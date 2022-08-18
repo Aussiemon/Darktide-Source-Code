@@ -1,0 +1,143 @@
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIResolution = require("scripts/managers/ui/ui_resolution")
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local highlight_size_addition = 10
+
+local function list_item_focused_visibility_function(content, style)
+	local hotspot = content.hotspot or content.parent.hotspot
+
+	return hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
+end
+
+local function highlight_color_change_function(content, style)
+	local default_color = (content.disabled and style.disabled_color) or style.default_color
+	local hover_color = style.hover_color
+	local color = style.color or style.text_color
+	local progress = content.highlight_progress
+
+	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+
+	style.hdr = progress == 1
+end
+
+local ListHeaderPassTemplates = {
+	default_hotspot_style = {
+		anim_hover_speed = 8,
+		anim_input_speed = 8,
+		anim_select_speed = 8,
+		anim_focus_speed = 8,
+		on_hover_sound = UISoundEvents.default_mouse_hover,
+		on_pressed_sound = UISoundEvents.default_click
+	},
+	highlight_size_addition = highlight_size_addition,
+	list_highlight_color_change_function = highlight_color_change_function,
+	list_item_focused_visibility_function = list_item_focused_visibility_function,
+	list_header = function (header_width, height, use_is_focused)
+		local header_font_style = table.clone(UIFontSettings.header_4)
+		header_font_style.size = {
+			header_width,
+			height
+		}
+		local passes = {
+			{
+				style_id = "hotspot",
+				pass_type = "hotspot",
+				content_id = "hotspot",
+				content = {
+					use_is_focused = use_is_focused
+				},
+				style = ListHeaderPassTemplates.default_hotspot_style
+			},
+			{
+				style_id = "hotspot",
+				pass_type = "logic",
+				value = function (pass, renderer, style, content, position, size)
+					local hotspot = content.hotspot
+					local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+					content.highlight_progress = highlight_progress
+					local dt = renderer.dt
+					local exclusive_focus = content.exclusive_focus
+					local anim_exclusive_focus_progress = content.anim_exclusive_focus_progress or 0
+					local anim_focus_speed = style.anim_focus_speed
+					local anim_delta = dt * anim_focus_speed
+
+					if exclusive_focus then
+						anim_exclusive_focus_progress = math.min(anim_exclusive_focus_progress + anim_delta, 1)
+					else
+						anim_exclusive_focus_progress = math.max(anim_exclusive_focus_progress - anim_delta, 0)
+					end
+
+					content.anim_exclusive_focus_progress = anim_exclusive_focus_progress
+				end
+			},
+			{
+				pass_type = "texture",
+				style_id = "background_selected",
+				value = "content/ui/materials/buttons/background_selected_faded",
+				style = {
+					color = Color.ui_terminal(0, true),
+					offset = {
+						0,
+						0,
+						0
+					},
+					size = {
+						header_width,
+						height
+					}
+				},
+				change_function = function (content, style)
+					style.color[1] = 255 * content.highlight_progress
+				end,
+				visibility_function = list_item_focused_visibility_function
+			},
+			{
+				pass_type = "texture",
+				style_id = "frame_highlight",
+				value = "content/ui/materials/buttons/background_selected_edge",
+				style = {
+					hdr = true,
+					color = Color.ui_terminal(255, true),
+					offset = {
+						0,
+						0,
+						11
+					},
+					size_addition = {
+						0,
+						0
+					},
+					size = {
+						4,
+						height
+					}
+				},
+				change_function = function (content, style)
+					local hotspot = content.hotspot
+					local use_is_focused = hotspot.use_is_focused
+					local focus_progress = (use_is_focused and hotspot.anim_focus_progress) or (not use_is_focused and hotspot.anim_select_progress)
+					local progress = math.max(hotspot.anim_hover_progress, focus_progress)
+					style.color[1] = 255 * math.easeOutCubic(progress)
+					local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
+					style.size_addition[2] = size_addition * 2
+					style.offset[2] = -size_addition
+					style.hdr = progress == 1
+				end,
+				visibility_function = list_item_focused_visibility_function
+			},
+			{
+				style_id = "list_header",
+				pass_type = "text",
+				value = "n/a",
+				value_id = "text",
+				style = header_font_style,
+				change_function = highlight_color_change_function
+			}
+		}
+
+		return passes
+	end
+}
+
+return settings("ListHeaderPassTemplates", ListHeaderPassTemplates)

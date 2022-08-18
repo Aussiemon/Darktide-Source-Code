@@ -1,0 +1,37 @@
+local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
+local item_material_overrides_name = "ItemMaterialOverrides"
+local item_material_overrides = {}
+
+local function _include_material_override_definition(file_name)
+	local definition = require(file_name)
+
+	for override_name, entry_data in pairs(definition) do
+		fassert(not item_material_overrides[override_name], "%s failed adding material_override %q from file %q. Key already exists.", item_material_overrides_name, override_name, file_name)
+
+		entry_data.name = override_name
+		entry_data.resource_dependencies = {}
+
+		ItemPackage.compile_resource_dependencies(entry_data, entry_data.resource_dependencies)
+
+		local entry = entry_data
+		item_material_overrides[override_name] = entry
+	end
+end
+
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/item_material_overrides_ammo")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/item_material_overrides_debug")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_colors")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_materials")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_patterns")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/minion_material_overrides_faces")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/minion_material_overrides_gear")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/minion_material_overrides_decals")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_base_body_mask")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_eye_colors")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_hair_colors")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_skin_colors")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_wrap_deform")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_tattoos")
+_include_material_override_definition("scripts/settings/equipment/item_material_overrides/player_material_overrides_gear_decals")
+
+return settings(item_material_overrides_name, item_material_overrides)

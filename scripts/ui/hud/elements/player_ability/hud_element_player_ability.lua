@@ -1,0 +1,209 @@
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local HudElementPlayerAbilitySettings = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability_settings")
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local HudElementPlayerAbility = class("HudElementPlayerAbility", "HudElementBase")
+
+HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, data)
+	local definition_path = data.definition_path
+	local definitions = dofile(definition_path)
+
+	HudElementPlayerAbility.super.init(self, parent, draw_layer, start_scale, definitions)
+
+	self._data = data
+	local weapon_slots = {}
+	local slot_configuration = PlayerCharacterConstants.slot_configuration
+
+	for slot_id, config in pairs(slot_configuration) do
+		if config.category == "weapon" then
+			weapon_slots[#weapon_slots + 1] = slot_id
+		end
+	end
+
+	self._weapon_slots = weapon_slots
+	self._ability_id = data.ability_id
+	self._slot_id = data.slot_id
+
+	self:set_charges_amount(99)
+	self:set_icon(data.icon)
+	self:_update_input()
+	self:_register_events()
+end
+
+HudElementPlayerAbility.destroy = function (self)
+	self:_unregister_events()
+	HudElementPlayerAbility.super.destroy(self)
+end
+
+local _input_devices = {
+	"xbox_controller",
+	"keyboard",
+	"mouse"
+}
+
+HudElementPlayerAbility._update_input = function (self)
+	local ability_id = self._ability_id
+	local service_type = "Ingame"
+	local alias_name = ability_id
+	local alias_array_index = 1
+	local alias = Managers.input:alias_object(service_type)
+	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
+	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or "n/a"
+
+	self:set_input_text(input_key)
+end
+
+HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_settings, input_service)
+	HudElementPlayerAbility.super.update(self, dt, t, ui_renderer, render_settings, input_service)
+
+	local player = self._data.player
+	local parent = self._parent
+	local ability_extension = parent:get_player_extension(player, "ability_system")
+	local ability_id = self._ability_id
+	local cooldown_progress, remaining_ability_charges = nil
+	local has_charges_left = true
+	local uses_charges = false
+
+	if ability_extension and ability_extension:ability_is_equipped(ability_id) then
+		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
+		local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_id)
+		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_id)
+		local max_ability_charges = ability_extension:max_ability_charges(ability_id)
+		uses_charges = max_ability_charges and max_ability_charges > 1
+		has_charges_left = remaining_ability_charges > 0
+
+		if max_ability_cooldown and max_ability_cooldown > 0 then
+			cooldown_progress = 1 - math.lerp(0, 1, remaining_ability_cooldown / max_ability_cooldown)
+
+			if cooldown_progress == 0 then
+				cooldown_progress = 1
+
+				if 1 then
+				end
+			end
+		elseif uses_charges then
+			cooldown_progress = 1
+		else
+			cooldown_progress = 0
+		end
+	end
+
+	if cooldown_progress ~= self._ability_progress then
+		self:_set_progress(cooldown_progress)
+	end
+
+	local on_cooldown = cooldown_progress ~= 1
+
+	if on_cooldown ~= self._on_cooldown or uses_charges ~= self._uses_charges or has_charges_left ~= self._has_charges_left then
+		if not on_cooldown and self._on_cooldown and (not uses_charges or has_charges_left) then
+			self:_play_sound(UISoundEvents.ability_off_cooldown)
+		end
+
+		self._on_cooldown = on_cooldown
+		self._uses_charges = uses_charges
+		self._has_charges_left = has_charges_left
+
+		self:_set_widget_state_colors(on_cooldown, uses_charges, has_charges_left)
+	end
+
+	if remaining_ability_charges and remaining_ability_charges ~= self._remaining_ability_charges then
+		self._remaining_ability_charges = remaining_ability_charges
+
+		self:set_charges_amount(uses_charges and remaining_ability_charges)
+	end
+end
+
+HudElementPlayerAbility.set_charges_amount = function (self, amount)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.ability
+	local content = widget.content
+	widget.dirty = true
+	content.text = (amount and tostring(amount)) or nil
+end
+
+HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.ability
+	local source_colors = nil
+
+	if on_cooldown then
+		if uses_charges then
+			if has_charges_left then
+				source_colors = HudElementPlayerAbilitySettings.has_charges_cooldown_colors
+			else
+				source_colors = HudElementPlayerAbilitySettings.out_of_charges_cooldown_colors
+			end
+		else
+			source_colors = HudElementPlayerAbilitySettings.cooldown_colors
+		end
+	elseif not uses_charges or (uses_charges and has_charges_left) then
+		source_colors = HudElementPlayerAbilitySettings.active_colors
+	else
+		source_colors = HudElementPlayerAbilitySettings.inactive
+	end
+
+	local style = widget.style
+
+	for pass_id, pass_style in pairs(style) do
+		local source_color = source_colors[pass_id]
+
+		if source_color then
+			ColorUtilities.color_copy(source_color, pass_style.color or pass_style.text_color)
+		end
+	end
+end
+
+HudElementPlayerAbility.set_input_text = function (self, text)
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.ability.content.input_text = text
+end
+
+HudElementPlayerAbility.set_icon = function (self, icon)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.ability
+	local style = widget.style
+
+	if icon then
+		style.icon.material_values.talent_icon = icon
+	end
+end
+
+HudElementPlayerAbility._set_progress = function (self, progress)
+	local is_nan = progress ~= progress
+	progress = (not is_nan and progress) or 0
+	self._ability_progress = progress
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.ability
+	local content = widget.content
+	widget.dirty = true
+	content.duration_progress = progress
+end
+
+HudElementPlayerAbility._register_events = function (self)
+	local event_manager = Managers.event
+	local events = HudElementPlayerAbilitySettings.events
+
+	for i = 1, #events, 1 do
+		local event = events[i]
+
+		event_manager:register(self, event[1], event[2])
+	end
+end
+
+HudElementPlayerAbility._unregister_events = function (self)
+	local event_manager = Managers.event
+	local events = HudElementPlayerAbilitySettings.events
+
+	for i = 1, #events, 1 do
+		local event = events[i]
+
+		event_manager:unregister(self, event[1])
+	end
+end
+
+HudElementPlayerAbility.event_on_input_settings_changed = function (self)
+	self:_update_input()
+end
+
+return HudElementPlayerAbility

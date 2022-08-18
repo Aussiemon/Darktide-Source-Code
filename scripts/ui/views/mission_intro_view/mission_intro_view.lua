@@ -1,0 +1,445 @@
+local Breeds = require("scripts/settings/breed/breeds")
+local Definitions = require("scripts/ui/views/mission_intro_view/mission_intro_view_definitions")
+local MissionIntroViewSettings = require("scripts/ui/views/mission_intro_view/mission_intro_view_settings")
+local Missions = require("scripts/settings/mission/mission_templates")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local Vo = require("scripts/utilities/vo")
+local MissionIntroView = class("MissionIntroView", "BaseView")
+
+MissionIntroView.init = function (self, settings, context)
+	self._spawn_point_units = {}
+	self._context = context
+	self._debug_preview = context and context.debug_preview
+	self._viewport = nil
+	self._camera = nil
+	self._profile_loaders = {}
+	self._spawn_slots = {}
+
+	self:_setup_offscreen_gui()
+	MissionIntroView.super.init(self, Definitions, settings)
+
+	self._pass_draw = false
+	self._can_exit = not context or context.can_exit
+
+	Managers.event:trigger("event_mission_intro_started")
+end
+
+MissionIntroView.on_enter = function (self)
+	MissionIntroView.super.on_enter(self)
+end
+
+MissionIntroView._setup_offscreen_gui = function (self)
+	local ui_manager = Managers.ui
+	local class_name = self.__class_name
+	local timer_name = "ui"
+	local world_layer = 10
+	local world_name = class_name .. "_ui_offscreen_world"
+	local view_name = self.view_name
+	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
+	local viewport_type = "overlay_offscreen"
+	local viewport_layer = 1
+	self._offscreen_viewport = ui_manager:create_viewport(self._offscreen_world, viewport_name, viewport_type, viewport_layer)
+	self._offscreen_viewport_name = viewport_name
+	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._offscreen_world)
+end
+
+MissionIntroView._destroy_offscreen_gui = function (self)
+	if self._ui_offscreen_renderer then
+		self._ui_offscreen_renderer = nil
+
+		Managers.ui:destroy_renderer(self.__class_name .. "_ui_offscreen_renderer")
+
+		local world = self._offscreen_world
+		local viewport_name = self._offscreen_viewport_name
+
+		ScriptWorld.destroy_viewport(world, viewport_name)
+		Managers.ui:destroy_world(world)
+
+		self._offscreen_viewport_name = nil
+		self._offscreen_world = nil
+	end
+end
+
+MissionIntroView.draw = function (self, dt, t, input_service, layer)
+	local debug_ui = false
+	local render_scale = self._render_scale
+	local render_settings = self._render_settings
+	local ui_renderer = (debug_ui and self._ui_renderer) or self._ui_offscreen_renderer
+	render_settings.start_layer = layer
+	render_settings.scale = render_scale
+	render_settings.inverse_scale = render_scale and 1 / render_scale
+	local ui_scenegraph = self._ui_scenegraph
+
+	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+	self:_draw_widgets(dt, t, input_service, ui_renderer)
+	UIRenderer.end_pass(ui_renderer)
+	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
+end
+
+MissionIntroView.event_register_mission_intro_spawn_point_1 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_1")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 1)
+end
+
+MissionIntroView.event_register_mission_intro_spawn_point_2 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_2")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 2)
+end
+
+MissionIntroView.event_register_mission_intro_spawn_point_3 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_3")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 3)
+end
+
+MissionIntroView.event_register_mission_intro_spawn_point_4 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_4")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 4)
+end
+
+MissionIntroView._register_mission_intro_spawn_point = function (self, spawn_point_unit, index)
+	self._spawn_point_units[index] = spawn_point_unit
+end
+
+MissionIntroView.event_register_mission_intro_camera = function (self, camera_unit)
+	self:_unregister_event("event_register_mission_intro_camera")
+
+	local viewport_name = MissionIntroViewSettings.viewport_name
+	local viewport_type = MissionIntroViewSettings.viewport_type
+	local viewport_layer = MissionIntroViewSettings.viewport_layer
+	local shading_environment = MissionIntroViewSettings.shading_environment
+
+	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+end
+
+MissionIntroView._initialize_background_world = function (self)
+	self:_register_event("event_register_mission_intro_camera")
+	self:_register_event("event_register_mission_intro_spawn_point_1")
+	self:_register_event("event_register_mission_intro_spawn_point_2")
+	self:_register_event("event_register_mission_intro_spawn_point_3")
+	self:_register_event("event_register_mission_intro_spawn_point_4")
+
+	local world_name = MissionIntroViewSettings.world_name
+	local world_layer = MissionIntroViewSettings.world_layer
+	local world_timer_name = MissionIntroViewSettings.timer_name
+	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+	local level_name = MissionIntroViewSettings.level_name
+
+	self._world_spawner:spawn_level(level_name)
+
+	self._world_initialized = true
+	local game_state_context = Managers.player:game_state_context()
+	local mission_name = game_state_context and game_state_context.mission_name
+
+	if mission_name then
+		self:_play_mission_brief_vo(mission_name)
+	else
+		self.mission_briefing_done = true
+	end
+
+	self:_register_event("event_mission_intro_trigger_players_event")
+end
+
+MissionIntroView.can_exit = function (self)
+	return self._can_exit
+end
+
+MissionIntroView.on_exit = function (self)
+	self:_destroy_offscreen_gui()
+	MissionIntroView.super.on_exit(self)
+
+	local spawn_slots = self._spawn_slots
+	local num_slots = #spawn_slots
+
+	for i = 1, num_slots, 1 do
+		local slot = spawn_slots[i]
+
+		if slot.occupied then
+			self:_reset_spawn_slot(slot)
+		end
+	end
+
+	if self._world_spawner then
+		self._world_spawner:destroy()
+
+		self._world_spawner = nil
+	end
+
+	Managers.event:trigger("event_mission_intro_finished")
+end
+
+MissionIntroView.update = function (self, dt, t, input_service)
+	if self._world_initialized then
+		local world_spawner = self._world_spawner
+
+		if world_spawner then
+			world_spawner:update(dt, t)
+		end
+
+		self:_update_player_slots(dt, t)
+	else
+		self:_initialize_background_world()
+		self:_setup_spawn_slots()
+		self:_assign_player_slots()
+	end
+
+	if self._current_vo_id then
+		local id = self._current_vo_id
+		local unit = self._vo_unit
+		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+		local is_playing = dialogue_extension:is_playing(id)
+		local is_finished_playing = not is_playing
+		local current_vo_event = self._current_vo_event
+		local last_vo_event = self._last_vo_event
+		local is_last_vo_event = current_vo_event == last_vo_event
+
+		if is_last_vo_event and is_finished_playing then
+			self.mission_briefing_done = true
+			self._current_vo_id = nil
+			self._current_vo_event = nil
+		end
+	end
+
+	return MissionIntroView.super.update(self, dt, t, input_service)
+end
+
+MissionIntroView._get_free_slot_id = function (self, player)
+	local spawn_slots = self._spawn_slots
+	local profile = player:profile()
+	local archetype_settings = profile.archetype
+	local breed_name = archetype_settings.breed
+	local is_ogryn = breed_name == "ogryn"
+	local prioritized_ogryn_slots = MissionIntroViewSettings.prioritized_ogryn_slots
+
+	if is_ogryn then
+		for i = 1, #prioritized_ogryn_slots, 1 do
+			local slot_index = prioritized_ogryn_slots[i]
+			local slot = spawn_slots[slot_index]
+
+			if not slot.occupied then
+				return slot_index
+			end
+		end
+	else
+		for i = 1, #spawn_slots, 1 do
+			if not table.find(prioritized_ogryn_slots, i) then
+				local slot = spawn_slots[i]
+
+				if not slot.occupied then
+					return i
+				end
+			end
+		end
+	end
+
+	for i = 1, #spawn_slots, 1 do
+		local slot = spawn_slots[i]
+
+		if not slot.occupied then
+			return i
+		end
+	end
+end
+
+MissionIntroView._player_slot_id = function (self, unique_id)
+	local spawn_slots = self._spawn_slots
+
+	for i = 1, #spawn_slots, 1 do
+		local slot = spawn_slots[i]
+
+		if slot.occupied and slot.unique_id == unique_id then
+			return i
+		end
+	end
+end
+
+MissionIntroView._setup_spawn_slots = function (self)
+	local spawn_point_units = self._spawn_point_units
+	local world = self._world_spawner:world()
+	local camera = self._world_spawner:camera()
+	local unit_spawner = self._world_spawner:unit_spawner()
+	local ignored_slots = MissionIntroViewSettings.ignored_slots
+	local spawn_slots = {}
+	local num_players = 4
+
+	for i = 1, num_players, 1 do
+		local spawn_point_unit = spawn_point_units[i]
+		local initial_position = Unit.world_position(spawn_point_unit, 1)
+		local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
+		local profile_spawner = UIProfileSpawner:new("MissionIntroView_" .. i, world, camera, unit_spawner)
+
+		for j = 1, #ignored_slots, 1 do
+			local slot_name = ignored_slots[j]
+
+			profile_spawner:ignore_slot(slot_name)
+		end
+
+		local spawn_slot = {
+			index = i,
+			boxed_rotation = QuaternionBox(initial_rotation),
+			boxed_position = Vector3.to_array(initial_position),
+			profile_spawner = profile_spawner,
+			spawn_point_unit = spawn_point_unit
+		}
+		spawn_slots[i] = spawn_slot
+	end
+
+	self._spawn_slots = spawn_slots
+end
+
+MissionIntroView.event_mission_intro_trigger_players_event = function (self, animation_event)
+	local spawn_slots = self._spawn_slots
+
+	for i = 1, #spawn_slots, 1 do
+		local slot = spawn_slots[i]
+
+		if slot.occupied then
+			local profile_spawner = slot.profile_spawner
+
+			profile_spawner:assign_animation_event(animation_event)
+		end
+	end
+end
+
+MissionIntroView._update_player_slots = function (self, dt, t, input_service)
+	local spawn_slots = self._spawn_slots
+
+	for i = 1, #spawn_slots, 1 do
+		local slot = spawn_slots[i]
+
+		if slot.occupied then
+			local profile_spawner = slot.profile_spawner
+
+			profile_spawner:update(dt, t, input_service)
+		end
+	end
+end
+
+local temp_sorted_players = {}
+
+MissionIntroView._assign_player_slots = function (self)
+	local player_manager = Managers.player
+	local players = player_manager:players()
+
+	local function sort_function(a, b)
+		local a_slot_index = a:slot() or math.huge
+		local b_slot_index = b:slot() or math.huge
+
+		return a_slot_index < b_slot_index
+	end
+
+	table.clear(temp_sorted_players)
+
+	for unique_id, player in pairs(players) do
+		temp_sorted_players[#temp_sorted_players + 1] = player
+	end
+
+	if #temp_sorted_players > 1 then
+		table.sort(temp_sorted_players, sort_function)
+	end
+
+	local spawn_slots = self._spawn_slots
+
+	for i = 1, #temp_sorted_players, 1 do
+		local player = temp_sorted_players[i]
+		local unique_id = player:unique_id()
+		local slot_id = self:_player_slot_id(unique_id)
+
+		if not slot_id then
+			slot_id = self:_get_free_slot_id(player)
+			local slot = spawn_slots[slot_id]
+
+			if slot then
+				self:_assign_player_to_slot(player, slot)
+			end
+		end
+	end
+end
+
+MissionIntroView._assign_player_to_slot = function (self, player, slot)
+	local unique_id = player:unique_id()
+	local profile = player:profile()
+	local boxed_position = slot.boxed_position
+	local boxed_rotation = slot.boxed_rotation
+	local spawn_position = Vector3.from_array(boxed_position)
+	local spawn_rotation = QuaternionBox.unbox(boxed_rotation)
+	local profile_spawner = slot.profile_spawner
+
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
+
+	local archetype_settings = profile.archetype
+	local archetype_name = archetype_settings.name
+	local breed_name = archetype_settings.breed
+	local breed_settings = Breeds[breed_name]
+	local mission_intro_state_machine = breed_settings.mission_intro_state_machine
+
+	profile_spawner:assign_state_machine(mission_intro_state_machine)
+
+	local animations_per_archetype = MissionIntroViewSettings.animations_per_archetype
+	local animations_settings = animations_per_archetype[archetype_name]
+	local anim_index = math.random(1, #animations_settings)
+	local animation_event = animations_settings[anim_index]
+
+	profile_spawner:assign_animation_event(animation_event)
+
+	slot.occupied = true
+	slot.player = player
+	slot.unique_id = unique_id
+end
+
+MissionIntroView._reset_spawn_slot = function (self, slot)
+	local profile_spawner = slot.profile_spawner
+
+	if profile_spawner then
+		profile_spawner:destroy()
+	end
+
+	slot.unique_id = nil
+	slot.profile_spawner = nil
+	slot.player = nil
+end
+
+MissionIntroView._play_mission_brief_vo = function (self, mission_name)
+	local mission = Missions[mission_name]
+	local mission_intro_time = mission.mission_intro_minimum_time or 0
+	self.done_at = Managers.time:time("main") + mission_intro_time
+	local mission_brief_vo = mission.mission_brief_vo
+
+	if not mission_brief_vo then
+		self.mission_briefing_done = true
+
+		return
+	end
+
+	local events = mission_brief_vo.vo_events
+	local voice_profile = mission_brief_vo.vo_profile
+	local wwise_route_key = mission_brief_vo.wwise_route_key
+	local dialogue_system = self:dialogue_system()
+	local callback = callback(self, "_cb_on_play_mission_brief_vo")
+	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback)
+	self._vo_unit = vo_unit
+	self._last_vo_event = events[#events]
+end
+
+MissionIntroView._cb_on_play_mission_brief_vo = function (self, id, event_name)
+	self._current_vo_event = event_name
+	self._current_vo_id = id
+end
+
+MissionIntroView.dialogue_system = function (self)
+	local world_spawner = self._world_spawner
+
+	if not world_spawner then
+		return nil
+	end
+
+	local world = world_spawner:world()
+	local extension_manager = Managers.ui:world_extension_manager(world)
+
+	return extension_manager:system_by_extension("DialogueActorExtension")
+end
+
+return MissionIntroView

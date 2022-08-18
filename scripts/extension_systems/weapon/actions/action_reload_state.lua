@@ -1,0 +1,122 @@
+require("scripts/extension_systems/weapon/actions/action_weapon_base")
+
+local AlternateFire = require("scripts/utilities/alternate_fire")
+local Overheat = require("scripts/utilities/overheat")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local buff_proc_events = BuffSettings.proc_events
+local ActionReloadState = class("ActionReloadState", "ActionWeaponBase")
+
+ActionReloadState.init = function (self, action_context, ...)
+	ActionReloadState.super.init(self, action_context, ...)
+
+	local unit_data_extension = action_context.unit_data_extension
+	self._action_reload_component = unit_data_extension:write_component("action_reload")
+	self._spread_control_component = unit_data_extension:write_component("spread_control")
+	self._sway_control_component = unit_data_extension:write_component("sway_control")
+	self._alternate_fire_component = unit_data_extension:write_component("alternate_fire")
+	self._buff_extension = ScriptUnit.extension(action_context.player_unit, "buff_system")
+end
+
+ActionReloadState.start = function (self, action_settings, t, time_scale, ...)
+	ActionReloadState.super.start(self, action_settings, t, time_scale, ...)
+
+	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
+		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template)
+	end
+
+	local action_reload = self._action_reload_component
+	local inventory_slot_component = self._inventory_slot_component
+	local reload_template = self._weapon_template.reload_template
+
+	self:_start_reload_state(reload_template, inventory_slot_component, action_reload, t)
+
+	local event_data = self._dialogue_input:get_event_data_payload()
+
+	self._dialogue_input:trigger_dialogue_event("reloading", event_data)
+end
+
+ActionReloadState.fixed_update = function (self, dt, t, time_in_action)
+	local inventory_slot = self._inventory_slot_component
+	local reload_template = self._weapon_template.reload_template
+	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot)
+	local time_scale = self._weapon_action_component.time_scale
+
+	self:_update_functionality(reload_state, time_in_action, time_scale)
+end
+
+ActionReloadState._start_reload_state = function (self, reload_template, inventory_slot_component, action_reload_component, t)
+	action_reload_component.has_refilled_ammunition = false
+	action_reload_component.has_removed_ammunition = false
+	action_reload_component.has_cleared_overheat = false
+	local anim_1p, anim_3p, action_time_offset = ReloadStates.start_reload_state(reload_template, inventory_slot_component)
+
+	self:trigger_anim_event(anim_1p, anim_3p, action_time_offset)
+end
+
+ActionReloadState.finish = function (self, reason, data, t, time_in_action)
+	ActionReloadState.super.finish(self, reason, data, t)
+
+	local inventory_slot = self._inventory_slot_component
+	local reload_template = self._weapon_template.reload_template
+	local time_scale = self._weapon_action_component.time_scale
+	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot)
+
+	self:_update_functionality(reload_state, time_in_action, time_scale)
+	self:_handle_state_transition(reload_template, inventory_slot, time_in_action, time_scale)
+	self._animation_extension:anim_event_1p("reload_finished")
+end
+
+ActionReloadState._update_functionality = function (self, reload_state, time_in_action, time_scale)
+	local inventory_slot_component = self._inventory_slot_component
+	local action_reload_component = self._action_reload_component
+	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
+	local has_removed_ammunition = action_reload_component.has_removed_ammunition
+	local has_cleared_overheat = action_reload_component.has_cleared_overheat
+
+	for functionality, time in pairs(reload_state.functionality) do
+		if time_in_action >= time / time_scale then
+			if functionality == "remove_ammunition" and not has_removed_ammunition then
+				ReloadStates.reimburse_clip_to_reserve(inventory_slot_component)
+
+				action_reload_component.has_removed_ammunition = true
+			elseif functionality == "refill_ammunition" and not has_refilled_ammunition then
+				local buff_extension = self._buff_extension
+				local param_table = buff_extension:request_proc_event_param_table()
+				param_table.weapon_template = self._weapon_template
+				param_table.shotgun = false
+
+				buff_extension:add_proc_event(buff_proc_events.on_reload, param_table)
+				ReloadStates.reload(inventory_slot_component)
+
+				action_reload_component.has_refilled_ammunition = true
+			elseif functionality == "clear_overheat" and not has_cleared_overheat then
+				Overheat.clear(inventory_slot_component)
+
+				action_reload_component.has_cleared_overheat = true
+			end
+		end
+	end
+end
+
+ActionReloadState._handle_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
+	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
+	local state_transitions = reload_state.state_transitions
+	local highest_completed_state_transition = nil
+	local highest_completed_state_time = 0
+
+	for state_name, time in pairs(state_transitions) do
+		local scaled_time = time / time_scale
+
+		if highest_completed_state_time <= scaled_time and scaled_time <= time_in_action then
+			highest_completed_state_time = scaled_time
+			highest_completed_state_transition = state_name
+		end
+	end
+
+	if highest_completed_state_transition then
+		inventory_slot_component.reload_state = highest_completed_state_transition
+	end
+end
+
+return ActionReloadState

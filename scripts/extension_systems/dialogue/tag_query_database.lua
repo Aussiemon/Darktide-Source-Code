@@ -1,0 +1,235 @@
+local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
+local TagQueryDatabase = class("TagQueryDatabase")
+TagQueryDatabase.NUM_DATABASE_RULES = 4095
+
+TagQueryDatabase.init = function (self, dialogue_system)
+	self._database = RuleDatabase.initialize(TagQueryDatabase.NUM_DATABASE_RULES)
+	self._rule_id_mapping = {}
+	self._rules_n = 0
+	self._contexts_by_object = {}
+	self._queries = {}
+
+	fassert(dialogue_system, "dialogue_system can't be nil")
+
+	self._dialogue_system = dialogue_system
+end
+
+TagQueryDatabase.destroy = function (self)
+	RuleDatabase.destroy(self._database)
+
+	self._database = nil
+	self._rule_id_mapping = nil
+	self._contexts_by_object = nil
+	self._queries = nil
+end
+
+TagQueryDatabase.add_object_context = function (self, object, context_name, context)
+	local object_context_list = self._contexts_by_object[object] or {}
+	self._contexts_by_object[object] = object_context_list
+	object_context_list[context_name] = context
+end
+
+TagQueryDatabase.remove_object = function (self, object)
+	self._contexts_by_object[object] = nil
+end
+
+TagQueryDatabase.contexts_by_object = function (self)
+	return self._contexts_by_object
+end
+
+TagQueryDatabase.set_global_context = function (self, context)
+	self.global_context = context
+end
+
+TagQueryDatabase.create_query = function (self)
+	return setmetatable({
+		query_context = {},
+		tagquery_database = self
+	}, TagQuery)
+end
+
+TagQueryDatabase.add_query = function (self, query)
+	self._queries[#self._queries + 1] = query
+end
+
+TagQueryDatabase.finalize_rules = function (self)
+	RuleDatabase.sort_rules(self._database)
+end
+
+RuleDatabase.initialize_static_values()
+
+local operator_lookup = {
+	EQ = RuleDatabase.OPERATOR_EQUAL,
+	LT = RuleDatabase.OPERATOR_LT,
+	GT = RuleDatabase.OPERATOR_GT,
+	NOT = RuleDatabase.OPERATOR_NOT,
+	LTEQ = RuleDatabase.OPERATOR_LTEQ,
+	GTEQ = RuleDatabase.OPERATOR_GTEQ,
+	NEQ = RuleDatabase.OPERATOR_NOT_EQUAL,
+	RAND = RuleDatabase.OPERATOR_RAND,
+	SET_INCLUDES = RuleDatabase.OPERATOR_SET_INCLUDES,
+	SET_INTERSECTS = RuleDatabase.OPERATOR_SET_INTERSECTS
+}
+local context_indexes = table.mirror_array_inplace({
+	"global_context",
+	"query_context",
+	"user_context",
+	"user_memory",
+	"faction_memory",
+	"faction_context"
+})
+
+TagQueryDatabase.define_rule = function (self, rule_definition)
+	local dialogue_name = rule_definition.name
+	local criterias = rule_definition.criterias
+	local real_criterias = table.clone(criterias)
+	rule_definition.real_criterias = real_criterias
+	local num_criterias = #criterias
+	local context_indexes = context_indexes
+	rule_definition.n_criterias = num_criterias
+
+	fassert(num_criterias <= (RuleDatabase.RULE_MAX_NUM_CRITERIA or 8), "Too many criteria in dialogue %s", dialogue_name)
+
+	for i = 1, num_criterias, 1 do
+		local criteria = criterias[i]
+		local context_name = criteria[1]
+
+		fassert(context_indexes[context_name], "No such context name %q", context_name)
+
+		local operator = criteria[3]
+		local value = nil
+
+		if operator == "TIMEDIFF" then
+			operator = criteria[4]
+
+			fassert(operator, "No operator besides TIMEDIFF in rule %q", rule_definition.name)
+
+			value = criteria[5]
+			criteria[5] = true
+		else
+			criteria[5] = false
+
+			if criteria.args then
+				value = criteria.args
+			else
+				value = criteria[4]
+			end
+		end
+
+		local operator_index = operator_lookup[operator]
+
+		fassert(operator_index, "No such rule operator named %q in rule %q", tostring(operator), rule_definition.name)
+
+		criteria[3] = operator_index
+		local value_type = type(value)
+
+		if value_type == "string" then
+			criteria[4] = value
+		elseif value_type == "boolean" then
+			if value then
+				value = 1
+			else
+				value = 0
+			end
+
+			criteria[4] = value
+		elseif value_type == "number" then
+			criteria[4] = value
+		elseif value_type == "table" then
+			criteria[4] = value
+		else
+			fassert(false, "define_rule context value unrecognized")
+		end
+	end
+
+	local rule_id = RuleDatabase.add_rule(self._database, dialogue_name, num_criterias, criterias)
+	self._rule_id_mapping[rule_id] = rule_definition
+	self._rule_id_mapping[rule_definition.name] = rule_id
+	self._rules_n = self._rules_n + 1
+end
+
+TagQueryDatabase.num_rules = function (self)
+	return self._rules_n
+end
+
+TagQueryDatabase.iterate_queries = function (self, t)
+	local num_iterations = #self._queries
+	local best_query = nil
+	local best_query_value = 0
+
+	for i = 1, num_iterations, 1 do
+		local query = self:_iterate_query(t)
+		local result = query.result
+
+		if result then
+			local validated_rule = query.validated_rule
+			local value = validated_rule.n_criterias
+
+			if best_query_value < value then
+				best_query_value = value
+				best_query = query
+			elseif value == best_query_value and math.random() > 0.5 then
+				best_query_value = value
+				best_query = query
+			end
+		end
+	end
+
+	return best_query
+end
+
+local dummy_table = {}
+
+TagQueryDatabase._iterate_query = function (self, t)
+	local query = table.remove(self._queries, 1)
+
+	if not query then
+		return
+	end
+
+	local query_context = query.query_context
+	local source = query_context.source
+	local user_context_list = self._contexts_by_object[source]
+
+	if user_context_list == nil then
+		return query
+	end
+
+	Profiler.start("Table concat")
+
+	local nice_array = {
+		self.global_context or dummy_table,
+		query_context or dummy_table,
+		user_context_list.user_context or dummy_table,
+		user_context_list.user_memory or dummy_table,
+		user_context_list.faction_memory or dummy_table,
+		0
+	}
+	local dialogue_extension = ScriptUnit.extension_input(source, "dialogue_system")
+
+	if dialogue_extension and dialogue_extension:faction_name() and dialogue_extension:faction_name() == "imperium" then
+		self._dialogue_system:populate_faction_contexts(nice_array, 6, dialogue_extension:faction_name(), source)
+	end
+
+	Profiler.stop("Table concat")
+	Profiler.start("Engine call")
+
+	local rule_index_found = RuleDatabase.iterate_query(self._database, nice_array, t)
+
+	Profiler.stop("Engine call")
+
+	if rule_index_found then
+		local rule = self._rule_id_mapping[rule_index_found]
+		query.validated_rule = rule
+		query.result = rule.response
+		query.rule_index = rule_index_found
+	end
+
+	return query
+end
+
+TagQueryDatabase.get_rule = function (self, rule_index)
+	return self._rule_id_mapping[rule_index]
+end
+
+return TagQueryDatabase

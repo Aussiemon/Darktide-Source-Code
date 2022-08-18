@@ -1,0 +1,62 @@
+local function _info(...)
+	Log.info("SessionBootBase", ...)
+end
+
+local SessionBootBase = class("SessionBootBase")
+SessionBootBase.INTERFACE = {
+	"result"
+}
+
+SessionBootBase.init = function (self, states, event_object)
+	fassert(event_object, "SessionBootBase requires event_object.")
+	fassert(states, "SessionBootBase requires states")
+	fassert(states.ready, "SessionBootBase requires state 'ready'")
+	fassert(states.failed, "SessionBootBase requires state 'failed'")
+
+	self._event_object = event_object
+end
+
+SessionBootBase.update = function (self, dt)
+	local connection_client = self._connection_client
+
+	if connection_client then
+		connection_client:update(dt)
+
+		if connection_client:has_disconnected() then
+			self._event_object:failed_to_boot(true, "game", "DISCONNECTED_FROM_HOST")
+			connection_client:delete()
+
+			self._connection_client = nil
+
+			self:_set_state("failed")
+		end
+	end
+
+	local connection_host = self._connection_host
+
+	if connection_host then
+		connection_host:update(dt)
+	end
+end
+
+SessionBootBase._set_state = function (self, new_state)
+	_info("Changed state %s -> %s", self._state, new_state)
+
+	self._state = new_state
+end
+
+SessionBootBase.state = function (self)
+	return self._state
+end
+
+SessionBootBase.event_object = function (self)
+	return self._event_object
+end
+
+SessionBootBase._set_window_title = function (self, ...)
+	if PLATFORM == "win32" then
+		Window.set_title(string.format(...))
+	end
+end
+
+return SessionBootBase

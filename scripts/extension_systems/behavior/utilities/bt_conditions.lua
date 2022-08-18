@@ -1,0 +1,17 @@
+local BtConditions = {}
+
+local function _add_conditions(path)
+	local conditions = require(path)
+
+	for condition_name, condition_func in pairs(conditions) do
+		fassert(BtConditions[condition_name] == nil, "[BtConditions] Duplicate condition %q found, each condition needs a unique name!", condition_name)
+
+		BtConditions[condition_name] = condition_func
+	end
+end
+
+_add_conditions("scripts/extension_systems/behavior/utilities/conditions/bt_bot_conditions")
+_add_conditions("scripts/extension_systems/behavior/utilities/conditions/bt_common_conditions")
+_add_conditions("scripts/extension_systems/behavior/utilities/conditions/bt_minion_conditions")
+
+return BtConditions
