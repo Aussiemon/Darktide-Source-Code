@@ -100,7 +100,7 @@ HudElementPrologueTooltipPopup._set_widget_info = function (self, actions, widge
 	local service_type = "Ingame"
 	local text = ""
 
-	for i = 1, #actions, 1 do
+	for i = 1, #actions do
 		local action_info = actions[i]
 		local loc_action = Localize(action_info.action)
 		local action_text = loc_action .. ": "
@@ -109,7 +109,7 @@ HudElementPrologueTooltipPopup._set_widget_info = function (self, actions, widge
 		local is_combo = action_info.is_combo or false
 		local type_override = action_info.type_override or false
 
-		for j = 1, #inputs, 1 do
+		for j = 1, #inputs do
 			local alias_key = Managers.ui:get_input_alias_key(inputs[j], service_type)
 			local action_type = Managers.ui:get_action_type(inputs[j], service_type)
 			local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
@@ -121,9 +121,9 @@ HudElementPrologueTooltipPopup._set_widget_info = function (self, actions, widge
 			end
 
 			if is_combo then
-				input_string = (j ~= 1 and input_string .. " + " .. input_text) or input_text
+				input_string = j ~= 1 and input_string .. " + " .. input_text or input_text
 			else
-				input_string = (j ~= 1 and input_string .. ", " .. input_text) or input_text
+				input_string = j ~= 1 and input_string .. ", " .. input_text or input_text
 			end
 
 			if i ~= 1 then
@@ -159,7 +159,7 @@ HudElementPrologueTooltipPopup._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPrologueTutorialTooltipSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -170,7 +170,7 @@ HudElementPrologueTooltipPopup._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPrologueTutorialTooltipSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

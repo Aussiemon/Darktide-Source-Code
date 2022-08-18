@@ -137,7 +137,7 @@ local function to_backend_modifiers(reward_modifiers)
 		at_least_one = true
 	end
 
-	return (at_least_one and backend_modifiers) or nil
+	return at_least_one and backend_modifiers or nil
 end
 
 GameplaySession.complete = function (self, session_id, participants, mission_result, reward_modifiers)
@@ -192,12 +192,11 @@ GameplaySession.events = function (self, session_id, events, position)
 		end
 
 		return promise
-		return
+	else
+		return Promise.resolved({
+			sessionId = session_id
+		})
 	end
-
-	return Promise.resolved({
-		sessionId = session_id
-	})
 end
 
 GameplaySession._events_batched = function (self, session_id, events)

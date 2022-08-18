@@ -35,7 +35,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 
 	local saved_pellet_hits = {}
 
-	for i = 1, NUM_PELLETS, 1 do
+	for i = 1, NUM_PELLETS do
 		saved_pellet_hits[i] = {
 			charge_level = 0,
 			num_hits = 0,
@@ -45,7 +45,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 			hit_results = {}
 		}
 
-		for j = 1, MAX_NUM_SAVED_PELLET_HITS, 1 do
+		for j = 1, MAX_NUM_SAVED_PELLET_HITS do
 			saved_pellet_hits[i].hit_results[j] = {
 				distance = 0,
 				position = Vector3Box(),
@@ -64,7 +64,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._num_impact_fx_per_unit = {}
 	local unit_damage_data = {}
 
-	for i = 1, NUM_PELLETS, 1 do
+	for i = 1, NUM_PELLETS do
 		unit_damage_data[i] = {}
 	end
 
@@ -76,10 +76,10 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	for hit_type, _ in pairs(hit_types) do
 		surface_impact_data[hit_type] = {}
 
-		for ii = 1, MAX_NUM_SURFACE_IMPACT_EFFECTS, 1 do
+		for ii = 1, MAX_NUM_SURFACE_IMPACT_EFFECTS do
 			local hits = {}
 
-			for jj = 1, MAX_NUM_HITS_PER_UNIT, 1 do
+			for jj = 1, MAX_NUM_HITS_PER_UNIT do
 				hits[jj] = {}
 			end
 
@@ -118,7 +118,7 @@ ActionShootPellets.start = function (self, ...)
 
 	local unit_damage_data = self._unit_damage_data
 
-	for i = 1, NUM_PELLETS, 1 do
+	for i = 1, NUM_PELLETS do
 		table.clear(unit_damage_data[i])
 	end
 
@@ -147,7 +147,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 	local remaining_pellets = num_pellets_total - num_pellets_fired
 	local num_pellets_this_frame = math.min(shotshell_template.pellets_per_frame, remaining_pellets)
 
-	for i = 1, num_pellets_this_frame, 1 do
+	for i = 1, num_pellets_this_frame do
 		num_pellets_fired = num_pellets_fired + 1
 		local pellet_rotation = weapon_spread_extension:target_style_spread(rotation, num_pellets_fired, num_pellets_total, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random_roll, roll_offset)
 		local direction = Quaternion.forward(pellet_rotation)
@@ -168,7 +168,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 
 		local unit_damage_data = self._unit_damage_data
 
-		for i = 1, NUM_PELLETS, 1 do
+		for i = 1, NUM_PELLETS do
 			table.clear(unit_damage_data[i])
 		end
 
@@ -204,7 +204,7 @@ ActionShootPellets._save_pellet_hits = function (self, hit_results, position, di
 	local num_hits = 0
 	local num_hit_results = #hit_results
 
-	for i = 1, num_hit_results, 1 do
+	for i = 1, num_hit_results do
 		local hit = hit_results[i]
 		local hit_position = hit[INDEX_POSITION]
 		local hit_normal = hit[INDEX_NORMAL]
@@ -292,7 +292,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 
 	local scaled_power_levels = self:_scale_power_level_with_num_hits(shotshell_template, power_level)
 
-	for i = 1, num_saved_pellets, 1 do
+	for i = 1, num_saved_pellets do
 		table.clear(self._hit_units)
 
 		local pellet_hits = saved_pellet_hits[i]
@@ -311,7 +311,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 		local can_play_impact_fx = nil
 		local stop = false
 
-		for index = 1, num_hits, 1 do
+		for index = 1, num_hits do
 			repeat
 				local hit = hit_results[index]
 				local hit_position = hit.position:unbox()
@@ -543,7 +543,7 @@ ActionShootPellets._can_play_impact_fx = function (self, hit_unit, num_impact_fx
 	local num_fx_per_unit = self._num_impact_fx_per_unit[hit_unit]
 
 	if (not num_fx_per_unit or num_fx_per_unit < (max_hits_per_unit or 4)) and num_impact_fx < 1 then
-		self._num_impact_fx_per_unit[hit_unit] = (num_fx_per_unit and num_fx_per_unit + 1) or 1
+		self._num_impact_fx_per_unit[hit_unit] = num_fx_per_unit and num_fx_per_unit + 1 or 1
 
 		return true, num_impact_fx + 1
 	end
@@ -560,7 +560,7 @@ ActionShootPellets.server_correction_occurred = function (self)
 
 	local unit_damage_data = self._unit_damage_data
 
-	for i = 1, NUM_PELLETS, 1 do
+	for i = 1, NUM_PELLETS do
 		table.clear(unit_damage_data[i])
 	end
 
@@ -620,9 +620,9 @@ ActionShootPellets._scale_power_level_with_num_hits = function (self, shotshell_
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 		local breed_armor_type = Armor.armor_type(hit_unit, breed_or_nil)
-		local min_num_hits = (breed_armor_type and shotshell_template.min_num_hits[breed_armor_type]) or 0
+		local min_num_hits = breed_armor_type and shotshell_template.min_num_hits[breed_armor_type] or 0
 		local adjusted_num_unit_hits = math.max(min_num_hits, num_unit_hits)
-		local unit_power_level = (power_level * adjusted_num_unit_hits) / max_hits
+		local unit_power_level = power_level * adjusted_num_unit_hits / max_hits
 
 		for hit_zone_name, hit_zone_hits in pairs(hit_zones) do
 			local ratio_of_total_hits = hit_zone_hits / num_unit_hits

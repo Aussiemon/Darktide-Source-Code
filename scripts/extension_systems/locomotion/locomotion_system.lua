@@ -66,7 +66,7 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 	local attack_direction = Vector3.down()
 	local damage_profile = DamageProfileTemplates.minion_instakill
 
-	for i = 1, #units_to_kill, 1 do
+	for i = 1, #units_to_kill do
 		local unit = units_to_kill[i]
 
 		if HEALTH_ALIVE[unit] then

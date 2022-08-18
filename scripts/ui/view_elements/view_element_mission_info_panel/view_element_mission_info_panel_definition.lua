@@ -244,13 +244,13 @@ local widget_definitions = {
 			style_id = "mission_title"
 		},
 		{
-			value = "Mission Type � Mission Zone",
+			value = "Mission Type · Mission Zone",
 			value_id = "type_and_zone",
 			pass_type = "text",
 			style_id = "type_and_zone"
 		},
 		{
-			value = "\ue007 40:30",
+			value = " 40:30",
 			value_id = "time_left",
 			pass_type = "text",
 			style_id = "time_left"

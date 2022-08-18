@@ -127,7 +127,7 @@ end
 
 local _sprint_requires_press_to_interrupt_table = {}
 
-for i = 1, #ActionHandlerSettings.sprint_requires_press_to_interrupt, 1 do
+for i = 1, #ActionHandlerSettings.sprint_requires_press_to_interrupt do
 	local action_kind = ActionHandlerSettings.sprint_requires_press_to_interrupt[i]
 	_sprint_requires_press_to_interrupt_table[action_kind] = true
 end
@@ -151,7 +151,7 @@ end
 
 local _prevent_sprint_table = {}
 
-for i = 1, #ActionHandlerSettings.prevent_sprint, 1 do
+for i = 1, #ActionHandlerSettings.prevent_sprint do
 	local action_kind = ActionHandlerSettings.prevent_sprint[i]
 	_prevent_sprint_table[action_kind] = true
 end

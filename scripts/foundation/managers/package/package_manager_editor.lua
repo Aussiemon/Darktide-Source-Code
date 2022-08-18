@@ -80,7 +80,7 @@ PackageManagerEditor.update = function (self)
 
 	table.clear(self._callback_queue)
 
-	for i = 1, #callback_queue, 1 do
+	for i = 1, #callback_queue do
 		local item = callback_queue[i]
 
 		Profiler.start("PACKAGE CALLBACK")

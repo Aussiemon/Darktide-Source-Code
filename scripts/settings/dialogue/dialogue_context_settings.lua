@@ -1,18 +1,19 @@
 local Vo = require("scripts/utilities/vo")
-local dialogue_context_settings = {
-	construct = function (self, key)
-		if dialogue_context_settings[key] then
-			return table.clone(dialogue_context_settings[key])
-		else
-			return {
-				time_lived = 0,
-				delta = 0,
-				count = 0,
-				time_to_live = 30
-			}
-		end
+local dialogue_context_settings = {}
+
+dialogue_context_settings.construct = function (self, key)
+	if dialogue_context_settings[key] then
+		return table.clone(dialogue_context_settings[key])
+	else
+		return {
+			time_lived = 0,
+			delta = 0,
+			count = 0,
+			time_to_live = 30
+		}
 	end
-}
+end
+
 local killstreak_query = {}
 
 dialogue_context_settings.number_of_kills_callback = function (dialogue_context_extension, timed_counter, t)

@@ -30,7 +30,7 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 
 		local missions = missions_data.missions
 
-		for i = 1, #missions, 1 do
+		for i = 1, #missions do
 			local mission = missions[i]
 			local start = mission.start
 			local expiry = mission.expiry

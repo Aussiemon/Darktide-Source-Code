@@ -146,20 +146,21 @@ local ProjectileLocomotion = {
 
 			return rotation
 		end
-	end,
-	integrate = function (physics_world, integration_data, dt, t, is_server)
-		Profiler.start("ProjectileLocomotion_integrate")
-
-		if integration_data.integrate then
-			local previus_position = integration_data.position:unbox()
-			local new_position = ProjectileLocomotion.integrate_position(physics_world, integration_data, dt, t)
-			local _ = ProjectileLocomotion.integrate_rotation(physics_world, integration_data, dt, t)
-
-			ProjectileLocomotionUtility.check_suppresion(physics_world, integration_data, previus_position, new_position, is_server, dt, t)
-		end
-
-		Profiler.stop("ProjectileLocomotion_integrate")
 	end
 }
+
+ProjectileLocomotion.integrate = function (physics_world, integration_data, dt, t, is_server)
+	Profiler.start("ProjectileLocomotion_integrate")
+
+	if integration_data.integrate then
+		local previus_position = integration_data.position:unbox()
+		local new_position = ProjectileLocomotion.integrate_position(physics_world, integration_data, dt, t)
+		local _ = ProjectileLocomotion.integrate_rotation(physics_world, integration_data, dt, t)
+
+		ProjectileLocomotionUtility.check_suppresion(physics_world, integration_data, previus_position, new_position, is_server, dt, t)
+	end
+
+	Profiler.stop("ProjectileLocomotion_integrate")
+end
 
 return ProjectileLocomotion

@@ -12,5 +12,3 @@ DialogueLookup[DialogueLookup_n + 4] = "event_demolition_more_corruptors"
 DialogueLookup[DialogueLookup_n + 5] = "info_event_demolition_corruptors_almost_done"
 DialogueLookup[DialogueLookup_n + 6] = "mission_stockpile_bazaar"
 DialogueLookup_n = DialogueLookup_n + 6
-
-return

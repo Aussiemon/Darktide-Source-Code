@@ -115,7 +115,7 @@ local function linear_to_clip_depth(linear_depth, camera_near, camera_far)
 		return 0
 	end
 
-	return (camera_far * (linear_depth - camera_near)) / (linear_depth * (camera_far - camera_near))
+	return camera_far * (linear_depth - camera_near) / (linear_depth * (camera_far - camera_near))
 end
 
 ViewElementLevelUpRewardPresentation._get_spawn_position = function (self)
@@ -164,7 +164,7 @@ ViewElementLevelUpRewardPresentation.start = function (self)
 	if presentation_type == "item" then
 		local reward_item_id = presentation_data.reward_item_id
 		local item = MasterItems.get_item(reward_item_id)
-		local item_name = (item and item.name) or "n/a"
+		local item_name = item and item.name or "n/a"
 		local weapon_template = item and item.weapon_template
 
 		if weapon_template then

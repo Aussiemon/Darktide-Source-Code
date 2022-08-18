@@ -1,19 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Promise = require("scripts/foundation/utilities/promise")
 local CacheWrapper = class("CacheWrapper")
 local Interface = {
@@ -94,73 +78,21 @@ CacheWrapper.refresh = function (self, version, url)
 end
 
 CacheWrapper.get_version = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	return self._current_metadata and self._current_metadata.version
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-6, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 CacheWrapper.get_metadata = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	return self._current_metadata or {}
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 5-5, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 CacheWrapper.get_cached = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	fassert(self._current_value, "Function refresh() must be called and allowed to finish before get_cached() can be called")
 
 	return self._current_value
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 CacheWrapper.has_data = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	return self._current_value ~= nil
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-7, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 implements(CacheWrapper, Interface)

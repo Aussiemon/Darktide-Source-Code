@@ -40,7 +40,7 @@ GrimoireBuff.update = function (self, dt, t, portable_random)
 	if num_grims < previous_num_grims then
 		local diff = previous_num_grims - num_grims
 
-		for i = 1, diff, 1 do
+		for i = 1, diff do
 			local heal_type = DamageSettings.heal_types.blessing
 			local health_added = Health.add(self._unit, 30, heal_type)
 

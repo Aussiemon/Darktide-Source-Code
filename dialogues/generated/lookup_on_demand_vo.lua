@@ -90,5 +90,3 @@ DialogueLookup[DialogueLookup_n + 43] = "smart_tag_vo_small_grenade"
 DialogueLookup[DialogueLookup_n + 44] = "smart_tag_vo_station_health"
 DialogueLookup[DialogueLookup_n + 45] = "smart_tag_vo_station_health_without_battery"
 DialogueLookup_n = DialogueLookup_n + 45
-
-return

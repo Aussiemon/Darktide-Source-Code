@@ -19,7 +19,7 @@ AchievementFactory.create_family_from_triggers = function (description, ui_type,
 
 	local id_array = {}
 
-	for i = 1, achievement_count, 1 do
+	for i = 1, achievement_count do
 		id_array[i] = _achievement_id_from_description(description, i)
 	end
 
@@ -28,7 +28,7 @@ AchievementFactory.create_family_from_triggers = function (description, ui_type,
 	local description_id = _description_id_from_description(description)
 	local achievements = {}
 
-	for i = 1, achievement_count, 1 do
+	for i = 1, achievement_count do
 		local id = id_array[i]
 		local trigger_component = triggers[i]
 		local visibility_component = VisibilityChain:new(id, show_in_progress, id_array[i - 1], id_array[i + 1])
@@ -40,7 +40,7 @@ AchievementFactory.create_family_from_triggers = function (description, ui_type,
 			}
 		end
 
-		local previous_ids = (i > 1 and table.slice(id_array, 1, i - 1)) or nil
+		local previous_ids = i > 1 and table.slice(id_array, 1, i - 1) or nil
 		achievements[i] = AchievementDefinition:new(id, ui_type, category, is_platform, trigger_component, visibility_component, description_id, description_table, previous_ids)
 	end
 
@@ -54,7 +54,7 @@ AchievementFactory.create_family = function (description, ui_type, category, Tri
 
 	local triggers = {}
 
-	for i = 1, achievement_count, 1 do
+	for i = 1, achievement_count do
 		triggers[i] = TriggerType:new(trigger, targets[i])
 	end
 
@@ -62,7 +62,7 @@ AchievementFactory.create_family = function (description, ui_type, category, Tri
 end
 
 AchievementFactory.create_unique = function (id, ui_type, category, trigger_component, optional_is_platform, optional_hidden)
-	local visibility_component = (optional_hidden and VisibilityHidden:new(id)) or VisibilityAlways:new()
+	local visibility_component = optional_hidden and VisibilityHidden:new(id) or VisibilityAlways:new()
 	local is_platform = optional_is_platform or false
 
 	return AchievementDefinition:new(id, ui_type, category, is_platform, trigger_component, visibility_component)

@@ -100,7 +100,7 @@ local function _set_weapon_tweaks(modifier_definition, weapon_tweaks, value)
 				local num_prior_tweaks = #prior_tweaks
 				local num_tweaks = #tweaks
 
-				for j = 1, num_tweaks, 1 do
+				for j = 1, num_tweaks do
 					if value then
 						local tweak = table.clone(tweaks[j])
 
@@ -117,7 +117,7 @@ local function _set_weapon_tweaks(modifier_definition, weapon_tweaks, value)
 end
 
 local function _apply_modifiers_to_weapon_tweaks(weapon_modifiers, modifier_definitions, weapon_tweaks, weapon_name)
-	for i = 1, #weapon_modifiers, 1 do
+	for i = 1, #weapon_modifiers do
 		local modifier_data = weapon_modifiers[i]
 		local modifier_name = modifier_data.name
 		local modifier_definition = modifier_definitions[modifier_name]
@@ -151,7 +151,7 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 	local overclock_modifiers = {}
 
 	if overclock_definitions then
-		for i = 1, #overclocks, 1 do
+		for i = 1, #overclocks do
 			local overclock_data = overclocks[i]
 			local overclock_name = overclock_data.name
 			local overclock_definition = overclock_definitions[overclock_name]
@@ -168,7 +168,7 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 
 	local base_stat_values = {}
 
-	for i = 1, #base_stats, 1 do
+	for i = 1, #base_stats do
 		local base_stat_data = base_stats[i]
 		local base_stat_name = base_stat_data.name
 		local base_stat_value = base_stat_data.value
@@ -249,7 +249,7 @@ WeaponTweakTemplates.extract_trait_buffs = function (weapon_template, buffs, tra
 	if not use_debug then
 		local item_definitions = MasterItems.get_cached()
 
-		for i = 1, #traits, 1 do
+		for i = 1, #traits do
 			local trait = traits[i]
 			local trait_item_id = trait.id
 			local rarity = trait.rarity or 1
@@ -265,7 +265,7 @@ WeaponTweakTemplates.extract_trait_buffs = function (weapon_template, buffs, tra
 			end
 		end
 	else
-		for i = 1, #debug_traits, 1 do
+		for i = 1, #debug_traits do
 			local trait_data = debug_traits[i]
 			local trait_name = trait_data.name
 			local rarity = trait_data.rarity
@@ -401,12 +401,12 @@ function _lerp_values_for_template(tweaks, override_lerp_value)
 	for _, trait in pairs(tweaks) do
 		local num_entries = #trait
 
-		for i = 1, num_entries, 1 do
+		for i = 1, num_entries do
 			local path = lerp_values
 			local entry = trait[i]
 			local depth = #entry
 
-			for j = 1, depth - 2, 1 do
+			for j = 1, depth - 2 do
 				local key = entry[j]
 				local existing_path = path[key]
 
@@ -478,7 +478,7 @@ function _lerp_entries_recursive(template, lerp_values_or_nil, default_lerp_valu
 			local lerpable_value = lerp_basic and lerp_perfect
 
 			if lerpable_value then
-				local t = (lerp_values_or_nil and lerp_values_or_nil[key]) or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
+				local t = lerp_values_or_nil and lerp_values_or_nil[key] or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
 
 				if type(lerp_basic) == "table" then
 					template[key] = _lerp_array(lerp_basic, lerp_perfect, t)
@@ -500,7 +500,7 @@ function _lerp_array(array_min, array_max, t)
 
 	local array = Script.new_array(num_entries)
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local min = array_min[i]
 		local max = array_max[i]
 		array[i] = math.lerp(min, max, t)

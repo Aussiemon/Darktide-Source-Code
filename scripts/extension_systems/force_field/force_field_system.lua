@@ -57,7 +57,7 @@ ForceFieldSystem.on_add_extension = function (self, world, unit, extension_name,
 	if should_remove_previous_shields then
 		local extensions = self:get_extensions_by_owner_unit(owner_unit)
 
-		for i = 1, #extensions, 1 do
+		for i = 1, #extensions do
 			local previous_extension = extensions[i]
 
 			if previous_extension ~= extension then
@@ -151,7 +151,7 @@ ForceFieldSystem._check_unit_collisions = function (self)
 		local extension_data = self._extension_data[force_field_unit]
 		local units_inside = extension_data.units_inside
 
-		for i = 1, extension_data.num_results, 1 do
+		for i = 1, extension_data.num_results do
 			local unit = extension_data.broadphase_results[i]
 			local unit_pos = POSITION_LOOKUP[unit]
 

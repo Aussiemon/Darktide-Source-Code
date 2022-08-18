@@ -25,7 +25,7 @@ AimProjectileAdsEffects._trajectory_settings = function (self, t)
 	local is_aiming_down_sights = alternate_fire_component and alternate_fire_component.is_active
 	local aiming_down_sights_start_time = alternate_fire_component and alternate_fire_component.start_t
 	local aiming_down_sights_time = t - aiming_down_sights_start_time
-	local delay = (projectile_aim_effect_settings and projectile_aim_effect_settings.arc_show_delay) or 0
+	local delay = projectile_aim_effect_settings and projectile_aim_effect_settings.arc_show_delay or 0
 	local is_timing_right = aiming_down_sights_time > delay
 
 	if not is_aiming_down_sights or not is_timing_right then

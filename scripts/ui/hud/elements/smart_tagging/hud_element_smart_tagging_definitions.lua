@@ -320,7 +320,7 @@ local widget_definitions = {
 				style.angle = math.pi - (content.angle or 0)
 				local color = style.color
 				local ignore_alpha = true
-				local anim_hover_progress = (content.force_hover and 1) or 0
+				local anim_hover_progress = content.force_hover and 1 or 0
 
 				ColorUtilities.color_lerp(default_color, hover_color, anim_hover_progress, color, ignore_alpha)
 			end

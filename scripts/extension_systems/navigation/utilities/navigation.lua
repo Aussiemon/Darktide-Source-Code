@@ -48,7 +48,7 @@ local Navigation = {
 		if query_output then
 			local tag_volume_n = GwNavQueries.nav_tag_volume_count(query_output)
 
-			for i = 1, tag_volume_n, 1 do
+			for i = 1, tag_volume_n do
 				local tag_volume = GwNavQueries.nav_tag_volume(query_output, i)
 				local _, _, tag_volume_layer_id, _, _ = GwNavTagVolume.navtag(tag_volume)
 
@@ -63,60 +63,64 @@ local Navigation = {
 		end
 
 		return result
-	end,
-	nav_tag_volume_points_center = function (points)
-		local num_points = #points
-		local center_pos = Vector3(0, 0, 0)
-
-		for i = 1, num_points, 1 do
-			center_pos = center_pos + Vector3(points[i][1], points[i][2], points[i][3])
-		end
-
-		return center_pos / num_points
-	end,
-	add_nav_data = function (nav_world, nav_data, level_name)
-		local nav_data_found = false
-		local num_nav_data = LevelResource.navdata_count(level_name)
-
-		for i = 1, num_nav_data, 1 do
-			local nav_data_name, _ = LevelResource.navdata_resource(level_name, i)
-
-			if Application.can_get_resource_id("navdata", nav_data_name) then
-				nav_data[#nav_data + 1] = GwNavWorld.add_navdata(nav_world, nav_data_name)
-				nav_data_found = true
-			end
-		end
-
-		local num_nested_levels = LevelResource.nested_level_count(level_name)
-
-		for i = 1, num_nested_levels, 1 do
-			local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
-			local result = Navigation.add_nav_data(nav_world, nav_data, nested_level_name)
-			nav_data_found = nav_data_found or result
-		end
-
-		return nav_data_found
-	end,
-	vector3s_to_arrays = function (vectors)
-		local arrays = {}
-
-		for i = 1, #vectors, 1 do
-			arrays[i] = {
-				Vector3.to_elements(vectors[i])
-			}
-		end
-
-		return arrays
-	end,
-	vector3s_from_arrays = function (arrays)
-		local vectors = {}
-
-		for i = 1, #arrays, 1 do
-			vectors[i] = Vector3.from_array(arrays[i])
-		end
-
-		return vectors
 	end
 }
+
+Navigation.nav_tag_volume_points_center = function (points)
+	local num_points = #points
+	local center_pos = Vector3(0, 0, 0)
+
+	for i = 1, num_points do
+		center_pos = center_pos + Vector3(points[i][1], points[i][2], points[i][3])
+	end
+
+	return center_pos / num_points
+end
+
+Navigation.add_nav_data = function (nav_world, nav_data, level_name)
+	local nav_data_found = false
+	local num_nav_data = LevelResource.navdata_count(level_name)
+
+	for i = 1, num_nav_data do
+		local nav_data_name, _ = LevelResource.navdata_resource(level_name, i)
+
+		if Application.can_get_resource_id("navdata", nav_data_name) then
+			nav_data[#nav_data + 1] = GwNavWorld.add_navdata(nav_world, nav_data_name)
+			nav_data_found = true
+		end
+	end
+
+	local num_nested_levels = LevelResource.nested_level_count(level_name)
+
+	for i = 1, num_nested_levels do
+		local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
+		local result = Navigation.add_nav_data(nav_world, nav_data, nested_level_name)
+		nav_data_found = nav_data_found or result
+	end
+
+	return nav_data_found
+end
+
+Navigation.vector3s_to_arrays = function (vectors)
+	local arrays = {}
+
+	for i = 1, #vectors do
+		arrays[i] = {
+			Vector3.to_elements(vectors[i])
+		}
+	end
+
+	return arrays
+end
+
+Navigation.vector3s_from_arrays = function (arrays)
+	local vectors = {}
+
+	for i = 1, #arrays do
+		vectors[i] = Vector3.from_array(arrays[i])
+	end
+
+	return vectors
+end
 
 return Navigation

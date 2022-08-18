@@ -62,12 +62,12 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 		if failure_conditions_met then
 			local disabled_grace_time = settings.mission_end_grace_time_disabled
 			local dead_grace_time = settings.mission_end_grace_time_dead
-			local grace_time = (all_players_disabled and disabled_grace_time) or (all_players_dead and dead_grace_time) or 0
-			local next_state = (all_players_disabled and "about_to_fail_disabled") or "about_to_fail_dead"
+			local grace_time = all_players_disabled and disabled_grace_time or all_players_dead and dead_grace_time or 0
+			local next_state = all_players_disabled and "about_to_fail_disabled" or "about_to_fail_dead"
 			self._end_t = t + grace_time
 
 			self:_change_state(next_state)
-			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", (all_players_dead and "Y") or "N", (all_players_disabled and "Y") or "N", grace_time)
+			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", all_players_dead and "Y" or "N", all_players_disabled and "Y" or "N", grace_time)
 		elseif completion_conditions_met then
 			self:_change_state("outro_cinematic")
 			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_win)
@@ -80,7 +80,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 			self._end_t = t + dead_grace_time
 
 			self:_change_state("about_to_fail_dead")
-			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", (all_players_dead and "Y") or "N", (all_players_disabled and "Y") or "N", dead_grace_time)
+			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", all_players_dead and "Y" or "N", all_players_disabled and "Y" or "N", dead_grace_time)
 		elseif not failure_conditions_met then
 			_log("[evaluate_end_conditions] Failure conditions interrupted")
 
@@ -104,16 +104,16 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 		end
 	elseif current_state == "done" then
 		fassert(failure_conditions_met or completion_conditions_met, "Trying to finish game mode without failing or completing it!")
-		_log("[evaluate_end_conditions] Completing game mode with result %q", (failure_conditions_met and "lost") or (completion_conditions_met and "won"))
+		_log("[evaluate_end_conditions] Completing game mode with result %q", failure_conditions_met and "lost" or completion_conditions_met and "won")
 
-		return true, (failure_conditions_met and "lost") or (completion_conditions_met and "won")
+		return true, failure_conditions_met and "lost" or completion_conditions_met and "won"
 	end
 
 	return false
 end
 
 GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_players, alive_players, ignore_bots)
-	for i = 1, num_alive_players, 1 do
+	for i = 1, num_alive_players do
 		local player = alive_players[i]
 		local player_unit = player.player_unit
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
@@ -133,7 +133,7 @@ GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_
 end
 
 GameModeCoopCompleteObjective._all_players_dead = function (self, num_alive_players, alive_players, ignore_bots)
-	for i = 1, num_alive_players, 1 do
+	for i = 1, num_alive_players do
 		local player = alive_players[i]
 		local player_unit = player.player_unit
 		local is_bot = not ignore_bots and not player:is_human_controlled()
@@ -158,7 +158,7 @@ GameModeCoopCompleteObjective._failure_conditions_met = function (self)
 
 		return all_players_disabled or all_players_dead or has_failed, all_players_disabled, all_players_dead
 	else
-		for i = 1, num_alive_players, 1 do
+		for i = 1, num_alive_players do
 			local player = alive_players[i]
 
 			if player:is_human_controlled() then

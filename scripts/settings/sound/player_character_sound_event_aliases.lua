@@ -1504,7 +1504,7 @@ local events = {
 			"is_critical_strike"
 		},
 		events = {
-			true = "wwise/events/weapon/play_indicator_crit_melee_swing"
+			["true"] = "wwise/events/weapon/play_indicator_crit_melee_swing"
 		}
 	},
 	melee_blocked_attack = {
@@ -1589,7 +1589,7 @@ local events = {
 		},
 		events = {
 			default = "wwise/events/weapon/play_weapon_silence",
-			true = {
+			["true"] = {
 				default = "wwise/events/weapon/play_indicator_crit_melee_hit",
 				combataxe_p3_m1 = "wwise/events/weapon/play_indicator_crit_melee_hit_slashing",
 				combatsword_p1_m1 = "wwise/events/weapon/play_indicator_crit_melee_hit_slashing",
@@ -1614,7 +1614,7 @@ local events = {
 			"is_critical_strike"
 		},
 		events = {
-			true = "wwise/events/weapon/play_indicator_crit_melee_hit"
+			["true"] = "wwise/events/weapon/play_indicator_crit_melee_hit"
 		}
 	},
 	flyby_stop = {

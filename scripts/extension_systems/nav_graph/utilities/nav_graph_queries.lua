@@ -68,7 +68,7 @@ end
 
 local function _extract_hit(hits)
 	if hits then
-		for i = 1, #hits, 1 do
+		for i = 1, #hits do
 			local hit = hits[i]
 
 			if hit then
@@ -101,7 +101,7 @@ local function _calculate_ledge_type(physics_world, ledge_position, ledge_normal
 	local hit1 = _extract_hit(PhysicsWorld.raycast(physics_world, edge_detect_position1, Vector3.down(), edge_detect_distance, "all", "collision_filter", "filter_ledge_test_simple"))
 	local edge_detect_position2 = ledge_position - ledge_normal * 0.18 + Vector3.up()
 	local hit2 = _extract_hit(PhysicsWorld.raycast(physics_world, edge_detect_position2, Vector3.down(), edge_detect_distance, "all", "collision_filter", "filter_ledge_test_simple"))
-	local hit_sum = ((hit1 and 1) or 0) + ((hit2 and 1) or 0)
+	local hit_sum = (hit1 and 1 or 0) + (hit2 and 1 or 0)
 	local is_on_edge = hit_sum == 1
 	local is_on_narrow_fence = hit_sum == 0
 
@@ -329,7 +329,7 @@ local function _calculate_jump_exit(nav_world, physics_world, calculation_params
 	local jump_across_max_length = calculation_params.jump_across_max_length
 	local end_index = (jump_across_max_length - jump_across_min_length) / 0.5
 
-	for i = 0, end_index, 1 do
+	for i = 0, end_index do
 		local exit_check_distance = jump_across_min_length + 0.5 * i
 		local hit_horizontal, horizontal_hit_pos = _extract_hit(PhysicsWorld.raycast(physics_world, jump_start_position_check, -ledge_normal, exit_check_distance, "all", "collision_filter", "filter_ledge_test"))
 
@@ -368,6 +368,7 @@ local function _is_jump_midpoint_unobstructed(physics_world, jump_start_position
 
 	if hit_down then
 		if distance_down > 0.3 then
+			-- Nothing
 		end
 
 		return false
@@ -387,7 +388,7 @@ local function _calculate_vault_ground_positions(physics_world, ledge_normal, le
 
 	local half_up = Vector3.up() * 0.5
 	local vertical_distance = 4
-	local hit3 = _extract_hit(PhysicsWorld.raycast(physics_world, (ledge_position + ledge_normal) - half_up, ledge_normal, vertical_distance, "all", "collision_filter", "filter_ledge_test"))
+	local hit3 = _extract_hit(PhysicsWorld.raycast(physics_world, ledge_position + ledge_normal - half_up, ledge_normal, vertical_distance, "all", "collision_filter", "filter_ledge_test"))
 	local hit4 = _extract_hit(PhysicsWorld.raycast(physics_world, ledge_position - ledge_normal - half_up, -ledge_normal, vertical_distance, "all", "collision_filter", "filter_ledge_test"))
 
 	if hit3 or hit4 then
@@ -532,7 +533,7 @@ local function _calculate_smart_objects_from_node_pair(nav_world, physics_world,
 	if num_splits > 0 then
 		calculation_params.ledge_normal = ledge_normal
 
-		for i = 0, num_splits, 1 do
+		for i = 0, num_splits do
 			local temp_byte_count = Script_temp_byte_count()
 			local ledge_t = ledge_t_start + i * ledge_t_stride
 			calculation_params.ledge_position = Vector3.lerp(position_a, position_b, ledge_t)
@@ -551,7 +552,7 @@ local function _check_and_remove_nearby_ledge(out_smart_objects, exit_positions,
 	local Vector3_distance = Vector3.distance
 	local Vector3Box_unbox = Vector3Box.unbox
 
-	for i = 1, #exit_positions, 1 do
+	for i = 1, #exit_positions do
 		local distance = Vector3_distance(entrance_position, Vector3Box_unbox(exit_positions[i]))
 		local max_distance_to_other_exit = calculation_params.cover_max_distance_to_other_exit
 
@@ -580,7 +581,7 @@ local function _calculate_smart_objects_from_node_list(nav_world, physics_world,
 	local up_vector = Vector3.up()
 	local node_list = calculation_params.node_list
 
-	for i = 1, #node_list, 1 do
+	for i = 1, #node_list do
 		local control_point_node = node_list[i]
 		local temp_byte_count = Script_temp_byte_count()
 
@@ -596,7 +597,7 @@ local function _calculate_smart_objects_from_node_list(nav_world, physics_world,
 			if num_splits > 0 then
 				calculation_params.ledge_normal = ledge_normal
 
-				for i = 0, num_splits, 1 do
+				for i = 0, num_splits do
 					local ledge_t = ledge_t_start + i * ledge_t_stride
 					local ledge_position = Vector3.lerp(position_a, position_b, ledge_t)
 					calculation_params.ledge_position = ledge_position
@@ -729,7 +730,7 @@ local function _get_smart_object_calculation_parameters(unit, component)
 		local unit_has_node = Unit.has_node
 		local unit_node = Unit.node
 
-		for i = 1, #node_list, 1 do
+		for i = 1, #node_list do
 			local control_point_name = node_list[i]
 			local temp_byte_count = Script_temp_byte_count()
 

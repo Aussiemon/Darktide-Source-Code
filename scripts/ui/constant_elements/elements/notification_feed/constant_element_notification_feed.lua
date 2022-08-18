@@ -54,7 +54,7 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 	local event_manager = Managers.event
 	local events = ConstantElementNotificationFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -85,7 +85,7 @@ ConstantElementNotificationFeed.event_add_notification_message = function (self,
 
 		local rarity_frame_texture, rarity_side_texture = ItemUtils.rarity_textures(data)
 		local widget = notification.widget
-		slot16 = widget.style.icon
+		local icon_style = widget.style.icon
 	end
 
 	if callback then
@@ -117,7 +117,7 @@ ConstantElementNotificationFeed.destroy = function (self)
 	local event_manager = Managers.event
 	local events = ConstantElementNotificationFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])
@@ -157,7 +157,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 	local start_index = nil
 
 	if num_notifications > 0 then
-		for i = 1, num_notifications, 1 do
+		for i = 1, num_notifications do
 			if priority_order <= notifications[i].priority_order then
 				start_index = i
 
@@ -180,7 +180,7 @@ end
 ConstantElementNotificationFeed._notification_by_id = function (self, notification_id, remove)
 	local notifications = self._notifications
 
-	for i = 1, #notifications, 1 do
+	for i = 1, #notifications do
 		local notification = notifications[i]
 
 		if notification.id == notification_id then
@@ -242,7 +242,7 @@ ConstantElementNotificationFeed._align_notification_widgets = function (self, dt
 	local offset_y = 0
 	local notifications = self._notifications
 
-	for i = 1, #notifications, 1 do
+	for i = 1, #notifications do
 		local notification = notifications[i]
 
 		if notification then

@@ -16,7 +16,7 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 	self._spline_path_indices_by_name = {}
 	self._start_spline_indices = {}
 	self._spline_connection_radius = LevelEventSettings.spline_follower.spline_connection_radius
-	self._seed = (self._is_server and system_init_data.level_seed) or nil
+	self._seed = self._is_server and system_init_data.level_seed or nil
 	local network_event_delegate = context.network_event_delegate
 
 	network_event_delegate:register_session_events(self, unpack(RPCS))
@@ -49,7 +49,7 @@ SplineFollowerSystem.hot_join_sync = function (self, sender, channel)
 		local current_spline_index = extension:current_spline_index()
 		local is_moving = extension:is_moving()
 		local objective_name = extension:objective_name()
-		local objective_name_id = (objective_name and NetworkLookup.mission_objective_names[objective_name]) or 1
+		local objective_name_id = objective_name and NetworkLookup.mission_objective_names[objective_name] or 1
 
 		RPC.rpc_spline_follower_hot_join_sync(channel, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id)
 	end
@@ -76,11 +76,11 @@ end
 SplineFollowerSystem._retrieve_splines_from_level = function (self, spline_names, level)
 	local splines = {}
 
-	for i = 1, #spline_names, 1 do
+	for i = 1, #spline_names do
 		local spline_name = spline_names[i]
 		local spline = Level.spline(level, spline_name)
 
-		for n = 1, #spline, 1 do
+		for n = 1, #spline do
 			local boxed_spline = Vector3Box(spline[n])
 			spline[n] = boxed_spline
 		end
@@ -117,7 +117,7 @@ SplineFollowerSystem._setup_graph_with_connected_splines = function (self, splin
 
 	table.clear(start_spline_indices)
 
-	for n = 1, #splines, 1 do
+	for n = 1, #splines do
 		local spline = splines[n]
 		local spline_start_position = spline[1]:unbox()
 		local spline_end_position = spline[#spline]:unbox()
@@ -125,7 +125,7 @@ SplineFollowerSystem._setup_graph_with_connected_splines = function (self, splin
 
 		graph:add_node(n)
 
-		for i = 1, #splines, 1 do
+		for i = 1, #splines do
 			if i ~= n then
 				local comparing_spline = splines[i]
 				local comparing_spline_start_position = comparing_spline[1]:unbox()
@@ -183,7 +183,7 @@ SplineFollowerSystem._next_random_spline_index = function (self, spline_indices,
 end
 
 SplineFollowerSystem.has_spline_path = function (self, name)
-	return (self._spline_path_indices_by_name[name] and true) or false
+	return self._spline_path_indices_by_name[name] and true or false
 end
 
 SplineFollowerSystem.spline_path_start_position_and_rotation = function (self, name)
@@ -205,7 +205,7 @@ SplineFollowerSystem.spline_path_end_positions = function (self, name)
 	local splines = self._splines_by_name[name]
 	local spline_path_end_positions = {}
 
-	for i = 1, #spline_path_indices, 1 do
+	for i = 1, #spline_path_indices do
 		local spline_path_index = spline_path_indices[i]
 		local spline = splines[spline_path_index]
 		spline_path_end_positions[#spline_path_end_positions + 1] = spline[#spline]:unbox()
@@ -245,7 +245,7 @@ end
 SplineFollowerSystem.rpc_spline_follower_hot_join_sync = function (self, channel_id, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local unit_extension = self._unit_to_extension_map[unit]
-	local objective_name = (is_moving and NetworkLookup.mission_objective_names[objective_name_id]) or ""
+	local objective_name = is_moving and NetworkLookup.mission_objective_names[objective_name_id] or ""
 
 	unit_extension:hot_join_sync(current_spline_index, is_moving, objective_name)
 end

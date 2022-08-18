@@ -32,7 +32,7 @@ HudElementPlayerCompass._cb_register_world_markers_list = function (self, world_
 	if active_presentation_data then
 		local marker_id = active_presentation_data.marker_id
 
-		for i = 1, #world_markers, 1 do
+		for i = 1, #world_markers do
 			local marker = world_markers[i]
 
 			if marker.id == marker_id then
@@ -47,7 +47,7 @@ end
 HudElementPlayerCompass._find_party_nameplate_by_unit = function (self, unit)
 	local world_markers_list = self._world_markers_list
 
-	for i = 1, #world_markers_list, 1 do
+	for i = 1, #world_markers_list do
 		local marker = world_markers_list[i]
 		local template = marker.template
 		local template_name = template.name
@@ -221,7 +221,7 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 	local degree_direction_abbreviations = HudElementPlayerCompassSettings.degree_direction_abbreviations
 	local party_icons_render_buffer = self:_get_party_icons_render_buffer(dt, t, ui_renderer)
 
-	for i = -visible_steps, visible_steps, 1 do
+	for i = -visible_steps, visible_steps do
 		local draw_index = start_index + i
 		local read_index = (draw_index - 1) % num_steps + 1
 		local next_read_index = (draw_index - 1) % num_steps + 2
@@ -230,15 +230,15 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 		if area_position[1] <= local_x + size[1] and local_x <= area_position[1] + area_size[1] then
 			local distance_from_center = math.abs(local_x - area_middle_x)
 			local distance_from_center_norm = distance_from_center / (area_size[1] * 0.5)
-			local alpha_fraction = (step_fade_start <= distance_from_center_norm and 1 - math.min((distance_from_center_norm - step_fade_start) / (1 - step_fade_start), 1)) or 1
+			local alpha_fraction = step_fade_start <= distance_from_center_norm and 1 - math.min((distance_from_center_norm - step_fade_start) / (1 - step_fade_start), 1) or 1
 			local alpha = 255 * alpha_fraction
 			step_color_table[1] = alpha
 			direction_icon_color_table[1] = alpha
 			local current_degree = read_index * degrees_per_step
 			local degree_icon = nil
 			local degree_abbreviation = not degree_icon and degree_direction_abbreviations[current_degree]
-			local font_size = (degree_abbreviation and font_size_big) or font_size_small
-			size[2] = (degree_abbreviation and step_height_large) or step_height_small
+			local font_size = degree_abbreviation and font_size_big or font_size_small
+			size[2] = degree_abbreviation and step_height_large or step_height_small
 			position[1] = local_x + step_width_offset
 			position[2] = area_position[2]
 
@@ -270,7 +270,7 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 						local icon_x = local_x + marker_spacing * degree_difference_fraction
 						local icon_distance_from_center = math.abs(icon_x - area_middle_x)
 						local icon_distance_from_center_norm = icon_distance_from_center / (area_size[1] * 0.5)
-						local icon_alpha_fraction = (step_fade_start <= icon_distance_from_center_norm and 1 - math.min((icon_distance_from_center_norm - step_fade_start) / (1 - step_fade_start), 1)) or 1
+						local icon_alpha_fraction = step_fade_start <= icon_distance_from_center_norm and 1 - math.min((icon_distance_from_center_norm - step_fade_start) / (1 - step_fade_start), 1) or 1
 						local icon_alpha = 255 * icon_alpha_fraction
 
 						self:_draw_party_icon(dt, t, ui_renderer, marker, icon_x, area_position[2], icon_alpha)

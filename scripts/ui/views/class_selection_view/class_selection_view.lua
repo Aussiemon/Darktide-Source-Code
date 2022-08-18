@@ -78,7 +78,7 @@ ClassSelectionView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -159,7 +159,7 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	if domain_options_widgets then
-		for i = 1, #domain_options_widgets, 1 do
+		for i = 1, #domain_options_widgets do
 			local widget = domain_options_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -254,7 +254,7 @@ ClassSelectionView._handle_input = function (self, input_service)
 
 	if not input_handled then
 		local new_selection_index, current_selection_index = nil
-		current_selection_index = (self._selected_domain and table.index_of(domain_options, self._selected_domain)) or 1
+		current_selection_index = self._selected_domain and table.index_of(domain_options, self._selected_domain) or 1
 		num_options = #domain_options
 
 		if input_service:get("navigate_left_continuous") or input_service:get("navigate_primary_left_pressed") then
@@ -290,7 +290,7 @@ ClassSelectionView._create_domain_option_widgets = function (self)
 	local widget_left = self:_create_widget("domain_select_left", domain_selection_definition.left)
 	widget_left.offset[1] = -ClassSelectionViewSettings.domain_select_spacing
 
-	for i = 1, num_options, 1 do
+	for i = 1, num_options do
 		local option = options[i]
 		local name = "domain_option_" .. i
 		local widget = self:_create_widget(name, domain_option_definition)
@@ -349,7 +349,7 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 
 	local domain_options_widgets = self._domain_options_widgets
 
-	for i = 1, #domain_options_widgets, 1 do
+	for i = 1, #domain_options_widgets do
 		local widget = domain_options_widgets[i]
 		local content = widget.content
 		content.hotspot.is_focused = selected_domain.archetype_title == content.archetype_title
@@ -364,7 +364,7 @@ ClassSelectionView._update_domain_info = function (self)
 	widgets_by_name.domain_info.content.title = Localize(selected_domain.archetype_title)
 	widgets_by_name.domain_info.content.description = Localize(selected_domain.archetype_description)
 
-	for i = 1, #self._domain_options, 1 do
+	for i = 1, #self._domain_options do
 		local domain_name = self._domain_options[i].name
 		widgets_by_name[domain_name .. "_corners"].content.visible = domain_name == selected_domain.name
 	end
@@ -372,7 +372,7 @@ end
 
 ClassSelectionView._destroy_domain_option_widgets = function (self)
 	if self._domain_options_widgets then
-		for i = 1, #self._domain_options_widgets, 1 do
+		for i = 1, #self._domain_options_widgets do
 			local widget = self._domain_options_widgets[i]
 
 			self:_unregister_widget_name(widget.name)
@@ -380,7 +380,7 @@ ClassSelectionView._destroy_domain_option_widgets = function (self)
 	end
 
 	if self._domain_options_select_widget then
-		for i = 1, #self._domain_options_select_widget, 1 do
+		for i = 1, #self._domain_options_select_widget do
 			local widget = self._domain_options_select_widget[i]
 
 			self:_unregister_widget_name(widget.name)

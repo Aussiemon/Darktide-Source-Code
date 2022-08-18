@@ -354,7 +354,7 @@ for name, template in pairs(hit_scan_templates) do
 	if template.collision_tests then
 		fassert(#template.collision_tests, "Hit scan template %q has empty 'collision_tests' setting", name)
 
-		for i = 1, #template.collision_tests, 1 do
+		for i = 1, #template.collision_tests do
 			local config = template.collision_tests[i]
 
 			fassert(config.test, "Hit scan template %q is missing 'depth' setting under 'collision_tests' entry %d", name, i)

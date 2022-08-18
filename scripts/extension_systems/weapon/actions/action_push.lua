@@ -82,7 +82,7 @@ ActionPush._push = function (self, t)
 
 		table.clear(hit_units)
 
-		for i = 1, num_actors, 1 do
+		for i = 1, num_actors do
 			local actor = actors[i]
 			local unit = Actor.unit(actor)
 			local owned_by_death_manager = _owned_by_death_manager(unit)
@@ -138,7 +138,7 @@ ActionPush._push = function (self, t)
 	end
 
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
-	local push_cost = (weapon_stamina_template and weapon_stamina_template.push_cost) or math.huge
+	local push_cost = weapon_stamina_template and weapon_stamina_template.push_cost or math.huge
 
 	Stamina.drain(self._player_unit, push_cost, t)
 	self:_pay_warp_charge_cost(t)

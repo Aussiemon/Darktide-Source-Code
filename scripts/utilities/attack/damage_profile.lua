@@ -65,8 +65,8 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 	local from_target_settings_near, from_target_settings_far, adm_near, adm_far = nil
 	local target_adm_ranged = target_settings.armor_damage_modifier_ranged
 	local adm_ranged = damage_profile.armor_damage_modifier_ranged
-	local target_settings_adm_near = (target_adm_ranged and target_adm_ranged.near and target_adm_ranged.near[power_type] and target_adm_ranged.near[power_type][armor_type]) or nil
-	local target_settings_adm_far = (target_adm_ranged and target_adm_ranged.far and target_adm_ranged.far[power_type] and target_adm_ranged.far[power_type][armor_type]) or nil
+	local target_settings_adm_near = target_adm_ranged and target_adm_ranged.near and target_adm_ranged.near[power_type] and target_adm_ranged.near[power_type][armor_type] or nil
+	local target_settings_adm_far = target_adm_ranged and target_adm_ranged.far and target_adm_ranged.far[power_type] and target_adm_ranged.far[power_type][armor_type] or nil
 
 	if target_settings_adm_near then
 		adm_near = target_settings_adm_near
@@ -88,8 +88,8 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 	local lerp_value, armor_damage_modifier = nil
 
 	if should_calculate_adm_ranged then
-		local near_lerp_values = (from_target_settings_near and target_settings_lerp_values) or damage_profile_lerp_values
-		local far_lerp_values = (from_target_settings_far and target_settings_lerp_values) or damage_profile_lerp_values
+		local near_lerp_values = from_target_settings_near and target_settings_lerp_values or damage_profile_lerp_values
+		local far_lerp_values = from_target_settings_far and target_settings_lerp_values or damage_profile_lerp_values
 		local near = adm_near
 		local far = adm_far
 		local near_is_lerpable = type(near) == "table"
@@ -109,7 +109,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		armor_damage_modifier = math.lerp(near, far, dropoff_scalar or 0)
 	else
 		local adm = target_settings.armor_damage_modifier
-		local target_settings_adm = (adm and adm[power_type] and adm[power_type][armor_type]) or nil
+		local target_settings_adm = adm and adm[power_type] and adm[power_type][armor_type] or nil
 		local lerp_values = nil
 
 		if target_settings_adm then
@@ -117,7 +117,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 			armor_damage_modifier = target_settings_adm
 		else
 			local damage_profile_adm = damage_profile.armor_damage_modifier
-			local damage_profile_settings_adm = (damage_profile_adm and damage_profile_adm[power_type] and damage_profile_adm[power_type][armor_type]) or nil
+			local damage_profile_settings_adm = damage_profile_adm and damage_profile_adm[power_type] and damage_profile_adm[power_type][armor_type] or nil
 			lerp_values = damage_profile_lerp_values
 			armor_damage_modifier = damage_profile_settings_adm or PowerLevelSettings.default_armor_damage_modifier[power_type][armor_type]
 		end
@@ -239,7 +239,7 @@ DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, tar
 
 	local lerp_values = weapon_extension:damage_profile_lerp_values(damage_profile.name)
 	local targets = target_index_or_nil and lerp_values.targets
-	local target_settings_lerp_values = (targets and (targets[target_index_or_nil] or targets.default_target)) or TARGET_SETTINGS_NO_LERP_VALUES
+	local target_settings_lerp_values = targets and (targets[target_index_or_nil] or targets.default_target) or TARGET_SETTINGS_NO_LERP_VALUES
 	lerp_values.current_target_settings_lerp_values = target_settings_lerp_values
 
 	return lerp_values
@@ -254,7 +254,7 @@ DamageProfile.lerp_value_from_path = function (lerp_values, ...)
 	local local_lerp_values = lerp_values
 	local depth = select("#", ...)
 
-	for i = 1, depth - 1, 1 do
+	for i = 1, depth - 1 do
 		local id = select(i, ...)
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
@@ -271,7 +271,7 @@ DamageProfile.progress_lerp_values_path = function (lerp_values, ...)
 	local local_lerp_values = lerp_values
 	local depth = select("#", ...)
 
-	for i = 1, depth, 1 do
+	for i = 1, depth do
 		local id = select(i, ...)
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
@@ -306,7 +306,7 @@ function _distribute_power_level_to_power_type(power_type, power_level, damage_p
 		local pdr_table = power_distribution_ranged[power_type]
 		local power_near = pdr_table.near
 		local power_far = pdr_table.far
-		local lerp_values = (from_target_settings and target_settings_lerp_values) or damage_profile_lerp_values
+		local lerp_values = from_target_settings and target_settings_lerp_values or damage_profile_lerp_values
 
 		if type(power_near) == "table" then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "power_distribution_ranged", power_type, "near")
@@ -340,7 +340,7 @@ function _distribute_power_level_to_power_type(power_type, power_level, damage_p
 	end
 
 	if not dropoff_scalar and power_multiplier > 0 and power_multiplier < 2 then
-		power_multiplier = power_multiplier * ((power_type == "attack" and 250) or 50)
+		power_multiplier = power_multiplier * (power_type == "attack" and 250 or 50)
 	end
 
 	return power_level * power_multiplier

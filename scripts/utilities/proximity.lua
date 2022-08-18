@@ -4,7 +4,7 @@ local query_results = {}
 Proximity.check_proximity_of_position = function (position, relation_side_names, radius, out_result_table, filter_function, broadphase)
 	local num_nearby_units = Broadphase.query(broadphase, position, radius, query_results, relation_side_names)
 
-	for i = 1, num_nearby_units, 1 do
+	for i = 1, num_nearby_units do
 		local found_unit = query_results[i]
 		local found_result = not filter_function or filter_function(found_unit)
 

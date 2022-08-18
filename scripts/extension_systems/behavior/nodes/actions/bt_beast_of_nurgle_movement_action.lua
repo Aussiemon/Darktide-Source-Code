@@ -187,7 +187,7 @@ end
 
 BtBeastOfNurgleMovementAction._set_anim_driven = function (self, unit, scratchpad, set_anim_driven)
 	MinionMovement.set_anim_driven(scratchpad, set_anim_driven)
-	self:_set_spline_blend(unit, (set_anim_driven and 0) or 1)
+	self:_set_spline_blend(unit, set_anim_driven and 0 or 1)
 end
 
 local NAV_MESH_ABOVE = 0.7
@@ -259,7 +259,7 @@ BtBeastOfNurgleMovementAction._calculate_randomized_move_to_directions = functio
 	local num_directions = degree_range / degree_per_direction
 	local current_degree = -(degree_range / 2)
 
-	for i = 1, num_directions, 1 do
+	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)

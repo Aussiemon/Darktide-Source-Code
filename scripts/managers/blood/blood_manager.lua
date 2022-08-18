@@ -26,7 +26,7 @@ BloodManager._create_blood_ball_buffer = function (self)
 	local buffer_size = BloodSettings.blood_ball.ring_buffer_size
 	local buffer = Script.new_array(buffer_size)
 
-	for index = 1, buffer_size, 1 do
+	for index = 1, buffer_size do
 		buffer[index] = {
 			speed = 0,
 			unit_name = "",
@@ -72,7 +72,7 @@ BloodManager._update_blood_balls = function (self, dt, t)
 	local max_size = blood_ball_ring_buffer.max_size
 	local num_updates = math.min(BloodSettings.blood_ball.max_per_frame, size)
 
-	for i = 1, num_updates, 1 do
+	for i = 1, num_updates do
 		local blood_ball_data = buffer[read_index]
 
 		self:_spawn_blood_ball(blood_ball_data)

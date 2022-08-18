@@ -134,7 +134,7 @@ Flashlight._update_flicker = function (self, t)
 		else
 			local fade_out = template.fade_out
 			local min_octave_percentage = template.min_octave_percentage
-			local fade_progress = (fade_out and math.max(1 - progress, min_octave_percentage)) or 1
+			local fade_progress = fade_out and math.max(1 - progress, min_octave_percentage) or 1
 			local frequence_multiplier = template.frequence_multiplier
 			local persistance = template.persistance
 			local octaves = template.octaves
@@ -165,7 +165,7 @@ end
 function _get_components(components, attachments)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local attachment_unit = attachments[i]
 		local flash_light_components = Component.get_components_by_name(attachment_unit, "WeaponFlashlight")
 
@@ -179,7 +179,7 @@ function _get_components(components, attachments)
 end
 
 function _toggle_light(flashlights, was_enabled)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		flashlight.component:toggle(flashlight.unit, was_enabled)
@@ -187,7 +187,7 @@ function _toggle_light(flashlights, was_enabled)
 end
 
 function _disable_light(flashlights)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		flashlight.component:disable(flashlight.unit)
@@ -195,7 +195,7 @@ function _disable_light(flashlights)
 end
 
 function _enable_light(flashlights)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		flashlight.component:enable(flashlight.unit)
@@ -203,7 +203,7 @@ function _enable_light(flashlights)
 end
 
 function _set_template(flashlights, template)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		flashlight.component:set_template(flashlight.unit, template)
@@ -211,7 +211,7 @@ function _set_template(flashlights, template)
 end
 
 function _set_intensity(flashlights, template, scale)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		flashlight.component:set_intensity(flashlight.unit, template, scale)
@@ -219,7 +219,7 @@ function _set_intensity(flashlights, template, scale)
 end
 
 function _trigger_wwise_event(wwise_resource, flashlights, fx_extension)
-	for i = 1, #flashlights, 1 do
+	for i = 1, #flashlights do
 		local flashlight = flashlights[i]
 
 		fx_extension:trigger_wwise_event(wwise_resource, false, flashlight.unit, 1)

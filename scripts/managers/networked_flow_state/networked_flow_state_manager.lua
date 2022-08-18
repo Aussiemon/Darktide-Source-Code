@@ -84,7 +84,7 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 
 	fassert(story == nil or story.stopped, "[NetworkedFlowStateManager] Tried to play networked story, but it is already playing.")
 
-	start_time = start_time or (start_from_stop_time and story and story.stop_time) or 0
+	start_time = start_time or start_from_stop_time and story and story.stop_time or 0
 
 	Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_played", level_index, start_time, false)
 
@@ -310,7 +310,7 @@ NetworkedFlowStateManager.flow_cb_change_state = function (self, unit, state_nam
 	if changed then
 		local unit_spawner = Managers.state.unit_spawner
 		local is_game_object = current_state.is_game_object or false
-		local unit_id = (is_game_object and unit_spawner:game_object_id(unit)) or unit_spawner:level_index(unit)
+		local unit_id = is_game_object and unit_spawner:game_object_id(unit) or unit_spawner:level_index(unit)
 		local type_data = FLOW_STATE_TYPES[type(new_state)]
 		new_state = self:_clamp_state(state_name, type_data, new_state)
 
@@ -342,7 +342,7 @@ NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, s
 	local state_name = unit_states.lookup[state_network_id]
 	local state = unit_states.states[state_name]
 	state.value = new_state
-	local flow_event = (only_set and state.client_state_set_event) or state.client_state_changed_event
+	local flow_event = only_set and state.client_state_set_event or state.client_state_changed_event
 
 	Unit.flow_event(unit, flow_event)
 end

@@ -20,5 +20,3 @@ DialogueLookup[DialogueLookup_n + 8] = "asset_unnatural_dark_a"
 DialogueLookup[DialogueLookup_n + 9] = "asset_unnatural_dark_b"
 DialogueLookup[DialogueLookup_n + 10] = "asset_water_course"
 DialogueLookup_n = DialogueLookup_n + 10
-
-return

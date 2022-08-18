@@ -12,7 +12,7 @@ MonsterPacing.init = function (self, nav_world)
 	local spawn_point_sections = Script.new_map(num_spawn_types)
 	local num_spawn_type_sections = Script.new_map(num_spawn_types)
 
-	for i = 1, num_spawn_types, 1 do
+	for i = 1, num_spawn_types do
 		local spawn_type = spawn_types[i]
 		spawn_point_sections[spawn_type] = Script.new_array(max_sections)
 		num_spawn_type_sections[spawn_type] = 0
@@ -58,7 +58,7 @@ MonsterPacing._generate_spawns = function (self, template)
 			table.remove(valid_spawn_types, index)
 			Log.warning("MonsterPacing", "Removed %s monster spawn type since found no spawners.", spawn_type)
 		else
-			for i = 1, current_num_sections, 1 do
+			for i = 1, current_num_sections do
 				fassert(spawn_point_sections[i], "[MonsterPacing] %s monster spawn type is missing valid spawners for section index %d.", spawn_type, i)
 			end
 
@@ -74,7 +74,7 @@ MonsterPacing._generate_spawns = function (self, template)
 		return false
 	end
 
-	for i = 1, num_sections, 1 do
+	for i = 1, num_sections do
 		TEMP_SECTIONS[i] = i
 	end
 
@@ -82,7 +82,7 @@ MonsterPacing._generate_spawns = function (self, template)
 	local breed_names = template.breed_names
 	local total_num_spawns = math.min(num_sections, template.num_spawns)
 
-	for i = 1, total_num_spawns, 1 do
+	for i = 1, total_num_spawns do
 		local spawn_type = valid_spawn_types[math.random(num_valid_spawn_types)]
 		local spawn_point_sections = spawn_type_point_sections[spawn_type]
 		local section_index = TEMP_SECTIONS[math.random(#TEMP_SECTIONS)]
@@ -118,10 +118,10 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 
 	local current_travel_distance = 0
 
-	for i = 1, #spawn_point_sections, 1 do
+	for i = 1, #spawn_point_sections do
 		local section = spawn_point_sections[i]
 
-		for j = 1, #section, 1 do
+		for j = 1, #section do
 			local spawn_point = section[j]
 			local travel_distance = spawn_point.spawn_travel_distance
 
@@ -199,7 +199,7 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 		local monsters = self._monsters
 		local num_monsters = #monsters
 
-		for i = 1, num_monsters, 1 do
+		for i = 1, num_monsters do
 			local monster = monsters[i]
 			local spawn_travel_distance = monster.travel_distance
 

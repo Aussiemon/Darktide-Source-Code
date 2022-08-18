@@ -23,7 +23,7 @@ end
 local function is_callable(value)
 	local t = type(value)
 
-	return t == "function" or (t == "table" and callable_table(value))
+	return t == "function" or t == "table" and callable_table(value)
 end
 
 local transition, resolve, run = nil
@@ -50,7 +50,7 @@ local function fulfill(promise, value)
 end
 
 function transition(promise, state, value)
-	if promise.state == state or promise.state ~= State.PENDING or (state ~= State.FULFILLED and state ~= State.REJECTED) then
+	if promise.state == state or promise.state ~= State.PENDING or state ~= State.FULFILLED and state ~= State.REJECTED then
 		return
 	end
 
@@ -64,8 +64,8 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 	local promise = Promise.new()
 
 	table.insert(self.queue, {
-		fulfill = (is_callable(on_fulfilled) and on_fulfilled) or nil,
-		reject = (is_callable(on_rejected) and on_rejected) or nil,
+		fulfill = is_callable(on_fulfilled) and on_fulfilled or nil,
+		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
 		debug_traceback_info_1 = debug.getinfo(2, "Sl"),
 		debug_traceback_info_2 = debug.getinfo(3, "Sl")
@@ -179,7 +179,7 @@ local function extract_locals(level_base)
 end
 
 local function extract_stored_traceback(obj)
-	local short_traceback = string.format("%s:%d\n%s:%d", (obj.debug_traceback_info_1 and obj.debug_traceback_info_1.source) or "", (obj.debug_traceback_info_1 and obj.debug_traceback_info_1.currentline) or -1, (obj.debug_traceback_info_2 and obj.debug_traceback_info_2.source) or "", (obj.debug_traceback_info_2 and obj.debug_traceback_info_2.currentline) or -1)
+	local short_traceback = string.format("%s:%d\n%s:%d", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.source or "", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.currentline or -1, obj.debug_traceback_info_2 and obj.debug_traceback_info_2.source or "", obj.debug_traceback_info_2 and obj.debug_traceback_info_2.currentline or -1)
 
 	return short_traceback
 end
@@ -199,7 +199,7 @@ function run(promise)
 			local success, result = xpcall(function ()
 				local success = obj.fulfill or passthrough
 				local failure = obj.reject or errorthrough
-				local callback = (promise.state == State.FULFILLED and success) or failure
+				local callback = promise.state == State.FULFILLED and success or failure
 
 				return callback(promise.value)
 			end, function (err)
@@ -241,7 +241,7 @@ function run(promise)
 			end
 		end
 
-		for j = 1, i, 1 do
+		for j = 1, i do
 			q[j] = nil
 		end
 	end)
@@ -321,7 +321,7 @@ Promise.all = function (...)
 		transition(promise, state, results)
 	end
 
-	for i = 1, #promises, 1 do
+	for i = 1, #promises do
 		promises[i]:next(function (value)
 			results[i] = value
 			remaining = remaining - 1
@@ -355,7 +355,7 @@ Promise.race = function (...)
 		fulfill(promise, value)
 	end
 
-	for i = 1, #promises, 1 do
+	for i = 1, #promises do
 		promises[i]:next(success)
 	end
 

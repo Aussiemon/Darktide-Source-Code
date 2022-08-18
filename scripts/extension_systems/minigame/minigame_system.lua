@@ -17,7 +17,7 @@ local CLIENT_RPCS = {
 MinigameSystem.init = function (self, context, system_init_data, ...)
 	MinigameSystem.super.init(self, context, system_init_data, ...)
 
-	self._seed = (self._is_server and system_init_data.level_seed) or nil
+	self._seed = self._is_server and system_init_data.level_seed or nil
 	local network_event_delegate = self._network_event_delegate
 
 	if not self._is_server and network_event_delegate then

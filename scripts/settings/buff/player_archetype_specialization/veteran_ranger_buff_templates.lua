@@ -183,7 +183,7 @@ local function _start_outline(template_data, template_context)
 	template_data.fx_extension = fx_extension
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system and side_system.side_by_unit[unit]
-	local enemy_units = (side and side.enemy_units_lookup) or {}
+	local enemy_units = side and side.enemy_units_lookup or {}
 	local player_position = POSITION_LOOKUP[unit]
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local first_person_component = unit_data_extension:read_component("first_person")
@@ -202,7 +202,7 @@ local function _start_outline(template_data, template_context)
 			local from_player = special_position - player_position
 			local from_player_flatten = Vector3.normalize(Vector3.flat(from_player))
 			local distance_squared = Vector3.length_squared(from_player_flatten)
-			local angle = (distance_squared > 0 and Vector3.angle(from_player_flatten, player_forward)) or 0
+			local angle = distance_squared > 0 and Vector3.angle(from_player_flatten, player_forward) or 0
 			local angle_score = angle / ANGLE_LIMIT
 			local distance_squared = Vector3.length_squared(from_player)
 			local distance_score = distance_squared / DISTANCE_LIMIT_SQUARED
@@ -240,7 +240,7 @@ local function _update_outlines(template_data, template_context, dt, t)
 		local number_of_active_specials = #alive_specials
 		local activation_time = math.min(HIGHLIGHT_OFFSET, HIGHLIGHT_OFFSET_TOTAL_MAX_TIME / number_of_active_specials)
 
-		for i = 1, number_of_active_specials, 1 do
+		for i = 1, number_of_active_specials do
 			local special_unit = alive_specials[i]
 
 			if not outlined_units[special_unit] and time_in_buff > i * activation_time then

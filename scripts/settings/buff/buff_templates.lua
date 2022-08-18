@@ -47,7 +47,7 @@ local default_buff_icon = "content/ui/materials/icons/abilities/default"
 
 for buff_name, template in pairs(templates) do
 	template.name = buff_name
-	template.predicted = (template.predicted == nil and true) or template.predicted
+	template.predicted = template.predicted == nil and true or template.predicted
 
 	if not template.icon then
 		template.icon = default_buff_icon

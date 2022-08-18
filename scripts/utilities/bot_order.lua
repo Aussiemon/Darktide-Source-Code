@@ -15,8 +15,7 @@ local function _order_ammo_pickup(bot_unit, pickup_unit, ordering_player)
 	if bot_group_data then
 		local has_full_ammo = Ammo.reserve_ammo_is_full(bot_unit)
 
-		if has_full_ammo then
-		else
+		if not has_full_ammo then
 			local time_manager = Managers.time
 			local t = time_manager:time("gameplay")
 			local bot_position = POSITION_LOOKUP[bot_unit]

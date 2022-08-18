@@ -96,7 +96,7 @@ HudElementBase.set_scenegraph_widgets_visible = function (self, scenegraph_id, v
 	local widgets = self._widgets
 	local n_widgets = #widgets
 
-	for i = 1, n_widgets, 1 do
+	for i = 1, n_widgets do
 		local widget = widgets[i]
 
 		if widget.scenegraph_id == scenegraph_id then
@@ -113,7 +113,7 @@ HudElementBase.set_dirty = function (self)
 	local widgets = self._widgets
 	local n_widgets = #widgets
 
-	for i = 1, n_widgets, 1 do
+	for i = 1, n_widgets do
 		local widget = widgets[i]
 		widget.dirty = true
 	end
@@ -226,7 +226,7 @@ HudElementBase._draw_widgets = function (self, dt, t, input_service, ui_renderer
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)

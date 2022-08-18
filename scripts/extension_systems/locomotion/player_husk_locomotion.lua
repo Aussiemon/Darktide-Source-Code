@@ -136,7 +136,7 @@ PlayerHuskLocomotionExtension.update = function (self, unit, dt, t)
 	local locomotion_steering_component = self._locomotion_steering_component
 
 	if locomotion_steering_component.move_method == "script_driven_hub" then
-		local current_active_stop = (locomotion_steering_component.hub_active_stopping and 1) or 0
+		local current_active_stop = locomotion_steering_component.hub_active_stopping and 1 or 0
 		local active_stop_anim_var_id = Unit.animation_find_variable(unit, self._active_stop_anim_var)
 
 		if active_stop_anim_var_id then

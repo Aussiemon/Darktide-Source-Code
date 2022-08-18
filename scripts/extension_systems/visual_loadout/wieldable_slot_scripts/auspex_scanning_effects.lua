@@ -102,7 +102,7 @@ AuspexScanningEffects.destroy = function (self)
 		World.destroy_unit(self._world, player_holo_unit)
 	end
 
-	for i = 1, #self._holo_units, 1 do
+	for i = 1, #self._holo_units do
 		World.destroy_unit(self._world, self._holo_units[i])
 	end
 
@@ -135,8 +135,8 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local is_active, line_of_sight, total_score, angle_score, distance_score, scannable_unit, angle, distance = Scanning.calculate_current_scores(scanning_component, weapon_action_component, first_person_component)
 	local scanning_progression = Scanning.scan_confirm_progression(scanning_component, weapon_action_component, t)
 	local is_confirming_scanning = scanning_progression ~= nil
-	local parameter_max = (line_of_sight and 1) or 0.85
-	local parameter_min = (scannable_unit and 0.4) or 0
+	local parameter_max = line_of_sight and 1 or 0.85
+	local parameter_min = scannable_unit and 0.4 or 0
 	local target_distance = math.lerp(parameter_min, parameter_max, distance_score)
 	local target_angle = math.lerp(parameter_min, parameter_max, angle_score)
 	local current_distance = math.move_towards(self._current_distance_paramater, target_distance, dt * 6)
@@ -184,7 +184,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 		outline_time = 0
 	end
 
-	local outline_time_theshold = (scan_settings and scan_settings.outline_time) or 0
+	local outline_time_theshold = scan_settings and scan_settings.outline_time or 0
 
 	if outline_unit and (outline_time_theshold < outline_time or is_confirming_scanning) then
 		self:_set_outline_unit(outline_unit, true)
@@ -192,7 +192,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	self._outline_unit = outline_unit
 	self._outline_time = outline_time
-	local confirm_unit = (is_confirming_scanning and scannable_unit) or nil
+	local confirm_unit = is_confirming_scanning and scannable_unit or nil
 	local highlight_unit = self._highlight_unit
 
 	if confirm_unit ~= highlight_unit then
@@ -211,7 +211,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 			Unit.set_unit_visibility(player_holo_unit, false)
 		end
 
-		for i = 1, #self._holo_units, 1 do
+		for i = 1, #self._holo_units do
 			Unit.set_unit_visibility(self._holo_units[i], false)
 		end
 
@@ -225,7 +225,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local first_person_extension = self._first_person_extension
 	local is_camera_following = first_person_extension and first_person_extension:is_camera_follow_target()
 	local is_in_first_person_mode = first_person_extension and first_person_extension:is_in_first_person_mode()
-	local active_unit = (is_in_first_person_mode and is_camera_following and self._item_unit_1p) or self._item_unit_3p
+	local active_unit = is_in_first_person_mode and is_camera_following and self._item_unit_1p or self._item_unit_3p
 	local scanner_world_position = Unit.world_position(active_unit, 1)
 	local holo_orgin_world_pose = Unit.world_pose(active_unit, 2)
 	local new_orgin = Matrix4x4.translation(holo_orgin_world_pose, Vector3.zero()) + Matrix4x4.forward(holo_orgin_world_pose) * 0.08
@@ -233,7 +233,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local holo_world_pose = Matrix4x4.from_quaternion_position_scale(new_look, new_orgin, Vector3.one())
 	local holo_world_pose_inv = Matrix4x4.inverse(holo_world_pose)
 	local holo_rotation = Matrix4x4.rotation(holo_world_pose)
-	local active_size_lerp_t = (not is_confirming_scanning and current_beep_normalized) or 1
+	local active_size_lerp_t = not is_confirming_scanning and current_beep_normalized or 1
 	local active_size = math.lerp(HOLO_INACTIVE_SIZE, HOLO_MAX_SIZE, active_size_lerp_t)
 	local near = scan_settings.distance.near
 	local far = scan_settings.distance.far
@@ -271,7 +271,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	if current_scan_mission_zone then
 		local scanable_units = current_scan_mission_zone:scannable_units()
 
-		for i = 1, #scanable_units, 1 do
+		for i = 1, #scanable_units do
 			local current_scanable_unit = scanable_units[i]
 			local scannable_extension = ScriptUnit.has_extension(current_scanable_unit, "mission_objective_zone_scannable_system")
 			local is_current_active = scannable_extension:is_active()
@@ -297,7 +297,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 				local normalized_alpha_distance = math.clamp01(math.ilerp(far, near * 0.25, distance_to_scannable))
 				local current_lerp = math.lerp(0.2, 1, normalized_alpha_distance)
 				local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
-				local size = (is_current_scanable_unit and active_size) or scaled_size
+				local size = is_current_scanable_unit and active_size or scaled_size
 				local holo_unit = self._holo_units[current_holo_unit]
 				current_holo_unit = current_holo_unit + 1
 
@@ -318,7 +318,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 		end
 	end
 
-	for i = current_holo_unit, #self._holo_units, 1 do
+	for i = current_holo_unit, #self._holo_units do
 		Unit.set_unit_visibility(self._holo_units[i], false)
 	end
 end
@@ -394,7 +394,7 @@ AuspexScanningEffects.__set_scanner_light = function (self, enebeled, scanner_li
 		return
 	end
 
-	for i = 1, #scanner_light_components, 1 do
+	for i = 1, #scanner_light_components do
 		local scanner_light_component = scanner_light_components[i]
 
 		scanner_light_component:enable_lights(enebeled)
@@ -417,7 +417,7 @@ AuspexScanningEffects._set_screen_active = function (self, enabled)
 		end
 
 		self._is_screen_enabled = enabled
-		local emissive_value = (enabled and EMISSIVE_SCREEN_ON) or EMISSIVE_SCREEN_OFF
+		local emissive_value = enabled and EMISSIVE_SCREEN_ON or EMISSIVE_SCREEN_OFF
 
 		Material.set_scalar(self._screen_material_1p, EMISSIVE_SCREEN_MATERIAL_VARIABLE_NAME, emissive_value)
 		Material.set_scalar(self._screen_material_3p, EMISSIVE_SCREEN_MATERIAL_VARIABLE_NAME, emissive_value)

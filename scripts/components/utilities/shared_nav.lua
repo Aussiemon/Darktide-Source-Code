@@ -1,17 +1,17 @@
-local SharedNav = {
-	create_nav_info = function ()
-		fassert(rawget(_G, "LevelEditor"), "[create_nav_info] LevelEditor only method.")
+local SharedNav = {}
 
-		local component_nav_info = {
-			nav_world = nil,
-			nav_tag_cost_table = nil,
-			traverse_logic = nil,
-			nav_gen_guid = nil
-		}
+SharedNav.create_nav_info = function ()
+	fassert(rawget(_G, "LevelEditor"), "[create_nav_info] LevelEditor only method.")
 
-		return component_nav_info
-	end
-}
+	local component_nav_info = {
+		nav_world = nil,
+		nav_tag_cost_table = nil,
+		traverse_logic = nil,
+		nav_gen_guid = nil
+	}
+
+	return component_nav_info
+end
 
 local function _clear_nav_info(nav_info)
 	local nav_world = nav_info.nav_world
@@ -49,7 +49,7 @@ local function _editor_setup_shared_nav_world(nav_info, with_traverse_logic)
 
 	local new_nav_world = GwNavWorld.create()
 
-	for i = 1, num_nav_data_paths, 1 do
+	for i = 1, num_nav_data_paths do
 		local nav_data_path = nav_data_paths[i]
 
 		GwNavGeneration.add_navdata_to_world(new_nav_world, nav_data_path)

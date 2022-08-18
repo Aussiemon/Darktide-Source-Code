@@ -149,7 +149,7 @@ PlayerUnitAttackIntensityExtension._check_locked_in_melee = function (self, t)
 		local delay = LockedInMeleeSettings.delay
 		local needed_challenge_rating = Managers.state.difficulty:get_table_entry_by_challenge(LockedInMeleeSettings.needed_challenge_rating)
 
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local nearby_unit = broadphase_results[i]
 			local unit_data_extension = ScriptUnit.extension(nearby_unit, "unit_data_system")
 			local breed = unit_data_extension:breed()

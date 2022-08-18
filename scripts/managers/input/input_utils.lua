@@ -207,7 +207,7 @@ InputUtils.input_text_for_current_input_device = function (service_type, alias_k
 
 	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_key, alias_array_index, device_types)
-	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or ""
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or ""
 
 	return input_key
 end

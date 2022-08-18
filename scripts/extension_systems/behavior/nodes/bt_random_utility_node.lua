@@ -69,7 +69,7 @@ local function _randomize_actions(unit, actions, blackboard, scratchpad, t, util
 	local total_utility_score = 0
 	local num_actions = #actions
 
-	for i = 1, num_actions, 1 do
+	for i = 1, num_actions do
 		local action = actions[i]
 		local action_name = action.name
 		local node = node_children[action_name]
@@ -91,11 +91,11 @@ local function _randomize_actions(unit, actions, blackboard, scratchpad, t, util
 		total_utility_score = total_utility_score + score
 	end
 
-	for i = 1, num_actions, 1 do
+	for i = 1, num_actions do
 		local picked_index = nil
 		local random_utility_score = math.random() * total_utility_score
 
-		for j = i, num_actions, 1 do
+		for j = i, num_actions do
 			local action = actions[j]
 			local action_utility_score = action.utility_score
 
@@ -163,7 +163,7 @@ BtRandomUtilityNode.evaluate = function (self, unit, blackboard, scratchpad, dt,
 	local fallback_node_name = self._fallback_node_name
 	local num_actions, fallback_node = _randomize_actions(unit, actions, blackboard, scratchpad, t, utility_node_data, node_children, fallback_node_name, running_child_node, last_leaf_node_running)
 
-	for i = 1, num_actions, 1 do
+	for i = 1, num_actions do
 		local action = actions[i]
 		local action_name = action.name
 		local child_node = node_children[action_name]

@@ -35,7 +35,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	if collision_tests then
 		table.clear(ALL_HITS)
 
-		for i = 1, #collision_tests, 1 do
+		for i = 1, #collision_tests do
 			local config = collision_tests[i]
 			local test = config.test
 			local against = config.against

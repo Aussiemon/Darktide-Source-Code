@@ -52,7 +52,7 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 	state_machine:add_transition("LocalRequestHostTypeState", "host type reply", LocalMechanismVerificationState)
 	state_machine:add_transition("LocalRequestHostTypeState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalRequestHostTypeState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalMechanismVerificationState", "mechanism matched", (slots_to_reserve and LocalSlotReserveState) or LocalSlotClaimState)
+	state_machine:add_transition("LocalMechanismVerificationState", "mechanism matched", slots_to_reserve and LocalSlotReserveState or LocalSlotClaimState)
 	state_machine:add_transition("LocalMechanismVerificationState", "mechanism mismatched", LocalDisconnectedState)
 	state_machine:add_transition("LocalMechanismVerificationState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalMechanismVerificationState", "disconnected", LocalDisconnectedState)

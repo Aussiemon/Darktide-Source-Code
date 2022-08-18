@@ -1,6 +1,11 @@
 local InputHandlerSettings = require("scripts/managers/player/player_game_states/input_handler_settings")
 local HumanInputHandler = class("HumanInputHandler")
-HumanInputHandler.reloaded = HumanInputHandler.reloaded ~= nil
+
+if HumanInputHandler.reloaded == nil then
+	HumanInputHandler.reloaded = false
+else
+	HumanInputHandler.reloaded = true
+end
 
 HumanInputHandler.init = function (self, player, is_server, client_clock_handler)
 	self._service = nil
@@ -90,7 +95,7 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 	local num_pack_unpack_actions = #pack_unpack_actions
 	self._num_pack_unpack_actions = num_pack_unpack_actions
 
-	for i = 1, num_pack_unpack_actions, 1 do
+	for i = 1, num_pack_unpack_actions do
 		local action = pack_unpack_actions[i]
 
 		fassert(action_lookup[action], "pack_unpack_actions contain unknown action %q", action)
@@ -129,13 +134,13 @@ HumanInputHandler._buffer_index = function (self, frame)
 end
 
 HumanInputHandler.pre_update = function (self, dt, t, input_service, ui_interaction_action)
-	for i = 1, self._num_ephemeral_actions, 1 do
+	for i = 1, self._num_ephemeral_actions do
 		local old_value = self._ephemeral_action_cache[i]
 		local new_value = old_value or input_service:get(self._ephemeral_actions[i])
 		self._ephemeral_action_cache[i] = old_value or new_value
 	end
 
-	for i = 1, self._num_ui_interaction_actions, 1 do
+	for i = 1, self._num_ui_interaction_actions do
 		local old_value = self._ui_interaction_action_cache[i]
 		local new_value = false
 
@@ -205,21 +210,21 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 	local num_actions = self._num_actions
 	local num_ephemeral_actions = self._num_ephemeral_actions
 
-	for i = 1, num_actions, 1 do
+	for i = 1, num_actions do
 		local action = actions[i]
 		input_cache[i][index] = input_service:get(action)
 	end
 
 	local ephemeral_action_cache = self._ephemeral_action_cache
 
-	for i = 1, num_ephemeral_actions, 1 do
+	for i = 1, num_ephemeral_actions do
 		input_cache[num_actions + i][index] = ephemeral_action_cache[i]
 		ephemeral_action_cache[i] = false
 	end
 
 	local ui_interaction_action_cache = self._ui_interaction_action_cache
 
-	for i = 1, self._num_ui_interaction_actions, 1 do
+	for i = 1, self._num_ui_interaction_actions do
 		local pos = num_actions + num_ephemeral_actions + i
 		input_cache[pos][index] = ui_interaction_action_cache[i]
 		ui_interaction_action_cache[i] = false
@@ -228,7 +233,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 	local action_lookup = self._action_lookup
 	local settings = self._input_settings
 
-	for i = 1, self._num_input_settings, 1 do
+	for i = 1, self._num_input_settings do
 		local input_setting = settings[i]
 		local cache_index = action_lookup[input_setting]
 		input_cache[cache_index][index] = self._input_settings_table[input_setting]
@@ -237,7 +242,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 	local pack_unpack_action_to_network_type_index = self._pack_unpack_action_to_network_type_index
 	local pack_unpack_actions = self._pack_unpack_actions
 
-	for i = 1, self._num_pack_unpack_actions, 1 do
+	for i = 1, self._num_pack_unpack_actions do
 		local action = pack_unpack_actions[i]
 		local cache_index = action_lookup[action]
 		local network_type_index = pack_unpack_action_to_network_type_index[action]
@@ -268,7 +273,7 @@ HumanInputHandler.update = function (self, dt, t, input_service)
 		local end_index = self:_buffer_index(start_frame + end_frame_offset)
 
 		if start_index <= end_index then
-			for i = 1, #input_cache, 1 do
+			for i = 1, #input_cache do
 				send_array[i] = {
 					unpack(input_cache[i], start_index, end_index)
 				}
@@ -276,14 +281,14 @@ HumanInputHandler.update = function (self, dt, t, input_service)
 		else
 			local max_index = self._input_buffer_size
 
-			for i = 1, #input_cache, 1 do
+			for i = 1, #input_cache do
 				local cache = input_cache[i]
 				local array = {
 					unpack(cache, start_index, max_index)
 				}
 				local field_filled = max_index - start_index + 1
 
-				for j = 1, end_index, 1 do
+				for j = 1, end_index do
 					array[j + field_filled] = cache[j]
 				end
 

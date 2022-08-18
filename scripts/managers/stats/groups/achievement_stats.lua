@@ -130,7 +130,7 @@ _add_generic_weapon_stats("stub_pistol_p1")
 _add_generic_weapon_stats("stub_rifle_p1")
 _add_generic_weapon_stats("thunder_hammer_p1")
 
-for i = 1, #_specializations, 1 do
+for i = 1, #_specializations do
 	local specialization = _specializations[i]
 	local id = string.format("max_rank_%s", specialization)
 
@@ -142,7 +142,7 @@ end
 local function _complete_all_mission_types(id, ...)
 	local flags = {}
 
-	for i = 1, #_mission_objectives, 1 do
+	for i = 1, #_mission_objectives do
 		local objective = _mission_objectives[i].objective_name
 		local flag_id = string.format("_%s_%s_flag", id, objective)
 
@@ -171,7 +171,7 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("team_flawless_miss
 	Flags.save_to_backend
 }))
 
-for i = 1, #_specializations, 1 do
+for i = 1, #_specializations do
 	local specialization = _specializations[i]
 	local id = string.format("missions_%s", specialization)
 
@@ -180,7 +180,7 @@ for i = 1, #_specializations, 1 do
 	}))
 end
 
-for i = 1, #_mission_objectives, 1 do
+for i = 1, #_mission_objectives do
 	local stat_name = _mission_objectives[i].stat_name
 	local mission_objective = _mission_objectives[i].objective_name
 	local id = string.format("%s_missions", stat_name)
@@ -190,13 +190,13 @@ for i = 1, #_mission_objectives, 1 do
 	}))
 end
 
-for i = 1, #_specializations, 1 do
+for i = 1, #_specializations do
 	local specialization = _specializations[i]
 
 	_complete_all_mission_types(string.format("mission_%s_objectives", specialization), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", specialization))
 end
 
-for difficulty = 1, 5, 1 do
+for difficulty = 1, 5 do
 	_complete_all_mission_types(string.format("mission_difficulty_%s_objectives", difficulty), Conditions.calculated_value_comparasions(Values.param(Hooks.definitions.hook_mission, "difficulty"), Values.constant(difficulty - 1), Comparators.greater_than))
 end
 

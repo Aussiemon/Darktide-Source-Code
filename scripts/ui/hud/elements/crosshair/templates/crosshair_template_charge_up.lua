@@ -330,7 +330,7 @@ template.update_function = function (parent, ui_renderer, widget, template, dt, 
 		local charge_left_style = style.charge_left
 		local charge_mask_left_style = style.charge_mask_left
 		local charge_right_style = style.charge_right
-		slot19 = style.charge_mask_right
+		local charge_mask_right_style = style.charge_mask_right
 	end
 
 	local mask_height = mask_size[2]

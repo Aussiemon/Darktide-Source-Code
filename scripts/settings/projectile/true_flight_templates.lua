@@ -36,7 +36,7 @@ local true_flight_templates = {
 		find_target_func = "find_closest_highest_value_target",
 		time_between_raycasts = 0.1,
 		lerp_modifier_func = function (integration_data, distance)
-			return (distance < 2 and 1) or 2 / distance
+			return distance < 2 and 1 or 2 / distance
 		end
 	},
 	smite_heavy = {
@@ -52,7 +52,7 @@ local true_flight_templates = {
 		find_target_func = "find_closest_highest_value_target",
 		time_between_raycasts = 0.1,
 		lerp_modifier_func = function (integration_data, distance)
-			return (distance < 1.5 and 1) or 1.5 / distance
+			return distance < 1.5 and 1 or 1.5 / distance
 		end
 	},
 	throwing_knives_true_flight = {
@@ -76,7 +76,7 @@ local true_flight_templates = {
 		lerp_modifier_func = function (integration_data, distance)
 			local d = 1.5
 
-			return (distance < d and 1) or d / distance
+			return distance < d and 1 or d / distance
 		end
 	},
 	magic_missile = {
@@ -113,7 +113,7 @@ local true_flight_templates = {
 		target_players = true,
 		lerp_constant = 50,
 		lerp_modifier_func = function (integration_data, distance)
-			return (distance < 7 and 0.01) or 3 / distance
+			return distance < 7 and 0.01 or 3 / distance
 		end
 	}
 }

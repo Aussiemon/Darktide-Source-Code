@@ -21,11 +21,11 @@ PropUnitDataExtension.setup_from_component = function (self, armor_data_name)
 	self._node_to_bind_pose = {}
 	local inv_bind_pose = Matrix4x4.inverse(bind_pose)
 
-	for i = 1, #hit_zones, 1 do
+	for i = 1, #hit_zones do
 		local hit_zone = hit_zones[i]
 		local actors = hit_zone.actors
 
-		for j = 1, #actors, 1 do
+		for j = 1, #actors do
 			local actor_name = actors[j]
 			local actor_id = Unit.find_actor(unit, actor_name)
 			local actor = Unit.actor(unit, actor_id)

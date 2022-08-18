@@ -31,23 +31,23 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	local has_husk_events = overheat_fx.has_husk_events
 	local looping_sound_start_event = overheat_fx.looping_sound_start_event
 	self._looping_sound_start_events = {
-		false = looping_sound_start_event,
-		true = (has_husk_events and looping_sound_start_event .. "_husk") or looping_sound_start_event
+		["false"] = looping_sound_start_event,
+		["true"] = has_husk_events and looping_sound_start_event .. "_husk" or looping_sound_start_event
 	}
 	local looping_sound_stop_event = overheat_fx.looping_sound_stop_event
 	self._looping_sound_stop_events = {
-		false = looping_sound_stop_event,
-		true = (has_husk_events and looping_sound_stop_event .. "_husk") or looping_sound_stop_event
+		["false"] = looping_sound_stop_event,
+		["true"] = has_husk_events and looping_sound_stop_event .. "_husk" or looping_sound_stop_event
 	}
 	local looping_sound_critical_start_event = overheat_fx.looping_sound_critical_start_event
 	self._looping_sound_critical_start_events = {
-		false = looping_sound_critical_start_event,
-		true = (has_husk_events and looping_sound_critical_start_event .. "_husk") or looping_sound_critical_start_event
+		["false"] = looping_sound_critical_start_event,
+		["true"] = has_husk_events and looping_sound_critical_start_event .. "_husk" or looping_sound_critical_start_event
 	}
 	local looping_sound_critical_stop_event = overheat_fx.looping_sound_critical_stop_event
 	self._looping_sound_critical_stop_events = {
-		false = looping_sound_critical_stop_event,
-		true = (has_husk_events and looping_sound_critical_stop_event .. "_husk") or looping_sound_critical_stop_event
+		["false"] = looping_sound_critical_stop_event,
+		["true"] = has_husk_events and looping_sound_critical_stop_event .. "_husk" or looping_sound_critical_stop_event
 	}
 	self._looping_sound_parameter_name = overheat_fx.looping_sound_parameter_name
 	self._low_threshold_sound_event = overheat_fx.low_threshold_sound_event
@@ -137,7 +137,7 @@ PlasmagunOverheatEffects._update_looping_sfx = function (self, overheat_configur
 	local looping_playing_id = self._looping_playing_id
 	local looping_critical_playing_id = self._looping_critical_playing_id
 	local sfx_source_id = self._sfx_source_id
-	local is_husk = (self._is_husk and "true") or "false"
+	local is_husk = self._is_husk and "true" or "false"
 	local critical_threshold = overheat_configuration.critical_threshold
 	local should_play_loop = not looping_playing_id and overheat_percentage > 0
 	local should_play_critical_loop = not looping_critical_playing_id and critical_threshold < overheat_percentage
@@ -156,13 +156,13 @@ PlasmagunOverheatEffects._update_material = function (self, overheat_percentage)
 	local attachments_1p = slot.attachments_1p
 	local attachments_3p = slot.attachments_3p
 
-	for i = 1, #attachments_1p, 1 do
+	for i = 1, #attachments_1p do
 		local attachment_unit = attachments_1p[i]
 
 		Unit.set_scalar_for_material(attachment_unit, material_name, material_variable_name, math.lerp(0, 0.2, overheat_percentage))
 	end
 
-	for i = 1, #attachments_3p, 1 do
+	for i = 1, #attachments_3p do
 		local attachment_unit = attachments_3p[i]
 
 		Unit.set_scalar_for_material(attachment_unit, material_name, material_variable_name, math.lerp(0, 0.2, overheat_percentage))
@@ -202,7 +202,7 @@ end
 
 PlasmagunOverheatEffects._stop_all_looping_sfx = function (self)
 	local wwise_world = self._wwise_world
-	local is_husk = (self._is_husk and "true") or "false"
+	local is_husk = self._is_husk and "true" or "false"
 	self._looping_playing_id = _start_or_stop_looping_wise_event(wwise_world, false, true, self._looping_playing_id, self._looping_sound_start_events[is_husk], self._looping_sound_stop_events[is_husk])
 	self._looping_critical_playing_id = _start_or_stop_looping_wise_event(wwise_world, false, true, self._looping_critical_playing_id, self._looping_sound_critical_start_events[is_husk], self._looping_sound_critical_stop_events[is_husk])
 end

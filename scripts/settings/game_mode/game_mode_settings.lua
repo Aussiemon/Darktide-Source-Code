@@ -16,7 +16,7 @@ local function _add_game_mode_settings(file_name)
 
 	local side_compositions = settings.side_compositions
 
-	for i = 1, #side_compositions, 1 do
+	for i = 1, #side_compositions do
 		local definition = side_compositions[i]
 		local name = definition.name
 		local relations = definition.relations

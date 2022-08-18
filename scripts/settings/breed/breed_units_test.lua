@@ -64,7 +64,7 @@ local function _init_and_run_tests()
 			if slot_ranged_weapon then
 				local items = slot_ranged_weapon.items
 
-				for i = 1, #items, 1 do
+				for i = 1, #items do
 					local item_name = items[i]
 					local item = item_definitions[item_name]
 					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item, attach_settings, unit)
@@ -128,13 +128,8 @@ local function _resource_dependencies()
 				local breeds = item.breeds
 				local weapon_template_name = item.weapon_template
 
-				if type(weapon_template_name) == "string" and weapon_template_name ~= "" then
-				else
+				if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
 					weapon_template_name = false
-
-					if false then
-						weapon_template_name = true
-					end
 				end
 
 				if weapon_template_name and breeds and table.contains(breeds, breed_name) then

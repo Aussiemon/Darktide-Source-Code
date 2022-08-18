@@ -117,7 +117,7 @@ ImpactEffect.play_shotshell_surface_effect = function (physics_world, attacking_
 		local effect_data = impact_data[unit_index]
 		local hit_data = effect_data.hits
 
-		for ii = 1, num_hits, 1 do
+		for ii = 1, num_hits do
 			local data = hit_data[ii]
 			local hit_actor_or_nil = data.hit_actor_or_nil
 			local hit_position = data.hit_position
@@ -170,7 +170,13 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 		armor_type = hitzone_armor_override[hit_zone_name]
 	end
 
-	impact_fxs = (breed_impact_fx_override and breed_impact_fx_override) or (armor_fx and armor_fx[armor_type])
+	if breed_impact_fx_override then
+		impact_fxs = breed_impact_fx_override
+	else
+		local default_damage_type_impact_fx = impact_fx_lookup[damage_type]
+		local armor_fx = default_damage_type_impact_fx and default_damage_type_impact_fx.armor
+		impact_fxs = armor_fx and armor_fx[armor_type]
+	end
 
 	if not impact_fxs then
 		return nil

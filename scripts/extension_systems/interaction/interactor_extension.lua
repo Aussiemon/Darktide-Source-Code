@@ -351,7 +351,7 @@ InteractorExtension._find_reachable_object = function (self, unit)
 	local closest_angle_to_chosen = math.huge
 	local closest_angle_to_focus = math.huge
 
-	for i = 1, num_actors, 1 do
+	for i = 1, num_actors do
 		local unit_actor = actors[i]
 		local target_unit, target_node = Actor.unit(unit_actor)
 		local valid_target = target_unit and target_unit ~= unit and ALIVE[target_unit]
@@ -417,7 +417,7 @@ InteractorExtension._get_distance_to_interact = function (self, start_pos, direc
 	if collision_hits then
 		local collisions_num = #collision_hits
 
-		for j = 1, collisions_num, 1 do
+		for j = 1, collisions_num do
 			local collision_hit = collision_hits[j]
 			local _, collision_distance, _, collision_actor = unpack(collision_hit)
 
@@ -441,7 +441,7 @@ InteractorExtension._check_collision_clear = function (self, start_pos, directio
 	if collision_hits then
 		local collisions_num = #collision_hits
 
-		for j = 1, collisions_num, 1 do
+		for j = 1, collisions_num do
 			local collision_hit = collision_hits[j]
 			local _, collision_distance, _, collision_actor = unpack(collision_hit)
 

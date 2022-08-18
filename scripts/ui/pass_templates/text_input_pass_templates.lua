@@ -10,7 +10,7 @@ local _math_floor = math.floor
 local _ui_renderer_text_size = UIRenderer.text_size
 local _utf8_string_length = Utf8.string_length
 local _utf8_sub_string = Utf8.sub_string
-local _ellipsis = "…"
+local _ellipsis = "â€¦"
 local _ellipsis_length = _utf8_string_length(_ellipsis)
 local TextInputPassTemplates = {}
 
@@ -42,7 +42,7 @@ local function _crop_text_width(ui_renderer, text, max_width, last_start_positio
 			local width_percent = 1 - (1 - (max_width - ellipsis_width) / actual_text_width) * 0.5
 			local num_char = _utf8_string_length(cropped_text)
 			local number_of_characters_to_show = _math_floor(num_char * width_percent)
-			local last_index = (start_index + number_of_characters_to_show) - 1
+			local last_index = start_index + number_of_characters_to_show - 1
 
 			if original_text_length < last_index then
 				last_index = original_text_length
@@ -168,7 +168,7 @@ local text_input_base = {
 
 				if is_writing then
 					local input_text = content.input_text
-					local text_length = (input_text and _utf8_string_length(input_text)) or 0
+					local text_length = input_text and _utf8_string_length(input_text) or 0
 
 					if input_text and text_length > 0 and not content.selected_text then
 						content.input_text = ""
@@ -228,7 +228,7 @@ local text_input_base = {
 					if type(keystroke) == "string" then
 						updated_input_text = Utf8.string_insert(updated_input_text, caret_position, keystroke)
 						caret_position = caret_position + 1
-						last_input = (last_input and last_input .. keystroke) or keystroke
+						last_input = last_input and last_input .. keystroke or keystroke
 					elseif type(keystroke) == "number" then
 						if keystroke == Keyboard.BACKSPACE then
 							if #updated_input_text == 0 then
@@ -389,9 +389,9 @@ local text_input_base = {
 				return
 			elseif caret_position == old_caret_position then
 				return
-			elseif caret_position < selection_start or (caret_position <= selection_end and old_caret_position < caret_position) then
+			elseif caret_position < selection_start or caret_position <= selection_end and old_caret_position < caret_position then
 				selection_start = _math_max(caret_position, 1)
-			elseif selection_start < caret_position or (caret_position == selection_start and caret_position < old_caret_position) then
+			elseif selection_start < caret_position or caret_position == selection_start and caret_position < old_caret_position then
 				selection_end = _math_min(caret_position, _utf8_string_length(input_text) + 1)
 			end
 
@@ -412,7 +412,7 @@ local text_input_base = {
 			local text_has_changed = new_input_text ~= old_input_text
 			local old_caret_position = content._caret_position
 			local new_caret_position = content.caret_position
-			local text_length = (new_input_text and _utf8_string_length(new_input_text)) or 0
+			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
 
 			if not text_has_changed and new_caret_position == old_caret_position then
 				return
@@ -439,47 +439,47 @@ local text_input_base = {
 			content._input_text_first_visible_pos = first_pos
 			caret_style.offset[1] = display_text_style.offset[1] + caret_offset
 		end
-	},
-	{
-		pass_type = "logic",
-		value = function (pass, ui_renderer, ui_style, content, position, size)
-			if not content._selection_changed then
-				return
-			end
-
-			content._selection_changed = nil
-			local selection_start = content._selection_start
-			local selection_end = content._selection_end
-			local display_text = content.display_text
-			local display_text_style = ui_style.parent.display_text
-			local first_visible_character_pos = content._input_text_first_visible_pos or 1
-
-			if first_visible_character_pos > 1 then
-				local offset = first_visible_character_pos - _ellipsis_length - 1
-				selection_start = _math_max(selection_start - offset, 1)
-				selection_end = selection_end - offset
-			end
-
-			local text_up_to_selection_start = _utf8_sub_string(display_text, 1, selection_start - 1)
-			local _1, _2, _3, select_start_offset = _ui_renderer_text_size(ui_renderer, text_up_to_selection_start, display_text_style.font_type, display_text_style.font_size)
-			local last_visible_character_pos = _utf8_string_length(display_text) + first_visible_character_pos
-
-			if selection_end > last_visible_character_pos then
-				selection_end = last_visible_character_pos
-			end
-
-			local visibly_selected_text = _utf8_sub_string(display_text, selection_start, selection_end - 1)
-			local _1, _2, _3, selection_width = _ui_renderer_text_size(ui_renderer, visibly_selected_text, display_text_style.font_type, display_text_style.font_size)
-			local selection_style = ui_style.parent.selection
-			local selection_offset = selection_style.offset or {}
-			local selection_size = selection_style.size or {}
-			selection_offset[1] = display_text_style.offset[1] + select_start_offset[1]
-			selection_size[1] = selection_width[1]
-			selection_style.offset = selection_offset
-			selection_style.size = selection_size
-		end,
-		visibility_function = _selection_visibility_function
 	}
+}
+text_input_base[6] = {
+	pass_type = "logic",
+	value = function (pass, ui_renderer, ui_style, content, position, size)
+		if not content._selection_changed then
+			return
+		end
+
+		content._selection_changed = nil
+		local selection_start = content._selection_start
+		local selection_end = content._selection_end
+		local display_text = content.display_text
+		local display_text_style = ui_style.parent.display_text
+		local first_visible_character_pos = content._input_text_first_visible_pos or 1
+
+		if first_visible_character_pos > 1 then
+			local offset = first_visible_character_pos - _ellipsis_length - 1
+			selection_start = _math_max(selection_start - offset, 1)
+			selection_end = selection_end - offset
+		end
+
+		local text_up_to_selection_start = _utf8_sub_string(display_text, 1, selection_start - 1)
+		local _1, _2, _3, select_start_offset = _ui_renderer_text_size(ui_renderer, text_up_to_selection_start, display_text_style.font_type, display_text_style.font_size)
+		local last_visible_character_pos = _utf8_string_length(display_text) + first_visible_character_pos
+
+		if selection_end > last_visible_character_pos then
+			selection_end = last_visible_character_pos
+		end
+
+		local visibly_selected_text = _utf8_sub_string(display_text, selection_start, selection_end - 1)
+		local _1, _2, _3, selection_width = _ui_renderer_text_size(ui_renderer, visibly_selected_text, display_text_style.font_type, display_text_style.font_size)
+		local selection_style = ui_style.parent.selection
+		local selection_offset = selection_style.offset or {}
+		local selection_size = selection_style.size or {}
+		selection_offset[1] = display_text_style.offset[1] + select_start_offset[1]
+		selection_size[1] = selection_width[1]
+		selection_style.offset = selection_offset
+		selection_style.size = selection_size
+	end,
+	visibility_function = _selection_visibility_function
 }
 local _simple_input_field_padding = 4
 local _simple_input_text_style = table.clone(UIFontSettings.body)
@@ -521,7 +521,7 @@ table.append(TextInputPassTemplates.simple_input_field, {
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
-			return (hotspot.use_is_focused and hotspot.is_focused) or hotspot.is_selected
+			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
 		end
 	},
 	{
@@ -581,7 +581,7 @@ table.append(TextInputPassTemplates.simple_input_field, {
 				blink_time = blink_time - 1
 			end
 
-			style_data.color[1] = (blink_time < 0.5 and 255) or 0
+			style_data.color[1] = blink_time < 0.5 and 255 or 0
 			pass_content._blink_time = blink_time
 		end
 	},
@@ -623,7 +623,7 @@ table.append(TextInputPassTemplates.simple_input_field, {
 		style = _simple_input_limit_text_style,
 		change_function = function (content, style)
 			local new_input_text = content.input_text
-			local text_length = (new_input_text and _utf8_string_length(new_input_text)) or 0
+			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
 			local max_length = content.max_length or 0
 			content.limit_text = string.format("%d/%d", text_length, max_length)
 		end,

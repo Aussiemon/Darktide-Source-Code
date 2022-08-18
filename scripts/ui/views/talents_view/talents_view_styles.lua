@@ -130,21 +130,21 @@ local large_icon = {
 		},
 		size = large_icon_size,
 		color = Color.ui_terminal(255, true)
-	},
-	frame_hover = table.clone(large_icon.frame),
-	talent_icon = {
-		vertical_alignment = "center",
-		horizontal_alignment = "center",
-		offset = {
-			0,
-			0,
-			3
-		},
-		size = large_icon_inner_size
-	},
-	talent_name = table.clone(UIFontSettings.header_3),
-	talent_description = table.clone(UIFontSettings.body)
+	}
 }
+large_icon.frame_hover = table.clone(large_icon.frame)
+large_icon.talent_icon = {
+	vertical_alignment = "center",
+	horizontal_alignment = "center",
+	offset = {
+		0,
+		0,
+		3
+	},
+	size = large_icon_inner_size
+}
+large_icon.talent_name = table.clone(UIFontSettings.header_3)
+large_icon.talent_description = table.clone(UIFontSettings.body)
 talents_view_styles.large_icon = large_icon
 talents_view_styles.highlight_ring = {
 	hdr = true,
@@ -178,9 +178,9 @@ local talent_icon = {
 			3
 		},
 		color = Color.ui_blue_light(255, true)
-	},
-	frame_selected = table.clone(talent_icon.frame)
+	}
 }
+talent_icon.frame_selected = table.clone(talent_icon.frame)
 talent_icon.frame_selected.offset[3] = 4
 talent_icon.frame_selected.color = Color.ui_terminal(255, true)
 talent_icon.frame_selected.hdr = true
@@ -230,9 +230,9 @@ local locked_talent_icon = {
 			3
 		},
 		color = Color.ui_grey_light(255, true)
-	},
-	frame_hover = table.clone(locked_talent_icon.frame)
+	}
 }
+locked_talent_icon.frame_hover = table.clone(locked_talent_icon.frame)
 locked_talent_icon.frame_hover.offset[3] = 4
 locked_talent_icon.frame_hover.hdr = true
 locked_talent_icon.talent_icon = {

@@ -50,8 +50,7 @@ XAsyncManager.update = function (self, dt)
 
 		if hr == HRESULT.S_OK then
 			data.promise:resolve(async_block)
-		elseif hr == HRESULT.E_PENDING then
-		else
+		elseif hr ~= HRESULT.E_PENDING then
 			data.promise:reject({
 				hr
 			})

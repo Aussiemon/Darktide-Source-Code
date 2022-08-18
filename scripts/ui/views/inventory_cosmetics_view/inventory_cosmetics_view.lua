@@ -35,7 +35,7 @@ local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase
 InventoryCosmeticsView.init = function (self, settings, context)
 	self._context = context
 	self._selected_slot = context.selected_slot
-	self._preview_player = (context.debug and Managers.player:local_player(1)) or context.player
+	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
@@ -80,7 +80,7 @@ InventoryCosmeticsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -236,7 +236,7 @@ end
 
 InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id)
 	self._camera_zoomed_in = not self._camera_zoomed_in
-	local display_name = (self._camera_zoomed_in and "loc_inventory_menu_zoom_out") or "loc_inventory_menu_zoom_in"
+	local display_name = self._camera_zoomed_in and "loc_inventory_menu_zoom_out" or "loc_inventory_menu_zoom_in"
 
 	self._input_legend_element:set_display_name(id, display_name)
 
@@ -321,7 +321,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 		self._inventory_items = items_array
 		local layout = {}
 
-		for i = 1, #items_array, 1 do
+		for i = 1, #items_array do
 			local item = items_array[i]
 
 			if self:_item_valid_by_current_profile(item) then
@@ -329,7 +329,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 				local valid = true
 
 				if slots then
-					for j = 1, #slots, 1 do
+					for j = 1, #slots do
 						if slots[j] == slot_name then
 							layout[#layout + 1] = {
 								item = item,
@@ -431,7 +431,7 @@ InventoryCosmeticsView._get_items_layout_by_slot = function (self, slot)
 			local valid = true
 
 			if valid and slots then
-				for j = 1, #slots, 1 do
+				for j = 1, #slots do
 					if slots[j] == slot_name then
 						layout[#layout + 1] = {
 							item = item,
@@ -474,7 +474,7 @@ end
 
 InventoryCosmeticsView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -515,7 +515,7 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
 		button_content.hotspot.disabled = disable_button
-		button_content.text = string.upper((disable_button and Localize("loc_weapon_inventory_equipped_button")) or Localize("loc_weapon_inventory_equip_button"))
+		button_content.text = string.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 	end
 end
 

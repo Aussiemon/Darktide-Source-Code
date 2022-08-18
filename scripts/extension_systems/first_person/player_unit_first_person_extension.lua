@@ -278,7 +278,7 @@ PlayerUnitFirstPersonExtension.is_within_default_view = function (self, position
 	local is_infront = dot > 0
 
 	if is_infront then
-		local base_vertical_fov_rad = (CameraSettings.player_first_person._node.vertical_fov * math.pi) / 180
+		local base_vertical_fov_rad = CameraSettings.player_first_person._node.vertical_fov * math.pi / 180
 		local base_horizontal_fov_rad = base_vertical_fov_rad * 1.7777777777777777
 		local player_right = Quaternion.right(rot)
 		local player_up = Quaternion.up(rot)

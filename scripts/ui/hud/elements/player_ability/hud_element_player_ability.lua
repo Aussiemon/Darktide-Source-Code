@@ -49,7 +49,7 @@ HudElementPlayerAbility._update_input = function (self)
 	local alias_array_index = 1
 	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or "n/a"
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
 	self:set_input_text(input_key)
 end
@@ -78,9 +78,6 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 
 			if cooldown_progress == 0 then
 				cooldown_progress = 1
-
-				if 1 then
-				end
 			end
 		elseif uses_charges then
 			cooldown_progress = 1
@@ -119,7 +116,7 @@ HudElementPlayerAbility.set_charges_amount = function (self, amount)
 	local widget = widgets_by_name.ability
 	local content = widget.content
 	widget.dirty = true
-	content.text = (amount and tostring(amount)) or nil
+	content.text = amount and tostring(amount) or nil
 end
 
 HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
@@ -137,7 +134,7 @@ HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, 
 		else
 			source_colors = HudElementPlayerAbilitySettings.cooldown_colors
 		end
-	elseif not uses_charges or (uses_charges and has_charges_left) then
+	elseif not uses_charges or uses_charges and has_charges_left then
 		source_colors = HudElementPlayerAbilitySettings.active_colors
 	else
 		source_colors = HudElementPlayerAbilitySettings.inactive
@@ -171,7 +168,7 @@ end
 
 HudElementPlayerAbility._set_progress = function (self, progress)
 	local is_nan = progress ~= progress
-	progress = (not is_nan and progress) or 0
+	progress = not is_nan and progress or 0
 	self._ability_progress = progress
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
@@ -184,7 +181,7 @@ HudElementPlayerAbility._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerAbilitySettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -195,7 +192,7 @@ HudElementPlayerAbility._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerAbilitySettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

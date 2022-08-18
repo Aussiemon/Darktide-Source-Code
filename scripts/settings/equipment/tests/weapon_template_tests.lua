@@ -186,7 +186,7 @@ function _conditional_state_test(weapon_template)
 	local action_inputs = weapon_template.action_inputs
 	local conditional_state_to_action = weapon_template.conditional_state_to_action_input or EMPTY_TABLE
 
-	for i = 1, #conditional_state_to_action, 1 do
+	for i = 1, #conditional_state_to_action do
 		local conditional_state_config = conditional_state_to_action[i]
 		local conditional_state = conditional_state_config.conditional_state
 
@@ -234,7 +234,7 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 		error_msg = "Missing priority for the following hit zones:"
 		success = false
 
-		for i = 1, num_missing_hit_zone_names, 1 do
+		for i = 1, num_missing_hit_zone_names do
 			local hit_zone_name = TEMP_MISSING_HIT_ZONE_NAMES[i]
 			error_msg = string.format("%s\n\t%s", error_msg, hit_zone_name)
 		end

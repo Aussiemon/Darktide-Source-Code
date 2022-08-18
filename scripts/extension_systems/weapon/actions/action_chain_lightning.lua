@@ -177,7 +177,7 @@ ActionChainLightning._decay_charge = function (self, t, time_in_action)
 	local charge_complete_time = action_component.charge_complete_time
 	local max_charge = action_component.max_charge
 	local time_charged = charge_duration - math.max(0, charge_complete_time - t)
-	local charge_level = math.min(math.clamp(min_charge + ((1 - min_charge) * time_charged) / charge_duration, min_charge, 1), max_charge)
+	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * time_charged / charge_duration, min_charge, 1), max_charge)
 	action_component.charge_level = charge_level
 end
 
@@ -201,7 +201,7 @@ ActionChainLightning._validate_targets = function (self, t)
 
 	table.clear(temp_targets)
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.traverse_depth_first(chain_targets[ii], temp_targets, _validation_func)
 	end
 
@@ -213,7 +213,7 @@ ActionChainLightning._validate_targets = function (self, t)
 		target:mark_for_deletion()
 	end
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_targets[ii], _on_delete_func, hit_units)
 	end
 
@@ -242,7 +242,7 @@ ActionChainLightning._find_new_targets = function (self, t)
 	local radius = chain_settings.radius or DEFAULT_RADIUS + self._stat_buff_max_radius
 	local jump_time = chain_settings.jump_time or DEFAULT_JUMP_TIME
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		local target = chain_targets[ii]
 		local travel_direction = Vector3.normalize(Vector3.flat(player_position - POSITION_LOOKUP[target:value("unit")]))
 
@@ -275,7 +275,7 @@ local function _jump(t, is_server, source_target, hit_units, broadphase, enemy_s
 	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
 
 	if num_results > 0 then
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local target_unit = BROADPHASE_RESULTS[i]
 
 			if target_unit and not hit_units[target_unit] then
@@ -316,7 +316,7 @@ ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, en
 	table.clear(temp_targets)
 	ChainLightningTarget.traverse_breadth_first(root_target, temp_targets, _target_finding_func, max_jumps)
 
-	for ii = 1, #temp_targets, 1 do
+	for ii = 1, #temp_targets do
 		local source = temp_targets[ii]
 
 		_jump(t, self._is_server, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, self._player_unit)
@@ -342,11 +342,11 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 
 	local chain_targets = self._chain_targets
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.traverse_depth_first(chain_targets[ii], temp_targets, _damage_finding_func, player_unit)
 	end
 
-	for ii = 1, #temp_targets, 1 do
+	for ii = 1, #temp_targets do
 		local target = temp_targets[ii]
 		local unit = target:value("unit")
 		local hit_zone_name = "torso"
@@ -355,7 +355,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 		local hit_actor = Unit.actor(unit, hit_actor_name)
 		local node_index = Actor.node(hit_actor)
 		local hit_world_position = Unit.world_position(unit, node_index)
-		slot22, slot23, slot24 = Attack.execute(unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL * charge_level, "target_index", 1, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", attack_types.ranged, "damage_type", damage_type)
+		local damage_dealt, attack_result, damage_efficiency = Attack.execute(unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL * charge_level, "target_index", 1, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", attack_types.ranged, "damage_type", damage_type)
 	end
 end
 
@@ -367,7 +367,7 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action)
 
 		local chain_targets = self._chain_targets
 
-		for ii = 1, #chain_targets, 1 do
+		for ii = 1, #chain_targets do
 			ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, self._hit_units)
 
 			local target_unit = chain_targets[ii]:value("unit")

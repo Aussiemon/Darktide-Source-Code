@@ -61,7 +61,7 @@ local function _select_language()
 	local language = nil
 
 	if PLATFORM == "win32" then
-		language = Application.user_setting("language_id") or (HAS_STEAM and Steam:language()) or DEFAULT_LANGUAGE
+		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "ps4" then
 		language = PS4.locale() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "xb1" then
@@ -107,7 +107,7 @@ LocalizationManager.setup_localizers = function (self, strings_package_id)
 	local num_string_resources = #STRING_RESOURCE_NAMES
 	local localizers = Script.new_array(num_string_resources)
 
-	for i = 1, num_string_resources, 1 do
+	for i = 1, num_string_resources do
 		local resource_name = STRING_RESOURCE_NAMES[i]
 		localizers[i] = Localizer(resource_name)
 	end
@@ -133,7 +133,7 @@ LocalizationManager._lookup = function (self, key)
 
 	fassert(localizers, "[LocalizationManager] Localizers not setup")
 
-	for ii = 1, #localizers, 1 do
+	for ii = 1, #localizers do
 		local localizer = localizers[ii]
 		local loc_str = nil
 
@@ -249,7 +249,7 @@ LocalizationManager._process_string = function (self, str, context)
 
 	str = string.gsub(str, "%$([%a%d_]*):*([%a%d,_]*)%$", callback(_apply_macro_callback, error_table))
 	str = string.gsub(str, "{([%a%d_]*):*([%a%d%.%%]*)}", callback(_apply_interpolation_callback, error_table, context))
-	local error_string = (#error_table > 0 and table.concat(error_table, "; ")) or nil
+	local error_string = #error_table > 0 and table.concat(error_table, "; ") or nil
 
 	return str, error_string
 end

@@ -190,7 +190,7 @@ StateLoading._detect_load_fail = function (self)
 		table.clear(failed_clients)
 		loading_manager:failed_clients(failed_clients)
 
-		for i = 1, #failed_clients, 1 do
+		for i = 1, #failed_clients do
 			Managers.connection:disconnect(failed_clients[i])
 		end
 	elseif loading_manager:is_client() and loading_manager:failed() then
@@ -204,7 +204,7 @@ StateLoading._load_global_packages = function (self)
 	if not GLOBAL_RESOURCES.loaded then
 		local package_manager = Managers.package
 
-		for i = 1, #GLOBAL_RESOURCES, 1 do
+		for i = 1, #GLOBAL_RESOURCES do
 			local package_name = GLOBAL_RESOURCES[i]
 
 			if not package_manager:is_loading(package_name) and not package_manager:has_loaded(package_name) then
@@ -221,7 +221,7 @@ StateLoading._global_packages_loaded = function (self)
 
 	local package_manager = Managers.package
 
-	for i = 1, #GLOBAL_RESOURCES, 1 do
+	for i = 1, #GLOBAL_RESOURCES do
 		local package_name = GLOBAL_RESOURCES[i]
 
 		if not package_manager:has_loaded(package_name) then

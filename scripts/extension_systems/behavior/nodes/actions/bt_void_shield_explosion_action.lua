@@ -82,7 +82,7 @@ BtVoidShieldExplosionAction._deal_damage = function (self, t, unit, action_data)
 	local num_results = broadphase:query(from, broadphase_radius, broadphase_results, target_side_names)
 	local ALIVE = ALIVE
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
 
 		if ALIVE[hit_unit] and hit_unit ~= unit then

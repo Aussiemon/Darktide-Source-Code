@@ -208,7 +208,7 @@ HumanGameplay._input_active = function (self)
 	local imgui_manager = Managers.imgui
 	local ui_manager = Managers.ui
 
-	if (imgui_manager and imgui_manager:using_input()) or (ui_manager and ui_manager:using_input()) then
+	if imgui_manager and imgui_manager:using_input() or ui_manager and ui_manager:using_input() then
 		return false
 	end
 

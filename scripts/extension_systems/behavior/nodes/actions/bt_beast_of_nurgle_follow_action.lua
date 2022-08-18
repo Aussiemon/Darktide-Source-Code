@@ -261,7 +261,7 @@ end
 
 BtBeastOfNurgleFollowAction._set_anim_driven = function (self, unit, scratchpad, set_anim_driven)
 	MinionMovement.set_anim_driven(scratchpad, set_anim_driven)
-	self:_set_spline_blend(unit, (set_anim_driven and 0) or 1)
+	self:_set_spline_blend(unit, set_anim_driven and 0 or 1)
 end
 
 return BtBeastOfNurgleFollowAction

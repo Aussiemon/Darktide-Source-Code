@@ -80,7 +80,7 @@ BtWarpTeleportAction._calculate_randomized_teleport_directions = function (self,
 	local current_degree = -(DEGREE_RANGE / 2)
 	local directions = {}
 
-	for i = 1, num_directions, 1 do
+	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
@@ -131,7 +131,7 @@ BtWarpTeleportAction._find_teleport_position = function (self, unit, scratchpad,
 
 	local teleport_directions = scratchpad.teleport_directions
 
-	for i = 1, MAX_TRIES, 1 do
+	for i = 1, MAX_TRIES do
 		local teleport_direction_index = scratchpad.teleport_direction_index
 		local teleport_direction = teleport_directions[teleport_direction_index]:unbox()
 		local teleport_test_position = target_position_on_nav_mesh + teleport_direction * teleport_distance
@@ -140,7 +140,7 @@ BtWarpTeleportAction._find_teleport_position = function (self, unit, scratchpad,
 
 		if teleport_nav_mesh_position then
 			local success, hit_position = GwNavQueries.raycast(nav_world, target_position_on_nav_mesh, teleport_nav_mesh_position, traverse_logic)
-			final_position = (success and teleport_nav_mesh_position) or hit_position
+			final_position = success and teleport_nav_mesh_position or hit_position
 		end
 
 		if final_position then

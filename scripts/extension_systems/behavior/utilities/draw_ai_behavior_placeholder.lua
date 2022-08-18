@@ -49,7 +49,7 @@ local function present_circle_array(gui, x, y)
 
 	ScriptGui.icrect(gui, RES_X, RES_Y, x1 - 5, y1, x1 + 300, y1 + num_items * FONT_SIZE + 10, LAYER, Color(100, 100, 100, 150))
 
-	for i = 1, num_items, 1 do
+	for i = 1, num_items do
 		local text = a[index]
 
 		ScriptGui.ictext(gui, RES_X, RES_Y, text, DevParameters.debug_text_font, FONT_SIZE, x1, y1 + FONT_SIZE * (i - 1), 400, Color(255, 220, 120))
@@ -94,7 +94,7 @@ local function draw_utility_info(gui, consideration_data, temp_max_value, name, 
 		ScriptGui.text(gui, scale_text, font_mtrl, font_size, scale_text_pos2, temp_max_value and Color(255, 0, 0, 0))
 	end
 
-	ScriptGui.text(gui, scale_text, font_mtrl, font_size, scale_text_pos, (temp_max_value and Color(255 * fade_factor, 240, 200, 10)) or Color(255 * fade_factor, 255, 255, 255))
+	ScriptGui.text(gui, scale_text, font_mtrl, font_size, scale_text_pos, temp_max_value and Color(255 * fade_factor, 240, 200, 10) or Color(255 * fade_factor, 255, 255, 255))
 	ScriptGui.text(gui, name, font_mtrl, font_size, pos + Vector3(offset_x, axis_y, 10), Color(255 * fade_factor, 255, 255, 255))
 end
 
@@ -116,10 +116,10 @@ local function draw_utility_condition(gui, action_name, consideration, pos, win_
 		value = not value
 	end
 
-	local result = (value and "true") or "false"
-	local x = (pos.x + win_size.x / 2) - 24
-	local y = (pos.y + win_size.y / 2) - 6
-	local color = (value and Color(255, 240, 200, 10)) or Color(255, 255, 255)
+	local result = value and "true" or "false"
+	local x = pos.x + win_size.x / 2 - 24
+	local y = pos.y + win_size.y / 2 - 6
+	local color = value and Color(255, 240, 200, 10) or Color(255, 255, 255)
 	local text = result
 
 	ScriptGui.text(gui, text, DevParameters.debug_text_font, 16, Vector3(x, y, pos.z + 1), color)
@@ -189,7 +189,7 @@ local function draw_realtime_utility(gui, action_name, consideration, pos, win_s
 		value = utility_data[field_name]
 	end
 
-	local current_value = (consideration.time_diff and t - value) or value
+	local current_value = consideration.time_diff and t - value or value
 	local min_value = consideration.min_value or 0
 	local max_value = consideration.max_value
 	local normalized_value = math.clamp((current_value - min_value) / (max_value - min_value), 0, 1)
@@ -216,7 +216,7 @@ local function draw_utility_nodes(gui, blackboard, utility_data, running, action
 	local size = Vector2(160, 100)
 	local step_y = size.y + 40
 	local pos_y = 40
-	local pos = Vector3(x1 * RES_X, ((y1 + NODE_HEIGHT) - extra_height) * RES_Y, LAYER + 10)
+	local pos = Vector3(x1 * RES_X, (y1 + NODE_HEIGHT - extra_height) * RES_Y, LAYER + 10)
 	local num = 0
 
 	for name, consideration_data in pairs(considerations) do
@@ -427,10 +427,10 @@ local function draw_node_children(bt, gui, node, node_children, blackboard, runn
 
 	if node.__class_name == "BtSequenceNode" then
 		bounding_box_x2 = start_x + max_child_width + xb
-		bounding_box_y2 = (cy + yb) - NODE_HEIGHT * 0.5
+		bounding_box_y2 = cy + yb - NODE_HEIGHT * 0.5
 		ocolor = Color(70, 150, 50, 200)
 	else
-		bounding_box_x2 = (cx + xb) - NODE_SPACING
+		bounding_box_x2 = cx + xb - NODE_SPACING
 		bounding_box_y2 = cy + NODE_HEIGHT + max_child_extra_height + yb
 	end
 

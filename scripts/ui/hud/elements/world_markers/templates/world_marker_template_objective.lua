@@ -263,7 +263,7 @@ local function setup_marker_by_visual_type(widget, marker, visual_type)
 	end
 
 	for content_id, value in pairs(default_textures) do
-		content[content_id] = (value ~= StrictNil and value) or nil
+		content[content_id] = value ~= StrictNil and value or nil
 	end
 
 	marker.template.default_position_offset = marker.template.position_offset
@@ -567,8 +567,8 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local pulse_speed = 4
 		local time_since_launch = Application.time_since_launch()
 		local pulse_progress = 0.5 + math.sin(time_since_launch * pulse_speed) * 0.5
-		local angle = (time_since_launch * rotation_speed) % math.pi * 2
-		local third_lap = (math.pi * 2) / 3
+		local angle = time_since_launch * rotation_speed % math.pi * 2
+		local third_lap = math.pi * 2 / 3
 		local start_offset = -math.pi * 0.25
 		style.demolition_marker_1.angle = start_offset + third_lap * 4 + angle
 		style.demolition_marker_2.angle = start_offset + third_lap * 3 + angle
@@ -592,7 +592,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local distance_text = tostring(math.floor(distance)) .. "m"
-	content.text = (distance > 1 and distance_text) or ""
+	content.text = distance > 1 and distance_text or ""
 	local unit = marker.unit
 	local hud_element = data.hud_element
 

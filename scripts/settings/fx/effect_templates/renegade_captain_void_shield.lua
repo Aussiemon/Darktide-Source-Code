@@ -8,7 +8,7 @@ local IMPACT_FX_POSITION_KEY = "impact_position_0%s"
 local IMPACT_FX_START_DURATION_KEY = "impact_start_duration_0%s"
 local IMPACT_FX_KEYSET = {}
 
-for i = 1, NUM_IMPACT_FX_ENTRIES, 1 do
+for i = 1, NUM_IMPACT_FX_ENTRIES do
 	IMPACT_FX_KEYSET[i] = {
 		impact_position_key = string.format(IMPACT_FX_POSITION_KEY, tostring(i)),
 		impact_start_duration_key = string.format(IMPACT_FX_START_DURATION_KEY, tostring(i))
@@ -42,7 +42,7 @@ local effect_template = {
 		local game_object_id = template_data.game_object_id
 		local toughness_damage, max_toughness = _get_network_values(game_session, game_object_id)
 		local percent = 1 - toughness_damage / max_toughness
-		local new_state = (percent > 0 and STATES.active) or STATES.depleted
+		local new_state = percent > 0 and STATES.active or STATES.depleted
 
 		if new_state ~= template_data.state then
 			_switch_state(template_data, template_context, new_state)
@@ -74,7 +74,7 @@ local effect_template = {
 				local start_duration_input = Vector2(start_time, IMPACT_FX_DURATION)
 				local include_children = true
 
-				for i = processed_attacks_index + 1, num_stored_attacks, 1 do
+				for i = processed_attacks_index + 1, num_stored_attacks do
 					local attack_data = stored_attacks[i]
 					local impact_world_position = attack_data.impact_world_position:unbox()
 					local previous_impact_fx_index = template_data.previous_impact_fx_index

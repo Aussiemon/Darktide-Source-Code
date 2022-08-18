@@ -23,7 +23,7 @@ HealthStationSystem._fetch_settings = function (self, mission, circumstance_name
 	local original_settings = mission.health_station
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = (mission_overrides and mission_overrides.health_station) or nil
+	local circumstance_settings = mission_overrides and mission_overrides.health_station or nil
 
 	return circumstance_settings or original_settings
 end
@@ -74,7 +74,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 	fassert(self._is_server, "[HealthStationSystem] Server only method.")
 
 	local mission_settings_health_station = self._mission_settings_health_station
-	local charges_to_distribute = (mission_settings_health_station and mission_settings_health_station.charges_to_distribute) or 0
+	local charges_to_distribute = mission_settings_health_station and mission_settings_health_station.charges_to_distribute or 0
 
 	if charges_to_distribute > 0 then
 		local stations = {}
@@ -107,7 +107,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 				end
 			end
 
-			for i = 1, #stations, 1 do
+			for i = 1, #stations do
 				local station = stations[i]
 
 				if station.charges == 4 then

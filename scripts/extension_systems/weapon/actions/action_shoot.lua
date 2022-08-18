@@ -555,7 +555,7 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation)
 	local effect_name_secondary = fx.muzzle_flash_effect_secondary
 	local crit_effect_name = fx.muzzle_flash_crit_effect
 	local is_critical_strike = self._critical_strike_component.is_active
-	local effect_to_play = (is_critical_strike and crit_effect_name) or effect_name
+	local effect_to_play = is_critical_strike and crit_effect_name or effect_name
 
 	if not effect_to_play then
 		return

@@ -11,7 +11,7 @@ end
 BakedPhysics.enable_actors = function (self, unit)
 	local num_actors = Unit.num_actors(unit)
 
-	for i = 1, Unit.num_actors(unit), 1 do
+	for i = 1, Unit.num_actors(unit) do
 		Unit.create_actor(unit, i, false)
 		Actor.put_to_sleep(Unit.actor(unit, i))
 	end

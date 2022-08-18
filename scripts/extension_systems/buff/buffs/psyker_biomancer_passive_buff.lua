@@ -6,7 +6,7 @@ PsykerBiomancerPassiveBuff.update_proc_events = function (self, t, proc_events, 
 	local template = self._template
 	local template_proc_events = template.proc_events
 
-	for i = 1, num_proc_events, 1 do
+	for i = 1, num_proc_events do
 		local proc_event_data = proc_events[i]
 		local proc_event_name = proc_event_data.name
 		local proc_chance = template_proc_events[proc_event_name]
@@ -14,7 +14,7 @@ PsykerBiomancerPassiveBuff.update_proc_events = function (self, t, proc_events, 
 		local is_local_proc_event = params.is_local_proc_event
 		local template_data = self._template_data
 		local template_context = self._template_context
-		local portable_random_to_use = (is_local_proc_event and local_portable_random) or portable_random
+		local portable_random_to_use = is_local_proc_event and local_portable_random or portable_random
 		local random_value = portable_random_to_use:next_random()
 
 		if proc_chance and random_value < proc_chance then

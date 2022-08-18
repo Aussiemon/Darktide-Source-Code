@@ -44,7 +44,8 @@ PriorityQueue.pop = function (self)
 
 	self:_swap(1, self._size)
 
-	self._keys[self._size], self._data[self._size] = nil
+	self._data[self._size] = nil
+	self._keys[self._size] = nil
 	self._size = self._size - 1
 	local key = self._keys[1]
 	local size = self._size

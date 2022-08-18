@@ -38,8 +38,8 @@ local function _scaled_damage_interval_function(template_data, template_context,
 		power_level = power_level * 0.5 + math.random() * power_level
 	end
 
-	local optional_owner_unit = (template_context.is_server and template_context.owner_unit) or nil
-	local optional_source_item = (template_context.is_server and template_context.source_item) or nil
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local optional_source_item = template_context.is_server and template_context.source_item or nil
 	local damage_template = template.damage_template
 	local damage_type = template.damage_type
 

@@ -1,10 +1,11 @@
 require("scripts/foundation/utilities/error")
 
-local destroyed_mt = {
-	__index = function (t, k)
-		ferror("Tried accessing %s on destroyed object of type %s", tostring(k), t.__class_name)
-	end
-}
+local destroyed_mt = {}
+
+destroyed_mt.__index = function (t, k)
+	ferror("Tried accessing %s on destroyed object of type %s", tostring(k), t.__class_name)
+end
+
 local special_functions = {
 	__index = true,
 	super = true,
@@ -40,28 +41,31 @@ function class(class_name, super_name)
 			super = super,
 			__class_name = class_name,
 			__index = class_table,
-			__interfaces = {},
-			new = function (self, ...)
-				local object = {}
-
-				setmetatable(object, class_table)
-
-				if object.init then
-					return object, object:init(...)
-				else
-					return object
-				end
-			end,
-			delete = function (self, ...)
-				if self.destroy then
-					self:destroy(...)
-				end
-
-				self.__deleted = true
-
-				setmetatable(self, destroyed_mt)
-			end
+			__interfaces = {}
 		}
+
+		class_table.new = function (self, ...)
+			local object = {}
+
+			setmetatable(object, class_table)
+
+			if object.init then
+				return object, object:init(...)
+			else
+				return object
+			end
+		end
+
+		class_table.delete = function (self, ...)
+			if self.destroy then
+				self:destroy(...)
+			end
+
+			self.__deleted = true
+
+			setmetatable(self, destroyed_mt)
+		end
+
 		CLASSES[class_name] = class_table
 	end
 
@@ -79,5 +83,3 @@ end
 function implements(class, ...)
 	return
 end
-
-return

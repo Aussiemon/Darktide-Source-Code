@@ -29,7 +29,7 @@ GameModeManager.init = function (self, game_mode_context, game_mode_name, gamepl
 	self._physics_world = game_mode_context.physics_world
 
 	if gameplay_modifiers then
-		for i = 1, #gameplay_modifiers, 1 do
+		for i = 1, #gameplay_modifiers do
 			self._gameplay_modifiers[gameplay_modifiers[i]] = true
 		end
 	end
@@ -94,7 +94,7 @@ GameModeManager._do_raycasts = function (self)
 
 	local raycast_queue = self._raycast_queue
 
-	for i = 1, num_raycasts, 1 do
+	for i = 1, num_raycasts do
 		local raycast_info = raycast_queue[i]
 		local id = raycast_info.raycast_object:cast(raycast_info.pos:unbox(), raycast_info.dir:unbox(), raycast_info.length)
 		self._async_raycast_handles[id] = raycast_info
@@ -111,7 +111,7 @@ GameModeManager._do_physics_callbacks = function (self)
 	if num_callbacks > 0 then
 		local safe_callbacks = self._physics_safe_callbacks
 
-		for i = 1, num_callbacks, 1 do
+		for i = 1, num_callbacks do
 			safe_callbacks[i]()
 		end
 
@@ -314,7 +314,7 @@ GameModeManager._set_end_conditions_met = function (self, outcome)
 	self._end_conditions_met_outcome = outcome
 
 	if self._is_server then
-		local session_id = (Managers.mission_server and Managers.mission_server._session_id) or nil
+		local session_id = Managers.mission_server and Managers.mission_server._session_id or nil
 
 		Managers.mechanism:trigger_event("game_mode_end", outcome, session_id)
 

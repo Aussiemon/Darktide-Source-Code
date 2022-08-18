@@ -59,7 +59,7 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 	local number_of_results, results = TrueFlightDefaults.broadphase_query(owner_unit, search_position, radius)
 
 	if number_of_results > 0 then
-		for i = 1, number_of_results, 1 do
+		for i = 1, number_of_results do
 			local unit = results[i]
 
 			if ScriptUnit.has_extension(unit, "health_system") then

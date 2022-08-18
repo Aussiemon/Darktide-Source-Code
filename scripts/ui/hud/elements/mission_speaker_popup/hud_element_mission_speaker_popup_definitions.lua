@@ -128,7 +128,7 @@ local widget_definitions = {
 }
 local num_bars = HudElementMissionSpeakerPopupSettings.bar_amount
 
-for i = 1, num_bars, 1 do
+for i = 1, num_bars do
 	local name = "bar_" .. i
 	widget_definitions[name] = UIWidget.create_definition({
 		{
@@ -186,93 +186,92 @@ for i = 1, num_bars, 1 do
 	}, "background")
 end
 
-local animations = {
-	popup_enter = {
-		{
-			name = "hide everything",
-			end_time = 0,
-			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets)
-				for key, widget in pairs(widgets) do
-					widget.alpha_multiplier = 0
-				end
+local animations = {}
+animations.popup_enter = {
+	{
+		name = "hide everything",
+		end_time = 0,
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets)
+			for key, widget in pairs(widgets) do
+				widget.alpha_multiplier = 0
+			end
 
-				widgets.popup.style.portrait.material_values.distortion = 1
-			end
-		},
-		{
-			name = "icon_fade_in",
-			end_time = 0.5,
-			start_time = 0.1,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = math.easeOutCubic(progress)
-				local popup_widget = widgets.popup
-				popup_widget.alpha_multiplier = anim_progress
-				popup_widget.offset[1] = 50 - 50 * anim_progress
-			end
-		},
-		{
-			name = "icon_distortion",
-			end_time = 2,
-			start_time = 0.3,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = math.ease_out_exp(math.bounce(progress))
-				local popup_widget = widgets.popup
-				popup_widget.style.portrait.material_values.distortion = anim_progress
-			end
-		},
-		{
-			name = "text_fade_in",
-			end_time = 1,
-			start_time = 0.6,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = math.easeCubic(progress)
-				local popup_widget = widgets.popup
-
-				for key, widget in pairs(widgets) do
-					if key ~= "popup" then
-						widget.alpha_multiplier = anim_progress
-					end
-				end
-			end
-		}
+			widgets.popup.style.portrait.material_values.distortion = 1
+		end
 	},
-	popup_exit = {
-		{
-			name = "text_fade_out",
-			end_time = 0.3,
-			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = 1 - math.easeOutCubic(progress)
+	{
+		name = "icon_fade_in",
+		end_time = 0.5,
+		start_time = 0.1,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = math.easeOutCubic(progress)
+			local popup_widget = widgets.popup
+			popup_widget.alpha_multiplier = anim_progress
+			popup_widget.offset[1] = 50 - 50 * anim_progress
+		end
+	},
+	{
+		name = "icon_distortion",
+		end_time = 2,
+		start_time = 0.3,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = math.ease_out_exp(math.bounce(progress))
+			local popup_widget = widgets.popup
+			popup_widget.style.portrait.material_values.distortion = anim_progress
+		end
+	},
+	{
+		name = "text_fade_in",
+		end_time = 1,
+		start_time = 0.6,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = math.easeCubic(progress)
+			local popup_widget = widgets.popup
 
-				for key, widget in pairs(widgets) do
-					if key ~= "popup" then
-						widget.alpha_multiplier = anim_progress
-					end
+			for key, widget in pairs(widgets) do
+				if key ~= "popup" then
+					widget.alpha_multiplier = anim_progress
 				end
 			end
-		},
-		{
-			name = "icon_distortion",
-			end_time = 0.8,
-			start_time = 0.3,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = 1 - math.easeOutCubic(progress)
-				local popup_widget = widgets.popup
-				popup_widget.style.portrait.material_values.distortion = anim_progress
+		end
+	}
+}
+animations.popup_exit = {
+	{
+		name = "text_fade_out",
+		end_time = 0.3,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = 1 - math.easeOutCubic(progress)
+
+			for key, widget in pairs(widgets) do
+				if key ~= "popup" then
+					widget.alpha_multiplier = anim_progress
+				end
 			end
-		},
-		{
-			name = "icon_fade_out",
-			end_time = 1,
-			start_time = 0.5,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-				local anim_progress = 1 - math.easeOutCubic(progress)
-				local popup_widget = widgets.popup
-				popup_widget.alpha_multiplier = anim_progress
-				popup_widget.offset[1] = 50 - 50 * anim_progress
-			end
-		}
+		end
+	},
+	{
+		name = "icon_distortion",
+		end_time = 0.8,
+		start_time = 0.3,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = 1 - math.easeOutCubic(progress)
+			local popup_widget = widgets.popup
+			popup_widget.style.portrait.material_values.distortion = anim_progress
+		end
+	},
+	{
+		name = "icon_fade_out",
+		end_time = 1,
+		start_time = 0.5,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+			local anim_progress = 1 - math.easeOutCubic(progress)
+			local popup_widget = widgets.popup
+			popup_widget.alpha_multiplier = anim_progress
+			popup_widget.offset[1] = 50 - 50 * anim_progress
+		end
 	}
 }
 

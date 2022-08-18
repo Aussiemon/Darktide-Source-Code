@@ -144,8 +144,8 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 	end
 
 	local was_interrupted = next_state == "stunned"
-	local anim_event = (was_interrupted and interrupt_anim_event) or stop_anim_event
-	local anim_event_3p = (was_interrupted and interrupt_anim_event_3p) or stop_anim_event_3p
+	local anim_event = was_interrupted and interrupt_anim_event or stop_anim_event
+	local anim_event_3p = was_interrupted and interrupt_anim_event_3p or stop_anim_event_3p
 	local animation_extension = self._animation_extension
 
 	if anim_event then

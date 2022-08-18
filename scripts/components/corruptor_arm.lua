@@ -55,7 +55,7 @@ CorruptorArm.editor_init = function (self, unit)
 		local text_position = Unit.local_position(unit, 1)
 		local translation_matrix = Matrix4x4.from_translation(text_position)
 
-		for i = 1, 4, 1 do
+		for i = 1, 4 do
 			self._guis[i] = World.create_world_gui(self._world, Matrix4x4.identity(), 1, 1)
 			self._debug_text_ids[i] = Gui.text_3d(self._guis[i], "Node", FONT_MATERIAL, FONT_SIZE, FONT, translation_matrix, Vector3.zero(), 3, text_color)
 
@@ -75,7 +75,7 @@ CorruptorArm.editor_destroy = function (self, unit)
 			self._line_render = nil
 		end
 
-		for i = 1, 4, 1 do
+		for i = 1, 4 do
 			Gui.destroy_text_3d(self._guis[i], self._debug_text_ids[i])
 			World.destroy_gui(self._world, self._guis[i])
 		end
@@ -141,7 +141,7 @@ CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment
 	local joint_increment = 1 / total_joint_amount
 	local mesh_increment = 1 / mesh_amount
 
-	for joint_amount = 0, total_joint_amount, 1 do
+	for joint_amount = 0, total_joint_amount do
 		local t = nil
 
 		if multi_mesh then
@@ -180,7 +180,7 @@ CorruptorArm._create_meshes = function (self, unit)
 		return
 	end
 
-	for i = 1, mesh_amount, 1 do
+	for i = 1, mesh_amount do
 		local attach_mesh = nil
 		local socket_node = Unit.node(unit, self._main_unit_root_name)
 		local socket_pos = Unit.world_position(unit, socket_node)
@@ -276,7 +276,7 @@ CorruptorArm._editor_debug_draw = function (self, unit)
 			"End Node"
 		}
 
-		for i = 1, 4, 1 do
+		for i = 1, 4 do
 			local text_position = node_pos[i]
 			local translation_matrix = Matrix4x4.from_translation(text_position)
 			local text_color = Color.red()
@@ -288,7 +288,7 @@ CorruptorArm._editor_debug_draw = function (self, unit)
 	end
 
 	if self._guis then
-		for i = 1, 4, 1 do
+		for i = 1, 4 do
 			Gui.set_visible(self._guis[i], not not self._should_debug_draw)
 		end
 	end

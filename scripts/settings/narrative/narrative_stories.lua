@@ -3,7 +3,7 @@ local narrative_stories = {
 }
 
 for _, chapters in pairs(narrative_stories) do
-	for i = 1, #chapters, 1 do
+	for i = 1, #chapters do
 		chapters[i].index = i
 	end
 end

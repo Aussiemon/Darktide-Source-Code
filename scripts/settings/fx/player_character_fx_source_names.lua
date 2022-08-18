@@ -20,7 +20,7 @@ for name, template in pairs(WeaponTemplates) do
 
 	if fx_sources then
 		for source_ending, _ in pairs(fx_sources) do
-			for i = 1, num_wieldable_slots, 1 do
+			for i = 1, num_wieldable_slots do
 				local slot_name = wieldable_slots[i]
 				local source_name = string.format("%s%s", slot_name, source_ending)
 				player_character_fx_source_names[source_name] = true

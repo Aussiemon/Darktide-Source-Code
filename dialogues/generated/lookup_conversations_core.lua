@@ -1874,5 +1874,3 @@ DialogueLookup[DialogueLookup_n + 935] = "temp_crude_language_2"
 DialogueLookup[DialogueLookup_n + 936] = "temp_crude_language_3_a"
 DialogueLookup[DialogueLookup_n + 937] = "temp_crude_language_3_b"
 DialogueLookup_n = DialogueLookup_n + 937
-
-return

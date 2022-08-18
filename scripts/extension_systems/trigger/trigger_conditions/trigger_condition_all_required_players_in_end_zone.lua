@@ -37,7 +37,7 @@ TriggerConditionAllRequiredPlayersInEndZone.is_condition_fulfilled = function (s
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local ScriptUnit_has_extension = ScriptUnit.has_extension
 
-	for i = 1, #player_units, 1 do
+	for i = 1, #player_units do
 		repeat
 			local player_unit = player_units[i]
 			local player = player_unit_spawn_manager:owner(player_unit)

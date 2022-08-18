@@ -14,7 +14,7 @@ for buff_target, _ in pairs(buff_targets) do
 	local lookup = {}
 	buff_target_component_lookups[buff_target] = lookup
 
-	for i = 1, num_buffs_per_target, 1 do
+	for i = 1, num_buffs_per_target do
 		lookup[i] = string.format("%s_%i", buff_target, i)
 	end
 end

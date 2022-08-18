@@ -1,7 +1,7 @@
 local ture_flight_smite = {}
 
 local function _lerp_modifier_func_default(integration_data, distance)
-	return (distance < 2 and 1) or 2 / distance
+	return distance < 2 and 1 or 2 / distance
 end
 
 local function _lerp_modifier_func(true_flight_template)
@@ -31,7 +31,7 @@ ture_flight_smite.smite_update_towards_position = function (target_position, phy
 	local new_off = math.abs(1 - Vector3.dot(new_direction, wanted_direction))
 	local is_alligned_offset = true_flight_template.is_alligned_offset
 	local is_aligned = new_off < is_alligned_offset
-	local acceleration = (is_aligned and true_flight_template.on_target_acceleration) or 0
+	local acceleration = is_aligned and true_flight_template.on_target_acceleration or 0
 	local new_speed = speed + acceleration * dt
 	local min_adjustment_speed = true_flight_template.min_adjustment_speed
 

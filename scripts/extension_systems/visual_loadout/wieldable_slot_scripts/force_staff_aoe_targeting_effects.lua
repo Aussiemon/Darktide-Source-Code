@@ -67,9 +67,9 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 
 	local is_local_unit = self._is_local_unit
 	local source_id = self._source_id
-	local decal_unit_name = (is_local_unit and position_finder_fx.decal_unit_name) or position_finder_fx.decal_unit_name_3p
-	local effect_name = (is_local_unit and position_finder_fx.effect_name) or position_finder_fx.effect_name_3p
-	local scaling_effect_name = (is_local_unit and position_finder_fx.scaling_effect_name) or position_finder_fx.scaling_effect_name_3p
+	local decal_unit_name = is_local_unit and position_finder_fx.decal_unit_name or position_finder_fx.decal_unit_name_3p
+	local effect_name = is_local_unit and position_finder_fx.effect_name or position_finder_fx.effect_name_3p
+	local scaling_effect_name = is_local_unit and position_finder_fx.scaling_effect_name or position_finder_fx.scaling_effect_name_3p
 	local scale_variable_name = position_finder_fx.scale_variable_name
 	local wwise_event = position_finder_fx.wwise_event_start
 	local wwise_parameter_name = position_finder_fx.wwise_parameter_name
@@ -125,7 +125,7 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 		local playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
 		self._targeting_playing_id = playing_id
 		local stop_event = position_finder_fx.wwise_event_stop
-		self._wwise_event_stop = (should_use_husk_event and stop_event .. "_husk") or stop_event
+		self._wwise_event_stop = should_use_husk_event and stop_event .. "_husk" or stop_event
 	elseif not wwise_event and old_playing_id then
 		local stop_event = self._wwise_event_stop
 

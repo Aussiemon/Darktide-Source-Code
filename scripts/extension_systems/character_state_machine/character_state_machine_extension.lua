@@ -183,7 +183,7 @@ CharacterStateMachineExtension._on_screen_particles = function (self, t)
 	elseif current_state == "lunging" and not self._dash_particle_effect then
 		local lunge_template = LungeTemplates[self._lunge_character_state_component.lunge_template]
 		local on_screen_effect = lunge_template.on_screen_effect
-		local on_screen_effect_delay = (on_screen_effect and lunge_template.on_screen_effect_delay) or 0
+		local on_screen_effect_delay = on_screen_effect and lunge_template.on_screen_effect_delay or 0
 		local should_play_on_screen = on_screen_effect and t >= self._character_state_component.entered_t + on_screen_effect_delay
 
 		if should_play_on_screen then

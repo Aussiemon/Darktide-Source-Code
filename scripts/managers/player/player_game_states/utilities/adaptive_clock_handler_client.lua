@@ -53,7 +53,7 @@ AdaptiveClockHandlerClient._target_offset = function (self)
 end
 
 AdaptiveClockHandlerClient.frame_parsed = function (self, frame, remainder_time, frame_time)
-	local measured_time = (frame * GameParameters.fixed_time_step + self:_frame_discrepancy_buffer() + remainder_time) - frame_time
+	local measured_time = frame * GameParameters.fixed_time_step + self:_frame_discrepancy_buffer() + remainder_time - frame_time
 	local server = Managers.connection:host()
 	local rtt = Network.ping(server)
 	local estimated_time = Managers.time:time("gameplay") - self._current_offset - rtt * 0.5

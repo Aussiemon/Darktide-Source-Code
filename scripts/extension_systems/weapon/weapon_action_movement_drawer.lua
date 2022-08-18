@@ -20,7 +20,7 @@ WeaponActionMovementDrawer.update = function (self, dt, t)
 	if movement_curve then
 		local weapon_action_component = self._weapon_action_component
 		local is_infinite_duration = weapon_action_component.is_infinite_duration
-		local end_t = (is_infinite_duration and math.huge) or weapon_action_component.end_t
+		local end_t = is_infinite_duration and math.huge or weapon_action_component.end_t
 
 		self:_draw_movement_curve(movement_curve, start_t, end_t, self._fixed_t)
 	end
@@ -42,7 +42,7 @@ local SCREEN_ALIGNMENT_X = "right"
 local LAYER = 10
 
 WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve, start_t, end_t, current_t)
-	local _end_t = (end_t == 0 and math.huge) or end_t
+	local _end_t = end_t == 0 and math.huge or end_t
 	local gui = Debug:debug_gui()
 	local bg_color = Color.light_green(200)
 	local line_color = Color.white()
@@ -60,7 +60,7 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 
 	local line_thickness = 2
 	local x_line_size = Vector2(extents_x, line_thickness)
-	local x_line_pos = Vector3(anchor_x, (anchor_y + extents_y) - line_thickness, anchor_z + 1)
+	local x_line_pos = Vector3(anchor_x, anchor_y + extents_y - line_thickness, anchor_z + 1)
 
 	Gui.rect(gui, x_line_pos, x_line_size, line_color)
 
@@ -71,7 +71,7 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 
 	local middle_line_extra = 0
 	local middle_line_size = Vector2(extents_x + middle_line_extra * 2, line_thickness)
-	local middle_line_pos = Vector3(anchor_x - middle_line_extra, (anchor_y + extents_y / 2) - line_thickness / 2, anchor_z + 1)
+	local middle_line_pos = Vector3(anchor_x - middle_line_extra, anchor_y + extents_y / 2 - line_thickness / 2, anchor_z + 1)
 
 	Gui.rect(gui, middle_line_pos, middle_line_size, line_color)
 
@@ -107,7 +107,7 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 	local p1 = nil
 	local p2 = Vector2(x_line_pos.x + extents_x * prev_t, y_line_pos.y + extents_y * prev_mod)
 
-	for i = 1, #movement_curve, 1 do
+	for i = 1, #movement_curve do
 		p1 = p2
 		local segment = movement_curve[i]
 		local mod = segment.modifier

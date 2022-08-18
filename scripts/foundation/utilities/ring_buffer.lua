@@ -44,7 +44,7 @@ RingBuffer.size = function (self)
 		if tail_index < head_index then
 			size = head_index - tail_index
 		else
-			size = (size + head_index) - tail_index
+			size = size + head_index - tail_index
 		end
 	end
 
@@ -55,13 +55,7 @@ RingBuffer._advance_indices = function (self)
 	local max_length = self._max_length
 	local tail_index = self._tail_index
 	local head_index = self._head_index
-
-	if head_index == max_length then
-		head_index = 1
-	else
-		head_index = head_index + 1
-	end
-
+	head_index = head_index == max_length and 1 or head_index + 1
 	local is_full = head_index == tail_index
 	local first_element_added = tail_index == 0 and head_index == 1
 

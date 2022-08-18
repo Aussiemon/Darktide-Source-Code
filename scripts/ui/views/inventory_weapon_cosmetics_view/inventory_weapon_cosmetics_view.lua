@@ -88,7 +88,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	}
 	local tab_ids = {}
 
-	for i = 1, #content, 1 do
+	for i = 1, #content do
 		local tab_content = content[i]
 		local display_name = tab_content.display_name
 		local display_icon = tab_content.icon
@@ -116,7 +116,7 @@ InventoryWeaponCosmeticsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 40)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -141,7 +141,7 @@ InventoryWeaponCosmeticsView._fetch_items = function (self)
 		local temp_item = require("scripts/backend/master_items"):get_cached()["content/items/weapons/player/trinkets/debug_trinket"]
 		local temp_items = {}
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			temp_items[i] = temp_item
 		end
 
@@ -371,7 +371,7 @@ end
 
 InventoryWeaponCosmeticsView._cb_on_ui_visibility_toggled = function (self, id)
 	self._visibility_toggled_on = not self._visibility_toggled_on
-	local display_name = (self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off") or "loc_menu_toggle_ui_visibility_on"
+	local display_name = self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off" or "loc_menu_toggle_ui_visibility_on"
 
 	self._input_legend_element:set_display_name(id, display_name)
 end
@@ -435,10 +435,10 @@ InventoryWeaponCosmeticsView._draw_widgets = function (self, dt, t, input_servic
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 		local widget_name = widget.name
-		render_settings.alpha_multiplier = (always_visible_widget_names[widget_name] and 1) or alpha_multiplier
+		render_settings.alpha_multiplier = always_visible_widget_names[widget_name] and 1 or alpha_multiplier
 
 		UIWidget.draw(widget, ui_renderer)
 	end
@@ -447,7 +447,7 @@ InventoryWeaponCosmeticsView._draw_widgets = function (self, dt, t, input_servic
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -457,7 +457,7 @@ end
 
 InventoryWeaponCosmeticsView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -520,9 +520,9 @@ InventoryWeaponCosmeticsView._create_entry_widget_from_config = function (self, 
 
 	fassert(template, "[InventoryWeaponCosmeticsView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -562,7 +562,7 @@ InventoryWeaponCosmeticsView._draw_grid = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -583,7 +583,7 @@ InventoryWeaponCosmeticsView._update_grid_widgets = function (self, dt, t, input
 	local widgets = self._grid_widgets
 
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]

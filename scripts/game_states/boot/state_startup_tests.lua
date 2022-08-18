@@ -12,7 +12,7 @@ StateStartupTests.on_enter = function (self, ...)
 end
 
 StateStartupTests._run_tests = function (self, tests)
-	for i = 1, #tests, 1 do
+	for i = 1, #tests do
 		local test_path = tests[i]
 		local test_func = require(test_path)
 		local success, error_msg = test_func()

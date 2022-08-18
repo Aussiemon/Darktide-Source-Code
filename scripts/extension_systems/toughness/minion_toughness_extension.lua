@@ -49,7 +49,7 @@ MinionToughnessExtension._initialize_toughness = function (self, unit, toughness
 	local linked_actor_name = toughness_template.linked_actor
 
 	if linked_actor_name then
-		slot6 = Unit.find_actor(unit, linked_actor_name)
+		local linked_actor_id = Unit.find_actor(unit, linked_actor_name)
 	end
 end
 
@@ -272,7 +272,7 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 	end
 
 	if absorbed_attack then
-		local hit_world_position = hit_world_position_or_nil or (hit_actor and Actor.position(hit_actor)) or POSITION_LOOKUP[self._unit]
+		local hit_world_position = hit_world_position_or_nil or hit_actor and Actor.position(hit_actor) or POSITION_LOOKUP[self._unit]
 
 		self:_store_toughness_attack_absorbed(damage_amount, hit_world_position)
 

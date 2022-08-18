@@ -1,251 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Definitions = require("scripts/ui/views/inbox_view/inbox_view_definitions")
 local InboxViewSettings = require("scripts/ui/views/inbox_view/inbox_view_settings")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
@@ -281,7 +33,7 @@ InboxView.on_enter = function (self)
 	self:_fetch_store_items()
 
 	local context = self._context
-	local player = (context and context.player) or self:_player()
+	local player = context and context.player or self:_player()
 	local profile = player:profile()
 	self._presentation_profile = table.clone_instance(profile)
 
@@ -292,7 +44,7 @@ InboxView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -308,7 +60,7 @@ InboxView._set_player_profile_information = function (self, player)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.character_name.content.text = character_name
 	widgets_by_name.character_title.content.text = character_title
-	widgets_by_name.character_level.content.text = tostring(current_level) .. " \ue006"
+	widgets_by_name.character_level.content.text = tostring(current_level) .. " "
 
 	self:_set_experience_bar(0, 0)
 	self:_fetch_character_progression(player)
@@ -375,68 +127,32 @@ InboxView._fetch_character_progression = function (self, player)
 			Log.error("InboxView", "Error fetching character progression: %s", error)
 		end)
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 40-48, warpins: 1 ---
 		profiles_promise = Promise.new()
 		local level_experience_progress = 0
 
 		profiles_promise:resolve(level_experience_progress)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
 	profiles_promise:next(function (level_progress)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		level_progress = level_progress or 0
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-19, warpins: 2 ---
 		self:_set_experience_bar(level_progress, 2)
 
 		self._character_progression_promise = nil
 		self._fetching_character_progression = false
 		self._dirty_character_list = true
-
-		return
-		--- END OF BLOCK #1 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-13, warpins: 1 ---
 		self._character_progression_promise = nil
 
 		Log.error("InboxView", "Error fetching character progression: %s", error)
 
 		self._fetching_character_progression = false
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
 
 	self._character_progression_promise = profiles_promise
 end
 
 InboxView._create_offscreen_renderer = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-45, warpins: 1 ---
 	local view_name = self.view_name
 	local world_layer = 10
 	local world_name = self.__class_name .. "_ui_offscreen_world"
@@ -454,18 +170,9 @@ InboxView._create_offscreen_renderer = function (self)
 		viewport_name = viewport_name,
 		renderer_name = renderer_name
 	}
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._create_grid = function (self, entries)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-37, warpins: 1 ---
 	self._current_scrollbar_progress = nil
 	local widgets = {}
 	local size = ItemPassTemplates.icon_size
@@ -482,54 +189,19 @@ InboxView._create_grid = function (self, entries)
 	self:_set_scenegraph_size("grid_interaction", scenegraph_width, scenegraph_height)
 
 	local function unload_icon(parent, widget, element, ui_renderer)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local content = widget.content
 
 		if content.icon_load_id then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 5-17, warpins: 1 ---
 			local material_values = widget.style.icon.material_values
 			material_values.use_placeholder_texture = 1
 
 			Managers.ui:unload_item_icon(content.icon_load_id)
 
 			content.icon_load_id = nil
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 18-18, warpins: 2 ---
-		return
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 38-80, warpins: 0 ---
-	for i = 1, #entries, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 38-66, warpins: 2 ---
+	for i = 1, #entries do
 		local entry = entries[i]
 		local widget_definition = UIWidget.create_definition(pass_template, "grid_content_pivot", nil, size)
 		local name = "widget_inventory_" .. i
@@ -540,53 +212,19 @@ InboxView._create_grid = function (self, entries)
 		local slot = entry.slot
 
 		if slot then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 67-75, warpins: 1 ---
 			local item = entry.item
 			content.item = item
 			local _, rarity_side_texture = ItemUtils.rarity_textures(item)
 			content.rarity_side_texture = rarity_side_texture
 
 			if item then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 76-76, warpins: 1 ---
 				widget.unload_icon = unload_icon
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-
-
 		end
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 77-80, warpins: 3 ---
 		widgets[#widgets + 1] = widget
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 81-107, warpins: 1 ---
 	local grid = UIWidgetGrid:new(widgets, widgets, self._ui_scenegraph, "grid_background", "down", grid_spacing)
 	local scrollbar_widget = self._widgets_by_name.grid_scrollbar
 
@@ -597,780 +235,226 @@ InboxView._create_grid = function (self, entries)
 		widgets = widgets,
 		grid = grid
 	}
-
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView._apply_item_icon_cb_func = function (self, widget, grid_index, rows, columns)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-10, warpins: 1 ---
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._remove_item_icon_cb_func = function (self, widget, ui_renderer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._on_back_pressed = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	Managers.ui:close_view(self.view_name)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._destroy_renderer = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	if self._offscreen_renderer then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-5, warpins: 1 ---
 		self._offscreen_renderer = nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-8, warpins: 2 ---
 	local world_data = self._offscreen_world
 
 	if world_data then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 9-26, warpins: 1 ---
 		Managers.ui:destroy_renderer(world_data.renderer_name)
 		ScriptWorld.destroy_viewport(world_data.world, world_data.viewport_name)
 		Managers.ui:destroy_world(world_data.world)
 
 		world_data = nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 27-27, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView.update = function (self, dt, t, input_service)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	if self._inbox_grid then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-18, warpins: 1 ---
 		self._inbox_grid.grid:update(dt, t)
 
 		local current_scrollbar_progress = self._inbox_grid.grid:scrollbar_progress()
 
 		if self._current_scrollbar_progress ~= current_scrollbar_progress then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 19-22, warpins: 1 ---
 			self._current_scrollbar_progress = current_scrollbar_progress
 
 			self:_update_grid_widgets_visibility()
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 23-34, warpins: 3 ---
 	self:_update_stat_bar_animations(dt)
 
 	return InboxView.super.update(self, dt, t, input_service)
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._update_grid_widgets_visibility = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	local widgets = self._inbox_grid.widgets
 
 	if widgets then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 5-10, warpins: 1 ---
 		local num_widgets = #widgets
 		local ui_renderer = self._ui_offscreen_renderer
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 11-20, warpins: 0 ---
-		for i = 1, num_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 11-20, warpins: 2 ---
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
 			local visible = self._inbox_grid.grid:is_widget_visible(widget)
 			content.visible = visible
-			--- END OF BLOCK #0 ---
-
-
-
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 21-24, warpins: 1 ---
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 25-43, warpins: 0 ---
-		for i = 1, num_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 25-30, warpins: 2 ---
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
 			local element = content.element
 			local visible = content.visible
 
 			if not visible and widget.unload_icon and content.icon_load_id then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 37-42, warpins: 1 ---
 				widget.unload_icon(self, widget, element, ui_renderer)
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 43-43, warpins: 4 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
 
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 44-47, warpins: 1 ---
-		--- END OF BLOCK #4 ---
-
-		FLOW; TARGET BLOCK #5
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #5 48-71, warpins: 0 ---
-		for i = 1, num_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 48-52, warpins: 2 ---
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
 			local visible = content.visible
 
 			if visible then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 53-57, warpins: 1 ---
 				local content = widget.content
 				local item = content.item
 
 				if not content.icon_load_id then
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 58-70, warpins: 1 ---
 					local cb = callback(self, "_apply_item_icon_cb_func", widget)
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb)
-					--- END OF BLOCK #0 ---
-
-
-
 				end
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 71-71, warpins: 3 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
-		--- END OF BLOCK #5 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 72-72, warpins: 2 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView.draw = function (self, dt, t, input_service, layer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-16, warpins: 1 ---
 	self:_draw_grid(dt, t, input_service)
 	InboxView.super.draw(self, dt, t, input_service, layer)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._draw_grid = function (self, dt, t, input_service, layer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	if self._inbox_grid then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-17, warpins: 1 ---
 		UIRenderer.begin_pass(self._offscreen_renderer, self._ui_scenegraph, input_service, dt, self._render_settings)
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 18-38, warpins: 0 ---
-		for i = 1, #self._inbox_grid.widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 18-24, warpins: 2 ---
+		for i = 1, #self._inbox_grid.widgets do
 			local widget = self._inbox_grid.widgets[i]
 
 			if self._inbox_grid.grid and self._inbox_grid.grid:is_widget_visible(widget) then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 33-37, warpins: 1 ---
 				UIWidget.draw(widget, self._offscreen_renderer)
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 38-38, warpins: 3 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 39-42, warpins: 1 ---
 		UIRenderer.end_pass(self._offscreen_renderer)
-		--- END OF BLOCK #2 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 43-43, warpins: 2 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	InboxView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 14-17, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 18-24, warpins: 0 ---
-		for i = 1, #stat_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 18-24, warpins: 2 ---
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 25-25, warpins: 2 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._destroy_grid_widgets = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local widgets = self._inbox_grid and self._inbox_grid.widgets
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-7, warpins: 2 ---
 	if widgets then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-13, warpins: 1 ---
 		local num_widgets = #widgets
 		local ui_renderer = self._ui_offscreen_renderer
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 14-33, warpins: 0 ---
-		for i = 1, num_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 14-19, warpins: 2 ---
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local element = widget.element
 			local content = widget.content
 
 			if content.icon_load_id then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 20-32, warpins: 1 ---
 				local material_values = widget.style.icon.material_values
 				material_values.use_placeholder_texture = 1
 
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 33-33, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 34-34, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView.on_exit = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-12, warpins: 1 ---
 	InboxView.super.on_exit(self)
 	self:_destroy_grid_widgets()
 	self:_destroy_renderer()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._fetch_store_items = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local store_promise = nil
 
 	self:_set_loading_visible(true)
 
 	if not store_promise then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-11, warpins: 1 ---
 		self:_set_empty_list()
 
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-17, warpins: 1 ---
 	store_promise:next(function (store_catalogue)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		if self._destroyed then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 5-5, warpins: 1 ---
 			return
-			--- END OF BLOCK #0 ---
-
-
-
 		end
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 6-15, warpins: 2 ---
 		local store_data = store_catalogue.data
 		local public_filtered = store_data.public_filtered
 		local layout = self:_create_grid_layout(public_filtered)
 
 		if #layout == 0 then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 16-20, warpins: 1 ---
 			self:_set_empty_list()
-			--- END OF BLOCK #0 ---
-
-
-
 		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 21-30, warpins: 1 ---
 			self:_set_loading_visible(false)
 			self:_create_grid(layout)
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 31-31, warpins: 2 ---
-		return
-		--- END OF BLOCK #2 ---
-
-
-
 	end)
-
-	return
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 18-18, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView._create_grid_layout = function (self, item_offers)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local layout = {}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-24, warpins: 0 ---
-	for i = 1, #item_offers, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-11, warpins: 2 ---
+	for i = 1, #item_offers do
 		local offer = item_offers[i]
 		local offer_id = offer.offerId
 		local sku = offer.sku
 		local category = sku.category
 
 		if category == "item_instance" then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 12-23, warpins: 1 ---
 			local item = MasterItems.get_store_item_instance(offer.description)
 			layout[#layout + 1] = {
 				item = item,
 				slot = ItemSlotSettings.slot_secondary
 			}
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 24-24, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 25-25, warpins: 1 ---
 	return layout
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView.cb_on_grid_entry_pressed = function (self, widget, element)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local item = element.item
 
 	if item and item ~= self._previewed_item then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 7-10, warpins: 1 ---
 		self:_preview_element(element)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 11-11, warpins: 3 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._preview_element = function (self, element)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-33, warpins: 1 ---
 	local item = element.item
 	self._previewed_item = item
 
@@ -1388,77 +472,35 @@ InboxView._preview_element = function (self, element)
 	content.rarity_side_texture = rarity_side_texture
 
 	if content.icon_load_id then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 34-46, warpins: 1 ---
 		local material_values = item_widget.style.icon.material_values
 		material_values.use_placeholder_texture = 1
 
 		Managers.ui:unload_item_icon(content.icon_load_id)
 
 		content.icon_load_id = nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 47-65, warpins: 2 ---
 	local cb = callback(self, "_apply_item_icon_cb_func", item_widget)
 	content.icon_load_id = Managers.ui:load_item_icon(item, cb)
 	local visible = true
 
 	self:_set_preview_widgets_visibility(visible)
-
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._set_loading_visible = function (self, visible)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.loading.content.visible = visible
 	widgets_by_name.inventory_grid.content.visible = not visible
 
 	self:_set_preview_widgets_visibility(false)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._set_empty_list = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.loading.content.text = "No Items available"
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 InboxView._set_preview_widgets_visibility = function (self, visible)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-28, warpins: 1 ---
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.item_background.content.visible = visible
 	widgets_by_name.item_detail_intro.content.visible = visible
@@ -1471,53 +513,14 @@ InboxView._set_preview_widgets_visibility = function (self, visible)
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 29-32, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 33-36, warpins: 0 ---
-		for i = 1, #stat_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 33-36, warpins: 2 ---
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 			widget.content.visible = visible
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 37-37, warpins: 2 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 InboxView._setup_stats_preview_widgets = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-78, warpins: 1 ---
 	local num_stats = 6
 	local max_rows = 2
 	local stats_size = {
@@ -1533,144 +536,100 @@ InboxView._setup_stats_preview_widgets = function (self)
 		0
 	}
 	local weapon_stats_bar_background_margin = 2
-	local weapon_stat_bar = {}
-	weapon_stat_bar[1] = {
-		value = "text",
-		value_id = "text",
-		pass_type = "text",
-		style = weapon_bar_text_style
-	}
-	weapon_stat_bar[2] = {
-		style_id = "background",
-		pass_type = "rect",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "left",
-			size = {
-				nil,
-				6
-			},
-			size_addition = {
-				weapon_stats_bar_background_margin * 2,
-				weapon_stats_bar_background_margin * 2
-			},
-			offset = {
-				0,
-				0,
-				0
-			},
-			color = {
-				255,
-				0,
-				0,
-				0
+	local weapon_stat_bar = {
+		{
+			value = "text",
+			value_id = "text",
+			pass_type = "text",
+			style = weapon_bar_text_style
+		},
+		{
+			style_id = "background",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
+				size = {
+					nil,
+					6
+				},
+				size_addition = {
+					weapon_stats_bar_background_margin * 2,
+					weapon_stats_bar_background_margin * 2
+				},
+				offset = {
+					0,
+					0,
+					0
+				},
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
 			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "bar",
+			value = "content/ui/materials/bars/simple/fill",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
+				size = {
+					nil,
+					6
+				},
+				offset = {
+					-weapon_stats_bar_background_margin,
+					0,
+					1
+				},
+				color = Color.white(255, true)
+			},
+			change_function = function (content, style)
+				local progress = content.progress or 0
+				local new_bar_length = stats_size[1] * progress
+				style.size[1] = new_bar_length
+			end
+		},
+		{
+			pass_type = "texture",
+			style_id = "end",
+			value = "content/ui/materials/bars/simple/end",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
+				size = {
+					12,
+					16
+				},
+				offset = {
+					0,
+					5,
+					2
+				},
+				color = {
+					255,
+					255,
+					255,
+					255
+				}
+			},
+			change_function = function (content, style)
+				local progress = content.progress or 0
+				style.offset[1] = stats_size[1] * progress - 8
+				local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
+				style.color[1] = 255 * alpha_multiplier
+			end
 		}
-	}
-	weapon_stat_bar[3] = {
-		pass_type = "texture",
-		style_id = "bar",
-		value = "content/ui/materials/bars/simple/fill",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "left",
-			size = {
-				nil,
-				6
-			},
-			offset = {
-				-weapon_stats_bar_background_margin,
-				0,
-				1
-			},
-			color = Color.white(255, true)
-		},
-		change_function = function (content, style)
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 1-3, warpins: 1 ---
-			local progress = content.progress or 0
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 5-10, warpins: 2 ---
-			local new_bar_length = stats_size[1] * progress
-			style.size[1] = new_bar_length
-
-			return
-			--- END OF BLOCK #1 ---
-
-
-
-		end
-	}
-	weapon_stat_bar[4] = {
-		pass_type = "texture",
-		style_id = "end",
-		value = "content/ui/materials/bars/simple/end",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "left",
-			size = {
-				12,
-				16
-			},
-			offset = {
-				0,
-				5,
-				2
-			},
-			color = {
-				255,
-				255,
-				255,
-				255
-			}
-		},
-		change_function = function (content, style)
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 1-3, warpins: 1 ---
-			local progress = content.progress or 0
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 5-20, warpins: 2 ---
-			style.offset[1] = stats_size[1] * progress - 8
-			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
-			style.color[1] = 255 * alpha_multiplier
-
-			return
-			--- END OF BLOCK #1 ---
-
-
-
-		end
 	}
 	local widget_definition = UIWidget.create_definition(weapon_stat_bar, "stat_pivot", nil, stats_size)
 	local widgets = {}
 	local spacing = 30
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 79-109, warpins: 0 ---
-	for i = 1, num_stats, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 79-109, warpins: 2 ---
+	for i = 1, num_stats do
 		local name = "stat_" .. i
 		local widget = self:_create_widget(name, widget_definition)
 		local column = (i - 1) % max_rows + 1
@@ -1679,212 +638,94 @@ InboxView._setup_stats_preview_widgets = function (self)
 		offset[2] = (column - 1) * stats_size[2] + (column - 1) * spacing
 		offset[1] = (row - 1) * stats_size[1]
 		widgets[#widgets + 1] = widget
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 110-112, warpins: 1 ---
 	self._stat_widgets = widgets
-
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView._setup_item_stats = function (self, item)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-83, warpins: 1 ---
 	table.clear(self._stats_animation_progress)
 
-	local context = {}
-	context[1] = {
-		title = "loc_weapon_stats_title_damage",
-		progress = math.random_range(0, 1)
-	}
-	context[2] = {
-		title = "loc_weapon_stats_title_rate_of_fire",
-		progress = math.random_range(0, 1)
-	}
-	context[3] = {
-		title = "loc_weapon_stats_title_handling",
-		progress = math.random_range(0, 1)
-	}
-	context[4] = {
-		title = "loc_weapon_stats_title_range",
-		progress = math.random_range(0, 1)
-	}
-	context[5] = {
-		title = "loc_weapon_stats_title_reload_speed",
-		progress = math.random_range(0, 1)
-	}
-	context[6] = {
-		title = "loc_weapon_stats_title_area_damage",
-		progress = math.random_range(0, 1)
-	}
-	context[7] = {
-		title = "loc_weapon_stats_title_mobility",
-		progress = math.random_range(0, 1)
-	}
-	context[8] = {
-		title = "loc_weapon_stats_title_suppress",
-		progress = math.random_range(0, 1)
-	}
-	context[9] = {
-		title = "loc_weapon_stats_title_ammo",
-		progress = math.random_range(0, 1)
+	local context = {
+		{
+			title = "loc_weapon_stats_title_damage",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_rate_of_fire",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_handling",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_range",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_reload_speed",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_area_damage",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_mobility",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_suppress",
+			progress = math.random_range(0, 1)
+		},
+		{
+			title = "loc_weapon_stats_title_ammo",
+			progress = math.random_range(0, 1)
+		}
 	}
 	local widgets_by_name = self._widgets_by_name
 	local anim_duration = 1
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 84-103, warpins: 0 ---
-	for i = 1, #context, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 84-90, warpins: 2 ---
+	for i = 1, #context do
 		local data = context[i]
 		local name = "stat_" .. i
 		local widget = widgets_by_name[name]
 
 		if widget then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 91-102, warpins: 1 ---
 			widget.content.text = Localize(data.title)
 			local value = data.progress
 
 			self:_set_stat_bar_value(i, value, anim_duration)
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 103-103, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 104-104, warpins: 1 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView._set_stat_bar_value = function (self, stat_index, value, duration, should_reset)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-10, warpins: 1 ---
 	local stats_animation_progress = self._stats_animation_progress
 	local name = "stat_" .. stat_index
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name[name]
 	local content = widget.content
 	local current_progress = content.progress or 0
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-14, warpins: 2 ---
 	local anim_data = {
-		time = 0
+		time = 0,
+		start_value = should_reset and 0 or current_progress,
+		end_value = value,
+		duration = duration,
+		widget = widget
 	}
-	anim_data.start_value = (should_reset and 0) or current_progress
-	anim_data.end_value = value
-	anim_data.duration = duration
-	anim_data.widget = widget
 	stats_animation_progress[#stats_animation_progress + 1] = anim_data
-
-	return
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 18-25, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 InboxView._update_stat_bar_animations = function (self, dt)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local stats_animation_progress = self._stats_animation_progress
 
 	if not stats_animation_progress or #stats_animation_progress < 1 then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-8, warpins: 2 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 9-12, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 13-42, warpins: 0 ---
 	for i = #stats_animation_progress, 1, -1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 13-37, warpins: 2 ---
 		local data = stats_animation_progress[i]
 		local duration = data.duration
 		local end_value = data.end_value
@@ -1899,51 +740,11 @@ InboxView._update_stat_bar_animations = function (self, dt)
 		widget.content.progress = anim_fraction
 
 		if time_progress < 1 then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 38-39, warpins: 1 ---
 			data.time = time
-			--- END OF BLOCK #0 ---
-
-
-
 		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 40-41, warpins: 1 ---
 			stats_animation_progress[i] = nil
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 42-42, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 43-43, warpins: 1 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 return InboxView

@@ -615,7 +615,7 @@ local animations = {
 				local anim_progress = 1 - progress
 				local widgets_to_fade = parent._additional_widgets
 
-				for i = 1, #widgets_to_fade, 1 do
+				for i = 1, #widgets_to_fade do
 					local widget = widgets_to_fade[i]
 					widget.alpha_multiplier = anim_progress
 				end
@@ -662,7 +662,7 @@ local animations = {
 
 				local widgets_to_fade = parent._additional_widgets
 
-				for i = 1, #widgets_to_fade, 1 do
+				for i = 1, #widgets_to_fade do
 					local widget = widgets_to_fade[i]
 					widget.alpha_multiplier = anim_progress
 				end

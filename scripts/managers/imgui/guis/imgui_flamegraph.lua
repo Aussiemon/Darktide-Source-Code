@@ -50,7 +50,7 @@ local font = DevParameters.debug_text_font
 ImguiFlamegraph.do_cell = function (self, gui, cursor, name, record, s, w, h, x, y)
 	local color = Color(ColorUtilities.hsl2rgb(tonumber(sub(make_hash(name), 1, 2), 16) / 256, 0.4, 0.5))
 	local search = self._search
-	local border_color = (search ~= "" and find(name, search) and Color(255, 255, 255)) or Color(64, 64, 64)
+	local border_color = search ~= "" and find(name, search) and Color(255, 255, 255) or Color(64, 64, 64)
 	local box_pos = V3(x, y, 998)
 	local box_size = V2(w, math.max(2, h))
 
@@ -159,7 +159,7 @@ ImguiFlamegraph.profile_cb = function (self, thread, samples, vmmode)
 		return
 	end
 
-	local depth = (self._invert and 100) or -100
+	local depth = self._invert and 100 or -100
 	local stk = dumpstack(thread, "pFZ;", depth)
 	local record = ImguiFlamegraph._root
 	record[false] = record[false] + samples

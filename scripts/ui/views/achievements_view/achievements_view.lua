@@ -117,10 +117,10 @@ end
 
 AchievementsView._on_navigation_input_changed = function (self)
 	local using_gamepad = not self._using_cursor_navigation
-	local focused_grid_id = (using_gamepad and (self._focused_grid_id or CATEGORIES_GRID)) or nil
+	local focused_grid_id = using_gamepad and (self._focused_grid_id or CATEGORIES_GRID) or nil
 	local grids = self._grids
 
-	for i = 1, #grids, 1 do
+	for i = 1, #grids do
 		local is_focused_grid = focused_grid_id == nil or i == focused_grid_id
 		local grid = grids[i]
 
@@ -130,7 +130,7 @@ AchievementsView._on_navigation_input_changed = function (self)
 		local grid_widgets = grid:widgets()
 
 		if grid_widgets then
-			for j = 1, #grid_widgets, 1 do
+			for j = 1, #grid_widgets do
 				local widget = grid_widgets[j]
 				local widget_hotspot = widget.content.hotspot
 
@@ -178,7 +178,7 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 	local selected_widget_is_focused = grid_widgets[selected_grid_index].content.hotspot.is_focused
 
 	if not selected_widget_is_focused then
-		for i = 1, #grid_widgets, 1 do
+		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
 			local hotspot = widget.content.hotspot
 
@@ -228,7 +228,7 @@ AchievementsView._show_summary = function (self)
 		}
 		local completed_achievements = self._completed_achievements
 
-		for i = 1, ViewStyles.achievement_summary.num_completed_to_show, 1 do
+		for i = 1, ViewStyles.achievement_summary.num_completed_to_show do
 			local achievement = completed_achievements[i]
 
 			if achievement then
@@ -250,7 +250,7 @@ AchievementsView._show_summary = function (self)
 		}
 		local achievements_in_progress = self._achievements_in_progress
 
-		for i = 1, ViewStyles.achievement_summary.num_near_completed_to_show, 1 do
+		for i = 1, ViewStyles.achievement_summary.num_near_completed_to_show do
 			local achievement = achievements_in_progress[i]
 
 			if achievement then
@@ -289,12 +289,12 @@ AchievementsView._populate_achievements_grid = function (self, achievements)
 			local related_commendation_ids = achievement.related_commendation_ids
 
 			if related_commendation_ids and (is_meta_achievement or is_completed) and not is_feat_of_strength then
-				achievement_context.widget_type = (is_completed and "completed_foldout_achievement") or "foldout_achievement"
+				achievement_context.widget_type = is_completed and "completed_foldout_achievement" or "foldout_achievement"
 				achievement_context.completed = is_completed
 				local all_achievements = self._achievements
 				local sub_achievements = {}
 
-				for i = 1, #related_commendation_ids, 1 do
+				for i = 1, #related_commendation_ids do
 					local related_commendation_id = related_commendation_ids[i]
 					local related_achievement = all_achievements[related_commendation_id]
 					sub_achievements[i] = related_achievement
@@ -315,7 +315,7 @@ AchievementsView._populate_achievements_grid = function (self, achievements)
 				local item_type = reward_item.item_type
 
 				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED then
-					achievement_context.widget_type = (is_completed and "completed_foldout_achievement") or "foldout_achievement"
+					achievement_context.widget_type = is_completed and "completed_foldout_achievement" or "foldout_achievement"
 					achievement_context.reward_item_type = "slot_item"
 				end
 			end
@@ -394,7 +394,7 @@ end
 AchievementsView._setup_grids = function (self)
 	local grid_settings = self._definitions.grid_settings
 
-	for i = 1, #grid_settings, 1 do
+	for i = 1, #grid_settings do
 		local view_element_grid_settings = grid_settings[i]
 		local scenegraph_id = view_element_grid_settings.scenegraph_id
 		local layer = 1
@@ -457,7 +457,7 @@ AchievementsView._update_grid_positions = function (self)
 	local grid_settings = self._definitions.grid_settings
 	local grids = self._grids
 
-	for i = 1, #grids, 1 do
+	for i = 1, #grids do
 		local view_element_grid_settings = grid_settings[i]
 		local scenegraph_id = view_element_grid_settings.scenegraph_id
 		local position = self:_scenegraph_world_position(scenegraph_id)

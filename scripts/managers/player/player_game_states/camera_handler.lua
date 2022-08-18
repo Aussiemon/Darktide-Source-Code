@@ -96,7 +96,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	elseif not is_hogtied and player_is_available and old_unit ~= player.player_unit then
 		new_unit = self:_follow_owner()
 		self._mode = CAMERA_MODES.first_person
-	elseif not old_unit or not ALIVE[old_unit] or (not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit)) then
+	elseif not old_unit or not ALIVE[old_unit] or not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit) then
 		new_unit = self:_next_follow_unit(player.player_unit)
 		self._mode = CAMERA_MODES.observer
 	end
@@ -400,7 +400,7 @@ CameraHandler._next_follow_unit = function (self, except_unit)
 		local player_units = side.player_units
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
-		for i = 1, #player_units, 1 do
+		for i = 1, #player_units do
 			local player_unit = player_units[i]
 			local player = player_unit_spawn_manager:owner(player_unit)
 			local human_controlled = player:is_human_controlled()
@@ -422,7 +422,7 @@ CameraHandler._next_follow_unit = function (self, except_unit)
 			local num_units = #valid_follow_units
 			local selected_index = 1
 
-			for i = 1, num_units, 1 do
+			for i = 1, num_units do
 				local unit = valid_follow_units[i]
 
 				if unit == old_unit then

@@ -15,7 +15,7 @@ end
 IntervalBuff.init = function (self, context, template, start_time, instance_id, ...)
 	IntervalBuff.super.init(self, context, template, start_time, instance_id, ...)
 
-	self._next_interval_t = start_time + ((template.start_interval_on_apply and 0) or _next_interval_t(template))
+	self._next_interval_t = start_time + (template.start_interval_on_apply and 0 or _next_interval_t(template))
 end
 
 IntervalBuff.update = function (self, dt, t, portable_random)

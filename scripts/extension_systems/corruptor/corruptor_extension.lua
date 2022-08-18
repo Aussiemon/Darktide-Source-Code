@@ -86,7 +86,7 @@ CorruptorExtension.damaged = function (self, damage)
 
 		local max_health = self._health_extension:max_health()
 		local damage_percent = damage / max_health
-		local anim_event = (damage_percent >= 0.1 and "hit_reaction") or "hit_reaction_light"
+		local anim_event = damage_percent >= 0.1 and "hit_reaction" or "hit_reaction_light"
 
 		self._animation_extension:anim_event(anim_event)
 	end
@@ -215,7 +215,7 @@ CorruptorExtension._update_closest_target = function (self)
 	local closest_distance = math.huge
 	local closest_target = nil
 
-	for i = 1, #target_units, 1 do
+	for i = 1, #target_units do
 		local target_unit = target_units[i]
 		local target_unit_position = POSITION_LOOKUP[target_unit]
 		local distance = Vector3.distance(position, target_unit_position)

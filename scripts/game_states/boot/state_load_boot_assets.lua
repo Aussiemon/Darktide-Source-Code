@@ -16,7 +16,7 @@ StateLoadBootAssets.on_enter = function (self, ...)
 	}
 	self._package_ids = {}
 
-	for i = 1, #boot_packages, 1 do
+	for i = 1, #boot_packages do
 		self._package_ids[boot_packages[i]] = pm:load(boot_packages[i], "StateBootSubStateBase", nil)
 	end
 end

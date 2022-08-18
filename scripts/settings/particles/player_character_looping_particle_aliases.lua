@@ -53,7 +53,7 @@ local PlayerCharacterLoopingParticleAliases = {
 					if max_souls > 0 then
 						local current_souls = specialization_resource_component.current_resource
 						local value = current_souls / max_souls
-						local multiplier = (current_souls > 1 and 1) or 1.5
+						local multiplier = current_souls > 1 and 1 or 1.5
 
 						return value * multiplier
 					end

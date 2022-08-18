@@ -13,7 +13,7 @@ local _party_status_in_same_mission = SocialConstants.PartyStatus.same_mission
 local _party_status_invite_pending = SocialConstants.PartyStatus.invite_pending
 local _party_status_in_others_party = SocialConstants.PartyStatus.other
 local _online_status_reconnecting = SocialConstants.OnlineStatus.reconnecting
-local _in_other_party_format = "%d/" .. SocialMenuSettings.max_num_party_members .. " \ue004"
+local _in_other_party_format = "%d/" .. SocialMenuSettings.max_num_party_members .. " "
 local _activity_param = {}
 
 local function _player_name_or_status_change_function(content, style)
@@ -36,7 +36,7 @@ local function _player_name_or_status_change_function(content, style)
 		end
 	end
 
-	style.font_size = (no_character_name and style.font_size_small) or style.font_size_default
+	style.font_size = no_character_name and style.font_size_small or style.font_size_default
 
 	if not content.is_own_player then
 		local party_status = content.party_status
@@ -55,9 +55,9 @@ local function _account_name_change_function(content, style)
 	local player_info = content.player_info
 	content.account_name = player_info:user_display_name()
 	local no_character_name = player_info:character_name() == ""
-	style.font_size = (no_character_name and style.font_size_large) or style.font_size_default
-	style.offset[2] = (no_character_name and style.vertical_offset_large) or style.vertical_offset_default
-	style.default_color = (no_character_name and style.default_color_large) or style.default_color_default
+	style.font_size = no_character_name and style.font_size_large or style.font_size_default
+	style.offset[2] = no_character_name and style.vertical_offset_large or style.vertical_offset_default
+	style.default_color = no_character_name and style.default_color_large or style.default_color_default
 
 	_listbutton_label_change_function(content, style)
 end
@@ -127,7 +127,7 @@ social_roster_view_blueprints.player_plaque = {
 			value = "",
 			change_function = function (content, style)
 				local player_info = content.player_info
-				local num_members = (player_info:player_activity_id() == "mission" and player_info:num_mission_members()) or player_info:num_party_members()
+				local num_members = player_info:player_activity_id() == "mission" and player_info:num_mission_members() or player_info:num_party_members()
 				content.party_membership = string.format(_in_other_party_format, num_members)
 
 				_listbutton_label_change_function(content, style)

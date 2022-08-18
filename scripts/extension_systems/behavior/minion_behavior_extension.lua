@@ -103,7 +103,7 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 		local rotation = Unit.world_rotation(unit, 1)
 		local forward = Quaternion.forward(rotation)
 
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local hit_unit = BROADPHASE_RESULTS[i]
 
 			if hit_unit ~= unit then

@@ -28,7 +28,7 @@ local function _inject_weapon_movement_states(template)
 
 	local num_entries = #template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local entry = template[i]
 		local first_path = entry[1]
 
@@ -46,7 +46,7 @@ local function _inject_weapon_movement_states(template)
 				weapon_movement_state
 			}
 
-			for i = 2, depth, 1 do
+			for i = 2, depth do
 				copied_entry[i] = entry[i]
 			end
 
@@ -65,12 +65,12 @@ end
 local function _test_template(template, name, template_type)
 	local num_entries = #template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local entry = template[i]
 		local lerp_value_id = #entry
 		local num_paths = lerp_value_id - 1
 
-		for path_index = 1, num_paths, 1 do
+		for path_index = 1, num_paths do
 			local path = entry[path_index]
 			local is_table = type(path) == "table"
 

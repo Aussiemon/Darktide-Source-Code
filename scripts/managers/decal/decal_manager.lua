@@ -55,7 +55,7 @@ DecalManager.remove_linked_decals = function (self, parent_unit)
 end
 
 DecalManager.register_decal_unit_ids = function (self, unit_ids)
-	for i = 1, #unit_ids, 1 do
+	for i = 1, #unit_ids do
 		local unit_id = unit_ids[i]
 		self._decal_unit_id_reference_counts[unit_id] = (self._decal_unit_id_reference_counts[unit_id] or 0) + 1
 	end
@@ -66,7 +66,7 @@ local decal_unit_ids = {}
 DecalManager.unregister_decal_unit_ids = function (self, unit_ids)
 	table.clear(decal_unit_ids)
 
-	for i = 1, #unit_ids, 1 do
+	for i = 1, #unit_ids do
 		local unit_id = unit_ids[i]
 		local reference_count = self._decal_unit_id_reference_counts[unit_id]
 

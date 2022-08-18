@@ -92,7 +92,7 @@ FlowCallbacks.set_allowed_nav_tag_volume_type = function (params)
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local nav_tag_volume_data = nav_mesh_manager:nav_tag_volume_data()
 
-	for i = 1, #nav_tag_volume_data, 1 do
+	for i = 1, #nav_tag_volume_data do
 		local data = nav_tag_volume_data[i]
 
 		if data.type == volume_type then
@@ -587,7 +587,7 @@ end
 local function _set_player_first_person_parameter(unit, wwise_world, source_id)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_mode = first_person_extension:is_in_first_person_mode()
-	local parameter_value = (first_person_mode and 1) or 0
+	local parameter_value = first_person_mode and 1 or 0
 
 	WwiseWorld.set_source_parameter(wwise_world, source_id, "first_person_mode", parameter_value)
 end
@@ -847,7 +847,7 @@ FlowCallbacks.player_inventory_event = function (params)
 		end
 
 		if attachments_1p then
-			for i = 1, #attachments_1p, 1 do
+			for i = 1, #attachments_1p do
 				local attachment_unit = attachments_1p[i]
 
 				unit_flow_event(attachment_unit, event_name)
@@ -860,7 +860,7 @@ FlowCallbacks.disable_lights_event = function (params)
 	local unit = params.unit
 	local num_lights = Unit.num_lights(unit)
 
-	for i = 1, num_lights, 1 do
+	for i = 1, num_lights do
 		local light = Unit.light(unit, i)
 
 		Light.set_enabled(light, false)
@@ -1369,7 +1369,7 @@ FlowCallbacks.trigger_random_player_vo = function (params)
 	local unit_list = {}
 	local unit_list_n = 0
 
-	for i = 1, #players, 1 do
+	for i = 1, #players do
 		local unit = players[i]
 
 		if HEALTH_ALIVE[unit] then
@@ -1874,7 +1874,7 @@ FlowCallbacks.closest_alive_player = function (params)
 
 	local lowest_distance = math.huge
 
-	for i = 1, #tracked_units, 1 do
+	for i = 1, #tracked_units do
 		local distance = _distance(tracked_units[i], params.location_unit)
 
 		if distance < lowest_distance then

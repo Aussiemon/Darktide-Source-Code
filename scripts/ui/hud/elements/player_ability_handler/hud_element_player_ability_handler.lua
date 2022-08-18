@@ -81,7 +81,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 		local visual_loadout_extension = extensions.visual_loadout
 		local item_slots = HudElementPlayerAbilityHandlerSettings.item_slots
 
-		for i = 1, #item_slots, 1 do
+		for i = 1, #item_slots do
 			local slot_id = item_slots[i]
 			local setup_settings = setup_settings_by_slot[slot_id]
 			local has_scenegraph = setup_settings ~= nil

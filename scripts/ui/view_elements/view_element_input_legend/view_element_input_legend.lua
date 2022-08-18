@@ -88,7 +88,7 @@ end
 
 ViewElementInputLegend.remove_all_entries = function (self)
 	if self._entries then
-		for i = 1, #self._entries, 1 do
+		for i = 1, #self._entries do
 			local entry = self._entries[i]
 			local widget = entry.widget
 
@@ -110,7 +110,7 @@ ViewElementInputLegend._handle_input = function (self, dt, t, input_service)
 	local entries = self._entries
 
 	if entries then
-		for i = 1, #entries, 1 do
+		for i = 1, #entries do
 			local entry = entries[i]
 			local input_action = entry.input_action
 
@@ -131,7 +131,7 @@ ViewElementInputLegend._on_navigation_input_changed = function (self)
 	local entries = self._entries
 
 	if entries then
-		for i = 1, #entries, 1 do
+		for i = 1, #entries do
 			local entry = entries[i]
 
 			self:_update_widget_text(entry)
@@ -154,7 +154,7 @@ ViewElementInputLegend._get_entry_by_id = function (self, id)
 	local entries = self._entries
 
 	if entries then
-		for i = 1, #entries, 1 do
+		for i = 1, #entries do
 			local entry = entries[i]
 
 			if entry.id == id then
@@ -203,7 +203,7 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 		local total_center_alignment_size = 0
 		local num_entries = #entries
 
-		for i = 1, num_entries, 1 do
+		for i = 1, num_entries do
 			local entry = entries[i]
 			local widget = entry.widget
 
@@ -244,7 +244,7 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 			total_center_alignment_size = total_center_alignment_size - button_spacing
 			local center_size_offset = (inversed_parent_width - total_center_alignment_size) / 2
 
-			for i = 1, num_entries, 1 do
+			for i = 1, num_entries do
 				local entry = entries[i]
 
 				if entry.side == "center_alignment" and entry.is_visible then

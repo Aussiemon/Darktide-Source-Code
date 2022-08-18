@@ -76,7 +76,7 @@ local NAV_MESH_BELOW = 1
 local function _get_step_position(direction_identifier, unit, scratchpad, action_data, self_position, target_direction, nav_world, traverse_logic)
 	local step_anim_distance = action_data.step_anim_distance
 	local right = Vector3.cross(target_direction, Vector3.up())
-	local direction = (direction_identifier == "right" and right) or (direction_identifier == "left" and -right) or target_direction
+	local direction = direction_identifier == "right" and right or direction_identifier == "left" and -right or target_direction
 	local wanted_position = self_position + direction * step_anim_distance
 	local wanted_position_on_navmesh = NavQueries.position_on_mesh(nav_world, wanted_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
 
@@ -88,7 +88,7 @@ local function _get_step_position(direction_identifier, unit, scratchpad, action
 	local side_name = scratchpad.side_name
 	local num_results = broadphase:query(wanted_position_on_navmesh, BROADPHASE_SEARCH_RADIUS, broadphase_results, side_name)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
 
 		if hit_unit ~= unit then
@@ -129,15 +129,15 @@ BtStepShootAction._start_stepping = function (self, unit, t, scratchpad, action_
 
 	if not wanted_step_position then
 		if test_forward_step_first then
-			local direction_identifier = (try_step_right and "right") or "left"
+			local direction_identifier = try_step_right and "right" or "left"
 			wanted_step_position, step_anim_event = _get_step_position(direction_identifier, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 
 			if not wanted_step_position then
-				local reverse_direction_identifer = (direction_identifier == "right" and "left") or "right"
+				local reverse_direction_identifer = direction_identifier == "right" and "left" or "right"
 				wanted_step_position, step_anim_event = _get_step_position(reverse_direction_identifer, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 			end
 		else
-			local reverse_direction_identifer = (try_step_right and "left") or "right"
+			local reverse_direction_identifer = try_step_right and "left" or "right"
 			wanted_step_position, step_anim_event = _get_step_position(reverse_direction_identifer, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 
 			if not wanted_step_position then

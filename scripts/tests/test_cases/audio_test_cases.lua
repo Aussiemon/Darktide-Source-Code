@@ -586,5 +586,3 @@ AudioTestCases.vo_rules_smart_tag_com_wheel = function ()
 		return "The following rules were not triggered " .. table.concat(failed_rules, "\n")
 	end)
 end
-
-return

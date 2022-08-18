@@ -73,13 +73,13 @@ function _create_inverse_root_node_bind_pose_lookup(unit, gib_template)
 				local conditional_entries = entry.conditional
 
 				if conditional_entries then
-					for i = 1, #conditional_entries, 1 do
+					for i = 1, #conditional_entries do
 						local entry_to_parse = conditional_entries[i]
 
 						_parse_gib_template_entry(entry_to_parse)
 					end
 				elseif entry[1] ~= nil then
-					for i = 1, #entry, 1 do
+					for i = 1, #entry do
 						local entry_to_parse = entry[i]
 
 						_parse_gib_template_entry(entry_to_parse)
@@ -124,7 +124,7 @@ MinionGibbing.update = function (self, breed_name, soft_cap_out_of_bounds_units)
 				local slots_attached_to_gib = inventory_slots_on_gibs[hit_zone_name]
 
 				if slots_attached_to_gib then
-					for j = 1, #slots_attached_to_gib, 1 do
+					for j = 1, #slots_attached_to_gib do
 						local slot = slots_attached_to_gib[j]
 
 						if visual_loadout_extension:can_unequip_slot(slot) then
@@ -213,7 +213,7 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		local slot_material_override_names = hit_zone_gib_template.material_overrides
 
 		if slot_material_override_names then
-			for i = 1, #slot_material_override_names, 1 do
+			for i = 1, #slot_material_override_names do
 				local slot_material_override_name = slot_material_override_names[i]
 
 				_apply_material_overrides(stump_unit, visual_loadout_extension, slot_material_override_name)
@@ -255,7 +255,7 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		local slot_material_override_names = hit_zone_gib_template.material_overrides
 
 		if slot_material_override_names then
-			for i = 1, #slot_material_override_names, 1 do
+			for i = 1, #slot_material_override_names do
 				local slot_material_override_name = slot_material_override_names[i]
 
 				_apply_material_overrides(gib_unit, visual_loadout_extension, slot_material_override_name)
@@ -275,7 +275,7 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		local attach_inventory_slots_to_gib = gib_settings.attach_inventory_slots_to_gib
 
 		if attach_inventory_slots_to_gib then
-			for i = 1, #attach_inventory_slots_to_gib, 1 do
+			for i = 1, #attach_inventory_slots_to_gib do
 				local slot_name = attach_inventory_slots_to_gib[i]
 
 				if visual_loadout_extension:can_unequip_slot(slot_name) then
@@ -297,7 +297,7 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	local extra_hit_zone_gibs = hit_zone_gib_template.extra_hit_zone_gibs
 
 	if extra_hit_zone_gibs then
-		for i = 1, #extra_hit_zone_gibs, 1 do
+		for i = 1, #extra_hit_zone_gibs do
 			local extra_hit_zone = extra_hit_zone_gibs[i]
 			local extra_hit_zone_gib_push_forces = hit_zone_gib_template.extra_hit_zone_gib_push_forces
 
@@ -333,7 +333,7 @@ MinionGibbing.delete_gibs = function (self)
 	local gibs = self._gibs
 
 	for hit_zone_name, gib_units in pairs(gibs) do
-		for i = 1, #gib_units, 1 do
+		for i = 1, #gib_units do
 			local gib_unit = gib_units[i]
 
 			unit_spawner_manager:mark_for_deletion(gib_unit)
@@ -348,7 +348,7 @@ MinionGibbing.allow_gib_for_hit_zone = function (self, hit_zone, allowed)
 end
 
 function _get_gibbing_template(gib_template, gibs, hit_zone_name, gibbing_type, portable_random, optional_gib_overrides)
-	local hit_zone_gib_template = (gib_template[hit_zone_name] and (gib_template[hit_zone_name][gibbing_type] or gib_template[hit_zone_name].default)) or (gib_template.fallback_hit_zone and (gib_template.fallback_hit_zone[gibbing_type] or gib_template.fallback_hit_zone.default))
+	local hit_zone_gib_template = gib_template[hit_zone_name] and (gib_template[hit_zone_name][gibbing_type] or gib_template[hit_zone_name].default) or gib_template.fallback_hit_zone and (gib_template.fallback_hit_zone[gibbing_type] or gib_template.fallback_hit_zone.default)
 
 	if not hit_zone_gib_template then
 		return false
@@ -361,7 +361,7 @@ function _get_gibbing_template(gib_template, gibs, hit_zone_name, gibbing_type, 
 	local conditional_gibbing = hit_zone_gib_template.conditional
 
 	if conditional_gibbing then
-		for i = 1, #conditional_gibbing, 1 do
+		for i = 1, #conditional_gibbing do
 			local template = conditional_gibbing[i]
 			local condition = template.condition
 			local already_gibbed_condition = condition.already_gibbed
@@ -392,7 +392,7 @@ function _get_gibbing_template(gib_template, gibs, hit_zone_name, gibbing_type, 
 end
 
 function _get_gib_unit_overrides(hit_zone_gib_template, hit_zone_name, gibbing_type, gib_overrides)
-	local hit_zone_gib_overrides = (gib_overrides[hit_zone_name] and (gib_overrides[hit_zone_name][gibbing_type] or gib_overrides[hit_zone_name].default)) or (gib_overrides.fallback_hit_zone and (gib_overrides.fallback_hit_zone[gibbing_type] or gib_overrides.fallback_hit_zone.default))
+	local hit_zone_gib_overrides = gib_overrides[hit_zone_name] and (gib_overrides[hit_zone_name][gibbing_type] or gib_overrides[hit_zone_name].default) or gib_overrides.fallback_hit_zone and (gib_overrides.fallback_hit_zone[gibbing_type] or gib_overrides.fallback_hit_zone.default)
 
 	if hit_zone_gib_overrides then
 		hit_zone_gib_template = table.clone(hit_zone_gib_template)
@@ -409,7 +409,7 @@ function _get_gib_unit_overrides(hit_zone_gib_template, hit_zone_name, gibbing_t
 		local conditional_overrides = hit_zone_gib_overrides.conditional
 
 		if conditional_gibbing and conditional_overrides then
-			for i = 1, #conditional_gibbing, 1 do
+			for i = 1, #conditional_gibbing do
 				if conditional_gibbing[i].gib_settings and conditional_overrides[i].override_gib_unit then
 					conditional_gibbing[i].gib_settings.gib_unit = conditional_overrides[i].override_gib_unit
 				end
@@ -474,7 +474,7 @@ function _scale_node(unit, hit_zone_gib_template)
 
 	if scale_node_name then
 		if type(scale_node_name) == "table" then
-			for i = 1, #scale_node_name, 1 do
+			for i = 1, #scale_node_name do
 				local scale_node = Unit.node(unit, scale_node_name[i])
 
 				Unit.set_local_scale(unit, scale_node, Vector3(0.01, 0.01, 0.01))
@@ -511,7 +511,7 @@ function _apply_push_forces(gib_actor, attack_direction, damage_profile, hit_zon
 		end
 	end
 
-	local gib_force_multiplier = (optional_override_gib_forces and optional_override_gib_forces[hit_zone_name]) or optional_override_force or GibPushForceMultipliers[hit_zone_name]
+	local gib_force_multiplier = optional_override_gib_forces and optional_override_gib_forces[hit_zone_name] or optional_override_force or GibPushForceMultipliers[hit_zone_name]
 
 	if type(gib_force_multiplier) == "table" then
 		gib_force_multiplier = math.random_range(gib_force_multiplier[1], gib_force_multiplier[2])
@@ -532,7 +532,7 @@ end
 function _disable_hit_zone_actors(unit, breed, hit_zone_name, hit_zone_gib_template)
 	local actor_names = HitZone.get_actor_names(unit, hit_zone_name)
 
-	for i = 1, #actor_names, 1 do
+	for i = 1, #actor_names do
 		local actor_name = actor_names[i]
 		local actor = Unit.actor(unit, actor_name)
 
@@ -543,11 +543,11 @@ function _disable_hit_zone_actors(unit, breed, hit_zone_name, hit_zone_gib_templ
 	local extra_hit_zone_actors_to_destroy = hit_zone_gib_template.extra_hit_zone_actors_to_destroy
 
 	if extra_hit_zone_actors_to_destroy then
-		for i = 1, #extra_hit_zone_actors_to_destroy, 1 do
+		for i = 1, #extra_hit_zone_actors_to_destroy do
 			local extra_hit_zone_name = extra_hit_zone_actors_to_destroy[i]
 			local extra_actor_names = HitZone.get_actor_names(unit, extra_hit_zone_name)
 
-			for j = 1, #extra_actor_names, 1 do
+			for j = 1, #extra_actor_names do
 				local extra_actor_name = extra_actor_names[j]
 				local actor = Unit.actor(unit, extra_actor_name)
 
@@ -570,7 +570,7 @@ function _destroy_ragdoll_actors(unit, breed, hit_zone_name)
 	local ragdoll_actor_names = hit_zone_ragdoll_actors[hit_zone_name]
 
 	if ragdoll_actor_names then
-		for i = 1, #ragdoll_actor_names, 1 do
+		for i = 1, #ragdoll_actor_names do
 			local actor_name = ragdoll_actor_names[i]
 			local actor = Unit.actor(unit, actor_name)
 
@@ -592,7 +592,7 @@ function _play_gib_fx(gib_unit, settings, world, wwise_world)
 			particle_effect = particle_effect[index]
 		end
 
-		local node = (vfx.node_name and Unit.node(gib_unit, vfx.node_name)) or 1
+		local node = vfx.node_name and Unit.node(gib_unit, vfx.node_name) or 1
 		local world_pose = Unit.world_pose(gib_unit, node)
 		local position = Matrix4x4.translation(world_pose)
 		local rotation = Matrix4x4.rotation(world_pose)

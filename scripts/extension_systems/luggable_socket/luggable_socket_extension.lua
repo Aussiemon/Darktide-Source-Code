@@ -86,7 +86,7 @@ LuggableSocketExtension._retrieve_overlapping_with_luggables = function (self)
 	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "oobb", "position", position, "rotation", rotation, "size", size, "collision_filter", "filter_dynamic")
 
 	if actor_count > 0 then
-		for i = 1, actor_count, 1 do
+		for i = 1, actor_count do
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
 

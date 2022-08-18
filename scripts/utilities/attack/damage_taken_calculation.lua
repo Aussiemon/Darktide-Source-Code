@@ -17,7 +17,7 @@ local DamageTakenCalculation = {
 		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit) or damage_profile.override_allow_friendly_fire
 		local is_minion = Breed.is_minion(attacked_breed_or_nil)
 		local is_player = Breed.is_player(attacked_breed_or_nil)
-		local health_setting = (is_player and health_settings.player) or (is_minion and health_settings.minion)
+		local health_setting = is_player and health_settings.player or is_minion and health_settings.minion
 		local health_extension = ScriptUnit.extension(attacked_unit, "health_system")
 		local is_invulnerable = health_extension:is_invulnerable()
 		local current_health_damage = health_extension:damage_taken()
@@ -30,7 +30,7 @@ local DamageTakenCalculation = {
 			toughness_template, weapon_toughness_template = toughness_exension:toughness_templates()
 		end
 
-		local current_toughness_damage = (toughness_exension and toughness_exension:toughness_damage()) or 0
+		local current_toughness_damage = toughness_exension and toughness_exension:toughness_damage() or 0
 		local movement_state = nil
 
 		if is_player then
@@ -134,7 +134,7 @@ function _calculate_tougness_damage_player(damage_amount, damage_profile, attack
 	local melee_attack = attack_type == "melee"
 	local ranged_attack = attack_type == "ranged"
 	local remaining_damage, toughness_damage, absorbed_attack, toughness_broken = nil
-	local toughness_melee_damage_modifier = (weapon_toughness_template and weapon_toughness_template.melee_damage_modifier) or toughness_template.melee_damage_modifier or 1
+	local toughness_melee_damage_modifier = weapon_toughness_template and weapon_toughness_template.melee_damage_modifier or toughness_template.melee_damage_modifier or 1
 
 	if melee_attack then
 		local toughness_melee_spillover_modifier = toughness_template.melee_spillover_modifier or 1
@@ -142,28 +142,16 @@ function _calculate_tougness_damage_player(damage_amount, damage_profile, attack
 		remaining_damage = math.lerp(damage_amount, 0, current_toughness_percent) * toughness_melee_spillover_modifier
 		toughness_damage = math.clamp(max_toughness * toughness_melee_damage_modifier, 0, max_toughness)
 		absorbed_attack = max_toughness > current_toughness_damage + toughness_damage
-
-		if absorbed_attack or toughness_before_damage < max_toughness * toughness_melee_damage_modifier then
-			toughness_broken = false
-
-			if false then
-				toughness_broken = false
-
-				if false then
-					toughness_broken = true
-				end
-			end
-		end
 	else
 		if not ranged_attack then
 			toughness_damage = max_toughness
 		else
 			local damage_modifier = toughness_template.state_damage_modifiers[movement_state] or 1
 			local toughness_multiplier = damage_profile.toughness_multiplier or 1
-			local weapon_toughness_multiplier = (weapon_toughness_template and weapon_toughness_template.toughness_damage_modifier) or 1
-			damage_modifier = (damage_modifier + toughness_multiplier * weapon_toughness_multiplier) - 1
-			local buff_toughness_damage_taken_multiplier = (attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_multiplier) or 1
-			local buff_toughness_damage_taken_modifier = (attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_modifier) or 1
+			local weapon_toughness_multiplier = weapon_toughness_template and weapon_toughness_template.toughness_damage_modifier or 1
+			damage_modifier = damage_modifier + toughness_multiplier * weapon_toughness_multiplier - 1
+			local buff_toughness_damage_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_multiplier or 1
+			local buff_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_modifier or 1
 			local damage_buff_multiplier = buff_toughness_damage_taken_multiplier * buff_toughness_damage_taken_modifier
 			damage_modifier = damage_modifier * damage_buff_multiplier
 			toughness_damage = math.clamp(damage_amount * damage_modifier, 0, max_toughness)
@@ -187,7 +175,7 @@ function _calculate_tougness_damage_player(damage_amount, damage_profile, attack
 		end
 	end
 
-	local attack_result = (absorbed_attack and attack_results.toughness_absorbed) or (toughness_broken and attack_results.toughness_broken)
+	local attack_result = absorbed_attack and attack_results.toughness_absorbed or toughness_broken and attack_results.toughness_broken
 	local absorbed_damage = damage_amount - remaining_damage
 
 	return attack_result, remaining_damage, toughness_damage, absorbed_damage
@@ -229,11 +217,11 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 		return attack_results.damaged, 0, 0
 	end
 
-	local permanent_damage_profile_ratio = (damage_profile and damage_profile.permanent_damage_ratio) or 0
-	local permanent_damage_buff_ratio = (attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_taken) or 0
-	local permanent_damage_buff_resistance = (attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_converter_resistance) or 0
+	local permanent_damage_profile_ratio = damage_profile and damage_profile.permanent_damage_ratio or 0
+	local permanent_damage_buff_ratio = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_taken or 0
+	local permanent_damage_buff_resistance = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_converter_resistance or 0
 	local permanent_damage_ratio = math.clamp(permanent_damage_profile_ratio + permanent_damage_buff_ratio * (1 - permanent_damage_buff_resistance), 0, 1)
-	local buff_corruption_taken_multiplier = (attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_multiplier) or 1
+	local buff_corruption_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_multiplier or 1
 	buff_corruption_taken_multiplier = math.max(0, buff_corruption_taken_multiplier)
 	local permanent_damage = damage_amount * permanent_damage_ratio * buff_corruption_taken_multiplier
 	local health_damage = damage_amount * (1 - permanent_damage_ratio)
@@ -243,12 +231,12 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 	end
 
 	if current_health_damage < current_permanent_damage + permanent_damage then
-		health_damage = (health_damage + current_permanent_damage + permanent_damage) - current_health_damage
+		health_damage = health_damage + current_permanent_damage + permanent_damage - current_health_damage
 	end
 
 	local remaining_health = max_health - current_health_damage - health_damage
 	local will_die = remaining_health <= 0
-	local attack_result = (will_die and attack_results.knock_down) or attack_results.damaged
+	local attack_result = will_die and attack_results.knock_down or attack_results.damaged
 	local has_resist_death_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.resist_death]
 
 	if will_die and has_resist_death_buff and not instakill then
@@ -266,7 +254,7 @@ function _calculate_health_damage_minion(damage_amount, damage_profile, current_
 
 	local remaining_health = max_health - current_health_damage - damage_amount
 	local will_die = remaining_health <= 0
-	local attack_result = (will_die and attack_results.died) or attack_results.damaged
+	local attack_result = will_die and attack_results.died or attack_results.damaged
 
 	return attack_result, damage_amount, 0
 end

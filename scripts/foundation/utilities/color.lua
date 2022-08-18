@@ -1,14 +1,16 @@
 require("scripts/foundation/utilities/error")
 
 if type(Color) ~= "table" then
-	local metatable = {
-		__call = function (self, ...)
-			return self.create(...)
-		end,
-		__index = function (self, color_name)
-			ferror("[Color] No color named %q defined in color.lua!", color_name)
-		end
-	}
+	local metatable = {}
+
+	metatable.__call = function (self, ...)
+		return self.create(...)
+	end
+
+	metatable.__index = function (self, color_name)
+		ferror("[Color] No color named %q defined in color.lua!", color_name)
+	end
+
 	local create_color_function = Color
 	Color = {
 		create = create_color_function
@@ -2298,5 +2300,3 @@ end
 if not COLORS_INITIALIZED then
 	COLORS_INITIALIZED = true
 end
-
-return

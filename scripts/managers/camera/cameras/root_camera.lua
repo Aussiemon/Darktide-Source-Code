@@ -11,7 +11,7 @@ RootCamera.init = function (self, root_node)
 end
 
 RootCamera.set_root_unit = function (self, unit, object, preserve_yaw)
-	object = (self._object_name and Unit.node(unit, self._object_name)) or object or 1
+	object = self._object_name and Unit.node(unit, self._object_name) or object or 1
 
 	BaseCamera.set_root_unit(self, unit, object)
 
@@ -33,7 +33,7 @@ RootCamera.parse_parameters = function (self, camera_settings, parent_node)
 	local degrees_to_radians = math.pi / 180
 	self._vertical_fov = camera_settings.vertical_fov and camera_settings.vertical_fov * degrees_to_radians
 	self._custom_vertical_fov = camera_settings.custom_vertical_fov and camera_settings.custom_vertical_fov * degrees_to_radians
-	self._default_fov = (camera_settings.default_fov and camera_settings.default_fov * degrees_to_radians) or self._vertical_fov
+	self._default_fov = camera_settings.default_fov and camera_settings.default_fov * degrees_to_radians or self._vertical_fov
 	self._near_range = camera_settings.near_range
 	self._far_range = camera_settings.far_range
 	self._safe_position_offset = camera_settings.safe_position_offset

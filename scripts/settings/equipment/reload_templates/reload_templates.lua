@@ -25,7 +25,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/rippe
 for reload_template_name, reload_template in pairs(reload_templates) do
 	local states = reload_template.states
 
-	for i = 1, #states, 1 do
+	for i = 1, #states do
 		local state_name = states[i]
 		local state = reload_template[state_name]
 		state.state_index = i

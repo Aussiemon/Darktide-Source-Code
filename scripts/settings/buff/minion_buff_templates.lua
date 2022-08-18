@@ -24,7 +24,7 @@ local templates = {
 				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
 				local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
 				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-				local optional_owner_unit = (template_context.is_server and template_context.owner_unit) or nil
+				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 			end
@@ -102,7 +102,7 @@ templates.daemonhost_corruption_aura = {
 			local power_level_table = MinionDifficultySettings.power_level.daemonhost_corruption_aura
 			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
 
-			for i = 1, num_results, 1 do
+			for i = 1, num_results do
 				local nearby_enemy = DAEMONHOST_CORRUPTION_AURA_RESULTS[i]
 
 				if HEALTH_ALIVE[nearby_enemy] then

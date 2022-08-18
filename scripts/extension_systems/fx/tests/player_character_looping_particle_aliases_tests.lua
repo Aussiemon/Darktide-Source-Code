@@ -17,7 +17,7 @@ local function tests()
 		if variables then
 			local num_variables = #variables
 
-			for i = 1, num_variables, 1 do
+			for i = 1, num_variables do
 				local variable_config = variables[i]
 				local variable_name = variable_config.variable_name
 

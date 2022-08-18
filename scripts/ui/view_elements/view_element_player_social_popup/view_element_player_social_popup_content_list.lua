@@ -56,11 +56,11 @@ local function _add_party_management_items(parent, player_info, is_own_player)
 	elseif party_status == PartyStatus.mine or party_status == PartyStatus.same_mission then
 		local can_kick, cannot_kick_reason = Managers.data_service.social:can_kick_from_party(player_info)
 		local list_item = _get_next_list_item()
-		list_item.blueprint = (not can_kick and "disabled_button_with_explanation") or "button"
+		list_item.blueprint = not can_kick and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_vote_to_kick_from_party")
 		list_item.callback = callback(parent, "cb_vote_to_kick_player_from_party", player_info)
 		list_item.is_disabled = not can_kick
-		list_item.reason_for_disabled = (cannot_kick_reason and Localize(cannot_kick_reason)) or ""
+		list_item.reason_for_disabled = cannot_kick_reason and Localize(cannot_kick_reason) or ""
 		list_item.on_pressed_sound = UISoundEvents.social_menu_initiate_kick_vote
 	elseif party_status == PartyStatus.invite_pending then
 		local list_item = _get_next_list_item()
@@ -73,14 +73,14 @@ local function _add_party_management_items(parent, player_info, is_own_player)
 		local can_invite, cannot_invite_reason = social_service:can_invite_to_party(player_info)
 		local can_join, cannot_join_reason = social_service:can_join_party(player_info)
 		local list_item = _get_next_list_item()
-		list_item.blueprint = (cannot_invite_reason and "disabled_button_with_explanation") or "button"
+		list_item.blueprint = cannot_invite_reason and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_invite_to_party")
 		list_item.reason_for_disabled = cannot_invite_reason and Localize(cannot_invite_reason)
 		list_item.callback = callback(parent, "cb_invite_player_to_party", player_info)
 		list_item.is_disabled = not can_invite
 		list_item.on_pressed_sound = UISoundEvents.social_menu_send_invite
 		list_item = _get_next_list_item()
-		list_item.blueprint = (cannot_join_reason and "disabled_button_with_explanation") or "button"
+		list_item.blueprint = cannot_join_reason and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_join_party")
 		list_item.reason_for_disabled = cannot_join_reason and Localize(cannot_join_reason)
 		list_item.callback = callback(parent, "cb_join_players_party", player_info)
@@ -125,7 +125,7 @@ local function _add_friend_management_items(parent, player_info)
 		list_item.blueprint = "choice_header"
 		list_item.label = Localize("loc_social_menu_received_friend_request_header", true, request_header_params)
 		list_item = _get_next_list_item(2)
-		list_item.blueprint = (not can_accept and "disabled_button_with_explanation") or "choice_button"
+		list_item.blueprint = not can_accept and "disabled_button_with_explanation" or "choice_button"
 		list_item.label = Localize("loc_social_menu_accept_friend_request")
 		list_item.icon = "content/ui/materials/icons/list_buttons/check"
 		list_item.reason_for_disabled = cannot_befriend_reason and Localize(cannot_befriend_reason)
@@ -147,23 +147,23 @@ local function _add_communication_management_items(parent, player_info, is_block
 	local can_mute_text, cannot_mute_text_reason = social_service:can_mute_player_in_text_chat(account_id)
 	local is_text_muted = player_info:is_text_muted()
 	local list_item = _get_next_list_item()
-	list_item.blueprint = (not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation") or "checkbox_button"
+	list_item.blueprint = not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation" or "checkbox_button"
 	list_item.label = Localize("loc_social_menu_mute_chat")
 	list_item.is_checked = is_text_muted or is_blocked
 	list_item.callback = callback(parent, "cb_mute_text_chat", player_info)
 	list_item.is_disabled = not can_mute_text or is_blocked
 	list_item.reason_for_disabled = cannot_mute_text_reason and Localize(cannot_mute_text_reason)
-	list_item.on_pressed_sound = (is_text_muted and UISoundEvents.social_menu_unmute_player_text) or UISoundEvents.social_menu_mute_player_text
+	list_item.on_pressed_sound = is_text_muted and UISoundEvents.social_menu_unmute_player_text or UISoundEvents.social_menu_mute_player_text
 	local can_mute_voice, cannot_mute_voice_reason = social_service:can_mute_player_in_voice_chat(account_id)
 	local is_voice_muted = player_info:is_voice_muted()
 	list_item = _get_next_list_item()
-	list_item.blueprint = (not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation") or "checkbox_button"
+	list_item.blueprint = not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation" or "checkbox_button"
 	list_item.label = Localize("loc_social_menu_mute_voice")
 	list_item.is_checked = is_voice_muted or is_blocked
 	list_item.callback = callback(parent, "cb_mute_voice_chat", player_info)
 	list_item.is_disabled = not can_mute_voice or is_blocked
 	list_item.reason_for_disabled = cannot_mute_voice_reason and Localize(cannot_mute_voice_reason)
-	list_item.on_pressed_sound = (is_voice_muted and UISoundEvents.social_menu_unmute_player_voice) or UISoundEvents.social_menu_mute_player_voice
+	list_item.on_pressed_sound = is_voice_muted and UISoundEvents.social_menu_unmute_player_voice or UISoundEvents.social_menu_mute_player_voice
 
 	if is_blocked then
 		list_item = _get_next_list_item()
@@ -174,7 +174,7 @@ local function _add_communication_management_items(parent, player_info, is_block
 	else
 		local can_block, cannot_block_reason = social_service:can_block(account_id)
 		list_item = _get_next_list_item()
-		list_item.blueprint = (cannot_block_reason and "disabled_button_with_explanation") or "button"
+		list_item.blueprint = cannot_block_reason and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_block")
 		list_item.callback = callback(parent, "cb_block_player", player_info)
 		list_item.is_disabled = not can_block

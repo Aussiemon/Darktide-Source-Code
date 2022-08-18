@@ -133,7 +133,7 @@ ButtonPassTemplates.url_button = {
 		style = url_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -243,7 +243,7 @@ ButtonPassTemplates.default_button = {
 		style = default_button_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -347,7 +347,7 @@ ButtonPassTemplates.ready_button = {
 		style = ready_hover_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -438,7 +438,7 @@ ButtonPassTemplates.default_button_small = {
 		style = default_button_small_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -489,7 +489,7 @@ ButtonPassTemplates.default_button_large = {
 		change_function = function (content, style)
 			local color = style.color
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local input_color = style.input_color
 			local hover_progress = hotspot.anim_hover_progress
 			local input_progress = hotspot.anim_input_progress
@@ -506,7 +506,7 @@ ButtonPassTemplates.default_button_large = {
 		value_id = "text",
 		style = table.clone(UIFontSettings.button_primary),
 		change_function = function (content, style)
-			local default_color = (content.hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = content.hotspot.disabled and style.disabled_color or style.default_color
 			local hotspot = content.hotspot
 			local hover_progress = hotspot.anim_hover_progress
 			local select_progress = hotspot.anim_select_progress
@@ -514,7 +514,7 @@ ButtonPassTemplates.default_button_large = {
 
 			color_lerp(default_color, style.hover_color, progress, style.text_color)
 
-			style.material = (progress == 1 and "content/ui/materials/base/ui_slug_hdr") or nil
+			style.material = progress == 1 and "content/ui/materials/base/ui_slug_hdr" or nil
 		end
 	}
 }
@@ -552,7 +552,7 @@ ButtonPassTemplates.secondary_button = {
 		change_function = function (content, style)
 			local text_color = style.text_color
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local highlight_color = style.hover_color
 			local hover_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 			local ignore_alpha = true
@@ -598,7 +598,7 @@ end
 
 ButtonPassTemplates.list_button_label_change_function = function (content, style)
 	local hotspot = content.hotspot
-	local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+	local default_color = hotspot.disabled and style.disabled_color or style.default_color
 	local hover_color = style.hover_color
 	local color = style.text_color or style.color
 	local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
@@ -900,7 +900,7 @@ ButtonPassTemplates.list_button = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local hover_progress = (content.show_background_with_hover and math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)) or 0
+			local hover_progress = content.show_background_with_hover and math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress) or 0
 			style.color[1] = 255 * math_max(content.hotspot.anim_select_progress, hover_progress)
 		end,
 		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
@@ -1150,7 +1150,7 @@ ButtonPassTemplates.list_button_two_rows_with_icon = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local hover_progress = (content.show_background_with_hover and hotspot.anim_hover_progress) or 0
+			local hover_progress = content.show_background_with_hover and hotspot.anim_hover_progress or 0
 			style.color[1] = 255 * math_max(content.hotspot.anim_select_progress, hover_progress)
 		end,
 		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
@@ -1284,7 +1284,7 @@ ButtonPassTemplates.continue_button = {
 			local arrow_style = style.parent.arrow
 			local arrow_color = arrow_style.color
 
-			for i = 2, 4, 1 do
+			for i = 2, 4 do
 				text_color[i] = (hover_color[i] - default_text_color[i]) * progress + default_text_color[i]
 				arrow_color[i] = text_color[i]
 			end
@@ -1373,7 +1373,7 @@ ButtonPassTemplates.menu_panel_button = {
 		style = menu_panel_button_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_text_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_text_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_input_progress)
@@ -1436,7 +1436,7 @@ ButtonPassTemplates.menu_panel_button = {
 			local progress_time = content.alert_anim_time or 0
 			progress_time = math.fmod(progress_time + dt, total_time)
 			content.alert_anim_time = progress_time
-			local progress = (progress_time <= anim_time and anim_time and progress_time / anim_time) or 1
+			local progress = progress_time <= anim_time and anim_time and progress_time / anim_time or 1
 			local size_addition = math.sirp(-style.size[1], 0, progress)
 			local style_size_additon = style.size_addition
 			style_size_additon[1] = size_addition
@@ -1602,7 +1602,7 @@ ButtonPassTemplates.tab_menu_button_icon = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local color = style.color
 			local math_max = math_max
@@ -1643,7 +1643,7 @@ ButtonPassTemplates.page_indicator = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local color = style.color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -1686,7 +1686,7 @@ ButtonPassTemplates.input_legend_button = {
 			local text_color = style.text_color
 			local progress = math.max(hotspot.anim_hover_progress or 0, hotspot.anim_input_progress or 0)
 
-			for i = 2, 4, 1 do
+			for i = 2, 4 do
 				text_color[i] = (hover_color[i] - default_text_color[i]) * progress + default_text_color[i]
 			end
 		end
@@ -1819,7 +1819,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			change_function = function (content, style)
 				local text_color = style.text_color
 				local hotspot = content.hotspot
-				local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
 				local highlight_color = style.hover_color
 				local hover_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local ignore_alpha = true

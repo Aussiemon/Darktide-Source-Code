@@ -40,11 +40,11 @@ SlotSystem.on_gameplay_post_init = function (self, level)
 	self._traverse_logic = traverse_logic
 	local nav_mesh_manager = Managers.state.nav_mesh
 
-	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES, 1 do
+	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 		local volume_type = FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
-		for j = 1, #layer_ids, 1 do
+		for j = 1, #layer_ids do
 			GwNavTagLayerCostTable.forbid_layer(nav_tag_cost_table, layer_ids[j])
 		end
 	end
@@ -53,7 +53,7 @@ SlotSystem.on_gameplay_post_init = function (self, level)
 	local unit_extension_data = self._unit_extension_data
 	local num_target_units = #target_units
 
-	for i = 1, num_target_units, 1 do
+	for i = 1, num_target_units do
 		local unit = target_units[i]
 		local extension = unit_extension_data[unit]
 
@@ -165,7 +165,7 @@ SlotSystem.on_remove_extension = function (self, unit, extension_name)
 		local target_units = self._target_units
 		local target_units_n = #target_units
 
-		for i = 1, target_units_n, 1 do
+		for i = 1, target_units_n do
 			if target_units[i] == unit then
 				target_units[i] = target_units[target_units_n]
 				target_units[target_units_n] = nil
@@ -182,7 +182,7 @@ SlotSystem.on_remove_extension = function (self, unit, extension_name)
 		local update_slots_user_units_n = #update_slots_user_units
 		self._update_slots_user_units_prioritized[unit] = nil
 
-		for i = 1, update_slots_user_units_n, 1 do
+		for i = 1, update_slots_user_units_n do
 			local user_unit = update_slots_user_units[i]
 
 			if user_unit == unit then
@@ -288,10 +288,10 @@ SlotSystem._improve_slot_position = function (self, user_unit, user_slot_extensi
 			local max_dist = SlotSystemSettings.slot_queue_radius
 			local max_tries = 2
 			local random_goal_function = _new_random_goal_uniformly_distributed_with_inside_from_outside_on_last
-			local random_slot_position = (queue_position and random_goal_function(nav_world, queue_position, min_dist, max_dist, max_tries, nil, above_limit, below_limit, horizontal_limit, traverse_logic)) or nil
-			local z_diff = (random_slot_position and math.abs(user_unit_position.z - random_slot_position.z)) or 0
+			local random_slot_position = queue_position and random_goal_function(nav_world, queue_position, min_dist, max_dist, max_tries, nil, above_limit, below_limit, horizontal_limit, traverse_logic) or nil
+			local z_diff = random_slot_position and math.abs(user_unit_position.z - random_slot_position.z) or 0
 			local z_diff_exceded = SlotSystemSettings.z_max_difference_above < z_diff
-			local distance = (random_slot_position and Vector3_distance(random_slot_position, user_unit_position)) or math.huge
+			local distance = random_slot_position and Vector3_distance(random_slot_position, user_unit_position) or math.huge
 			local close_distance = distance < 5
 			position = random_slot_position
 
@@ -467,7 +467,7 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 	Profiler.start("SlotSystem:physics_async_update")
 	Profiler.start("update_target_slots")
 
-	for i = 1, target_units_n, 1 do
+	for i = 1, target_units_n do
 		local target_unit = target_units[i]
 		local target_slot_extension = unit_extension_data[target_unit]
 		local successful = self:_update_target_slots(t, target_unit, target_units, unit_extension_data, target_slot_extension, nav_world, traverse_logic)
@@ -517,8 +517,8 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 
 	local update_slots_user_units = self._update_slots_user_units
 	local update_slots_user_units_n = #update_slots_user_units
-	local max_user_updates = (self._max_slot_update_override and update_slots_user_units_n) or math.min(SlotSystemSettings.max_user_updates_per_frame, update_slots_user_units_n)
-	local max_user_loops = (self._max_slot_update_override and update_slots_user_units_n) or math.min(SlotSystemSettings.max_user_loops_per_frame, update_slots_user_units_n)
+	local max_user_updates = self._max_slot_update_override and update_slots_user_units_n or math.min(SlotSystemSettings.max_user_updates_per_frame, update_slots_user_units_n)
+	local max_user_loops = self._max_slot_update_override and update_slots_user_units_n or math.min(SlotSystemSettings.max_user_loops_per_frame, update_slots_user_units_n)
 	local index = self._current_user_index
 	local update_counter = 0
 	local loop_counter = 0
@@ -536,7 +536,7 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 
 		loop_counter = loop_counter + 1
 		index = index + 1
-		update_counter = update_counter + ((consume_update and 1) or 0)
+		update_counter = update_counter + (consume_update and 1 or 0)
 	end
 
 	self._current_user_index = index
@@ -607,7 +607,7 @@ SlotSystem._update_target_slots = function (self, t, target_unit, target_units, 
 	end
 
 	local real_target_unit_position = POSITION_LOOKUP[target_unit]
-	local target_unit_position = (is_on_ladder and real_target_unit_position) or _get_target_position_on_navmesh(real_target_unit_position, nav_world, traverse_logic)
+	local target_unit_position = is_on_ladder and real_target_unit_position or _get_target_position_on_navmesh(real_target_unit_position, nav_world, traverse_logic)
 	local target_unit_position_known = target_slot_extension.position:unbox()
 	local outside_navmesh_at_t = target_slot_extension.outside_navmesh_at_t
 	local outside_navmesh = false
@@ -628,7 +628,7 @@ SlotSystem._update_target_slots = function (self, t, target_unit, target_units, 
 		dist_sq = Vector3_distance_sq(target_unit_position, target_unit_position_known)
 	end
 
-	if SlotSystemSettings.target_slots_moved_distance_sq < dist_sq or is_on_ladder ~= was_on_ladder or (is_on_ladder and target_slot_extension.next_slot_status_update_at < t) then
+	if SlotSystemSettings.target_slots_moved_distance_sq < dist_sq or is_on_ladder ~= was_on_ladder or is_on_ladder and target_slot_extension.next_slot_status_update_at < t then
 		local should_offset_slot = true
 
 		target_slot_extension.position:store(target_unit_position)
@@ -642,7 +642,7 @@ SlotSystem._update_target_slots = function (self, t, target_unit, target_units, 
 
 	local moved_at = target_slot_extension.moved_at
 	local target_locomotion_component = target_slot_extension.locomotion_component
-	local target_speed_sq = (target_locomotion_component and Vector3_length_squared(target_locomotion_component.velocity_current)) or 0
+	local target_speed_sq = target_locomotion_component and Vector3_length_squared(target_locomotion_component.velocity_current) or 0
 
 	if not is_on_ladder and moved_at and SlotSystemSettings.target_slots_update < t - moved_at and (target_speed_sq <= SlotSystemSettings.target_slots_stopped_moving_speed_sq or SlotSystemSettings.target_slots_update_long < t - moved_at) then
 		local should_offset_slot = false
@@ -670,19 +670,19 @@ SlotSystem._update_occupied_slots = function (self, unit_extension_data)
 	local target_units = self._target_units
 	local target_units_n = #target_units
 
-	for j = 1, target_units_n, 1 do
+	for j = 1, target_units_n do
 		local target_unit = target_units[j]
 		local target_slot_extension = unit_extension_data[target_unit]
 		local all_slots = target_slot_extension.all_slots
 		local num_occupied = 0
 
-		for i = 1, NUM_SLOT_TYPES, 1 do
+		for i = 1, NUM_SLOT_TYPES do
 			local slot_type = SLOT_TYPES[i]
 			local slot_data = all_slots[slot_type]
 			local slots = slot_data.slots
 			local total_slots_count = slot_data.total_slots_count
 
-			for k = 1, total_slots_count, 1 do
+			for k = 1, total_slots_count do
 				local slot = slots[k]
 				local occupied = not slot.released and slot.user_unit
 
@@ -782,7 +782,7 @@ SlotSystem._prioritize_queued_units_on_slot = function (self, slot)
 		local queue = slot.queue
 		local queue_n = #queue
 
-		for i = 1, queue_n, 1 do
+		for i = 1, queue_n do
 			local queued_unit = queue[i]
 
 			self:register_prioritized_user_unit_update(queued_unit)

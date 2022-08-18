@@ -239,7 +239,7 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 
 		if particle_name then
 			local node_name = vfx.node_name
-			local node_index = (node_name and Unit.node(unit, node_name)) or 1
+			local node_index = node_name and Unit.node(unit, node_name) or 1
 			local position = Unit.world_position(unit, node_index)
 			local rotation = Quaternion.identity()
 			local effect_id = World.create_particles(world, particle_name, position, rotation)

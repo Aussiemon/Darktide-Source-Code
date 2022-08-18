@@ -26,7 +26,7 @@ PlayerUnitPlaceholderHudExtension.init = function (self, extension_init_context,
 	self._num_hit_markers = 0
 	self._hit_markers = Script.new_array(MAX_NUM_ACTIVE_HIT_MARKERS)
 
-	for i = 1, MAX_NUM_ACTIVE_HIT_MARKERS, 1 do
+	for i = 1, MAX_NUM_ACTIVE_HIT_MARKERS do
 		self._hit_markers[i] = {
 			fade_time = 0,
 			color = {
@@ -114,7 +114,7 @@ PlayerUnitPlaceholderHudExtension._update_weapon_charge = function (self)
 	local weapon_charge_pos = Vector3(mid_pos.x + WEAPON_CHARGE_X_OFFSET, mid_pos.y + WEAPON_CHARGE_Y_OFFSET, 0)
 	local wanted_width = WEAPON_CHARGE_WIDTH * charge_level
 	local half_border_size = WEAPON_CHARGE_BORDER_SIZE * 0.5
-	local weapon_charge_border_rect_pos = Vector3((mid_pos.x + WEAPON_CHARGE_X_OFFSET) - half_border_size, (mid_pos.y + WEAPON_CHARGE_Y_OFFSET) - half_border_size, 0)
+	local weapon_charge_border_rect_pos = Vector3(mid_pos.x + WEAPON_CHARGE_X_OFFSET - half_border_size, mid_pos.y + WEAPON_CHARGE_Y_OFFSET - half_border_size, 0)
 
 	Gui.rect(gui, weapon_charge_border_rect_pos, Vector2(WEAPON_CHARGE_WIDTH + WEAPON_CHARGE_BORDER_SIZE, WEAPON_CHARGE_HEIGHT + WEAPON_CHARGE_BORDER_SIZE), Color(56, 56, 56))
 	Gui.rect(gui, weapon_charge_pos, Vector2(WEAPON_CHARGE_WIDTH, WEAPON_CHARGE_HEIGHT), Color(104, 104, 104))
@@ -140,7 +140,7 @@ local function _draw_overheat(gui, heat_level, y_offset)
 	local overheat_pos = Vector3(mid_pos.x + OVERHEAT_X_OFFSET, mid_pos.y + OVERHEAT_Y_OFFSET + y_offset, 0)
 	local wanted_width = OVERHEAT_WIDTH * heat_level
 	local half_border_size = OVERHEAT_BORDER_SIZE * 0.5
-	local overheat_border_rect_pos = Vector3((mid_pos.x + OVERHEAT_X_OFFSET) - half_border_size, (mid_pos.y + OVERHEAT_Y_OFFSET + y_offset) - half_border_size, 0)
+	local overheat_border_rect_pos = Vector3(mid_pos.x + OVERHEAT_X_OFFSET - half_border_size, mid_pos.y + OVERHEAT_Y_OFFSET + y_offset - half_border_size, 0)
 
 	Gui.rect(gui, overheat_border_rect_pos, Vector2(OVERHEAT_WIDTH + OVERHEAT_BORDER_SIZE, OVERHEAT_HEIGHT + OVERHEAT_BORDER_SIZE), Color(56, 56, 56))
 	Gui.rect(gui, overheat_pos, Vector2(OVERHEAT_WIDTH, OVERHEAT_HEIGHT), Color(104, 104, 104))
@@ -183,8 +183,8 @@ local function _draw_warp_charge(gui, unit, warp_charge_component, y_offset, pla
 	local warp_charge_pos = Vector3(mid_pos.x + WARP_CHARGE_X_OFFSET, mid_pos.y + WARP_CHARGE_Y_OFFSET + y_offset, 0)
 	local wanted_width = WARP_CHARGE_WIDTH * warp_charge_level
 	local half_border_size = WARP_CHARGE_BORDER_SIZE * 0.5
-	local warp_charge_border_rect_pos = Vector3((mid_pos.x + WARP_CHARGE_X_OFFSET) - half_border_size, (mid_pos.y + WARP_CHARGE_Y_OFFSET + y_offset) - half_border_size, 0)
-	local bar_color = (prevent_overcharge and Color(204, 204, 255)) or Color(255, 2, 229)
+	local warp_charge_border_rect_pos = Vector3(mid_pos.x + WARP_CHARGE_X_OFFSET - half_border_size, mid_pos.y + WARP_CHARGE_Y_OFFSET + y_offset - half_border_size, 0)
+	local bar_color = prevent_overcharge and Color(204, 204, 255) or Color(255, 2, 229)
 
 	Gui.rect(gui, warp_charge_border_rect_pos, Vector2(WARP_CHARGE_WIDTH + WARP_CHARGE_BORDER_SIZE, WARP_CHARGE_HEIGHT + WARP_CHARGE_BORDER_SIZE), Color(56, 56, 56))
 	Gui.rect(gui, warp_charge_pos, Vector2(WARP_CHARGE_WIDTH, WARP_CHARGE_HEIGHT), Color(104, 104, 104))
@@ -225,7 +225,7 @@ PlayerUnitPlaceholderHudExtension._update_buff_progressbar = function (self)
 	local buff_charge_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET, mid_pos.y + BUFF_CHARGE_Y_OFFSET, 0)
 	local wanted_width = BUFF_CHARGE_WIDTH * charge_level
 	local half_border_size = BUFF_CHARGE_BORDER_SIZE * 0.5
-	local buff_charge_border_rect_pos = Vector3((mid_pos.x + BUFF_CHARGE_X_OFFSET) - half_border_size, (mid_pos.y + BUFF_CHARGE_Y_OFFSET) - half_border_size, 0)
+	local buff_charge_border_rect_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET - half_border_size, mid_pos.y + BUFF_CHARGE_Y_OFFSET - half_border_size, 0)
 
 	Gui.rect(gui, buff_charge_border_rect_pos, Vector2(BUFF_CHARGE_WIDTH + BUFF_CHARGE_BORDER_SIZE, BUFF_CHARGE_HEIGHT + BUFF_CHARGE_BORDER_SIZE), Color(56, 56, 56))
 	Gui.rect(gui, buff_charge_pos, Vector2(BUFF_CHARGE_WIDTH, BUFF_CHARGE_HEIGHT), Color(104, 104, 104))
@@ -248,7 +248,7 @@ PlayerUnitPlaceholderHudExtension._update_scanning_progressbar = function (self,
 	local buff_charge_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET, mid_pos.y + BUFF_CHARGE_Y_OFFSET, 0)
 	local wanted_width = BUFF_CHARGE_WIDTH * scanning_progression
 	local half_border_size = BUFF_CHARGE_BORDER_SIZE * 0.5
-	local buff_charge_border_rect_pos = Vector3((mid_pos.x + BUFF_CHARGE_X_OFFSET) - half_border_size, (mid_pos.y + BUFF_CHARGE_Y_OFFSET) - half_border_size, 0)
+	local buff_charge_border_rect_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET - half_border_size, mid_pos.y + BUFF_CHARGE_Y_OFFSET - half_border_size, 0)
 
 	Gui.rect(gui, buff_charge_border_rect_pos, Vector2(BUFF_CHARGE_WIDTH + BUFF_CHARGE_BORDER_SIZE, BUFF_CHARGE_HEIGHT + BUFF_CHARGE_BORDER_SIZE), Color(56, 56, 56))
 	Gui.rect(gui, buff_charge_pos, Vector2(BUFF_CHARGE_WIDTH, BUFF_CHARGE_HEIGHT), Color(104, 104, 104))
@@ -269,7 +269,7 @@ PlayerUnitPlaceholderHudExtension._update_wounds = function (self)
 	local max_wounds = self._health_extension:max_wounds()
 	local divider_interval = SIZE[1] / max_wounds
 
-	for i = 1, max_wounds + 1, 1 do
+	for i = 1, max_wounds + 1 do
 		if i ~= 1 and i ~= max_wounds + 1 then
 			local pos = Vector3((EDGE_OFFSET + divider_interval * (i - 1)) * scale, h - (90 + (i - 1) * 6), 0)
 
@@ -293,7 +293,7 @@ PlayerUnitPlaceholderHudExtension.report_hit = function (self, hit_weakspot, att
 			local oldest_index = 1
 			local oldest_time = hit_markers[1].fade_time
 
-			for i = 2, num_active_markers, 1 do
+			for i = 2, num_active_markers do
 				local fade_time = hit_markers[i].fade_time
 
 				if fade_time < oldest_time then
@@ -319,18 +319,8 @@ PlayerUnitPlaceholderHudExtension.report_hit = function (self, hit_weakspot, att
 			b = 191.25
 		elseif attack_result == AttackSettings.attack_results.damaged then
 			r = 255
-
-			if hit_weakspot then
-				g = 165
-			else
-				g = 255
-			end
-
-			if hit_weakspot then
-				b = 0
-			else
-				b = 255
-			end
+			g = hit_weakspot and 165 or 255
+			b = hit_weakspot and 0 or 255
 		elseif attack_result == AttackSettings.attack_results.died then
 			r = 255
 			g = 0
@@ -373,7 +363,7 @@ local dirs = {
 }
 
 local function _draw_marker(gui, position, length, alpha_multiplier, hit_fade_color, offset_scale)
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		local offset = Vector3(dirs[i * 2 - 1], dirs[i * 2], 0)
 		local p1 = position + offset * offset_scale + offset * length
 		local p2 = position + offset * offset_scale

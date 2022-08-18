@@ -24,18 +24,18 @@ local action_sweep_settings = {
 		[hit_zone_names.center_mass] = 6,
 		[hit_zone_names.captain_void_shield] = 6,
 		[hit_zone_names.corruptor_armor] = 6
-	},
-	hit_zone_priority_functions = {
-		[hit_zone_names.shield] = function (unit, attacking_unit_position, current_hit_zone_priority)
-			local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
-
-			if shield_extension and shield_extension:can_block_from_position(attacking_unit_position) then
-				return current_hit_zone_priority
-			else
-				return WORST_HIT_ZONE_PRIORITY
-			end
-		end
 	}
+}
+action_sweep_settings.hit_zone_priority_functions = {
+	[hit_zone_names.shield] = function (unit, attacking_unit_position, current_hit_zone_priority)
+		local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
+
+		if shield_extension and shield_extension:can_block_from_position(attacking_unit_position) then
+			return current_hit_zone_priority
+		else
+			return WORST_HIT_ZONE_PRIORITY
+		end
+	end
 }
 
 return settings("ActionSweepSettings", action_sweep_settings)

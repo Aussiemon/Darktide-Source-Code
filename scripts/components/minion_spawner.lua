@@ -30,14 +30,14 @@ MinionSpawner._get_data = function (self, unit)
 		local anim_length = Unit.simple_animation_length(unit)
 		local spawning_started_anim = {
 			time_from = self:get_data(unit, "spawning_started_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_started_time_to") * anim_length,
-			speed = (spawning_started_anim.time_to - spawning_started_anim.time_from) / anim_duration
+			time_to = self:get_data(unit, "spawning_started_time_to") * anim_length
 		}
+		spawning_started_anim.speed = (spawning_started_anim.time_to - spawning_started_anim.time_from) / anim_duration
 		local spawning_done_anim = {
 			time_from = self:get_data(unit, "spawning_done_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_done_time_to") * anim_length,
-			speed = (spawning_done_anim.time_to - spawning_done_anim.time_from) / anim_duration
+			time_to = self:get_data(unit, "spawning_done_time_to") * anim_length
 		}
+		spawning_done_anim.speed = (spawning_done_anim.time_to - spawning_done_anim.time_from) / anim_duration
 		anim_data = {
 			spawning_started = spawning_started_anim,
 			spawning_done = spawning_done_anim

@@ -16,6 +16,7 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 	self._active = true
 
 	if not mission.level then
+		-- Nothing
 	end
 
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
@@ -93,7 +94,7 @@ ChunkLodManager._async_raycast_result_cb = function (self, id, hits, num_hits, d
 	local force_show_all = data[1]
 	local is_using_cinematic_levels = data[2]
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local result = hits[i]
 		local actor = result[INDEX_ACTOR]
 		local hit_unit = Actor.unit(actor)

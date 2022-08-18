@@ -12,7 +12,7 @@ StatTree.set_value = function (self, stat_table, value, ...)
 	local root = stat_table[self:get_id()] or {}
 	local node = root
 
-	for i = 1, param_count, 1 do
+	for i = 1, param_count do
 		local param_name = select(i, ...)
 
 		if i == param_count then
@@ -30,7 +30,7 @@ StatTree.get_value = function (self, stat_table, ...)
 	local param_count = select("#", ...)
 	local node = stat_table[self:get_id()]
 
-	for i = 1, param_count, 1 do
+	for i = 1, param_count do
 		if not node then
 			return self._default_value
 		end

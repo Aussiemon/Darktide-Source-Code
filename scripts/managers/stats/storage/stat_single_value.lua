@@ -4,7 +4,7 @@ local StatSingleValue = class("StatSingleValue", "StatStorage")
 StatSingleValue.init = function (self, id, optional_default_value)
 	StatSingleValue.super.init(self, id)
 
-	self._default_value = (optional_default_value == nil and 0) or optional_default_value
+	self._default_value = optional_default_value == nil and 0 or optional_default_value
 end
 
 StatSingleValue.set_value = function (self, stat_table, value)

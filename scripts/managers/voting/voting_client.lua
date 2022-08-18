@@ -30,7 +30,7 @@ VotingClient.init = function (self, voting_id, initiator_peer, template, optiona
 	else
 		self._state = STATES.in_progress
 
-		for i = 1, #member_list, 1 do
+		for i = 1, #member_list do
 			local peer_id = member_list[i]
 			self._member_list[i] = peer_id
 			self._votes[peer_id] = initial_votes_list[i]
@@ -50,7 +50,7 @@ end
 VotingClient.on_voting_accepted = function (self, member_list, initial_votes_list, time_left)
 	self._state = STATES.in_progress
 
-	for i = 1, #member_list, 1 do
+	for i = 1, #member_list do
 		local peer_id = member_list[i]
 		self._member_list[i] = peer_id
 		self._votes[peer_id] = initial_votes_list[i]
@@ -141,7 +141,7 @@ VotingClient.member_list = function (self)
 
 	local member_list = self._member_list
 
-	for i = 1, member_list, 1 do
+	for i = 1, member_list do
 		member_list_copy[i] = member_list[i]
 	end
 

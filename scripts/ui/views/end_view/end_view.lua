@@ -23,7 +23,7 @@ EndView.init = function (self, settings, context)
 	local definitions = Definitions
 	self._context = context
 	self._can_exit = context and context.can_exit
-	self._round_won = (context and context.round_won) or false
+	self._round_won = context and context.round_won or false
 	self._session_report = context and context.session_report
 	self._end_player_view_context = {}
 	self._human_spawn_point_units = {}
@@ -78,7 +78,7 @@ EndView.on_exit = function (self)
 	local ui_renderer = self._ui_renderer
 	local game_mode_condition_widgets = self._game_mode_condition_widgets
 
-	for i = 1, #game_mode_condition_widgets, 1 do
+	for i = 1, #game_mode_condition_widgets do
 		local widget = game_mode_condition_widgets[i]
 
 		if widget.content.portrait_load_id then
@@ -91,7 +91,7 @@ EndView.on_exit = function (self)
 	if spawn_slots then
 		local num_slots = #spawn_slots
 
-		for i = 1, num_slots, 1 do
+		for i = 1, num_slots do
 			local slot = spawn_slots[i]
 
 			if slot.occupied then
@@ -179,7 +179,7 @@ EndView.update = function (self, dt, t, input_service)
 		self:_update_continue_button(timer_text)
 	end
 
-	self._widget_alpha = _math_clamp01(self._widget_alpha + dt / _update_alpha_fade_time * ((is_showing_player_view and -1) or 1))
+	self._widget_alpha = _math_clamp01(self._widget_alpha + dt / _update_alpha_fade_time * (is_showing_player_view and -1 or 1))
 
 	self:_update_player_slots(dt, t, input_service)
 
@@ -229,7 +229,7 @@ EndView._draw_widgets = function (self, dt, t, input_service, ui_renderer, rende
 	if widget_alpha > 0 then
 		local game_mode_condition_widgets = self._game_mode_condition_widgets
 
-		for i = 1, #game_mode_condition_widgets, 1 do
+		for i = 1, #game_mode_condition_widgets do
 			local widget = game_mode_condition_widgets[i]
 			widget.alpha_multiplier = widget_alpha
 			local widget_content = widget.content
@@ -249,7 +249,7 @@ end
 
 EndView._create_game_mode_condition_widgets = function (self)
 	local game_mode_condition_widget_definitions = self._definitions.game_mode_condition_widget_definitions
-	local round_condition_widget_definitions = (self._round_won and game_mode_condition_widget_definitions.victory) or game_mode_condition_widget_definitions.defeat
+	local round_condition_widget_definitions = self._round_won and game_mode_condition_widget_definitions.victory or game_mode_condition_widget_definitions.defeat
 	local static_widget_definitions = round_condition_widget_definitions.static
 	local widgets = self._widgets
 
@@ -271,7 +271,7 @@ EndView._setup_input_legend = function (self)
 	local legend_inputs = self._definitions.legend_inputs
 	local input_legends_by_key = {}
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 		local id = self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
@@ -315,7 +315,7 @@ EndView._setup_background_world = function (self)
 
 	local max_spawn_slots = 4
 
-	for i = 1, max_spawn_slots, 1 do
+	for i = 1, max_spawn_slots do
 		local event_name_human = "event_register_end_of_round_spawn_point_human_" .. i
 		local event_name_ogryn = "event_register_end_of_round_spawn_point_ogryn_" .. i
 
@@ -394,7 +394,7 @@ EndView._setup_spawn_slots = function (self, players)
 		player_index = player_index + 1
 		local profile_spawner = UIProfileSpawner:new("EndView_" .. player_index, world, camera, unit_spawner)
 
-		for j = 1, #ignored_slots, 1 do
+		for j = 1, #ignored_slots do
 			local slot_name = ignored_slots[j]
 
 			profile_spawner:ignore_slot(slot_name)
@@ -418,7 +418,7 @@ end
 EndView._get_free_slot_id = function (self)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if not slot.occupied then
@@ -430,7 +430,7 @@ end
 EndView._player_slot_id = function (self, account_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied and slot.account_id == account_id then
@@ -510,9 +510,9 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 
 	if more_than_one_party then
 		if party_status == PartyStatus.mine then
-			widget_content.party_status = "\ue0041"
+			widget_content.party_status = "1"
 		elseif party_status == PartyStatus.other then
-			widget_content.party_status = "\ue0042"
+			widget_content.party_status = "2"
 		end
 	end
 
@@ -543,7 +543,7 @@ EndView._update_player_slots = function (self, dt, t, input_service)
 	local spawn_slots = self._spawn_slots
 
 	if spawn_slots then
-		for i = 1, #spawn_slots, 1 do
+		for i = 1, #spawn_slots do
 			local slot = spawn_slots[i]
 
 			if slot.occupied then
@@ -614,7 +614,7 @@ EndView._load_portrait_icon = function (self, widget, profile)
 		widget_content.frame_load_id = nil
 	end
 
-	local insignia_item = (loadout and loadout.slot_insignia) or MasterItems.find_fallback_item("slot_insignia")
+	local insignia_item = loadout and loadout.slot_insignia or MasterItems.find_fallback_item("slot_insignia")
 	local insignia_id = insignia_item and insignia_item.name
 	widget_content.insignia_id = insignia_id
 	local cb = callback(self, "_cb_set_player_insignia", widget)

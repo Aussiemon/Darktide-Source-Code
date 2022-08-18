@@ -1,7 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local MasterItems = require("scripts/backend/master_items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -83,7 +79,7 @@ RemoteProfilesSyncState.update = function (self, dt)
 
 	profile_synchronizer_host:start_initial_sync(channel_id, peer_id, local_player_id_array)
 
-	for array_index = 1, #local_player_id_array, 1 do
+	for array_index = 1, #local_player_id_array do
 		local profile_sync_state = self._profile_sync_states[array_index]
 
 		if not profile_sync_state then
@@ -168,18 +164,9 @@ RemoteProfilesSyncState._request_backend_profile = function (self, array_index, 
 end
 
 RemoteProfilesSyncState.rpc_ready_to_receive_local_profiles = function (self, channel_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-10, warpins: 1 ---
 	self._sync_profiles = true
 
 	Log.info("RemoteProfilesSyncState", "[rpc_ready_to_receive_local_profiles] LoadingTimes: Started Syncing Profiles To Connecting Peer", self._shared_state.peer_id)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return RemoteProfilesSyncState

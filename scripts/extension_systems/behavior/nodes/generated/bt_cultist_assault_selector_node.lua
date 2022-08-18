@@ -13,7 +13,7 @@ BtCultistAssaultSelectorNode.init_values = function (self, blackboard, action_da
 
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_tree_node = child_node.tree_node
 		local child_action_data = child_tree_node.action_data
@@ -128,7 +128,7 @@ BtCultistAssaultSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
 	local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
-	if scratchpad.is_switching_weapons or (wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name) then
+	if scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name then
 		condition_result = true
 	end
 
@@ -448,7 +448,17 @@ BtCultistAssaultSelectorNode.evaluate = function (self, unit, blackboard, scratc
 
 		sub_condition_result_01 = condition_result
 		local has_target_unit = sub_condition_result_01
-		condition_result = (not has_target_unit or false) and is_passive and should_patrol
+
+		if has_target_unit then
+			condition_result = false
+		else
+			local patrol_component = blackboard.patrol
+			local should_patrol = patrol_component.should_patrol
+			local perception_component = blackboard.perception
+			local aggro_state = perception_component.aggro_state
+			local is_passive = aggro_state == "passive"
+			condition_result = is_passive and should_patrol
+		end
 	until true
 
 	if condition_result then

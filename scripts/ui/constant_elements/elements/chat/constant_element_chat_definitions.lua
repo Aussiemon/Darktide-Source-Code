@@ -171,7 +171,7 @@ local animations = {
 
 				local message_widgets = params.message_widgets
 
-				for i = 1, #message_widgets, 1 do
+				for i = 1, #message_widgets do
 					local widget = message_widgets[i]
 					widget.alpha_multiplier = alpha_multiplier
 				end
@@ -199,7 +199,7 @@ local animations = {
 				local input_field_widget = widgets.input_field
 				input_field_widget.content.visible = true
 				params.input_field_source = input_field_widget.alpha_multiplier or 0
-				params.input_field_target = (active and 1) or 0
+				params.input_field_target = active and 1 or 0
 				input_field_widget.content.is_writing = params.activate_input_field
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)

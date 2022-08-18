@@ -127,7 +127,7 @@ components.checkbox = function (template)
 	local options_by_id = {}
 
 	if template.options then
-		for i = 1, #template.options, 1 do
+		for i = 1, #template.options do
 			local option = template.options[i]
 			local id = option.id
 			options_by_id[id] = option
@@ -212,7 +212,7 @@ components.value_slider = function (template)
 	local step_size_value = template.step_size_value
 	local num_decimals = template.num_decimals
 	local default_value = nil
-	default_value = (type(template.default_value) ~= "function" or template:default_value()) and (template.default_value or min_value)
+	default_value = type(template.default_value) == "function" and template:default_value() or template.default_value or min_value
 	local value_range = max_value - min_value
 	local new_num_decimals = num_decimals or 1
 	local step_size = step_size_value or 0.1

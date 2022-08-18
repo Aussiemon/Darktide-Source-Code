@@ -46,7 +46,7 @@ LightControllerSystem._fetch_settings = function (self, mission, circumstance_na
 	local original_settings = mission.light_groups_enabled or {}
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = (mission_overrides and mission_overrides.light_groups_enabled) or nil
+	local circumstance_settings = mission_overrides and mission_overrides.light_groups_enabled or nil
 
 	return circumstance_settings or original_settings
 end
@@ -78,7 +78,7 @@ LightControllerSystem._add_light_groups = function (self, unit)
 	local light_group_extensions = self._light_group_extensions
 	local light_groups = extension:light_groups()
 
-	for i = 1, #light_groups, 1 do
+	for i = 1, #light_groups do
 		local light_group_name = light_groups[i]
 		local extensions = light_group_extensions[light_group_name] or {}
 		extensions[#extensions + 1] = extension
@@ -104,7 +104,7 @@ LightControllerSystem._set_light_group_enabled = function (self, light_group_nam
 	local extensions = self._light_group_extensions[light_group_name]
 
 	if extensions ~= nil then
-		for i = 1, #extensions, 1 do
+		for i = 1, #extensions do
 			extensions[i]:set_enabled(is_enabled, is_deterministic)
 		end
 	end

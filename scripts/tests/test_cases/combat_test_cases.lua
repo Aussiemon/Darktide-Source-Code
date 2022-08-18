@@ -70,7 +70,7 @@ local function form_trait_list(traits, existing_traits)
 	local new_traits = existing_traits or {}
 	local num_existing_traits = #new_traits
 
-	for i = 1, #traits, 1 do
+	for i = 1, #traits do
 		new_traits[num_existing_traits + i] = {
 			rarity = 1,
 			name = traits[i]
@@ -154,7 +154,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local next_lua_trace_measure_point = 0
 		local bots_stuck_data = {}
 
-		for i = 1, num_bots, 1 do
+		for i = 1, num_bots do
 			bots_stuck_data[i] = {
 				Vector3Box(Vector3(-999, -999, -999)),
 				os.time()
@@ -265,7 +265,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			z = player_current_position.z
 		}
 		local num_breeds = table.size(breeds)
-		local angle_offset = (2 * math.pi) / num_breeds
+		local angle_offset = 2 * math.pi / num_breeds
 		local distance = 10
 
 		for index, breed in ipairs(breeds) do
@@ -322,7 +322,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			end
 		end
 
-		local wait_duration = (spawn_simultaneously and kill_timer) or 5
+		local wait_duration = spawn_simultaneously and kill_timer or 5
 
 		TestifySnippets.wait(wait_duration)
 
@@ -447,7 +447,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 						local missing_actor_names = {}
 
 						for _, actor_names in pairs(hit_zone_ragdoll_actors) do
-							for i = 1, #actor_names, 1 do
+							for i = 1, #actor_names do
 								local actor_name = actor_names[i]
 								local actor = Unit.actor(minion_unit, actor_name)
 
@@ -585,5 +585,3 @@ CombatTestCases.gib_all_minions = function (case_settings)
 		return result
 	end)
 end
-
-return

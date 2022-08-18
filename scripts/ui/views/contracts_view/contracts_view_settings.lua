@@ -27,7 +27,7 @@ local contracts_view_settings = {
 	num_tasks_in_list = 8,
 	wallet_type = "marks",
 	task_label_block_damage = "loc_contracts_task_label_block_damage",
-	task_fulfilled_check_mark = "\ue001",
+	task_fulfilled_check_mark = "",
 	task_complexity_hard = "loc_contracts_contract_complexity_hard",
 	task_description_complete_mission_no_death = "loc_contracts_task_description_complete_mission_no_death"
 }

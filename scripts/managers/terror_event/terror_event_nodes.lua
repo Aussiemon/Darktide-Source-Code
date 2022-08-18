@@ -9,17 +9,12 @@ local TerrorEventNodes = {
 			event.scratchpad.ends_at = t + node.duration
 		end,
 		update = function (node, scratchpad, t, dt)
-			if t <= scratchpad.ends_at then
-			else
+			if t > scratchpad.ends_at then
 				return true
 			end
 		end,
 		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			if not is_completed then
-				slot6 = string.format("(%.1f sec)", (is_running and scratchpad.ends_at - t) or node.duration)
-			else
-				return false and true
-			end
+			return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
 		end
 	},
 	delay = {
@@ -32,11 +27,7 @@ local TerrorEventNodes = {
 			end
 		end,
 		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			if not is_completed then
-				slot6 = string.format("(%.1f sec)", (is_running and scratchpad.ends_at - t) or node.duration)
-			else
-				return false and true
-			end
+			return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
 		end
 	},
 	continue_when = {
@@ -56,11 +47,7 @@ local TerrorEventNodes = {
 		end,
 		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
 			if node.duration then
-				if not is_completed then
-					slot6 = string.format("(%.1f sec)", (is_running and scratchpad.ends_at - t) or node.duration)
-				else
-					return false and true
-				end
+				return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
 			end
 		end
 	},
@@ -140,7 +127,7 @@ local TerrorEventNodes = {
 			local spawn_types = node.spawn_types
 			local enabled = node.enabled
 
-			for i = 1, #spawn_types, 1 do
+			for i = 1, #spawn_types do
 				local spawn_type = spawn_types[i]
 
 				pacing_manager:pause_spawn_type(spawn_type, not enabled, "terror_event")
@@ -154,12 +141,12 @@ local TerrorEventNodes = {
 			local enabled = node.enabled
 			local names = ""
 
-			for i = 1, #spawn_types, 1 do
+			for i = 1, #spawn_types do
 				local spawn_type = spawn_types[i]
 				names = names .. spawn_type .. " "
 			end
 
-			return string.format("Controlling pacing spawn: %s => %s", names, (enabled and "true") or "false")
+			return string.format("Controlling pacing spawn: %s => %s", names, enabled and "true" or "false")
 		end
 	},
 	freeze_specials_pacing = {
@@ -175,7 +162,7 @@ local TerrorEventNodes = {
 		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
 			local enabled = node.enabled
 
-			return string.format("Freezing specials pacing => %s", (enabled and "true") or "false")
+			return string.format("Freezing specials pacing => %s", enabled and "true" or "false")
 		end
 	},
 	set_pacing_enabled = {
@@ -189,7 +176,7 @@ local TerrorEventNodes = {
 			return true
 		end,
 		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("Set pacing enabled: %s", (node.enabled and "true") or "false")
+			return string.format("Set pacing enabled: %s", node.enabled and "true" or "false")
 		end
 	}
 }
@@ -242,7 +229,7 @@ TerrorEventNodes.spawn_by_points = {
 			table.shuffle(spawners)
 
 			if limit_spawners then
-				for i = limit_spawners + 1, #spawners, 1 do
+				for i = limit_spawners + 1, #spawners do
 					spawners[i] = nil
 				end
 			end
@@ -271,7 +258,7 @@ TerrorEventNodes.spawn_by_points = {
 		local wait_for_spawners = scratchpad.wait_for_spawners
 
 		if wait_for_spawners then
-			for i = 1, #wait_for_spawners, 1 do
+			for i = 1, #wait_for_spawners do
 				if wait_for_spawners[i]:is_spawning() then
 					return false
 				end
@@ -308,7 +295,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		table.shuffle(spawners)
 
 		if limit_spawners then
-			for i = limit_spawners + 1, #spawners, 1 do
+			for i = limit_spawners + 1, #spawners do
 				spawners[i] = nil
 			end
 		end
@@ -336,7 +323,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local wait_for_spawners = scratchpad.wait_for_spawners
 
 		if wait_for_spawners then
-			for i = 1, #wait_for_spawners, 1 do
+			for i = 1, #wait_for_spawners do
 				if wait_for_spawners[i]:is_spawning() then
 					return false
 				end
@@ -361,7 +348,7 @@ TerrorEventNodes.try_inject_special_minion = {
 
 		local spawner_group = node.spawner_group
 
-		for i = 1, breed_amount, 1 do
+		for i = 1, breed_amount do
 			Managers.state.pacing:try_inject_special(breed_name, nil, nil, spawner_group)
 		end
 	end,

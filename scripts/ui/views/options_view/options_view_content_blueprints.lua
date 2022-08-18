@@ -98,9 +98,9 @@ local blueprints = {
 			content.text = Managers.localization:localize(display_name)
 			content.entry = entry
 
-			for i = 1, 2, 1 do
+			for i = 1, 2 do
 				local widget_option_id = "option_" .. i
-				content[widget_option_id] = (i == 1 and Managers.localization:localize("loc_setting_checkbox_on")) or Managers.localization:localize("loc_setting_checkbox_off")
+				content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t)
@@ -115,10 +115,10 @@ local blueprints = {
 				new_value = not value
 			end
 
-			for i = 1, 2, 1 do
+			for i = 1, 2 do
 				local widget_option_id = "option_hotspot_" .. i
 				local option_hotspot = content[widget_option_id]
-				local is_selected = (value and i == 1) or (not value and i == 2)
+				local is_selected = value and i == 1 or not value and i == 2
 				option_hotspot.is_selected = is_selected
 			end
 
@@ -260,7 +260,7 @@ blueprints.value_slider = {
 			end
 
 			local slider_value = content.slider_value
-			drag_value = (slider_value and explode_function(slider_value)) or get_function()
+			drag_value = slider_value and explode_function(slider_value) or get_function()
 		elseif not focused or drag_previously_active then
 			local previous_slider_value = content.previous_slider_value
 			local slider_value = content.slider_value
@@ -270,7 +270,7 @@ blueprints.value_slider = {
 
 				if previous_slider_value ~= slider_value then
 					new_normalized_value = slider_value
-					drag_value = (slider_value and explode_function(slider_value)) or get_function()
+					drag_value = slider_value and explode_function(slider_value) or get_function()
 				end
 			elseif normalized_value ~= slider_value then
 				content.slider_value = normalized_value
@@ -334,7 +334,7 @@ blueprints.dropdown = {
 
 		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
 
-		local options = (entry.options_function and entry.options_function()) or entry.options
+		local options = entry.options_function and entry.options_function() or entry.options
 		local num_visible_options = math.min(#options, max_visible_options)
 
 		return DropdownPassTemplates.settings_dropdown(settings_grid_width, settings_value_height, settings_value_width, num_visible_options)
@@ -349,7 +349,7 @@ blueprints.dropdown = {
 
 		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
 
-		local options = entry.options or (entry.options_function and entry.options_function())
+		local options = entry.options or entry.options_function and entry.options_function()
 		local num_options = #options
 		local num_visible_options = math.min(num_options, max_visible_options)
 		content.num_visible_options = num_visible_options
@@ -357,7 +357,7 @@ blueprints.dropdown = {
 		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
 		local options_by_id = {}
 
-		for i = 1, num_options, 1 do
+		for i = 1, num_options do
 			local option = options[i]
 			options_by_id[option.id] = option
 		end
@@ -373,7 +373,7 @@ blueprints.dropdown = {
 		local scroll_length = math.max(size[2] * num_options - content.area_length, 0)
 		content.scroll_length = scroll_length
 		local spacing = 0
-		local scroll_amount = (scroll_length > 0 and (size[2] + spacing) / scroll_length) or 0
+		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
 		content.scroll_amount = scroll_amount
 	end,
 	update = function (parent, widget, input_service, dt, t)
@@ -409,13 +409,13 @@ blueprints.dropdown = {
 			hotspot_style.on_pressed_sound = hotspot_style.on_pressed_fold_out_sound
 		end
 
-		value = (not entry.get_function or entry.get_function()) and (content.internal_value or "<not selected>")
+		value = entry.get_function and entry.get_function() or content.internal_value or "<not selected>"
 		local localization_manager = Managers.localization
 		local preview_option = options_by_id[value]
 		local preview_option_id = preview_option and preview_option.id
-		local preview_value = (preview_option and preview_option.display_name) or "n/a"
+		local preview_value = preview_option and preview_option.display_name or "n/a"
 		local ignore_localization = preview_option and preview_option.ignore_localization
-		content.value_text = (ignore_localization and preview_value) or localization_manager:localize(preview_value)
+		content.value_text = ignore_localization and preview_value or localization_manager:localize(preview_value)
 		local widget_type = widget.type
 		local template = blueprints[widget_type]
 		local size = template.size
@@ -432,7 +432,7 @@ blueprints.dropdown = {
 		local new_selection_index = nil
 
 		if not selected_index or not focused then
-			for i = 1, #options, 1 do
+			for i = 1, #options do
 				local option = options[i]
 
 				if option.id == preview_option_id then
@@ -486,10 +486,10 @@ blueprints.dropdown = {
 		local option_hovered = false
 		local option_index = 1
 		local start_index = content.start_index or 1
-		local end_index = math.min((start_index + num_visible_options) - 1, num_options)
+		local end_index = math.min(start_index + num_visible_options - 1, num_options)
 		local using_scrollbar = num_visible_options < num_options
 
-		for i = start_index, end_index, 1 do
+		for i = start_index, end_index do
 			local option_text_id = "option_text_" .. option_index
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
@@ -506,12 +506,12 @@ blueprints.dropdown = {
 
 			local option_display_name = option.display_name
 			local option_ignore_localization = option.ignore_localization
-			content[option_text_id] = (option_ignore_localization and option_display_name) or localization_manager:localize(option_display_name)
+			content[option_text_id] = option_ignore_localization and option_display_name or localization_manager:localize(option_display_name)
 			local options_y = size[2] * option_index
-			style[option_hotspot_id].offset[2] = (grow_downwards and options_y) or -options_y
-			style[option_text_id].offset[2] = (grow_downwards and options_y) or -options_y
+			style[option_hotspot_id].offset[2] = grow_downwards and options_y or -options_y
+			style[option_text_id].offset[2] = grow_downwards and options_y or -options_y
 			local entry_length = style[option_hotspot_id].size[1]
-			entry_length = (using_scrollbar and entry_length) or settings_value_width
+			entry_length = using_scrollbar and entry_length or settings_value_width
 			style[outline_style_id].size[1] = entry_length
 			style[option_text_id].size[1] = entry_length
 			option_index = option_index + 1
@@ -527,7 +527,7 @@ blueprints.dropdown = {
 
 		local scrollbar_hotspot = content.scrollbar_hotspot
 		local scrollbar_hovered = scrollbar_hotspot.is_hover
-		local pass_input = using_gamepad or value_changed or (not option_hovered and not scrollbar_hovered)
+		local pass_input = using_gamepad or value_changed or not option_hovered and not scrollbar_hovered
 
 		return pass_input
 	end
@@ -549,7 +549,7 @@ blueprints.keybind = {
 		local content = widget.content
 		local entry = content.entry
 		local value = entry.get_function()
-		local preview_value = (value and InputUtils.localized_string_from_key_info(value)) or content.key_unassigned_string
+		local preview_value = value and InputUtils.localized_string_from_key_info(value) or content.key_unassigned_string
 		content.value_text = preview_value
 		local hotspot = content.hotspot
 

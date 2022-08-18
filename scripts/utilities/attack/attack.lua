@@ -45,7 +45,7 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 		attack_args_temp[ARGS[arg]] = val
 	end
 
-	for i = 1, NUM_ARGS, 1 do
+	for i = 1, NUM_ARGS do
 		local setting = ARGS[i]
 		local val = attack_args_temp[i]
 
@@ -144,7 +144,7 @@ ARGS = {
 }
 NUM_ARGS = #ARGS
 
-for i = 1, NUM_ARGS, 1 do
+for i = 1, NUM_ARGS do
 	local argument = ARGS[i]
 	local arg_name = argument.name
 	ARGS[arg_name] = i
@@ -293,7 +293,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit)
 		damage_dealt = 0
 		damage_absorbed = calculated_damage
-		result = (damage_allowed and attack_results.blocked) or attack_results.friendly_fire
+		result = damage_allowed and attack_results.blocked or attack_results.friendly_fire
 
 		if is_server and unit_data_extension and damage_allowed then
 			local block_component = unit_data_extension:write_component("block")
@@ -378,13 +378,13 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
 		local attacked_action = behaviour_extension and behaviour_extension:running_action()
 		local weapon_template_or_nil = attacking_item and WeaponTemplate.weapon_template_from_item(attacking_item)
-		local weapon_template_name = (weapon_template_or_nil and weapon_template_or_nil.name) or "none"
+		local weapon_template_name = weapon_template_or_nil and weapon_template_or_nil.name or "none"
 		local attacked_position_or_nil = POSITION_LOOKUP[attacked_unit]
 		local attacking_position_or_nil = POSITION_LOOKUP[attacking_unit]
 		local either_unit_lacks_position = not attacked_position_or_nil or not attacking_position_or_nil
-		local distance_between_units = (either_unit_lacks_position and 0) or Vector3.length(attacked_position_or_nil - attacking_position_or_nil)
+		local distance_between_units = either_unit_lacks_position and 0 or Vector3.length(attacked_position_or_nil - attacking_position_or_nil)
 		local attacking_health_extension_or_nil = ScriptUnit.has_extension(attacking_unit, "health_system")
-		local attacking_health_percent = (attacking_health_extension_or_nil and attacking_health_extension_or_nil:current_health_percent()) or 0
+		local attacking_health_percent = attacking_health_extension_or_nil and attacking_health_extension_or_nil:current_health_percent() or 0
 
 		if did_damage and attacking_is_human then
 			Managers.stats:record_damage(attacking_player, attacked_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt)

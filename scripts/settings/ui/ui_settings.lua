@@ -228,25 +228,25 @@ local ui_settings = {
 		special = 3
 	},
 	trait_category_icon = {
-		ranged_aimed = "\ue040",
-		ranged_common = "\ue040",
-		melee_activated = "\ue040",
-		ranged_explosive = "\ue040",
-		ranged_overheat = "\ue040",
-		ranged_warpcharge = "\ue040",
-		melee_common = "\ue040"
+		ranged_aimed = "",
+		ranged_common = "",
+		melee_activated = "",
+		ranged_explosive = "",
+		ranged_overheat = "",
+		ranged_warpcharge = "",
+		melee_common = ""
 	},
 	digital_clock_numbers = {
-		[0] = "\ue010",
-		"\ue011",
-		"\ue012",
-		"\ue013",
-		"\ue014",
-		"\ue015",
-		"\ue016",
-		"\ue017",
-		"\ue018",
-		"\ue019"
+		[0] = "",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		""
 	}
 }
 

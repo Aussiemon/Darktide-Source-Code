@@ -71,7 +71,7 @@ local ALL_AMOUNT_FROM_CATEGORY = {}
 for category, entries in pairs(ALL_CATEGORIES) do
 	local total_attacks = 0
 
-	for i = 1, #entries, 1 do
+	for i = 1, #entries do
 		local data = entries[i]
 		local num_attacks = #data.attack_names
 		total_attacks = total_attacks + num_attacks

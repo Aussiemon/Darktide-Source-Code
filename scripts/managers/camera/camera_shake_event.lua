@@ -18,8 +18,8 @@ CameraShakeEvent.init = function (self, event_name, source_unit_data)
 	self._seed = event.seed or math.random(1, 100)
 	self._source_unit_data = source_unit_data
 	self._is_done = false
-	self._engine_math = (rawget(_G, "EditorApi") and Math) or math
-	self._math_utils_or_math = (rawget(_G, "EditorApi") and MathUtils) or math
+	self._engine_math = rawget(_G, "EditorApi") and Math or math
+	self._math_utils_or_math = rawget(_G, "EditorApi") and MathUtils or math
 end
 
 CameraShakeEvent.update = function (self, dt, camera_data, camera_position)
@@ -79,7 +79,7 @@ CameraShakeEvent._calculate_perlin_value = function (self, x, fade_progress)
 	local persistance = event_settings.persistance
 	local number_of_octaves = event_settings.octaves
 
-	for i = 0, number_of_octaves, 1 do
+	for i = 0, number_of_octaves do
 		local frequency = 2^i
 		local amplitude = persistance^i
 		total = total + self:_interpolated_noise(x * frequency) * amplitude

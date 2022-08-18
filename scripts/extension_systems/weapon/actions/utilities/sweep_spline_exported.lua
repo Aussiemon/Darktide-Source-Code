@@ -13,7 +13,7 @@ SweepSplineExported.init = function (self, action_settings, first_person_compone
 end
 
 SweepSplineExported.position_and_rotation = function (self, t)
-	local frame = (t == 0 and 1) or math.ceil(self._num_frames * t)
+	local frame = t == 0 and 1 or math.ceil(self._num_frames * t)
 	local local_matrix = Matrix4x4Box.unbox(self._matrices[frame])
 	local local_point = Matrix4x4.translation(local_matrix)
 	local local_rotation = Matrix4x4.rotation(local_matrix)
@@ -46,7 +46,7 @@ SweepSplineExported._build = function (self, action_settings)
 
 		local frame_index = num_frames + 1
 
-		for i = 1, num_frames, 1 do
+		for i = 1, num_frames do
 			local time = full_frame_to_time_map[i]
 
 			if t < time then
@@ -68,7 +68,7 @@ SweepSplineExported._build = function (self, action_settings)
 	self._frame_to_time_map = frame_to_time_map
 	local num_hit_detection_frames = 0
 
-	for frame = start_frame, end_frame, 1 do
+	for frame = start_frame, end_frame do
 		local t = full_frame_to_time_map[frame]
 		local matrix_data = matrices_data[t]
 		local matrix = _build_matrix(matrix_data)
@@ -83,7 +83,7 @@ end
 function _find_frame(time, frame_to_time_map, num_frames)
 	local prev_frame_time = 0
 
-	for i = 1, num_frames, 1 do
+	for i = 1, num_frames do
 		local frame_time = frame_to_time_map[i]
 
 		if time < frame_time then

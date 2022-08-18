@@ -66,7 +66,7 @@ ActionProximityTag.start = function (self, action_settings, t, time_scale, actio
 		local broadphase = broadphase_system.broadphase
 		local num_results = broadphase:query(query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local enemy_unit = BROADPHASE_RESULTS[i]
 
 			if HEALTH_ALIVE[enemy_unit] then

@@ -27,7 +27,7 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 	local event_manager = Managers.event
 	local events = HudElementCombatFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -118,7 +118,7 @@ HudElementCombatFeed.destroy = function (self)
 	local event_manager = Managers.event
 	local events = HudElementCombatFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])
@@ -161,7 +161,7 @@ end
 HudElementCombatFeed._notification_by_id = function (self, notification_id, remove)
 	local notifications = self._notifications
 
-	for i = 1, #notifications, 1 do
+	for i = 1, #notifications do
 		local notification = notifications[i]
 
 		if notification.id == notification_id then
@@ -222,7 +222,7 @@ HudElementCombatFeed._align_notification_widgets = function (self, dt)
 	local offset_y = 0
 	local notifications = self._notifications
 
-	for i = 1, #notifications, 1 do
+	for i = 1, #notifications do
 		local notification = notifications[i]
 
 		if notification then
@@ -297,7 +297,7 @@ HudElementCombatFeed._draw_widgets = function (self, dt, t, input_service, ui_re
 			local total_time = notification.total_time
 			local time = notification.time
 
-			if (time and total_time and total_time <= time) or self._max_messages < i then
+			if time and total_time and total_time <= time or self._max_messages < i then
 				self:_remove_notification(notification.id)
 			else
 				local widget = notification.widget

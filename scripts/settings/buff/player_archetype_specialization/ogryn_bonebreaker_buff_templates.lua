@@ -239,7 +239,7 @@ templates.ogryn_bonebreaker_melee_kills_restore_ally_toughness = {
 		local side = side_system.side_by_unit[unit]
 		local player_units = side.valid_player_units
 
-		for i = 1, #player_units, 1 do
+		for i = 1, #player_units do
 			local player_unit = player_units[i]
 
 			if player_unit ~= unit and HEALTH_ALIVE[player_unit] then

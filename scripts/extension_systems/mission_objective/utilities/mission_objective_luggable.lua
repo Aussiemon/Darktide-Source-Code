@@ -55,7 +55,7 @@ MissionObjectiveLuggable.display_socket_markers = function (self, show_markers)
 		local socket_units = luggable_synchronizer_extension:active_socket_units()
 		self._override_marked_units = {}
 
-		for i = 1, #socket_units, 1 do
+		for i = 1, #socket_units do
 			local socket_unit = socket_units[i]
 			local socket_extension = ScriptUnit.extension(socket_unit, "luggable_socket_system")
 

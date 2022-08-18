@@ -25,7 +25,7 @@ BtJumpAcrossAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 		behavior_component.move_state = "jumping"
 		scratchpad.behavior_component = behavior_component
 		local blend_timings = action_data.blend_timings
-		local blend_duration = (blend_timings and blend_timings[jump_anim_event]) or 0
+		local blend_duration = blend_timings and blend_timings[jump_anim_event] or 0
 		scratchpad.blend_timing = t + blend_duration
 	else
 		scratchpad.failed_to_use_smart_object = true
@@ -60,7 +60,7 @@ BtJumpAcrossAction._start_jump = function (self, unit, breed, animation_extensio
 	local num_anim_thresholds = #anim_thresholds
 	local jump_anim_event = nil
 
-	for i = 1, num_anim_thresholds, 1 do
+	for i = 1, num_anim_thresholds do
 		local anim_threshold = anim_thresholds[i]
 
 		if horizontal_length < anim_threshold.horizontal_threshold then

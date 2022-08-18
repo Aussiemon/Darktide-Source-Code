@@ -86,7 +86,7 @@ local function damage_profile_tests(damage_profiles)
 				damage_profile_error_msg = damage_profile_error_msg .. default_target_error_msg
 			end
 
-			for i = 1, #targets, 1 do
+			for i = 1, #targets do
 				local target_success, target_error_msg = _check_target(targets[i], i)
 
 				if not target_success then

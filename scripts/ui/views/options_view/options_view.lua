@@ -94,7 +94,7 @@ OptionsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -134,7 +134,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 	local alignment_list = {}
 	local amount = #content
 
-	for i = 1, amount, 1 do
+	for i = 1, amount do
 		local entry = content[i]
 		local verified = true
 
@@ -234,7 +234,7 @@ OptionsView._draw_grid = function (self, grid, widgets, interaction_widget, dt, 
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for j = 1, #widgets, 1 do
+	for j = 1, #widgets do
 		local widget = widgets[j]
 		local draw = widget ~= self._selected_settings_widget
 
@@ -455,7 +455,7 @@ OptionsView._setup_category_config = function (self, config)
 	local entries = {}
 	local reset_functions_by_category = {}
 
-	for i = 1, #config_categories, 1 do
+	for i = 1, #config_categories do
 		local category_config = config_categories[i]
 		local category_display_name = category_config.display_name
 		local category_icon = category_config.icon
@@ -542,7 +542,7 @@ OptionsView._update_category_content_widgets = function (self, dt, t)
 	if category_content_widgets then
 		local selected_category_widget = self._selected_category_widget
 
-		for i = 1, #category_content_widgets, 1 do
+		for i = 1, #category_content_widgets do
 			local widget = category_content_widgets[i]
 
 			if widget.content.hotspot.is_focused then
@@ -574,7 +574,7 @@ OptionsView._update_settings_content_widgets = function (self, dt, t, input_serv
 
 		local handle_input = false
 
-		for i = 1, #settings_content_widgets, 1 do
+		for i = 1, #settings_content_widgets do
 			local widget = settings_content_widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -608,7 +608,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	local scenegraph_id = "settings_grid_content_pivot"
 	local default_value = config.default_value
 	local default_value_type = type(default_value)
-	local options = config.options or (config.options_function and config.options_function())
+	local options = config.options or config.options_function and config.options_function()
 	local widget_type = config.widget_type
 
 	if not widget_type then
@@ -619,7 +619,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 
 			if get_function then
 				local value = get_function()
-				local value_type = (value ~= nil and type(value)) or default_value_type
+				local value_type = value ~= nil and type(value) or default_value_type
 
 				if value_type == "boolean" then
 					widget_type = "checkbox"
@@ -643,9 +643,9 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 
 	fassert(template, "[OptionsView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -704,7 +704,7 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 
 		local value = entry.get_function()
 		local devices = entry.devices
-		local value_text = (value and InputUtils.localized_string_from_key_info(value)) or self:_localize("loc_keybind_unassigned")
+		local value_text = value and InputUtils.localized_string_from_key_info(value) or self:_localize("loc_keybind_unassigned")
 
 		self._keybind_popup:set_value_text(value_text)
 		Managers.input:start_key_watch(devices)
@@ -783,7 +783,7 @@ OptionsView._set_exlusive_focus_on_grid_widget = function (self, widget_name, fo
 	local widgets = self._settings_content_widgets
 	local selected_widget = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local selected = widget.name == widget_name
 		local content = widget.content
@@ -817,7 +817,7 @@ OptionsView._change_navigation_column = function (self, column_index)
 
 	local widgets = navigation_widgets[column_index]
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -831,7 +831,7 @@ OptionsView._change_navigation_column = function (self, column_index)
 
 	local widgets = navigation_widgets[column_index]
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -847,7 +847,7 @@ end
 OptionsView._set_default_navigation_widget = function (self)
 	local navigation_widgets = self._navigation_widgets
 
-	for i = 1, #navigation_widgets, 1 do
+	for i = 1, #navigation_widgets do
 		if self:_change_navigation_column(i) then
 			return
 		end
@@ -859,7 +859,7 @@ OptionsView._set_selected_navigation_widget = function (self, widget)
 	local selected_row, selected_column = nil
 	local navigation_widgets = self._navigation_widgets
 
-	for column_index = 1, #navigation_widgets, 1 do
+	for column_index = 1, #navigation_widgets do
 		local widgets = navigation_widgets[column_index]
 		local _, focused_grid_index = self:_set_focused_grid_widget(widgets, widget_name)
 
@@ -873,11 +873,11 @@ OptionsView._set_selected_navigation_widget = function (self, widget)
 
 	local navigation_grids = self._navigation_grids
 
-	for column_index = 1, #navigation_grids, 1 do
+	for column_index = 1, #navigation_grids do
 		local selected_grid = column_index == selected_column
 		local navigation_grid = navigation_grids[column_index]
 
-		navigation_grid:select_grid_index((selected_grid and selected_row) or nil, nil, nil, column_index == 1)
+		navigation_grid:select_grid_index(selected_grid and selected_row or nil, nil, nil, column_index == 1)
 	end
 
 	self._selected_navigation_row_index = selected_row
@@ -887,7 +887,7 @@ end
 OptionsView._set_focused_grid_widget = function (self, widgets, widget_name)
 	local selected_widget, selected_widget_index = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local is_focused = widget.name == widget_name
 		local content = widget.content
@@ -909,7 +909,7 @@ end
 OptionsView._set_selected_grid_widget = function (self, widgets, widget_name)
 	local selected_widget, selected_widget_index = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local is_selected = widget.name == widget_name
 		local content = widget.content

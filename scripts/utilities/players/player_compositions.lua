@@ -31,26 +31,29 @@ local PlayerCompositions = {
 
 		return result_table
 	end,
-	player_composition_changed_event = "player_composition_changed",
-	trigger_change_event = function (composition_name)
-		Managers.event:trigger(PlayerCompositions.player_composition_changed_event, composition_name)
-	end,
-	player_from_unique_id = function (composition_name, unique_id)
-		if composition_name == "players" then
-			return Managers.player:player_from_unique_id(unique_id)
-		elseif composition_name == "party" then
-			if GameParameters.prod_like_backend then
-				return Managers.player:player_from_unique_id(unique_id) or Managers.party_immaterium:other_member_from_unique_id(unique_id)
-			end
-		else
-			fassert(false, "Unupported composition_name %q", composition_name)
-		end
-	end,
-	party_member_by_peer_id = function (peer_id)
-		if GameParameters.prod_like_backend then
-			return Managers.party_immaterium:member_from_peer_id(peer_id)
-		end
-	end
+	player_composition_changed_event = "player_composition_changed"
 }
+
+PlayerCompositions.trigger_change_event = function (composition_name)
+	Managers.event:trigger(PlayerCompositions.player_composition_changed_event, composition_name)
+end
+
+PlayerCompositions.player_from_unique_id = function (composition_name, unique_id)
+	if composition_name == "players" then
+		return Managers.player:player_from_unique_id(unique_id)
+	elseif composition_name == "party" then
+		if GameParameters.prod_like_backend then
+			return Managers.player:player_from_unique_id(unique_id) or Managers.party_immaterium:other_member_from_unique_id(unique_id)
+		end
+	else
+		fassert(false, "Unupported composition_name %q", composition_name)
+	end
+end
+
+PlayerCompositions.party_member_by_peer_id = function (peer_id)
+	if GameParameters.prod_like_backend then
+		return Managers.party_immaterium:member_from_peer_id(peer_id)
+	end
+end
 
 return PlayerCompositions

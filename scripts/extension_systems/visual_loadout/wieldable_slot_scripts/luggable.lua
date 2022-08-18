@@ -96,7 +96,7 @@ Luggable.destroy = function (self)
 	local item_unit_3p = self._item_unit_3p
 
 	if ALIVE[item_unit_3p] then
-		slot2 = self._is_server
+		local is_server = self._is_server
 	else
 		self._item_unit_3p = nil
 	end

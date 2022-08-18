@@ -46,7 +46,7 @@ DebugPacingGraph.update = function (self, t, x_value, y_value, optional_annotati
 	local graph_entries = self._graph_entries
 
 	if x_percent >= 1 then
-		for i = 2, #graph_entries, 1 do
+		for i = 2, #graph_entries do
 			local point = graph_entries[i].point:unbox()
 			local prev_graph_entry = graph_entries[i - 1]
 			local prev_point = prev_graph_entry.point:unbox()
@@ -92,7 +92,7 @@ DebugPacingGraph.draw = function (self, dt, t)
 	local value_per_x_segment = math.floor(max_x_extent / num_value_segments)
 	local width_per_segment = math.floor(width / num_value_segments)
 
-	for i = 0, num_value_segments, 1 do
+	for i = 0, num_value_segments do
 		local x = i * width_per_segment
 		local segment_position = origin_position + Vector3(x, 0, 0)
 		local offset_position = segment_position + Vector3(0, 20, 0)
@@ -109,7 +109,7 @@ DebugPacingGraph.draw = function (self, dt, t)
 	local value_per_y_segment = math.floor(max_y_extent / num_value_segments)
 	local height_per_segment = math.floor(height / num_value_segments)
 
-	for i = 0, num_value_segments, 1 do
+	for i = 0, num_value_segments do
 		local y = i * height_per_segment
 		local segment_position = origin_position + Vector3(0, -y, 0)
 		local offset_position = segment_position + Vector3(-20, 0, 0)
@@ -124,7 +124,7 @@ DebugPacingGraph.draw = function (self, dt, t)
 
 	local graph_entries = self._graph_entries
 
-	for i = 1, #graph_entries, 1 do
+	for i = 1, #graph_entries do
 		local graph_entry = graph_entries[i]
 		local point = graph_entry.point:unbox()
 
@@ -140,7 +140,7 @@ DebugPacingGraph.draw = function (self, dt, t)
 		position.z = point_layer
 		local annotation = graph_entry.annotation
 
-		Gui.rect(gui, position, size, (annotation and Color.blue()) or Color(255, 255, 0, 0))
+		Gui.rect(gui, position, size, annotation and Color.blue() or Color(255, 255, 0, 0))
 
 		if annotation then
 			ScriptGui.text(gui, annotation, DevParameters.debug_text_font, SEGMENT_VALUE_SIZE, position + Vector3.forward() * 10, Color.yellow(), Color.black())

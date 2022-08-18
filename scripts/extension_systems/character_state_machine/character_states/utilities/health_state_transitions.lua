@@ -1,29 +1,29 @@
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local HealthStateTransitions = {
-	poll = function (unit_data_extension, next_state_params)
-		local dead_state_input = unit_data_extension:read_component("dead_state_input")
+local HealthStateTransitions = {}
 
-		if dead_state_input.die then
-			next_state_params.time_to_despawn_corpse = dead_state_input.despawn_time
+HealthStateTransitions.poll = function (unit_data_extension, next_state_params)
+	local dead_state_input = unit_data_extension:read_component("dead_state_input")
 
-			return "dead"
-		end
+	if dead_state_input.die then
+		next_state_params.time_to_despawn_corpse = dead_state_input.despawn_time
 
-		local character_state_component = unit_data_extension:read_component("character_state")
-		local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
-
-		if not PlayerUnitStatus.is_knocked_down(character_state_component) and knocked_down_state_input.knock_down then
-			return "knocked_down"
-		end
-
-		local hogtied_state_input = unit_data_extension:read_component("hogtied_state_input")
-
-		if not PlayerUnitStatus.is_hogtied(character_state_component) and hogtied_state_input.hogtie then
-			return "hogtied"
-		end
-
-		return nil
+		return "dead"
 	end
-}
+
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
+
+	if not PlayerUnitStatus.is_knocked_down(character_state_component) and knocked_down_state_input.knock_down then
+		return "knocked_down"
+	end
+
+	local hogtied_state_input = unit_data_extension:read_component("hogtied_state_input")
+
+	if not PlayerUnitStatus.is_hogtied(character_state_component) and hogtied_state_input.hogtie then
+		return "hogtied"
+	end
+
+	return nil
+end
 
 return HealthStateTransitions

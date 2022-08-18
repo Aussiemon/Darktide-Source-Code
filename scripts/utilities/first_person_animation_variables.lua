@@ -68,7 +68,7 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 	local sway_template = weapon_extension:sway_template()
 	local sway_settings = Sway.movement_state_settings(sway_template, movement_state_component)
 	local visual_sway_settings = sway_settings and sway_settings.visual_sway_settings
-	local sway_lerp_speed = (visual_sway_settings and visual_sway_settings.lerp_speed) or DEFAULT_SWAY_LERP_SPEED
+	local sway_lerp_speed = visual_sway_settings and visual_sway_settings.lerp_speed or DEFAULT_SWAY_LERP_SPEED
 	local sway_lerp_scalar = math.min(sway_lerp_speed * dt, 1)
 	local sway_offset_x = sway_component.offset_x
 	local sway_offset_y = sway_component.offset_y

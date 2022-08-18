@@ -152,7 +152,7 @@ BehaviorTree.parse_lua_node = function (self, lua_node, parent)
 	local num_children = #lua_node
 	local tree_action_data = self._action_data
 
-	for i = 2, num_children, 1 do
+	for i = 2, num_children do
 		local child = lua_node[i]
 		local bt_node, action_data = _create_btnode_from_lua_node(child, parent)
 

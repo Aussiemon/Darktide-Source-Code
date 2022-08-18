@@ -8,7 +8,7 @@ local NUM_RADIUS_KEYS = NUM_MAX_WOUNDS / NUM_RADIUS_ENTRIES
 local RADIUS_KEY = "wound_radius_0%d"
 local RADIUS_KEYS = Script.new_array(NUM_RADIUS_KEYS)
 
-for i = 1, NUM_RADIUS_KEYS, 1 do
+for i = 1, NUM_RADIUS_KEYS do
 	local radius_key = string.format(RADIUS_KEY, i)
 	RADIUS_KEYS[i] = radius_key
 end
@@ -18,7 +18,7 @@ local NUM_SHAPE_SCALE_KEYS = NUM_MAX_WOUNDS / NUM_SHAPE_SCALE_ENTRIES
 local SHAPE_SCALE_KEY = "wound_shape_scaling_0%d"
 local SHAPE_SCALE_KEYS = Script.new_array(NUM_SHAPE_SCALE_KEYS)
 
-for i = 1, NUM_SHAPE_SCALE_KEYS, 1 do
+for i = 1, NUM_SHAPE_SCALE_KEYS do
 	local shape_scale_key = string.format(SHAPE_SCALE_KEY, i)
 	SHAPE_SCALE_KEYS[i] = shape_scale_key
 end
@@ -32,7 +32,7 @@ local COLOR_BRIGHTNESS_KEYS = Script.new_array(NUM_MAX_WOUNDS)
 local COLOR_TIME_DURATION_KEY = "wound_color_time_duration_0%d"
 local COLOR_TIME_DURATION_KEYS = Script.new_array(NUM_MAX_WOUNDS)
 
-for i = 1, NUM_MAX_WOUNDS, 1 do
+for i = 1, NUM_MAX_WOUNDS do
 	local position_key = string.format(POSITION_KEY, i)
 	POSITION_KEYS[i] = position_key
 	local shape_key = string.format(SHAPE_KEY, i)
@@ -47,21 +47,21 @@ local WoundMaterials = {
 	create_data = function ()
 		local radii = Script.new_array(NUM_RADIUS_KEYS)
 
-		for i = 1, NUM_RADIUS_KEYS, 1 do
+		for i = 1, NUM_RADIUS_KEYS do
 			local key = RADIUS_KEYS[i]
 			radii[key] = Vector3Box()
 		end
 
 		local shape_scales = Script.new_array(NUM_SHAPE_SCALE_KEYS)
 
-		for i = 1, NUM_SHAPE_SCALE_KEYS, 1 do
+		for i = 1, NUM_SHAPE_SCALE_KEYS do
 			local key = SHAPE_SCALE_KEYS[i]
 			shape_scales[key] = Vector3Box()
 		end
 
 		local wounds_data = Script.new_array(NUM_MAX_WOUNDS)
 
-		for wound_index = 1, NUM_MAX_WOUNDS, 1 do
+		for wound_index = 1, NUM_MAX_WOUNDS do
 			local radius_key_index = math.ceil(wound_index / NUM_RADIUS_ENTRIES)
 			local radius_material_key = RADIUS_KEYS[radius_key_index]
 			local radius_index = (wound_index - 1) % NUM_RADIUS_ENTRIES + 1
@@ -153,7 +153,7 @@ WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slo
 	local start_index = optional_index or 1
 	local end_index = optional_index or wounds_data.num_wounds
 
-	for wound_index = start_index, end_index, 1 do
+	for wound_index = start_index, end_index do
 		local wound_data = wounds_data[wound_index]
 		local position_material_key = POSITION_KEYS[wound_index]
 		local hit_shader_vector = wound_data.hit_shader_vector:unbox()
@@ -173,7 +173,7 @@ WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slo
 				local attachments = slot_data.attachments
 
 				if attachments then
-					for i = 1, #attachments, 1 do
+					for i = 1, #attachments do
 						_set_wound_position_for_item(attachments[i], position_material_key, hit_shader_vector)
 					end
 				end
@@ -208,13 +208,13 @@ WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slo
 end
 
 function _set_wound_position_for_item(item_unit, position_material_key, hit_shader_vector)
-	for mesh_index = 1, Unit.num_meshes(item_unit), 1 do
+	for mesh_index = 1, Unit.num_meshes(item_unit) do
 		local mesh = Unit.mesh(item_unit, mesh_index)
 		local mesh_node_index = Mesh.node(mesh)
 		local mesh_node_position = Unit.local_position(item_unit, mesh_node_index)
 		local mesh_hit_shader_vector = hit_shader_vector - mesh_node_position
 
-		for material_index = 1, Mesh.num_materials(mesh), 1 do
+		for material_index = 1, Mesh.num_materials(mesh) do
 			local material = Mesh.material(mesh, material_index)
 
 			Material.set_vector3(material, position_material_key, mesh_hit_shader_vector)

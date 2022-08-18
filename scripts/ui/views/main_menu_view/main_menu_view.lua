@@ -28,7 +28,7 @@ MainMenuView.on_enter = function (self)
 
 	self._character_list_widgets = {}
 	self._character_slot_spawn_id = 0
-	self._character_wait_overlay_active = (self._parent and self._parent._character_is_syncing) or false
+	self._character_wait_overlay_active = self._parent and self._parent._character_is_syncing or false
 	self._news_list_requested = false
 	self._is_main_menu_open = false
 	self._character_list_grid = nil
@@ -54,7 +54,7 @@ MainMenuView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 20)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -112,7 +112,7 @@ end
 
 MainMenuView.cb_update_strike_team_count = function (self, party)
 	if not self._destroyed then
-		local num_party = (#party > 1 and #party) or 1
+		local num_party = #party > 1 and #party or 1
 		local max_party_limit = MainMenuViewSettings.max_party_size
 		self._widgets_by_name.strike_team.content.text_count = string.format("%d/%d", num_party, max_party_limit)
 		local text_style = self._widgets_by_name.strike_team.style.text
@@ -146,7 +146,7 @@ MainMenuView._set_waiting_for_characters = function (self, waiting)
 	if waiting then
 		local character_slot_widgets = self._character_list_widgets
 
-		for i = 1, #character_slot_widgets, 1 do
+		for i = 1, #character_slot_widgets do
 			local widget = character_slot_widgets[i]
 			widget.content.hotspot.is_selected = false
 		end
@@ -164,7 +164,7 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 
 	local profiles = self._character_profiles
 	local num_characters = #profiles or 0
-	local slots_remaining = (num_characters < MainMenuViewSettings.max_num_characters and MainMenuViewSettings.max_num_characters - num_characters) or 0
+	local slots_remaining = num_characters < MainMenuViewSettings.max_num_characters and MainMenuViewSettings.max_num_characters - num_characters or 0
 	self._widgets_by_name.slots_count.content.text = Localize("loc_main_menu_slots_remaining", true, {
 		count = slots_remaining
 	})
@@ -183,7 +183,7 @@ MainMenuView._event_selected_profile_changed = function (self, profile)
 		local selected_index = 1
 		local widgets = self._character_list_widgets
 
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_profile = widget.content.profile
 
@@ -232,7 +232,7 @@ MainMenuView._set_selected_character_list_index = function (self, index)
 	local selected_widget = character_list_widgets[index]
 	local selected_profile = selected_widget.content.profile
 
-	for i = 1, #character_list_widgets, 1 do
+	for i = 1, #character_list_widgets do
 		local widget = character_list_widgets[i]
 		local is_selected = widget == selected_widget
 		widget.content.hotspot.is_selected = is_selected
@@ -258,10 +258,10 @@ MainMenuView._populate_news_list = function (self)
 	local slides = {}
 	local valid_viewed_slides_id = {}
 
-	for i = 1, #viewed_news_slides_id, 1 do
+	for i = 1, #viewed_news_slides_id do
 		local read_id = viewed_news_slides_id[i]
 
-		for d = 1, #slides, 1 do
+		for d = 1, #slides do
 			local slide = slides[d]
 
 			if read_id == slide.id then
@@ -292,11 +292,11 @@ MainMenuView._get_news_starting_slide_index = function (self, slides, viewed_sli
 
 	local starting_slide_index = #slides
 
-	for i = 1, #slides, 1 do
+	for i = 1, #slides do
 		local slide = slides[i]
 		local found = false
 
-		for d = 1, #viewed_slides, 1 do
+		for d = 1, #viewed_slides do
 			local read_slide_id = viewed_slides[d]
 
 			if read_slide_id == slide.id then
@@ -406,7 +406,7 @@ MainMenuView._handle_input = function (self, input_service)
 	local num_character_slots = #character_slot_widgets or 0
 
 	if selected_character_list_index then
-		for i = 1, num_character_slots, 1 do
+		for i = 1, num_character_slots do
 			local widget = character_slot_widgets[i]
 			widget.content.hotspot.disabled = self._is_main_menu_open
 
@@ -510,12 +510,12 @@ MainMenuView._sync_character_slots = function (self)
 
 	self._character_slot_spawn_id = 0
 	local profiles = self._character_profiles
-	local num_characters = (profiles and #profiles) or 0
+	local num_characters = profiles and #profiles or 0
 	local grid_direction = "down"
 	local grid_scenegraph_id = "character_grid_start"
 	local char_list = {}
 
-	for i = 1, num_characters, 1 do
+	for i = 1, num_characters do
 		local widget_definition = UIWidget.create_definition(CharacterSelectPassTemplates.character_select, "character_grid_content_pivot", nil, CharacterSelectPassTemplates.character_create_size)
 		local profile = profiles[i]
 		self._character_slot_spawn_id = self._character_slot_spawn_id + 1
@@ -558,7 +558,7 @@ MainMenuView._draw_character_list = function (self, dt, t, input_service, layer)
 		local grid_widgets = self._character_list_widgets
 		local grid = self._character_list_grid
 
-		for i = 1, #grid_widgets, 1 do
+		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
 
 			if grid:is_widget_visible(widget) then
@@ -620,7 +620,7 @@ MainMenuView._destroy_character_grid = function (self)
 	local widgets = self._character_list_widgets
 
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 
 			self:_unload_portrait_icon(widget)
@@ -651,7 +651,7 @@ MainMenuView._show_character_details = function (self, show, profile)
 
 	if show == true then
 		local character_title = ProfileUtils.character_title(profile)
-		local character_level = tostring(profile.current_level) .. " \ue006"
+		local character_level = tostring(profile.current_level) .. " "
 		self._widgets_by_name.character_info.content.character_specialization = string.format("%s %s", character_title, character_level)
 		self._widgets_by_name.character_info.content.character_name = ProfileUtils.character_name(profile)
 		self._widgets_by_name.character_info.content.specialization_icon = profile.archetype.archetype_badge
@@ -660,14 +660,14 @@ end
 
 MainMenuView._are_slots_full = function (self)
 	local profiles = self._character_profiles
-	local num_characters = (profiles and #profiles) or 0
+	local num_characters = profiles and #profiles or 0
 
 	return MainMenuViewSettings.max_num_characters <= num_characters
 end
 
 MainMenuView._set_player_profile_information = function (self, profile, widget)
 	local character_name = ProfileUtils.character_name(profile)
-	local character_level = tostring(profile.current_level) .. " \ue006"
+	local character_level = tostring(profile.current_level) .. " "
 	local character_title = ProfileUtils.character_title(profile)
 	widget.content.character_name = character_name
 	widget.content.character_title = string.format("%s %s", character_title, character_level)

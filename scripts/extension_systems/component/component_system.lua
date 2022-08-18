@@ -40,7 +40,7 @@ ComponentSystem.on_add_extension = function (self, world, unit, extension_name, 
 	local component_name_to_units_map = self._component_name_to_units_map
 	local components = extension:components()
 
-	for i = 1, #components, 1 do
+	for i = 1, #components do
 		local component_name = components[i]:name()
 		component_name_to_units_map[component_name] = component_name_to_units_map[component_name] or {}
 		local unit_list = component_name_to_units_map[component_name]
@@ -116,7 +116,7 @@ ComponentSystem.get_components = function (self, unit, component_name)
 	if extension then
 		local components = extension:components()
 
-		for i = 1, #components, 1 do
+		for i = 1, #components do
 			if components[i]:name() == component_name then
 				result[#result + 1] = components[i]
 			end

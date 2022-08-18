@@ -33,7 +33,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	local snapshot_id = GameSession.game_object_field(game_session, game_object_id, SNAPSHOT_ID)
 	local snapshot = self._snapshot_ring_buffer[snapshot_id]
 	local time_manager = Managers.time
-	local init_t = (time_manager:has_timer("gameplay") and time_manager:time("gameplay")) or 0
+	local init_t = time_manager:has_timer("gameplay") and time_manager:time("gameplay") or 0
 
 	self:_read_snapshot(snapshot, init_t, self._snapshot_game_object_return_data)
 
@@ -82,7 +82,7 @@ end
 ProjectileHuskLocomotionExtension.update = function (self, unit, dt, t)
 	local old_position = POSITION_LOOKUP[unit]
 	local current_position = self:_update_interpolation(unit, dt, t)
-	local distance = (current_position and Vector3.distance(current_position, old_position)) or 0
+	local distance = current_position and Vector3.distance(current_position, old_position) or 0
 	local speed = distance / dt
 	self._current_speed = speed
 	local fx_extension = self._fx_extension
@@ -255,7 +255,7 @@ end
 ProjectileHuskLocomotionExtension._initialize_interpolation_data = function (self)
 	local snapshot_ring_buffer = Script.new_array(MAX_SNAPSHOT_ID)
 
-	for i = 1, MAX_SNAPSHOT_ID, 1 do
+	for i = 1, MAX_SNAPSHOT_ID do
 		snapshot_ring_buffer[i] = self:_new_snapshot()
 	end
 
@@ -329,7 +329,7 @@ ProjectileHuskLocomotionExtension._read_latest_snapshot = function (self, unit, 
 		local approximation_timeline = GameParameters.fixed_time_step * num_snapshots_ahead_of_latest
 		local approximated = true
 
-		for i = 1, num_snapshots_ahead_of_latest - 1, 1 do
+		for i = 1, num_snapshots_ahead_of_latest - 1 do
 			local approx_snapshot_id = _snapshot_id_add(snapshot_id, -i)
 			local approx_snapshot = snapshot_ring_buffer[approx_snapshot_id]
 			local approx_t = i / num_snapshots_ahead_of_latest
@@ -385,7 +385,7 @@ function _snapshot_id_diff(snapshot_start, snapshot_end)
 end
 
 function _snapshot_id_add(snapshot_id, number_to_add)
-	return ((snapshot_id + number_to_add) - 1) % MAX_SNAPSHOT_ID + 1
+	return (snapshot_id + number_to_add - 1) % MAX_SNAPSHOT_ID + 1
 end
 
 return ProjectileHuskLocomotionExtension

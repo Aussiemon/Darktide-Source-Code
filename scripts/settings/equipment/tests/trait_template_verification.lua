@@ -55,7 +55,7 @@ function _verify_trait_templates(template_type, trait_templates)
 			error_msg = string.format("%s%q failed:\n", error_msg, name)
 			local num_error_msgs = #template_error_msgs
 
-			for i = 1, num_error_msgs, 1 do
+			for i = 1, num_error_msgs do
 				error_msg = string.format("%s\t%s\n", error_msg, template_error_msgs[i])
 			end
 		end
@@ -75,7 +75,7 @@ function _verify_trait_template(template_type, trait_template, base_templates)
 	local successful_entries = {}
 	local num_entries = #trait_template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		successful_entries[i] = false
 	end
 
@@ -87,7 +87,7 @@ function _verify_trait_template(template_type, trait_template, base_templates)
 
 	local success = true
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		if not successful_entries[i] then
 			success = false
 			error_msgs[#error_msgs + 1] = string.format("entry id %i could not find any lerp targets.", i)
@@ -100,7 +100,7 @@ end
 function _verify_trait_template_entries(template_type, trait_template, base_templates, successful_entries)
 	local num_entries = #trait_template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local entry = trait_template[i]
 
 		for name, weapon_template in pairs(WeaponTemplates) do
@@ -129,7 +129,7 @@ end
 function _verify_damage_trait_template_entries(template_type, trait_template, damage_profile_templates, successful_entries)
 	local num_entries = #trait_template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local entry = trait_template[i]
 
 		for name, damage_profile in pairs(damage_profile_templates) do
@@ -146,7 +146,7 @@ function _verify_damage_trait_template_entry(entry, damage_profile)
 	local test_template = damage_profile
 	local depth = #entry
 
-	for i = 1, depth - 1, 1 do
+	for i = 1, depth - 1 do
 		local path = entry[i]
 		test_template = test_template[path]
 
@@ -174,7 +174,7 @@ function _verify_trait_template_entry(trait_template_entry, base_template)
 	local test_template = base_template
 	local depth = #trait_template_entry
 
-	for i = 1, depth - 1, 1 do
+	for i = 1, depth - 1 do
 		local path = trait_template_entry[i]
 		test_template = test_template[path]
 
@@ -202,7 +202,7 @@ function _check_lerp_value(trait_template, error_msgs_table)
 	local success = true
 	local num_entries = #trait_template
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local entry = trait_template[i]
 		local entry_depth = #entry
 		local lerp_value = entry[entry_depth]

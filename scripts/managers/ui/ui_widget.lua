@@ -30,13 +30,13 @@ end
 
 UIWidget.init = function (name, widget_definition)
 	local content = table.clone(widget_definition.content)
-	local style = (widget_definition.style and table.clone(widget_definition.style)) or {}
-	local offset = (widget_definition.offset and table.clone(widget_definition.offset)) or {
+	local style = widget_definition.style and table.clone(widget_definition.style) or {}
+	local offset = widget_definition.offset and table.clone(widget_definition.offset) or {
 		0,
 		0,
 		0
 	}
-	local size = (widget_definition.size and table.clone(widget_definition.size)) or nil
+	local size = widget_definition.size and table.clone(widget_definition.size) or nil
 	content.size = size
 	content.size_table = {}
 
@@ -85,7 +85,7 @@ end
 UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_overrides, optional_size, style_overrides)
 	local definition = {}
 
-	for i = 1, #pass_definitions, 1 do
+	for i = 1, #pass_definitions do
 		local pass_info = pass_definitions[i]
 		local is_clone = false
 
@@ -223,7 +223,7 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 			value = value_content_table[value_id]
 		end
 
-		value = value or (type(default_value) == "table" and table.clone(default_value)) or default_value
+		value = value or type(default_value) == "table" and table.clone(default_value) or default_value
 		value_content_table[value_id] = value
 	end
 
@@ -320,7 +320,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 		render_settings.world_target_position = style.world_target_position
 	end
 
-	for i = 1, #passes, 1 do
+	for i = 1, #passes do
 		repeat
 			local pass_visibility = visible
 			local pass_info = passes[i]
@@ -330,9 +330,9 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			assert(ui_pass, "No such UI Pass: %s", pass_type)
 
 			local content_id = pass_info.content_id
-			local pass_content = (content_id and content[content_id]) or content
+			local pass_content = content_id and content[content_id] or content
 
-			assert(not content_id or (content_id and pass_content), "No content data for pass [%s] with content-id %s", pass_type, content_id)
+			assert(not content_id or content_id and pass_content, "No content data for pass [%s] with content-id %s", pass_type, content_id)
 
 			if content then
 				if content.visible == false then
@@ -349,9 +349,9 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			end
 
 			local style_id = pass_info.style_id
-			local style_data = (style_id and style[style_id]) or style
+			local style_data = style_id and style[style_id] or style
 
-			assert(not style_id or (style_id and style_data), "No style data for pass [%s] with style-id %s", pass_type, style_id)
+			assert(not style_id or style_id and style_data, "No style data for pass [%s] with style-id %s", pass_type, style_id)
 
 			if style_id and not style_data.parent then
 				style_data.parent = style
@@ -430,8 +430,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			local style_data_size = style_data.size
 
 			if style_data_size or style_data_size_addition then
-				local width = (style_data_size and style_data_size[1]) or pass_size[1]
-				local height = (style_data_size and style_data_size[2]) or pass_size[2]
+				local width = style_data_size and style_data_size[1] or pass_size[1]
+				local height = style_data_size and style_data_size[2] or pass_size[2]
 
 				if style_data_size_addition then
 					if style_data_size_addition[1] then
@@ -451,7 +451,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 
 				if horizontal_alignment then
 					if horizontal_alignment == "right" then
-						x = (x + pass_size[1]) - width
+						x = x + pass_size[1] - width
 					elseif horizontal_alignment == "center" then
 						x = x + (pass_size[1] - width) / 2
 					end
@@ -461,7 +461,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					if vertical_alignment == "center" then
 						y = y + (pass_size[2] - height) / 2
 					elseif vertical_alignment == "bottom" then
-						y = (y + pass_size[2]) - height
+						y = y + pass_size[2] - height
 					end
 				end
 
@@ -565,7 +565,7 @@ UIWidget.set_visible = function (widget, ui_renderer, visible)
 				local visible_previous = pass_data.visible
 				pass_data.visible = visible
 
-				if (visible_previous and not visible) or pass_data.material then
+				if visible_previous and not visible or pass_data.material then
 					local pass_type = pass_info.pass_type
 					local ui_pass = UIPasses[pass_type]
 					local destroy_function = ui_pass.destroy

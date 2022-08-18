@@ -154,7 +154,7 @@ local function setup_marker_by_visual_type(widget, marker, visual_type)
 	end
 
 	for content_id, value in pairs(default_textures) do
-		content[content_id] = (value ~= StrictNil and value) or nil
+		content[content_id] = value ~= StrictNil and value or nil
 	end
 
 	marker.template.default_position_offset = marker.template.position_offset
@@ -446,7 +446,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 	local marker_unit = marker.unit
 	local unit_data_extension = ScriptUnit.has_extension(marker_unit, "unit_data_system")
-	local visual_type = (_show_warning_state(unit_data_extension) and "warning") or "critical"
+	local visual_type = _show_warning_state(unit_data_extension) and "warning" or "critical"
 
 	if visual_type and marker.visual_type ~= visual_type then
 		setup_marker_by_visual_type(widget, marker, visual_type)
@@ -487,7 +487,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local progress = math.min(spawn_progress_timer / duration, 1)
 		local anim_out_progress = math.ease_out_quad(progress)
 		local anim_in_progress = math.ease_out_exp(progress)
-		content.spawn_progress_timer = (progress ~= 1 and spawn_progress_timer) or nil
+		content.spawn_progress_timer = progress ~= 1 and spawn_progress_timer or nil
 		style.icon.color[1] = 255 * anim_in_progress
 		style.arrow.color[1] = 255 * anim_in_progress
 		style.text.text_color[1] = 255 * anim_in_progress
@@ -497,17 +497,17 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		end
 	end
 
-	local speed = 1 + ((health_max_percentage < 0.25 and 2) or 0)
-	local pulse_progress = (Application.time_since_launch() * speed) % 1
+	local speed = 1 + (health_max_percentage < 0.25 and 2 or 0)
+	local pulse_progress = Application.time_since_launch() * speed % 1
 	local pulse_anim_progress = math.clamp((pulse_progress * 3 - 1)^2, 0, 1)
 	local alpha_multiplier = 0.7 + pulse_anim_progress * 0.3
 	widget.alpha_multiplier = alpha_multiplier
 	local distance_text = tostring(math.floor(distance)) .. "m"
-	content.text = (distance > 1 and distance_text) or ""
+	content.text = distance > 1 and distance_text or ""
 	data.distance_text = distance_text
 	marker.ignore_scale = content.is_clamped
 	content.is_hovered = is_hovered
-	content.scale = (content.is_clamped and 1) or marker.scale
+	content.scale = content.is_clamped and 1 or marker.scale
 
 	return animating
 end

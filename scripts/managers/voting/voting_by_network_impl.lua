@@ -63,7 +63,7 @@ VotingByNetworkImpl.can_start_voting = function (self, template_name, params)
 	local required_params = template.required_params
 
 	if required_params then
-		for i = 1, #required_params, 1 do
+		for i = 1, #required_params do
 			local param_name = required_params[i]
 
 			if params[param_name] == nil then
@@ -194,7 +194,7 @@ VotingByNetworkImpl.update = function (self, dt, t)
 		end
 	end
 
-	for i = 1, #delete_votings, 1 do
+	for i = 1, #delete_votings do
 		local voting_id = delete_votings[i]
 
 		votings[voting_id]:delete()
@@ -396,10 +396,10 @@ VotingByNetworkImpl.rpc_voting_accepted = function (self, channel_id, voting_id,
 	if voting then
 		local voting_options_lookup = NetworkLookup.voting_options
 
-		for i = 1, #initial_votes_list, 1 do
+		for i = 1, #initial_votes_list do
 			local option_id = initial_votes_list[i]
 			local option = voting_options_lookup[option_id]
-			initial_votes_list[i] = (option == "nil" and StrictNil) or option
+			initial_votes_list[i] = option == "nil" and StrictNil or option
 		end
 
 		voting:on_voting_accepted(member_list, initial_votes_list, time_left)
@@ -416,10 +416,10 @@ VotingByNetworkImpl._rpc_start_voting = function (self, voting_id, template_id, 
 	local params = template.unpack_params(...)
 	local voting_options_lookup = NetworkLookup.voting_options
 
-	for i = 1, #initial_votes_list, 1 do
+	for i = 1, #initial_votes_list do
 		local option_id = initial_votes_list[i]
 		local option = voting_options_lookup[option_id]
-		initial_votes_list[i] = (option == "nil" and StrictNil) or option
+		initial_votes_list[i] = option == "nil" and StrictNil or option
 	end
 
 	local voting = VotingClient:new(voting_id, initiator_peer, template, params, member_list, initial_votes_list, time_left)

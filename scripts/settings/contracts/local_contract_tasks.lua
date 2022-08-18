@@ -3,7 +3,7 @@ local local_tasks = {}
 
 local function _create_checker(end_at, indices)
 	return function (specifiers, ...)
-		for i = 1, end_at, 1 do
+		for i = 1, end_at do
 			local backend_name = indices[i]
 			local specifier = specifiers[backend_name]
 

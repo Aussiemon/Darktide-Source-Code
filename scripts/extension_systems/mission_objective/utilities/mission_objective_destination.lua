@@ -72,7 +72,7 @@ MissionObjectiveDestination._closest_distance = function (self)
 
 	local lowest_distance = nil
 
-	for i = 1, #tracked_units, 1 do
+	for i = 1, #tracked_units do
 		local distance = self:_distance(tracked_units[i], self._target_unit)
 
 		if not lowest_distance or distance < lowest_distance then

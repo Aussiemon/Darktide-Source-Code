@@ -89,7 +89,7 @@ end
 
 FreeFlightManager._get_input = function (self)
 	local imgui_manager = Managers.imgui
-	local input = (imgui_manager and imgui_manager:using_input() and self._input:null_service()) or self._input
+	local input = imgui_manager and imgui_manager:using_input() and self._input:null_service() or self._input
 
 	return input
 end

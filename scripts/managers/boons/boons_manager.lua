@@ -1,23 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local MasterItems = require("scripts/backend/master_items")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -326,93 +306,23 @@ BoonsManager.get_boon_items_in_inventory = function (self, player, callback)
 end
 
 BoonsManager._send_rpc_server = function (self, rpc_name, peer_id, ...)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local send_rpc = self._is_client
 
 	if send_rpc then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-12, warpins: 1 ---
 		Managers.connection:send_rpc_server(rpc_name, peer_id, ...)
-		--- END OF BLOCK #0 ---
-
-
-
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 13-18, warpins: 1 ---
 		self[rpc_name](self, nil, peer_id, ...)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 19-19, warpins: 2 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 BoonsManager._send_rpc_client = function (self, rpc_name, peer_id, ...)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local send_rpc = peer_id ~= Network.peer_id()
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 9-10, warpins: 2 ---
 	if send_rpc then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 11-19, warpins: 1 ---
 		Managers.connection:send_rpc_client(rpc_name, peer_id, ...)
-		--- END OF BLOCK #0 ---
-
-
-
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 20-24, warpins: 1 ---
 		self[rpc_name](self, nil, ...)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 25-25, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 return BoonsManager

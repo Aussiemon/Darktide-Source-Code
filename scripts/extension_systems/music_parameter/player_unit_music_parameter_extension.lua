@@ -56,7 +56,7 @@ local boss_trigger_distance_sq = WwiseGameSyncSettings.boss_trigger_distance * W
 PlayerUnitMusicParameterExtension._check_is_boss_near = function (self, alive_monsters, alive_witches_lookup)
 	local player_position = POSITION_LOOKUP[self._unit]
 
-	for i = 1, alive_monsters.size, 1 do
+	for i = 1, alive_monsters.size do
 		local monster_unit = alive_monsters[i]
 		local distance_sq = Vector3.distance_squared(player_position, POSITION_LOOKUP[monster_unit])
 
@@ -94,7 +94,7 @@ PlayerUnitMusicParameterExtension._shortest_horde_distance = function (self, pos
 	local shortest_distance = math.huge
 	local player_position = POSITION_LOOKUP[self._unit]
 
-	for i = 1, #positions, 1 do
+	for i = 1, #positions do
 		local horde_position = positions[i]
 		local distance = Vector3.distance_squared(player_position, horde_position)
 

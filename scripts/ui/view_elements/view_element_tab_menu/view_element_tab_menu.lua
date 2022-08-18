@@ -54,7 +54,7 @@ ViewElementTabMenu.add_entry = function (self, display_name, on_pressed_callback
 		on_pressed_callback = on_pressed_callback,
 		update = optional_update_function
 	}
-	local display_text = (no_localization == true and display_name) or self:_localize(display_name)
+	local display_text = no_localization == true and display_name or self:_localize(display_name)
 	local content = widget.content
 	content.hotspot.pressed_callback = on_pressed_callback
 	content.text = display_text
@@ -97,7 +97,7 @@ end
 ViewElementTabMenu.tab_disabled = function (self, id)
 	local widget = self:_widget_by_id(id)
 
-	return (widget and widget.content.hotspot.disabled) or false
+	return widget and widget.content.hotspot.disabled or false
 end
 
 ViewElementTabMenu.remove_entry = function (self, id)
@@ -115,7 +115,7 @@ end
 
 ViewElementTabMenu.remove_all_entries = function (self)
 	if self._entries then
-		for i = 1, #self._entries, 1 do
+		for i = 1, #self._entries do
 			local entry = self._entries[i]
 			local widget = entry.widget
 
@@ -133,7 +133,7 @@ ViewElementTabMenu.update = function (self, dt, t, input_service)
 	if entries then
 		local num_entries = #entries
 
-		for i = 1, num_entries, 1 do
+		for i = 1, num_entries do
 			local entry = entries[i]
 			local entry_update = entry.update
 
@@ -174,7 +174,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 		local total_width = 0
 		local num_entries = #entries
 
-		for i = 1, num_entries, 1 do
+		for i = 1, num_entries do
 			local entry = entries[i]
 			local widget = entry.widget
 
@@ -199,7 +199,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 
 		widgets_by_name.input_text_left.offset[1] = left_size_offset
 
-		for i = 1, num_entries, 1 do
+		for i = 1, num_entries do
 			local entry = entries[i]
 			local widget = entry.widget
 			widget.content.hotspot.is_focused = i == self._selected_index
@@ -246,15 +246,15 @@ ViewElementTabMenu._update_input_action_texts = function (self)
 	local input_action_left = self._input_action_left
 	local input_action_right = self._input_action_right
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.input_text_left.content.text = (not using_cursor_navigation and input_action_left and self:_get_input_text(input_action_left)) or ""
-	widgets_by_name.input_text_right.content.text = (not using_cursor_navigation and input_action_right and self:_get_input_text(input_action_right)) or ""
+	widgets_by_name.input_text_left.content.text = not using_cursor_navigation and input_action_left and self:_get_input_text(input_action_left) or ""
+	widgets_by_name.input_text_right.content.text = not using_cursor_navigation and input_action_right and self:_get_input_text(input_action_right) or ""
 end
 
 ViewElementTabMenu._widget_by_id = function (self, id)
 	local entries = self._entries
 
 	if entries then
-		for i = 1, #entries, 1 do
+		for i = 1, #entries do
 			local entry = entries[i]
 
 			if entry.id == id then

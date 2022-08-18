@@ -187,7 +187,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 end
 
 BtChaosHoundLeapAction._try_start_leap = function (self, unit, t, scratchpad, action_data)
-	local velocity = (scratchpad.current_velocity and scratchpad.current_velocity:unbox()) or self:_calculate_wanted_velocity(unit, t, scratchpad, action_data)
+	local velocity = scratchpad.current_velocity and scratchpad.current_velocity:unbox() or self:_calculate_wanted_velocity(unit, t, scratchpad, action_data)
 
 	if velocity then
 		scratchpad.velocity = Vector3Box(velocity)
@@ -220,7 +220,7 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 	local speed = action_data.leap_speed
 	local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local locomotion_component = target_unit_data_extension:read_component("locomotion")
-	local target_velocity = (is_dodging and Vector3(0, 0, 0)) or locomotion_component.velocity_current
+	local target_velocity = is_dodging and Vector3(0, 0, 0) or locomotion_component.velocity_current
 	local gravity = action_data.gravity
 	local acceptable_accuracy = action_data.acceptable_accuracy
 	local angle_to_hit_target, est_pos = Trajectory.angle_to_hit_moving_target(self_position, target_position, speed, target_velocity, gravity, acceptable_accuracy)
@@ -355,7 +355,7 @@ BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchp
 	local dodge_radius = action_data.dodge_collision_radius
 	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
 
-	for i = 1, actor_count, 1 do
+	for i = 1, actor_count do
 		repeat
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
@@ -410,7 +410,7 @@ BtChaosHoundLeapAction._update_ground_normal_rotation = function (self, unit, ta
 
 	local to_position_1 = from_position_1 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_1 = self:_ray_cast(physics_world, from_position_1, to_position_1)
-	local from_position_2 = (self_position + offset_up) - forward
+	local from_position_2 = self_position + offset_up - forward
 	local to_position_2 = from_position_2 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_2 = self:_ray_cast(physics_world, from_position_2, to_position_2)
 

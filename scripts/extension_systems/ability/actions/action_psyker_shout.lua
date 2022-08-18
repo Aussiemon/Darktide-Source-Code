@@ -185,7 +185,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 		local total_num_hits = 0
 
 		while total_range > 0 do
-			local range = (previous_range > 0 and previous_range * 2) or 2.5
+			local range = previous_range > 0 and previous_range * 2 or 2.5
 			local slice_radius = range - previous_range
 			total_range = total_range - range
 			previous_range = range
@@ -197,7 +197,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 			local num_hits = broadphase:query(position, slice_radius, broadphase_results, enemy_side_names)
 			total_num_hits = total_num_hits + num_hits
 
-			for i = 1, num_hits, 1 do
+			for i = 1, num_hits do
 				local enemy_unit = broadphase_results[i]
 				local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
 				local distance_squared = Vector3.distance_squared(enemy_unit_position, player_position)

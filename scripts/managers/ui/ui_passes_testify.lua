@@ -8,45 +8,47 @@ local function _center_position(position, size)
 	}
 end
 
-local UIPassesTestify = {
-	widget_position_by_name = function (name, pass_data)
-		local widget_name = pass_data.widget_name
+local UIPassesTestify = {}
 
-		if widget_name ~= name then
-			return Testify.RETRY
-		end
+UIPassesTestify.widget_position_by_name = function (name, pass_data)
+	local widget_name = pass_data.widget_name
 
-		local position = pass_data.position
-		local size = pass_data.size
-
-		return _center_position(position, size)
-	end,
-	widget_position_by_text = function (text, pass_data)
-		local ui_content = pass_data.ui_content
-		local widget_text = ui_content.parent.text
-
-		if widget_text ~= text then
-			return Testify.RETRY
-		end
-
-		local position = pass_data.position
-		local size = pass_data.size
-
-		return _center_position(position, size)
-	end,
-	widget_position_by_title_text = function (text, pass_data)
-		local ui_content = pass_data.ui_content
-		local widget_title_text = ui_content.parent.title_text
-
-		if widget_title_text ~= text then
-			return Testify.RETRY
-		end
-
-		local position = pass_data.position
-		local size = pass_data.size
-
-		return _center_position(position, size)
+	if widget_name ~= name then
+		return Testify.RETRY
 	end
-}
+
+	local position = pass_data.position
+	local size = pass_data.size
+
+	return _center_position(position, size)
+end
+
+UIPassesTestify.widget_position_by_text = function (text, pass_data)
+	local ui_content = pass_data.ui_content
+	local widget_text = ui_content.parent.text
+
+	if widget_text ~= text then
+		return Testify.RETRY
+	end
+
+	local position = pass_data.position
+	local size = pass_data.size
+
+	return _center_position(position, size)
+end
+
+UIPassesTestify.widget_position_by_title_text = function (text, pass_data)
+	local ui_content = pass_data.ui_content
+	local widget_title_text = ui_content.parent.title_text
+
+	if widget_title_text ~= text then
+		return Testify.RETRY
+	end
+
+	local position = pass_data.position
+	local size = pass_data.size
+
+	return _center_position(position, size)
+end
 
 return UIPassesTestify

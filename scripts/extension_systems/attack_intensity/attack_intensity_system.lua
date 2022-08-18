@@ -62,7 +62,7 @@ AttackIntensitySystem._update_minion_extensions = function (self, dt, t)
 	local minion_attack_intensity_extension_data = self._minion_attack_intensity_extension_data
 	local num_updates = math.min(self._num_minion_extensions, NUM_UPDATES_PER_FRAME)
 
-	for i = 1, num_updates, 1 do
+	for i = 1, num_updates do
 		local current_update_unit = self._current_update_unit
 		local current_update_extension = self._current_update_extension
 

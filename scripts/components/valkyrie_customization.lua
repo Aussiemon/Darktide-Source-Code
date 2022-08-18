@@ -131,7 +131,7 @@ ValkyrieCustomization.destroy = function (self, unit)
 	local unit_get_data = Unit.get_data
 	local unit_set_data = Unit.set_data
 
-	for i = 1, Unit.data_table_size(unit, "attached_items"), 1 do
+	for i = 1, Unit.data_table_size(unit, "attached_items") do
 		if unit_alive(unit_get_data(unit, "attached_items", i)) ~= false then
 			World.destroy_unit(world, unit_get_data(unit, "attached_items", i))
 			unit_set_data(unit, "attached_items", i, nil)

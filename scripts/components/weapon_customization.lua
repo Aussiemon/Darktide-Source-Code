@@ -131,7 +131,7 @@ WeaponCustomization.spawn_item_attachments = function (self, unit, item_data)
 			if attachment_units then
 				local num_attachments = #attachment_units
 
-				for j = 1, num_attachments, 1 do
+				for j = 1, num_attachments do
 					Unit.set_data(unit, "attached_items", #attachment_units - j + 1, attachment_units[j])
 				end
 			end

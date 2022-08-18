@@ -1280,7 +1280,7 @@ local function create_render_settings_entry(template)
 	local display_name = template.display_name
 	local value_type = template.value_type
 	local default_value = template.default_value
-	local default_value_type = value_type or (default_value ~= nil and type(default_value)) or nil
+	local default_value_type = value_type or default_value ~= nil and type(default_value) or nil
 	local options = template.options
 	local save_location = template.save_location
 
@@ -1315,14 +1315,14 @@ local function create_render_settings_entry(template)
 	local function parse_settings_for_option_values(setting_id, option_id)
 		local dirty = false
 
-		for i = 1, #RENDER_TEMPLATES, 1 do
+		for i = 1, #RENDER_TEMPLATES do
 			local template = RENDER_TEMPLATES[i]
 
 			if template.id == setting_id then
 				local options = template.options
 
 				if options then
-					for j = 1, #options, 1 do
+					for j = 1, #options do
 						local option = options[j]
 
 						if option.id == option_id then
@@ -1344,7 +1344,7 @@ local function create_render_settings_entry(template)
 
 	local function on_setting_edited_function(values)
 		for value_id, value in pairs(values) do
-			for i = 1, #RENDER_TEMPLATES, 1 do
+			for i = 1, #RENDER_TEMPLATES do
 				local template = RENDER_TEMPLATES[i]
 
 				if template.id == value_id then
@@ -1407,7 +1407,7 @@ local function create_render_settings_entry(template)
 			on_activated = function (new_value)
 				local option = nil
 
-				for i = 1, #options, 1 do
+				for i = 1, #options do
 					if options[i].id == new_value then
 						option = options[i]
 
@@ -1574,7 +1574,7 @@ if PLATFORM == "win32" then
 			if DisplayAdapter.num_outputs(adapter_index) < 1 then
 				local found_valid_adapter = false
 
-				for i = 1, num_adapters, 1 do
+				for i = 1, num_adapters do
 					if DisplayAdapter.num_outputs(i) > 0 then
 						found_valid_adapter = true
 						adapter_index = i
@@ -1593,7 +1593,7 @@ if PLATFORM == "win32" then
 			local options = {}
 			local num_modes = DisplayAdapter.num_modes(adapter_index, output_screen)
 
-			for i = 1, num_modes, 1 do
+			for i = 1, num_modes do
 				local width, height = DisplayAdapter.mode(adapter_index, output_screen, i)
 
 				if DefaultGameParameters.lowest_resolution <= width then
@@ -1645,7 +1645,7 @@ if PLATFORM == "win32" then
 			local resolution_width = resolution[1]
 			local resolution_height = resolution[2]
 
-			for i = 1, #resolution_options, 1 do
+			for i = 1, #resolution_options do
 				local option = resolution_options[i]
 
 				if option.width == resolution_width and option.height == resolution_height then
@@ -1699,7 +1699,7 @@ if PLATFORM == "win32" then
 	new_settings[#new_settings + 1] = create_render_settings_entry(screen_mode_setting)
 end
 
-for i = 1, #RENDER_TEMPLATES, 1 do
+for i = 1, #RENDER_TEMPLATES do
 	local template = RENDER_TEMPLATES[i]
 	new_settings[#new_settings + 1] = create_render_settings_entry(template)
 end

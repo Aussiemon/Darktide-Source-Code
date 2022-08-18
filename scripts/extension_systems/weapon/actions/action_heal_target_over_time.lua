@@ -47,7 +47,7 @@ ActionHealTargetOverTime.fixed_update = function (self, dt, t, time_in_action)
 		if hits then
 			local num_hits = #hits
 
-			for index = 1, num_hits, 1 do
+			for index = 1, num_hits do
 				local hit = hits[index]
 				local hit_actor = hit[INDEX_ACTOR]
 				local hit_unit = Actor.unit(hit_actor)

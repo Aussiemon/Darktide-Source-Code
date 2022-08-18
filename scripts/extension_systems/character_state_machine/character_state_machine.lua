@@ -24,7 +24,7 @@ CharacterStateMachine.init = function (self, unit, is_server, states, start_stat
 	local character_state_component = unit_data_extension:write_component("character_state")
 	self._character_state_component = character_state_component
 	character_state_component.previous_state_name = "dummy"
-	character_state_component.state_name = (is_server and start_state) or "dummy"
+	character_state_component.state_name = is_server and start_state or "dummy"
 	character_state_component.entered_t = t
 
 	if is_server then
@@ -116,7 +116,7 @@ CharacterStateMachine.exit_current_state = function (self)
 end
 
 CharacterStateMachine.current_state = function (self)
-	return (self._state_current and self._state_current.name) or "none"
+	return self._state_current and self._state_current.name or "none"
 end
 
 CharacterStateMachine.set_state = function (self, unit, dt, t, next_state, params)

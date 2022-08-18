@@ -29,7 +29,7 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 	local total_events_to_process = self._input_event_queue_n
 	local ALIVE = ALIVE
 
-	for i = 1, total_events_to_process, 1 do
+	for i = 1, total_events_to_process do
 		repeat
 			local unit, event_name, identifier = self:_pop_event(self._query_temp_array)
 
@@ -132,7 +132,7 @@ DialogueEventQueue._pop_event = function (self, event_data_target)
 	local number_of_arguments = table.remove(self._input_event_queue, 1)
 	local index = 0
 
-	for i = 1, number_of_arguments, 1 do
+	for i = 1, number_of_arguments do
 		event_data_target[index + 1] = table.remove(self._input_event_queue, 1)
 		event_data_target[index + 2] = table.remove(self._input_event_queue, 1)
 		index = index + 2

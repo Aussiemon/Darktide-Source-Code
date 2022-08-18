@@ -75,7 +75,7 @@ local target_selection_template = {
 			local aggro_state = perception_component.aggro_state
 			local num_target_units = #target_units
 
-			for i = 1, num_target_units, 1 do
+			for i = 1, num_target_units do
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit then

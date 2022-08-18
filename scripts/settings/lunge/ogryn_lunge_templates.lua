@@ -76,9 +76,9 @@ local ogryn_lunge_templates = {
 			armor_types.resistant
 		},
 		mood = MoodSettings.mood_types.zealot_maniac_combat_ability
-	},
-	ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)
+	}
 }
+ogryn_lunge_templates.ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)
 ogryn_lunge_templates.ogryn_charge_increased_distance.distance = talent_settings.combat_ability_2.distance
 ogryn_lunge_templates.ogryn_charge_increased_distance.anim_settings.timing_anims = {
 	[2.3] = "ability_charge_out"

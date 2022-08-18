@@ -33,101 +33,108 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_ch
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects")
 
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local WieldableSlotScripts = {
-	create = function (wieldable_slot_scripts_context, wieldable_slot_scripts, fx_sources, slot, item)
-		local item_wieldable_slot_scripts = item.wieldable_slot_scripts
+local WieldableSlotScripts = {}
 
-		if not item_wieldable_slot_scripts then
-			return
-		end
+WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldable_slot_scripts, fx_sources, slot, item)
+	local item_wieldable_slot_scripts = item.wieldable_slot_scripts
 
-		local num_scripts = #item_wieldable_slot_scripts
+	if not item_wieldable_slot_scripts then
+		return
+	end
 
-		for i = 1, num_scripts, 1 do
-			local script_name = item_wieldable_slot_scripts[i]
-			local script_class = CLASSES[script_name]
+	local num_scripts = #item_wieldable_slot_scripts
 
-			if script_class then
-				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-				local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
+	for i = 1, num_scripts do
+		local script_name = item_wieldable_slot_scripts[i]
+		local script_class = CLASSES[script_name]
 
-				fassert(wieldable_slot_scripts[slot.name][i] == nil, "Trying to overwrite already existing wieldable slot script on index %d with %q on %q", i, script_name, item.name)
+		if script_class then
+			local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
 
-				wieldable_slot_scripts[slot.name][i] = script
-			end
-		end
-	end,
-	destroy = function (wieldable_slot_scripts)
-		local num_scripts = #wieldable_slot_scripts
+			fassert(wieldable_slot_scripts[slot.name][i] == nil, "Trying to overwrite already existing wieldable slot script on index %d with %q on %q", i, script_name, item.name)
 
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			wieldable_slot_script:destroy()
-		end
-	end,
-	update = function (wieldable_slot_scripts, unit, dt, t)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			if wieldable_slot_script.update then
-				wieldable_slot_script:update(unit, dt, t)
-			end
-		end
-	end,
-	fixed_update = function (wieldable_slot_scripts, unit, dt, t)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			if wieldable_slot_script.fixed_update then
-				wieldable_slot_script:fixed_update(unit, dt, t)
-			end
-		end
-	end,
-	post_update = function (wieldable_slot_scripts, unit, dt, t)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			if wieldable_slot_script.post_update then
-				wieldable_slot_script:post_update(unit, dt, t)
-			end
-		end
-	end,
-	update_unit_position = function (wieldable_slot_scripts, unit, dt, t)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			if wieldable_slot_script.update_unit_position then
-				wieldable_slot_script:update_unit_position(unit, dt, t)
-			end
-		end
-	end,
-	wield = function (wieldable_slot_scripts)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			wieldable_slot_script:wield()
-		end
-	end,
-	unwield = function (wieldable_slot_scripts)
-		local num_scripts = #wieldable_slot_scripts
-
-		for i = 1, num_scripts, 1 do
-			local wieldable_slot_script = wieldable_slot_scripts[i]
-
-			wieldable_slot_script:unwield()
+			wieldable_slot_scripts[slot.name][i] = script
 		end
 	end
-}
+end
+
+WieldableSlotScripts.destroy = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		wieldable_slot_script:destroy()
+	end
+end
+
+WieldableSlotScripts.update = function (wieldable_slot_scripts, unit, dt, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		if wieldable_slot_script.update then
+			wieldable_slot_script:update(unit, dt, t)
+		end
+	end
+end
+
+WieldableSlotScripts.fixed_update = function (wieldable_slot_scripts, unit, dt, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		if wieldable_slot_script.fixed_update then
+			wieldable_slot_script:fixed_update(unit, dt, t)
+		end
+	end
+end
+
+WieldableSlotScripts.post_update = function (wieldable_slot_scripts, unit, dt, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		if wieldable_slot_script.post_update then
+			wieldable_slot_script:post_update(unit, dt, t)
+		end
+	end
+end
+
+WieldableSlotScripts.update_unit_position = function (wieldable_slot_scripts, unit, dt, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		if wieldable_slot_script.update_unit_position then
+			wieldable_slot_script:update_unit_position(unit, dt, t)
+		end
+	end
+end
+
+WieldableSlotScripts.wield = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		wieldable_slot_script:wield()
+	end
+end
+
+WieldableSlotScripts.unwield = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for i = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[i]
+
+		wieldable_slot_script:unwield()
+	end
+end
 
 return WieldableSlotScripts

@@ -8,7 +8,7 @@ local CustomSettingsView = class("CustomSettingsView", "BaseView")
 
 CustomSettingsView.init = function (self, settings, context)
 	local settings = settings or {}
-	self.pages = (context and context.pages) or {}
+	self.pages = context and context.pages or {}
 
 	CustomSettingsView.super.init(self, Definitions, settings)
 
@@ -85,7 +85,7 @@ CustomSettingsView._change_settings_page = function (self, next_index)
 	local page_number_widget = self._widgets_by_name.page_number
 
 	if current_widgets then
-		for i = 1, #current_widgets, 1 do
+		for i = 1, #current_widgets do
 			local widget = current_widgets[i]
 			local widget_name = widget.name
 
@@ -99,7 +99,7 @@ CustomSettingsView._change_settings_page = function (self, next_index)
 	local scenegraph_id = "grid_content_pivot"
 	local widget_focus_index = nil
 
-	for i = 1, #self.pages[next_index].entries, 1 do
+	for i = 1, #self.pages[next_index].entries do
 		local entry = self.pages[next_index].entries[i]
 		local name = "widget_" .. i
 
@@ -187,7 +187,7 @@ CustomSettingsView._draw_grid = function (self, dt, t, input_service)
 	if grid then
 		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 
 			if grid:is_widget_visible(widget) then
@@ -225,7 +225,7 @@ CustomSettingsView._focus_selected_widget = function (self)
 
 	self._grid:focus_grid_index()
 
-	for i = 1, #self._grid_widgets, 1 do
+	for i = 1, #self._grid_widgets do
 		local widget = self._grid_widgets[i]
 		local content = widget.content
 

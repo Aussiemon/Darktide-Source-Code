@@ -18,7 +18,7 @@ StateLoadRenderSettings._apply_render_settings = function (self, settings)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
 			if setting.pages then
-				for i = 1, #setting.pages, 1 do
+				for i = 1, #setting.pages do
 					local page_setting = setting.pages[i].entries
 
 					self:_apply_render_settings(page_setting)

@@ -98,10 +98,10 @@ VendorInteractionViewBase._on_navigation_input_changed = function (self)
 	local is_mouse = self._using_cursor_navigation
 	local button_widgets = self._button_widgets
 	local focused_index = nil
-	local num_buttons = (button_widgets and #button_widgets) or 0
+	local num_buttons = button_widgets and #button_widgets or 0
 
 	if is_mouse then
-		for i = 1, num_buttons, 1 do
+		for i = 1, num_buttons do
 			local button = button_widgets[i]
 			button.content.hotspot.is_focused = false
 		end
@@ -114,10 +114,10 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 	local is_mouse = self._using_cursor_navigation
 	local button_widgets = self._button_widgets
 	local focused_index = nil
-	local num_buttons = (button_widgets and #button_widgets) or 0
+	local num_buttons = button_widgets and #button_widgets or 0
 
 	if not is_mouse then
-		for i = 1, num_buttons, 1 do
+		for i = 1, num_buttons do
 			local button = button_widgets[i]
 
 			if button.content.hotspot.is_focused then
@@ -178,7 +178,7 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 				local button_widgets = self._button_widgets
 
 				if button_widgets then
-					for i = 1, #button_widgets, 1 do
+					for i = 1, #button_widgets do
 						widget_list[#widget_list + 1] = button_widgets[i]
 					end
 				end
@@ -197,7 +197,7 @@ VendorInteractionViewBase._setup_option_buttons = function (self, options)
 	local spacing = 10
 	local button_height = 50
 
-	for i = 1, #options, 1 do
+	for i = 1, #options do
 		local option = options[i]
 		local widget = self:_create_widget("option_button_" .. i, button_definition)
 		widget.content.hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
@@ -240,7 +240,7 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 		local button_widgets = self._button_widgets
 
 		if button_widgets then
-			for i = 1, #button_widgets, 1 do
+			for i = 1, #button_widgets do
 				widget_list[#widget_list + 1] = button_widgets[i]
 			end
 		end
@@ -268,7 +268,7 @@ VendorInteractionViewBase.draw = function (self, dt, t, input_service, layer)
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
 	local ui_scenegraph = self._ui_scenegraph
-	local situational_input_service = (self._presenting_options and input_service) or input_service:null_service()
+	local situational_input_service = self._presenting_options and input_service or input_service:null_service()
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, situational_input_service, dt, render_settings)
 	self:_draw_widgets(dt, t, situational_input_service, ui_renderer, render_settings)
@@ -287,7 +287,7 @@ VendorInteractionViewBase._draw_widgets = function (self, dt, t, input_service, 
 	if button_widgets then
 		local num_widgets = #button_widgets
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = button_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -297,7 +297,7 @@ VendorInteractionViewBase._draw_widgets = function (self, dt, t, input_service, 
 	local wallet_widgets = self._wallet_widgets
 
 	if wallet_widgets then
-		for i = 1, #wallet_widgets, 1 do
+		for i = 1, #wallet_widgets do
 			local widget = wallet_widgets[i]
 
 			UIWidget.draw(widget, self._ui_renderer)
@@ -311,7 +311,7 @@ VendorInteractionViewBase.update = function (self, dt, t, input_service)
 	local input_legend = self:_element("input_legend")
 
 	if input_legend then
-		local text = (self._presenting_options and "loc_view_close") or "loc_view_back"
+		local text = self._presenting_options and "loc_view_close" or "loc_view_back"
 		local entry_id = "entry_0"
 
 		input_legend:set_display_name(entry_id, text, nil)
@@ -345,7 +345,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 	end
 
 	if self._wallet_widgets then
-		for i = 1, #self._wallet_widgets, 1 do
+		for i = 1, #self._wallet_widgets do
 			local widget = self._wallet_widgets[i]
 
 			self:_unregister_widget_name(widget.name)
@@ -358,7 +358,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 	local widgets = {}
 	local wallet_definition = Definitions.wallet_definitions
 
-	for i = 1, #self._wallet_type, 1 do
+	for i = 1, #self._wallet_type do
 		local wallet_type = self._wallet_type[i]
 		local wallet_settings = WalletSettings[wallet_type]
 		local font_gradient_material = wallet_settings.font_gradient_material
@@ -371,7 +371,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 		if wallets_data then
 			local wallet = wallets_data:by_type(wallet_type)
 			local balance = wallet and wallet.balance
-			amount = (balance and balance.amount) or 0
+			amount = balance and balance.amount or 0
 		end
 
 		local text = tostring(amount)
@@ -384,7 +384,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 		local text_offset = widget.style.text.original_offset
 		local texture_offset = widget.style.texture.original_offset
 		local text_margin = 5
-		local price_margin = (i < #self._wallet_type and 30) or 0
+		local price_margin = i < #self._wallet_type and 30 or 0
 		widget.style.texture.offset[1] = texture_offset[1] + total_width
 		widget.style.text.offset[1] = text_offset[1] + text_margin + total_width
 		total_width = total_width + text_width + texture_width + text_margin + price_margin
@@ -393,7 +393,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 
 	local corner_width = corner_right.content.original_size[1]
 	local corner_texture_size_minus_wallet = 100
-	local total_corner_width = (total_width + corner_width) - corner_texture_size_minus_wallet
+	local total_corner_width = total_width + corner_width - corner_texture_size_minus_wallet
 
 	self:_set_scenegraph_size("wallet_pivot", total_width, nil)
 	self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)

@@ -47,7 +47,7 @@ HangLedge.calculate_offset_rotation = function (physics_world, hang_ledge_unit, 
 		local ray_succeded, hit_position, ray_goal_position = nil
 		local num_rays = 5
 
-		for i = 1, num_rays, 1 do
+		for i = 1, num_rays do
 			ray_goal_position = below_player_position + to_unit * 0.5 * i
 			ray_succeded, hit_position = _is_position_in_line_of_sight(physics_world, ray_origin_position, ray_goal_position)
 

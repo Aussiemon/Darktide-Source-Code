@@ -8,7 +8,7 @@ local highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition
 local function list_item_highlight_change_function(content, style)
 	local hotspot = content.hotspot
 	local use_is_focused = hotspot.use_is_focused
-	local focus_progress = (use_is_focused and hotspot.anim_focus_progress) or (not use_is_focused and hotspot.anim_select_progress)
+	local focus_progress = use_is_focused and hotspot.anim_focus_progress or not use_is_focused and hotspot.anim_select_progress
 	local progress = math.max(hotspot.anim_hover_progress, focus_progress)
 	style.color[1] = 255 * math.easeOutCubic(progress)
 	local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
@@ -57,7 +57,7 @@ local CheckboxPassTemplates = {
 			height
 		}
 
-		for i = 1, num_options, 1 do
+		for i = 1, num_options do
 			local horizontal_offset = -((num_options - i) * option_width)
 			local option_font_style = table.clone(UIFontSettings.list_button)
 			option_font_style.horizontal_alignment = "right"

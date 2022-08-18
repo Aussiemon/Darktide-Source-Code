@@ -31,7 +31,7 @@ MainMenuLoader.start_loading = function (self)
 			end
 		end
 
-		for i = 1, #views_to_load, 1 do
+		for i = 1, #views_to_load do
 			local view_name = views_to_load[i]
 
 			ui_manager:load_view(view_name, "MainMenuLoader - " .. view_name, callback)
@@ -51,7 +51,7 @@ MainMenuLoader.cleanup = function (self)
 		local ui_manager = Managers.ui
 
 		if ui_manager then
-			for i = 1, #views_to_load, 1 do
+			for i = 1, #views_to_load do
 				local view_name = views_to_load[i]
 
 				ui_manager:unload_view(view_name, "MainMenuLoader - " .. view_name)

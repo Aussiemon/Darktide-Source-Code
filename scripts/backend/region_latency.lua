@@ -1,13 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"refresh_region_latencies",
@@ -61,41 +51,16 @@ RegionLatency.refresh_region_latencies = function (self)
 
 		return Promise.all(unpack(promises))
 	end):next(function (result)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-13, warpins: 1 ---
 		Log.info("RegionLatency", "Refreshed region latencies: " .. table.tostring(result, 3))
 
 		cached = result
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (e)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-12, warpins: 1 ---
 		Log.error("RegionLatency", "Could not refresh latencies: " .. table.tostring(e, 3))
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
 end
 
 RegionLatency.get_cached_region_latencies = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return cached
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 implements(RegionLatency, Interface)

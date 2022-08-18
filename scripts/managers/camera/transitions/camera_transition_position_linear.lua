@@ -17,7 +17,7 @@ end
 CameraTransitionPositionLinear.update = function (self, dt, position, update_time)
 	CameraTransitionBase.update(self, dt, update_time)
 
-	local node_1_position = (self._freeze_node_1 and self._node_1_pos_table:unbox()) or position
+	local node_1_position = self._freeze_node_1 and self._node_1_pos_table:unbox() or position
 	local node_2_position = self._node_2:position()
 	local duration = self._duration
 	local speed = self._speed

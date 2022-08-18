@@ -2548,7 +2548,7 @@ for name, template in pairs(recoil_templates) do
 			move_state_settings.num_offset_ranges = num_offset_ranges
 			local offset_random_range = move_state_settings.offset_random_range
 
-			for i = 1, num_offset_ranges, 1 do
+			for i = 1, num_offset_ranges do
 				if not offset_random_range[i] then
 					offset_random_range[i] = {
 						yaw = 0,

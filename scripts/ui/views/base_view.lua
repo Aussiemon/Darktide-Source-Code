@@ -132,7 +132,7 @@ BaseView.trigger_widget_pressed = function (self, name, optional_content_id)
 
 	local passes = widget.passes
 
-	for i = 1, #passes, 1 do
+	for i = 1, #passes do
 		local pass = passes[i]
 		local pass_type = pass.pass_type
 
@@ -200,7 +200,7 @@ BaseView.on_enter = function (self)
 	local enter_sound_events = self._settings.enter_sound_events
 
 	if enter_sound_events then
-		for i = 1, #enter_sound_events, 1 do
+		for i = 1, #enter_sound_events do
 			local sound_event = enter_sound_events[i]
 
 			self:_play_sound(sound_event)
@@ -243,7 +243,7 @@ BaseView.on_exit = function (self)
 	local exit_sound_events = self._settings.exit_sound_events
 
 	if exit_sound_events then
-		for i = 1, #exit_sound_events, 1 do
+		for i = 1, #exit_sound_events do
 			local sound_event = exit_sound_events[i]
 
 			self:_play_sound(sound_event)
@@ -464,7 +464,7 @@ BaseView._draw_widgets = function (self, dt, t, input_service, ui_renderer, rend
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
@@ -529,7 +529,7 @@ BaseView._remove_element = function (self, reference_name)
 	local element = elements[reference_name]
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		if elements_array[i] == element then
 			table.remove(elements_array, i)
 
@@ -559,7 +559,7 @@ end
 BaseView._on_resolution_modified_elements = function (self, scale)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
@@ -573,7 +573,7 @@ end
 BaseView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 
 		if element then
@@ -587,7 +587,7 @@ end
 BaseView._update_elements = function (self, dt, t, input_service)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 
 		if element then

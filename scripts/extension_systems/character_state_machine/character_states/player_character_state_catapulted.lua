@@ -64,13 +64,7 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 	local locomotion_position = PlayerMovement.locomotion_position(locomotion)
 	local catapulted_direction = nil
 	local dot = Vector3.dot(forward, direction)
-
-	if dot > 0 then
-		catapulted_direction = "forward"
-	else
-		catapulted_direction = "backward"
-	end
-
+	catapulted_direction = dot > 0 and "forward" or "backward"
 	self._catapulted_direction = catapulted_direction
 	self._start_catapulted_height = locomotion_position.z
 

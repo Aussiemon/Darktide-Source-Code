@@ -34,7 +34,7 @@ local function _create_surface_decal(surface_decals, surface_type, hit_type, min
 			units = {}
 		}
 
-		for i = 1, #decal_units, 1 do
+		for i = 1, #decal_units do
 			surface_decals[surface_type][hit_type].units[i] = decal_units[i]
 		end
 	end

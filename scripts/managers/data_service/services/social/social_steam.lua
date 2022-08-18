@@ -24,7 +24,7 @@ SocialSteam.fetch_friends_list = function (self)
 	local app_id = Steam.app_id()
 	local num_friends = Friends.num_friends(Friends.FRIEND_FLAG)
 
-	for i = 1, num_friends, 1 do
+	for i = 1, num_friends do
 		local id = Friends.id(i)
 		local friend = FriendSteam:new(id, app_id)
 		friend_list[i] = friend
@@ -49,7 +49,7 @@ SocialSteam.fetch_blocked_list = function (self)
 	local promise = Promise:new()
 	local num_blocked = Friends.num_friends(Friends.IGNORED_FRIEND_FLAG)
 
-	for i = 1, num_blocked, 1 do
+	for i = 1, num_blocked do
 		local id = Friends.id(i)
 		local blocked = FriendSteam:new(id, app_id)
 		blocked_list[i] = blocked
@@ -67,7 +67,7 @@ SocialSteam.fetch_blocked_list_ids_forced = function (self)
 	local promise = Promise:new()
 	local num_blocked = Friends.num_friends(Friends.IGNORED_FRIEND_FLAG)
 
-	for i = 1, num_blocked, 1 do
+	for i = 1, num_blocked do
 		local id = Friends.id(i)
 		blocked_list[i] = id
 	end

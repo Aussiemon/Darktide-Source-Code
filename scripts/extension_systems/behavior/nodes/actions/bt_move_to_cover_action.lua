@@ -69,7 +69,7 @@ BtMoveToCoverAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	local move_state = behavior_component.move_state
 	local move_type = self:_get_move_type(scratchpad, action_data)
 
-	if move_state ~= "moving" or (move_type ~= scratchpad.current_move_type and scratchpad.move_type_switch_stickiness <= t) then
+	if move_state ~= "moving" or move_type ~= scratchpad.current_move_type and scratchpad.move_type_switch_stickiness <= t then
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data, move_type)
 
 		scratchpad.current_move_type = move_type

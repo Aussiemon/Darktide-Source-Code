@@ -86,7 +86,7 @@ local function _ammo_check(action_settings, condition_func_params)
 	local full_clip = clip_capacity == current_clip_amount
 	local empty_clip = current_clip_amount == 0
 	local reload_policy = action_settings.reload_policy or "always"
-	local policy_fulfilled = (reload_policy == "empty" and empty_clip) or (reload_policy == "always" and not full_clip)
+	local policy_fulfilled = reload_policy == "empty" and empty_clip or reload_policy == "always" and not full_clip
 	local fulfill_reload_requirements = ammo_reserve > 0 and policy_fulfilled
 
 	if not fulfill_reload_requirements then

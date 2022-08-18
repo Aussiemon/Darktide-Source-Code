@@ -53,11 +53,11 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 		attack_direction = Quaternion.rotate(player_rotation, direction)
 	else
 		local rotation = Quaternion.lerp(start_rotation, end_rotation, 0.5)
-		local quaternion_axis = action_settings.attack_direction or (action_settings.spline_settings.matrices_data_location and "forward") or "right"
+		local quaternion_axis = action_settings.attack_direction or action_settings.spline_settings.matrices_data_location and "forward" or "right"
 		attack_direction = Quaternion[quaternion_axis](rotation)
 	end
 
-	return (action_settings.invert_attack_direction and -attack_direction) or attack_direction
+	return action_settings.invert_attack_direction and -attack_direction or attack_direction
 end
 
 local ActionSweep = class("ActionSweep", "ActionWeaponBase")
@@ -99,7 +99,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	local max_num_saved_entries = action_settings.max_num_saved_entries
 
 	if max_num_saved_entries then
-		for i = 1, max_num_saved_entries, 1 do
+		for i = 1, max_num_saved_entries do
 			self._saved_entries[i] = {
 				hit_distance = 0,
 				hit_actor = ActorBox(),
@@ -211,7 +211,7 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 
 	local action_settings = self._action_settings
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
-	local hit_stickyness_settings = (special_active_at_start and action_settings.hit_stickyness_settings_special_active) or action_settings.hit_stickyness_settings
+	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
 	if hit_stickyness_settings and self:_is_currently_sticky() then
 		self:_stop_hit_stickyness(hit_stickyness_settings)
@@ -229,7 +229,7 @@ end
 ActionSweep.sensitivity_modifier = function (self, t)
 	local action_settings = self._action_settings
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
-	local hit_stickyness_settings = (special_active_at_start and action_settings.hit_stickyness_settings_special_active) or action_settings.hit_stickyness_settings
+	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
 	if not hit_stickyness_settings then
 		return 1
@@ -301,7 +301,7 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 	end
 
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
-	local hit_stickyness_settings = (special_active_at_start and action_settings.hit_stickyness_settings_special_active) or action_settings.hit_stickyness_settings
+	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
 	if hit_stickyness_settings and self:_is_currently_sticky() then
 		self:_update_hit_stickyness(dt, t, action_sweep_component, hit_stickyness_settings)
@@ -428,7 +428,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 
 	if DevParameters.debug_sweep_stickyness then
 		local hit_zone = HitZone.get(stick_to_unit, stick_to_actor)
-		local hit_zone_name = (hit_zone and hit_zone.name) or "n/a"
+		local hit_zone_name = hit_zone and hit_zone.name or "n/a"
 
 		Debug:text([[
 Sticking to:
@@ -472,7 +472,7 @@ hit_zone:%s]], stick_to_unit, stick_to_actor, hit_zone_name)
 				wounds_shape = action_settings.wounds_shape_special_active
 			end
 
-			for i = 1, num_damage_instances_this_frame, 1 do
+			for i = 1, num_damage_instances_this_frame do
 				local damage_profile = nil
 
 				if is_last_damage_instance and i == num_damage_instances_this_frame then
@@ -504,7 +504,7 @@ hit_zone:%s]], stick_to_unit, stick_to_actor, hit_zone_name)
 	local duration = hit_stickyness_settings.duration
 	local extra_duration = hit_stickyness_settings.extra_duration or 0
 
-	if (sticky_target_unit_alive and sticky_t >= duration + extra_duration) or (not sticky_target_unit_alive and sticky_t >= duration * 0.5) then
+	if sticky_target_unit_alive and sticky_t >= duration + extra_duration or not sticky_target_unit_alive and sticky_t >= duration * 0.5 then
 		self:_stop_hit_stickyness(hit_stickyness_settings)
 	end
 end
@@ -644,7 +644,7 @@ ActionSweep._save_sweep_results = function (self, sweep_results, num_sweep_resul
 		self._time_before_processing_saved_entries = t + num_frames_before_process * GameParameters.fixed_time_step
 	end
 
-	for i = 1, num_sweep_results, 1 do
+	for i = 1, num_sweep_results do
 		local result = sweep_results[i]
 		local hit_actor = result.actor
 		local hit_position = result.position
@@ -670,7 +670,7 @@ ActionSweep._merge_saved_entries = function (self, sweep_results, num_sweep_resu
 
 	local num_merged_results = 0
 
-	for i = 1, num_saved_entries, 1 do
+	for i = 1, num_saved_entries do
 		repeat
 			local saved_entry = saved_entries[i]
 			local actor = saved_entry.hit_actor:unbox()
@@ -691,7 +691,7 @@ ActionSweep._merge_saved_entries = function (self, sweep_results, num_sweep_resu
 		until true
 	end
 
-	for i = 1, num_sweep_results, 1 do
+	for i = 1, num_sweep_results do
 		num_merged_results = num_merged_results + 1
 		merged_results[num_merged_results] = sweep_results[i]
 	end
@@ -708,7 +708,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local abort_attack = false
 	local armor_aborted_attack = false
 
-	for i = 1, num_ordered_units, 1 do
+	for i = 1, num_ordered_units do
 		local result = ordered_units[i]
 		local hit_actor = result.actor
 		local hit_unit = actor_to_unit[hit_actor]
@@ -734,7 +734,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	end
 
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
-	local hit_stickyness_settings = (special_active_at_start and action_settings.hit_stickyness_settings_special_active) or action_settings.hit_stickyness_settings
+	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
 	if self:_can_start_stickyness(hit_stickyness_settings, abort_attack, special_was_active_before_processing_hits) then
 		self:_start_hit_stickyness(hit_stickyness_settings, t, attack_direction)
@@ -758,7 +758,7 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 	local player_position = POSITION_LOOKUP[self._player_unit]
 	local ALIVE = ALIVE
 
-	for i = 1, num_sweep_results, 1 do
+	for i = 1, num_sweep_results do
 		repeat
 			local result = sweep_results[i]
 			local hit_actor = result.actor
@@ -870,7 +870,7 @@ ActionSweep._context_aware_sweep_order = function (self, unit_table, sweep_units
 	local fp_right = Quaternion.right(fp_rotation)
 	local fp_up = Quaternion.up(fp_rotation)
 
-	for i = 1, #unit_table, 1 do
+	for i = 1, #unit_table do
 		local result = unit_table[i]
 		local hit_actor = result.actor
 		local hit_position = result.position
@@ -961,11 +961,11 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local damage_profile, damage_type = nil
 
 	if is_special_active then
-		damage_profile = (abort_attack and self._damage_profile_special_active_on_abort) or self._damage_profile_special_active
-		damage_type = (abort_attack and self._damage_type_special_active_on_abort) or self._damage_type_special_active
+		damage_profile = abort_attack and self._damage_profile_special_active_on_abort or self._damage_profile_special_active
+		damage_type = abort_attack and self._damage_type_special_active_on_abort or self._damage_type_special_active
 	else
-		damage_profile = (abort_attack and self._damage_profile_on_abort) or self._damage_profile
-		damage_type = (abort_attack and self._damage_type_on_abort) or self._damage_type
+		damage_profile = abort_attack and self._damage_profile_on_abort or self._damage_profile
+		damage_type = abort_attack and self._damage_type_on_abort or self._damage_type
 	end
 
 	local damage, result, damage_efficiency = nil
@@ -1025,7 +1025,7 @@ ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_a
 	local player_unit = self._player_unit
 	local source_parameters = impact_fx_data.source_parameters
 	local max_hit_mass = self:_current_max_hit_mass(self._inventory_slot_component)
-	local hit_mass_percentage = (max_hit_mass == 0 and 1) or 1 - math.clamp(amount_of_mass_hit / max_hit_mass, 0, 1)
+	local hit_mass_percentage = max_hit_mass == 0 and 1 or 1 - math.clamp(amount_of_mass_hit / max_hit_mass, 0, 1)
 	source_parameters.hit_mass_percentage = hit_mass_percentage
 	source_parameters.num_melee_hits = math.min(num_hit_enemies, 10)
 	local action_settings = self._action_settings
@@ -1112,18 +1112,18 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 	if sweep_results1 then
 		num_results1 = #sweep_results1
 
-		for i = 1, num_results1, 1 do
+		for i = 1, num_results1 do
 			SWEEP_RESULTS[i] = sweep_results1[i]
 		end
 	end
 
 	if sweep_results2 then
-		for i = 1, #sweep_results2, 1 do
+		for i = 1, #sweep_results2 do
 			local info = sweep_results2[i]
 			local this_actor = info.actor
 			local found = nil
 
-			for j = 1, num_results1, 1 do
+			for j = 1, num_results1 do
 				if SWEEP_RESULTS[j].actor == this_actor then
 					found = true
 				end
@@ -1137,12 +1137,12 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 	end
 
 	if sweep_results3 then
-		for i = 1, #sweep_results3, 1 do
+		for i = 1, #sweep_results3 do
 			local info = sweep_results3[i]
 			local this_actor = info.actor
 			local found = nil
 
-			for j = 1, num_results1 + num_results2, 1 do
+			for j = 1, num_results1 + num_results2 do
 				if SWEEP_RESULTS[j].actor == this_actor then
 					found = true
 				end
@@ -1157,7 +1157,7 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 
 	local num_results = num_results1 + num_results2 + num_results3
 
-	for i = num_results + 1, #SWEEP_RESULTS, 1 do
+	for i = num_results + 1, #SWEEP_RESULTS do
 		SWEEP_RESULTS[i] = nil
 	end
 
@@ -1165,9 +1165,9 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 end
 
 ActionSweep._weapon_half_extents = function (self, weapon_template, action_settings)
-	local width_mod = (action_settings.width_mod and action_settings.width_mod * ActionSweepSettings.sweep_width_mod) or ActionSweepSettings.sweep_width_mod
-	local height_mod = (action_settings.height_mod and action_settings.height_mod * ActionSweepSettings.sweep_height_mod) or ActionSweepSettings.sweep_height_mod
-	local range_mod = (action_settings.range_mod and action_settings.range_mod * ActionSweepSettings.sweep_range_mod) or ActionSweepSettings.sweep_range_mod
+	local width_mod = action_settings.width_mod and action_settings.width_mod * ActionSweepSettings.sweep_width_mod or ActionSweepSettings.sweep_width_mod
+	local height_mod = action_settings.height_mod and action_settings.height_mod * ActionSweepSettings.sweep_height_mod or ActionSweepSettings.sweep_height_mod
+	local range_mod = action_settings.range_mod and action_settings.range_mod * ActionSweepSettings.sweep_range_mod or ActionSweepSettings.sweep_range_mod
 	local weapon_box = action_settings.weapon_box or weapon_template.weapon_box
 	local _ = nil
 	local weapon_half_extents = Vector3(weapon_box[1], weapon_box[2], weapon_box[3])
@@ -1215,16 +1215,16 @@ end
 local external_properties = {}
 
 ActionSweep._play_hit_effects = function (self, damage_profile, hit_position, attack_direction, damage, result, damage_efficiency)
-	local sweep_hit_alias = (damage_profile.melee_attack_strength == melee_attack_strengths.heavy and "melee_heavy_sweep_hit") or "melee_sweep_hit"
-	local crit_hit_alias = (damage_profile.melee_attack_strength == melee_attack_strengths.heavy and "melee_heavy_sweep_hit_crit") or "melee_sweep_hit_crit"
+	local sweep_hit_alias = damage_profile.melee_attack_strength == melee_attack_strengths.heavy and "melee_heavy_sweep_hit" or "melee_sweep_hit"
+	local crit_hit_alias = damage_profile.melee_attack_strength == melee_attack_strengths.heavy and "melee_heavy_sweep_hit_crit" or "melee_sweep_hit_crit"
 	local sync_to_clients = false
 	local sweep_fx_source_name = self._sweep_fx_source_name
 
 	if sweep_fx_source_name then
 		table.clear(external_properties)
 
-		external_properties.is_critical_strike = (self._critical_strike_component.is_active and "true") or "false"
-		external_properties.special_active = (self._inventory_slot_component.special_active and "true") or "false"
+		external_properties.is_critical_strike = self._critical_strike_component.is_active and "true" or "false"
+		external_properties.special_active = self._inventory_slot_component.special_active and "true" or "false"
 
 		self._fx_extension:trigger_gear_wwise_event_with_source(sweep_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)
 		self._fx_extension:trigger_gear_wwise_event_with_source(crit_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)

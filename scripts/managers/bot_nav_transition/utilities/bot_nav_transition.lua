@@ -41,7 +41,7 @@ BotNavTransition.calculate_nav_tag_layer = function (from, to, player_jumped)
 	local diff = to - from
 	local height = diff.z
 
-	if height < -(min_fall_damage_height + (max_health * 0.5) / damage_multiplier) then
+	if height < -(min_fall_damage_height + max_health * 0.5 / damage_multiplier) then
 		return nil
 	elseif height < -min_fall_damage_height then
 		return "bot_damage_drops"

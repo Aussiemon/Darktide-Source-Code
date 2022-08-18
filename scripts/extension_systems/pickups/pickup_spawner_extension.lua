@@ -46,7 +46,7 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	local num_items = #items
 	local spawnable_pickups = {}
 
-	for i = 1, num_items, 1 do
+	for i = 1, num_items do
 		if items[i] ~= "none" then
 			spawnable_pickups[#spawnable_pickups + 1] = items[i]
 		end
@@ -116,7 +116,7 @@ PickupSpawnerExtension._fetch_next_item = function (self, component_index)
 		elseif component.item_spawn_selection == FLOW_SPAWN_METHOD.random_in_list then
 			local max_tries = 5
 
-			for i = 1, max_tries, 1 do
+			for i = 1, max_tries do
 				local new_seed, rnd_index = math.next_random(self._seed, 1, num_items)
 
 				if rnd_index ~= last_index then
@@ -153,7 +153,7 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 	local num_components = #self._components
 	local components = self._components
 
-	for i = 1, num_components, 1 do
+	for i = 1, num_components do
 		local component = components[i]
 
 		if component.distribution_type == distribution_type then
@@ -162,7 +162,7 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 					local spawnable_pickups = component.spawnable_pickups
 					local num_items = #spawnable_pickups
 
-					for j = 0, num_items, 1 do
+					for j = 0, num_items do
 						local spawnable_pickup = spawnable_pickups[j]
 
 						if spawnable_pickup == pickup_name then
@@ -189,7 +189,7 @@ PickupSpawnerExtension.spawn_guaranteed = function (self)
 	local num_components = #self._components
 	local components = self._components
 
-	for i = 1, num_components, 1 do
+	for i = 1, num_components do
 		local component = components[i]
 		local distribution_type = component.distribution_type
 

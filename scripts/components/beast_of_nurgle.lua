@@ -75,7 +75,7 @@ BeastOfNurgle._set_default_spline_data = function (self)
 	self._heading = Quaternion.forward(rotation)
 	local offset, point, m, relative_m = nil
 
-	for i = 1, #self._spline_joints + 1, 1 do
+	for i = 1, #self._spline_joints + 1 do
 		offset = self._segment_length * (i - 1)
 		point = translation + self._heading * -offset
 		m = Matrix4x4.copy(self._unit_transform)
@@ -161,7 +161,7 @@ BeastOfNurgle._update_spline_data = function (self)
 		self._heading = Vector3.normalize(current_position - closest_position)
 		local new_tangent = Vector3.normalize(current_position - last_pos)
 
-		for i = 1, new_segments, 1 do
+		for i = 1, new_segments do
 			local p = Matrix4x4.translation(closest_spline_transform) + self._heading * self._segment_length * i
 			local q = Quaternion.look(new_tangent, Matrix4x4.up(self._unit_transform))
 			local m = Matrix4x4.from_quaternion_position(q, p)

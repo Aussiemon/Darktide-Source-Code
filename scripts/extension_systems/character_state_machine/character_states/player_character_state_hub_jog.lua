@@ -224,7 +224,7 @@ PlayerCharacterStateHubJog._current_direction = function (self, locomotion_compo
 	local moving = Vector3.length_squared(velocity_current_flat) > 0
 	local locomotion_rotation = locomotion_component.rotation
 	local loc_forward = Quaternion.forward(locomotion_rotation)
-	local current_direction = (moving and velocity_current_flat_dir) or loc_forward
+	local current_direction = moving and velocity_current_flat_dir or loc_forward
 
 	return current_direction, moving
 end
@@ -446,19 +446,19 @@ function _anims_from_angle(angle, anims)
 	if abs_angle < TAU_16TH then
 		return anims.forward
 	elseif abs_angle < TAU_16TH * 3 then
-		return (left and anims.left_45) or anims.right_45
+		return left and anims.left_45 or anims.right_45
 	elseif abs_angle < TAU_16TH * 5 then
-		return (left and anims.left_90) or anims.right_90
+		return left and anims.left_90 or anims.right_90
 	elseif abs_angle < TAU_16TH * 7 then
-		return (left and anims.left_135) or anims.right_135
+		return left and anims.left_135 or anims.right_135
 	else
-		return (left and anims.left_180) or anims.right_180
+		return left and anims.left_180 or anims.right_180
 	end
 end
 
 function _move_speed(move_state_movement_settings, move_direction, new_x, new_y)
 	local stopping = new_x == 0 and new_y == 0
-	local speed_scale = (stopping and 0) or 1
+	local speed_scale = stopping and 0 or 1
 	local max_move_speed = move_state_movement_settings.move_speed
 
 	return max_move_speed * speed_scale, stopping

@@ -11,7 +11,7 @@ local PointOfInterestUtilities = {
 		if hits then
 			local num_hits = #hits
 
-			for i = 1, num_hits, 1 do
+			for i = 1, num_hits do
 				local hit_data = hits[i]
 				local hit_unit = Actor.unit(hit_data[INDEX_ACTOR])
 

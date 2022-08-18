@@ -71,7 +71,7 @@ local function _check_target_armor(unit, target_armor_types, default_hit_zone, c
 		local closest_distance = math.huge
 		local closest_position = nil
 
-		for i = 1, #breed_hit_zones, 1 do
+		for i = 1, #breed_hit_zones do
 			local hit_zone_name = breed_hit_zones[i].name
 			local hit_zone_armor_type = Armor.armor_type(unit, breed, hit_zone_name)
 			local can_stick = target_armor_types[hit_zone_armor_type]
@@ -152,7 +152,7 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 	local target_hit_zone = nil
 
 	if number_of_results > 0 then
-		for i = 1, number_of_results, 1 do
+		for i = 1, number_of_results do
 			local unit = broadphase_results[i]
 
 			if is_valid_and_legitimate_targe_func(integration_data, unit, position) then

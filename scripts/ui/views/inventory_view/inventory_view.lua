@@ -1,27 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_view/inventory_view_definitions")
@@ -60,7 +36,7 @@ local InventoryView = class("InventoryView", "BaseView")
 
 InventoryView.init = function (self, settings, context)
 	self._context = context
-	self._preview_player = (context.debug and Managers.player:local_player(1)) or context.player
+	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items or {}
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
@@ -251,7 +227,7 @@ InventoryView._get_items_layout_by_slot = function (self, slot)
 			end
 
 			if slots then
-				for j = 1, #slots, 1 do
+				for j = 1, #slots do
 					if slots[j] == slot_name then
 						layout[#layout + 1] = {
 							item = item,
@@ -277,7 +253,7 @@ InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, option
 	if slot_name then
 		Managers.event:trigger("event_inventory_set_camera_item_slot_focus", slot_name, 1.5, func_ptr)
 	elseif optional_camera_settings then
-		for i = 1, #optional_camera_settings, 1 do
+		for i = 1, #optional_camera_settings do
 			local camera_settings = optional_camera_settings[i]
 
 			Managers.event:trigger(camera_settings[1], camera_settings[2], camera_settings[3], camera_settings[4], camera_settings[5])
@@ -303,6 +279,7 @@ InventoryView.cb_on_grid_entry_right_pressed = function (self, widget, element)
 		local slots = item.slots
 
 		if slots and not table.contains(slots, "slot_primary") and table.contains(slots, "slot_secondary") then
+			-- Nothing
 		end
 	end
 end
@@ -369,7 +346,7 @@ end
 
 InventoryView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -538,7 +515,7 @@ InventoryView._setup_menu_tabs = function (self, content)
 	}
 	local tab_ids = {}
 
-	for i = 1, #content, 1 do
+	for i = 1, #content do
 		local tab_content = content[i]
 		local display_name = tab_content.display_name
 		local display_icon = tab_content.icon
@@ -576,9 +553,9 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 
 	fassert(template, "[InventoryView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -613,7 +590,7 @@ InventoryView._draw_loadout_widgets = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
@@ -639,7 +616,7 @@ InventoryView._draw_grid = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -660,7 +637,7 @@ InventoryView._destroy_loadout_widgets = function (self)
 	local widgets = self._loadout_widgets
 
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -687,7 +664,7 @@ InventoryView._destroy_grid_widgets = function (self)
 	local widgets = self._grid_widgets
 
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -706,7 +683,7 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 	if widgets then
 		local handle_input = false
 
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -736,7 +713,7 @@ InventoryView._handle_input = function (self, input_service)
 	if grid_widgets then
 		local new_highlighted_group_header, new_highlighted_group_header_text = nil
 
-		for i = 1, #grid_widgets, 1 do
+		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
 			local content = widget.content
 			local hotspot = content.hotspot
@@ -766,7 +743,7 @@ InventoryView._get_next_array_index = function (self, direction, start_index, ar
 	local array_length = table.size(array)
 
 	if direction > 0 then
-		for i = start_index, array_length, 1 do
+		for i = start_index, array_length do
 			local value = array[i]
 
 			if value then
@@ -853,7 +830,7 @@ InventoryView._select_individual_widget_index = function (self, index)
 	local loadout_widgets = self._loadout_widgets
 
 	if loadout_widgets then
-		for i = 1, #loadout_widgets, 1 do
+		for i = 1, #loadout_widgets do
 			local is_selected = i == index
 			local widget = loadout_widgets[i]
 			widget.content.hotspot.is_selected = is_selected
@@ -897,7 +874,7 @@ InventoryView.update = function (self, dt, t, input_service)
 			self:_setup_menu_tabs(context_tabs)
 		end
 
-		local tab_index = (self._previous_selected_tab_index and math.min(self._previous_selected_tab_index, #context_tabs)) or 1
+		local tab_index = self._previous_selected_tab_index and math.min(self._previous_selected_tab_index, #context_tabs) or 1
 
 		self:_set_active_layout_by_index(tab_index)
 	end
@@ -951,119 +928,34 @@ InventoryView._request_wallets_update = function (self)
 			self._next_wallet_update_duration = InventoryViewSettings.wallet_sync_delay
 		end)
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 29-32, warpins: 2 ---
 		self:_update_wallets_presentation(nil)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 end
 
 InventoryView._update_wallets_presentation = function (self, wallets_data, hide_presentation)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local text = ""
 
 	if not hide_presentation then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-18, warpins: 1 ---
 		local sorted_wallet_settings = {}
 
 		table.append_non_indexed(sorted_wallet_settings, WalletSettings)
 		table.sort(sorted_wallet_settings, function (a, b)
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 1-4, warpins: 1 ---
 			return a.sort_order < b.sort_order
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 8-8, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end)
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 19-46, warpins: 0 ---
-		for i = 1, #sorted_wallet_settings, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 19-23, warpins: 2 ---
+		for i = 1, #sorted_wallet_settings do
 			local wallet_settings = sorted_wallet_settings[i]
 			local wallet_type = wallet_settings.type
 			local backend_index = wallet_settings.backend_index
 			local wallet = wallets_data and wallets_data:by_type(wallet_type)
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 28-30, warpins: 2 ---
 			local string_symbol = wallet_settings.string_symbol
 			local balance = wallet and wallet.balance
-			--- END OF BLOCK #1 ---
-
-			FLOW; TARGET BLOCK #2
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #2 32-33, warpins: 2 ---
-			local amount = (balance and balance.amount) or 0
-			--- END OF BLOCK #2 ---
-
-			FLOW; TARGET BLOCK #3
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #3 38-46, warpins: 2 ---
+			local amount = balance and balance.amount or 0
 			text = text .. tostring(amount) .. " " .. string_symbol .. "\n"
-			--- END OF BLOCK #3 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 47-51, warpins: 2 ---
 	self._widgets_by_name.wallet_text.content.text = text
-
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 return InventoryView

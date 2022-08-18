@@ -85,7 +85,7 @@ UIUnitSpawner.spawn_unit = function (self, unit_name, ...)
 end
 
 UIUnitSpawner._world_delete_units = function (self, world, units_list, num_units)
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		local unit = units_list[i]
 		local unit_is_alive = Unit_alive(unit)
 

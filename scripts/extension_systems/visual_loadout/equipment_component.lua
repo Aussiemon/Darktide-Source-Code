@@ -380,7 +380,7 @@ EquipmentComponent.unequip_slot_dependencies = function (self, slot_config, equi
 end
 
 EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equip_order, items, body_deform_overrides, breed_name, character_unit_3p, character_unit_1p)
-	for i = 1, #slot_equip_order, 1 do
+	for i = 1, #slot_equip_order do
 		local slot_name = slot_equip_order[i]
 		local item = items[slot_name]
 
@@ -434,7 +434,7 @@ local function _get_hidden_slot_names(equipment, base_unit_name, wielded_slot_na
 			local hide_slots = item.hide_slots
 
 			if hide_slots then
-				for i = 1, #hide_slots, 1 do
+				for i = 1, #hide_slots do
 					local other_slot_name_to_hide = hide_slots[i]
 					hidden_slot_names[other_slot_name_to_hide] = true
 				end
@@ -446,7 +446,7 @@ local function _get_hidden_slot_names(equipment, base_unit_name, wielded_slot_na
 				local slot_is_wielded = slot_name == wielded_slot_name
 
 				if slot_is_wielded then
-					local is_force_hidden_by_gameplay = (first_person_mode and slot.wants_hidden_by_gameplay_1p) or (not first_person_mode and slot.wants_hidden_by_gameplay_3p) or false
+					local is_force_hidden_by_gameplay = first_person_mode and slot.wants_hidden_by_gameplay_1p or not first_person_mode and slot.wants_hidden_by_gameplay_3p or false
 
 					if is_force_hidden_by_gameplay then
 						hidden_slot_names[slot_name] = true
@@ -535,7 +535,7 @@ EquipmentComponent.try_spawn_attachments = function (self, equipment, slot_equip
 		spawned_attachments = true
 		local slot_equip_order_n = #slot_equip_order
 
-		for i = 1, slot_equip_order_n, 1 do
+		for i = 1, slot_equip_order_n do
 			local slot_name = slot_equip_order[i]
 			local slot = temp_unspawned_attachment_slots[slot_name]
 			local slot_is_unspawned = slot ~= nil
@@ -587,8 +587,8 @@ EquipmentComponent.resolve_profile_properties = function (equipment, wielded_slo
 end
 
 EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, unit_3p, unit_1p, first_person_mode)
-	local unit_showing = (first_person_mode and unit_1p) or unit_3p
-	local unit_hidden = (first_person_mode and unit_3p) or unit_1p
+	local unit_showing = first_person_mode and unit_1p or unit_3p
+	local unit_hidden = first_person_mode and unit_3p or unit_1p
 	local player_visibility = ScriptUnit.has_extension(unit_3p, "player_visibility_system")
 
 	if unit_showing then
@@ -599,7 +599,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 		unit_set_unit_visibility(unit_hidden, false, true)
 	end
 
-	local base_unit_name = (first_person_mode and "unit_1p") or "unit_3p"
+	local base_unit_name = first_person_mode and "unit_1p" or "unit_3p"
 	local slot_names_to_hide = _get_hidden_slot_names(equipment, base_unit_name, wielded_slot, first_person_mode)
 
 	for slot_name, slot in pairs(equipment) do
@@ -661,7 +661,7 @@ EquipmentComponent.slot_flow_event_1p = function (slot, event_name)
 
 	local attachment_units = slot.attachments_1p
 
-	for i = 1, #attachment_units, 1 do
+	for i = 1, #attachment_units do
 		local attachment_unit = attachment_units[i]
 
 		unit_flow_event(attachment_unit, event_name)
@@ -675,7 +675,7 @@ EquipmentComponent.slot_flow_event_3p = function (slot, event_name)
 
 	local attachment_units = slot.attachments_3p
 
-	for i = 1, #attachment_units, 1 do
+	for i = 1, #attachment_units do
 		local attachment_unit = attachment_units[i]
 
 		unit_flow_event(attachment_unit, event_name)
@@ -711,7 +711,7 @@ EquipmentComponent.send_component_event = function (slot, event_name, ...)
 
 	local attachments_3p = slot.attachments_3p
 
-	for i = 1, #attachments_3p, 1 do
+	for i = 1, #attachments_3p do
 		local attachment_unit = attachments_3p[i]
 
 		Component_event(attachment_unit, event_name, ...)
@@ -724,7 +724,7 @@ EquipmentComponent.send_component_event = function (slot, event_name, ...)
 
 		local attachments_1p = slot.attachments_1p
 
-		for i = 1, #attachments_1p, 1 do
+		for i = 1, #attachments_1p do
 			local attachment_unit = attachments_1p[i]
 
 			Component_event(attachment_unit, event_name, ...)

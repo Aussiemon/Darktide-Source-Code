@@ -105,7 +105,7 @@ AuthoritativePlayerInputHandler.update = function (self, dt, t)
 	if num_to_remove > 0 then
 		local input_cache = self._input_cache
 
-		for i = 1, self._input_cache_size, 1 do
+		for i = 1, self._input_cache_size do
 			local cache = input_cache[i]
 
 			table.remove_sequence(cache, 1, num_to_remove)
@@ -153,7 +153,7 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 
 			self._parsed_frame = start_frame - 1
 
-			for i = 1, self._input_cache_size, 1 do
+			for i = 1, self._input_cache_size do
 				table.clear(cache[i])
 			end
 		end
@@ -163,10 +163,10 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 
 		assert(index_offset <= size + 1, "Creating hole in table by filling after first unfilled index.")
 
-		for i = 1, self._input_cache_size, 1 do
+		for i = 1, self._input_cache_size do
 			local inputs = select(i, ...)
 
-			for j = 1, end_frame_offset + 1, 1 do
+			for j = 1, end_frame_offset + 1 do
 				local value = inputs[j]
 
 				assert(value ~= nil, "Client sent less than it claimed. Mismatch between end_frame_offset and size of data.")

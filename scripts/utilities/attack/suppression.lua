@@ -103,7 +103,7 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 	local instant_aggro = suppression_settings.instant_aggro
 	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= attacking_unit or optional_include_self then
@@ -151,7 +151,7 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 	local apply_suppression_falloff = suppression_settings.suppression_falloff
 	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= attacking_unit or optional_include_self then
@@ -203,7 +203,7 @@ Suppression.apply_suppression_offsets_to_sway = function (suppression_component,
 	local t = Managers.time:time("gameplay")
 
 	if t < suppression_t + decay_time then
-		local decay_amount = ((suppression_t + decay_time) - t) / decay_time
+		local decay_amount = (suppression_t + decay_time - t) / decay_time
 		suppression_pitch = suppression_pitch * decay_amount
 		suppression_yaw = suppression_yaw * decay_amount
 		pitch = pitch + suppression_pitch
@@ -221,7 +221,7 @@ Suppression.apply_suppression_offsets_to_spread = function (suppression_componen
 	local t = Managers.time:time("gameplay")
 
 	if t < suppression_t + decay_time then
-		local decay_amount = ((suppression_t + decay_time) - t) / decay_time
+		local decay_amount = (suppression_t + decay_time - t) / decay_time
 		suppression_pitch = suppression_pitch * decay_amount
 		suppression_yaw = suppression_yaw * decay_amount
 		pitch = pitch + suppression_pitch

@@ -100,7 +100,7 @@ Log._update_external_functions = function (global_level, lowest_category_level)
 	local log_types = Log._types
 	local num_log_types = #log_types
 
-	for i = 1, num_log_types, 1 do
+	for i = 1, num_log_types do
 		local item = log_types[i]
 		Log[item.tag] = i
 
@@ -130,7 +130,7 @@ Log.set_category_log_level = function (category, level)
 	Log._category_levels[category] = level
 	local log_types = Log._types
 
-	for i = 1, #log_types, 1 do
+	for i = 1, #log_types do
 		local active = level <= i or nil
 		log_types[i].active_categories[category] = active
 	end
@@ -143,7 +143,7 @@ Log.reset_category_log_level = function (category)
 	Log._category_levels[category] = nil
 	local log_types = Log._types
 
-	for i = 1, #log_types, 1 do
+	for i = 1, #log_types do
 		log_types[i].active_categories[category] = nil
 	end
 
@@ -154,11 +154,11 @@ end
 Log._format_log_category_message = function (tag, category, message, ...)
 	local num_new_args = select("#", ...)
 
-	for i = 1, num_new_args, 1 do
+	for i = 1, num_new_args do
 		temp_args[i] = tostring(select(i, ...))
 	end
 
-	for i = num_new_args + 1, #temp_args, 1 do
+	for i = num_new_args + 1, #temp_args do
 		temp_args[i] = nil
 	end
 
@@ -168,11 +168,11 @@ end
 Log._format_message = function (message, ...)
 	local num_new_args = select("#", ...)
 
-	for i = 1, num_new_args, 1 do
+	for i = 1, num_new_args do
 		temp_args[i] = tostring(select(i, ...))
 	end
 
-	for i = num_new_args + 1, #temp_args, 1 do
+	for i = num_new_args + 1, #temp_args do
 		temp_args[i] = nil
 	end
 
@@ -283,5 +283,3 @@ end
 print_error = Log._msg_print_error
 print_warning = Log._msg_print_warning
 print = Log._default_print
-
-return

@@ -24,7 +24,7 @@ AchievementEventTrigger.trigger = function (self, constant_achievement_data, tri
 		return false
 	end
 
-	for i = 1, #self._keys, 1 do
+	for i = 1, #self._keys do
 		local real_value = event_params[self._keys[i]]
 		local expected_value = self._values[i]
 

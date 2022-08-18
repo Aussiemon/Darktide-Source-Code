@@ -143,7 +143,7 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
 
-				for i = 1, #widgets, 1 do
+				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = anim_progress
 				end
 			end

@@ -33,7 +33,7 @@ BotTargetSelection.slot_weight = function (unit, target_unit, target_distance_sq
 		return 0
 	end
 
-	local ally_multiplier = (ally_slot and ALLY_SLOT_MULTIPLIER) or 1
+	local ally_multiplier = ally_slot and ALLY_SLOT_MULTIPLIER or 1
 
 	return DEFAULT_SLOT_WEIGHT * ally_multiplier
 end
@@ -57,7 +57,7 @@ local OPPORTUNITY_TARGET_REACTION_TIMES = BotSettings.opportunity_target_reactio
 
 BotTargetSelection.opportunity_weight = function (unit, target_unit, target_breed, t)
 	local tags = target_breed.tags
-	local is_opportunity_target = (tags and tags.special) or target_breed.breed_type == breed_type_player
+	local is_opportunity_target = tags and tags.special or target_breed.breed_type == breed_type_player
 
 	if not is_opportunity_target then
 		return 0, false

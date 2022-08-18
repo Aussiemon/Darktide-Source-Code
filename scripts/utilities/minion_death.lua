@@ -16,9 +16,9 @@ MinionDeath.set_dead = function (unit, attack_direction, hit_zone_name, damage_p
 
 	minion_death_manager:set_dead(unit, attack_direction, hit_zone_name, damage_profile_name, do_ragdoll_push, herding_template_name_or_nil)
 
-	local hit_zone_id = (hit_zone_name and NetworkLookup.hit_zones[hit_zone_name]) or nil
+	local hit_zone_id = hit_zone_name and NetworkLookup.hit_zones[hit_zone_name] or nil
 	local damage_profile_id = NetworkLookup.damage_profile_templates[damage_profile_name]
-	local herding_template_id = (herding_template_name_or_nil and NetworkLookup.herding_templates[herding_template_name_or_nil]) or nil
+	local herding_template_id = herding_template_name_or_nil and NetworkLookup.herding_templates[herding_template_name_or_nil] or nil
 
 	Managers.state.game_session:send_rpc_clients("rpc_minion_set_dead", unit_id, attack_direction, hit_zone_id, damage_profile_id, do_ragdoll_push == true, herding_template_id)
 end

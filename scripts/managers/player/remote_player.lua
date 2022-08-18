@@ -128,7 +128,7 @@ local MILLISECONDS_TO_SECONDS = 0.001
 RemotePlayer.lag_compensation_rewind_s = function (self)
 	local ms = self:lag_compensation_rewind_ms()
 
-	return (ms and ms * MILLISECONDS_TO_SECONDS) or nil
+	return ms and ms * MILLISECONDS_TO_SECONDS or nil
 end
 
 RemotePlayer.create_input_handler = function (self)

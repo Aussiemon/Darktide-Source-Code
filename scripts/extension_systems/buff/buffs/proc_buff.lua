@@ -231,7 +231,7 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 	local template = self._template
 	local activated_proc = false
 
-	for i = 1, num_proc_events, 1 do
+	for i = 1, num_proc_events do
 		local proc_event_data = proc_events[i]
 		local proc_event_name = proc_event_data.name
 		local proc_chance = self:_proc_chance(proc_event_name)
@@ -242,10 +242,10 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 		local template_context = self._template_context
 
 		if proc_chance and self:_can_activate(t) then
-			local portable_random_to_use = ((is_local_proc_event or not is_predicted_buff) and local_portable_random) or portable_random
+			local portable_random_to_use = (is_local_proc_event or not is_predicted_buff) and local_portable_random or portable_random
 			local auto_tester = DevParameters.weapon_traits_testify
 			local will_proc = proc_chance == 1 or auto_tester
-			local random_value = (will_proc and 0) or portable_random_to_use:next_random()
+			local random_value = will_proc and 0 or portable_random_to_use:next_random()
 
 			if random_value < proc_chance then
 				local check_proc_func = template.check_proc_func
@@ -292,7 +292,7 @@ ProcBuff._proc_chance = function (self, proc_event_name)
 	local proc_events = template.proc_events
 	local template_override_data = self._template_override_data
 	local override_proc_events = template_override_data and template_override_data.proc_events
-	local chance = (override_proc_events and override_proc_events[proc_event_name]) or proc_events[proc_event_name]
+	local chance = override_proc_events and override_proc_events[proc_event_name] or proc_events[proc_event_name]
 
 	return chance
 end
@@ -362,7 +362,7 @@ ProcBuff._stop_proc_active_fx = function (self)
 	local wwise_world = template_context.wwise_world
 	local active_vfx = self._active_vfx
 
-	for i = 1, #active_vfx, 1 do
+	for i = 1, #active_vfx do
 		local effect = active_vfx[i]
 		local particle_id = effect.particle_id
 		local stop_type = effect.stop_type
@@ -418,7 +418,7 @@ ProcBuff.debug_draw = function (self, gui, t, position, box_width, box_height, s
 		local cooldown_rect_size = Vector3(box_width * cooldown_rect_scalar, box_height / 4, 0) * scale
 		local cooldown_rect_color = Color(230 * opacity, 200, 0, 10)
 
-		Gui.rect(gui, position + Vector3(0, (3 * box_height) / 4, 0) * scale, cooldown_rect_size, cooldown_rect_color)
+		Gui.rect(gui, position + Vector3(0, 3 * box_height / 4, 0) * scale, cooldown_rect_size, cooldown_rect_color)
 	end
 end
 

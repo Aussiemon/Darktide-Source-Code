@@ -13,7 +13,7 @@ end
 PerlinLight.enable = function (self, unit)
 	local config_name = self:get_data(unit, "flicker_config")
 
-	for i = 1, Unit.num_lights(unit), 1 do
+	for i = 1, Unit.num_lights(unit) do
 		local light = Unit.light(unit, i)
 
 		Light.set_enabled(light, true)
@@ -22,7 +22,7 @@ PerlinLight.enable = function (self, unit)
 end
 
 PerlinLight.disable = function (self, unit)
-	for i = 1, Unit.num_lights(unit), 1 do
+	for i = 1, Unit.num_lights(unit) do
 		local light = Unit.light(unit, i)
 
 		Light.set_enabled(light, false)

@@ -1,33 +1,3 @@
--- Decompilation Error: _run_step(_unwarp_expressions, node)
-
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local ConstantElementWatermarkSettings = require("scripts/ui/constant_elements/elements/watermark/constant_element_watermark_settings")
 local Definitions = require("scripts/ui/constant_elements/elements/watermark/constant_element_watermark_definitions")
 local QR = require("scripts/settings/ui/qr/qrencode")
@@ -52,7 +22,7 @@ ConstantElementWatermark.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementWatermark.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	self._qr_data = self:_generate_qr()
-	self._description_text = (HAS_STEAM and Steam.user_id()) or "n/a"
+	self._description_text = HAS_STEAM and Steam.user_id() or "n/a"
 	self._has_rendered = false
 end
 
@@ -194,20 +164,20 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 	local qr_total_height = render_size[2] * scale
 	local ui_scenegraph = self._ui_scenegraph
 
-	for i = 1, ConstantElementWatermarkSettings.num_markers, 1 do
+	for i = 1, ConstantElementWatermarkSettings.num_markers do
 		local scenegraph_id = "watermark_" .. i
 		local world_position = UIScenegraph.world_position(ui_scenegraph, scenegraph_id)
 		local size_width, size_height = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
-		local start_pos_x = (world_position[1] + size_width * 0.5) - qr_total_width * 0.5
-		local start_pos_y = (world_position[2] + size_height * 0.5) - qr_total_height * 0.5
+		local start_pos_x = world_position[1] + size_width * 0.5 - qr_total_width * 0.5
+		local start_pos_y = world_position[2] + size_height * 0.5 - qr_total_height * 0.5
 		temp_size[1] = qr_total_width / rows
 		temp_size[2] = qr_total_height / cols
 
-		for y = 1, rows, 1 do
+		for y = 1, rows do
 			local row = qr_data[y]
 			local pos_y = start_pos_y + temp_size[2] * (y - 1)
 
-			for x = 1, cols, 1 do
+			for x = 1, cols do
 				temp_position[2] = pos_y
 				local color = qr_color_black
 
@@ -221,7 +191,7 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 			end
 		end
 
-		temp_position[1] = (start_pos_x + qr_total_width * 0.5) - box_size[1] * 0.5
+		temp_position[1] = start_pos_x + qr_total_width * 0.5 - box_size[1] * 0.5
 		temp_position[2] = start_pos_y + qr_total_height
 
 		UIRenderer.draw_text(ui_renderer, title_text, font_size, font_type, temp_position, box_size, text_color_table, text_options)
@@ -233,135 +203,16 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 end
 
 ConstantElementWatermark._generate_qr = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 5-8, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 10-15, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 22-23, warpins: 2 ---
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 25-26, warpins: 2 ---
-	if not BUILD_IDENTIFIER then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-4, warpins: 1 ---
-		local engine_revision_info = "n/a"
-		--- END OF BLOCK #0 ---
-
-
-
-	end
-
-	if not APPLICATION_SETTINGS.content_revision then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 9-9, warpins: 1 ---
-		local content_revision_info = LOCAL_CONTENT_REVISION
-		--- END OF BLOCK #0 ---
-
-
-
-	end
-
-	slot3 = string.format
-	slot4 = "%16s:%8s:%12s:%08x"
-
-	if not HAS_STEAM or not Steam.user_id() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 21-21, warpins: 2 ---
-		slot5 = ""
-		--- END OF BLOCK #0 ---
-
-
-
-	end
-
-	if not content_revision_info then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 24-24, warpins: 1 ---
-		slot6 = ""
-		--- END OF BLOCK #0 ---
-
-
-
-	end
-
-	slot7 = engine_revision_info or ""
-	local message = slot3(slot4, slot5, slot6, engine_revision_info or "", os.time()):gsub(" ", "0")
+	local engine_revision_info = BUILD_IDENTIFIER or "n/a"
+	local content_revision_info = APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION
+	local message = string.format("%16s:%8s:%12s:%08x", HAS_STEAM and Steam.user_id() or "", content_revision_info or "", engine_revision_info or "", os.time()):gsub(" ", "0")
 	local ok, data_or_err = QR.qrcode(message)
-	--- END OF BLOCK #4 ---
 
-	FLOW; TARGET BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 27-27, warpins: 1 ---
-	slot7 = ""
-
-	--- END OF BLOCK #5 ---
-
-	FLOW; TARGET BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 28-42, warpins: 2 ---
 	if ok then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 43-43, warpins: 1 ---
 		return data_or_err
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #6 ---
-
-	FLOW; TARGET BLOCK #7
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #7 44-47, warpins: 2 ---
 	error(data_or_err)
-
-	return
-	--- END OF BLOCK #7 ---
-
-
-
 end
 
 return ConstantElementWatermark

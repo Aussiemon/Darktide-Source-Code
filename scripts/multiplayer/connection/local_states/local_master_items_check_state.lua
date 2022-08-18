@@ -1,5 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
 local MasterItems = require("scripts/backend/master_items")
 local RPCS = {
 	"rpc_master_items_version_reply"

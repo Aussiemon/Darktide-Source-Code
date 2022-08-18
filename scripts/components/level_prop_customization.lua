@@ -69,7 +69,7 @@ LevelPropCustomization._spawn_children = function (self)
 end
 
 LevelPropCustomization._destroy_actors = function (self, unit)
-	for ii = 1, Unit.num_actors(unit), 1 do
+	for ii = 1, Unit.num_actors(unit) do
 		Unit.destroy_actor(unit, ii)
 	end
 end

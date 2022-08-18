@@ -95,7 +95,7 @@ TriggerActionBase.on_unit_enter = function (self, entering_unit)
 	local action_on_client = self._action_on_client
 	local action_on_server = self._action_on_server
 
-	if (action_on_server and not is_local_unit) or is_local_unit then
+	if action_on_server and not is_local_unit or is_local_unit then
 		self:local_on_unit_enter(entering_unit)
 	end
 
@@ -116,7 +116,7 @@ TriggerActionBase.on_unit_exit = function (self, exiting_unit)
 	local action_on_client = self._action_on_client
 	local action_on_server = self._action_on_server
 
-	if (action_on_server and not is_local_unit) or is_local_unit then
+	if action_on_server and not is_local_unit or is_local_unit then
 		self:local_on_unit_exit(exiting_unit)
 	end
 
@@ -137,7 +137,7 @@ TriggerActionBase._activate_on_unit = function (self, unit)
 	local action_on_client = self._action_on_client
 	local action_on_server = self._action_on_server
 
-	if (action_on_server and not is_local_unit) or is_local_unit then
+	if action_on_server and not is_local_unit or is_local_unit then
 		self:local_on_activate(unit)
 	end
 
@@ -157,7 +157,7 @@ TriggerActionBase._deactivate_on_unit = function (self, unit)
 	local action_on_client = self._action_on_client
 	local action_on_server = self._action_on_server
 
-	if (action_on_server and not is_local_unit) or is_local_unit then
+	if action_on_server and not is_local_unit or is_local_unit then
 		self:local_on_deactivate(unit)
 	end
 

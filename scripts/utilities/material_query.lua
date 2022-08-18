@@ -29,7 +29,7 @@ local surface_materials = {
 MaterialQuery.surface_materials = surface_materials
 local lookup = {}
 
-for i = 1, #surface_materials, 1 do
+for i = 1, #surface_materials do
 	local material_name = surface_materials[i]
 	lookup[Unit.material_id(material_name)] = material_name
 end

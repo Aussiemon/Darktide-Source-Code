@@ -27,11 +27,11 @@ Wallet.combined_wallets = function (self, character_id)
 		local account_wallet = account_wallet_data.body.wallets
 		local wallets = {}
 
-		for i = 1, #character_wallet, 1 do
+		for i = 1, #character_wallet do
 			wallets[#wallets + 1] = character_wallet[i]
 		end
 
-		for i = 1, #account_wallet, 1 do
+		for i = 1, #account_wallet do
 			wallets[#wallets + 1] = account_wallet[i]
 		end
 

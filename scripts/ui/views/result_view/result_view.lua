@@ -148,7 +148,7 @@ ResultView._set_text = function (self, text, text_id, background_id)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local text_length, text_height = UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, nil, text_options)
 		local background_scenegraph = self._ui_scenegraph[background_id]
-		slot10 = ResultViewSettings.text_background_edge_width
+		local text_background_edge_width = ResultViewSettings.text_background_edge_width
 	end
 end
 

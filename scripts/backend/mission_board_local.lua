@@ -3,7 +3,7 @@ local LocalMissionBoardSettings = require("scripts/settings/mission/local_missio
 local MISSIONS = {}
 local _missions_settings = LocalMissionBoardSettings.missions
 
-for i = 1, #_missions_settings, 1 do
+for i = 1, #_missions_settings do
 	local settings = _missions_settings[i]
 	local mission = {
 		expiry = 2000000000000.0,
@@ -33,7 +33,7 @@ MissionBoardLocal = {
 	fetch_mission = function (mission_id)
 		local data = nil
 
-		for i = 1, #MISSIONS, 1 do
+		for i = 1, #MISSIONS do
 			local mission = MISSIONS[i]
 
 			if mission.id == mission_id then
@@ -56,7 +56,7 @@ MissionBoardLocal = {
 		local alive_time = LocalMissionBoardSettings.mission_alive_time
 		local missions = {}
 
-		for i = 1, #MISSIONS * 2, 1 do
+		for i = 1, #MISSIONS * 2 do
 			local index = math.index_wrapper(i, #MISSIONS)
 			local mission = table.clone(MISSIONS[index])
 			mission.start = server_time + (i - 1) * time_jump * 1000

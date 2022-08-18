@@ -90,7 +90,7 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 		local side = side_system.side_by_unit[unit]
 		local player_units = side.valid_player_units
 
-		for i = 1, #player_units, 1 do
+		for i = 1, #player_units do
 			local player_unit = player_units[i]
 			local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 			local param_table = buff_extension:request_proc_event_param_table()

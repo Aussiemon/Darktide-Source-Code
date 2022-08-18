@@ -20,7 +20,7 @@ BtRandomNode.init_values = function (self, blackboard, action_data, node_data)
 	node_data[node_identifier] = true
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child = children[i]
 		local child_tree_node = child.tree_node
 		local child_action_data = child_tree_node.action_data
@@ -34,7 +34,7 @@ BtRandomNode.ready = function (self, lua_node)
 	local num_children = #children
 	local probabilities = Script.new_array(num_children)
 
-	for i = 1, num_children, 1 do
+	for i = 1, num_children do
 		local child = children[i]
 		local action_data = child.tree_node.action_data
 		probabilities[i] = action_data.random_weight
@@ -64,8 +64,8 @@ BtRandomNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, eva
 		local children = self._children
 		local num_children = #children
 
-		for i = 1, num_children, 1 do
-			local child_index = ((start_index + i) - 2) % num_children + 1
+		for i = 1, num_children do
+			local child_index = (start_index + i - 2) % num_children + 1
 			local child_node = children[child_index]
 			local child_condition_name = child_node.condition_name
 			local child_tree_node = child_node.tree_node

@@ -1,5 +1,3 @@
--- Decompilation Error: _run_step(_unwarp_expressions, node)
-
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtBotSelectorNode = class("BtBotSelectorNode", "BtNode")
@@ -15,7 +13,7 @@ BtBotSelectorNode.init_values = function (self, blackboard, action_data, node_da
 
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_tree_node = child_node.tree_node
 		local child_action_data = child_tree_node.action_data
@@ -66,7 +64,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local num_proximite_enemies = #enemies_in_proximity
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies, 1 do
+			for i = 1, num_proximite_enemies do
 				local enemy_unit = enemies_in_proximity[i]
 				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 				local enemy_breed = enemy_unit_data_extension:breed()
@@ -98,9 +96,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 				if has_target_ally_aid_destination then
 					condition_result = navigation_extension:destination_reached()
-
-					if navigation_extension.destination_reached() then
-					end
 				else
 					local self_position = POSITION_LOOKUP[unit]
 
@@ -108,9 +103,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 						local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 						local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
 						condition_result = is_near
-
-						if is_near then
-						end
 					else
 						local BotSettings = require("scripts/settings/bot/bot_settings")
 						local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
@@ -156,7 +148,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local num_proximite_enemies = #enemies_in_proximity
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies, 1 do
+			for i = 1, num_proximite_enemies do
 				local enemy_unit = enemies_in_proximity[i]
 				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 				local enemy_breed = enemy_unit_data_extension:breed()
@@ -188,9 +180,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 				if has_target_ally_aid_destination then
 					condition_result = navigation_extension:destination_reached()
-
-					if navigation_extension.destination_reached() then
-					end
 				else
 					local self_position = POSITION_LOOKUP[unit]
 
@@ -198,9 +187,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 						local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 						local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
 						condition_result = is_near
-
-						if is_near then
-						end
 					else
 						local BotSettings = require("scripts/settings/bot/bot_settings")
 						local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
@@ -245,7 +231,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local num_proximite_enemies = #enemies_in_proximity
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies, 1 do
+			for i = 1, num_proximite_enemies do
 				local enemy_unit = enemies_in_proximity[i]
 				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 				local enemy_breed = enemy_unit_data_extension:breed()
@@ -277,9 +263,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 				if has_target_ally_aid_destination then
 					condition_result = navigation_extension:destination_reached()
-
-					if navigation_extension.destination_reached() then
-					end
 				else
 					local self_position = POSITION_LOOKUP[unit]
 
@@ -287,9 +270,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 						local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 						local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
 						condition_result = is_near
-
-						if is_near then
-						end
 					else
 						local BotSettings = require("scripts/settings/bot/bot_settings")
 						local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
@@ -337,9 +317,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 			if has_target_ally_aid_destination then
 				condition_result = navigation_extension:destination_reached()
-
-				if navigation_extension.destination_reached() then
-				end
 			else
 				local self_position = POSITION_LOOKUP[unit]
 
@@ -347,9 +324,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 					local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
 					condition_result = is_near
-
-					if is_near then
-					end
 				else
 					local BotSettings = require("scripts/settings/bot/bot_settings")
 					local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
@@ -392,9 +366,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 			if has_target_level_unit_destination then
 				condition_result = navigation_extension:destination_reached()
-
-				if navigation_extension.destination_reached() then
-				end
 			else
 				local self_position = POSITION_LOOKUP[unit]
 
@@ -402,20 +373,12 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 					local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_level_unit_destination, navigation_extension)
 					condition_result = is_near
-
-					if is_near then
-					end
 				else
 					local BotSettings = require("scripts/settings/bot/bot_settings")
 					local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
 					local z_move_to_epsilon = BotSettings.z_move_to_epsilon
 					local offset = target_level_unit_destination - self_position
-
-					if math.abs(offset.z) > z_move_to_epsilon or Vector3.length_squared(Vector3.flat(offset)) > flat_move_to_epsilon_sq then
-						condition_result = false
-					else
-						condition_result = true
-					end
+					condition_result = math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
 				end
 			end
 
@@ -448,9 +411,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 		local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
 		local can_interact_with_pickup = interactor_extension:can_interact(interaction_unit, interaction_type)
 		condition_result = can_interact_with_pickup
-
-		if can_interact_with_pickup then
-		end
 	else
 		condition_result = false
 	end
@@ -506,7 +466,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local num_proximite_enemies = #enemies_in_proximity
 					local total_challenge_rating = 0
 
-					for i = 1, num_proximite_enemies, 1 do
+					for i = 1, num_proximite_enemies do
 						local enemy_unit = enemies_in_proximity[i]
 						local enemy_position = POSITION_LOOKUP[enemy_unit]
 
@@ -515,20 +475,8 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 							local enemy_breed = enemy_unit_data_extension:breed()
 							local enemy_blackboard = BLACKBOARDS[enemy_unit]
 							local enemy_perception_component = enemy_blackboard.perception
-
-							if enemy_perception_component.target_unit ~= unit then
-								slot51 = false
-							else
-								local is_targeting_bot = true
-							end
-
-							slot52 = enemy_breed.challenge_rating
-
-							if not is_targeting_bot or not targeting_multiplier then
-								slot53 = 1
-							end
-
-							local challenge_rating = slot52 * slot53
+							local is_targeting_bot = enemy_perception_component.target_unit == unit
+							local challenge_rating = enemy_breed.challenge_rating * (is_targeting_bot and targeting_multiplier or 1)
 							total_challenge_rating = total_challenge_rating + challenge_rating
 
 							if challenge_threshold <= total_challenge_rating then
@@ -542,9 +490,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local condition_result = can_activate
 					sub_condition_result_01 = condition_result
 					condition_result = sub_condition_result_01
-
-					if sub_condition_result_01 then
-					end
 				elseif ability_template_name == "ranged_stance" then
 					local sub_condition_result_02, condition_result = nil
 
@@ -556,10 +501,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 							local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 							local breed = unit_data_extension:breed()
 							local tags = breed.tags
-
-							if tags.special or tags.elite then
-								condition_result = true
-							end
 						else
 							condition_result = false
 						end
@@ -567,9 +508,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 					sub_condition_result_02 = condition_result
 					condition_result = sub_condition_result_02
-
-					if sub_condition_result_02 then
-					end
 				else
 					condition_result = false
 				end
@@ -628,7 +566,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local num_proximite_enemies = #enemies_in_proximity
 					local total_challenge_rating = 0
 
-					for i = 1, num_proximite_enemies, 1 do
+					for i = 1, num_proximite_enemies do
 						local enemy_unit = enemies_in_proximity[i]
 						local enemy_position = POSITION_LOOKUP[enemy_unit]
 
@@ -637,20 +575,8 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 							local enemy_breed = enemy_unit_data_extension:breed()
 							local enemy_blackboard = BLACKBOARDS[enemy_unit]
 							local enemy_perception_component = enemy_blackboard.perception
-
-							if enemy_perception_component.target_unit ~= unit then
-								slot51 = false
-							else
-								local is_targeting_bot = true
-							end
-
-							slot52 = enemy_breed.challenge_rating
-
-							if not is_targeting_bot or not targeting_multiplier then
-								slot53 = 1
-							end
-
-							local challenge_rating = slot52 * slot53
+							local is_targeting_bot = enemy_perception_component.target_unit == unit
+							local challenge_rating = enemy_breed.challenge_rating * (is_targeting_bot and targeting_multiplier or 1)
 							total_challenge_rating = total_challenge_rating + challenge_rating
 
 							if challenge_threshold <= total_challenge_rating then
@@ -664,9 +590,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local condition_result = can_activate
 					sub_condition_result_01 = condition_result
 					condition_result = sub_condition_result_01
-
-					if sub_condition_result_01 then
-					end
 				elseif ability_template_name == "ranged_stance" then
 					local sub_condition_result_02, condition_result = nil
 
@@ -678,10 +601,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 							local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 							local breed = unit_data_extension:breed()
 							local tags = breed.tags
-
-							if tags.special or tags.elite then
-								condition_result = true
-							end
 						else
 							condition_result = false
 						end
@@ -689,9 +608,6 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 					sub_condition_result_02 = condition_result
 					condition_result = sub_condition_result_02
-
-					if sub_condition_result_02 then
-					end
 				else
 					condition_result = false
 				end
@@ -733,13 +649,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			condition_result = false
 		else
 			local target_enemy_distance = perception_component.target_enemy_distance
-
-			if target_enemy_distance >= 25 then
-				slot18 = false
-			else
-				local result = true
-			end
-
+			local result = target_enemy_distance < 25
 			condition_result = result
 		end
 	until true
@@ -773,28 +683,14 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			else
 				local self_segment = main_path_manager:segment_index_by_unit(unit)
 				local follow_segment = main_path_manager:segment_index_by_unit(follow_unit)
-
-				if self_segment and follow_segment then
-					if follow_segment >= self_segment then
-						slot22 = false
-					else
-						local is_ahead = true
-					end
-				end
+				local is_ahead = self_segment and follow_segment and follow_segment < self_segment
 
 				if is_ahead then
 					condition_result = false
 				else
 					local perception_component = blackboard.perception
 					local target_enemy = perception_component.target_enemy
-
-					if target_enemy then
-						if target_enemy ~= perception_component.priority_target_enemy then
-							slot25 = false
-						else
-							local has_priority_target = true
-						end
-					end
+					local has_priority_target = target_enemy and target_enemy == perception_component.priority_target_enemy
 
 					if perception_component.target_ally_needs_aid or has_priority_target then
 						condition_result = false
@@ -808,12 +704,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 							condition_result = false
 						else
 							local distance_squared = Vector3.distance_squared(latest_position_on_nav_mesh, follow_unit_latest_position_on_nav_mesh)
-
-							if distance_squared < 1600 then
-								condition_result = false
-							else
-								condition_result = true
-							end
+							condition_result = distance_squared >= 1600
 						end
 					end
 				end

@@ -12,7 +12,7 @@ local function _init_breed_nav_settings(Breeds)
 
 	for breed_name, breed_data in pairs(Breeds) do
 		local is_player_character = Breed.is_player(breed_data)
-		local default_nav_cost_maps = (is_player_character and default_nav_cost_maps_bots) or default_nav_cost_maps_minions
+		local default_nav_cost_maps = is_player_character and default_nav_cost_maps_bots or default_nav_cost_maps_minions
 		local nav_cost_map_multipliers = breed_data.nav_cost_map_multipliers
 
 		if nav_cost_map_multipliers then
@@ -32,7 +32,7 @@ local function _init_breed_nav_settings(Breeds)
 			end
 		end
 
-		local default_nav_tag_layers = (is_player_character and default_nav_tag_layers_bots) or default_nav_tag_layers_minions
+		local default_nav_tag_layers = is_player_character and default_nav_tag_layers_bots or default_nav_tag_layers_minions
 		local nav_tag_allowed_layers = breed_data.nav_tag_allowed_layers
 
 		if nav_tag_allowed_layers then

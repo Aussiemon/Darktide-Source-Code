@@ -11,7 +11,7 @@ local function _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
 	local success = true
 	local actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", pos, "size", base_height * 2, "collision_filter", collision_filter)
 
-	for i = 1, num_actors, 1 do
+	for i = 1, num_actors do
 		repeat
 			local actor = actors[i]
 			local actor_unit = Actor.unit(actor)

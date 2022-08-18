@@ -308,8 +308,8 @@ local disorientation_settings = {
 				action_delay = 0
 			}
 		}
-	},
-	disorientation_types = table.enum(unpack(table.keys(disorientation_settings.disorientation_templates)))
+	}
 }
+disorientation_settings.disorientation_types = table.enum(unpack(table.keys(disorientation_settings.disorientation_templates)))
 
 return settings("DisorientationSettings", disorientation_settings)

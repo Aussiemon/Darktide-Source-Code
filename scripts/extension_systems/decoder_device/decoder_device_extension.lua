@@ -248,7 +248,7 @@ end
 
 DecoderDeviceExtension.wait_for_setup = function (self)
 	local minigame_extension = self._minigame_extension
-	local current_minigame_state = (minigame_extension and minigame_extension:current_state()) or minigame_states.none
+	local current_minigame_state = minigame_extension and minigame_extension:current_state() or minigame_states.none
 	local decode_interaction = not self._started_decode and not self._is_placed
 
 	return self._unit_is_enabled and decode_interaction and current_minigame_state ~= minigame_states.active
@@ -256,7 +256,7 @@ end
 
 DecoderDeviceExtension.wait_for_restart = function (self)
 	local minigame_extension = self._minigame_extension
-	local current_minigame_state = (minigame_extension and minigame_extension:current_state()) or minigame_states.none
+	local current_minigame_state = minigame_extension and minigame_extension:current_state() or minigame_states.none
 	local decode_interaction = self._is_placed and self._started_decode and self._decoding_interrupted
 
 	return self._unit_is_enabled and decode_interaction and current_minigame_state ~= minigame_states.active

@@ -72,5 +72,3 @@ ProtoUI.end_group = function (idx)
 
 	size_lookup[val] = nil
 end
-
-return

@@ -172,12 +172,12 @@ PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cos
 		if suppression_template and suppression_component then
 			suppression_movement_template = suppression_template[movement_state]
 
-			Suppression.add_immediate_suppression(t, suppression_movement_template, suppression_component, math.floor((1 + num_suppression_hits) - NUM_HITS_FOR_LOW_SUPPRESSION))
+			Suppression.add_immediate_suppression(t, suppression_movement_template, suppression_component, math.floor(1 + num_suppression_hits - NUM_HITS_FOR_LOW_SUPPRESSION))
 		end
 
 		Vo.player_suppressed_event(self._unit)
 
-		self._suppression_delay = (suppression_movement_template and suppression_movement_template.delay) or 1
+		self._suppression_delay = suppression_movement_template and suppression_movement_template.delay or 1
 	end
 
 	self._num_suppression_hits = num_suppression_hits

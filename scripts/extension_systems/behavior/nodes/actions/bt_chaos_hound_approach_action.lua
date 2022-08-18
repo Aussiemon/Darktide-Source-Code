@@ -280,7 +280,7 @@ BtChaosHoundApproachAction._update_ground_normal_rotation = function (self, unit
 	local from_position_1 = self_position + offset_up + forward
 	local to_position_1 = from_position_1 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_1 = self:_ray_cast(physics_world, from_position_1, to_position_1)
-	local from_position_2 = (self_position + offset_up) - forward
+	local from_position_2 = self_position + offset_up - forward
 	local to_position_2 = from_position_2 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_2 = self:_ray_cast(physics_world, from_position_2, to_position_2)
 
@@ -324,7 +324,7 @@ BtChaosHoundApproachAction._add_threat_to_other_targets = function (self, unit, 
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local max_threat = breed.threat_config.max_threat
 
-	for i = 1, num_enemies, 1 do
+	for i = 1, num_enemies do
 		local target_unit = valid_enemy_player_units[i]
 
 		if target_unit ~= excluded_target then

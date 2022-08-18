@@ -32,13 +32,14 @@ end
 
 HudElementTeamPanelHandler._composition_changed = function (self, composition_name)
 	if composition_name ~= self._player_composition_name then
+		-- Nothing
 	end
 end
 
 HudElementTeamPanelHandler._setup_position_scenegraphs = function (self)
 	local scenegraphs = {}
 
-	for i = 1, self._max_panels - 1, 1 do
+	for i = 1, self._max_panels - 1 do
 		scenegraphs[i] = "player_" .. i
 	end
 
@@ -51,7 +52,7 @@ HudElementTeamPanelHandler._num_other_player_panels = function (self)
 	local my_unique_id = self._my_unique_id
 	local player_count = 0
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local player_panel = player_panels_array[i]
 		local unique_id = player_panel.unique_id
 
@@ -68,10 +69,10 @@ HudElementTeamPanelHandler._get_available_scenegraph = function (self)
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, #scenegraphs, 1 do
+	for i = 1, #scenegraphs do
 		local taken = false
 
-		for j = 1, num_player_panels, 1 do
+		for j = 1, num_player_panels do
 			local data = player_panels_array[j]
 
 			if data.scenegraph_id == scenegraphs[i] then
@@ -133,7 +134,7 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 	local players_added = false
 
 	if num_players_to_add > 0 then
-		for i = 1, num_players_to_add, 1 do
+		for i = 1, num_players_to_add do
 			local current_num_panels = self._num_panels
 
 			if max_panels <= current_num_panels then
@@ -210,7 +211,7 @@ HudElementTeamPanelHandler._remove_panel = function (self, unique_id, ui_rendere
 	local panel_data = nil
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 
 		if data.unique_id == unique_id then
@@ -244,7 +245,7 @@ HudElementTeamPanelHandler._refresh_assigned_scenegraph_ids = function (self)
 
 	table.clear(self._unique_id_by_scenegraph)
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local unique_id = data.unique_id
 
@@ -276,7 +277,7 @@ HudElementTeamPanelHandler._align_panels = function (self)
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local scenegraph_id = data.scenegraph_id
 		local panel = data.panel
@@ -314,7 +315,7 @@ HudElementTeamPanelHandler.set_visible = function (self, visible, ui_renderer, u
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -330,7 +331,7 @@ HudElementTeamPanelHandler.set_retained_visibility = function (self, visible, ui
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -346,7 +347,7 @@ HudElementTeamPanelHandler.on_resolution_modified = function (self)
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -361,7 +362,7 @@ HudElementTeamPanelHandler.update = function (self, dt, t, ui_renderer, render_s
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -376,7 +377,7 @@ HudElementTeamPanelHandler.draw = function (self, dt, t, ui_renderer, render_set
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -392,7 +393,7 @@ HudElementTeamPanelHandler.visor_effect_set_visible = function (self, visible, u
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -408,7 +409,7 @@ HudElementTeamPanelHandler.visor_effect_draw = function (self, dt, t, ui_rendere
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 
@@ -424,7 +425,7 @@ HudElementTeamPanelHandler.visor_effect_destroy = function (self, ui_renderer)
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
-	for i = 1, num_player_panels, 1 do
+	for i = 1, num_player_panels do
 		local data = player_panels_array[i]
 		local panel = data.panel
 

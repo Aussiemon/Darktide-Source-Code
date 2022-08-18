@@ -53,7 +53,7 @@ for template_name, template in pairs(package_prioritization_templates) do
 	template.remaining_package_aliases = {}
 	local required_package_aliases = template.required_package_aliases
 
-	for i = 1, #PlayerPackageAliases, 1 do
+	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
 
 		if not table.contains(required_package_aliases, alias) then

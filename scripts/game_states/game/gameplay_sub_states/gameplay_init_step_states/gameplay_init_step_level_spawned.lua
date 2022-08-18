@@ -22,7 +22,7 @@ GameplayInitLevelSpawned._trigger_level_spawned = function (self, level)
 	local nested_levels = Level.nested_levels(level)
 	local num_nested_levels = Level.num_nested_levels(level)
 
-	for i = 1, num_nested_levels, 1 do
+	for i = 1, num_nested_levels do
 		self:_trigger_level_spawned(nested_levels[i])
 	end
 

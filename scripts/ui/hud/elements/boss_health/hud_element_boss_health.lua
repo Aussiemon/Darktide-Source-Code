@@ -53,7 +53,7 @@ HudElementBossHealth._initial_boss_scan = function (self)
 	local player_side = side_system:get_side_from_name(default_player_side_name)
 	local monster_units = player_side:alive_units_by_tag("enemy", "monster")
 
-	for i = 1, monster_units.size, 1 do
+	for i = 1, monster_units.size do
 		local unit = monster_units[i]
 		local boss_extension = ScriptUnit.has_extension(unit, "boss_system")
 
@@ -119,7 +119,7 @@ HudElementBossHealth.event_boss_encounter_end = function (self, unit, boss_exten
 	if target then
 		active_targets_by_unit[unit] = nil
 
-		for i = 1, #active_targets_array, 1 do
+		for i = 1, #active_targets_array do
 			if active_targets_array[i].unit == unit then
 				table.remove(active_targets_array, i)
 
@@ -146,8 +146,8 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 	local active_targets_array = self._active_targets_array
 	local num_active_targets = #active_targets_array
 
-	for i = 1, num_active_targets, 1 do
-		local widget_group_index = (num_active_targets > 1 and i + 1) or i
+	for i = 1, num_active_targets do
+		local widget_group_index = num_active_targets > 1 and i + 1 or i
 		local widget_group = widget_groups[widget_group_index]
 		local target = active_targets_array[i]
 		local unit = target.unit
@@ -172,7 +172,7 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 
 			if health_fraction and health_ghost_fraction then
 				local widget = widget_group.health
-				local bar_size = (widget_group_index == 1 and HudElementBossHealthSettings.size) or HudElementBossHealthSettings.size_small
+				local bar_size = widget_group_index == 1 and HudElementBossHealthSettings.size or HudElementBossHealthSettings.size_small
 				local bar_width = bar_size[1]
 
 				self:_apply_widget_bar_fractions(widget, bar_width, health_fraction, health_ghost_fraction, health_max_fraction)
@@ -202,7 +202,7 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 						widget.visible = true
 					end
 
-					local bar_size = (widget_group_index == 1 and HudElementBossToughnessSettings.size) or HudElementBossToughnessSettings.size_small
+					local bar_size = widget_group_index == 1 and HudElementBossToughnessSettings.size or HudElementBossToughnessSettings.size_small
 					local bar_width = bar_size[1]
 
 					self:_apply_widget_bar_fractions(widget, bar_width, toughness_fraction, toughness_ghost_fraction, toughness_max_fraction)
@@ -229,8 +229,8 @@ HudElementBossHealth._draw_widgets = function (self, dt, t, input_service, ui_re
 	local active_targets_array = self._active_targets_array
 	local num_active_targets = #active_targets_array
 
-	for i = 1, num_active_targets, 1 do
-		local widget_group_index = (num_active_targets > 1 and i + 1) or i
+	for i = 1, num_active_targets do
+		local widget_group_index = num_active_targets > 1 and i + 1 or i
 		local widget_group = widget_groups[widget_group_index]
 		local target = active_targets_array[i]
 		local unit = target.unit

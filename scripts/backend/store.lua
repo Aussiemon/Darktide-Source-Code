@@ -62,7 +62,7 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 	end
 
 	offer.seconds_remaining = function (self, now)
-		return (self.price.validTo and (tonumber(self.price.validTo) - now) / 1000) or 0
+		return self.price.validTo and (tonumber(self.price.validTo) - now) / 1000 or 0
 	end
 
 	offer.is_valid_at = function (self, now)
@@ -113,7 +113,7 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 			local result = purchase_result.body
 			local items = result.items
 
-			for i = 1, #items, 1 do
+			for i = 1, #items do
 				items[i].gear_id = items[i].gearId
 				items[i].gearId = nil
 			end

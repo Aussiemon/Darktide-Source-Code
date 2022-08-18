@@ -26,7 +26,7 @@ HazardPropSystem._fetch_settings = function (self, mission, circumstance_name)
 	local original_settings = mission.hazard_prop_settings
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = (mission_overrides and mission_overrides.hazard_prop_settings) or nil
+	local circumstance_settings = mission_overrides and mission_overrides.hazard_prop_settings or nil
 
 	return circumstance_settings or original_settings
 end
@@ -129,7 +129,7 @@ HazardPropSystem._populate_hazard_props = function (self)
 			local percentage_of_pool = weight / total_weight
 			local count = num_props * percentage_of_pool
 
-			for i = 1, count, 1 do
+			for i = 1, count do
 				hazard_pool[#hazard_pool + 1] = hazard_type
 			end
 
@@ -139,7 +139,7 @@ HazardPropSystem._populate_hazard_props = function (self)
 		if num_props > #hazard_pool then
 			local fillers = self:_sort_remainders(remainders)
 
-			for i = 1, #fillers, 1 do
+			for i = 1, #fillers do
 				if num_props > #hazard_pool then
 					hazard_pool[#hazard_pool + 1] = fillers[i]
 				else
@@ -150,7 +150,7 @@ HazardPropSystem._populate_hazard_props = function (self)
 
 		self:_shuffle(hazard_pool)
 
-		for i = 1, num_props, 1 do
+		for i = 1, num_props do
 			props[i]:set_content(hazard_pool[i])
 		end
 	end

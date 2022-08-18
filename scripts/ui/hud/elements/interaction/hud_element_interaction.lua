@@ -179,7 +179,7 @@ HudElementInteraction._update_can_interact_target = function (self)
 					interactee_unit = interactee_unit,
 					player_unit = player_unit,
 					marker_id = marker_id,
-					background_size = (type_description ~= nil and HudElementInteractionSettings.background_size) or HudElementInteractionSettings.background_size_small
+					background_size = type_description ~= nil and HudElementInteractionSettings.background_size or HudElementInteractionSettings.background_size_small
 				}
 				local response_callback = callback(self, "_cb_world_markers_list_request")
 
@@ -217,7 +217,7 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 		input = input_text,
 		action = input_display_text
 	}
-	local input_type_string = (hold_required and "loc_interaction_input_type_hold") or "loc_interaction_input_type"
+	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
 	return Localize(input_type_string, true, input_action_localization_params)
 end
@@ -265,7 +265,7 @@ HudElementInteraction._cb_world_markers_list_request = function (self, marker_li
 	if active_presentation_data then
 		local marker_id = active_presentation_data.marker_id
 
-		for i = 1, #marker_list, 1 do
+		for i = 1, #marker_list do
 			local marker = marker_list[i]
 
 			if marker.id == marker_id then
@@ -322,7 +322,7 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	local background_widget = widgets_by_name.background
 	local progress_width = hold_progress * background_size[1]
 	background_widget.style.input_progress_background.size[1] = progress_width
-	background_widget.style.input_progress_background_large.size[1] = progress_width + ((hold_progress > 0 and 1) or 0)
+	background_widget.style.input_progress_background_large.size[1] = progress_width + (hold_progress > 0 and 1 or 0)
 	local progress_frame_style = background_widget.style.input_progress_frame
 	progress_frame_style.size[1] = progress_width
 	progress_frame_style.offset[1] = progress_frame_style.default_offset[1] - background_size[1] + progress_width
@@ -353,7 +353,7 @@ HudElementInteraction._update_target_interaction_animation = function (self, dt,
 
 	self:_set_scenegraph_size("background", nil, background_size[2] * 0.3 + background_size[2] * 0.7 * size_progress)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		widget.alpha_multiplier = alpha_progress
 	end
@@ -418,7 +418,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		local player_slot = interactee_player:slot()
 		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
-		description_text = color_string .. "{#size(30)}\ue005 {#reset()}" .. interactee_player:name()
+		description_text = color_string .. "{#size(30)} {#reset()}" .. interactee_player:name()
 	end
 
 	local widgets_by_name = self._widgets_by_name

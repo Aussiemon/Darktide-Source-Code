@@ -23,7 +23,7 @@ ViewLoader.start_loading = function (self, mission_name, level_editor_level, cir
 		for view_name, view_settings in pairs(Views) do
 			local load_always = view_settings.load_always
 			local load_in_hub = view_settings.load_in_hub
-			local should_load = load_always or (is_hub and load_in_hub)
+			local should_load = load_always or is_hub and load_in_hub
 
 			if should_load then
 				loading_views[view_name] = view_settings

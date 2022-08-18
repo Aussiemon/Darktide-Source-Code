@@ -58,7 +58,7 @@ BallisticRaycastPostionFinderActionModule._ballistic_raycast = function (self, p
 	local velocity = Quaternion.forward(Quaternion.multiply(first_person_rotation, Quaternion(Vector3.right(), angle))) * speed
 	local position = first_person_position
 
-	for i = 1, max_steps, 1 do
+	for i = 1, max_steps do
 		local new_position = position + velocity * time_step
 		local delta = new_position - position
 		local direction = Vector3.normalize(delta)

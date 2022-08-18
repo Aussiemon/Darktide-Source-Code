@@ -48,7 +48,7 @@ TriggerConditionAllAlivePlayersInside._all_players_inside = function (self)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local ScriptUnit_has_extension = ScriptUnit.has_extension
 
-	for i = 1, #valid_player_units, 1 do
+	for i = 1, #valid_player_units do
 		local player_unit = valid_player_units[i]
 		local player = player_unit_spawn_manager:owner(player_unit)
 
@@ -57,7 +57,7 @@ TriggerConditionAllAlivePlayersInside._all_players_inside = function (self)
 			local unit_data_extension = ScriptUnit_has_extension(player_unit, "unit_data_system")
 			local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 			local requires_allied_interaction_help = character_state_component and PlayerUnitStatus.requires_allied_interaction_help(character_state_component)
-			local should_count = ((evaluates_bots and is_bot) or not is_bot) and not requires_allied_interaction_help
+			local should_count = (evaluates_bots and is_bot or not is_bot) and not requires_allied_interaction_help
 
 			if should_count and not registered_units[player_unit] then
 				return false

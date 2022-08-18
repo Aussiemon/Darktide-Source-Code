@@ -42,5 +42,3 @@ CameraTransitionGeneric.update = function (self, dt, parameter_value, update_tim
 
 	return value, done
 end
-
-return

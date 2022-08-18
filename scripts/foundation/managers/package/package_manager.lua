@@ -88,7 +88,7 @@ PackageManager._bring_in = function (self, package_name)
 
 	assert(items, "No items loading package %q", package_name)
 
-	for i = 1, #items, 1 do
+	for i = 1, #items do
 		local item = items[i]
 		local callback = item.callback
 
@@ -229,7 +229,7 @@ PackageManager.reference_count = function (self, package, reference_name)
 	local load_call_item_list = self._package_to_load_call_item[package]
 
 	if load_call_item_list then
-		for i = 1, #load_call_item_list, 1 do
+		for i = 1, #load_call_item_list do
 			if load_call_item_list[i].reference_name == reference_name then
 				reference_count = reference_count + 1
 			end
@@ -269,7 +269,7 @@ PackageManager.update = function (self, dt, t)
 	local queued_callback_items = self._queued_callback_items
 	self._queued_callback_items = temp_callback_items
 
-	for i = 1, #queued_callback_items, 1 do
+	for i = 1, #queued_callback_items do
 		local item = queued_callback_items[i]
 
 		item.callback(item.id)

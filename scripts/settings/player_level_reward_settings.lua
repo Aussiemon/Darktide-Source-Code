@@ -74,7 +74,7 @@ for item_key, item in pairs(item_definitions) do
 	end
 end
 
-for i = 1, 30, 1 do
+for i = 1, 30 do
 	local random_item_index = math.random(1, #weapon_items_array)
 	local item = weapon_items_array[random_item_index]
 	rewards[#rewards + 1] = {

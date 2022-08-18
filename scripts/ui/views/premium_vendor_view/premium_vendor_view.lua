@@ -51,7 +51,7 @@ PremiumVendorView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -83,7 +83,7 @@ PremiumVendorView._setup_stats_preview_widgets = function (self)
 	local widgets = {}
 	local spacing = PremiumVendorViewSettings.stats_spacing
 
-	for i = 1, num_stats, 1 do
+	for i = 1, num_stats do
 		local name = "stat_" .. i
 		local widget = self:_create_widget(name, widget_definition)
 		local column = (i - 1) % max_rows + 1
@@ -141,7 +141,7 @@ PremiumVendorView._setup_item_stats = function (self, item)
 	local widgets_by_name = self._widgets_by_name
 	local anim_duration = PremiumVendorViewSettings.stats_anim_duration
 
-	for i = 1, #context, 1 do
+	for i = 1, #context do
 		local data = context[i]
 		local name = "stat_" .. i
 		local widget = widgets_by_name[name]
@@ -164,7 +164,7 @@ PremiumVendorView._set_stat_bar_value = function (self, stat_index, value, durat
 	local current_progress = content.progress or 0
 	local anim_data = {
 		time = 0,
-		start_value = (should_reset and 0) or current_progress,
+		start_value = should_reset and 0 or current_progress,
 		end_value = value,
 		duration = duration,
 		widget = widget
@@ -213,7 +213,7 @@ PremiumVendorView._set_preview_widgets_visibility = function (self, visible)
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 			widget.content.visible = visible
 		end
@@ -248,7 +248,7 @@ PremiumVendorView._set_display_price = function (self, price, type)
 	local text_widget = widgets_by_name.price_text
 	local button_widget = widgets_by_name.purchase_button
 	text_widget.content.text = price_text
-	text_widget.style.text.text_color = (can_afford and Color.ui_grey_light(255, true)) or Color.ui_hud_red_light(255, true)
+	text_widget.style.text.text_color = can_afford and Color.ui_grey_light(255, true) or Color.ui_hud_red_light(255, true)
 	button_widget.content.hotspot.disabled = not can_afford
 end
 
@@ -458,7 +458,7 @@ PremiumVendorView._get_items_layout_by_slot = function (self, slot)
 			local valid = true
 
 			if valid and slots then
-				for j = 1, #slots, 1 do
+				for j = 1, #slots do
 					if slots[j] == slot_name then
 						layout[#layout + 1] = {
 							widget_type = "item",
@@ -477,7 +477,7 @@ end
 PremiumVendorView._create_grid_layout = function (self, item_offers)
 	local layout = {}
 
-	for i = 1, #item_offers, 1 do
+	for i = 1, #item_offers do
 		local offer = item_offers[i]
 		local offer_id = offer.offerId
 		local sku = offer.sku
@@ -504,6 +504,7 @@ PremiumVendorView.cb_on_grid_entry_right_pressed = function (self, widget, eleme
 		local slots = item.slots
 
 		if slots and not table.contains(slots, "slot_primary") and table.contains(slots, "slot_secondary") then
+			-- Nothing
 		end
 	end
 end
@@ -537,7 +538,7 @@ end
 
 PremiumVendorView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -607,9 +608,9 @@ PremiumVendorView._create_entry_widget_from_config = function (self, config, suf
 
 	fassert(template, "[PremiumVendorView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -649,7 +650,7 @@ PremiumVendorView._draw_grid = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -672,7 +673,7 @@ PremiumVendorView._update_grid_widgets = function (self, dt, t, input_service)
 	if widgets then
 		local handle_input = false
 
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -762,7 +763,7 @@ PremiumVendorView._draw_widgets = function (self, dt, t, input_service, ui_rende
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)

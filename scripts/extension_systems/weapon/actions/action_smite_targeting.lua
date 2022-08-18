@@ -88,7 +88,7 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	if target_unit or (self._target_charge and not self._target_locked) then
+	if target_unit or self._target_charge and not self._target_locked then
 		self._overload_module:fixed_update(dt, t)
 		self._charge_module:fixed_update(dt, t, self._charge_duration)
 	end

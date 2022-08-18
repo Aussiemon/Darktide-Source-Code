@@ -152,6 +152,7 @@ end
 
 ScanningDeviceExtension.update = function (self, unit, dt, t)
 	if self._current_state == STATES.none then
+		-- Nothing
 	elseif self._current_state == STATES.moving then
 		if self._should_move_to_start_spline and not self._past_spline_start_position then
 			self:_move_to_spline(dt)
@@ -164,7 +165,7 @@ ScanningDeviceExtension.update = function (self, unit, dt, t)
 			if self._is_server then
 				local num_players_in_proximity, _ = self:_players_in_proximity()
 				local has_players_in_proximity = num_players_in_proximity > 0
-				local speed_settings = (has_players_in_proximity and self._max_speed_player_close) or self._max_speed_no_player_close
+				local speed_settings = has_players_in_proximity and self._max_speed_player_close or self._max_speed_no_player_close
 				local bonus_speed = self._bonus_speed_per_close_player * num_players_in_proximity
 				local target_speed = speed_settings + bonus_speed
 				local acceleration = self._acceleration_to_max_speed
@@ -225,7 +226,7 @@ ScanningDeviceExtension.update = function (self, unit, dt, t)
 				end
 			end
 
-			if self._at_end_position or (not should_move_to_end_position and movement_status == "end") then
+			if self._at_end_position or not should_move_to_end_position and movement_status == "end" then
 				if self._place_unit_at_end_position and should_move_to_end_position then
 					local direct_to_end_position = true
 
@@ -283,7 +284,7 @@ ScanningDeviceExtension._move_towards_position = function (self, delta, end_posi
 	Unit.set_local_rotation(unit, 1, end_rotation)
 
 	local distance_to_target = Vector3.distance(current_position, end_position)
-	local reached_position = (direct_to_end_position and true) or false
+	local reached_position = direct_to_end_position and true or false
 
 	if distance_to_target < 0.0001 then
 		reached_position = true
@@ -328,7 +329,7 @@ ScanningDeviceExtension._players_in_proximity = function (self)
 
 	table.clear(PLAYERS_IN_PROXIMITY)
 
-	for i = 1, #valid_player_units, 1 do
+	for i = 1, #valid_player_units do
 		local unit = valid_player_units[i]
 		local position = positions[unit]
 		local distance_squared = Vector3.distance_squared(position, device_position)

@@ -5,14 +5,14 @@ local bit_xor = require("bit").bxor
 local function binary(x, digits)
 	local s = string.format("%o", x)
 	local a = {
-		0 = "000",
-		1 = "001",
-		6 = "110",
-		2 = "010",
-		5 = "101",
-		3 = "011",
-		7 = "111",
-		4 = "100"
+		["0"] = "000",
+		["1"] = "001",
+		["6"] = "110",
+		["2"] = "010",
+		["5"] = "101",
+		["3"] = "011",
+		["7"] = "111",
+		["4"] = "100"
 	}
 	s = string.gsub(s, "(.)", function (d)
 		return a[d]
@@ -333,8 +333,8 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 		max = requested_ec_level
 	end
 
-	for ec_level = min, max, 1 do
-		for version = 1, #capacity, 1 do
+	for ec_level = min, max do
+		for version = 1, #capacity do
 			bits = capacity[version][ec_level] * 8
 			bits = bits - 4
 
@@ -349,13 +349,13 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 			modebits = bits - digits
 
 			if local_mode == 1 then
-				c = math.floor((modebits * 3) / 10)
+				c = math.floor(modebits * 3 / 10)
 			elseif local_mode == 2 then
-				c = math.floor((modebits * 2) / 11)
+				c = math.floor(modebits * 2 / 11)
 			elseif local_mode == 3 then
-				c = math.floor((modebits * 1) / 8)
+				c = math.floor(modebits * 1 / 8)
 			else
-				c = math.floor((modebits * 1) / 13)
+				c = math.floor(modebits * 1 / 13)
 			end
 
 			if len <= c then
@@ -1441,14 +1441,14 @@ local function get_generator_polynominal_adjusted(num_ec_codewords, highest_expo
 		[0] = 0
 	}
 
-	for i = 0, highest_exponent - num_ec_codewords - 1, 1 do
+	for i = 0, highest_exponent - num_ec_codewords - 1 do
 		gp_alpha[i] = 0
 	end
 
 	local gp = generator_polynomial[num_ec_codewords]
 
-	for i = 1, num_ec_codewords + 1, 1 do
-		gp_alpha[(highest_exponent - num_ec_codewords + i) - 1] = gp[i]
+	for i = 1, num_ec_codewords + 1 do
+		gp_alpha[highest_exponent - num_ec_codewords + i - 1] = gp[i]
 	end
 
 	return gp_alpha
@@ -1457,7 +1457,7 @@ end
 local function convert_to_alpha(tab)
 	local new_tab = {}
 
-	for i = 0, #tab, 1 do
+	for i = 0, #tab do
 		new_tab[i] = int_alpha[tab[i]]
 	end
 
@@ -1467,7 +1467,7 @@ end
 local function convert_to_int(tab, len_message)
 	local new_tab = {}
 
-	for i = 0, #tab, 1 do
+	for i = 0, #tab do
 		new_tab[i] = alpha_int[tab[i]]
 	end
 
@@ -1486,17 +1486,17 @@ local function calculate_error_correction(data, num_ec_codewords)
 	end
 
 	local len_message = #mp
-	local highest_exponent = (len_message + num_ec_codewords) - 1
+	local highest_exponent = len_message + num_ec_codewords - 1
 	local gp_alpha, tmp, he = nil
 	local gp_int = {}
 	local mp_int = {}
 	local mp_alpha = {}
 
-	for i = 1, len_message, 1 do
+	for i = 1, len_message do
 		mp_int[highest_exponent - i + 1] = mp[i]
 	end
 
-	for i = 1, highest_exponent - len_message, 1 do
+	for i = 1, highest_exponent - len_message do
 		mp_int[i] = 0
 	end
 
@@ -3732,7 +3732,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	if type(data) == "table" then
 		local tmp = ""
 
-		for i = 1, #data, 1 do
+		for i = 1, #data do
 			tmp = tmp .. binary(data[i], 8)
 		end
 
@@ -3747,8 +3747,8 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	local pos = 0
 	local cpty_ec_bits = 0
 
-	for i = 1, #blocks / 2, 1 do
-		for j = 1, blocks[2 * i - 1], 1 do
+	for i = 1, #blocks / 2 do
+		for j = 1, blocks[2 * i - 1] do
 			size_datablock_bytes = blocks[2 * i][2]
 			size_ecblock_bytes = blocks[2 * i][1] - blocks[2 * i][2]
 			cpty_ec_bits = cpty_ec_bits + size_ecblock_bytes * 8
@@ -3756,7 +3756,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 			local tmp_tab = calculate_error_correction(datablocks[#datablocks], size_ecblock_bytes)
 			local tmp_str = ""
 
-			for x = 1, #tmp_tab, 1 do
+			for x = 1, #tmp_tab do
 				tmp_str = tmp_str .. binary(tmp_tab[x], 8)
 			end
 
@@ -3770,7 +3770,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	pos = 1
 
 	repeat
-		for i = 1, #datablocks, 1 do
+		for i = 1, #datablocks do
 			if pos < #datablocks[i] then
 				arranged_data = arranged_data .. string.sub(datablocks[i], pos, pos + 7)
 			end
@@ -3783,7 +3783,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	pos = 1
 
 	repeat
-		for i = 1, #ecblocks, 1 do
+		for i = 1, #ecblocks do
 			if pos < #ecblocks[i] then
 				arranged_ec = arranged_ec .. string.sub(ecblocks[i], pos, pos + 7)
 			end
@@ -3798,15 +3798,15 @@ end
 local function add_position_detection_patterns(tab_x)
 	local size = #tab_x
 
-	for i = 1, 8, 1 do
-		for j = 1, 8, 1 do
+	for i = 1, 8 do
+		for j = 1, 8 do
 			tab_x[i][j] = -2
 			tab_x[size - 8 + i][j] = -2
 			tab_x[i][size - 8 + j] = -2
 		end
 	end
 
-	for i = 1, 7, 1 do
+	for i = 1, 7 do
 		tab_x[1][i] = 2
 		tab_x[7][i] = 2
 		tab_x[i][1] = 2
@@ -3821,8 +3821,8 @@ local function add_position_detection_patterns(tab_x)
 		tab_x[i][size] = 2
 	end
 
-	for i = 1, 3, 1 do
-		for j = 1, 3, 1 do
+	for i = 1, 3 do
+		for j = 1, 3 do
 			tab_x[2 + j][i + 2] = 2
 			tab_x[size - j - 1][i + 2] = 2
 			tab_x[2 + j][size - i - 1] = 2
@@ -3835,7 +3835,7 @@ local function add_timing_pattern(tab_x)
 	line = 7
 	col = 9
 
-	for i = col, #tab_x - 8, 1 do
+	for i = col, #tab_x - 8 do
 		if math.fmod(i, 2) == 1 then
 			tab_x[i][line] = 2
 		else
@@ -3843,7 +3843,7 @@ local function add_timing_pattern(tab_x)
 		end
 	end
 
-	for i = col, #tab_x - 8, 1 do
+	for i = col, #tab_x - 8 do
 		if math.fmod(i, 2) == 1 then
 			tab_x[line][i] = 2
 		else
@@ -4117,8 +4117,8 @@ local function add_alignment_pattern(tab_x)
 	local ap = alignment_pattern[version]
 	local pos_x, pos_y = nil
 
-	for x = 1, #ap, 1 do
-		for y = 1, #ap, 1 do
+	for x = 1, #ap do
+		for y = 1, #ap do
 			if (x ~= 1 or y ~= 1) and (x ~= #ap or y ~= 1) and (x ~= 1 or y ~= #ap) then
 				pos_x = ap[x] + 1
 				pos_y = ap[y] + 1
@@ -4203,25 +4203,25 @@ local function add_typeinfo_to_matrix(matrix, ec_level, mask)
 	local ec_mask_type = typeinfo[ec_level][mask]
 	local bit = nil
 
-	for i = 1, 7, 1 do
+	for i = 1, 7 do
 		bit = string.sub(ec_mask_type, i, i)
 
 		fill_matrix_position(matrix, bit, 9, #matrix - i + 1)
 	end
 
-	for i = 8, 9, 1 do
+	for i = 8, 9 do
 		bit = string.sub(ec_mask_type, i, i)
 
 		fill_matrix_position(matrix, bit, 9, 17 - i)
 	end
 
-	for i = 10, 15, 1 do
+	for i = 10, 15 do
 		bit = string.sub(ec_mask_type, i, i)
 
 		fill_matrix_position(matrix, bit, 9, 16 - i)
 	end
 
-	for i = 1, 6, 1 do
+	for i = 1, 6 do
 		bit = string.sub(ec_mask_type, i, i)
 
 		fill_matrix_position(matrix, bit, i, 9)
@@ -4231,7 +4231,7 @@ local function add_typeinfo_to_matrix(matrix, ec_level, mask)
 
 	fill_matrix_position(matrix, bit, 8, 9)
 
-	for i = 8, 15, 1 do
+	for i = 8, 15 do
 		bit = string.sub(ec_mask_type, i, i)
 
 		fill_matrix_position(matrix, bit, #matrix - 15 + i, 9)
@@ -4286,7 +4286,7 @@ local function add_version_information(matrix, version)
 	start_x = #matrix - 10
 	start_y = 1
 
-	for i = 1, #bitstring, 1 do
+	for i = 1, #bitstring do
 		bit = string.sub(bitstring, i, i)
 		x = start_x + math.fmod(i - 1, 3)
 		y = start_y + math.floor((i - 1) / 3)
@@ -4297,7 +4297,7 @@ local function add_version_information(matrix, version)
 	start_x = 1
 	start_y = #matrix - 10
 
-	for i = 1, #bitstring, 1 do
+	for i = 1, #bitstring do
 		bit = string.sub(bitstring, i, i)
 		x = start_x + math.floor((i - 1) / 3)
 		y = start_y + math.fmod(i - 1, 3)
@@ -4311,10 +4311,10 @@ local function prepare_matrix_with_mask(version, ec_level, mask)
 	local tab_x = {}
 	size = version * 4 + 17
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		tab_x[i] = {}
 
-		for j = 1, size, 1 do
+		for j = 1, size do
 			tab_x[i][j] = 0
 		end
 	end
@@ -4337,6 +4337,7 @@ local function get_pixel_with_mask(mask, x, y, value)
 	local invert = false
 
 	if mask == -1 then
+		-- Nothing
 	elseif mask == 0 then
 		if math.fmod(x + y, 2) == 0 then
 			invert = true
@@ -4456,7 +4457,7 @@ local function add_data_to_matrix(matrix, data, mask)
 		byte_number = byte_number + 1
 		positions, x, y, dir = get_next_free_positions(matrix, x, y, dir, byte, mask)
 
-		for i = 1, #byte, 1 do
+		for i = 1, #byte do
 			_x = positions[i][1]
 			_y = positions[i][2]
 			m = get_pixel_with_mask(mask, _x, _y, string.sub(byte, i, i))
@@ -4479,11 +4480,11 @@ local function calculate_penalty(matrix)
 	local number_of_dark_cells = 0
 	local last_bit_blank, is_blank, number_of_consecutive_bits = nil
 
-	for x = 1, size, 1 do
+	for x = 1, size do
 		number_of_consecutive_bits = 0
 		last_bit_blank = nil
 
-		for y = 1, size, 1 do
+		for y = 1, size do
 			if matrix[x][y] > 0 then
 				number_of_dark_cells = number_of_dark_cells + 1
 				is_blank = false
@@ -4497,7 +4498,7 @@ local function calculate_penalty(matrix)
 				number_of_consecutive_bits = number_of_consecutive_bits + 1
 			else
 				if number_of_consecutive_bits >= 5 then
-					penalty1 = (penalty1 + number_of_consecutive_bits) - 2
+					penalty1 = penalty1 + number_of_consecutive_bits - 2
 				end
 
 				number_of_consecutive_bits = 1
@@ -4507,22 +4508,22 @@ local function calculate_penalty(matrix)
 		end
 
 		if number_of_consecutive_bits >= 5 then
-			penalty1 = (penalty1 + number_of_consecutive_bits) - 2
+			penalty1 = penalty1 + number_of_consecutive_bits - 2
 		end
 	end
 
-	for y = 1, size, 1 do
+	for y = 1, size do
 		number_of_consecutive_bits = 0
 		last_bit_blank = nil
 
-		for x = 1, size, 1 do
+		for x = 1, size do
 			is_blank = matrix[x][y] < 0
 
 			if last_bit_blank == is_blank then
 				number_of_consecutive_bits = number_of_consecutive_bits + 1
 			else
 				if number_of_consecutive_bits >= 5 then
-					penalty1 = (penalty1 + number_of_consecutive_bits) - 2
+					penalty1 = penalty1 + number_of_consecutive_bits - 2
 				end
 
 				number_of_consecutive_bits = 1
@@ -4532,21 +4533,21 @@ local function calculate_penalty(matrix)
 		end
 
 		if number_of_consecutive_bits >= 5 then
-			penalty1 = (penalty1 + number_of_consecutive_bits) - 2
+			penalty1 = penalty1 + number_of_consecutive_bits - 2
 		end
 	end
 
-	for x = 1, size, 1 do
-		for y = 1, size, 1 do
-			if y < size - 1 and x < size - 1 and ((matrix[x][y] < 0 and matrix[x + 1][y] < 0 and matrix[x][y + 1] < 0 and matrix[x + 1][y + 1] < 0) or (matrix[x][y] > 0 and matrix[x + 1][y] > 0 and matrix[x][y + 1] > 0 and matrix[x + 1][y + 1] > 0)) then
+	for x = 1, size do
+		for y = 1, size do
+			if y < size - 1 and x < size - 1 and (matrix[x][y] < 0 and matrix[x + 1][y] < 0 and matrix[x][y + 1] < 0 and matrix[x + 1][y + 1] < 0 or matrix[x][y] > 0 and matrix[x + 1][y] > 0 and matrix[x][y + 1] > 0 and matrix[x + 1][y + 1] > 0) then
 				penalty2 = penalty2 + 3
 			end
 
-			if size > y + 6 and matrix[x][y] > 0 and matrix[x][y + 1] < 0 and matrix[x][y + 2] > 0 and matrix[x][y + 3] > 0 and matrix[x][y + 4] > 0 and matrix[x][y + 5] < 0 and matrix[x][y + 6] > 0 and ((size > y + 10 and matrix[x][y + 7] < 0 and matrix[x][y + 8] < 0 and matrix[x][y + 9] < 0 and matrix[x][y + 10] < 0) or (y - 4 >= 1 and matrix[x][y - 1] < 0 and matrix[x][y - 2] < 0 and matrix[x][y - 3] < 0 and matrix[x][y - 4] < 0)) then
+			if size > y + 6 and matrix[x][y] > 0 and matrix[x][y + 1] < 0 and matrix[x][y + 2] > 0 and matrix[x][y + 3] > 0 and matrix[x][y + 4] > 0 and matrix[x][y + 5] < 0 and matrix[x][y + 6] > 0 and (size > y + 10 and matrix[x][y + 7] < 0 and matrix[x][y + 8] < 0 and matrix[x][y + 9] < 0 and matrix[x][y + 10] < 0 or y - 4 >= 1 and matrix[x][y - 1] < 0 and matrix[x][y - 2] < 0 and matrix[x][y - 3] < 0 and matrix[x][y - 4] < 0) then
 				penalty3 = penalty3 + 40
 			end
 
-			if size >= x + 6 and matrix[x][y] > 0 and matrix[x + 1][y] < 0 and matrix[x + 2][y] > 0 and matrix[x + 3][y] > 0 and matrix[x + 4][y] > 0 and matrix[x + 5][y] < 0 and matrix[x + 6][y] > 0 and ((size >= x + 10 and matrix[x + 7][y] < 0 and matrix[x + 8][y] < 0 and matrix[x + 9][y] < 0 and matrix[x + 10][y] < 0) or (x - 4 >= 1 and matrix[x - 1][y] < 0 and matrix[x - 2][y] < 0 and matrix[x - 3][y] < 0 and matrix[x - 4][y] < 0)) then
+			if size >= x + 6 and matrix[x][y] > 0 and matrix[x + 1][y] < 0 and matrix[x + 2][y] > 0 and matrix[x + 3][y] > 0 and matrix[x + 4][y] > 0 and matrix[x + 5][y] < 0 and matrix[x + 6][y] > 0 and (size >= x + 10 and matrix[x + 7][y] < 0 and matrix[x + 8][y] < 0 and matrix[x + 9][y] < 0 and matrix[x + 10][y] < 0 or x - 4 >= 1 and matrix[x - 1][y] < 0 and matrix[x - 2][y] < 0 and matrix[x - 3][y] < 0 and matrix[x - 4][y] < 0) then
 				penalty3 = penalty3 + 40
 			end
 		end
@@ -4572,7 +4573,7 @@ local function get_matrix_with_lowest_penalty(version, ec_level, data)
 	local tab, penalty, tab_min_penalty, min_penalty = nil
 	tab_min_penalty, min_penalty = get_matrix_and_penalty(version, ec_level, data, 0)
 
-	for i = 1, 7, 1 do
+	for i = 1, 7 do
 		tab, penalty = get_matrix_and_penalty(version, ec_level, data, i)
 
 		if penalty < min_penalty then

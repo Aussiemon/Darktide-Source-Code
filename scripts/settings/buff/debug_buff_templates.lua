@@ -163,7 +163,7 @@ local templates = {
 				local stack_count = template_context.stack_count
 				local base_power_level = 100
 				local extra_stack_power_level = base_power_level * (stack_count - 1)
-				local extra_reached_max_stacks_power_level = (template_data.has_reached_max_stacks and 500) or 0
+				local extra_reached_max_stacks_power_level = template_data.has_reached_max_stacks and 500 or 0
 				local power_level = base_power_level + extra_stack_power_level + extra_reached_max_stacks_power_level
 				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
 

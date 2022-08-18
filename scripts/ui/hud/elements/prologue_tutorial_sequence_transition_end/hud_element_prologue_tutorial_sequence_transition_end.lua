@@ -55,7 +55,7 @@ HudElementPrologueTutorialSequenceTransitionEnd._register_events = function (sel
 	local event_manager = Managers.event
 	local events = Settings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -66,7 +66,7 @@ HudElementPrologueTutorialSequenceTransitionEnd._unregister_events = function (s
 	local event_manager = Managers.event
 	local events = Settings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

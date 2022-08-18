@@ -70,5 +70,3 @@ LevelScriptdataTesterComponent.destroy = function (self, unit)
 end
 
 LevelScriptdataTesterComponent.component_data = {}
-
-return

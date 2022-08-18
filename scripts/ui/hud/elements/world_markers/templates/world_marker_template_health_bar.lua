@@ -170,7 +170,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local style = widget.style
 	local unit = marker.unit
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
-	local health_percent = (health_extension and health_extension:current_health_percent()) or 0
+	local health_percent = health_extension and health_extension:current_health_percent() or 0
 	local bar_logic = marker.bar_logic
 
 	bar_logic:update(dt, t, health_percent)
@@ -191,7 +191,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local background_width = math.max(bar_width - ghost_bar_width - health_width, 0)
 		background_width = math.max(background_width - spacing, 0)
 		local background_style = style.background
-		background_style.offset[1] = (default_width_offset + bar_width) - background_width
+		background_style.offset[1] = default_width_offset + bar_width - background_width
 		background_style.size[1] = background_width
 		local health_max_style = style.health_max
 		local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)

@@ -45,7 +45,7 @@ InventoryWeaponDetailsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 40)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -169,7 +169,7 @@ InventoryWeaponDetailsView._preview_item = function (self, item)
 	if base_stats then
 		local num_stats = #base_stats
 
-		for i = 1, num_stats, 1 do
+		for i = 1, num_stats do
 			local stat = base_stats[i]
 			local stat_name = stat.name
 			local title = stat.title
@@ -234,10 +234,10 @@ InventoryWeaponDetailsView._create_trait_slot_widgets = function (self, item)
 	local trait_widget_definition = self._definitions.trait_widget_definition
 	local total_widgets_height = 20
 
-	for i = 1, num_trait_slots, 1 do
+	for i = 1, num_trait_slots do
 		local trait_id = traits[i]
 		local trait_settings = TraitSettings[trait_id]
-		local trait_display_name = (trait_settings and trait_settings.display_name) or "<Trait Name Missing>"
+		local trait_display_name = trait_settings and trait_settings.display_name or "<Trait Name Missing>"
 		local trait_description_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 		local widget_name = "trait_" .. i
 		local widget = self:_create_widget(widget_name, trait_widget_definition, nil)
@@ -393,7 +393,7 @@ InventoryWeaponDetailsView._update_trait_presentation = function (self, dt)
 
 	local hover_index = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local widget_content = widget.content
 
@@ -424,10 +424,10 @@ end
 InventoryWeaponDetailsView._trait_widget_row_and_column = function (self, widget)
 	local trait_widget_navigation = self._trait_widget_navigation
 
-	for i = 1, #trait_widget_navigation, 1 do
+	for i = 1, #trait_widget_navigation do
 		local row_array = trait_widget_navigation[i]
 
-		for j = 1, #row_array, 1 do
+		for j = 1, #row_array do
 			if row_array[j] == widget then
 				return i, j
 			end
@@ -437,7 +437,7 @@ end
 
 InventoryWeaponDetailsView._cb_on_ui_visibility_toggled = function (self, id)
 	self._visibility_toggled_on = not self._visibility_toggled_on
-	local display_name = (self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off") or "loc_menu_toggle_ui_visibility_on"
+	local display_name = self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off" or "loc_menu_toggle_ui_visibility_on"
 
 	self._input_legend_element:set_display_name(id, display_name)
 end
@@ -503,10 +503,10 @@ InventoryWeaponDetailsView._draw_widgets = function (self, dt, t, input_service,
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 		local widget_name = widget.name
-		render_settings.alpha_multiplier = (always_visible_widget_names[widget_name] and 1) or alpha_multiplier
+		render_settings.alpha_multiplier = always_visible_widget_names[widget_name] and 1 or alpha_multiplier
 
 		UIWidget.draw(widget, ui_renderer)
 	end
@@ -515,7 +515,7 @@ InventoryWeaponDetailsView._draw_widgets = function (self, dt, t, input_service,
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -525,7 +525,7 @@ InventoryWeaponDetailsView._draw_widgets = function (self, dt, t, input_service,
 	local trait_widgets = self._trait_widgets
 
 	if trait_widgets then
-		for i = 1, #trait_widgets, 1 do
+		for i = 1, #trait_widgets do
 			local widget = trait_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -535,7 +535,7 @@ end
 
 InventoryWeaponDetailsView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -597,9 +597,9 @@ InventoryWeaponDetailsView._create_entry_widget_from_config = function (self, co
 
 	fassert(template, "[InventoryWeaponDetailsView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -639,7 +639,7 @@ InventoryWeaponDetailsView._draw_grid = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -660,7 +660,7 @@ InventoryWeaponDetailsView._update_grid_widgets = function (self, dt, t, input_s
 	local widgets = self._grid_widgets
 
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]

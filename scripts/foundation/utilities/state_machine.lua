@@ -108,7 +108,7 @@ StateMachine.update = function (self, dt)
 	local stack = self._state_machine_stack
 	local leaf_index = #stack
 
-	for ii = 1, #stack, 1 do
+	for ii = 1, #stack do
 		local state = stack[ii]._current_state
 		local update_func = nil
 
@@ -164,7 +164,7 @@ StateMachine.state_report = function (self)
 
 	assert(start_index, "to make a state report the state machine itself must be on the stack")
 
-	for ii = start_index, #stack, 1 do
+	for ii = start_index, #stack do
 		local state_machine = stack[ii]
 		s = s .. string.format("State %q waits for:\n", self._current_state_name(state_machine))
 		local transitions = state_machine:_transitions_from_state()
@@ -272,7 +272,7 @@ StateMachine._received_event = function (self, event_name, args)
 
 	local state_names = {}
 
-	for i = 1, #stack, 1 do
+	for i = 1, #stack do
 		state_names[i] = self._current_state_name(stack[i])
 	end
 

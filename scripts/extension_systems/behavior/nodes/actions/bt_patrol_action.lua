@@ -150,7 +150,7 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 	local move_state = behavior_component.move_state
 
-	if move_state ~= "moving" or (scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t) then
+	if move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t then
 		self:_start_move_anim(unit, scratchpad, behavior_component, action_data, t)
 	end
 
@@ -298,7 +298,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 		patrol_position = follow_unit_position + -follow_unit_right * PATROL_OFFSET_SIDEWAYS
 	end
 
-	local back_offset = (is_third and 2) or 1
+	local back_offset = is_third and 2 or 1
 	patrol_position = patrol_position + follow_unit_bwd * PATORL_OFFSET_BACK * back_offset
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, patrol_position, ABOVE, BELOW, HOTIZONTAL)
 

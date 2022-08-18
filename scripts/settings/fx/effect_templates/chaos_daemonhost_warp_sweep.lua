@@ -47,51 +47,53 @@ local effect_template = {
 		local durations = EMISSIVE.durations
 		template_data.effect_out_t = t + durations.out
 		template_data.effect_t = 0
-	end,
-	update = function (template_data, template_context, dt, t)
-		local effect_out_t = template_data.effect_out_t
-		local effect_t = template_data.effect_t + dt
-		template_data.effect_t = effect_t
-		local body_slot_unit = template_data.body_slot_unit
-		local durations = EMISSIVE.durations
-		local to = durations.to
-		local total = durations.total
-		local scalar_values = EMISSIVE.scalar_values
-
-		for scalar_key, intensity in pairs(scalar_values) do
-			local lerp_value = nil
-
-			if effect_out_t < t then
-				lerp_value = math.lerp(intensity, 0, effect_t / total)
-			else
-				lerp_value = math.lerp(0, intensity, effect_t / to)
-			end
-
-			local clamped_intensity = math.clamp(lerp_value, 0, 1)
-
-			Unit.set_scalar_for_material(body_slot_unit, MATERIAL, scalar_key, clamped_intensity)
-		end
-	end,
-	stop = function (template_data, template_context)
-		local world = template_context.world
-		local vfx_particle_id_1 = template_data.vfx_particle_id_1
-
-		World.stop_spawning_particles(world, vfx_particle_id_1)
-
-		local vfx_particle_id_2 = template_data.vfx_particle_id_2
-
-		World.stop_spawning_particles(world, vfx_particle_id_2)
-
-		local body_slot_unit = template_data.body_slot_unit
-
-		if ALIVE[body_slot_unit] then
-			local scalar_values = EMISSIVE.scalar_values
-
-			for scalar_key, _ in pairs(scalar_values) do
-				Unit.set_scalar_for_material(body_slot_unit, MATERIAL, scalar_key, 0)
-			end
-		end
 	end
 }
+
+effect_template.update = function (template_data, template_context, dt, t)
+	local effect_out_t = template_data.effect_out_t
+	local effect_t = template_data.effect_t + dt
+	template_data.effect_t = effect_t
+	local body_slot_unit = template_data.body_slot_unit
+	local durations = EMISSIVE.durations
+	local to = durations.to
+	local total = durations.total
+	local scalar_values = EMISSIVE.scalar_values
+
+	for scalar_key, intensity in pairs(scalar_values) do
+		local lerp_value = nil
+
+		if effect_out_t < t then
+			lerp_value = math.lerp(intensity, 0, effect_t / total)
+		else
+			lerp_value = math.lerp(0, intensity, effect_t / to)
+		end
+
+		local clamped_intensity = math.clamp(lerp_value, 0, 1)
+
+		Unit.set_scalar_for_material(body_slot_unit, MATERIAL, scalar_key, clamped_intensity)
+	end
+end
+
+effect_template.stop = function (template_data, template_context)
+	local world = template_context.world
+	local vfx_particle_id_1 = template_data.vfx_particle_id_1
+
+	World.stop_spawning_particles(world, vfx_particle_id_1)
+
+	local vfx_particle_id_2 = template_data.vfx_particle_id_2
+
+	World.stop_spawning_particles(world, vfx_particle_id_2)
+
+	local body_slot_unit = template_data.body_slot_unit
+
+	if ALIVE[body_slot_unit] then
+		local scalar_values = EMISSIVE.scalar_values
+
+		for scalar_key, _ in pairs(scalar_values) do
+			Unit.set_scalar_for_material(body_slot_unit, MATERIAL, scalar_key, 0)
+		end
+	end
+end
 
 return effect_template

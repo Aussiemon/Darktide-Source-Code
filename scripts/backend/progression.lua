@@ -24,7 +24,7 @@ Progression.get_progression = function (self, entity_type, id)
 	assert(id, "Progression id must be set for type: " .. entity_type)
 
 	local url = BackendUtilities.url_builder(entity_type):path("/"):path(id)
-	local account_id = (entity_type == "account" and id) or nil
+	local account_id = entity_type == "account" and id or nil
 
 	return BackendUtilities.make_account_title_request("progression", url, nil, account_id):next(function (data)
 		return data.body
@@ -46,7 +46,7 @@ Progression.get_entity_type_progression = function (self, entity_type)
 		local progression_info = data.body.progressionInfo
 		local result = {}
 
-		for i = 1, #progression_info, 1 do
+		for i = 1, #progression_info do
 			local info = progression_info[i]
 
 			if info.type == entity_type then
@@ -72,7 +72,7 @@ Progression.level_up = function (self, entity_type, id, to_level)
 			placeHolder = "might need something"
 		}
 	}
-	local account_id = (entity_type == "account" and id) or nil
+	local account_id = entity_type == "account" and id or nil
 
 	return BackendUtilities.make_account_title_request("progression", url, options, account_id):next(function (data)
 		return data.body

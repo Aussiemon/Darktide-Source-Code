@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local CinematicLevelLoader = require("scripts/extension_systems/cinematic_scene/utilities/cinematic_level_loader")
 local CinematicManagerTestify = GameParameters.testify and require("scripts/managers/cinematic/cinematic_manager_testify")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -262,7 +260,7 @@ CinematicManager.queue_story = function (self, cinematic_scene_name, category, o
 		local story_definition = category_stories[1]
 		local roll = math.random() * total_weight
 
-		for i = 1, #category_stories, 1 do
+		for i = 1, #category_stories do
 			roll = roll - category_stories[i].weight
 
 			if roll <= 0 then
@@ -275,7 +273,7 @@ CinematicManager.queue_story = function (self, cinematic_scene_name, category, o
 		story_definition.played_callback = played_callback
 		story_definition.cinematic_scene_name = cinematic_scene_name
 
-		fassert((optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil) or (optional_scene_unit_origin == nil and optional_scene_unit_destination == nil), "Missing alignment units with component 'CinematicScene'.")
+		fassert(optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil or optional_scene_unit_origin == nil and optional_scene_unit_destination == nil, "Missing alignment units with component 'CinematicScene'.")
 
 		if optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil then
 			story_definition.category = category
@@ -533,7 +531,7 @@ CinematicManager._client_cinematic_story_sync = function (self, cinematic_scene_
 	local category_stories = self._stories[category]
 	local world = self._world
 
-	for i = 1, #category_stories, 1 do
+	for i = 1, #category_stories do
 		local story_definition = category_stories[i]
 
 		if story_definition.name == story_name then

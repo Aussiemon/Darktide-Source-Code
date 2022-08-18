@@ -41,7 +41,7 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._unit_template_network_lookup = self:_build_network_lookup(self._unit_templates)
 
 	if game_session then
-		self._is_fully_hot_join_synced = (is_server and true) or false
+		self._is_fully_hot_join_synced = is_server and true or false
 
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 
@@ -330,7 +330,7 @@ UnitSpawnerManager._world_delete_units = function (self, units_list, num_units)
 
 	Profiler.start("delete_units")
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		Profiler.start("unit")
 
 		local unit = units_list[i]

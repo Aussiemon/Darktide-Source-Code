@@ -126,7 +126,7 @@ HuskLiquidAreaExtension._calculate_liquid_size = function (self)
 	local max_distance_sq = -math.huge
 	local center_position = (max_position + min_position) / 2
 
-	for i = 1, num_liquid, 1 do
+	for i = 1, num_liquid do
 		local position = temp_positions[i]
 		local distance_sq = Vector3_distance_squared(center_position, position)
 
@@ -191,7 +191,7 @@ HuskLiquidAreaExtension.rpc_set_liquid_filled = function (self, channel, go_id, 
 end
 
 HuskLiquidAreaExtension.rpc_set_liquid_filled_multiple = function (self, channel, go_id, real_index_array)
-	for i = 1, #real_index_array, 1 do
+	for i = 1, #real_index_array do
 		self:_set_liquid_filled(real_index_array[i])
 	end
 end

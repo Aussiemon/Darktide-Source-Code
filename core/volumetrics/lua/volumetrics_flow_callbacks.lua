@@ -25,5 +25,3 @@ VolumetricsFlowCallbacks.unregister_fog_volume = function (params)
 		stingray.Volumetrics.unregister_volume(unit)
 	end
 end
-
-return

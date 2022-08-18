@@ -41,7 +41,7 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 			end
 		end
 
-		for i = 1, num_main_path_segments, 1 do
+		for i = 1, num_main_path_segments do
 			local main_path_segment = main_path_segments[i]
 
 			if main_path_segment.crossroads_id == crossroads_id and main_path_segment.road_id ~= chosen_road_id then
@@ -85,7 +85,7 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 
 			local next_main_path_index = index + 1
 
-			for j = 1, num_to_remove, 1 do
+			for j = 1, num_to_remove do
 				local removed_main_path_index = to_remove[j]
 
 				if next_main_path_index == removed_main_path_index then
@@ -105,7 +105,7 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 
 	local num_to_stitch = #to_stitch
 
-	for i = 1, num_to_stitch, 1 do
+	for i = 1, num_to_stitch do
 		repeat
 			local stitched_indices = to_stitch[i]
 			local num_stitched_indices = #stitched_indices
@@ -118,13 +118,13 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 			local wanted_main_path_segment = main_path_segments[wanted_main_path_segment_index]
 			local wanted_main_path_nodes = wanted_main_path_segment.nodes
 
-			for j = 2, num_stitched_indices, 1 do
+			for j = 2, num_stitched_indices do
 				local stitch_index = stitched_indices[j]
 				local stitch_main_path = main_path_segments[stitch_index]
 				local stitch_main_path_nodes = stitch_main_path.nodes
 				local num_nodes_to_stitch = #stitch_main_path_nodes
 
-				for k = 1, num_nodes_to_stitch, 1 do
+				for k = 1, num_nodes_to_stitch do
 					local stiched_node = stitch_main_path_nodes[k]
 					wanted_main_path_nodes[#wanted_main_path_nodes + 1] = stiched_node
 				end

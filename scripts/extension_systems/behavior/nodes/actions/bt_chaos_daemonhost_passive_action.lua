@@ -59,7 +59,7 @@ BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, 
 	local num_on_enter_buff_names = #on_enter_buff_names
 	local on_enter_buffs = Script.new_array(num_on_enter_buff_names)
 
-	for i = 1, num_on_enter_buff_names, 1 do
+	for i = 1, num_on_enter_buff_names do
 		local buff_name = on_enter_buff_names[i]
 		local _, buff_id = buff_extension:add_externally_controlled_buff(buff_name, t)
 		on_enter_buffs[i] = buff_id
@@ -89,7 +89,7 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 		local buff_extension = scratchpad.buff_extension
 		local on_enter_buffs = scratchpad.on_enter_buffs
 
-		for i = 1, #on_enter_buffs, 1 do
+		for i = 1, #on_enter_buffs do
 			local buff_id = on_enter_buffs[i]
 
 			buff_extension:remove_externally_controlled_buff(buff_id)
@@ -230,7 +230,7 @@ BtChaosDaemonhostPassiveAction._update_flashlights = function (self, unit, posit
 	local perception_extension = scratchpad.perception_extension
 	local num_enemies = #valid_enemy_player_units
 
-	for i = 1, num_enemies, 1 do
+	for i = 1, num_enemies do
 		local target_unit = valid_enemy_player_units[i]
 		local last_los_position = perception_extension:last_los_position(target_unit)
 		local is_applying_flashlight = false
@@ -292,7 +292,7 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 	local num_enemies = #valid_enemy_player_units
 	local closest_distance_index, closest_target_unit = nil
 
-	for i = 1, num_enemies, 1 do
+	for i = 1, num_enemies do
 		local target_unit = valid_enemy_player_units[i]
 		local has_line_of_sight = perception_extension:has_line_of_sight(target_unit)
 
@@ -301,7 +301,7 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 			local target_position = POSITION_LOOKUP[target_unit]
 			local distance_to_target_sq = Vector3.distance_squared(position, target_position)
 
-			for j = 1, #distances, 1 do
+			for j = 1, #distances do
 				local entry = distances[j]
 				local distance_sq = entry.distance * entry.distance
 
@@ -369,7 +369,7 @@ BtChaosDaemonhostPassiveAction._update_health = function (self, scratchpad, acti
 	local health_extension = scratchpad.health_extension
 	local current_health_percent = health_extension:current_health_percent()
 	scratchpad.current_health_percent = current_health_percent
-	local lerp_health = ((1 - current_health_percent) * 100) / missing_percent
+	local lerp_health = (1 - current_health_percent) * 100 / missing_percent
 	local missing_health_anger = math.floor(math.clamp(lerp_health * anger_max, 0, anger_max))
 	anger_flat = anger_flat + missing_health_anger
 
@@ -430,7 +430,7 @@ BtChaosDaemonhostPassiveAction._update = function (self, unit, breed, blackboard
 		if next_anger_t < t then
 			local decay_anger_settings = anger_settings.decay
 			local anger_decay = decay_anger_settings[stage]
-			anger_tick = (distance_tick + flashlight_tick + anger_tick) - anger_decay
+			anger_tick = distance_tick + flashlight_tick + anger_tick - anger_decay
 			scratchpad.next_anger_t = t + anger_settings.tick_interval
 		end
 
@@ -450,7 +450,7 @@ BtChaosDaemonhostPassiveAction._check_flashlight = function (self, from, target_
 	local current_wielded_slot_scripts = visual_loadout_extension:current_wielded_slot_scripts()
 
 	if current_wielded_slot_scripts then
-		for i = 1, #current_wielded_slot_scripts, 1 do
+		for i = 1, #current_wielded_slot_scripts do
 			local script = current_wielded_slot_scripts[i]
 			local flashlight_enabled = script.flashlight_enabled and script:flashlight_enabled()
 
@@ -479,7 +479,7 @@ BtChaosDaemonhostPassiveAction._get_stage = function (self, scratchpad, action_d
 	local anger = scratchpad.anger
 	local num_stages = #stages
 
-	for i = 1, num_stages, 1 do
+	for i = 1, num_stages do
 		local amount = stages[i]
 
 		if anger <= amount then

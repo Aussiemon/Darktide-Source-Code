@@ -36,7 +36,7 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 
 	local initial_votes_list = {}
 
-	for i = 1, #member_list, 1 do
+	for i = 1, #member_list do
 		local peer_id = member_list[i]
 		self._member_list[i] = peer_id
 		local initial_vote_option = initial_votes_by_peer[peer_id]
@@ -50,7 +50,7 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 			_info("Auto-voted %q for %s", initial_vote_option, peer_id)
 		else
 			self._votes[peer_id] = StrictNil
-			initial_votes_list[i] = NetworkLookup.voting_options.nil
+			initial_votes_list[i] = NetworkLookup.voting_options["nil"]
 		end
 	end
 
@@ -92,12 +92,12 @@ VotingHost.on_member_joined = function (self, peer_id)
 	votes[peer_id] = StrictNil
 	local votes_list_lookup = {}
 
-	for i = 1, #member_list, 1 do
+	for i = 1, #member_list do
 		local member_peer_id = member_list[i]
 		local vote_option = votes[member_peer_id]
 
 		if vote_option == StrictNil then
-			votes_list_lookup[i] = NetworkLookup.voting_options.nil
+			votes_list_lookup[i] = NetworkLookup.voting_options["nil"]
 		else
 			votes_list_lookup[i] = NetworkLookup.voting_options[vote_option]
 		end
@@ -109,7 +109,7 @@ VotingHost.on_member_joined = function (self, peer_id)
 	local voting_id = self._voting_id
 	local template_id = NetworkLookup.voting_templates[template.name]
 	local initiator_peer = self._initiator_peer
-	local time_left = (self._duration and math.max(self._duration - self._time, 0)) or nil
+	local time_left = self._duration and math.max(self._duration - self._time, 0) or nil
 	local params = self._params
 
 	RPC[rpc_start_voting](channel_id, voting_id, template_id, initiator_peer, member_list, votes_list_lookup, time_left, template.pack_params(params))
@@ -168,7 +168,7 @@ VotingHost.member_list = function (self)
 
 	local member_list = self._member_list
 
-	for i = 1, member_list, 1 do
+	for i = 1, member_list do
 		member_list_copy[i] = member_list[i]
 	end
 
@@ -288,7 +288,7 @@ VotingHost._send_rpc_members = function (self, rpc_name, ...)
 	local network_interface = self._network_interface
 	local member_list = self._member_list
 
-	for i = 1, #member_list, 1 do
+	for i = 1, #member_list do
 		local peer_id = member_list[i]
 
 		if peer_id ~= local_peer_id then
@@ -305,7 +305,7 @@ VotingHost._send_rpc_members_except = function (self, rpc_name, except_peer_id, 
 	local network_interface = self._network_interface
 	local member_list = self._member_list
 
-	for i = 1, #member_list, 1 do
+	for i = 1, #member_list do
 		local peer_id = member_list[i]
 
 		if peer_id ~= local_peer_id and peer_id ~= except_peer_id then

@@ -130,7 +130,7 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	local override_multiplier = damage_profile.shield_multiplier or DEFAULT_MULTIPLIER
 	stagger_strength = override_multiplier * (stagger_strength or 0)
 	local template = self._template
-	local default_min_stagger_strength = (template.attack_type_min_stagger_strength and template.attack_type_min_stagger_strength[attack_type]) or 0
+	local default_min_stagger_strength = template.attack_type_min_stagger_strength and template.attack_type_min_stagger_strength[attack_type] or 0
 	stagger_strength = math.max(stagger_strength, default_min_stagger_strength)
 	local override_stagger_strength = damage_profile.shield_override_stagger_strength
 

@@ -114,7 +114,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local min_lifetime = fuse_damage_settings.min_lifetime
 	local fuse_started = self._fuse_started
 	local sticking_to_unit, sticking_to_actor_index = locomotion_extension:sticking_to_unit()
-	local fuse_time = (sticking_to_unit and fuse_damage_settings.sticky_fuse_time) or fuse_damage_settings.fuse_time
+	local fuse_time = sticking_to_unit and fuse_damage_settings.sticky_fuse_time or fuse_damage_settings.fuse_time
 
 	if min_lifetime then
 		if min_lifetime < new_life_time then
@@ -264,7 +264,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 			end
 
 			local sticking_to_unit, _ = locomotion_extension:sticking_to_unit()
-			local can_projectile_stick = (not sticking_to_unit and sticks_to_armor_types) or sticks_to_breeds
+			local can_projectile_stick = not sticking_to_unit and sticks_to_armor_types or sticks_to_breeds
 
 			if can_projectile_stick and HEALTH_ALIVE[hit_unit] then
 				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
@@ -293,7 +293,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 			hit_mass_stop = impact_damage_settings.delete_on_hit_mass and hit_mass_stop
 
-			if (hit_hard_target and impact_damage_settings.delete_on_impact) or hit_mass_stop then
+			if hit_hard_target and impact_damage_settings.delete_on_impact or hit_mass_stop then
 				mark_for_deletion = true
 			end
 

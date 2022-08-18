@@ -191,7 +191,7 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 			end
 		end
 
-		local rotation_speed = (scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed) or action_data.close_rotation_speed
+		local rotation_speed = scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed or action_data.close_rotation_speed
 
 		locomotion_extension:set_rotation_speed(rotation_speed)
 		locomotion_extension:set_wanted_rotation(rotation)

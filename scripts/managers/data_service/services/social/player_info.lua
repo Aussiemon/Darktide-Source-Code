@@ -63,13 +63,13 @@ end
 PlayerInfo.account_id = function (self)
 	local presence = self:_get_presence()
 
-	return self._account_id or (presence and presence:account_id() ~= "" and presence:account_id())
+	return self._account_id or presence and presence:account_id() ~= "" and presence:account_id()
 end
 
 PlayerInfo.user_display_name = function (self)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
-	local name = (presence and presence:platform_persona_name_or_account_name()) or (platform_social and platform_social:name()) or self._account_name or "N/A"
+	local name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
 	local platform_icon = self:platform_icon()
 
 	if platform_icon then
@@ -83,7 +83,7 @@ PlayerInfo.platform_icon = function (self)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
 
-	return (presence and presence:platform_icon()) or (platform_social and platform_social:platform_icon()) or nil
+	return presence and presence:platform_icon() or platform_social and platform_social:platform_icon() or nil
 end
 
 PlayerInfo.online_status = function (self)
@@ -94,7 +94,7 @@ PlayerInfo.online_status = function (self)
 	if platform_social then
 		online_status = platform_social:online_status()
 	elseif presence then
-		online_status = (presence:is_online() and OnlineStatus.online) or OnlineStatus.offline
+		online_status = presence:is_online() and OnlineStatus.online or OnlineStatus.offline
 	end
 
 	if online_status == OnlineStatus.offline and self._is_party_member then
@@ -113,7 +113,7 @@ end
 PlayerInfo.is_friend = function (self)
 	local platform_social = self._platform_social
 
-	return (not self._is_blocked and self._friend_status ~= FriendStatus.friend and platform_social and platform_social:is_friend()) or false
+	return not self._is_blocked and self._friend_status ~= FriendStatus.friend and platform_social and platform_social:is_friend() or false
 end
 
 PlayerInfo.friend_status = function (self)
@@ -129,7 +129,7 @@ end
 PlayerInfo.is_blocked = function (self)
 	local platform_social = self._platform_social
 
-	return self._is_blocked or self._friend_status == FriendStatus.ignored or (platform_social and platform_social:is_blocked()) or false
+	return self._is_blocked or self._friend_status == FriendStatus.ignored or platform_social and platform_social:is_blocked() or false
 end
 
 PlayerInfo.set_is_blocked = function (self, is_blocked)
@@ -164,14 +164,14 @@ PlayerInfo.platform = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
 
-	return (platform_social and platform_social:platform()) or (presence and presence:platform()) or "Unknown"
+	return platform_social and platform_social:platform() or presence and presence:platform() or "Unknown"
 end
 
 PlayerInfo.platform_user_id = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
 
-	return (platform_social and platform_social:id()) or (presence and presence:platform_user_id()) or ""
+	return platform_social and platform_social:id() or presence and presence:platform_user_id() or ""
 end
 
 PlayerInfo.player_activity_id = function (self)
@@ -193,13 +193,13 @@ end
 PlayerInfo.character_name = function (self)
 	local profile = self:profile()
 
-	return (profile and profile.name) or ""
+	return profile and profile.name or ""
 end
 
 PlayerInfo.character_level = function (self)
 	local profile = self:profile()
 
-	return (profile and profile.current_level) or 0
+	return profile and profile.current_level or 0
 end
 
 PlayerInfo.is_own_player = function (self)
@@ -209,13 +209,13 @@ end
 PlayerInfo.num_party_members = function (self)
 	local presence = self:_get_presence()
 
-	return (presence and presence:num_party_members()) or 1
+	return presence and presence:num_party_members() or 1
 end
 
 PlayerInfo.num_mission_members = function (self)
 	local presence = self:_get_presence()
 
-	return (presence and presence:num_mission_members()) or 1
+	return presence and presence:num_mission_members() or 1
 end
 
 PlayerInfo.party_status = function (self)

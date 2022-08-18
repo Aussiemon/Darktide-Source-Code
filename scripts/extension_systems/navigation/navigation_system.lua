@@ -28,7 +28,7 @@ NavigationSystem.set_enabled_unit = function (self, unit, enabled)
 
 	fassert(extension, "[NavigationSystem] Couldn't find extension for unit.")
 
-	self._enabled_units[unit] = (enabled and extension) or nil
+	self._enabled_units[unit] = enabled and extension or nil
 end
 
 NavigationSystem.update = function (self, context, dt, t)

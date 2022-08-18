@@ -50,7 +50,7 @@ local player_panel_size = social_menu_roster_view_styles.player_panel_size
 local grid_spacing = social_menu_roster_view_styles.grid_spacing
 local empty_slot_prefix = "party_slot_"
 
-for i = 1, SocialMenuSettings.max_num_party_members, 1 do
+for i = 1, SocialMenuSettings.max_num_party_members do
 	local key = empty_slot_prefix .. i
 	local party_panel_vertical_offset = (i - 1) * (grid_spacing[2] + player_panel_size[2])
 	party_panel_style[key] = {

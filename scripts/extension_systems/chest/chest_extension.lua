@@ -99,7 +99,7 @@ ChestExtension.open = function (self)
 	local containing_pickups = self._containing_pickups
 	local chest_size = self._chest_size
 
-	for i = 1, chest_size, 1 do
+	for i = 1, chest_size do
 		if containing_pickups[i] ~= nil then
 			local check_reserve = false
 			local unit, _ = pickup_spawner_extension:spawn_specific_item(i, containing_pickups[i], check_reserve)

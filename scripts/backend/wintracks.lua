@@ -1,9 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Wintracks = class("Wintracks")
 
@@ -26,7 +20,7 @@ local function _map_to_id(wintracks)
 	local mapped = {}
 	local len = #wintracks
 
-	for i = 1, len, 1 do
+	for i = 1, len do
 		local wintrack = wintracks[i]
 		mapped[wintrack.id] = wintrack
 	end
@@ -48,7 +42,7 @@ Wintracks.get_wintracks_state = function (self, include_info)
 				local infos = {}
 				local len = #items
 
-				for i = 1, len, 1 do
+				for i = 1, len do
 					local item = items[i]
 					local data = item.body
 					data._links = nil
@@ -65,25 +59,11 @@ Wintracks.get_wintracks_state = function (self, include_info)
 end
 
 Wintracks.get_wintrack = function (self, wintrack_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-25, warpins: 1 ---
 	local path = BackendUtilities.url_builder():path("/wintracks/"):path(wintrack_id):to_string()
 
 	return Managers.backend:title_request(path):next(function (data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return data.body
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return Wintracks

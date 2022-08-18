@@ -487,7 +487,7 @@ local widget_definitions = {
 			value_id = "icon",
 			pass_type = "text",
 			style_id = "icon",
-			value = "\ue005",
+			value = "",
 			style = symbol_style
 		},
 		{
@@ -510,7 +510,7 @@ local widget_definitions = {
 			value_id = "icon",
 			pass_type = "text",
 			style_id = "icon",
-			value = "\ue004",
+			value = "",
 			style = symbol_style
 		},
 		{
@@ -720,7 +720,7 @@ local widget_definitions = {
 			style = new_button_text_style,
 			change_function = function (content, style, _, dt)
 				local hotspot = content.hotspot
-				local default_color = (hotspot.disabled and style.disabled_color) or style.default_color
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
 				local hover_color = style.hover_color
 				local text_color = style.text_color
 				local hotspot = content.hotspot
@@ -741,7 +741,7 @@ local widget_definitions = {
 			style = slots_count_text_style
 		}
 	}, "slots_count"),
-	gamertag = (IS_XBS and UIWidget.create_definition({
+	gamertag = IS_XBS and UIWidget.create_definition({
 		{
 			value_id = "gamertag",
 			style_id = "gamertag_style",
@@ -749,8 +749,8 @@ local widget_definitions = {
 			value = Managers.account:gamertag(),
 			style = gamertag_style
 		}
-	}, "gamertag")) or nil,
-	gamertag_input = (IS_XBS and UIWidget.create_definition({
+	}, "gamertag") or nil,
+	gamertag_input = IS_XBS and UIWidget.create_definition({
 		{
 			value_id = "gamertag_input",
 			style_id = "gamertag_style",
@@ -758,7 +758,7 @@ local widget_definitions = {
 			value = TextUtils.localize_with_button_hint("cycle_list_secondary", "loc_switch_profile", nil, DefaultViewInputSettings.service_type, Localize("loc_input_legend_text_template")),
 			style = gamertag_input_style
 		}
-	}, "gamertag_input")) or nil,
+	}, "gamertag_input") or nil,
 	metal_corners = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/frames/screen/metal_01_lower",

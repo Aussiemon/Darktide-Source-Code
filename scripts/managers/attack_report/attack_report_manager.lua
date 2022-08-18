@@ -24,7 +24,7 @@ AttackReportManager.init = function (self, is_server, network_event_delegate)
 
 	local ring_buffer = Script.new_array(RING_BUFFER_SIZE)
 
-	for i = 1, RING_BUFFER_SIZE, 1 do
+	for i = 1, RING_BUFFER_SIZE do
 		ring_buffer[i] = {
 			hit_weakspot = false,
 			damage = 0,
@@ -59,7 +59,7 @@ AttackReportManager.update = function (self, dt, t)
 	local num_updates = math.min(MAX_UPDATES_PER_FRAME, size)
 	local read_index = self._read_index
 
-	for i = 1, num_updates, 1 do
+	for i = 1, num_updates do
 		local buffer_data = ring_buffer[read_index]
 
 		self:_process_attack_result(buffer_data)
@@ -148,7 +148,7 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 			local first_person_extension = ScriptUnit.extension(attacked_unit, "first_person_system")
 			local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
 
-			if (not attacked_player.remote and attacked_player:is_human_controlled()) or is_in_first_person_mode then
+			if not attacked_player.remote and attacked_player:is_human_controlled() or is_in_first_person_mode then
 				_trigger_damage_indicator(attacked_unit, attacking_unit, attack_direction, attack_result, damage_profile)
 			end
 		end

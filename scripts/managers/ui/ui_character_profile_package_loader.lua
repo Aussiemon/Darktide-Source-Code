@@ -102,7 +102,7 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 		}
 		local package_ids = {}
 
-		for i = 1, num_packages_to_load, 1 do
+		for i = 1, num_packages_to_load do
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "cb_on_slot_item_package_loaded", slot_id, item_name, package_name, complete_callback)
 			local prioritize = true
@@ -129,7 +129,7 @@ UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self,
 
 	local item_packages = slot_loading_data.packages
 
-	for i = 1, #item_packages, 1 do
+	for i = 1, #item_packages do
 		if item_packages[i] == package_name then
 			table.remove(item_packages, i)
 
@@ -154,7 +154,7 @@ UICharacterProfilePackageLoader._unload_slot = function (self, slot_id)
 	local packages = self._slots_package_ids[slot_id]
 
 	if packages then
-		for i = 1, #packages, 1 do
+		for i = 1, #packages do
 			package_manager:release(packages[i])
 		end
 	end

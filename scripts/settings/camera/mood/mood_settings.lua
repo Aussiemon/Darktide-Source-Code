@@ -86,7 +86,7 @@ mood_settings.moods = {
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		sound_stop_event_func = function (unit)
 			local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
-			local current_toughness = (toughness_extension and toughness_extension:current_toughness_percent()) or 0
+			local current_toughness = toughness_extension and toughness_extension:current_toughness_percent() or 0
 
 			return current_toughness > 0
 		end

@@ -3,7 +3,7 @@ local MainMenuViewTestify = {
 		local character_profiles = main_menu_view:character_profiles()
 		local character_ids = {}
 
-		for i = 1, #character_profiles, 1 do
+		for i = 1, #character_profiles do
 			local character_id = character_profiles[i].character_id
 			character_ids[#character_ids + 1] = character_id
 		end

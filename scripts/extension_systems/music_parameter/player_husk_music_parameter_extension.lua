@@ -17,7 +17,8 @@ PlayerHuskMusicParameterExtension.on_game_object_created = function (self, game_
 end
 
 PlayerHuskMusicParameterExtension.on_game_object_destroyed = function (self, game_session, game_object_id)
-	self._game_session, self._game_object_id = nil
+	self._game_object_id = nil
+	self._game_session = nil
 end
 
 PlayerHuskMusicParameterExtension.fixed_update = function (self, unit, dt, t)

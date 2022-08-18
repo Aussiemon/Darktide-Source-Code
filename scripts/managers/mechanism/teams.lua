@@ -6,7 +6,7 @@ Teams.init = function (self, team_settings)
 	self._teams = teams
 	self._peer_to_team_lookup = {}
 
-	for i = 1, #team_settings, 1 do
+	for i = 1, #team_settings do
 		local team_config = team_settings[i]
 		teams[i] = Team:new(team_config)
 	end
@@ -22,7 +22,7 @@ Teams.has_space_in_any_team_for_peers = function (self, peer_ids)
 	local teams = self._teams
 	local num_teams = #teams
 
-	for i = 1, num_teams, 1 do
+	for i = 1, num_teams do
 		local team = teams[i]
 		num_space = num_space + team:num_unoccupied_slots()
 	end
@@ -39,7 +39,7 @@ end
 Teams.add_peers_to_any_team = function (self, peer_ids)
 	local num_peer_ids = #peer_ids
 
-	for i = 1, num_peer_ids, 1 do
+	for i = 1, num_peer_ids do
 		local peer_id = peer_ids[i]
 		local assigned_team = false
 

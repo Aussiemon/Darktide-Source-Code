@@ -334,12 +334,7 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 					local unit = self._unit
 					local event_name = "mission_update_vo"
 					local is_circumstance = "false"
-
-					if circumstance == "default" then
-						is_circumstance = "false"
-					else
-						is_circumstance = "true"
-					end
+					is_circumstance = circumstance == "default" and "false" or "true"
 
 					table.clear(self._trigger_event_data_payload)
 
@@ -467,7 +462,7 @@ DialogueExtension.play_voice = function (self, sound_event, use_occlusion)
 		end
 	end
 
-	local playing_id, _ = self._dialogue_system:_check_play_debug_sound(sound_event, (self._extension.currently_playing_dialogue and self._extension.currently_playing_dialogue.currently_playing_subtitle) or "")
+	local playing_id, _ = self._dialogue_system:_check_play_debug_sound(sound_event, self._extension.currently_playing_dialogue and self._extension.currently_playing_dialogue.currently_playing_subtitle or "")
 
 	if not playing_id then
 		self:_set_source_parameter("voice_fx_preset", self._voice_fx_preset, wwise_source_id)
@@ -628,7 +623,7 @@ end
 DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback)
 	local rule_queue = self._dialogue_system._vo_rule_queue
 
-	for i = 1, #rule_names, 1 do
+	for i = 1, #rule_names do
 		local vo_event = {
 			unit = self._unit,
 			rule_name = rule_names[i],

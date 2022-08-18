@@ -44,7 +44,7 @@ local function _evaluate_node(behavior_tree_name, node)
 		test_function(behavior_tree_name, node.name, action_data)
 	end
 
-	for i = 2, #node, 1 do
+	for i = 2, #node do
 		_evaluate_node(behavior_tree_name, node[i])
 	end
 end

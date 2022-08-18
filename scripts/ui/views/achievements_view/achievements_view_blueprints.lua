@@ -32,7 +32,7 @@ local function _format_time_trial_progress(current_progress)
 end
 
 local function _format_completed_achievement_label(label)
-	return string.format("\ue001 %s", label)
+	return string.format(" %s", label)
 end
 
 local _text_extra_options = {}
@@ -265,7 +265,7 @@ local _achievement_folding_template = {
 		value_id = "foldout_arrow",
 		style_id = "foldout_arrow",
 		pass_type = "text",
-		value = "\ue00a",
+		value = "",
 		style = pass_template_styles.foldout_arrow
 	}
 }
@@ -281,8 +281,8 @@ local function _achievement_folding_template_init(widget_content, widget_style, 
 		local content = widget_content
 		local unfolded = not content.unfolded or false
 		content.unfolded = unfolded
-		content.foldout_arrow = (unfolded and "\ue008") or "\ue00a"
-		content.size[2] = (unfolded and widget_content.unfolded_height) or widget_content.folded_height
+		content.foldout_arrow = unfolded and "" or ""
+		content.size[2] = unfolded and widget_content.unfolded_height or widget_content.folded_height
 
 		parent:force_update_list_size()
 		parent:scroll_to_grid_index(context.widget_index)
@@ -426,7 +426,7 @@ local function _add_sub_achievements_pass_template(pass_template, sub_achievemen
 	local index = #pass_template
 	local num_sub_achievements = #sub_achievements
 
-	for i = 1, num_sub_achievements, 1 do
+	for i = 1, num_sub_achievements do
 		local sub_label_name = "sub_label_" .. i
 		local sub_label_style = table.clone(pass_template_styles.foldout_sub_label)
 		local sub_progress_name = "sub_progress_" .. i
@@ -460,7 +460,7 @@ local function _sub_achievements_pass_template_init(widget_content, widget_style
 	local achievement_types = AchievementUITypes
 	local sub_achievement_offset_y = folded_height
 
-	for i = 1, #sub_achievements, 1 do
+	for i = 1, #sub_achievements do
 		local sub_achievement = sub_achievements[i]
 		local sub_label_name = "sub_label_" .. i
 		local sub_progress_name = "sub_progress_" .. i

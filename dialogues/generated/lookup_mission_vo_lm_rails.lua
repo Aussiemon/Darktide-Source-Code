@@ -56,5 +56,3 @@ DialogueLookup[DialogueLookup_n + 26] = "mission_rails_start_banter_b"
 DialogueLookup[DialogueLookup_n + 27] = "mission_rails_station_approach"
 DialogueLookup[DialogueLookup_n + 28] = "mission_rails_trains"
 DialogueLookup_n = DialogueLookup_n + 28
-
-return

@@ -17,7 +17,7 @@ local ARGS = {
 }
 local NUM_ARGS = #ARGS
 
-for i = 1, NUM_ARGS, 1 do
+for i = 1, NUM_ARGS do
 	local argument = ARGS[i]
 	local arg_name = argument.name
 	ARGS[arg_name] = ARGS[i]
@@ -39,7 +39,7 @@ BuffArgs.is_only_predictable_data = function (...)
 
 	local all_ok = true
 
-	for i = 1, NUM_ARGS, 1 do
+	for i = 1, NUM_ARGS do
 		all_ok = all_ok and (not ARGS[i].block_prediction or EMPTY_TABLE[ARGS[i].name] == nil)
 		EMPTY_TABLE[ARGS[i].name] = nil
 	end

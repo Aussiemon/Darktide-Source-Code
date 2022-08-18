@@ -22,7 +22,7 @@ FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sourc
 	self._impact_index = 1
 	self._impact_data = {}
 
-	for i = 1, 50, 1 do
+	for i = 1, 50 do
 		self._impact_data[i] = {
 			position = Vector3Box(),
 			normal = Vector3Box()
@@ -63,7 +63,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 	if fire_configuration then
 		local effects = action_settings.fx
 		local stream_effect_data = effects.stream_effect
-		local stream_effect_name = (self._is_local_unit and stream_effect_data.name) or stream_effect_data.name_3p
+		local stream_effect_name = self._is_local_unit and stream_effect_data.name or stream_effect_data.name_3p
 		local effect_duration = effects.duration
 		local weapon_extension = self._weapon_extension
 		local fire_time = 0.3
@@ -86,7 +86,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 			local position_valid = position_finder_component.position_valid
 			local stream_effect_id = self._stream_effect_id
 			local max_length = self._action_flamer_gas_component.range
-			local direction = Vector3.normalize((from_pos + Vector3.multiply(Quaternion.forward(first_person_rotation), max_length)) - from_pos)
+			local direction = Vector3.normalize(from_pos + Vector3.multiply(Quaternion.forward(first_person_rotation), max_length) - from_pos)
 			local rotation = Quaternion.look(direction)
 
 			if not stream_effect_id then
@@ -157,7 +157,7 @@ end
 FlamerGasEffects._update_impact_effects = function (self, dt, t)
 	local impact_data = self._impact_data
 
-	for i = 1, #impact_data, 1 do
+	for i = 1, #impact_data do
 		local data = impact_data[i]
 		local impact_time = data.time
 

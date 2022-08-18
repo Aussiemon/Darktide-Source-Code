@@ -33,7 +33,7 @@ SystemView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -82,7 +82,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 
 	local amount = #list
 
-	for i = 1, amount, 1 do
+	for i = 1, amount do
 		local entry = list[i]
 		local verified = true
 		local disabled = false
@@ -161,7 +161,7 @@ SystemView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local content_widgets = self._content_widgets
 	local num_content_widgets = #content_widgets
 
-	for i = 1, num_content_widgets, 1 do
+	for i = 1, num_content_widgets do
 		local widget = content_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)

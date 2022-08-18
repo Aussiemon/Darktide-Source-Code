@@ -21,14 +21,14 @@ HudBossHealthBarLogic.init = function (self, settings)
 	}
 	self._stored_fractions = {}
 
-	for i = 1, #self._update_order, 1 do
+	for i = 1, #self._update_order do
 		local name = self._update_order[i]
 		self._stored_fractions[name] = 1
 	end
 end
 
 HudBossHealthBarLogic._verify_settings = function (self, settings)
-	for i = 1, #settings_list, 1 do
+	for i = 1, #settings_list do
 		local setting_name = settings_list[i]
 
 		fassert(settings[setting_name] ~= nil, "[HudBossHealthBarLogic] - Missing setting by name: ", setting_name)
@@ -127,7 +127,7 @@ HudBossHealthBarLogic._update_bar_animations = function (self, dt, t)
 
 	table.clear(current_fraction_temp_table)
 
-	for i = 1, #update_order, 1 do
+	for i = 1, #update_order do
 		local name = update_order[i]
 		local anim_data = bar_animations[name]
 

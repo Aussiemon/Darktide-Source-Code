@@ -20,7 +20,7 @@ RoamerPacing.init = function (self, nav_world, level_path, seed)
 	for name, packs in pairs(RoamerPacks) do
 		local probabilities = {}
 
-		for i = 1, #packs, 1 do
+		for i = 1, #packs do
 			local pack = packs[i]
 			probabilities[i] = pack.weight
 		end
@@ -64,11 +64,11 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 	self._traverse_logic = traverse_logic
 	local nav_mesh_manager = Managers.state.nav_mesh
 
-	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES, 1 do
+	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 		local volume_type = FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
-		for j = 1, #layer_ids, 1 do
+		for j = 1, #layer_ids do
 			GwNavTagLayerCostTable.forbid_layer(nav_tag_cost_table, layer_ids[j])
 		end
 	end
@@ -111,11 +111,11 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		patrol_data.patrol_traverse_logic = patrol_traverse_logic
 		patrol_data.patrol_nav_tag_cost_table = patrol_nav_tag_cost_table
 
-		for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES, 1 do
+		for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 			local volume_type = FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 			local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
-			for j = 1, #layer_ids, 1 do
+			for j = 1, #layer_ids do
 				GwNavTagLayerCostTable.forbid_layer(patrol_nav_tag_cost_table, layer_ids[j])
 			end
 		end
@@ -185,7 +185,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local chosen_packs, pack_pick = nil
 	local num_spawn_point_positions = #spawn_point_positions
 
-	for i = 1, num_spawn_point_positions, 1 do
+	for i = 1, num_spawn_point_positions do
 		repeat
 			if empty_zone_count > 0 then
 				empty_zone_count = empty_zone_count - 1
@@ -250,7 +250,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 
 					if density_type == "none" then
 						local random_add_step = pack_pick + self:_random(1, #packs - 1)
-						pack_pick = (random_add_step > 6 and random_add_step % 6) or random_add_step
+						pack_pick = random_add_step > 6 and random_add_step % 6 or random_add_step
 					end
 
 					density_setting = density_settings[new_density_type]
@@ -282,7 +282,7 @@ RoamerPacing._create_sub_zones = function (self, spawn_positions, density_settin
 	local try_fill_one_sub_zone = density_setting.try_fill_one_sub_zone
 	local num_spawn_positions = #spawn_positions
 
-	for j = 1, num_spawn_positions, 1 do
+	for j = 1, num_spawn_positions do
 		local sub_zone_positions = spawn_positions[j]
 		local num_sub_zone_positions = #sub_zone_positions
 
@@ -299,7 +299,7 @@ RoamerPacing._create_sub_zones = function (self, spawn_positions, density_settin
 			else
 				sub_zone = Script.new_array(num_sub_zone_positions)
 
-				for k = 1, num_sub_zone_positions, 1 do
+				for k = 1, num_sub_zone_positions do
 					local spawn_position = sub_zone_positions[k]
 					local sub_zone_location, new_num_roamer_slots = self:_create_sub_zone_location(spawn_position, density_setting, group_id)
 					sub_zone[#sub_zone + 1] = sub_zone_location
@@ -394,17 +394,17 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 	local main_path_manager = Managers.state.main_path
 	local spawn_point_positions = main_path_manager:spawn_point_positions()
 
-	for i = start_zone_index, num_zones, 1 do
+	for i = start_zone_index, num_zones do
 		local zone = zones[i]
 		local num_to_spawn = zone.num_to_spawn
 
 		if not num_to_spawn then
+			-- Nothing
 		else
 			local sub_zones = zone.sub_zones
 			local num_sub_zones = #sub_zones
 
-			if num_sub_zones == 0 then
-			else
+			if num_sub_zones ~= 0 then
 				local roamer_packs = zone.roamer_packs
 				local roamer_packs_name = roamer_packs.name
 				local roamer_pack_probability = roamer_pack_probabilities[roamer_packs_name]
@@ -419,7 +419,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 				local spawn_point_index = zone.spawn_point_index
 				local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_challenge(limit_difficulty_settings)
 				local tries = 0
-				local roamers_per_sub_zone = (num_to_spawn > 1 and math.floor(num_to_spawn / num_sub_zones)) or 1
+				local roamers_per_sub_zone = num_to_spawn > 1 and math.floor(num_to_spawn / num_sub_zones) or 1
 				num_to_spawn = roamers_per_sub_zone * num_sub_zones
 				local sub_zone_index = 1
 				local num_spawned = 0
@@ -462,7 +462,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 						if num_spawn_positions > 0 and num_patrols > 0 and min_members_in_patrol <= num_to_spawn and min_members_in_patrol <= num_to_spawn_in_pack then
 							local num_patrollable_breeds = 0
 
-							for j = 1, num_breeds, 1 do
+							for j = 1, num_breeds do
 								local breed_name = breed_names[j]
 
 								if Breeds[breed_name].can_patrol then
@@ -477,7 +477,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 							end
 						end
 
-						for j = 0, num_to_spawn_in_pack - 1, 1 do
+						for j = 0, num_to_spawn_in_pack - 1 do
 							if num_to_spawn == 0 then
 								break
 							end
@@ -598,7 +598,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	local num_updates = math.min(NUM_ROAMERS_UPDATE_PER_FRAME, self._num_roamers)
 	local roamers_allowed = Managers.state.pacing:spawn_type_enabled("roamers")
 
-	for i = 1, num_updates, 1 do
+	for i = 1, num_updates do
 		local roamer_update_index = self._roamer_update_index
 		local roamer = roamers[roamer_update_index]
 		local roamer_got_removed = false
@@ -619,7 +619,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 				if not activated_roamer then
 					roamer_got_removed = self:_deactivate_roamer(roamer)
 				end
-			elseif (not should_activate and is_active) or (is_active and not HEALTH_ALIVE[roamer.spawned_unit]) then
+			elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
 				roamer_got_removed = self:_deactivate_roamer(roamer)
 			end
 
@@ -665,7 +665,7 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 	local POSITION_LOOKUP = POSITION_LOOKUP
 	local aggroing_unit_position = POSITION_LOOKUP[aggroing_unit]
 
-	for i = 1, #members, 1 do
+	for i = 1, #members do
 		local roamer_unit = members[i]
 		local roamer = roamer_lookup[roamer_unit]
 
@@ -739,7 +739,7 @@ RoamerPacing._try_activate_roamer = function (self, roamer, side_id)
 		local patrol_should_activate = true
 		local patrol = patrols[patrol_id]
 
-		for i = 1, #patrol, 1 do
+		for i = 1, #patrol do
 			local roamer_id = patrol[i]
 			local other_roamer = self._roamers[roamer_id]
 			local other_spawned_unit = other_roamer.spawned_unit
@@ -915,7 +915,7 @@ RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 	local group_system = Managers.state.extension:system("group_system")
 	local ALIVE = ALIVE
 
-	for i = start_range, end_range, 1 do
+	for i = start_range, end_range do
 		local zone = zones[i]
 		local group_id = zone.group_id
 		local group = group_system:group_from_id(group_id)
@@ -923,7 +923,7 @@ RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 		if group then
 			local members = group.members
 
-			for j = 1, #members, 1 do
+			for j = 1, #members do
 				local member = members[j]
 
 				if ALIVE[member] then

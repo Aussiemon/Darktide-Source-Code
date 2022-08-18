@@ -3,7 +3,7 @@ local minion_difficulty_settings = {}
 local function _equal_difficulty_values(val, val_2)
 	local diff_table = {}
 
-	for i = 1, 5, 1 do
+	for i = 1, 5 do
 		diff_table[i] = {
 			val,
 			val_2
@@ -59,12 +59,12 @@ local function _shoot_steps_asc(from, to, ceil)
 	}
 	local shoot_steps = {}
 
-	for i = 1, #steps, 1 do
+	for i = 1, #steps do
 		local value = steps[i]
-		shoot_steps[i] = (ceil and {
+		shoot_steps[i] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value)
-		}) or {
+		} or {
 			from * value,
 			to * value
 		}
@@ -83,12 +83,12 @@ local function _shoot_steps_desc(from, to, ceil)
 	}
 	local shoot_steps = {}
 
-	for i = 1, #steps, 1 do
+	for i = 1, #steps do
 		local value = steps[i]
-		shoot_steps[i] = (ceil and {
+		shoot_steps[i] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value)
-		}) or {
+		} or {
 			from * value,
 			to * value
 		}

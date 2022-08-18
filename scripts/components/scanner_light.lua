@@ -7,7 +7,7 @@ ScannerLight.init = function (self, unit)
 	local lights_array = self:get_data(unit, "lights")
 
 	if lights_array then
-		for i = 1, #lights_array, 1 do
+		for i = 1, #lights_array do
 			local light_name = lights_array[i]
 			local has_light = Unit.has_light(unit, light_name)
 
@@ -82,7 +82,7 @@ end
 ScannerLight.enable_lights = function (self, enabled)
 	local lights = self._lights
 
-	for i = 1, #lights, 1 do
+	for i = 1, #lights do
 		local light = lights[i]
 
 		Light.set_enabled(light, enabled)
@@ -94,7 +94,7 @@ ScannerLight.set_light_color = function (self, color)
 	local color_filter = Vector3(r / 255, g / 255, b / 255)
 	local lights = self._lights
 
-	for i = 1, #lights, 1 do
+	for i = 1, #lights do
 		local light = lights[i]
 
 		Light.set_color_filter(light, color_filter)

@@ -47,7 +47,7 @@ NavBlockExtension._get_volume_alt_min_max = function (self, volume_points)
 
 	local alt_min, alt_max = nil
 
-	for i = 1, #volume_points, 1 do
+	for i = 1, #volume_points do
 		local alt = volume_points[i].z
 
 		if not alt_min or alt < alt_min then

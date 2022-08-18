@@ -154,9 +154,6 @@ SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
 
 		if side_system:is_enemy(tagger_unit, unit) then
 			return "enemy_over_here"
-
-			if "enemy_over_here" then
-			end
 		end
 	elseif target_type == "health_station" then
 		local health_station_extension = ScriptUnit.extension(unit, "health_station_system")
@@ -202,7 +199,7 @@ SmartTagExtension.display_name = function (self, tagger_unit)
 	local template_name = self:contextual_tag_template(tagger_unit)
 	local template = template_name and SmartTagSettings.templates[template_name]
 
-	return (template and template.display_name) or "n/a"
+	return template and template.display_name or "n/a"
 end
 
 SmartTagExtension.register_reply = function (self, tag_id)

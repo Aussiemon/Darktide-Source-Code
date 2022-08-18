@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -265,7 +263,7 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 	end
 
 	for content_id, value in pairs(default_textures) do
-		content[content_id] = (value ~= StrictNil and value) or nil
+		content[content_id] = value ~= StrictNil and value or nil
 	end
 
 	marker.template.default_position_offset = marker.template.position_offset
@@ -449,15 +447,17 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	local visible = data:show_marker(player_unit)
 
 	if distance <= evolve_distance or is_tagged then
-
-		-- Decompilation error in this vicinity:
 		local player_extensions = hud:player_extensions()
 		local interactor_extension = player_extensions and player_extensions.interactor
 		local marker_offset = interactor_extension and interactor_extension:marker_offset()
-		local default_position_offset = self.default_position_offset
-		self.position_offset[1] = default_position_offset[1] + marker_offset.x
-		self.position_offset[2] = default_position_offset[2] + marker_offset.y
-		self.position_offset[3] = default_position_offset[3] + marker_offset.z
+
+		if marker_offset then
+			local default_position_offset = self.default_position_offset
+			self.position_offset[1] = default_position_offset[1] + marker_offset.x
+			self.position_offset[2] = default_position_offset[2] + marker_offset.y
+			self.position_offset[3] = default_position_offset[3] + marker_offset.z
+		end
+
 		local show_interaction_ui = interactor_extension and interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension and interactor_extension:show_counter_ui()
 
@@ -482,7 +482,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	end
 
 	marker.ignore_scale = content.is_clamped
-	local global_scale = (marker.ignore_scale and 1) or marker.scale
+	local global_scale = marker.ignore_scale and 1 or marker.scale
 
 	if marker.raycast_initialized then
 		local raycast_result = marker.raycast_result

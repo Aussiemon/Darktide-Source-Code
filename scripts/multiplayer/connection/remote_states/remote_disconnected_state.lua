@@ -30,7 +30,7 @@ RemoteDisconnectedState.init = function (self, state_machine, shared_state)
 	local reserved_player_slots = shared_state.reserved_player_slots
 
 	if reserved_player_slots then
-		for i = 1, #reserved_player_slots, 1 do
+		for i = 1, #reserved_player_slots do
 			local slot = reserved_player_slots[i]
 
 			Managers.player:release_slot(slot)

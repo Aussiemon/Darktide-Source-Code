@@ -39,7 +39,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 	self._unit_to_extension_map = {}
 	self._hot_join_sync_list = {}
 
-	for i = 1, #extension_list, 1 do
+	for i = 1, #extension_list do
 		local extension_name = extension_list[i]
 		local update_list = {
 			update = {},

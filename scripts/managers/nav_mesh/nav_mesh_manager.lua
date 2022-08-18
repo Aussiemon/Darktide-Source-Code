@@ -52,7 +52,7 @@ end
 NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_tag_volume_data)
 	local num_nested_levels = LevelResource.nested_level_count(level_name)
 
-	for i = 1, num_nested_levels, 1 do
+	for i = 1, num_nested_levels do
 		local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
 
 		self:_require_nav_tag_volume_data(nested_level_name, nav_tag_volume_data)
@@ -63,7 +63,7 @@ NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_ta
 	if Application.can_get_resource("lua", file_path) then
 		local volume_data = require(file_path).volume_data
 
-		for i = 1, #volume_data, 1 do
+		for i = 1, #volume_data do
 			local data = volume_data[i]
 
 			if string.find(data.type, "content/volume_types/nav_tag_volumes/") ~= nil then
@@ -83,7 +83,7 @@ NavMeshManager._create_nav_tag_volumes_from_level_data = function (self, nav_tag
 	local layer_name_to_id = {}
 	local layer_index = 1
 
-	for i = 1, #nav_tag_volume_data, 1 do
+	for i = 1, #nav_tag_volume_data do
 		local data = nav_tag_volume_data[i]
 		local alt_min_z = data.alt_min_vector[3]
 		local alt_max_z = data.alt_max_vector[3]
@@ -163,7 +163,7 @@ NavMeshManager._setup_nav_tag_layer_lookup = function (self, nav_tag_volume_laye
 
 	local default_nav_tag_layer_names = table.keys(default_nav_tag_layers)
 
-	for i = 1, #default_nav_tag_layer_names, 1 do
+	for i = 1, #default_nav_tag_layer_names do
 		local layer_name = default_nav_tag_layer_names[i]
 
 		if not table.contains(lookup, layer_name) then
@@ -193,7 +193,7 @@ NavMeshManager.initialize_nav_tag_cost_table = function (self, cost_table, layer
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local allowed_layers = self._nav_tag_allowed_layers
 
-	for layer_id = 1, #nav_tag_layer_lookup, 1 do
+	for layer_id = 1, #nav_tag_layer_lookup do
 		local layer_name = nav_tag_layer_lookup[layer_id]
 		local layer_cost = layer_costs[layer_name] or 1
 
@@ -235,7 +235,7 @@ NavMeshManager.nav_tag_volume_layer_ids_by_volume_type = function (self, volume_
 	local volume_data = self._nav_tag_volume_data
 	local layer_ids = {}
 
-	for i = 1, #volume_data, 1 do
+	for i = 1, #volume_data do
 		local data = volume_data[i]
 
 		if data.type == volume_type then
@@ -273,7 +273,7 @@ NavMeshManager._create_nav_cost_maps = function (self)
 	local nav_world = self._nav_world
 	local nav_cost_maps_data = Script.new_array(num_cost_maps)
 
-	for i = 1, num_cost_maps, 1 do
+	for i = 1, num_cost_maps do
 		nav_cost_maps_data[i] = {
 			recompute = false,
 			cost_map = GwNavVolumeCostMap.create(nav_world, i),
@@ -288,7 +288,7 @@ NavMeshManager._destroy_nav_cost_maps = function (self)
 	local nav_cost_maps_data = self._nav_cost_maps_data
 	local num_cost_maps = #nav_cost_maps_data
 
-	for i = 1, num_cost_maps, 1 do
+	for i = 1, num_cost_maps do
 		local cost_map_data = nav_cost_maps_data[i]
 		local volumes = cost_map_data.volumes
 
@@ -473,7 +473,7 @@ NavMeshManager._recompute_nav_cost_maps = function (self)
 	local num_nav_cost_maps = #nav_cost_maps_data
 	local nav_world = self._nav_world
 
-	for i = 1, num_nav_cost_maps, 1 do
+	for i = 1, num_nav_cost_maps do
 		local cost_map_data = nav_cost_maps_data[i]
 
 		if cost_map_data.recompute then
@@ -503,7 +503,7 @@ NavMeshManager.hot_join_sync = function (self, sender, channel)
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local allowed_layers = self._nav_tag_allowed_layers
 
-	for layer_id = 1, #nav_tag_layer_lookup, 1 do
+	for layer_id = 1, #nav_tag_layer_lookup do
 		local layer_name = nav_tag_layer_lookup[layer_id]
 		local allowed = allowed_layers[layer_name]
 

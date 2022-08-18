@@ -35,7 +35,7 @@ CriteriaParser.localize_criteria = function (backend_criteria)
 	local title_key = localization_data.label_key
 	local description_key = localization_data.description_key
 
-	for i = 1, #localization_data.parameters, 1 do
+	for i = 1, #localization_data.parameters do
 		local param = localization_data.parameters[i]
 		params[param.key] = Localize(string.format(param.pattern, parsed_task.specifiers[param.input] or "missing_value"))
 	end

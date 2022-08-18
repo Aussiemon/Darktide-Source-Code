@@ -1053,7 +1053,7 @@ params.max_bots = {
 		if Managers.state.game_session:is_server() then
 			Managers.event:trigger("debug_max_bots_changed", new_value, old_value)
 		else
-			local value_index = (new_value == "default" and 0) or new_value + 1
+			local value_index = new_value == "default" and 0 or new_value + 1
 			local channel = Managers.connection:host_channel()
 
 			RPC.rpc_debug_set_max_bots(channel, value_index)
@@ -1157,7 +1157,7 @@ params.use_gameplay_sound_indicators = {
 	category = "Wwise",
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
-			Wwise.set_state("sound_option_gameplay_indicators", (new_value == true and "true") or "false")
+			Wwise.set_state("sound_option_gameplay_indicators", new_value == true and "true" or "false")
 		end
 	end
 }
@@ -1608,7 +1608,7 @@ local function _attack_selection_template_override_options(breed_name)
 	local options = {}
 	local attack_selection_templates = data.attack_selection_templates
 
-	for i = 1, #attack_selection_templates, 1 do
+	for i = 1, #attack_selection_templates do
 		local template = attack_selection_templates[i]
 		options[i] = template.name
 	end
@@ -2883,7 +2883,7 @@ params.dialogue_mute_vo = {
 	category = "Dialogue",
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
-			Wwise.set_state("debug_mute_vo", (new_value == true and "true") or "false")
+			Wwise.set_state("debug_mute_vo", new_value == true and "true" or "false")
 		end
 	end
 }
@@ -2908,7 +2908,7 @@ params.dialogue_enable_vo_focus_mode = {
 	category = "Dialogue",
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
-			Wwise.set_state("debug_focus_vo", (new_value == true and "true") or "false")
+			Wwise.set_state("debug_focus_vo", new_value == true and "true" or "false")
 		end
 	end
 }

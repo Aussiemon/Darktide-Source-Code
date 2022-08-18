@@ -756,20 +756,20 @@ roamer_settings.density_settings = {
 }
 local density_types = roamer_settings.density_types
 
-for i = 1, #density_types, 1 do
+for i = 1, #density_types do
 	local density_type = density_types[i]
 
-	for j = 1, #roamer_settings.density_settings, 1 do
+	for j = 1, #roamer_settings.density_settings do
 		fassert(roamer_settings.density_settings[j][density_type], "Missing density settings for density type %s with resistance %d in roamer_settings.lua", density_type, j)
 	end
 end
 
 local encampment_types = roamer_settings.encampment_types
 
-for i = 1, #encampment_types, 1 do
+for i = 1, #encampment_types do
 	local encampment_type = encampment_types[i]
 
-	for j = 1, #roamer_settings.density_settings, 1 do
+	for j = 1, #roamer_settings.density_settings do
 		fassert(roamer_settings.density_settings[j][encampment_type], "Missing density settings for encampment_type %s with resistance %d in roamer_settings.lua", encampment_type, j)
 	end
 end

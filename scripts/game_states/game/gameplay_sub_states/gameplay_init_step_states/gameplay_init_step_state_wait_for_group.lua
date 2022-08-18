@@ -48,6 +48,7 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 		local lost_connection = not Managers.connection:game_session_host_is_set() or not Managers.connection:host_channel()
 
 		if lost_connection then
+			-- Nothing
 		end
 	end
 

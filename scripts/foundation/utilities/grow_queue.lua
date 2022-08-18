@@ -34,7 +34,7 @@ GrowQueue.contains = function (self, item)
 	local last = self.last
 	local queue = self.queue
 
-	for i = first, last, 1 do
+	for i = first, last do
 		local queued_item = queue[i]
 
 		if item == queued_item then
@@ -60,7 +60,7 @@ end
 GrowQueue.print_items = function (self, s)
 	local s = (s or "") .. " queue: [" .. self.first .. "->" .. self.last .. "] --> "
 
-	for i = self.first, self.last, 1 do
+	for i = self.first, self.last do
 		s = s .. tostring(self.queue[i]) .. ","
 	end
 

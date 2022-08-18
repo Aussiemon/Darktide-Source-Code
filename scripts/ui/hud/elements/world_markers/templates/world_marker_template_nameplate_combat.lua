@@ -130,8 +130,8 @@ template.on_enter = function (widget, marker)
 	local player_slot = data:slot()
 	local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 	local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
-	content.header_text = color_string .. "\ue005{#reset()} " .. data:name()
-	content.icon_text = color_string .. "\ue005{#reset()}"
+	content.header_text = color_string .. "{#reset()} " .. data:name()
+	content.icon_text = color_string .. "{#reset()}"
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)
@@ -173,8 +173,8 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		widget.alpha_multiplier = 1
 		content.edge_clamp_progress = edge_clamp_progress
 		local clamped_alpha = 255 - 255 * edge_clamp_progress
-		style.icon_text.text_color[1] = (distance > 15 and clamped_alpha) or 0
-		style.arrow.color[1] = (distance > 15 and clamped_alpha) or 0
+		style.icon_text.text_color[1] = distance > 15 and clamped_alpha or 0
+		style.arrow.color[1] = distance > 15 and clamped_alpha or 0
 	end
 end
 

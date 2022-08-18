@@ -68,7 +68,7 @@ ActionAimPlace.fixed_update = function (self, dt, t)
 			self._action_component.rotation_step = current_rotation_step
 		end
 
-		local angle = (math.pi * 2) / rotation_steps * current_rotation_step
+		local angle = math.pi * 2 / rotation_steps * current_rotation_step
 		local additional_rotation = Quaternion(Vector3.up(), angle)
 		rotation = Quaternion.multiply(rotation, additional_rotation)
 	end

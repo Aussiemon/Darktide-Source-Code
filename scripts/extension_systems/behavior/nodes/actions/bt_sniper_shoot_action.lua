@@ -254,7 +254,7 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
 	local shoot_node_position = Unit.world_position(target_unit, Unit.node(target_unit, scratchpad.aim_node_name))
 	local stored_target_position = scratchpad.stored_target_position and scratchpad.stored_target_position:unbox()
-	local last_los_position = stored_target_position or (has_line_of_sight and shoot_node_position) or perception_extension:last_los_position(target_unit)
+	local last_los_position = stored_target_position or has_line_of_sight and shoot_node_position or perception_extension:last_los_position(target_unit)
 
 	if scratchpad.dodge_window and t < scratchpad.dodge_window then
 		local is_dodging = Dodge.is_dodging(target_unit, attack_types.ranged)
@@ -299,7 +299,7 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 
 	local lock_to_target_lerp_speed = action_data.lock_to_target_lerp_speed
 	local default_lerp_speed = action_data.default_lerp_speed
-	local lerp_speed = (scratchpad.locked_to_target and lock_to_target_lerp_speed) or default_lerp_speed
+	local lerp_speed = scratchpad.locked_to_target and lock_to_target_lerp_speed or default_lerp_speed
 	local aim_position = Vector3.lerp(current_aim_position, last_los_position, dt * lerp_speed)
 
 	scratchpad.current_aim_position:store(aim_position)
@@ -351,7 +351,7 @@ BtSniperShootAction._start_shooting = function (self, unit, t, scratchpad, actio
 	scratchpad.shoot_state = "shooting"
 	scratchpad.next_shoot_timing = t
 	local num_shots = action_data.num_shots
-	scratchpad.num_shots = (type(num_shots) == "table" and math.random(num_shots[1], num_shots[2])) or num_shots
+	scratchpad.num_shots = type(num_shots) == "table" and math.random(num_shots[1], num_shots[2]) or num_shots
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
 	local perception_extension = scratchpad.perception_extension

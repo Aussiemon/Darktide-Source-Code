@@ -403,7 +403,7 @@ ContractsView._populate_task_list = function (self, tasks)
 	local num_completed_tasks = 0
 	local on_selected_callback = callback(self, "_cb_display_task_info")
 
-	for i = 1, #tasks, 1 do
+	for i = 1, #tasks do
 		local task_info = tasks[i]
 		local criteria = task_info.criteria
 		local label, description, target = _get_task_description_and_target(criteria)
@@ -420,7 +420,7 @@ ContractsView._populate_task_list = function (self, tasks)
 			task_progress_normalized = task_progress,
 			task_reward = reward,
 			selected_callback = on_selected_callback,
-			size = (task_name_size[2] < label_height and task_size_double) or task_size_normal
+			size = task_name_size[2] < label_height and task_size_double or task_size_normal
 		}
 
 		if task_is_fulfilled then
@@ -486,7 +486,7 @@ end
 ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 	local reroll_cost = self._contract_data.rerollCost
 	local reroll_cost_amount = reroll_cost.amount
-	local balance_amount = (wallet and wallet.balance.amount) or 0
+	local balance_amount = wallet and wallet.balance.amount or 0
 	local popup_params = {}
 
 	if reroll_cost_amount <= balance_amount then

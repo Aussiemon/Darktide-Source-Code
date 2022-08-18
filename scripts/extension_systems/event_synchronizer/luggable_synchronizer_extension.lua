@@ -64,7 +64,7 @@ LuggableSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 		local has_socketed = self:_check_sockets() or has_despawned
 
 		if has_socketed then
-			local additional_plugged_socket = (has_despawned and despawn_num) or 1
+			local additional_plugged_socket = has_despawned and despawn_num or 1
 
 			self:_update_mission_increment(dt, additional_plugged_socket)
 			Unit.flow_event(self._unit, "lua_luggable_socketed")
@@ -75,7 +75,7 @@ end
 local function _retrieve_units_by_system(units, system_name)
 	local result = {}
 
-	for i = 1, #units, 1 do
+	for i = 1, #units do
 		local unit = units[i]
 		local extension = ScriptUnit.has_extension(unit, system_name)
 
@@ -90,7 +90,7 @@ end
 local function _retrieve_units_by_zone(units, volume_name)
 	local result = {}
 
-	for i = 1, #units, 1 do
+	for i = 1, #units do
 		local unit = units[i]
 		local extension = Unit.has_volume(unit, volume_name)
 
@@ -205,7 +205,7 @@ LuggableSynchronizerExtension._check_sockets = function (self)
 
 				if has_overlap then
 					local consume_luggable = socket_ext:consume_luggable()
-					local socket_lock_time = (consume_luggable and self._luggable_despawn_timer) or nil
+					local socket_lock_time = consume_luggable and self._luggable_despawn_timer or nil
 
 					socket_ext:socket_luggable(luggable_unit, socket_lock_time)
 
@@ -258,7 +258,7 @@ LuggableSynchronizerExtension._configure_spawner_markers = function (self)
 	local spawners = self._spawners
 	local spawners_with_marker_on_start = self._spawners_with_marker_on_start
 
-	for i = 1, #spawners, 1 do
+	for i = 1, #spawners do
 		local spawner_unit = spawners[i]
 		local objective_target_ext = ScriptUnit.extension(spawner_unit, "mission_objective_target_system")
 
@@ -366,7 +366,7 @@ LuggableSynchronizerExtension._find_free_random_unit = function (self, all_units
 		local volume_index = rnd_num
 		local volume_unit = volumes[volume_index]
 
-		for i = 1, #all_units, 1 do
+		for i = 1, #all_units do
 			local unit = all_units[i]
 
 			if reserved_units[unit] == nil and Unit.is_point_inside_volume(volume_unit, VOLUME_NAME, POSITION_LOOKUP[unit]) then
@@ -380,7 +380,7 @@ LuggableSynchronizerExtension._find_free_random_unit = function (self, all_units
 	end
 
 	if #free_units == 0 then
-		for i = 1, #all_units, 1 do
+		for i = 1, #all_units do
 			local unit = all_units[i]
 
 			if reserved_units[unit] == nil then
@@ -444,7 +444,7 @@ LuggableSynchronizerExtension._spawn_all_luggables = function (self)
 	local num_spawners = #spawners
 	local num_luggables = math.min(num_sockets, num_spawners)
 
-	for i = 1, num_luggables, 1 do
+	for i = 1, num_luggables do
 		local random_free_spawner = self:_get_free_spawner()
 
 		if random_free_spawner then

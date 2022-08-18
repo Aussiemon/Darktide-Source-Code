@@ -28,7 +28,7 @@ function _get_character_armor_type(unit, breed, hit_zone_name_or_nil, attack_typ
 	if has_toughess and toughness_armor_type then
 		armor_type = toughness_armor_type
 	elseif hit_zone_name_or_nil then
-		armor_type = (breed.hitzone_armor_override and attack_type_or_nil ~= "impact" and breed.hitzone_armor_override[hit_zone_name_or_nil]) or breed.armor_type
+		armor_type = breed.hitzone_armor_override and attack_type_or_nil ~= "impact" and breed.hitzone_armor_override[hit_zone_name_or_nil] or breed.armor_type
 	else
 		armor_type = breed.armor_type
 	end

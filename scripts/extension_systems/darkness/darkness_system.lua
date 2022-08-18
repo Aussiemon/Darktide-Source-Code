@@ -45,12 +45,12 @@ DarknessSystem.on_add_extension = function (self, world, unit, extension_name, e
 
 	if extension_name == "LightSourceExtension" then
 		extension = {
-			intensity = (extension_init_data and extension_init_data.intensity) or 1
+			intensity = extension_init_data and extension_init_data.intensity or 1
 		}
 	elseif extension_name == "PlayerUnitDarknessExtension" then
 		extension = {
 			darkness_intensity = 0,
-			intensity = (extension_init_data and extension_init_data.intensity) or 1
+			intensity = extension_init_data and extension_init_data.intensity or 1
 		}
 	end
 
@@ -138,7 +138,7 @@ DarknessSystem.is_in_darkness_volume = function (self, position)
 		local is_inside_func = Level.is_point_inside_volume
 		local level = self._level
 
-		for i = 1, self._num_volumes, 1 do
+		for i = 1, self._num_volumes do
 			local vol_name = volumes[i]
 
 			if is_inside_func(level, vol_name, position) then

@@ -25,8 +25,8 @@ local templates = {
 				local damage_template = DamageProfileTemplates.burning
 				local stack_multiplier = template_context.stack_count / template.max_stacks
 				local power_level = stack_multiplier * stack_multiplier * 500
-				local owner_unit = (template_context.is_server and template_context.owner_unit) or nil
-				local source_item = (template_context.is_server and template_context.source_item) or nil
+				local owner_unit = template_context.is_server and template_context.owner_unit or nil
+				local source_item = template_context.is_server and template_context.source_item or nil
 
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
 			end
@@ -66,8 +66,8 @@ local templates = {
 			if HEALTH_ALIVE[unit] then
 				local damage_template = DamageProfileTemplates.bleeding
 				local power_level = 30
-				local source_item = (template_context.is_server and template_context.source_item) or nil
-				local owner_unit = (template_context.is_server and template_context.owner_unit) or nil
+				local source_item = template_context.is_server and template_context.source_item or nil
+				local owner_unit = template_context.is_server and template_context.owner_unit or nil
 
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.bleeding, "attacking_unit", owner_unit, "item", source_item)
 			end

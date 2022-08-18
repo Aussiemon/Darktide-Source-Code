@@ -6,7 +6,7 @@ MinionSpawnerQueue.init = function (self)
 end
 
 local function _queue_index_from_id(queue, queue_id)
-	for i = 1, #queue, 1 do
+	for i = 1, #queue do
 		if queue[i].queue_id == queue_id then
 			return i
 		end
@@ -78,13 +78,13 @@ MinionSpawnerQueue.get_debug_info = function (self)
 
 	local queue = self._queue
 
-	for i = 1, #queue, 1 do
+	for i = 1, #queue do
 		local item = queue[i]
 		local queue_id = item.queue_id
 		local breed_list = item.breed_list
 		local spawn_data = item.spawn_data
 
-		for j = item.breed_list_index, item.breed_list_size, 1 do
+		for j = item.breed_list_index, item.breed_list_size do
 			local breed = breed_list[j]
 			debug_info[#debug_info + 1] = {
 				queue_id = queue_id,

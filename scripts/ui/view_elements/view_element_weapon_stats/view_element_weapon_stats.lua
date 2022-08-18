@@ -60,7 +60,7 @@ ViewElementWeaponStats._draw_widgets = function (self, dt, t, input_service, ui_
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -70,7 +70,7 @@ ViewElementWeaponStats._draw_widgets = function (self, dt, t, input_service, ui_
 	local action_texts_widgets = self._action_texts_widgets
 
 	if action_texts_widgets then
-		for i = 1, #action_texts_widgets, 1 do
+		for i = 1, #action_texts_widgets do
 			local widget = action_texts_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -80,7 +80,7 @@ ViewElementWeaponStats._draw_widgets = function (self, dt, t, input_service, ui_
 	local keyword_texts_widgets = self._keyword_texts_widgets
 
 	if keyword_texts_widgets then
-		for i = 1, #keyword_texts_widgets, 1 do
+		for i = 1, #keyword_texts_widgets do
 			local widget = keyword_texts_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -91,7 +91,7 @@ ViewElementWeaponStats._draw_widgets = function (self, dt, t, input_service, ui_
 	local trait_widgets = self._trait_widgets
 
 	if trait_widgets then
-		for i = 1, #trait_widgets, 1 do
+		for i = 1, #trait_widgets do
 			local widget = trait_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -132,7 +132,7 @@ ViewElementWeaponStats._get_traits = function (self, item)
 	local traits = {}
 
 	if item.trait_slots then
-		for i = 1, #item.trait_slots, 1 do
+		for i = 1, #item.trait_slots do
 			local slot = item.trait_slots[i]
 			local trait = item.traits[i]
 
@@ -147,8 +147,8 @@ ViewElementWeaponStats._get_traits = function (self, item)
 						slot_rarity = tonumber(slot.maxRank),
 						locked = slot.locked,
 						slot_categories = slot.traitCategories,
-						name = (trait_item.display_name and Localize(trait_item.display_name)) or "",
-						description = (trait_item.description and Localize(trait_item.description)) or "",
+						name = trait_item.display_name and Localize(trait_item.display_name) or "",
+						description = trait_item.description and Localize(trait_item.description) or "",
 						icon = trait_item.icon,
 						category = trait_item.weapon_type_restriction[1],
 						trait_id = trait_id,
@@ -196,7 +196,7 @@ ViewElementWeaponStats.present_item = function (self, item)
 			end
 		else
 			local stamina_push_cost = main_stats.stamina_push_cost or 0
-			local push_cost_color = (stamina_push_cost == 1 and Color.ui_brown_light(255, true)) or (stamina_push_cost > 1 and Color.ui_hud_red_light(255, true)) or (stamina_push_cost < 1 and Color.green(255, true))
+			local push_cost_color = stamina_push_cost == 1 and Color.ui_brown_light(255, true) or stamina_push_cost > 1 and Color.ui_hud_red_light(255, true) or stamina_push_cost < 1 and Color.green(255, true)
 			local push_cost_text = _apply_color_to_text(string.format("%.0f%%", stamina_push_cost * 100), push_cost_color)
 
 			self:_set_widget_text("resource_value", push_cost_text)
@@ -221,7 +221,7 @@ ViewElementWeaponStats._setup_trait_slot_widgets = function (self, item)
 	local trait_widgets = self._trait_widgets
 
 	if trait_widgets then
-		for i = 1, #trait_widgets, 1 do
+		for i = 1, #trait_widgets do
 			local widget = trait_widgets[i]
 			local widget_name = widget.name
 
@@ -241,7 +241,7 @@ ViewElementWeaponStats._setup_trait_slot_widgets = function (self, item)
 		local offset_x = trait_size[1] * 0.5
 		local total_length = trait_size[1] * num_traits + spacing * (num_traits - 1)
 
-		for i = 1, num_traits, 1 do
+		for i = 1, num_traits do
 			local trait = traits[i]
 			local widget_name = "trait_" .. trait_index
 			local widget = self:_create_widget(widget_name, trait_widget_definition)
@@ -273,7 +273,7 @@ end
 
 ViewElementWeaponStats._setup_keyword_widgets = function (self, item)
 	if self._keyword_texts_widgets then
-		for i = 1, #self._keyword_texts_widgets, 1 do
+		for i = 1, #self._keyword_texts_widgets do
 			local widget = self._keyword_texts_widgets[i]
 			local widget_name = widget.name
 
@@ -308,13 +308,13 @@ ViewElementWeaponStats._setup_keyword_widgets = function (self, item)
 		}
 		local max_rows = 10
 
-		for i = 1, #displayed_keywords, 1 do
+		for i = 1, #displayed_keywords do
 			local name = "keyword_text_" .. i
 			local widget = self:_create_widget(name, widget_definition)
 			widgets[i] = widget
 			local keyword = displayed_keywords[i]
 			local display_name = keyword.display_name
-			local title_text = Localize(display_name) .. " •"
+			local title_text = Localize(display_name) .. " â€¢"
 			widget.content.text = title_text
 			local column = (i - 1) % max_rows + 1
 			local row = math.ceil(i / max_rows)
@@ -327,7 +327,7 @@ end
 
 ViewElementWeaponStats._setup_action_text_widgets = function (self, item)
 	if self._action_texts_widgets then
-		for i = 1, #self._action_texts_widgets, 1 do
+		for i = 1, #self._action_texts_widgets do
 			local widget = self._action_texts_widgets[i]
 			local widget_name = widget.name
 
@@ -406,10 +406,10 @@ ViewElementWeaponStats._set_trait_tooltip_text = function (self, ui_renderer, tr
 	_temp_trait_tooltip_localization_values.trait_tier = _apply_color_to_text(TextUtilities.convert_to_roman_numerals(trait_rarity), trait_rarity_color)
 
 	if trait.slot_categories then
-		for i = 1, #trait.slot_categories, 1 do
+		for i = 1, #trait.slot_categories do
 			local category = trait.slot_categories[i]
 			local category_icon = UISettings.trait_category_icon[category]
-			slot_categories_text = (slot_categories_text == "" and category_icon) or slot_categories_text .. " / " .. category_icon
+			slot_categories_text = slot_categories_text == "" and category_icon or slot_categories_text .. " / " .. category_icon
 		end
 
 		_temp_trait_tooltip_localization_values.slot_tier = _apply_color_to_text(TextUtilities.convert_to_roman_numerals(slot_rarity), slot_rarity_color)
@@ -451,7 +451,7 @@ ViewElementWeaponStats._setup_stats_widgets = function (self, compairing_stats)
 	table.clear(self._stats_animation_progress)
 
 	if self._stat_widgets then
-		for i = 1, #self._stat_widgets, 1 do
+		for i = 1, #self._stat_widgets do
 			local widget = self._stat_widgets[i]
 			local widget_name = widget.name
 
@@ -487,7 +487,7 @@ ViewElementWeaponStats._setup_stats_widgets = function (self, compairing_stats)
 	local spacing = 15
 	local anim_duration = 1
 
-	for i = 1, num_stats, 1 do
+	for i = 1, num_stats do
 		local stat_data = compairing_stats_array[i]
 		local name = "stat_" .. i
 		local widget = self:_create_widget(name, widget_definition)
@@ -538,7 +538,7 @@ ViewElementWeaponStats._set_stat_bar_value = function (self, stat_index, value, 
 	local current_progress = content.progress or 0
 	local anim_data = {
 		time = 0,
-		start_value = (should_reset and 0) or current_progress,
+		start_value = should_reset and 0 or current_progress,
 		end_value = value,
 		duration = duration,
 		widget = widget
@@ -584,7 +584,7 @@ ViewElementWeaponStats._set_preview_widgets_visibility = function (self, visible
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
-		for i = 1, #stat_widgets, 1 do
+		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
 			widget.content.visible = visible
 		end
@@ -593,7 +593,7 @@ ViewElementWeaponStats._set_preview_widgets_visibility = function (self, visible
 	local action_texts_widgets = self._action_texts_widgets
 
 	if action_texts_widgets then
-		for i = 1, #action_texts_widgets, 1 do
+		for i = 1, #action_texts_widgets do
 			local widget = action_texts_widgets[i]
 			widget.content.visible = visible
 		end
@@ -602,7 +602,7 @@ ViewElementWeaponStats._set_preview_widgets_visibility = function (self, visible
 	local keyword_texts_widgets = self._keyword_texts_widgets
 
 	if keyword_texts_widgets then
-		for i = 1, #keyword_texts_widgets, 1 do
+		for i = 1, #keyword_texts_widgets do
 			local widget = keyword_texts_widgets[i]
 			widget.content.visible = visible
 		end
@@ -611,7 +611,7 @@ ViewElementWeaponStats._set_preview_widgets_visibility = function (self, visible
 	local trait_widgets = self._trait_widgets
 
 	if trait_widgets then
-		for i = 1, #trait_widgets, 1 do
+		for i = 1, #trait_widgets do
 			local widget = trait_widgets[i]
 			widget.content.visible = visible
 		end

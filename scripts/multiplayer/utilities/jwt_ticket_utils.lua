@@ -70,7 +70,7 @@ end
 JwtTicketUtils.join_jwt_ticket_array = function (jwt_ticket_array)
 	local str = ""
 
-	for i = 1, #jwt_ticket_array, 1 do
+	for i = 1, #jwt_ticket_array do
 		local part = jwt_ticket_array[i]
 		str = str .. part
 	end

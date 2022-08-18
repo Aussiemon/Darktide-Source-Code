@@ -148,7 +148,7 @@ local widget_definitions = {
 			value_id = "text_background",
 			style_id = "text_background",
 			pass_type = "text",
-			value = "\ue018\ue018",
+			value = "",
 			style = timer_new_text_style
 		},
 		{

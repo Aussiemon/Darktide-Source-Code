@@ -178,7 +178,7 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 	local moving_forward = move_y > 0
 	local moving_backward = not moving_forward
 	local mover_collides_down = Mover.collides_down(Unit.mover(unit))
-	local on_ground = mover_collides_down and ((looking_down and moving_forward) or moving_backward)
+	local on_ground = mover_collides_down and (looking_down and moving_forward or moving_backward)
 	local x_input, y_input = nil
 
 	if on_ground then
@@ -203,7 +203,7 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 			y_input = move_y * percentage_to_increase_y_input
 
 			if not has_movement_x then
-				x_input = (is_left and 1 * percentage_to_increase_x_input) or -1 * percentage_to_increase_x_input
+				x_input = is_left and 1 * percentage_to_increase_x_input or -1 * percentage_to_increase_x_input
 			end
 		else
 			y_input = move_y

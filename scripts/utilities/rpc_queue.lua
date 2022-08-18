@@ -7,7 +7,7 @@ RPCQueue.init = function (self, channel_id, settings)
 	self._time_between_sends = settings.time_between_sends or 0
 	local max_rpcs = settings.max_rpcs
 
-	for i = 1, max_rpcs, 1 do
+	for i = 1, max_rpcs do
 		self._queue[i] = {
 			args = {}
 		}
@@ -21,7 +21,7 @@ end
 
 RPCQueue.update = function (self, dt)
 	if self._send_timer <= 0 then
-		for i = 1, self._num_rpcs_per_send, 1 do
+		for i = 1, self._num_rpcs_per_send do
 			if self:_can_send_next_rpc() then
 				self:_send_next_rpc()
 			end
@@ -84,7 +84,7 @@ RPCQueue.queue_rpc = function (self, rpc_name, ...)
 	rpc.name = rpc_name
 	local num_args = select("#", ...)
 
-	for i = 1, num_args, 1 do
+	for i = 1, num_args do
 		local arg = select(i, ...)
 		rpc.args[i] = arg
 	end

@@ -17,7 +17,7 @@ end
 CameraTransitionRotationLerp.update = function (self, dt, rotation, update_time)
 	CameraTransitionBase.update(self, dt, update_time)
 
-	local node_1_rot = (self._freeze_node_1 and self._node_1_rot_table:unbox()) or rotation
+	local node_1_rot = self._freeze_node_1 and self._node_1_rot_table:unbox() or rotation
 	local node_2_rot = self._node_2:rotation()
 	local duration = self._duration
 

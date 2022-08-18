@@ -68,7 +68,7 @@ InputAliases.load = function (self, service_name)
 		end
 	end
 
-	for i = 1, #TO_REMOVE, 1 do
+	for i = 1, #TO_REMOVE do
 		local alias_to_remove = TO_REMOVE[i]
 		service_overrides[alias_to_remove] = nil
 

@@ -64,7 +64,7 @@ local function TEXT_INPUT_delete_selection(data)
 
 		local d = b - a
 
-		for i = a + 1, #data, 1 do
+		for i = a + 1, #data do
 			data[i] = data[i + d]
 		end
 
@@ -109,11 +109,11 @@ ProtoUI.behaviour_text_input = function (data, text, font, font_size, pos, size,
 			data.last_stroke = ProtoUI.t
 
 			if text ~= data.text then
-				for i = 1, #text, 1 do
+				for i = 1, #text do
 					data[i] = string.sub(text, i, i)
 				end
 
-				for i = #text + 1, #data, 1 do
+				for i = #text + 1, #data do
 					data[i] = nil
 				end
 
@@ -125,11 +125,11 @@ ProtoUI.behaviour_text_input = function (data, text, font, font_size, pos, size,
 			local mod_ctrl = ProtoUI.keyboard_is_down("left ctrl") or ProtoUI.keyboard_is_down("right ctrl")
 			local mod_shift = ProtoUI.keyboard_is_down("left shift") or ProtoUI.keyboard_is_down("right shift")
 
-			for i = 1, n, 1 do
+			for i = 1, n do
 				local stroke = keystrokes[i]
 
 				if type(stroke) == "string" then
-					if not max_length or max_length > #data or (data.selection and data.selection ~= data.caret) then
+					if not max_length or max_length > #data or data.selection and data.selection ~= data.caret then
 						TEXT_INPUT_delete_selection(data)
 
 						data.caret = data.caret + 1
@@ -227,8 +227,8 @@ ProtoUI.behaviour_draggable = function (data, sub_pos, sub_size, pos, size)
 			data.state = "hover"
 		end
 
-		sub_pos[1] = math.clamp(ProtoUI.mouse_cursor[1] - data.drag_offset_x, pos[1], (pos[1] + size[1]) - sub_size[1])
-		sub_pos[2] = math.clamp(ProtoUI.mouse_cursor[2] - data.drag_offset_y, pos[2], (pos[2] + size[2]) - sub_size[2])
+		sub_pos[1] = math.clamp(ProtoUI.mouse_cursor[1] - data.drag_offset_x, pos[1], pos[1] + size[1] - sub_size[1])
+		sub_pos[2] = math.clamp(ProtoUI.mouse_cursor[2] - data.drag_offset_y, pos[2], pos[2] + size[2] - sub_size[2])
 	end
 
 	return data, sub_pos, drag_ended
@@ -245,5 +245,3 @@ ProtoUI.behaviour_draggable_seekable = function (data0, sub_pos0, sub_size, pos,
 
 	return data, sub_pos, drag_ended
 end
-
-return

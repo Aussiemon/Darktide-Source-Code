@@ -66,7 +66,7 @@ end
 AccountProfileOverwiewView.update = function (self, dt, t, input_service)
 	local grids = self._column_grids_array
 
-	for i = 1, #grids, 1 do
+	for i = 1, #grids do
 		grids[i].grid_widget:update(dt, t, input_service)
 	end
 
@@ -82,7 +82,7 @@ AccountProfileOverwiewView.draw = function (self, dt, t, input_service, layer)
 
 		local grids = self._column_grids_array
 
-		for i = 1, #grids, 1 do
+		for i = 1, #grids do
 			self:_draw_list_widgets(grids[i], input_service, offscreen_renderer)
 		end
 
@@ -124,7 +124,7 @@ AccountProfileOverwiewView._add_list_item = function (self, list, item_data)
 	local grid = self._column_grids[list]
 	local item_icon = item_data.icon
 	local blueprints = self._definitions.blueprints
-	local blueprint = (item_icon and blueprints.item_blueprint_with_icon) or blueprints.item_blueprint
+	local blueprint = item_icon and blueprints.item_blueprint_with_icon or blueprints.item_blueprint
 	local popup_callback = callback(self, "cb_show_popup", item_data)
 	local widget_definition = UIWidget.create_definition(blueprint.passes, grid.grid_scenegraph_id, {
 		hotspot = {
@@ -192,7 +192,7 @@ AccountProfileOverwiewView._draw_list_widgets = function (self, list, input_serv
 	local widgets = list.widgets
 	local grid = list.grid_widget
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget, margin) then
@@ -229,7 +229,7 @@ AccountProfileOverwiewView._set_boons_data = function (self, data)
 	local boons_grid = self._column_grids[BOONS_LIST]
 	boons_grid.data = boons_data
 
-	for i = 1, #boons_data, 1 do
+	for i = 1, #boons_data do
 		local boon_data = boons_data[i]
 		local boon = Boons[boon_data.name]
 		local popup_data = {
@@ -279,7 +279,7 @@ AccountProfileOverwiewView._set_commendations_data = function (self, commendatio
 
 	local items_to_add = math.min(NUM_COMMENDATIONS_TO_SHOW, #commendations_data)
 
-	for i = 1, items_to_add, 1 do
+	for i = 1, items_to_add do
 		local commendation_data = commendations_data[i]
 		local icon = commendation_data.icon
 		local progress = self:_format_progress("percent", commendation_data.progress_current, commendation_data.progress_goal)
@@ -299,9 +299,9 @@ AccountProfileOverwiewView._set_current_contracts_data = function (self, data)
 	local tasks = data.tasks
 	local contracts_widget = self._widgets_by_name.contracts
 	local num_tasks = #tasks
-	contracts_widget.content.num_tasks = num_tasks .. " \ue033"
+	contracts_widget.content.num_tasks = num_tasks .. " "
 
-	for i = 1, num_tasks, 1 do
+	for i = 1, num_tasks do
 		local task = tasks[i]
 		local progress = self:_format_progress(task.taskType, task.progressCurrent, task.progressGoal)
 		local item_data = {

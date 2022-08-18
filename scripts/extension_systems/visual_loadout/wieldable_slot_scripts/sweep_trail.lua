@@ -20,7 +20,7 @@ SweepTrail.init = function (self, context, slot, weapon_template, fx_sources, it
 	local sweep_trail_components = {}
 	local num_attachments = #slot.attachments_1p
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local attachment_unit = slot.attachments_1p[i]
 		local components = Component.get_components_by_name(attachment_unit, "SweepTrail")
 
@@ -85,7 +85,7 @@ SweepTrail._update_trail_status = function (self)
 	local sweep_trail_components = self._sweep_trail_components
 	local num_trails = #sweep_trail_components
 
-	for i = 1, num_trails, 1 do
+	for i = 1, num_trails do
 		local sweep_trail = sweep_trail_components[i]
 
 		sweep_trail.component:set_critical_strike(sweep_trail.unit, is_critical)

@@ -220,7 +220,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local progress = math.min(spawn_progress_timer / duration, 1)
 		local anim_out_progress = math.ease_out_quad(progress)
 		local anim_in_progress = math.ease_out_exp(progress)
-		content.spawn_progress_timer = (progress ~= 1 and spawn_progress_timer) or nil
+		content.spawn_progress_timer = progress ~= 1 and spawn_progress_timer or nil
 		style.icon.color[1] = 255 * anim_in_progress
 		style.arrow.color[1] = 255 * anim_in_progress
 		style.text.text_color[1] = 255 * anim_in_progress
@@ -247,14 +247,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local alpha_multiplier = 1
 
 	if not content.is_inside_frustum then
-		local pulse_progress = (Application.time_since_launch() * 1) % 1
+		local pulse_progress = Application.time_since_launch() * 1 % 1
 		local pulse_anim_progress = (pulse_progress * 2 - 1)^2
 		alpha_multiplier = 0.7 + pulse_anim_progress * 0.3
 	end
 
 	widget.alpha_multiplier = alpha_multiplier
 	local distance_text = tostring(math.floor(distance)) .. "m"
-	content.text = (distance > 1 and distance_text) or ""
+	content.text = distance > 1 and distance_text or ""
 	data.distance_text = distance_text
 	marker.ignore_scale = content.is_clamped or is_hovered
 	content.is_hovered = is_hovered

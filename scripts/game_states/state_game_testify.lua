@@ -166,7 +166,7 @@ local StateGameTestify = {
 		local render_settings = {}
 		local i = 0
 
-		for j = 1, #settings, 1 do
+		for j = 1, #settings do
 			if settings[j].display_name == "loc_settings_menu_group_graphics" then
 				break
 			elseif not settings[j].widget_type then

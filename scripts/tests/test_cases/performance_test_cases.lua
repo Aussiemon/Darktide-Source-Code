@@ -69,5 +69,3 @@ PerformanceTestCases = {
 		end)
 	end
 }
-
-return

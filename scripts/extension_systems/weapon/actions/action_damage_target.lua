@@ -105,7 +105,7 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 
 	if target_breed then
 		local hit_zone_weakspot_types = target_breed.hit_zone_weakspot_types
-		local hit_zone = (hit_zone_weakspot_types and next(hit_zone_weakspot_types)) or hit_zone_names.center_mass
+		local hit_zone = hit_zone_weakspot_types and next(hit_zone_weakspot_types) or hit_zone_names.center_mass
 		local actors = HitZone.get_actor_names(target_unit, hit_zone)
 		local hit_actor_name = actors[1]
 		hit_zone_name = hit_zone

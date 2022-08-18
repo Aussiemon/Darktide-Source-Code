@@ -49,7 +49,7 @@ ChainLightningEffects.init = function (self, context, slot, weapon_template, fx_
 	self._length_variable_index = World.find_particles_variable(self._world, TARGET_VFX, PARTICLE_VARIABLE_NAME)
 	self._fx_tables = Script.new_array(MAX_FX_TABLES)
 
-	for ii = 1, MAX_FX_TABLES, 1 do
+	for ii = 1, MAX_FX_TABLES do
 		self._fx_tables[ii] = {
 			active = false,
 			index = ii
@@ -85,8 +85,8 @@ ChainLightningEffects._find_root_targets = function (self, t)
 	local chain_settings = action_settings and action_settings.chain_settings
 	local fx_settings = action_settings and action_settings.fx
 	local action_kind = action_settings and action_settings.kind
-	local max_targets = (chain_settings and chain_settings.max_targets) or DEFAULT_MAX_TARGETS
-	local fx_hand = (fx_settings and fx_settings.fx_hand) or DEFAULT_HAND
+	local max_targets = chain_settings and chain_settings.max_targets or DEFAULT_MAX_TARGETS
+	local fx_hand = fx_settings and fx_settings.fx_hand or DEFAULT_HAND
 	local targeting = action_kind == "overload_charge_target_finder"
 	local attacking = action_kind == "chain_lightning"
 
@@ -145,7 +145,7 @@ ChainLightningEffects._find_root_targets = function (self, t)
 	else
 		local chain_targets = self._chain_targets
 
-		for ii = 1, #chain_targets, 1 do
+		for ii = 1, #chain_targets do
 			ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, self)
 		end
 
@@ -173,7 +173,7 @@ ChainLightningEffects._find_new_chain_targets = function (self, t, broadphase, e
 	table.clear(valid_sources)
 	ChainLightningTarget.traverse_breadth_first(root_target, valid_sources, _target_finding_func, max_jumps)
 
-	for ii = 1, #valid_sources, 1 do
+	for ii = 1, #valid_sources do
 		local source = valid_sources[ii]
 
 		self:_jump(t, source, hit_units, broadphase, enemy_side_names, initial_attack_direction, radius, max_angle)
@@ -203,7 +203,7 @@ ChainLightningEffects._jump = function (self, t, source_target, hit_units, broad
 	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
 
 	if num_results > 0 then
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local target_unit = BROADPHASE_RESULTS[i]
 
 			if target_unit and not hit_units[target_unit] then
@@ -252,7 +252,7 @@ ChainLightningEffects._validate_targets = function (self, t)
 			table.clear(deletion_targets)
 			ChainLightningTarget.traverse_depth_first(chain_targets[ii], deletion_targets)
 
-			for jj = 1, #deletion_targets, 1 do
+			for jj = 1, #deletion_targets do
 				local child_target = deletion_targets[jj]
 
 				_on_delete_func(child_target, self)
@@ -266,7 +266,7 @@ ChainLightningEffects._validate_targets = function (self, t)
 
 	table.clear(validation_targets)
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.traverse_depth_first(chain_targets[ii], validation_targets, _validation_func)
 	end
 
@@ -278,7 +278,7 @@ ChainLightningEffects._validate_targets = function (self, t)
 		target:mark_for_deletion()
 	end
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_targets[ii], _on_delete_func, self)
 	end
 
@@ -299,12 +299,12 @@ ChainLightningEffects._find_new_targets = function (self, t)
 	local broadphase = broadphase_system.broadphase
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local chain_settings = action_settings and action_settings.chain_settings
-	local max_angle = (chain_settings and chain_settings.max_angle) or DEFAULT_MAX_ANGLE
-	local max_jumps = (chain_settings and chain_settings.max_jumps) or DEFAULT_MAX_JUMPS
-	local radius = (chain_settings and chain_settings.radius) or DEFAULT_RADIUS
-	local jump_time = (chain_settings and chain_settings.jump_time) or DEFAULT_JUMP_TIME
+	local max_angle = chain_settings and chain_settings.max_angle or DEFAULT_MAX_ANGLE
+	local max_jumps = chain_settings and chain_settings.max_jumps or DEFAULT_MAX_JUMPS
+	local radius = chain_settings and chain_settings.radius or DEFAULT_RADIUS
+	local jump_time = chain_settings and chain_settings.jump_time or DEFAULT_JUMP_TIME
 
-	for ii = 1, #self._chain_targets, 1 do
+	for ii = 1, #self._chain_targets do
 		local attack_direction = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[self._owner_unit] - POSITION_LOOKUP[self._chain_targets[ii]:value("unit")]))
 
 		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, max_jumps, radius, self._chain_targets[ii], attack_direction)
@@ -322,11 +322,11 @@ ChainLightningEffects._update_fx = function (self)
 
 	table.clear(effect_targets)
 
-	for ii = 1, #self._chain_targets, 1 do
+	for ii = 1, #self._chain_targets do
 		ChainLightningTarget.traverse_breadth_first(self._chain_targets[ii], effect_targets)
 	end
 
-	for ii = 1, #effect_targets, 1 do
+	for ii = 1, #effect_targets do
 		local target = effect_targets[ii]
 		local data = target:value("parent_effect_data")
 
@@ -412,7 +412,7 @@ ChainLightningEffects._reset = function (self)
 	self._left_hand_particle_id = self:_stop_vfx(self._world, self._left_hand_particle_id)
 	local chain_targets = self._chain_targets
 
-	for ii = 1, #chain_targets, 1 do
+	for ii = 1, #chain_targets do
 		ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, self)
 	end
 
@@ -423,7 +423,7 @@ end
 ChainLightningEffects._next_free_fx_table = function (self)
 	local fx_tables = self._fx_tables
 
-	for ii = 1, MAX_FX_TABLES, 1 do
+	for ii = 1, MAX_FX_TABLES do
 		local fx_table = fx_tables[ii]
 
 		if not fx_table.active then

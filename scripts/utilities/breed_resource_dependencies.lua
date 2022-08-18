@@ -33,7 +33,7 @@ local CONTENT_IMPACT_PARTICLE_START_STRING = "content/fx/particles/impacts/"
 local WWISE_START_STRING = "wwise/"
 
 local function _is_valid_resource_name(value)
-	return (string.starts_with(value, CONTENT_START_STRING) and not string.starts_with(value, CONTENT_UI_START_STRING) and not string.starts_with(value, CONTENT_IMPACT_PARTICLE_START_STRING)) or string.starts_with(value, WWISE_START_STRING)
+	return string.starts_with(value, CONTENT_START_STRING) and not string.starts_with(value, CONTENT_UI_START_STRING) and not string.starts_with(value, CONTENT_IMPACT_PARTICLE_START_STRING) or string.starts_with(value, WWISE_START_STRING)
 end
 
 BreedResourceDependencies._resolve_recursive = function (data, item_definitions, resource_packages)

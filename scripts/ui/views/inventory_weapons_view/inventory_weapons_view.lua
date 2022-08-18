@@ -44,7 +44,7 @@ InventoryWeaponsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
 	local legend_inputs = self._definitions.legend_inputs
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -268,7 +268,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		self._inventory_items = items_array
 		local layout = {}
 
-		for i = 1, #items_array, 1 do
+		for i = 1, #items_array do
 			local item = items_array[i]
 
 			if self:_item_valid_by_current_profile(item) then
@@ -276,7 +276,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 				local valid = true
 
 				if valid and slots then
-					for j = 1, #slots, 1 do
+					for j = 1, #slots do
 						if slots[j] == slot_name then
 							layout[#layout + 1] = {
 								widget_type = "item",
@@ -409,7 +409,7 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 		local ui_renderer = self._ui_offscreen_renderer
 		local num_widgets = #widgets
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = ContentBlueprints[widget_type]
@@ -428,7 +428,7 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 			if item then
 				is_equipped = equipped_item and equipped_item.gear_id == item.gear_id
 				local is_selected = previewed_item and previewed_item.gear_id == item.gear_id
-				style.salvage_circle.material_values.progress = (is_selected and discard_item_hold_progress) or 0
+				style.salvage_circle.material_values.progress = is_selected and discard_item_hold_progress or 0
 			end
 
 			content.is_equipped = is_equipped
@@ -469,7 +469,7 @@ InventoryWeaponsView._discard_items = function (self, item)
 
 	delete_promise:next(function (path)
 		local credits_amount = 10
-		local text = string.format("You've gained %s\ue031 Credits", credits_amount)
+		local text = string.format("You've gained %s Credits", credits_amount)
 
 		Managers.event:trigger("event_add_notification_message", "default", text)
 	end)
@@ -484,7 +484,7 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	local gear_id = item.gear_id
 	local inventory_items = self._inventory_items
 
-	for i = 1, #inventory_items, 1 do
+	for i = 1, #inventory_items do
 		if inventory_items[i].gear_id == gear_id then
 			table.remove(self._inventory_items, i)
 
@@ -558,7 +558,7 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
 		button_content.hotspot.disabled = disable_button
-		button_content.text = string.upper((disable_button and Localize("loc_weapon_inventory_equipped_button")) or Localize("loc_weapon_inventory_equip_button"))
+		button_content.text = string.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 	end
 end
 

@@ -174,7 +174,7 @@ end
 ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_renderer)
 	local button_widgets = self._button_widgets
 
-	for i = 1, #button_widgets, 1 do
+	for i = 1, #button_widgets do
 		local widget = button_widgets[i]
 
 		self:_unregister_widget_name(widget.name)
@@ -191,25 +191,19 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 	local total_height_spacing = ConstantElementPopupHandlerSettings.total_height_spacing
 	local num_options = #options
 
-	for i = 1, num_options, 1 do
+	for i = 1, num_options do
 		local option = options[i]
 		local template_type = option.template_type or "default_button"
 		local widget_name = "button_" .. i
 		local pass_template = ButtonPassTemplates[template_type]
-		local button_size = (pass_template.size_function and pass_template.size_function(self, option, ui_renderer)) or pass_template.size
+		local button_size = pass_template.size_function and pass_template.size_function(self, option, ui_renderer) or pass_template.size
 		local widget_definitions = UIWidget.create_definition(ButtonPassTemplates[template_type], "button_pivot", nil, button_size)
 		local widget = self:_create_widget(widget_name, widget_definitions)
 		button_widgets[i] = widget
 		local content = widget.content
 		local hotkey = option.hotkey
 		local text = nil
-
-		if hotkey then
-			text = TextUtilities.localize_with_button_hint(hotkey, option.text, option.text_params)
-		else
-			text = Localize(option.text, option.text_params ~= nil, option.text_params)
-		end
-
+		text = hotkey and TextUtilities.localize_with_button_hint(hotkey, option.text, option.text_params) or Localize(option.text, option.text_params ~= nil, option.text_params)
 		content.text = text
 		content.hotkey = option.hotkey
 		content.callback = option.callback
@@ -233,7 +227,7 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 			local start_index = i - widgets_on_row
 			local end_index = start_index + widgets_on_row
 
-			for j = start_index, end_index, 1 do
+			for j = start_index, end_index do
 				local button_length = button_widgets[j].content.size[1]
 				button_widgets[j].offset[1] = start_offset
 				start_offset = start_offset + button_length
@@ -265,7 +259,7 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 			local start_index = i - widgets_on_row + 1
 			local end_index = num_options
 
-			for j = start_index, end_index, 1 do
+			for j = start_index, end_index do
 				local button_length = button_widgets[j].content.size[1]
 				button_widgets[j].offset[1] = start_offset
 				start_offset = start_offset + button_length
@@ -418,7 +412,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 			end
 		end
 	elseif direction == self.INPUT_DIR_DOWN then
-		for i = math.min(starting_index + 1, num_widgets), num_widgets, 1 do
+		for i = math.min(starting_index + 1, num_widgets), num_widgets do
 			local widget = button_widgets[i]
 			local content = widget.content
 
@@ -462,7 +456,7 @@ end
 ConstantElementPopupHandler._select_button_index = function (self, index)
 	local button_widgets = self._button_widgets
 
-	for i = 1, #button_widgets, 1 do
+	for i = 1, #button_widgets do
 		local widget = button_widgets[i]
 		widget.content.hotspot.is_selected = i == index
 	end
@@ -502,7 +496,7 @@ ConstantElementPopupHandler._update_button_input = function (self, input_service
 	end
 
 	if not input_handled then
-		for i = 1, #button_widgets, 1 do
+		for i = 1, #button_widgets do
 			local widget = button_widgets[i]
 			local content = widget.content
 			local hotkey = content.hotkey
@@ -549,7 +543,7 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 		self._on_exit_anim_id = nil
 		local button_widgets = self._button_widgets
 
-		for i = 1, #button_widgets, 1 do
+		for i = 1, #button_widgets do
 			local widget = button_widgets[i]
 
 			self:_unregister_widget_name(widget.name)
@@ -679,7 +673,7 @@ ConstantElementPopupHandler._draw_widgets = function (self, dt, t, input_service
 
 	local button_widgets = self._button_widgets
 
-	for i = 1, #button_widgets, 1 do
+	for i = 1, #button_widgets do
 		local widget = button_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)

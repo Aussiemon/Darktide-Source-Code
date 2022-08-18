@@ -40,7 +40,7 @@ TriggerConditionOnlyEnter._is_player = function (self, unit)
 	if player then
 		local is_bot = not player:is_human_controlled()
 		local evaluates_bots = self._evaluates_bots
-		local valid_player = (evaluates_bots and is_bot) or not is_bot
+		local valid_player = evaluates_bots and is_bot or not is_bot
 
 		return valid_player
 	end

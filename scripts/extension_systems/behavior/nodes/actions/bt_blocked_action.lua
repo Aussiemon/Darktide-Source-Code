@@ -28,7 +28,7 @@ BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local script_driven_rotation = false
 	local affected_by_gravity = locomotion_extension.movement_type == "constrained_by_mover"
 	local velocity = locomotion_extension:current_velocity()
-	local override_velocity_z = (affected_by_gravity and velocity.z > 0 and 0) or nil
+	local override_velocity_z = affected_by_gravity and velocity.z > 0 and 0 or nil
 
 	locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation, override_velocity_z)
 	locomotion_extension:set_rotation_speed(ROTATION_SPEED)
@@ -88,7 +88,7 @@ BtBlockedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 			local mover_move_distance = breed.override_mover_move_distance
 			local ignore_forced_mover_kill = true
 			local successful = locomotion_extension:set_movement_type("constrained_by_mover", mover_move_distance, ignore_forced_mover_kill)
-			local override_velocity_z = (velocity.z > 0 and 0) or nil
+			local override_velocity_z = velocity.z > 0 and 0 or nil
 
 			locomotion_extension:set_affected_by_gravity(true, override_velocity_z)
 

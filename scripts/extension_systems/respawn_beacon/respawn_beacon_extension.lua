@@ -43,7 +43,7 @@ RespawnBeaconExtension.respawn_players = function (self)
 	local force_spawn = false
 	local is_respawn = true
 
-	for i = 1, #players_to_spawn, 1 do
+	for i = 1, #players_to_spawn do
 		local player = players_to_spawn[i]
 		local spawn_position = valid_spawn_positions[i]
 
@@ -100,7 +100,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 	local position_offset = settings.position_offset_range
 	local current_degree = -(degree_range / 2)
 
-	for i = 1, num_guards, 1 do
+	for i = 1, num_guards do
 		current_degree = current_degree + degree_per_direction
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = -Vector3(math.sin(radians), math.cos(radians), 0)
@@ -113,7 +113,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 		if navmesh_position then
 			local too_close_to_spawn_position = false
 
-			for j = 1, #valid_spawn_positions, 1 do
+			for j = 1, #valid_spawn_positions do
 				local distance_to_spawn_position = Vector3.distance(navmesh_position, valid_spawn_positions[j])
 
 				if distance_to_spawn_position <= TOO_CLOSE_TO_SPAWN_POSITION_DISTANCE then
@@ -137,7 +137,7 @@ end
 RespawnBeaconExtension.despawn_guards = function (self)
 	local minion_spawn_manager = Managers.state.minion_spawn
 
-	for i = 1, #self._guards, 1 do
+	for i = 1, #self._guards do
 		local guard_unit = self._guards[i]
 
 		minion_spawn_manager:despawn(guard_unit)

@@ -467,8 +467,8 @@ MissionObjectiveSystem._override_ui_string = function (self, objective_name, new
 
 		self._new_ui_strings[objective_name] = ui_string_array
 		local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
-		local new_header_id = (new_ui_header and NetworkLookup.mission_objective_ui_strings[new_ui_header]) or 0
-		local new_description_id = (new_ui_description and NetworkLookup.mission_objective_ui_strings[new_ui_description]) or 0
+		local new_header_id = new_ui_header and NetworkLookup.mission_objective_ui_strings[new_ui_header] or 0
+		local new_description_id = new_ui_description and NetworkLookup.mission_objective_ui_strings[new_ui_description] or 0
 
 		self:send_rpc_to_objective_list(nil, "rpc_mission_objective_override_ui_string", objective_name_id, new_header_id, new_description_id)
 	end
@@ -584,6 +584,7 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 	local synchronizer = objective_list:objective_registered_synchronizer(objective_name)
 
 	if synchronizer then
+		-- Nothing
 	end
 
 	objective_list:register_synchronizer_unit(objective_name, objective_unit)
@@ -653,7 +654,7 @@ MissionObjectiveSystem.enable_unit = function (self, objective_name, unit, stage
 	local stage_units = registered_units[stage]
 
 	if stage_units then
-		for i = 1, #stage_units, 1 do
+		for i = 1, #stage_units do
 			local registered_unit = stage_units[i]
 
 			if unit == registered_unit then
@@ -680,7 +681,7 @@ MissionObjectiveSystem.disable_unit = function (self, objective_name, unit, stag
 	local stage_units = registered_units[stage]
 
 	if stage_units then
-		for i = 1, #stage_units, 1 do
+		for i = 1, #stage_units do
 			local registered_unit = stage_units[i]
 
 			if unit == registered_unit then
@@ -743,7 +744,7 @@ MissionObjectiveSystem.hot_join_sync = function (self, sender, channel)
 					local header_id = 0
 					local description_id = 0
 
-					for i = 1, #ui_strings, 1 do
+					for i = 1, #ui_strings do
 						local ui_string = ui_strings[i]
 
 						if i == 1 then
@@ -892,8 +893,8 @@ end
 
 MissionObjectiveSystem.rpc_mission_objective_override_ui_string = function (self, channel_id, objective_name_id, new_header_id, new_description_id)
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
-	local new_ui_header = (new_header_id ~= 0 and NetworkLookup.mission_objective_ui_strings[new_header_id]) or nil
-	local new_ui_description = (new_description_id ~= 0 and NetworkLookup.mission_objective_ui_strings[new_description_id]) or nil
+	local new_ui_header = new_header_id ~= 0 and NetworkLookup.mission_objective_ui_strings[new_header_id] or nil
+	local new_ui_description = new_description_id ~= 0 and NetworkLookup.mission_objective_ui_strings[new_description_id] or nil
 
 	self:_override_ui_string(objective_name, new_ui_header, new_ui_description)
 end

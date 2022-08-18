@@ -48,7 +48,7 @@ MinionSpawnerSystem._add_spawner_groups = function (self, unit, new_spawnergroup
 	local ext_spawner_groups = extension:spawner_groups()
 	local spawner_groups = new_spawnergroup_names or ext_spawner_groups
 
-	for i = 1, #spawner_groups, 1 do
+	for i = 1, #spawner_groups do
 		local spawner_group = spawner_groups[i]
 		local extensions = spawner_group_extensions[spawner_group] or {}
 		extensions[#extensions + 1] = extension
@@ -92,7 +92,7 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius)
 	local num_results = broadphase:query(position, radius, broadphase_results, BROADPHASE_CATEGORIES)
 	local hit_extensions = {}
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_id = broadphase_results[i]
 		hit_extensions[i] = extension_broadphase_lookup[hit_id]
 	end

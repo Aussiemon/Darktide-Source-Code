@@ -37,7 +37,7 @@ MinigameDecodeSymbols.hot_join_sync = function (self, sender, channel)
 
 	local decode_targets = self._decode_targets
 
-	for target_stage = 1, #decode_targets, 1 do
+	for target_stage = 1, #decode_targets do
 		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_target", minigame_unit_id, is_level_unit, target_stage, decode_targets[target_stage])
 	end
 
@@ -121,7 +121,7 @@ MinigameDecodeSymbols.setup_game = function (self)
 
 	table.clear(symbols)
 
-	for i = 1, total_items, 1 do
+	for i = 1, total_items do
 		symbols[i] = i
 	end
 
@@ -131,7 +131,7 @@ MinigameDecodeSymbols.setup_game = function (self)
 	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_symbols", minigame_unit_id, is_level_unit, symbols)
 	table.clear(targets)
 
-	for stage = 1, stage_amount, 1 do
+	for stage = 1, stage_amount do
 		local new_seed, rnd_num = math.next_random(seed, 1, items_per_stage)
 		targets[#targets + 1] = rnd_num
 		seed = new_seed

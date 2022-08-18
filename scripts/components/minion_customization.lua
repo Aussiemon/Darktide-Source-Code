@@ -116,7 +116,7 @@ MinionCustomization.spawn_items = function (self, items)
 					if attachment_units then
 						local num_attachments = #attachment_units
 
-						for j = 1, num_attachments, 1 do
+						for j = 1, num_attachments do
 							Unit.set_data(item_unit, "attached_items", #attachment_units - j + 1, attachment_units[j])
 						end
 					end

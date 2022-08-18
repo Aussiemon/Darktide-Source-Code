@@ -77,7 +77,7 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	ENGINE_FUNCTIONS_OVERRIDDEN = true
 end
 
-HAS_STEAM = (rawget(_G, "Steam") and true) or false
+HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
 CLASSES = CLASSES or {}
 SETTINGS = SETTINGS or {}
@@ -168,5 +168,3 @@ if not NETWORK_INIT_WRAPPED then
 		end
 	end
 end
-
-return

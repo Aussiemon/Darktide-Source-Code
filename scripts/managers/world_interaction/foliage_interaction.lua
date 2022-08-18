@@ -101,7 +101,7 @@ FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t
 	local ai_unit = nil
 	local num_enemies = Broadphase.query(ai_broadphase, player_pos, window_size * 0.5, ENEMIES)
 
-	for i = 1, num_enemies, 1 do
+	for i = 1, num_enemies do
 		ai_unit = ENEMIES[i]
 
 		if Unit.alive(ai_unit) then

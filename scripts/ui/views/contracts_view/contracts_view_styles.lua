@@ -224,7 +224,7 @@ contracts_view_styles.task_list_item_background_change_function = function (cont
 end
 
 contracts_view_styles.task_list_item_task_name_change_function = function (content, style)
-	local default_color = (content.hotspot.disabled and style.disabled_color) or style.default_color
+	local default_color = content.hotspot.disabled and style.disabled_color or style.default_color
 	local hotspot = content.hotspot
 	local hover_progress = hotspot.anim_hover_progress
 	local select_progress = hotspot.anim_select_progress

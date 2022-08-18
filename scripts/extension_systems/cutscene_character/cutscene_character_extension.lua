@@ -118,7 +118,7 @@ CutsceneCharacterExtension._set_loadout = function (self, items)
 		local prop_item_names = self._prop_items
 		local item_definitions = MasterItems.get_cached()
 
-		for i = 1, #prop_item_names, 1 do
+		for i = 1, #prop_item_names do
 			local item_name = prop_item_names[i]
 			prop_items[i] = rawget(item_definitions, item_name)
 		end

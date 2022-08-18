@@ -243,7 +243,7 @@ end
 InputManager.set_dead_zones = function (self, raw_device)
 	local num_axes = raw_device.num_axes()
 
-	for i = 1, num_axes, 1 do
+	for i = 1, num_axes do
 		raw_device.set_dead_zone(i, raw_device.CIRCULAR, 0.1)
 	end
 end

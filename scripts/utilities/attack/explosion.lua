@@ -35,7 +35,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 
 	local number_of_hit_units = 0
 
-	for i = 1, num_actors, 1 do
+	for i = 1, num_actors do
 		local hit_actor = hit_actors[i]
 		local hit_unit = Actor.unit(hit_actor)
 
@@ -158,7 +158,7 @@ Explosion.lerp_value_from_path = function (lerp_values, ...)
 	local local_lerp_values = lerp_values
 	local depth = select("#", ...)
 
-	for i = 1, depth - 1, 1 do
+	for i = 1, depth - 1 do
 		local id = select(i, ...)
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
@@ -234,7 +234,7 @@ end
 function _play_effects(world, attacking_unit, explosion_template, charge_level, source_position, impact_normal, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local fx_extension = player_unit_spawn_manager:owner(attacking_unit) and ScriptUnit.extension(attacking_unit, "fx_system")
-	local rotation = (impact_normal and Quaternion.look(impact_normal)) or Quaternion.identity()
+	local rotation = impact_normal and Quaternion.look(impact_normal) or Quaternion.identity()
 	local fx_system = Managers.state.extension:system("fx_system")
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
 	local scalable_vfx = explosion_template.scalable_vfx
@@ -249,7 +249,7 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 				local effects = vfx_data.effects
 				local num_effects = #effects
 
-				for j = 1, num_effects, 1 do
+				for j = 1, num_effects do
 					local effect_name = effects[j]
 
 					if fx_extension then
@@ -268,7 +268,7 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 	elseif vfx then
 		local num_vfx = #explosion_template.vfx
 
-		for i = 1, num_vfx, 1 do
+		for i = 1, num_vfx do
 			local effect_name = vfx[i]
 
 			if fx_extension then
@@ -284,7 +284,7 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 	if sfx then
 		local num_sfx = #sfx
 
-		for i = 1, num_sfx, 1 do
+		for i = 1, num_sfx do
 			local event_name_or_table = sfx[i]
 
 			if type(event_name_or_table) == "string" then

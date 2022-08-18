@@ -51,7 +51,7 @@ AmmoDisplay._update_charge = function (self, unit)
 
 	local is_critical = charge_value <= critical_value
 
-	Unit.set_scalar_for_material(unit, "display_01", "warning", (is_critical and 1) or 0)
+	Unit.set_scalar_for_material(unit, "display_01", "warning", is_critical and 1 or 0)
 	Unit.set_scalar_for_material(unit, "display_01", "steps", 30)
 
 	if is_critical then

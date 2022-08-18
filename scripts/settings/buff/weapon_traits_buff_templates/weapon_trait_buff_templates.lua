@@ -263,7 +263,7 @@ local templates = {
 			local num_hits = broadphase:query(player_position, 10, broadphase_results, enemy_side_names)
 			local num_burning = 0
 
-			for i = 1, num_hits, 1 do
+			for i = 1, num_hits do
 				local enemy_unit = broadphase_results[i]
 				local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
 
@@ -381,86 +381,86 @@ local templates = {
 		stat_buffs = {
 			[buff_stat_buffs.weapon_special_max_activations] = 1
 		}
-	},
-	weapon_trait_reload_unwielded_weapons = {
-		class_name = "timed_trigger_buff",
-		active_duration = 1,
-		trigger_function = function (data, context)
-			local unit = context.unit
-			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-			local inventory_component = unit_data_extension:read_component("inventory")
-			local wielded_slot = inventory_component.wielded_slot
-			local slot_configuration = visual_loadout_extension:slot_configuration()
-
-			for slot_name, config in pairs(slot_configuration) do
-				local is_wielded_slot = slot_name == wielded_slot
-
-				if config.slot_type == "weapon" and not is_wielded_slot then
-					local inventory_slot_component = unit_data_extension:write_component(slot_name)
-					local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
-
-					Ammo.transfer_from_reserve_to_clip(inventory_slot_component, max_ammunition_clip)
-
-					if ReloadStates.uses_reload_states(inventory_slot_component) then
-						local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_name)
-						local reload_template = weapon_template.reload_template
-
-						ReloadStates.reset(reload_template, inventory_slot_component)
-					end
-				end
-			end
-		end
-	},
-	weapon_trait_reload_speed_on_quad_sweep = {
-		predicted = true,
-		class_name = "proc_buff",
-		proc_events = {
-			[buff_proc_events.on_sweep] = 1,
-			[buff_proc_events.on_reload] = 1
-		},
-		conditional_stat_buffs = {
-			[buff_stat_buffs.reload_speed] = 0.5
-		},
-		start_func = function (template_data, template_context)
-			template_data.internal_stacks = 0
-			template_data.max_stacks = 3
-		end,
-		specific_proc_func = {
-			on_sweep = function (params, template_data, template_context)
-				if params.num_hit_units >= 4 then
-					template_data.internal_stacks = template_data.max_stacks
-				end
-			end,
-			on_reload = function (params, template_data, template_context)
-				template_data.internal_stacks = template_data.internal_stacks - 1
-			end
-		},
-		conditional_stat_buffs_func = function (template_data, template_context)
-			return template_data.internal_stacks > 0
-		end
-	},
-	weapon_trait_increased_stagger_on_hip_fire = {
-		predicted = false,
-		class_name = "buff",
-		stat_buffs = {
-			[buff_stat_buffs.opt_in_stagger_duration_multiplier] = 2
-		}
-	},
-	weapon_trait_uninterruptable_on_big_sweep = {
-		predicted = true,
-		class_name = "proc_buff",
-		active_duration = 4,
-		proc_events = {
-			[buff_proc_events.on_sweep] = 1
-		},
-		proc_keywords = {
-			buff_keywords.uninterruptible
-		},
-		check_proc_func = function (params, template_data, template_context)
-			return params.num_hit_units >= 4
-		end
 	}
+}
+templates.weapon_trait_reload_unwielded_weapons = {
+	class_name = "timed_trigger_buff",
+	active_duration = 1,
+	trigger_function = function (data, context)
+		local unit = context.unit
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local inventory_component = unit_data_extension:read_component("inventory")
+		local wielded_slot = inventory_component.wielded_slot
+		local slot_configuration = visual_loadout_extension:slot_configuration()
+
+		for slot_name, config in pairs(slot_configuration) do
+			local is_wielded_slot = slot_name == wielded_slot
+
+			if config.slot_type == "weapon" and not is_wielded_slot then
+				local inventory_slot_component = unit_data_extension:write_component(slot_name)
+				local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+
+				Ammo.transfer_from_reserve_to_clip(inventory_slot_component, max_ammunition_clip)
+
+				if ReloadStates.uses_reload_states(inventory_slot_component) then
+					local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_name)
+					local reload_template = weapon_template.reload_template
+
+					ReloadStates.reset(reload_template, inventory_slot_component)
+				end
+			end
+		end
+	end
+}
+templates.weapon_trait_reload_speed_on_quad_sweep = {
+	predicted = true,
+	class_name = "proc_buff",
+	proc_events = {
+		[buff_proc_events.on_sweep] = 1,
+		[buff_proc_events.on_reload] = 1
+	},
+	conditional_stat_buffs = {
+		[buff_stat_buffs.reload_speed] = 0.5
+	},
+	start_func = function (template_data, template_context)
+		template_data.internal_stacks = 0
+		template_data.max_stacks = 3
+	end,
+	specific_proc_func = {
+		on_sweep = function (params, template_data, template_context)
+			if params.num_hit_units >= 4 then
+				template_data.internal_stacks = template_data.max_stacks
+			end
+		end,
+		on_reload = function (params, template_data, template_context)
+			template_data.internal_stacks = template_data.internal_stacks - 1
+		end
+	},
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.internal_stacks > 0
+	end
+}
+templates.weapon_trait_increased_stagger_on_hip_fire = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[buff_stat_buffs.opt_in_stagger_duration_multiplier] = 2
+	}
+}
+templates.weapon_trait_uninterruptable_on_big_sweep = {
+	predicted = true,
+	class_name = "proc_buff",
+	active_duration = 4,
+	proc_events = {
+		[buff_proc_events.on_sweep] = 1
+	},
+	proc_keywords = {
+		buff_keywords.uninterruptible
+	},
+	check_proc_func = function (params, template_data, template_context)
+		return params.num_hit_units >= 4
+	end
 }
 
 return templates

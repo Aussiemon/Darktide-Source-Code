@@ -9,11 +9,11 @@ local function _get_center_of_all_actors(target_unit)
 	local number_of_positions = 0
 	local number_of_nodes = Unit.num_scene_graph_items(target_unit)
 
-	for i = 1, number_of_nodes, 1 do
+	for i = 1, number_of_nodes do
 		local actors = Unit_get_node_actors(target_unit, i, false, true)
 
 		if actors then
-			for j = 1, #actors, 1 do
+			for j = 1, #actors do
 				local actor = Unit_actor(target_unit, actors[j])
 				local center_of_mass = Actor_center_of_mass(actor)
 				position = position + center_of_mass
@@ -43,7 +43,7 @@ local function get_center_of_hit_zone(target_unit, target_hit_zone)
 		local target_actor_names = target_unit_data:hit_zone_actors(target_hit_zone)
 
 		if target_actor_names then
-			for i = 1, #target_actor_names, 1 do
+			for i = 1, #target_actor_names do
 				local target_actor = Unit_actor(target_unit, target_actor_names[i])
 				local target_position = Actor_center_of_mass(target_actor)
 				position = position + target_position
@@ -80,7 +80,7 @@ true_flight_defaults.get_unit_position = function (target_unit, target_hit_zone)
 end
 
 local function _lerp_modifier_func_default(integration_data, distance, height_over_target)
-	return (distance < 5 and 1) or 5 / distance
+	return distance < 5 and 1 or 5 / distance
 end
 
 local function _lerp_modifier_func(true_flight_template)
@@ -151,7 +151,7 @@ true_flight_defaults.get_closest_highest_value_target = function (integration_da
 	local closest_distance = math.huge
 
 	if number_of_results > 0 then
-		for i = 1, number_of_results, 1 do
+		for i = 1, number_of_results do
 			local unit = results[i]
 
 			if ScriptUnit.has_extension(unit, "health_system") and is_valid_and_legitimate_target_func(integration_data, unit, position) then

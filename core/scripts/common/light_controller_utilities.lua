@@ -9,7 +9,7 @@ local LightControllerUtilities = {
 				light_source_enabled = false
 			end
 
-			for ii = 1, num_lights, 1 do
+			for ii = 1, num_lights do
 				local light = Unit.light(unit, ii)
 
 				Light.set_enabled(light, light_source_enabled)
@@ -34,7 +34,7 @@ local LightControllerUtilities = {
 		local num_lights = Unit.num_lights(unit)
 
 		if num_lights >= 1 then
-			for ii = 1, num_lights, 1 do
+			for ii = 1, num_lights do
 				local light = Unit.light(unit, ii)
 				local color_intensity = Light.color_with_intensity(light)
 				local color = Vector3.normalize(color_intensity)
@@ -46,7 +46,7 @@ local LightControllerUtilities = {
 		end
 	end,
 	set_flicker = function (unit, is_enabled, flicker_name)
-		for ii = 1, Unit.num_lights(unit), 1 do
+		for ii = 1, Unit.num_lights(unit) do
 			local light = Unit.light(unit, ii)
 
 			if is_enabled then

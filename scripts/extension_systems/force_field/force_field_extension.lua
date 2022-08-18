@@ -21,7 +21,7 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 		local width = 6
 		local forward = Quaternion.forward(rotation)
 		local rotation_left = Quaternion.from_euler_angles_xyz(0, 0, 90)
-		local left = (Quaternion.rotate(rotation_left, forward) * width) / 2
+		local left = Quaternion.rotate(rotation_left, forward) * width / 2
 		local p1 = Vector3Box(position)
 		local p2 = Vector3Box(position + left * 0.3)
 		local p3 = Vector3Box(position + left * 0.6)
@@ -150,7 +150,7 @@ ForceFieldExtension.force_field_unit = function (self)
 end
 
 ForceFieldExtension.remaining_duration = function (self)
-	return (self._indefinite_duration and self._max_duration) or self._duration
+	return self._indefinite_duration and self._max_duration or self._duration
 end
 
 return ForceFieldExtension

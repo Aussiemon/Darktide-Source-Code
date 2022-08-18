@@ -77,14 +77,14 @@ local target_selection_template = {
 			local num_target_units = #target_units
 			local aggro_state = perception_component.aggro_state
 
-			for i = 1, num_target_units, 1 do
+			for i = 1, num_target_units do
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit then
 					local target_position = POSITION_LOOKUP[target_unit]
 					local distance_sq = Vector3_distance_squared(position, target_position)
 
-					if aggro_state == aggro_states.aggroed or (distance_sq < detection_radius_sq and valid_enemy_player_units[target_unit]) then
+					if aggro_state == aggro_states.aggroed or distance_sq < detection_radius_sq and valid_enemy_player_units[target_unit] then
 						local can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
 						local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 						local character_state_component = target_unit_data_extension:read_component("character_state")

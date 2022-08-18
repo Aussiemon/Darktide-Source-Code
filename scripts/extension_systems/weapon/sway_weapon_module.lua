@@ -46,10 +46,10 @@ SwayWeaponModule.fixed_update = function (self, dt, t)
 	local sway_template = self._weapon_extension:sway_template()
 	local sway_settings = sway_template[weapon_movement_state]
 	local shooting_grace_duration = sway_settings.decay.from_shooting_grace_time or 0
-	local shooting = shooting_status_component.shooting or (not shooting_status_component.shooting and t <= shooting_status_component.shooting_end_time + shooting_grace_duration)
+	local shooting = shooting_status_component.shooting or not shooting_status_component.shooting and t <= shooting_status_component.shooting_end_time + shooting_grace_duration
 	local sway_settings_decay = sway_settings.decay
 	local player_mobility_grace, player_mobility_decay = self:_player_event_decay(sway_settings_decay, t)
-	local decay_settings = (player_mobility_grace and player_mobility_decay) or (shooting and sway_settings_decay.shooting) or sway_settings_decay.idle
+	local decay_settings = player_mobility_grace and player_mobility_decay or shooting and sway_settings_decay.shooting or sway_settings_decay.idle
 	local min_pitch = sway_settings.continuous_sway.pitch
 	local min_yaw = sway_settings.continuous_sway.yaw
 	local max_pitch = sway_settings.max_sway.pitch

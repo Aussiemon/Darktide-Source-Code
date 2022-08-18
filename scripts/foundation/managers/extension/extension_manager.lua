@@ -34,7 +34,7 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 	self._unit_templates = unit_templates
 	local categories = {}
 
-	for i = 1, #unit_category_list, 1 do
+	for i = 1, #unit_category_list do
 		categories[unit_category_list[i]] = {}
 	end
 
@@ -220,7 +220,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 
 	local unit_in_runtime_loaded_level = ScriptUnit.unit_in_runtime_loaded_level(unit)
 
-	for i = 1, num_extensions, 1 do
+	for i = 1, num_extensions do
 		repeat
 			local name, init_args, _ = extension_config:extension(i)
 			extension_list[#extension_list + 1] = name
@@ -261,7 +261,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 
 	local extensions = self_units[unit]
 
-	for i = 1, #extension_list, 1 do
+	for i = 1, #extension_list do
 		repeat
 			local name = extension_list[i]
 
@@ -305,7 +305,7 @@ ExtensionManager.sync_unit_extensions = function (self, unit, session, object_id
 		local extension_list = unit_extensions_list[unit]
 		local num_extensions = #extension_list
 
-		for i = 1, num_extensions, 1 do
+		for i = 1, num_extensions do
 			repeat
 				local name = extension_list[i]
 
@@ -383,7 +383,7 @@ ExtensionManager.add_and_register_units = function (self, world, unit_list, num_
 	local added_list = TEMP_TABLE
 	local num_added = 0
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		local unit = unit_list[i]
 		local unit_template_name = Unit.get_data(unit, "unit_template")
 
@@ -407,7 +407,7 @@ ExtensionManager.add_and_register_units = function (self, world, unit_list, num_
 
 		fassert(category_table, "Unit registered with invalid category %q", optional_category)
 
-		for i = 1, num_units, 1 do
+		for i = 1, num_units do
 			local unit = unit_list[i]
 			category_table[unit] = unit
 
@@ -459,7 +459,7 @@ ExtensionManager.update_time_slice_add_and_register_units = function (self)
 	local num_added = 0
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
 
-	for index = last_index + 1, num_units, 1 do
+	for index = last_index + 1, num_units do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
@@ -514,7 +514,7 @@ ExtensionManager.register_units_extensions = function (self, unit_list, num_unit
 	local systems_map = self._extension_to_system_map
 	local systems = self._systems
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		repeat
 			local unit = unit_list[i]
 			local unit_extensions = self_units[unit]
@@ -629,7 +629,7 @@ ExtensionManager.unregister_units = function (self, units, num_units)
 
 	Profiler.start("destroy extensions")
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		repeat
 			local unit = units[i]
 			local optional_category = Unit.get_data(unit, "__unit_category")
@@ -681,7 +681,7 @@ ExtensionManager.add_ignore_extensions = function (self, ignore_extensions)
 	local ignore_extensions_list = self._ignore_extensions_list
 	local num_extensions = #ignore_extensions
 
-	for i = 1, num_extensions, 1 do
+	for i = 1, num_extensions do
 		local extension_name = ignore_extensions[i]
 		ignore_extensions_list[extension_name] = true
 	end

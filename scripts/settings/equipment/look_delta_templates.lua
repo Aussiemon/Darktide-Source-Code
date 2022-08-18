@@ -356,52 +356,52 @@ local look_delta_templates = {
 				return 0.1
 			end
 		}
+	}
+}
+look_delta_templates.default_lasgun_spraynpray = table.clone(look_delta_templates.lasgun_brace_light)
+look_delta_templates.auspex_scanner = {
+	shooting = {
+		deadzone_x_lerp_constant = 0.2,
+		delta_x_modifier = 1.5,
+		deadzone_y_lerp_constant = 0.2,
+		deadzone_y = 0.025,
+		delta_y_modifier = 1.5,
+		deadzone_x = 0.025,
+		lerp_constant_x_func = function (look_delta_x)
+			return 0.9 * (0.15 + 0.85 * (1 - math.min(math.abs(look_delta_x * look_delta_x), 1)))
+		end,
+		lerp_constant_y_func = function (look_delta_y)
+			return 0.9
+		end
 	},
-	default_lasgun_spraynpray = table.clone(look_delta_templates.lasgun_brace_light),
-	auspex_scanner = {
-		shooting = {
-			deadzone_x_lerp_constant = 0.2,
-			delta_x_modifier = 1.5,
-			deadzone_y_lerp_constant = 0.2,
-			deadzone_y = 0.025,
-			delta_y_modifier = 1.5,
-			deadzone_x = 0.025,
-			lerp_constant_x_func = function (look_delta_x)
-				return 0.9 * (0.15 + 0.85 * (1 - math.min(math.abs(look_delta_x * look_delta_x), 1)))
-			end,
-			lerp_constant_y_func = function (look_delta_y)
-				return 0.9
-			end
-		},
-		idle = {
-			deadzone_x_lerp_constant = 0.05,
-			delta_x_modifier = 20,
-			deadzone_y_lerp_constant = 0.075,
-			deadzone_y = 0.025,
-			delta_y_modifier = -15,
-			deadzone_x = 0.025,
-			lerp_constant_x_func = function (look_delta_x)
-				return 0.03 * (0.5 + 0.5 * (1 - math.min(math.abs(look_delta_x * look_delta_x), 1)))
-			end,
-			lerp_constant_y_func = function (look_delta_y)
-				return 0.05
-			end
-		},
-		inspect = {
-			deadzone_x_lerp_constant = 0.05,
-			delta_x_modifier = 3.3,
-			no_look_delta_clamp = true,
-			deadzone_y = 0,
-			delta_y_modifier = 2.5,
-			deadzone_y_lerp_constant = 0.075,
-			deadzone_x = 0,
-			lerp_constant_x_func = function (look_delta_x)
-				return 0.1
-			end,
-			lerp_constant_y_func = function (look_delta_y)
-				return 0.1
-			end
-		}
+	idle = {
+		deadzone_x_lerp_constant = 0.05,
+		delta_x_modifier = 20,
+		deadzone_y_lerp_constant = 0.075,
+		deadzone_y = 0.025,
+		delta_y_modifier = -15,
+		deadzone_x = 0.025,
+		lerp_constant_x_func = function (look_delta_x)
+			return 0.03 * (0.5 + 0.5 * (1 - math.min(math.abs(look_delta_x * look_delta_x), 1)))
+		end,
+		lerp_constant_y_func = function (look_delta_y)
+			return 0.05
+		end
+	},
+	inspect = {
+		deadzone_x_lerp_constant = 0.05,
+		delta_x_modifier = 3.3,
+		no_look_delta_clamp = true,
+		deadzone_y = 0,
+		delta_y_modifier = 2.5,
+		deadzone_y_lerp_constant = 0.075,
+		deadzone_x = 0,
+		lerp_constant_x_func = function (look_delta_x)
+			return 0.1
+		end,
+		lerp_constant_y_func = function (look_delta_y)
+			return 0.1
+		end
 	}
 }
 

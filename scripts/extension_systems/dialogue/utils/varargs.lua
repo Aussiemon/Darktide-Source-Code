@@ -318,5 +318,3 @@ pack_index = {
 		array[index + 19] = a20
 	end
 }
-
-return

@@ -17,7 +17,7 @@ TriggerConditionLuggableInside._setup_sockets_in_volume = function (self)
 	local luggable_socket_system = Managers.state.extension:system("luggable_socket_system")
 	local socket_units = luggable_socket_system:socket_units()
 
-	for i = 1, #socket_units, 1 do
+	for i = 1, #socket_units do
 		local socket_unit = socket_units[i]
 		local unit_pos = Unit.world_position(socket_unit, 1)
 		local is_inside = Unit.is_point_inside_volume(unit, "c_volume", unit_pos)
@@ -52,7 +52,7 @@ TriggerConditionLuggableInside._socket_luggable = function (self, luggable_unit)
 	local sockets_in_volume = self._sockets_in_volume
 	local closest_distance, closest_socket_extension = nil
 
-	for i = 1, #sockets_in_volume, 1 do
+	for i = 1, #sockets_in_volume do
 		local socket_unit = sockets_in_volume[i]
 		local slot_position = Unit.world_position(socket_unit, 1)
 		local luggable_position = Unit.world_position(luggable_unit, 1)

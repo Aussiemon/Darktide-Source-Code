@@ -34,5 +34,3 @@ PlayerHuskHubAimExtension.update = function (self, unit, dt, t)
 
 	hub_aim_constraints:update(head_direction, torso_direction, is_moving, aim_state, dt, t)
 end
-
-return

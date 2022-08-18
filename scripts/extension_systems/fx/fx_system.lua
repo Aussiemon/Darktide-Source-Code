@@ -32,7 +32,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	self._max_num_template_effects = max_num_template_effects
 	local template_effects = Script.new_array(max_num_template_effects)
 
-	for i = 1, max_num_template_effects, 1 do
+	for i = 1, max_num_template_effects do
 		template_effects[i] = {
 			is_running = false,
 			buffer_index = i,
@@ -95,7 +95,7 @@ end
 FxSystem.hot_join_sync = function (self, sender, channel)
 	local running_template_effects = self._running_template_effects
 
-	for i = 1, #running_template_effects, 1 do
+	for i = 1, #running_template_effects do
 		local template_effect = running_template_effects[i]
 		local buffer_index = template_effect.buffer_index
 		local template = template_effect.template
@@ -105,7 +105,7 @@ FxSystem.hot_join_sync = function (self, sender, channel)
 		local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
 		local optional_node = template_effect.optional_node
 		local position = template_effect.optional_position:unbox()
-		local optional_position = (Vector3.is_valid(position) and position) or nil
+		local optional_position = Vector3.is_valid(position) and position or nil
 
 		RPC.rpc_start_template_effect(channel, buffer_index, template_id, optional_unit_id, optional_node, optional_position)
 	end
@@ -117,7 +117,7 @@ FxSystem.update = function (self, context, dt, t, ...)
 	local template_context = self._template_context
 	local running_template_effects = self._running_template_effects
 
-	for i = 1, #running_template_effects, 1 do
+	for i = 1, #running_template_effects do
 		local template_effect = running_template_effects[i]
 		local template = template_effect.template
 		local template_data = template_effect.template_data
@@ -131,7 +131,7 @@ end
 FxSystem._has_running_template_of_name = function (self, unit, template_name)
 	local running_template_effects = self._running_template_effects
 
-	for i = 1, #running_template_effects, 1 do
+	for i = 1, #running_template_effects do
 		local template_effect = running_template_effects[i]
 		local template = template_effect.template
 
@@ -155,7 +155,7 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 	local global_effect_id = self._next_global_effect_id
 	local template_effects = self._template_effects
 
-	for i = 1, max_num_template_effects, 1 do
+	for i = 1, max_num_template_effects do
 		buffer_index = global_effect_id % max_num_template_effects + 1
 		template_effect = template_effects[buffer_index]
 
@@ -525,7 +525,7 @@ function _create_impact_vfx(world, vfx, position, direction, normal)
 	if num_vfx > 0 then
 		local direction_rotation, normal_rotation, reverse_direction_rotation, reverse_normal_rotation = nil
 
-		for i = 1, num_vfx, 1 do
+		for i = 1, num_vfx do
 			local entry = vfx[i]
 			local effects = entry.effects
 			local use_normal_rotation = entry.normal_rotation
@@ -534,16 +534,10 @@ function _create_impact_vfx(world, vfx, position, direction, normal)
 			local rotation = nil
 
 			if use_normal_rotation and reverse then
-				if not reverse_normal_rotation then
-					reverse_normal_rotation = Quaternion.look((normal and -normal) or -direction)
-				end
-
+				reverse_normal_rotation = reverse_normal_rotation or Quaternion.look(normal and -normal or -direction)
 				rotation = reverse_normal_rotation
 			elseif use_normal_rotation then
-				if not normal_rotation then
-					normal_rotation = Quaternion.look(normal or direction)
-				end
-
+				normal_rotation = normal_rotation or Quaternion.look(normal or direction)
 				rotation = normal_rotation
 			elseif reverse then
 				reverse_direction_rotation = reverse_direction_rotation or Quaternion.look(-direction)
@@ -569,7 +563,7 @@ function _create_impact_sfx(wwise_world, sfx, source_parameters, position, direc
 			WwiseWorld.set_source_parameter(wwise_world, auto_source_id, name, value)
 		end
 
-		for i = 1, num_sfx, 1 do
+		for i = 1, num_sfx do
 			local event_name = sfx[i]
 
 			WwiseWorld.trigger_resource_event(wwise_world, event_name, auto_source_id)
@@ -578,12 +572,12 @@ function _create_impact_sfx(wwise_world, sfx, source_parameters, position, direc
 end
 
 function _play_material_switch_sfx(wwise_world, material_switch_sfx, position, direction, is_normal_rotated)
-	local num_material_switch_sfx = (material_switch_sfx and #material_switch_sfx) or 0
+	local num_material_switch_sfx = material_switch_sfx and #material_switch_sfx or 0
 
 	if num_material_switch_sfx > 0 then
 		local rotation = Quaternion.look(direction)
 
-		for i = 1, num_material_switch_sfx, 1 do
+		for i = 1, num_material_switch_sfx do
 			local event_group_state = material_switch_sfx[i]
 			local event = event_group_state.event
 			local group = event_group_state.group
@@ -750,7 +744,7 @@ function _play_impact_fx_template(world, wwise_world, unit_to_extension_map, imp
 	if blood_ball then
 		local num_blood_ball = #blood_ball
 
-		for i = 1, num_blood_ball, 1 do
+		for i = 1, num_blood_ball do
 			local blood_ball_unit = blood_ball[i]
 			local impact_fx_damage_type = impact_fx.damage_type
 

@@ -18,7 +18,7 @@ ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_
 	ActionBuffTarget.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	local _, self_cast = self:_get_target()
-	local anim_event = (self_cast and action_settings.self_cast_anim_event) or action_settings.ally_anim_event
+	local anim_event = self_cast and action_settings.self_cast_anim_event or action_settings.ally_anim_event
 
 	self:trigger_anim_event(anim_event)
 
@@ -47,7 +47,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 
 		if self._is_server then
 			local has_override_buff_rule = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override)
-			local buff_name = (has_override_buff_rule and action_settings.override_buff_name) or action_settings.buff_name
+			local buff_name = has_override_buff_rule and action_settings.override_buff_name or action_settings.buff_name
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 			if buff_extension then
@@ -92,7 +92,7 @@ ActionBuffTarget._get_target = function (self)
 	local action_module_targeting_component = self._action_module_targeting_component
 	local target_unit = action_module_targeting_component.target_unit_1
 	local self_cast = action_settings.self_cast or not target_unit
-	local target = (self_cast and self._player_unit) or target_unit
+	local target = self_cast and self._player_unit or target_unit
 
 	return target, self_cast
 end

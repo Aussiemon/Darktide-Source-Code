@@ -25,7 +25,7 @@ local raw_inputs = {
 	"weapon_extra_release"
 }
 
-for i = 1, #wield_inputs, 1 do
+for i = 1, #wield_inputs do
 	local input_config = wield_inputs[i]
 	raw_inputs[#raw_inputs + 1] = input_config.input
 end
@@ -73,10 +73,10 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	local MAX_ACTION_INPUT_QUEUE = self._MAX_ACTION_INPUT_QUEUE
 	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
 
-	for i = 1, RING_BUFFER_SIZE, 1 do
+	for i = 1, RING_BUFFER_SIZE do
 		local sequences = Script.new_array(MAX_ACTION_INPUT_SEQUENCES)
 
-		for j = 1, MAX_ACTION_INPUT_SEQUENCES, 1 do
+		for j = 1, MAX_ACTION_INPUT_SEQUENCES do
 			sequences[j] = {
 				[IS_RUNNING] = false,
 				[CURRENT_ELEMENT_INDEX] = 1,
@@ -87,7 +87,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 		sequences_ring_buffer[i] = sequences
 		local action_input_queue = Script.new_array(MAX_ACTION_INPUT_QUEUE)
 
-		for j = 1, MAX_ACTION_INPUT_QUEUE, 1 do
+		for j = 1, MAX_ACTION_INPUT_QUEUE do
 			action_input_queue[j] = {
 				[ACTION_INPUT] = NO_ACTION_INPUT,
 				[RAW_INPUT] = NO_RAW_INPUT,
@@ -103,7 +103,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 		action_input_queue_ring_buffer[i] = action_input_queue
 		local hierarchy_position = Script.new_array(MAX_HIERARCHY_DEPTH)
 
-		for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+		for j = 1, MAX_HIERARCHY_DEPTH do
 			hierarchy_position[j] = NO_ACTION_INPUT
 		end
 
@@ -120,7 +120,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	self._num_bot_action_input_requests = 0
 	self._bot_action_input_current_buffer_index = 0
 
-	for i = 1, BOT_REQUEST_RING_BUFFER_MAX, 1 do
+	for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
 		local entry = {}
 
 		_reset_bot_request_entry(entry, NO_ACTION_INPUT, NO_RAW_INPUT)
@@ -175,7 +175,7 @@ ActionInputParser.consume_next_input = function (self, t)
 			self:_jump_hierarchy(hierarchy_position, second_entry_hierarchy_position, base_hierarchy, sequences, t, network_lookup)
 			self:_clear_action_input_queue(input_queue)
 		else
-			for i = 1, MAX_ACTION_INPUT_QUEUE, 1 do
+			for i = 1, MAX_ACTION_INPUT_QUEUE do
 				local entry = input_queue[i]
 				local next_entry = input_queue[i + 1]
 
@@ -185,7 +185,7 @@ ActionInputParser.consume_next_input = function (self, t)
 					local entry_hierarchy = entry[HIERARCHY_POSITION]
 					local next_entry_hierarchy = next_entry[HIERARCHY_POSITION]
 
-					for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+					for j = 1, MAX_HIERARCHY_DEPTH do
 						entry_hierarchy[j] = next_entry_hierarchy[j]
 					end
 				else
@@ -193,7 +193,7 @@ ActionInputParser.consume_next_input = function (self, t)
 					entry[RAW_INPUT] = NO_RAW_INPUT
 					local entry_hierarchy = entry[HIERARCHY_POSITION]
 
-					for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+					for j = 1, MAX_HIERARCHY_DEPTH do
 						entry_hierarchy[j] = NO_ACTION_INPUT
 					end
 				end
@@ -218,7 +218,7 @@ ActionInputParser.clear_input_queue_and_sequences = function (self)
 
 	local sequences = self._sequences[ring_buffer_index]
 
-	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local sequence = sequences[i]
 
 		self:_stop_running_sequence(sequence)
@@ -273,7 +273,7 @@ ActionInputParser.bot_queue_action_input = function (self, action_input, raw_inp
 	if BOT_REQUEST_RING_BUFFER_MAX <= num_bot_action_input_requests then
 		local s = string.format("Reached past the ring_buffer limit (max:%i):", BOT_REQUEST_RING_BUFFER_MAX)
 
-		for i = 1, BOT_REQUEST_RING_BUFFER_MAX, 1 do
+		for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
 			local request = self._bot_action_input_request_queue[i]
 			local req_action_input = request.action_input
 			local req_raw_input = request.raw_input
@@ -318,7 +318,7 @@ ActionInputParser.bot_queue_clear_requests = function (self, id)
 	local NO_RAW_INPUT = self._NO_RAW_INPUT
 	local bot_action_input_request_queue = self._bot_action_input_request_queue
 
-	for i = 1, BOT_REQUEST_RING_BUFFER_MAX, 1 do
+	for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
 		local request = bot_action_input_request_queue[i]
 
 		_reset_bot_request_entry(request, NO_ACTION_INPUT, NO_RAW_INPUT)
@@ -333,7 +333,7 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 	local min_value = type_info.min
 	local last_fixed_frame = self._last_fixed_frame
 
-	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local sequence = sequences[i]
 		input_sequences_is_running_table[i] = sequence[IS_RUNNING]
 		input_sequences_current_element_index_table[i] = sequence[CURRENT_ELEMENT_INDEX]
@@ -348,7 +348,7 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 		local action_input_network_lookup = self._ACTION_INPUT_NETWORK_LOOKUP[template_name]
 		local input_queue = self._action_input_queue[ring_buffer_index]
 
-		for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+		for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 			local entry = input_queue[i]
 			input_queue_action_input_table[i] = action_input_network_lookup[entry[ACTION_INPUT]]
 			input_queue_raw_input_table[i] = self._RAW_INPUTS_NETWORK_LOOKUP[entry[RAW_INPUT]]
@@ -357,7 +357,7 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 			input_queue_produced_by_hierarchy_table[i] = produced_by_hierarchy
 
 			if i == 1 then
-				for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+				for j = 1, MAX_HIERARCHY_DEPTH do
 					local action_input = hierarchy_position[j]
 					input_queue_hierarchy_position_table[j] = action_input_network_lookup[action_input]
 				end
@@ -366,17 +366,17 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 
 		local hierarchy_position = self._hierarchy_position[ring_buffer_index]
 
-		for i = 1, MAX_HIERARCHY_DEPTH, 1 do
+		for i = 1, MAX_HIERARCHY_DEPTH do
 			local action_input = hierarchy_position[i]
 			hierarchy_position_table[i] = action_input_network_lookup[action_input]
 		end
 	else
-		for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+		for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 			input_queue_action_input_table[i] = 1
 			input_queue_raw_input_table[i] = 1
 			input_queue_produced_by_hierarchy_table[i] = false
 
-			for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+			for j = 1, MAX_HIERARCHY_DEPTH do
 				input_queue_hierarchy_position_table[j] = 1
 			end
 		end
@@ -394,7 +394,7 @@ ActionInputParser._fill_table_with_authoritative_hierarchy_position = function (
 
 	if produced_by_hierarchy then
 		if is_first_entry then
-			for i = 1, max_hierarchy_depth, 1 do
+			for i = 1, max_hierarchy_depth do
 				local auth_action_input = action_input_network_lookups[input_queue_hierarchy_position[i]]
 				table[i] = auth_action_input
 			end
@@ -403,7 +403,7 @@ ActionInputParser._fill_table_with_authoritative_hierarchy_position = function (
 			local prev_hierarchy_position = prev_entry[HIERARCHY_POSITION]
 			local hierarchy_depth = 0
 
-			for i = 1, max_hierarchy_depth, 1 do
+			for i = 1, max_hierarchy_depth do
 				hierarchy_depth = i
 				local action_input = prev_hierarchy_position[i]
 
@@ -414,17 +414,17 @@ ActionInputParser._fill_table_with_authoritative_hierarchy_position = function (
 				end
 			end
 
-			for i = hierarchy_depth + 1, max_hierarchy_depth, 1 do
+			for i = hierarchy_depth + 1, max_hierarchy_depth do
 				table[i] = no_action_input
 			end
 
 			local prev_action_input = prev_entry[ACTION_INPUT]
 			local current_hierarchy = _get_current_hierarchy(table, base_hierarchy, max_hierarchy_depth, no_action_input)
 			local transition = current_hierarchy[prev_action_input]
-			slot18 = self:_handle_hierarchy_transition(transition, table, prev_action_input, base_hierarchy, current_hierarchy)
+			local _ = self:_handle_hierarchy_transition(transition, table, prev_action_input, base_hierarchy, current_hierarchy)
 		end
 	else
-		for i = 1, max_hierarchy_depth, 1 do
+		for i = 1, max_hierarchy_depth do
 			table[i] = no_action_input
 		end
 	end
@@ -445,7 +445,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 	local fixed_time_step = GameParameters.fixed_time_step
 	local sequences = self._sequences[buffer_index]
 
-	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local sequence = sequences[i]
 		local action_input_name = action_input_network_lookups[i]
 		local is_running = input_sequences_is_running[i]
@@ -461,7 +461,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 	local base_hierarchy = self._ACTION_INPUT_HIERARCHY[template_name]
 	local input_queue = self._action_input_queue[buffer_index]
 
-	for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 		local action_input_name = action_input_network_lookups[input_qeueue_action_input[i]]
 		local raw_input = self._RAW_INPUTS_NETWORK_LOOKUP[input_queue_raw_input[i]]
 		local entry = input_queue[i]
@@ -469,7 +469,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 
 		self:_fill_table_with_authoritative_hierarchy_position(auth_hierarchy_position, i, input_queue_produced_by_hierarchy, action_input_network_lookups, input_queue_hierarchy_position, input_queue, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 
-		for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+		for j = 1, MAX_HIERARCHY_DEPTH do
 			local auth_action_input = auth_hierarchy_position[j]
 			local sim_action_input = entry_hierarchy_position[j]
 
@@ -485,10 +485,10 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 	self._input_queue_first_entry_became_first_entry_t = (fixed_frame - 1) * GameParameters.fixed_time_step + input_queue_first_entry_became_first_entry_t
 	local sim_hierarchy_position = self._hierarchy_position[buffer_index]
 
-	for i = 1, MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, MAX_HIERARCHY_DEPTH do
 		local sim_action_input = sim_hierarchy_position[i]
 		local auth_action_input_index = hierarchy_position[i]
-		local auth_action_input = (auth_action_input_index and action_input_network_lookups[auth_action_input_index]) or self._NO_ACTION_INPUT
+		local auth_action_input = auth_action_input_index and action_input_network_lookups[auth_action_input_index] or self._NO_ACTION_INPUT
 
 		if sim_action_input ~= auth_action_input then
 			sim_hierarchy_position[i] = auth_action_input
@@ -515,11 +515,11 @@ ActionInputParser.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local old_sequences = self._sequences[old_index]
 	local this_frames_sequences = self._sequences[new_index]
 
-	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local old_sequence = old_sequences[i]
 		local new_sequence = this_frames_sequences[i]
 
-		for j = 1, #old_sequence, 1 do
+		for j = 1, #old_sequence do
 			new_sequence[j] = old_sequence[j]
 		end
 	end
@@ -528,7 +528,7 @@ ActionInputParser.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local old_hierarchy_position = hierarchy_position[old_index]
 	local this_frames_hierarchy_position = hierarchy_position[new_index]
 
-	for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, self._MAX_HIERARCHY_DEPTH do
 		this_frames_hierarchy_position[i] = old_hierarchy_position[i]
 	end
 
@@ -559,7 +559,7 @@ ActionInputParser._update_buffering = function (self, old_input_queue, new_input
 	local has_first_entry = first_action_input ~= self._NO_ACTION_INPUT
 	local sequence_config_or_nil = has_first_entry and sequence_configs[first_action_input]
 	local buffer_time_or_nil = sequence_config_or_nil and sequence_config_or_nil.buffer_time
-	local time_to_buffer = (buffer_time_or_nil and t >= self._input_queue_first_entry_became_first_entry_t + buffer_time_or_nil) or false
+	local time_to_buffer = buffer_time_or_nil and t >= self._input_queue_first_entry_became_first_entry_t + buffer_time_or_nil or false
 
 	if time_to_buffer then
 		local first_entry_hierarchy_position = first_entry[HIERARCHY_POSITION]
@@ -570,7 +570,7 @@ ActionInputParser._update_buffering = function (self, old_input_queue, new_input
 		self:_jump_hierarchy(hierarchy_position, first_entry_hierarchy_position, base_hierarchy, sequences, prepare_child_t, network_lookup)
 		self:_clear_action_input_queue(new_input_queue)
 	else
-		for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+		for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 			local old_entry = old_input_queue[i]
 			local new_entry = new_input_queue[i]
 			new_entry[ACTION_INPUT] = old_entry[ACTION_INPUT]
@@ -578,7 +578,7 @@ ActionInputParser._update_buffering = function (self, old_input_queue, new_input
 			local new_entry_hierarchy = new_entry[HIERARCHY_POSITION]
 			local old_entry_hierarchy = old_entry[HIERARCHY_POSITION]
 
-			for j = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+			for j = 1, self._MAX_HIERARCHY_DEPTH do
 				new_entry_hierarchy[j] = old_entry_hierarchy[j]
 			end
 		end
@@ -592,7 +592,7 @@ ActionInputParser._update_bot_action_input_requests = function (self, request_qu
 	local sequence_configs = self._ACTION_INPUT_SEQUENCE_CONFIGS[template_name]
 	local current_buffer_index = self._bot_action_input_current_buffer_index
 
-	for i = 1, num_requests, 1 do
+	for i = 1, num_requests do
 		local buffer_index = current_buffer_index % BOT_REQUEST_RING_BUFFER_MAX + 1
 		current_buffer_index = buffer_index
 		local request = request_queue[buffer_index]
@@ -704,13 +704,13 @@ ActionInputParser._handle_hierarchy_transition = function (self, transition, hie
 end
 
 ActionInputParser._reset_hierarchy_position = function (self, hierarchy_position)
-	for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, self._MAX_HIERARCHY_DEPTH do
 		hierarchy_position[i] = self._NO_ACTION_INPUT
 	end
 end
 
 ActionInputParser._progress_hierarchy_position = function (self, hierarchy_position, action_input)
-	for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, self._MAX_HIERARCHY_DEPTH do
 		if hierarchy_position[i] == self._NO_ACTION_INPUT then
 			hierarchy_position[i] = action_input
 
@@ -742,7 +742,7 @@ ActionInputParser._jump_hierarchy = function (self, hierarchy_position, wanted_h
 
 	self:_stop_running_sequences_from_hierarchy(current_hierarchy, sequences, network_lookup)
 
-	for i = 1, MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, MAX_HIERARCHY_DEPTH do
 		hierarchy_position[i] = wanted_hierarchy_position[i]
 	end
 
@@ -769,7 +769,7 @@ end
 local temp_inputs = {}
 
 ActionInputParser._this_frames_inputs = function (self, input_extension)
-	for i = 1, #raw_inputs, 1 do
+	for i = 1, #raw_inputs do
 		local raw_input = raw_inputs[i]
 		temp_inputs[raw_input] = input_extension:get(raw_input)
 	end
@@ -778,7 +778,7 @@ ActionInputParser._this_frames_inputs = function (self, input_extension)
 end
 
 ActionInputParser._has_running_sequences = function (self, sequences)
-	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local sequence = sequences[i]
 
 		if sequence[IS_RUNNING] then
@@ -857,7 +857,7 @@ ActionInputParser._evaluate_input = function (self, input_config, this_frames_in
 		if input_config.input_mode == "all" then
 			local all_true = true
 
-			for i = 1, #inputs, 1 do
+			for i = 1, #inputs do
 				local array_input_config = inputs[i]
 				local input = array_input_config.input
 				local value = array_input_config.value
@@ -871,7 +871,7 @@ ActionInputParser._evaluate_input = function (self, input_config, this_frames_in
 				return true, inputs[1].input
 			end
 		else
-			for i = 1, #inputs, 1 do
+			for i = 1, #inputs do
 				local array_input_config = inputs[i]
 				local input = array_input_config.input
 				local value = array_input_config.value
@@ -928,7 +928,7 @@ ActionInputParser._queue_action_input = function (self, action_input_queue, sequ
 	local next_entry_index = 0
 	local has_space = false
 
-	for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 		local entry = action_input_queue[i]
 
 		if entry[ACTION_INPUT] == self._NO_ACTION_INPUT then
@@ -960,7 +960,7 @@ ActionInputParser._queue_action_input = function (self, action_input_queue, sequ
 		entry[RAW_INPUT] = raw_input
 		local entry_hierarchy_position = entry[HIERARCHY_POSITION]
 
-		for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+		for i = 1, self._MAX_HIERARCHY_DEPTH do
 			entry_hierarchy_position[i] = hierarchy_position[i]
 		end
 
@@ -978,7 +978,7 @@ ActionInputParser._manipulate_queue_by_max_queue = function (self, action_input_
 	local last_occurrence_of_action_input = nil
 	local times_queued = 0
 
-	for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 		local entry = action_input_queue[i]
 		local queued_action_input = entry[ACTION_INPUT]
 
@@ -995,7 +995,7 @@ ActionInputParser._manipulate_queue_by_max_queue = function (self, action_input_
 
 		self:_clear_action_input_queue(action_input_queue, clear_from)
 
-		for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+		for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 			local entry = action_input_queue[i]
 			local queued_action_input = entry[ACTION_INPUT]
 
@@ -1035,13 +1035,13 @@ ActionInputParser._manipulate_queue_by_no_space = function (self, action_input_q
 		return nil
 	end
 
-	for i = matching_entry_index, MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = matching_entry_index, MAX_ACTION_INPUT_QUEUE do
 		local remove_entry = action_input_queue[i]
 		remove_entry[ACTION_INPUT] = NO_ACTION_INPUT
 		remove_entry[RAW_INPUT] = NO_RAW_INPUT
 		local remove_entry_hierarchy_position = remove_entry[HIERARCHY_POSITION]
 
-		for j = 1, MAX_HIERARCHY_DEPTH, 1 do
+		for j = 1, MAX_HIERARCHY_DEPTH do
 			remove_entry_hierarchy_position[j] = NO_ACTION_INPUT
 		end
 	end
@@ -1053,7 +1053,7 @@ ActionInputParser._hierarchy_depth = function (self, hierarchy_position)
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
 	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
 
-	for i = 1, MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, MAX_HIERARCHY_DEPTH do
 		local action_input = hierarchy_position[i]
 
 		if action_input == NO_ACTION_INPUT then
@@ -1067,7 +1067,7 @@ end
 ActionInputParser._clear_action_input_queue_hierarchy = function (self, hierarchy_position)
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
 
-	for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, self._MAX_HIERARCHY_DEPTH do
 		hierarchy_position[i] = NO_ACTION_INPUT
 	end
 end
@@ -1075,7 +1075,7 @@ end
 ActionInputParser._clear_action_input_queue = function (self, input_queue, start_index)
 	start_index = start_index or 1
 
-	for i = start_index, self._MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = start_index, self._MAX_ACTION_INPUT_QUEUE do
 		local entry = input_queue[i]
 
 		if entry[ACTION_INPUT] == self._NO_ACTION_INPUT then
@@ -1093,7 +1093,7 @@ end
 ActionInputParser._clear_action_input_queue_from_matching_hierarchy_position = function (self, input_queue, hierarchy_position)
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
 
-	for i = 1, self._MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 		local entry = input_queue[i]
 
 		if entry[ACTION_INPUT] == NO_ACTION_INPUT then
@@ -1113,7 +1113,7 @@ end
 ActionInputParser._same_hierarchy_position = function (self, hieararchy_a, hierarchy_b)
 	local same_hierarchy_position = true
 
-	for i = 1, self._MAX_HIERARCHY_DEPTH, 1 do
+	for i = 1, self._MAX_HIERARCHY_DEPTH do
 		if hieararchy_a[i] ~= hierarchy_b[i] then
 			same_hierarchy_position = false
 
@@ -1142,7 +1142,7 @@ ActionInputParser._stop_running_sequences_from_hierarchy = function (self, hiera
 end
 
 function _get_current_hierarchy(hierarchy_position, hierarchy, max_hierarchy_depth, no_action_input)
-	for i = 1, max_hierarchy_depth, 1 do
+	for i = 1, max_hierarchy_depth do
 		local position = hierarchy_position[i]
 
 		if position == no_action_input then
@@ -1158,7 +1158,7 @@ end
 function _hierarchy_string(hierarchy_position, max_hierarchy_depth, no_action_input)
 	local hierarchy_string = "["
 
-	for i = 1, max_hierarchy_depth, 1 do
+	for i = 1, max_hierarchy_depth do
 		local action_input = hierarchy_position[i]
 
 		if action_input == no_action_input then
@@ -1186,7 +1186,7 @@ end
 function _input_queue_string(action_input_queue, MAX_ACTION_INPUT_QUEUE, NO_ACTION_INPUT, MAX_HIERARCHY_DEPTH)
 	local s = "[ action_input_queue\n"
 
-	for i = 1, MAX_ACTION_INPUT_QUEUE, 1 do
+	for i = 1, MAX_ACTION_INPUT_QUEUE do
 		local entry = action_input_queue[i]
 		local action_input = entry[ACTION_INPUT]
 		local entry_s = nil

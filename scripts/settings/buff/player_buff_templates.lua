@@ -170,7 +170,7 @@ local templates = {
 			local has_at_least_one = specialization_extension:has_special_rule(always_at_least_one_coherency)
 			local always_at_least_two_coherency = special_rules.always_at_least_two_coherency
 			local has_at_least_two = specialization_extension:has_special_rule(always_at_least_two_coherency)
-			local min = (has_at_least_two and 3) or (has_at_least_one and 2) or 0
+			local min = has_at_least_two and 3 or has_at_least_one and 2 or 0
 
 			return min, nil
 		end

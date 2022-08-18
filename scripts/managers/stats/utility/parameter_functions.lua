@@ -97,7 +97,7 @@ ParameterFunctions.pick = function (stat_definition, ...)
 
 	fassert(_generate_pick_x[amount_to_pick], "No function defined to pick '%d' parameters.", amount_to_pick)
 
-	for index = 1, amount_to_pick, 1 do
+	for index = 1, amount_to_pick do
 		local desired_param_name = select(index, ...)
 		local desired_index = table.index_of(stat_params, desired_param_name)
 
@@ -115,7 +115,7 @@ ParameterFunctions.smart_pick = function (stat_definition, names, transforms)
 	local output = {}
 	local size = #names
 
-	for index = 1, size, 1 do
+	for index = 1, size do
 		local desired_param_name = names[index]
 		local desired_index = table.index_of(stat_params, desired_param_name)
 
@@ -125,7 +125,7 @@ ParameterFunctions.smart_pick = function (stat_definition, names, transforms)
 	end
 
 	return function (_, ...)
-		for i = 1, size, 1 do
+		for i = 1, size do
 			output[i] = select(indices[i], ...)
 
 			if transforms[i] then
@@ -141,7 +141,7 @@ ParameterFunctions.transformers = {
 	faction_of_breed = function (breed_name)
 		local breed_data = Breeds[breed_name]
 
-		return (breed_data and breed_data.sub_faction_name) or "unknown"
+		return breed_data and breed_data.sub_faction_name or "unknown"
 	end,
 	side_objective_to_type = function (side_objective_name)
 		if side_objective_name == "side_mission_grimoire" then

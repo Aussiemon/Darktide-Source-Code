@@ -51,11 +51,11 @@ PresenceEntryMyself.set_activity_id = function (self, activity_id)
 end
 
 PresenceEntryMyself.character_id = function (self)
-	return (self:character_profile() and self:character_profile().character_id) or ""
+	return self:character_profile() and self:character_profile().character_id or ""
 end
 
 PresenceEntryMyself.character_name = function (self)
-	return (self:character_profile() and self:character_profile().name) or ""
+	return self:character_profile() and self:character_profile().name or ""
 end
 
 PresenceEntryMyself.character_profile = function (self)
@@ -81,9 +81,9 @@ PresenceEntryMyself.platform_icon = function (self)
 	local platform = self._platform
 
 	if platform == "steam" then
-		return "\ue06b"
+		return ""
 	elseif platform == "xbox" then
-		return "\ue06c"
+		return ""
 	end
 
 	return nil

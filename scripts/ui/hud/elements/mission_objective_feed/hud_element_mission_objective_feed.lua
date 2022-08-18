@@ -49,7 +49,7 @@ HudElementMissionObjectiveFeed._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectiveFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -60,7 +60,7 @@ HudElementMissionObjectiveFeed._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectiveFeedSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])
@@ -190,7 +190,7 @@ HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_object
 	local widget = self._widgets_by_name[objective_name]
 	local style = widget.style
 	local bar_style = style.bar
-	local progression = (hud_objective:has_second_progression() and hud_objective:second_progression()) or hud_objective:progression()
+	local progression = hud_objective:has_second_progression() and hud_objective:second_progression() or hud_objective:progression()
 	local bar_default_size = bar_style.default_size
 	bar_style.size[1] = bar_default_size[1] * progression
 end
@@ -200,7 +200,7 @@ HudElementMissionObjectiveFeed._get_objectives_height = function (self, widget, 
 	local content = widget.content
 	local style = widget.style
 	local show_bar = content.show_bar
-	local bar_height = (show_bar and style.bar.size[2]) or 0
+	local bar_height = show_bar and style.bar.size[2] or 0
 
 	return header_size[2] + bar_height * 2
 end

@@ -21,7 +21,7 @@ WeaponTemplateResourceDependencies.generate = function (weapon_template_name)
 
 	local impact_fx_resource_packages = ImpactFxResourceDependencies.generate(weapon_template)
 
-	for i = 1, #impact_fx_resource_packages, 1 do
+	for i = 1, #impact_fx_resource_packages do
 		local resource = impact_fx_resource_packages[i]
 
 		if _is_valid_resource_name_exclude_items(resource) then
@@ -97,9 +97,6 @@ function _resolve_data_recursive(data, resource_packages)
 
 					if Application.can_get_resource("package", husk_event) then
 						resource_packages[husk_event] = true
-
-						if true then
-						end
 					end
 				end
 			end

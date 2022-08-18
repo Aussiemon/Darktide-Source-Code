@@ -267,7 +267,7 @@ ImguiManager._render = function (self, dt, t)
 		if Imgui.begin_menu("View") then
 			for gui_name, gui in pairs(guis) do
 				local is_active = active_guis[gui_name]
-				local text = ((is_active and "* ") or "  ") .. gui_name
+				local text = (is_active and "* " or "  ") .. gui_name
 
 				if Imgui.menu_item(text) then
 					if is_active then

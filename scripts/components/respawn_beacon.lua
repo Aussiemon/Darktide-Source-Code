@@ -178,25 +178,25 @@ RespawnBeacon._store_positions = function (self, valid_positions, on_nav_positio
 	local Vector3Box = Vector3Box
 	local positions = self._valid_positions
 
-	for i = 1, #valid_positions, 1 do
+	for i = 1, #valid_positions do
 		positions[#positions + 1] = Vector3Box(valid_positions[i])
 	end
 
 	positions = self._on_nav_positions
 
-	for i = 1, #on_nav_positions, 1 do
+	for i = 1, #on_nav_positions do
 		positions[#positions + 1] = Vector3Box(on_nav_positions[i])
 	end
 
 	positions = self._fitting_positions
 
-	for i = 1, #fitting_positions, 1 do
+	for i = 1, #fitting_positions do
 		positions[#positions + 1] = Vector3Box(fitting_positions[i])
 	end
 
 	positions = self._volume_positions
 
-	for i = 1, #volume_positions, 1 do
+	for i = 1, #volume_positions do
 		positions[#positions + 1] = Vector3Box(volume_positions[i])
 	end
 end
@@ -206,28 +206,28 @@ RespawnBeacon._unbox_positions = function (self)
 	local positions = self._valid_positions
 	local valid_positions = {}
 
-	for i = 1, #positions, 1 do
+	for i = 1, #positions do
 		valid_positions[i] = vector3_unbox(positions[i])
 	end
 
 	positions = self._on_nav_positions
 	local on_nav_positions = {}
 
-	for i = 1, #positions, 1 do
+	for i = 1, #positions do
 		on_nav_positions[i] = vector3_unbox(positions[i])
 	end
 
 	positions = self._fitting_positions
 	local fitting_positions = {}
 
-	for i = 1, #positions, 1 do
+	for i = 1, #positions do
 		fitting_positions[i] = vector3_unbox(positions[i])
 	end
 
 	positions = self._volume_positions
 	local volume_positions = {}
 
-	for i = 1, #positions, 1 do
+	for i = 1, #positions do
 		volume_positions[i] = vector3_unbox(positions[i])
 	end
 

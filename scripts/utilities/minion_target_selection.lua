@@ -33,7 +33,7 @@ MinionTargetSelection.disabled_weight = function (target_selection_weights, targ
 
 	local disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	local disabling_type = disabled_character_state_component.disabling_type
-	local disabling_type_weight = (target_selection_weights.disabling_type and target_selection_weights.disabling_type[disabling_type]) or 0
+	local disabling_type_weight = target_selection_weights.disabling_type and target_selection_weights.disabling_type[disabling_type] or 0
 	local disabled_weight = (target_selection_weights.disabled or DEFAULT_TARGET_DISABLED_WEIGHT) + disabling_type_weight
 
 	return disabled_weight

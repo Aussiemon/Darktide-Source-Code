@@ -187,7 +187,7 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	local max_hit_mass = _max_hit_mass(damage_settings)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
-	local current_mass_hit = (math.huge <= max_hit_mass and 0) or max_hit_mass * used_hit_mass_percentage
+	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
 	local fp_position = self._first_person_component.position
 	local lunge_direction = self._lunge_character_state_component.direction
 	local lunge_dir_right = Vector3.cross(lunge_direction, Vector3.up())
@@ -198,7 +198,7 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 	local right_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward + right))
 	local hit_enemy_units = self._hit_enemy_units
 
-	for i = 1, num_actors, 1 do
+	for i = 1, num_actors do
 		local hit_actor = actors[i]
 		local hit_unit = Actor.unit(hit_actor)
 

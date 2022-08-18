@@ -6,7 +6,7 @@ for mission_name, mission in pairs(Missions) do
 	local mission_template_files = mission.terror_event_templates
 
 	if mission_template_files then
-		for i = 1, #mission_template_files, 1 do
+		for i = 1, #mission_template_files do
 			local template_file = mission_template_files[i]
 
 			if not terror_event_templates[template_file] then

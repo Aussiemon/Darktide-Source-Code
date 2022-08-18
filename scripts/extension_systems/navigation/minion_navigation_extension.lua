@@ -97,12 +97,12 @@ MinionNavigationExtension._set_randomized_nav_tag_costs = function (self, nav_ta
 	local nav_mesh_manager = self._nav_mesh_manager
 	local randomized_nav_tag_costs = optional_randomized_nav_tag_costs or DEFAULT_RANDOMIZED_NAV_TAG_COSTS
 
-	for i = 1, #randomized_nav_tag_costs, 1 do
+	for i = 1, #randomized_nav_tag_costs do
 		local data = randomized_nav_tag_costs[i]
 		local costs = data.costs
 		local chance_to_pick_first_index = data.chance_to_pick_first_index
 		local random_value = math.random()
-		local cost = (random_value < chance_to_pick_first_index and costs[1]) or costs[2]
+		local cost = random_value < chance_to_pick_first_index and costs[1] or costs[2]
 		local layer_name = data.layer_name
 		local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_name)
 
@@ -311,7 +311,7 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 
 			local already_at_wanted_destination = distance_to_wanted_destination_sq <= AT_DESTINATION_DISTANCE_SQ
 			local is_path_recomputation_needed = GwNavBot.is_path_recomputation_needed(nav_bot)
-			local should_start_new_pathfind = is_path_recomputation_needed or (not already_at_wanted_destination and (not has_path or change_large_enough))
+			local should_start_new_pathfind = is_path_recomputation_needed or not already_at_wanted_destination and (not has_path or change_large_enough)
 
 			if should_start_new_pathfind then
 				local far_pathing_allowed = self._far_pathing_allowed
@@ -528,7 +528,7 @@ MinionNavigationExtension._recalculate_max_speed = function (self)
 	local aggregate_mod = 1
 	local modifiers = self._movement_modifiers
 
-	for i = 1, self._movement_modifier_table_size, 1 do
+	for i = 1, self._movement_modifier_table_size do
 		local mod = modifiers[i]
 
 		if mod then

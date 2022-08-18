@@ -49,14 +49,14 @@ local DestructibleUtilities = {
 			}
 			destructible_parameters.stages[1] = stage
 		else
-			for i = 1, num_stages, 1 do
+			for i = 1, num_stages do
 				local parent_node = parent_nodes[i]
 				local stage = {}
 				local dynamic_meshes = {}
 				local static_meshes = {}
 				local meshes = Unit.get_node_meshes(unit, parent_node, true, false) or {}
 
-				for j = 1, #meshes, 1 do
+				for j = 1, #meshes do
 					local mesh = meshes[j]
 					local mesh_node = Mesh.node(Unit.mesh(unit, mesh))
 					local mesh_actors = Unit.get_node_actors(unit, mesh_node, true, false)
@@ -93,7 +93,7 @@ local DestructibleUtilities = {
 				local unit_actors = Unit.get_node_actors(unit, parent_node, recursive, use_global_table)
 				local actors = {}
 
-				for j = 1, #unit_actors, 1 do
+				for j = 1, #unit_actors do
 					local actor = Unit.actor(unit, unit_actors[j])
 
 					if Actor.is_dynamic(actor) then
@@ -126,13 +126,13 @@ local function _set_stage_meshes_visiblity(unit, destructible_stage, visible)
 	local Unit_set_mesh_visibility = Unit.set_mesh_visibility
 	local meshes = destructible_stage.static_meshes
 
-	for i = 1, #meshes, 1 do
+	for i = 1, #meshes do
 		Unit_set_mesh_visibility(unit, meshes[i], visible)
 	end
 
 	meshes = destructible_stage.dynamic_meshes
 
-	for i = 1, #meshes, 1 do
+	for i = 1, #meshes do
 		Unit_set_mesh_visibility(unit, meshes[i], visible)
 	end
 end
@@ -140,10 +140,10 @@ end
 local function _set_all_dynamic_meshes_visiblity(unit, stages, visible)
 	local Unit_set_mesh_visibility = Unit.set_mesh_visibility
 
-	for i = 1, #stages, 1 do
+	for i = 1, #stages do
 		local dynamic_meshes = stages[i].dynamic_meshes
 
-		for j = 1, #dynamic_meshes, 1 do
+		for j = 1, #dynamic_meshes do
 			Unit_set_mesh_visibility(unit, dynamic_meshes[j], visible)
 		end
 	end
@@ -245,7 +245,7 @@ DestructibleUtilities.calculate_total_health = function (destructible_parameters
 	if current_stage_index > 0 then
 		local num_stages = #destructible_parameters.stages
 
-		for i = current_stage_index, num_stages, 1 do
+		for i = current_stage_index, num_stages do
 			local stage = destructible_parameters.stages[i]
 			health = health + stage.health
 		end
@@ -269,7 +269,7 @@ local function _are_lights_destroyed(destructible_parameters)
 		return true
 	end
 
-	for ii = 1, current_stage_index, 1 do
+	for ii = 1, current_stage_index do
 		local stage = destructible_parameters.stages[ii]
 
 		if #stage.lights > 0 then

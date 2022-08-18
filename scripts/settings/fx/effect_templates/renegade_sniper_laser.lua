@@ -19,7 +19,7 @@ local function _get_positions(local_player_unit, template_data, game_session, ga
 	local attachment_unit, node_index = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, FX_SOURCE_NAME)
 	local muzzle_pos = Unit.world_position(attachment_unit, node_index)
 	local laser_aim_position = GameSession.game_object_field(game_session, game_object_id, "laser_aim_position")
-	local local_player_position = (local_player_unit and Unit.local_position(local_player_unit, 1)) or Vector3(0, 0, 0)
+	local local_player_position = local_player_unit and Unit.local_position(local_player_unit, 1) or Vector3(0, 0, 0)
 	local closest_point = Geometry.closest_point_on_line(local_player_position, muzzle_pos, laser_aim_position)
 
 	return closest_point, muzzle_pos, laser_aim_position, attachment_unit, node_index

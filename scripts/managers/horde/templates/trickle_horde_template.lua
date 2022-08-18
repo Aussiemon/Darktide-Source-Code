@@ -19,13 +19,13 @@ local function _compose_spawn_list(composition)
 
 	local breeds = composition.breeds
 
-	for i = 1, #breeds, 1 do
+	for i = 1, #breeds do
 		local breed_data = breeds[i]
 		local breed_name = breed_data.name
 		local amount = breed_data.amount
 		local num_to_spawn = math_random(amount[1], amount[2])
 
-		for j = 1, num_to_spawn, 1 do
+		for j = 1, num_to_spawn do
 			TEMP_BREED_NAMES[#TEMP_BREED_NAMES + 1] = breed_name
 		end
 	end
@@ -127,7 +127,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, horde_position, above, below, num_to_spawn, flood_fill_positions)
 	local breeds_can_patrol = true
 
-	for i = 1, num_positions, 1 do
+	for i = 1, num_positions do
 		local position = flood_fill_positions[i]
 		flood_fill_positions[#flood_fill_positions + 1] = position
 		local breed_name = spawn_list[i]
@@ -143,7 +143,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local should_spawn_patrol = breeds_can_patrol and challenge_rating < PATROL_CHALLENGE_RAITNG_THRESHOLD
 
 	if should_spawn_patrol then
-		for i = 1, num_positions, 1 do
+		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
 			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.passive, nil, nil, group_id, nil, nil, "trickle_horde")
@@ -167,7 +167,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			spawned_minions[i] = unit
 		end
 	else
-		for i = 1, num_positions, 1 do
+		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
 			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id, nil, nil, "trickle_horde")

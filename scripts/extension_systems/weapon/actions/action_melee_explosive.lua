@@ -80,7 +80,7 @@ ActionMeleeExplosive._process_hit = function (self, t, unit, hit_actor, hit_unit
 	local ammunition_usage = action_settings.ammunition_usage
 	local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, self._action_settings)
 
-	if abort_attack and (not ammunition_usage or (ammunition_usage and has_ammo)) then
+	if abort_attack and (not ammunition_usage or ammunition_usage and has_ammo) then
 		local explosion_delay = action_settings.explosion_delay
 		self._exploding_time = t + explosion_delay
 	end

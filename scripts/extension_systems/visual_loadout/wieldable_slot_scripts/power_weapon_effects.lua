@@ -112,7 +112,7 @@ PowerWeaponEffects._update_active = function (self, t)
 end
 
 function _set_start_time(t, weapon_material_varaibles)
-	for i = 1, #weapon_material_varaibles, 1 do
+	for i = 1, #weapon_material_varaibles do
 		local weapon_material_varaible = weapon_material_varaibles[i]
 
 		weapon_material_varaible.component:set_start_time(t, weapon_material_varaible.unit)
@@ -120,7 +120,7 @@ function _set_start_time(t, weapon_material_varaibles)
 end
 
 function _set_stop_time(t, weapon_material_varaibles)
-	for i = 1, #weapon_material_varaibles, 1 do
+	for i = 1, #weapon_material_varaibles do
 		local weapon_material_varaible = weapon_material_varaibles[i]
 
 		weapon_material_varaible.component:set_stop_time(t, weapon_material_varaible.unit)
@@ -130,7 +130,7 @@ end
 function _unit_components(components, attachments)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local attachment_unit = attachments[i]
 		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
 

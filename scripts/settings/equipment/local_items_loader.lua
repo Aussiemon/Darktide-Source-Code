@@ -10,11 +10,11 @@ LocalLoader.QUERY_TIMEOUT_SECONDS = 60
 LocalLoader.QUERY_POLL_INTERVAL_SECONDS = 0.1
 
 LocalLoader._wait_for_query = function (query_handle, timeout_s, start_time)
-	start_time = start_time or (Managers and Managers.time:time("main")) or 0
+	start_time = start_time or Managers and Managers.time:time("main") or 0
 	local results = Metadata.claim_results(query_handle)
 
 	if not results then
-		local now = (Managers and Managers.time:time("main")) or 0
+		local now = Managers and Managers.time:time("main") or 0
 
 		if timeout_s < now - start_time then
 			Log.error("LocalLoader", "Timed out waiting for RMD data from engine. Query deadlocked?")
@@ -25,7 +25,7 @@ LocalLoader._wait_for_query = function (query_handle, timeout_s, start_time)
 			return LocalLoader._wait_for_query(query_handle, timeout_s, start_time)
 		end)
 	else
-		local now = (Managers and Managers.time:time("main")) or 0
+		local now = Managers and Managers.time:time("main") or 0
 
 		Log.info("LocalLoader", "Query finished, took %f seconds", now - start_time)
 	end

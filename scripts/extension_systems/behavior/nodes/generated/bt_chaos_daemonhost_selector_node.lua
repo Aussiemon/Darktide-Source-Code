@@ -13,7 +13,7 @@ BtChaosDaemonhostSelectorNode.init_values = function (self, blackboard, action_d
 
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_tree_node = child_node.tree_node
 		local child_action_data = child_tree_node.action_data
@@ -41,7 +41,7 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 		local num_valid_target_units = #target_units
 		local num_alive_targets = 0
 
-		for i = 1, num_valid_target_units, 1 do
+		for i = 1, num_valid_target_units do
 			local player_unit = target_units[i]
 
 			if HEALTH_ALIVE[player_unit] then

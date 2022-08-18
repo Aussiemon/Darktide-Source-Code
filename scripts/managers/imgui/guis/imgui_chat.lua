@@ -43,7 +43,7 @@ ImguiChat.update = function (self, dt, t)
 
 	local is_mic_muted = Managers.chat:is_mic_muted()
 
-	Imgui.text(string.format("Mic muted: %s", (is_mic_muted and "yes") or "no"))
+	Imgui.text(string.format("Mic muted: %s", is_mic_muted and "yes" or "no"))
 	Imgui.end_child_window()
 
 	for session_handle, session in pairs(Managers.chat._sessions) do
@@ -54,24 +54,24 @@ ImguiChat.update = function (self, dt, t)
 			Imgui.indent()
 
 			for participant_uri, participant in pairs(session.participants) do
-				local name = (participant.is_current_user and "Me") or participant.displayname or participant_uri
-				local peer_id = (participant.peer_id and participant.peer_id) or "nil"
-				local speaking = (participant.is_speaking and ", Speaking") or ""
+				local name = participant.is_current_user and "Me" or participant.displayname or participant_uri
+				local peer_id = participant.peer_id and participant.peer_id or "nil"
+				local speaking = participant.is_speaking and ", Speaking" or ""
 				local voip_muted = participant.is_muted_for_me or participant.is_moderator_muted
-				local voip_muted_text = (voip_muted and ", voip muted") or ""
+				local voip_muted_text = voip_muted and ", voip muted" or ""
 				local text_muted = participant.is_text_muted_for_me or participant.is_moderator_text_muted
-				local text_muted_text = (text_muted and ", text muted") or ""
+				local text_muted_text = text_muted and ", text muted" or ""
 				local text = string.format("%s (%s)%s%s%s", name, peer_id, speaking, voip_muted_text, text_muted_text)
 
 				Imgui.text(text)
 
-				if Imgui.button(((voip_muted and "Unmute voip") or "Mute voip") .. "##" .. participant_uri) then
+				if Imgui.button((voip_muted and "Unmute voip" or "Mute voip") .. "##" .. participant_uri) then
 					Managers.chat:channel_voip_mute_participant(session_handle, participant_uri, not voip_muted)
 				end
 
 				Imgui.same_line()
 
-				if Imgui.button(((text_muted and "Unmute text") or "Mute text") .. "##" .. participant_uri) then
+				if Imgui.button((text_muted and "Unmute text" or "Mute text") .. "##" .. participant_uri) then
 					Managers.chat:channel_text_mute_participant(session_handle, participant_uri, not text_muted)
 				end
 

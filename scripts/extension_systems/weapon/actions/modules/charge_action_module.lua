@@ -37,7 +37,7 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	local charge_complete_time = action_module_charge_component.charge_complete_time
 	local max_charge = action_module_charge_component.max_charge
 	local time_charged = charge_duration - math.max(0, charge_complete_time - t)
-	local charge_level = math.min(math.clamp(min_charge + ((1 - min_charge) * time_charged) / charge_duration, min_charge, 1), max_charge)
+	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * time_charged / charge_duration, min_charge, 1), max_charge)
 	action_module_charge_component.charge_level = charge_level
 	local charge_variable = Unit.animation_find_variable(first_person_unit, "charge")
 
@@ -53,7 +53,7 @@ ChargeActionModule.finish = function (self, reason, data, t, force_reset)
 		new_action_kind = data.new_action_kind
 	end
 
-	if force_reset or reason == "hold_input_released" or reason == "stunned" or (new_action_kind == "unaim" and reason == "new_interrupting_action") then
+	if force_reset or reason == "hold_input_released" or reason == "stunned" or new_action_kind == "unaim" and reason == "new_interrupting_action" then
 		local action_module_charge_component = self._action_module_charge_component
 		action_module_charge_component.charge_complete_time = 0
 		action_module_charge_component.charge_level = 0

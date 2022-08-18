@@ -17,15 +17,15 @@ UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_sc
 	}
 	self._area_scenegraph_id = area_scenegraph_id
 	alignment_list = alignment_list or widgets
-	local axis = ((direction == DIRECTION.LEFT or direction == DIRECTION.RIGHT) and 1) or 2
+	local axis = (direction == DIRECTION.LEFT or direction == DIRECTION.RIGHT) and 1 or 2
 	local negative_direction = direction == DIRECTION.LEFT or direction == DIRECTION.UP
 	self._using_negative_direction = negative_direction
 	self._fill_section_spacing = fill_section_spacing
 	self._use_is_focused_for_navigation = use_is_focused_for_navigation
 	self._axis = axis
-	self._scroll_direction_multiplier = (negative_direction and 1) or -1
+	self._scroll_direction_multiplier = negative_direction and 1 or -1
 	local area_size = self:_get_area_size()
-	self._start_offset = (negative_direction and area_size[axis]) or 0
+	self._start_offset = negative_direction and area_size[axis] or 0
 	self._widgets = widgets
 	self._alignment_list = alignment_list
 	self._total_grid_length, self._smallest_widget_length = self:_align_grid_widgets(alignment_list)
@@ -277,7 +277,7 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 	end
 
 	if input_direction == DIRECTION.DOWN then
-		for i = math.min(index + 1, num_widgets), num_widgets, 1 do
+		for i = math.min(index + 1, num_widgets), num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
 
@@ -366,7 +366,7 @@ UIWidgetGrid._find_closest_neighbour_horizontal = function (self, index, input_d
 			end
 		end
 	elseif input_direction == DIRECTION.RIGHT then
-		for i = math.min(index + 1, num_widgets), num_widgets, 1 do
+		for i = math.min(index + 1, num_widgets), num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
 
@@ -399,7 +399,7 @@ UIWidgetGrid.remove_widget = function (self, widget)
 	local widgets = self._widgets
 	local alignment_list = self._alignment_list
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		if widgets[i] == widget then
 			table.remove(widgets, i)
 
@@ -407,7 +407,7 @@ UIWidgetGrid.remove_widget = function (self, widget)
 		end
 	end
 
-	for i = 1, #alignment_list, 1 do
+	for i = 1, #alignment_list do
 		if alignment_list[i] == widget then
 			table.remove(alignment_list, i)
 
@@ -472,7 +472,7 @@ UIWidgetGrid._align_grid_widgets = function (self, widgets)
 			local limit_new_section_spacing = use_limit_new_section_spacing
 
 			if limit_new_section_spacing then
-				for i = 1, #grid_section_entry_sizes, 1 do
+				for i = 1, #grid_section_entry_sizes do
 					local previous_selection_entry_size = grid_section_entry_sizes[i]
 					local previous_selection_entry_position = grid_section_entry_positions[i]
 
@@ -484,7 +484,7 @@ UIWidgetGrid._align_grid_widgets = function (self, widgets)
 
 			if limit_new_section_spacing then
 				local previous_selection_entry_size = grid_section_entry_sizes[1]
-				local direction_axis = (previous_selection_entry_size and previous_selection_entry_size[axis]) or 0
+				local direction_axis = previous_selection_entry_size and previous_selection_entry_size[axis] or 0
 
 				if negative_direction then
 					position[axis] = position[axis] - (direction_axis + spacing[axis])
@@ -579,10 +579,10 @@ UIWidgetGrid.handle_grid_selection = function (self, input_service)
 	local new_selection_index = nil
 
 	if input_service:get("navigate_up_continuous") then
-		local direction = (using_negative_direction and DIRECTION.DOWN) or DIRECTION.UP
+		local direction = using_negative_direction and DIRECTION.DOWN or DIRECTION.UP
 		new_selection_index = self:_find_closest_neighbour_vertical(current_index, direction)
 	elseif input_service:get("navigate_down_continuous") then
-		local direction = (using_negative_direction and DIRECTION.UP) or DIRECTION.DOWN
+		local direction = using_negative_direction and DIRECTION.UP or DIRECTION.DOWN
 		new_selection_index = self:_find_closest_neighbour_vertical(current_index, direction)
 	elseif input_service:get("navigate_left_continuous") then
 		new_selection_index = self:_find_closest_neighbour_horizontal(current_index, DIRECTION.LEFT)

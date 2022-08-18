@@ -2,7 +2,23 @@ local AcceleratedLocalSpaceMovement = {}
 local Vector3_dot = Vector3.dot
 
 AcceleratedLocalSpaceMovement.speed_function = function (speed, wanted_speed, wanted_other_speed, acceleration, deceleration, dt)
-	speed = (wanted_speed ~= 0 or ((speed <= 0 or math.max(speed - v * dt, 0)) and math.min(speed + v * dt, 0))) and (speed <= 1 or math.max(speed - deceleration * dt, 1)) and (speed >= -1 or math.min(speed + deceleration * dt, -1)) and (wanted_speed <= 0 or math.min(speed + acceleration * dt, wanted_speed)) and math.max(speed - acceleration * dt, wanted_speed)
+	if wanted_speed == 0 then
+		local v = wanted_other_speed == 0 and deceleration or acceleration
+
+		if speed > 0 then
+			speed = math.max(speed - v * dt, 0)
+		else
+			speed = math.min(speed + v * dt, 0)
+		end
+	elseif speed > 1 then
+		speed = math.max(speed - deceleration * dt, 1)
+	elseif speed < -1 then
+		speed = math.min(speed + deceleration * dt, -1)
+	elseif wanted_speed > 0 then
+		speed = math.min(speed + acceleration * dt, wanted_speed)
+	else
+		speed = math.max(speed - acceleration * dt, wanted_speed)
+	end
 
 	return speed
 end
@@ -21,7 +37,7 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 	local new_x = _speed_function(x, wanted_x, wanted_y, acc, dec, dt)
 	local new_y = _speed_function(y, wanted_y, wanted_x, acc, dec, dt)
 	local stopped = new_x == 0 and new_y == 0
-	local speed_scale = (stopped and 0) or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
+	local speed_scale = stopped and 0 or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
 	local moving_backwards = new_y < 0
 
 	if moving_backwards then

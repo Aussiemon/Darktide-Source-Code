@@ -5,24 +5,20 @@ local PREVIEWER_FRAME_DELAY = 1
 local WeaponIconUI = class("WeaponIconUI")
 
 WeaponIconUI.init = function (self, render_settings)
-	if not render_settings then
-		slot2 = {
-			viewport_layer = 900,
-			level_name = "content/levels/ui/weapon_icon/weapon_icon",
-			viewport_name = "weapon_viewport",
-			timer_name = "ui",
-			shading_environment = "content/shading_environments/ui/weapon_icons",
-			world_layer = 800,
-			world_name = "weapon_icon_world",
-			viewport_type = (DEBUG and "default") or "item_weapon_offscreen"
-		}
-	end
-
-	self._render_settings = slot2
-	self._portrait_width = (render_settings and render_settings.portrait_width) or 768
-	self._portrait_height = (render_settings and render_settings.portrait_height) or 512
-	self._target_resolution_width = (render_settings and render_settings.target_resolution_width) or 3840
-	self._target_resolution_height = (render_settings and render_settings.target_resolution_height) or 2160
+	self._render_settings = render_settings or {
+		viewport_layer = 900,
+		level_name = "content/levels/ui/weapon_icon/weapon_icon",
+		viewport_name = "weapon_viewport",
+		timer_name = "ui",
+		shading_environment = "content/shading_environments/ui/weapon_icons",
+		world_layer = 800,
+		world_name = "weapon_icon_world",
+		viewport_type = DEBUG and "default" or "item_weapon_offscreen"
+	}
+	self._portrait_width = render_settings and render_settings.portrait_width or 768
+	self._portrait_height = render_settings and render_settings.portrait_height or 512
+	self._target_resolution_width = render_settings and render_settings.target_resolution_width or 3840
+	self._target_resolution_height = render_settings and render_settings.target_resolution_height or 2160
 	self._icon_requests_queue_order = {}
 	self._icon_requests = {}
 	self._default_camera_settings_key = "human"
@@ -151,7 +147,7 @@ WeaponIconUI.unload_weapon_icon = function (self, id)
 
 		self._icon_requests[gear_id] = nil
 
-		for i = 1, #self._icon_requests_queue_order, 1 do
+		for i = 1, #self._icon_requests_queue_order do
 			if self._icon_requests_queue_order[i] == gear_id then
 				table.remove(self._icon_requests_queue_order, i)
 
@@ -161,7 +157,7 @@ WeaponIconUI.unload_weapon_icon = function (self, id)
 	else
 		references_lookup[id] = nil
 
-		for i = 1, #references_array, 1 do
+		for i = 1, #references_array do
 			if references_array[i] == id then
 				table.remove(references_array, i)
 
@@ -412,7 +408,7 @@ WeaponIconUI.update = function (self, dt, t)
 	if update_world then
 		local uv_grid = self._uv_grid
 
-		for i = 1, #uv_grid, 1 do
+		for i = 1, #uv_grid do
 			world_spawner:update(dt, t)
 		end
 	end
@@ -429,11 +425,11 @@ WeaponIconUI._create_uv_grid = function (self)
 	local num_rows = math.floor(self._target_resolution_height / self._portrait_height)
 	local uv_grid = {}
 
-	for i = 1, num_rows, 1 do
+	for i = 1, num_rows do
 		local y_start = (i - 1) / num_rows
 		local y_end = i / num_rows
 
-		for j = 1, num_columns, 1 do
+		for j = 1, num_columns do
 			local x_start = (j - 1) / num_columns
 			local x_end = j / num_columns
 			local uvs = {
@@ -460,7 +456,7 @@ end
 WeaponIconUI._get_free_grid_index = function (self)
 	local uv_grid_index_occupation_list = self._uv_grid_index_occupation_list
 
-	for i = 1, #uv_grid_index_occupation_list, 1 do
+	for i = 1, #uv_grid_index_occupation_list do
 		local occupied = uv_grid_index_occupation_list[i]
 
 		if not occupied then
@@ -501,7 +497,7 @@ WeaponIconUI._get_unit_by_value_key = function (self, key, value)
 	local level = world_spawner:level()
 	local level_units = Level.units(level)
 
-	for i = 1, #level_units, 1 do
+	for i = 1, #level_units do
 		local unit = level_units[i]
 
 		if Unit.get_data(unit, key) == value then

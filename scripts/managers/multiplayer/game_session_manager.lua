@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local GameSessionManager = class("GameSessionManager")
 local NETWORK_EVENTS = {
 	"game_object_migrated_to_me",
@@ -72,11 +70,11 @@ GameSessionManager.connected_to_client = function (self, peer_id)
 end
 
 GameSessionManager.is_host = function (self)
-	return (self._session_host and true) or false
+	return self._session_host and true or false
 end
 
 GameSessionManager.is_client = function (self)
-	return (self._session_client and true) or false
+	return self._session_client and true or false
 end
 
 GameSessionManager.host = function (self)
@@ -448,6 +446,11 @@ GameSessionManager._update_client = function (self, dt)
 			local channel_id = parameters.channel_id
 
 			self:_member_joined(channel_id, peer_id)
+		elseif event == "session_left" then
+			local peer_id = parameters.peer_id
+			local channel_id = parameters.channel_id
+
+			self:_member_left(channel_id, peer_id, parameters.game_reason, parameters.engine_reason)
 		end
 	end
 end
@@ -486,7 +489,7 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 end
 
 GameSessionManager._client_left = function (self, channel_id, peer_id, game_reason, engine_reason)
-	local source = (game_reason and "game") or "engine"
+	local source = game_reason and "game" or "engine"
 	local reason = game_reason or engine_reason
 
 	_info("Member %s left with %s reason %s", peer_id, source, reason)
@@ -560,7 +563,7 @@ end
 
 GameSessionManager._member_left = function (self, channel_id, peer_id, game_reason, engine_reason)
 	if channel_id then
-		local source = (game_reason and "game") or "engine"
+		local source = game_reason and "game" or "engine"
 		local reason = game_reason or engine_reason
 
 		_info("Member %s left with %s reason %s", peer_id, source, reason)

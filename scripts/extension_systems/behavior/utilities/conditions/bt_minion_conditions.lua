@@ -1,330 +1,306 @@
 local AttackIntensity = require("scripts/utilities/attack_intensity")
-local conditions = {
-	has_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
+local conditions = {}
 
-		if not is_running and perception_component.lock_target then
-			return false
-		end
+conditions.has_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
 
-		local target_unit = perception_component.target_unit
+	if not is_running and perception_component.lock_target then
+		return false
+	end
 
-		return HEALTH_ALIVE[target_unit]
-	end,
-	is_dead = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local death_component = blackboard.death
-		local is_dead = death_component.is_dead
+	local target_unit = perception_component.target_unit
 
-		return is_dead
-	end,
-	is_in_cover = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local cover_component = blackboard.cover
-		local is_in_cover = cover_component.is_in_cover
+	return HEALTH_ALIVE[target_unit]
+end
 
-		return is_in_cover
-	end,
-	is_alerted = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+conditions.is_dead = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local death_component = blackboard.death
+	local is_dead = death_component.is_dead
 
-		if not has_target_unit then
-			return false
-		end
+	return is_dead
+end
 
-		local perception_component = blackboard.perception
-		local is_alerted_aggro_state = perception_component.aggro_state == "alerted"
+conditions.is_in_cover = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local cover_component = blackboard.cover
+	local is_in_cover = cover_component.is_in_cover
 
-		return is_alerted_aggro_state
-	end,
-	is_aggroed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return is_in_cover
+end
 
-		if not has_target_unit then
-			return false
-		end
+conditions.is_alerted = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
-		local perception_component = blackboard.perception
-		local is_aggroed = perception_component.aggro_state == "aggroed"
+	if not has_target_unit then
+		return false
+	end
 
-		return is_aggroed
-	end,
-	has_cover = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local is_alerted_aggro_state = perception_component.aggro_state == "alerted"
 
-		if not is_aggroed then
-			return false
-		end
+	return is_alerted_aggro_state
+end
 
-		local behavior_component = blackboard.behavior
-		local combat_range = behavior_component.combat_range
-		local combat_ranges = condition_args.combat_ranges
+conditions.is_aggroed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
-		if not combat_ranges[combat_range] then
-			return false
-		end
+	if not has_target_unit then
+		return false
+	end
 
-		local cover_component = blackboard.cover
-		local has_cover = cover_component.has_cover
+	local perception_component = blackboard.perception
+	local is_aggroed = perception_component.aggro_state == "aggroed"
 
-		return has_cover
-	end,
-	is_aggroed_in_combat_range = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return is_aggroed
+end
 
-		if not is_aggroed then
-			return false
-		end
+conditions.has_cover = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
-		local behavior_component = blackboard.behavior
-		local combat_range = behavior_component.combat_range
-		local condition_combat_ranges = condition_args.combat_ranges
+	if not is_aggroed then
+		return false
+	end
 
-		return condition_combat_ranges[combat_range]
-	end,
-	should_switch_weapon = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local weapon_switch_component = blackboard.weapon_switch
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
-		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+	local behavior_component = blackboard.behavior
+	local combat_range = behavior_component.combat_range
+	local combat_ranges = condition_args.combat_ranges
 
-		if scratchpad.is_switching_weapons or (wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name) then
-			return true
-		end
-	end,
-	is_exiting_spawner = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local spawn_component = blackboard.spawn
+	if not combat_ranges[combat_range] then
+		return false
+	end
 
-		return spawn_component.is_exiting_spawner
-	end,
-	at_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_id = nav_smart_object_component.id
-		local smart_object_is_next = smart_object_id ~= -1
+	local cover_component = blackboard.cover
+	local has_cover = cover_component.has_cover
 
-		if not smart_object_is_next then
-			return false
-		end
+	return has_cover
+end
 
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-		local is_smart_objecting = navigation_extension:is_using_smart_object()
+conditions.is_aggroed_in_combat_range = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
-		if is_smart_objecting then
-			return true
-		end
+	if not is_aggroed then
+		return false
+	end
 
-		local smart_object_unit = nav_smart_object_component.unit
+	local behavior_component = blackboard.behavior
+	local combat_range = behavior_component.combat_range
+	local condition_combat_ranges = condition_args.combat_ranges
 
-		if not ALIVE[smart_object_unit] then
-			return false
-		end
+	return condition_combat_ranges[combat_range]
+end
 
-		local nav_graph_extension = ScriptUnit.extension(smart_object_unit, "nav_graph_system")
-		local nav_graph_added = nav_graph_extension:nav_graph_added(smart_object_id)
+conditions.should_switch_weapon = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local weapon_switch_component = blackboard.weapon_switch
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
+	local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
-		if not nav_graph_added then
-			return false
-		end
+	if scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name then
+		return true
+	end
+end
 
-		local behavior_component = blackboard.behavior
-		local is_in_moving_state = behavior_component.move_state == "moving"
-		local entrance_is_at_bot_progress_on_path = nav_smart_object_component.entrance_is_at_bot_progress_on_path
+conditions.is_exiting_spawner = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local spawn_component = blackboard.spawn
 
-		return is_in_moving_state and entrance_is_at_bot_progress_on_path
-	end,
-	at_teleport_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_type = nav_smart_object_component.type
-		local is_smart_object_teleporter = smart_object_type == "teleporters"
+	return spawn_component.is_exiting_spawner
+end
 
-		return is_smart_object_teleporter
-	end,
-	at_jump_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_type = nav_smart_object_component.type
-		local is_smart_object_jump = smart_object_type == "jumps" or smart_object_type == "cover_vaults"
+conditions.at_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_id = nav_smart_object_component.id
+	local smart_object_is_next = smart_object_id ~= -1
 
-		return is_smart_object_jump
-	end,
-	at_smashable_obstacle_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_type = nav_smart_object_component.type
+	if not smart_object_is_next then
+		return false
+	end
 
-		if smart_object_type == "monster_walls" then
-			local wall_unit = nav_smart_object_component.unit
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local is_smart_objecting = navigation_extension:is_using_smart_object()
 
-			return HEALTH_ALIVE[wall_unit]
-		elseif smart_object_type == "doors" then
-			local door_unit = nav_smart_object_component.unit
-			local door_extension = ScriptUnit.extension(door_unit, "door_system")
+	if is_smart_objecting then
+		return true
+	end
 
-			if not door_extension:can_attack() then
-				return false
-			end
+	local smart_object_unit = nav_smart_object_component.unit
 
-			local health_extension = ScriptUnit.has_extension(door_unit, "health_system")
+	if not ALIVE[smart_object_unit] then
+		return false
+	end
 
-			return health_extension ~= nil
-		else
-			return false
-		end
-	end,
-	at_door_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_type = nav_smart_object_component.type
-		local is_smart_object_door = smart_object_type == "doors"
+	local nav_graph_extension = ScriptUnit.extension(smart_object_unit, "nav_graph_system")
+	local nav_graph_added = nav_graph_extension:nav_graph_added(smart_object_id)
 
-		if not is_smart_object_door then
-			return false
-		end
+	if not nav_graph_added then
+		return false
+	end
 
+	local behavior_component = blackboard.behavior
+	local is_in_moving_state = behavior_component.move_state == "moving"
+	local entrance_is_at_bot_progress_on_path = nav_smart_object_component.entrance_is_at_bot_progress_on_path
+
+	return is_in_moving_state and entrance_is_at_bot_progress_on_path
+end
+
+conditions.at_teleport_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_type = nav_smart_object_component.type
+	local is_smart_object_teleporter = smart_object_type == "teleporters"
+
+	return is_smart_object_teleporter
+end
+
+conditions.at_jump_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_type = nav_smart_object_component.type
+	local is_smart_object_jump = smart_object_type == "jumps" or smart_object_type == "cover_vaults"
+
+	return is_smart_object_jump
+end
+
+conditions.at_smashable_obstacle_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_type = nav_smart_object_component.type
+
+	if smart_object_type == "monster_walls" then
+		local wall_unit = nav_smart_object_component.unit
+
+		return HEALTH_ALIVE[wall_unit]
+	elseif smart_object_type == "doors" then
 		local door_unit = nav_smart_object_component.unit
 		local door_extension = ScriptUnit.extension(door_unit, "door_system")
-		local num_attackers = door_extension:num_attackers()
 
-		return num_attackers <= 0
-	end,
-	at_climb_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_type = nav_smart_object_component.type
-		local is_smart_object_ledge = smart_object_type == "ledges" or smart_object_type == "ledges_with_fence" or smart_object_type == "cover_ledges"
-
-		return is_smart_object_ledge
-	end,
-	attack_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
-
-		if not is_running and perception_component.lock_target then
+		if not door_extension:can_attack() then
 			return false
 		end
 
-		if is_running then
-			return true
-		end
+		local health_extension = ScriptUnit.has_extension(door_unit, "health_system")
 
+		return health_extension ~= nil
+	else
+		return false
+	end
+end
+
+conditions.at_door_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_type = nav_smart_object_component.type
+	local is_smart_object_door = smart_object_type == "doors"
+
+	if not is_smart_object_door then
+		return false
+	end
+
+	local door_unit = nav_smart_object_component.unit
+	local door_extension = ScriptUnit.extension(door_unit, "door_system")
+	local num_attackers = door_extension:num_attackers()
+
+	return num_attackers <= 0
+end
+
+conditions.at_climb_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_type = nav_smart_object_component.type
+	local is_smart_object_ledge = smart_object_type == "ledges" or smart_object_type == "ledges_with_fence" or smart_object_type == "cover_ledges"
+
+	return is_smart_object_ledge
+end
+
+conditions.attack_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+
+	if not is_running and perception_component.lock_target then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local target_unit = perception_component.target_unit
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
+
+	return attack_allowed
+end
+
+conditions.attack_not_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+
+	if not is_running and perception_component.lock_target then
+		return false
+	end
+
+	local target_unit = perception_component.target_unit
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
+
+	return not attack_allowed
+end
+
+conditions.moving_attack_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+
+	if not is_running and perception_component.lock_target then
+		return false
+	end
+
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local has_path = navigation_extension:has_path()
+
+	if not has_path then
+		return false
+	end
+
+	local min_needed_path_distance = 5
+	local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(min_needed_path_distance)
+
+	if has_upcoming_smart_object then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local slot_component = blackboard.slot
+	local has_slot = slot_component.has_slot and not slot_component.has_ghost_slot
+
+	if not has_slot then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local move_state = behavior_component.move_state
+	local is_following_path = navigation_extension:is_following_path()
+
+	if move_state ~= "moving" or not is_following_path then
+		return false
+	end
+
+	if condition_args and condition_args.attack_type then
 		local target_unit = perception_component.target_unit
 		local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
 
 		return attack_allowed
-	end,
-	attack_not_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
-
-		if not is_running and perception_component.lock_target then
-			return false
-		end
-
-		local target_unit = perception_component.target_unit
-		local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
-
-		return not attack_allowed
-	end,
-	moving_attack_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
-
-		if not is_running and perception_component.lock_target then
-			return false
-		end
-
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-		local has_path = navigation_extension:has_path()
-
-		if not has_path then
-			return false
-		end
-
-		local min_needed_path_distance = 5
-		local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(min_needed_path_distance)
-
-		if has_upcoming_smart_object then
-			return false
-		end
-
-		if is_running then
-			return true
-		end
-
-		local slot_component = blackboard.slot
-		local has_slot = slot_component.has_slot and not slot_component.has_ghost_slot
-
-		if not has_slot then
-			return false
-		end
-
-		local behavior_component = blackboard.behavior
-		local move_state = behavior_component.move_state
-		local is_following_path = navigation_extension:is_following_path()
-
-		if move_state ~= "moving" or not is_following_path then
-			return false
-		end
-
-		if condition_args and condition_args.attack_type then
-			local target_unit = perception_component.target_unit
-			local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
-
-			return attack_allowed
-		else
-			return true
-		end
-	end,
-	not_assaulting = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if scratchpad.is_assaulting then
-			return false
-		end
-
+	else
 		return true
-	end,
-	should_run_stop_and_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
+	end
+end
 
-		if not is_running and perception_component.lock_target then
-			return false
-		end
+conditions.not_assaulting = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if scratchpad.is_assaulting then
+		return false
+	end
 
-		if not is_running or not scratchpad.is_anim_driven then
-			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-			local is_following_path = navigation_extension:is_following_path()
+	return true
+end
 
-			if not is_following_path then
-				return false
-			end
+conditions.should_run_stop_and_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
 
-			local min_needed_path_distance = action_data.move_distance
-			local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(min_needed_path_distance)
+	if not is_running and perception_component.lock_target then
+		return false
+	end
 
-			if has_upcoming_smart_object then
-				return false
-			end
-
-			local remaining_path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
-
-			if remaining_path_distance <= min_needed_path_distance then
-				return false
-			end
-		end
-
-		if is_running then
-			return true
-		end
-
-		local behavior_component = blackboard.behavior
-		local move_state = behavior_component.move_state
-
-		if move_state ~= "moving" then
-			return false
-		end
-
-		local target_unit = perception_component.target_unit
-		local attack_allowed = AttackIntensity.minion_can_attack(unit, "ranged", target_unit)
-
-		if not attack_allowed then
-			return false
-		end
-
-		local enter_combat_range_flag = behavior_component.enter_combat_range_flag
-
-		return enter_combat_range_flag
-	end,
-	should_strafe_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if not is_running or not scratchpad.is_anim_driven then
 		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 		local is_following_path = navigation_extension:is_following_path()
 
@@ -332,297 +308,366 @@ local conditions = {
 			return false
 		end
 
-		local min_needed_path_distance = 5
+		local min_needed_path_distance = action_data.move_distance
 		local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(min_needed_path_distance)
 
 		if has_upcoming_smart_object then
 			return false
 		end
 
-		if is_running then
-			return true
-		end
+		local remaining_path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
 
-		local behavior_component = blackboard.behavior
-		local move_state = behavior_component.move_state
-
-		return move_state == "moving"
-	end,
-	should_step_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
-
-		if not is_running and perception_component.lock_target then
+		if remaining_path_distance <= min_needed_path_distance then
 			return false
 		end
-
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-		local is_on_wait_time = navigation_extension:is_on_wait_time()
-
-		if is_on_wait_time then
-			return false
-		end
-
-		if is_running then
-			return true
-		end
-
-		local target_unit = perception_component.target_unit
-		local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
-
-		return attack_allowed
-	end,
-	is_suppressed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local suppression_component = blackboard.suppression
-		local is_suppressed = suppression_component.is_suppressed
-
-		return is_suppressed
-	end,
-	is_staggered = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local stagger_component = blackboard.stagger
-		local is_staggered = stagger_component.num_triggered_staggers > 0
-
-		return is_staggered
-	end,
-	is_blocked = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local blocked_component = blackboard.blocked
-		local is_blocked = blocked_component.is_blocked
-
-		return is_blocked
-	end,
-	should_use_combat_idle = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local slot_component = blackboard.slot
-		local is_waiting_on_slot = slot_component.is_waiting_on_slot
-
-		if is_waiting_on_slot then
-			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-			local has_reached_destination = navigation_extension:has_reached_destination()
-
-			return has_reached_destination
-		end
-	end,
-	has_pounce_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local pounce_component = blackboard.pounce
-		local has_pounce_target = ALIVE[pounce_component.pounce_target]
-
-		return has_pounce_target
-	end,
-	has_clear_shot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if is_running then
-			return true
-		end
-
-		local perception_component = blackboard.perception
-		local target_unit = perception_component.target_unit
-		local line_of_sight_id = action_data.clear_shot_line_of_sight_id
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
-		local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
-
-		return has_clear_shot
-	end,
-	dont_have_clear_shot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if is_running then
-			return true
-		end
-
-		local perception_component = blackboard.perception
-		local target_unit = perception_component.target_unit
-		local line_of_sight_id = action_data.line_of_sight_id
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
-		local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
-
-		return not has_clear_shot
-	end,
-	can_shoot_net = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local behavior_component = blackboard.behavior
-		local shoot_net_cooldown = behavior_component.shoot_net_cooldown
-		local t = Managers.time:time("gameplay")
-
-		return shoot_net_cooldown <= t
-	end,
-	netgunner_is_on_cooldown = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local behavior_component = blackboard.behavior
-		local shoot_net_cooldown = behavior_component.shoot_net_cooldown
-		local t = Managers.time:time("gameplay")
-
-		return t < shoot_net_cooldown
-	end,
-	netgunner_hit_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local behavior_component = blackboard.behavior
-		local hit_target = behavior_component.hit_target
-
-		return hit_target
-	end,
-	daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if is_running then
-			return true
-		end
-
-		local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-
-		if not is_aggroed then
-			return
-		end
-
-		local perception_component = blackboard.perception
-		local target_unit = perception_component.target_unit
-		local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-		local character_state_component = unit_data_extension:read_component("character_state")
-		local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
-		local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-		local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
-		local is_disabled_by_this_deamonhost = disabled_state_input.disabling_unit == unit
-
-		return is_knocked_down or is_disabled_by_this_deamonhost
-	end,
-	chaos_hound_is_aggroed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local pounce_component = blackboard.pounce
-
-		return is_aggroed or pounce_component.started_leap
-	end,
-	chaos_hound_can_pounce = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local pounce_component = blackboard.pounce
-		local pounce_cooldown = pounce_component.pounce_cooldown
-		local t = Managers.time:time("gameplay")
-
-		return pounce_cooldown <= t
-	end,
-	chaos_hound_pounce_is_on_cooldown = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local pounce_component = blackboard.pounce
-		local pounce_cooldown = pounce_component.pounce_cooldown
-		local t = Managers.time:time("gameplay")
-
-		return t <= pounce_cooldown
-	end,
-	can_throw_grenade = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local behavior_component = blackboard.throw_grenade
-		local next_throw_at_t = behavior_component.next_throw_at_t
-		local t = Managers.time:time("gameplay")
-
-		return next_throw_at_t <= t
-	end,
-	slot_not_wielded = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
-		local wanted_slot_name = condition_args.slot_name
-
-		return wielded_slot_name ~= wanted_slot_name
-	end,
-	slot_wielded = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
-		local wanted_slot_name = condition_args.slot_name
-
-		return wielded_slot_name == wanted_slot_name
-	end,
-	daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local target_side_id = 1
-		local side_system = Managers.state.extension:system("side_system")
-		local side = side_system:get_side(target_side_id)
-		local target_units = side.valid_player_units
-		local num_valid_target_units = #target_units
-		local num_alive_targets = 0
-
-		for i = 1, num_valid_target_units, 1 do
-			local player_unit = target_units[i]
-
-			if HEALTH_ALIVE[player_unit] then
-				num_alive_targets = num_alive_targets + 1
-			end
-		end
-
-		local statistics_component = blackboard.statistics
-		local valid_targets_on_aggro = statistics_component.valid_targets_on_aggro
-
-		if valid_targets_on_aggro > 1 and num_alive_targets == 1 then
-			return true
-		end
-
-		local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
-		local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
-		local num_dead_players = valid_targets_on_aggro - num_alive_targets
-		local wants_to_leave = num_player_kills_for_despawn <= num_dead_players
-
-		return wants_to_leave
-	end,
-	daemonhost_is_passive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local perception_component = blackboard.perception
-		local aggro_state = perception_component.aggro_state
-		local should_be_passive = aggro_state == "alerted" or aggro_state == "passive"
-
-		return should_be_passive
-	end,
-	daemonhost_can_warp_sweep = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if is_running then
-			return true
-		end
-
-		local behavior_component = blackboard.behavior
-		local t = Managers.time:time("gameplay")
-
-		if t < behavior_component.warp_sweep_cooldown then
-			return false
-		end
-
-		local num_nearby_units_threshold = action_data.num_nearby_units_threshold
-		local broadphase_component = blackboard.nearby_units_broadphase
-		local num_broadphase_units = broadphase_component.num_units
-
-		return num_nearby_units_threshold <= num_broadphase_units
-	end,
-	target_changed_and_valid = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		if is_running then
-			return true
-		end
-
-		local perception_component = blackboard.perception
-
-		if perception_component.target_changed then
-			local new_target_unit = perception_component.target_unit
-
-			return new_target_unit and ALIVE[new_target_unit]
-		end
-
-		return false
-	end,
-	is_aggroed_in_combat_range_or_running = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-
-		if not is_aggroed then
-			return false
-		end
-
-		if is_running then
-			return true
-		end
-
-		local behavior_component = blackboard.behavior
-		local combat_range = behavior_component.combat_range
-		local condition_combat_ranges = condition_args.combat_ranges
-
-		return condition_combat_ranges[combat_range]
-	end,
-	should_patrol = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-
-		if has_target_unit then
-			return false
-		end
-
-		local patrol_component = blackboard.patrol
-		local should_patrol = patrol_component.should_patrol
-		local perception_component = blackboard.perception
-		local aggro_state = perception_component.aggro_state
-		local is_passive = aggro_state == "passive"
-
-		return is_passive and should_patrol
-	end,
-	captain_can_use_special_actions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local captain_can_use_special_action = not scratchpad.is_blocking_captain_special_actions
-
-		return captain_can_use_special_action
 	end
-}
+
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local move_state = behavior_component.move_state
+
+	if move_state ~= "moving" then
+		return false
+	end
+
+	local target_unit = perception_component.target_unit
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, "ranged", target_unit)
+
+	if not attack_allowed then
+		return false
+	end
+
+	local enter_combat_range_flag = behavior_component.enter_combat_range_flag
+
+	return enter_combat_range_flag
+end
+
+conditions.should_strafe_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local is_following_path = navigation_extension:is_following_path()
+
+	if not is_following_path then
+		return false
+	end
+
+	local min_needed_path_distance = 5
+	local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(min_needed_path_distance)
+
+	if has_upcoming_smart_object then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local move_state = behavior_component.move_state
+
+	return move_state == "moving"
+end
+
+conditions.should_step_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+
+	if not is_running and perception_component.lock_target then
+		return false
+	end
+
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local is_on_wait_time = navigation_extension:is_on_wait_time()
+
+	if is_on_wait_time then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local target_unit = perception_component.target_unit
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
+
+	return attack_allowed
+end
+
+conditions.is_suppressed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local suppression_component = blackboard.suppression
+	local is_suppressed = suppression_component.is_suppressed
+
+	return is_suppressed
+end
+
+conditions.is_staggered = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local stagger_component = blackboard.stagger
+	local is_staggered = stagger_component.num_triggered_staggers > 0
+
+	return is_staggered
+end
+
+conditions.is_blocked = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local blocked_component = blackboard.blocked
+	local is_blocked = blocked_component.is_blocked
+
+	return is_blocked
+end
+
+conditions.should_use_combat_idle = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local slot_component = blackboard.slot
+	local is_waiting_on_slot = slot_component.is_waiting_on_slot
+
+	if is_waiting_on_slot then
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+		local has_reached_destination = navigation_extension:has_reached_destination()
+
+		return has_reached_destination
+	end
+end
+
+conditions.has_pounce_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local has_pounce_target = ALIVE[pounce_component.pounce_target]
+
+	return has_pounce_target
+end
+
+conditions.has_clear_shot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local line_of_sight_id = action_data.clear_shot_line_of_sight_id
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
+
+	return has_clear_shot
+end
+
+conditions.dont_have_clear_shot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local line_of_sight_id = action_data.line_of_sight_id
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
+
+	return not has_clear_shot
+end
+
+conditions.can_shoot_net = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local shoot_net_cooldown = behavior_component.shoot_net_cooldown
+	local t = Managers.time:time("gameplay")
+
+	return shoot_net_cooldown <= t
+end
+
+conditions.netgunner_is_on_cooldown = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local shoot_net_cooldown = behavior_component.shoot_net_cooldown
+	local t = Managers.time:time("gameplay")
+
+	return t < shoot_net_cooldown
+end
+
+conditions.netgunner_hit_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local hit_target = behavior_component.hit_target
+
+	return hit_target
+end
+
+conditions.daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return
+	end
+
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+	local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
+	local is_disabled_by_this_deamonhost = disabled_state_input.disabling_unit == unit
+
+	return is_knocked_down or is_disabled_by_this_deamonhost
+end
+
+conditions.chaos_hound_is_aggroed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+
+	return is_aggroed or pounce_component.started_leap
+end
+
+conditions.chaos_hound_can_pounce = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local pounce_cooldown = pounce_component.pounce_cooldown
+	local t = Managers.time:time("gameplay")
+
+	return pounce_cooldown <= t
+end
+
+conditions.chaos_hound_pounce_is_on_cooldown = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local pounce_cooldown = pounce_component.pounce_cooldown
+	local t = Managers.time:time("gameplay")
+
+	return t <= pounce_cooldown
+end
+
+conditions.can_throw_grenade = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.throw_grenade
+	local next_throw_at_t = behavior_component.next_throw_at_t
+	local t = Managers.time:time("gameplay")
+
+	return next_throw_at_t <= t
+end
+
+conditions.slot_not_wielded = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+	local wanted_slot_name = condition_args.slot_name
+
+	return wielded_slot_name ~= wanted_slot_name
+end
+
+conditions.slot_wielded = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+	local wanted_slot_name = condition_args.slot_name
+
+	return wielded_slot_name == wanted_slot_name
+end
+
+conditions.daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local target_side_id = 1
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(target_side_id)
+	local target_units = side.valid_player_units
+	local num_valid_target_units = #target_units
+	local num_alive_targets = 0
+
+	for i = 1, num_valid_target_units do
+		local player_unit = target_units[i]
+
+		if HEALTH_ALIVE[player_unit] then
+			num_alive_targets = num_alive_targets + 1
+		end
+	end
+
+	local statistics_component = blackboard.statistics
+	local valid_targets_on_aggro = statistics_component.valid_targets_on_aggro
+
+	if valid_targets_on_aggro > 1 and num_alive_targets == 1 then
+		return true
+	end
+
+	local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+	local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
+	local num_dead_players = valid_targets_on_aggro - num_alive_targets
+	local wants_to_leave = num_player_kills_for_despawn <= num_dead_players
+
+	return wants_to_leave
+end
+
+conditions.daemonhost_is_passive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local aggro_state = perception_component.aggro_state
+	local should_be_passive = aggro_state == "alerted" or aggro_state == "passive"
+
+	return should_be_passive
+end
+
+conditions.daemonhost_can_warp_sweep = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local t = Managers.time:time("gameplay")
+
+	if t < behavior_component.warp_sweep_cooldown then
+		return false
+	end
+
+	local num_nearby_units_threshold = action_data.num_nearby_units_threshold
+	local broadphase_component = blackboard.nearby_units_broadphase
+	local num_broadphase_units = broadphase_component.num_units
+
+	return num_nearby_units_threshold <= num_broadphase_units
+end
+
+conditions.target_changed_and_valid = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+
+	if perception_component.target_changed then
+		local new_target_unit = perception_component.target_unit
+
+		return new_target_unit and ALIVE[new_target_unit]
+	end
+
+	return false
+end
+
+conditions.is_aggroed_in_combat_range_or_running = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local combat_range = behavior_component.combat_range
+	local condition_combat_ranges = condition_args.combat_ranges
+
+	return condition_combat_ranges[combat_range]
+end
+
+conditions.should_patrol = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if has_target_unit then
+		return false
+	end
+
+	local patrol_component = blackboard.patrol
+	local should_patrol = patrol_component.should_patrol
+	local perception_component = blackboard.perception
+	local aggro_state = perception_component.aggro_state
+	local is_passive = aggro_state == "passive"
+
+	return is_passive and should_patrol
+end
+
+conditions.captain_can_use_special_actions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local captain_can_use_special_action = not scratchpad.is_blocking_captain_special_actions
+
+	return captain_can_use_special_action
+end
 
 return conditions

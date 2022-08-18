@@ -138,7 +138,7 @@ MinionAttack.trigger_shoot_sfx_and_vfx = function (unit, scratchpad, action_data
 	end
 
 	local current_aim_anim_event = scratchpad.current_aim_anim_event
-	local aim_stance = scratchpad.aim_stance or (action_data.aim_stances and action_data.aim_stances[current_aim_anim_event])
+	local aim_stance = scratchpad.aim_stance or action_data.aim_stances and action_data.aim_stances[current_aim_anim_event]
 
 	if aim_stance then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -318,7 +318,7 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 	local before_shoot_effect_template_timing = action_data.before_shoot_effect_template_timing
 
 	if before_shoot_effect_template_timing and not scratchpad.before_shoot_effect_template_timing then
-		scratchpad.before_shoot_effect_template_timing = (t + first_shoot_timing) - before_shoot_effect_template_timing
+		scratchpad.before_shoot_effect_template_timing = t + first_shoot_timing - before_shoot_effect_template_timing
 	end
 end
 
@@ -572,7 +572,7 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 	local damage_profile = action_data.push_enemies_damage_profile
 	local power_level = action_data.push_enemies_power_level
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = ENEMY_BROADPHASE_RESULTS[i]
 
 		if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and hit_unit ~= ignored_unit then
@@ -615,7 +615,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data)
 	local damage_type = action_data.push_minions_damage_type
 	local pushed_minions = scratchpad.pushed_minions
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = FRIENDLY_BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= unit and not pushed_minions[hit_unit] then
@@ -657,23 +657,14 @@ MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit,
 	local hits_one_target = action_data.hits_one_target
 	local HEALTH_ALIVE = HEALTH_ALIVE
 
-	for i = 1, actor_count, 1 do
+	for i = 1, actor_count do
 		local hit_actor = actors[i]
 		local hit_unit = Actor.unit(hit_actor)
 
 		if HEALTH_ALIVE[hit_unit] and not sweep_hit_units_cache[hit_unit] and hit_unit ~= unit then
 			local actor_position = Actor.position(hit_actor)
 			local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.melee)
-
-			if not action_data.ignore_dodge then
-			else
-				is_dodging = false
-
-				if false then
-					is_dodging = true
-				end
-			end
-
+			is_dodging = not action_data.ignore_dodge and is_dodging
 			local in_reach = _check_weapon_reach(position, actor_position, action_data, is_dodging, nil, attack_event)
 
 			if in_reach then
@@ -766,7 +757,7 @@ MinionAttack.update_lag_compensation_melee = function (unit, breed, scratchpad, 
 			local forward = Quaternion.forward(unit_rotation)
 			local to_target = Vector3.flat(target_position - unit_position)
 			local dot = Vector3.dot(Vector3.normalize(to_target), forward)
-			local reach_cone = (is_dodging and (action_data.dodge_reach_cone or DEFAULT_DODGE_REACH_CONE)) or action_data.weapon_reach_cone or DEFAULT_REACH_CONE
+			local reach_cone = is_dodging and (action_data.dodge_reach_cone or DEFAULT_DODGE_REACH_CONE) or action_data.weapon_reach_cone or DEFAULT_REACH_CONE
 
 			if dot < reach_cone then
 				return
@@ -825,7 +816,7 @@ MinionAttack.melee_broadphase_extents = function (unit, action_data)
 end
 
 function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_position, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, offtarget_hit_or_nil)
-	local damage_profile = override_damage_profile_or_nil or (offtarget_hit_or_nil and action_data.offtarget_damage_profile) or action_data.damage_profile
+	local damage_profile = override_damage_profile_or_nil or offtarget_hit_or_nil and action_data.offtarget_damage_profile or action_data.damage_profile
 	local attack_type = attack_types.melee
 	local target_weapon_template = nil
 	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
@@ -839,7 +830,7 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		local is_blocking = Block.is_blocking(target_unit, attack_type, target_weapon_template, true)
 		local is_dodging = Dodge.is_dodging(target_unit, attack_type)
 
-		if (not is_blocking and is_blockable) or is_dodging or scratchpad.target_dodged_during_attack then
+		if not is_blocking and is_blockable or is_dodging or scratchpad.target_dodged_during_attack then
 			if not scratchpad.lag_compensation_attacking then
 				scratchpad.lag_compensation_hit_position = Vector3Box(hit_position)
 				scratchpad.lag_compensation_target_unit = target_unit
@@ -888,7 +879,7 @@ function _sucessfull_dodge(dodging_unit, attacking_unit, attack_type, dodge_type
 
 		table.clear(_sucessfull_dodge_parameters)
 
-		_sucessfull_dodge_parameters.enemy_type = (is_monster and "monster") or (is_special and "special") or (is_elite and "elite") or nil
+		_sucessfull_dodge_parameters.enemy_type = is_monster and "monster" or is_special and "special" or is_elite and "elite" or nil
 
 		dodging_unit_fx_extension:trigger_exclusive_gear_wwise_event("dodge_success_melee", _sucessfull_dodge_parameters, optional_position, optional_except_sender)
 	end
@@ -919,7 +910,7 @@ function _sucessfull_dodge(dodging_unit, attacking_unit, attack_type, dodge_type
 end
 
 function _get_weapon_reach(action_data, attack_event)
-	local weapon_reach = (type(action_data.weapon_reach) == "table" and (action_data.weapon_reach[attack_event] or action_data.weapon_reach.default)) or action_data.weapon_reach
+	local weapon_reach = type(action_data.weapon_reach) == "table" and (action_data.weapon_reach[attack_event] or action_data.weapon_reach.default) or action_data.weapon_reach
 
 	return weapon_reach
 end
@@ -964,13 +955,10 @@ function _melee_with_weapon_reach(unit, breed, scratchpad, blackboard, target_un
 
 	if not action_data.ignore_dodge then
 		if not scratchpad.target_dodged_during_attack then
+			-- Nothing
 		end
 	else
 		is_dodging = false
-
-		if false then
-			is_dodging = true
-		end
 	end
 
 	local ignore_z = true
@@ -982,7 +970,7 @@ function _melee_with_weapon_reach(unit, breed, scratchpad, blackboard, target_un
 		local forward = Quaternion.forward(unit_rotation)
 		local to_target = Vector3.flat(target_position - unit_position)
 		local dot = Vector3.dot(Vector3.normalize(to_target), forward)
-		local reach_cone = (is_dodging and (action_data.dodge_reach_cone or DEFAULT_DODGE_REACH_CONE)) or action_data.weapon_reach_cone or DEFAULT_REACH_CONE
+		local reach_cone = is_dodging and (action_data.dodge_reach_cone or DEFAULT_DODGE_REACH_CONE) or action_data.weapon_reach_cone or DEFAULT_REACH_CONE
 
 		if reach_cone < dot then
 			local hit_node_index = Unit.node(target_unit, "enemy_aim_target_01")
@@ -1016,7 +1004,7 @@ function _melee_with_oobb(unit, breed, scratchpad, blackboard, target_unit, acti
 
 	local HEALTH_ALIVE = HEALTH_ALIVE
 
-	for i = 1, actor_count, 1 do
+	for i = 1, actor_count do
 		local actor = actors[i]
 		local hit_unit = Actor.unit(actor)
 
@@ -1024,7 +1012,7 @@ function _melee_with_oobb(unit, breed, scratchpad, blackboard, target_unit, acti
 			CHECKED_OOBB_UNITS[hit_unit] = true
 			local hit_unit_position = POSITION_LOOKUP[hit_unit]
 			local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.melee)
-			is_dodging = not action_data.ignore_dodge and (is_dodging or (hit_unit == target_unit and scratchpad.target_dodged_during_attack))
+			is_dodging = not action_data.ignore_dodge and (is_dodging or hit_unit == target_unit and scratchpad.target_dodged_during_attack)
 			local in_reach = true
 
 			if is_dodging then
@@ -1069,7 +1057,7 @@ function _melee_with_broadphase(unit, breed, scratchpad, action_data, blackboard
 	local num_results = broadphase:query(from_position, broadphase_radius, ATTACK_BROADPHASE_RESULTS, target_side_names)
 	local ALIVE = ALIVE
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = ATTACK_BROADPHASE_RESULTS[i]
 
 		if ALIVE[hit_unit] and hit_unit ~= unit then

@@ -167,13 +167,13 @@ MinionFxExtension._trigger_unit_line_fx = function (self, line_effect, inventory
 				spawn_emitters = false
 			else
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
-				local chosen_effect_name = (num_emitters == 0 and start_emitter_effect_name) or emitter_effect_name
+				local chosen_effect_name = num_emitters == 0 and start_emitter_effect_name or emitter_effect_name
+
+				World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
+
+				emitter_distance = new_emitter_distance
+				num_emitters = num_emitters + 1
 			end
-
-			World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
-
-			emitter_distance = new_emitter_distance
-			num_emitters = num_emitters + 1
 		end
 	end
 

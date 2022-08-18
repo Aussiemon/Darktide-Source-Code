@@ -146,7 +146,7 @@ local function construct_interface_settings_dropdown(template)
 
 	local options = {}
 
-	for i = 1, #template.options, 1 do
+	for i = 1, #template.options do
 		local value = template.options[i]
 		options[#options + 1] = {
 			id = value.name,
@@ -259,7 +259,7 @@ local template_functions = {
 }
 local settings = {}
 
-for i = 1, #settings_definitions, 1 do
+for i = 1, #settings_definitions do
 	local definition = settings_definitions[i]
 	local widget_type = definition.widget_type
 	local template_function = template_functions[widget_type]

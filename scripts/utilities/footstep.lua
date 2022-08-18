@@ -35,7 +35,7 @@ local Footstep = {
 			if optional_set_first_person_parameter then
 				local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 				local first_person_mode = first_person_extension:is_in_first_person_mode()
-				local parameter_value = (first_person_mode and 1) or 0
+				local parameter_value = first_person_mode and 1 or 0
 
 				WwiseWorld.set_source_parameter(wwise_world, source_id, "first_person_mode", parameter_value)
 			end

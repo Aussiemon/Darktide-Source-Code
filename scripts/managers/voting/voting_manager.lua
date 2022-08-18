@@ -39,7 +39,7 @@ VotingManager.can_start_voting = function (self, template_name, params)
 	local required_params = template.required_params
 
 	if required_params then
-		for i = 1, #required_params, 1 do
+		for i = 1, #required_params do
 			local param_name = required_params[i]
 
 			if params[param_name] == nil then

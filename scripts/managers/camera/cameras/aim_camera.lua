@@ -37,7 +37,7 @@ end
 AimCamera.update = function (self, dt, position, rotation, data)
 	local root_node = self._root_node
 	local aim_yaw = root_node:aim_yaw() + self._offset_yaw
-	local aim_pitch = (self._ignore_aim_pitch and self._offset_pitch) or root_node:aim_pitch() + self._offset_pitch
+	local aim_pitch = self._ignore_aim_pitch and self._offset_pitch or root_node:aim_pitch() + self._offset_pitch
 	local aim_roll = root_node:aim_roll() + self._offset_roll
 	local new_rotation = Quaternion.from_yaw_pitch_roll(aim_yaw, aim_pitch, aim_roll)
 

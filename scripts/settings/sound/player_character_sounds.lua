@@ -35,12 +35,9 @@ player_character_sounds.resolve_sound = function (sound_alias, properties, optio
 			return true, events.default, has_husk_events
 		end
 
-		for i = 1, num_switches, 1 do
+		for i = 1, num_switches do
 			local switch_name = switches[i]
-
-			if not properties[switch_name] then
-				local switch_property = optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES[switch_name]
-			end
+			local switch_property = properties[switch_name] or (optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES)[switch_name]
 
 			if switch_property and events[switch_property] then
 				events = events[switch_property]
@@ -58,7 +55,7 @@ player_character_sounds.resolve_sound = function (sound_alias, properties, optio
 
 	local allow_default = settings and not settings.no_default
 
-	return allow_default, allow_default and settings.events.default, (settings and settings.has_husk_events) or false
+	return allow_default, allow_default and settings.events.default, settings and settings.has_husk_events or false
 end
 
 local function _valid_events_recursive(events, relevant_events)
@@ -88,7 +85,7 @@ player_character_sounds.find_relevant_events = function (profile_properties)
 			local resource_name = events.default
 			sound_alias_relevant_events_temp[resource_name] = true
 		else
-			for i = 1, num_switches, 1 do
+			for i = 1, num_switches do
 				local switch_name = switches[i]
 				local switch_property = profile_properties[switch_name]
 

@@ -16,13 +16,13 @@ local _table_clear = table.clear
 local _floor = math.floor
 
 local function _format_mission_timer_text(time_left)
-	local timer_text = string.format("\ue007 %.2d:%.2d", _floor(time_left / 60) % 60, _floor(time_left) % 60)
+	local timer_text = string.format(" %.2d:%.2d", _floor(time_left / 60) % 60, _floor(time_left) % 60)
 
 	return tostring(timer_text)
 end
 
 function _clear_widgets_alpha(widgets)
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		widget.alpha_multiplier = 0
 		widget.visible = false
@@ -226,7 +226,7 @@ ViewElementMissionInfoPanel._create_list_widgets = function (self, content, num_
 
 	local ui_renderer = self._offscreen_renderer
 
-	for i = 1, num_items, 1 do
+	for i = 1, num_items do
 		local entry = content[i]
 		local template_name = entry.template
 		local template = blueprint_templates[template_name]
@@ -280,7 +280,7 @@ end
 ViewElementMissionInfoPanel._draw_list_widgets = function (self, grid, widgets, ui_renderer)
 	grid = self._details_list_grid
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -328,7 +328,7 @@ local _retract_window_animation_params = {}
 ViewElementMissionInfoPanel._transition_to_state_none = function (self)
 	local retract_window_animation_params = _retract_window_animation_params
 	local current_state = self._state
-	local next_state = (current_state == STATES.mission_info and STATES.transition_mission_info) or STATES.transition_status_report
+	local next_state = current_state == STATES.mission_info and STATES.transition_mission_info or STATES.transition_status_report
 	retract_window_animation_params.from_state = current_state
 	self._active_animation = self:_start_animation("retract_window", nil, retract_window_animation_params, callback(self, "_cb_animation_complete", STATES.none))
 
@@ -444,7 +444,7 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	local widgets_by_name = self._widgets_by_name
 	local map_data = Missions[mission_data.map]
 	local zone_data = Zones[map_data.zone_id]
-	local main_objective_type_key = (map_data.objectives and MissionObjectiveTemplates[map_data.objectives].main_objective_type) or "default"
+	local main_objective_type_key = map_data.objectives and MissionObjectiveTemplates[map_data.objectives].main_objective_type or "default"
 	local main_objective_type_name = MissionBoardSettings.main_objective_type_name[main_objective_type_key]
 	local type_name = TextUtils.localize_to_title_case(main_objective_type_name)
 	local zone_name = TextUtils.localize_to_title_case(zone_data.name)
@@ -453,8 +453,8 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	local header_widget = widgets_by_name.mission_header
 	old_header_widget.content = header_widget.content
 	header_widget.content = new_header_content
-	new_header_content.mission_title = (map_data.mission_name and TextUtils.localize_to_title_case(map_data.mission_name)) or mission_data.map
-	new_header_content.type_and_zone = string.format("%s � %s", type_name, zone_name)
+	new_header_content.mission_title = map_data.mission_name and TextUtils.localize_to_title_case(map_data.mission_name) or mission_data.map
+	new_header_content.type_and_zone = string.format("%s · %s", type_name, zone_name)
 
 	if zone_data.images then
 		new_header_content.zone_image = zone_data.images.mission_board_details

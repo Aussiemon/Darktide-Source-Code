@@ -95,7 +95,7 @@ PackageSynchronizerHost._reevaluate_all_profile_packages = function (self)
 				for sync_local_player_id, player_data in pairs(player_states) do
 					local alias_states = player_data.alias_states
 
-					for i = 1, num_player_package_aliases, 1 do
+					for i = 1, num_player_package_aliases do
 						local alias = player_package_aliases[i]
 						alias_states[alias] = SYNC_STATES.not_synced
 					end
@@ -118,7 +118,7 @@ PackageSynchronizerHost._set_prioritization_template = function (self, template_
 
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases, 1 do
+	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
@@ -567,7 +567,7 @@ PackageSynchronizerHost.is_peer_synced = function (self, peer_id, debug_log)
 			if not sync_states[sync_peer_id] or sync_states[sync_peer_id].enabled then
 				local synced = true
 
-				for i = 1, #required_package_aliases, 1 do
+				for i = 1, #required_package_aliases do
 					local alias = required_package_aliases[i]
 					local alias_state = alias_states[alias]
 
@@ -597,7 +597,7 @@ PackageSynchronizerHost.is_peer_synced = function (self, peer_id, debug_log)
 			for _, player_data in pairs(player_states) do
 				local alias_states = player_data.alias_states
 
-				for i = 1, #required_package_aliases, 1 do
+				for i = 1, #required_package_aliases do
 					local alias = required_package_aliases[i]
 					local alias_state = alias_states[alias]
 
@@ -631,7 +631,7 @@ PackageSynchronizerHost._is_player_synced_by_all = function (self, peer_id, loca
 		if data.enabled then
 			local alias_states = data.peer_states[peer_id].player_states[local_player_id].alias_states
 
-			for i = 1, #required_package_aliases, 1 do
+			for i = 1, #required_package_aliases do
 				local alias = required_package_aliases[i]
 				local alias_state = alias_states[alias]
 
@@ -692,7 +692,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 	local new_peer_states = {}
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases, 1 do
+	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
@@ -758,7 +758,7 @@ end
 PackageSynchronizerHost.add_bot = function (self, local_player_id)
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases, 1 do
+	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
 		alias_states[alias] = SYNC_STATES.not_synced
 	end

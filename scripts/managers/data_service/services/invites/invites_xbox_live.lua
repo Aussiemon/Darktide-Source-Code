@@ -12,7 +12,7 @@ end
 InvitesXboxLive.update = function (self)
 	local invites = XboxLiveMPA.invites()
 
-	for i = 1, #invites, 1 do
+	for i = 1, #invites do
 		local invite = invites[i]
 
 		table.insert(self._invites, invite.connection_string)

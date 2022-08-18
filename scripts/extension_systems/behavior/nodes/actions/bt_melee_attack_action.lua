@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -138,7 +136,7 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 	end
 
 	local attack_type = action_data.attack_type
-	local wanted_attack_type = (type(attack_type) == "table" and attack_type[attack_event]) or attack_type
+	local wanted_attack_type = type(attack_type) == "table" and attack_type[attack_event] or attack_type
 	scratchpad.attack_type = wanted_attack_type
 
 	if wanted_attack_type == "sweep" then
@@ -351,6 +349,44 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 
 		if not has_started_sweep and not scratchpad.is_moving_attack then
 			self:_rotate_towards_target_unit(unit, scratchpad)
+		elseif has_started_sweep then
+			local initial_sweep_rotation = scratchpad.initial_sweep_rotation and scratchpad.initial_sweep_rotation:unbox()
+
+			if initial_sweep_rotation then
+				scratchpad.locomotion_extension:set_wanted_rotation(initial_sweep_rotation)
+			end
+		end
+
+		local is_sweeping = has_started_sweep and t < scratchpad.stop_sweep_t
+
+		if is_sweeping then
+			self:_attack_sweep(unit, breed, blackboard, scratchpad, action_data)
+		elseif stop_sweep_t < t then
+			if scratchpad.multiple_attacks then
+				local attack_sweep_timings = scratchpad.attack_sweep_timings
+				local attack_index = scratchpad.attack_index + 1
+
+				if attack_index <= #attack_sweep_timings then
+					scratchpad.attack_index = attack_index
+					local current_attack_sweep_timing = attack_sweep_timings[attack_index]
+					scratchpad.start_sweep_t = scratchpad.start_time + current_attack_sweep_timing[1]
+					scratchpad.stop_sweep_t = scratchpad.start_time + current_attack_sweep_timing[2]
+
+					table.clear(scratchpad.sweep_hit_units_cache)
+
+					local multi_target_config = action_data.multi_target_config
+
+					if multi_target_config then
+						local is_target_locked = true
+
+						MinionPerception.evaluate_multi_target_switch(unit, scratchpad, t, multi_target_config, is_target_locked)
+					end
+				else
+					self:_finished_attacks(unit, scratchpad, action_data)
+				end
+			else
+				self:_finished_attacks(unit, scratchpad, action_data)
+			end
 		end
 	else
 		local attack_timing = scratchpad.attack_timing
@@ -513,7 +549,7 @@ BtMeleeAttackAction._update_moving_attack = function (self, unit, dt, t, action_
 		local wanted_value = max_value
 		local num_configs = #animation_move_speed_config
 
-		for i = 1, num_configs, 1 do
+		for i = 1, num_configs do
 			local config = animation_move_speed_config[i]
 			local distance = config.distance
 			local value = config.value

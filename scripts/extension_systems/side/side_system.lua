@@ -24,7 +24,7 @@ SideSystem._create_sides = function (self, side_compositions)
 	local side_lookup = Script.new_map(num_sides)
 	local side_names = Script.new_array(num_sides)
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local definition = side_compositions[i]
 		local side_name = definition.name
 
@@ -45,7 +45,7 @@ end
 SideSystem._setup_relations = function (self, side_compositions, sides, side_lookup)
 	local num_sides = #sides
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local definition = side_compositions[i]
 		local side = sides[i]
 		local relations = definition.relations
@@ -54,7 +54,7 @@ SideSystem._setup_relations = function (self, side_compositions, sides, side_loo
 			local num_relation_sides = #side_list
 			local temp_sides = Script.new_array(num_relation_sides)
 
-			for j = 1, #side_list, 1 do
+			for j = 1, #side_list do
 				local relation_side_name = side_list[j]
 
 				fassert(side_lookup[relation_side_name], "[SideSystem] Side %q does not exist.", relation_side_name)
@@ -69,14 +69,14 @@ SideSystem._setup_relations = function (self, side_compositions, sides, side_loo
 	local relation_types = Side.SIDE_RELATION_TYPES
 	local num_relation_types = #relation_types
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local side = sides[i]
 
-		for j = 1, num_relation_types, 1 do
+		for j = 1, num_relation_types do
 			local relation = relation_types[j]
 			local current_sides = side:relation_sides(relation)
 
-			for k = 1, #current_sides, 1 do
+			for k = 1, #current_sides do
 				local relation_side = current_sides[k]
 				local relation_sides = relation_side:relation_sides(relation)
 
@@ -95,7 +95,7 @@ SideSystem.on_add_extension = function (self, world, unit, extension_name, exten
 
 	extension.is_player_unit = extension_init_data.is_player_unit
 	extension.is_human_unit = extension_init_data.is_human_unit
-	extension.breed_tags = (extension_init_data.breed and extension_init_data.breed.tags) or EMPTY_TABLE
+	extension.breed_tags = extension_init_data.breed and extension_init_data.breed.tags or EMPTY_TABLE
 	self._unit_extension_data[unit] = extension
 	local side_id = extension_init_data.side_id
 
@@ -149,11 +149,11 @@ SideSystem._add_unit_to_side = function (self, unit, side_id)
 	local relation_types = Side.SIDE_RELATION_TYPES
 	local num_relation_types = #relation_types
 
-	for i = 1, num_relation_types, 1 do
+	for i = 1, num_relation_types do
 		local relation = relation_types[i]
 		local relation_sides = side:relation_sides(relation)
 
-		for j = 1, #relation_sides, 1 do
+		for j = 1, #relation_sides do
 			local relation_side = relation_sides[j]
 
 			relation_side:add_relation_unit(unit, side_extension, relation)
@@ -173,11 +173,11 @@ SideSystem._remove_unit_from_side = function (self, unit)
 	local relation_types = Side.SIDE_RELATION_TYPES
 	local num_relation_types = #relation_types
 
-	for i = 1, num_relation_types, 1 do
+	for i = 1, num_relation_types do
 		local relation = relation_types[i]
 		local relation_sides = side:relation_sides(relation)
 
-		for j = 1, #relation_sides, 1 do
+		for j = 1, #relation_sides do
 			local relation_side = relation_sides[j]
 
 			relation_side:remove_relation_unit(unit, side_extension, relation)
@@ -198,11 +198,11 @@ SideSystem.remove_unit_from_tag_units = function (self, unit)
 	local relation_types = Side.SIDE_RELATION_TYPES
 	local num_relation_types = #relation_types
 
-	for i = 1, num_relation_types, 1 do
+	for i = 1, num_relation_types do
 		local relation = relation_types[i]
 		local relation_sides = side:relation_sides(relation)
 
-		for j = 1, #relation_sides, 1 do
+		for j = 1, #relation_sides do
 			local relation_side = relation_sides[j]
 
 			relation_side:remove_tag_unit(unit, side_extension, relation)
@@ -247,7 +247,7 @@ SideSystem.pre_update = function (self, context, dt, t)
 	local sides = self._sides
 	local num_sides = #sides
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local side = sides[i]
 
 		self:_update_frame_tables(side)
@@ -260,7 +260,7 @@ SideSystem.add_aggroed_minion = function (self, unit)
 	local enemy_sides = side:relation_sides("enemy")
 	local num_enemy_sides = #enemy_sides
 
-	for i = 1, num_enemy_sides, 1 do
+	for i = 1, num_enemy_sides do
 		local enemy_side = enemy_sides[i]
 		local num_aggroed_minion_target_units = enemy_side.num_aggroed_minion_target_units + 1
 		enemy_side.num_aggroed_minion_target_units = num_aggroed_minion_target_units
@@ -275,7 +275,7 @@ SideSystem.remove_aggroed_minion = function (self, unit)
 	local enemy_sides = side:relation_sides("enemy")
 	local num_enemy_sides = #enemy_sides
 
-	for i = 1, num_enemy_sides, 1 do
+	for i = 1, num_enemy_sides do
 		local enemy_side = enemy_sides[i]
 		local aggroed_minion_target_units = enemy_side.aggroed_minion_target_units
 		local index = aggroed_minion_target_units[unit]
@@ -346,7 +346,7 @@ SideSystem._update_frame_tables = function (self, side)
 	local added_player_units = side:added_player_units()
 	local num_added_player_units = #added_player_units
 
-	for i = 1, num_added_player_units, 1 do
+	for i = 1, num_added_player_units do
 		local unit = added_player_units[i]
 		local side_extension = unit_extension_data[unit]
 
@@ -407,7 +407,7 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 	local added_enemy_player_units = side:relation_player_units("enemy")
 	local num_added_enemy_player_units = #added_enemy_player_units
 
-	for i = 1, num_added_enemy_player_units, 1 do
+	for i = 1, num_added_enemy_player_units do
 		local unit = added_enemy_player_units[i]
 		local side_extension = unit_extension_data[unit]
 
@@ -445,7 +445,7 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 	local enemy_units = side:relation_units("enemy")
 	local num_enemy_units = #enemy_units
 
-	for i = 1, num_enemy_units, 1 do
+	for i = 1, num_enemy_units do
 		local unit = enemy_units[i]
 		local side_extension = unit_extension_data[unit]
 

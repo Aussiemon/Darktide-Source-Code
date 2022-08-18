@@ -39,7 +39,7 @@ end
 ImguiInputGui._set_header_texts = function (...)
 	local num_columns = select("#", ...)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.text_colored(select(i, ...), unpack(ImguiInputGui.HEADER))
 		Imgui.next_column()
 	end
@@ -50,7 +50,7 @@ ImguiInputGui._set_column_widths = function (...)
 
 	Imgui.columns(num_columns, true)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.set_column_width(select(i, ...), i - 1)
 	end
 end

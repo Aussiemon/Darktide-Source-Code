@@ -92,7 +92,7 @@ local RangedAction = {
 		if attack_result == attack_results.died then
 			local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 			local breed_or_nil = unit_data_extension and unit_data_extension:breed()
-			local estimated_unit_center = ((breed_or_nil and (breed_or_nil.player_locomotion_constrain_radius or breed_or_nil.broadphase_radius)) or 1) * 0.5
+			local estimated_unit_center = (breed_or_nil and (breed_or_nil.player_locomotion_constrain_radius or breed_or_nil.broadphase_radius) or 1) * 0.5
 			explosion_position = hit_position + attack_direction * estimated_unit_center
 			explosion_template = hitmass_explosion.kill_explosion_template
 		elseif attack_result ~= attack_results.dodged then

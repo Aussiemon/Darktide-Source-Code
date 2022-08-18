@@ -151,7 +151,7 @@ local player_panel_pass_template = {
 		style_id = "character_portrait"
 	},
 	{
-		value = "\ue001",
+		value = "",
 		value_id = "checkmark",
 		pass_type = "text",
 		style_id = "checkmark"
@@ -173,7 +173,7 @@ local player_panel_pass_template = {
 		pass_type = "text"
 	},
 	{
-		value = "\ue004",
+		value = "",
 		value_id = "party_status",
 		pass_type = "text",
 		style_id = "party_status"

@@ -123,7 +123,7 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 
 	local unit = self._unit
 
-	for i = 1, #control_panel_props, 1 do
+	for i = 1, #control_panel_props do
 		local control_panel_prop = control_panel_props[i]
 		local node_name = "ap_control_panel_" .. tostring(i)
 
@@ -238,7 +238,7 @@ DoorExtension._should_nav_block = function (self)
 	local closed = current_state == STATES.closed
 	local anim_time = self:_normalized_anim_time()
 	local blocked_time = self._blocked_time
-	local should_nav_block = (closed and blocked_time <= anim_time) or (not closed and anim_time < 1 - blocked_time)
+	local should_nav_block = closed and blocked_time <= anim_time or not closed and anim_time < 1 - blocked_time
 
 	return should_nav_block
 end
@@ -311,7 +311,7 @@ DoorExtension._update_external_dependencies = function (self)
 		local anim_time = self:_anim_time()
 		local anim_duration = self:_anim_duration()
 
-		for i = 1, #portal_volume_components, 1 do
+		for i = 1, #portal_volume_components do
 			portal_volume_components[i]:door_apply_portal_obstruction(door_is_closed, current_normalized_anim_time, anim_time, anim_duration)
 		end
 
@@ -345,7 +345,7 @@ DoorExtension.can_open = function (self, interactor_unit)
 	local type = self._type
 	local open_type = self._open_type
 
-	if type == TYPES.two_states or (type == TYPES.three_states and interactor_unit == nil) then
+	if type == TYPES.two_states or type == TYPES.three_states and interactor_unit == nil then
 		can_open = current_state == STATES.closed
 		can_open = can_open and (open_type == OPEN_TYPES.open_only or open_type == OPEN_TYPES.none)
 	elseif type == TYPES.three_states and interactor_unit ~= nil then
@@ -386,7 +386,7 @@ DoorExtension._minion_proximity_check = function (self)
 	local half_extents = self._bounding_box_half_extents:unbox()
 	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local unit = broadphase_results[i]
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()

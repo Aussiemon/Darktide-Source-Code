@@ -22,7 +22,7 @@ ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, sta
 	self._pass_input = true
 	self._shading_environment = context and context.shading_environment
 	self._ignore_blur = context and context.ignore_blur
-	self._draw_background = (context and context.draw_background == true) or false
+	self._draw_background = context and context.draw_background == true or false
 
 	self:_setup_default_gui()
 	self:_setup_background_gui()
@@ -126,7 +126,7 @@ ViewElementInventoryWeaponPreview.event_register_item_camera = function (self, c
 	self:_unregister_event("event_register_item_camera")
 
 	local viewport_name = self._reference_name .. "_viewport"
-	local viewport_type = (self._draw_background and "default") or "default_with_alpha"
+	local viewport_type = self._draw_background and "default" or "default_with_alpha"
 	local viewport_layer = 1
 	local shading_environment = self._shading_environment or ViewElementInventoryWeaponPreviewSettings.shading_environment
 
@@ -152,9 +152,9 @@ ViewElementInventoryWeaponPreview.switch_zoom = function (self)
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local slot_camera_unit = (self._camera_zoomed and self._zoomed_camera) or self._camera
-	local target_world_position = (slot_camera_unit and Unit.world_position(slot_camera_unit, 1)) or default_camera_world_position
-	local target_world_rotation = (slot_camera_unit and Unit.world_rotation(slot_camera_unit, 1)) or default_camera_world_rotation
+	local slot_camera_unit = self._camera_zoomed and self._zoomed_camera or self._camera
+	local target_world_position = slot_camera_unit and Unit.world_position(slot_camera_unit, 1) or default_camera_world_position
+	local target_world_rotation = slot_camera_unit and Unit.world_rotation(slot_camera_unit, 1) or default_camera_world_rotation
 	local camera_world_position = default_camera_world_position
 	local camera_world_rotation = default_camera_world_rotation
 
@@ -208,7 +208,7 @@ ViewElementInventoryWeaponPreview._update_viewport = function (self)
 			world_spawner:set_viewport_size(viewport_scale_width, viewport_scale_height)
 			world_spawner:set_viewport_position(viewport_scale_x, viewport_scale_y)
 
-			slot7 = self:_get_spawn_position()
+			local new_position = self:_get_spawn_position()
 		end
 	end
 end
@@ -218,7 +218,7 @@ local function linear_to_clip_depth(linear_depth, camera_near, camera_far)
 		return 0
 	end
 
-	return (camera_far * (linear_depth - camera_near)) / (linear_depth * (camera_far - camera_near))
+	return camera_far * (linear_depth - camera_near) / (linear_depth * (camera_far - camera_near))
 end
 
 ViewElementInventoryWeaponPreview._get_spawn_position = function (self)
@@ -470,7 +470,7 @@ ViewElementInventoryWeaponPreview._get_unit_by_value_key = function (self, key, 
 	local level = world_spawner:level()
 	local level_units = Level.units(level)
 
-	for i = 1, #level_units, 1 do
+	for i = 1, #level_units do
 		local unit = level_units[i]
 
 		if Unit.get_data(unit, key) == value then

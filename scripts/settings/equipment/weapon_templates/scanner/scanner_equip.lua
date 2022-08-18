@@ -350,7 +350,7 @@ weapon_template.action_scan_confirm_on_screen_ui_validation = function (wielded_
 	local visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
 	local wieldable_slot_scripts = visual_loadout_extension:wieldable_slot_scripts_from_slot(wielded_slot_id)
 
-	for i = 1, #wieldable_slot_scripts, 1 do
+	for i = 1, #wieldable_slot_scripts do
 		local wieldable_slot_script = wieldable_slot_scripts[i]
 
 		if wieldable_slot_script.has_outline_unit and wieldable_slot_script:has_outline_unit() then

@@ -44,7 +44,7 @@ end
 DecoderSynchronizerExtension.register_connected_units = function (self, stage_units)
 	local decoder_units = self:_retrieve_decoder_units(stage_units)
 
-	for i = 1, #decoder_units, 1 do
+	for i = 1, #decoder_units do
 		local decoder_device_extension = ScriptUnit.extension(decoder_units[i], "decoder_device_system")
 
 		decoder_device_extension:register_synchronizer(self)
@@ -58,7 +58,7 @@ end
 DecoderSynchronizerExtension._retrieve_decoder_units = function (self, units)
 	local decoder_units = {}
 
-	for i = 1, #units, 1 do
+	for i = 1, #units do
 		local unit = units[i]
 		local decoder_device_extension = ScriptUnit.has_extension(unit, "decoder_device_system")
 
@@ -75,7 +75,7 @@ DecoderSynchronizerExtension._retrieve_decoder_units = function (self, units)
 	local random_table, _ = table.generate_random_table(1, #decoder_units, self._seed)
 	local num_active_units = self._num_active_units
 
-	for i = 1, num_active_units, 1 do
+	for i = 1, num_active_units do
 		local index = random_table[i]
 		result[#result + 1] = decoder_units[index]
 	end
@@ -86,7 +86,9 @@ end
 DecoderSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 	if self._is_server and self._event_active then
 		if self._current_state == STATES.none then
+			-- Nothing
 		elseif self._current_state == STATES.activating_devices then
+			-- Nothing
 		elseif self._current_state == STATES.timer_on then
 			if self._pause_timer < self._time_till_next_stall then
 				self._pause_timer = self._pause_timer + dt
@@ -100,6 +102,7 @@ DecoderSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 				self:_set_state(STATES.complete)
 			end
 		elseif self._current_state == STATES.timer_paused then
+			-- Nothing
 		elseif self._current_state == STATES.complete then
 			self:finished_stage()
 		end
@@ -134,7 +137,7 @@ DecoderSynchronizerExtension._get_random_decoding_device = function (self)
 	table.clear(remaining_devices)
 
 	if stall_once_per_device then
-		for i = 1, #devices, 1 do
+		for i = 1, #devices do
 			local device = devices[i]
 
 			if not table.contains(self._used_devices, device) then
@@ -177,7 +180,7 @@ DecoderSynchronizerExtension.unblock_decoding_progression = function (self)
 			local rnd_time = self:_get_next_random_stall_time()
 			self._time_till_next_stall = rnd_time
 
-			for i = 1, num_devices, 1 do
+			for i = 1, num_devices do
 				local attached_device = attached_devices[i]
 				local decoder_device_extension = ScriptUnit.extension(attached_device, "decoder_device_system")
 
@@ -209,7 +212,7 @@ DecoderSynchronizerExtension.start_event = function (self)
 
 	local attached_devices = self._attached_devices
 
-	for i = 1, #attached_devices, 1 do
+	for i = 1, #attached_devices do
 		local attached_device = attached_devices[i]
 
 		if is_server then
@@ -266,7 +269,7 @@ DecoderSynchronizerExtension.finished_event = function (self)
 
 		local attached_devices = self._attached_devices
 
-		for i = 1, #attached_devices, 1 do
+		for i = 1, #attached_devices do
 			local attached_device = attached_devices[i]
 			local decoder_device_extension = ScriptUnit.extension(attached_device, "decoder_device_system")
 

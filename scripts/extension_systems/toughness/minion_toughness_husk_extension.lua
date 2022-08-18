@@ -38,7 +38,7 @@ end
 MinionToughnessHuskExtension.update = function (self, context, dt, t)
 	local current_toughness_percent = self:current_toughness_percent()
 	local current_state = self._state
-	local new_state = (current_toughness_percent > 0 and STATES.active) or STATES.depleted
+	local new_state = current_toughness_percent > 0 and STATES.active or STATES.depleted
 
 	if current_state ~= new_state then
 		self:_switch_state(context, new_state)

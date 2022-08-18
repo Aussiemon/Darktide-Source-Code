@@ -91,7 +91,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 		local cross_play_disabled = results[2]
 		local avoid_platform_user_ids = results[3]
 
-		for i = 1, #avoid_platform_user_ids, 1 do
+		for i = 1, #avoid_platform_user_ids do
 			avoid_platform_user_ids[i] = avoid_list_id_formatter(avoid_platform_user_ids[i])
 		end
 

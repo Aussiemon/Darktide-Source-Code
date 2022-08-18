@@ -45,185 +45,197 @@ local MinionMovement = {
 		end
 
 		return target_current_velocity
-	end,
-	target_speed_away = function (unit, target_unit)
-		local target_current_velocity = MinionMovement.target_velocity(target_unit)
-		local position = POSITION_LOOKUP[unit]
-		local target_position = POSITION_LOOKUP[target_unit]
-		local target_direction = Vector3.normalize(target_position - position)
-		local velocity_dot = Vector3.dot(target_direction, target_current_velocity)
+	end
+}
 
-		return velocity_dot
-	end,
-	target_position_with_velocity = function (unit, target_unit, optional_destination)
-		local target_current_velocity = MinionMovement.target_velocity(target_unit)
-		local destination = optional_destination or POSITION_LOOKUP[target_unit]
-		local target_position = destination + target_current_velocity
+MinionMovement.target_speed_away = function (unit, target_unit)
+	local target_current_velocity = MinionMovement.target_velocity(target_unit)
+	local position = POSITION_LOOKUP[unit]
+	local target_position = POSITION_LOOKUP[target_unit]
+	local target_direction = Vector3.normalize(target_position - position)
+	local velocity_dot = Vector3.dot(target_direction, target_current_velocity)
 
-		return target_position, target_current_velocity
-	end,
-	apply_animation_wanted_movement_speed = function (unit, navigation_extension, dt)
-		local wanted_movement_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt)
+	return velocity_dot
+end
 
-		navigation_extension:set_max_speed(wanted_movement_speed)
-	end,
-	get_animation_wanted_movement_speed = function (unit, dt, optional_max_speed)
-		local self_position = POSITION_LOOKUP[unit]
-		local wanted_root_pose = Unit.animation_wanted_root_pose(unit)
-		local translation = Matrix4x4.translation(wanted_root_pose)
-		local velocity = (translation - self_position) / dt
-		local wanted_movement_speed = math.min(Vector3.length(velocity), optional_max_speed or math.huge)
+MinionMovement.target_position_with_velocity = function (unit, target_unit, optional_destination)
+	local target_current_velocity = MinionMovement.target_velocity(target_unit)
+	local destination = optional_destination or POSITION_LOOKUP[target_unit]
+	local target_position = destination + target_current_velocity
 
-		return wanted_movement_speed
-	end,
-	set_anim_rotation_driven = function (scratchpad, anim_rotation_driven)
-		local locomotion_extension = scratchpad.locomotion_extension
+	return target_position, target_current_velocity
+end
 
-		if anim_rotation_driven then
-			locomotion_extension:use_lerp_rotation(false)
-		else
-			locomotion_extension:use_lerp_rotation(true)
-			locomotion_extension:set_anim_rotation_scale(1)
-		end
+MinionMovement.apply_animation_wanted_movement_speed = function (unit, navigation_extension, dt)
+	local wanted_movement_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt)
 
-		scratchpad.is_anim_rotation_driven = anim_rotation_driven
-	end,
-	set_anim_rotation = function (unit, scratchpad)
-		local wanted_root_pose = Unit.animation_wanted_root_pose(unit)
-		local rotation = Matrix4x4.rotation(wanted_root_pose)
-		local locomotion_extension = scratchpad.locomotion_extension
+	navigation_extension:set_max_speed(wanted_movement_speed)
+end
 
-		locomotion_extension:set_wanted_rotation(rotation)
-	end,
-	set_anim_driven = function (scratchpad, anim_driven, optional_script_driven_rotation)
-		local locomotion_extension = scratchpad.locomotion_extension
+MinionMovement.get_animation_wanted_movement_speed = function (unit, dt, optional_max_speed)
+	local self_position = POSITION_LOOKUP[unit]
+	local wanted_root_pose = Unit.animation_wanted_root_pose(unit)
+	local translation = Matrix4x4.translation(wanted_root_pose)
+	local velocity = (translation - self_position) / dt
+	local wanted_movement_speed = math.min(Vector3.length(velocity), optional_max_speed or math.huge)
 
-		if anim_driven then
-			local script_driven_rotation = optional_script_driven_rotation or false
+	return wanted_movement_speed
+end
 
-			locomotion_extension:use_lerp_rotation(false)
-			locomotion_extension:set_anim_driven(true, false, script_driven_rotation)
-		else
-			locomotion_extension:use_lerp_rotation(true)
-			locomotion_extension:set_anim_driven(false)
-			locomotion_extension:set_anim_rotation_scale(1)
-		end
+MinionMovement.set_anim_rotation_driven = function (scratchpad, anim_rotation_driven)
+	local locomotion_extension = scratchpad.locomotion_extension
 
-		scratchpad.is_anim_driven = anim_driven
-	end,
-	update_anim_driven_start_rotation = function (unit, scratchpad, action_data, t, optional_destination, optional_ignore_set_anim_driven)
-		if not scratchpad.rotation_duration then
-			local destination = optional_destination
+	if anim_rotation_driven then
+		locomotion_extension:use_lerp_rotation(false)
+	else
+		locomotion_extension:use_lerp_rotation(true)
+		locomotion_extension:set_anim_rotation_scale(1)
+	end
 
-			if not destination then
-				local navigation_extension = scratchpad.navigation_extension
-				local current_node, next_node_in_path = navigation_extension:current_and_next_node_positions_in_path()
-				destination = next_node_in_path or current_node
-			end
+	scratchpad.is_anim_rotation_driven = anim_rotation_driven
+end
 
-			local start_move_event_name = scratchpad.move_start_anim_event_name
-			local start_move_anim_data = action_data.start_move_anim_data[start_move_event_name]
-			local rotation_sign = start_move_anim_data.sign
-			local rotation_radians = start_move_anim_data.rad
-			local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
+MinionMovement.set_anim_rotation = function (unit, scratchpad)
+	local wanted_root_pose = Unit.animation_wanted_root_pose(unit)
+	local rotation = Matrix4x4.rotation(wanted_root_pose)
+	local locomotion_extension = scratchpad.locomotion_extension
 
-			scratchpad.locomotion_extension:set_anim_rotation_scale(rotation_scale)
+	locomotion_extension:set_wanted_rotation(rotation)
+end
 
-			local rotation_duration = action_data.start_rotation_durations[start_move_event_name]
-			scratchpad.rotation_duration = t + rotation_duration
-		elseif scratchpad.rotation_duration <= t then
-			scratchpad.start_rotation_timing = nil
-			scratchpad.rotation_duration = nil
+MinionMovement.set_anim_driven = function (scratchpad, anim_driven, optional_script_driven_rotation)
+	local locomotion_extension = scratchpad.locomotion_extension
 
-			if not optional_ignore_set_anim_driven then
-				MinionMovement.set_anim_driven(scratchpad, false)
-			end
-		end
-	end,
-	get_moving_direction_name = function (unit, scratchpad, optional_destination, optional_rotation)
+	if anim_driven then
+		local script_driven_rotation = optional_script_driven_rotation or false
+
+		locomotion_extension:use_lerp_rotation(false)
+		locomotion_extension:set_anim_driven(true, false, script_driven_rotation)
+	else
+		locomotion_extension:use_lerp_rotation(true)
+		locomotion_extension:set_anim_driven(false)
+		locomotion_extension:set_anim_rotation_scale(1)
+	end
+
+	scratchpad.is_anim_driven = anim_driven
+end
+
+MinionMovement.update_anim_driven_start_rotation = function (unit, scratchpad, action_data, t, optional_destination, optional_ignore_set_anim_driven)
+	if not scratchpad.rotation_duration then
 		local destination = optional_destination
 
 		if not destination then
-			local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
+			local navigation_extension = scratchpad.navigation_extension
+			local current_node, next_node_in_path = navigation_extension:current_and_next_node_positions_in_path()
 			destination = next_node_in_path or current_node
 		end
 
-		local self_position = POSITION_LOOKUP[unit]
-		local to_destination = destination - self_position
-		local direction = Vector3.flat(Vector3.normalize(to_destination))
-		local rotation = optional_rotation or Unit.local_rotation(unit, 1)
-		local right = Quaternion.right(rotation)
-		local forward = Quaternion.forward(rotation)
-		local moving_direction_name = MinionMovement.get_relative_direction_name(right, forward, direction)
+		local start_move_event_name = scratchpad.move_start_anim_event_name
+		local start_move_anim_data = action_data.start_move_anim_data[start_move_event_name]
+		local rotation_sign = start_move_anim_data.sign
+		local rotation_radians = start_move_anim_data.rad
+		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
 
-		return moving_direction_name
-	end,
-	get_lean_animation_variable_value = function (unit, scratchpad, action_data, dt, optional_lean_towards_position)
-		local wanted_position = optional_lean_towards_position
+		scratchpad.locomotion_extension:set_anim_rotation_scale(rotation_scale)
 
-		if not wanted_position then
-			local navigation_extension = scratchpad.navigation_extension
-			local path_lean_node_offset = action_data.path_lean_node_offset
+		local rotation_duration = action_data.start_rotation_durations[start_move_event_name]
+		scratchpad.rotation_duration = t + rotation_duration
+	elseif scratchpad.rotation_duration <= t then
+		scratchpad.start_rotation_timing = nil
+		scratchpad.rotation_duration = nil
 
-			for i = path_lean_node_offset, 1, -1 do
-				local _, node = navigation_extension:current_and_wanted_node_position_in_path(i)
-
-				if node then
-					wanted_position = node
-
-					break
-				end
-			end
+		if not optional_ignore_set_anim_driven then
+			MinionMovement.set_anim_driven(scratchpad, false)
 		end
-
-		if wanted_position then
-			local position = POSITION_LOOKUP[unit]
-			local flat_desired_velocity_normalized = Vector3.flat(Vector3.normalize(wanted_position - position))
-			local unit_rotation = Unit.local_rotation(unit, 1)
-			local flat_unit_direction = Vector3.flat(Quaternion.forward(unit_rotation))
-			local max_dot_lean_value = action_data.max_dot_lean_value
-			local dot = math.max(Vector3.dot(flat_unit_direction, flat_desired_velocity_normalized), max_dot_lean_value)
-			local is_to_the_left = Vector3.cross(flat_unit_direction, flat_desired_velocity_normalized).z > 0
-			local default_lean_value = action_data.default_lean_value
-			local right_lean_value = action_data.right_lean_value
-			local left_lean_value = action_data.left_lean_value
-			local dot_diff = math.abs(1 - dot)
-			local percentage = dot_diff / max_dot_lean_value
-			local lean_variable = nil
-
-			if is_to_the_left then
-				lean_variable = math.lerp(default_lean_value, left_lean_value, percentage)
-			else
-				lean_variable = math.lerp(default_lean_value, right_lean_value, percentage)
-			end
-
-			local lean_speed = action_data.lean_speed
-
-			if lean_speed then
-				local current_lean_variable = scratchpad.current_lean_variable or default_lean_value
-				lean_variable = math.lerp(current_lean_variable, lean_variable, dt * lean_speed)
-				scratchpad.current_lean_variable = lean_variable
-			end
-
-			lean_variable = math.clamp(lean_variable, left_lean_value, right_lean_value)
-
-			return lean_variable
-		end
-	end,
-	should_start_idle = function (scratchpad, behavior_component)
-		local is_following_path = scratchpad.navigation_extension:is_following_path()
-
-		if is_following_path then
-			return false, false
-		end
-
-		local move_state = behavior_component.move_state
-		local is_in_idle = move_state == "idle"
-		local should_start_idle = not is_in_idle
-
-		return should_start_idle, is_in_idle
 	end
-}
+end
+
+MinionMovement.get_moving_direction_name = function (unit, scratchpad, optional_destination, optional_rotation)
+	local destination = optional_destination
+
+	if not destination then
+		local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
+		destination = next_node_in_path or current_node
+	end
+
+	local self_position = POSITION_LOOKUP[unit]
+	local to_destination = destination - self_position
+	local direction = Vector3.flat(Vector3.normalize(to_destination))
+	local rotation = optional_rotation or Unit.local_rotation(unit, 1)
+	local right = Quaternion.right(rotation)
+	local forward = Quaternion.forward(rotation)
+	local moving_direction_name = MinionMovement.get_relative_direction_name(right, forward, direction)
+
+	return moving_direction_name
+end
+
+MinionMovement.get_lean_animation_variable_value = function (unit, scratchpad, action_data, dt, optional_lean_towards_position)
+	local wanted_position = optional_lean_towards_position
+
+	if not wanted_position then
+		local navigation_extension = scratchpad.navigation_extension
+		local path_lean_node_offset = action_data.path_lean_node_offset
+
+		for i = path_lean_node_offset, 1, -1 do
+			local _, node = navigation_extension:current_and_wanted_node_position_in_path(i)
+
+			if node then
+				wanted_position = node
+
+				break
+			end
+		end
+	end
+
+	if wanted_position then
+		local position = POSITION_LOOKUP[unit]
+		local flat_desired_velocity_normalized = Vector3.flat(Vector3.normalize(wanted_position - position))
+		local unit_rotation = Unit.local_rotation(unit, 1)
+		local flat_unit_direction = Vector3.flat(Quaternion.forward(unit_rotation))
+		local max_dot_lean_value = action_data.max_dot_lean_value
+		local dot = math.max(Vector3.dot(flat_unit_direction, flat_desired_velocity_normalized), max_dot_lean_value)
+		local is_to_the_left = Vector3.cross(flat_unit_direction, flat_desired_velocity_normalized).z > 0
+		local default_lean_value = action_data.default_lean_value
+		local right_lean_value = action_data.right_lean_value
+		local left_lean_value = action_data.left_lean_value
+		local dot_diff = math.abs(1 - dot)
+		local percentage = dot_diff / max_dot_lean_value
+		local lean_variable = nil
+
+		if is_to_the_left then
+			lean_variable = math.lerp(default_lean_value, left_lean_value, percentage)
+		else
+			lean_variable = math.lerp(default_lean_value, right_lean_value, percentage)
+		end
+
+		local lean_speed = action_data.lean_speed
+
+		if lean_speed then
+			local current_lean_variable = scratchpad.current_lean_variable or default_lean_value
+			lean_variable = math.lerp(current_lean_variable, lean_variable, dt * lean_speed)
+			scratchpad.current_lean_variable = lean_variable
+		end
+
+		lean_variable = math.clamp(lean_variable, left_lean_value, right_lean_value)
+
+		return lean_variable
+	end
+end
+
+MinionMovement.should_start_idle = function (scratchpad, behavior_component)
+	local is_following_path = scratchpad.navigation_extension:is_following_path()
+
+	if is_following_path then
+		return false, false
+	end
+
+	local move_state = behavior_component.move_state
+	local is_in_idle = move_state == "idle"
+	local should_start_idle = not is_in_idle
+
+	return should_start_idle, is_in_idle
+end
+
 local DEFAULT_IDLE_ANIM_EVENT = "idle"
 
 MinionMovement.start_idle = function (scratchpad, behavior_component, action_data)
@@ -234,7 +246,8 @@ MinionMovement.start_idle = function (scratchpad, behavior_component, action_dat
 	if scratchpad.is_anim_driven then
 		MinionMovement.set_anim_driven(scratchpad, false)
 
-		scratchpad.start_rotation_timing, scratchpad.rotation_duration = nil
+		scratchpad.rotation_duration = nil
+		scratchpad.start_rotation_timing = nil
 	end
 
 	scratchpad.moving_direction_name = nil
@@ -254,7 +267,7 @@ MinionMovement.get_change_target_direction = function (unit, target_position)
 	elseif dot_product > -inv_sqrt_2 then
 		local is_to_the_left = Vector3.cross(forward_vector_flat, target_vector_flat).z > 0
 
-		return (is_to_the_left and "left") or "right"
+		return is_to_the_left and "left" or "right"
 	end
 
 	return "bwd"
@@ -293,7 +306,7 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 		local unit_forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 		local stagger_direction = stagger_component.direction:unbox()
 		local is_left_stagger = Vector3.cross(unit_forward, stagger_direction).z > 0
-		local stagger_anims = (is_left_stagger and action_data.running_stagger_anim_left) or action_data.running_stagger_anim_right
+		local stagger_anims = is_left_stagger and action_data.running_stagger_anim_left or action_data.running_stagger_anim_right
 		local stagger_anim = Animation.random_event(stagger_anims)
 
 		animation_extension:anim_event(stagger_anim)
@@ -361,7 +374,7 @@ MinionMovement.init_find_ranged_position = function (scratchpad, action_data)
 	local current_degree = -(degree_range / 2)
 	local randomized_move_to_directions = {}
 
-	for i = 1, num_directions, 1 do
+	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
@@ -466,7 +479,7 @@ MinionMovement.update_move_to_ranged_position = function (unit, t, scratchpad, a
 		has_line_of_sight = scratchpad.perception_component.has_line_of_sight
 	end
 
-	local force_move_due_to_lost_los = optional_force_move or (not has_line_of_sight and is_in_idle)
+	local force_move_due_to_lost_los = optional_force_move or not has_line_of_sight and is_in_idle
 
 	if scratchpad.move_to_cooldown <= t and (scratchpad.max_distance_to_target_sq < distance_to_destination_sq or force_move_due_to_lost_los) then
 		if is_in_idle then

@@ -347,13 +347,13 @@ MechanismManager.rpc_mechanism_event_ready_for_game_score = function (self, chan
 end
 
 MechanismManager.end_result = function (self)
-	local end_result = (self._mechanism and self._mechanism._mechanism_data.end_result) or false
+	local end_result = self._mechanism and self._mechanism._mechanism_data.end_result or false
 
 	return end_result
 end
 
 MechanismManager.mechanism_state = function (self)
-	local mechanism_state = (self._mechanism and self._mechanism._state) or false
+	local mechanism_state = self._mechanism and self._mechanism._state or false
 
 	return mechanism_state
 end

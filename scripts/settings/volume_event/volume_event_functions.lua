@@ -17,21 +17,21 @@ local volume_event_functions = {
 
 			MinionDeath.die(entering_unit, nil, attack_direction, nil, damage_profile, nil, nil, nil, nil)
 		end
-	},
-	trigger = {
-		on_enter = function (entering_unit, dt, t, data)
-			local volume_unit = data.connected_units
-			local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
-
-			trigger_extension:on_volume_enter(entering_unit, dt, t)
-		end,
-		on_exit = function (exiting_unit, data)
-			local volume_unit = data.connected_units
-			local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
-
-			trigger_extension:on_volume_exit(exiting_unit)
-		end
 	}
+}
+volume_event_functions.trigger = {
+	on_enter = function (entering_unit, dt, t, data)
+		local volume_unit = data.connected_units
+		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
+
+		trigger_extension:on_volume_enter(entering_unit, dt, t)
+	end,
+	on_exit = function (exiting_unit, data)
+		local volume_unit = data.connected_units
+		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
+
+		trigger_extension:on_volume_exit(exiting_unit)
+	end
 }
 
 return settings("VolumeEventFunctions", volume_event_functions)

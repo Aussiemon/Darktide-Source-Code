@@ -401,7 +401,7 @@ end
 
 LoadingView._update_next_hint = function (self)
 	local num_hints = #temp_loading_hints
-	self._hint_index = (self._hint_index and self._hint_index % num_hints + 1) or math.random(1, num_hints)
+	self._hint_index = self._hint_index and self._hint_index % num_hints + 1 or math.random(1, num_hints)
 	local next_hint = temp_loading_hints[self._hint_index]
 
 	self:_set_hint_text(next_hint)
@@ -430,7 +430,7 @@ LoadingView._set_logo_pulse_progress = function (self, progress)
 end
 
 LoadingView.update = function (self, dt, t, input_service)
-	local logo_progress = (Application.time_since_launch() * 0.05) % 1
+	local logo_progress = Application.time_since_launch() * 0.05 % 1
 	local logo_anim_progress = (logo_progress * 2 - 1)^2
 
 	self:_set_logo_pulse_progress(logo_anim_progress)
@@ -458,7 +458,7 @@ LoadingView.update = function (self, dt, t, input_service)
 			self:_update_next_hint()
 		end
 
-		self._text_cycle_duration = (progress ~= 1 and text_cycle_duration) or nil
+		self._text_cycle_duration = progress ~= 1 and text_cycle_duration or nil
 
 		self:_set_hint_text_opacity(cycle_progress)
 	end

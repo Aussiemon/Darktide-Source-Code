@@ -6,9 +6,9 @@ local LookDelta = {
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
 		if alternate_fire_component.is_active then
-			look_delta_template_name = (weapon_template and weapon_template.alternate_fire_settings.look_delta_template) or "default_aiming"
+			look_delta_template_name = weapon_template and weapon_template.alternate_fire_settings.look_delta_template or "default_aiming"
 		else
-			look_delta_template_name = (weapon_template and weapon_template.look_delta_template) or "default"
+			look_delta_template_name = weapon_template and weapon_template.look_delta_template or "default"
 		end
 
 		return LookDeltaTemplates[look_delta_template_name]

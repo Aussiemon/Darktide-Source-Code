@@ -25,20 +25,20 @@ local function circumstance_init_function(widget, content, ui_renderer)
 	local descriptors = {}
 	local mutators = circumstance_template.mutators or {}
 
-	for i = 1, #mutators, 1 do
+	for i = 1, #mutators do
 		local mutator_name = mutators[i]
 		local mutator = MutatorTemplates[mutator_name]
 		local descriptions = mutator.description
 
-		for j = 1, #descriptions, 1 do
+		for j = 1, #descriptions do
 			descriptors[#descriptors + 1] = Localizer:localize(descriptions[j])
 		end
 	end
 
 	local formatted_description = ""
 
-	for i = 1, #descriptors, 1 do
-		formatted_description = formatted_description .. string.format("· %s\n", descriptors[i])
+	for i = 1, #descriptors do
+		formatted_description = formatted_description .. string.format("Â· %s\n", descriptors[i])
 	end
 
 	local widget_content = widget.content
@@ -81,14 +81,14 @@ local details_widgets_blueprints = {
 			init = function (widget, data)
 				local mission_settings = MissionSettings[data.map]
 				local zone_settings = ZoneSettings[mission_settings.zone_id]
-				local mission_title = (mission_settings.mission_name and Localizer:localize(mission_settings.mission_name)) or data.map
+				local mission_title = mission_settings.mission_name and Localizer:localize(mission_settings.mission_name) or data.map
 				local zone_name = Localizer:localize(zone_settings.name)
-				local main_objective_type = (mission_settings.objectives and MissionObjectiveTemplates[mission_settings.objectives].main_objective_type) or "default"
+				local main_objective_type = mission_settings.objectives and MissionObjectiveTemplates[mission_settings.objectives].main_objective_type or "default"
 				local main_objective_type_header_key = MissionBoardSettings.main_objective_type_name[main_objective_type]
 				local main_objective_type_header = Managers.localization:localize(main_objective_type_header_key)
 				local widget_content = widget.content
 				widget_content.mission_name = mission_title
-				widget_content.type_and_zone = string.format("%s · %s", main_objective_type_header, zone_name)
+				widget_content.type_and_zone = string.format("%s Â· %s", main_objective_type_header, zone_name)
 			end
 		},
 		base_reward = {

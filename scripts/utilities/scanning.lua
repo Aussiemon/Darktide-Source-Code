@@ -1,33 +1,35 @@
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Scanning = {
-	get_scannable_units_position = function (scannable_unit, scannable_extension)
-		scannable_extension = scannable_extension or ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
+local Scanning = {}
 
-		return (scannable_extension and scannable_extension:center_poisition()) or POSITION_LOOKUP[scannable_unit]
-	end,
-	calculate_score = function (scannable_unit, first_person_component, scan_settings, scannable_extension)
-		local rotation = first_person_component.rotation
-		local player_forward = rotation and Quaternion.forward(rotation)
-		local player_position = first_person_component.position
-		local scannable_unit_position = Scanning.get_scannable_units_position(scannable_unit, scannable_extension)
-		local from_player = scannable_unit_position - player_position
-		local distance = Vector3.length(from_player)
-		local near_distance = scan_settings.distance.near
-		local far_distance = scan_settings.distance.far
-		local distance_score = math.ilerp(far_distance, 0, distance)
-		local inner_near_angle = scan_settings.angle.inner.near
-		local inner_far_angle = scan_settings.angle.inner.far
-		local inner_angle = math.lerp(inner_far_angle, inner_near_angle, distance_score)
-		local outer_angle = scan_settings.angle.outer
-		local angle = Vector3.angle(from_player, player_forward, true)
-		local angle_score = math.ilerp(outer_angle, inner_angle, angle)
-		local angle_distribution = scan_settings.score_distribution.angle
-		local distance_distribution = scan_settings.score_distribution.distance
-		local total_score = angle_distribution * angle_score + distance_distribution * distance_score
+Scanning.get_scannable_units_position = function (scannable_unit, scannable_extension)
+	scannable_extension = scannable_extension or ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 
-		return total_score, angle_score, distance_score, angle, distance
-	end
-}
+	return scannable_extension and scannable_extension:center_poisition() or POSITION_LOOKUP[scannable_unit]
+end
+
+Scanning.calculate_score = function (scannable_unit, first_person_component, scan_settings, scannable_extension)
+	local rotation = first_person_component.rotation
+	local player_forward = rotation and Quaternion.forward(rotation)
+	local player_position = first_person_component.position
+	local scannable_unit_position = Scanning.get_scannable_units_position(scannable_unit, scannable_extension)
+	local from_player = scannable_unit_position - player_position
+	local distance = Vector3.length(from_player)
+	local near_distance = scan_settings.distance.near
+	local far_distance = scan_settings.distance.far
+	local distance_score = math.ilerp(far_distance, 0, distance)
+	local inner_near_angle = scan_settings.angle.inner.near
+	local inner_far_angle = scan_settings.angle.inner.far
+	local inner_angle = math.lerp(inner_far_angle, inner_near_angle, distance_score)
+	local outer_angle = scan_settings.angle.outer
+	local angle = Vector3.angle(from_player, player_forward, true)
+	local angle_score = math.ilerp(outer_angle, inner_angle, angle)
+	local angle_distribution = scan_settings.score_distribution.angle
+	local distance_distribution = scan_settings.score_distribution.distance
+	local total_score = angle_distribution * angle_score + distance_distribution * distance_score
+
+	return total_score, angle_score, distance_score, angle, distance
+end
+
 local INDEX_DISTANCE = 2
 local INDEX_ACTOR = 4
 local INTERACTABLE_FILTER = "filter_player_character_interactable_overlap"
@@ -41,7 +43,7 @@ Scanning.check_direct_line_of_sight = function (physics_world, first_person_comp
 	local hits, _ = PhysicsWorld.raycast(physics_world, look_pos, look_forward, scan_distance, "all", "collision_filter", INTERACTABLE_FILTER)
 
 	if hits then
-		for i = 1, #hits, 1 do
+		for i = 1, #hits do
 			local hit = hits[i]
 			local hit_distance = hit[INDEX_DISTANCE]
 			local hit_actor = hit[INDEX_ACTOR]
@@ -88,7 +90,7 @@ Scanning.check_line_of_sight_to_unit = function (physics_world, first_person_com
 	local hits, _ = PhysicsWorld.raycast(physics_world, look_pos, to_scan_direction, scan_distance, "all", "collision_filter", INTERACTABLE_FILTER)
 
 	if hits then
-		for i = 1, #hits, 1 do
+		for i = 1, #hits do
 			local hit = hits[i]
 			local hit_distance = hit[INDEX_DISTANCE]
 			local hit_actor = hit[INDEX_ACTOR]
@@ -122,7 +124,7 @@ Scanning.find_scannable_unit = function (physics_world, first_person_component, 
 	local best_score = -math.huge
 	local best_unit, best_scan_exension = nil
 
-	for i = 1, #scannable_units, 1 do
+	for i = 1, #scannable_units do
 		local scannable_unit = scannable_units[i]
 		local scannable_extension = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 		local is_active = scannable_extension:is_active()
@@ -189,7 +191,7 @@ Scanning.scan_confirm_progression = function (scanning_compomnent, weapon_action
 	if scan_settings and action_settings.kind == "scan_confirm" then
 		local start_time = weapon_action_component.start_t
 		local time_in_action = t - start_time
-		local confirm_time = (has_valid_target and scan_settings.confirm_time) or scan_settings.fail_time_time
+		local confirm_time = has_valid_target and scan_settings.confirm_time or scan_settings.fail_time_time
 		local progress = math.clamp01(time_in_action / confirm_time)
 
 		return progress

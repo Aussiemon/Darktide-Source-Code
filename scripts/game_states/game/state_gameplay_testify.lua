@@ -191,7 +191,7 @@ local StateGameplayTestify = {
 			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 99999, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "melee", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 			Attack.execute(unit, damage_profile, "instakill", true)
 
-			melee_damage_type_index = (melee_damage_type_index + 1 > #melee_damage_types and 1) or melee_damage_type_index + 1
+			melee_damage_type_index = melee_damage_type_index + 1 > #melee_damage_types and 1 or melee_damage_type_index + 1
 		end
 	end,
 	hit_minion_with_random_ranged = function (params, _)
@@ -207,7 +207,7 @@ local StateGameplayTestify = {
 
 			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 99999, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 
-			ranged_damage_type_index = (ranged_damage_type_index + 1 > #ranged_damage_types and 1) or ranged_damage_type_index + 1
+			ranged_damage_type_index = ranged_damage_type_index + 1 > #ranged_damage_types and 1 or ranged_damage_type_index + 1
 		end
 	end,
 	hit_minion_with_ranged_alternative_fire_attack = function (params, _)

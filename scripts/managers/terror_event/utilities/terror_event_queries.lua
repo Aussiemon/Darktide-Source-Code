@@ -4,12 +4,12 @@ local function _count_num_alive_minions_in_spawners(spawner_queue_id)
 	local num_alive_minions = 0
 
 	for script, queue_ids in pairs(spawner_queue_id) do
-		for i = 1, #queue_ids, 1 do
+		for i = 1, #queue_ids do
 			local queue_id = queue_ids[i]
 			local spawned_minions_by_queue_id = script:spawned_minions_by_queue_id(queue_id)
 
 			if spawned_minions_by_queue_id then
-				for j = 1, #spawned_minions_by_queue_id, 1 do
+				for j = 1, #spawned_minions_by_queue_id do
 					if HEALTH_ALIVE[spawned_minions_by_queue_id[j]] then
 						num_alive_minions = num_alive_minions + 1
 					end
@@ -69,7 +69,7 @@ TerrorEventQueries.num_aggroed_minions_in_level = function ()
 	local blackboards = BLACKBOARDS
 	local num_aggroed = 0
 
-	for i = 1, alive_minions.size, 1 do
+	for i = 1, alive_minions.size do
 		local minion_unit = alive_minions[i]
 		local blackboard = blackboards[minion_unit]
 		local perception_component = blackboard.perception

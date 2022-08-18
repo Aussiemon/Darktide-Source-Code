@@ -33,9 +33,9 @@ end
 
 EndPartyView._present_game_data_fields = function (self)
 	local presentation_data = self._presentation_data
-	local total_kills = (self._debug_preview and 0) or presentation_data.total_kills
-	local total_deaths = (self._debug_preview and 0) or presentation_data.total_deaths
-	local play_time_seconds = (self._debug_preview and 0) or presentation_data.play_time_seconds
+	local total_kills = self._debug_preview and 0 or presentation_data.total_kills
+	local total_deaths = self._debug_preview and 0 or presentation_data.total_deaths
+	local play_time_seconds = self._debug_preview and 0 or presentation_data.play_time_seconds
 	local total_time_minutes = math.floor(play_time_seconds / 60)
 	local total_time_seconds = math.floor(play_time_seconds % 60)
 	local no_cache = true
@@ -115,7 +115,7 @@ EndPartyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local player_panels = self._player_panels
 	local num_widgets = #player_panels
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local panel = player_panels[i]
 		local widget = panel.widget
 		local boxed_position = panel.boxed_position
@@ -131,7 +131,7 @@ end
 
 EndPartyView._on_panel_pressed = function (self, panel, index)
 	local player = panel.player
-	local unique_id = (self._debug_preview and index) or player:unique_id()
+	local unique_id = self._debug_preview and index or player:unique_id()
 	local event_name = "end_of_round_play_character_animation"
 
 	Managers.event:trigger(event_name, unique_id)
@@ -144,7 +144,7 @@ EndPartyView._update_player_accolade_positions = function (self, dt, t)
 	local screen_height = RESOLUTION_LOOKUP.height
 	local spawned_accolades_array = self._spawned_accolades_array
 
-	for i = 1, #spawned_accolades_array, 1 do
+	for i = 1, #spawned_accolades_array do
 		local entry = spawned_accolades_array[i]
 		local view_element = entry.view_element
 		local spawn_offset = entry.spawn_offset
@@ -232,7 +232,7 @@ EndPartyView._setup_players_ui = function (self)
 	local spawn_slots = self._spawn_slots
 	local accolade_spawn_delay = EndPartyViewSettings.accolade_initial_spawn_delay
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then

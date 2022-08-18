@@ -137,8 +137,8 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 
 	if self._is_server and not self._unit_is_local then
 		local wounds_template_id = NetworkLookup.wounds_templates[wounds_template.name]
-		local hit_zone_id_or_nil = (hit_zone_name_or_nil and NetworkLookup.hit_zones[hit_zone_name_or_nil]) or nil
-		local override_wounds_shape_id_or_nil = (override_wound_shape_or_nil and NetworkLookup.wounds_shapes[override_wound_shape_or_nil]) or nil
+		local hit_zone_id_or_nil = hit_zone_name_or_nil and NetworkLookup.hit_zones[hit_zone_name_or_nil] or nil
+		local override_wounds_shape_id_or_nil = override_wound_shape_or_nil and NetworkLookup.wounds_shapes[override_wound_shape_or_nil] or nil
 		local attack_result_id = NetworkLookup.attack_results[attack_result]
 		local damage_type_id = NetworkLookup.damage_types[damage_type]
 

@@ -22,11 +22,11 @@ local ItemPassTemplates = {
 	gear_icon_size = {
 		128,
 		192
-	},
-	gadget_size = {
-		ItemPassTemplates.icon_size[1],
-		ItemPassTemplates.icon_size[2] + 50
 	}
+}
+ItemPassTemplates.gadget_size = {
+	ItemPassTemplates.icon_size[1],
+	ItemPassTemplates.icon_size[2] + 50
 }
 local item_size = ItemPassTemplates.item_size
 local icon_size = ItemPassTemplates.icon_size

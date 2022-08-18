@@ -2,7 +2,7 @@ local ActionHandlerSettings = require("scripts/settings/action/action_handler_se
 local ActionAvailability = {}
 local disallowed_action_kinds_during_lunge = {}
 
-for i = 1, #ActionHandlerSettings.disallowed_action_kinds_during_lunge, 1 do
+for i = 1, #ActionHandlerSettings.disallowed_action_kinds_during_lunge do
 	local action_kind = ActionHandlerSettings.disallowed_action_kinds_during_lunge[i]
 	disallowed_action_kinds_during_lunge[action_kind] = true
 end
@@ -23,7 +23,7 @@ end
 
 local allowed_action_kinds_during_sprint = {}
 
-for i = 1, #ActionHandlerSettings.allowed_action_kinds_during_sprint, 1 do
+for i = 1, #ActionHandlerSettings.allowed_action_kinds_during_sprint do
 	local action_kind = ActionHandlerSettings.allowed_action_kinds_during_sprint[i]
 	allowed_action_kinds_during_sprint[action_kind] = true
 end

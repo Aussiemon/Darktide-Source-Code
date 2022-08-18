@@ -36,7 +36,7 @@ HudElementPlayerBuffs.event_player_buff_removed = function (self, player, buff_i
 
 	local active_buffs_data = self._active_buffs_data
 
-	for i = 1, #active_buffs_data, 1 do
+	for i = 1, #active_buffs_data do
 		local buff_data = active_buffs_data[i]
 
 		if buff_data.buff_instance == buff_instance then
@@ -55,7 +55,7 @@ HudElementPlayerBuffs._sync_current_active_buffs = function (self, buffs)
 		return
 	end
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 		local add_buff = buff:show_in_hud()
 
@@ -130,7 +130,7 @@ end
 HudElementPlayerBuffs._get_available_widget = function (self)
 	local buff_widgets_array = self._buff_widgets_array
 
-	for i = 1, #buff_widgets_array, 1 do
+	for i = 1, #buff_widgets_array do
 		local widget = buff_widgets_array[i]
 		local content = widget.content
 
@@ -147,7 +147,7 @@ HudElementPlayerBuffs._setup_buff_widget_array = function (self)
 	local buff_widgets_array = {}
 	local widgets_by_name = self._widgets_by_name
 
-	for i = 1, MAX_BUFFS, 1 do
+	for i = 1, MAX_BUFFS do
 		local buff_widget_name = "buff_" .. i
 		local widget = widgets_by_name[buff_widget_name]
 		buff_widgets_array[i] = widget
@@ -166,14 +166,14 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update)
 	local num_aligned_positive_buffs = 0
 	local num_aligned_negative_buffs = 0
 
-	for i = 1, num_active_buffs, 1 do
+	for i = 1, num_active_buffs do
 		local buff_data = active_buffs_data[i]
 		local is_negative = buff_data.is_negative
-		local previous_buff_offset = (is_negative and previous_negative_buff_offset) or previous_positive_buff_offset
-		local num_aligned_category_buffs = (is_negative and num_aligned_negative_buffs) or num_aligned_positive_buffs
+		local previous_buff_offset = is_negative and previous_negative_buff_offset or previous_positive_buff_offset
+		local num_aligned_category_buffs = is_negative and num_aligned_negative_buffs or num_aligned_positive_buffs
 		local widget = buff_data.widget
 		local offset = widget.offset
-		offset[2] = (is_negative and -42) or 0
+		offset[2] = is_negative and -42 or 0
 		local old_horizontal_offset = offset[1]
 		local target_x = horizontal_spacing * num_aligned_category_buffs
 
@@ -211,7 +211,7 @@ end
 HudElementPlayerBuffs._update_buffs = function (self)
 	local active_buffs_data = self._active_buffs_data
 
-	for i = 1, #active_buffs_data, 1 do
+	for i = 1, #active_buffs_data do
 		local buff_data = active_buffs_data[i]
 		local buff_instance = buff_data.buff_instance
 
@@ -247,7 +247,7 @@ HudElementPlayerBuffs._update_buffs = function (self)
 			end
 
 			if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil then
-				content.text = (stack_count and stack_count > 1 and tostring(stack_count)) or nil
+				content.text = stack_count and stack_count > 1 and tostring(stack_count) or nil
 				buff_data.stack_count = stack_count
 				widget.dirty = true
 			end
@@ -336,7 +336,7 @@ HudElementPlayerBuffs._draw_widgets = function (self, dt, t, input_service, ui_r
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		if widget.dirty then
@@ -349,7 +349,7 @@ HudElementPlayerBuffs._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerBuffsSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -360,7 +360,7 @@ HudElementPlayerBuffs._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerBuffsSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

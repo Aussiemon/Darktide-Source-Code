@@ -54,7 +54,7 @@ CorruptorArmExtension.destroy = function (self)
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local target_units = self._target_units
 
-		for i = 1, #target_units, 1 do
+		for i = 1, #target_units do
 			local target_unit = target_units[i]
 
 			unit_spawner_manager:mark_for_deletion(target_unit)
@@ -85,7 +85,7 @@ CorruptorArmExtension.deactivate = function (self)
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local target_units = self._target_units
 
-		for i = 1, #target_units, 1 do
+		for i = 1, #target_units do
 			local target_unit = target_units[i]
 
 			unit_spawner_manager:mark_for_deletion(target_unit)
@@ -260,7 +260,7 @@ CorruptorArmExtension._spawn_targets = function (self, unit)
 	local destructible_count = CorruptorSettings.destructible_count
 	local destructible_node_names = CorruptorSettings.destructible_node_names
 
-	for i = 1, destructible_count, 1 do
+	for i = 1, destructible_count do
 		local node_name = destructible_node_names[i]
 		local spawn_node = Unit.node(unit, node_name)
 		local pustule_position = Unit.world_position(unit, spawn_node)

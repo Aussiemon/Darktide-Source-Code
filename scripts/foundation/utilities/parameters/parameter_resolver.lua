@@ -83,7 +83,7 @@ ParameterResolver.resolve_command_line = function ()
 		local t = {}
 
 		if type(value) == "table" then
-			for _i = 1, #value, 1 do
+			for _i = 1, #value do
 				t[_i] = value[_i]
 			end
 		else
@@ -112,7 +112,7 @@ ParameterResolver.resolve_command_line = function ()
 				parameters[param] = nil
 			end
 
-			local no_value_exists_for_param = (has_more_args_after_current() and next_is_parameter()) or not has_more_args_after_current()
+			local no_value_exists_for_param = has_more_args_after_current() and next_is_parameter() or not has_more_args_after_current()
 
 			if no_value_exists_for_param then
 				parameters[param] = true
@@ -167,7 +167,7 @@ local function _find_value_in_options(value, options)
 		return true
 	end
 
-	for i = 1, #options, 1 do
+	for i = 1, #options do
 		local option = options[i]
 
 		if value_type == "number" and type(option) == "number" then
@@ -189,7 +189,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 	for param, config in pairs(DefaultDevParameters) do
 		local value = config.value
-		dev_parameters[param] = (type(value) == "table" and table.clone(value)) or value
+		dev_parameters[param] = type(value) == "table" and table.clone(value) or value
 	end
 
 	local loaded_parameters = Application.user_setting("development_settings") or {}

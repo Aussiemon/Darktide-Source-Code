@@ -104,10 +104,10 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 		local is_human = breed_name == "human"
 		local disabling_unit_position = Unit.world_position(disabling_unit, 1)
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
-		local up = Vector3.up() * ((is_human and THROW_TELEPORT_UP_OFFSET_HUMAN) or THROW_TELEPORT_UP_OFFSET_OGRYN)
+		local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
 		local disabling_unit_forward = Quaternion.forward(unit_rotation)
 		local teleport_position = disabling_unit_position + disabling_unit_forward + up
-		local direction = (is_human and disabling_unit_forward) or -disabling_unit_forward
+		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
 		PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)

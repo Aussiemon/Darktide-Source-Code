@@ -29,11 +29,11 @@ MinionUnitDataExtension.init = function (self, extension_init_context, unit, ext
 		node_to_bind_pose = {}
 		local inv_bind_pose = Matrix4x4.inverse(bind_pose)
 
-		for i = 1, #hit_zones, 1 do
+		for i = 1, #hit_zones do
 			local hit_zone = hit_zones[i]
 			local actors = hit_zone.actors
 
-			for j = 1, #actors, 1 do
+			for j = 1, #actors do
 				local actor_name = actors[j]
 				local actor_id = Unit.find_actor(unit, actor_name)
 				local actor = Unit.actor(unit, actor_id)
@@ -172,7 +172,7 @@ MinionUnitDataExtension.post_update = function (self, unit, dt, t, ...)
 	local hit_zone_actors_lookup = self._hit_zone_actors_lookup
 	local pending_destroyed_hit_zones = self._pending_destroyed_hit_zones
 
-	for i = 1, #pending_destroyed_hit_zones, 1 do
+	for i = 1, #pending_destroyed_hit_zones do
 		local hit_zone_name = pending_destroyed_hit_zones[i]
 
 		HitZone.destroy_hit_zone(unit, hit_zone_lookup, hit_zone_actors_lookup, hit_zone_name)

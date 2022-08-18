@@ -84,11 +84,11 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		end
 
 		local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.throw
-		local starting_state = (throw_parameters and throw_parameters.locomotion_state) or locomotion_states.manual_physics
+		local starting_state = throw_parameters and throw_parameters.locomotion_state or locomotion_states.manual_physics
 		local is_critical_strike = false
 
 		if self._is_server then
-			slot22, slot23 = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot)
+			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot)
 		end
 	end
 end

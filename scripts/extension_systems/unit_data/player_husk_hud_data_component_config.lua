@@ -57,7 +57,7 @@ local looping_sound_aliases = {
 	"weapon_temperature"
 }
 
-for i = 1, #looping_sound_aliases, 1 do
+for i = 1, #looping_sound_aliases do
 	local looping_sound_alias = looping_sound_aliases[i]
 	local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
 

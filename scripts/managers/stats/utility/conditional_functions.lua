@@ -81,70 +81,73 @@ local ConditionalFunctions = {
 
 			return breed_data and breed_data.sub_faction_name == faction
 		end
-	end,
-	weapon_has_keywords = function (stat_to_check, keywords)
-		local _weapon_templates = {}
-
-		for name, weapon_template in pairs(WeaponTemplates) do
-			local weapon_template_keywords = weapon_template.keywords
-
-			if weapon_template_keywords then
-				local template_is_ok = true
-
-				for _, keyword in ipairs(keywords) do
-					if not table.array_contains(weapon_template_keywords, keyword) then
-						template_is_ok = false
-
-						break
-					end
-				end
-
-				if template_is_ok then
-					_weapon_templates[#_weapon_templates + 1] = name
-				end
-			end
-		end
-
-		local index_of_weapon = table.index_of(stat_to_check:get_parameters(), "weapon_template_name")
-
-		fassert(index_of_weapon ~= -1, "Stat '%s' has no parameter weapon template name.")
-
-		return function (_, _, _, ...)
-			local weapon_template_name = select(index_of_weapon, ...)
-
-			return table.array_contains(_weapon_templates, weapon_template_name)
-		end
-	end,
-	all = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions, 1 do
-				if not conditions[i](...) then
-					return false
-				end
-			end
-
-			return true
-		end
-	end,
-	any = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions, 1 do
-				if conditions[i](...) then
-					return true
-				end
-			end
-
-			return false
-		end
 	end
 }
+
+ConditionalFunctions.weapon_has_keywords = function (stat_to_check, keywords)
+	local _weapon_templates = {}
+
+	for name, weapon_template in pairs(WeaponTemplates) do
+		local weapon_template_keywords = weapon_template.keywords
+
+		if weapon_template_keywords then
+			local template_is_ok = true
+
+			for _, keyword in ipairs(keywords) do
+				if not table.array_contains(weapon_template_keywords, keyword) then
+					template_is_ok = false
+
+					break
+				end
+			end
+
+			if template_is_ok then
+				_weapon_templates[#_weapon_templates + 1] = name
+			end
+		end
+	end
+
+	local index_of_weapon = table.index_of(stat_to_check:get_parameters(), "weapon_template_name")
+
+	fassert(index_of_weapon ~= -1, "Stat '%s' has no parameter weapon template name.")
+
+	return function (_, _, _, ...)
+		local weapon_template_name = select(index_of_weapon, ...)
+
+		return table.array_contains(_weapon_templates, weapon_template_name)
+	end
+end
+
+ConditionalFunctions.all = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if not conditions[i](...) then
+				return false
+			end
+		end
+
+		return true
+	end
+end
+
+ConditionalFunctions.any = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if conditions[i](...) then
+				return true
+			end
+		end
+
+		return false
+	end
+end
 
 return ConditionalFunctions

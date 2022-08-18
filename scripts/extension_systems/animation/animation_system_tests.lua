@@ -9,7 +9,7 @@ end
 local function _check_layer_states(unit, state_machine_name)
 	local num_layers, anim_states = Unit.animation_get_state(unit)
 
-	for i = 1, num_layers, 1 do
+	for i = 1, num_layers do
 		local anim_state = anim_states[i]
 
 		fassert(anim_state ~= nil, "[AnimationSystemTests] Missing state for layer %d in state machine %s, this will crash when trying to hot-join sync - ensure that layer has a \"Default State\" set in its state machine.", i, state_machine_name)
@@ -25,7 +25,7 @@ end
 local function _check_anim_variables_exists_in_game_object_field(breed, animation_variables)
 	local game_object_type = breed.game_object_type
 
-	for i = 1, #animation_variables, 1 do
+	for i = 1, #animation_variables do
 		local animation_variable = animation_variables[i]
 
 		fassert(Network.object_has_field(game_object_type, animation_variable), "[AnimationSystemTests] %s does not exist in game object field of game object type %s", animation_variable, game_object_type)

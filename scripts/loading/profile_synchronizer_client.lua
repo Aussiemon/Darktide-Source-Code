@@ -27,7 +27,7 @@ ProfileSynchronizerClient.peer_profile_chunks_array = function (self, peer_id, l
 
 	local profile_chunks_array = {}
 
-	for i = 1, #local_player_id_array, 1 do
+	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local chunks = profile_chunks[local_player_id]
 

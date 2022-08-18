@@ -83,7 +83,7 @@ ConstantMissionLobbyStatus._setup_ready_slots = function (self, amount)
 	local ready_slot_size = ConstantMissionLobbyStatusSettings.ready_slot_size
 	local x_offset = -amount * ready_slot_size[1]
 
-	for i = 1, amount, 1 do
+	for i = 1, amount do
 		local widget_name = "slot_" .. i
 		local widget = self:_create_widget(widget_name, widget_definition)
 		widgets[#widgets + 1] = widget
@@ -105,7 +105,7 @@ ConstantMissionLobbyStatus._set_start_time = function (self, time)
 
 	local symbols_text = ""
 
-	for i = 1, #time_string_to_array, 1 do
+	for i = 1, #time_string_to_array do
 		local number = tonumber(time_string_to_array[i])
 		local symbol = UISettings.digital_clock_numbers[number]
 		symbols_text = symbols_text .. symbol
@@ -149,7 +149,7 @@ ConstantMissionLobbyStatus._draw_widgets = function (self, dt, t, input_service,
 
 	local slot_widgets = self._slot_widgets
 
-	for i = 1, #slot_widgets, 1 do
+	for i = 1, #slot_widgets do
 		local widget = slot_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)

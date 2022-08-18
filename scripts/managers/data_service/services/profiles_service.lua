@@ -1,33 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local MasterItems = require("scripts/backend/master_items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
@@ -41,7 +11,7 @@ end
 local function _find_character_progression(character, characters_progression)
 	local character_id = character.id
 
-	for i = 1, #characters_progression, 1 do
+	for i = 1, #characters_progression do
 		local progression = characters_progression[i]
 
 		if progression.id == character_id then
@@ -68,7 +38,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 		local profiles = {}
 		local selected_profile = nil
 
-		for i = 1, #characters, 1 do
+		for i = 1, #characters do
 			local character = characters[i]
 			local progression = _find_character_progression(character, characters_progression)
 			local profile = ProfileUtils.character_to_profile(character, gear_list, progression)
@@ -161,44 +131,17 @@ ProfilesService.prologue_completed = function (self, character_id)
 end
 
 ProfilesService.set_prologue_completed = function (self, character_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-12, warpins: 1 ---
 	return self._backend_interface.characters:set_prologue_completed(character_id, "true"):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-13, warpins: 1 ---
 		Log.warning("ProfilesService", "set_prologue_completed failed: %s", table.tostring(error, 3))
 
 		return Promise.resolved()
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_name, gender, planet)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-19, warpins: 1 ---
 	return Managers.backend.interfaces.social:suggested_names_by_archetype(archetype_name, gender, planet):next(function (names)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		return Promise.resolved(names)
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		return Promise.resolved({
 			"Alex",
 			"Rikard",
@@ -207,77 +150,27 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 			"Niki",
 			"Marie"
 		})
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 ProfilesService.set_character_height = function (self, character_id, value)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-16, warpins: 1 ---
 	return self._backend_interface.characters:set_character_height(character_id, value):next(function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		return Promise.resolved(character_id)
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-14, warpins: 1 ---
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 ProfilesService.check_name = function (self, name)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-15, warpins: 1 ---
 	return self._backend_interface.characters:check_name(name):next(function (data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		return Promise.resolved(data)
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-14, warpins: 1 ---
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return ProfilesService

@@ -310,7 +310,7 @@ local function create_definitions(settings)
 					local text_color = style.text_color
 					local progress = math.max(hotspot.anim_hover_progress or 0, hotspot.anim_input_progress or 0)
 
-					for i = 2, 4, 1 do
+					for i = 2, 4 do
 						text_color[i] = (hover_color[i] - default_text_color[i]) * progress + default_text_color[i]
 					end
 				end

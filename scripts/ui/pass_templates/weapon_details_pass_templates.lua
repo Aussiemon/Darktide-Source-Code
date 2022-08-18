@@ -26,7 +26,7 @@ local total_bar_length = bar_width * num_bars
 local total_bar_spacing = bar_spacing * (num_bars - 1)
 local total_length = total_bar_spacing + total_bar_length
 
-for i = 1, num_bars, 1 do
+for i = 1, num_bars do
 	local bar_value_id = "bar_value_" .. i
 	local bar_background_id = "bar_background_" .. i
 	local x_offset = (i - 1) * bar_width + bar_spacing * (i - 1)

@@ -53,7 +53,7 @@ EndPlayerView.on_exit = function (self)
 	local ui_renderer = self._ui_renderer
 	local card_widgets = self._card_widgets
 
-	for i = 1, #card_widgets, 1 do
+	for i = 1, #card_widgets do
 		local widget = card_widgets[i]
 
 		if widget.content.icon_load_id then
@@ -163,7 +163,7 @@ EndPlayerView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local carousel_left_border = self._carousel_left_border
 	local carousel_right_border = self._carousel_right_border
 
-	for i = 1, #card_widgets, 1 do
+	for i = 1, #card_widgets do
 		local widget = card_widgets[i]
 		local widget_offset_x = widget.offset[1]
 
@@ -219,7 +219,7 @@ EndPlayerView._create_cards = function (self)
 		return
 	end
 
-	for i = 1, num_cards, 1 do
+	for i = 1, num_cards do
 		local card_data = reward_card_data[i]
 
 		if card_data.kind == "salary" then
@@ -274,7 +274,7 @@ EndPlayerView._create_card_widget = function (self, index, card_data)
 	end
 
 	local blueprint = blueprints[blueprint_name]
-	local pass_template = (blueprint.pass_template_function and blueprint.pass_template_function(self, card_data)) or blueprint.pass_template
+	local pass_template = blueprint.pass_template_function and blueprint.pass_template_function(self, card_data) or blueprint.pass_template
 	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, blueprint.size, blueprint.style)
 	local widget_name = "card_" .. index
 	local widget = UIWidget.init(widget_name, widget_definition)
@@ -298,7 +298,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 	}
 	self._wallet_widgets = wallet_widgets
 
-	for i = 1, #salary_rewards, 1 do
+	for i = 1, #salary_rewards do
 		local salary_reward = salary_rewards[i]
 		local currency = salary_reward.currency
 		local wallet_widget = wallet_widgets[currency]
@@ -313,7 +313,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 
 	local wallets = wallet_data.wallets
 
-	for i = 1, #wallets, 1 do
+	for i = 1, #wallets do
 		local wallet = wallets[i].balance
 		local currency = wallet.type
 		local wallet_widget = wallet_widgets[currency]
@@ -438,7 +438,7 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 			self:_play_sound(UISoundEvents.end_screen_summary_level_up)
 		end
 
-		current_level = (experience_for_next_level <= current_experience and max_level) or next_level - 1
+		current_level = experience_for_next_level <= current_experience and max_level or next_level - 1
 		local current_level_widget = widgets_by_name.current_level_text
 		current_level_widget.content.text = tostring(math.min(current_level, max_level - 1))
 		local next_level_widget = widgets_by_name.next_level_text
@@ -454,7 +454,7 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 	text_params.experience = current_experience
 	text_params.experience_for_next_level = experience_for_next_level
 	character_progress_widget.content.text = Localize("loc_eor_xp_bar_progression_text", true, text_params)
-	local bar_progress = (current_level == max_level and 1) or math.ilerp(experience_for_current_level, experience_for_next_level, current_experience)
+	local bar_progress = current_level == max_level and 1 or math.ilerp(experience_for_current_level, experience_for_next_level, current_experience)
 	local progress_bar_widget = widgets_by_name.progress_bar
 	progress_bar_widget.content.progress = bar_progress
 	local experience_gain_widget = widgets_by_name.experience_gain

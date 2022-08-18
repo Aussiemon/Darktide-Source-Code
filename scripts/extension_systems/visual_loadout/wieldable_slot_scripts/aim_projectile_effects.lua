@@ -56,7 +56,7 @@ AimProjectileEffects._trajectory_settings = function (self, t)
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
 	local is_aiming = action_settings and action_settings.kind == "aim_projectile"
 	local action_start_time = weapon_action_component.start_t
-	local arc_draw_delay = (action_settings and action_settings.arc_draw_delay) or 0
+	local arc_draw_delay = action_settings and action_settings.arc_draw_delay or 0
 	local time_in_action = t - action_start_time
 	local is_timing_right = arc_draw_delay < time_in_action
 
@@ -79,6 +79,7 @@ AimProjectileEffects.post_update = function (self, unit, dt, t)
 	local draw_trajectory, trajectory_settings = self:_trajectory_settings(t)
 
 	if draw_trajectory then
+		-- Nothing
 	elseif self:_trajectory_vfx_is_active() then
 		self:_stop_trajectory_vfx()
 	end
@@ -136,7 +137,7 @@ AimProjectileEffects._update_trajectory_fx = function (self, trajectory_settings
 	local distributed_positions, total_distance = self:_get_points_distrubuted_by_distance(aim_parameters.position, aim_data, position_distance, max_positions)
 
 	if total_distance > 0 then
-		for i = 1, max_positions, 1 do
+		for i = 1, max_positions do
 			local data = distributed_positions[i]
 			local position, _ = self:_calculate_arc_position(data, total_distance, arc_offset)
 
@@ -164,7 +165,7 @@ AimProjectileEffects._get_trajactory_data = function (self, integration_data, ma
 	local number_of_iterations_done = 0
 	local fixed_frame_time = DefaultGameParameters.fixed_time_step
 
-	for i = 1, max_iterations, 1 do
+	for i = 1, max_iterations do
 		local old_position = integration_data.position:unbox()
 
 		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time)
@@ -205,7 +206,7 @@ AimProjectileEffects._get_points_distrubuted_by_distance = function (self, start
 	local current_length = Vector3.length(start_delta)
 	local total_distance = 0
 
-	for i = 1, number_of_dots, 1 do
+	for i = 1, number_of_dots do
 		position_table[i] = {
 			position = current_position,
 			distance = total_distance
@@ -228,14 +229,14 @@ AimProjectileEffects._get_points_distrubuted_by_distance = function (self, start
 
 					break
 				end
-			end
 
-			total_distance = total_distance + current_length
-			next_point = aim_data[current_index].new_position
-			local new_delta = next_point - old_point
-			current_drection = Vector3.normalize(new_delta)
-			current_length = Vector3.length(new_delta)
-			current_position = old_point
+				total_distance = total_distance + current_length
+				next_point = aim_data[current_index].new_position
+				local new_delta = next_point - old_point
+				current_drection = Vector3.normalize(new_delta)
+				current_length = Vector3.length(new_delta)
+				current_position = old_point
+			end
 		end
 	end
 

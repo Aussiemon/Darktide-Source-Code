@@ -248,7 +248,7 @@ BotBehaviorExtension._update_ammo = function (self, unit)
 		local has_the_least_ammo = true
 		local human_player_units = self._side.valid_human_units
 
-		for i = 1, #human_player_units, 1 do
+		for i = 1, #human_player_units do
 			local human_unit = human_player_units[i]
 			local human_ammo_percentage = Ammo.current_total_percentage(human_unit)
 
@@ -262,7 +262,7 @@ BotBehaviorExtension._update_ammo = function (self, unit)
 		if has_the_least_ammo then
 			local perception_component = self._perception_component
 			local target_enemy = perception_component.priority_target_enemy or perception_component.target_enemy
-			local max_ammo_percentage = (target_enemy and NEEDS_AMMO_PERCENTAGE_COMBAT) or NEEDS_AMMO_PERCENTAGE
+			local max_ammo_percentage = target_enemy and NEEDS_AMMO_PERCENTAGE_COMBAT or NEEDS_AMMO_PERCENTAGE
 			pickup_component.needs_ammo = ammo_percentage < max_ammo_percentage
 		end
 	elseif pickup_component.needs_ammo then
@@ -294,7 +294,7 @@ BotBehaviorExtension._update_health_stations = function (self, unit)
 		local players_with_less_health = 0
 		local human_player_units = self._side.valid_human_units
 
-		for i = 1, #human_player_units, 1 do
+		for i = 1, #human_player_units do
 			local human_unit = human_player_units[i]
 			local human_damage_taken = 1 - Health.current_health_percent(human_unit)
 			local human_permanent_damage_taken = Health.permanent_damage_taken_percent(human_unit)
@@ -319,7 +319,7 @@ BotBehaviorExtension._verify_target_ally_aid_destination = function (self, unit)
 	local interaction_unit = behavior_component.interaction_unit
 	local target_ally = perception_component.target_ally
 
-	if interaction_unit ~= target_ally or (interaction_unit == nil and target_ally == nil) then
+	if interaction_unit ~= target_ally or interaction_unit == nil and target_ally == nil then
 		return
 	end
 
@@ -383,7 +383,7 @@ BotBehaviorExtension._update_movement_target = function (self, unit, dt, t)
 			if should_stop then
 				navigation_extension:stop()
 			else
-				local path_callback = (cover_position and callback(self, "cb_cover_path_result", cover_hash)) or nil
+				local path_callback = cover_position and callback(self, "cb_cover_path_result", cover_hash) or nil
 
 				navigation_extension:move_to(override_destination, path_callback)
 			end
@@ -399,7 +399,7 @@ BotBehaviorExtension._update_movement_target = function (self, unit, dt, t)
 		local target_ally_needs_aid = perception_component.target_ally_needs_aid
 		local need_to_stop = target_ally_need_type == "in_need_of_attention_stop"
 
-		if not follow_component.needs_destination_refresh and (self._follow_timer < 0 or need_to_stop or (target_ally_needs_aid and not is_interacting and navigation_extension:destination_reached())) then
+		if not follow_component.needs_destination_refresh and (self._follow_timer < 0 or need_to_stop or target_ally_needs_aid and not is_interacting and navigation_extension:destination_reached()) then
 			follow_component.needs_destination_refresh = true
 		end
 
@@ -447,7 +447,7 @@ BotBehaviorExtension._update_cover = function (self, unit, self_position, follow
 		local num_cover_positions, cover_positions = self:_find_cover(active_threats, self_position)
 		local found_position, found_hash, occupied_cover_hash, occupied_cover_position = nil
 
-		for i = 1, num_cover_positions, 1 do
+		for i = 1, num_cover_positions do
 			local position = cover_positions[i]
 			local position_hash = _to_hash(position)
 
@@ -537,7 +537,7 @@ BotBehaviorExtension._in_line_of_fire = function (self, self_unit, self_position
 
 	for attacker_unit, victim_unit in pairs(take_cover_targets) do
 		local already_in_cover_from = taking_cover_from[attacker_unit]
-		local width = (already_in_cover_from and LINE_OF_FIRE_CHECK_STICKY_WIDTH) or LINE_OF_FIRE_CHECK_WIDTH
+		local width = already_in_cover_from and LINE_OF_FIRE_CHECK_STICKY_WIDTH or LINE_OF_FIRE_CHECK_WIDTH
 
 		if ALIVE[victim_unit] and (victim_unit == self_unit or _line_of_fire_check(POSITION_LOOKUP[attacker_unit], POSITION_LOOKUP[victim_unit], self_position, width, LINE_OF_FIRE_CHECK_LENGTH)) then
 			TAKE_COVER_TEMP_TABLE[attacker_unit] = victim_unit
@@ -619,9 +619,9 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 	local self_unit = self._unit
 	local bot_group = self._bot_group
 	local health_slot_pickup_order = bot_group:pickup_order(self_unit, "slot_healthkit")
-	local health_slot_pickup_order_unit = (health_slot_pickup_order and health_slot_pickup_order.unit) or nil
+	local health_slot_pickup_order_unit = health_slot_pickup_order and health_slot_pickup_order.unit or nil
 	local potion_slot_pickup_order = bot_group:pickup_order(self_unit, "slot_potion")
-	local potion_slot_pickup_order_unit = (potion_slot_pickup_order and potion_slot_pickup_order.unit) or nil
+	local potion_slot_pickup_order_unit = potion_slot_pickup_order and potion_slot_pickup_order.unit or nil
 	local pickup_component = self._pickup_component
 	local health_pickup = pickup_component.health_deployable
 	local mule_pickup = pickup_component.mule_pickup

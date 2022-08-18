@@ -56,5 +56,3 @@ GLOBAL_RESOURCES = {
 	"content/pickups/pickup_assets",
 	"content/weapons/weapon_assets"
 }
-
-return

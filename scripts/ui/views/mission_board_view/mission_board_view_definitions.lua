@@ -264,13 +264,13 @@ local special_widgets_definition = {
 			style_id = "info_plate"
 		},
 		{
-			value = "99999 \ue032",
+			value = "99999 ",
 			value_id = "tag_xp",
 			pass_type = "text",
 			style_id = "tag_xp"
 		},
 		{
-			value = "99999 \ue031",
+			value = "99999 ",
 			value_id = "tag_reward",
 			pass_type = "text",
 			style_id = "tag_reward"

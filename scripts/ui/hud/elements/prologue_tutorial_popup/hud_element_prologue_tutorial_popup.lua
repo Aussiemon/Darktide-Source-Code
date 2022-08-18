@@ -99,7 +99,7 @@ HudElementPrologueTutorialPopup._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPrologueTutorialPopupSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -110,7 +110,7 @@ HudElementPrologueTutorialPopup._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPrologueTutorialPopupSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

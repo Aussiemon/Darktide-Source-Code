@@ -13,7 +13,7 @@ TalentsView.init = function (self, settings, context)
 	if not context then
 		self._preview_player = self:_player()
 	else
-		self._preview_player = (context.debug and Managers.player:local_player(1)) or context.player
+		self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	end
 
 	TalentsView.super.init(self, Definitions, settings)
@@ -139,7 +139,7 @@ TalentsView._update_focused_talent = function (self)
 	local focused_talent_name = ""
 	local focused_talent_description = ""
 
-	for i = 1, #talent_groups, 1 do
+	for i = 1, #talent_groups do
 		local talent_group = talent_groups[i]
 		local group_widget = talent_group.group_widget
 		local group_hotspot = group_widget and group_widget.content.hotspot
@@ -147,7 +147,7 @@ TalentsView._update_focused_talent = function (self)
 		local talent_widgets = talent_group.talent_widgets
 		local group_is_focused = group_hotspot and group_hotspot.is_hover
 
-		for j = 1, #talent_widgets, 1 do
+		for j = 1, #talent_widgets do
 			local talent_widget = talent_widgets[j]
 			local content = talent_widget.content
 			content.focused = group_focused_last_frame
@@ -211,7 +211,7 @@ TalentsView._select_widget_in_group = function (self, group, selected_widget)
 	local talent_widgets = group.talent_widgets
 	local selected_talents = self._selected_talents
 
-	for i = 1, #talent_widgets, 1 do
+	for i = 1, #talent_widgets do
 		local widget = talent_widgets[i]
 		local widget_content = widget.content
 		local hotspot = widget_content.hotspot
@@ -300,7 +300,7 @@ TalentsView._populate_talents_data = function (self, archetype, talents, special
 	local talent_groups = {}
 	local group_index = 0
 
-	for i = 1, #talent_group_definitions, 1 do
+	for i = 1, #talent_group_definitions do
 		local group_defintion = talent_group_definitions[i]
 		local required_level = group_defintion.required_level or 0
 		local is_locked = player_level < required_level
@@ -352,7 +352,7 @@ TalentsView._populate_talents_data = function (self, archetype, talents, special
 			group_index = group_index + 1
 			local talent_widgets = {}
 
-			for j = 1, #group_talents, 1 do
+			for j = 1, #group_talents do
 				local talent_name = group_talents[j]
 				local talent = talents[talent_name]
 				local callback_group_index = group_widget and group_index

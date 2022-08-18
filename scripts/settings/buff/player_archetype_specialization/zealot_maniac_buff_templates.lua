@@ -190,7 +190,7 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 		template_data.last_update_t = 0
 		template_data.damage_pool = {}
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			local damage_pool_slice = {
 				ticks = 0,
 				current_damage = 0
@@ -205,7 +205,7 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 		local recuperate_percentage = talent_settings.mixed_3.recuperate_percentage
 		damage_amount = damage_amount * recuperate_percentage
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			local slice = damage_pool[i]
 
 			if slice.ticks == 0 then
@@ -243,7 +243,7 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 			local active = false
 			local total_heal = 0
 
-			for i = 1, 10, 1 do
+			for i = 1, 10 do
 				local slice = damage_pool[i]
 				local ticks = slice.ticks
 

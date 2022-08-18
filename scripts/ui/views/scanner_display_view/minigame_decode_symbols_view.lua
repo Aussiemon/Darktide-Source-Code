@@ -36,7 +36,7 @@ end
 MinigameDecodeSymbolsView.draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local grid_widgets = self._grid_widgets
 
-	for i = 1, #grid_widgets, 1 do
+	for i = 1, #grid_widgets do
 		local widget = grid_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
@@ -60,8 +60,8 @@ MinigameDecodeSymbolsView._create_symbol_widgets = function (self)
 		local spacing = ScannerDisplayViewSettings.decode_symbol_spacing
 		local grid_widgets = {}
 
-		for i = 1, stage_amount, 1 do
-			for j = 1, symbols_per_stage, 1 do
+		for i = 1, stage_amount do
+			for j = 1, symbols_per_stage do
 				local widget_name = "symbol_"
 				local symbol_id = symbols[#grid_widgets + 1]
 

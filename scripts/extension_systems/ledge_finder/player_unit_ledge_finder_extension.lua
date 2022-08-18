@@ -21,10 +21,10 @@ PlayerUnitLedgeFinderExtension.init = function (self, extension_init_context, un
 	local ledge_ring_buffer = Script.new_array(RING_BUFFER_SIZE)
 	self._ledge_ring_buffer = ledge_ring_buffer
 
-	for i = 1, RING_BUFFER_SIZE, 1 do
+	for i = 1, RING_BUFFER_SIZE do
 		local ledge_data = Script.new_array(MAX_NUM_LEDGE_TRACKING)
 
-		for j = 1, MAX_NUM_LEDGE_TRACKING, 1 do
+		for j = 1, MAX_NUM_LEDGE_TRACKING do
 			ledge_data[j] = self:_new_ledge_data()
 		end
 
@@ -118,7 +118,7 @@ PlayerUnitLedgeFinderExtension._find_potential_ledge_points = function (self, or
 	local point_found = nil
 	local raycast_object = self._raycast_object
 
-	for ray_index = 1, NUM_RAYS, 1 do
+	for ray_index = 1, NUM_RAYS do
 		local ray_pos = origin + up_vector * HEIGHT_STEP * ray_index
 		local hit, position, distance = Raycast.cast(raycast_object, ray_pos, ray_direction, RAY_LENGTH)
 		local ray_result_index = (ray_index - 1) * NUM_ENTRIES_PER_RAY
@@ -132,7 +132,7 @@ PlayerUnitLedgeFinderExtension._find_potential_ledge_points = function (self, or
 	local player_height = ledge_finder_tweak_data.player_height
 	local player_width = ledge_finder_tweak_data.player_width
 
-	for eval_ray_index = 1, NUM_RAYS, 1 do
+	for eval_ray_index = 1, NUM_RAYS do
 		local eval_strided_array_i = (eval_ray_index - 1) * NUM_ENTRIES_PER_RAY
 		local eval_hit = RAY_RESULTS[eval_strided_array_i + HIT]
 		local eval_position = RAY_RESULTS[eval_strided_array_i + POSITION]
@@ -140,7 +140,7 @@ PlayerUnitLedgeFinderExtension._find_potential_ledge_points = function (self, or
 		local potential_ledge_point = false
 
 		if eval_hit then
-			for comp_ray_index = eval_ray_index + 1, NUM_RAYS, 1 do
+			for comp_ray_index = eval_ray_index + 1, NUM_RAYS do
 				local comp_strided_array_i = (comp_ray_index - 1) * NUM_ENTRIES_PER_RAY
 				local comp_hit = RAY_RESULTS[comp_strided_array_i + HIT]
 				local comp_distance = RAY_RESULTS[comp_strided_array_i + DISTANCE]
@@ -192,13 +192,13 @@ PlayerUnitLedgeFinderExtension._pair_potential_ledge_points = function (self, le
 	local ledge_data = ledges.ledge_data
 	local num_left_ledge_points = #potential_left_ledge_points
 
-	for i = 1, num_left_ledge_points, 1 do
+	for i = 1, num_left_ledge_points do
 		local eval_point = potential_left_ledge_points[i]
 		local best_find_j, best_find_point = nil
 		local best_find_rad = math.huge
 		local num_potential_right_ledge_points = #potential_right_ledge_points
 
-		for j = 1, num_potential_right_ledge_points, 1 do
+		for j = 1, num_potential_right_ledge_points do
 			local comp_point = potential_right_ledge_points[j]
 			local dir = Vector3.normalize(eval_point - comp_point)
 			local dot = math.clamp(Vector3.dot(dir, up), -1, 1)
@@ -225,7 +225,7 @@ PlayerUnitLedgeFinderExtension._pair_potential_ledge_points = function (self, le
 			local material_unit = right_unit or left_unit
 
 			if material_unit then
-				local impact_position = (material_unit == right_unit and best_find_point) or eval_point
+				local impact_position = material_unit == right_unit and best_find_point or eval_point
 				data.material_or_nil = MaterialQuery.query_unit_material(material_unit, impact_position, down)
 			else
 				data.material_or_nil = nil
@@ -242,7 +242,7 @@ PlayerUnitLedgeFinderExtension._finalize_ledges = function (self, ledges, player
 	local player_position_flat = Vector3.flat(player_position)
 	local up = Vector3.up()
 
-	for i = 1, num_ledges, 1 do
+	for i = 1, num_ledges do
 		local data = ledge_data[i]
 		local left = data.left:unbox()
 		local right = data.right:unbox()

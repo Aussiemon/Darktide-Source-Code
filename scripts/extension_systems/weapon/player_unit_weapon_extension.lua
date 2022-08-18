@@ -736,7 +736,7 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 	local lookup = buff_target_component_lookups[buff_target]
 	local buff_extension = self._buff_extension
 
-	for i = 1, num_buffs, 1 do
+	for i = 1, num_buffs do
 		local buff_template = buff_list[i]
 		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template, t, "item_slot_name", slot_name)
 		local component_name = lookup[i]
@@ -770,7 +770,7 @@ PlayerUnitWeaponExtension._remove_buffs = function (self, buffs, buff_target, in
 	local num_buff_slots = #lookup
 	local buff_extension = self._buff_extension
 
-	for i = 1, num_buff_slots, 1 do
+	for i = 1, num_buff_slots do
 		local component_name = lookup[i]
 		local component_index = inventory_slot_component[component_name]
 
@@ -782,7 +782,7 @@ PlayerUnitWeaponExtension._remove_buffs = function (self, buffs, buff_target, in
 	local server_buff_indexes = self._server_buff_indexes and self._server_buff_indexes[buff_target]
 
 	if server_buff_indexes then
-		for i = 1, #server_buff_indexes, 1 do
+		for i = 1, #server_buff_indexes do
 			local local_index = server_buff_indexes[i]
 
 			buff_extension:remove_externally_controlled_buff(local_index, nil)
@@ -896,18 +896,13 @@ PlayerUnitWeaponExtension._update_powered_weapon_intensity = function (self, dt,
 		local p2 = 1
 		local segment_progress = 0
 
-		for i = 1, #powered_weapon_intensity, 1 do
+		for i = 1, #powered_weapon_intensity do
 			local segment = powered_weapon_intensity[i]
 			local segment_t = segment.t
 
 			if action_t <= segment_t then
 				p2 = segment.intensity
-
-				if segment_t == 0 then
-					segment_progress = 1
-				else
-					segment_progress = action_t / segment_t
-				end
+				segment_progress = segment_t == 0 and 1 or action_t / segment_t
 
 				break
 			else
@@ -937,7 +932,7 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	end
 
 	local weapon_action_speed_mod = self._weapon_action_movement:move_speed_modifier(t)
-	local static_speed_mod = (weapon_template and weapon_template.static_speed_mod) or 1
+	local static_speed_mod = weapon_template and weapon_template.static_speed_mod or 1
 
 	return alternate_fire_speed_mod * weapon_action_speed_mod * static_speed_mod
 end

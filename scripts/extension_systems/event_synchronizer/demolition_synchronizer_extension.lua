@@ -42,7 +42,7 @@ end
 DemolitionSynchronizerExtension._seperate_objective_units = function (self, units)
 	local target_units = {}
 
-	for i = 1, #units, 1 do
+	for i = 1, #units do
 		local unit = units[i]
 		local target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
 
@@ -66,13 +66,13 @@ DemolitionSynchronizerExtension.register_connected_units = function (self, stage
 	if segment_stages then
 		local unit_list = {}
 
-		for i = 1, #segment_stages, 1 do
+		for i = 1, #segment_stages do
 			table.append(unit_list, registered_units[segment_stages[i]])
 		end
 
 		self._segment_units = unit_list
 
-		for i = 1, #unit_list, 1 do
+		for i = 1, #unit_list do
 			local trigger_unit = unit_list[i]
 
 			if ScriptUnit.has_extension(trigger_unit, "trigger_system") then
@@ -104,7 +104,7 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 			stage = stage - length
 			local segment = {}
 
-			for i = 1, length, 1 do
+			for i = 1, length do
 				segment[i] = stage + i
 			end
 
@@ -141,7 +141,7 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 	for s = math.min(#segments, self._total_segments), 1, -1 do
 		local segment = segments[s]
 
-		for i = 1, #segment, 1 do
+		for i = 1, #segment do
 			stage_order[#stage_order + 1] = segment[i]
 			stage_delay[#stage_delay + 1] = self._stage_end_delay
 		end
@@ -159,7 +159,7 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 end
 
 DemolitionSynchronizerExtension._stage_contains_corruptor = function (self, stage_units)
-	for i = 1, #stage_units, 1 do
+	for i = 1, #stage_units do
 		if ScriptUnit.has_extension(stage_units[i], "corruptor_system") then
 			return true
 		end
@@ -186,7 +186,7 @@ DemolitionSynchronizerExtension.finished_stage = function (self)
 	if self._is_server then
 		local target_units = self._target_units
 
-		for i = 1, #target_units, 1 do
+		for i = 1, #target_units do
 			local target_unit = target_units[i]
 
 			Component.event(target_unit, "demolition_stage_finished")
@@ -205,7 +205,7 @@ DemolitionSynchronizerExtension.activate_units = function (self)
 		local segment_units = self._segment_units
 
 		if segment_units then
-			for i = 1, #segment_units, 1 do
+			for i = 1, #segment_units do
 				local target_unit = segment_units[i]
 
 				Component.event(target_unit, "demolition_segment_start")
@@ -216,7 +216,7 @@ DemolitionSynchronizerExtension.activate_units = function (self)
 
 		local target_units = self._target_units
 
-		for i = 1, #target_units, 1 do
+		for i = 1, #target_units do
 			local target_unit = target_units[i]
 
 			Component.event(target_unit, "demolition_stage_start")

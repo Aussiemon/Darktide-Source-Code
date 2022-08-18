@@ -18,7 +18,7 @@ PropAnimationExtension.init = function (self, extension_init_context, unit, exte
 	local next_seed = math.random_seed()
 	local num_seeds, seeds = Unit.animation_get_seeds(unit)
 
-	for i = 1, num_seeds, 1 do
+	for i = 1, num_seeds do
 		local seed = nil
 		next_seed, seed = math.random_seed(next_seed)
 		seeds[i] = seed
@@ -44,7 +44,7 @@ PropAnimationExtension.setup_from_component = function (self, animation_variable
 
 	local variables = self._variables
 
-	for i = 1, #animation_variables, 1 do
+	for i = 1, #animation_variables do
 		local variable_name = animation_variables[i]
 		local variable_index = Unit.animation_find_variable(unit, variable_name)
 		variables[variable_name] = variable_index

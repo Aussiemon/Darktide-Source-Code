@@ -1,8 +1,8 @@
 local SharedOverheatAndWarpChargeFunctions = {
 	add_immediate = function (charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
-		fassert(not use_charge or (use_charge and charge_level), "[SharedOverheatAndWarpChargeFunctions][add_immediate] use_charge parameter specified without a charge_level!")
+		fassert(not use_charge or use_charge and charge_level, "[SharedOverheatAndWarpChargeFunctions][add_immediate] use_charge parameter specified without a charge_level!")
 
-		local added_percentage = (use_charge and add_percentage * charge_level) or add_percentage
+		local added_percentage = use_charge and add_percentage * charge_level or add_percentage
 		local new_percentage = current_percentage + added_percentage
 		local clamped_percentage = math.clamp(new_percentage, 0, 1)
 		local new_state = nil
@@ -38,7 +38,7 @@ local SharedOverheatAndWarpChargeFunctions = {
 	end,
 	update = function (dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate_modifier, high_threshold_decay_rate_modifier, critical_threshold_decay_rate_modifier, default_threshold_decay_rate_modifier)
 		local rate_modifier = nil
-		rate_modifier = (low_threshold < current_percentage and current_percentage <= high_threshold and low_threshold_decay_rate_modifier) or (high_threshold < current_percentage and current_percentage <= critical_threshold and high_threshold_decay_rate_modifier) or (critical_threshold < current_percentage and critical_threshold_decay_rate_modifier) or default_threshold_decay_rate_modifier or 1
+		rate_modifier = low_threshold < current_percentage and current_percentage <= high_threshold and low_threshold_decay_rate_modifier or high_threshold < current_percentage and current_percentage <= critical_threshold and high_threshold_decay_rate_modifier or critical_threshold < current_percentage and critical_threshold_decay_rate_modifier or default_threshold_decay_rate_modifier or 1
 		local percentage_decrease = 1 / auto_vent_duration * dt * rate_modifier
 		local new_percentage = math.clamp(current_percentage - percentage_decrease, 0, 1)
 

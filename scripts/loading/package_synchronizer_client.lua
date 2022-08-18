@@ -50,7 +50,7 @@ PackageSynchronizerClient.init_item_definitions = function (self, item_definitio
 	self._item_definitions = item_definitions
 	local pending_peers = self._pending_peers
 
-	for i = 1, #self._pending_peers, 1 do
+	for i = 1, #self._pending_peers do
 		local peer_id = pending_peers[i]
 
 		self:add_peer(peer_id)
@@ -158,7 +158,7 @@ PackageSynchronizerClient._resolve_profile_packages = function (self, profile)
 	local sound_dependencies = {}
 	local particle_dependencies = {}
 
-	for i = 1, #PlayerPackageAliases, 1 do
+	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
 		profile_packages[alias] = {
 			dependencies = {},
@@ -351,11 +351,11 @@ end
 PackageSynchronizerClient._resolve_specialization = function (self, archetype, sound_dependencies, particle_dependencies)
 	local sound_resources, particle_resources = SpecializationResourceDependencies.generate(archetype)
 
-	for i = 1, #sound_resources, 1 do
+	for i = 1, #sound_resources do
 		sound_dependencies[sound_resources[i]] = false
 	end
 
-	for i = 1, #particle_resources, 1 do
+	for i = 1, #particle_resources do
 		particle_dependencies[particle_resources[i]] = false
 	end
 end
@@ -383,7 +383,7 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 			local peer_packages = data.peer_packages
 
 			for local_player_id, player_packages in pairs(peer_packages) do
-				for i = 1, #required_package_aliases, 1 do
+				for i = 1, #required_package_aliases do
 					local alias = required_package_aliases[i]
 					local package_data = player_packages[alias]
 					local previous_state = package_data.state
@@ -398,7 +398,7 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 							hosted_synchronizer_host:alias_loading_complete(self._peer_id, peer_id, local_player_id, alias)
 						else
 							local alias_index = table.index_of(PlayerPackageAliases, alias)
-							local alias_version = (player_alias_versions[peer_id] and player_alias_versions[peer_id][local_player_id]) or 1
+							local alias_version = player_alias_versions[peer_id] and player_alias_versions[peer_id][local_player_id] or 1
 
 							RPC.rpc_alias_loading_complete(self._host_channel_id, self._peer_id, peer_id, local_player_id, alias_index, alias_version)
 						end
@@ -418,7 +418,7 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 				local peer_packages = data.peer_packages
 
 				for local_player_id, player_packages in pairs(peer_packages) do
-					for i = 1, #remaining_package_aliases, 1 do
+					for i = 1, #remaining_package_aliases do
 						local alias = remaining_package_aliases[i]
 						local package_data = player_packages[alias]
 
@@ -463,7 +463,7 @@ PackageSynchronizerClient._load_dependencies = function (self, dependencies, pri
 end
 
 local function _unload_packages(package_ids)
-	for i = 1, #package_ids, 1 do
+	for i = 1, #package_ids do
 		local id = package_ids[i]
 
 		Managers.package:release(id)
@@ -604,7 +604,7 @@ end
 PackageSynchronizerClient.enable_peers = function (self, peer_ids)
 	local packages = self._packages
 
-	for i = 1, #peer_ids, 1 do
+	for i = 1, #peer_ids do
 		local peer_id = peer_ids[i]
 
 		if packages[peer_id] then
