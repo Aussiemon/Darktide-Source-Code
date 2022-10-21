@@ -21,36 +21,52 @@ local function _link_unit(world, item_unit, target_unit, attach_node_name, map_n
 	World.link_unit(world, item_unit, 1, target_unit, attach_node_index, map_nodes)
 end
 
+local attach_settings_temp = {
+	spawn_with_extensions = false,
+	from_script_component = false,
+	is_minion = true
+}
+
 local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
 	local items = item_slot_data.items
 	local num_items = #items
 	local new_seed, item_index = math.next_random(random_seed, 1, num_items)
-	local item_data = item_definitions[items[item_index]]
+	local item_name = items[item_index]
+	local item_data = item_definitions[item_name]
 	local attach_node_name = item_data.unwielded_attach_node or item_data.attach_node
 	local attach_node = nil
 
 	if tonumber(attach_node_name) ~= nil then
 		attach_node = tonumber(attach_node_name)
 	else
-		fassert(Unit.has_node(unit, attach_node_name), "[MinionVisualLoadoutExtension] Base unit does not have attach node %q to accomodate item %q.", attach_node_name, items[item_index])
-
 		attach_node = Unit.node(unit, item_data.unwielded_attach_node or item_data.attach_node)
 	end
 
-	local attach_settings = {
-		from_script_component = false,
-		spawn_with_extensions = false,
-		is_minion = true,
-		world = world,
-		unit_spawner = Managers.state.unit_spawner,
-		character_unit = unit,
-		item_definitions = item_definitions,
-		attach_pose = Unit.world_pose(unit, attach_node),
-		lod_group = lod_group,
-		lod_shadow_group = lod_shadow_group
-	}
 	local extract_attachment_units_bind_poses = false
-	local item_unit, attachments, _, _ = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit, extract_attachment_units_bind_poses)
+	local item_unit, attachments = nil
+
+	if DEDICATED_SERVER and not item_slot_data.is_weapon then
+		item_unit, attachments = nil
+	else
+		attach_settings_temp.world = world
+		attach_settings_temp.unit_spawner = Managers.state.unit_spawner
+		attach_settings_temp.character_unit = unit
+		attach_settings_temp.item_definitions = item_definitions
+		attach_settings_temp.attach_pose = Unit.world_pose(unit, attach_node)
+		attach_settings_temp.lod_group = lod_group
+		attach_settings_temp.lod_shadow_group = lod_shadow_group
+
+		if item_slot_data.spawn_with_extensions then
+			attach_settings_temp.extension_manager = Managers.state.extension
+			attach_settings_temp.spawn_with_extensions = true
+		else
+			attach_settings_temp.extension_manager = nil
+			attach_settings_temp.spawn_with_extensions = nil
+		end
+
+		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, attach_settings_temp, unit, extract_attachment_units_bind_poses)
+	end
+
 	local drop_on_death = item_slot_data.drop_on_death
 	local slot_entry = {
 		visible = true,
@@ -89,7 +105,6 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 	self._unit = unit
 	self._world = world
 	self._wwise_world = extension_init_context.wwise_world
-	self._soft_cap_out_of_bounds_units = extension_init_context.soft_cap_out_of_bounds_units
 	local slots = {}
 	self._slots = slots
 	self._wielded_slot_name = nil
@@ -105,20 +120,27 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 	self._inventory = inventory
 	local material_override_slots = {}
 	self._material_override_slots = material_override_slots
+	local inventory_slots = inventory.slots
 
-	for slot_name, slot_data in pairs(inventory) do
-		if slot_name ~= "gib_overrides" then
-			if slot_data.is_material_override_slot then
-				material_override_slots[slot_name] = slot_data
-			elseif slot_data.is_weapon then
-				slots[slot_name], random_seed = _create_slot_entry(unit, nil, nil, world, slot_data, random_seed, item_definitions)
-			else
-				slots[slot_name], random_seed = _create_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, item_definitions)
-			end
+	for slot_name, slot_data in pairs(inventory_slots) do
+		local slot_unit = nil
 
-			if slot_data.starts_invisible then
-				self:_set_slot_visibility(slot_name, false)
-			end
+		if slot_data.is_material_override_slot then
+			material_override_slots[slot_name] = slot_data
+		elseif slot_data.is_weapon then
+			slots[slot_name], random_seed = _create_slot_entry(unit, nil, nil, world, slot_data, random_seed, item_definitions)
+			slot_unit = slots[slot_name].unit
+		else
+			slots[slot_name], random_seed = _create_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, item_definitions)
+			slot_unit = slots[slot_name].unit
+		end
+
+		if slot_data.starts_invisible then
+			self:_set_slot_visibility(slot_name, false)
+		end
+
+		if slot_unit then
+			Managers.state.out_of_bounds:register_soft_oob_unit(slot_unit, self, "_update_soft_oob")
 		end
 	end
 
@@ -139,18 +161,21 @@ end
 
 MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 	local breed = self._breed
-	local tint_color = SideColor.minion_color(unit)
 
-	if tint_color then
-		local _, r, g, b = Quaternion.to_elements(tint_color)
-		local vector_color = Vector3(r, g, b)
-		local include_children = true
-		local material_variables = breed.side_color_material_variables
+	if not DEDICATED_SERVER then
+		local tint_color = SideColor.minion_color(unit)
 
-		for i = 1, #material_variables do
-			local variable_name = material_variables[i]
+		if tint_color then
+			local _, r, g, b = Quaternion.to_elements(tint_color)
+			local vector_color = Vector3(r, g, b)
+			local include_children = true
+			local material_variables = breed.side_color_material_variables
 
-			Unit.set_vector3_for_materials(unit, variable_name, vector_color, include_children)
+			for i = 1, #material_variables do
+				local variable_name = material_variables[i]
+
+				Unit.set_vector3_for_materials(unit, variable_name, vector_color, include_children)
+			end
 		end
 	end
 
@@ -158,10 +183,10 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 	local use_wounds = breed.use_wounds
 
 	if gib_template then
-		local gib_overrides_or_nil = self._inventory.gib_overrides
+		local gib_variations_or_nil = self._inventory.gib_variations
 		local random_seed = self._random_seed
 		local wounds_extension_or_nil = use_wounds and ScriptUnit.extension(unit, "wounds_system") or nil
-		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_overrides_or_nil, wounds_extension_or_nil)
+		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_variations_or_nil, wounds_extension_or_nil)
 	end
 end
 
@@ -186,7 +211,10 @@ MinionVisualLoadoutExtension.destroy = function (self)
 
 			local item_unit = slot_data.unit
 
-			unit_spawner_manager:mark_for_deletion(item_unit)
+			if item_unit then
+				unit_spawner_manager:mark_for_deletion(item_unit)
+				Managers.state.out_of_bounds:unregister_soft_oob_unit(item_unit, self)
+			end
 		end
 	end
 
@@ -201,34 +229,21 @@ MinionVisualLoadoutExtension.destroy = function (self)
 	end
 end
 
-MinionVisualLoadoutExtension.update = function (self, unit, dt, t, ...)
-	local breed_name = self._breed_name
-	local minion_gibbing = self._minion_gibbing
-	local soft_cap_out_of_bounds_units = self._soft_cap_out_of_bounds_units
-
-	if minion_gibbing then
-		minion_gibbing:update(breed_name, soft_cap_out_of_bounds_units)
-	end
-
-	local unit_is_local = self._unit_is_local
-	local is_server = self._is_server
-
+MinionVisualLoadoutExtension._update_soft_oob = function (self, unit)
 	for slot_name, slot_data in pairs(self._slots) do
-		local item_unit = slot_data.unit
-
-		if soft_cap_out_of_bounds_units[item_unit] then
-			if unit_is_local then
-				Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, despawning (%s).", breed_name, item_unit, tostring(Unit.world_position(item_unit, 1)))
+		if unit == slot_data.unit then
+			if self._unit_is_local then
+				Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, despawning (%s).", self._breed_name, unit, tostring(Unit.world_position(unit, 1)))
 				self:_unequip_slot(slot_name)
-			elseif is_server then
-				Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, despawning (%s).", breed_name, item_unit, tostring(Unit.world_position(item_unit, 1)))
+			elseif self._is_server then
+				Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, despawning (%s).", self._breed_name, unit, tostring(Unit.world_position(unit, 1)))
 				self:unequip_slot(slot_name)
 			else
-				local dropped_actor = Unit.actor(item_unit, "dropped")
+				local dropped_actor = Unit.actor(unit, "dropped")
 
 				if dropped_actor then
-					Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, destroying actor (%s).", breed_name, item_unit, tostring(Unit.world_position(item_unit, 1)))
-					Unit.destroy_actor(item_unit, dropped_actor)
+					Log.info("MinionVisualLoadoutExtension", "%s's %s is out-of-bounds, destroying actor (%s).", self._breed_name, unit, tostring(Unit.world_position(unit, 1)))
+					Unit.destroy_actor(unit, dropped_actor)
 				end
 			end
 		end
@@ -247,6 +262,10 @@ MinionVisualLoadoutExtension.inventory = function (self)
 	return self._inventory
 end
 
+MinionVisualLoadoutExtension.inventory_slots = function (self)
+	return self._inventory.slots
+end
+
 MinionVisualLoadoutExtension.set_unit_local = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(CLIENT_RPCS))
@@ -261,18 +280,9 @@ end
 MinionVisualLoadoutExtension._wield_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
-
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to wield non-existing slot %q.", slot_name)
-
 	local slot_state = slot_data.state
-
-	fassert(slot_state == "unwielded", "[MinionVisualLoadoutExtension] Tried to wield slot %q whilst it was in state %q.", slot_name, slot_state)
-
 	local item_data = slot_data.item_data
 	local wielded_node_name = item_data.wielded_attach_node
-
-	fassert(wielded_node_name, "[MinionVisualLoadoutExtension] Tried to wield slot %q without a wielded attachment node.", slot_name)
-
 	local current_wielded_slot_name = self._wielded_slot_name
 
 	if current_wielded_slot_name then
@@ -296,7 +306,6 @@ MinionVisualLoadoutExtension.has_slot = function (self, slot_name)
 end
 
 MinionVisualLoadoutExtension.wield_slot = function (self, slot_name)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"wield_slot\" directly!")
 	self:_wield_slot(slot_name)
 
 	local game_object_id = self._game_object_id
@@ -308,18 +317,9 @@ end
 MinionVisualLoadoutExtension._unwield_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
-
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to unwield non-existing slot %q.", slot_name)
-
 	local slot_state = slot_data.state
-
-	fassert(slot_state == "wielded", "[MinionVisualLoadoutExtension] Tried to unwield slot %q whilst it was in state %q.", slot_name, slot_state)
-
 	local item_data = slot_data.item_data
 	local unwielded_node_name = item_data.unwielded_attach_node
-
-	fassert(unwielded_node_name, "[MinionVisualLoadoutExtension] Tried to unwield slot %q without an unwielded attachment node.", slot_name)
-
 	local world = self._world
 	local item_unit = slot_data.unit
 	local unit = self._unit
@@ -333,7 +333,6 @@ MinionVisualLoadoutExtension._unwield_slot = function (self, slot_name)
 end
 
 MinionVisualLoadoutExtension.unwield_slot = function (self, slot_name)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"unwield_slot\" directly!")
 	self:_unwield_slot(slot_name)
 
 	local game_object_id = self._game_object_id
@@ -345,12 +344,7 @@ end
 MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
-
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to drop non-existing slot %q.", slot_name)
-
 	local slot_state = slot_data.state
-
-	fassert(slot_state == "wielded" or slot_state == "unwielded", "[MinionVisualLoadoutExtension] Tried to drop slot %q whilst it was in state %q.", slot_name, slot_state)
 
 	if self._wielded_slot_name == slot_name then
 		self._wielded_slot_name = nil
@@ -382,7 +376,8 @@ MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 
 	if slot_state == "wielded" then
 		local random_radius = 0.25
-		local x, y = math.random_inside_unit_circle()
+		local x = math.random() * 2 - 1
+		local y = math.random() * 2 - 1
 		local random_offset = Vector3(x * random_radius, y * random_radius, 0)
 		local direction = Vector3.up() + random_offset
 		local speed = 5
@@ -403,7 +398,6 @@ MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 end
 
 MinionVisualLoadoutExtension.drop_slot = function (self, slot_name)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"drop_slot\" directly!")
 	self:_drop_slot(slot_name)
 
 	local game_object_id = self._game_object_id
@@ -417,13 +411,20 @@ MinionVisualLoadoutExtension._send_on_death_event = function (self)
 		if slot_data.state ~= "unequipped" then
 			local item_unit = slot_data.unit
 
-			Unit.flow_event(item_unit, "on_death")
+			if item_unit then
+				Unit.flow_event(item_unit, "on_death")
+			end
+		end
+
+		if slot_data.attachments then
+			for _, attachment in pairs(slot_data.attachments) do
+				Unit.flow_event(attachment, "on_death")
+			end
 		end
 	end
 end
 
 MinionVisualLoadoutExtension.send_on_death_event = function (self)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"send_on_death_event\" directly!")
 	self:_send_on_death_event()
 
 	local game_object_id = self._game_object_id
@@ -434,15 +435,19 @@ end
 MinionVisualLoadoutExtension._attach_slot_to_gib = function (self, slot_name, gib_unit)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
-
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to attach non-existing slot %q to gib.", slot_name)
-
 	local slot_state = slot_data.state
-
-	fassert(slot_state ~= "unequipped", "[MinionVisualLoadoutExtension] Tried to attach slot %q to gib whilst it was in state %q.", slot_name, slot_state)
-
 	local world = self._world
 	local item_unit = slot_data.unit
+
+	if not DEDICATED_SERVER then
+		local has_outline_system = Managers.state.extension:has_system("outline_system")
+
+		if has_outline_system then
+			local outline_system = Managers.state.extension:system("outline_system")
+
+			outline_system:dropping_loadout_unit(self._unit, item_unit)
+		end
+	end
 
 	World.unlink_unit(world, item_unit, true)
 	World.link_unit(world, item_unit, 1, gib_unit, 1, true)
@@ -456,22 +461,18 @@ MinionVisualLoadoutExtension._attach_slot_to_gib = function (self, slot_name, gi
 		LODGroup.remove_lod_object(lod_group, item_lod_object)
 		LODGroup.add_lod_object(gib_lod_group, item_lod_object)
 
-		local bv_mesh = Unit.mesh(gib_unit, "b_culling_volume")
-		local bv = Mesh.bounding_volume(bv_mesh)
+		local bv = LODGroup.compile_time_bounding_volume(gib_lod_group)
 
-		LODGroup.override_bounding_volume(gib_lod_group, bv)
+		if bv then
+			LODGroup.override_bounding_volume(gib_lod_group, bv)
+		end
 	end
 end
 
 MinionVisualLoadoutExtension._unequip_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
-
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to unequip non-existing slot %q.", slot_name)
-
 	local slot_state = slot_data.state
-
-	fassert(slot_state ~= "unequipped", "[MinionVisualLoadoutExtension] Tried to unequip slot %q whilst it was in state %q.", slot_name, slot_state)
 
 	if self._wielded_slot_name == slot_name then
 		self._wielded_slot_name = nil
@@ -490,14 +491,16 @@ MinionVisualLoadoutExtension._unequip_slot = function (self, slot_name)
 
 	local item_unit = slot_data.unit
 
-	unit_spawner_manager:mark_for_deletion(item_unit)
+	if item_unit then
+		unit_spawner_manager:mark_for_deletion(item_unit)
+	end
+
 	table.clear(slot_data)
 
 	slot_data.state = "unequipped"
 end
 
 MinionVisualLoadoutExtension.unequip_slot = function (self, slot_name)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"unequip_slot\" directly!")
 	self:_unequip_slot(slot_name)
 
 	local game_object_id = self._game_object_id
@@ -510,19 +513,16 @@ MinionVisualLoadoutExtension._set_slot_visibility = function (self, slot_name, v
 	local slots = self._slots
 	local slot_data = slots[slot_name]
 
-	fassert(slot_data, "[MinionVisualLoadoutExtension] Tried to set visibility for non-existing slot %q.", slot_name)
-	fassert(slot_data.state ~= "unequipped", "[MinionVisualLoadoutExtension] Tried to set visibility for unequipped slot %q.", slot_name)
-	fassert(slot_data.visible ~= visibility, "[MinionVisualLoadoutExtension] Tried to set visibility for slot %q to %q, which it already was.", slot_name, visibility)
+	if not DEDICATED_SERVER then
+		local item_unit = slot_data.unit
 
-	local item_unit = slot_data.unit
-
-	Unit.set_unit_visibility(item_unit, visibility, true)
+		Unit.set_unit_visibility(item_unit, visibility, true)
+	end
 
 	slot_data.visible = visibility
 end
 
 MinionVisualLoadoutExtension.set_slot_visibility = function (self, slot_name, visibility)
-	fassert(self._is_server, "[MinionVisualLoadoutExtension] Only server should call \"set_slot_visibility\" directly!")
 	self:_set_slot_visibility(slot_name, visibility)
 
 	local game_object_id = self._game_object_id
@@ -558,6 +558,10 @@ MinionVisualLoadoutExtension.slot_unit = function (self, slot_name)
 
 	if not slot_data then
 		return nil
+	end
+
+	if DEDICATED_SERVER then
+		return slot_data.unit or self._unit
 	end
 
 	return slot_data.unit
@@ -754,8 +758,6 @@ MinionVisualLoadoutExtension.rpc_minion_set_slot_visibility = function (self, ch
 end
 
 MinionVisualLoadoutExtension.rpc_minion_gib = function (self, channel_id, go_id, attack_direction, damage_profile_id, hit_zone_id, is_critical_strike)
-	fassert(not self._is_server, "rpc_minion_gib should only be called on clients.")
-
 	local hit_zone_name = hit_zone_id and NetworkLookup.hit_zones[hit_zone_id]
 	local damage_profile_name = NetworkLookup.damage_profile_templates[damage_profile_id]
 	local damage_profile = DamageProfileTemplates[damage_profile_name]

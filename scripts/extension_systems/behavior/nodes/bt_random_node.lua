@@ -14,9 +14,6 @@ BtRandomNode.init_values = function (self, blackboard, action_data, node_data)
 	BtRandomNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
-
-	fassert(node_data[node_identifier] == nil, "[BtRandomNode] Node data for %q was already created.", node_identifier)
-
 	node_data[node_identifier] = true
 	local children = self._children
 

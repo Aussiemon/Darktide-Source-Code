@@ -1,5 +1,6 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local ExternalPayment = class("ExternalPayment")
 
 local function is_steam()
@@ -24,47 +25,6 @@ local function get_payment_platform()
 	end
 end
 
-local function get_entitlements()
-	local async_job, error_code = XboxLive.query_associated_products_async({
-		"consumable",
-		"unmanaged"
-	})
-
-	if not async_job then
-		return Promise.rejected({
-			message = string.format("query_associated_products_async returned error_code=0x%x", error_code)
-		})
-	end
-
-	return Promise.until_value_is_true(function ()
-		local result, async_job, error_code = XboxLive.query_associated_products_async_result(async_job)
-
-		if error_code then
-			Log.error("ExternalPayment", string.format("Failed to fetch associated products, error_code=0x%x", error_code))
-
-			return {
-				success = false,
-				code = error_code
-			}
-		end
-
-		if result ~= nil and error_code == nil then
-			local result_by_id = {}
-
-			for _, v in ipairs(result) do
-				result_by_id[v.storeId] = v
-			end
-
-			return {
-				success = true,
-				data = result_by_id
-			}
-		end
-
-		return false
-	end)
-end
-
 local function get_platform_token()
 	if is_xbox_live() then
 		local async_block, error_code = XUser.get_xbs_token_async(Managers.account:user_id())
@@ -84,6 +44,70 @@ local function get_platform_token()
 
 			if error_code then
 				return nil, string.format("get_xbs_token_async_result returned error_code=0x%x", error_code)
+			end
+		end)
+	else
+		return Promise.resolved(nil)
+	end
+end
+
+local function get_purchase_id(access_token)
+	if is_xbox_live() then
+		local async_block, error_code = XboxLive.get_purchase_id_async(access_token)
+
+		if error_code then
+			return Promise.rejected({
+				message = string.format("get_purchase_id_async returned error_code=0x%x", error_code)
+			})
+		end
+
+		return Promise.until_value_is_true(function ()
+			local id, error_code = XboxLive.get_purchase_id_result(async_block)
+
+			if id then
+				return id
+			end
+
+			if error_code then
+				local errorStr = string.format("0x%x", error_code)
+
+				Log.error("ExternalPayment", "get_purchase_id_result failed with code: %s", errorStr)
+
+				return nil, {
+					message = string.format("get_purchase_id_result returned error_code=%s", errorStr)
+				}
+			end
+		end)
+	else
+		return Promise.resolved(nil)
+	end
+end
+
+local function get_collections_id(access_token)
+	if is_xbox_live() then
+		local async_block, error_code = XboxLive.get_user_collection_id_async(access_token)
+
+		if error_code then
+			return Promise.rejected({
+				message = string.format("get_user_collection_id_async returned error_code=0x%x", error_code)
+			})
+		end
+
+		return Promise.until_value_is_true(function ()
+			local id, error_code = XboxLive.get_user_collection_id_result(async_block)
+
+			if id then
+				return id
+			end
+
+			if error_code then
+				local errorStr = string.format("0x%x", error_code)
+
+				Log.error("ExternalPayment", "get_user_collection_id_result failed with code: %s", errorStr)
+
+				return nil, {
+					message = string.format("get_user_collection_id_result returned error_code=%s", errorStr)
+				}
 			end
 		end)
 	else
@@ -119,6 +143,59 @@ local function show_xbox_purchase_ui(product_id)
 	end)
 end
 
+local function get_account_status(platform, account_id)
+	local builder = BackendUtilities.url_builder():path("/store/"):path(account_id):path("/status"):query("platform", platform)
+
+	return Managers.backend:title_request(builder:to_string()):next(function (response)
+		return response.body
+	end)
+end
+
+local function update_user_id(user_id_type, account_id)
+	return Managers.backend:title_request(BackendUtilities.url_builder():path("/store/"):path(account_id):path("/xbox/token/accessToken"):query("type", user_id_type):to_string()):next(function (response)
+		local access_token = response.body.token
+
+		if user_id_type == "collectionId" then
+			return get_collections_id(access_token)
+		elseif user_id_type == "purchaseId" then
+			return get_purchase_id(access_token)
+		end
+	end):next(function (user_id)
+		return Managers.backend:title_request(BackendUtilities.url_builder():path("/store/"):path(account_id):path("/xbox/token/"):path(user_id_type):to_string(), {
+			method = "PUT",
+			body = {
+				token = user_id
+			}
+		})
+	end)
+end
+
+ExternalPayment.update_account_store_status = function (self)
+	if is_xbox_live() then
+		return Managers.backend:authenticate():next(function (account)
+			local account_id = account.sub
+
+			return get_account_status("xbox", account_id):next(function (account_status)
+				local has_collection_id = account_status and account_status.xbox and account_status.xbox.userIds and account_status.xbox.userIds.userCollectionId
+				local has_purchase_id = account_status and account_status.xbox and account_status.xbox.userIds and account_status.xbox.userIds.userPurchaseId
+				local promises = {}
+
+				if not has_collection_id then
+					table.insert(promises, update_user_id("collectionId", account_id))
+				end
+
+				if not has_purchase_id then
+					table.insert(promises, update_user_id("purchaseId", account_id))
+				end
+
+				return Promise.all(unpack(promises))
+			end)
+		end)
+	else
+		return Promise.resolved(nil)
+	end
+end
+
 ExternalPayment.payment_options = function (self)
 	local language = "en"
 
@@ -142,6 +219,26 @@ ExternalPayment.reconcile_pending_txns = function (self)
 				method = "POST",
 				headers = {
 					["platform-token"] = token
+				}
+			}):next(function (response)
+				return response.body
+			end)
+		end)
+	end)
+end
+
+ExternalPayment.reconcile_dlc = function (self, store_ids)
+	return get_platform_token():next(function (token)
+		return Managers.backend:authenticate():next(function (account)
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", get_payment_platform())
+
+			return Managers.backend:title_request(builder:to_string(), {
+				method = "POST",
+				headers = {
+					["platform-token"] = token
+				},
+				body = {
+					store_ids = store_ids
 				}
 			}):next(function (response)
 				return response.body
@@ -212,9 +309,10 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 	elseif is_xbox_live() then
 		local offer_id = option.microsoft and option.microsoft.productId
 		local offer = platform_entitlements[offer_id]
+		local is_store_managed_consumable = offer and table.array_contains(offer.productKind, "consumable")
 
-		if offer then
-			option.description.description = offer.title
+		if is_store_managed_consumable then
+			option.description.title = offer.title
 			option.price.amount.formattedPrice = offer.formattedPrice.formattedPrice
 		else
 			option.description.description = "??"
@@ -227,10 +325,8 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 	end
 
 	option._on_micro_txn = function (self, authorized, order_id)
-		fassert(self.pending_txn_promise, "txn promise unexpectedly not set for order_id %s", order_id)
-
 		if authorized then
-			Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
+			return Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
 				self.pending_txn_promise:resolve(data)
 
 				self.pending_txn_promise = nil
@@ -238,7 +334,7 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 				return data
 			end)
 		else
-			Managers.backend.interfaces.external_payment:fail_txn(order_id):next(function (data)
+			return Managers.backend.interfaces.external_payment:fail_txn(order_id):next(function (data)
 				self.pending_txn_promise:resolve(data)
 
 				self.pending_txn_promise = nil
@@ -259,12 +355,18 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 			})
 		end
 
-		self.pending_txn_promise = Promise:new()
-
-		Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
+		self.pending_txn_promise = Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
 			if is_steam() then
 				Managers.steam:register_micro_txn_callback(order_id, callback(self, "_on_micro_txn"))
 			elseif is_xbox_live() then
+				local success = Managers.account:verify_gdk_store_account()
+
+				if not success then
+					return Promise:rejected({
+						message = "Could not verify store profile match"
+					})
+				end
+
 				local microsoft_product_id = self.microsoft and self.microsoft.productId
 
 				if microsoft_product_id then
@@ -289,7 +391,7 @@ ExternalPayment.get_options = function (self)
 	local entitlement_promise = nil
 
 	if is_xbox_live() then
-		entitlement_promise = get_entitlements()
+		entitlement_promise = XboxLiveUtils.get_associated_products()
 	else
 		entitlement_promise = Promise.resolved(nil)
 	end

@@ -1,9 +1,6 @@
 local Experience = {}
 
 Experience.required_experience_for_level = function (experience_settings, level)
-	assert(level >= 0, "[Experience] - Trying to get required experience for a too low level")
-	assert(level <= experience_settings.max_level, "[Experience] - Trying to get required experience for a too high level")
-
 	local max_level = experience_settings.max_level
 	local experience_per_level_array = experience_settings.experience_per_level_array
 	local total_required_experience = 0
@@ -21,9 +18,6 @@ end
 
 Experience.get_level = function (experience_settings, experience)
 	experience = experience or 0
-
-	assert(experience >= 0, "[Experience] - Trying to get level with a negative experience value.")
-
 	local exp_total = 0
 	local level = 0
 	local progress = 0

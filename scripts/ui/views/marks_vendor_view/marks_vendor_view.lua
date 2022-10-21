@@ -24,20 +24,10 @@ MarksVendorView._get_store = function (self)
 	return store_promise
 end
 
-MarksVendorView.show_temporary_items = function (self)
+MarksVendorView.show_items = function (self)
 	self:_clear_list()
 
 	self._show_temporary_store_items = true
-
-	self:_update_wallets():next(function ()
-		self:_fetch_store_items()
-	end)
-end
-
-MarksVendorView.show_standard_items = function (self)
-	self:_clear_list()
-
-	self._show_temporary_store_items = false
 
 	self:_update_wallets():next(function ()
 		self:_fetch_store_items()

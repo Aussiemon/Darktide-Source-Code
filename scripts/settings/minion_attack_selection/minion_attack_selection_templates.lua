@@ -4,8 +4,6 @@ local function _extract_templates(path)
 	local templates = require(path)
 
 	for name, template in pairs(templates) do
-		fassert(minion_attack_selection_templates[name] == nil, "[MinionAttackSelectionTemplates] Duplicate template with name %q.", name)
-
 		minion_attack_selection_templates[name] = template
 		template.name = name
 	end

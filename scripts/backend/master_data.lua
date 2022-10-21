@@ -1,4 +1,4 @@
-local CachedWrapper = require("scripts/backend/cache_wrapper")
+local CacheWrapper = require("scripts/backend/cache_wrapper")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -25,7 +25,7 @@ MasterData.items_cache = function (self)
 		local metadata_cb = callback(self, "_get_items_metadata")
 		local fetch_cb = callback(self, "_get_items_from_backend")
 		local fallback_cb = callback(self, "_fail_on_missing_metadata")
-		self._fetch_items_wrapper = CachedWrapper:new(metadata_cb, fetch_cb, fallback_cb)
+		self._fetch_items_wrapper = CacheWrapper:new(metadata_cb, fetch_cb, fallback_cb)
 	end
 
 	return self._fetch_items_wrapper

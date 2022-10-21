@@ -1,7 +1,9 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local end_view_styles = {
+	voting_button_fade_time = 0.5,
 	panel_size = {
-		270,
+		440,
 		200
 	},
 	page_corner_decoration = {}
@@ -42,7 +44,7 @@ page_page_bottom_center_decoration.bottom_center_decoration = {
 	offset = {
 		0,
 		0,
-		2
+		5
 	}
 }
 end_view_styles.defeat_page_overlay = {}
@@ -50,6 +52,52 @@ local defeat_page_overlay_styles = end_view_styles.defeat_page_overlay
 defeat_page_overlay_styles.overlay = {
 	color = Color.black(64, true)
 }
+end_view_styles.stay_in_party_vote = {}
+local stay_in_party_vote_style = end_view_styles.stay_in_party_vote
+stay_in_party_vote_style.hotspot = {}
+local stay_in_party_vote_hotspot_style = stay_in_party_vote_style.hotspot
+stay_in_party_vote_hotspot_style.on_hover_sound = UISoundEvents.default_mouse_hover
+stay_in_party_vote_hotspot_style.on_pressed_sound = UISoundEvents.default_select
+stay_in_party_vote_style.vote_text = table.clone(UIFontSettings.input_legend_button)
+local vote_text_style = stay_in_party_vote_style.vote_text
+vote_text_style.text_color = Color.ui_grey_light(255, true)
+vote_text_style.voted_yes_color = Color.ui_terminal(255, true)
+vote_text_style.normal_color = table.clone(vote_text_style.text_color)
+vote_text_style.default_color = table.clone(vote_text_style.text_color)
+vote_text_style.text_horizontal_alignment = "left"
+vote_text_style.text_vertical_alignment = "top"
+vote_text_style.fade_time = 0.25
+stay_in_party_vote_style.vote_choice = table.clone(vote_text_style)
+local vote_choice_style = stay_in_party_vote_style.vote_choice
+vote_choice_style.offset = {
+	0,
+	30,
+	1
+}
+stay_in_party_vote_style.vote_count_text = table.clone(vote_text_style)
+local vote_count_text_style = stay_in_party_vote_style.vote_count_text
+vote_count_text_style.font_size = 36
+vote_count_text_style.text_horizontal_alignment = "center"
+stay_in_party_vote_style.tooltip = table.clone(UIFontSettings.body_small)
+local stay_in_party_vote_tooltip_style = stay_in_party_vote_style.tooltip
+stay_in_party_vote_tooltip_style.text_color[1] = 0
+stay_in_party_vote_tooltip_style.text_vertical_alignment = "bottom"
+end_view_styles.continue_button = {}
+local continue_button_style = end_view_styles.continue_button
+continue_button_style.text = table.clone(UIFontSettings.input_legend_button)
+local continue_button_text_style = continue_button_style.text
+continue_button_text_style.text_horizontal_alignment = "right"
+continue_button_text_style.text_vertical_alignment = "top"
+continue_button_text_style.default_color = Color.ui_grey_light(255, true)
+continue_button_text_style.disabled_color = Color.ui_grey_medium(255, true)
+continue_button_text_style.normal_color = table.clone(continue_button_text_style.default_color)
+continue_button_text_style.disabled_fade_time = 0.25
+continue_button_style.tooltip = table.clone(stay_in_party_vote_tooltip_style)
+local continue_button_tooltip_style = continue_button_style.tooltip
+continue_button_tooltip_style.text_horizontal_alignment = "right"
+continue_button_style.vote_done_tooltip = table.clone(continue_button_tooltip_style)
+local continue_button_vote_done_tooltip_style = continue_button_style.vote_done_tooltip
+continue_button_vote_done_tooltip_style.text_color = Color.white(0, true)
 end_view_styles.mission_header_victory = {}
 local mission_header_victory_style = end_view_styles.mission_header_victory
 mission_header_victory_style.mission_header = table.clone(UIFontSettings.header_2)
@@ -75,7 +123,7 @@ mission_header_divider_style_victory.offset = {
 	0
 }
 mission_header_divider_style_victory.color = Color.ui_brown_light(255, true)
-mission_header_victory_style.mission_sub_header = table.clone(UIFontSettings.body)
+mission_header_victory_style.mission_sub_header = table.clone(UIFontSettings.body_small)
 local mission_sub_header_victory_style = mission_header_victory_style.mission_sub_header
 mission_sub_header_victory_style.text_horizontal_alignment = "center"
 mission_sub_header_victory_style.text_vertical_alignment = "center"
@@ -156,7 +204,7 @@ character_title_style_victory.offset = {
 player_panel_victory_style.account_divider = {
 	horizontal_alignment = "center",
 	size = {
-		nil,
+		280,
 		1
 	},
 	offset = {

@@ -78,6 +78,7 @@ MissionIntroView.draw = function (self, dt, t, input_service, layer)
 	self:_draw_widgets(dt, t, input_service, ui_renderer)
 	UIRenderer.end_pass(ui_renderer)
 	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
+	Managers.ui:render_loading_icon()
 end
 
 MissionIntroView.event_register_mission_intro_spawn_point_1 = function (self, spawn_point_unit)
@@ -133,9 +134,10 @@ MissionIntroView._initialize_background_world = function (self)
 	self._world_initialized = true
 	local game_state_context = Managers.player:game_state_context()
 	local mission_name = game_state_context and game_state_context.mission_name
+	local mission_giver_vo = game_state_context and game_state_context.mission_giver_vo
 
 	if mission_name then
-		self:_play_mission_brief_vo(mission_name)
+		self:_play_mission_brief_vo(mission_name, mission_giver_vo)
 	else
 		self.mission_briefing_done = true
 	end
@@ -325,8 +327,8 @@ MissionIntroView._assign_player_slots = function (self)
 	local players = player_manager:players()
 
 	local function sort_function(a, b)
-		local a_slot_index = a:slot() or math.huge
-		local b_slot_index = b:slot() or math.huge
+		local a_slot_index = a:slot() + (a:is_human_controlled() and 0 or 100)
+		local b_slot_index = b:slot() + (b:is_human_controlled() and 0 or 100)
 
 		return a_slot_index < b_slot_index
 	end
@@ -367,23 +369,17 @@ MissionIntroView._assign_player_to_slot = function (self, player, slot)
 	local spawn_position = Vector3.from_array(boxed_position)
 	local spawn_rotation = QuaternionBox.unbox(boxed_rotation)
 	local profile_spawner = slot.profile_spawner
-
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
-
 	local archetype_settings = profile.archetype
 	local archetype_name = archetype_settings.name
 	local breed_name = archetype_settings.breed
 	local breed_settings = Breeds[breed_name]
 	local mission_intro_state_machine = breed_settings.mission_intro_state_machine
-
-	profile_spawner:assign_state_machine(mission_intro_state_machine)
-
 	local animations_per_archetype = MissionIntroViewSettings.animations_per_archetype
 	local animations_settings = animations_per_archetype[archetype_name]
 	local anim_index = math.random(1, #animations_settings)
 	local animation_event = animations_settings[anim_index]
 
-	profile_spawner:assign_animation_event(animation_event)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, mission_intro_state_machine, animation_event)
 
 	slot.occupied = true
 	slot.player = player
@@ -402,7 +398,7 @@ MissionIntroView._reset_spawn_slot = function (self, slot)
 	slot.player = nil
 end
 
-MissionIntroView._play_mission_brief_vo = function (self, mission_name)
+MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_giver_vo)
 	local mission = Missions[mission_name]
 	local mission_intro_time = mission.mission_intro_minimum_time or 0
 	self.done_at = Managers.time:time("main") + mission_intro_time
@@ -415,11 +411,24 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name)
 	end
 
 	local events = mission_brief_vo.vo_events
-	local voice_profile = mission_brief_vo.vo_profile
+	local voice_profile = nil
+
+	if mission_giver_vo == "none" then
+		voice_profile = mission_brief_vo.vo_profile
+	else
+		voice_profile = mission_giver_vo
+	end
+
 	local wwise_route_key = mission_brief_vo.wwise_route_key
 	local dialogue_system = self:dialogue_system()
 	local callback = callback(self, "_cb_on_play_mission_brief_vo")
-	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback)
+	local seed = nil
+
+	if Managers.connection then
+		seed = Managers.connection:session_seed()
+	end
+
+	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed)
 	self._vo_unit = vo_unit
 	self._last_vo_event = events[#events]
 end

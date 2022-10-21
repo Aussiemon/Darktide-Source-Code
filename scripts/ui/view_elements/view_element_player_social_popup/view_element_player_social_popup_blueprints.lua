@@ -17,7 +17,7 @@ local view_element_player_popup_blueprints = {
 			local hotspot = widget_content.hotspot
 			hotspot.disabled = context.is_disabled
 			hotspot.pressed_callback = context.callback
-			local on_pressed_sound = hotspot.on_pressed_sound
+			local on_pressed_sound = context.on_pressed_sound
 
 			if on_pressed_sound then
 				widget.style.hotspot.on_pressed_sound = on_pressed_sound
@@ -39,7 +39,7 @@ local view_element_player_popup_blueprints = {
 			widget_content.icon = "content/ui/materials/icons/list_buttons/block"
 			local hotspot = widget_content.hotspot
 			hotspot.disabled = true
-			local on_pressed_sound = hotspot.on_pressed_sound
+			local on_pressed_sound = context.on_pressed_sound
 
 			if on_pressed_sound then
 				widget.style.hotspot.on_pressed_sound = on_pressed_sound
@@ -81,7 +81,7 @@ view_element_player_popup_blueprints.choice_button = {
 		local hotspot = widget_content.hotspot
 		hotspot.disabled = context.is_disabled
 		hotspot.pressed_callback = context.callback
-		local on_pressed_sound = hotspot.on_pressed_sound
+		local on_pressed_sound = context.on_pressed_sound
 
 		if on_pressed_sound then
 			widget.style.hotspot.on_pressed_sound = on_pressed_sound

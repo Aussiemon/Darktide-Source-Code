@@ -7,8 +7,8 @@ local event_vo_hacking_psyker_female_c = {
 			[2.0] = "loc_psyker_female_c__response_to_hacking_fix_decode_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.886771,
-			[2.0] = 1.695417
+			[1.0] = 1.886781,
+			[2.0] = 1.695427
 		},
 		randomize_indexes = {}
 	}

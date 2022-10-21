@@ -6,12 +6,14 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local RangedAction = require("scripts/utilities/action/ranged_action")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local proc_events = BuffSettings.proc_events
 local template_types = WeaponTweakTemplateSettings.template_types
 local damage_types = DamageSettings.damage_types
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ActionFlamerGas = class("ActionFlamerGas", "ActionShoot")
 
 ActionFlamerGas.init = function (self, action_context, action_params, action_settings)
@@ -21,8 +23,14 @@ ActionFlamerGas.init = function (self, action_context, action_params, action_set
 	self._target_damage_times = {}
 	self._target_frame_counts = {}
 	self._dot_targets = {}
-	self._action_module_position_finder_component = action_context.unit_data_extension:write_component("action_module_position_finder")
-	self._action_flamer_gas_component = action_context.unit_data_extension:write_component("action_flamer_gas")
+	local unit_data_extension = action_context.unit_data_extension
+	self._action_module_position_finder_component = unit_data_extension:write_component("action_module_position_finder")
+	self._action_flamer_gas_component = unit_data_extension:write_component("action_flamer_gas")
+	local fire_config = action_settings.fire_configuration
+
+	if fire_config.charge_duration then
+		self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
+	end
 end
 
 ActionFlamerGas.start = function (self, action_settings, t, ...)
@@ -71,6 +79,20 @@ ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action)
 	self:_acquire_targets(t)
 	self:_damage_targets(dt, t)
 	self:_burn_targets(dt, t)
+
+	local action_settings = self._action_settings
+	local fire_config = action_settings.fire_configuration
+
+	if fire_config.charge_duration then
+		local min = fire_config.charge_duration.min
+		local max = fire_config.charge_duration.max
+		local charge = self._action_module_charge_component.charge_level
+		local duration = math.lerp(min, max, charge)
+
+		if duration < time_in_action then
+			return true
+		end
+	end
 end
 
 local hit_units_this_frame = {}
@@ -252,11 +274,10 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	local damage_type = damage_types.burning
 	local is_critical_strike = false
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
-	local power_level = 500
 	local charge_level = 1
 	local weapon_item = self._weapon.item
 
-	RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+	RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
 end
 
 ActionFlamerGas._burn_targets = function (self, dt, t)
@@ -310,11 +331,17 @@ ActionFlamerGas._shoot = function (self, position, rotation, power_level, charge
 		end
 	end
 
+	local action_component = self._action_component
 	local attacker_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = attacker_buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = player_unit
 
-	attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	if param_table then
+		param_table.attacking_unit = player_unit
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+
+		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	end
 end
 
 local broadphase_results = {}
@@ -367,6 +394,12 @@ ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)
 	local position_finder_component = self._action_module_position_finder_component
 	position_finder_component.position = Vector3.zero()
 	position_finder_component.position_valid = false
+	local action_settings = self._action_settings
+	local fire_config = action_settings.fire_configuration
+
+	if fire_config.charge_duration then
+		self._action_module_charge_component.charge_level = 0
+	end
 end
 
 ActionFlamerGas.running_action_state = function (self, t, time_in_action)

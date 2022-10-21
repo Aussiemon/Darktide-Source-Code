@@ -43,7 +43,7 @@ local asset_vo_psyker_male_a = {
 			"loc_psyker_male_a__asset_foul_smoke_04"
 		},
 		sound_events_duration = {
-			9.125271,
+			9.12525,
 			2.112083,
 			3.576792,
 			5.783396
@@ -75,8 +75,8 @@ local asset_vo_psyker_male_a = {
 			[2.0] = "loc_psyker_male_a__asset_grease_pit_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.040896,
-			[2.0] = 3.267292
+			[1.0] = 4.040875,
+			[2.0] = 3.267271
 		},
 		randomize_indexes = {}
 	},
@@ -88,7 +88,7 @@ local asset_vo_psyker_male_a = {
 			[2.0] = "loc_psyker_male_a__asset_sigil_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.530833,
+			[1.0] = 5.530813,
 			[2.0] = 6.858063
 		},
 		randomize_indexes = {}
@@ -103,7 +103,7 @@ local asset_vo_psyker_male_a = {
 			"loc_psyker_male_a__asset_unnatural_dark_a_04"
 		},
 		sound_events_duration = {
-			2.874792,
+			2.874771,
 			3.023,
 			3.447417,
 			2.393229
@@ -121,7 +121,7 @@ local asset_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			2.758667,
-			3.081167,
+			3.081146,
 			1.875792,
 			3.012
 		},
@@ -135,8 +135,8 @@ local asset_vo_psyker_male_a = {
 			[2.0] = "loc_psyker_male_a__mission_cartel_water_course_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.743354,
-			[2.0] = 6.339292
+			[1.0] = 6.743333,
+			[2.0] = 6.339271
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

@@ -1,4 +1,5 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"get_commendations"
 }
@@ -19,24 +20,18 @@ Commendations.delete_commendations = function (self, account_id)
 end
 
 Commendations.create_update = function (self, account_id, stat_updates, completed_commendations)
-	local ok, player_platform, player_platform_id = self:unpack_player(account_id)
-
-	if not ok then
-		Log.error("Backend", "Failed to create commendation update")
-
-		return
-	end
-
 	return {
 		accountId = account_id,
-		platformName = player_platform,
-		platformId = player_platform_id,
 		stats = stat_updates,
 		completed = completed_commendations
 	}
 end
 
 Commendations.bulk_update_commendations = function (self, commendation_update)
+	if DevParameters.disable_achievement_backend_update then
+		return Promise.resolved(nil)
+	end
+
 	local path = BackendUtilities.url_builder():path("/commendations"):to_string()
 
 	Log.info("Backend", "Patching commendations %s", table.tostring(commendation_update, 99))
@@ -45,19 +40,6 @@ Commendations.bulk_update_commendations = function (self, commendation_update)
 		method = "PATCH",
 		body = commendation_update
 	})
-end
-
-Commendations.unpack_player = function (self, account_id)
-	if not account_id then
-		Log.warning("Backend", "Expected account id to be present")
-
-		return false
-	end
-
-	local player_platform = "steam"
-	local player_platform_id = "76561199099162575"
-
-	return true, player_platform, player_platform_id
 end
 
 implements(Commendations, Interface)

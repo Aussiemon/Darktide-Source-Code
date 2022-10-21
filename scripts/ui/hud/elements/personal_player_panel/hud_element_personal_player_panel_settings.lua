@@ -2,22 +2,24 @@ local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_personal_player_panel_settings = {
 	critical_health_threshold = 0.2,
 	health_bar_settings = {
+		ghost_delay = 0.25,
 		animate_on_health_increase = true,
-		alpha_fade_delay = 2.6,
 		duration_health_ghost = 1.5,
 		health_animation_threshold = 0.1,
-		alpha_fade_duration = 0.6,
+		alpha_fade_delay = 2.6,
 		duration_health = 1.5,
-		alpha_fade_min_value = 50
+		alpha_fade_min_value = 50,
+		alpha_fade_duration = 0.6
 	},
 	toughness_bar_settings = {
+		ghost_delay = 0.25,
 		animate_on_health_increase = true,
-		alpha_fade_delay = 2.6,
 		duration_health_ghost = 1,
 		health_animation_threshold = 0.05,
-		alpha_fade_duration = 0.6,
+		alpha_fade_delay = 2.6,
 		duration_health = 1,
-		alpha_fade_min_value = 50
+		alpha_fade_min_value = 50,
+		alpha_fade_duration = 0.6
 	},
 	size = {
 		510,
@@ -46,7 +48,7 @@ local hud_element_personal_player_panel_settings = {
 	feature_list = {
 		respawn_timer = true,
 		name = true,
-		throwables = false,
+		pocketable = false,
 		voip = true,
 		portrait = true,
 		ammo = false,
@@ -58,7 +60,8 @@ local hud_element_personal_player_panel_settings = {
 		toughness_hit_indicator = true,
 		toughness_text = true,
 		toughness = true,
-		corruption_text = true
+		corruption_text = true,
+		throwables = false
 	}
 }
 

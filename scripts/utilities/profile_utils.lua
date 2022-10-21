@@ -4,6 +4,7 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
 local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ProfileUtils = {}
 
 local function profile_from_backend_data(backend_profile_data)
@@ -303,12 +304,12 @@ end
 
 ProfileUtils.split_for_network = function (profile_json, chunk_array)
 	local max_string_length = 400
-	local length = string.len(profile_json)
+	local length = #profile_json
 	local num_chunks = math.ceil(length / max_string_length)
 	local remaining_json = profile_json
 
 	for i = 1, num_chunks do
-		local remaining_length = string.len(remaining_json)
+		local remaining_length = #remaining_json
 		local chunk_length = math.min(max_string_length, remaining_length)
 		local chunk = string.sub(remaining_json, 1, chunk_length)
 		chunk_array[i] = chunk
@@ -331,9 +332,6 @@ ProfileUtils.get_bot_profile = function (identifier)
 	local item_definitions = MasterItems.get_cached()
 	local bot_profiles = BotCharacterProfiles(item_definitions)
 	local bot_profile = bot_profiles[identifier]
-
-	fassert(bot_profiles, "Trying to get nonexistent bot profile, identifier: %s", identifier)
-
 	local profile = table.shallow_copy(bot_profile)
 
 	convert_profile_from_lookups_to_data(profile)
@@ -351,16 +349,26 @@ ProfileUtils.replace_profile_for_prologue = function (profile)
 		return profile
 	end
 
-	local new_profile = table.shallow_copy(profile)
-	new_profile.loadout = table.shallow_copy(profile.loadout)
+	local new_profile = table.clone_instance(profile)
+	local loadout_item_ids = new_profile.loadout_item_ids
+	local loadout_item_data = new_profile.loadout_item_data
 	local override_loadout = override_table.loadout
 
-	for key, value in pairs(override_loadout) do
-		new_profile.loadout[key] = value
-		new_profile.visual_loadout[key] = value
+	for slot_name, item_data in pairs(override_loadout) do
+		new_profile.loadout[slot_name] = item_data
+		new_profile.visual_loadout[slot_name] = item_data
+		local item_name = item_data.name
+		loadout_item_ids[slot_name] = item_name .. slot_name
+		loadout_item_data[slot_name] = {
+			id = item_name
+		}
 	end
 
 	return new_profile
+end
+
+ProfileUtils.replace_profile_for_training_grounds = function (profile)
+	return ProfileUtils.replace_profile_for_prologue(profile)
 end
 
 ProfileUtils._override_table = function (new, override)
@@ -446,7 +454,13 @@ end
 ProfileUtils.character_title = function (profile)
 	local specialization_key = profile.specialization
 	local archetype = profile.archetype
-	local archetype_name = Localize(archetype.archetype_name)
+	local archetype_name = nil
+
+	if UISettings.archetype_font_icon[archetype.name] then
+		archetype_name = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
+	else
+		archetype_name = Localize(archetype.archetype_name)
+	end
 
 	if specialization_key and specialization_key ~= "none" then
 		local specializations = archetype.specializations

@@ -6,6 +6,7 @@ local UIRenderer = {}
 local dummy_text_options = {}
 local slug_render_params = {}
 local gui_args = {}
+local optional_gui_args = Script.new_map(32)
 
 for i = 1, 20 do
 	gui_args[i] = true
@@ -24,35 +25,15 @@ local function _snap_to_position(position, scale)
 	return position
 end
 
+local bit_or = bit.bor
+
 local function _get_material_flag(render_settings, material_flags, render_pass_flag)
 	if render_settings then
-		if render_settings.mask then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.GUI_MASK_LAYER or GuiMaterialFlag.GUI_MASK_LAYER
-		end
-
-		if render_settings.mask_alpha then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.WRITE_ALPHA or GuiMaterialFlag.WRITE_ALPHA
-		end
-
-		if render_settings.mask_red then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.WRITE_RED or GuiMaterialFlag.WRITE_RED
-		end
-
-		if render_settings.mask_blue then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.WRITE_BLUE or GuiMaterialFlag.WRITE_BLUE
-		end
-
-		if render_settings.mask_green then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.WRITE_GREEN or GuiMaterialFlag.WRITE_GREEN
-		end
-
-		if render_settings.hdr then
-			material_flags = material_flags and material_flags + GuiMaterialFlag.GUI_HDR_LAYER or GuiMaterialFlag.GUI_HDR_LAYER
-		end
+		material_flags = material_flags and bit_or(material_flags, render_settings.material_flags) or render_settings.material_flags
 	end
 
 	if render_pass_flag then
-		material_flags = material_flags and material_flags + GuiMaterialFlag.GUI_RENDER_PASS_LAYER or GuiMaterialFlag.GUI_RENDER_PASS_LAYER
+		material_flags = bit_or(material_flags, GuiMaterialFlag.GUI_RENDER_PASS_LAYER)
 	end
 
 	return material_flags
@@ -159,8 +140,12 @@ UIRenderer.destroy = function (self, world)
 	else
 		World.destroy_gui(world or self.world, self.gui)
 
+		self.gui = nil
+
 		if self.gui_retained then
 			World.destroy_gui(world or self.world, self.gui_retained)
+
+			self.gui_retained = nil
 		end
 	end
 end
@@ -201,8 +186,9 @@ end
 local Color = Color
 local Vector2 = Vector2
 local Vector3 = Vector3
-local Gui_slug_text = Gui.slug_text
-local Gui_update_slug_text = Gui.update_slug_text
+local Gui2_slug_text = Gui2.slug_text
+local Gui2_update_slug_text = Gui2.update_slug_text
+local Gui2_slug_text_extents = Gui2.slug_text_extents
 local Gui_slug_text_3d = Gui.slug_text_3d
 local Gui_update_slug_text_3d = Gui.update_slug_text_3d
 local Gui_slug_icon = Gui.slug_icon
@@ -211,20 +197,20 @@ local Gui_slug_icon_3d = Gui.slug_icon_3d
 local Gui_update_slug_icon_3d = Gui.update_slug_icon_3d
 local Gui_slug_picture = Gui.slug_picture
 local Gui_update_slug_picture = Gui.update_slug_picture
-local Gui_rect = Gui.rect
-local Gui_update_rect = Gui.update_rect
 local Gui_triangle = Gui.triangle
 local Gui_update_triangle = Gui.update_triangle
-local Gui_bitmap = Gui.bitmap
-local Gui_update_bitmap = Gui.update_bitmap
-local Gui_bitmap_uv = Gui.bitmap_uv
-local Gui_update_bitmap_uv = Gui.update_bitmap_uv
-local Gui_bitmap_3d = Gui.bitmap_3d
-local Gui_update_bitmap_3d = Gui.update_bitmap_3d
-local Gui_bitmap_3d_uv = Gui.bitmap_3d_uv
-local Gui_update_bitmap_3d_uv = Gui.update_bitmap_3d_uv
+local Gui2_rect = Gui2.rect
+local Gui2_update_rect = Gui2.update_rect
+local Gui2_bitmap = Gui2.bitmap
+local Gui2_update_bitmap = Gui2.update_bitmap
+local Gui2_bitmap_uv = Gui2.bitmap_uv
+local Gui2_update_bitmap_uv = Gui2.update_bitmap_uv
+local Gui2_bitmap_3d = Gui2.bitmap_3d
+local Gui2_update_bitmap_3d = Gui2.update_bitmap_3d
 
 UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size, color, retained_id)
+	table.clear(optional_gui_args)
+
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -232,53 +218,55 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 		retained_id = nil
 	end
 
-	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
-	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
+	local snap_pixel_positions, alpha_multiplier = nil
+
+	if render_settings then
+		snap_pixel_positions = render_settings.snap_pixel_positions
+
+		if render_settings.start_layer then
+			gui_position[3] = render_settings.start_layer + gui_position[3]
+		end
+
+		alpha_multiplier = render_settings.alpha_multiplier
+	end
+
+	if color then
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+	end
 
 	if snap_pixel_positions == nil then
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
 	end
 
-	if snap_pixel_positions then
-		local scale = self.scale
-		gui_position = _snap_to_position(gui_position, scale)
-	end
-
-	if render_settings then
-		gui_position[3] = (render_settings.start_layer or 0) + gui_position[3]
-	end
-
-	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag)
+	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag) or 0
 	local render_pass = self.base_render_pass
 
-	if render_pass and render_settings.hdr then
-		render_pass = render_pass .. "_hdr"
+	if render_pass then
+		if render_settings.hdr then
+			optional_gui_args.render_pass = render_pass .. "_hdr"
+		else
+			optional_gui_args.render_pass = render_pass
+		end
 	end
 
+	optional_gui_args.snap_pixel_positions = snap_pixel_positions
 	local gui = retained_mode and self.gui_retained or self.gui
-	local gui_func = retained_id and Gui_update_bitmap or Gui_bitmap
 
-	table.clear_array(gui_args, 20)
+	if retained_id then
+		local id = Gui2_update_bitmap(gui, retained_id, material, material_flags, gui_position, gui_size, optional_gui_args)
 
-	gui_args[9] = color
-	gui_args[8] = gui_size
-	gui_args[7] = gui_position
-	gui_args[6] = render_pass
-	gui_args[5] = self.render_pass_flag
-	gui_args[4] = material_flags
-	gui_args[3] = material
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+		return id
+	else
+		local id = Gui2_bitmap(gui, material, material_flags, gui_position, gui_size, optional_gui_args)
 
-	table.compact_array(gui_args)
-
-	local id = gui_func(unpack(gui_args))
-
-	return retained_mode and id or nil
+		return id
+	end
 end
 
-UIRenderer.script_draw_bitmap_uv = function (self, material, uvs, gui_position, gui_size, color, retained_id)
+UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_size, uvs, color, retained_id)
+	table.clear(optional_gui_args)
+
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -286,57 +274,57 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, uvs, gui_position, 
 		retained_id = nil
 	end
 
-	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
-	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
+	local snap_pixel_positions, alpha_multiplier = nil
+
+	if render_settings then
+		snap_pixel_positions = render_settings.snap_pixel_positions
+
+		if render_settings.start_layer then
+			gui_position[3] = render_settings.start_layer + gui_position[3]
+		end
+
+		alpha_multiplier = render_settings.alpha_multiplier
+	end
+
+	if color then
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+	end
 
 	if snap_pixel_positions == nil then
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
 	end
 
-	if snap_pixel_positions then
-		local scale = self.scale
-		gui_position = _snap_to_position(gui_position, scale)
-	end
-
-	if render_settings then
-		gui_position[3] = (render_settings.start_layer or 0) + gui_position[3]
-	end
-
-	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag)
-	local uv00 = uvs[1]
-	local uv11 = uvs[2]
+	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag) or 0
 	local render_pass = self.base_render_pass
 
-	if render_pass and render_settings.hdr then
-		render_pass = render_pass .. "_hdr"
+	if render_pass then
+		if render_settings.hdr then
+			optional_gui_args.render_pass = render_pass .. "_hdr"
+		else
+			optional_gui_args.render_pass = render_pass
+		end
 	end
 
+	local uv00 = uvs[1]
+	local uv11 = uvs[2]
+	optional_gui_args.snap_pixel_positions = snap_pixel_positions
 	local gui = retained_mode and self.gui_retained or self.gui
-	local gui_func = retained_id and Gui_update_bitmap_uv or Gui_bitmap_uv
 
-	table.clear_array(gui_args, 20)
+	if retained_id then
+		local id = Gui2_update_bitmap_uv(gui, retained_id, material, material_flags, Vector2(uv00[1], uv00[2]), Vector2(uv11[1], uv11[2]), gui_position, gui_size, optional_gui_args)
 
-	gui_args[11] = color
-	gui_args[10] = gui_size
-	gui_args[9] = gui_position
-	gui_args[8] = render_pass
-	gui_args[7] = self.render_pass_flag
-	gui_args[6] = Vector2(uv11[1], uv11[2])
-	gui_args[5] = Vector2(uv00[1], uv00[2])
-	gui_args[4] = material_flags
-	gui_args[3] = material
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+		return id
+	else
+		local id = Gui2_bitmap_uv(gui, material, material_flags, Vector2(uv00[1], uv00[2]), Vector2(uv11[1], uv11[2]), gui_position, gui_size, optional_gui_args)
 
-	table.compact_array(gui_args)
-
-	local id = gui_func(unpack(gui_args))
-
-	return retained_mode and id or nil
+		return id
+	end
 end
 
 UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, gui_layer, gui_size, color, optional_uvs, retained_id)
+	table.clear(optional_gui_args)
+
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -345,7 +333,10 @@ UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, g
 	end
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+
+	if color then
+		optional_gui_args.color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	end
 
 	if render_settings then
 		gui_layer = (render_settings.start_layer or 0) + gui_layer
@@ -357,60 +348,40 @@ UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, g
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
 	end
 
-	if snap_pixel_positions then
-		local scale = self.scale
-		local translation = Matrix4x4.translation(tm)
-		translation = _snap_to_position(translation, scale)
-
-		Matrix4x4.set_translation(tm, translation)
-	end
-
+	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
 	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag)
-	gui_position = gui_position or Vector3.zero()
-	local uv00, uv11, gui_func = nil
 
 	if optional_uvs then
 		local new_uvs1 = optional_uvs[1]
 		local new_uvs2 = optional_uvs[2]
-		uv00 = Vector2(new_uvs1[1], new_uvs1[2])
-		uv11 = Vector2(new_uvs2[1], new_uvs2[2])
-		gui_func = retained_id and Gui_update_bitmap_3d_uv or Gui_bitmap_3d_uv
-	else
-		gui_func = retained_id and Gui_update_bitmap_3d or Gui_bitmap_3d
+		optional_gui_args.uv00 = Vector2(new_uvs1[1], new_uvs1[2])
+		optional_gui_args.uv11 = Vector2(new_uvs2[1], new_uvs2[2])
 	end
 
 	local render_pass = self.base_render_pass
 
-	if render_pass and render_settings.hdr then
-		render_pass = render_pass .. "_hdr"
+	if render_pass then
+		if render_settings.hdr then
+			optional_gui_args.render_pass = render_pass .. "_hdr"
+		else
+			optional_gui_args.render_pass = render_pass
+		end
 	end
 
+	optional_gui_args.position_offset = gui_position
+	optional_gui_args.size = gui_size
+	optional_gui_args.snap_pixel_positions = snap_pixel_positions
 	local gui = retained_mode and self.gui_retained or self.gui
 
-	table.clear_array(gui_args, 20)
-
-	gui_args[13] = color
-	gui_args[12] = gui_size
-	gui_args[11] = gui_layer
-	gui_args[10] = gui_position
-	gui_args[9] = tm
-	gui_args[8] = render_pass
-	gui_args[7] = self.render_pass_flag
-	gui_args[6] = optional_uvs and Vector2(uv11[1], uv11[2])
-	gui_args[5] = optional_uvs and Vector2(uv00[1], uv00[2]) or nil
-	gui_args[4] = material_flags
-	gui_args[3] = material
-	gui_args[2] = retained_id
-	gui_args[1] = gui
-
-	table.compact_array(gui_args)
-
-	local id = gui_func(unpack(gui_args))
-
-	return retained_mode and id or nil
+	if retained_id then
+		return Gui2_update_bitmap_3d(gui, retained_id, material, material_flags, tm, gui_layer, optional_gui_args)
+	else
+		return Gui2_bitmap_3d(gui, material, material_flags, tm, gui_layer, optional_gui_args)
+	end
 end
 
 UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_position, gui_size, color, options, retained_id)
+	local additional_settings = options
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -418,23 +389,26 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 		retained_id = nil
 	end
 
-	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
+	local snap_pixel_positions, alpha_multiplier = nil
+
+	if render_settings then
+		snap_pixel_positions = render_settings.snap_pixel_positions
+
+		if render_settings.start_layer then
+			gui_position[3] = render_settings.start_layer + gui_position[3]
+		end
+
+		alpha_multiplier = render_settings.alpha_multiplier
+	end
+
+	alpha_multiplier = alpha_multiplier or 1
 	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
-	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
 
 	if snap_pixel_positions == nil then
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
 	end
 
-	if snap_pixel_positions then
-		local scale = self.scale
-		gui_position = _snap_to_position(gui_position, scale)
-	end
-
-	if render_settings then
-		gui_position[3] = (render_settings.start_layer or 0) + gui_position[3]
-	end
-
+	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
@@ -443,39 +417,19 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 		flags = flags + Gui.RenderPass
 	end
 
-	table.clear(slug_render_params)
-
-	local material_flags = _get_material_flag(render_settings, nil, self.render_pass_flag)
-
-	if material_flags then
-		slug_render_params[#slug_render_params + 1] = "material_flags"
-		slug_render_params[#slug_render_params + 1] = material_flags
-	end
-
-	slug_render_params = table.append(slug_render_params, options or dummy_text_options)
+	additional_settings.material_flags = _get_material_flag(render_settings, 0, self.render_pass_flag)
+	additional_settings.flags = flags
+	additional_settings.color = color
+	additional_settings.render_pass = self.base_render_pass
+	additional_settings.snap_pixel_positions = snap_pixel_positions
+	local id = nil
 	local gui = retained_mode and self.gui_retained or self.gui
-	local gui_func = retained_id and Gui_update_slug_text or Gui_slug_text
 
-	fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
-	table.clear_array(gui_args, 21)
-
-	gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18], gui_args[19], gui_args[20], gui_args[21] = unpack(slug_render_params)
-	gui_args[12] = flags
-	gui_args[11] = "flags"
-	gui_args[10] = color
-	gui_args[9] = gui_size
-	gui_args[8] = gui_position
-	gui_args[7] = self.base_render_pass
-	gui_args[6] = self.render_pass_flag
-	gui_args[5] = font_size
-	gui_args[4] = font
-	gui_args[3] = text
-	gui_args[2] = retained_id
-	gui_args[1] = gui
-
-	table.compact_array(gui_args)
-
-	local id = gui_func(unpack(gui_args))
+	if retained_id then
+		id = Gui2_update_slug_text(gui, retained_id, text, font, font_size, gui_position, gui_size, additional_settings)
+	else
+		id = Gui2_slug_text(gui, text, font, font_size, gui_position, gui_size, additional_settings)
+	end
 
 	return retained_mode and id or nil
 end
@@ -527,7 +481,6 @@ UIRenderer.script_draw_text_3d = function (self, text, font_size, font_type, tm,
 	local gui = retained_mode and self.gui_retained or self.gui
 	local gui_func = retained_id and Gui_update_slug_text_3d or Gui_slug_text_3d
 
-	fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
 	table.clear_array(gui_args, 20)
 
 	gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18], gui_args[19], gui_args[20] = unpack(slug_render_params)
@@ -553,9 +506,6 @@ end
 
 UIRenderer.create_video_player = function (self, reference_name, world, resource, set_loop)
 	local video_players = self.video_players
-
-	assert(not video_players[reference_name])
-
 	local video_world = world or self.world
 	local video_player = video_world:create_video_player(resource, set_loop)
 	video_players[reference_name] = video_player
@@ -569,7 +519,6 @@ UIRenderer.destroy_video_player = function (self, reference_name, world)
 	local video_players = self.video_players
 	local video_player = video_players[reference_name]
 
-	fassert(video_player, "[UIRenderer] - Could not find a video player to destroy with name: %s", reference_name)
 	World.destroy_video_player(world or self.world, video_player)
 
 	video_players[reference_name] = nil
@@ -665,7 +614,6 @@ UIRenderer.draw_slug_icon = function (self, resource, index, position, size, col
 		render_pass = render_pass .. "_hdr"
 	end
 
-	fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
 	table.clear_array(gui_args, 20)
 
 	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
@@ -732,7 +680,6 @@ UIRenderer.draw_slug_multi_icon = function (self, resource, index, position, siz
 		local draw_resource = is_resource_array and resource[i] or resource
 		local retained_id = retained_ids and retained_ids[i] or nil
 
-		fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
 		table.clear_array(gui_args, 20)
 
 		gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
@@ -801,7 +748,6 @@ UIRenderer.draw_slug_icon_rotated = function (self, resource, index, size, posit
 	local gui = retained_mode and self.gui_retained or self.gui
 	local gui_func = retained_id and Gui_update_slug_icon_3d or Gui_slug_icon_3d
 
-	fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
 	table.clear_array(gui_args, 20)
 
 	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
@@ -872,7 +818,6 @@ UIRenderer.draw_slug_picture = function (self, resource, position, size, color, 
 	local gui = retained_mode and self.gui_retained or self.gui
 	local gui_func = retained_id and Gui_update_slug_picture or Gui_slug_picture
 
-	fassert(#slug_render_params < 10, "[UIRenderer] - To many slug params: %d, can currently only handle 9", #slug_render_params)
 	table.clear_array(gui_args, 20)
 
 	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
@@ -893,7 +838,12 @@ UIRenderer.draw_slug_picture = function (self, resource, position, size, color, 
 	return retained_mode and id or nil
 end
 
-UIRenderer.draw_rect = function (self, position, size, color, retained_id)
+UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_id)
+	table.clear(optional_gui_args)
+
+	local scale = self.scale
+	gui_position = Gui.scale_vector3(gui_position, scale)
+	gui_size = Gui.scale_vector3(gui_size, scale)
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -901,49 +851,45 @@ UIRenderer.draw_rect = function (self, position, size, color, retained_id)
 		retained_id = nil
 	end
 
-	local scale = self.scale
-	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
-	position = UIResolution.scale_vector(position, scale)
-	size = UIResolution.scale_vector(size, scale)
-	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
+	local snap_pixel_positions, alpha_multiplier = nil
+
+	if render_settings then
+		snap_pixel_positions = render_settings.snap_pixel_positions
+
+		if render_settings.start_layer then
+			gui_position[3] = render_settings.start_layer + gui_position[3]
+		end
+
+		alpha_multiplier = render_settings.alpha_multiplier
+	end
+
+	if color then
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+	end
 
 	if snap_pixel_positions == nil then
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
 	end
 
-	if snap_pixel_positions then
-		position = _snap_to_position(position, scale)
-	end
-
-	if render_settings then
-		position[3] = (render_settings.start_layer or 0) + position[3]
-	end
-
+	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
 	local render_pass = self.base_render_pass
 
-	if render_pass and render_settings.hdr then
-		render_pass = render_pass .. "_hdr"
+	if render_pass then
+		if render_settings.hdr then
+			optional_gui_args.render_pass = render_pass .. "_hdr"
+		else
+			optional_gui_args.render_pass = render_pass
+		end
 	end
 
+	optional_gui_args.snap_pixel_positions = snap_pixel_positions
 	local gui = retained_mode and self.gui_retained or self.gui
-	local gui_func = retained_id and Gui_update_rect or Gui_rect
 
-	table.clear_array(gui_args, 20)
-
-	gui_args[7] = color
-	gui_args[6] = size
-	gui_args[5] = position
-	gui_args[4] = render_pass
-	gui_args[3] = self.render_pass_flag
-	gui_args[2] = retained_id
-	gui_args[1] = gui
-
-	table.compact_array(gui_args)
-
-	local id = gui_func(unpack(gui_args))
-
-	return retained_mode and id or nil
+	if retained_id then
+		return Gui2_update_rect(gui, retained_id, gui_position, gui_size, optional_gui_args)
+	else
+		return Gui2_rect(gui, gui_position, gui_size, optional_gui_args)
+	end
 end
 
 UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id)
@@ -1103,36 +1049,24 @@ end
 
 UIRenderer.draw_texture_rotated = function (self, material, size, position, angle, pivot, color, optional_uvs, retained_id)
 	local scale = self.scale
-	size = UIResolution.scale_vector(size, scale)
+	size = Gui.scale_vector3(size, scale)
 	local tm = Rotation2D(Vector3.zero(), angle, Vector2(UIResolution.scale_lua_vector2(pivot, scale)))
-	local translation = Matrix4x4.translation(tm)
-	local translation_x, translation_y, translation_z = Vector3.to_elements(translation)
-	local scaled_position_x, scaled_position_y = Vector3.to_elements(UIResolution.scale_vector(position, scale))
-
-	Vector3.set_xyz(translation, translation_x + scaled_position_x, translation_y, translation_z + scaled_position_y)
-	Matrix4x4.set_translation(tm, translation)
-
+	tm = Rotation2D.translate(tm, position, scale)
 	local layer = math.max(position[3], 1)
 
 	return UIRenderer.script_draw_bitmap_3d(self, material, tm, nil, layer, size, color, optional_uvs, retained_id)
 end
 
 UIRenderer.draw_text = function (self, text, font_size, font_type, position, size, color, options, retained_id)
-	Profiler.start("UIRenderer.draw_text")
-
 	local scale = self.scale
 	position = UIResolution.scale_vector(position, scale)
 	size = size and UIResolution.scale_vector(size, scale)
 	local return_value = UIRenderer.script_draw_text(self, text, font_size, font_type, position, size, color, options, retained_id)
 
-	Profiler.stop("UIRenderer.draw_text")
-
 	return return_value
 end
 
 UIRenderer.word_wrap = function (self, text, font_type, font_size, width)
-	Profiler.start("UIRenderer.word_wrap")
-
 	local whitespace = " 。，"
 	local soft_dividers = " -+&/*"
 	local return_dividers = "\n"
@@ -1143,8 +1077,6 @@ UIRenderer.word_wrap = function (self, text, font_type, font_size, width)
 	local flags = font_data.render_flags or 0
 	local rows, return_indices = Gui.slug_word_wrap(self.gui, text, font, font_size, width * scale, return_dividers, soft_dividers, reuse_global_table, flags)
 
-	Profiler.stop("UIRenderer.word_wrap")
-
 	return rows, return_indices
 end
 
@@ -1153,8 +1085,6 @@ UIRenderer.text_width = function (self, text, font_type, font_size, optional_siz
 end
 
 UIRenderer.text_height = function (self, text, font_type, font_size, optional_size, options)
-	Profiler.start("UIRenderer.text_height")
-
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
@@ -1162,23 +1092,31 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 	local min, max, _ = Gui.slug_text_max_extents(self.gui, text, font, font_size, optional_size, "flags", flags, unpack(options or dummy_text_options))
 	local height = max.y - min.y
 
-	Profiler.stop("UIRenderer.text_height")
-
 	return height
 end
 
 UIRenderer.text_size = function (self, text, font_type, font_size, optional_size, options)
-	Profiler.start("UIRenderer.text_size")
-
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
 	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
-	local min, max, caret = Gui.slug_text_extents(self.gui, text, font, font_size, optional_size, "flags", flags, unpack(options or dummy_text_options))
-	local width = max.x - min.x
-	local height = max.y - min.y
+	local additional_settings = nil
 
-	Profiler.stop("UIRenderer.text_size")
+	if not options then
+		table.clear(optional_gui_args)
+
+		additional_settings = optional_gui_args
+	else
+		additional_settings = options
+	end
+
+	additional_settings.flags = flags
+	additional_settings.optional_size = optional_size
+	local min, max, caret = Gui2_slug_text_extents(self.gui, text, font, font_size, additional_settings)
+	local min_x, min_y = Vector3.to_elements(min)
+	local max_x, max_y = Vector3.to_elements(max)
+	local width = max_x - min_x
+	local height = max_y - min_y
 
 	return width, height, min, caret
 end
@@ -1353,20 +1291,23 @@ UIRenderer.destroy_slug_picture = function (self, retained_id)
 	Gui.destroy_slug_picture(self.gui_retained, retained_id)
 end
 
+local _debug_render_scenegraph_text_options = {
+	shadow = true,
+	horizontal_alignment = Gui.HorizontalAlignCenter,
+	vertical_alignment = Gui.VerticalAlignCenter
+}
+
 local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)
-	local default_size = {
-		5,
-		5
-	}
 	local draw_color = Color.maroon(64, true)
 	local draw_text_color = Color.white(255, true)
 	local font_size = 10
 	local font_type = "arial"
+	ui_renderer.render_settings.material_flags = 0
 
 	for i = 1, n_scenegraph do
 		local draw = true
 		local scenegraph_object = scenegraph[i]
-		local size = table.clone(scenegraph_object.size) or table.clone(default_size)
+		local size = Vector2(unpack(scenegraph_object.size))
 		local scenegraph_object_scale = scenegraph_object.scale
 		local scenegraph_object_parent = scenegraph_object.parent
 
@@ -1389,10 +1330,10 @@ local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)
 			UIRenderer.draw_rect(ui_renderer, Vector3(unpack(scenegraph_object.world_position)), size, color)
 		end
 
-		local position = Vector3(scenegraph_object.world_position[1], scenegraph_object.world_position[2], scenegraph_object.world_position[3] + 1)
-
 		if draw then
-			UIRenderer.draw_text(ui_renderer, scenegraph_object.name, font_size, font_type, position, draw_text_color)
+			local position = Vector3(scenegraph_object.world_position[1], scenegraph_object.world_position[2], scenegraph_object.world_position[3] + 1)
+
+			UIRenderer.draw_text(ui_renderer, scenegraph_object.name, font_size, font_type, position, size, draw_text_color, _debug_render_scenegraph_text_options)
 		end
 
 		local children = scenegraph_object.children

@@ -66,6 +66,56 @@ local considerations = {
 			is_condition = true
 		}
 	},
+	melee_attack_elite = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 5,
+			spline = {
+				0,
+				1,
+				0.629,
+				1,
+				0.63002,
+				0,
+				1,
+				0
+			}
+		},
+		target_speed_away = {
+			component_field = "target_speed_away",
+			blackboard_component = "perception",
+			max_value = 4,
+			spline = {
+				0,
+				1,
+				0.1,
+				1,
+				0.1001,
+				0,
+				1,
+				0
+			}
+		},
+		distance_to_target_z = {
+			component_field = "target_distance_z",
+			blackboard_component = "perception",
+			max_value = 4.25,
+			spline = {
+				0,
+				1,
+				0.5,
+				0,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
+	},
 	running_phased_melee_attack = {
 		distance_to_target = {
 			component_field = "target_distance",
@@ -144,7 +194,7 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 30,
+			max_value = 25,
 			spline = {
 				0,
 				0.01,
@@ -456,7 +506,7 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 40,
+			max_value = 30,
 			spline = {
 				0,
 				1,
@@ -478,14 +528,16 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 60,
+			max_value = 30,
 			spline = {
 				0,
 				1,
+				0.25,
+				0.6,
 				0.5,
-				1,
+				0.4,
 				0.900001,
-				1,
+				0.2,
 				1,
 				0
 			}

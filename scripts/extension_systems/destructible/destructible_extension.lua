@@ -18,10 +18,6 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 		lights_enabled = true,
 		visible = true
 	}
-
-	fassert(Unit.find_actor(unit, "c_destructible"), "[DestructibleExtension][init] Cannot find actor 'c_destructible' for Unit(%s; %s)", tostring(unit), Unit.id_string(unit))
-	fassert(Unit.actor(unit, "c_destructible") or Unit.get_data(unit, "disable_physics"), "[DestructibleExtension][init] Missing actor 'c_destructible' for Unit(%s; %s)", tostring(unit), Unit.id_string(unit))
-	fassert(Unit.has_visibility_group(unit, "main"), "[DestructibleExtension][init] Missing visibility group 'main' for Unit(%s; %s)", tostring(unit), Unit.id_string(unit))
 end
 
 DestructibleExtension.destroy = function (self)
@@ -62,9 +58,6 @@ end
 
 DestructibleExtension.setup_stages = function (self)
 	local unit = self._unit
-
-	fassert(self._destruction_info == nil, "[DestructibleExtension] Only 1 Destructible component allowed per Unit.")
-
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 	local info = self._stages_info
 	self._destruction_info = DestructibleUtilities.setup_stages(unit, info.mass, info.speed, info.force_direction_type, health_extension)
@@ -100,17 +93,17 @@ DestructibleExtension.update = function (self, unit, dt, t)
 	end
 end
 
-DestructibleExtension.set_enabled = function (self, val)
+DestructibleExtension.set_enabled = function (self, value)
 	local actor = Unit.actor(self._unit, "c_destructible")
 
-	Actor.set_scene_query_enabled(actor, val)
+	Actor.set_scene_query_enabled(actor, value)
 end
 
-DestructibleExtension.set_disable_physics = function (self, disable_physics)
-	self._physics_disabled = disable_physics
+DestructibleExtension.set_physics_disabled = function (self, physics_disabled)
+	self._physics_disabled = physics_disabled
 end
 
-DestructibleExtension.disable_physics = function (self)
+DestructibleExtension.physics_disabled = function (self)
 	return self._physics_disabled
 end
 
@@ -151,8 +144,6 @@ DestructibleExtension.add_damage = function (self, damage, hit_actor, attack_dir
 end
 
 DestructibleExtension._setup_nav_gate = function (self, unit, nav_world, is_server)
-	fassert(self._nav_layer_name == nil, "[DestructibleExtension][_setup_nav_gate] nav_layer already set.")
-
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
 	local layer_name = "monster_wall_volume_" .. tostring(unit_level_index)
 	local volume_layer_allowed = false
@@ -210,8 +201,6 @@ end
 DestructibleExtension._sync_server_state = function (self, peer_id)
 	local unit = self._unit
 	local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
-
-	fassert(self._destruction_info or Unit.get_data(unit, "disable_physics"), "[DestructibleExtension][_sync_server_state] component not ready.")
 
 	if self._destruction_info then
 		local current_stage_index = self._destruction_info.current_stage_index

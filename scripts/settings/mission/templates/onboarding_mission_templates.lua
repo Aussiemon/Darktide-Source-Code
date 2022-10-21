@@ -1,37 +1,19 @@
 local mission_templates = {
-	om_hub_01 = {
-		zone_id = "hub",
-		mission_name = "loc_mission_name_om_hub_01",
-		wwise_state = "hub",
-		objectives = "onboarding",
-		game_mode_name = "hub_singleplay",
-		hud_elements = "scripts/ui/hud/hud_elements_player_hub",
+	om_basic_combat_01 = {
+		use_prologue_profile = false,
+		mission_name = "loc_mission_name_tg_basic_combat_01",
+		objectives = "training_grounds",
+		zone_id = "training_grounds",
+		game_mode_name = "training_grounds",
 		mechanism_name = "onboarding",
-		level = "content/levels/hub/hub_ship/missions/mission_om_hub_01",
-		cinematics = {
-			cutscene_5_hub = {
-				"cs_05_hub"
-			},
-			cutscene_7 = {
-				"cs_07"
-			}
+		level = "content/levels/training_grounds/missions/mission_tg_basic_combat_01",
+		terror_event_templates = {
+			"terror_events_training_ground"
 		},
 		testify_flags = {
 			run_through_mission = false,
-			mission_server = false
-		}
-	},
-	om_hub_02 = {
-		zone_id = "hub",
-		mission_name = "loc_mission_name_om_hub_02",
-		wwise_state = "hub",
-		objectives = "onboarding",
-		game_mode_name = "hub_singleplay",
-		hud_elements = "scripts/ui/hud/hud_elements_player_hub",
-		mechanism_name = "onboarding",
-		level = "content/levels/hub/hub_ship/missions/mission_om_hub_02",
-		testify_flags = {
-			run_through_mission = false,
+			performance = false,
+			cutscenes = false,
 			mission_server = false
 		}
 	}

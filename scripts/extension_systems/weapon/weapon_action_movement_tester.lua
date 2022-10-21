@@ -21,8 +21,7 @@ WeaponActionMovementTester.parse_weapon_templates = function (weapon_templates)
 end
 
 function _verify_curve(curve, curve_type, action_name, weapon_template_name)
-	fassert(curve.start_modifier, "Missing start_modifier in %q for action \"%s\" in weapon_template \"%s\"", curve_type, action_name, weapon_template_name)
-	fassert(#curve > 0, "No segments in the %q for action \"%s\" in weapon_template \"%s\"", curve_type, action_name, weapon_template_name)
+	return
 end
 
 return WeaponActionMovementTester

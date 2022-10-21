@@ -4,10 +4,6 @@ local RPCS = {
 local RemoteStateSyncState = class("RemoteStateSyncState")
 
 RemoteStateSyncState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.peer_id) == "string", "Peer id required")
-
 	self._shared_state = shared_state
 	self._request_has_arrived = false
 

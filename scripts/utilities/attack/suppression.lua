@@ -241,6 +241,14 @@ Suppression.is_suppressed = function (unit)
 	return false
 end
 
+Suppression.clear_suppression = function (unit)
+	local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
+
+	if suppression_extension and suppression_extension.clear_suppression then
+		suppression_extension:clear_suppression()
+	end
+end
+
 function _get_breed(unit)
 	if not HEALTH_ALIVE[unit] then
 		return
@@ -262,21 +270,6 @@ function _apply_suppression_player(unit, suppression_value, stagger_category, hi
 end
 
 function _apply_suppression_minion(suppressed_unit, suppression_value, suppression_type, suppression_attack_delay, attacking_unit, from_position, optional_instant_aggro)
-	local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
-
-	if attacking_unit_buff_extension then
-		local is_frame_unique_proc = attacking_unit_buff_extension:is_frame_unique_proc(proc_events.on_suppress, suppressed_unit)
-
-		if is_frame_unique_proc then
-			attacking_unit_buff_extension:set_frame_unique_proc(proc_events.on_suppress, suppressed_unit)
-
-			local param_table = attacking_unit_buff_extension:request_proc_event_param_table()
-			param_table.suppressed_unit = suppressed_unit
-
-			attacking_unit_buff_extension:add_proc_event(proc_events.on_suppress, param_table)
-		end
-	end
-
 	local suppression_extension = ScriptUnit.has_extension(suppressed_unit, "suppression_system")
 
 	if suppression_extension then

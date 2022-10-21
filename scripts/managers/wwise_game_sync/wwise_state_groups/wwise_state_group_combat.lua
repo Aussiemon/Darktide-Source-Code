@@ -2,6 +2,8 @@ require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_b
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local STATES = WwiseGameSyncSettings.state_groups.music_combat
+local HORDE_HIGH_MINIMUM_AGGROED_MINIONS = WwiseGameSyncSettings.combat_state_horde_high_minimum_aggroed_minions
+local HORDE_LOW_MINIMUM_AGGROED_MINIONS = WwiseGameSyncSettings.combat_state_horde_low_minimum_aggroed_minions
 local FAST_PARAMETER_UPDATE_RATE = 0.25
 local SLOW_PARAMETER_UPDATE_RATE = 1
 local WwiseStateGroupCombat = class("WwiseStateGroupCombat", "WwiseStateGroupBase")
@@ -54,13 +56,24 @@ end
 WwiseStateGroupCombat._wwise_state = function (self)
 	local music_parameter_extension = self._music_parameter_extension
 	local intensity_percent = music_parameter_extension:intensity_percent()
+	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions() or 0
+	local horde_high_minimum_aggroed_minions = HORDE_HIGH_MINIMUM_AGGROED_MINIONS <= num_aggroed_minions
+	local horde_low_minimum_aggroed_minions = num_aggroed_minions < HORDE_HIGH_MINIMUM_AGGROED_MINIONS and HORDE_LOW_MINIMUM_AGGROED_MINIONS <= num_aggroed_minions
 
 	if music_parameter_extension:boss_near() then
 		return STATES.boss
 	elseif music_parameter_extension:ambush_horde_near() then
-		return STATES.horde
+		if horde_high_minimum_aggroed_minions then
+			return STATES.horde_high
+		elseif horde_low_minimum_aggroed_minions then
+			return STATES.horde_low
+		end
 	elseif music_parameter_extension:vector_horde_near() then
-		return STATES.horde
+		if horde_high_minimum_aggroed_minions then
+			return STATES.horde_high
+		elseif horde_low_minimum_aggroed_minions then
+			return STATES.horde_low
+		end
 	elseif intensity_percent > 0 then
 		return STATES.normal
 	end

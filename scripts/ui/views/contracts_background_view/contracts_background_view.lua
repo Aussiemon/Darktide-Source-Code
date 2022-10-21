@@ -10,6 +10,13 @@ end
 
 ContractsBackgroundView.on_enter = function (self)
 	ContractsBackgroundView.super.on_enter(self)
+
+	local narrative_manager = Managers.narrative
+	local narrative_event_name = "level_unlock_contract_store_visited"
+
+	if narrative_manager:can_complete_event(narrative_event_name) then
+		narrative_manager:complete_event(narrative_event_name)
+	end
 end
 
 return ContractsBackgroundView

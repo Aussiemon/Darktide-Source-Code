@@ -9,10 +9,10 @@ local event_vo_survive_zealot_male_b = {
 			"loc_zealot_male_b__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			2.982083,
+			2.982063,
 			3.71425,
-			2.196625,
-			3.219479
+			2.196604,
+			3.219458
 		},
 		randomize_indexes = {}
 	},

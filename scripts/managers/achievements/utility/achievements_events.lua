@@ -9,6 +9,19 @@ local events = {
 				Managers.stats:record_player_spawned(player)
 			end
 		end
+	},
+	{
+		name = "host_game_session_manager_player_joined",
+		response = function (self, peer_id, player)
+			local valid_account_id = player.account_id and math.is_uuid(player:account_id())
+			local valid_character_id = player.character_id and math.is_uuid(player:character_id())
+
+			if valid_account_id and valid_character_id then
+				local travel_ratio = Managers.state.main_path:furthest_travel_percentage(1)
+
+				Managers.stats:record_player_joined(player, travel_ratio)
+			end
+		end
 	}
 }
 local AchievementsEvents = {

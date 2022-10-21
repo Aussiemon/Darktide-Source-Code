@@ -2,6 +2,7 @@ local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templa
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -265,7 +266,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return false
 		end,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		},
@@ -273,13 +274,13 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		start_input = "zoom_shoot",
-		minimum_hold_time = 0.3,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		hit_marker_type = "center",
 		crosshair_type = "ironsight",
 		weapon_handling_template = "autogun_quad_burst_fast",
 		ammunition_usage = 1,
+		minimum_hold_time = 0.3,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -341,7 +342,7 @@ weapon_template.actions = {
 				action_name = "action_reload"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		},
@@ -399,11 +400,11 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 3.3,
 		action_movement_curve = {
@@ -452,7 +453,7 @@ weapon_template.actions = {
 				chain_time = 3.1
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -598,11 +599,7 @@ weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.base_stats = {
 	autogun_p1_m1_stability_stat = {

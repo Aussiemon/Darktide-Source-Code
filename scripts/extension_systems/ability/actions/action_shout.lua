@@ -2,10 +2,7 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local Health = require("scripts/utilities/health")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Toughness = require("scripts/utilities/toughness/toughness")
@@ -28,7 +25,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 	ActionShout.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
 	local rotation = self._first_person_component.rotation
@@ -141,10 +138,11 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 						local has_special_rule = specialization_extension:has_special_rule(revive_special_rule)
 
 						if has_special_rule and is_player_unit then
-							local character_state_component = self._unit_data_extension:read_component("character_state")
+							local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+							local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 
 							if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
-								local assisted_state_input_component = self._unit_data_extension:write_component("assisted_state_input")
+								local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
 								assisted_state_input_component.force_assist = true
 							end
 						end
@@ -183,6 +181,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		local buff_to_add = action_settings.buff_to_add
 		local shout_direction = self._shout_direction
 		local shout_dot = action_settings.shout_dot
+		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
 
 		for i = 1, num_hits do
 			repeat
@@ -207,6 +206,29 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
 						buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
+					end
+
+					local buff_special_rule = special_rules.shout_applies_buff_to_enemies
+					local has_special_rule = specialization_extension:has_special_rule(buff_special_rule)
+
+					if has_special_rule then
+						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
+						local buff_name = nil
+						local monster_buff_name = action_settings.special_rule_buff_enemy_monster
+
+						if monster_buff_name then
+							local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
+							local breed = unit_data_extension:breed()
+							local is_monster = breed.tags.monster
+
+							if is_monster then
+								buff_name = monster_buff_name
+							else
+								buff_name = action_settings.special_rule_buff_enemy
+							end
+						end
+
+						buff_extension:add_internally_controlled_buff(buff_name, t)
 					end
 
 					local hit_zone_name = "torso"
@@ -236,9 +258,12 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.unit = player_unit
 
-	buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+	if param_table then
+		param_table.unit = player_unit
+
+		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+	end
 end
 
 ActionShout.finish = function (self, reason, data, t, time_in_action, action_settings)

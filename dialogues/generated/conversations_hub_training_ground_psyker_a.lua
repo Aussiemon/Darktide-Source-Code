@@ -1,4 +1,51 @@
 local conversations_hub_training_ground_psyker_a = {
+	hub_idle = {
+		randomize_indexes_n = 0,
+		sound_events_n = 19,
+		sound_events = {
+			"loc_training_ground_psyker_a__hub_idle_01",
+			"loc_training_ground_psyker_a__hub_idle_02",
+			"loc_training_ground_psyker_a__hub_idle_03",
+			"loc_training_ground_psyker_a__hub_idle_04",
+			"loc_training_ground_psyker_a__hub_idle_05",
+			"loc_training_ground_psyker_a__hub_idle_06",
+			"loc_training_ground_psyker_a__hub_idle_07",
+			"loc_training_ground_psyker_a__hub_idle_09",
+			"loc_training_ground_psyker_a__hub_idle_10",
+			"loc_training_ground_psyker_a__hub_idle_11",
+			"loc_training_ground_psyker_a__hub_idle_12",
+			"loc_training_ground_psyker_a__hub_idle_13",
+			"loc_training_ground_psyker_a__hub_idle_14",
+			"loc_training_ground_psyker_a__hub_idle_15",
+			"loc_training_ground_psyker_a__hub_idle_16",
+			"loc_training_ground_psyker_a__hub_idle_17",
+			"loc_training_ground_psyker_a__hub_idle_18",
+			"loc_training_ground_psyker_a__hub_idle_19",
+			"loc_training_ground_psyker_a__hub_idle_20"
+		},
+		sound_events_duration = {
+			4.338708,
+			2.546458,
+			3.338313,
+			3.066688,
+			3.036021,
+			5.064417,
+			3.066688,
+			5.484979,
+			5.388604,
+			5.402188,
+			3.329542,
+			5.441167,
+			5.300979,
+			3.456583,
+			5.690896,
+			4.845354,
+			4.543063,
+			5.1345,
+			6.457563
+		},
+		randomize_indexes = {}
+	},
 	hub_interact_training_ground_psyker_dislikes_character = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,
@@ -94,17 +141,6 @@ local conversations_hub_training_ground_psyker_a = {
 			4.805521,
 			6.529854,
 			4.327813
-		},
-		randomize_indexes = {}
-	},
-	npc_first_interaction_training_ground_psyker = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_01"
-		},
-		sound_events_duration = {
-			[1.0] = 38.41425
 		},
 		randomize_indexes = {}
 	}

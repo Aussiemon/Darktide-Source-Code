@@ -16,11 +16,11 @@ local indicator_size = {
 	28
 }
 template.size = size
-template.unit_node = "ui_interaction_marker"
+template.unit_node = "ui_objective_marker"
 template.position_offset = {
 	0,
 	0,
-	0.3
+	0.2
 }
 template.name = "objective"
 template.max_distance = 300
@@ -32,15 +32,15 @@ template.screen_margins = {
 	right = 450
 }
 local template_visual_definitions = {
-	template_settings_overrides = {
-		screen_clamp = true,
-		position_offset = {
-			0,
-			0,
-			0.3
-		}
-	},
 	default = {
+		template_settings_overrides = {
+			screen_clamp = true,
+			position_offset = {
+				0,
+				0,
+				0.2
+			}
+		},
 		colors = {
 			frame = UIHudSettings.color_tint_main_1,
 			arrow = Color.ui_hud_green_super_light(255, true),
@@ -399,12 +399,12 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			pass_type = "texture",
 			value = "content/ui/materials/hud/interactions/icons/objective_main",
 			style = {
-				vertical_alignment = "center",
+				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = size,
 				offset = {
 					0,
-					0,
+					-5,
 					2
 				},
 				color = UIHudSettings.color_tint_main_1
@@ -419,7 +419,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			pass_type = "texture",
 			value = "content/ui/materials/hud/interactions/frames/point_of_interest_top",
 			style = {
-				vertical_alignment = "center",
+				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = size,
 				offset = {
@@ -443,7 +443,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			pass_type = "texture",
 			value = "content/ui/materials/hud/interactions/frames/point_of_interest_back",
 			style = {
-				vertical_alignment = "center",
+				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = size,
 				offset = {
@@ -472,12 +472,12 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			value = "content/ui/materials/hud/interactions/frames/direction",
 			style_id = "arrow",
 			style = {
-				vertical_alignment = "center",
+				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
-					0,
+					5,
 					1
 				},
 				color = Color.ui_hud_green_super_light(255, true)
@@ -490,26 +490,6 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			end
 		},
 		{
-			style_id = "indicator",
-			value_id = "indicator",
-			pass_type = "texture",
-			value = "content/ui/materials/hud/icons/player_assistance/player_assistance_arrow",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				size = indicator_size,
-				offset = {
-					0,
-					indicator_size[2] + 15,
-					4
-				},
-				color = Color.ui_hud_green_super_light(255, true)
-			},
-			visibility_function = function (content, style)
-				return content.distance < 10 and not content.is_clamped
-			end
-		},
-		{
 			style_id = "text",
 			pass_type = "text",
 			value_id = "text",
@@ -518,10 +498,10 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				text_vertical_alignment = "top",
 				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
-				vertical_alignment = "center",
+				vertical_alignment = "top",
 				offset = {
 					0,
-					40,
+					-5,
 					2
 				},
 				font_type = header_font_settings.font_type,
@@ -534,7 +514,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				}
 			},
 			visibility_function = function (content, style)
-				return content.distance >= 10 and style.text_color[1] > 0
+				return content.distance >= 15 and style.text_color[1] > 0
 			end
 		}
 	}, scenegraph_id)

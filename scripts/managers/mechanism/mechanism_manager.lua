@@ -44,11 +44,18 @@ MechanismManager.EVENTS = {
 	client_exit_gameplay = {
 		type = EVENT_TYPES.locally
 	},
-	ready_for_game_score = {
-		rpc_name = "rpc_mechanism_event_ready_for_game_score",
+	failed_fetching_session_report = {
+		rpc_name = "rpc_mechanism_event_failed_fetching_session_report",
 		type = EVENT_TYPES.server,
-		pack_function = function (self, peer_id, success)
-			return peer_id, success
+		pack_function = function (self, peer_id)
+			return peer_id
+		end
+	},
+	game_score_end_time = {
+		rpc_name = "rpc_mechanism_event_game_score_end_time",
+		type = EVENT_TYPES.all,
+		pack_function = function (self, time)
+			return time
 		end
 	}
 }
@@ -195,7 +202,6 @@ MechanismManager.connect_to_host = function (self, channel_id)
 end
 
 MechanismManager.disconnect = function (self, channel_id)
-	fassert(channel_id == self._mechanism_host_channel, "Trying to disconnect to host not connected to")
 	_info("Disconnecting from mechanism host on channel %i", channel_id)
 
 	self._mechanism_host_channel = nil
@@ -224,9 +230,6 @@ MechanismManager.change_mechanism = function (self, mechanism_name, context)
 	end
 
 	local settings = MechanismSettings[mechanism_name]
-
-	fassert(settings, "%q does not exist in MechanismSettings", mechanism_name)
-
 	local lookup_id = self.LOOKUP[mechanism_name]
 
 	for channel_id in pairs(self._clients) do
@@ -299,8 +302,6 @@ MechanismManager.trigger_event = function (self, event, ...)
 
 	local event_function = mechanism[event]
 
-	fassert(event_function, "Mechanism %q does not handle event %q.", mechanism.name, event)
-
 	if event_data.type == EVENT_TYPES.locally then
 		event_function(mechanism, ...)
 	elseif event_data.type == EVENT_TYPES.server then
@@ -312,6 +313,12 @@ MechanismManager.trigger_event = function (self, event, ...)
 			event_function(mechanism, ...)
 		end
 	else
+		local is_client = host_channel
+
+		if is_client then
+			Log.warning("MechanismManager", "trying to trigger host event as client")
+		end
+
 		local rpc_name = event_data.rpc_name
 
 		_send_event_rpc(rpc_name, self._clients, event_data:pack_function(...))
@@ -321,9 +328,6 @@ end
 
 MechanismManager.rpc_mechanism_event_game_mode_end = function (self, channel_id, result_id, session_id)
 	local mechanism = self._mechanism
-
-	fassert(mechanism.game_mode_end, "Mechanism %q does not handle event %q.", mechanism.name, "game_mode_end")
-
 	local reason = NetworkLookup.game_mode_outcomes[result_id]
 
 	mechanism:game_mode_end(reason, session_id)
@@ -335,15 +339,23 @@ MechanismManager.rpc_mechanism_event = function (self, channel_id, event_id)
 	local mechanism = self._mechanism
 	local event_function = mechanism[event_name]
 
-	fassert(event_function, "Mechanism %q does not handle event %q.", mechanism.name, event_name)
 	event_function(mechanism)
 end
 
-MechanismManager.rpc_mechanism_event_ready_for_game_score = function (self, channel_id, peer_id, success)
+MechanismManager.rpc_mechanism_event_failed_fetching_session_report = function (self, channel_id, peer_id)
 	local mechanism = self._mechanism
 
-	fassert(mechanism.ready_for_game_score, "Mechanism %q does not handle event 'ready_for_game_score'.", mechanism.name)
-	mechanism:ready_for_game_score(peer_id, success)
+	mechanism:failed_fetching_session_report(peer_id)
+end
+
+MechanismManager.rpc_mechanism_event_game_score_end_time = function (self, channel_id, end_time)
+	local mechanism = self._mechanism
+
+	if mechanism.game_score_end_time then
+		mechanism:game_score_end_time(end_time)
+	elseif not Managers.progression:is_using_dummy_report() then
+		-- Nothing
+	end
 end
 
 MechanismManager.end_result = function (self)
@@ -356,6 +368,12 @@ MechanismManager.mechanism_state = function (self)
 	local mechanism_state = self._mechanism and self._mechanism._state or false
 
 	return mechanism_state
+end
+
+MechanismManager.singleplay_type = function (self)
+	local mechanism = self._mechanism
+
+	return mechanism and mechanism.singleplay_type and mechanism:singleplay_type()
 end
 
 return MechanismManager

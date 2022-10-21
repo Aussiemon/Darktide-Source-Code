@@ -24,11 +24,11 @@ local breed_data = {
 	detection_radius = 13,
 	use_navigation_path_splines = true,
 	walk_speed = 1.9,
-	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
 	use_bone_lod = true,
+	sub_faction_name = "chaos",
 	unit_template_name = "minion",
 	spawn_anim_state = "to_gunner",
-	sub_faction_name = "chaos",
+	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
 	game_object_type = "minion_elite_ranged",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
@@ -47,11 +47,12 @@ local breed_data = {
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 3,
 	player_locomotion_constrain_radius = 0.9,
-	stagger_reduction_ranged = 12,
+	stagger_reduction_ranged = 25,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	hit_mass = 100,
+	reduced_hit_mass = 5,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -75,7 +76,7 @@ local breed_data = {
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 0.75,
 		[stagger_types.killshot] = 0.75,
-		[stagger_types.sticky] = 1
+		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 1,
@@ -83,15 +84,16 @@ local breed_data = {
 		[stagger_types.heavy] = 3,
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 1,
-		[stagger_types.killshot] = 2
+		[stagger_types.killshot] = 2,
+		[stagger_types.sticky] = 0.25
 	},
 	stagger_thresholds = {
-		[stagger_types.light] = 5,
+		[stagger_types.light] = 3,
 		[stagger_types.medium] = 15,
-		[stagger_types.heavy] = 80,
+		[stagger_types.heavy] = 40,
 		[stagger_types.light_ranged] = 10,
 		[stagger_types.sticky] = 5,
-		[stagger_types.killshot] = 10
+		[stagger_types.killshot] = 3
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_ogryn_gunner,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_ogryn_gunner_sounds"),
@@ -167,7 +169,7 @@ local breed_data = {
 	aim_config = {
 		lerp_speed = 5,
 		target = "head_aim_target",
-		distance = 5,
+		distance = 50,
 		lean_variable_name = "lean",
 		lean_variable_modifier = -0.2,
 		node = "j_neck",
@@ -326,9 +328,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -414,25 +413,10 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
-		health_percent_throttle = 0.3,
-		always_show_killing_blow = false,
-		thresholds = {
-			[damage_types.blunt] = 0.3,
-			[damage_types.blunt_heavy] = 0.4,
-			[damage_types.blunt_thunder] = 0.3,
-			[damage_types.plasma] = 0.15,
-			[damage_types.rippergun_pellet] = 0.15,
-			[damage_types.auto_bullet] = 0.25,
-			[damage_types.pellet] = 0.35,
-			[damage_types.boltshell] = 0.1,
-			[damage_types.laser] = 0.55,
-			[damage_types.power_sword] = 0.3,
-			[damage_types.sawing_stuck] = 0.01,
-			[damage_types.sawing] = 0.01,
-			[damage_types.slashing_force_stuck] = 0.3,
-			[damage_types.combat_blade] = 0.1
-		}
+		always_show_killing_blow = true,
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2,
+		radius_multiplier = 1.3
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot

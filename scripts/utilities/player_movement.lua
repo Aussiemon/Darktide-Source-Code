@@ -1,8 +1,6 @@
 local PlayerMovement = {}
 
 PlayerMovement.teleport = function (player, position, rotation)
-	assert(Managers.state.game_session:is_server(), "Can't teleport players on clients, game uses authoritative server network model.")
-
 	local cb = callback(PlayerMovement._teleport_callback, player.player_unit, Vector3Box(position), rotation and QuaternionBox(rotation) or nil)
 
 	Managers.state.game_mode:register_physics_safe_callback(cb)
@@ -18,11 +16,10 @@ PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed
 
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local locomotion_component = unit_data_extension:write_component("locomotion")
-		local new_rotation, new_position = PlayerMovement.calculate_relative_rotation_position(locomotion_component.parent_unit, rotation, position)
-		locomotion_component.position = new_position
+		locomotion_component.position = position
 
-		if new_rotation then
-			locomotion_component.rotation = new_rotation
+		if rotation then
+			locomotion_component.rotation = rotation
 		end
 
 		local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
@@ -50,63 +47,52 @@ PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed
 	end
 end
 
-PlayerMovement.locomotion_position = function (locomotion_component)
-	local parent_unit = locomotion_component.parent_unit
-	local position = locomotion_component.position
-	local _, absolute_position = PlayerMovement.calculate_absolute_rotation_position(parent_unit, nil, position)
+PlayerMovement.calculate_absolute_rotation_position = function (parent_unit, relative_rotation, relative_position)
+	local parent_pose = Unit.world_pose(parent_unit, 1)
+	local relative_pose = Matrix4x4.from_quaternion_position(relative_rotation, relative_position)
+	local absolute_pose = Matrix4x4.multiply(relative_pose, parent_pose)
 
-	return absolute_position
+	return Matrix4x4.rotation(absolute_pose), Matrix4x4.translation(absolute_pose)
 end
 
-PlayerMovement.calculate_absolute_rotation_position = function (parent_unit, relative_rotation, relative_position)
-	if not parent_unit then
-		return relative_rotation, relative_position
-	else
-		local parent_position = Unit.world_position(parent_unit, 1)
-		local parent_rotation = Unit.world_rotation(parent_unit, 1)
-		local parent_pose = Matrix4x4.from_quaternion_position(parent_rotation, parent_position)
-		local relative_pose = Matrix4x4.identity()
+PlayerMovement.calculate_absolute_position = function (parent_unit, relative_position)
+	local parent_pose = Unit.world_pose(parent_unit, 1)
+	local relative_pose = Matrix4x4.from_translation(relative_position)
+	local absolute_pose = Matrix4x4.multiply(relative_pose, parent_pose)
 
-		if relative_rotation and relative_position then
-			relative_pose = Matrix4x4.from_quaternion_position(relative_rotation, relative_position)
-		elseif relative_rotation and not relative_position then
-			relative_pose = Matrix4x4.from_quaternion(relative_rotation)
-		elseif not relative_rotation and relative_position then
-			relative_pose = Matrix4x4.from_translation(relative_position)
-		end
+	return Matrix4x4.translation(absolute_pose)
+end
 
-		local absolute_pose = Matrix4x4.multiply(relative_pose, parent_pose)
-		local absolute_position = Matrix4x4.translation(absolute_pose)
-		local absolute_rotation = Matrix4x4.rotation(absolute_pose)
+PlayerMovement.calculate_absolute_rotation = function (parent_unit, relative_rotation)
+	local parent_pose = Unit.world_pose(parent_unit, 1)
+	local relative_pose = Matrix4x4.from_quaternion(relative_rotation)
+	local absolute_pose = Matrix4x4.multiply(relative_pose, parent_pose)
 
-		return absolute_rotation, absolute_position
-	end
+	return Matrix4x4.rotation(absolute_pose)
 end
 
 PlayerMovement.calculate_relative_rotation_position = function (parent_unit, absolute_rotation, absolute_position)
-	if not parent_unit then
-		return absolute_rotation, absolute_position
-	else
-		local parent_position = Unit.world_position(parent_unit, 1)
-		local parent_rotation = Unit.world_rotation(parent_unit, 1)
-		local parent_pose = Matrix4x4.from_quaternion_position(parent_rotation, parent_position)
-		local inverted_parent_pose = Matrix4x4.inverse(parent_pose)
-		local absolute_pose = Matrix4x4.identity()
+	local inverted_parent_pose = Matrix4x4.inverse(Unit.world_pose(parent_unit, 1))
+	local absolute_pose = Matrix4x4.from_quaternion_position(absolute_rotation, absolute_position)
+	local relative_pose = Matrix4x4.multiply(absolute_pose, inverted_parent_pose)
 
-		if absolute_rotation and absolute_position then
-			absolute_pose = Matrix4x4.from_quaternion_position(absolute_rotation, absolute_position)
-		elseif absolute_rotation and not absolute_position then
-			absolute_pose = Matrix4x4.from_quaternion(absolute_rotation)
-		elseif not absolute_rotation and absolute_position then
-			absolute_pose = Matrix4x4.from_translation(absolute_position)
-		end
+	return Matrix4x4.rotation(relative_pose), Matrix4x4.translation(relative_pose)
+end
 
-		local relative_pose = Matrix4x4.multiply(absolute_pose, inverted_parent_pose)
-		local relative_position = Matrix4x4.translation(relative_pose)
-		local relative_rotation = Matrix4x4.rotation(relative_pose)
+PlayerMovement.calculate_relative_position = function (parent_unit, absolute_position)
+	local inverted_parent_pose = Matrix4x4.inverse(Unit.world_pose(parent_unit, 1))
+	local absolute_pose = Matrix4x4.from_translation(absolute_position)
+	local relative_pose = Matrix4x4.multiply(absolute_pose, inverted_parent_pose)
 
-		return relative_rotation, relative_position
-	end
+	return Matrix4x4.translation(relative_pose)
+end
+
+PlayerMovement.calculate_relative_rotation = function (parent_unit, absolute_rotation)
+	local inverted_parent_pose = Matrix4x4.inverse(Unit.world_pose(parent_unit, 1))
+	local absolute_pose = Matrix4x4.from_quaternion(absolute_rotation)
+	local relative_pose = Matrix4x4.multiply(absolute_pose, inverted_parent_pose)
+
+	return Matrix4x4.rotation(relative_pose)
 end
 
 local ROTATION_SOFT_LIMIT = math.pi * 0.5

@@ -31,8 +31,6 @@ BotNavTransitionManager.on_gameplay_post_init = function (self, level)
 end
 
 BotNavTransitionManager.destroy = function (self)
-	fassert(table.is_empty(self._bot_nav_transitions), "[BotNavTransitionManager] Transitions still exist on shutdown.")
-
 	local traverse_logic = self._traverse_logic
 
 	if traverse_logic then
@@ -102,9 +100,6 @@ BotNavTransitionManager.create_transition = function (self, wanted_from, via, wa
 
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_name)
-
-	fassert(layer_id, "[BotNavTransitionManager] Layer %s is not defined.", layer_name)
-
 	local physics_world = self._physics_world
 	local waypoint = BotNavTransition.resolve_waypoint_position(from, via, player_jumped, physics_world)
 	local created, graph = GwNavGraph.create(nav_world, IS_BIDIRECTIONAL, {
@@ -112,7 +107,6 @@ BotNavTransitionManager.create_transition = function (self, wanted_from, via, wa
 		to
 	}, Color.blue(), layer_id, index)
 
-	fassert(created, "[BotNavTransitionManager] Navgraph creation failed")
 	GwNavGraph.add_to_database(graph)
 
 	local broadphase_id = Broadphase.add(broadphase, nil, from, BOT_NAV_TRANSITION_RADIUS)
@@ -133,8 +127,6 @@ BotNavTransitionManager.create_transition = function (self, wanted_from, via, wa
 		next_index = (next_index - index_offset) % max_bot_nav_transitions + 1 + index_offset
 	until not transitions[next_index] or not transitions[next_index].permanent or next_index == index
 
-	fassert(next_index ~= index or not make_permanent, "[BotNavTransitionManager] Too many permanent bot nav transitions!")
-
 	self._current_index = next_index
 
 	return true, index
@@ -143,7 +135,6 @@ end
 BotNavTransitionManager.unregister_transition = function (self, index)
 	local bot_nav_transitions = self._bot_nav_transitions
 
-	fassert(bot_nav_transitions[index], "[BotNavTransitionManager] No transition found for index %d.", index)
 	self:_destroy_transition(bot_nav_transitions, index)
 end
 
@@ -224,16 +215,12 @@ BotNavTransitionManager.register_ladder = function (self, unit)
 	local layer_name = LadderNavTransition.NAV_TAG_LAYER
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_name)
-
-	fassert(layer_id, "[BotNavTransitionManager] Layer %s is not defined.", layer_name)
-
 	local index = self._ladder_smart_object_index + 1
 	local created, graph = GwNavGraph.create(nav_world, ladder_is_bidirectional, {
 		top_on_nav_mesh_position,
 		ground_on_nav_mesh_position
 	}, Color.blue(), layer_id, index)
 
-	fassert(created, "[BotNavTransitionManager] Navgraph creation failed")
 	GwNavGraph.add_to_database(graph)
 
 	self._ladder_smart_object_index = index

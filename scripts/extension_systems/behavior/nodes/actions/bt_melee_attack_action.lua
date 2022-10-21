@@ -8,6 +8,7 @@ local Block = require("scripts/utilities/attack/block")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionBackstabSettings = require("scripts/settings/minion_backstab/minion_backstab_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -79,9 +80,12 @@ end
 local DEFAULT_DOWN_Z_THRESHOLD = -2
 local DEFAULT_UP_Z_THRESHOLD = 1.9
 local DEFAULT_ATTACK_ANIM_EVENT = "attack"
-local DEFAULT_ANIMATION_WANTED_MOVEMENTSPEED_TIMING = 0.2
 local DEFAULT_BACKSTAB_TIMING = 0.6
 local DEFAULT_BOT_AOE_THREAT_TIMING = 0.2
+local DEFAULT_SET_ATTACKED_MELEE_TIMING = {
+	0.2,
+	0.5
+}
 
 BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_unit, t, spawn_component, scratchpad, action_data)
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
@@ -168,6 +172,12 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		if scratchpad.lag_compensation_rewind_s then
 			scratchpad.lag_compensation_timing = scratchpad.start_sweep_t + extra_timing
 		end
+
+		local sweep_ground_impact_fx_template = action_data.sweep_ground_impact_fx_template
+
+		if sweep_ground_impact_fx_template then
+			scratchpad.sweep_ground_impact_at_t = t + action_data.sweep_ground_impact_fx_timing
+		end
 	else
 		local attack_anim_damage_timings = action_data.attack_anim_damage_timings
 		local attack_timing_or_table = attack_anim_damage_timings[attack_event]
@@ -209,6 +219,8 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 			scratchpad.aoe_threat_bot_group = bot_group
 			scratchpad.aoe_threat_window = scratchpad.dodge_window - DEFAULT_BOT_AOE_THREAT_TIMING
 		end
+
+		scratchpad.set_attacked_melee_timing = scratchpad.attack_timing - math.random_range(DEFAULT_SET_ATTACKED_MELEE_TIMING[1], DEFAULT_SET_ATTACKED_MELEE_TIMING[2])
 	end
 
 	local moving_attack = action_data.moving_attack
@@ -236,11 +248,8 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		navigation_extension:set_enabled(true, action_data.move_speed or breed.run_speed)
 
 		local using_animation_movement_speed = not action_data.ignore_animation_movement_speed
-
-		fassert(using_animation_movement_speed or move_start_timing == 0, "[BtMeleeAttackAction] To avoid minion from sliding away due to navigation being enabled please either allow for animation driven movement speed or change the animation to allow for move_start_timing=0.")
-
 		scratchpad.navigation_extension = navigation_extension
-		scratchpad.animation_wanted_movementspeed_timing = t + (action_data.animation_wanted_movementspeed_timing or DEFAULT_ANIMATION_WANTED_MOVEMENTSPEED_TIMING)
+		scratchpad.set_animation_wanted_movement_speed = true
 	end
 
 	local effect_template_start_timing = action_data.effect_template_start_timings and action_data.effect_template_start_timings[attack_event]
@@ -303,6 +312,12 @@ BtMeleeAttackAction.leave = function (self, unit, breed, blackboard, scratchpad,
 			Vo.enemy_generic_vo_event(unit, attack_ended_vo, breed.name)
 		end
 	end
+
+	local target_unit = scratchpad.perception_component.target_unit
+
+	if scratchpad.set_attacked_melee then
+		AttackIntensity.remove_attacked_melee(target_unit)
+	end
 end
 
 BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -329,14 +344,18 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	local backstab_timing = scratchpad.backstab_timing
 
 	if backstab_timing and backstab_timing <= t then
-		local ignore_attack_intensity = true
-		local wwise_event = action_data.backstab_event or default_backstab_melee_event
-		local dot_threshold = action_data.backstab_dot or default_backstab_melee_dot
-		local target_unit = scratchpad.perception_component.target_unit
-		local triggered_backstab_sound = MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
+		local attack_timing = scratchpad.attack_timing
 
-		if triggered_backstab_sound then
-			scratchpad.backstab_timing = nil
+		if (not attack_timing or t < attack_timing) and not scratchpad.finished_attack then
+			local ignore_attack_intensity = true
+			local wwise_event = action_data.backstab_event or default_backstab_melee_event
+			local dot_threshold = action_data.backstab_dot or default_backstab_melee_dot
+			local target_unit = scratchpad.perception_component.target_unit
+			local triggered_backstab_sound = MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
+
+			if triggered_backstab_sound then
+				scratchpad.backstab_timing = nil
+			end
 		end
 	end
 
@@ -348,7 +367,7 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		local has_started_sweep = start_sweep_t < t
 
 		if not has_started_sweep and not scratchpad.is_moving_attack then
-			self:_rotate_towards_target_unit(unit, scratchpad)
+			self:_rotate_towards_target_unit(unit, scratchpad, action_data)
 		elseif has_started_sweep then
 			local initial_sweep_rotation = scratchpad.initial_sweep_rotation and scratchpad.initial_sweep_rotation:unbox()
 
@@ -388,6 +407,12 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 				self:_finished_attacks(unit, scratchpad, action_data)
 			end
 		end
+
+		if scratchpad.sweep_ground_impact_at_t and scratchpad.sweep_ground_impact_at_t <= t then
+			GroundImpact.play(unit, scratchpad.physics_world, action_data.sweep_ground_impact_fx_template)
+
+			scratchpad.sweep_ground_impact_at_t = nil
+		end
 	else
 		local attack_timing = scratchpad.attack_timing
 
@@ -414,6 +439,8 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 				end
 			else
 				self:_finished_attacks(unit, scratchpad, action_data)
+
+				scratchpad.finished_attack = true
 			end
 		elseif attack_timing then
 			if scratchpad.should_create_aoe_threat and scratchpad.aoe_threat_window < t then
@@ -425,13 +452,21 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 				scratchpad.should_create_aoe_threat = false
 			end
 
-			if scratchpad.target_dodged_during_attack then
+			local target_unit = scratchpad.perception_component.target_unit
+
+			if scratchpad.set_attacked_melee_timing and scratchpad.set_attacked_melee_timing <= t then
+				AttackIntensity.set_attacked_melee(target_unit)
+
+				scratchpad.set_attacked_melee = true
+				scratchpad.set_attacked_melee_timing = nil
+			end
+
+			if scratchpad.target_dodged_during_attack and not action_data.dont_rotate_towards_target then
 				scratchpad.locomotion_extension:set_wanted_rotation(scratchpad.stored_dodge_rotation:unbox())
 			else
-				local rotation = self:_rotate_towards_target_unit(unit, scratchpad)
+				local rotation = self:_rotate_towards_target_unit(unit, scratchpad, action_data)
 
 				if scratchpad.dodge_window < t then
-					local target_unit = scratchpad.perception_component.target_unit
 					local is_dodging = Dodge.is_dodging(target_unit, attack_types.melee)
 
 					if is_dodging and not scratchpad.target_dodged_during_attack then
@@ -513,13 +548,23 @@ BtMeleeAttackAction._finished_attacks = function (self, unit, scratchpad, action
 
 		slot_system:do_slot_search(unit, false)
 	end
+
+	if scratchpad.set_attacked_melee then
+		local target_unit = scratchpad.perception_component.target_unit
+
+		AttackIntensity.remove_attacked_melee(target_unit)
+
+		scratchpad.set_attacked_melee = nil
+	end
 end
 
-BtMeleeAttackAction._rotate_towards_target_unit = function (self, unit, scratchpad)
+BtMeleeAttackAction._rotate_towards_target_unit = function (self, unit, scratchpad, action_data)
 	local target_unit = scratchpad.perception_component.target_unit
 	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
 
-	scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
+	if not action_data.dont_rotate_towards_target then
+		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
+	end
 
 	return flat_rotation
 end
@@ -582,8 +627,13 @@ BtMeleeAttackAction._update_moving_attack = function (self, unit, dt, t, action_
 		scratchpad.previous_move_animation_value = final_value
 	end
 
-	if not action_data.ignore_animation_movement_speed and scratchpad.animation_wanted_movementspeed_timing < t then
+	if not action_data.ignore_animation_movement_speed and scratchpad.start_animation_wanted_movement_speed then
 		MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+	end
+
+	if scratchpad.set_animation_wanted_movement_speed then
+		scratchpad.set_animation_wanted_movement_speed = nil
+		scratchpad.start_animation_wanted_movement_speed = true
 	end
 end
 

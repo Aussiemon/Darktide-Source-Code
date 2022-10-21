@@ -16,13 +16,9 @@ DialogueEventQueue.init = function (self, unit_extension_data, dialogues, query_
 end
 
 DialogueEventQueue.update_new_events = function (self, dt, t)
-	Profiler.start("update_new_events")
-
 	self._current_time = self._current_time + dt
 
 	if self:is_category_filtered() then
-		Profiler.stop("update_new_events")
-
 		return
 	end
 
@@ -37,7 +33,8 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 				break
 			end
 
-			local breed_data = Unit.get_data(unit, "breed")
+			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+			local breed_data = unit_data_extension and unit_data_extension:breed() or Unit.get_data(unit, "breed")
 			local source_name = nil
 
 			if breed_data and not breed_data.is_player then
@@ -58,15 +55,9 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 			query:finalize()
 		until true
 	end
-
-	Profiler.stop("update_new_events")
 end
 
 DialogueEventQueue.append_event = function (self, unit, event_name, event_data, identifier)
-	fassert(unit, "Unit can't be nil")
-	fassert(event_name, "event_name can't be nil")
-	fassert(event_data, "event_data can't be nil")
-
 	if self:is_category_filtered() then
 		if self._filter_category and event_data.dialogue_name then
 			local incoming_category = self._dialogues[event_data.dialogue_name].category
@@ -85,9 +76,6 @@ DialogueEventQueue.append_event = function (self, unit, event_name, event_data, 
 end
 
 DialogueEventQueue.filter_events_under = function (self, category, duration)
-	fassert(duration, "Duration of an event filter can't be nil")
-	fassert(duration > 0, "Duration of an event filter can't be zero or negative")
-
 	if self:is_category_filtered() then
 		Log.warning("DialogueEventQueue", "filter events received when another filter is in place (%d, %s)", self._filtering_end_time, self._filter_category)
 
@@ -123,7 +111,6 @@ DialogueEventQueue._append_event_implementation = function (self, unit, event_na
 end
 
 DialogueEventQueue._pop_event = function (self, event_data_target)
-	fassert(event_data_target, "event_data_target can't be nil")
 	table.clear(event_data_target)
 
 	local unit = table.remove(self._input_event_queue, 1)
@@ -137,9 +124,6 @@ DialogueEventQueue._pop_event = function (self, event_data_target)
 		event_data_target[index + 2] = table.remove(self._input_event_queue, 1)
 		index = index + 2
 	end
-
-	fassert(unit, "DialogueEventQueue: poped an event with a nil unit")
-	fassert(event_name, "DialogueEventQueue: poped an event with a nil event_name")
 
 	self._input_event_queue_n = self._input_event_queue_n - 1
 	self._index_input_event_queue = self._index_input_event_queue - 4 - 2 * number_of_arguments

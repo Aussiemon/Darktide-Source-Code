@@ -44,13 +44,13 @@ local bleeding_adm = {
 	[armor_types.prop_armor] = 0.75
 }
 local corruptor_corruption_adm = {
-	[armor_types.unarmored] = 1,
-	[armor_types.armored] = 0.75,
-	[armor_types.resistant] = 0.75,
+	[armor_types.unarmored] = 0,
+	[armor_types.armored] = 0,
+	[armor_types.resistant] = 0,
 	[armor_types.player] = 0.1,
-	[armor_types.berserker] = 0.5,
-	[armor_types.super_armor] = 0.5,
-	[armor_types.disgustingly_resilient] = 0.75,
+	[armor_types.berserker] = 0,
+	[armor_types.super_armor] = 0,
+	[armor_types.disgustingly_resilient] = 0,
 	[armor_types.void_shield] = 0,
 	[armor_types.prop_armor] = 0
 }
@@ -247,7 +247,7 @@ damage_templates.warpfire = {
 		impact = burninating_adm
 	},
 	power_distribution = {
-		attack = 20,
+		attack = 15,
 		impact = 0
 	},
 	cleave_distribution = {
@@ -318,9 +318,32 @@ damage_templates.protectorate_force_field = {
 		default_target = {}
 	}
 }
-damage_templates.buff_instakill = {
+damage_templates.ogryn_bonebreaker_ally_damage = {
+	stagger_category = "melee",
+	ignore_toughness = true,
+	power_distribution = {
+		attack = 500,
+		impact = 0
+	},
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.ogryn_bonebreaker_ally_damage_permanent = {
+	stagger_category = "melee",
+	ignore_toughness = true,
+	permanent_damage_ratio = 1,
+	power_distribution = {
+		attack = 500,
+		impact = 0
+	},
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.killing_blow = {
 	ignore_shield = true,
-	stagger_category = "ranged",
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
 		impact = 0

@@ -94,23 +94,23 @@ HuskHealthExtension.max_health = function (self)
 end
 
 HuskHealthExtension.add_damage = function (self)
-	fassert(false, "Not allowed to call HuskHealthExtension:add_damage() on husks!")
+	return
 end
 
 HuskHealthExtension.add_heal = function (self)
-	fassert(false, "Not allowed to call HuskHealthExtension:add_heal() on husks!")
+	return
 end
 
 HuskHealthExtension.health_depleted = function (self)
-	fassert(false, "Not allowed to call HuskHealthExtension:health_depleted() on husks!")
+	return
 end
 
 HuskHealthExtension.set_unkillable = function (self)
-	fassert(false, "Not allowed to call HuskHealthExtension:set_unkillable() on husks!")
+	return
 end
 
 HuskHealthExtension.set_invulnerable = function (self)
-	fassert(false, "Not allowed to call HuskHealthExtension:set_invulnerable() on husks!")
+	return
 end
 
 HuskHealthExtension.num_wounds = function (self)

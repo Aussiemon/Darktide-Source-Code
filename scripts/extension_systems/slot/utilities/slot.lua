@@ -1,7 +1,9 @@
+local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local SlotPosition = require("scripts/extension_systems/slot/utilities/slot_position")
 local SlotSystemSettings = require("scripts/settings/slot/slot_system_settings")
 local SlotTypeSettings = require("scripts/settings/slot/slot_type_settings")
+local Vo = require("scripts/utilities/vo")
 local Slot = {}
 local SLOT_TYPES = {}
 
@@ -863,8 +865,6 @@ local function _update_slot_status(slot, is_on_navmesh, target_units, unit_exten
 end
 
 Slot.update_target_slots_status = function (target_unit, target_units, unit_extension_data, nav_world, traverse_logic, outside_navmesh, t)
-	Profiler.start("update_target_slots_status")
-
 	local target_unit_extension = unit_extension_data[target_unit]
 	local all_slots = target_unit_extension.all_slots
 
@@ -896,8 +896,6 @@ Slot.update_target_slots_status = function (target_unit, target_units, unit_exte
 			target_unit_extension.full_slots_at_t[slot_type] = nil
 		end
 	end
-
-	Profiler.stop("update_target_slots_status")
 end
 
 local GwNavQueries_triangle_from_position = GwNavQueries.triangle_from_position
@@ -1013,11 +1011,8 @@ local function _update_target_slots_positions_on_ladder(target_unit, target_unit
 end
 
 Slot.update_target_slots_positions = function (target_unit, target_units, unit_extension_data, should_offset_slot, nav_world, traverse_logic, is_on_ladder, ladder_unit, bottom, top, target_outside_navmesh, t)
-	Profiler.start("update_target_slots_positions")
-
 	if is_on_ladder then
 		_update_target_slots_positions_on_ladder(target_unit, target_units, unit_extension_data, should_offset_slot, nav_world, traverse_logic, ladder_unit, bottom, top)
-		Profiler.stop("update_target_slots_positions")
 
 		return
 	end
@@ -1071,7 +1066,6 @@ Slot.update_target_slots_positions = function (target_unit, target_units, unit_e
 	end
 
 	_update_anchor_weights(target_unit, unit_extension_data)
-	Profiler.stop("update_target_slots_positions")
 end
 
 Slot.find_best_slot = function (target_unit, target_units, user_unit, unit_extension_data, nav_world, t)
@@ -1140,7 +1134,7 @@ Slot.find_best_slot = function (target_unit, target_units, user_unit, unit_exten
 
 	if best_slot then
 		repeat
-			user_unit_extension.temporary_wait_position = nil
+			user_unit_extension.temporary_wait_position = false
 			local current_slot = user_unit_extension.slot
 
 			if current_slot and current_slot == best_slot then
@@ -1273,8 +1267,20 @@ Slot.update_disabled_slots_count = function (target_units, unit_extension_data)
 	end
 end
 
-Slot.update_slot_sound = function (is_server, network_transmit, target_units, unit_extension_data)
-	return
+Slot.update_slot_sound = function (target_units)
+	local target_units_n = #target_units
+
+	for unit_i = 1, target_units_n do
+		local target_unit = target_units[unit_i]
+		local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
+		local slot_occupancy_percent = slot_extension.slot_occupancy_percent
+
+		if DialogueSettings.surrounded_vo_slot_percent < slot_occupancy_percent then
+			local trigger_id = "surrounded"
+
+			Vo.generic_mission_vo_event(target_unit, trigger_id)
+		end
+	end
 end
 
 return Slot

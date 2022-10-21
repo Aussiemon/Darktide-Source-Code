@@ -8,19 +8,40 @@ local scenegraph_definition = {
 local widget_definitions = {}
 local input_legend_params = {}
 local intro_texts = {
-	description_text = "loc_credits_vendor_view_intro_description",
+	description_text = "loc_credits_vendor_view_intro_description_temp",
 	title_text = "loc_credits_vendor_view_intro_title"
 }
 local button_options_definitions = {
 	{
-		display_name = "loc_credits_vendor_view_option_buy",
+		display_name = "loc_credits_vendor_view_option_buy_temp",
 		callback = function (self)
 			local tab_bar_params = {
+				hide_tabs = true,
 				layer = 10,
 				tabs_params = {
 					{
 						view = "credits_vendor_view",
-						display_name = "loc_credits_vendor_view_title"
+						display_name = "loc_credits_vendor_view_title",
+						blur_background = false,
+						input_legend_buttons = {
+							{
+								input_action = "hotkey_item_inspect",
+								display_name = "loc_weapon_inventory_inspect_button",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_inspect_pressed",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+
+										return view_instance and view_instance._previewed_item ~= nil
+									end
+
+									return false
+								end
+							}
+						}
 					}
 				}
 			}

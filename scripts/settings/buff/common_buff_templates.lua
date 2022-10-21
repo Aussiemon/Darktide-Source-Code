@@ -154,6 +154,19 @@ templates.ranged_sprinting_stun_movement_slow = {
 	},
 	lerp_t_func = smoothstep_lerp_t_func
 }
+templates.ogryn_powermaul_stun_movement_slow = {
+	unique_buff_id = "hit_reaction_movement_slow",
+	unique_buff_priority = 1,
+	duration = 2,
+	class_name = "buff",
+	lerped_stat_buffs = {
+		[buff_stat_buffs.movement_speed] = {
+			max = 0.8,
+			min = 0.01
+		}
+	},
+	lerp_t_func = smoothstep_lerp_t_func
+}
 templates.stun_immune_ultra_short = {
 	unique_buff_id = "stun_immunity",
 	duration = 0.25,

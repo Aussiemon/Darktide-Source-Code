@@ -95,9 +95,7 @@ MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)
 end
 
 MissionObjectiveZoneSystem.destroy = function (self)
-	if self._is_server then
-		fassert(self._servo_skull_unit == nil, "[destroy] Servo Skull should be deleted in StateGameplay:_despawn_units().")
-	else
+	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 
@@ -150,7 +148,7 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 
 			for i = 1, start_num_zones do
 				local spline_end_position = spline_path_end_positions[i]
-				local selected_unit, closest = nil
+				local selected_unit, closest, zone_seed = nil
 
 				for n = 1, num_units do
 					local unit = sorted_units[n]
@@ -163,11 +161,12 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 						if not closest or distance < closest then
 							closest = distance
 							selected_unit = unit
+							seed, zone_seed = math.random_seed(seed)
+
+							unit_extension:set_seed(zone_seed)
 						end
 					end
 				end
-
-				fassert(selected_unit, "[MissionObjectiveZoneSystem] no volume found for the spline with end position %s", spline_end_position)
 
 				selected_units[#selected_units + 1] = selected_unit
 				counter = counter + 1
@@ -203,15 +202,12 @@ MissionObjectiveZoneSystem._sort_units_by_id = function (self, units)
 end
 
 MissionObjectiveZoneSystem.spawn_servo_skull = function (self, position, rotation)
-	fassert(self._is_server, "[MissionObjectiveZoneSynchronizerExtension] Server only method.")
-
 	local servo_skull = "servo_skull"
 	local prop_settings = LevelProps[servo_skull]
 	local servo_skull_unit_name = prop_settings.unit_name
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local spawned_servo_skull_unit, game_object_id = unit_spawner_manager:spawn_network_unit(servo_skull_unit_name, "level_prop", position, rotation, nil, prop_settings)
 
-	fassert(spawned_servo_skull_unit, "[MissionObjectiveZoneSynchronizerExtension] Could not spawn unit('%s')", servo_skull_unit_name)
 	self:_register_servo_skull(spawned_servo_skull_unit)
 
 	local game_session_manager = Managers.state.game_session
@@ -254,8 +250,6 @@ MissionObjectiveZoneSystem._unregister_servo_skull = function (self)
 end
 
 MissionObjectiveZoneSystem._evaluate_next_step = function (self, objective_name, activate_zone)
-	fassert(self._is_server, "[MissionObjectiveZoneSystem] Server only method.")
-
 	if self._is_server then
 		local selected_zone_units = self._selected_zone_units[objective_name]
 		local current_index = self._current_index
@@ -376,9 +370,6 @@ MissionObjectiveZoneSystem.retrieve_selected_units_for_event = function (self, o
 end
 
 MissionObjectiveZoneSystem.start_event = function (self, objective_name)
-	fassert(self._is_server, "[MissionObjectiveZoneSystem] Server only method.")
-	fassert(not self._current_objective_name, "[MissionObjectiveZoneSystem] Only one event at a time, is currently supported")
-
 	self._current_objective_name = objective_name
 	self._progress = 0
 
@@ -417,8 +408,6 @@ MissionObjectiveZoneSystem.current_active_zone = function (self)
 end
 
 MissionObjectiveZoneSystem.register_finished_zone = function (self)
-	fassert(self._is_server, "[MissionObjectiveZoneSystem] Server only method.")
-
 	self._progress = self._progress + 1
 	local objective_name = self._current_objective_name
 
@@ -467,7 +456,6 @@ MissionObjectiveZoneSystem.current_objective_name = function (self)
 end
 
 MissionObjectiveZoneSystem.event_completed = function (self)
-	fassert(self._is_server, "[MissionObjectiveZoneSystem] Server only method.")
 	self:_unregister_servo_skull()
 
 	self._current_objective_name = nil
@@ -482,7 +470,6 @@ MissionObjectiveZoneSystem.rpc_mission_objective_zone_system_hot_join_sync = fun
 		local is_level_unit = false
 		local servo_skull_unit = Managers.state.unit_spawner:unit(game_object_id, is_level_unit)
 
-		fassert(servo_skull_unit, "Missing servo_skull.")
 		self:_register_servo_skull(servo_skull_unit)
 	end
 

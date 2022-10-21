@@ -11,10 +11,28 @@ HealthStationInteraction.interactor_condition_func = function (self, interactor_
 	local total_damage_taken = health_extension:damage_taken()
 	local health_station_extension = ScriptUnit.has_extension(interactee_unit, "health_station_system")
 	local charge_amount = health_station_extension:charge_amount()
-	local is_damaged = total_damage_taken > 0
 	local has_charges = charge_amount > 0
+	local is_damaged = total_damage_taken > 0
 
-	return is_damaged and has_charges and not self:_interactor_disabled(interactor_unit)
+	return has_charges and is_damaged and not self:_interactor_disabled(interactor_unit)
+end
+
+HealthStationInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+	local block_text = interactee_extension:block_text()
+
+	if block_text then
+		return block_text
+	end
+
+	local health_extension = ScriptUnit.extension(interactor_unit, "health_system")
+	local total_damage_taken = health_extension:damage_taken()
+
+	if total_damage_taken <= 0 then
+		return "loc_health_station_full_health"
+	end
+
+	return nil
 end
 
 HealthStationInteraction.start = function (self, world, interactor_unit, unit_data_component, t, is_server)
@@ -43,7 +61,7 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 				permanent_health_to_recover = health_extension:permanent_damage_taken()
 			end
 
-			local permanent_heal_type = DamageSettings.heal_types.blessing
+			local permanent_heal_type = DamageSettings.heal_types.blessing_health_station
 
 			Health.add(interactor_unit, permanent_health_to_recover, permanent_heal_type)
 
@@ -75,6 +93,17 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 			Unit.flow_event(target_unit, "lua_heal_success_local")
 		end
 	end
+end
+
+HealthStationInteraction.interactee_show_marker_func = function (self, interactor_unit, interactee_unit)
+	local health_station_extension = ScriptUnit.has_extension(interactee_unit, "health_station_system")
+	local charge_amount = health_station_extension:charge_amount()
+
+	if charge_amount == 0 and health_station_extension:battery_in_slot() then
+		return false
+	end
+
+	return not self:_interactor_disabled(interactor_unit)
 end
 
 return HealthStationInteraction

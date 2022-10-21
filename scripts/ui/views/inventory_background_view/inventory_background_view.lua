@@ -11,7 +11,9 @@ local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
@@ -43,18 +45,39 @@ InventoryBackgroundView.on_enter = function (self)
 	self._player_level = profile.current_level
 	self._preview_player = player
 	self._is_own_player = self._preview_player == self:_player()
+	self._show_talents_tab = false
 	self._is_readonly = context and context.is_readonly
+	self._has_empty_talent_groups = false
 	self._preview_profile_equipped_items = {}
 
 	self:_update_equipped_items()
 	self:_register_event("event_inventory_view_equip_item", "event_inventory_view_equip_item")
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
 	self:_register_event("event_change_wield_slot", "event_change_wield_slot")
+	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 	self:_setup_top_panel()
 	self:_setup_input_legend()
 	self:_setup_background_world()
 	self:_force_select_panel_index(1)
 	self:_set_player_profile_information(player)
+
+	local profile_archetype = profile.archetype
+	local archetype_name = profile_archetype.name
+
+	self:_setup_background_frames_by_archetype(archetype_name)
+
+	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
+	self._widgets_by_name.character_insigna.content.visible = false
+end
+
+InventoryBackgroundView._setup_background_frames_by_archetype = function (self, archetype_name)
+	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
+	local frame_textures = inventory_frames_by_archetype[archetype_name]
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.corner_top_left.content.texture = frame_textures.left_upper
+	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
+	widgets_by_name.corner_top_right.content.texture = frame_textures.right_upper
+	widgets_by_name.corner_bottom_right.content.texture = frame_textures.right_lower
 end
 
 InventoryBackgroundView._set_player_profile_information = function (self, player)
@@ -65,7 +88,8 @@ InventoryBackgroundView._set_player_profile_information = function (self, player
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.character_name.content.text = character_name
 	widgets_by_name.character_title.content.text = character_title
-	widgets_by_name.character_level.content.text = tostring(current_level) .. " "
+	widgets_by_name.character_level.content.text = tostring(current_level)
+	widgets_by_name.character_level_next.content.text = ""
 
 	self:_set_experience_bar(0, 0)
 	self:_fetch_character_progression(player)
@@ -102,12 +126,119 @@ InventoryBackgroundView._unload_portrait_icon = function (self)
 	self._portrait_loaded_info = nil
 end
 
-InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, columns)
+InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
 	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
+end
+
+InventoryBackgroundView._request_player_frame = function (self, item, ui_renderer)
+	self:_unload_portrait_frame(ui_renderer)
+	self:_load_portrait_frame(item)
+end
+
+InventoryBackgroundView._load_portrait_frame = function (self, item)
+	local cb = callback(self, "_cb_set_player_frame")
+	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+	self._frame_loaded_info = {
+		icon_load_id = icon_load_id
+	}
+end
+
+InventoryBackgroundView._unload_portrait_frame = function (self, ui_renderer)
+	local frame_loaded_info = self._frame_loaded_info
+
+	if not frame_loaded_info then
+		return
+	end
+
+	local widget = self._widgets_by_name.character_portrait
+
+	if not self.destroyed then
+		local material_values = widget.style.texture.material_values
+		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
+	end
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
+	local icon_load_id = frame_loaded_info.icon_load_id
+
+	Managers.ui:unload_item_icon(icon_load_id)
+
+	self._frame_loaded_info = nil
+end
+
+InventoryBackgroundView._cb_set_player_frame = function (self, item)
+	local profile = self._presentation_profile
+	local loadout = profile and profile.loadout
+	local frame_item = loadout and loadout.slot_portrait_frame
+	local frame_item_gear_id = frame_item and frame_item.gear_id
+	local icon = nil
+
+	if frame_item_gear_id == item.gear_id then
+		icon = item.icon
+	else
+		icon = "content/ui/textures/nameplates/portrait_frames/default"
+	end
+
+	local widget = self._widgets_by_name.character_portrait
+	local material_values = widget.style.texture.material_values
+	material_values.portrait_frame_texture = icon
+end
+
+InventoryBackgroundView._request_player_insignia = function (self, item)
+	self:_unload_insignia()
+	self:_load_insignia(item)
+end
+
+InventoryBackgroundView._load_insignia = function (self, item)
+	local cb = callback(self, "_cb_set_player_insignia")
+	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+	self._insignia_loaded_info = {
+		icon_load_id = icon_load_id
+	}
+end
+
+InventoryBackgroundView._unload_insignia = function (self)
+	local insignia_loaded_info = self._insignia_loaded_info
+
+	if not insignia_loaded_info then
+		return
+	end
+
+	if not self.destroyed then
+		local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
+		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
+	end
+
+	local icon_load_id = insignia_loaded_info.icon_load_id
+
+	Managers.ui:unload_item_icon(icon_load_id)
+
+	self._insignia_loaded_info = nil
+	self._widgets_by_name.character_insigna.content.visible = false
+end
+
+InventoryBackgroundView._cb_set_player_insignia = function (self, item)
+	local profile = self._presentation_profile
+	local loadout = profile and profile.loadout
+	local frame_item = loadout.slot_insignia
+	local frame_item_gear_id = frame_item and frame_item.gear_id
+	local icon = nil
+
+	if frame_item_gear_id == item.gear_id then
+		icon = item.icon
+		local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
+		material_values.texture_map = icon
+	end
+
+	self._widgets_by_name.character_insigna.content.visible = icon and true or false
 end
 
 InventoryBackgroundView._fetch_character_progression = function (self, player)
@@ -121,11 +252,11 @@ InventoryBackgroundView._fetch_character_progression = function (self, player)
 
 	if Managers.backend:authenticated() then
 		local backend_interface = Managers.backend.interfaces
-		profiles_promise = Promise.all(backend_interface.progression:get_entity_type_progression("character", character_id)):next(function (results)
-			local character_progression = unpack(results)
-			local current_level_experience = character_progression.currentXpInLevel or 0
-			local needed_level_experience = character_progression.neededXpForNextLevel or 0
-			local normalized_progress = current_level_experience / needed_level_experience
+		profiles_promise = backend_interface.progression:get_progression("character", character_id):next(function (results)
+			local progression_data = results
+			local current_level_experience = progression_data and progression_data.currentXpInLevel or 0
+			local needed_level_experience = progression_data and progression_data.neededXpForNextLevel or 0
+			local normalized_progress = needed_level_experience > 0 and current_level_experience / (current_level_experience + needed_level_experience) or 0
 
 			return normalized_progress
 		end):catch(function (error)
@@ -218,8 +349,8 @@ InventoryBackgroundView._update_equipped_items = function (self)
 	end
 end
 
-InventoryBackgroundView.event_inventory_view_equip_item = function (self, slot_name, item)
-	self:_equip_slot_item(slot_name, item)
+InventoryBackgroundView.event_inventory_view_equip_item = function (self, slot_name, item, force_update)
+	self:_equip_slot_item(slot_name, item, force_update)
 end
 
 InventoryBackgroundView.event_equip_local_changes = function (self)
@@ -231,11 +362,15 @@ InventoryBackgroundView.event_change_wield_slot = function (self, slot_name)
 	self:_update_presentation_wield_item()
 end
 
-InventoryBackgroundView._equip_slot_item = function (self, slot_name, item)
+InventoryBackgroundView.event_player_profile_updated = function (self)
+	self:_update_has_empty_talents_groups()
+end
+
+InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, force_update)
 	local presentation_loadout = self._preview_profile_equipped_items
 	local previous_item = presentation_loadout[slot_name]
 	local unequip_item = not item and previous_item
-	local valid_item_change = not unequip_item and item.gear_id and (not previous_item or previous_item.gear_id ~= item.gear_id)
+	local valid_item_change = not unequip_item and item.gear_id and (not previous_item or previous_item.gear_id ~= item.gear_id) or force_update
 
 	if unequip_item or valid_item_change then
 		presentation_loadout[slot_name] = item
@@ -245,6 +380,8 @@ end
 InventoryBackgroundView._equip_local_changes = function (self)
 	local profile_loadout = self._presentation_profile.loadout
 	local preview_loadout = self._preview_profile_equipped_items
+	local equip_items_by_slot = {}
+	local equip_items = false
 
 	for slot_name, item in pairs(preview_loadout) do
 		local item_slot_settings = ItemSlotSettings[slot_name]
@@ -256,12 +393,16 @@ InventoryBackgroundView._equip_local_changes = function (self)
 			local slot_has_changes = unequip_item or valid_item_change
 
 			if slot_has_changes then
-				ItemUtils.equip_item_in_slot(slot_name, item)
-
+				equip_items_by_slot[slot_name] = item
 				profile_loadout[slot_name] = item
 				self._player_spawned = false
+				equip_items = true
 			end
 		end
+	end
+
+	if equip_items then
+		ItemUtils.equip_slot_items(equip_items_by_slot)
 	end
 end
 
@@ -285,6 +426,19 @@ InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 	self:_update_presentation_wield_item()
 end
 
+InventoryBackgroundView._update_has_empty_talents_groups = function (self)
+	if self._is_readonly or not self._show_talents_tab then
+		return
+	end
+
+	local profile = self._preview_player:profile()
+	local profile_archetype = profile.archetype
+	local specialization_name = profile.specialization
+	local selected_talents = profile.talents
+	local player_level = self._player_level
+	self._has_empty_talent_groups = PlayerSpecialization.has_empty_talent_groups(profile_archetype, specialization_name, player_level, selected_talents)
+end
+
 InventoryBackgroundView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
 	local layer = 60
@@ -297,10 +451,26 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		{
 			view_name = "inventory_view",
 			display_name = "loc_inventory_view_display_name",
+			update = function (content, style, dt)
+				local has_new_items_by_type = ItemUtils.has_new_items_by_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+				local has_new_items = false
+
+				if has_new_items_by_type(ITEM_TYPES.WEAPON_MELEE) then
+					has_new_items = true
+				elseif has_new_items_by_type(ITEM_TYPES.WEAPON_RANGED) then
+					has_new_items = true
+				elseif has_new_items_by_type(ITEM_TYPES.GADGET) then
+					has_new_items = true
+				end
+
+				content.show_alert = has_new_items
+			end,
 			view_context = {
 				tabs = {
 					{
 						is_grid_layout = true,
+						ui_animation = "loadout_on_enter",
 						camera_settings = {
 							{
 								"event_inventory_set_camera_position_axis_offset",
@@ -347,11 +517,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						},
 						layout = {
 							{
-								widget_type = "spacing_vertical"
-							},
-							{
 								display_name = "loc_inventory_loadout_group_primary_weapon",
-								widget_type = "sub_header"
+								widget_type = "item_sub_header",
+								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE
 							},
 							{
 								slot_title = "loc_inventory_title_slot_primary",
@@ -361,11 +529,16 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								slot = ItemSlotSettings.slot_primary
 							},
 							{
-								widget_type = "spacing_vertical"
+								widget_type = "dynamic_spacing",
+								size = {
+									300,
+									10
+								}
 							},
 							{
 								display_name = "loc_inventory_loadout_group_secondary_weapon",
-								widget_type = "sub_header"
+								widget_type = "item_sub_header",
+								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED
 							},
 							{
 								slot_title = "loc_inventory_title_slot_secondary",
@@ -373,37 +546,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
 								widget_type = "item_slot",
 								slot = ItemSlotSettings.slot_secondary
-							},
-							{
-								widget_type = "spacing_vertical_small"
-							},
-							{
-								widget_type = "spacing_vertical"
-							},
-							{
-								display_name = "loc_inventory_loadout_group_attachments",
-								widget_type = "sub_header"
-							},
-							{
-								slot_title = "loc_inventory_title_slot_attachment_1",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_1
-							},
-							{
-								slot_title = "loc_inventory_title_slot_attachment_2",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_2
-							},
-							{
-								slot_title = "loc_inventory_title_slot_attachment_3",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_3
 							}
 						}
 					}
@@ -413,10 +555,28 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		{
 			view_name = "inventory_view",
 			display_name = "loc_cosmetics_view_display_name",
+			update = function (content, style, dt)
+				local has_new_items_by_type = ItemUtils.has_new_items_by_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+				local has_new_items = false
+
+				if has_new_items_by_type(ITEM_TYPES.GEAR_HEAD) then
+					has_new_items = true
+				elseif has_new_items_by_type(ITEM_TYPES.GEAR_UPPERBODY) then
+					has_new_items = true
+				elseif has_new_items_by_type(ITEM_TYPES.GEAR_LOWERBODY) then
+					has_new_items = true
+				elseif has_new_items_by_type(ITEM_TYPES.GEAR_EXTRA_COSMETIC) then
+					has_new_items = true
+				end
+
+				content.show_alert = has_new_items
+			end,
 			view_context = {
 				tabs = {
 					{
 						is_grid_layout = false,
+						ui_animation = "cosmetics_on_enter",
 						display_name = "tab1",
 						icon = "content/ui/materials/icons/item_types/outfits",
 						camera_settings = {
@@ -465,10 +625,11 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						},
 						layout = {
 							{
+								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
 								slot_title = "loc_inventory_title_slot_gear_head",
 								loadout_slot = true,
-								scenegraph_id = "slot_gear_head",
 								default_icon = "content/ui/materials/icons/items/gears/head/empty",
+								scenegraph_id = "slot_gear_head",
 								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_head,
 								navigation_grid_indices = {
@@ -477,60 +638,80 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								}
 							},
 							{
+								slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
 								slot_title = "loc_inventory_title_slot_gear_upperbody",
 								loadout_slot = true,
-								scenegraph_id = "slot_gear_upperbody",
 								default_icon = "content/ui/materials/icons/items/gears/arms/empty",
+								scenegraph_id = "slot_gear_upperbody",
 								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_upperbody,
-								navigation_grid_indices = {
-									1,
-									2
-								}
-							},
-							{
-								slot_title = "loc_inventory_title_slot_gear_lowerbody",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_lowerbody",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_lowerbody,
-								navigation_grid_indices = {
-									2,
-									2
-								}
-							},
-							{
-								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_extra_cosmetic",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_extra_cosmetic,
 								navigation_grid_indices = {
 									2,
 									1
 								}
 							},
 							{
-								scenegraph_id = "button_skin_sets",
-								display_name = "loc_inventory_cosmetics_button_skins_title",
-								disabled = true,
-								widget_type = "list_button_with_background",
-								size = {
-									500,
-									80
+								slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
+								slot_title = "loc_inventory_title_slot_gear_lowerbody",
+								loadout_slot = true,
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								scenegraph_id = "slot_gear_lowerbody",
+								widget_type = "gear_item_slot",
+								slot = ItemSlotSettings.slot_gear_lowerbody,
+								navigation_grid_indices = {
+									3,
+									1
 								}
 							},
 							{
+								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
+								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
+								loadout_slot = true,
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								scenegraph_id = "slot_gear_extra_cosmetic",
+								widget_type = "gear_item_slot",
+								slot = ItemSlotSettings.slot_gear_extra_cosmetic,
+								navigation_grid_indices = {
+									1,
+									2
+								}
+							},
+							{
+								slot_title = "loc_inventory_title_slot_portrait_frame",
+								loadout_slot = true,
+								scenegraph_id = "slot_portrait_frame",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								widget_type = "ui_item_slot",
+								slot = ItemSlotSettings.slot_portrait_frame,
+								navigation_grid_indices = {
+									2,
+									2
+								}
+							},
+							{
+								slot_title = "loc_inventory_title_slot_insignia",
+								loadout_slot = true,
+								scenegraph_id = "slot_insignia",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								widget_type = "ui_item_slot",
+								slot = ItemSlotSettings.slot_insignia,
+								navigation_grid_indices = {
+									3,
+									2
+								}
+							},
+							{
+								loadout_slot = true,
 								scenegraph_id = "button_expressions",
-								display_name = "loc_inventory_cosmetics_button_expressions_title",
-								disabled = true,
+								display_name = "loc_inventory_title_slot_animation_end_of_round",
+								slot_title = "loc_inventory_title_slot_animation_end_of_round",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								widget_type = "list_button_with_background",
 								size = {
 									500,
 									60
-								}
+								},
+								slot = ItemSlotSettings.slot_animation_end_of_round
 							}
 						}
 					}
@@ -538,9 +719,77 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			}
 		}
 	}
+	local player_level = self._player_level
+	local show_talents_tab = PlayerSpecialization.specialization_level_requirement() <= player_level
 
-	for i = 1, #self._views_settings do
-		local settings = self._views_settings[i]
+	if self._is_readonly or not self._is_own_player then
+		show_talents_tab = show_talents_tab and profile.specialization ~= "none"
+	end
+
+	self._show_talents_tab = show_talents_tab
+
+	if show_talents_tab then
+		self:_update_has_empty_talents_groups()
+
+		self._views_settings[#self._views_settings + 1] = {
+			view_name = "talents_view",
+			display_name = "loc_talents_view_display_name",
+			update = function (content, style, dt)
+				content.show_alert = self._has_empty_talent_groups
+			end,
+			view_context = {
+				camera_settings = {
+					{
+						"event_inventory_set_camera_position_axis_offset",
+						"x",
+						is_ogryn and 5.2 or 3.5,
+						0.5,
+						math.easeCubic
+					},
+					{
+						"event_inventory_set_camera_position_axis_offset",
+						"y",
+						0,
+						0.5,
+						math.easeCubic
+					},
+					{
+						"event_inventory_set_camera_position_axis_offset",
+						"z",
+						0,
+						0.5,
+						math.easeCubic
+					},
+					{
+						"event_inventory_set_camera_rotation_axis_offset",
+						"x",
+						0,
+						0.5,
+						math.easeCubic
+					},
+					{
+						"event_inventory_set_camera_rotation_axis_offset",
+						"y",
+						0,
+						0.5,
+						math.easeCubic
+					},
+					{
+						"event_inventory_set_camera_rotation_axis_offset",
+						"z",
+						0,
+						0.5,
+						math.easeCubic
+					}
+				}
+			}
+		}
+	end
+
+	local views_settings = self._views_settings
+
+	for i = 1, #views_settings do
+		local settings = views_settings[i]
 		local view_name = settings.view_name
 		local display_name_loc_key = settings.display_name
 
@@ -555,9 +804,10 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			self:_on_panel_option_pressed(i)
 		end
 
+		local optional_update_function = settings.update
 		local cb = callback(entry_callback_function)
 
-		self._top_panel:add_entry(display_name, cb)
+		self._top_panel:add_entry(display_name, cb, optional_update_function)
 	end
 
 	self._top_panel:set_is_handling_navigation_input(true)
@@ -804,6 +1054,8 @@ end
 
 InventoryBackgroundView.on_exit = function (self)
 	self:_unload_portrait_icon()
+	self:_unload_portrait_frame(self._ui_renderer)
+	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
 
 	if self._active_view then
 		if Managers.ui:view_active(self._active_view) then
@@ -849,6 +1101,29 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		self:_spawn_profile(profile)
 
 		self._player_spawned = true
+	end
+
+	local profile = self._presentation_profile
+	local loadout = profile and profile.loadout
+
+	if loadout then
+		local frame_item = loadout.slot_portrait_frame
+		local frame_item_gear_id = frame_item and frame_item.gear_id
+
+		if frame_item_gear_id ~= self._frame_item_gear_id then
+			self._frame_item_gear_id = frame_item_gear_id
+
+			self:_request_player_frame(frame_item, self._ui_renderer)
+		end
+
+		local insignia_item = loadout.slot_insignia
+		local insignia_item_gear_id = insignia_item and insignia_item.gear_id
+
+		if insignia_item_gear_id ~= self._insignia_item_gear_id then
+			self._insignia_item_gear_id = insignia_item_gear_id
+
+			self:_request_player_insignia(insignia_item)
+		end
 	end
 
 	local profile_spawner = self._profile_spawner

@@ -19,8 +19,8 @@ local assault_scale = {
 	{
 		5,
 		{
-			1,
-			1
+			0.7,
+			0.7
 		}
 	},
 	{
@@ -42,8 +42,8 @@ local spray_n_pray_scale = {
 	{
 		1,
 		{
-			0.1,
-			0.1
+			2.7,
+			1.7
 		}
 	},
 	{
@@ -144,8 +144,8 @@ recoil_templates.default_autopistol_assault = {
 		rise_duration = 0.05,
 		rise = {
 			0.4,
-			0.05,
-			0.05,
+			0.25,
+			0.15,
 			0.075,
 			0.1,
 			0.075,

@@ -11,9 +11,7 @@ HudElementPersonalPlayerPanel.update = function (self, dt, t, ui_renderer, rende
 end
 
 HudElementPersonalPlayerPanel.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.start("HudElementPersonalPlayerPanel:draw")
 	HudElementPersonalPlayerPanel.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.stop("HudElementPersonalPlayerPanel:draw")
 end
 
 return HudElementPersonalPlayerPanel

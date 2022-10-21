@@ -3,7 +3,8 @@ require("scripts/extension_systems/weapon/actions/action_sweep")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local Explosion = require("scripts/utilities/attack/explosion")
-local DEFAULT_POWER_LEVEL = 500
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ActionMeleeExplosive = class("ActionMeleeExplosive", "ActionSweep")
 
 ActionMeleeExplosive.init = function (self, action_context, action_params, action_settings)
@@ -60,7 +61,13 @@ ActionMeleeExplosive._explode = function (self)
 	local explode_position, explode_direction = self:_find_explosion_position_and_direction()
 
 	if self._is_server then
-		Explosion.create_explosion(self._world, self._physics_world, explode_position, explode_direction, self._player.player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, nil, self._weapon.item)
+		local is_critical_strike = false
+		local ignore_cover = false
+		local weapon = self._weapon
+		local item = weapon and weapon.item
+		local orgin_slot = self._inventory_component.wielded_slot
+
+		Explosion.create_explosion(self._world, self._physics_world, explode_position, explode_direction, self._player.player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, is_critical_strike, ignore_cover, item, orgin_slot)
 	end
 
 	local ammunition_usage = action_settings.ammunition_usage

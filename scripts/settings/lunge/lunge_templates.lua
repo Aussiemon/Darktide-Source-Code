@@ -4,8 +4,6 @@ local function _add_lunge_templates(path)
 	local templates = require(path)
 
 	for name, template in pairs(templates) do
-		fassert(lunge_templates[name] == nil, "LungeTemplate %q exists in multiple locations.", name)
-
 		template.name = name
 		local entry = template
 		lunge_templates[name] = entry

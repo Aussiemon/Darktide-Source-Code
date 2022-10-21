@@ -49,10 +49,8 @@ HudElementMissionObjectiveFeed._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectiveFeedSettings.events
 
-	for i = 1, #events do
-		local event = events[i]
-
-		event_manager:register(self, event[1], event[2])
+	for event_name, function_name in pairs(events) do
+		event_manager:register(self, event_name, function_name)
 	end
 end
 
@@ -60,10 +58,8 @@ HudElementMissionObjectiveFeed._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectiveFeedSettings.events
 
-	for i = 1, #events do
-		local event = events[i]
-
-		event_manager:unregister(self, event[1])
+	for event_name, function_name in pairs(events) do
+		event_manager:unregister(self, event_name)
 	end
 end
 
@@ -78,10 +74,11 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self)
 
 	for objective_name, hud_objective in pairs(hud_objectives) do
 		local active_objective = active_objectives[objective_name]
-		local should_show = active_objective and active_objective:use_hud()
+		local locally_added = hud_objective:locally_added()
+		local should_show = locally_added or active_objective and active_objective:use_hud()
 
 		if should_show then
-			if not hud_objective:is_synchronized_with_objective(active_objective) then
+			if not locally_added and not hud_objective:is_synchronized_with_objective(active_objective) then
 				hud_objective:synchronize_objective(active_objective)
 				self:_synchronize_widget_with_hud_objective(objective_name)
 			end
@@ -96,18 +93,13 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self)
 		local hud_objective_exists = hud_objectives[objective_name] ~= nil
 
 		if not hud_objective_exists and objective:use_hud() then
-			self:_add_objective(objective_name)
+			self:_add_objective(objective)
 		end
 	end
 end
 
-HudElementMissionObjectiveFeed._add_objective = function (self, objective_name)
-	fassert(self._hud_objectives[objective_name] == nil, "[HudElementMissionObjectiveFeed][_add_objective] HUD Objective already created.")
-
-	local objective = self._mission_objective_system:get_active_objective(objective_name)
-
-	fassert(objective, "[HudElementMissionObjectiveFeed][_add_objective] Objective not valid.")
-
+HudElementMissionObjectiveFeed._add_objective = function (self, objective, locally_added)
+	local objective_name = objective:name()
 	local new_hud_objective = HudElementMissionObjective:new(objective)
 	self._hud_objectives[objective_name] = new_hud_objective
 	self._objectives_counter = self._objectives_counter + 1
@@ -118,21 +110,20 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective_name)
 end
 
 HudElementMissionObjectiveFeed._remove_objective = function (self, objective_name)
-	self._objective_widgets_by_name[objective_name] = nil
+	if self._objective_widgets_by_name[objective_name] then
+		self._objective_widgets_by_name[objective_name] = nil
 
-	self:_unregister_widget_name(objective_name)
-	self._hud_objectives[objective_name]:delete()
+		self:_unregister_widget_name(objective_name)
+		self._hud_objectives[objective_name]:delete()
 
-	self._hud_objectives[objective_name] = nil
-	self._objectives_counter = self._objectives_counter - 1
+		self._hud_objectives[objective_name] = nil
+		self._objectives_counter = self._objectives_counter - 1
 
-	self:_align_objective_widgets()
+		self:_align_objective_widgets()
+	end
 end
 
 HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function (self, objective_name)
-	fassert(self:has_widget(objective_name), "[HudElementMissionObjectiveFeed][_setup_widget] No widget.")
-	fassert(self._hud_objectives[objective_name], "[HudElementMissionObjectiveFeed][_setup_widget] No HUD objective.")
-
 	local widget = self._widgets_by_name[objective_name]
 	local hud_objective = self._hud_objectives[objective_name]
 	local content = widget.content
@@ -184,9 +175,6 @@ end
 
 HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_objective)
 	local objective_name = hud_objective:objective_name()
-
-	fassert(self:has_widget(objective_name), "[HudElementMissionObjectiveFeed][_update_bar_progress] No widget.")
-
 	local widget = self._widgets_by_name[objective_name]
 	local style = widget.style
 	local bar_style = style.bar

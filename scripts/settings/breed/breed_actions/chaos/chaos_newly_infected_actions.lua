@@ -7,7 +7,6 @@ local hit_zone_names = HitZone.hit_zone_names
 local action_data = {
 	name = "chaos_newly_infected",
 	idle = {
-		vo_event = "idle",
 		rotate_towards_target = true,
 		anim_events = {
 			"idle",
@@ -426,16 +425,14 @@ local action_data = {
 	assault_follow = {
 		walk_speed = 4.3,
 		utility_weight = 1,
-		running_stagger_anim_right = "run_stagger_02",
 		controlled_stagger = true,
 		leave_walk_distance = 8,
 		controlled_stagger_ignored_combat_range = "melee",
 		force_move_anim_event = "assault_fwd",
 		controlled_stagger_min_speed = 2,
+		vo_event = "assault",
 		walk_anim_event = "move_fwd",
 		is_assaulting = true,
-		running_stagger_duration = 1.1666666666666667,
-		running_stagger_anim_left = "run_stagger_01",
 		move_speed = 5.6,
 		use_animation_running_stagger_speed = true,
 		run_anim_event = "assault_fwd",
@@ -489,6 +486,19 @@ local action_data = {
 		},
 		start_move_event_anim_speed_durations = {
 			move_start_assault_fwd = 1.0666666666666667
+		},
+		running_stagger_anim_left = {
+			"run_stagger_01",
+			"run_stagger_03"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_02",
+			"run_stagger_03"
+		},
+		running_stagger_duration = {
+			run_stagger_03 = 1.3333333333333333,
+			run_stagger_02 = 1.5,
+			run_stagger_01 = 1.3666666666666667
 		}
 	},
 	melee_attack = {
@@ -688,19 +698,16 @@ local action_data = {
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_running_melee_attack,
 		attack_anim_events = {
-			"attack_run_01",
 			"attack_run_02",
 			"attack_run_03"
 		},
 		attack_anim_damage_timings = {
 			attack_run_03 = 1.5,
-			attack_run_02 = 1.5666666666666667,
-			attack_run_01 = 0.7333333333333333
+			attack_run_02 = 1.5666666666666667
 		},
 		attack_anim_durations = {
 			attack_run_03 = 2.6666666666666665,
-			attack_run_02 = 2.8666666666666667,
-			attack_run_01 = 2
+			attack_run_02 = 2.8666666666666667
 		},
 		attack_intensities = {
 			melee = 0.5,
@@ -710,8 +717,7 @@ local action_data = {
 		},
 		move_start_timings = {
 			attack_run_03 = 0,
-			attack_run_02 = 0,
-			attack_run_01 = 0
+			attack_run_02 = 0
 		},
 		damage_profile = DamageProfileTemplates.melee_fighter_default,
 		damage_type = damage_types.minion_melee_sharp,

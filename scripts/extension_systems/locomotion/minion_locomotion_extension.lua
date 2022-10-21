@@ -93,8 +93,7 @@ end
 local movement_types = {
 	script_driven = 0,
 	snap_to_navmesh = 1,
-	constrained_by_mover = 2,
-	disabled = 3
+	constrained_by_mover = 2
 }
 
 MinionLocomotionExtension.set_movement_type = function (self, movement_type, override_mover_separate_distance, ignore_forced_mover_kill)

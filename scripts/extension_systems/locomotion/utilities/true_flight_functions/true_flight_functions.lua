@@ -4,8 +4,6 @@ local function _extract_true_flight_functions(path)
 	local extracted_functions = require(path)
 
 	for name, extracted_function in pairs(extracted_functions) do
-		fassert(true_flight_functions[name] == nil, "Found two or more true flight functions  with the same name: %q", name)
-
 		true_flight_functions[name] = extracted_function
 	end
 end

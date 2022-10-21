@@ -114,12 +114,12 @@ local blueprints = {
 				visibility_function = banner_pass_visibility_function
 			},
 			{
-				value = "content/ui/materials/mission_board/frames/headline_background_vertical",
+				value = "content/ui/materials/bars/headline_background_vertical",
 				style_id = "fade_top",
 				pass_type = "texture_uv"
 			},
 			{
-				value = "content/ui/materials/mission_board/frames/headline_background_vertical",
+				value = "content/ui/materials/bars/headline_background_vertical",
 				style_id = "fade_bottom",
 				pass_type = "texture"
 			},
@@ -327,8 +327,6 @@ local function lerp_style(widget_styles, source_styles, target_styles, progress)
 				local property_type = type(style_property)
 
 				if to_property then
-					fassert(property_type == type(from_property) and property_type == type(to_property), "Property type differs for style %s.%s", style_name, property_name)
-
 					if property_name == "size" or property_name == "offset" then
 						local to_x = to_property[1]
 						local to_y = to_property[2]

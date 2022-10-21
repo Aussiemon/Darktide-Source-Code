@@ -2,21 +2,29 @@ local Armor = require("scripts/utilities/attack/armor")
 local HitMass = {}
 local _target_breed, _hit_mass_from_character, _hit_mass_from_object = nil
 
-HitMass.target_hit_mass = function (unit)
+HitMass.target_hit_mass = function (attacker_unit, target_unit, use_reduced_hit_mass)
 	local hit_mass = nil
-	local breed = _target_breed(unit)
+	local breed = _target_breed(target_unit)
 
 	if breed then
-		hit_mass = _hit_mass_from_character(unit, breed)
+		hit_mass = _hit_mass_from_character(target_unit, breed, use_reduced_hit_mass)
 	else
-		hit_mass = _hit_mass_from_object(unit)
+		hit_mass = _hit_mass_from_object(target_unit)
+	end
+
+	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+
+	if attacker_buff_extension then
+		local stat_buffs = attacker_buff_extension:stat_buffs()
+		local consumed_hit_mass_modifier = stat_buffs.consumed_hit_mass_modifier or 1
+		hit_mass = hit_mass * consumed_hit_mass_modifier
 	end
 
 	return hit_mass
 end
 
-HitMass.consume_hit_mass = function (unit, hit_mass_budget_attack, hit_mass_budget_impact)
-	local target_hit_mass = HitMass.target_hit_mass(unit)
+HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, use_reduced_hit_mass)
+	local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, use_reduced_hit_mass)
 	local new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - target_hit_mass)
 	local new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - target_hit_mass)
 
@@ -66,12 +74,12 @@ function _target_breed(unit)
 	return unit_data_ext:breed()
 end
 
-function _hit_mass_from_character(unit, breed)
+function _hit_mass_from_character(unit, breed, use_reduced_hit_mass)
 	if not HEALTH_ALIVE[unit] then
 		return 0
 	end
 
-	local hit_mass = breed.hit_mass
+	local hit_mass = use_reduced_hit_mass and breed.reduced_hit_mass or breed.hit_mass
 
 	return hit_mass
 end

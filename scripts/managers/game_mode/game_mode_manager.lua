@@ -38,12 +38,17 @@ GameModeManager.init = function (self, game_mode_context, game_mode_name, gamepl
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 
-	self._num_raycasts = 0
-	self._raycast_queue = {}
+	self._num_raycasts_this_frame = 0
+	self._raycast_queue_head = 0
+	self._raycast_queue_tail = 0
+	self._raycast_queue = Script.new_map(64)
+	self._raycast_data = Script.new_array(4)
 	self._async_raycast_handles = {}
 	self._raycast_callback = callback(self, "_async_raycast_result_cb")
 	self._num_physics_safe_callbacks = 0
 	self._physics_safe_callbacks = {}
+	self._run_single_threaded_physics = false
+	self._wants_single_threaded_physics = {}
 end
 
 GameModeManager.destroy = function (self)
@@ -54,6 +59,24 @@ GameModeManager.destroy = function (self)
 	self._game_mode:destroy()
 end
 
+GameModeManager.set_wants_single_threaded_physics = function (self, single_threaded, reason)
+	Log.info("GameModeManager", "set_wants_single_threaded_physics single_threaded %s, reason: %s ", tostring(single_threaded), tostring(reason))
+
+	self._wants_single_threaded_physics[reason] = single_threaded and single_threaded or nil
+end
+
+GameModeManager._set_single_threaded_physics = function (self, single_threaded)
+	self._run_single_threaded_physics = single_threaded
+end
+
+GameModeManager.wants_single_threaded_physics = function (self)
+	return next(self._wants_single_threaded_physics) ~= nil
+end
+
+GameModeManager.run_single_threaded_physics = function (self)
+	return self._run_single_threaded_physics
+end
+
 GameModeManager.register_physics_safe_callback = function (self, cb)
 	local index = self._num_physics_safe_callbacks + 1
 	self._physics_safe_callbacks[index] = cb
@@ -61,9 +84,23 @@ GameModeManager.register_physics_safe_callback = function (self, cb)
 end
 
 GameModeManager._async_raycast_result_cb = function (self, id, hits, num_hits)
-	local raycast_info = self._async_raycast_handles[id]
+	local queue = self._raycast_queue
+	local index = self._async_raycast_handles[id]
+	local cb = queue[index - 1]
+	local num_args = queue[index - 2]
+	local data_buffer = self._raycast_data
+	queue[index - 1] = nil
+	queue[index - 2] = nil
+	index = index - 2
 
-	raycast_info.cb(id, hits, num_hits, raycast_info)
+	for i = 1, num_args do
+		local j = index - i
+		data_buffer[i] = queue[j]
+		queue[j] = nil
+	end
+
+	cb(id, hits, num_hits, data_buffer)
+	table.clear(data_buffer)
 
 	self._async_raycast_handles[id] = nil
 end
@@ -73,36 +110,52 @@ GameModeManager.create_safe_raycast_object = function (self, ...)
 end
 
 GameModeManager.add_safe_raycast = function (self, raycast_object, pos, dir, length, cb, ...)
-	local num_raycasts = self._num_raycasts + 1
-	self._raycast_queue[num_raycasts] = {
-		raycast_object = raycast_object,
-		pos = Vector3Box(pos),
-		dir = Vector3Box(dir),
-		length = length,
-		cb = cb,
-		...
-	}
-	self._num_raycasts = num_raycasts
+	local queue = self._raycast_queue
+	local tail = self._raycast_queue_tail
+	local num_args = select("#", ...)
+	queue[tail - 1] = raycast_object
+	queue[tail - 2], queue[tail - 3], queue[tail - 4] = Vector3.to_elements(pos)
+	queue[tail - 5], queue[tail - 6], queue[tail - 7] = Vector3.to_elements(dir)
+	queue[tail - 8] = length
+	queue[tail - 9] = cb
+	queue[tail - 10] = num_args
+	tail = tail - 10
+
+	for i = 1, num_args do
+		queue[tail - i] = select(i, ...)
+	end
+
+	self._raycast_queue_tail = tail - num_args
+	self._num_raycasts_this_frame = self._num_raycasts_this_frame + 1
 end
 
 GameModeManager._do_raycasts = function (self)
-	local num_raycasts = self._num_raycasts
+	local num_raycasts = self._num_raycasts_this_frame
 
 	if num_raycasts <= 0 then
 		return
 	end
 
-	local raycast_queue = self._raycast_queue
+	local queue = self._raycast_queue
+	local head = self._raycast_queue_head
 
-	for i = 1, num_raycasts do
-		local raycast_info = raycast_queue[i]
-		local id = raycast_info.raycast_object:cast(raycast_info.pos:unbox(), raycast_info.dir:unbox(), raycast_info.length)
-		self._async_raycast_handles[id] = raycast_info
+	for _ = 1, num_raycasts do
+		local raycast_object = queue[head - 1]
+		local raycast_pos = Vector3(queue[head - 2], queue[head - 3], queue[head - 4])
+		local raycast_dir = Vector3(queue[head - 5], queue[head - 6], queue[head - 7])
+		local length = queue[head - 8]
+		local id = raycast_object:cast(raycast_pos, raycast_dir, length)
+		self._async_raycast_handles[id] = head - 8
+
+		for i = head - 1, head - 8, -1 do
+			queue[i] = nil
+		end
+
+		head = head - 10 - queue[head - 10]
 	end
 
-	table.clear(raycast_queue)
-
-	self._num_raycasts = 0
+	self._raycast_queue_head = head
+	self._num_raycasts_this_frame = 0
 end
 
 GameModeManager._do_physics_callbacks = function (self)
@@ -144,13 +197,6 @@ GameModeManager.use_side_color = function (self)
 	local use_side_color = game_mode_settings.use_side_color
 
 	return use_side_color
-end
-
-GameModeManager.force_third_person_mode = function (self)
-	local game_mode_settings = self._game_mode:settings()
-	local force_third_person_mode = game_mode_settings.force_third_person_mode
-
-	return force_third_person_mode
 end
 
 GameModeManager.use_third_person_hub_camera = function (self)
@@ -200,9 +246,15 @@ end
 
 GameModeManager.is_prologue = function (self)
 	local game_mode_settings = self._game_mode:settings()
-	local is_prologue = game_mode_settings.is_prologue
+	local is_prologue = game_mode_settings.is_prologue or false
 
 	return is_prologue
+end
+
+GameModeManager.is_social_hub = function (self)
+	local game_mode_settings = self._game_mode:settings()
+
+	return game_mode_settings.is_social_hub or false
 end
 
 GameModeManager.is_locked_reserve_ammo = function (self)
@@ -330,9 +382,9 @@ GameModeManager.rpc_game_mode_end_conditions_met = function (self, channel_id, o
 	self:_set_end_conditions_met(outcome)
 end
 
-GameModeManager.complete_game_mode = function (self)
+GameModeManager.complete_game_mode = function (self, triggered_from_flow)
 	if self._is_server then
-		self._game_mode:complete()
+		self._game_mode:complete(triggered_from_flow)
 	end
 end
 

@@ -11,34 +11,61 @@ for _, breed in pairs(Breeds) do
 end
 
 local BreedQueries = {
-	match_minions_by_tags = function (template_breed_tags)
+	match_minions_by_tags = function (template_breed_tags, optional_excluded_breed_tags, optional_prefered_sub_faction)
 		local best_breeds = {}
 		local num_template_breed_tags = #template_breed_tags
 
 		for i = 1, #minion_list do
-			local breed = minion_list[i]
-			local minion_breed_tags = breed.tags
-			local score, tag_amount = nil
+			repeat
+				local breed = minion_list[i]
+				local faction = breed.sub_faction_name
 
-			for j = 1, num_template_breed_tags do
-				local tags = template_breed_tags[j]
-				tag_amount = 0
-				score = 0
+				if optional_prefered_sub_faction and faction ~= optional_prefered_sub_faction then
+					break
+				end
 
-				for k = 1, #tags do
-					local tag = tags[k]
+				local minion_breed_tags = breed.tags
 
-					if minion_breed_tags[tag] then
-						score = score + 1
+				if optional_excluded_breed_tags then
+					local is_excluded = false
+
+					for h = 1, #optional_excluded_breed_tags do
+						local excluded_tag = optional_excluded_breed_tags[h]
+
+						if minion_breed_tags[excluded_tag] then
+							is_excluded = true
+
+							break
+						end
 					end
 
-					tag_amount = k
+					if is_excluded then
+						break
+					end
 				end
 
-				if score == tag_amount then
-					best_breeds[#best_breeds + 1] = breed
+				local score, tag_amount = nil
+
+				for j = 1, num_template_breed_tags do
+					local tags = template_breed_tags[j]
+					tag_amount = 0
+					score = 0
+
+					for k = 1, #tags do
+						local tag = tags[k]
+
+						if minion_breed_tags[tag] then
+							score = score + 1
+						end
+
+						tag_amount = k
+					end
+
+					if score == tag_amount then
+						best_breeds[#best_breeds + 1] = breed
+					end
 				end
-			end
+			until true
 		end
 
 		return best_breeds
@@ -68,7 +95,7 @@ BreedQueries.pick_random_minion_by_points = function (minion_breeds, points)
 	end
 end
 
-BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, optional_mission_objective_id, optional_attack_selection_template_name)
+BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, optional_mission_objective_id, optional_attack_selection_template_name, optional_aggro_state, optional_group_id, optional_max_health_modifier)
 	local num_spawners = #spawners
 	local breed_lists = {}
 	local breed_index = 1
@@ -88,7 +115,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 
 	for i = 1, #breed_lists do
 		local spawner = spawners[i]
-		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, target_side_id, nil, optional_mission_objective_id, nil, optional_attack_selection_template_name)
+		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, target_side_id, nil, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
 		local spawner_queue_id = spawned_minion_data.spawner_queue_id
 		spawner_queue_id = spawner_queue_id or {}
 		local queue_ids = spawner_queue_id[spawner]

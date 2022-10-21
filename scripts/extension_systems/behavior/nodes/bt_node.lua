@@ -8,9 +8,6 @@ BtNode.init = function (self, identifier, parent, condition_name, enter_hook, le
 	self.parent = parent
 	self.identifier = identifier
 	local condition = BtConditions[condition_name]
-
-	fassert(condition, "[BtNode] No condition called %q.", condition_name)
-
 	self.condition_name = condition_name
 
 	self:_init_enter_function(enter_hook)
@@ -34,8 +31,6 @@ BtNode._init_enter_function = function (self, enter_hook)
 			args_or_nil = enter_hook.args
 		end
 	end
-
-	fassert(enter_hook_name == nil or BtEnterHooks[enter_hook_name], "[BtNode] No enter hook called %q.", enter_hook_name)
 
 	if enter_hook then
 		self.enter = function (_self, unit, breed, blackboard, scratchpad, action_data, t, node_data, old_running_child_nodes, new_running_child_nodes)
@@ -84,14 +79,12 @@ BtNode._init_leave_function = function (self, leave_hook)
 		end
 	end
 
-	fassert(leave_hook_name == nil or BtLeaveHooks[leave_hook_name], "[BtNode] No leave hook called %q.", leave_hook_name)
-
 	if leave_hook then
 		self.leave = function (_self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy, node_data, old_running_child_nodes, new_running_child_nodes)
 			local metatable = getmetatable(self)
 
 			metatable.leave(_self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy, node_data)
-			BtLeaveHooks[leave_hook_name](unit, breed, blackboard, scratchpad, action_data, t, args_or_nil)
+			BtLeaveHooks[leave_hook_name](unit, breed, blackboard, scratchpad, action_data, t, args_or_nil, reason)
 
 			local current_parent = _self.parent
 

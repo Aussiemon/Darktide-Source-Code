@@ -17,13 +17,7 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._is_server = is_server
 	self._level_spawned = false
 	self._sparse_nav_graph_connected = false
-
-	Profiler.start("NavMeshManager:require_nav_tag_volume_data")
-
 	local nav_tag_volume_data = self:_require_nav_tag_volume_data(level_name, {})
-
-	Profiler.stop("NavMeshManager:require_nav_tag_volume_data")
-
 	local nav_tag_volume_layers = self:_create_nav_tag_volumes_from_level_data(nav_tag_volume_data)
 	self._nav_tag_volume_data = nav_tag_volume_data
 	self._nav_cost_map_lookup = self:_setup_nav_cost_map_lookup()
@@ -76,8 +70,6 @@ NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_ta
 end
 
 NavMeshManager._create_nav_tag_volumes_from_level_data = function (self, nav_tag_volume_data)
-	fassert(not self._sparse_nav_graph_connected, "[NavMeshManager] Too late to create nav tag volumes, must be done before GwNavWorld.connect_sparse_graph() has been called")
-
 	local nav_world = self._nav_world
 	local layer_id_to_name = {}
 	local layer_name_to_id = {}
@@ -107,8 +99,6 @@ NavMeshManager._create_nav_tag_volumes_from_level_data = function (self, nav_tag
 end
 
 NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min, altitude_max, layer_name, allowed, optional_type)
-	fassert(not self._sparse_nav_graph_connected, "[NavMeshManager] Too late to create nav tag volumes, must be done before GwNavWorld.connect_sparse_graph() has been called")
-
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local layer_id = nav_tag_layer_lookup[layer_name]
 
@@ -188,8 +178,6 @@ NavMeshManager._initialize_client_traverse_logic = function (self, nav_world)
 end
 
 NavMeshManager.initialize_nav_tag_cost_table = function (self, cost_table, layer_costs)
-	fassert(not self._is_server or self._level_spawned, "[NavMeshManager] Trying to initialize nav tag cost table before level has spawned - not all nav tag volumes have been added yet!")
-
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local allowed_layers = self._nav_tag_allowed_layers
 
@@ -267,9 +255,6 @@ local NAV_COST_MAP_MAX_COST_MAPS = 16
 NavMeshManager._create_nav_cost_maps = function (self)
 	local nav_cost_map_lookup = self._nav_cost_map_lookup
 	local num_cost_maps = #nav_cost_map_lookup
-
-	fassert(num_cost_maps <= NAV_COST_MAP_MAX_COST_MAPS, "[NavMeshManager] Error! Too many Nav Cost Maps!")
-
 	local nav_world = self._nav_world
 	local nav_cost_maps_data = Script.new_array(num_cost_maps)
 
@@ -292,7 +277,6 @@ NavMeshManager._destroy_nav_cost_maps = function (self)
 		local cost_map_data = nav_cost_maps_data[i]
 		local volumes = cost_map_data.volumes
 
-		fassert(table.is_empty(volumes), "[NavMeshManager] Error! You must remove associated volumes before destroying the Nav Volume Cost Map!")
 		GwNavVolumeCostMap.destroy(cost_map_data.cost_map)
 
 		nav_cost_maps_data[i] = nil
@@ -308,9 +292,6 @@ end
 NavMeshManager.nav_cost_map = function (self, cost_map_id)
 	local nav_cost_maps_data = self._nav_cost_maps_data
 	local cost_map_data = nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Couldn't find Nav Cost Map with id=%q!", cost_map_id)
-
 	local cost_map = cost_map_data.cost_map
 
 	return cost_map
@@ -323,16 +304,11 @@ NavMeshManager.add_nav_cost_map_box_volume = function (self, transform, scale_ve
 	local volume_ids_size = volume_id_data.size
 	local volume_ids_max_size = volume_id_data.max_size
 
-	fassert(volume_ids_size < volume_ids_max_size, "[NavMeshManager] Error! Too many Nav Volume Cost Map Volumes!")
-
 	while volume_ids[volume_id] do
 		volume_id = volume_id % volume_ids_max_size + 1
 	end
 
 	local cost_map_data = self._nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Error! Trying to Add Volume to Unknown Nav Volume Cost Map!")
-
 	local cost_map = cost_map_data.cost_map
 	local volume = GwNavVolumeCostMap.create_box_volume(transform, scale_vector, cost)
 
@@ -355,16 +331,11 @@ NavMeshManager.add_nav_cost_map_sphere_volume = function (self, position, radius
 	local volume_ids_size = volume_id_data.size
 	local volume_ids_max_size = volume_id_data.max_size
 
-	fassert(volume_ids_size < volume_ids_max_size, "[NavMeshManager] Error! Too many Nav Cost Map Volumes!")
-
 	while volume_ids[volume_id] do
 		volume_id = volume_id % volume_ids_max_size + 1
 	end
 
 	local cost_map_data = self._nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Error! Trying to Add Volume to Unknown Nav Cost Map!")
-
 	local cost_map = cost_map_data.cost_map
 	local volume = GwNavVolumeCostMap.create_sphere_volume(position, radius, cost)
 
@@ -383,17 +354,10 @@ end
 NavMeshManager.set_nav_cost_map_volume_transform = function (self, volume_id, cost_map_id, transform)
 	local volume_id_data = self._nav_cost_map_volume_id_data
 	local volume_ids = volume_id_data.ids
-
-	fassert(volume_ids[volume_id], "[NavMeshManager] Error! Trying to Set Transform for Unknown Nav Cost Map Volume!")
-
 	local cost_map_data = self._nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Error! Trying to Set Transform for Volume from Unknown Nav Cost Map!")
-
 	local volumes = cost_map_data.volumes
 	local volume = volumes[volume_id]
 
-	fassert(volume ~= nil, "[NavMeshManager] Error! Trying to Set Transform for Unknown Volume in Nav Cost Map!")
 	GwNavVolumeCostMap.set_volume_transform(volume, transform)
 
 	cost_map_data.recompute = true
@@ -403,17 +367,10 @@ end
 NavMeshManager.set_nav_cost_map_volume_scale = function (self, volume_id, cost_map_id, scale)
 	local volume_id_data = self._nav_cost_map_volume_id_data
 	local volume_ids = volume_id_data.ids
-
-	fassert(volume_ids[volume_id], "[NavMeshManager] Error! Trying to Set Scale for Unknown Nav Cost Map Volume!")
-
 	local cost_map_data = self._nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Error! Trying to Set Scale for Volume from Unknown Nav Cost Map!")
-
 	local volumes = cost_map_data.volumes
 	local volume = volumes[volume_id]
 
-	fassert(volume ~= nil, "[NavMeshManager] Error! Trying to Set Scale for Unknown Volume in Nav Cost Map!")
 	GwNavVolumeCostMap.set_volume_scale(volume, scale)
 
 	cost_map_data.recompute = true
@@ -424,18 +381,9 @@ NavMeshManager.remove_nav_cost_map_volume = function (self, volume_id, cost_map_
 	local volume_id_data = self._nav_cost_map_volume_id_data
 	local volume_id_size = volume_id_data.size
 	local volume_ids = volume_id_data.ids
-
-	fassert(volume_ids[volume_id], "[NavMeshManager] Error! Trying to Remove Unknown Nav Cost Map Volume!")
-
 	local cost_map_data = self._nav_cost_maps_data[cost_map_id]
-
-	fassert(cost_map_data ~= nil, "[NavMeshManager] Error! Trying to Remove Volume from Unknown Nav Cost Map!")
-
 	local volumes = cost_map_data.volumes
 	local volume = volumes[volume_id]
-
-	fassert(volume ~= nil, "[NavMeshManager] Error! Trying to Remove Volume for Unknown Volume in Nav Cost Map!")
-
 	local cost_map = cost_map_data.cost_map
 
 	GwNavVolumeCostMap.remove_volume(cost_map, volume)
@@ -461,7 +409,6 @@ end
 NavMeshManager.on_gameplay_post_init = function (self)
 	local num_nav_tag_layers = #self._nav_tag_layer_lookup
 
-	fassert(num_nav_tag_layers <= NetworkConstants.max_nav_tag_layer_id, "[NavMeshManager] Too many nav tag layers (%d, max:%d), raise global.network_config value for nav_tag_layer_id by a factor 2.", num_nav_tag_layers, NetworkConstants.max_nav_tag_layer_id)
 	GwNavWorld.connect_sparse_graph(self._nav_world)
 
 	self._sparse_nav_graph_connected = true
@@ -487,16 +434,12 @@ NavMeshManager._recompute_nav_cost_maps = function (self)
 end
 
 NavMeshManager.update = function (self, dt, t)
-	Profiler.start("NavCostMap Recomputation")
-
 	if self._should_recompute_nav_cost_maps and self._next_nav_cost_map_recomputation_t < t then
 		self:_recompute_nav_cost_maps()
 
 		self._should_recompute_nav_cost_maps = false
 		self._next_nav_cost_map_recomputation_t = t + NAV_COST_MAP_RECOMPUTATION_INTERVAL
 	end
-
-	Profiler.stop("NavCostMap Recomputation")
 end
 
 NavMeshManager.hot_join_sync = function (self, sender, channel)
@@ -522,9 +465,6 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	end
 
 	local layer_id = self._nav_tag_layer_lookup[layer_name]
-
-	fassert(layer_id, "[NavMeshManager] Tried to set the cost on a non-existing nav tag volume layer %q.", layer_name)
-
 	self._nav_tag_allowed_layers[layer_name] = allowed
 	local nav_world = self._nav_world
 	local damage_profile = DamageProfileTemplates.default
@@ -567,6 +507,7 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	end
 
 	Managers.state.pacing:allow_nav_tag_layer(layer_name, allowed)
+	Managers.state.main_path:allow_nav_tag_layer(layer_name, allowed)
 	Managers.state.bot_nav_transition:allow_nav_tag_layer(layer_name, allowed)
 
 	local bot_navigation_extensions = Managers.state.extension:get_entities("BotNavigationExtension")

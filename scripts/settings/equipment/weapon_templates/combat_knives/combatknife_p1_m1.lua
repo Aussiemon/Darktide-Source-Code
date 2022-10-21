@@ -5,8 +5,10 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local WeaponTraitsBespokeCombatknifeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatknife_p1")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -51,7 +53,26 @@ local weapon_template = {
 			anim_event = "equip",
 			sprint_ready_up_time = 0,
 			total_time = 0.1,
-			allowed_chain_actions = {}
+			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					action_name = "grenade_ability"
+				},
+				wield = {
+					action_name = "action_unwield"
+				},
+				start_attack = {
+					action_name = "action_melee_start_left"
+				},
+				block = {
+					action_name = "action_block"
+				},
+				special_action = {
+					action_name = "action_special_jab"
+				}
+			}
 		},
 		action_melee_start_left = {
 			anim_end_event = "attack_finished",
@@ -120,7 +141,6 @@ local weapon_template = {
 			allowed_during_sprint = true,
 			damage_window_end = 0.35,
 			anim_event = "attack_swing_left",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -185,7 +205,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -202,7 +222,6 @@ local weapon_template = {
 			first_person_hit_stop_anim = "attack_hit",
 			damage_window_end = 0.5,
 			anim_event = "attack_swing_heavy_down_left",
-			power_level = 500,
 			total_time = 1,
 			action_movement_curve = {
 				{
@@ -263,7 +282,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -336,7 +355,6 @@ local weapon_template = {
 			allowed_during_sprint = true,
 			damage_window_end = 0.45,
 			anim_event = "attack_swing_right",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -402,7 +420,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -418,7 +436,6 @@ local weapon_template = {
 			range_mod = 1.25,
 			damage_window_end = 0.5,
 			anim_event = "attack_swing_heavy_right_diagonal",
-			power_level = 500,
 			total_time = 1,
 			action_movement_curve = {
 				{
@@ -481,7 +498,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -555,7 +572,6 @@ local weapon_template = {
 			allowed_during_sprint = true,
 			damage_window_end = 0.45,
 			anim_event = "attack_swing_stab",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -620,7 +636,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -693,7 +709,6 @@ local weapon_template = {
 			allowed_during_sprint = true,
 			damage_window_end = 0.4,
 			anim_event = "attack_swing_right_diagonal_up",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -759,7 +774,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -819,18 +834,18 @@ local weapon_template = {
 			}
 		},
 		action_right_light_pushfollow = {
-			damage_window_start = 0.42,
+			damage_window_start = 0.266,
 			hit_armor_anim = "attack_hit",
-			weapon_handling_template = "time_scale_1_5",
+			weapon_handling_template = "time_scale_1",
 			anim_end_event = "attack_finished",
 			kind = "sweep",
 			attack_direction_override = "push",
-			first_person_hit_stop_anim = "attack_hit",
 			range_mod = 1.25,
-			damage_window_end = 0.56,
+			first_person_hit_stop_anim = "attack_hit",
+			damage_window_end = 0.38,
+			anim_event_3p = "attack_swing_left_diagonal",
 			anim_event = "attack_swing_pushfollow",
-			power_level = 500,
-			total_time = 2,
+			total_time = 1.33,
 			action_movement_curve = {
 				{
 					modifier = 1.2,
@@ -866,15 +881,15 @@ local weapon_template = {
 				},
 				special_action = {
 					action_name = "action_special_jab",
-					chain_time = 0.4
+					chain_time = 0.25
 				},
 				start_attack = {
 					action_name = "action_melee_start_right",
-					chain_time = 0.4
+					chain_time = 0.25
 				},
 				block = {
 					action_name = "action_block",
-					chain_time = 0.6
+					chain_time = 0.4
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -895,7 +910,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,
 			damage_type = damage_types.knife,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -905,7 +920,6 @@ local weapon_template = {
 			block_duration = 0.5,
 			kind = "push",
 			anim_event = "attack_push",
-			power_level = 500,
 			total_time = 1,
 			action_movement_curve = {
 				{
@@ -945,11 +959,11 @@ local weapon_template = {
 					chain_time = 0.32
 				}
 			},
-			inner_push_rad = math.pi * 0.6,
+			inner_push_rad = math.pi * 0.1,
 			outer_push_rad = math.pi * 1,
-			inner_damage_profile = DamageProfileTemplates.push_test,
+			inner_damage_profile = DamageProfileTemplates.ninja_push,
 			inner_damage_type = damage_types.physical,
-			outer_damage_profile = DamageProfileTemplates.push_test,
+			outer_damage_profile = DamageProfileTemplates.light_push,
 			outer_damage_type = damage_types.physical
 		},
 		action_special_jab = {
@@ -960,12 +974,12 @@ local weapon_template = {
 			attack_direction_override = "push",
 			first_person_hit_stop_anim = "attack_hit",
 			range_mod = 1.25,
-			weapon_handling_template = "time_scale_1_5",
+			weapon_handling_template = "time_scale_1",
 			damage_window_end = 0.35,
 			anim_end_event = "attack_finished",
 			anim_event = "attack_special",
 			power_level = 150,
-			total_time = 2,
+			total_time = 2.33,
 			action_movement_curve = {
 				{
 					modifier = 1.25,
@@ -1001,11 +1015,11 @@ local weapon_template = {
 				},
 				start_attack = {
 					action_name = "action_melee_start_left",
-					chain_time = 0.5
+					chain_time = 0.32
 				},
 				special_action = {
 					action_name = "action_special_jab",
-					chain_time = 0.95
+					chain_time = 0.7
 				},
 				block = {
 					action_name = "action_block"
@@ -1029,7 +1043,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.jab_special,
 			damage_type = damage_types.punch,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -1077,14 +1091,10 @@ weapon_template.keywords = {
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "assault"
 weapon_template.sprint_template = "ninja_l"
-weapon_template.stamina_template = "default"
+weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "assault"
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.3,
-	sprinting = 0.35
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.combat_knife
 weapon_template.overclocks = {
 	armor_pierce_up_dps_down = {
 		combatknife_p1_m1_dps_stat = -0.1,
@@ -1279,6 +1289,10 @@ local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
 
 table.append(weapon_template.traits, melee_common_traits)
 
+local bespoke_combatknife_p1_traits = table.keys(WeaponTraitsBespokeCombatknifeP1)
+
+table.append(weapon_template.traits, bespoke_combatknife_p1_traits)
+
 weapon_template.perks = {
 	combatknife_p1_m1_dps_perk = {
 		description = "loc_trait_description_combatknife_p1_m1_dps_perk",
@@ -1444,6 +1458,38 @@ weapon_template.perks = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
 			}
 		}
+	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_very_fast_attack"
+	},
+	{
+		display_name = "loc_weapon_keyword_ninja_fencer"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		display_name = "loc_gestalt_ninja_fencer",
+		type = "ninja_fencer",
+		attack_chain = {
+			"ninja_fencer",
+			"ninja_fencer",
+			"ninja_fencer",
+			"ninja_fencer"
+		}
+	},
+	secondary = {
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter"
+		}
+	},
+	special = {
+		display_name = "loc_weapon_special_fist_attack",
+		type = "melee"
 	}
 }
 

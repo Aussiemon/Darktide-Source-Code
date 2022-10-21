@@ -35,7 +35,7 @@ PlayerUnitVisualLoadout.wield_previous_slot = function (inventory_component, uni
 	end
 
 	local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-	local can_wield_slot = ability_extension and ability_extension:can_wield(previously_wielded_slot_name)
+	local can_wield_slot = ability_extension and ability_extension:can_wield(previously_wielded_slot_name, true)
 
 	if can_wield_slot then
 		PlayerUnitVisualLoadout.wield_slot(previously_wielded_slot_name, unit, t)
@@ -79,8 +79,6 @@ end
 PlayerUnitVisualLoadout.unequip_item_from_slot = function (player_unit, slot_name, t)
 	local inventory = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
 	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
-
-	fassert(inventory[slot_name] ~= visual_loadout_extension.UNEQUIPPED_SLOT, "[PlayerUnitVisualLoadout] %s was already unequipped!", slot_name)
 
 	if inventory.wielded_slot == slot_name then
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
@@ -165,25 +163,57 @@ PlayerUnitVisualLoadout.has_weapon_keyword_from_slot = function (visual_loadout_
 	return has_keyword
 end
 
+local function _is_slot_hidden(inventory_component, slot_name)
+	if not slot_name then
+		return false
+	end
+
+	local player = Managers.player:local_player(1)
+
+	if not player then
+		return false
+	end
+
+	local player_unit = player.player_unit
+	local weapon_name = inventory_component[slot_name]
+
+	if not weapon_name then
+		return false
+	end
+
+	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
+	local weapon_template = weapon_name and visual_loadout_extension:weapon_template_from_slot(slot_name)
+	local is_slot_hidden = weapon_template and weapon_template.hide_slot or false
+
+	return is_slot_hidden
+end
+
 PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inventory_component)
 	local wielded_slot = inventory_component.wielded_slot
 	local next_slot_name = nil
-	local wield_prev = wield_input == "wield_prev"
-	local wield_next = wield_input == "wield_next"
+	local wield_scroll_down = wield_input == "wield_scroll_down"
+	local wield_scroll_up = wield_input == "wield_scroll_up"
 
-	if wield_prev or wield_next then
+	if wield_scroll_down or wield_scroll_up then
 		local slot_index = scroll_wield_order[wielded_slot]
 
 		if slot_index then
-			local next_slot_index = math.clamp(wield_prev and slot_index - 1 or slot_index + 1, 1, #scroll_wield_order)
-			next_slot_name = scroll_wield_order[next_slot_index]
+			local next_slot_index = math.clamp(wield_scroll_up and slot_index - 1 or slot_index + 1, 1, #scroll_wield_order)
+			local is_slot_hidden = _is_slot_hidden(inventory_component, scroll_wield_order[next_slot_index])
+			next_slot_name = is_slot_hidden and wielded_slot or scroll_wield_order[next_slot_index]
 		end
 	end
 
 	if next_slot_name then
 		return next_slot_name
-	elseif wield_input == "quick_wield" or (wield_prev or wield_next) and not next_slot_name then
+	elseif wield_input == "quick_wield" or (wield_scroll_down or wield_scroll_up) and not next_slot_name then
 		next_slot_name = quick_wield_configuration[wielded_slot]
+		local is_slot_hidden = _is_slot_hidden(inventory_component, next_slot_name)
+
+		if is_slot_hidden then
+			return wielded_slot
+		end
+
 		next_slot_name = next_slot_name or quick_wield_configuration.default
 
 		return next_slot_name
@@ -198,9 +228,6 @@ end
 
 PlayerUnitVisualLoadout.wield_input_from_slot_name = function (slot_name)
 	local slot_config = slot_configuration[slot_name]
-
-	fassert(slot_config.wieldable, "Slot %q is not a wieldable slot. Can't find wield_input.", slot_name)
-	fassert(slot_config.wield_input, "Slot %q can't be wielded from input. Can't find wield_input.", slot_name)
 
 	return slot_config.wield_input
 end

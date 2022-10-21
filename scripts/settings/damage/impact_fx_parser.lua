@@ -190,8 +190,6 @@ local function _add_impact_fx_to_lookup(lookup_table, impact_fx_type, damage_typ
 		lookup_table[damage_type][impact_fx_type][armor_or_material_type] = {}
 	end
 
-	fassert(not lookup_table[damage_type][impact_fx_type][armor_or_material_type][hit_type], "[ImpactFxParser] Trying to overwrite %s impact fx %q->%q->%q", impact_fx_type, damage_type, armor_or_material_type, hit_type)
-
 	lookup_table[damage_type][impact_fx_type][armor_or_material_type][hit_type] = fx_table
 end
 
@@ -224,9 +222,6 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 				if table.size(fx_table) ~= 0 then
 					local fx_name = string.format("armor_fx_%s_%s_%s", damage_type, armor_type, hit_type)
 					fx_table.name = fx_name
-
-					fassert(not templates_table[fx_name], "Duplicate entry found for impact_fx %q", fx_name)
-
 					templates_table[fx_name] = fx_table
 
 					_add_impact_fx_to_lookup(lookup_table, "armor", damage_type, armor_type, hit_type, fx_table)
@@ -252,9 +247,6 @@ local function _create_surface_impact_fx_templates(lookup_table, templates_table
 			if table.size(fx_table) ~= 0 then
 				local fx_name = string.format("surface_fx_%s_%s_%s", damage_type, material_type, hit_type)
 				fx_table.name = fx_name
-
-				fassert(not templates_table[fx_name], "Duplicate entry found for impact_fx %q", fx_name)
-
 				templates_table[fx_name] = table.clone(fx_table)
 
 				_add_impact_fx_to_lookup(lookup_table, "material", damage_type, material_type, hit_type, fx_table)

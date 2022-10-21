@@ -9,10 +9,10 @@ local event_vo_demolition_veteran_male_a = {
 			"loc_veteran_male_a__event_demolition_first_corruptor_destroyed_a_04"
 		},
 		sound_events_duration = {
-			2.391604,
-			2.621646,
+			2.391583,
+			2.621625,
 			0.954438,
-			2.209021
+			2.209
 		},
 		randomize_indexes = {}
 	}

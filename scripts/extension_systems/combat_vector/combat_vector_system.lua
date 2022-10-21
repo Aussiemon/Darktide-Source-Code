@@ -3,10 +3,12 @@ require("scripts/extension_systems/combat_vector/combat_vector_user_extension")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local CombatVectorSettings = require("scripts/settings/combat_vector/combat_vector_settings")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
-local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
+local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local CombatVectorSystem = class("CombatVectorSystem", "ExtensionSystemBase")
-local _generate_combat_vector, _get_segment_range_identifier, _calculate_segment, _calculate_nav_mesh_locations, _calculate_from_position, _calculate_to_position, _calculate_main_aggro_unit, _calculate_flank_positions, _calculate_flank_vectors, _clear_data = nil
+local _calculate_flank_positions, _calculate_flank_vectors, _calculate_from_position, _calculate_main_aggro_unit, _calculate_nav_mesh_locations, _calculate_segment, _calculate_to_position, _clear_data, _generate_combat_vector, _get_segment_range_identifier = nil
 local LEFT_SEGMENT_INDEX = 1
 local MID_SEGMENT_INDEX = 2
 local RIGHT_SEGMENT_INDEX = 3
@@ -164,12 +166,7 @@ CombatVectorSystem.update = function (self, context, dt, t)
 		return
 	end
 
-	Profiler.start("update_combat_vector")
-
 	local changed = self:_update_combat_vector(dt, t)
-
-	Profiler.stop("update_combat_vector")
-
 	local nav_mesh_locations = self._nav_mesh_locations
 	local claimed_location_counters = self._claimed_location_counters
 	local flank_positions = self._flank_positions
@@ -195,10 +192,10 @@ CombatVectorSystem._reset = function (self)
 end
 
 CombatVectorSystem._update_combat_vector = function (self, dt, t)
+	local nav_world = self._nav_world
 	local aggro_unit_scores = self._aggro_unit_scores
 	local current_aggro_unit = self._main_aggro_unit
-	self._main_aggro_unit = _calculate_main_aggro_unit(dt, aggro_unit_scores, current_aggro_unit, CombatVectorSettings.aggro_decay_speed)
-	local nav_world = self._nav_world
+	self._main_aggro_unit = _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_aggro_unit, CombatVectorSettings.aggro_decay_speed)
 	local traverse_logic = self._traverse_logic
 	local astar_data = self._astar_data
 	local astar = astar_data.astar
@@ -554,7 +551,7 @@ function _calculate_segment(nav_world, traverse_logic, segments, segment_positio
 end
 
 function _calculate_from_position(nav_world, traverse_logic, main_aggro_unit)
-	if not main_aggro_unit then
+	if not ALIVE[main_aggro_unit] then
 		return
 	end
 
@@ -637,7 +634,7 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 	return to_position
 end
 
-function _calculate_main_aggro_unit(dt, aggro_unit_scores, current_main_aggro_unit, decay_speed)
+function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_main_aggro_unit, decay_speed)
 	local highest_score = 0
 	local best_aggro_unit = nil
 	local ALIVE = ALIVE
@@ -657,11 +654,54 @@ function _calculate_main_aggro_unit(dt, aggro_unit_scores, current_main_aggro_un
 	if not best_aggro_unit then
 		local target_side_id = CombatVectorSettings.target_side_id
 		best_aggro_unit = Managers.state.main_path:ahead_unit(target_side_id)
+		local unit_data_extension = ScriptUnit.has_extension(best_aggro_unit, "unit_data_system")
+		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+
+		if character_state_component and PlayerUnitStatus.is_disabled(character_state_component) then
+			local main_path_manager = Managers.state.main_path
+			local nav_spawn_points = main_path_manager:nav_spawn_points()
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system:get_side(target_side_id)
+			local valid_player_units = side.valid_player_units
+			local num_valid_player_units = #valid_player_units
+			local best_travel_distance = 0
+
+			for j = 1, num_valid_player_units do
+				repeat
+					local player_unit = valid_player_units[j]
+
+					if player_unit == best_aggro_unit then
+						break
+					end
+
+					local player_position = POSITION_LOOKUP[player_unit]
+					local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
+
+					if not group_index then
+						local navigation_extension = ScriptUnit.extension(player_unit, "navigation_system")
+						local latest_position_on_nav_mesh = navigation_extension:latest_position_on_nav_mesh()
+
+						if latest_position_on_nav_mesh then
+							group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+						end
+					end
+
+					local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+					local end_index = start_index + 1
+					local _, travel_distance = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
+
+					if best_travel_distance < travel_distance then
+						best_aggro_unit = player_unit
+						best_travel_distance = travel_distance
+					end
+				until true
+			end
+		end
 	elseif best_aggro_unit ~= current_main_aggro_unit then
 		aggro_unit_scores[best_aggro_unit] = highest_score + CombatVectorSettings.main_aggro_target_stickyness
 	end
 
-	return best_aggro_unit
+	return best_aggro_unit or current_main_aggro_unit
 end
 
 local FLANK_POS_ABOVE = 5

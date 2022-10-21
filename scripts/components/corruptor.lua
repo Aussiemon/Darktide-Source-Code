@@ -41,7 +41,7 @@ Corruptor.events.demolition_stage_start = function (self)
 end
 
 Corruptor.events.died = function (self)
-	if DEDICATED_SERVER then
+	if Managers.stats.can_record_stats() then
 		Managers.stats:record_team_corruptor_destroyed()
 	end
 

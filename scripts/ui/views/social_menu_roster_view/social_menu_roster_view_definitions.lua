@@ -274,34 +274,6 @@ local widget_definitions = {
 			visibility_function = party_inverted_visibility_function
 		},
 		{
-			style_id = "party_slot_1",
-			scenegraph_id = "party_grid",
-			pass_type = "text",
-			value = Localize("loc_social_menu_party_empty_slot"),
-			visibility_function = party_inverted_visibility_function
-		},
-		{
-			style_id = "party_slot_2",
-			scenegraph_id = "party_grid",
-			pass_type = "text",
-			value = Localize("loc_social_menu_party_empty_slot"),
-			visibility_function = party_inverted_visibility_function
-		},
-		{
-			style_id = "party_slot_3",
-			scenegraph_id = "party_grid",
-			pass_type = "text",
-			value = Localize("loc_social_menu_party_empty_slot"),
-			visibility_function = party_inverted_visibility_function
-		},
-		{
-			style_id = "party_slot_4",
-			scenegraph_id = "party_grid",
-			pass_type = "text",
-			value = Localize("loc_social_menu_party_empty_slot"),
-			visibility_function = party_inverted_visibility_function
-		},
-		{
 			value = "content/ui/materials/frames/party_lower",
 			style_id = "frame_bottom",
 			pass_type = "texture",
@@ -405,9 +377,6 @@ local widget_definitions = {
 	}, "roster_grid_mask")
 }
 local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button)
-
-fassert(tab_button_template[2].style_id == "glow")
-
 tab_button_template[2].style.offset[2] = 3
 local view_elements = {
 	tab_bar = {

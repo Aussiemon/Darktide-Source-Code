@@ -167,8 +167,6 @@ local screen_3 = {
 			elseif value == 3 then
 				Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 				Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
-			else
-				fassert(false, "Speaker settings: Unrecognized value ")
 			end
 		end
 	}
@@ -288,9 +286,6 @@ FirstRunSettingsView._create_setting_widget = function (self, widget_options, su
 	local widget_type = widget_options.widget_type
 	local widget = nil
 	local template = ContentBlueprints[widget_type]
-
-	fassert(template, "[FirstRunSettingsView] - Could not find content blueprint for type: %s", widget_type)
-
 	local size = template.size_function and template.size_function(self, widget_options) or template.size
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, widget_options) or template.pass_template

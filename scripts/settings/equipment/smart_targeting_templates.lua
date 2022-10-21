@@ -1,6 +1,6 @@
 local Range = require("scripts/utilities/range")
 
-function _degrees_to_radians(degrees)
+local function _degrees_to_radians(degrees)
 	return degrees * 0.0174532925
 end
 
@@ -277,7 +277,6 @@ local smart_targeting_templates = {
 		}
 	},
 	target_ally = {
-		only_direct_hit = true,
 		precision_target = {
 			max_range = 100,
 			min_range = 1,

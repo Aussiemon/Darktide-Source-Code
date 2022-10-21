@@ -38,7 +38,8 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	self._failed_clients = {}
 	local player_game_state_mapping = {}
 	local game_state_context = {
-		mission_name = params.mission_name
+		mission_name = params.mission_name,
+		mission_giver_vo = params.mission_giver_vo or "none"
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -67,16 +68,18 @@ StateLoading._setup_loading_data = function (self, params)
 	self._circumstance_name = params.circumstance_name
 	self._side_mission = params.side_mission
 	self._needs_load_level = params.next_state and params.next_state.NEEDS_MISSION_LEVEL
+	self._mission_giver_vo = params.mission_giver_vo or "none"
 	self._next_state = params.next_state
 	self._next_state_params = params.next_state_params
 end
 
-StateLoading._reset_player_game_state = function (self, mission_name)
+StateLoading._reset_player_game_state = function (self, mission_name, mission_giver_vo)
 	Managers.player:on_game_state_exit(self)
 
 	local player_game_state_mapping = {}
 	local game_state_context = {
-		mission_name = mission_name
+		mission_name = mission_name,
+		mission_giver_vo = mission_giver_vo or "none"
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -97,7 +100,7 @@ StateLoading._reset_state_loading = function (self, params)
 
 	local mission_name = params.mission_name
 
-	self:_reset_player_game_state(mission_name)
+	self:_reset_player_game_state(mission_name, params.mission_giver_vo)
 end
 
 StateLoading.update = function (self, main_dt, main_t)
@@ -114,7 +117,7 @@ StateLoading.update = function (self, main_dt, main_t)
 			Managers.loading:cleanup()
 
 			return error_state, error_state_params
-		elseif IS_XBS then
+		elseif IS_XBS or IS_GDK then
 			local error_state, error_state_params = Managers.account:wanted_transition()
 
 			if error_state then
@@ -235,8 +238,6 @@ StateLoading._global_packages_loaded = function (self)
 end
 
 StateLoading._update_loading = function (self)
-	assert(self._state == "loading", "Updating loading when not in loading state")
-
 	local loading_manager = Managers.loading
 
 	if loading_manager:load_finished() and self:_global_packages_loaded() then

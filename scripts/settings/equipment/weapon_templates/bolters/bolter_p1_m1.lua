@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -175,12 +176,12 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		sprint_requires_press_to_interrupt = true,
-		minimum_hold_time = 0.19,
 		start_input = "shoot_pressed",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.3,
 		weapon_handling_template = "bolter_full_auto",
 		ammunition_usage = 1,
+		minimum_hold_time = 0.19,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -245,18 +246,18 @@ weapon_template.actions = {
 				chain_time = 0.1
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		sprint_ready_up_time = 0,
-		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
 		crosshair_type = "ironsight",
+		start_input = "zoom_shoot",
 		total_time = 0.3,
 		action_movement_curve = {
 			{
@@ -324,7 +325,7 @@ weapon_template.actions = {
 				chain_time = 0.8
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -377,12 +378,12 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1",
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -412,21 +413,20 @@ weapon_template.actions = {
 				chain_until = 0.4
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_push = {
-		allowed_during_sprint = true,
 		push_radius = 2.4,
 		start_input = "special_action",
 		block_duration = 0.5,
 		kind = "push",
 		continue_sprinting = true,
+		allowed_during_sprint = true,
 		damage_time = 0.122,
 		unaim = true,
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -662,11 +662,7 @@ weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.42,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.bolter
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
@@ -676,5 +672,34 @@ table.append(weapon_template.traits, ranged_common_traits)
 local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
+
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_high_damage"
+	},
+	{
+		display_name = "loc_weapon_keyword_piercing_shots"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "burst",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
+	},
+	special = {
+		display_name = "loc_weapon_special_weapon_bash",
+		type = "melee"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
+}
 
 return weapon_template

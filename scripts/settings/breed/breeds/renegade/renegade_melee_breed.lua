@@ -33,7 +33,7 @@ local breed_data = {
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
 	base_height = 1.9,
-	stagger_resistance = 1.25,
+	stagger_resistance = 1,
 	player_locomotion_constrain_radius = 0.4,
 	challenge_rating = 1,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
@@ -56,8 +56,8 @@ local breed_data = {
 	armor_type = armor_types.armored,
 	gib_template = MinionGibbingTemplates.renegade_melee,
 	stagger_durations = {
-		[stagger_types.light] = 0.75,
-		[stagger_types.medium] = 1.25,
+		[stagger_types.light] = 0.5,
+		[stagger_types.medium] = 0.75,
 		[stagger_types.heavy] = 2.8,
 		[stagger_types.explosion] = 6.303030303030303,
 		[stagger_types.light_ranged] = 0.5,
@@ -272,19 +272,16 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.05,
-			j_leftshoulder = 0.05,
+			j_rightshoulder = 0.15,
+			j_leftshoulder = 0.15,
 			j_spine = 0.3,
-			j_spine1 = 0.2,
-			j_head = 0.35,
-			j_neck = 0.15
+			j_spine1 = 0.1,
+			j_head = 0.5,
+			j_neck = 0.5
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,

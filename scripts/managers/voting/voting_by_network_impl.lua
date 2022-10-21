@@ -181,6 +181,16 @@ VotingByNetworkImpl.update = function (self, dt, t)
 			template.on_completed(voting_id, template, table.clone(voting:params()), result)
 
 			delete_votings[#delete_votings + 1] = voting_id
+
+			if DEDICATED_SERVER then
+				local votes = {}
+
+				for _, value in pairs(voting:votes()) do
+					votes[value] = (votes[value] or 0) + 1
+				end
+
+				Managers.telemetry_events:vote_completed(template.name, result, votes)
+			end
 		elseif state == "aborted" then
 			local abort_reason = voting:abort_reason()
 			self._voting_results[voting_id] = {
@@ -462,8 +472,8 @@ VotingByNetworkImpl.rpc_start_voting_kick_player = function (self, channel_id, v
 	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, kick_peer_id)
 end
 
-VotingByNetworkImpl.rpc_start_voting_stay_in_party = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id)
-	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id)
+VotingByNetworkImpl.rpc_start_voting_stay_in_party = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
+	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
 end
 
 VotingByNetworkImpl.rpc_register_vote = function (self, channel_id, voting_id, voter_peer_id, option_id)
@@ -521,7 +531,7 @@ VotingByNetworkImpl._event_network_client_disconnected = function (self, network
 			local template = voting:template()
 
 			if template.abort_on_member_left then
-				voting:on_voting_aborted("Member left")
+				voting:on_voting_aborted("Member left", peer_id)
 			else
 				voting:on_member_left(peer_id)
 			end

@@ -30,9 +30,6 @@ end
 
 local function _create_slot_from_configuration(configuration, slot_options)
 	local slot_name = configuration.name
-
-	fassert(configuration.wieldable ~= nil, "wieldable is not defined in slot (%s)", slot_name)
-
 	local slot = {
 		name = slot_name,
 		equipped = false,
@@ -126,8 +123,6 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 	self:_spawn_item_units(slot, unit_3p, unit_1p, attach_settings, optional_mission_template)
 
 	if slot.use_existing_unit_3p then
-		fassert(ALIVE[optional_existing_unit_3p], "[EquipmentComponent] Missing existing unit 3p when equipping item.")
-
 		slot.attachments_3p = nil
 		slot.unit_3p = optional_existing_unit_3p
 		local smart_tagging_id = Unit.find_actor(optional_existing_unit_3p, "smart_tagging")
@@ -208,7 +203,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 		end
 	end
 
-	if _should_spawn_1p(unit_1p, item) then
+	if _should_spawn_1p(unit_1p, item, slot) then
 		self:_fill_attach_settings_1p(attach_settings, slot.breed_name)
 
 		local item_unit_1p, attachment_units_1p = nil
@@ -255,10 +250,18 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		self:_fill_attach_settings_3p(attach_settings, slot)
 
 		local unit_3p = slot.unit_3p
-		local attachment_units_3p = VisualLoadoutCustomization.spawn_item_attachments(item, attach_settings, unit_3p, nil, optional_mission_template)
+		local weapon_skin_item = item.slot_weapon_skin
+		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
+		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
+		local attachment_units_3p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_3p, nil, optional_mission_template)
 		local parent_unit = slot.parent_unit_3p
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_3p, parent_unit, attach_settings)
+
+		if skin_data then
+			VisualLoadoutCustomization.apply_material_overrides(skin_data, unit_3p, parent_unit, attach_settings)
+		end
+
 		VisualLoadoutCustomization.add_extensions(nil, attachment_units_3p, attach_settings)
 
 		local deform_overrides = slot.deform_overrides
@@ -274,15 +277,23 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 
 	local parent_unit_1p = slot.parent_unit_1p
 
-	if _should_spawn_1p(parent_unit_1p, item) then
+	if _should_spawn_1p(parent_unit_1p, item, slot) then
 		local attach_settings = self:_attach_settings()
 
 		self:_fill_attach_settings_1p(attach_settings, slot.breed_name)
 
 		local unit_1p = slot.unit_1p
-		local attachment_units_1p = VisualLoadoutCustomization.spawn_item_attachments(item, attach_settings, unit_1p, nil, optional_mission_template)
+		local weapon_skin_item = item.slot_weapon_skin
+		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
+		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
+		local attachment_units_1p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_1p, nil, optional_mission_template)
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_1p, parent_unit_1p, attach_settings)
+
+		if skin_data then
+			VisualLoadoutCustomization.apply_material_overrides(skin_data, unit_1p, parent_unit_1p, attach_settings)
+		end
+
 		VisualLoadoutCustomization.add_extensions(nil, attachment_units_1p, attach_settings)
 		Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(unit_1p, "custom_fov", true)
 
@@ -305,11 +316,15 @@ local function _despawn_item_units(unit_spawner, base_unit, attachments)
 		for i = #attachments, 1, -1 do
 			local unit = attachments[i]
 
-			unit_spawner:mark_for_deletion(unit)
+			if unit then
+				unit_spawner:mark_for_deletion(unit)
+			end
 		end
 	end
 
-	unit_spawner:mark_for_deletion(base_unit)
+	if base_unit then
+		unit_spawner:mark_for_deletion(base_unit)
+	end
 end
 
 EquipmentComponent.unequip_item = function (self, slot)
@@ -358,8 +373,6 @@ EquipmentComponent.unequip_slot_dependencies = function (self, slot_config, equi
 		return
 	end
 
-	fassert(not slot_config.wieldable, "A wieldable slot being used as another slots dependency is going to be all kinds of trouble")
-	fassert(not slot_config.use_existing_unit_3p, "A slot used as another slots dependency that used an existing unit is going to be all kinds of trouble")
 	table.clear(dependent_items)
 
 	for i = #slot_equip_order, 1, -1 do
@@ -492,6 +505,12 @@ local function _set_slot_hidden(slot, hidden_3p, hidden_1p)
 		else
 			_show_base_unit(unit_1p)
 		end
+	end
+end
+
+local function _mask_base_body_slot(base_body_slot, mask_override, unit_3p)
+	if mask_override then
+		VisualLoadoutCustomization.apply_material_override(body_unit, unit_3p, false, mask_override, false)
 	end
 end
 
@@ -647,6 +666,56 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				end
 			end
 		end
+
+		local slot_gear_upperbody = equipment.slot_gear_upperbody
+		local gear_upperbody_item = slot_gear_upperbody.item
+
+		if gear_upperbody_item then
+			if slot_names_to_hide.slot_body_torso == nil then
+				local torso_unit = equipment.slot_body_torso.unit_3p
+
+				if torso_unit then
+					local mask_torso = gear_upperbody_item.mask_torso
+
+					if mask_torso == "" or mask_torso == nil then
+						mask_torso = "mask_default"
+					end
+
+					VisualLoadoutCustomization.apply_material_override(torso_unit, unit_3p, false, mask_torso, false)
+				end
+			end
+
+			if slot_names_to_hide.slot_body_arms == nil then
+				local arms_unit = equipment.slot_body_arms.unit_3p
+
+				if arms_unit then
+					local mask_arms = gear_upperbody_item.mask_arms
+
+					if mask_arms == "" or mask_arms == nil then
+						mask_arms = "mask_default"
+					end
+
+					VisualLoadoutCustomization.apply_material_override(arms_unit, unit_3p, false, mask_arms, false)
+				end
+			end
+		end
+
+		local slot_gear_lowerbody = equipment.slot_gear_lowerbody
+		local gear_lowerbody_item = slot_gear_lowerbody.item
+
+		if gear_lowerbody_item and slot_names_to_hide.slot_body_legs == nil then
+			local legs_unit = equipment.slot_body_legs.unit_3p
+
+			if legs_unit then
+				local mask_legs = gear_lowerbody_item.mask_legs
+
+				if mask_legs == "" or mask_legs == nil then
+					mask_legs = "mask_default"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(legs_unit, unit_3p, false, mask_legs, false)
+			end
+		end
 	end
 
 	if player_visibility then
@@ -733,11 +802,11 @@ EquipmentComponent.send_component_event = function (slot, event_name, ...)
 end
 
 function _should_spawn_3p(slot)
-	return not slot.use_existing_unit_3p
+	return not slot.use_existing_unit_3p and (not DEDICATED_SERVER or slot.wieldable)
 end
 
-function _should_spawn_1p(unit_1p, item)
-	return unit_1p and item.base_unit and item.show_in_1p
+function _should_spawn_1p(unit_1p, item, slot)
+	return unit_1p and item.base_unit and item.show_in_1p and (not DEDICATED_SERVER or slot.wieldable)
 end
 
 return EquipmentComponent

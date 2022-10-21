@@ -2,10 +2,13 @@ local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
+local buff_stat_buffs = BuffSettings.stat_buffs
+local damage_types = DamageSettings.damage_types
 local templates = {
 	cultist_flamer_hit_by_flame = {
 		interval = 0.5,
@@ -17,7 +20,7 @@ local templates = {
 		keywords = {
 			buff_keywords.burning
 		},
-		interval_function = function (template_data, template_context)
+		interval_func = function (template_data, template_context)
 			local unit = template_context.unit
 
 			if HEALTH_ALIVE[unit] then
@@ -63,6 +66,14 @@ local templates = {
 		keywords = {
 			buff_keywords.renegade_grenadier_liquid_immunity
 		}
+	},
+	beast_of_nurgle_liquid_immunity = {
+		unique_buff_id = "beast_of_nurgle_liquid_immunity",
+		class_name = "buff",
+		unique_buff_priority = 1,
+		keywords = {
+			buff_keywords.beast_of_nurgle_liquid_immunity
+		}
 	}
 }
 local RELATION = "enemy"
@@ -84,7 +95,7 @@ templates.daemonhost_corruption_aura = {
 	class_name = "interval_buff",
 	keywords = {},
 	duration = math.huge,
-	interval_function = function (template_data, template_context)
+	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		if HEALTH_ALIVE[unit] then
@@ -125,6 +136,68 @@ templates.daemonhost_corruption_aura = {
 			end
 		end
 	end
+}
+templates.chaos_beast_of_nurgle_hit_by_vomit = {
+	hud_priority = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	max_stacks = 3,
+	duration = 8,
+	class_name = "buff",
+	keywords = {
+		buff_keywords.beast_of_nurgle_vomit
+	},
+	forbidden_keywords = {
+		buff_keywords.beast_of_nurgle_liquid_immunity
+	},
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.6,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.8
+	},
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_hit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
+templates.chaos_beast_of_nurgle_being_eaten = {
+	interval = 1,
+	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.beast_of_nurgle_vomit,
+		buff_keywords.beast_of_nurgle_liquid_immunity
+	},
+	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
+	damage_type = damage_types.minion_vomit,
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+			local max_health = health_extension:max_health()
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+			local damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid
+			local power_level_table = MinionDifficultySettings.power_level.chaos_beast_of_nurgle_being_eaten
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table) * max_health
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_hit",
+		looping_wwise_start_event = "wwise/events/minions/play_beast_of_nurgle_stomach_loop",
+		looping_wwise_stop_event = "wwise/events/minions/stop_beast_of_nurgle_stomach_loop"
+	}
 }
 
 return templates

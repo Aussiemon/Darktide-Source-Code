@@ -86,8 +86,6 @@ CacheWrapper.get_metadata = function (self)
 end
 
 CacheWrapper.get_cached = function (self)
-	fassert(self._current_value, "Function refresh() must be called and allowed to finish before get_cached() can be called")
-
 	return self._current_value
 end
 

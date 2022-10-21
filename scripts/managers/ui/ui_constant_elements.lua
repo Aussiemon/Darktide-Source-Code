@@ -68,12 +68,7 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 		for group_index = 1, #visibility_groups do
 			local group_name = visibility_groups[group_index]
 			local visibility_group = visibility_groups_lookup[group_name]
-
-			fassert(visibility_group, "Could not find the visibility group: (%s) for element: (%s)", group_name, class_name)
-
 			local validation_function = visibility_group.validation_function
-
-			fassert(validation_function, "Could not find any validation_function for visibility group: (%s)", group_name)
 
 			if not visibility_group.visible_elements then
 				visibility_group.visible_elements = {}
@@ -107,7 +102,6 @@ UIConstantElements._setup_element = function (self, definition)
 	local elements_array = self._elements_array
 	local class_name = definition.class_name
 
-	fassert(elements[class_name] == nil, "Duplicate entries of element (%s)", class_name)
 	self:_add_element(definition, elements, elements_array)
 
 	self._current_group_name = nil
@@ -115,9 +109,6 @@ end
 
 UIConstantElements._add_element = function (self, definition, elements, elements_array)
 	local class_name = definition.class_name
-
-	fassert(elements[class_name] == nil, "element (%s) is already added", class_name)
-
 	local validation_function = definition.validation_function
 
 	if not validation_function or validation_function(self) then
@@ -143,8 +134,6 @@ UIConstantElements.ui_renderer = function (self)
 end
 
 UIConstantElements.update = function (self, dt, t, input_service)
-	Profiler.start("[UIConstantElements]- update")
-
 	local ui_renderer = self._ui_renderer
 
 	self:_update_element_visibility()
@@ -161,23 +150,14 @@ UIConstantElements.update = function (self, dt, t, input_service)
 			element:on_resolution_modified()
 		end
 
-		Profiler.start(element_name)
-
 		if element:should_update() then
 			element:update(dt, t, ui_renderer, render_settings, input_service)
 		end
-
-		Profiler.stop(element_name)
 	end
-
-	Profiler.stop("[UIConstantElements]- update")
 end
 
 UIConstantElements.draw = function (self, dt, t, input_service)
 	local ui_renderer = self._ui_renderer
-
-	Profiler.start("[UIConstantElements]- draw")
-
 	local render_settings = self._render_settings
 	local saved_start_layer = render_settings.start_layer
 	local elements_array = self._elements_array
@@ -187,21 +167,15 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
-		Profiler.start(element_name)
-
 		if element:should_draw() then
 			render_settings.alpha_multiplier = 1
 
 			element:draw(dt, t, ui_renderer, render_settings, input_service)
 		end
-
-		Profiler.stop(element_name)
 	end
 
 	render_settings.alpha_multiplier = alpha_multiplier
 	render_settings.start_layer = saved_start_layer
-
-	Profiler.stop("[UIConstantElements]- draw")
 end
 
 UIConstantElements.destroy = function (self)

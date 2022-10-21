@@ -41,22 +41,20 @@ end
 local function construct_audio_settings_dropdown(template)
 	local entry = {
 		default_value = template.default_value,
-		display_name = template.display_name
+		display_name = template.display_name,
+		options = template.options,
+		commit = template.commit
 	}
-
-	fassert(template.options, "Options are required when constructing a dropdown")
-
-	entry.options = template.options
-
-	fassert(template.commit, "Commit function expected when when constructing a dropdown")
-
-	entry.commit = template.commit
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
 
 	entry.on_activated = function (new_value)
-		local current_value = get_user_setting(save_location, id) or default_value
+		local current_value = get_user_setting(save_location, id)
+
+		if current_value == nil then
+			current_value = default_value
+		end
 
 		if not _is_same(current_value, new_value) then
 			entry.commit(new_value)
@@ -81,12 +79,9 @@ end
 local function construct_audio_settings_boolean(template)
 	local entry = {
 		default_value = template.default_value,
-		display_name = template.display_name
+		display_name = template.display_name,
+		commit = template.commit
 	}
-
-	fassert(template.commit, "On audio settings boolean construct, commit function expected")
-
-	entry.commit = template.commit
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
@@ -102,7 +97,11 @@ local function construct_audio_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = get_user_setting(save_location, id) or default_value
+		local current_value = get_user_setting(save_location, id)
+
+		if current_value == nil then
+			current_value = default_value
+		end
 
 		if not _is_same(current_value, new_value) then
 			entry.commit(new_value)
@@ -122,6 +121,7 @@ local settings = {
 	}
 }
 local default_sound_volume = 100
+local default_sound_chat_volume = 70
 local master_volume_value_name = "option_master_slider"
 local master_volume_display_name = "loc_settings_master_volume"
 
@@ -263,8 +263,6 @@ local speaker_settings = {
 		elseif value == 3 then
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
-		else
-			fassert(false, "Speaker settings: Unrecognized value ")
 		end
 	end
 }
@@ -317,13 +315,90 @@ local mix_presets_settings = {
 		Wwise.set_parameter(parameter_name, value)
 	end
 }
+
+local function get_dialogue_wwise_value(value)
+	local setting_value = "neutral"
+
+	if value > 0 then
+		setting_value = string.format("plus_%d", value)
+	elseif value < 0 then
+		setting_value = string.format("minus_%d", math.abs(value))
+	end
+
+	return setting_value
+end
+
+local dialogue_volume_value_name = "options_vo_trim"
+local dialogue_volume_display_name = "loc_audio_volume_settings_dialogue"
+local default_volume_default_value = 0
+
+local function dialogue_volume_value_change_function(value)
+	local setting_value = get_dialogue_wwise_value(value)
+
+	Wwise.set_state(dialogue_volume_value_name, setting_value)
+	Application.set_user_setting("sound_settings", dialogue_volume_value_name, value)
+	Application.save_user_settings()
+end
+
+local function dialogue_volume_value_get_function()
+	return Application.user_setting("sound_settings", dialogue_volume_value_name) or default_volume_default_value
+end
+
+local dialogue_volume_slider_params = {
+	step_size_value = 1,
+	max_value = 5,
+	min_value = -5,
+	apply_on_drag = true,
+	display_name = dialogue_volume_display_name,
+	default_value = default_volume_default_value,
+	value_get_function = dialogue_volume_value_get_function,
+	on_value_changed_function = dialogue_volume_value_change_function
+}
+local dialogue_volume_template = OptionsUtilities.create_value_slider_template(dialogue_volume_slider_params)
+
+dialogue_volume_template.commit = function (value)
+	local setting_value = get_dialogue_wwise_value(value)
+
+	Wwise.set_state(dialogue_volume_value_name, setting_value)
+end
+
 local game_interface_setting = {
-	display_name = "loc_setting_game_interface",
+	display_name = "loc_settings_audio_headshot_sound",
 	id = "interface_setting",
 	default_value = true,
 	save_location = "sound_settings",
 	commit = function (value)
-		local options_audio_parameter_name = "options_audio_interface"
+		local options_audio_parameter_name = "options_headshot"
+
+		if value then
+			Wwise.set_state(options_audio_parameter_name, "on")
+		else
+			Wwise.set_state(options_audio_parameter_name, "off")
+		end
+	end
+}
+local audio_backstab_sound_setting = {
+	display_name = "loc_settings_audio_backstab_sound",
+	id = "backstab_setting",
+	default_value = true,
+	save_location = "sound_settings",
+	commit = function (value)
+		local options_audio_parameter_name = "options_backstab"
+
+		if value then
+			Wwise.set_state(options_audio_parameter_name, "on")
+		else
+			Wwise.set_state(options_audio_parameter_name, "off")
+		end
+	end
+}
+local audio_teammate_ping_setting = {
+	display_name = "loc_settings_audio_teammate_ping",
+	id = "teammate_ping_setting",
+	default_value = true,
+	save_location = "sound_settings",
+	commit = function (value)
+		local options_audio_parameter_name = "options_teammate_ping"
 
 		if value then
 			Wwise.set_state(options_audio_parameter_name, "on")
@@ -339,7 +414,50 @@ settings[#settings + 1] = {
 }
 settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
 settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
+settings[#settings + 1] = dialogue_volume_template
 settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
+settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
+settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
+settings[#settings + 1] = {
+	group_name = "voice_chat_settings",
+	display_name = "loc_settings_menu_group_voice_chat_settings",
+	widget_type = "group_header"
+}
+local chat_volume_value_name = "options_voip_volume_slider"
+local chat_volume_display_name = "loc_settings_audio_voice_chat_volume"
+
+local function chat_volume_value_change_function(value)
+	Wwise.set_parameter(chat_volume_value_name, value)
+	Application.set_user_setting("sound_settings", chat_volume_value_name, value)
+	Application.save_user_settings()
+
+	if Managers.chat then
+		Managers.chat:mic_volume_changed()
+	end
+end
+
+local function chat_volume_value_get_function()
+	return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_volume
+end
+
+local chat_volume_slider_params = {
+	apply_on_drag = false,
+	display_name = chat_volume_display_name,
+	default_value = default_sound_chat_volume,
+	value_get_function = chat_volume_value_get_function,
+	on_value_changed_function = chat_volume_value_change_function
+}
+local chat_volume_template = OptionsUtilities.create_percent_slider_template(chat_volume_slider_params)
+
+chat_volume_template.commit = function (value)
+	Wwise.set_parameter(chat_volume_value_name, value)
+
+	if Managers.chat then
+		Managers.chat:mic_volume_changed()
+	end
+end
+
+settings[#settings + 1] = chat_volume_template
 local voice_chat_settings = {
 	display_name = "loc_setting_voice_chat_presets",
 	id = "voice_chat",
@@ -370,11 +488,6 @@ local voice_chat_settings = {
 			Managers.chat:mute_local_mic(value == 0)
 		end
 	end
-}
-settings[#settings + 1] = {
-	group_name = "voice_chat_settings",
-	display_name = "loc_settings_menu_group_voice_chat_settings",
-	widget_type = "group_header"
 }
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
 

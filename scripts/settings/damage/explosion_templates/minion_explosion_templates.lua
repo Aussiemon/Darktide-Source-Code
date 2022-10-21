@@ -50,7 +50,6 @@ local explosion_templates = {
 			"content/fx/particles/weapons/rifles/bolter/bolter_burrowed_explode"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_refl_tiny",
 			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
 		}
 	},
@@ -69,7 +68,6 @@ local explosion_templates = {
 			"content/fx/particles/weapons/rifles/bolter/bolter_bullet_surface_explode"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_refl_tiny",
 			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
 		}
 	},

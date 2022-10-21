@@ -8,6 +8,7 @@ local mission_templates = {
 		is_hub = true,
 		mechanism_name = "hub",
 		hud_elements = "scripts/ui/hud/hud_elements_player_hub",
+		force_third_person_mode = true,
 		level = "content/levels/hub/hub_ship/missions/hub_ship",
 		gameplay_modifiers = {
 			"unkillable",
@@ -21,7 +22,6 @@ local mission_templates = {
 		testify_flags = {
 			run_through_mission = false,
 			screenshots = true,
-			performance = true,
 			mission_server = false
 		},
 		dialogue_settings = {

@@ -14,6 +14,8 @@ MinionRangedAimExtension.init = function (self, extension_init_context, unit, ex
 	self._aim_lerp_speed = aim_config.lerp_speed
 	self._aim_distance = aim_config.distance
 	self._aim_node = Unit.node(unit, aim_config.node)
+	self._valid_aim_combat_ranges = aim_config.valid_aim_combat_ranges
+	self._behavior_component = blackboard.behavior
 	local unit_position = Unit.world_position(unit, self._aim_node)
 	local unit_forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 	local init_target = unit_position + unit_forward * self._aim_distance
@@ -24,6 +26,7 @@ MinionRangedAimExtension.init = function (self, extension_init_context, unit, ex
 	self._lean_variable_modifier = aim_config.lean_variable_modifier
 	self._require_line_of_sight = aim_config.require_line_of_sight
 	self._unit = unit
+	self._aim_on_target = aim_config.aim_on_target
 end
 
 MinionRangedAimExtension._init_blackboard_components = function (self, blackboard)
@@ -51,27 +54,36 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local game_object_id = self._game_object_id
 	local unit_position = Unit.world_position(unit, self._aim_node)
 	local target_unit = perception_component.target_unit
+	local valid_combat_ranges = self._valid_aim_combat_ranges
+	local behavior_component = self._behavior_component
 
-	if not ALIVE[target_unit] or self._require_line_of_sight and not perception_component.has_line_of_sight then
+	if not ALIVE[target_unit] or self._require_line_of_sight and not perception_component.has_line_of_sight or valid_combat_ranges and not valid_combat_ranges[behavior_component.combat_range] then
 		local perception_extension = self._perception_extension
 		local last_los_position = perception_extension:last_los_position(target_unit)
 		local fallback_target, fallback_direction = nil
+		local used_fallback = false
 
 		if last_los_position then
 			local to_last_los_position = Vector3.normalize(last_los_position - unit_position)
 			fallback_target = unit_position + to_last_los_position * self._aim_distance
 			fallback_direction = to_last_los_position
+			self._used_fallback = false
 		else
 			fallback_target = self._previous_aim_target:unbox()
 			local to_fallback_target = Vector3.normalize(fallback_target - unit_position)
 			fallback_direction = to_fallback_target
+			used_fallback = true
 		end
 
 		local constraint_target = self._constraint_target
 
-		Unit.animation_set_constraint_target(unit, constraint_target, fallback_target)
-		GameSession.set_game_object_field(game_session, game_object_id, "aim_direction", fallback_direction)
-		self._previous_aim_target:store(fallback_target)
+		if not self._used_fallback then
+			Unit.animation_set_constraint_target(unit, constraint_target, fallback_target)
+			GameSession.set_game_object_field(game_session, game_object_id, "aim_direction", fallback_direction)
+			self._previous_aim_target:store(fallback_target)
+		end
+
+		self._used_fallback = used_fallback
 
 		return
 	end
@@ -89,7 +101,7 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local to_target = target_position - unit_position
 	local aim_direction = Vector3.normalize(to_target)
 	local aim_distance = self._aim_distance
-	local aim_target = unit_position + aim_direction * aim_distance
+	local aim_target = self._aim_on_target and target_position or unit_position + aim_direction * aim_distance
 	local rotation = Unit.world_rotation(unit, 1)
 	local rotation_forward = Vector3.flat(Quaternion.forward(rotation))
 	local rotation_forward_normalized = Vector3.normalize(rotation_forward)

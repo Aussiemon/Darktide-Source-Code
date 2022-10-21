@@ -22,18 +22,13 @@ local base_template_settings = {
 				}
 			}
 		},
-		inspect = {
-			dont_queue = true,
+		inspect_start = {
+			buffer_time = 0,
 			input_sequence = {
 				{
 					value = true,
 					input = "weapon_inspect_hold"
-				}
-			}
-		},
-		inspect_start = {
-			buffer_time = 0,
-			input_sequence = {
+				},
 				{
 					value = true,
 					duration = 0.2,
@@ -85,11 +80,8 @@ local base_template_settings = {
 	action_input_hierarchy = {
 		grenade_ability = "stay",
 		combat_ability = "stay",
-		inspect = {
-			wield = "base",
-			inspect_start = {
-				inspect_stop = "base"
-			}
+		inspect_start = {
+			inspect_stop = "base"
 		}
 	}
 }

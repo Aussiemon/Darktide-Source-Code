@@ -2,8 +2,6 @@ local StateMachine = class("StateMachine")
 StateMachine.IGNORE_EVENT = StateMachine.IGNORE_EVENT or {}
 
 StateMachine.init = function (self, name, parent, ...)
-	assert(type(name) == "string", "state machine name must be specified and be a string")
-
 	self._name = name
 	self._global_args = {
 		...
@@ -20,9 +18,6 @@ StateMachine.init = function (self, name, parent, ...)
 
 	if parent ~= nil then
 		local parent_stack = parent._root_state_machine._state_machine_stack
-
-		assert(parent_stack[#parent_stack] == parent, "the parent must be last in the stack")
-
 		self._state_machine_stack = parent_stack
 		parent_stack[#parent_stack + 1] = self
 	else
@@ -51,7 +46,6 @@ StateMachine.destroy = function (self)
 
 	local stack = self._state_machine_stack
 
-	assert(stack[#stack] == self, "state machines must be destroyed in reversed creation order")
 	table.remove(stack, #stack)
 
 	self._root_state_machine = nil
@@ -66,9 +60,6 @@ StateMachine.add_transition = function (self, source_class_name, event_name, tar
 	end
 
 	local target_transitions = transitions[source_class_name]
-
-	assert(target_transitions[event_name] == nil, "the event " .. event_name .. " already has a transition to " .. tostring(target_transitions[event_name]))
-
 	target_transitions[event_name] = target_class or StateMachine.IGNORE_EVENT
 end
 
@@ -87,8 +78,6 @@ StateMachine.set_transitions = function (self, source_class_name, transitions)
 end
 
 StateMachine.set_initial_state = function (self, state_class, ...)
-	assert(self._current_state == nil, "it is not allowed to set initial state twice")
-
 	self._current_state = self:_enter_state(state_class, {
 		...
 	})
@@ -161,8 +150,6 @@ StateMachine.state_report = function (self)
 	local s = ""
 	local stack = self._state_machine_stack
 	local start_index = table.find(stack, self)
-
-	assert(start_index, "to make a state report the state machine itself must be on the stack")
 
 	for ii = start_index, #stack do
 		local state_machine = stack[ii]
@@ -278,15 +265,11 @@ StateMachine._received_event = function (self, event_name, args)
 
 	local report = string.format("none of the active states (%s) handled the event %q\n", table.concat(state_names, ", "), event_name)
 	report = report .. self._root_state_machine:state_report()
-
-	assert(false, report)
 end
 
 StateMachine._leave_state = function (self)
 	local stack = self._state_machine_stack
 	local stack_index = table.find(stack, self)
-
-	assert(stack_index, "leaving a state requires the state machine to be in the state machine stack")
 
 	for ii = #stack, stack_index, -1 do
 		local state_machine = stack[ii]
@@ -305,8 +288,6 @@ StateMachine._leave_state = function (self)
 end
 
 StateMachine._enter_state = function (self, state_class, args)
-	assert(self._current_state == nil, "entering a state twice is not allowed")
-
 	local state = state_class:new(self, unpack(self._global_args))
 	self._current_state = state
 

@@ -16,7 +16,7 @@ local local_mission_board_settings = {
 			resistance = 2,
 			credits = 800,
 			xp = 600,
-			circumstance = "nurgle_manifestation_01",
+			circumstance = "heretical_disruption_01",
 			challenge = 4,
 			required_level = 1,
 			mission = "dm_forge",
@@ -28,7 +28,7 @@ local local_mission_board_settings = {
 	happening_name = "Happy Happy Test Happening",
 	happening_cirucumstances = {
 		"darkness_01",
-		"nurgle_manifestation_01"
+		"heretical_disruption_01"
 	}
 }
 

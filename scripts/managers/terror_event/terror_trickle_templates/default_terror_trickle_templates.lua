@@ -26,7 +26,6 @@ local LOW_MIXED_COMPOSITIONS = {
 	HordeCompositions.close_terror_trickle
 }
 local LOW_MELEE_COMPOSITIONS = {
-	HordeCompositions.melee_terror_trickle,
 	HordeCompositions.infected_terror_trickle,
 	HordeCompositions.poxwalker_terror_trickle
 }
@@ -34,6 +33,10 @@ local LOW_RANGED_COMPOSITIONS = {
 	HordeCompositions.close_terror_trickle,
 	HordeCompositions.close_terror_trickle,
 	HordeCompositions.infected_terror_trickle
+}
+local FLOOD_MELEE_COMPOSITIONS = {
+	HordeCompositions.infected_terror_trickle,
+	HordeCompositions.poxwalker_terror_trickle
 }
 local terror_trickle_templates = {
 	low_mixed = {
@@ -67,8 +70,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				40,
-				50
+				50,
+				60
 			}
 		},
 		{
@@ -84,8 +87,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				40
+				50,
+				60
 			}
 		},
 		{
@@ -101,8 +104,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				20,
-				30
+				50,
+				60
 			}
 		},
 		{
@@ -118,8 +121,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				10,
-				20
+				50,
+				60
 			}
 		}
 	},
@@ -137,8 +140,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -154,8 +157,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -171,8 +174,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -188,8 +191,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -205,8 +208,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		}
 	},
@@ -485,8 +488,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -502,8 +505,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -519,8 +522,8 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -536,8 +539,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		},
 		{
@@ -553,8 +556,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				30,
-				35
+				50,
+				60
 			}
 		}
 	},
@@ -647,9 +650,26 @@ local terror_trickle_templates = {
 	},
 	flood_melee = {
 		{
-			challenge_rating_stop_threshold = 35,
+			challenge_rating_stop_threshold = 20,
 			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			compositions = FLOOD_MELEE_COMPOSITIONS,
+			num_waves = {
+				2,
+				2
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				10,
+				15
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 25,
+			tension_stop_threshold = 80,
+			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				3,
 				3
@@ -661,74 +681,57 @@ local terror_trickle_templates = {
 			cooldown = {
 				10,
 				15
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 30,
+			tension_stop_threshold = 100,
+			compositions = FLOOD_MELEE_COMPOSITIONS,
+			num_waves = {
+				3,
+				3
+			},
+			time_between_waves = {
+				4,
+				7
+			},
+			cooldown = {
+				8,
+				12
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 30,
+			tension_stop_threshold = 120,
+			compositions = FLOOD_MELEE_COMPOSITIONS,
+			num_waves = {
+				3,
+				3
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				8,
+				12
 			}
 		},
 		{
 			challenge_rating_stop_threshold = 35,
-			tension_stop_threshold = 80,
-			compositions = LOW_MELEE_COMPOSITIONS,
-			num_waves = {
-				3,
-				3
-			},
-			time_between_waves = {
-				6,
-				10
-			},
-			cooldown = {
-				10,
-				15
-			}
-		},
-		{
-			challenge_rating_stop_threshold = 40,
-			tension_stop_threshold = 100,
-			compositions = LOW_MELEE_COMPOSITIONS,
-			num_waves = {
-				3,
-				3
-			},
-			time_between_waves = {
-				6,
-				10
-			},
-			cooldown = {
-				10,
-				15
-			}
-		},
-		{
-			challenge_rating_stop_threshold = 50,
-			tension_stop_threshold = 120,
-			compositions = LOW_MELEE_COMPOSITIONS,
-			num_waves = {
-				3,
-				3
-			},
-			time_between_waves = {
-				3,
-				6
-			},
-			cooldown = {
-				10,
-				15
-			}
-		},
-		{
-			challenge_rating_stop_threshold = 50,
 			tension_stop_threshold = 140,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
-				3,
-				3
+				4,
+				4
 			},
 			time_between_waves = {
 				3,
 				6
 			},
-			ccooldown = {
-				10,
-				15
+			cooldown = {
+				8,
+				12
 			}
 		}
 	},

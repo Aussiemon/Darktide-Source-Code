@@ -11,12 +11,6 @@ local EACError = require("scripts/managers/error/errors/eac_error")
 local ConnectionClient = class("ConnectionClient")
 
 ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lobby_function, network_hash, host_type, optional_reservations, jwt_ticket, optional_matched_game_session_id, optional_accelerated_endpoint)
-	fassert(event_delegate, "Event delegate is required")
-	fassert(engine_lobby, "Engine lobby is required")
-	fassert(destroy_lobby_function, "Destroy engine function is required")
-	fassert(network_hash, "Network hash is required")
-	fassert(host_type, "Host type is required")
-
 	self._event_delegate = event_delegate
 	self._engine_lobby = engine_lobby
 	self._destroy_lobby_function = destroy_lobby_function
@@ -50,6 +44,8 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 		if mission_id then
 			Crashify.print_property("mission_id", mission_id)
 		end
+
+		self._session_id = session_id
 	end
 
 	self._host_peer_id = engine_lobby:lobby_host()
@@ -110,6 +106,10 @@ end
 
 ConnectionClient.deployment_id = function (self)
 	return self._deployment_id
+end
+
+ConnectionClient.session_id = function (self)
+	return self._session_id
 end
 
 ConnectionClient.accelerated_endpoint = function (self)

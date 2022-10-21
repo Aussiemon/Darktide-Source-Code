@@ -21,7 +21,7 @@ BallisticRaycastPostionFinderActionModule.fixed_update = function (self, dt, t)
 	local hit, hit_position, _, normal = self:_ballistic_raycast(physics_world, collision_filter)
 
 	if hit then
-		local up = Vector3(0, 0, 1)
+		local up = Vector3.up()
 
 		if Vector3.dot(normal, up) < 0.75 then
 			local player_position = self._locomotion_component.position
@@ -58,11 +58,10 @@ BallisticRaycastPostionFinderActionModule._ballistic_raycast = function (self, p
 	local velocity = Quaternion.forward(Quaternion.multiply(first_person_rotation, Quaternion(Vector3.right(), angle))) * speed
 	local position = first_person_position
 
-	for i = 1, max_steps do
+	for ii = 1, max_steps do
 		local new_position = position + velocity * time_step
 		local delta = new_position - position
-		local direction = Vector3.normalize(delta)
-		local distance = Vector3.length(delta)
+		local direction, distance = Vector3.direction_length(delta)
 		local hit, hit_position, hit_distance, normal, hit_actor = PhysicsWorld.raycast(physics_world, position, direction, distance, "closest", "types", "both", "collision_filter", collision_filter)
 
 		if hit_position then

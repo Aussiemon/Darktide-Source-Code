@@ -1,5 +1,6 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -188,12 +189,13 @@ local weapon_template = {
 		action_charge_fast = {
 			target_anim_event = "attack_charge_fast",
 			start_input = "fast_charge",
-			target_finder_module_class_name = "closest_targeting",
+			target_finder_module_class_name = "chain_lightning",
 			overload_module_class_name = "warp_charge",
 			kind = "overload_target_finder",
 			sprint_ready_up_time = 0.4,
 			anim_end_event = "attack_charge_cancel",
 			allowed_during_sprint = true,
+			ability_type = "grenade_ability",
 			target_missing_anim_event = "attack_charge_cancel",
 			charge_template = "chain_lightning_charge_fast",
 			anim_event = "attack_charge_fast",
@@ -252,7 +254,7 @@ local weapon_template = {
 			anim_event = "attack_shoot",
 			ability_type = "grenade_ability",
 			uninterruptible = true,
-			target_finder_module_class_name = "closest_targeting",
+			target_finder_module_class_name = "chain_lightning",
 			anim_time_scale = 1,
 			total_time = 0.5,
 			action_movement_curve = {
@@ -291,13 +293,14 @@ local weapon_template = {
 		},
 		action_charge = {
 			target_anim_event = "attack_charge",
-			target_finder_module_class_name = "closest_targeting",
+			target_finder_module_class_name = "chain_lightning",
 			start_input = "charge",
 			kind = "overload_target_finder",
 			sprint_ready_up_time = 0.4,
 			overload_module_class_name = "warp_charge",
 			anim_end_event = "attack_charge_cancel",
 			allowed_during_sprint = true,
+			ability_type = "grenade_ability",
 			target_missing_anim_event = "attack_charge_cancel",
 			charge_template = "chain_lightning_charge",
 			anim_event = "attack_charge",
@@ -350,7 +353,7 @@ local weapon_template = {
 		},
 		action_shoot_charged = {
 			overload_module_class_name = "warp_charge",
-			target_finder_module_class_name = "closest_targeting",
+			target_finder_module_class_name = "chain_lightning",
 			stop_time = 2.1,
 			sprint_requires_press_to_interrupt = true,
 			shoot_at_time = 0.2,
@@ -521,31 +524,31 @@ local weapon_template = {
 	sprint_template = "default",
 	stamina_template = "default",
 	toughness_template = "default",
-	footstep_intervals = {
-		crouch_walking = 0.61,
-		walking = 0.4,
-		sprinting = 0.37
-	},
+	footstep_intervals = FootstepIntervalsTemplates.default,
 	action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 		return not current_action_name or current_action_name == "none"
-	end,
-	overheated_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-		local player_unit = player.player_unit
-		local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
-		local warp_charge = unit_data_ext:read_component("warp_charge")
-		local has_warp_charge = warp_charge.current_percentage >= 0.1
-
-		return has_warp_charge
-	end,
-	action_one_charging_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-		return current_action_name == "action_charge_fast"
-	end,
-	action_two_charging_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-		return current_action_name == "action_charge"
-	end,
-	action_two_firing_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-		return current_action_name == "action_shoot_charged"
 	end
 }
+
+weapon_template.overheated_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	local player_unit = player.player_unit
+	local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
+	local warp_charge = unit_data_ext:read_component("warp_charge")
+	local has_warp_charge = warp_charge.current_percentage >= 0.1
+
+	return has_warp_charge
+end
+
+weapon_template.action_one_charging_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_charge_fast"
+end
+
+weapon_template.action_two_charging_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_charge"
+end
+
+weapon_template.action_two_firing_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_shoot_charged"
+end
 
 return weapon_template

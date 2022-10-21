@@ -23,15 +23,16 @@ local breed_data = {
 	use_bone_lod = true,
 	look_at_distance = 20,
 	display_name = "loc_breed_display_name_chaos_hound",
-	uses_wwise_special_targeting_parameter = true,
 	unit_template_name = "minion",
+	uses_wwise_special_targeting_parameter = true,
 	faction_name = "chaos",
+	volley_fire_target = true,
 	target_stickiness_distance = 10,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
-	walk_speed = 2.3,
-	stagger_resistance = 2,
 	spawn_aggro_state = "aggroed",
+	stagger_resistance = 2,
+	walk_speed = 2.3,
 	use_navigation_path_splines = true,
 	navigation_propagation_box_extent = 200,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
@@ -295,10 +296,6 @@ local breed_data = {
 			"j_rightleg",
 			"j_rightfoot",
 			"j_righttoebase"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine1",
-			"j_spine2"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

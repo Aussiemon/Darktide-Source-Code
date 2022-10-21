@@ -15,7 +15,7 @@ local RPCS = {
 	"rpc_event_synchronizer_scanning_finished",
 	"rpc_event_synchronizer_mission_objective_zone_follow_spline",
 	"rpc_event_synchronizer_mission_objective_zone_at_end_of_spline",
-	"rpc_event_synchronizer_distribute_seed",
+	"rpc_event_synchronizer_distribute_seeds",
 	"rpc_event_synchronizer_luggable_hide_luggable",
 	"rpc_event_synchronizer_demolition_target_override"
 }
@@ -49,12 +49,12 @@ EventSynchronizerSystem.hot_join_sync = function (self, sender, channel)
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do
-		if extension.seed then
-			local seed = extension:seed()
+		if extension.seeds then
+			local setup_seed, seed = extension:seeds()
 			local level_unit_id = Managers.state.unit_spawner:level_index(unit)
 
 			if level_unit_id then
-				RPC.rpc_event_synchronizer_distribute_seed(channel, level_unit_id, seed)
+				RPC.rpc_event_synchronizer_distribute_seeds(channel, level_unit_id, setup_seed, seed)
 			end
 		end
 
@@ -115,11 +115,11 @@ EventSynchronizerSystem.rpc_event_synchronizer_mission_objective_zone_at_end_of_
 	self._unit_to_extension_map[synchronizer_unit]:at_end_of_spline()
 end
 
-EventSynchronizerSystem.rpc_event_synchronizer_distribute_seed = function (self, channel_id, unit_id, seed)
+EventSynchronizerSystem.rpc_event_synchronizer_distribute_seeds = function (self, channel_id, unit_id, setup_seed, seed)
 	local is_level_unit = true
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 
-	self._unit_to_extension_map[unit]:set_seed(seed)
+	self._unit_to_extension_map[unit]:distribute_seeds(setup_seed, seed)
 end
 
 EventSynchronizerSystem.rpc_event_synchronizer_luggable_hide_luggable = function (self, channel_id, unit_id, luggable_unit_ids)

@@ -186,6 +186,18 @@ local settings_definitions = {
 		widget_type = "boolean"
 	},
 	{
+		id = "stationary_dodge",
+		save_location = "input_settings",
+		display_name = "loc_setting_stationary_dodge",
+		widget_type = "boolean"
+	},
+	{
+		id = "diagonal_forward_dodge",
+		save_location = "input_settings",
+		display_name = "loc_setting_diagonal_forward_dodge",
+		widget_type = "boolean"
+	},
+	{
 		id = "hold_to_sprint",
 		save_location = "input_settings",
 		display_name = "loc_setting_hold_to_sprint",

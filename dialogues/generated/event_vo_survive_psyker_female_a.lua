@@ -12,7 +12,7 @@ local event_vo_survive_psyker_female_a = {
 			1.320125,
 			2.158938,
 			1.877583,
-			2.801583
+			2.801604
 		},
 		randomize_indexes = {}
 	},

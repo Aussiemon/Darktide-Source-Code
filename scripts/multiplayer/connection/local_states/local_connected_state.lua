@@ -1,9 +1,6 @@
 local LocalConnectedState = class("LocalConnectedState")
 
 LocalConnectedState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.event_list) == "table", "Event list required")
-
 	self._shared_state = shared_state
 
 	shared_state.event_list[#shared_state.event_list + 1] = function ()

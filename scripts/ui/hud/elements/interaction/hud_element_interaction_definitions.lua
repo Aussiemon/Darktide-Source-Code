@@ -3,17 +3,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-
-local function _get_hud_color(key, alpha)
-	local color = table.clone(UIHudSettings[key])
-
-	if alpha then
-		color[1] = alpha
-	end
-
-	return color
-end
-
+local get_hud_color = UIHudSettings.get_hud_color
 local edge_spacing = HudElementInteractionSettings.edge_spacing
 local input_box_height = HudElementInteractionSettings.input_box_height
 local background_size = HudElementInteractionSettings.background_size
@@ -65,7 +55,7 @@ input_interact_text_style.horizontal_alignment = "center"
 input_interact_text_style.vertical_alignment = "top"
 input_interact_text_style.text_horizontal_alignment = "left"
 input_interact_text_style.text_vertical_alignment = "top"
-input_interact_text_style.text_color = _get_hud_color("color_tint_main_1", 255)
+input_interact_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_interact_text_style.offset = {
 	0,
 	input_box_height * 0.25 - 2,
@@ -80,7 +70,7 @@ input_tag_text_style.horizontal_alignment = "center"
 input_tag_text_style.vertical_alignment = "top"
 input_tag_text_style.text_horizontal_alignment = "right"
 input_tag_text_style.text_vertical_alignment = "top"
-input_tag_text_style.text_color = _get_hud_color("color_tint_main_1", 255)
+input_tag_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_tag_text_style.offset = {
 	0,
 	input_box_height * 0.25,
@@ -185,7 +175,7 @@ local widget_definitions = {
 					0,
 					0
 				},
-				color = _get_hud_color("color_tint_main_4", 230)
+				color = get_hud_color("color_tint_main_4", 230)
 			}
 		},
 		{
@@ -202,7 +192,7 @@ local widget_definitions = {
 				size = {
 					[2] = input_box_height
 				},
-				color = _get_hud_color("color_tint_main_3", 230)
+				color = get_hud_color("color_tint_main_3", 230)
 			}
 		},
 		{

@@ -4,7 +4,6 @@ local NETWORK_EVENTS = {
 	"game_object_created",
 	"game_object_destroyed",
 	"game_session_disconnect",
-	"rpc_set_simulated_latency",
 	"rpc_debug_crash_server"
 }
 
@@ -58,15 +57,15 @@ GameSessionManager.channel_to_peer = function (self, channel_id)
 end
 
 GameSessionManager.connected_to_host = function (self)
-	fassert(not self._is_server, "Invalid to ask if not a client")
-
 	return self._connected_to_host
 end
 
 GameSessionManager.connected_to_client = function (self, peer_id)
-	fassert(self._is_server, "Invalid to ask if not a host")
-
 	return self._joined_peers_cache[peer_id] == true
+end
+
+GameSessionManager.joined_peers = function (self)
+	return self._joined_peers_cache
 end
 
 GameSessionManager.is_host = function (self)
@@ -85,6 +84,12 @@ GameSessionManager.host = function (self)
 	if self._session_client then
 		return self._session_client:host()
 	end
+end
+
+GameSessionManager.num_clients = function (self)
+	local session_host = self._session_host
+
+	return session_host and session_host:num_clients() or 0
 end
 
 GameSessionManager.disconnect = function (self)
@@ -247,17 +252,12 @@ GameSessionManager.game_object_created = function (self, game_object_id, owner_p
 	elseif type == "server_husk_data_state" or type == "server_husk_hud_data_state" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local player = player_unit_spawn_manager:owner(unit)
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-		if player.remote then
-			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-
-			if type == "server_husk_data_state" then
-				unit_data_extension:on_server_husk_data_state_game_object_created(game_object_id)
-			elseif type == "server_husk_hud_data_state" then
-				unit_data_extension:on_server_husk_hud_data_state_game_object_created(game_object_id)
-			end
+		if type == "server_husk_data_state" then
+			unit_data_extension:on_server_husk_data_state_game_object_created(game_object_id)
+		elseif type == "server_husk_hud_data_state" then
+			unit_data_extension:on_server_husk_hud_data_state_game_object_created(game_object_id)
 		end
 	end
 end
@@ -302,18 +302,6 @@ GameSessionManager.game_session_disconnected = function (self)
 	return self._session_disconnected
 end
 
-GameSessionManager.set_simulated_latency = function (self, latency)
-	local variation = DevParameters.simulate_ping_variation * latency
-	local min = latency - variation
-	local max = latency + variation
-
-	if self._is_server then
-		self:send_rpc_clients("rpc_set_simulated_latency", min, max)
-	end
-
-	Application.console_command("network", "latency", tostring(min), tostring(max))
-end
-
 GameSessionManager.set_simulated_packet_loss = function (self, frequency)
 	Application.console_command("network", "packet_loss", frequency)
 end
@@ -335,8 +323,6 @@ GameSessionManager.debug_crash_server = function (self, user_name)
 end
 
 GameSessionManager.send_rpc_clients = function (self, rpc_name, ...)
-	assert(self._is_server, "[GameSessionManager][send_rpc_clients] Trying to send rpc to clients on client.")
-
 	local rpc = RPC[rpc_name]
 
 	for peer, _ in pairs(self._joined_peers_cache) do
@@ -349,8 +335,6 @@ GameSessionManager.send_rpc_clients = function (self, rpc_name, ...)
 end
 
 GameSessionManager.send_rpc_clients_except = function (self, rpc_name, except_channel_id, ...)
-	assert(self._is_server, "[GameSessionManager][send_rpc_clients_except] Trying to send rpc to clients on client.")
-
 	local rpc = RPC[rpc_name]
 	local except_peer = self:channel_to_peer(except_channel_id)
 
@@ -364,12 +348,7 @@ GameSessionManager.send_rpc_clients_except = function (self, rpc_name, except_ch
 end
 
 GameSessionManager.send_rpc_client = function (self, rpc_name, peer, ...)
-	assert(self._is_server, "[GameSessionManager][send_rpc_client] Trying to send rpc to clients on client.")
-
 	local joined_peers_cache = self._joined_peers_cache
-
-	fassert(joined_peers_cache[peer], "[GameSessionManager][send_rpc_clients_list] Tried to send RPC to a non-joined peer!")
-
 	local rpc = RPC[rpc_name]
 	local channel = self:peer_to_channel(peer)
 
@@ -377,8 +356,6 @@ GameSessionManager.send_rpc_client = function (self, rpc_name, peer, ...)
 end
 
 GameSessionManager.send_rpc_clients_list = function (self, rpc_name, client_list, ...)
-	assert(self._is_server, "[GameSessionManager][send_rpc_clients_list] Trying to send rpc to clients on client.")
-
 	local rpc = RPC[rpc_name]
 	local joined_peers_cache = self._joined_peers_cache
 
@@ -392,8 +369,6 @@ GameSessionManager.send_rpc_clients_list = function (self, rpc_name, client_list
 end
 
 GameSessionManager.send_rpc_server = function (self, rpc_name, ...)
-	assert(not self._is_server, "Trying to send server rpc as server.")
-
 	local host_channel = self._session_client:host_channel()
 
 	RPC[rpc_name](host_channel, ...)
@@ -477,15 +452,15 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 	Managers.state.mutator:hot_join_sync(peer_id, channel_id)
 	Managers.state.cinematic:hot_join_sync(peer_id, channel_id)
 	RPC.rpc_is_fully_hot_join_synced(channel_id)
-	Managers.event:trigger("host_game_session_manager_player_joined", peer_id)
+	Managers.event:trigger("host_game_session_manager_player_joined", peer_id, player)
 
 	local player_spawner_system = Managers.state.extension:system("player_spawner_system")
-	local position, rotation, side_name = player_spawner_system:next_free_spawn_point()
+	local position, rotation, parent, side_name = player_spawner_system:next_free_spawn_point()
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local force_spawn = true
 	local is_respawn = false
 
-	player_unit_spawn_manager:spawn_player(player, position, rotation, force_spawn, side_name, nil, "walking", is_respawn)
+	player_unit_spawn_manager:spawn_player(player, position, rotation, parent, force_spawn, side_name, nil, "walking", is_respawn)
 end
 
 GameSessionManager._client_left = function (self, channel_id, peer_id, game_reason, engine_reason)

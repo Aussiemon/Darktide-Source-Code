@@ -511,7 +511,7 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 			start_pitch = 0
 		},
 		immediate_spread = {
-			num_shots_clear_time = 0.5,
+			num_shots_clear_time = 0.25,
 			suppression_hit = {
 				{
 					yaw = 0.25,
@@ -579,18 +579,18 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 		}
 	}
 }
-local pitch_spread = 0.8
-local yaw_spread = pitch_spread * 1
+local pitch_spread = 1
+local yaw_spread = pitch_spread * 1.2
 spread_templates.default_autogun_spraynpray = {
 	still = {
 		max_spread = {
-			yaw = 13,
+			yaw = 14,
 			pitch = 10
 		},
 		decay = {
 			from_shooting_grace_time = 0.025,
 			shooting = {
-				yaw = 0.5,
+				yaw = 0.25,
 				pitch = 0.5
 			},
 			idle = {
@@ -599,8 +599,14 @@ spread_templates.default_autogun_spraynpray = {
 			}
 		},
 		continuous_spread = {
-			min_yaw = 2,
-			min_pitch = 2
+			min_pitch = {
+				lerp_perfect = 1.2,
+				lerp_basic = 1.8
+			},
+			min_yaw = {
+				lerp_perfect = 3.5,
+				lerp_basic = 4.5
+			}
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
@@ -918,48 +924,13 @@ spread_templates.default_autogun_spraynpray = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 2.1,
-			min_pitch = 2.1
-		},
-		immediate_spread = {
-			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					yaw = 0.25,
-					pitch = 0.25
-				}
+			min_pitch = {
+				lerp_perfect = 1.6,
+				lerp_basic = 2.2
 			},
-			damage_hit = {
-				{
-					yaw = 0.4,
-					pitch = 0.4
-				}
-			},
-			shooting = {
-				{
-					pitch = pitch_spread * 1,
-					yaw = yaw_spread * 1
-				},
-				{
-					pitch = pitch_spread * 0.75,
-					yaw = yaw_spread * 0.75
-				},
-				{
-					pitch = pitch_spread * 0.5,
-					yaw = yaw_spread * 0.5
-				},
-				{
-					pitch = pitch_spread * 0.4,
-					yaw = yaw_spread * 0.4
-				},
-				{
-					pitch = pitch_spread * 0.3,
-					yaw = yaw_spread * 0.3
-				},
-				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
-				}
+			min_yaw = {
+				lerp_perfect = 6,
+				lerp_basic = 8
 			}
 		}
 	},

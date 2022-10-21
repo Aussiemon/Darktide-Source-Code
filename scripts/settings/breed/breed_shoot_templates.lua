@@ -9,6 +9,7 @@ local function _create_breed_shoot_templates(path)
 end
 
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/chaos/chaos_ogryn_gunner_shoot_templates")
+_create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/chaos/chaos_beast_of_nurgle_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_assault_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_gunner_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_captain_shoot_templates")

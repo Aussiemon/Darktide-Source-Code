@@ -2,13 +2,12 @@ local Action = require("scripts/utilities/weapon/action")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local GrimoireEffects = class("GrimoireEffects")
 local EQUIPPED_LOOPING_SOUND_ALIAS = "equipped_item_passive_loop"
-local EQUIPPED_LOOPING_PARTICLE_ALIAS = "equipped_item_passive_loop"
+local EQUIPPED_LOOPING_PARTICLE = "equipped_item_passive"
 local DESTROY_PARTICLE_ALIAS = "grimoire_destroy"
 local DISCARD_START_SOUND_ALIAS = "windup_start"
 local DISCARD_STOP_SOUND_ALIAS = "windup_stop"
 local SOURCE_NAME = "_passive"
 local DESTROY_TIME = 0.2
-local SHOULD_FADE_KILL = false
 local EXTERNAL_PROPERTIES = {}
 
 GrimoireEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -20,19 +19,23 @@ GrimoireEffects.init = function (self, context, slot, weapon_template, fx_source
 	self._is_husk = is_husk
 	self._playing_id = nil
 	self._destroy_particle_id = nil
+	local fx_extension = context.fx_extension
+	local visual_loadout_extension = context.visual_loadout_extension
+	self._fx_extension = fx_extension
+	self._visual_loadout_extension = visual_loadout_extension
+	self._weapon_extension = ScriptUnit.has_extension(owner_unit, "weapon_system")
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
-	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	self._weapon_extension = ScriptUnit.has_extension(owner_unit, "weapon_system")
-	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	self._fx_source_name = fx_sources[SOURCE_NAME]
 
 	if not is_husk then
 		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(EQUIPPED_LOOPING_SOUND_ALIAS)
 		self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
-		self._looping_particle_component = unit_data_extension:read_component(EQUIPPED_LOOPING_PARTICLE_ALIAS)
 	end
+
+	local fx_source_name = fx_sources[SOURCE_NAME]
+	self._fx_source_name = fx_source_name
+	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 end
 
 GrimoireEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -48,27 +51,15 @@ GrimoireEffects.update_first_person_mode = function (self, first_person_mode)
 end
 
 GrimoireEffects.wield = function (self)
-	if self._is_husk then
-		return
-	end
-
 	self:_start_effects()
 end
 
 GrimoireEffects.unwield = function (self)
-	if self._is_husk then
-		return
-	end
-
 	self:_update_effects()
 	self:_destroy_effects()
 end
 
 GrimoireEffects.destroy = function (self)
-	if self._is_husk then
-		return
-	end
-
 	self:_update_effects()
 	self:_destroy_effects()
 end
@@ -124,17 +115,25 @@ GrimoireEffects._update_destroy = function (self, time_in_action, action_setting
 end
 
 GrimoireEffects._start_effects = function (self)
+	if not self._looping_effect_id then
+		local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(EQUIPPED_LOOPING_PARTICLE, EXTERNAL_PROPERTIES)
+
+		if resolved then
+			local world = self._world
+			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
+
+			World.link_particles(world, effect_id, self._vfx_link_unit, self._vfx_link_node, Matrix4x4.identity(), "stop")
+
+			self._looping_effect_id = effect_id
+		end
+	end
+
 	if self._is_husk then
 		return
 	end
 
 	local fx_source_name = self._fx_source_name
-	local particles_spawned = self._looping_particle_component.is_playing
 	local sound_started = self._looping_sound_component.is_playing
-
-	if not particles_spawned then
-		self._fx_extension:spawn_looping_particles(EQUIPPED_LOOPING_PARTICLE_ALIAS, fx_source_name, EXTERNAL_PROPERTIES)
-	end
 
 	if not sound_started then
 		self._fx_extension:trigger_looping_wwise_event(EQUIPPED_LOOPING_SOUND_ALIAS, fx_source_name)
@@ -142,16 +141,17 @@ GrimoireEffects._start_effects = function (self)
 end
 
 GrimoireEffects._destroy_effects = function (self)
+	if self._looping_effect_id then
+		World.destroy_particles(self._world, self._looping_effect_id)
+
+		self._looping_effect_id = nil
+	end
+
 	if self._is_husk then
 		return
 	end
 
-	local particles_spawned = self._looping_particle_component.is_playing
 	local sound_started = self._looping_sound_component.is_playing
-
-	if particles_spawned then
-		self._fx_extension:stop_looping_particles(EQUIPPED_LOOPING_PARTICLE_ALIAS, SHOULD_FADE_KILL)
-	end
 
 	if sound_started then
 		self._fx_extension:stop_looping_wwise_event(EQUIPPED_LOOPING_SOUND_ALIAS)

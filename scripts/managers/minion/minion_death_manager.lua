@@ -43,8 +43,6 @@ local INSTANT_RAGDOLL_STAGGER_TYPES = {
 }
 
 MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
-	fassert(self._is_server, "Only server can trigger death on a minion.")
-
 	local blackboard = BLACKBOARDS[unit]
 	local death_component = Blackboard.write_component(blackboard, "death")
 
@@ -70,9 +68,9 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile)
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local inventory = visual_loadout_extension:inventory()
+		local inventory_slots = visual_loadout_extension:inventory_slots()
 
-		for slot_name, slot_data in pairs(inventory) do
+		for slot_name, slot_data in pairs(inventory_slots) do
 			if slot_data.drop_on_death and visual_loadout_extension:can_drop_slot(slot_name) then
 				visual_loadout_extension:drop_slot(slot_name)
 			end
@@ -107,7 +105,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 
 		Managers.state.pacing:remove_aggroed_minion(unit)
 
-		if DEDICATED_SERVER and breed.is_boss then
+		if Managers.stats.can_record_stats() and breed.is_boss then
 			local boss_max_health = health_extension:max_health()
 			local boss_unit_id = Managers.state.unit_spawner:game_object_id(unit)
 			local boss_extension = ScriptUnit.extension(unit, "boss_system")
@@ -220,8 +218,6 @@ MinionDeathManager.client_finalize_death = function (self, unit, unit_id)
 end
 
 MinionDeathManager.rpc_minion_set_dead = function (self, channel_id, unit_id, attack_direction, hit_zone_id, damage_profile_id, do_ragdoll_push, herding_template_id_or_nil)
-	fassert(not self._is_server, "rpc_minion_set_dead should only be called on clients.")
-
 	local unit = Managers.state.unit_spawner:unit(unit_id)
 	local hit_zone_name = hit_zone_id and NetworkLookup.hit_zones[hit_zone_id]
 	local damage_profile_name = NetworkLookup.damage_profile_templates[damage_profile_id]
@@ -279,6 +275,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 	end
 
 	local side_system = Managers.state.extension:system("side_system")
+	local victim_position = POSITION_LOOKUP[unit]
 	local attacking_side = side_system.side_by_unit[attacking_unit_or_nil]
 	local on_kill_area_suppression = damage_profile.on_kill_area_suppression
 
@@ -286,9 +283,8 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 		local lerp_values = DamageProfile.lerp_values(damage_profile, attacking_unit_or_nil)
 		lerp_values = DamageProfile.progress_lerp_values_path(lerp_values, "on_kill_area_suppression")
 		local optional_relation, optional_include_self = nil
-		local from_position = POSITION_LOOKUP[unit]
 
-		Suppression.apply_area_minion_suppression(attacking_unit_or_nil, on_kill_area_suppression, from_position, optional_relation, optional_include_self, lerp_values)
+		Suppression.apply_area_minion_suppression(attacking_unit_or_nil, on_kill_area_suppression, victim_position, optional_relation, optional_include_self, lerp_values)
 	end
 
 	local victim_side = side_system.side_by_unit[unit]
@@ -300,13 +296,18 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 
 		if buff_extension then
 			local param_table = buff_extension:request_proc_event_param_table()
-			param_table.dying_unit = unit
-			param_table.attacking_unit = attacking_unit_or_nil
-			param_table.attack_type = attack_type_or_nil
-			param_table.damage_profile_name = damage_profile.name
-			param_table.breed_name = breed.name
 
-			buff_extension:add_proc_event(proc_events.on_minion_death, param_table)
+			if param_table then
+				param_table.dying_unit = unit
+				param_table.attacking_unit = attacking_unit_or_nil
+				param_table.attack_type = attack_type_or_nil
+				param_table.damage_profile_name = damage_profile.name
+				param_table.breed_name = breed.name
+				param_table.side_name = victim_side:name()
+				param_table.position = Vector3Box(victim_position)
+
+				buff_extension:add_proc_event(proc_events.on_minion_death, param_table)
+			end
 		end
 	end
 end

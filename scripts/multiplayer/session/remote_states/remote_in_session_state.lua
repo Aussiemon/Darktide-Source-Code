@@ -1,10 +1,6 @@
 local RemoteInSessionState = class("RemoteInSessionState")
 
 RemoteInSessionState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_list) == "table", "Event list required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-	assert(type(shared_state.channel_id) == "number", "Channel required")
-
 	self._shared_state = shared_state
 end
 

@@ -20,9 +20,6 @@ Progression.get_account_progression = function (self)
 end
 
 Progression.get_progression = function (self, entity_type, id)
-	assert(entity_type, "Progression entity type must be set")
-	assert(id, "Progression id must be set for type: " .. entity_type)
-
 	local url = BackendUtilities.url_builder(entity_type):path("/"):path(id)
 	local account_id = entity_type == "account" and id or nil
 

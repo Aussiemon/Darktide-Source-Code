@@ -4,12 +4,6 @@ local RPCS = {
 }
 
 RemoteWaitForJoinState.init = function (self, state_machine, shared_state)
-	assert(shared_state.network_delegate, "Network delegate required")
-	assert(shared_state.engine_gamesession, "Game session required")
-	assert(type(shared_state.channel_id) == "number", "Channel ID required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 
 	shared_state.network_delegate:register_session_channel_events(self, shared_state.channel_id, unpack(RPCS))

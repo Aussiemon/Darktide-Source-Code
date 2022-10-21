@@ -47,6 +47,24 @@ CameraSettings.cinematic = {
 		safe_position_offset = Vector3Box(0, 0, 0)
 	}
 }
+CameraSettings.cinematic_gameplay = {
+	_node = {
+		near_range = 0.08,
+		name = "story_slave",
+		far_range = 1000,
+		disable_collision = true,
+		class = "CinematicLinkCamera",
+		vertical_fov = 45,
+		tree_transitions = {
+			default = CameraTransitionTemplates.instant_cut,
+			first_person = CameraTransitionTemplates.to_first_person,
+			third_person = CameraTransitionTemplates.to_third_person,
+			third_person_hub = CameraTransitionTemplates.to_third_person
+		},
+		node_transitions = {},
+		safe_position_offset = Vector3Box(0, 0, 0)
+	}
+}
 CameraSettings.testify_camera = {
 	_node = {
 		near_range = 0.08,
@@ -579,6 +597,7 @@ CameraSettings.player_first_person = {
 		far_range = 1000,
 		disable_collision = true,
 		custom_vertical_fov = 55,
+		should_apply_fov_multiplier = true,
 		class = "RootCamera",
 		vertical_fov = 65,
 		tree_transitions = {

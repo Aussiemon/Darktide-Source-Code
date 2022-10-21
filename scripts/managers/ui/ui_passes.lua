@@ -101,9 +101,7 @@ UIPasses.texture = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
-		local style_id = pass.style_id
-		local value_id = pass.value_id
-		local value = ui_content[value_id]
+		local value = ui_content[pass.value_id]
 		local color = ui_style.color
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
@@ -115,20 +113,22 @@ UIPasses.texture = {
 			apply_material_values(gui_material, material_values)
 		end
 
-		if scale_to_material then
-			local scale = ui_renderer.scale
+		local scale = ui_renderer.scale
 
+		if scale_to_material then
 			Material.set_scalar(gui_material, "ui_scale", scale)
 		end
 
+		local gui_position = Gui.scale_vector3(position, scale)
+		local gui_size = Gui.scale_vector3(size, scale)
+
 		if retained_mode then
-			local retained_id = retained_mode and (pass_data.retained_id and pass_data.retained_id or true)
-			local old_retained_id = retained_id
-			retained_id = UIRenderer.draw_texture(ui_renderer, value, position, size, color, retained_id)
+			local retained_id = pass_data.retained_id or true
+			retained_id = UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color, retained_id)
 			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
 		else
-			UIRenderer.draw_texture(ui_renderer, value, position, size, color)
+			UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color)
 		end
 	end
 }
@@ -156,8 +156,7 @@ UIPasses.texture_uv = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
-		local value_id = pass.value_id
-		local value = ui_content[value_id]
+		local value = ui_content[pass.value_id]
 		local color = ui_style.color
 		local uvs = ui_style.uvs
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
@@ -170,19 +169,22 @@ UIPasses.texture_uv = {
 			apply_material_values(gui_material, material_values)
 		end
 
-		if scale_to_material then
-			local scale = ui_renderer.scale
+		local scale = ui_renderer.scale
 
+		if scale_to_material then
 			Material.set_scalar(gui_material, "ui_scale", scale)
 		end
 
+		local gui_position = Gui.scale_vector3(position, scale)
+		local gui_size = Gui.scale_vector3(size, scale)
+
 		if retained_mode then
-			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
-			retained_id = UIRenderer.draw_texture_uv(ui_renderer, value, position, size, uvs, color, retained_id)
-			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
+			local retained_id = pass_data.retained_id or true
+			retained_id = UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, uvs, color, retained_id)
+			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
 		else
-			UIRenderer.draw_texture_uv(ui_renderer, value, position, size, uvs, color)
+			UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, uvs, color)
 		end
 	end
 }
@@ -500,7 +502,7 @@ UIPasses.rotated_texture = {
 		end
 
 		if retained_mode then
-			local retained_id = retained_mode and (pass_data.retained_id and pass_data.retained_id or true)
+			local retained_id = pass_data.retained_id or true
 			retained_id = UIRenderer.draw_texture_rotated(ui_renderer, value, size, position, angle, pivot, color, uvs, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -525,13 +527,13 @@ UIPasses.rect = {
 		end
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
-		local pass_data = pass.data
 		local color = ui_style.color
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
-			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+			local pass_data = pass.data
+			local retained_id = pass_data.retained_id or true
 			retained_id = UIRenderer.draw_rect(ui_renderer, position, size, color, retained_id)
-			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
+			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
 		else
 			UIRenderer.draw_rect(ui_renderer, position, size, color)
@@ -654,11 +656,9 @@ UIPasses.video = {
 		ui_content.video_completed = is_complete
 	end
 }
-local temp_text_options = {}
+local temp_text_options = Script.new_map(32)
 UIPasses.text = {
 	init = function (pass)
-		assert(pass.value_id, "no text id in pass definition. YOU NEEDS IT.")
-
 		return {
 			dirty = true,
 			value_id = pass.value_id
@@ -667,6 +667,7 @@ UIPasses.text = {
 	destroy = function (pass, ui_renderer)
 		local pass_data = pass.data
 		local retained_ids = pass_data.retained_ids
+		local retained_mode = retained_ids ~= nil
 
 		if retained_ids then
 			for i = 1, #retained_ids do
@@ -675,14 +676,26 @@ UIPasses.text = {
 
 			pass_data.retained_ids = nil
 		end
+
+		local gui_material = pass_data.material
+
+		if gui_material then
+			UIRenderer.destroy_material(ui_renderer, gui_material, retained_mode)
+
+			pass_data.material_value = nil
+			pass_data.material = nil
+		end
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
 		local retained_ids = nil
 
 		table.clear(temp_text_options)
+		UIFonts.get_font_options_by_style(ui_style, temp_text_options)
 
-		if use_retained_mode(pass, ui_renderer.render_settings) then
+		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
+
+		if retained_mode then
 			retained_ids = pass_data.retained_ids and pass_data.retained_ids or true
 		end
 
@@ -693,13 +706,9 @@ UIPasses.text = {
 		end
 
 		local text = ui_content[pass_data.value_id]
-
-		UIFonts.get_font_options_by_style(ui_style, temp_text_options)
-
 		local optional_material = ui_style.material
 
 		if optional_material then
-			local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 			local material_values = ui_style.material_values
 			local scale_to_material = ui_style.scale_to_material
 			local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, optional_material, pass_data, retained_mode)
@@ -708,41 +717,41 @@ UIPasses.text = {
 				apply_material_values(gui_material, material_values)
 			end
 
-			if gui_material then
-				temp_text_options[#temp_text_options + 1] = "material_resource"
-				temp_text_options[#temp_text_options + 1] = gui_material
-			else
-				temp_text_options[#temp_text_options + 1] = "material"
-				temp_text_options[#temp_text_options + 1] = optional_material
-			end
+			temp_text_options.material_resource = gui_material
+			temp_text_options.material = optional_material
 		end
 
 		local font_type = ui_style.font_type
 		local font_size = ui_style.font_size
-		font_size = UIFonts.scaled_size(font_size, ui_renderer.scale)
+		local ui_scale = ui_renderer.scale
+		font_size = math.max(font_size * ui_scale, 1)
 		local text_color = ui_style.text_color
 		local retained_id = retained_ids and (new_retained_ids and true or retained_ids[1])
-		retained_id = UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, text_color, temp_text_options, retained_id)
+		local gui_position = Gui.scale_vector3(position, ui_scale)
+		local gui_size = nil
+
+		if size then
+			gui_size = Gui.scale_vector3(size, ui_scale)
+		end
+
+		retained_id = UIRenderer.script_draw_text(ui_renderer, text, font_size, font_type, gui_position, gui_size, text_color, temp_text_options, retained_id)
 
 		if new_retained_ids then
 			new_retained_ids[1] = retained_id
 		end
 
+		if retained_mode then
+			pass_data.retained_ids = new_retained_ids or pass_data.retained_ids
+			pass_data.dirty = false
+		end
+
 		local box_color = ui_style.box_color
 
 		if box_color or ui_style.debug_draw_box then
-			local layer = position[3]
-			position[3] = math.max(layer - 1, 1)
+			gui_position[3] = math.max(gui_position[3] - 1, 1)
 			local text_box_color = box_color or Color.magenta(50, true)
 
-			UIRenderer.draw_rect(ui_renderer, position, size, text_box_color)
-
-			position[3] = layer
-		end
-
-		if use_retained_mode(pass, ui_renderer.render_settings) then
-			pass_data.retained_ids = new_retained_ids or pass_data.retained_ids
-			pass_data.dirty = false
+			UIRenderer.draw_rect(ui_renderer, gui_position, gui_size, text_box_color)
 		end
 	end
 }
@@ -865,7 +874,7 @@ UIPasses.hotspot = {
 		local cursor_position = nil
 
 		if PLATFORM == "xbs" and not gamepad_active then
-			cursor_position = Vector3(cursor[1], 1080 - cursor[2], cursor[3])
+			cursor_position = Vector3(cursor[1], cursor[2], cursor[3])
 		else
 			cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
 		end

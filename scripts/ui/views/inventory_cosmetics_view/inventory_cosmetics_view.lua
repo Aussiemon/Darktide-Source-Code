@@ -34,7 +34,9 @@ local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase
 
 InventoryCosmeticsView.init = function (self, settings, context)
 	self._context = context
-	self._selected_slot = context.selected_slot
+	self._selected_slots = context.selected_slots or {
+		context.selected_slot
+	}
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
@@ -57,18 +59,25 @@ InventoryCosmeticsView.on_enter = function (self)
 	self:_stop_previewing()
 
 	self._inventory_items = {}
-	local selected_slot = self._selected_slot
+	local selected_slots = self._selected_slots
 
-	if selected_slot then
-		local slot_display_name = selected_slot.display_name
+	if selected_slots then
+		self:_fetch_inventory_items(selected_slots)
 
-		self:_fetch_inventory_items(selected_slot)
+		local spawn_player = false
 
-		local selected_slot_name = selected_slot.name
+		for i = 1, #selected_slots do
+			local slot = selected_slots[i]
+			local selected_slot_name = slot.name
 
-		if selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame" then
-			self._spawn_player = true
+			if selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame" then
+				spawn_player = true
+
+				break
+			end
 		end
+
+		self._spawn_player = spawn_player
 	end
 
 	self:_register_button_callbacks()
@@ -88,14 +97,16 @@ InventoryCosmeticsView._setup_input_legend = function (self)
 	end
 end
 
-InventoryCosmeticsView._set_preview_widgets_visibility = function (self, visible)
+InventoryCosmeticsView._set_preview_widgets_visibility = function (self, visible, allow_equip_button)
 	InventoryCosmeticsView.super._set_preview_widgets_visibility(self, visible)
 
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.equip_button.content.visible = visible
+	widgets_by_name.equip_button.content.visible = allow_equip_button and true or visible
+	widgets_by_name.display_name_divider2.content.visible = visible
 end
 
 InventoryCosmeticsView._stop_previewing = function (self)
+	InventoryCosmeticsView.super._stop_previewing(self)
 	self:_set_preview_widgets_visibility(false)
 
 	if self._player_panel then
@@ -173,19 +184,14 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	local gear_id = item.gear_id or item_name
 
 	if item then
-		local selected_slot = self._selected_slot
-		local selected_slot_name = selected_slot.name
-
-		if selected_slot_name == "slot_portrait_frame" or selected_slot_name == "slot_insignia" then
-			local context = {
-				preview_profile = self._presentation_profile
-			}
-			self._player_panel = self:_add_element(ViewElementPlayerPanel, "player_panel", 1, context)
-
-			self:_update_player_panel_position()
-			self._world_spawner:set_camera_blur(0.8, 0.1)
+		if self._selected_slots then
+			local first_slot_name = slots[1]
+			local first_slot = ItemSlotSettings[first_slot_name]
+			self._selected_slot = first_slot
 		end
 
+		local selected_slot = self._selected_slot
+		local selected_slot_name = selected_slot and selected_slot.name
 		local presentation_profile = self._presentation_profile
 		local presentation_loadout = presentation_profile.loadout
 		presentation_loadout[selected_slot_name] = item
@@ -210,11 +216,16 @@ InventoryCosmeticsView._preview_element = function (self, element)
 			end
 		end
 
-		local display_name = ItemUtils.display_name(item)
-		local widgets_by_name = self._widgets_by_name
-		widgets_by_name.display_name.content.text = display_name
+		if selected_slot_name == "slot_portrait_frame" or selected_slot_name == "slot_insignia" then
+			InventoryCosmeticsView.super._preview_element(self, element)
+			self:_set_preview_widgets_visibility(false, true)
+		else
+			local display_name = ItemUtils.display_name(item)
+			local widgets_by_name = self._widgets_by_name
+			widgets_by_name.display_name.content.text = display_name
 
-		self:_set_preview_widgets_visibility(true)
+			self:_set_preview_widgets_visibility(true)
+		end
 	end
 end
 
@@ -297,17 +308,19 @@ InventoryCosmeticsView.on_exit = function (self)
 	Managers.event:trigger("event_equip_local_changes")
 end
 
-InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
+InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
-	local num_items = 100
-	local slot_name = selected_slot.name
-	local filter = {
-		slot_name
-	}
+	local filter = {}
 
-	Managers.data_service.gear:fetch_inventory_paged(character_id, num_items, filter):next(function (items)
+	for i = 1, #selected_slots do
+		local slot = selected_slots[i]
+		local slot_name = slot.name
+		filter[#filter + 1] = slot_name
+	end
+
+	Managers.data_service.gear:fetch_inventory_paged(character_id, 100, filter):next(function (items)
 		if self._destroyed then
 			return
 		end
@@ -326,15 +339,18 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 
 			if self:_item_valid_by_current_profile(item) then
 				local slots = item.slots
-				local valid = true
 
 				if slots then
-					for j = 1, #slots do
-						if slots[j] == slot_name then
+					local first_slot_name = slots[1]
+					local first_slot = ItemSlotSettings[first_slot_name]
+					local valid = true
+
+					if slots then
+						for j = 1, #slots do
 							layout[#layout + 1] = {
 								item = item,
-								slot = selected_slot,
-								widget_type = WIDGET_TYPE_BY_SLOT[slot_name]
+								slot = first_slot,
+								widget_type = WIDGET_TYPE_BY_SLOT[first_slot_name]
 							}
 						end
 					end
@@ -342,13 +358,14 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 			end
 		end
 
+		local first_selected_slot = selected_slots[1]
 		self._offer_items_layout = layout
-		local slot_display_name = selected_slot and selected_slot.display_name
+		local slot_display_name = first_selected_slot and first_selected_slot.display_name
 
 		self:_present_layout_by_slot_filter(nil, slot_display_name)
 
 		local start_index = #layout > 0 and 1
-		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
+		local equipped_item = start_index and self:equipped_item_in_slot(first_selected_slot.name)
 
 		if equipped_item then
 			start_index = self:item_grid_index(equipped_item) or start_index
@@ -415,42 +432,6 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 	return false
 end
 
-InventoryCosmeticsView._get_items_layout_by_slot = function (self, slot)
-	local slot_name = slot.name
-	local widget_type = WIDGET_TYPE_BY_SLOT[slot_name]
-	local layout = {
-		{
-			widget_type = "spacing_vertical_small"
-		}
-	}
-	local inventory_items = self._inventory_items
-
-	for _, item in ipairs(inventory_items) do
-		if self:_item_valid_by_current_profile(item) then
-			local slots = item.slots
-			local valid = true
-
-			if valid and slots then
-				for j = 1, #slots do
-					if slots[j] == slot_name then
-						layout[#layout + 1] = {
-							item = item,
-							slot = slot,
-							widget_type = widget_type
-						}
-					end
-				end
-			end
-		end
-	end
-
-	layout[#layout + 1] = {
-		widget_type = "spacing_vertical_small"
-	}
-
-	return layout
-end
-
 InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 	if self._equip_button_disabled then
 		return
@@ -505,8 +486,8 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 
 	if not disable_button then
 		local selected_slot = self._selected_slot
-		local selected_slot_name = selected_slot.name
-		local equipped_item = self:equipped_item_in_slot(selected_slot_name)
+		local selected_slot_name = selected_slot and selected_slot.name
+		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
 		disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
 	end
 

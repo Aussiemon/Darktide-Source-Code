@@ -1,55 +1,139 @@
-local mission_board_view_settings = {
-	board_size = {
-		1280,
-		720
-	},
-	grid_size = {
-		24,
-		5
-	},
-	grid_blur_edge_size = {
-		8,
-		8
-	},
-	grid_spacing = {
+local MissionBoardViewSettings = {
+	resource_renderer_enabled = true,
+	mission_time_grace_period = 1,
+	resource_renderer_name = "mission_board_view_scanlines_ui_renderer",
+	resource_renderer_material = "content/ui/materials/mission_board/render_target_scanlines",
+	fetch_retry_cooldown = 5,
+	color_background = {
+		200,
+		0,
 		0,
 		0
+	},
+	color_corner = Color.terminal_corner(nil, true),
+	color_frame = Color.terminal_frame(nil, true),
+	color_main = {
+		255,
+		169,
+		211,
+		158
+	},
+	color_accent = Color.golden_rod(nil, true),
+	color_disabled = {
+		50,
+		161,
+		175,
+		158
+	},
+	color_gray = {
+		200,
+		161,
+		175,
+		158
+	},
+	mission_positions = {
+		{
+			234.736,
+			835.341,
+			index = 1
+		},
+		{
+			1118.371,
+			365.955,
+			index = 2
+		},
+		{
+			1197.436,
+			720.065,
+			index = 3
+		},
+		{
+			844.629,
+			741.424,
+			index = 4
+		},
+		{
+			853.249,
+			96.558,
+			index = 5
+		},
+		{
+			177.226,
+			598.332,
+			index = 6
+		},
+		{
+			899.525,
+			391.039,
+			index = 7
+		},
+		{
+			1016.314,
+			576.887,
+			index = 8
+		},
+		{
+			1030.706,
+			169.407,
+			index = 9
+		},
+		{
+			618.534,
+			842.57,
+			index = 10
+		},
+		{
+			615.872,
+			138.585,
+			index = 11
+		},
+		{
+			270.279,
+			317.813,
+			index = 12
+		},
+		{
+			1046.255,
+			851.528,
+			index = 13
+		},
+		{
+			406.033,
+			750.475,
+			index = 14
+		},
+		{
+			380.706,
+			529.623,
+			index = 15
+		}
+	},
+	flash_mission_position = {
+		704.213501,
+		552.210754,
+		index = 0,
+		length = 0
+	},
+	fluff_frames = {
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_01",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_02",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_03",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_04",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_05",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_06",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_07",
+		"content/ui/materials/fluff/hologram/frames/fluff_frame_08"
+	},
+	world_spawner_settings = {
+		viewport_name = "mission_board_viewport",
+		level_name = "content/levels/ui/mission_board/mission_board",
+		viewport_shading_environment = "content/shading_environments/ui/mission_board",
+		viewport_layer = 1,
+		viewport_type = "default",
+		world_timer_name = "ui",
+		world_layer = 1,
+		world_name = "mission_board"
 	}
 }
-mission_board_view_settings.cell_size = {
-	mission_board_view_settings.board_size[1] / mission_board_view_settings.grid_size[1] - mission_board_view_settings.grid_spacing[1],
-	mission_board_view_settings.board_size[2] / mission_board_view_settings.grid_size[2] - mission_board_view_settings.grid_spacing[2]
-}
-mission_board_view_settings.view_fade_time = 0.3
-mission_board_view_settings.timer_bar_fuzziness = 0.01
-mission_board_view_settings.scrollbar_width = 8
-mission_board_view_settings.icon_hover_animation_time = 0.25
-mission_board_view_settings.icon_fade_time = 0.3
-mission_board_view_settings.zone_line_draw_time = 0.2
-mission_board_view_settings.icon_distance_scale_factor = 40
-mission_board_view_settings.show_icon_sound_cooldown = 0.5
-mission_board_view_settings.hide_icon_sound_cooldown = 0.5
-mission_board_view_settings.minimum_refresh_wait_time = 15
-mission_board_view_settings.num_icon_layers = 10
-mission_board_view_settings.icon_layer_step = 4
-mission_board_view_settings.furthest_icon_scale = 0.8
-mission_board_view_settings.closest_icon_scale = 1
-mission_board_view_settings.icon_placement_k = 29
-mission_board_view_settings.icon_placement_v = 71
-mission_board_view_settings.default_circumstance = "default"
-mission_board_view_settings.node_name_format = "grid_%d_%d"
-mission_board_view_settings.xp_format = "%d "
-mission_board_view_settings.reward_format = "%d "
-mission_board_view_settings.time_format = "%.2d:%.2d "
-mission_board_view_settings.input_threshold = 0.7
-mission_board_view_settings.main_objective_type_name = {
-	fortification_objective = "loc_mission_type_fortification_objective",
-	demolition_objective = "loc_mission_type_demolition_objective",
-	kill_objective = "loc_mission_type_kill_objective",
-	control_objective = "loc_mission_type_control_objective",
-	default = "loc_mission_type_default",
-	decode_objective = "loc_mission_type_decode_objective",
-	luggable_objective = "loc_mission_type_luggable_objective"
-}
 
-return settings("MissionBoardViewSettingsNew", mission_board_view_settings)
+return settings("MissionBoardViewSettings", MissionBoardViewSettings)

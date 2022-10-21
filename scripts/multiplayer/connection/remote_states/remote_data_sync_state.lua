@@ -7,13 +7,6 @@ local RPCS = {
 local RemoteDataSyncState = class("RemoteDataSyncState")
 
 RemoteDataSyncState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.is_dedicated_server) == "boolean", "Dedicated server state required")
-	assert(type(shared_state.host_type) == "string", "host_type required.")
-	assert(type(shared_state.session_seed) == "number", "session_seed required.")
-
 	self._shared_state = shared_state
 	self._is_dedicated_server = shared_state.is_dedicated_server
 	self._host_type = shared_state.host_type

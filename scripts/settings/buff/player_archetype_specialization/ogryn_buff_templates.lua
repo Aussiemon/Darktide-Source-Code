@@ -1,7 +1,7 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctionTemplates = require("scripts/settings/buff/check_proc_function_templates")
-local ConditionalFunctionTemplates = require("scripts/settings/buff/conditional_function_templates")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local Damage = require("scripts/utilities/attack/damage")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local Health = require("scripts/utilities/health")
@@ -18,7 +18,8 @@ local templates = {
 		class_name = "buff",
 		stat_buffs = {
 			[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.tank.toughness_damage_taken_multiplier,
-			[stat_buffs.damage_taken_multiplier] = talent_settings.tank.damage_taken_multiplier
+			[stat_buffs.damage_taken_multiplier] = talent_settings.tank.damage_taken_multiplier,
+			[stat_buffs.static_movement_reduction_multiplier] = talent_settings.tank.static_movement_reduction_multiplier
 		}
 	},
 	ogryn_base_passive_revive = {

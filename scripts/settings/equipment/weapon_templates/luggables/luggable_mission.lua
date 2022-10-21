@@ -78,6 +78,7 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	drop = "stay",
+	wield = "base",
 	push = "stay",
 	aim_luggable = {
 		drop = "base",
@@ -87,12 +88,8 @@ weapon_template.action_input_hierarchy = {
 			drop = "base"
 		}
 	},
-	inspect = {
-		drop = "base",
-		wield = "base",
-		inspect_start = {
-			inspect_stop = "base"
-		}
+	inspect_start = {
+		inspect_stop = "base"
 	}
 }
 
@@ -131,7 +128,6 @@ weapon_template.actions = {
 		block_duration = 0.4,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 0.67,
 		action_movement_curve = {
 			{
@@ -158,11 +154,11 @@ weapon_template.actions = {
 				chain_time = 0.53
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
 	action_aim_luggable = {

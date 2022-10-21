@@ -40,9 +40,6 @@ Lunge.calculate_lunge_total_time = function (distance, lunge_speed_at_times)
 		local start_point = 1
 		local current_speed_setting_index = Lunge.find_speed_settings_index(time_in_lunge, start_point, lunge_speed_at_times)
 		local speed = Lunge.find_current_lunge_speed(time_in_lunge, current_speed_setting_index, lunge_speed_at_times)
-
-		fassert(speed > 0, "Speed is 0, will never hit end.")
-
 		distance_travelled = distance_travelled + speed * time_step
 
 		if distance < distance_travelled then

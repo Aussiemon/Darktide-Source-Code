@@ -1,4 +1,12 @@
 local material_overrides = {
+	mask_default = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0
+			}
+		}
+	},
 	mask_torso_keep_collar = {
 		property_overrides = {
 			mask_top_bottom = {
@@ -55,11 +63,19 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_legs_keep_knees_and_shins = {
+		property_overrides = {
+			mask_top_bottom = {
+				0.2,
+				0.425
+			}
+		}
+	},
 	mask_legs_keep_knees = {
 		property_overrides = {
 			mask_top_bottom = {
-				1,
-				0.1
+				0.35,
+				0.425
 			}
 		}
 	}

@@ -10,7 +10,7 @@ local event_vo_demolition_psyker_male_c = {
 		},
 		sound_events_duration = {
 			2.070146,
-			1.549375,
+			1.549385,
 			1.645031,
 			2.103677
 		},

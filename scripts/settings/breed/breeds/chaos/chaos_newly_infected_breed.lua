@@ -19,29 +19,30 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_newly_infected"
 local breed_data = {
-	detection_radius = 15,
 	display_name = "loc_breed_display_name_chaos_newly_infected",
-	run_speed = 4.3,
 	spawn_inventory_slot = "slot_melee_weapon",
+	run_speed = 4.3,
 	use_bone_lod = true,
-	spawn_anim_state = "to_melee",
 	game_object_type = "minion_melee",
-	unit_template_name = "minion",
+	spawn_anim_state = "to_melee",
 	power_level_type = "renegade_default_melee",
+	unit_template_name = "minion",
 	faction_name = "chaos",
+	detection_radius = 15,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_newly_infected",
+	challenge_rating = 0.4,
+	stagger_resistance = 0.5,
 	use_avoidance = true,
-	stagger_resistance = 1,
 	base_height = 1.7,
 	walk_speed = 2.4,
 	player_locomotion_constrain_radius = 0.3,
-	challenge_rating = 0.4,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_newly_infected",
 	use_wounds = true,
 	slot_template = "chaos_poxwalker",
 	activate_slot_system_on_spawn = true,
+	explosion_power_multiplier = 0.3,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	hit_mass = 0.75,
 	bone_lod_radius = 1,
@@ -57,9 +58,9 @@ local breed_data = {
 	armor_type = armor_types.unarmored,
 	gib_template = MinionGibbingTemplates.chaos_newly_infected,
 	stagger_durations = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 1.75,
-		[stagger_types.heavy] = 2.75,
+		[stagger_types.light] = 0.6,
+		[stagger_types.medium] = 1,
+		[stagger_types.heavy] = 2.25,
 		[stagger_types.light_ranged] = 0.75,
 		[stagger_types.explosion] = 6.303030303030303,
 		[stagger_types.killshot] = 1,
@@ -70,6 +71,14 @@ local breed_data = {
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 1.75,
 		[stagger_types.light_ranged] = 0.2
+	},
+	impact_anim_override = {
+		damaged = {
+			fwd = "hit_reaction_fwd",
+			bwd = "hit_reaction_bwd",
+			left = "hit_reaction_left",
+			right = "hit_reaction_right"
+		}
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_newly_infected,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_newly_infected_sounds"),
@@ -271,19 +280,16 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.05,
-			j_leftshoulder = 0.05,
-			j_spine = 0.2,
+			j_rightshoulder = 0.15,
+			j_leftshoulder = 0.15,
+			j_spine = 0.3,
 			j_spine1 = 0.1,
 			j_head = 0.5,
-			j_neck = 0.25
+			j_neck = 0.5
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,

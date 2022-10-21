@@ -13,8 +13,8 @@ local true_flight_krak_grenade = {
 		local trigger_time = true_flight_template.trigger_time
 		local on_target_time = integration_data.on_target_time
 		local have_triggered = trigger_time < on_target_time
-		local velocity = integration_data.velocity:unbox()
-		local position = integration_data.position:unbox()
+		local velocity = integration_data.velocity
+		local position = integration_data.position
 		local towards_target = target_position - position
 		local wanted_direction = Vector3.normalize(towards_target)
 		local current_direction = Vector3.normalize(velocity)
@@ -35,8 +35,8 @@ local true_flight_krak_grenade = {
 			end
 
 			integration_data.integrate = true
-			position = integration_data.position:unbox()
-			local rotation = integration_data.rotation:unbox()
+			position = integration_data.position
+			local rotation = integration_data.rotation
 
 			return position, rotation
 		else
@@ -141,7 +141,7 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 	table.clear(broadphase_results)
 
 	local number_of_results = nil
-	local veclocity = integration_data.velocity:unbox()
+	local veclocity = integration_data.velocity
 	local current_direction = Vector3.normalize(veclocity)
 	local offset = current_direction * forward_search_distance_to_find_target
 	local seach_position = position + offset

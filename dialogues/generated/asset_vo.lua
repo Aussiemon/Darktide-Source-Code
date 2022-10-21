@@ -125,24 +125,6 @@ return function ()
 				25
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"asset_foul_smoke",
 				OP.EQ,
@@ -299,11 +281,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "asset_pneumatic_press",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "asset_pneumatic_press",
 		response = "asset_pneumatic_press",
 		database = "asset_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -465,24 +448,6 @@ return function ()
 				17
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"asset_unnatural_dark_a",
 				OP.EQ,
@@ -527,24 +492,6 @@ return function ()
 				args = {
 					"asset_unnatural_dark_a"
 				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",

@@ -36,7 +36,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 
 	self._physics_world = extension_init_context.physics_world
 	self._line_of_sight_lookup = {}
-	self._line_of_sight_queue = {}
+	self._line_of_sight_queue = Script.new_array(4)
 	self._running_line_of_sight_checks = {}
 	self._num_running_raycasts = 0
 	local line_of_sight_data = breed.line_of_sight_data
@@ -72,6 +72,9 @@ MinionPerceptionExtension._init_blackboard_components = function (self, blackboa
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 	perception_component.aggro_state = "passive"
 	perception_component.target_unit = nil
+
+	perception_component.target_position:store(Vector3.zero())
+
 	perception_component.previous_target_unit = nil
 	perception_component.lock_target = false
 	perception_component.target_distance = math.huge
@@ -264,7 +267,8 @@ MinionPerceptionExtension.aggro = function (self)
 		if breed.trigger_boss_health_bar_on_aggro then
 			local boss_extension = ScriptUnit.extension(unit, "boss_system")
 
-			Managers.event:trigger("boss_encounter_start", unit, boss_extension)
+			boss_extension:start_boss_encounter()
+			Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", self._game_object_id)
 		end
 	end
 end
@@ -356,9 +360,6 @@ MinionPerceptionExtension.set_threat_decay_enabled = function (self, enabled)
 end
 
 MinionPerceptionExtension.force_new_target_attempt = function (self, optional_config)
-	fassert(not self._perception_component.lock_target, "[MinionPerceptionExtension] Need to unlock target lock before forcing new target attempt.")
-	fassert(not self._force_new_target_attempt, "[MinionPerceptionExtension] Trying to force new target attempt twice before update.")
-
 	self._force_new_target_attempt_config = optional_config
 	self._force_new_target_attempt = true
 end
@@ -396,15 +397,10 @@ MinionPerceptionExtension._update_target_selection = function (self, unit, side,
 	local los_collision_filter = breed.line_of_sight_collision_filter
 	local target_units = side.ai_target_units
 
-	Profiler.start("minion_perception_extension_los_checks")
 	self:_update_line_of_sight(unit, target_units, los_collision_filter)
-	Profiler.stop("minion_perception_extension_los_checks")
-	Profiler.start("minion_perception_extension_target_selection")
 
 	local template = self._target_selection_template
 	local target_unit = template(unit, side, perception_component, breed, target_units, self._line_of_sight_lookup, t, self._threat_units, force_new_target_attempt, force_new_target_attempt_config, self._debug_target_weighting, self._last_los_positions)
-
-	Profiler.stop("minion_perception_extension_target_selection")
 
 	return target_unit
 end

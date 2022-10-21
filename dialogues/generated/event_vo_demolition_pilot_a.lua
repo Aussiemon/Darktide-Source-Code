@@ -9,10 +9,10 @@ local event_vo_demolition_pilot_a = {
 			"loc_pilot_a__event_demolition_first_corruptor_destroyed_b_04"
 		},
 		sound_events_duration = {
-			3.002084,
-			3.509375,
-			2.445355,
-			3.343313
+			3.011167,
+			3.518458,
+			2.454438,
+			3.352396
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_demolition_pilot_a = {
 			"loc_pilot_a__event_demolition_last_corruptor_04"
 		},
 		sound_events_duration = {
-			2.648188,
-			2.921105,
-			2.987792,
-			2.646896
+			2.657271,
+			2.930188,
+			2.996875,
+			2.655979
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local event_vo_demolition_pilot_a = {
 			"loc_pilot_a__event_demolition_more_corruptors_04"
 		},
 		sound_events_duration = {
-			2.974667,
-			3.08798,
-			2.439625,
-			2.51325
+			2.98375,
+			3.097063,
+			2.448708,
+			2.522333
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local event_vo_demolition_pilot_a = {
 			"loc_pilot_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
-			2.165417,
-			3.434063,
-			2.783084,
-			3.151563
+			2.1745,
+			3.443146,
+			2.792167,
+			3.160646
 		},
 		randomize_indexes = {}
 	}

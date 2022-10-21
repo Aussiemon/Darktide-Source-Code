@@ -80,11 +80,11 @@ target_selection_template.melee_elite = function (unit, side, perception_compone
 			if target_unit ~= current_target_unit then
 				local target_position = POSITION_LOOKUP[target_unit]
 				local distance_to_target_sq = vector3_distance_squared(position, target_position)
-				local distance_sq = is_shooting and distance_to_target_sq - EXTRA_SHOOT_DISTANCE_SQ or distance_to_target_sq
+				local check_distance_sq = is_shooting and distance_to_target_sq - EXTRA_SHOOT_DISTANCE_SQ or distance_to_target_sq
 
-				if aggro_state == aggro_states.aggroed or distance_sq < detection_radius_sq then
+				if aggro_state == aggro_states.aggroed or check_distance_sq < detection_radius_sq then
 					local is_new_target = true
-					local score = _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, perception_component, t, debug_target_weighting_or_nil)
+					local score = _calculate_score(breed, unit, target_unit, distance_to_target_sq, is_new_target, threat_units, perception_component, t, debug_target_weighting_or_nil)
 
 					if best_score < score then
 						local has_line_of_sight = line_of_sight_lookup[target_unit]
@@ -92,7 +92,7 @@ target_selection_template.melee_elite = function (unit, side, perception_compone
 						if aggro_state == aggro_states.aggroed or has_line_of_sight then
 							local z_distance = math.abs(position.z - target_position.z)
 							closest_z_distance = z_distance
-							closest_distance_sq = distance_sq
+							closest_distance_sq = distance_to_target_sq
 							best_target_unit = target_unit
 							best_score = score
 						end

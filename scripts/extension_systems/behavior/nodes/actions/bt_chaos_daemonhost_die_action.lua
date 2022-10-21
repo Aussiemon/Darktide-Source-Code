@@ -5,6 +5,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
 local MinionDeath = require("scripts/utilities/minion_death")
 local MinionMovement = require("scripts/utilities/minion_movement")
+local Vo = require("scripts/utilities/vo")
 local STAGES = DaemonhostSettings.stages
 local BtChaosDaemonhostDieAction = class("BtChaosDaemonhostDieAction", "BtNode")
 
@@ -34,6 +35,12 @@ BtChaosDaemonhostDieAction.enter = function (self, unit, breed, blackboard, scra
 		scratchpad.anim_driven_duration = t + anim_driven_until
 
 		MinionMovement.set_anim_driven(scratchpad, true)
+	end
+
+	local vo_event = action_data.vo_event
+
+	if vo_event then
+		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
 	end
 end
 

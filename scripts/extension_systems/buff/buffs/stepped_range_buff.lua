@@ -5,7 +5,7 @@ local SteppedRangeBuff = class("SteppedRangeBuff", "Buff")
 SteppedRangeBuff.init = function (self, context, template, start_time, instance_id, ...)
 	SteppedRangeBuff.super.init(self, context, template, start_time, instance_id, ...)
 
-	local lerp_value = self._template_context.lerp_value
+	local lerp_value = self._template_context.buff_lerp_value
 	self._duration_progress = 0
 	self._start_time = start_time
 	self._instance_id = instance_id

@@ -1,10 +1,8 @@
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
 local ExtensionManager = require("scripts/foundation/managers/extension/extension_manager")
 local WorldRenderUtils = require("scripts/utilities/world_render")
-local UIResolution = require("scripts/managers/ui/ui_resolution")
 local VOSourcesCache = require("scripts/extension_systems/dialogue/vo_sources_cache")
 local UIWorldSpawner = class("UIWorldSpawner")
 
@@ -14,6 +12,7 @@ UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optio
 	self._storyteller = World.storyteller(world)
 
 	World.set_data(world, "__world_name", world_name)
+	World.set_data(world, "__is_ui_world", true)
 
 	self._unit_spawner = UIUnitSpawner:new(world)
 	self._world = world
@@ -154,7 +153,6 @@ UIWorldSpawner._setup_extension_manager = function (self)
 	local level_name = self._level_name
 	local is_server = nil
 	local unit_templates = require("scripts/extension_systems/unit_templates")
-	local connection_manager = Managers.connection
 
 	require("scripts/extension_systems/cinematic_scene/cinematic_scene_system")
 	require("scripts/extension_systems/cutscene_character/cutscene_character_system")
@@ -251,7 +249,6 @@ UIWorldSpawner._setup_extension_manager = function (self)
 		"level_spawned",
 		"cinematic"
 	}
-	local network_transmit = {}
 	local circumstance_name = "default"
 	local use_time_slice = false
 	self._extension_manager = ExtensionManager:new(world, physics_world, wwise_world, nil, nil, level_name, circumstance_name, is_server, unit_templates, system_config, system_init_data, unit_categories, nil, nil, nil, {}, use_time_slice)
@@ -275,10 +272,10 @@ UIWorldSpawner._create_world = function (self, world_name, layer, timer_name, op
 	return world
 end
 
-UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
+UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback, render_targets)
 	local world = self._world
 	shading_callback = shading_callback or callback(self, "_shading_callback")
-	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, camera_unit, nil, nil, nil, shading_environment, shading_callback)
+	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, camera_unit, nil, nil, nil, shading_environment, shading_callback, nil, render_targets)
 	self._viewport = viewport
 	self._viewport_name = viewport_name
 	local camera = ScriptViewport.camera(viewport)
@@ -287,12 +284,14 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 	self._camera_unit = camera_unit
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
-	self._boxed_camera_start_position = Vector3.to_array(camera_position)
+	self._boxed_camera_start_position = Vector3Box(camera_position)
 	self._boxed_camera_start_rotation = QuaternionBox(camera_rotation)
 
 	ScriptWorld.activate_viewport(world, viewport)
 
 	self._initial_fov = Camera.vertical_fov(camera) / math.pi * 180
+
+	return viewport
 end
 
 UIWorldSpawner.change_camera_unit = function (self, camera_unit, add_shadow_cull_camera)
@@ -305,8 +304,9 @@ UIWorldSpawner.change_camera_unit = function (self, camera_unit, add_shadow_cull
 	self._camera_unit = camera_unit
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
-	self._boxed_camera_start_position = Vector3.to_array(camera_position)
-	self._boxed_camera_start_rotation = QuaternionBox(camera_rotation)
+
+	Vector3Box.store(self._boxed_camera_start_position, camera_position)
+	QuaternionBox.store(self._boxed_camera_start_rotation, camera_rotation)
 end
 
 UIWorldSpawner.sync_camera_to_camera_unit = function (self, camera_unit)
@@ -321,16 +321,14 @@ UIWorldSpawner.set_camera_position = function (self, position)
 	local camera_unit = self._camera_unit
 
 	Unit.set_local_position(camera_unit, 1, position)
-
-	self._boxed_camera_start_position = Vector3.to_array(position)
+	Vector3Box.store(self._boxed_camera_start_position, position)
 end
 
 UIWorldSpawner.set_camera_rotation = function (self, rotation)
 	local camera_unit = self._camera_unit
 
 	Unit.set_local_rotation(camera_unit, 1, rotation)
-
-	self._boxed_camera_start_rotation = QuaternionBox(rotation)
+	QuaternionBox.store(self._boxed_camera_start_rotation, rotation)
 end
 
 UIWorldSpawner.set_viewport_position = function (self, x_scale, y_scale)

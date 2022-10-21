@@ -66,8 +66,6 @@ Component.event = function (unit, event, ...)
 end
 
 Component.trigger_event_on_clients = function (component, event_name, rpc_name, ...)
-	fassert(component.is_server, "Trying to send event %q on component %q to clients when not server.", event_name, component:name())
-
 	local unit = component.unit
 	local is_level_index, id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 	local event_id = Component.event_lookup[event_name]
@@ -77,8 +75,6 @@ Component.trigger_event_on_clients = function (component, event_name, rpc_name, 
 end
 
 Component.hot_join_sync_event_to_client = function (client, channel, component, event_name, rpc_name, ...)
-	fassert(component.is_server, "Trying to hot join sync %q in component %q to client when not server.", event_name, component:name())
-
 	local rpc = RPC[rpc_name or Component.default_rpc_name]
 	local unit = component.unit
 	local is_level_index, id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
@@ -94,7 +90,6 @@ Component.receive_client_event = function (self, sender, is_level_index, id, net
 	local component = component_ext:component(network_index)
 	local event_name = Component.event_lookup[event_id]
 
-	fassert(component, "Trying to send event %q to component %q but no such component exists on unit %q.", event_name, component:name(), unit)
 	component.events[event_name](component, ...)
 end
 

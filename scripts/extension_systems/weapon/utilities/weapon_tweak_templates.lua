@@ -23,11 +23,11 @@ local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFAULT_STAT_TRAIT_VALUE = WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
 local WeaponTweakTemplates = {}
-local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _build_templates, _lerp_values_for_template, _clamp_lerp_values_recursive, _add_default_lerp_value_recursive, _lerp_entries_recursive, _lerp_array, _verify_base_templates = nil
+local math_lerp = math.lerp
+local math_clamp = math.clamp
+local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _build_templates, _lerp_array, _verify_base_templates, _add_tweak_modifiers, _resolve_template = nil
 
 WeaponTweakTemplates.preparse_weapon_template = function (weapon_template)
-	fassert(weapon_template.__base_template_lookup == nil, "Already has __base_template_lookup.")
-
 	local base_template_lookup = {
 		[template_types.recoil] = _preparse_templates(weapon_template, template_types.recoil),
 		[template_types.sway] = _preparse_templates(weapon_template, template_types.sway),
@@ -74,66 +74,9 @@ WeaponTweakTemplates.create = function (lerp_values, weapon_template, override_l
 	return templates
 end
 
-local function _convert_stat_trait_values(tweak, stat_trait_value)
-	for _, tweak_row in ipairs(tweak) do
-		local tweak_row_length = #tweak_row
-		local tweak_value = tweak_row[tweak_row_length]
-
-		if type(tweak_value) == "table" then
-			local lerp_min = tweak_value.min
-			local lerp_max = tweak_value.max
-			local result = math.lerp(lerp_min, lerp_max, stat_trait_value)
-			tweak_row[tweak_row_length] = result
-		end
-	end
-end
-
-local function _set_weapon_tweaks(modifier_definition, weapon_tweaks, value)
-	for template_type, _ in pairs(template_types) do
-		local targets = modifier_definition[template_type]
-
-		if targets then
-			local prior_targets = weapon_tweaks[template_type]
-
-			for target_template, tweaks in pairs(targets) do
-				local prior_tweaks = prior_targets[target_template]
-				local num_prior_tweaks = #prior_tweaks
-				local num_tweaks = #tweaks
-
-				for j = 1, num_tweaks do
-					if value then
-						local tweak = table.clone(tweaks[j])
-
-						_convert_stat_trait_values(tweak, value)
-
-						prior_tweaks[num_prior_tweaks + j] = tweak
-					else
-						prior_tweaks[num_prior_tweaks + j] = tweaks[j]
-					end
-				end
-			end
-		end
-	end
-end
-
-local function _apply_modifiers_to_weapon_tweaks(weapon_modifiers, modifier_definitions, weapon_tweaks, weapon_name)
-	for i = 1, #weapon_modifiers do
-		local modifier_data = weapon_modifiers[i]
-		local modifier_name = modifier_data.name
-		local modifier_definition = modifier_definitions[modifier_name]
-
-		if modifier_definition then
-			_set_weapon_tweaks(modifier_definition, weapon_tweaks)
-		else
-			Log.warning("WeaponTweakTemplates", "Could not find modifier definition %s for weapon %s when fetching weapon tweaks", modifier_name, weapon_name)
-		end
-	end
-end
-
 WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_stats, overclocks, perks, traits, override_lerp_value)
 	local weapon_tweaks = {}
 	local base_template_lookup = weapon_template.__base_template_lookup
-	local weapon_name = weapon_template.name
 
 	for template_type, _ in pairs(template_types) do
 		local tweak_targets = {}
@@ -147,6 +90,7 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 		weapon_tweaks[template_type] = tweak_targets
 	end
 
+	local weapon_name = weapon_template.name
 	local overclock_definitions = weapon_template.overclocks
 	local overclock_modifiers = {}
 
@@ -183,34 +127,43 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 			local overclock_modifier = overclock_modifiers[base_stat_name] or 0
 			base_stat_value = base_stat_value + overclock_modifier
 
-			_set_weapon_tweaks(base_stat_definition, weapon_tweaks, base_stat_value)
+			_add_lerped_tweak_modifiers(weapon_tweaks, base_stat_definition, base_stat_value)
 		end
 	end
 
 	local trait_definitions = weapon_template.traits
 
 	if trait_definitions then
-		_apply_modifiers_to_weapon_tweaks(traits, trait_definitions, weapon_tweaks, weapon_name)
+		for i = 1, #traits do
+			local modifier_data = traits[i]
+			local modifier_name = modifier_data.name
+			local modifier_definition = trait_definitions[modifier_name]
+
+			if modifier_definition then
+				_add_tweak_modifiers(weapon_tweaks, modifier_definition)
+			else
+				Log.warning("WeaponTweakTemplates", "Could not find modifier definition %s for weapon %s when fetching weapon tweaks", modifier_name, weapon_name)
+			end
+		end
 	end
 
 	local perk_definitions = weapon_template.perks
 
 	if perk_definitions then
-		_apply_modifiers_to_weapon_tweaks(perks, perk_definitions, weapon_tweaks, weapon_name)
-	end
+		for i = 1, #perks do
+			local modifier_data = perks[i]
+			local modifier_name = modifier_data.name
+			local modifier_definition = perk_definitions[modifier_name]
 
-	local all_lerp_values = {}
-
-	for template_type, tweaks in pairs(weapon_tweaks) do
-		local lerp_values = {}
-		all_lerp_values[template_type] = lerp_values
-
-		for target, target_tweaks in pairs(tweaks) do
-			lerp_values[target] = _lerp_values_for_template(target_tweaks, override_lerp_value)
+			if modifier_definition then
+				_add_tweak_modifiers(weapon_tweaks, modifier_definition)
+			else
+				Log.warning("WeaponTweakTemplates", "Could not find modifier definition %s for weapon %s when fetching weapon tweaks", modifier_name, weapon_name)
+			end
 		end
 	end
 
-	return all_lerp_values
+	return weapon_tweaks
 end
 
 WeaponTweakTemplates.extract_buffs = function (weapon_template)
@@ -231,10 +184,14 @@ local function _add_trait(trait_name, rarity, buffs, weapon_name)
 		local weapon_buff_list = buffs[buff_target]
 
 		for buff_template_name, data in pairs(trait_definition) do
-			local override_data = data[rarity]
+			for i = rarity, 1, -1 do
+				local override_data = data[i]
 
-			if override_data then
-				weapon_buff_list[#weapon_buff_list + 1] = buff_template_name
+				if override_data then
+					weapon_buff_list[#weapon_buff_list + 1] = buff_template_name
+
+					break
+				end
 			end
 		end
 	else
@@ -371,133 +328,36 @@ function _lookup_entry(new_identifier, base_identifier)
 	}
 end
 
-function _build_templates(source_templates, base_template_lookup, lerp_values, override_lerp_value_or_nil)
-	local templates = {}
-	local iterator = pairs
+function _add_tweak_stats(start_table, tweak, tweak_value)
+	local path = start_table
+	local entry = tweak
+	local depth = #entry
 
-	for lookup_type, lookup_entry in iterator(base_template_lookup) do
-		local new_identifier = lookup_entry.new_identifier
-		local base_identifier = lookup_entry.base_identifier
-		local base_template = source_templates[base_identifier]
+	for j = 1, depth - 2 do
+		local key = entry[j]
+		local existing_path = path[key]
 
-		fassert(base_template, "Weapon tweak template %q does not exist!", base_identifier)
-
-		local new_template = table.clone(base_template)
-		local template_lerp_values = lerp_values[lookup_type]
-		local default_lerp_value_or_nil = template_lerp_values[DEFAULT_LERP_VALUE]
-
-		_lerp_entries_recursive(new_template, lerp_values[lookup_type], default_lerp_value_or_nil, override_lerp_value_or_nil)
-
-		templates[new_identifier] = new_template
-	end
-
-	return templates
-end
-
-function _lerp_values_for_template(tweaks, override_lerp_value)
-	local lerp_values = {}
-	local default_lerp_value = nil
-
-	for _, trait in pairs(tweaks) do
-		local num_entries = #trait
-
-		for i = 1, num_entries do
-			local path = lerp_values
-			local entry = trait[i]
-			local depth = #entry
-
-			for j = 1, depth - 2 do
-				local key = entry[j]
-				local existing_path = path[key]
-
-				if existing_path then
-					path = existing_path
-				else
-					local new_path = {}
-					path[key] = new_path
-					path = new_path
-				end
-			end
-
-			local key = entry[depth - 1]
-			local value = entry[depth]
-			local existing_value = path[key]
-
-			if existing_value then
-				path[key] = existing_value + value
-			else
-				path[key] = value
-			end
-		end
-
-		local trait_default_lerp_value = trait[DEFAULT_LERP_VALUE]
-
-		if trait_default_lerp_value then
-			local better_than_previous = not default_lerp_value or default_lerp_value < trait_default_lerp_value
-
-			if better_than_previous then
-				default_lerp_value = trait_default_lerp_value
-			end
-		end
-	end
-
-	if default_lerp_value then
-		_add_default_lerp_value_recursive(lerp_values, default_lerp_value)
-	end
-
-	_clamp_lerp_values_recursive(lerp_values)
-
-	return lerp_values
-end
-
-function _add_default_lerp_value_recursive(lerp_values, default_lerp_value)
-	lerp_values[DEFAULT_LERP_VALUE] = default_lerp_value
-
-	for _, val in pairs(lerp_values) do
-		if type(val) == "table" then
-			_add_default_lerp_value_recursive(val, default_lerp_value)
-		end
-	end
-end
-
-function _clamp_lerp_values_recursive(lerp_values)
-	for key, value in pairs(lerp_values) do
-		if type(value) == "table" then
-			_clamp_lerp_values_recursive(lerp_values[key])
+		if existing_path then
+			path = existing_path
 		else
-			lerp_values[key] = math.clamp(value, 0, 1)
+			local new_path = {}
+			path[key] = new_path
+			path = new_path
 		end
 	end
-end
 
-function _lerp_entries_recursive(template, lerp_values_or_nil, default_lerp_value_or_nil, override_lerp_value_or_nil)
-	for key, value in pairs(template) do
-		if type(value) == "table" then
-			local lerp_basic = value.lerp_basic
-			local lerp_perfect = value.lerp_perfect
-			local lerpable_value = lerp_basic and lerp_perfect
+	local key = entry[depth - 1]
+	local existing_value = path[key]
 
-			if lerpable_value then
-				local t = lerp_values_or_nil and lerp_values_or_nil[key] or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
-
-				if type(lerp_basic) == "table" then
-					template[key] = _lerp_array(lerp_basic, lerp_perfect, t)
-				else
-					local lerped_value = math.lerp(lerp_basic, lerp_perfect, t)
-					template[key] = lerped_value
-				end
-			else
-				_lerp_entries_recursive(value, lerp_values_or_nil and lerp_values_or_nil[key], default_lerp_value_or_nil, override_lerp_value_or_nil)
-			end
-		end
+	if existing_value then
+		path[key] = math_clamp(existing_value + tweak_value, 0, 1)
+	else
+		path[key] = math_clamp(tweak_value, 0, 1)
 	end
 end
 
 function _lerp_array(array_min, array_max, t)
 	local num_entries = #array_min
-
-	fassert(num_entries == #array_max, "arrays aren't matching.")
-
 	local array = Script.new_array(num_entries)
 
 	for i = 1, num_entries do
@@ -515,9 +375,118 @@ function _verify_base_templates(base_templates, verify_function)
 	for name, template in iterator(base_templates) do
 		local copied_template = table.clone(template)
 
-		_lerp_entries_recursive(copied_template)
+		_resolve_template(copied_template, template)
 		verify_function(name, copied_template)
 	end
+end
+
+function _resolve_template(out_template, base_template, lerp_values_or_nil, default_lerp_value_or_nil, override_lerp_value_or_nil)
+	for key, template in pairs(base_template) do
+		if type(template) == "table" then
+			local lerp_basic = template.lerp_basic
+			local lerp_perfect = template.lerp_perfect
+			local lerpable_value = lerp_basic and lerp_perfect
+			local current_lerp_values = lerp_values_or_nil and lerp_values_or_nil[key]
+
+			if lerpable_value then
+				local t = current_lerp_values or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
+
+				if type(lerp_basic) == "table" then
+					out_template[key] = _lerp_array(lerp_basic, lerp_perfect, t)
+				else
+					local lerped_value = math.lerp(lerp_basic, lerp_perfect, t)
+					out_template[key] = lerped_value
+				end
+			else
+				local sub_template = {}
+				out_template[key] = sub_template
+
+				_resolve_template(sub_template, template, current_lerp_values, default_lerp_value_or_nil, override_lerp_value_or_nil)
+			end
+		else
+			out_template[key] = template
+		end
+	end
+end
+
+function _add_tweak_modifiers(out_tweaks, modifier_definition)
+	for template_type, targets in pairs(modifier_definition) do
+		if rawget(template_types, template_type) then
+			local out_tweak = out_tweaks[template_type] or {}
+
+			for target_template, tweak_groups in pairs(targets) do
+				local out_tweak_target = out_tweak[target_template] or {}
+
+				for tweak_group_idx = 1, #tweak_groups do
+					local tweak_group = tweak_groups[tweak_group_idx]
+
+					for tweak_row_idx = 1, #tweak_group do
+						local tweak_row = tweak_group[tweak_row_idx]
+						local tweak_value = tweak_row[#tweak_row]
+
+						_add_tweak_stats(out_tweak_target, tweak_row, tweak_value)
+					end
+				end
+
+				out_tweak[target_template] = out_tweak_target
+			end
+
+			out_tweaks[template_type] = out_tweak
+		end
+	end
+end
+
+function _add_lerped_tweak_modifiers(out_tweaks, modifier_definition, lerp_t)
+	for template_type, targets in pairs(modifier_definition) do
+		if rawget(template_types, template_type) then
+			local out_tweak = out_tweaks[template_type] or {}
+
+			for target_template, tweak_groups in pairs(targets) do
+				local out_tweak_target = out_tweak[target_template] or {}
+
+				for tweak_group_idx = 1, #tweak_groups do
+					local tweak_group = tweak_groups[tweak_group_idx]
+
+					for tweak_row_idx = 1, #tweak_group do
+						local tweak_row = tweak_group[tweak_row_idx]
+						local tweak_value = tweak_row[#tweak_row]
+
+						if type(tweak_value) == "table" then
+							local lerp_min = tweak_value.min
+							local lerp_max = tweak_value.max
+							tweak_value = math_lerp(lerp_min, lerp_max, lerp_t)
+						end
+
+						_add_tweak_stats(out_tweak_target, tweak_row, tweak_value)
+					end
+				end
+
+				out_tweak[target_template] = out_tweak_target
+			end
+
+			out_tweaks[template_type] = out_tweak
+		end
+	end
+end
+
+function _build_templates(source_templates, base_template_lookup, lerp_values, override_lerp_value_or_nil)
+	local templates = {}
+	local iterator = pairs
+
+	for lookup_type, lookup_entry in iterator(base_template_lookup) do
+		local new_identifier = lookup_entry.new_identifier
+		local base_identifier = lookup_entry.base_identifier
+		local base_template = source_templates[base_identifier]
+		local new_template = {}
+		local template_lerp_values = lerp_values and lerp_values[lookup_type]
+		local default_lerp_value_or_nil = template_lerp_values and template_lerp_values[DEFAULT_LERP_VALUE]
+
+		_resolve_template(new_template, base_template, template_lerp_values, default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE, override_lerp_value_or_nil)
+
+		templates[new_identifier] = new_template
+	end
+
+	return templates
 end
 
 return WeaponTweakTemplates

@@ -343,7 +343,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local thumb_length = hotspot_style.size[axis]
 				local inverse_scale = renderer.inverse_scale
 				local base_cursor = input_service:get("cursor")
-				local cursor = UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+				local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 				local cursor_direction = cursor[axis]
 				local input_coordinate = math.clamp(cursor_direction - (position[axis] + track_axis_offset), 0, scrollbar_length)
 				local input_offset = content.input_offset
@@ -412,7 +412,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local scroll_amount = content.scroll_amount or 0.1
 				local inverse_scale = renderer.inverse_scale
 				local cursor = input_service:get("cursor")
-				local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
+				local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 				local is_hover = math.point_is_inside_2d_box(cursor_position, position, size)
 
 				if axis_input ~= 0 and is_hover then

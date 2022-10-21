@@ -5,59 +5,60 @@ local VivoxManager = class("VivoxManager")
 
 VivoxManager.init = function (self)
 	self._initialized = false
-	self._connected = false
-	self._login_state = 0
+	self._mute_list_has_changes = false
 	self._account_handle = nil
 	self._privileges_manager = nil
 	self._sessions = {}
 	self._join_queue = {}
+	self._channel_tags = {}
+	self._channel_host_peer_id = {}
+	self._delayed_participants_added = {}
+
+	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
 end
 
-VivoxManager.split_peer_id_display_name = function (self, input)
-	local separator = string.find(input, "|")
+VivoxManager.destroy = function (self)
+	Managers.event:unregister(self, "player_mute_status_changed")
+end
 
-	if separator and separator < string.len(input) and separator > 1 then
-		local peer_id = string.sub(input, 1, separator - 1)
-		local displayname = string.sub(input, separator + 1)
-
-		return peer_id, displayname
+VivoxManager.split_displayname = function (self, input)
+	if not input then
+		return nil
 	end
 
-	return nil
-end
+	local parts = string.split(input, "|")
 
-VivoxManager.split_session_handle = function (self, input)
-	local separator = string.find(input, "~")
-
-	if separator and separator < string.len(input) and separator > 1 then
-		local name = string.sub(input, 1, separator - 1)
-		local tag = string.sub(input, separator + 1)
-		tag = string.match(tag, "(.+)@")
-
-		return name, tag
+	if #parts == 2 then
+		return parts[1], parts[2]
+	else
+		return nil
 	end
-
-	return nil
 end
 
-VivoxManager.peer_id_from_session_handle = function (self, input)
-	return input and string.match(input, "%.(.+)~")
+VivoxManager.peer_id_from_session_handle = function (self, session_handle)
+	return self._channel_host_peer_id[session_handle]
 end
 
-VivoxManager.tag_from_session_handle = function (self, input)
-	return input and string.match(input, "~(.+)@")
+VivoxManager.tag_from_session_handle = function (self, session_handle)
+	return self._channel_tags[session_handle]
 end
 
 VivoxManager.initialize = function (self)
 	if rawget(_G, "Vivox") then
-		local verbose_chat_log = DevParameters.verbose_chat_log == true
+		local verbose_chat_log = false
 
 		if Vivox.initialize(verbose_chat_log) then
 			self._initialized = true
-
-			Vivox.create_connector()
-
 			self._privileges_manager = PrivilegesManager:new()
+
+			Managers.backend:authenticate():next(function (auth_data)
+				local domain = auth_data.vivox_domain
+				local issuer = auth_data.vivox_issuer
+
+				Vivox.create_connector(domain, issuer)
+			end):catch(function (error)
+				Log.error("VivoxManager", "Could not create connector: " .. tostring(error))
+			end)
 		end
 	else
 		Log.error("VivoxManager", "Vivox not available")
@@ -68,8 +69,12 @@ VivoxManager.is_initialized = function (self)
 	return self._initialized
 end
 
+VivoxManager.connection_state = function (self)
+	return self._connection_state
+end
+
 VivoxManager.is_connected = function (self)
-	return self._connected
+	return self._connection_state == ChatManagerConstants.ConnectionState.CONNECTED or self._connection_state == ChatManagerConstants.ConnectionState.RECOVERED
 end
 
 VivoxManager.login_state = function (self)
@@ -80,31 +85,52 @@ VivoxManager.is_logged_in = function (self)
 	return self:login_state() == ChatManagerConstants.LoginState.LOGGED_IN and self._account_handle ~= nil
 end
 
-VivoxManager.login = function (self, peer_id, displayname)
-	assert(self:is_initialized() and self:is_connected(), "VivoxManager not connected")
+VivoxManager.login = function (self, peer_id, account_id, vivox_token)
+	if not self._login_state or self._login_state == ChatManagerConstants.LoginState.LOGGED_OUT then
+		if not peer_id then
+			Log.warning("VivoxManager", "Could not login: missing peer_id.")
 
-	local login_name = peer_id .. "|" .. displayname
+			return
+		end
 
-	Vivox.login(login_name)
+		if not account_id then
+			Log.warning("VivoxManager", "Could not login: missing account_id.")
+
+			return
+		end
+
+		if type(vivox_token) ~= "string" or #vivox_token <= 0 then
+			Log.error("VivoxManager", "Could not login: missing vivox_token.")
+
+			return
+		end
+
+		local login_name = string.format("%s|%s", peer_id, account_id)
+
+		Vivox.login_with_access_token(login_name, account_id, vivox_token)
+	else
+		Log.warning("VivoxManager", "Already logged in.")
+	end
 end
 
-VivoxManager.join_chat_channel = function (self, channel, voice, tag)
+VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, tag, vivox_token)
 	if not self:is_logged_in() then
 		return
 	end
 
-	assert(tag, "Joining a channel requires a tag")
 	self._privileges_manager:communications_privilege(false):next(function (results)
 		if results.has_privilege == true then
-			local channel_name = channel .. "~" .. tostring(tag)
+			self._channel_tags[channel] = tag
+			self._channel_host_peer_id[channel] = host_peer_id
 
 			if self:is_logged_in() then
-				Vivox.add_channel_session(self._account_handle, channel_name, true, voice)
+				Vivox.add_channel_session(self._account_handle, channel, true, voice, vivox_token)
 			else
 				table.insert(self._join_queue, {
-					channel_name,
+					channel,
 					true,
-					voice
+					voice,
+					vivox_token
 				})
 			end
 		else
@@ -122,6 +148,8 @@ VivoxManager.leave_channel = function (self, channel_handle)
 		Vivox.remove_session(channel_handle)
 
 		self._sessions[channel_handle] = nil
+		self._channel_tags[channel_handle] = nil
+		self._channel_host_peer_id[channel_handle] = nil
 	end
 end
 
@@ -153,36 +181,24 @@ VivoxManager.connected_voip_channels = function (self)
 	return channels
 end
 
-VivoxManager.connected_to_chat_channel = function (self, peer_id, tag)
-	return self:_connected_to_channel(peer_id, tag, "session_text_state")
-end
+local function _update_local_render_volume(session_handle)
+	local volume = 50
 
-VivoxManager.connected_to_voip_channel = function (self, peer_id, tag)
-	return self:_connected_to_channel(peer_id, tag, "session_media_state")
-end
-
-VivoxManager._connected_to_channel = function (self, peer_id, tag, state)
-	for channel_handle, channel in pairs(self._sessions) do
-		local channel_tag = self:tag_from_session_handle(channel_handle)
-
-		if channel_tag == tag then
-			local channel_peer_id = self:peer_id_from_session_handle(channel_handle)
-
-			if channel_peer_id == peer_id then
-				local session_state = channel[state]
-
-				if session_state and session_state == ChatManagerConstants.ChannelConnectionState.CONNECTED then
-					return channel_handle
-				end
-			end
-		end
+	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").options_voip_volume_slider ~= nil then
+		local voip_volume = Application.user_setting("sound_settings").options_voip_volume_slider
+		volume = voip_volume <= 0.01 and 0 or math.lerp(30, 60, voip_volume / 100)
 	end
 
-	return nil
+	Vivox.session_set_local_render_volume(session_handle, volume)
+end
+
+VivoxManager.mic_volume_changed = function (self)
+	for session_handle, channel in pairs(self._sessions) do
+		_update_local_render_volume(session_handle)
+	end
 end
 
 VivoxManager.send_channel_message = function (self, channel_handle, message_body)
-	assert(self:is_logged_in(), "VivoxManager not logged in")
 	Vivox.send_session_message(channel_handle, message_body)
 end
 
@@ -201,11 +217,15 @@ VivoxManager.update = function (self, dt, t)
 		self._last_update = 0
 
 		if self._initialized then
+			if self._mute_list_has_changes then
+				self._mute_list_has_changes = false
+
+				self:_update_mute_status()
+			end
+
 			local message = Vivox.get_message()
 
 			if message then
-				assert(message.type, "Vivox message missing type")
-
 				if message.type == Vivox.MessageType_EVENT then
 					self:_handle_event(message)
 				elseif message.type == Vivox.MessageType_RESPONSE then
@@ -213,10 +233,36 @@ VivoxManager.update = function (self, dt, t)
 				end
 			end
 		end
+
+		for channel_handle, participants in pairs(self._delayed_participants_added) do
+			local finalized_participants = {}
+
+			for i, participant in ipairs(participants) do
+				if participant.player_info then
+					local displayname = participant.player_info:user_display_name()
+
+					if displayname and displayname ~= "" and displayname ~= "N/A" then
+						participant.displayname = displayname
+						participant.displayname_set = true
+
+						table.insert(finalized_participants, i)
+					end
+				end
+			end
+
+			table.reverse(finalized_participants)
+
+			for _, index in ipairs(finalized_participants) do
+				local participant = participants[index]
+
+				Managers.event:trigger("chat_manager_participant_added", channel_handle, participant)
+				table.remove(participants, index)
+			end
+		end
 	end
 end
 
-local function login_state(vx_login_state_change_state)
+local function login_state_enum(vx_login_state_change_state)
 	if vx_login_state_change_state == 0 then
 		return ChatManagerConstants.LoginState.LOGGED_OUT
 	elseif vx_login_state_change_state == 1 then
@@ -232,7 +278,7 @@ local function login_state(vx_login_state_change_state)
 	end
 end
 
-local function session_text_state(vx_session_text_state)
+local function session_text_state_enum(vx_session_text_state)
 	if vx_session_text_state == 0 then
 		return ChatManagerConstants.ChannelConnectionState.DISCONNECTED
 	elseif vx_session_text_state == 1 then
@@ -246,7 +292,7 @@ local function session_text_state(vx_session_text_state)
 	end
 end
 
-local function session_media_state(vx_session_media_state)
+local function session_media_state_enum(vx_session_media_state)
 	if vx_session_media_state == 1 then
 		return ChatManagerConstants.ChannelConnectionState.DISCONNECTED
 	elseif vx_session_media_state == 2 then
@@ -257,6 +303,22 @@ local function session_media_state(vx_session_media_state)
 		return ChatManagerConstants.ChannelConnectionState.CONNECTING
 	elseif vx_session_media_state == 7 then
 		return ChatManagerConstants.ChannelConnectionState.DISCONNECTING
+	else
+		return nil
+	end
+end
+
+local function connection_state_enum(vx_connection_state)
+	if vx_connection_state == 0 then
+		return ChatManagerConstants.ConnectionState.DISCONNECTED
+	elseif vx_connection_state == 1 then
+		return ChatManagerConstants.ConnectionState.CONNECTED
+	elseif vx_connection_state == 3 then
+		return ChatManagerConstants.ConnectionState.RECOVERING
+	elseif vx_connection_state == 4 then
+		return ChatManagerConstants.ConnectionState.FAILED_TO_RECOVER
+	elseif vx_connection_state == 5 then
+		return ChatManagerConstants.ConnectionState.RECOVERED
 	else
 		return nil
 	end
@@ -278,13 +340,13 @@ VivoxManager.channel_voip_mute_participant = function (self, channel_handle, par
 	Vivox.audio_session_set_participant_mute_for_me(channel_handle, participant_uri, mute)
 end
 
+VivoxManager.player_mute_status_changed = function (self)
+	self._mute_list_has_changes = true
+end
+
 VivoxManager._handle_event = function (self, message)
-	assert(message.event, "Missing event")
-
 	if message.event == Vivox.EventType_LOGIN_STATE_CHANGE then
-		assert(message.state, "EventType_LOGIN_STATE_CHANGE missing state")
-
-		local state = login_state(message.state)
+		local state = login_state_enum(message.state)
 		self._login_state = state
 
 		Managers.event:trigger("chat_manager_login_state_change", state)
@@ -294,8 +356,9 @@ VivoxManager._handle_event = function (self, message)
 				local channel = queued_channel[1]
 				local text = queued_channel[2]
 				local voice = queued_channel[3]
+				local vivox_token = queued_channel[4]
 
-				Vivox.add_channel_session(self._account_handle, channel, text, voice)
+				Vivox.add_channel_session(self._account_handle, channel, text, voice, vivox_token)
 			end
 
 			Vivox.get_local_audio_info()
@@ -304,18 +367,23 @@ VivoxManager._handle_event = function (self, message)
 
 			if PLATFORM == "xbs" then
 				mute = false
-			elseif Application.user_setting and Application.user_setting() and Application.user_setting().sound_settings and Application.user_setting().sound_settings.voice_chat then
-				mute = Application.user_setting().sound_settings.voice_chat == 0
+			elseif Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat then
+				mute = Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat == 0
 			end
 
 			self:mute_local_mic(mute)
 		end
-	elseif message.event == Vivox.EventType_SESSION_ADDED then
-		assert(message.session_handle, "EventType_SESSION_ADDED missing session_handle")
+	elseif message.event == Vivox.EventType_CONNECTION_STATE_CHANGE then
+		local state = connection_state_enum(message.state)
 
+		if self._connection_state ~= state then
+			self._connection_state = state
+
+			Managers.event:trigger("chat_manager_connection_state_change", state)
+		end
+	elseif message.event == Vivox.EventType_SESSION_ADDED then
 		local tag = self:tag_from_session_handle(message.session_handle)
 		local session = {
-			messages = {},
 			participants = {},
 			is_channel = message.is_channel,
 			session_handle = message.session_handle,
@@ -326,16 +394,12 @@ VivoxManager._handle_event = function (self, message)
 
 		Managers.event:trigger("chat_manager_added_channel", message.session_handle, session)
 	elseif message.event == Vivox.EventType_SESSION_REMOVED then
-		assert(message.session_handle, "EventType_SESSION_REMOVED missing session_handle")
-
 		self._sessions[message.session_handle] = nil
+		self._delayed_participants_added[message.session_handle] = nil
 
 		Managers.event:trigger("chat_manager_removed_channel", message.session_handle)
 	elseif message.event == Vivox.EventType_TEXT_STREAM_UPDATED then
-		assert(message.session_handle, "EventType_TEXT_STREAM_UPDATED missing session_handle")
-		assert(message.session_text_state, "EventType_TEXT_STREAM_UPDATED missing session_text_state")
-
-		local state = session_text_state(message.session_text_state)
+		local state = session_text_state_enum(message.session_text_state)
 
 		if self._sessions[message.session_handle] then
 			self._sessions[message.session_handle].session_text_state = state
@@ -343,11 +407,7 @@ VivoxManager._handle_event = function (self, message)
 			Managers.event:trigger("chat_manager_updated_channel_state", message.session_handle, state)
 		end
 	elseif message.event == Vivox.EventType_MEDIA_STREAM_UPDATED then
-		assert(message.session_handle, "EventType_MEDIA_STREAM_UPDATED missing session_handle")
-		assert(message.session_media_state, "EventType_MEDIA_STREAM_UPDATED missing session_media_state")
-		assert(message.incoming ~= nil, "EventType_MEDIA_STREAM_UPDATED missing incoming flag")
-
-		local state = session_media_state(message.session_media_state)
+		local state = session_media_state_enum(message.session_media_state)
 
 		if self._sessions[message.session_handle] then
 			self._sessions[message.session_handle].session_media_state = state
@@ -355,46 +415,62 @@ VivoxManager._handle_event = function (self, message)
 
 			Managers.event:trigger("voip_manager_updated_channel_state", message.session_handle, state, message.incoming)
 		end
-	elseif message.event == Vivox.EventType_MESSAGE then
-		assert(message.session_handle, "EventType_MESSAGE missing session_handle")
 
+		if state == ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			_update_local_render_volume(message.session_handle)
+		end
+	elseif message.event == Vivox.EventType_MESSAGE then
 		if not self._sessions[message.session_handle] then
 			return
 		end
-
-		table.insert(self._sessions[message.session_handle].messages, message)
 
 		local participant = self._sessions[message.session_handle].participants[message.participant_uri]
 
-		Managers.event:trigger("chat_manager_message_recieved", message.session_handle, participant, message)
-	elseif message.event == Vivox.EventType_PARTICIPANT_ADDED then
-		assert(message.session_handle, "EventType_PARTICIPANT_ADDED missing session_handle")
-		assert(message.participant_uri, "EventType_PARTICIPANT_ADDED missing participant_url")
+		if participant.is_mute_status_set == true then
+			if participant.displayname_set ~= true and participant.player_info then
+				local displayname = participant.player_info:user_display_name()
 
+				if displayname and displayname ~= "" and displayname ~= "N/A" then
+					participant.displayname = displayname
+					participant.displayname_set = true
+				end
+			end
+
+			if participant.displayname_set == true then
+				Managers.event:trigger("chat_manager_message_recieved", message.session_handle, participant, message)
+			end
+		end
+	elseif message.event == Vivox.EventType_PARTICIPANT_ADDED then
 		if not self._sessions[message.session_handle] then
 			return
 		end
 
-		local peer_id, displayname = self:split_peer_id_display_name(message.displayname)
+		local peer_id, account_id = self:split_displayname(message.displayname)
 		local participant = {
 			is_speaking = false,
+			displayname_set = false,
 			is_muted_for_me = false,
 			is_moderator_muted = false,
 			is_text_muted_for_me = false,
 			is_moderator_text_muted = false,
+			is_mute_status_set = false,
 			account_name = message.account_name,
 			participant_uri = message.participant_uri,
-			displayname = displayname and displayname or message.displayname,
+			packed_displayname = message.displayname,
 			peer_id = peer_id,
+			account_id = account_id,
 			is_current_user = message.is_current_user
 		}
 		self._sessions[message.session_handle].participants[message.participant_uri] = participant
+		self._mute_list_has_changes = true
 
-		Managers.event:trigger("chat_manager_participant_added", message.session_handle, participant)
+		if not self._delayed_participants_added[message.session_handle] then
+			self._delayed_participants_added[message.session_handle] = {}
+		end
+
+		table.insert(self._delayed_participants_added[message.session_handle], participant)
+		Managers.account:refresh_communcation_restrictions()
 	elseif message.event == Vivox.EventType_PARTICIPANT_UPDATED then
-		assert(message.session_handle, "EventType_PARTICIPANT_UPDATED missing session_handle")
-		assert(message.participant_uri, "EventType_PARTICIPANT_UPDATED missing participant_url")
-
 		if not self._sessions[message.session_handle] then
 			return
 		end
@@ -408,9 +484,6 @@ VivoxManager._handle_event = function (self, message)
 
 		Managers.event:trigger("chat_manager_participant_update", message.session_handle, participant)
 	elseif message.event == Vivox.EventType_PARTICIPANT_REMOVED then
-		assert(message.session_handle, "EventType_PARTICIPANT_REMOVED missing session_handle")
-		assert(message.participant_uri, "EventType_PARTICIPANT_REMOVED missing participant_url")
-
 		if not self._sessions[message.session_handle] then
 			return
 		end
@@ -419,20 +492,34 @@ VivoxManager._handle_event = function (self, message)
 		local participant = session.participants[message.participant_uri]
 		session.participants[message.participant_uri] = nil
 
+		if self._delayed_participants_added[message.session_handle] then
+			local found = nil
+
+			for i, p in ipairs(self._delayed_participants_added[message.session_handle]) do
+				if p == message.participant_uri then
+					found = i
+
+					break
+				end
+			end
+
+			if found then
+				table.remove(self._delayed_participants_added[message.session_handle], i)
+			end
+		end
+
 		Managers.event:trigger("chat_manager_participant_removed", message.session_handle, message.participant_uri, participant)
 	end
 end
 
 VivoxManager._handle_response = function (self, message)
-	assert(message.response, "Missing response")
-
 	if message.response == Vivox.ResponseType_CONNECTOR_CREATE then
-		self._connected = true
+		if self._connection_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			self._connection_state = ChatManagerConstants.ChannelConnectionState.CONNECTED
 
-		Managers.event:trigger("chat_manager_connected", self._connected)
+			Managers.event:trigger("chat_manager_connection_state_change", self._connection_state)
+		end
 	elseif message.response == Vivox.ResponseType_ACCOUNT_ANONYMOUS_LOGIN then
-		assert(message.account_handle, "ResponseType_ACCOUNT_ANONYMOUS_LOGIN missing account_handle")
-
 		self._account_handle = message.account_handle
 	elseif message.response == Vivox.ResponseType_MUTED_LOCAL_MIC then
 		Vivox.get_local_audio_info()
@@ -443,6 +530,127 @@ VivoxManager._handle_response = function (self, message)
 			mic_volume = message.mic_volume,
 			speaker_volume = message.speaker_volume
 		}
+	end
+end
+
+VivoxManager._update_mute_status = function (self)
+	for channel_handle, channel in pairs(self._sessions) do
+		local tag = self:tag_from_session_handle(channel_handle)
+		local player_promise = nil
+
+		if tag == ChatManagerConstants.ChannelTag.HUB then
+			player_promise = Managers.data_service.social:fetch_players_on_server()
+		elseif tag == ChatManagerConstants.ChannelTag.MISSION then
+			player_promise = Managers.data_service.social:fetch_party_members()
+		elseif tag == ChatManagerConstants.ChannelTag.PARTY then
+			player_promise = Managers.data_service.social:fetch_party_members()
+		else
+			Log.error("VivoxManager", "Unsupported channel tag %s", tostring(tag))
+
+			local channel_participants = channel.participants
+
+			for participant_uri, participant in pairs(channel_participants) do
+				participant.is_text_muted_for_me = true
+				participant.is_muted_for_me = true
+
+				self:channel_text_mute_participant(participant_uri, true)
+				self:channel_voip_mute_participant(channel_handle, participant_uri, true)
+			end
+		end
+
+		if player_promise then
+			player_promise:next(function (player_infos)
+				local channel_participants = channel.participants
+
+				self:_update_mute_status_for_participants(channel_handle, channel_participants, player_infos)
+			end)
+		end
+	end
+end
+
+local _participants_by_account_id = {}
+
+VivoxManager._update_mute_status_for_participants = function (self, channel_handle, participants, player_infos)
+	local participants_by_account_id = _participants_by_account_id
+	local my_platform = Managers.data_service.social:platform()
+
+	table.clear(participants_by_account_id)
+
+	for _, participant in pairs(participants) do
+		participant.is_mute_status_set = false
+		local account_id = participant.account_id
+
+		if account_id then
+			participants_by_account_id[account_id] = participant
+		elseif not participant.is_muted_for_me then
+			Log.warning("VivoxManager", "Participant %s missing account_id.", participant.participant_uri)
+
+			participant.is_text_muted_for_me = true
+			participant.is_muted_for_me = true
+
+			self:channel_voip_mute_participant(channel_handle, participant.participant_uri, true)
+		end
+	end
+
+	for _, player_info in pairs(player_infos) do
+		local account_id = player_info:account_id()
+		local participant = account_id and participants_by_account_id[account_id]
+
+		if participant and participant.is_current_user then
+			participant.player_info = player_info
+			local displayname = player_info:user_display_name()
+
+			if displayname ~= "" and displayname ~= "N/A" then
+				participant.displayname = displayname
+				participant.displayname_set = true
+			end
+
+			participant.player_info = player_info
+			participant.is_mute_status_set = true
+
+			if participant.is_mute_status_set and not participant.has_notified_participant_added then
+				Managers.event:trigger("chat_manager_participant_added", channel_handle, participant)
+			end
+		elseif participant then
+			local text_mute = player_info:is_text_muted()
+			local voice_mute = player_info:is_voice_muted()
+			local displayname = player_info:user_display_name()
+
+			if IS_GDK or IS_XBS then
+				local platform = player_info:platform()
+				local platform_user_id = player_info:platform_user_id()
+
+				if platform ~= my_platform then
+					local relation = player_info:is_friend() and XblAnonymousUserType.CrossNetworkFriend or XblAnonymousUserType.CrossNetworkUser
+					text_mute = Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingText) or text_mute
+					voice_mute = Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingVoice) or voice_mute
+				else
+					local platform_muted = Managers.account:is_muted(platform_user_id)
+					text_mute = platform_muted or text_mute
+					voice_mute = platform_muted or voice_mute
+
+					if not Managers.account:user_restriction_verified(platform_user_id, XblPermission.CommunicateUsingVoice) then
+						Managers.account:verify_user_restriction(platform_user_id, XblPermission.CommunicateUsingVoice)
+					end
+				end
+			end
+
+			if text_mute ~= participant.is_text_muted_for_me then
+				self:channel_text_mute_participant(channel_handle, participant.participant_uri, text_mute)
+			end
+
+			if voice_mute ~= participant.is_muted_for_me then
+				self:channel_voip_mute_participant(channel_handle, participant.participant_uri, voice_mute)
+			end
+
+			if displayname ~= "" and displayname ~= "N/A" then
+				participant.displayname = displayname
+				participant.displayname_set = true
+			end
+
+			participant.player_info = player_info
+			participant.is_mute_status_set = true
+		end
 	end
 end
 

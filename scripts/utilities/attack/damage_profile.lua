@@ -1,7 +1,9 @@
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
+local buff_keywords = BuffSettings.keywords
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
 local DEFAULT_CRIT_MOD = DamageProfileSettings.default_crit_mod
@@ -24,7 +26,7 @@ local DamageProfile = {
 
 		return power_type_power
 	end,
-	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike)
+	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit)
 		local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level)
 		local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave")
 		local cleave_output = PowerLevelSettings.cleave_output
@@ -34,6 +36,20 @@ local DamageProfile = {
 		local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
 		local max_hit_mass_attack = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
 		local max_hit_mass_impact = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+		if buff_extension then
+			local stat_buffs = buff_extension:stat_buffs()
+			local max_hit_mass_attack_modifier = stat_buffs.max_hit_mass_attack_modifier or 1
+			max_hit_mass_attack = max_hit_mass_attack * max_hit_mass_attack_modifier
+			local max_hit_mass_impact_modifier = stat_buffs.max_hit_mass_impact_modifier or 1
+			max_hit_mass_impact = max_hit_mass_impact * max_hit_mass_impact_modifier
+			local crit_piercing_keyword = buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
+
+			if is_critical_strike and crit_piercing_keyword then
+				max_hit_mass_attack = math.huge
+			end
+		end
 
 		return max_hit_mass_attack, max_hit_mass_impact
 	end

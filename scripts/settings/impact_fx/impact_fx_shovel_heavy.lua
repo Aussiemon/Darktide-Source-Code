@@ -68,15 +68,17 @@ local unarmored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_melee_hits_axe_heavy",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_combat_weapon_shovel_hit_impact",
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
+			{
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			}
+		},
+		blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
@@ -103,17 +105,7 @@ local unarmored = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
 			}
 		},
@@ -122,11 +114,6 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
-				}
 			}
 		},
 		weakspot_damage = {
@@ -134,81 +121,33 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
-				}
 			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
-				}
-			},
-			{
-				reverse = true,
-				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_reduced = {
 			{
-				reverse = true,
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			}
-		},
-		blocked = {
-			{
-				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			}
-		},
-		dead = {
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
-				}
-			}
-		},
-		shove = {
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		}
@@ -217,7 +156,9 @@ local unarmored = {
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
-		damage = blood_ball
+		damage = blood_ball,
+		damage_reduced = blood_ball,
+		dead = blood_ball
 	}
 }
 local armored = {
@@ -333,17 +274,7 @@ local armored = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/armor_penetrate"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
 			}
 		},
@@ -359,100 +290,33 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/armor_penetrate"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
-				}
 			}
 		},
 		damage = {
 			{
-				reverse = true,
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/armor_penetrate"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/armor_penetrate"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
-				}
-			}
-		},
-		blocked = {
-			{
-				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/surfaces/impact_metal"
-				}
-			}
-		},
-		dead = {
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
-				}
-			}
-		},
-		shove = {
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		}
@@ -462,7 +326,7 @@ local armored = {
 		died = blood_ball,
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
-		no_damage = blood_ball,
+		damage_reduced = blood_ball,
 		dead = blood_ball
 	}
 }
@@ -584,120 +448,60 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/gib_head_bits_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
 			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
 			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_squirt_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			}
-		},
-		blocked = {
-			{
-				effects = {
-					"content/fx/particles/impacts/damage_blocked"
-				}
-			}
-		},
-		dead = {
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
-				}
-			},
-			{
-				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
-				}
-			}
-		},
-		shove = {
-			{
-				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored"
+					"content/fx/particles/impacts/armor_ricochet"
 				}
 			}
 		}
 	},
 	blood_ball = {
-		weakspot_died = disgusting_blood_ball,
-		died = disgusting_blood_ball,
-		weakspot_damage = disgusting_blood_ball,
-		damage = disgusting_blood_ball,
-		dead = disgusting_blood_ball
+		weakspot_died = blood_ball,
+		died = blood_ball,
+		weakspot_damage = blood_ball,
+		damage = blood_ball,
+		damage_reduced = blood_ball,
+		dead = blood_ball
 	}
 }
 local resistant = table.clone(unarmored)

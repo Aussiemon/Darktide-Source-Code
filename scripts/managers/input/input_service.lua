@@ -133,8 +133,6 @@ end
 
 InputService._rework_action_rules = function (self)
 	for action_name, action_definition in pairs(self._mappings) do
-		assert(self._actions[action_name] == nil, "Multiple definition of action %s within a mapping", action_name)
-
 		self._actions[action_name] = self:_rework_action_rule(action_definition)
 	end
 end
@@ -381,8 +379,6 @@ InputService.null_service = function (self)
 end
 
 InputService.connect_device = function (self, device)
-	assert(not self:device(device.device_type), "Trying to connect a device type already connected")
-
 	self._connected_devices[#self._connected_devices + 1] = device
 
 	self:_rework_actions()
@@ -406,8 +402,6 @@ end
 InputService.get = function (self, action_name)
 	local action_rule = self._actions[action_name]
 
-	fassert(action_rule, "Trying to get undefined action %s", action_name)
-
 	if action_rule.filter then
 		return action_rule.eval_func(action_rule.eval_obj, action_rule.eval_param)
 	else
@@ -426,31 +420,19 @@ end
 InputService.get_default = function (self, action_name)
 	local action = self._actions[action_name]
 
-	fassert(action, "Trying to get the default value of undefined action %s", action_name)
-
 	return action.default_func(action.default_value)
 end
 
 InputService.get_alias_key = function (self, action_name)
 	local action = self._actions[action_name]
-
-	fassert(action, "Trying to get undefined action %s", action_name)
-
 	local key_alias = action.key_alias
-
-	fassert(key_alias, "Trying to get undefined key_alias for action %s", action_name)
 
 	return key_alias
 end
 
 InputService.get_action_type = function (self, action_name)
 	local action = self._actions[action_name]
-
-	fassert(action, "Trying to get undefined action %s", action_name)
-
 	local action_type = action.type
-
-	fassert(action_type, "Trying to get undefined action type for action %s", action_name)
 
 	return action_type
 end

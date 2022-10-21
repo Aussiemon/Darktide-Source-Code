@@ -39,6 +39,10 @@ PartyImmateriumMissionSessionBoot._fetch_server_details = function (self)
 
 		_info("Got server details: %s", table.tostring(self._server_details, 3))
 
+		if response.vivoxToken then
+			self._event_object:set_vivox_backend_info(response.vivoxToken)
+		end
+
 		if not response.ticket then
 			_error("Got empty ticket, meaning that we are not a part of this session. or some other error occured")
 			self:_failed("empty_ticket")
@@ -188,7 +192,6 @@ PartyImmateriumMissionSessionBoot.update = function (self, dt)
 end
 
 PartyImmateriumMissionSessionBoot.result = function (self)
-	fassert(self._state == STATES.ready, "Tried to get result when not ready")
 	self:_set_window_title("client %s", Network.peer_id())
 
 	local connection_client = self._connection_client

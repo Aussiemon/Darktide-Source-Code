@@ -20,6 +20,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_rifles/settings_templates/stub_rifle_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_recoil_templates", recoil_templates, loaded_template_files)
 
 recoil_templates.lasgun = {
 	[weapon_movement_states.still] = {
@@ -2517,17 +2518,9 @@ recoil_templates.boltgun_hip_spray_n_pray = {
 for name, template in pairs(recoil_templates) do
 	for _, movement_state in pairs(weapon_movement_states) do
 		local move_state_settings = template[movement_state]
-
-		fassert(move_state_settings, "Missing movement state [\"%s\"] for recoil template [\"%s\"]!", movement_state, name)
-
 		local inheritance_settings = move_state_settings.inherits
 
 		if inheritance_settings then
-			fassert(inheritance_settings[1], "Inheritance wanted for recoil template [\"%s\"], but no parent template to inherit from defined!", name)
-			fassert(recoil_templates[inheritance_settings[1]], "Trying to inherit non-existent template [\"%s\"] in recoil template [\"%s\"]!", inheritance_settings[1], name)
-			fassert(inheritance_settings[2], "Inheritance wanted for recoil template [\"%s\"], but no movement state to inherit from defined!", name)
-			fassert(template[inheritance_settings[2]], "Trying to inherit non-existent movement state [\"%s\"] in recoil template [\"%s\"]!", inheritance_settings[2], name)
-
 			local new_move_state_settings = table.clone(recoil_templates[inheritance_settings[1]][inheritance_settings[2]])
 
 			for key, override_data in pairs(move_state_settings) do

@@ -13,6 +13,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 	self._nav_world = nav_world
 	self._traverse_logic = traverse_logic
 	self._broadphase_system = extension_manager:system("broadphase_system")
+	self._moveable_platform_system = Managers.state.extension:system("moveable_platform_system")
 	self._last_move_target_unit = nil
 	self._last_move_target_rotations = {}
 	local mule_pickups = {}
@@ -246,18 +247,10 @@ BotGroup.update = function (self, side, dt, t)
 	local bot_data = self._bot_data
 	local nav_world = self._nav_world
 
-	Profiler.start("_update_move_targets")
 	self:_update_move_targets(bot_data, num_bots, nav_world, side)
-	Profiler.stop("_update_move_targets")
-	Profiler.start("_update_priority_targets")
 	self:_update_priority_targets(bot_data, side, dt)
-	Profiler.stop("_update_priority_targets")
-	Profiler.start("_update_ally_needs_aid_priority")
 	self:_update_ally_needs_aid_priority(bot_data)
-	Profiler.stop("_update_ally_needs_aid_priority")
-	Profiler.start("_update_pickups")
 	self:_update_pickups(bot_data, side, dt, t)
-	Profiler.stop("_update_pickups")
 end
 
 local ADDITIONAL_PRESENCE_DISTANCE = 5
@@ -381,7 +374,12 @@ BotGroup._update_move_targets = function (self, bot_data, num_bots, nav_world, s
 		selected_unit = self:_find_closest_move_target(TEMP_HUMAN_UNITS, last_move_target_unit, average_bot_pos)
 	end
 
-	local bot_follow_disabled = false
+	local bot_follow_disabled = nil
+	local locked_on_platform = self._moveable_platform_system:units_are_locked()
+
+	if locked_on_platform then
+		bot_follow_disabled = true
+	end
 
 	if selected_unit and not bot_follow_disabled then
 		self._last_move_target_unit = selected_unit
@@ -1082,24 +1080,27 @@ BotGroup._update_pickups_and_deployables_near_player = function (self, bot_data,
 			available_mule_pickups[slot_name][pickup_unit] = valid_until
 		elseif pickup_data.group == "ammo" then
 			for unit, data in pairs(bot_data) do
-				local pickup_component = data.pickup_component
-				local ammo_pickup_order_unit = data.ammo_pickup_order_unit
+				local follow_position = data.follow_position
 
-				if not ammo_pickup_order_unit or pickup_component.ammo_pickup_valid_until <= t then
-					local current_pickup = pickup_component.ammo_pickup
-					local bot_position = POSITION_LOOKUP[unit]
-					local pickup_position = POSITION_LOOKUP[pickup_unit]
-					local distance = Vector3_distance(bot_position, pickup_position)
-					local follow_position = data.follow_position
-					local ammo_condition = (distance < AMMO_MAX_DISTANCE or follow_position and Vector3_distance(follow_position, pickup_position) < AMMO_MAX_FOLLOW_DISTANCE) and (not current_pickup or distance - (current_pickup == pickup_unit and AMMO_STICKINESS or 0) < pickup_component.ammo_pickup_distance)
+				if follow_position then
+					local pickup_component = data.pickup_component
+					local ammo_pickup_order_unit = data.ammo_pickup_order_unit
 
-					if ammo_condition then
-						pickup_component.ammo_pickup = pickup_unit
-						pickup_component.ammo_pickup_valid_until = valid_until
-						pickup_component.ammo_pickup_distance = distance
+					if not ammo_pickup_order_unit or pickup_component.ammo_pickup_valid_until <= t then
+						local current_pickup = pickup_component.ammo_pickup
+						local bot_position = POSITION_LOOKUP[unit]
+						local pickup_position = POSITION_LOOKUP[pickup_unit]
+						local distance = Vector3_distance(bot_position, pickup_position)
+						local ammo_condition = (distance < AMMO_MAX_DISTANCE or follow_position and Vector3_distance(follow_position, pickup_position) < AMMO_MAX_FOLLOW_DISTANCE) and (not current_pickup or distance - (current_pickup == pickup_unit and AMMO_STICKINESS or 0) < pickup_component.ammo_pickup_distance)
 
-						if ammo_pickup_order_unit then
-							data.ammo_pickup_order_unit = nil
+						if ammo_condition then
+							pickup_component.ammo_pickup = pickup_unit
+							pickup_component.ammo_pickup_valid_until = valid_until
+							pickup_component.ammo_pickup_distance = distance
+
+							if ammo_pickup_order_unit then
+								data.ammo_pickup_order_unit = nil
+							end
 						end
 					end
 				end
@@ -1115,19 +1116,22 @@ BotGroup._update_pickups_and_deployables_near_player = function (self, bot_data,
 
 		if deployable_name == "medical_crate" then
 			for unit, data in pairs(bot_data) do
-				local pickup_component = data.pickup_component
-				local bot_position = POSITION_LOOKUP[unit]
-				local unit_position = POSITION_LOOKUP[found_unit]
-				local distance = Vector3_distance(bot_position, unit_position)
 				local follow_position = data.follow_position
-				local distance_to_follow_position = Vector3_distance(follow_position, unit_position)
-				local within_max_distance = distance < HEALTH_DEPLOYABLE_MAX_DISTANCE
-				local within_follow_distance = follow_position and distance_to_follow_position < HEALTH_DEPLOYABLE_MAX_FOLLOW_DISTANCE
-				local condition = within_max_distance or within_follow_distance
 
-				if condition then
-					pickup_component.health_deployable = found_unit
-					pickup_component.health_deployable_valid_until = valid_until
+				if follow_position then
+					local pickup_component = data.pickup_component
+					local bot_position = POSITION_LOOKUP[unit]
+					local unit_position = POSITION_LOOKUP[found_unit]
+					local distance = Vector3_distance(bot_position, unit_position)
+					local distance_to_follow_position = Vector3_distance(follow_position, unit_position)
+					local within_max_distance = distance < HEALTH_DEPLOYABLE_MAX_DISTANCE
+					local within_follow_distance = follow_position and distance_to_follow_position < HEALTH_DEPLOYABLE_MAX_FOLLOW_DISTANCE
+					local condition = within_max_distance or within_follow_distance
+
+					if condition then
+						pickup_component.health_deployable = found_unit
+						pickup_component.health_deployable_valid_until = valid_until
+					end
 				end
 			end
 		end

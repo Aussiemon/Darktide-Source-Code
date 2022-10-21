@@ -5,17 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
-
-local function _get_hud_color(key, alpha)
-	local color = table.clone(UIHudSettings[key])
-
-	if alpha then
-		color[1] = alpha
-	end
-
-	return color
-end
-
+local get_hud_color = UIHudSettings.get_hud_color
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	pivot = {
@@ -61,10 +51,10 @@ local scenegraph_definition = {
 		}
 	}
 }
-local hover_color = _get_hud_color("color_tint_main_1", 255)
-local default_color = _get_hud_color("color_tint_main_2", 255)
-local icon_hover_color = _get_hud_color("color_tint_main_2", 255)
-local icon_default_color = _get_hud_color("color_tint_main_3", 255)
+local hover_color = get_hud_color("color_tint_main_1", 255)
+local default_color = get_hud_color("color_tint_main_2", 255)
+local icon_hover_color = get_hud_color("color_tint_main_2", 255)
+local icon_default_color = get_hud_color("color_tint_main_3", 255)
 local default_button_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
@@ -94,7 +84,7 @@ local button_pass_template = {
 				0,
 				3
 			},
-			color = _get_hud_color("color_tint_main_2", 255)
+			color = get_hud_color("color_tint_main_2", 255)
 		},
 		change_function = function (content, style)
 			local color = style.color
@@ -120,7 +110,7 @@ local button_pass_template = {
 				0,
 				4
 			},
-			color = _get_hud_color("color_tint_main_1", 255)
+			color = get_hud_color("color_tint_main_1", 255)
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
@@ -314,7 +304,7 @@ local widget_definitions = {
 					-133,
 					6
 				},
-				color = _get_hud_color("color_tint_main_1", 255)
+				color = get_hud_color("color_tint_main_1", 255)
 			},
 			change_function = function (content, style)
 				style.angle = math.pi - (content.angle or 0)
@@ -367,7 +357,7 @@ local interaction_line_definition = UIWidget.create_definition({
 				0,
 				2
 			},
-			color = _get_hud_color("color_tint_main_2", 255)
+			color = get_hud_color("color_tint_main_2", 255)
 		}
 	},
 	{
@@ -390,7 +380,7 @@ local interaction_line_definition = UIWidget.create_definition({
 				0,
 				0
 			},
-			color = _get_hud_color("color_tint_main_2", 255)
+			color = get_hud_color("color_tint_main_2", 255)
 		}
 	},
 	{

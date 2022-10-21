@@ -1,12 +1,6 @@
 local RemoteLeaveSessionState = class("RemoteLeaveSessionState")
 
 RemoteLeaveSessionState.init = function (self, state_machine, shared_state)
-	assert(shared_state.event_list, "Event list required")
-	assert(shared_state.engine_gamesession, "Game session required")
-	assert(shared_state.engine_lobby, "Engine lobby required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-	assert(type(shared_state.gameobject_callback_object) == "table", "Callback object required")
-
 	self._shared_state = shared_state
 end
 

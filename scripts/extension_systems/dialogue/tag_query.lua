@@ -3,17 +3,12 @@ TagQuery.__index = TagQuery
 
 TagQuery.add = function (self, ...)
 	local n_args = select("#", ...)
-
-	fassert(n_args == math.floor(n_args / 2) * 2, "Uneven amount of args, number of arguments: %d", n_args)
-
 	local query_context = self.query_context
 
 	for i = 1, n_args, 2 do
 		local key, value = select(i, ...)
 		query_context[key] = value
 	end
-
-	fassert(not self.finalized, "Tried to add query after finalized.")
 end
 
 TagQuery.get_result = function (self)

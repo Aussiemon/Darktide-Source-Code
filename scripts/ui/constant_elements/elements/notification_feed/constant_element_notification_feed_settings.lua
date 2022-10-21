@@ -1,5 +1,6 @@
 local constant_element_notification_feed_settings = {
 	entry_spacing = 10,
+	max_visible_notifications = 5,
 	text_height_spacing = 15,
 	header_size = {
 		470,

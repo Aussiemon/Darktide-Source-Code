@@ -26,7 +26,7 @@ local event_vo_survive_veteran_male_a = {
 			"loc_veteran_male_a__event_survive_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			2.301354,
+			2.301333,
 			2.426542,
 			2.969542,
 			2.517521

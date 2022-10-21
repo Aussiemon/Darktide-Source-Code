@@ -117,8 +117,6 @@ LightControllerSystem._connect_to_destructible_extension = function (self, unit)
 end
 
 LightControllerSystem.hot_join_sync = function (self, sender, channel_id)
-	fassert(self._is_server, "Running LightControllerSystem without networking, possibly in loading level")
-
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do

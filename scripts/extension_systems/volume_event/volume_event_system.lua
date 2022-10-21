@@ -6,26 +6,16 @@ local VolumeEventSystem = class("VolumeEventSystem", "ExtensionSystemBase")
 VolumeEventSystem.init = function (self, extension_system_creation_context, system_init_data, system_name, extension_list, ...)
 	VolumeEventSystem.super.init(self, extension_system_creation_context, system_init_data, system_name, extension_list, ...)
 
+	self._init_done = false
+
 	if not self._is_server then
 		return
 	end
 
 	self._extension_list = extension_list
-
-	Profiler.start("VolumeEventSystem:volume_init_system")
-
 	self._engine_volume_event_system = VolumeEvent.init_system(nil, VolumeEventSettings.updates_per_frame)
-
-	Profiler.stop("VolumeEventSystem:volume_init_system")
-
 	local level_name = extension_system_creation_context.level_name
-
-	Profiler.start("VolumeEventSystem:require_level_volumes")
-
 	local level_volumes = self:_require_level_volumes(level_name, {})
-
-	Profiler.stop("VolumeEventSystem:require_level_volumes")
-
 	self._level_volumes_by_name = self:_create_event_volume_data(level_volumes)
 	local units_by_extension = {}
 	local traversal_costs = {}
@@ -53,8 +43,13 @@ VolumeEventSystem._require_level_volumes = function (self, level_name, volume_da
 
 	if Application.can_get_resource("lua", file_path) then
 		local file_data = require(file_path)
+		local volumes_data = file_data.volume_data
 
-		table.append(volume_data, file_data.volume_data)
+		for _, data in ipairs(volumes_data) do
+			data.level_name = level_name
+		end
+
+		table.append(volume_data, volumes_data)
 	else
 		Log.info("VolumeEventSystem", "Couldn't find any level volume data for level %q, no volume events will run on this level\nThe volume_data file should have been auto generated when saving the level in the editor, just add a reference to it in the level package.", level_name)
 	end
@@ -73,6 +68,7 @@ VolumeEventSystem._create_event_volume_data = function (self, level_volumes)
 		if volume_events then
 			local volume_name = level_volume.name
 			local volume = volumes_by_name[volume_name]
+			local level_name = level_volume.level_name .. ".level"
 
 			if not volume then
 				volume = {
@@ -81,11 +77,14 @@ VolumeEventSystem._create_event_volume_data = function (self, level_volumes)
 					events = volume_events,
 					connected_units = {},
 					levels = {},
+					level_names = {
+						[level_name] = true
+					},
 					volume_ids = {}
 				}
 				volumes_by_name[volume_name] = volume
 			else
-				fassert(volume.type == volume_type, "[VolumeEventSystem] Volumes has same name %q but different types %q ~= %q", volume_name, volume.type, volume_type)
+				volume.level_names[level_name] = true
 			end
 		end
 	end
@@ -118,26 +117,25 @@ VolumeEventSystem.on_gameplay_post_init = function (self, main_level)
 	self:_add_nested_levels(main_level, levels)
 
 	for volume_name, volume in pairs(self._level_volumes_by_name) do
+		local volume_level_names = volume.level_names
+
 		for i = 1, #levels do
 			local level = levels[i]
+			local level_name = Level.name(level)
 
-			if Level.has_volume(level, volume_name) then
+			if volume_level_names[level_name] then
 				volume.levels[#volume.levels + 1] = level
 			end
 		end
 
 		self:_register_level_volume(volume_name)
 	end
+
+	self._init_done = true
 end
 
 VolumeEventSystem._register_level_volume = function (self, volume_name)
-	Profiler.start("VolumeEventSystem:_register_level_volume")
-
 	local volume = self._level_volumes_by_name[volume_name]
-
-	fassert(volume, "[VolumeEventSystem] Volume data not found %q", volume_name)
-	fassert(not volume.registered, "[VolumeEventSystem] Volume already registered %q", volume_name)
-
 	local engine_volume_event_system = self._engine_volume_event_system
 	local connected_units = volume.connected_units
 	local volume_events = volume.events
@@ -166,6 +164,10 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 			connected_units = connected_units
 		}
 
+		if self._init_done then
+			-- Nothing
+		end
+
 		for i = 1, #volume_levels do
 			local level = volume_levels[i]
 			local volume_id = VolumeEvent.register_volume(engine_volume_event_system, level, volume_name, extension_name, invert_volume, data, on_enter, on_exit, filter)
@@ -175,13 +177,9 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 	end
 
 	volume.registered = true
-
-	Profiler.stop("VolumeEventSystem:_register_level_volume")
 end
 
 VolumeEventSystem.register_unit_volume = function (self, unit, volume_name, extension_name, volume_type)
-	Profiler.start("VolumeEventSystem:register_unit_volume")
-
 	local engine_volume_event_system = self._engine_volume_event_system
 	local volume_events = volume_type_events[volume_type]
 	local event_settings = volume_events[extension_name]
@@ -196,31 +194,24 @@ VolumeEventSystem.register_unit_volume = function (self, unit, volume_name, exte
 	}
 	local volume_id = VolumeEvent.register_volume(engine_volume_event_system, unit, volume_name, extension_name, invert_volume, data, on_enter, on_exit, filter)
 
-	Profiler.stop("VolumeEventSystem:register_unit_volume")
-
 	return volume_id
 end
 
 VolumeEventSystem.unregister_unit_volume = function (self, volume_id, extension_name)
-	Profiler.start("VolumeEventSystem:unregister_unit_volume")
-
 	local engine_volume_event_system = self._engine_volume_event_system
 
 	VolumeEvent.unregister_volume(engine_volume_event_system, volume_id, extension_name)
-	Profiler.stop("VolumeEventSystem:unregister_unit_volume")
 end
 
 VolumeEventSystem._unregister_level_volume = function (self, volume_name)
-	Profiler.start("VolumeEventSystem:_unregister_level_volume")
-
 	local volume = self._level_volumes_by_name[volume_name]
-
-	fassert(volume, "[VolumeEventSystem] Volume does not exist %q", volume_name)
-	fassert(volume.registered, "[VolumeEventSystem] Tried to unregister a non-registered volume %q", volume_name)
-
 	local engine_volume_event_system = self._engine_volume_event_system
 	local traversal_costs = self._traversal_costs
 	local volume_ids = volume.volume_ids
+
+	if self._init_done then
+		-- Nothing
+	end
 
 	for extension_name, _ in pairs(volume.events) do
 		for i = 1, #volume_ids do
@@ -239,7 +230,6 @@ VolumeEventSystem._unregister_level_volume = function (self, volume_name)
 	volume.registered = false
 
 	table.clear(volume.connected_units)
-	Profiler.stop("VolumeEventSystem:_unregister_level_volume")
 end
 
 VolumeEventSystem._update_traversal_cost = function (self, extension_name, volume_name, cost)
@@ -261,8 +251,6 @@ VolumeEventSystem._set_unit_nav_tag_layer_cost = function (self, unit, layer_nam
 end
 
 VolumeEventSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
-	Profiler.start("VolumeEventSystem:on_add_extension")
-
 	local extension = {}
 
 	ScriptUnit.set_extension(unit, self._name, extension)
@@ -273,8 +261,6 @@ VolumeEventSystem.on_add_extension = function (self, world, unit, extension_name
 		local extension_units = self._units_by_extension[extension_name]
 		extension_units[#extension_units + 1] = unit
 	end
-
-	Profiler.stop("VolumeEventSystem:on_add_extension")
 
 	return extension
 end
@@ -294,8 +280,6 @@ local function _check_extension_dependencies(unit, extension_name)
 
 	if has_traversal_cost then
 		local navigation_extension = ScriptUnit.has_extension(unit, "navigation_system")
-
-		fassert(navigation_extension, "[VolumeEventSystem] Volume extension %s on unit %s has traveral cost specified for one or more volume types, but no navigation extension was found", extension_name, unit)
 	end
 end
 
@@ -332,9 +316,7 @@ VolumeEventSystem.update = function (self, context, dt, t)
 		return
 	end
 
-	Profiler.start("VolumeEventSystem:update")
 	VolumeEvent.update(self._engine_volume_event_system, t, dt)
-	Profiler.stop("VolumeEventSystem:update")
 end
 
 VolumeEventSystem.destroy = function (self)
@@ -373,14 +355,7 @@ VolumeEventSystem.connect_unit_to_volume = function (self, volume_name, unit)
 	end
 
 	local volume = self._level_volumes_by_name[volume_name]
-
-	fassert(volume, "[VolumeEventSystem] Volume data not found %q", volume_name)
-	fassert(volume.registered, "[VolumeEventSystem] Volume not registered %q", volume_name)
-
 	local connected_units = volume.connected_units
-
-	fassert(not table.contains(connected_units, unit), "[VolumeEventSystem] Unit %q already connected to volume %q", unit, volume_name)
-
 	connected_units[#connected_units + 1] = unit
 end
 
@@ -390,13 +365,9 @@ VolumeEventSystem.disconnect_unit_from_volume = function (self, volume_name, uni
 	end
 
 	local volume = self._level_volumes_by_name[volume_name]
-
-	fassert(volume, "[VolumeEventSystem] Volume data not found %q", volume_name)
-
 	local connected_units = volume.connected_units
 	local unit_index = table.find(connected_units, unit)
 
-	fassert(unit_index, "[VolumeEventSystem] Tried to disconnect a non-connected unit %q from volume %q", unit, volume_name)
 	table.remove(connected_units, unit_index)
 end
 

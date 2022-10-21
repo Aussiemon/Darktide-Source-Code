@@ -15,16 +15,16 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__long_death_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			7.079021,
+			7.546688,
+			6.862938,
+			6.488438,
+			11.57765,
+			8.598042,
+			6.704438,
+			11.64206,
+			8.133125,
+			8.210375
 		},
 		sound_event_weights = {
 			0.1,
@@ -51,11 +51,11 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__reinforcements_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.401,
+			2.582,
+			5.015,
+			3.417,
+			2.779
 		},
 		sound_event_weights = {
 			0.2,
@@ -82,16 +82,16 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__taunt_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.342,
+			3.87,
+			3.63,
+			3.999,
+			4.557,
+			5.312,
+			5.094,
+			3.837,
+			5.267,
+			3.685
 		},
 		sound_event_weights = {
 			0.1,
@@ -123,16 +123,16 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__taunt_combat_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.347,
+			3.075,
+			5.179,
+			2.699,
+			3.474,
+			3.602,
+			5.371,
+			6.045,
+			3.465,
+			3.86
 		},
 		sound_event_weights = {
 			0.1,

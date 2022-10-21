@@ -1,12 +1,6 @@
 local RemoteDisconnectedState = class("RemoteDisconnectedState")
 
 RemoteDisconnectedState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.peer_id) == "string", "Peer id required")
-	assert(shared_state.engine_lobby, "Engine lobby required")
-	assert(type(shared_state.event_list) == "table", "Event list required")
-	assert(type(shared_state.slot_reserver) == "table", "Slot reserver is required")
-
 	self._shared_state = shared_state
 
 	if shared_state.eac_client_added then

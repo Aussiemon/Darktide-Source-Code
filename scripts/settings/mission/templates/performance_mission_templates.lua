@@ -86,9 +86,7 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/performance_tests/units/perf_empty_scene/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_enemies_scene_a = {
 		mechanism_name = "adventure",
@@ -99,6 +97,17 @@ local mission_templates = {
 		level = "content/levels/debug/performance_tests/enemies/perf_enemies_scene_a/world",
 		terror_event_templates = {
 			"terror_events_perf_enemies_scene_a"
+		}
+	},
+	perf_enemies_scene_b = {
+		mechanism_name = "adventure",
+		game_mode_name = "default",
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		is_dev_mission = true,
+		level = "content/levels/debug/performance_tests/enemies/perf_enemies_scene_b/world",
+		terror_event_templates = {
+			"terror_events_perf_enemies_scene_b"
 		}
 	}
 }

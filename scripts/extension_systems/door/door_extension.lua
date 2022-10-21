@@ -46,13 +46,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._self_closing_time = 0
 	self._self_closing_timer = 0
 	self._control_panel_units = {}
-
-	fassert(Unit.has_animation_state_machine(unit), "Missing animation state machine for Unit(%s)", tostring(unit))
-
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
-
-	fassert(Unit.animation_get_layer_count(unit) == 1, "[DoorExtension][init] 1 layer expected for unit(%s)", tostring(unit))
-
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
 	self._side_names = side_system:side_names()
@@ -79,12 +73,13 @@ DoorExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._current_state)
 end
 
-DoorExtension.setup_from_component = function (self, type, start_state, open_duration, close_duration, blocked_time, self_closing_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+DoorExtension.setup_from_component = function (self, type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 	local unit = self._unit
 	self._type = type
 	self._open_type = open_type
 	self._start_state = start_state
 	self._blocked_time = blocked_time
+	self._allow_closing = allow_closing
 	self._self_closing_time = self_closing_time
 
 	self:_setup_nav_layer(unit, start_state)
@@ -115,8 +110,6 @@ DoorExtension.setup_from_component = function (self, type, start_state, open_dur
 end
 
 DoorExtension._spawn_control_panels = function (self, control_panel_props, control_panels_active)
-	fassert(self._is_server, "[DoorExtension] Server only method.")
-
 	if #control_panel_props == 0 then
 		return
 	end
@@ -148,9 +141,6 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 		end
 
 		local control_panel_unit, _ = unit_spawner_manager:spawn_network_unit(control_panel_unit_name, "level_prop", control_panel_position, control_panel_rotation, nil, props_settings)
-
-		fassert(control_panel_unit, "[DoorExtension] Could not spawn unit('%s')", control_panel_unit_name)
-
 		local door_control_panel_extension = ScriptUnit.extension(control_panel_unit, "door_control_panel_system")
 
 		door_control_panel_extension:register_door(self)
@@ -161,8 +151,6 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 end
 
 DoorExtension._unspawn_control_panels = function (self)
-	fassert(self._is_server, "[DoorExtension] Server only method.")
-
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local control_panel_units = self._control_panel_units
 
@@ -174,8 +162,6 @@ DoorExtension._unspawn_control_panels = function (self)
 end
 
 DoorExtension.set_control_panel_active = function (self, val)
-	fassert(self._is_server, "[DoorExtension] Server only method.")
-
 	local control_panel_units = self._control_panel_units
 
 	for _, control_panel_unit in ipairs(control_panel_units) do
@@ -269,9 +255,11 @@ DoorExtension._normalized_anim_time = function (self)
 	return anim_time_normalized
 end
 
+local _times_buffer = {}
+
 DoorExtension._anim_time = function (self)
 	local unit = self._unit
-	local _, times = Unit.animation_get_time(unit)
+	local times = Unit.animation_get_time(unit, _times_buffer)
 	local anim_duration = self:_anim_duration()
 	local anim_time = math.min(times[1], anim_duration)
 
@@ -320,8 +308,6 @@ DoorExtension._update_external_dependencies = function (self)
 end
 
 DoorExtension._set_nav_block = function (self, block)
-	fassert(self._is_server, "[DoorExtension][_set_nav_block] Only server is allowed to call this function!")
-
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local layer_name = self._nav_layer_name
 	local allowed = not block
@@ -349,10 +335,7 @@ DoorExtension.can_open = function (self, interactor_unit)
 		can_open = current_state == STATES.closed
 		can_open = can_open and (open_type == OPEN_TYPES.open_only or open_type == OPEN_TYPES.none)
 	elseif type == TYPES.three_states and interactor_unit ~= nil then
-		local tentative_open_state = self:_get_open_state_from_interactor(interactor_unit)
-		local already_open = current_state == STATES.open_fwd or current_state == STATES.open_bwd
-		local should_open_other_way = already_open and tentative_open_state ~= current_state
-		can_open = current_state == STATES.closed or should_open_other_way
+		can_open = current_state == STATES.closed
 		can_open = can_open and (open_type == OPEN_TYPES.open_only or open_type == OPEN_TYPES.none)
 	end
 
@@ -362,6 +345,10 @@ DoorExtension.can_open = function (self, interactor_unit)
 end
 
 DoorExtension.can_close = function (self, use_proximity_check)
+	if not self._allow_closing then
+		return false
+	end
+
 	local can_close = false
 
 	if not use_proximity_check or not self:_minion_proximity_check() then
@@ -420,8 +407,6 @@ DoorExtension._minion_proximity_check = function (self)
 end
 
 DoorExtension.open = function (self, state, interactor_unit)
-	fassert(self._is_server, "[DoorExtension][open] Method should only be called on the server")
-
 	if self._type == TYPES.two_states then
 		if state ~= nil and state ~= "open" then
 			state = STATES.open
@@ -465,8 +450,6 @@ DoorExtension._get_open_state_from_interactor = function (self, interactor_unit)
 end
 
 DoorExtension.close = function (self)
-	fassert(self._is_server, "[DoorExtension][close] Method should only be called on the server")
-
 	if not self:can_close() then
 		return
 	end
@@ -538,12 +521,14 @@ DoorExtension._set_current_state = function (self, state)
 		end
 
 		self._interactee_extension:set_action_text(text)
+
+		if not self._allow_closing and string.find(state, "open") then
+			self._interactee_extension:set_active(false)
+		end
 	end
 end
 
 DoorExtension._set_server_state = function (self, new_state)
-	fassert(self._is_server, "[DoorExtension][_set_server_state] Method should only be called on the server")
-
 	local current_state = self._current_state
 
 	if current_state ~= new_state then

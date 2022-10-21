@@ -1,29 +1,29 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions")
 local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local ItemUtils = require("scripts/utilities/items")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local MasterItems = require("scripts/backend/master_items")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local link_attachment_item_to_slot = nil
 
 function link_attachment_item_to_slot(target_table, slot_id, item)
+	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
+
 	for k, t in pairs(target_table) do
 		if type(t) == "table" then
-			if k == slot_id then
+			if k == slot_id and t.item and t.item ~= unused_trinket_name then
 				t.item = item
 
 				return true
-			else
-				link_attachment_item_to_slot(t, slot_id, item)
+			elseif link_attachment_item_to_slot(t, slot_id, item) then
+				return true
 			end
 		end
 	end
@@ -31,48 +31,210 @@ function link_attachment_item_to_slot(target_table, slot_id, item)
 	return false
 end
 
-local InventoryWeaponCosmeticsView = class("InventoryWeaponCosmeticsView", "BaseView")
+local InventoryWeaponCosmeticsView = class("InventoryWeaponCosmeticsView", "ItemGridViewBase")
 
 InventoryWeaponCosmeticsView.init = function (self, settings, context)
+	local class_name = self.__class_name
+	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 	self._context = context
 	self._visibility_toggled_on = true
 	self._preview_player = context.player or Managers.player:local_player(1)
+	self._selected_item = context.preview_item
+
+	if self._selected_item then
+		self._presentation_item = MasterItems.create_preview_item_instance(self._selected_item)
+	end
 
 	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings)
 
+	self._grow_direction = "down"
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
 	self._pass_input = false
 	self._pass_draw = false
 end
 
+InventoryWeaponCosmeticsView._setup_forward_gui = function (self)
+	local ui_manager = Managers.ui
+	local timer_name = "ui"
+	local world_layer = 101
+	local world_name = self._unique_id .. "_ui_forward_world"
+	local view_name = self.view_name
+	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+	local viewport_name = self._unique_id .. "_ui_forward_world_viewport"
+	local viewport_type = "default_with_alpha"
+	local viewport_layer = 1
+	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
+	self._viewport_name = viewport_name
+	local renderer_name = self._unique_id .. "_forward_renderer"
+	self._ui_forward_renderer = ui_manager:create_renderer(renderer_name, self._world)
+	local gui = self._ui_forward_renderer.gui
+	local gui_retained = self._ui_forward_renderer.gui_retained
+	local resource_renderer_name = self._unique_id
+	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
+end
+
+InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
+	if self._ui_resource_renderer then
+		local renderer_name = self._unique_id
+		self._ui_resource_renderer = nil
+
+		Managers.ui:destroy_renderer(renderer_name)
+	end
+
+	if self._ui_forward_renderer then
+		self._ui_forward_renderer = nil
+
+		Managers.ui:destroy_renderer(self._unique_id .. "_forward_renderer")
+
+		local world = self._world
+		local viewport_name = self._viewport_name
+
+		ScriptWorld.destroy_viewport(world, viewport_name)
+		Managers.ui:destroy_world(world)
+
+		self._viewport_name = nil
+		self._world = nil
+	end
+end
+
+InventoryWeaponCosmeticsView.on_exit = function (self)
+	self:_destroy_forward_gui()
+	InventoryWeaponCosmeticsView.super.on_exit(self)
+end
+
 InventoryWeaponCosmeticsView.on_enter = function (self)
 	InventoryWeaponCosmeticsView.super.on_enter(self)
-	self:_setup_weapon_preview()
-	self:_setup_default_gui()
-	self:_setup_input_legend()
-	self:_fetch_items()
-	self:_setup_offscreen_gui()
+	self:_setup_forward_gui()
 
-	local tabs_content = {
-		{
-			display_name = "display_name",
-			icon = "content/ui/materials/icons/cosmetics/categories/upper_body"
-		},
-		{
-			display_name = "display_name",
-			icon = "content/ui/materials/icons/cosmetics/categories/upper_body"
-		}
+	self._background_widget = self:_create_widget("background", Definitions.background_widget)
+
+	if not self._selected_item then
+		return
+	end
+
+	local grid_size = Definitions.grid_settings.grid_size
+	self._content_blueprints = require("scripts/ui/view_content_blueprints/item_blueprints")(grid_size)
+
+	self:_setup_input_legend()
+
+	local tabs_content = {}
+	tabs_content[1] = {
+		display_name = "loc_weapon_cosmetics_title_skins",
+		item_type = "WEAPON_SKIN",
+		icon = "content/ui/materials/icons/item_types/weapon_skins",
+		filter_on_weapon_template = true,
+		generate_visual_item_function = function (real_item, selected_item)
+			local visual_item = nil
+
+			if real_item.gear then
+				visual_item = MasterItems.create_preview_item_instance(selected_item)
+			else
+				visual_item = table.clone_instance(selected_item)
+			end
+
+			visual_item.gear_id = real_item.gear_id
+			visual_item.slot_weapon_skin = real_item
+
+			return visual_item
+		end,
+		apply_on_preview = function (real_item, presentation_item)
+			presentation_item.slot_weapon_skin = real_item
+			self._selected_weapon_skin = real_item
+		end
+	}
+	tabs_content[2] = {
+		slot_name = "slot_trinket_1",
+		display_name = "loc_weapon_cosmetics_title_trinkets",
+		icon = "content/ui/materials/icons/item_types/weapon_trinkets",
+		generate_visual_item_function = function (real_item, selected_item)
+			local visual_item = MasterItems.create_preview_item_instance(selected_item)
+			visual_item.gear_id = real_item.gear_id
+
+			return visual_item
+		end,
+		apply_on_preview = function (real_item, presentation_item)
+			if not link_attachment_item_to_slot(presentation_item, "trinket_slot_1", real_item) and not link_attachment_item_to_slot(presentation_item, "trinket_slot_2", real_item) and not link_attachment_item_to_slot(presentation_item, "slot_trinket_1", real_item) then
+				link_attachment_item_to_slot(presentation_item, "slot_trinket_2", real_item)
+			end
+
+			self._selected_weapon_trinket = real_item
+		end
 	}
 
 	self:_setup_menu_tabs(tabs_content)
+
+	if self._selected_item then
+		self:_preview_item(self._selected_item)
+		self._weapon_preview:center_align(0, {
+			-0.2,
+			-0.3,
+			-0.2
+		})
+	end
+
+	self:present_grid_layout({})
+	self:_register_button_callbacks()
+	self:cb_switch_tab(1)
+end
+
+InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local equip_button = widgets_by_name.equip_button
+	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
+end
+
+InventoryWeaponCosmeticsView.present_grid_layout = function (self, layout)
+	local grid_display_name = self._grid_display_name
+	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
+	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
+	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+	local grid_settings = self._definitions.grid_settings
+	local grid_size = grid_settings.grid_size
+	local ContentBlueprints = generate_blueprints_function(grid_size)
+	local spacing_entry = {
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10
+		}
+	}
+
+	table.insert(layout, 1, spacing_entry)
+	table.insert(layout, #layout + 1, spacing_entry)
+
+	local grow_direction = self._grow_direction or "down"
+
+	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction)
+end
+
+InventoryWeaponCosmeticsView._setup_weapon_stats = function (self)
+	return
+end
+
+InventoryWeaponCosmeticsView._setup_sort_options = function (self)
+	return
+end
+
+InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
+	if not self._weapon_preview then
+		local reference_name = "weapon_preview"
+		local layer = 10
+		local context = {
+			ignore_blur = false,
+			draw_background = false
+		}
+		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
+	end
 end
 
 InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
+	self._tabs_content = content
 	local id = "tab_menu"
 	local layer = 10
 	local tab_menu_settings = {
 		fixed_button_size = true,
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		button_spacing = 20,
 		button_size = {
 			200,
@@ -124,64 +286,79 @@ InventoryWeaponCosmeticsView._setup_input_legend = function (self)
 	end
 end
 
-InventoryWeaponCosmeticsView._fetch_items = function (self)
+InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name, item_type, generate_visual_item_function, filter_on_weapon_template)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
-	local num_items = 100
-	local filter = {
-		"slot_gear_extra_cosmetic"
-	}
 
-	Managers.data_service.gear:fetch_inventory_paged(character_id, num_items, filter):next(function (items)
+	if slot_name then
+		local slot_filter = {
+			slot_name
+		}
+	end
+
+	if item_type then
+		local item_type_filter = {
+			item_type
+		}
+	end
+
+	local selected_item = self._selected_item
+
+	Managers.data_service.gear:fetch_inventory(character_id, slot_filter, item_type_filter):next(function (items)
 		if self._destroyed then
 			return
 		end
 
-		local temp_item = require("scripts/backend/master_items"):get_cached()["content/items/weapons/player/trinkets/debug_trinket"]
-		local temp_items = {}
+		local items_array = {}
 
-		for i = 1, 10 do
-			temp_items[i] = temp_item
+		for gear_id, item in pairs(items) do
+			items_array[#items_array + 1] = item
 		end
 
-		self._inventory_items = temp_items
+		self._inventory_items = items_array
+		local selected_item_weapon_template = selected_item.weapon_template
+		local layout = {}
 
-		self:_populate_grid()
+		for i = 1, #items_array do
+			local item = items_array[i]
+			local valid = true
+
+			if filter_on_weapon_template then
+				local weapon_template_restriction = item.weapon_template_restriction
+				valid = weapon_template_restriction and table.contains(weapon_template_restriction, selected_item_weapon_template) and true or false
+			end
+
+			if valid then
+				local visual_item = generate_visual_item_function(item, selected_item)
+				layout[#layout + 1] = {
+					widget_type = "item_icon",
+					item = visual_item,
+					real_item = item
+				}
+			end
+		end
+
+		self._offer_items_layout = layout
+
+		self:present_grid_layout(layout)
+
+		local start_index = #layout > 0 and 1
+		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
+
+		if equipped_item then
+			start_index = self:item_grid_index(equipped_item) or start_index
+
+			if start_index then
+				self:focus_on_item(equipped_item)
+			end
+		elseif start_index then
+			local instant_scroll = true
+			local scrollbar_animation_progress = 0
+
+			self:focus_grid_index(start_index, scrollbar_animation_progress, instant_scroll)
+		end
 	end)
-end
-
-InventoryWeaponCosmeticsView._get_items_layout_by_slot = function (self, slot)
-	local layout = {
-		{
-			widget_type = "dynamic_spacing",
-			size = {
-				20,
-				128
-			}
-		}
-	}
-	local inventory_items = self._inventory_items
-
-	for item_name, item in pairs(inventory_items) do
-		if self:_item_valid_by_current_profile(item) then
-			layout[#layout + 1] = {
-				widget_type = "item",
-				item = item,
-				slot = slot
-			}
-		end
-	end
-
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			20,
-			128
-		}
-	}
-
-	return layout
 end
 
 InventoryWeaponCosmeticsView._item_valid_by_current_profile = function (self, item)
@@ -200,173 +377,78 @@ InventoryWeaponCosmeticsView._item_valid_by_current_profile = function (self, it
 	return false
 end
 
-InventoryWeaponCosmeticsView._selected_slot = function (self)
-	local key = "slot_trinket_1"
-
-	return ItemSlotSettings[key]
+InventoryWeaponCosmeticsView.equipped_item_in_slot = function (self, slot_name)
+	return false
 end
 
-InventoryWeaponCosmeticsView._populate_grid = function (self, optional_grid_index, optional_sort_index)
-	local grid_index = optional_grid_index
-	local selected_slot = self:_selected_slot()
-	local layout = self:_get_items_layout_by_slot(selected_slot)
+InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
+	local previewed_element = self._previewed_element
 
-	self:_setup_grid_layout(layout)
+	if previewed_element then
+		local selected_item = self._selected_item
 
-	local equipped_item_grid_index = nil
+		if self._selected_weapon_skin then
+			ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
 
-	if not grid_index then
-		if equipped_item_grid_index then
-			grid_index = equipped_item_grid_index
-		elseif #self._grid_widgets > 0 then
-			grid_index = 1
+			self._selected_weapon_skin = nil
+		end
+
+		if self._selected_weapon_trinket then
+			ItemUtils.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
+
+			self._selected_weapon_trinket = nil
 		end
 	end
 
-	local instant_scroll = true
-	local scroll_progress = grid_index and self._grid:get_scrollbar_percentage_by_index(grid_index)
-
-	self._grid:focus_grid_index(grid_index, scroll_progress, instant_scroll)
-
-	self._focused_grid_index = grid_index
-	local using_cursor_navigation = Managers.ui:using_cursor_navigation()
-	self._using_cursor_navigation = using_cursor_navigation
-
-	if not using_cursor_navigation then
-		self._grid:select_grid_index(grid_index, scroll_progress, instant_scroll)
-	end
+	Managers.ui:close_view("inventory_weapon_cosmetics_view")
 end
 
 InventoryWeaponCosmeticsView._cb_on_close_pressed = function (self)
 	Managers.ui:close_view("inventory_weapon_cosmetics_view")
 end
 
-InventoryWeaponCosmeticsView._setup_default_gui = function (self)
-	local ui_manager = Managers.ui
-	local reference_name = "InventoryWeaponCosmeticsView"
-	local timer_name = "ui"
-	local world_layer = 100
-	local world_name = reference_name .. "_ui_default_world"
-	local view_name = self.view_name
-	self._gui_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-	local viewport_name = reference_name .. "_ui_default_world_viewport"
-	local viewport_type = "overlay"
-	local viewport_layer = 1
-	self._gui_viewport = ui_manager:create_viewport(self._gui_world, viewport_name, viewport_type, viewport_layer)
-	self._gui_viewport_name = viewport_name
-	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._gui_world)
-end
-
-InventoryWeaponCosmeticsView._preview_item = function (self, item, attachment_item)
-	item = table.clone_instance(item)
-
-	if attachment_item then
-		link_attachment_item_to_slot(item, "slot_trinket_1", attachment_item)
-		link_attachment_item_to_slot(item, "slot_trinket_2", attachment_item)
-	end
-
-	local disable_auto_spin = true
-
-	self._weapon_preview:present_item(item, disable_auto_spin)
-
+InventoryWeaponCosmeticsView._preview_element = function (self, element)
+	local selected_tab_index = self._selected_tab_index
+	local content = self._tabs_content[selected_tab_index]
+	local apply_on_preview = content.apply_on_preview
+	local presentation_item = self._presentation_item
+	local selected_item = self._selected_item
+	local item = element.item
+	local real_item = element.real_item
 	self._previewed_item = item
-	local display_name = ItemUtils.display_name(item)
-	local sub_display_name = ItemUtils.sub_display_name(item)
-	local rarity_color = ItemUtils.rarity_color(item)
+	self._previewed_element = element
+
+	apply_on_preview(real_item, presentation_item)
+	self:_preview_item(presentation_item)
+
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.sub_title_text.content.text = sub_display_name
-	widgets_by_name.title_text.content.text = display_name
-	widgets_by_name.title_divider_glow.style.texture.color = table.clone(rarity_color)
+	widgets_by_name.sub_display_name.content.text = ItemUtils.display_name(item)
+	widgets_by_name.display_name.content.text = ItemUtils.display_name(real_item)
 end
 
-InventoryWeaponCosmeticsView._destroy_weapon_preview = function (self)
+InventoryWeaponCosmeticsView._preview_item = function (self, item)
+	local item_display_name = item.display_name
+	local slots = item.slots or {}
+	local item_name = item.name
+	local gear_id = item.gear_id or item_name
+
 	if self._weapon_preview then
-		local reference_name = "weapon_preview"
+		local disable_auto_spin = false
 
-		self:_remove_element(reference_name)
-
-		self._weapon_preview = nil
+		self._weapon_preview:present_item(item, disable_auto_spin)
 	end
-end
 
-InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
-	if not self._weapon_preview then
-		local reference_name = "weapon_preview"
-		local layer = 10
-		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
-			draw_background = true
-		})
-		self._weapon_zoom_fraction = 0.95
+	local visible = true
 
-		self:_update_weapon_preview_viewport()
-	end
-end
-
-InventoryWeaponCosmeticsView._update_weapon_preview_viewport = function (self)
-	local weapon_preview = self._weapon_preview
-
-	if weapon_preview then
-		local width_scale = 1
-		local height_scale = 1
-		local x_scale = 0
-		local y_scale = 0
-
-		weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
-		weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
-
-		local weapon_x_scale, weapon_y_scale = self:_get_weapon_spawn_position_normalized()
-
-		weapon_preview:set_weapon_position_normalized(weapon_x_scale, weapon_y_scale)
-
-		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
-
-		weapon_preview:set_weapon_zoom(weapon_zoom_fraction)
-	end
+	self:_set_preview_widgets_visibility(visible)
 end
 
 InventoryWeaponCosmeticsView.on_back_pressed = function (self)
 	Managers.ui:close_view("inventory_weapon_cosmetics_view")
 end
 
-InventoryWeaponCosmeticsView.on_exit = function (self)
-	if self._ui_default_renderer then
-		self._ui_default_renderer = nil
-
-		Managers.ui:destroy_renderer("InventoryWeaponCosmeticsView" .. "_ui_default_renderer")
-
-		local world = self._gui_world
-		local viewport_name = self._gui_viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._gui_viewport_name = nil
-		self._gui_viewport = nil
-		self._gui_world = nil
-	end
-
-	self:_destroy_weapon_preview()
-	self:_destroy_offscreen_gui()
-	InventoryWeaponCosmeticsView.super.on_exit(self)
-end
-
-InventoryWeaponCosmeticsView._get_weapon_spawn_position_normalized = function (self)
-	self:_force_update_scenegraph()
-
-	local scale = nil
-	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
-	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
-	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
-	local scale_x = (pivot_world_position[1] - parent_world_position[1]) / viewport_width
-	local scale_y = 1 - (pivot_world_position[2] - parent_world_position[2]) / viewport_height
-
-	return scale_x, scale_y
-end
-
 InventoryWeaponCosmeticsView._set_weapon_zoom = function (self, fraction)
 	self._weapon_zoom_fraction = fraction
-
-	self:_update_weapon_preview_viewport()
 end
 
 InventoryWeaponCosmeticsView._cb_on_ui_visibility_toggled = function (self, id)
@@ -384,284 +466,87 @@ InventoryWeaponCosmeticsView._handle_input = function (self, input_service)
 
 		if scroll_axis ~= 0 then
 			local weapon_zoom_fraction = (self._weapon_zoom_fraction or 1) + scroll * 0.01
-
-			self:_set_weapon_zoom(weapon_zoom_fraction)
 		end
 	end
 end
 
 InventoryWeaponCosmeticsView.update = function (self, dt, t, input_service)
-	if self._grid then
-		self._grid:update(dt, t, input_service)
-		self:_update_grid_widgets(dt, t, input_service)
-	end
-
 	return InventoryWeaponCosmeticsView.super.update(self, dt, t, input_service)
 end
 
 InventoryWeaponCosmeticsView.draw = function (self, dt, t, input_service, layer)
-	self:_draw_grid(dt, t, input_service)
-
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
-	local ui_renderer = self._ui_default_renderer
+	local ui_default_renderer = self._ui_default_renderer
+	local ui_forward_renderer = self._ui_forward_renderer
+	local ui_renderer = self._ui_renderer
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
-	local alpha_multiplier = render_settings.alpha_multiplier or 1
-	render_settings.alpha_multiplier = 1
-
-	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
-
-	local anim_alpha_speed = 3
-
-	if self._visibility_toggled_on then
-		alpha_multiplier = math.min(alpha_multiplier + dt * anim_alpha_speed, 1)
-	else
-		alpha_multiplier = math.max(alpha_multiplier - dt * anim_alpha_speed, 0)
-	end
-
-	render_settings.alpha_multiplier = alpha_multiplier
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
-	self:_draw_widgets(dt, t, input_service, ui_renderer, render_settings)
+	UIWidget.draw(self._background_widget, ui_renderer)
 	UIRenderer.end_pass(ui_renderer)
+	self:_draw_elements(dt, t, ui_default_renderer, render_settings, input_service)
+	UIRenderer.begin_pass(ui_forward_renderer, ui_scenegraph, input_service, dt, render_settings)
+	self:_draw_widgets(dt, t, input_service, ui_forward_renderer)
+	UIRenderer.end_pass(ui_forward_renderer)
+	self:_draw_render_target()
+end
+
+InventoryWeaponCosmeticsView._draw_render_target = function (self)
+	local ui_forward_renderer = self._ui_forward_renderer
+	local gui = ui_forward_renderer.gui
+	local color = Color(255, 255, 255, 255)
+	local ui_resource_renderer = self._ui_resource_renderer
+	local material = ui_resource_renderer.render_target_material
+	local scale = self._render_scale or 1
+	local width, height = self:_scenegraph_size("canvas")
+	local position = self:_scenegraph_world_position("canvas")
+	local size = {
+		width,
+		height
+	}
+	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
+	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
+
+	Gui.bitmap(gui, material, "render_pass", "to_screen", gui_position, gui_size, color)
 end
 
 InventoryWeaponCosmeticsView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local always_visible_widget_names = self._always_visible_widget_names
-	local alpha_multiplier = render_settings.alpha_multiplier
+	local alpha_multiplier = render_settings and render_settings.alpha_multiplier
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
 	for i = 1, num_widgets do
 		local widget = widgets[i]
 		local widget_name = widget.name
-		render_settings.alpha_multiplier = always_visible_widget_names[widget_name] and 1 or alpha_multiplier
 
 		UIWidget.draw(widget, ui_renderer)
 	end
-
-	render_settings.alpha_multiplier = alpha_multiplier
-	local stat_widgets = self._stat_widgets
-
-	if stat_widgets then
-		for i = 1, #stat_widgets do
-			local widget = stat_widgets[i]
-
-			UIWidget.draw(widget, ui_renderer)
-		end
-	end
-end
-
-InventoryWeaponCosmeticsView._clear_widgets = function (self, widgets)
-	if widgets then
-		for i = 1, #widgets do
-			local widget = widgets[i]
-			local widget_name = widget.name
-
-			if self:has_widget(widget_name) then
-				self:_unregister_widget_name(widget_name)
-			end
-		end
-
-		table.clear(widgets)
-	end
-end
-
-InventoryWeaponCosmeticsView._setup_grid_layout = function (self, layout)
-	self._current_scrollbar_progress = nil
-	self._visible_grid_layout = layout
-
-	self:_clear_widgets(self._grid_widgets)
-	self:_clear_widgets(self._grid_alignment_widgets)
-
-	local widgets = {}
-	local alignment_widgets = {}
-	local left_click_callback_name = "cb_on_grid_entry_left_pressed"
-	local right_click_callback_name = "cb_on_grid_entry_right_pressed"
-
-	for index, entry in ipairs(layout) do
-		local widget_suffix = "entry_" .. tostring(index)
-		local widget, alignment_widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name)
-		widgets[#widgets + 1] = widget
-		alignment_widgets[#alignment_widgets + 1] = alignment_widget
-	end
-
-	self._grid_widgets = widgets
-	self._grid_alignment_widgets = alignment_widgets
-	local grid_scenegraph_id = "grid_background"
-	local grid_pivot_scenegraph_id = "grid_content_pivot"
-	local grid_spacing = InventoryWeaponCosmeticsViewSettings.grid_spacing
-	local grid = self:_setup_grid(self._grid_widgets, self._grid_alignment_widgets, grid_scenegraph_id, grid_spacing)
-	self._grid = grid
-	local widgets_by_name = self._widgets_by_name
-	local grid_scrollbar_widget_id = "grid_scrollbar"
-	local scrollbar_widget = widgets_by_name[grid_scrollbar_widget_id]
-
-	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
-	grid:set_scrollbar_progress(0)
-	grid:set_scroll_step_length(100)
-	self:_on_navigation_input_changed()
-end
-
-InventoryWeaponCosmeticsView._setup_grid = function (self, widgets, alignment_list, grid_scenegraph_id, spacing)
-	local direction = "right"
-
-	return UIWidgetGrid:new(widgets, alignment_list, self._ui_scenegraph, grid_scenegraph_id, direction, spacing)
-end
-
-InventoryWeaponCosmeticsView._create_entry_widget_from_config = function (self, config, suffix, callback_name, secondary_callback_name)
-	local scenegraph_id = "grid_content_pivot"
-	local widget_type = config.widget_type
-	local widget = nil
-	local template = ContentBlueprints[widget_type]
-
-	fassert(template, "[InventoryWeaponCosmeticsView] - Could not find content blueprint for type: %s", widget_type)
-
-	local size = template.size_function and template.size_function(self, config) or template.size
-	local pass_template_function = template.pass_template_function
-	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
-	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
-
-	if widget_definition then
-		local name = "widget_" .. suffix
-		widget = self:_create_widget(name, widget_definition)
-		widget.type = widget_type
-		local init = template.init
-
-		if init then
-			init(self, widget, config, callback_name, secondary_callback_name)
-		end
-	end
-
-	if widget then
-		return widget, widget
-	else
-		return nil, {
-			size = size
-		}
-	end
-end
-
-InventoryWeaponCosmeticsView._draw_grid = function (self, dt, t, input_service)
-	local grid = self._grid
-
-	if not grid then
-		return
-	end
-
-	local widgets = self._grid_widgets
-	local widgets_by_name = self._widgets_by_name
-	local interaction_widget = widgets_by_name.grid_interaction
-	local is_grid_hovered = not self._using_cursor_navigation or interaction_widget.content.hotspot.is_hover or false
-	local render_settings = self._render_settings
-	local ui_renderer = self._ui_offscreen_renderer
-	local ui_scenegraph = self._ui_scenegraph
-
-	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
-
-	for i = 1, #widgets do
-		local widget = widgets[i]
-
-		if grid:is_widget_visible(widget) then
-			local hotspot = widget.content.hotspot
-
-			if hotspot then
-				hotspot.force_disabled = not is_grid_hovered
-			end
-
-			UIWidget.draw(widget, ui_renderer)
-		end
-	end
-
-	UIRenderer.end_pass(ui_renderer)
-end
-
-InventoryWeaponCosmeticsView._update_grid_widgets = function (self, dt, t, input_service)
-	local widgets = self._grid_widgets
-
-	if widgets then
-		for i = 1, #widgets do
-			local widget = widgets[i]
-			local widget_type = widget.type
-			local template = ContentBlueprints[widget_type]
-			local update = template and template.update
-
-			if update then
-				update(self, widget, input_service, dt, t)
-			end
-		end
-	end
-end
-
-InventoryWeaponCosmeticsView._setup_offscreen_gui = function (self)
-	local ui_manager = Managers.ui
-	local class_name = self.__class_name
-	local timer_name = "ui"
-	local world_layer = 1
-	local world_name = class_name .. "_ui_offscreen_world"
-	local view_name = self.view_name
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
-	local viewport_type = "overlay_offscreen"
-	local viewport_layer = 1
-	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
-	self._viewport_name = viewport_name
-	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._world)
-end
-
-InventoryWeaponCosmeticsView._destroy_offscreen_gui = function (self)
-	if self._ui_offscreen_renderer then
-		self._ui_offscreen_renderer = nil
-
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_offscreen_renderer")
-
-		local world = self._world
-		local viewport_name = self._viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._viewport_name = nil
-		self._world = nil
-	end
-end
-
-InventoryWeaponCosmeticsView.on_resolution_modified = function (self, scale)
-	InventoryWeaponCosmeticsView.super.on_resolution_modified(self, scale)
-	self:_update_weapon_preview_viewport()
-end
-
-InventoryWeaponCosmeticsView.cb_on_grid_entry_left_pressed = function (self, widget, element)
-	local view_context = self._context
-	local item = view_context and view_context.preview_item
-
-	if item then
-		local attachment_item = require("scripts/backend/master_items"):get_cached()["content/items/weapons/player/trinkets/debug_trinket"]
-
-		self:_preview_item(item, attachment_item)
-	end
-end
-
-InventoryWeaponCosmeticsView.cb_on_grid_entry_right_pressed = function (self, widget, element)
-	return
 end
 
 InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
-	return
+	if index ~= self._selected_tab_index then
+		self._selected_tab_index = index
+
+		self._tab_menu_element:set_selected_index(index)
+
+		local content = self._tabs_content[index]
+		local slot_name = content.slot_name
+		local item_type = content.item_type
+		local generate_visual_item_function = content.generate_visual_item_function
+		local filter_on_weapon_template = content.filter_on_weapon_template
+		self._grid_display_name = content.display_name
+
+		self:_fetch_inventory_items(slot_name, item_type, generate_visual_item_function, filter_on_weapon_template)
+	end
 end
 
 InventoryWeaponCosmeticsView.on_resolution_modified = function (self, scale)
 	InventoryWeaponCosmeticsView.super.on_resolution_modified(self, scale)
-
-	local grid = self._grid
-
-	if grid then
-		grid:on_resolution_modified(scale)
-	end
-
 	self:_update_tab_bar_position()
 end
 

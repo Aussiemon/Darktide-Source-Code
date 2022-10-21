@@ -27,12 +27,49 @@ PlayerVoiceGrunts.set_voice = function (wwise_world, source, switch_group, selec
 	end
 end
 
-PlayerVoiceGrunts.trigger_sound = function (sound_alias, visual_loadout_extension, fx_extension)
+PlayerVoiceGrunts.trigger_voice = function (sound_alias, visual_loadout_extension, fx_extension, suppress_vo)
+	local dialogue_extension = fx_extension._dialogue_extension
+	local should_play_voice = PlayerVoiceGrunts:_should_play_voice(dialogue_extension, suppress_vo)
+
+	if not should_play_voice then
+		return
+	elseif should_play_voice and suppress_vo then
+		dialogue_extension:stop_currently_playing_vo()
+	end
+
 	local resolved, event_name, append_husk_to_event_name = visual_loadout_extension:resolve_gear_sound(sound_alias)
 
 	if resolved then
-		fx_extension:trigger_voice_wwise_event_with_source(event_name, SOURCE_NAME, append_husk_to_event_name)
+		return fx_extension:trigger_voice_wwise_event_with_source(event_name, SOURCE_NAME, append_husk_to_event_name)
 	end
+end
+
+PlayerVoiceGrunts.trigger_voice_non_synced = function (sound_alias, visual_loadout_extension, fx_extension, suppress_vo)
+	local dialogue_extension = fx_extension._dialogue_extension
+	local should_play_voice = PlayerVoiceGrunts:_should_play_voice(dialogue_extension, suppress_vo)
+
+	if not should_play_voice then
+		return
+	elseif should_play_voice and suppress_vo then
+		dialogue_extension:stop_currently_playing_vo()
+	end
+
+	local resolved, event_name, append_husk_to_event_name = visual_loadout_extension:resolve_gear_sound(sound_alias)
+
+	if resolved then
+		return fx_extension:trigger_wwise_event_non_synced(dialogue_extension, event_name, SOURCE_NAME, append_husk_to_event_name)
+	end
+end
+
+PlayerVoiceGrunts._should_play_voice = function (self, dialogue_extension, suppress_vo)
+	local should_play_voice = true
+	local is_player_speaking = dialogue_extension and dialogue_extension:is_currently_playing_dialogue()
+
+	if is_player_speaking and not suppress_vo then
+		should_play_voice = false
+	end
+
+	return should_play_voice
 end
 
 local temp_voice_data = {}

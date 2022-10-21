@@ -1,22 +1,24 @@
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local InputUtils = require("scripts/managers/input/input_utils")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TextUtils = require("scripts/utilities/ui/text")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewDefinitions = require("scripts/ui/views/contracts_view/contracts_view_definitions")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewSettings = require("scripts/ui/views/contracts_view/contracts_view_settings")
 local ViewStyles = require("scripts/ui/views/contracts_view/contracts_view_styles")
-local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
+local Vo = require("scripts/utilities/vo")
 local ContractsView = class("ContractsView", "BaseView")
 
 ContractsView.init = function (self, settings, context)
-	self._parent = context and context.parent
+	local parent = context and context.parent
+	self._parent = parent
+	self._current_vo_event = nil
+	self._current_vo_id = nil
+	self._vo_unit = nil
+	self._vo_callback = callback(self, "_cb_on_play_vo")
+	self._world_spawner = parent and parent._world_spawner
 
 	ContractsView.super.init(self, ViewDefinitions, settings)
 end
@@ -70,6 +72,26 @@ ContractsView.update = function (self, dt, t, input_service)
 		self:_set_contract_info(self._contract_data)
 	end
 
+	local synced_grid_index = self._synced_grid_index
+	local task_grid = self._task_grid
+	local grid_index = task_grid and task_grid:selected_grid_index() or nil
+	local grid_index_changed = not synced_grid_index or grid_index and synced_grid_index ~= grid_index
+
+	if grid_index_changed then
+		local task_widget = grid_index and task_grid:widget_by_index(grid_index)
+
+		if task_widget then
+			local task_info = task_widget.content.task_info
+
+			if task_info then
+				self:_cb_display_task_info(task_widget, task_info)
+			end
+		end
+
+		self._synced_grid_index = grid_index
+	end
+
+	self:_update_vo(dt, t)
 	self:_update_contract_time_left(t)
 
 	return ContractsView.super.update(self, dt, t, input_service)
@@ -83,7 +105,7 @@ ContractsView._handle_input = function (self, input_service, dt, t)
 	local reroll_button = self._widgets_by_name.reroll_button
 	local button_hotspot = reroll_button.content.hotspot
 
-	if button_hotspot.is_selected and input_service:get(ViewSettings.reroll_input_action) then
+	if not button_hotspot.disabled and input_service:get(ViewSettings.reroll_input_action) then
 		button_hotspot.pressed_callback()
 	end
 end
@@ -96,17 +118,19 @@ end
 
 ContractsView.cb_reroll_task_confirmed = function (self, task_id, wallet)
 	local last_transaction_id = wallet and wallet.lastTransactionId
-
-	self:_hide_task_info()
-
 	local player = self:_player()
 	local character_id = player:character_id()
 	local promise = self._backend_interfaces.contracts:reroll_task(character_id, task_id, last_transaction_id)
 
 	promise:next(function (data)
+		self:_play_contracts_vendor_vo(ViewSettings.vo_event_replacing_task)
+		self:_hide_task_info()
+
 		wallet.lastTransactionId = (wallet.lastTransactionId or 0) + 1
 
 		self:_replace_contract(task_id, data)
+	end):catch(function (error)
+		return
 	end)
 end
 
@@ -143,8 +167,6 @@ ContractsView._cb_display_task_info = function (self, task_widget, task_info)
 		label_style.size[2] = label_height
 	end
 
-	local divider_style = task_info_style.divider
-	divider_style.offset[2] = divider_style.default_offset[2] + height_addition
 	local description_style = task_info_style.description
 	description_style.offset[2] = description_style.default_offset[2] + height_addition
 	local description = content.task_description
@@ -162,20 +184,21 @@ ContractsView._cb_display_task_info = function (self, task_widget, task_info)
 
 	local task_is_fulfilled = task_info.fulfilled
 	local reward_text_style = task_info_style.reward_text
+	local reward_background_style = task_info_style.reward_background
 	local reward_icon_style = task_info_style.reward_icon
-	reward_icon_style.visible = not task_is_fulfilled
+	local reward_text = string.format(ViewSettings.task_info_reward_string_format, task_info.reward.amount)
+	task_info_content.reward_text = reward_text
+	local reward_text_width = self:_text_size(reward_text, reward_text_style.font_type, reward_text_style.font_size)
+	reward_text_style.text_color = reward_text_style.default_color
+	reward_text_style.material = reward_text_style.default_material
+	reward_background_style.size[1] = reward_icon_style.size[1] + reward_text_width + 20
 
 	if not task_is_fulfilled then
-		local reward_text = string.format(ViewSettings.task_info_reward_string_format, task_info.reward.amount)
-		task_info_content.reward_text = reward_text
-		local reward_text_width = self:_text_size(reward_text, reward_text_style.font_type, reward_text_style.font_size)
-		reward_icon_style.offset[1] = reward_icon_style.default_offset[1] - reward_text_width
-		reward_text_style.text_color = reward_text_style.default_color
-		reward_text_style.material = reward_text_style.default_material
+		task_info_style.completed_text.visible = false
+		task_info_style.completed_overlay.visible = false
 	else
-		task_info_content.reward_text = ViewSettings.task_fulfilled_check_mark
-		reward_text_style.material = nil
-		reward_text_style.text_color = reward_text_style.fulfilled_color
+		task_info_style.completed_text.visible = true
+		task_info_style.completed_overlay.visible = true
 	end
 
 	task_info_content.completion_text = string.format("%d/%d", task_info.criteria.value, content.task_target)
@@ -195,42 +218,17 @@ ContractsView._cb_display_task_info = function (self, task_widget, task_info)
 		task_info_content.complexity_text = Localize(ViewSettings.task_complexity_medium)
 	end
 
-	local reroll_cost_text_style = task_info_style.reroll_cost_text
-	local reroll_cost_icon_style = task_info_style.reroll_cost_icon
-	reroll_cost_text_style.visible = not task_is_fulfilled
-	reroll_cost_text_style.material = reroll_cost_text_style.default_material
-	reroll_cost_icon_style.visible = not task_is_fulfilled
 	local reroll_cost = self._contract_data.rerollCost
 	local reroll_cost_wallet_type = reroll_cost.type
 	local wallet_promise = self:_fetch_wallet(reroll_cost_wallet_type)
 	local reroll_cost_amount = reroll_cost.amount
-	task_info_content.reroll_cost_text = reroll_cost_amount
-	local reroll_cost_text_width = self:_text_size(reroll_cost_amount, reroll_cost_text_style.font_type, reroll_cost_text_style.font_size)
-	local reroll_cost_text_default_left_offset = reroll_cost_icon_style.size[1] + reroll_cost_text_style.default_offset[1]
-	local total_cost_text_width = reroll_cost_text_default_left_offset + reroll_cost_text_width
-	local task_info_cost_width = self:_scenegraph_size("task_info_cost")
-	local cost_margins = task_info_cost_width - total_cost_text_width
-	local left_margin = math.floor(cost_margins / 2)
-	reroll_cost_icon_style.offset[1] = left_margin
-	reroll_cost_text_style.offset[1] = left_margin + reroll_cost_text_default_left_offset
 	local button = self._widgets_by_name.reroll_button
 	local button_content = button.content
 	button_content.visible = true
 	local button_hotspot = button_content.hotspot
 	button_hotspot.disabled = task_is_fulfilled
-	button_hotspot.is_selected = not button_hotspot.disabled and not self._using_cursor_navigation
+	button_content.visible = not task_is_fulfilled
 	button_hotspot.pressed_callback = not task_is_fulfilled and callback(self, "_cb_reroll_task_pressed", task_info)
-
-	wallet_promise:next(function (credits)
-		local credits_amount = credits.balance.amount
-
-		if credits_amount < reroll_cost_amount then
-			button_hotspot.disabled = true
-			button_hotspot.is_selected = false
-			reroll_cost_text_style.material = reroll_cost_text_style.insufficient_funds_material
-		end
-	end)
-
 	local total_height = task_info_style.size[2] + height_addition
 
 	self:_set_scenegraph_size("task_info_plate", nil, total_height)
@@ -264,8 +262,32 @@ end
 
 ContractsView._setup_task_grid_layout = function (self)
 	local grid_settings = self._definitions.task_grid_settings
+	local player = self:_player()
+	local profile = player:profile()
+	local archetype = profile.archetype
+	local archetype_background_large = archetype.archetype_background_large
+	grid_settings.terminal_background_icon = archetype_background_large
 	local layer = 1
 	self._task_grid = self:_add_element(ViewElementGrid, "task_grid", layer, grid_settings)
+
+	self._task_grid:present_grid_layout({}, {})
+
+	local bottom_material = "content/ui/materials/frames/contracts_bottom"
+	local bottom_divider_size = {
+		732,
+		256
+	}
+	local bottom_divider_position = {
+		0,
+		bottom_divider_size[2] * 0.5 - 40,
+		12
+	}
+	local grid_divider_bottom_widget = self._task_grid:widget_by_name("grid_divider_bottom")
+	grid_divider_bottom_widget.content.texture = bottom_material
+	grid_divider_bottom_widget.style.texture.size = bottom_divider_size
+	grid_divider_bottom_widget.style.texture.offset = bottom_divider_position
+	local timer_text_widget = self._task_grid:widget_by_name("timer_text")
+	timer_text_widget.offset[2] = bottom_divider_size[2] * 0.5 + 30
 
 	self:_update_task_grid_position()
 end
@@ -303,14 +325,20 @@ ContractsView._set_contract_info = function (self, contract_data)
 		local reward_text_style = contract_info_style.reward_text
 		local reward_icon_style = contract_info_style.reward_icon
 		local reward_text_width = self:_text_size(reward_text, reward_text_style.font_type, reward_text_style.font_size)
-		reward_icon_style.offset[1] = reward_icon_style.default_offset[1] - reward_text_width
+		self._widgets_by_name.contract_info_header.content.visible = true
 		local progress_widget = self._widgets_by_name.contract_progress
 		local progress_content = progress_widget.content
 		progress_content.visible = true
-		progress_content.progress_text = string.format("%d/%d", num_tasks_completed, num_tasks)
+		local localization_content = {
+			tasks_completed = num_tasks_completed,
+			tasks_total = num_tasks
+		}
+		local progress_text = Localize(ViewSettings.contract_progress_localization_string_format, true, localization_content)
+		progress_content.progress_text = progress_text
+		local bar_progress = num_tasks_completed / num_tasks
 		local progress_style = progress_widget.style
 		local progress_bar_style = progress_style.progress_bar
-		local progress_bar_width = math.floor(num_tasks_completed / num_tasks * progress_bar_style.default_size[1])
+		local progress_bar_width = math.floor(bar_progress * progress_bar_style.default_size[1])
 		progress_bar_style.size[1] = progress_bar_width
 		local progress_bar_edge_style = progress_style.progress_bar_edge
 		progress_bar_edge_style.offset[1] = progress_bar_width + progress_bar_edge_style.offset[1]
@@ -419,8 +447,11 @@ ContractsView._populate_task_list = function (self, tasks)
 			task_target = target,
 			task_progress_normalized = task_progress,
 			task_reward = reward,
-			selected_callback = on_selected_callback,
-			size = task_name_size[2] < label_height and task_size_double or task_size_normal
+			size = {
+				task_size_normal[1],
+				task_size_normal[2] + math.max(label_height - 10, 0)
+			},
+			fulfilled = task_is_fulfilled
 		}
 
 		if task_is_fulfilled then
@@ -428,18 +459,70 @@ ContractsView._populate_task_list = function (self, tasks)
 		end
 	end
 
+	local function sort_function(a, b)
+		local a_fulfilled = a.fulfilled or false
+		local b_fulfilled = b.fulfilled or false
+
+		return b_fulfilled and not a_fulfilled
+	end
+
+	table.sort(task_list, sort_function)
+
+	local list_padding = {
+		widget_type = "list_padding"
+	}
+
+	table.insert(task_list, 1, list_padding)
+
+	task_list[#task_list + 1] = list_padding
 	local task_grid = self._task_grid
 
 	local function select_widget_function(widget, config)
 		local task_grid = task_grid
-		local grid_index = config.widget_index
+		local grid_index = task_grid:widget_index(widget)
 
 		task_grid:select_grid_index(grid_index)
 	end
 
-	self._task_grid:present_grid_layout(task_list, self._definitions.widget_blueprints, select_widget_function)
+	local function on_present_callback(widget, config)
+		local task_grid = task_grid
+		local grid_start_index = 1
+		self._synced_grid_index = nil
+
+		task_grid:select_grid_index(grid_start_index)
+	end
+
+	task_grid:present_grid_layout(task_list, self._definitions.widget_blueprints, select_widget_function, nil, nil, nil, on_present_callback)
 
 	return num_completed_tasks
+end
+
+ContractsView._update_vo = function (self, dt, t)
+	local world_spawner = self._world_spawner
+
+	if world_spawner then
+		world_spawner:update(dt, t)
+	else
+		local world_name = "ui_contracts_world"
+		local world_layer = 2
+		local world_timer_name = "ui"
+		self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+	end
+
+	local current_vo_id = self._current_vo_id
+
+	if not current_vo_id then
+		return
+	end
+
+	local unit = self._vo_unit
+	local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+	local is_playing = dialogue_extension:is_playing(current_vo_id)
+
+	if not is_playing then
+		self._current_vo_id = nil
+		self._current_vo_event = nil
+	end
 end
 
 ContractsView._update_contract_time_left = function (self, t)
@@ -462,10 +545,8 @@ ContractsView._update_reroll_button_text = function (self, using_gamepad)
 		local action = ViewSettings.reroll_input_action
 		button_content.text = TextUtils.localize_with_button_hint(action, "loc_contracts_reroll_button", nil, service_type, Localize("loc_input_legend_text_template"))
 		local button_hotspot = button_content.hotspot
-		button_hotspot.is_selected = not button_hotspot.disabled
 	else
 		button_content.text = Localize("loc_contracts_reroll_button")
-		button_content.hotspot.is_selected = nil
 	end
 end
 
@@ -505,7 +586,7 @@ ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 			},
 			{
 				text = "loc_contracts_reroll_confimation_no",
-				template_type = "default_button_small",
+				template_type = "terminal_button_small",
 				close_on_pressed = true,
 				hotkey = "back"
 			}
@@ -533,6 +614,46 @@ ContractsView._update_task_grid_position = function (self)
 	local position = self:_scenegraph_world_position("task_grid")
 
 	self._task_grid:set_pivot_offset(position[1], position[2])
+end
+
+ContractsView._play_contracts_vendor_vo = function (self, event_name)
+	local voice_profile = "contract_vendor_a"
+
+	self:_play_vo_event(event_name, voice_profile)
+end
+
+ContractsView.dialogue_system = function (self)
+	local world_spawner = self._world_spawner
+
+	if not world_spawner then
+		return nil
+	end
+
+	local world = world_spawner:world()
+	local extension_manager = Managers.ui:world_extension_manager(world)
+
+	if not extension_manager then
+		return nil
+	end
+
+	return extension_manager:system_by_extension("DialogueActorExtension")
+end
+
+ContractsView._cb_on_play_vo = function (self, id, event_name)
+	self._current_vo_event = event_name
+	self._current_vo_id = id
+end
+
+local _vo_events = {}
+
+ContractsView._play_vo_event = function (self, event_name, voice_profile, optional_route_key)
+	local dialogue_system = self:dialogue_system()
+	local events = _vo_events
+	events[1] = event_name
+	local wwise_route_key = optional_route_key or 19
+	local callback = self._vo_callback
+	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback)
+	self._vo_unit = vo_unit
 end
 
 return ContractsView

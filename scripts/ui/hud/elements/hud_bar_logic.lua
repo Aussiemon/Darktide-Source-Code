@@ -28,8 +28,6 @@ end
 HudBarLogic._verify_settings = function (self, settings)
 	for i = 1, #settings_list do
 		local setting_name = settings_list[i]
-
-		fassert(settings[setting_name], "[HudBarLogic] - Missing setting by name: %s", setting_name)
 	end
 end
 

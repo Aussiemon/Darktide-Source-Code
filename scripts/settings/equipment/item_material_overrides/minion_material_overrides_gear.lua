@@ -1,4 +1,166 @@
 local material_overrides = {
+	cultist_upperbody_d_var_01 = {
+		texture_overrides = {
+			bcm = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/base_d/textures/upperbody_d_var_01_skin_bcm"
+			},
+			orm = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/base_d/textures/upperbody_d_var_01_skin_orm"
+			},
+			nm = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/base_d/textures/upperbody_d_var_01_skin_nm"
+			}
+		}
+	},
+	cultist_roamer_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_03"
+			}
+		}
+	},
+	cultist_roamer_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_04"
+			}
+		}
+	},
+	cultist_lowerbody_a_roamer_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_lowerbody_a_02"
+			}
+		}
+	},
+	cultist_lowerbody_a_roamer_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_lowerbody_a_03"
+			}
+		}
+	},
+	cultist_lowerbody_b_elite_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_lowerbody_b_02"
+			}
+		}
+	},
+	cultist_lowerbody_b_elite_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_lowerbody_b_03"
+			}
+		}
+	},
+	cultist_elite_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_05"
+			}
+		}
+	},
+	traitor_guard_helmet_01_emissive_var_01 = {
+		property_overrides = {
+			emissive_color_intensity = {
+				0.124,
+				0.184,
+				0.068,
+				1.2
+			}
+		}
+	},
+	traitor_guard_helmet_01_emissive_var_02 = {
+		property_overrides = {
+			emissive_color_intensity = {
+				0.056,
+				0.154,
+				0.094,
+				0.75
+			}
+		}
+	},
+	traitor_guard_helmet_01_c_var_01 = {
+		texture_overrides = {
+			bca = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_gear/helmet_01_c/textures/helmet_01_c_var_01_bca"
+			}
+		}
+	},
+	traitor_guard_helmet_01_c_var_02 = {
+		texture_overrides = {
+			bca = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_gear/helmet_01_c/textures/helmet_01_c_var_02_bca"
+			}
+		}
+	},
+	traitor_guard_roamer_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_roamer_01"
+			}
+		}
+	},
+	traitor_guard_helmet_02_var_01 = {
+		texture_overrides = {
+			bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_gear/helmet_02/textures/helmet_02_var_01_bc"
+			},
+			nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_gear/helmet_02/textures/helmet_02_var_01_nm"
+			},
+			orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_gear/helmet_02/textures/helmet_02_var_01_orm"
+			}
+		}
+	},
+	traitor_guard_roamer_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_roamer_02"
+			}
+		}
+	},
+	traitor_guard_roamer_color_var_03 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_roamer_03"
+			}
+		}
+	},
+	traitor_guard_upperbody_a_var_01 = {
+		texture_overrides = {
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_var_01_mat_mask2"
+			}
+		}
+	},
+	traitor_guard_upperbody_b_var_01 = {
+		texture_overrides = {
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_var_01_mat_mask2"
+			}
+		}
+	},
 	traitor_guard_captain_upperbody_b = {
 		texture_overrides = {
 			mat1_gradient = {
@@ -36,6 +198,33 @@ local material_overrides = {
 			},
 			base_nm = {
 				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_elite_base_nm"
+			}
+		},
+		property_overrides = {
+			pattern_1_tiling = {
+				4.647
+			},
+			chip_dirt = {
+				0.637
+			}
+		}
+	},
+	traitor_guard_elite_upperbody_a_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_elite_01"
+			},
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_elite_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_elite_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_elite_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/upperbody_a_elite_var_01_mat_mask2"
 			}
 		},
 		property_overrides = {
@@ -95,6 +284,33 @@ local material_overrides = {
 			}
 		}
 	},
+	traitor_guard_elite_upperbody_b_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_elite_01"
+			},
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_elite_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_elite_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_elite_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/upperbody_b_elite_var_01_mat_mask2"
+			}
+		},
+		property_overrides = {
+			pattern_1_tiling = {
+				4.647
+			},
+			chip_dirt = {
+				0.637
+			}
+		}
+	},
 	traitor_guard_special_upperbody_b = {
 		texture_overrides = {
 			mat1_gradient = {
@@ -131,6 +347,22 @@ local material_overrides = {
 			}
 		}
 	},
+	traitor_guard_lowerbody_a_var_01 = {
+		texture_overrides = {
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/lowerbody_a_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/lowerbody_a_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/lowerbody_a_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_a/textures/lowerbody_a_var_01_mat_mask2"
+			}
+		}
+	},
 	traitor_guard_sniper_lowerbody = {
 		texture_overrides = {
 			mat1_gradient = {
@@ -147,6 +379,44 @@ local material_overrides = {
 		texture_overrides = {
 			mat1_gradient = {
 				resource = "content/textures/colors/1_colour_traitor_guard_elite_01"
+			}
+		},
+		property_overrides = {
+			chip_dirt = {
+				0.237
+			}
+		}
+	},
+	traitor_guard_elite_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_elite_02"
+			}
+		}
+	},
+	traitor_guard_elite_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_elite_03"
+			}
+		}
+	},
+	traitor_guard_elite_lowerbody_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_traitor_guard_elite_01"
+			},
+			base_bc = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/lowerbody_b_var_01_base_bc"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/lowerbody_b_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/lowerbody_b_var_01_base_nm"
+			},
+			mat_mask2 = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/base_b/textures/lowerbody_b_var_01_mat_mask2"
 			}
 		},
 		property_overrides = {
@@ -251,6 +521,35 @@ local material_overrides = {
 			}
 		}
 	},
+	chaos_hound_var_01 = {
+		texture_overrides = {
+			bcm = {
+				resource = "content/characters/enemy/chaos_hound/attachments_base/body/textures/body_var_01_bcm"
+			}
+		}
+	},
+	chaos_ogryn_melee_b_var_01 = {
+		texture_overrides = {
+			bc = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_armor_var_01_bc"
+			},
+			orm = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_armor_var_01_orm"
+			},
+			nm = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_armor_var_01_nm"
+			},
+			base_bca = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_var_01_base_bca"
+			},
+			base_orm = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_var_01_base_orm"
+			},
+			base_nm = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_gear/melee_b/textures/melee_b_var_01_base_nm"
+			}
+		}
+	},
 	chaos_ogryn_torso_a_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -270,6 +569,21 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/enemy/chaos_ogryn/attachments_base/textures/tattoos/torso_a_tattoo_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.2,
+				0.05,
+				0,
+				0.013
+			}
+		}
+	},
+	chaos_ogryn_torso_a_tattoo_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_base/textures/tattoos/torso_a_tattoo_03"
 			}
 		},
 		property_overrides = {
@@ -311,6 +625,21 @@ local material_overrides = {
 			}
 		}
 	},
+	chaos_ogryn_arms_a_tattoo_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_base/textures/tattoos/arms_a_tattoo_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.2,
+				0.05,
+				0,
+				0.013
+			}
+		}
+	},
 	poxwalker_skin_01 = {
 		property_overrides = {
 			hsv_skin = {
@@ -325,7 +654,7 @@ local material_overrides = {
 			hsv_skin = {
 				1,
 				1.204,
-				0.7
+				0.5
 			}
 		}
 	},
@@ -379,7 +708,7 @@ local material_overrides = {
 			hsv_skin = {
 				0.004,
 				0.997,
-				0.589
+				0.289
 			}
 		}
 	},
@@ -479,10 +808,205 @@ local material_overrides = {
 			}
 		}
 	},
+	cultist_face_tattoo_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_face_tattoo_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_face_tattoo_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_face_tattoo_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_04"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_face_tattoo_05 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_05"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_face_tattoo_06 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/face_tattoos/tattoo_06"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_base_d_tattoo_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/base_d_tattoos/tattoo_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_base_d_tattoo_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/base_d_tattoos/tattoo_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_base_d_tattoo_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/base_d_tattoos/tattoo_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_base_d_tattoo_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultists/attachments_base/textures/base_d_tattoos/tattoo_04"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_berzeker_body_tattoo_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultist_melee_elite/attachments_base/textures/body_tattoos/tattoo_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_berzeker_body_tattoo_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultist_melee_elite/attachments_base/textures/body_tattoos/tattoo_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
+	cultist_berzeker_body_tattoo_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_cultist_melee_elite/attachments_base/textures/body_tattoos/tattoo_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.285,
+				0.294,
+				0.1
+			}
+		}
+	},
 	cloth_variation_01 = {
 		texture_overrides = {
 			mat1_gradient = {
-				resource = "content/textures/colors/2_colour_city_02"
+				resource = "content/textures/colors/3_colour_city_01"
 			},
 			mat1_bc = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
@@ -1213,7 +1737,7 @@ local material_overrides = {
 			mat1_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			},
-			mat1_gradient = {
+			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_city_02"
 			},
 			mat2_bc = {
@@ -1268,7 +1792,7 @@ local material_overrides = {
 	cloth_variation_wt_05 = {
 		texture_overrides = {
 			mat1_gradient = {
-				resource = "content/textures/colors/1_colour_green_01"
+				resource = "content/textures/colors/2_colour_cartel_01"
 			},
 			mat1_bc = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_bc"
@@ -1280,7 +1804,7 @@ local material_overrides = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			},
 			mat2_gradient = {
-				resource = "content/textures/colors/1_colour_green_01"
+				resource = "content/textures/colors/2_colour_cartel_01"
 			},
 			mat2_bc = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_bc"
@@ -1302,9 +1826,6 @@ local material_overrides = {
 		texture_overrides = {
 			mat1_gradient = {
 				resource = "content/textures/colors/2_colour_forest_08"
-			},
-			mat1_pattern = {
-				resource = "content/textures/camo_patterns/camo_02"
 			},
 			mat1_bc = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
@@ -1370,7 +1891,7 @@ local material_overrides = {
 	cloth_variation_wt_08 = {
 		texture_overrides = {
 			mat1_gradient = {
-				resource = "content/textures/colors/2_colour_forest_11"
+				resource = "content/textures/colors/3_colour_forest_04"
 			},
 			mat1_bc = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
@@ -1382,7 +1903,7 @@ local material_overrides = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
 			},
 			mat2_gradient = {
-				resource = "content/textures/colors/2_colour_forest_11"
+				resource = "content/textures/colors/3_colour_forest_04"
 			},
 			mat2_bc = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
@@ -1511,13 +2032,13 @@ local material_overrides = {
 		property_overrides = {
 			environment_mask = {
 				3.5,
-				1.12,
-				0.627
+				0.92,
+				0.457
 			},
 			environment_mask_properties = {
-				0.566,
-				0.382,
-				0.31,
+				0.516,
+				0.332,
+				0.26,
 				2.806
 			}
 		}
@@ -1531,13 +2052,13 @@ local material_overrides = {
 		property_overrides = {
 			environment_mask = {
 				3.5,
-				0.75,
-				0.577
+				0.55,
+				0.377
 			},
 			environment_mask_properties = {
-				0.566,
-				0.382,
-				0.31,
+				0.516,
+				0.332,
+				0.26,
 				2.806
 			}
 		}
@@ -1591,7 +2112,7 @@ local material_overrides = {
 		property_overrides = {
 			environment_mask = {
 				3.58,
-				2.236,
+				1.836,
 				0.477
 			},
 			environment_mask_properties = {
@@ -1626,17 +2147,17 @@ local material_overrides = {
 		property_overrides = {
 			hsv_skin = {
 				0.95,
-				1.5,
-				0.257
+				1.4,
+				0.15
 			}
 		}
 	},
 	chaos_skin_color_02 = {
 		property_overrides = {
 			hsv_skin = {
-				0.045,
-				1.244,
-				1.43
+				0.042,
+				1.124,
+				0.85
 			}
 		}
 	},
@@ -1644,8 +2165,17 @@ local material_overrides = {
 		property_overrides = {
 			hsv_skin = {
 				0.015,
-				0.586,
-				1.475
+				0.786,
+				1.275
+			}
+		}
+	},
+	chaos_skin_color_04 = {
+		property_overrides = {
+			hsv_skin = {
+				0.93,
+				1.02,
+				1.169
 			}
 		}
 	},

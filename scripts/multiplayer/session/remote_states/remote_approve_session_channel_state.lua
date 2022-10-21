@@ -1,9 +1,6 @@
 local RemoteApproveSessionChannelState = class("RemoteApproveSessionChannelState")
 
 RemoteApproveSessionChannelState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-
 	self._shared_state = shared_state
 	self._time = 0
 end

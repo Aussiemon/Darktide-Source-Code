@@ -8,6 +8,13 @@ local CLIENT_RPCS = {
 	"rpc_health_station_on_battery_spawned",
 	"rpc_health_station_sync_charges"
 }
+local DISTRIBUTION_CHARGES_PER_STATION = {
+	2.5,
+	2.5,
+	2.5,
+	2.5,
+	2.5
+}
 
 HealthStationSystem.init = function (self, context, system_init_data, ...)
 	HealthStationSystem.super.init(self, context, system_init_data, ...)
@@ -71,12 +78,9 @@ HealthStationSystem.hot_join_sync = function (self, sender, channel)
 end
 
 HealthStationSystem._distribute_charges_to_stations = function (self)
-	fassert(self._is_server, "[HealthStationSystem] Server only method.")
-
 	local mission_settings_health_station = self._mission_settings_health_station
-	local charges_to_distribute = mission_settings_health_station and mission_settings_health_station.charges_to_distribute or 0
 
-	if charges_to_distribute > 0 then
+	if mission_settings_health_station then
 		local stations = {}
 		local unit_to_extension_map = self._unit_to_extension_map
 
@@ -92,13 +96,30 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 			end
 		end
 
-		if #stations > 0 then
+		local station_count = #stations
+		local difficulty_manager = Managers.state.difficulty
+		local difficulty = math.floor((difficulty_manager:get_challenge() + difficulty_manager:get_resistance()) / 2)
+		local charges_to_distribute = math.ceil(DISTRIBUTION_CHARGES_PER_STATION[difficulty] * station_count)
+
+		if mission_settings_health_station.charges_to_distribute then
+			charges_to_distribute = mission_settings_health_station.charges_to_distribute
+		end
+
+		if station_count > 0 and charges_to_distribute > 0 then
 			local max_charges_per_station = HealthStationExtension.MAX_CHARGES
-			local max_total_charges = max_charges_per_station * #stations
+			local max_total_charges = max_charges_per_station * station_count
 			charges_to_distribute = math.min(charges_to_distribute, max_total_charges)
 
+			if station_count <= charges_to_distribute then
+				for i = 1, station_count do
+					stations[i].charges = 1
+				end
+
+				charges_to_distribute = charges_to_distribute - station_count
+			end
+
 			while charges_to_distribute > 0 do
-				local station_index = math.random(1, #stations)
+				local station_index = math.random(1, station_count)
 				local charges = stations[station_index].charges
 
 				if charges < max_charges_per_station then
@@ -107,7 +128,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 				end
 			end
 
-			for i = 1, #stations do
+			for i = 1, station_count do
 				local station = stations[i]
 
 				if station.charges == 4 then
@@ -144,7 +165,6 @@ HealthStationSystem.rpc_health_station_use = function (self, channel_id, level_u
 	local unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[unit]
 
-	fassert(health_station_extension, "[HealthStationSystem] Invalid call to 'rpc_health_station_use'.")
 	health_station_extension:use_charge()
 end
 
@@ -152,9 +172,6 @@ HealthStationSystem.rpc_health_station_hot_join = function (self, channel_id, le
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local health_station_unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[health_station_unit]
-
-	fassert(health_station_extension, "[HealthStationSystem] Invalid call to 'rpc_health_station_hot_join'.")
-
 	local socket_unit = nil
 
 	if socket_object_id ~= NetworkConstants.invalid_game_object_id then
@@ -174,10 +191,6 @@ HealthStationSystem.rpc_health_station_on_socket_spawned = function (self, chann
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local health_station_unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[health_station_unit]
-
-	fassert(health_station_extension, "[HealthStationSystem] Invalid call to 'rpc_health_station_on_socket_spawned'.")
-	fassert(socket_object_id ~= NetworkConstants.invalid_game_object_id, "[HealthStationExtension] No socket Unit.")
-
 	local is_level_unit = false
 	local socket_unit = unit_spawner_manager:unit(socket_object_id, is_level_unit)
 
@@ -188,10 +201,6 @@ HealthStationSystem.rpc_health_station_on_battery_spawned = function (self, chan
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local health_station_unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[health_station_unit]
-
-	fassert(health_station_extension, "[HealthStationSystem] Invalid call to 'rpc_health_station_on_battery_spawned'.")
-	fassert(unit_spawner_manager:valid_unit_id(battery_id, battery_is_level_unit), "[HealthStationExtension] No battery Unit.")
-
 	local battery_unit = unit_spawner_manager:unit(battery_id, battery_is_level_unit)
 
 	health_station_extension:register_battery_unit(battery_unit)
@@ -202,7 +211,6 @@ HealthStationSystem.rpc_health_station_sync_charges = function (self, channel_id
 	local unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[unit]
 
-	fassert(health_station_extension, "[HealthStationSystem] Invalid call to 'rpc_health_station_sync_charges'.")
 	health_station_extension:set_charge_amount(charge_amount)
 end
 

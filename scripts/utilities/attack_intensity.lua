@@ -11,6 +11,20 @@ local AttackIntensity = {
 
 		target_attack_intensity_extension:set_attacked()
 	end,
+	set_attacked_melee = function (target_unit)
+		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+
+		target_attack_intensity_extension:set_attacked_melee()
+	end,
+	remove_attacked_melee = function (target_unit)
+		if not ALIVE[target_unit] then
+			return
+		end
+
+		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+
+		target_attack_intensity_extension:remove_attacked_melee()
+	end,
 	minion_can_attack = function (unit, type, target_unit)
 		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
 

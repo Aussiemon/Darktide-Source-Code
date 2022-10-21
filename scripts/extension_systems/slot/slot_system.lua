@@ -87,6 +87,7 @@ SlotSystem.on_add_extension = function (self, world, unit, extension_name, exten
 		extension.moved_at = 0
 		extension.next_slot_status_update_at = 0
 		extension.num_occupied_slots = 0
+		extension.slot_occupancy_percent = 0
 		extension.full_slots_at_t = {}
 	elseif extension_name == "SlotUserExtension" then
 		extension.improve_wait_slot_position_t = 0
@@ -97,13 +98,7 @@ SlotSystem.on_add_extension = function (self, world, unit, extension_name, exten
 		local activate_slot_system_on_spawn = breed.activate_slot_system_on_spawn
 		extension.do_search = activate_slot_system_on_spawn
 		local slot_template_name = breed.slot_template
-
-		fassert(slot_template_name, "[SlotSystem] %s does not have slot_template set in its breed.", breed.name)
-
 		local slot_template_per_challenge = SlotTemplates[slot_template_name]
-
-		fassert(slot_template_per_challenge, "[SlotSystem] %s does not have slot_template %s setup in SlotTemplates.", breed.name, slot_template_name)
-
 		local slot_template = Managers.state.difficulty:get_table_entry_by_challenge(slot_template_per_challenge)
 		local slot_type = slot_template.slot_type
 		extension.slot_template = slot_template
@@ -464,9 +459,6 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 	local traverse_logic = self._traverse_logic
 	local unit_extension_data = self._unit_extension_data
 
-	Profiler.start("SlotSystem:physics_async_update")
-	Profiler.start("update_target_slots")
-
 	for i = 1, target_units_n do
 		local target_unit = target_units[i]
 		local target_slot_extension = unit_extension_data[target_unit]
@@ -477,33 +469,22 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 		end
 	end
 
-	Profiler.stop("update_target_slots")
-
 	if self._next_occupied_slot_count_update < t then
-		Profiler.start("update_occupied_slots")
 		self:_update_occupied_slots(unit_extension_data)
 
 		self._next_occupied_slot_count_update = t + SlotSystemSettings.occupied_slots_count_update_interval
-
-		Profiler.stop("update_occupied_slots")
 	end
 
 	if self._next_disabled_slot_count_update < t then
-		Profiler.start("update_disabled_slots_count")
 		Slot.update_disabled_slots_count(target_units, unit_extension_data)
 
 		self._next_disabled_slot_count_update = t + SlotSystemSettings.disabled_slots_count_update_interval
-
-		Profiler.stop("update_disabled_slots_count")
 	end
 
 	if self._next_slot_sound_update < t then
-		Profiler.start("update_slot_sound")
-		Slot.update_slot_sound(self._is_server, self._network_transmit, target_units, unit_extension_data)
+		Slot.update_slot_sound(target_units)
 
 		self._next_slot_sound_update = t + SlotSystemSettings.slot_sound_update_interval
-
-		Profiler.stop("update_slot_sound")
 	end
 
 	local update_slots_user_units_prioritized = self._update_slots_user_units_prioritized
@@ -541,8 +522,6 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 
 	self._current_user_index = index
 	self._max_slot_update_override = nil
-
-	Profiler.stop("SlotSystem:physics_async_update")
 end
 
 local GwNavQueries_inside_position_from_outside_position = GwNavQueries.inside_position_from_outside_position
@@ -675,6 +654,7 @@ SlotSystem._update_occupied_slots = function (self, unit_extension_data)
 		local target_slot_extension = unit_extension_data[target_unit]
 		local all_slots = target_slot_extension.all_slots
 		local num_occupied = 0
+		local num_total = 0
 
 		for i = 1, NUM_SLOT_TYPES do
 			local slot_type = SLOT_TYPES[i]
@@ -690,9 +670,12 @@ SlotSystem._update_occupied_slots = function (self, unit_extension_data)
 					num_occupied = num_occupied + 1
 				end
 			end
+
+			num_total = num_total + total_slots_count
 		end
 
 		target_slot_extension.num_occupied_slots = num_occupied
+		target_slot_extension.slot_occupancy_percent = num_total ~= 0 and num_occupied / num_total
 	end
 end
 
@@ -723,15 +706,12 @@ SlotSystem._update_user_unit_slot = function (self, user_unit, user_slot_extensi
 		return false
 	end
 
-	Profiler.start("get_best_slot")
 	Slot.find_best_slot(target_unit, target_units, user_unit, unit_extension_data, nav_world, t)
-	Profiler.stop("get_best_slot")
 
 	local slot = user_slot_extension.slot
 
 	if slot then
 		Slot.release_check(slot, unit_extension_data)
-		Profiler.start("set_ghost_position")
 
 		local slot_behind_target = Slot.is_behind_target(slot, user_unit, target_slot_extension)
 
@@ -740,17 +720,11 @@ SlotSystem._update_user_unit_slot = function (self, user_unit, user_slot_extensi
 		else
 			Slot.clear_ghost_position(slot)
 		end
-
-		Profiler.stop("set_ghost_position")
 	else
-		Profiler.start("get_best_slot_to_wait_on")
 		Slot.find_best_slot_to_wait_on(target_unit, user_unit, unit_extension_data, nav_world, t)
-		Profiler.stop("get_best_slot_to_wait_on")
 	end
 
-	Profiler.start("improve_slot_position")
 	self:_improve_slot_position(user_unit, user_slot_extension, nav_world, traverse_logic, t)
-	Profiler.stop("improve_slot_position")
 
 	local delayed_priotized_time = user_slot_extension.delayed_prioritized_user_unit_update_time
 

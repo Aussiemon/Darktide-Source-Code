@@ -42,9 +42,6 @@ end
 HudElementBase._create_widget = function (self, name, definition)
 	local widgets_by_name = self._widgets_by_name
 	local widget = UIWidget.init(name, definition)
-
-	fassert(not widgets_by_name[name], "[%s] - Widget with name: %s is already created. Name has to be unique!", self.__class_name, name)
-
 	widgets_by_name[name] = widget
 	widget.dirty = true
 
@@ -53,9 +50,6 @@ end
 
 HudElementBase._unregister_widget_name = function (self, name)
 	local widgets_by_name = self._widgets_by_name
-
-	fassert(widgets_by_name[name], "[%s] - Widget with name: %s does not exist.", self.__class_name, name)
-
 	widgets_by_name[name] = nil
 end
 

@@ -1,11 +1,6 @@
 local LocalInSessionState = class("LocalInSessionState")
 
 LocalInSessionState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_list) == "table", "Event list required")
-	assert(shared_state.engine_gamesession, "Game session required")
-	assert(type(shared_state.channel_id) == "number", "Channel ID required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-
 	self._shared_state = shared_state
 end
 

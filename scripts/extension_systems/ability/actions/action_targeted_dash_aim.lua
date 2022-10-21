@@ -30,9 +30,6 @@ ActionTargetedDashAim.finish = function (self, reason, data, t, time_in_action)
 	if self._unit_data_extension.is_resimulating then
 		return
 	end
-
-	local new_target = self:_find_target(time_in_action)
-	self._lunge_character_state_component.lunge_target = new_target
 end
 
 ActionTargetedDashAim.fixed_update = function (self, dt, t, time_in_action)
@@ -47,7 +44,7 @@ end
 ActionTargetedDashAim._find_target = function (self, time_in_action)
 	local new_target = nil
 
-	if self:_check_input(time_in_action, self._aim_ready_up_time) then
+	if self._aim_ready_up_time < time_in_action then
 		local lunge_template = self:get_lunge_template()
 		local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 		local smart_target_unit = smart_targeting_data.unit
@@ -91,7 +88,7 @@ ActionTargetedDashAim.get_lunge_template = function (self)
 
 	if ability_template_tweak_data and ability_template_tweak_data.lunge_template_name then
 		lunge_template_name = ability_template_tweak_data.lunge_template_name
-	elseif action_settings.lunge_template then
+	else
 		lunge_template_name = action_settings.lunge_template_name
 	end
 

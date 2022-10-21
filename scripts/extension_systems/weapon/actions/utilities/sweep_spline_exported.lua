@@ -2,10 +2,6 @@ local SweepSplineExported = class("SweepSplineExported")
 local _find_frame, _apply_first_person_context, _damage_window_frames, _build_matrix = nil
 
 SweepSplineExported.init = function (self, action_settings, first_person_component)
-	fassert(action_settings.spline_settings, "Requires spline_settings.")
-	fassert(action_settings.damage_window_start, "Requires damage_window_start.")
-	fassert(action_settings.damage_window_end, "Requires damage_window_end.")
-
 	self._first_person_component = first_person_component
 	self._action_settings = action_settings
 
@@ -31,9 +27,6 @@ end
 SweepSplineExported._build = function (self, action_settings)
 	local spline_settings = action_settings.spline_settings
 	local matrices_data_location = spline_settings.matrices_data_location
-
-	fassert(matrices_data_location, "Could not find any matrices data.")
-
 	local matrices_data = dofile(matrices_data_location)
 	local num_frames = 0
 	local full_frame_to_time_map = {}

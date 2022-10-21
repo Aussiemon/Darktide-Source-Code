@@ -80,14 +80,10 @@ TriggerExtension.setup_from_component = function (self, component_guid, trigger_
 	local unit = self._unit
 
 	if is_server then
-		fassert(self._trigger_conditions[component_guid] == nil, "[TriggerExtension][setup_from_component] Component already registered.")
-
 		self._trigger_conditions[component_guid] = trigger_condition_classes[trigger_condition]:new(unit, trigger_condition, condition_evaluates_bots)
 
 		self:_register_volume()
 	end
-
-	fassert(self._trigger_actions[component_guid] == nil, "[TriggerExtension][setup_from_component] Component already registered.")
 
 	self._trigger_actions[component_guid] = trigger_action_classes[trigger_action]:new(is_server, unit, action_parameters)
 	self._triggered_by_entering_unit[component_guid] = {}
@@ -95,8 +91,6 @@ TriggerExtension.setup_from_component = function (self, component_guid, trigger_
 end
 
 TriggerExtension._register_volume = function (self)
-	fassert(self._is_server, "Server only method")
-
 	local unit = self._unit
 	local volume_name = self._volume_name
 	local volume_event_system = Managers.state.extension:system("volume_event_system")
@@ -107,8 +101,6 @@ TriggerExtension._register_volume = function (self)
 end
 
 TriggerExtension._unregister_volume = function (self)
-	fassert(self._is_server, "Server only method")
-
 	local volume_event_system = Managers.state.extension:system("volume_event_system")
 
 	if self._volume_id ~= 0 then
@@ -119,8 +111,6 @@ TriggerExtension._unregister_volume = function (self)
 end
 
 TriggerExtension.on_volume_enter = function (self, entering_unit, dt, t)
-	Profiler.start("TriggerExtension_on_volume_enter")
-
 	if self._is_server and ALIVE[entering_unit] then
 		if self._is_active then
 			local volume_id = self._volume_id
@@ -154,13 +144,9 @@ TriggerExtension.on_volume_enter = function (self, entering_unit, dt, t)
 			}
 		end
 	end
-
-	Profiler.stop("TriggerExtension_on_volume_enter")
 end
 
 TriggerExtension.on_volume_exit = function (self, exiting_unit)
-	Profiler.start("TriggerExtension_on_volume_exit")
-
 	if self._is_server and ALIVE[exiting_unit] then
 		if self._is_active then
 			for component_guid, condition in pairs(self._trigger_conditions) do
@@ -186,8 +172,6 @@ TriggerExtension.on_volume_exit = function (self, exiting_unit)
 			self._volume_enter_while_inactive[exiting_unit] = nil
 		end
 	end
-
-	Profiler.stop("TriggerExtension_on_volume_exit")
 end
 
 TriggerExtension.activate = function (self, value)
@@ -223,8 +207,6 @@ TriggerExtension.local_action_on_unit_exit = function (self, component_guid, exi
 end
 
 TriggerExtension.update = function (self, unit, dt, t)
-	Profiler.start("TriggerExtension_update")
-
 	if self._is_server and self._is_active then
 		for component_guid, condition in pairs(self._trigger_conditions) do
 			local registered_units = condition:registered_units()
@@ -236,13 +218,9 @@ TriggerExtension.update = function (self, unit, dt, t)
 			end
 		end
 	end
-
-	Profiler.stop("TriggerExtension_update")
 end
 
 TriggerExtension._can_trigger = function (self, component_guid, entering_unit)
-	fassert(self._is_server, "Server only method")
-
 	local can_trigger = nil
 	local only_once = self._only_once
 
@@ -269,20 +247,14 @@ TriggerExtension._can_trigger = function (self, component_guid, entering_unit)
 end
 
 TriggerExtension.set_triggered = function (self, component_guid, entering_unit, value)
-	fassert(self._is_server, "Server only method")
-
 	self._triggered_by_entering_unit[component_guid][entering_unit] = value
 end
 
 TriggerExtension.set_was_triggered = function (self, component_guid, entering_unit, value)
-	fassert(self._is_server, "Server only method")
-
 	self._was_triggered_by_entering_unit[component_guid][entering_unit] = value
 end
 
 TriggerExtension.is_triggered = function (self, component_guid, entering_unit)
-	fassert(self._is_server, "Server only method")
-
 	local triggered = nil
 	local triggered_by_entering_unit = self._triggered_by_entering_unit[component_guid]
 
@@ -296,8 +268,6 @@ TriggerExtension.is_triggered = function (self, component_guid, entering_unit)
 end
 
 TriggerExtension.was_triggered = function (self, component_guid, entering_unit)
-	fassert(self._is_server, "Server only method")
-
 	local was_triggered = nil
 	local was_triggered_by_entering_unit = self._was_triggered_by_entering_unit[component_guid]
 

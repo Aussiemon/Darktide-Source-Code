@@ -9,10 +9,10 @@ local event_vo_survive_psyker_male_c = {
 			"loc_psyker_male_c__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			1.295792,
+			1.295802,
 			1.264604,
-			1.126031,
-			1.4485
+			1.126042,
+			1.44851
 		},
 		randomize_indexes = {}
 	},
@@ -26,7 +26,7 @@ local event_vo_survive_psyker_male_c = {
 			"loc_psyker_male_c__event_survive_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			1.089958,
+			1.089969,
 			1.305302,
 			1.120271,
 			1.46474

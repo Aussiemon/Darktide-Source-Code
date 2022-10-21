@@ -15,9 +15,6 @@ DarknessSystem.init = function (self, entity_system_creation_context, system_ini
 
 	if darkness_settings then
 		local volumes = darkness_settings.volumes
-
-		fassert(volumes, "Missing volumes table in darkness settings.")
-
 		self._darkness_volumes = volumes
 		self._num_volumes = #volumes
 	else

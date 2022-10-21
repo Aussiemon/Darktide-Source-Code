@@ -82,8 +82,6 @@ SplineMovementHermiteInterpolatedMetered._set_spline_lengths = function (self, s
 	for index, spline in ipairs(splines) do
 		local points = spline.points
 		spline.length = spline_class.length(segments_per_spline, unpack_unbox(points))
-
-		fassert(spline.length > 0, "[SplineMovementHermiteInterpolatedMetered] Spline %n in curve %s has length 0.", index, self._spline_curve:name())
 	end
 end
 

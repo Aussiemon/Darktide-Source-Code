@@ -10,7 +10,7 @@ Destructible.init = function (self, unit, is_server)
 	if destructible_extension then
 		local disable_physics = Unit.get_data(unit, "disable_physics")
 
-		destructible_extension:set_disable_physics(disable_physics)
+		destructible_extension:set_physics_disabled(disable_physics)
 
 		if not disable_physics then
 			local start_visible = self:get_data(unit, "start_visible")

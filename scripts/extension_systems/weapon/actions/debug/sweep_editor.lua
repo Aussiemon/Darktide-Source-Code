@@ -28,9 +28,6 @@ SweepEditor.run = function (self, unit, weapon_template_name, action_name)
 	local weapon_template = WeaponTemplate.weapon_template(weapon_template_name)
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local spline_settings = action_settings.spline_settings
-
-	fassert(spline_settings, "No spline_settings in action_settings.")
-
 	local sweep_type = nil
 
 	if spline_settings.matrices_data_location then

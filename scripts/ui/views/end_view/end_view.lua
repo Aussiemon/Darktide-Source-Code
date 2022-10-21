@@ -1,5 +1,6 @@
 local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
 local Breeds = require("scripts/settings/breed/breeds")
+local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -13,16 +14,23 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewStyles = require("scripts/ui/views/end_view/end_view_styles")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local PartyStatus = SocialConstants.PartyStatus
 local _math_clamp01 = math.clamp01
+local _math_floor = math.floor
+local _math_max = math.max
+local _math_min = math.min
+local _continue_button_action = "next"
+local _vote_button_action = EndViewSettings.stay_in_party_vote_button
 local SUMMARY_VIEW_NAME = "end_player_view"
+local STAY_IN_PARTY = table.enum("yes", "no")
 local EndView = class("EndView", "BaseView")
 
 EndView.init = function (self, settings, context)
 	local definitions = Definitions
 	self._context = context
 	self._can_exit = context and context.can_exit
+	self._can_skip = false
+	self._skip_grace_time = 0
 	self._round_won = context and context.round_won or false
 	self._session_report = context and context.session_report
 	self._end_player_view_context = {}
@@ -32,6 +40,13 @@ EndView.init = function (self, settings, context)
 	self._delay_before_summary = EndViewSettings.delay_before_summary
 	self._end_time = nil
 	self._reference_name = "EndView_" .. tostring(self)
+	self._stay_in_party_voting_id = nil
+	self._stay_in_party_voting_active = false
+	self._stay_in_party = STAY_IN_PARTY.no
+	self._all_in_same_party = false
+	self._all_voted_yes = false
+	self._num_members_in_my_party = 1
+	self._has_shown_summary_view = false
 
 	EndView.super.init(self, definitions, settings)
 
@@ -63,11 +78,15 @@ EndView.on_enter = function (self)
 		self:_set_mission_key(played_mission, session_report)
 	end
 
-	local server_time = Managers.time:time("main")
-	self._show_player_view_time = (server_time + self._delay_before_summary) * 1000
+	local t = Managers.time:time("main")
+	local server_time = Managers.backend:get_server_time(t)
+	self._show_player_view_time = server_time + self._delay_before_summary * 1000
+	local continue_button = self._widgets_by_name.continue_button
+	continue_button.content.hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
 
+	self:_setup_stay_in_party_vote()
 	self:_setup_background_world()
-	self:_setup_input_legend()
+	self:_on_navigation_input_changed()
 end
 
 EndView.on_exit = function (self)
@@ -107,6 +126,10 @@ EndView.on_exit = function (self)
 	end
 
 	self:_unregister_event("event_state_game_score_continue")
+	self:_unregister_event("event_stay_in_party_voting_started")
+	self:_unregister_event("event_stay_in_party_voting_completed")
+	self:_unregister_event("event_stay_in_party_voting_aborted")
+	self:_unregister_event("event_stay_in_party_vote_casted")
 	EndView.super.on_exit(self)
 end
 
@@ -133,11 +156,35 @@ EndView.update = function (self, dt, t, input_service)
 	local end_time = self._end_time
 	local show_player_view_time = self._show_player_view_time
 	local server_time = Managers.backend:get_server_time(t)
+	local has_shown_summary_view = not show_player_view_time and not is_showing_player_view
 
-	if not session_report or not end_time then
+	if has_shown_summary_view ~= self._has_shown_summary_view then
+		self._has_shown_summary_view = has_shown_summary_view
+		self._skip_grace_time = EndViewSettings.skip_grace_time
+
+		self:_set_character_names()
+	end
+
+	local grace_time = self._skip_grace_time
+
+	if grace_time > 0 then
+		grace_time = math.max(grace_time - dt, 0)
+	end
+
+	self._skip_grace_time = grace_time
+	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == STAY_IN_PARTY.yes
+	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
+
+	if can_skip ~= self._can_skip and (not can_skip or grace_time == 0) then
+		self._can_skip = can_skip
+
+		self:_update_buttons()
+	end
+
+	if not session_report then
 		local progression_manager = Managers.progression
 
-		if not session_report and not progression_manager:is_fetching_session_report() and progression_manager:session_report_success() then
+		if progression_manager:session_report_success() then
 			session_report = progression_manager:session_report()
 			self._session_report = session_report
 			local context = self._context
@@ -146,42 +193,41 @@ EndView.update = function (self, dt, t, input_service)
 				local played_mission = context.played_mission
 
 				self:_set_mission_key(played_mission, session_report)
+				self:_set_character_names()
 			end
 		end
+	end
 
-		if not end_time and session_report then
-			end_time = server_time + EndViewSettings.max_duration * 1000
-			self._end_time = end_time
-			local new_show_player_view_time = server_time + EndViewSettings.min_delay_before_summary * 1000
-			show_player_view_time = math.max(show_player_view_time, new_show_player_view_time)
+	if not end_time then
+		end_time = Managers.progression:game_score_end_time()
+		self._end_time = end_time
+
+		if end_time then
+			local min_show_player_view_time = server_time + EndViewSettings.min_delay_before_summary * 1000
+			show_player_view_time = math.max(show_player_view_time, min_show_player_view_time)
 			self._show_player_view_time = show_player_view_time
 		end
 	end
 
-	if session_report and end_time then
-		if show_player_view_time and show_player_view_time < server_time and not is_showing_player_view then
-			local character_session_report = self._session_report.character
-			local context = self._context
-			local summary_view_context = self._end_player_view_context
-			summary_view_context.can_exit = false
-			summary_view_context.round_won = context.round_won
-			summary_view_context.session_report = character_session_report
+	if session_report and end_time and show_player_view_time and show_player_view_time < server_time and not is_showing_player_view then
+		local character_session_report = self._session_report.character
+		local context = self._context
+		local summary_view_context = self._end_player_view_context
+		summary_view_context.can_exit = false
+		summary_view_context.round_won = context.round_won
+		summary_view_context.session_report = character_session_report
 
-			Managers.ui:open_view(SUMMARY_VIEW_NAME, nil, nil, nil, nil, summary_view_context)
-			self:_register_event("event_state_game_score_continue")
+		Managers.ui:open_view(SUMMARY_VIEW_NAME, nil, nil, nil, nil, summary_view_context)
+		self:_register_event("event_state_game_score_continue")
 
-			self._show_player_view_time = nil
-		end
-
-		local time = math.max((end_time - server_time) / 1000 + 1, 0)
-		local timer_text = self:_get_timer_text(time)
-
-		self:_update_continue_button(timer_text)
+		self._show_player_view_time = nil
 	end
 
 	self._widget_alpha = _math_clamp01(self._widget_alpha + dt / _update_alpha_fade_time * (is_showing_player_view and -1 or 1))
 
 	self:_update_player_slots(dt, t, input_service)
+	self:_update_continue_button_time(end_time, server_time)
+	self:_update_voting_button_visibility(dt)
 
 	return EndView.super.update(self, dt, t, input_service)
 end
@@ -194,12 +240,23 @@ EndView.draw = function (self, dt, t, input_service, layer)
 	EndView.super.draw(self, dt, t, input_service, layer)
 end
 
-EndView.cb_on_stay_in_party_pressed = function (self)
-	Log.info("EndView", "STAY IN PARTY")
+EndView._on_navigation_input_changed = function (self)
+	self:_update_buttons()
 end
 
-EndView.cb_on_continue_pressed = function (self)
-	self:_trigger_current_presentation_skip()
+EndView.event_register_end_of_round_camera = function (self, camera_unit)
+	self:_unregister_event("end_of_round_camera")
+
+	if self._context then
+		self._context.camera_unit = camera_unit
+	end
+
+	local viewport_name = EndViewSettings.viewport_name
+	local viewport_type = EndViewSettings.viewport_type
+	local viewport_layer = EndViewSettings.viewport_layer
+	local shading_environment = EndViewSettings.shading_environment
+
+	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end
 
 EndView.event_state_game_score_continue = function (self)
@@ -211,9 +268,47 @@ EndView.event_state_game_score_continue = function (self)
 	end
 end
 
+EndView.event_stay_in_party_voting_started = function (self, voting_id)
+	local all_is_same_party = self._all_in_same_party
+
+	if all_is_same_party and voting_id then
+		Managers.voting:cast_vote(voting_id, "no")
+		Log.info("STAY_IN_PARTY_VOTING", "everyone is same party, voting NO to merge")
+
+		return
+	end
+
+	self._stay_in_party_voting_id = voting_id
+	self._stay_in_party_voting_active = true
+
+	self:_sync_votes()
+end
+
+EndView.event_stay_in_party_voting_completed = function (self)
+	self._stay_in_party_voting_active = false
+	self._stay_in_party_voting_id = nil
+end
+
+EndView.event_stay_in_party_voting_aborted = function (self)
+	self._stay_in_party_voting_active = false
+	self._stay_in_party_voting_id = nil
+end
+
+EndView.event_stay_in_party_vote_casted = function (self)
+	if not self._stay_in_party_voting_active then
+		return
+	end
+
+	self:_sync_votes()
+end
+
 EndView._handle_input = function (self, input_service, dt, t)
-	if input_service:get("next") then
+	if input_service:get(_continue_button_action) then
 		self:_trigger_current_presentation_skip()
+	end
+
+	if self._stay_in_party_voting_active and input_service:get(_vote_button_action) then
+		self:_cb_on_stay_in_party_pressed()
 	end
 
 	return EndView.super._handle_input(self, input_service, dt, t)
@@ -266,48 +361,101 @@ EndView._create_game_mode_condition_widgets = function (self)
 	self._player_widget_definition = dynamic_widget_definitions[player_widget_definition_name]
 end
 
-EndView._setup_input_legend = function (self)
-	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 20)
-	local legend_inputs = self._definitions.legend_inputs
-	local input_legends_by_key = {}
+EndView._update_continue_button_time = function (self, end_time, server_time)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.continue_button
+	local widget_content = widget.content
+	local time = end_time and _math_max(_math_floor((end_time - server_time) / 1000) + 1, 0)
 
-	for i = 1, #legend_inputs do
-		local legend_input = legend_inputs[i]
-		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
-		local id = self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
-		local key = legend_input.key
+	if time ~= widget_content.time then
+		widget_content.time = time
 
-		if key then
-			input_legends_by_key[key] = {
-				id = id,
-				settings = legend_input
-			}
-		end
+		self:_update_buttons()
 	end
-
-	self._input_legends_by_key = input_legends_by_key
 end
 
-EndView._update_continue_button = function (self, timer_text)
-	local input_legends_by_key = self._input_legends_by_key
-	local input_legend = input_legends_by_key.continue
-	local input_id = input_legend.id
-	local settings = input_legend.settings
-	local text = settings.display_name
-	local suffix = " (" .. timer_text .. ")"
+local _voting_button_fade_time = ViewStyles.voting_button_fade_time
 
-	self._input_legend_element:set_display_name(input_id, text, suffix)
+EndView._update_voting_button_visibility = function (self, dt)
+	local voting_widget = self._widgets_by_name.stay_in_party_vote
+	local is_active = self._stay_in_party_voting_active
+	local alpha = voting_widget.alpha_multiplier or 0
+
+	if is_active and alpha < 1 then
+		alpha = _math_min(alpha + dt / _voting_button_fade_time, 1)
+	elseif not is_active and alpha > 0 then
+		alpha = _math_max(alpha - dt / _voting_button_fade_time, 0)
+	end
+
+	voting_widget.alpha_multiplier = alpha
+	voting_widget.visible = is_active or alpha > 0
+end
+
+EndView._update_buttons = function (self)
+	local service_type = DefaultViewInputSettings.service_type
+	local vote_completed = not self._stay_in_party_voting_active
+	local player_voted_yes = self._stay_in_party == STAY_IN_PARTY.yes
+	local all_voted_yes = self._all_voted_yes
+	local already_in_party = self._num_members_in_my_party > 1
+	local continue_button_widget = self._widgets_by_name.continue_button
+	local continue_button_content = continue_button_widget.content
+	local continue_button_loc_string = continue_button_content.loc_string
+	local continue_button_action = _continue_button_action
+	local can_skip = self._can_skip
+	local input_legend_text_template = can_skip and Localize("loc_input_legend_text_template") or nil
+	local button_text = TextUtilities.localize_with_button_hint(continue_button_action, continue_button_loc_string, nil, service_type, input_legend_text_template)
+	local time = continue_button_content.time
+
+	if time and self._has_shown_summary_view then
+		local timer_text = self:_get_timer_text(time)
+		button_text = button_text .. " (" .. timer_text .. ")"
+	end
+
+	continue_button_content.text = button_text
+	continue_button_content.vote_completed = vote_completed and all_voted_yes
+	continue_button_content.hotspot.disabled = not can_skip
+	local voting_widget = self._widgets_by_name.stay_in_party_vote
+	local voting_widget_content = voting_widget.content
+	voting_widget_content.vote_completed = vote_completed
+	voting_widget_content.voted_yes = player_voted_yes
+	voting_widget_content.can_skip = can_skip
+	voting_widget_content.already_in_party = already_in_party
+	local loc_string = EndViewSettings.stay_in_party_vote_text
+	local vote_button_action = _vote_button_action
+	local vote_button_text = TextUtilities.localize_with_button_hint(vote_button_action, loc_string, nil, service_type, input_legend_text_template)
+	voting_widget_content.vote_text = vote_button_text
+	local voting_widget_style = voting_widget.style
+	local vote_count_style = voting_widget_style.vote_count_text
+	vote_count_style.text_color = all_voted_yes and vote_count_style.voted_yes_color or vote_count_style.default_text_color
 end
 
 EndView._get_timer_text = function (self, time)
-	local floor = math.floor
-	local timer_text = string.format("%.2d:%.2d", floor(time / 60) % 60, floor(time) % 60)
+	local timer_text = string.format("%.2d:%.2d", _math_floor(time / 60) % 60, time % 60)
 
 	return timer_text
 end
 
 EndView._trigger_current_presentation_skip = function (self)
-	Managers.event:trigger("event_trigger_current_end_presentation_skip")
+	if not self._can_skip or self._skip_grace_time > 0 then
+		return
+	end
+
+	if not self._has_shown_summary_view then
+		Managers.event:trigger("event_trigger_current_end_presentation_skip")
+	elseif not self._can_exit then
+		Managers.multiplayer_session:leave("skip_end_of_round")
+	end
+end
+
+EndView._setup_stay_in_party_vote = function (self)
+	self:_register_event("event_stay_in_party_voting_started")
+	self:_register_event("event_stay_in_party_voting_completed")
+	self:_register_event("event_stay_in_party_voting_aborted")
+	self:_register_event("event_stay_in_party_vote_casted")
+
+	local vote_widget = self._widgets_by_name.stay_in_party_vote
+	local hotspot = vote_widget.content.hotspot
+	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
 end
 
 EndView._setup_background_world = function (self)
@@ -353,22 +501,9 @@ EndView._setup_background_world = function (self)
 	self:_register_event("end_of_round_blur_background_world", "_end_of_round_blur_background_world")
 end
 
-EndView.event_register_end_of_round_camera = function (self, camera_unit)
-	self:_unregister_event("end_of_round_camera")
-
-	if self._context then
-		self._context.camera_unit = camera_unit
-	end
-
-	local viewport_name = EndViewSettings.viewport_name
-	local viewport_type = EndViewSettings.viewport_type
-	local viewport_layer = EndViewSettings.viewport_layer
-	local shading_environment = EndViewSettings.shading_environment
-
-	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
-end
-
 EndView._setup_spawn_slots = function (self, players)
+	Log.info("EndView", "_setup_spawn_slots() num players: %d", table.size(players))
+
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
@@ -377,18 +512,26 @@ EndView._setup_spawn_slots = function (self, players)
 	local spawn_slots = {}
 	local is_own_party = false
 	local is_other_party = false
+	local members_in_my_party = 0
+	local players_in_mission = 0
 
 	for unique_id, player_info in pairs(players) do
+		players_in_mission = players_in_mission + 1
 		local party_status = player_info:party_status()
+		local num_party_members = player_info:num_party_members()
 
 		if party_status == PartyStatus.mine then
 			is_own_party = true
-		elseif party_status == PartyStatus.other then
+			members_in_my_party = members_in_my_party + 1
+		elseif num_party_members > 1 then
 			is_other_party = true
 		end
 	end
 
 	local more_than_one_party = is_own_party and is_other_party
+	self._all_in_same_party = members_in_my_party == players_in_mission or players_in_mission == 1
+	self._num_members_in_my_party = members_in_my_party
+	self._num_players_in_mission = players_in_mission
 
 	for unique_id, player_info in pairs(players) do
 		player_index = player_index + 1
@@ -413,6 +556,8 @@ EndView._setup_spawn_slots = function (self, players)
 	end
 
 	self._spawn_slots = spawn_slots
+
+	self:_set_character_names()
 end
 
 EndView._get_free_slot_id = function (self)
@@ -496,6 +641,7 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 end
 
 EndView._create_player_widget = function (self, player_info, slot, more_than_one_party)
+	local session_report = self._session_report
 	local widget_definition = self._player_widget_definition
 	local widget_name = string.format("player_panel_%d", slot.index)
 	local widget = self:_create_widget(widget_name, widget_definition)
@@ -503,9 +649,9 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	local profile = player_info:profile()
 	widget_content.player_info = player_info
 	widget_content.boxed_position = slot.boxed_position
-	widget_content.character_name = TextUtilities.formatted_character_name(player_info)
 	widget_content.character_title = ProfileUtils.character_title(profile)
 	widget_content.account_name = player_info:user_display_name()
+	widget_content.peer_id = player_info:peer_id()
 	local party_status = player_info:party_status()
 
 	if more_than_one_party then
@@ -517,7 +663,7 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	end
 
 	local widget_style = widget.style
-	widget_style.party_status.visible = party_status == PartyStatus.mine or party_status == PartyStatus.other
+	widget_style.party_status.visible = player_info:num_party_members() > 1
 
 	if player_info:is_own_player() then
 		local character_name_style = widget_style.character_name
@@ -567,6 +713,40 @@ EndView._reset_spawn_slot = function (self, slot)
 	slot.player = nil
 end
 
+EndView._set_character_names = function (self)
+	local session_report = self._session_report
+	local session_report_raw = session_report and session_report.eor
+	local participant_reports = session_report_raw and session_report_raw.team.participants
+	local experience_settings = session_report and session_report.character.experience_settings
+	local spawn_slots = self._spawn_slots
+
+	if spawn_slots then
+		for i = 1, #spawn_slots do
+			local slot = spawn_slots[i]
+			local account_id = slot.account_id
+			local report = self:_get_participant_progression(participant_reports, account_id)
+			local player_info = slot.player_info
+			local widget = slot.widget
+			local widget_content = widget.content
+			local character_name = player_info:character_name()
+
+			if not report then
+				widget_content.character_name = character_name
+			elseif not self._has_shown_summary_view then
+				local character_level = report.currentLevel
+				widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+			elseif player_info:is_own_player() then
+				local character_level = player_info:character_level()
+				widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+			else
+				local xp = report.currentXp
+				local level_after_mission = self:_level_from_xp(experience_settings, xp)
+				widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
+			end
+		end
+	end
+end
+
 EndView._set_mission_key = function (self, mission_key, session_report)
 	local mission_settings = Missions[mission_key]
 	local display_name = mission_settings.mission_name
@@ -584,6 +764,42 @@ EndView._set_mission_key = function (self, mission_key, session_report)
 		}
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
 	end
+end
+
+EndView._get_participant_progression = function (self, participant_reports, account_id)
+	if participant_reports then
+		for i = 1, #participant_reports do
+			local report = participant_reports[i]
+
+			if report.accountId == account_id then
+				local progression_reports = report.progression
+
+				if progression_reports then
+					for j = 1, #progression_reports do
+						local progression_report = progression_reports[j]
+
+						if progression_report.type == "character" then
+							return progression_report
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
+EndView._level_from_xp = function (self, experience_settings, xp)
+	local max_level = experience_settings.max_level
+	local xp_table = experience_settings.experience_table
+	local level = 0
+
+	while max_level > level and xp_table[level + 1] <= xp do
+		level = level + 1
+	end
+
+	return level
 end
 
 EndView._load_portrait_icon = function (self, widget, profile)
@@ -621,6 +837,49 @@ EndView._load_portrait_icon = function (self, widget, profile)
 	widget_content.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 end
 
+EndView._sync_votes = function (self)
+	local voting_id = self._stay_in_party_voting_id
+	local num_votes = 0
+	local yes_votes = 0
+	local player_vote = STAY_IN_PARTY.no
+
+	if voting_id then
+		local votes = Managers.voting:votes(voting_id)
+		local local_player_peer_id = Network.peer_id()
+		local game_mode_condition_widgets = self._game_mode_condition_widgets
+
+		for i = 1, #game_mode_condition_widgets do
+			local widget = game_mode_condition_widgets[i]
+			local peer_id = widget.content.peer_id
+
+			if peer_id then
+				local vote = votes[peer_id]
+
+				if vote == STAY_IN_PARTY.yes then
+					yes_votes = yes_votes + 1
+
+					if peer_id == local_player_peer_id then
+						player_vote = STAY_IN_PARTY.yes
+					end
+				end
+
+				num_votes = num_votes + 1
+				local checkmark_style = widget.style.checkmark
+				checkmark_style.visible = vote == STAY_IN_PARTY.yes
+			end
+		end
+	end
+
+	local num_votes_text = string.format("%d/%d", yes_votes, num_votes)
+	local voting_widget = self._widgets_by_name.stay_in_party_vote
+	local widget_content = voting_widget.content
+	widget_content.vote_count_text = num_votes_text
+	self._all_voted_yes = yes_votes == num_votes
+	self._stay_in_party = player_vote
+
+	self:_update_buttons()
+end
+
 EndView._unload_portrait_icon = function (self, widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, false)
 	UIWidget.set_visible(widget, ui_renderer, true)
@@ -655,9 +914,6 @@ EndView._unload_portrait_frame = function (self, widget, ui_renderer)
 	local material_values = frame_style.material_values
 	local portrait_frame_texture = material_values.portrait_frame_texture
 	material_values.portrait_frame_texture = UISettings.portrait_frame_default_texture
-
-	Log.info("EndView", "Destroying frame: %s", portrait_frame_texture)
-
 	local widget_content = widget.content
 
 	Managers.ui:unload_item_icon(widget_content.frame_load_id)
@@ -670,9 +926,6 @@ EndView._unload_insignia = function (self, widget)
 	local material_values = insignia_style.material_values
 	local character_insignia_texture = material_values.texture_map
 	material_values.texture_map = UISettings.insignia_default_texture
-
-	Log.info("EndView", "Destroying insignia: %s", character_insignia_texture)
-
 	local widget_content = widget.content
 
 	Managers.ui:unload_item_icon(widget_content.insignia_load_id)
@@ -680,13 +933,30 @@ EndView._unload_insignia = function (self, widget)
 	widget_content.insignia_load_id = nil
 end
 
-EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns)
+EndView._cb_on_continue_pressed = function (self)
+	self:_trigger_current_presentation_skip()
+end
+
+EndView._cb_on_stay_in_party_pressed = function (self)
+	local voting_id = self._stay_in_party_voting_id
+	local player_vote = self._stay_in_party == STAY_IN_PARTY.no and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
+	self._stay_in_party = player_vote
+
+	if voting_id then
+		Managers.voting:cast_vote(voting_id, player_vote)
+	end
+
+	self:_update_buttons()
+end
+
+EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.character_portrait
 	local material_values = portrait_style.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 EndView._cb_set_player_frame = function (self, widget, item)

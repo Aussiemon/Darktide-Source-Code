@@ -63,6 +63,7 @@ ConnectionRemoteStateMachine.init = function (self, event_delegate, engine_lobby
 	state_machine:add_transition("RemoteVersionCheckState", "timeout", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteVersionCheckState", "disconnected", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "version replied", RemoteRequestHostTypeState)
+	state_machine:add_transition("RemoteMasterItemsCheckState", "missing version", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "timeout", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "disconnected", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteRequestHostTypeState", "host type replied", RemoteMechanismVerificationState)

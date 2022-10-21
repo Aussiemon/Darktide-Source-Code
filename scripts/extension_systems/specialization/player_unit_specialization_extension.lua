@@ -72,6 +72,10 @@ PlayerUnitSpecializationExtension.get_specialization_name = function (self)
 	return self._specialization_name
 end
 
+PlayerUnitSpecializationExtension.get_talents = function (self)
+	return self._talents
+end
+
 PlayerUnitSpecializationExtension.has_special_rule = function (self, special_rule_name)
 	local active_special_rules = self._active_special_rules
 
@@ -117,6 +121,8 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 
 	table.clear(self._active_special_rules)
 
+	local unit = self._unit
+
 	for _, special_rule_name in pairs(special_rules) do
 		active_special_rules[special_rule_name] = true
 	end
@@ -132,7 +138,6 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 	end
 
 	local coherency_system = self._coherency_system
-	local unit = self._unit
 	local coherency_external_buff_indices = self._coherency_external_buff_indices
 
 	for _, buff_template_name in pairs(coherency_buffs) do
@@ -141,6 +146,10 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 end
 
 PlayerUnitSpecializationExtension._remove_gameplay_features = function (self, fixed_t)
+	if GameParameters.testify then
+		Log.info("PlayerUnitSpecializationExtension", "remove_gameplay_features - %s", debug.traceback())
+	end
+
 	local unit = self._unit
 	local coherency_system = self._coherency_system
 	local coherency_external_buff_indices = self._coherency_external_buff_indices

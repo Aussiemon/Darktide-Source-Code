@@ -14,9 +14,6 @@ ShadingEnvironmentVolume.enable = function (self, unit)
 		local override = self:get_data(unit, "override")
 		local shading_environment = self:get_data(unit, "shading_environment")
 		local shading_environment_slot_string = self:get_data(unit, "shading_environment_slot")
-
-		fassert(tonumber(shading_environment_slot_string) ~= nil, "[ShadingEnvironmentVolume]%s[Unit: %s] Expecting a number for 'shading_environment_slot'. value: %q", Unit.level(unit), Unit.id_string(unit), tostring(shading_environment_slot_string))
-
 		local shading_environment_slot = tonumber(shading_environment_slot_string)
 		local start_enabled = self:get_data(unit, "start_enabled")
 
@@ -38,16 +35,20 @@ end
 
 ShadingEnvironmentVolume.editor_init = function (self, unit)
 	if LevelEditor then
-		if LevelEditor.register_shading_environment_volume then
-			volume_data = {
-				fade_in_distance = self:get_data(unit, "fade_in_distance"),
-				blend_layer = self:get_data(unit, "blend_layer") or 1,
-				override = self:get_data(unit, "override"),
-				shading_environment = self:get_data(unit, "shading_environment"),
-				shading_environment_slot = self:get_data(unit, "shading_environment_slot")
-			}
+		self._enabled = self:get_data(unit, "start_enabled")
 
-			LevelEditor:register_shading_environment_volume(unit, volume_data)
+		if LevelEditor.register_shading_environment_volume then
+			if self._enabled then
+				local volume_data = {
+					fade_in_distance = self:get_data(unit, "fade_in_distance"),
+					blend_layer = self:get_data(unit, "blend_layer") or 1,
+					override = self:get_data(unit, "override"),
+					shading_environment = self:get_data(unit, "shading_environment"),
+					shading_environment_slot = self:get_data(unit, "shading_environment_slot")
+				}
+
+				LevelEditor:register_shading_environment_volume(unit, volume_data)
+			end
 		else
 			Application.console_send({
 				system = "Shading Environment Volume",
@@ -76,7 +77,7 @@ ShadingEnvironmentVolume.disable_environment = function (self)
 end
 
 ShadingEnvironmentVolume.editor_destroy = function (self, unit)
-	if LevelEditor and LevelEditor.unregister_shading_environment_volume then
+	if LevelEditor and LevelEditor.unregister_shading_environment_volume and self._enabled then
 		LevelEditor:unregister_shading_environment_volume(unit)
 	end
 end

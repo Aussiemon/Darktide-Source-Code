@@ -105,6 +105,7 @@ local action_data = {
 		}
 	},
 	alerted = {
+		override_aggro_distance = 6,
 		vo_event = "alerted_idle",
 		moving_alerted_anim_events = {
 			bwd = "alerted_bwd",
@@ -258,11 +259,11 @@ local action_data = {
 		}
 	},
 	melee_attack = {
-		weapon_reach = 3,
+		weapon_reach = 3.25,
 		utility_weight = 2,
 		vo_event = "assault",
 		set_weapon_intensity = true,
-		considerations = UtilityConsiderations.melee_attack,
+		considerations = UtilityConsiderations.melee_attack_elite,
 		attack_anim_events = {
 			normal = {
 				"attack_03",
@@ -276,20 +277,24 @@ local action_data = {
 			}
 		},
 		attack_anim_damage_timings = {
-			attack_03 = 0.5287356321839081,
+			attack_03 = 0.6133333333333333,
 			attack_reach_up = 0.6923076923076923,
-			attack_04 = 0.5977011494252874,
+			attack_04 = 0.6933333333333334,
 			attack_down_01 = 2.1666666666666665
 		},
 		attack_anim_durations = {
-			attack_03 = 1.4022988505747127,
+			attack_03 = 1.92,
 			attack_reach_up = 1.7435897435897436,
-			attack_04 = 1.3793103448275863,
+			attack_04 = 1.7333333333333334,
 			attack_down_01 = 4.5
 		},
 		attack_intensities = {
 			ranged = 1,
 			melee = 3
+		},
+		stagger_type_reduction = {
+			ranged = 30,
+			melee = 30
 		},
 		damage_profile = DamageProfileTemplates.melee_executor_default,
 		damage_type = damage_types.minion_melee_blunt_elite
@@ -325,8 +330,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.melee_executor_default,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 20,
-			melee = 20
+			ranged = 30,
+			melee = 30
 		},
 		animation_move_speed_configs = {
 			attack_move_02 = {
@@ -358,7 +363,7 @@ local action_data = {
 		utility_weight = 2,
 		vo_event = "special_atack",
 		set_weapon_intensity = true,
-		considerations = UtilityConsiderations.melee_attack,
+		considerations = UtilityConsiderations.melee_attack_elite,
 		attack_anim_events = {
 			normal = {
 				"attack_01",
@@ -390,8 +395,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.melee_executor_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 20,
-			melee = 20
+			ranged = 30,
+			melee = 30
 		},
 		ground_impact_fx_template = GroundImpactFxTemplates.renegade_executor_cleave
 	},
@@ -426,8 +431,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.melee_executor_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 20,
-			melee = 20
+			ranged = 30,
+			melee = 30
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
@@ -555,16 +560,20 @@ local action_data = {
 			},
 			explosion = {
 				fwd = {
-					"stagger_explosion_back_2"
+					"stagger_fwd_heavy_3"
 				},
 				bwd = {
-					"stagger_explosion_back_2"
+					"stagger_bwd_heavy",
+					"stagger_bwd_heavy_2"
 				},
 				left = {
-					"stagger_explosion_back_2"
+					"stagger_left_heavy_3"
 				},
 				right = {
-					"stagger_explosion_back_2"
+					"stagger_right_heavy"
+				},
+				dwn = {
+					"stagger_dwn_heavy"
 				}
 			},
 			killshot = {

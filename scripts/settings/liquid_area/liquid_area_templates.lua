@@ -4,8 +4,6 @@ local function _add_template_entries(path)
 	local templates = require(path)
 
 	for name, template in pairs(templates) do
-		fassert(liquid_area_templates[name] == nil, "[LiquidAreaTemplates] Duplicate entries of %s.", name)
-
 		template.name = name
 		liquid_area_templates[name] = template
 	end

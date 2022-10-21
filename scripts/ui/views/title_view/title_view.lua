@@ -23,8 +23,9 @@ end
 TitleView.on_enter = function (self)
 	TitleView.super.on_enter(self)
 
-	self._widgets_by_name.title_text.content.text = Localize("loc_title_view_input_description")
+	self._continue_input_name = "title_screen_start"
 
+	self:_apply_title_text()
 	self:_setup_background_world()
 	self:_register_event("event_state_title_reset", "event_state_title_reset")
 end
@@ -63,11 +64,29 @@ TitleView.event_state_title_reset = function (self)
 	self._continue_triggered = false
 	self._loading_reason = nil
 	self._widgets_by_name.title_text.content.ready_to_continue = false
-	self._widgets_by_name.title_text.content.text = Localize("loc_title_view_input_description")
+
+	self:_apply_title_text()
+end
+
+TitleView._apply_title_text = function (self)
+	local input_alias_name = self._continue_input_name
+	local service_type = "View"
+	local color_tint_text = true
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, input_alias_name, color_tint_text)
+	local context = {
+		input = input_key
+	}
+	local text = Localize("loc_title_view_input_description", true, context)
+	self._widgets_by_name.title_text.content.text = text
+end
+
+TitleView._on_navigation_input_changed = function (self)
+	TitleView.super._on_navigation_input_changed(self)
+	self:_apply_title_text()
 end
 
 TitleView.update = function (self, dt, t, input_service)
-	TitleView.super.update(self, dt, t)
+	TitleView.super.update(self, dt, t, input_service)
 
 	local world_spawner = self._world_spawner
 
@@ -80,6 +99,8 @@ TitleView.update = function (self, dt, t, input_service)
 	end
 
 	if not self._continue_triggered and input_service and not input_service:is_null_service() then
+		local continue_input_name = self._continue_input_name
+
 		if IS_XBS then
 			local input_device_list = InputUtils.input_device_list
 			local xbox_controllers = input_device_list.xbox_controller
@@ -95,7 +116,7 @@ TitleView.update = function (self, dt, t, input_service)
 			for i = 1, #device_list do
 				local device = device_list[i]
 
-				if device and device.active() and device.any_pressed() then
+				if device and device.active() and input_service:get(continue_input_name) then
 					self:_continue()
 				end
 			end
@@ -104,11 +125,11 @@ TitleView.update = function (self, dt, t, input_service)
 
 	if self._continue_triggered then
 		local parent = self._parent
-		local loading, loading_reason = parent:is_loading()
+		local loading, force_refresh, loading_reason, no_cache, context = parent:is_loading()
 
-		if loading and loading_reason ~= self._loading_reason then
+		if loading and (force_refresh or loading_reason ~= self._loading_reason) then
 			self._loading_reason = loading_reason
-			self._widgets_by_name.title_text.content.text = Localize(loading_reason)
+			self._widgets_by_name.title_text.content.text = Localize(loading_reason, no_cache, context)
 		end
 	end
 end

@@ -85,7 +85,7 @@ scrollbar_base[3] = {
 		local thumb_length = hotspot_style.size[axis]
 		local inverse_scale = renderer.inverse_scale
 		local base_cursor = input_service:get("cursor")
-		local cursor = UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+		local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 		local cursor_direction = cursor[axis]
 		local input_coordinate = math.clamp(cursor_direction - position[axis], 0, scrollbar_length)
 		local input_offset = content.input_offset
@@ -132,7 +132,7 @@ scrollbar_base[4] = {
 		if using_cursor_navigation then
 			local inverse_scale = renderer.inverse_scale
 			local cursor = input_service:get("cursor")
-			local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
+			local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 			is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
 		else
 			is_hover = hotspot.is_selected or content.focused
@@ -142,13 +142,20 @@ scrollbar_base[4] = {
 
 		local scroll_axis_negative = input_service:get(scroll_action_negative)
 		local scroll_axis_positive = input_service:get(scroll_action_positive)
-		local axis_input = scroll_axis_negative and -1 or scroll_axis_positive and 1 or 0
+		local axis_input = scroll_axis_negative and 1 or scroll_axis_positive and 1 or 0
 		local scroll_amount = content.scroll_amount or 0.1
 
 		if axis_input ~= 0 and is_hover then
 			content.axis_input = axis_input
+			local current_scroll_direction = scroll_axis_negative and -1 or 1
 			local previous_scroll_add = content.scroll_add or 0
-			content.scroll_add = previous_scroll_add + axis_input * scroll_amount
+
+			if content.current_scroll_direction and content.current_scroll_direction ~= current_scroll_direction then
+				previous_scroll_add = 0
+			end
+
+			content.current_scroll_direction = current_scroll_direction
+			content.scroll_add = previous_scroll_add * 1.1 + scroll_amount
 		end
 
 		local scroll_add = content.scroll_add
@@ -158,13 +165,14 @@ scrollbar_base[4] = {
 			local step = scroll_add * dt * speed
 
 			if math.abs(scroll_add) > scroll_amount / 500 then
-				content.scroll_add = scroll_add - step
+				content.scroll_add = math.max(scroll_add - step, 0)
 			else
 				content.scroll_add = nil
 			end
 
+			local current_scroll_direction = content.current_scroll_direction or 0
 			local current_scroll_value = content.scroll_value or content.value or 0
-			content.scroll_value = math.clamp(current_scroll_value + step, 0, 1)
+			content.scroll_value = math.clamp(current_scroll_value + step * current_scroll_direction, 0, 1)
 			content.value = content.scroll_value
 		end
 	end
@@ -190,7 +198,6 @@ scrollbar_base[5] = {
 		hotspot_offset[2] = current_position
 	end
 }
-local thumb_change_function = nil
 ScrollbarPassTemplates.simple_scrollbar = table.clone(scrollbar_base)
 
 table.append(ScrollbarPassTemplates.simple_scrollbar, {

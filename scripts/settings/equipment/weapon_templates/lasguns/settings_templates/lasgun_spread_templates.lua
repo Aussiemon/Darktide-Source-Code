@@ -1350,6 +1350,494 @@ spread_templates.hip_lasgun_killshot_p1_m3 = {
 		}
 	}
 }
+spread_templates.hip_lasgun_killshot_p2_m1 = {
+	still = {
+		max_spread = {
+			pitch = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			},
+			yaw = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			}
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.15
+				},
+				yaw = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.15
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				}
+			}
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 1.5,
+				lerp_basic = 2.5
+			},
+			min_yaw = {
+				lerp_perfect = 1.5,
+				lerp_basic = 2.5
+			}
+		},
+		randomized_spread = {
+			first_shot_min_ratio = 0.17,
+			max_yaw_delta = 0.8,
+			first_shot_random_ratio = 0.1,
+			random_ratio = 0.18,
+			max_pitch_delta = 0.8,
+			min_ratio = 0.25
+		},
+		immediate_spread = {
+			num_shots_clear_time = 2,
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.75 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.75 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.15,
+						lerp_basic = 1.5 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.15,
+						lerp_basic = 1.5 * spread_multi
+					}
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"hip_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 2.5,
+				lerp_basic = 4
+			},
+			min_yaw = {
+				lerp_perfect = 2.5,
+				lerp_basic = 4
+			}
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			shooting = {
+				pitch = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				}
+			}
+		},
+		immediate_spread = {
+			num_shots_clear_time = 1.2,
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 1.25,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.65
+					},
+					yaw = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.65
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.35
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.35
+					}
+				}
+			}
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"hip_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 1.3,
+				lerp_basic = 2.3
+			},
+			min_yaw = {
+				lerp_perfect = 1.3,
+				lerp_basic = 2.6
+			}
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"hip_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 2.3,
+				lerp_basic = 2.85
+			},
+			min_yaw = {
+				lerp_perfect = 2.3,
+				lerp_basic = 2.85
+			}
+		}
+	}
+}
+spread_templates.ads_lasgun_killshot_p2_m1 = {
+	still = {
+		max_spread = {
+			pitch = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			},
+			yaw = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			}
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.15
+				},
+				yaw = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.15
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				}
+			}
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 1.5,
+				lerp_basic = 2.5
+			},
+			min_yaw = {
+				lerp_perfect = 1.5,
+				lerp_basic = 2.5
+			}
+		},
+		randomized_spread = {
+			first_shot_min_ratio = 0.017,
+			max_yaw_delta = 0.8,
+			first_shot_random_ratio = 0.05,
+			random_ratio = 0.18,
+			max_pitch_delta = 0.8,
+			min_ratio = 0.25
+		},
+		immediate_spread = {
+			num_shots_clear_time = 2,
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.75 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.75 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.15,
+						lerp_basic = 1.5 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.15,
+						lerp_basic = 1.5 * spread_multi
+					}
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"ads_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 2.5,
+				lerp_basic = 3
+			},
+			min_yaw = {
+				lerp_perfect = 2.5,
+				lerp_basic = 3
+			}
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			shooting = {
+				pitch = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				}
+			}
+		},
+		immediate_spread = {
+			num_shots_clear_time = 1.2,
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 1.25,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 2
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.65
+					},
+					yaw = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.65
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.35
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.35
+					}
+				}
+			}
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"ads_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 1.3,
+				lerp_basic = 2.3
+			},
+			min_yaw = {
+				lerp_perfect = 1.3,
+				lerp_basic = 2.6
+			}
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"ads_lasgun_killshot_p2_m1",
+			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 2.3,
+				lerp_basic = 2.85
+			},
+			min_yaw = {
+				lerp_perfect = 2.3,
+				lerp_basic = 2.85
+			}
+		}
+	}
+}
 spread_templates.default_lasgun_killshot = {
 	still = {
 		max_spread = {

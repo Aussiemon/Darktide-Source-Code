@@ -157,8 +157,8 @@ ImguiInputWidgets.vector3 = {
 	end
 }
 ImguiInputWidgets.dropdown = {
-	new = function (display_name, get_value, options, on_value_changed, optional_num_decimals, has_dynamic_contents)
-		local options_texts = {}
+	new = function (display_name, get_value, options, options_texts, on_value_changed, optional_num_decimals, has_dynamic_contents)
+		local options_texts = options_texts or {}
 		local number_format, options_values, width = ImguiInputWidgets.dropdown._refresh_contents(display_name, options_texts, options, optional_num_decimals, has_dynamic_contents)
 
 		return {
@@ -177,13 +177,11 @@ ImguiInputWidgets.dropdown = {
 	end,
 	_refresh_contents = function (display_name, options_texts, options, optional_num_decimals, has_dynamic_contents)
 		local has_options_function = type(options) == "function"
-
-		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
-
-		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
+		local num_options_texts = #options_texts
 		local options_values = has_options_function and options() or options
+		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
 
-		for i = 1, #options_values do
+		for i = num_options_texts + 1, #options_values do
 			options_texts[i] = WidgetUtilities.dropdown_value_to_string(options_values[i], number_format)
 		end
 
@@ -215,7 +213,8 @@ ImguiInputWidgets.dropdown = {
 
 		Imgui.push_item_width(width)
 
-		local preview_value = WidgetUtilities.dropdown_value_to_string(value, number_format)
+		local preview_index = table.index_of(options_values, value)
+		local preview_value = options_texts[preview_index] or WidgetUtilities.dropdown_value_to_string(value, number_format)
 		local is_active = Imgui.begin_combo(label, preview_value)
 		local is_focused = Imgui.is_item_focused() or is_active
 

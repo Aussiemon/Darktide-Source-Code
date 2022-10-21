@@ -35,25 +35,28 @@ ReviveInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		knocked_down_state_input.knock_down = false
 		local buff_extension = ScriptUnit.extension(interactor_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
-		param_table.unit = interactor_unit
-		param_table.revived_unit = target_unit
 
-		buff_extension:add_proc_event(proc_events.on_revive, param_table)
+		if param_table then
+			param_table.unit = interactor_unit
+			param_table.revived_unit = target_unit
 
-		if DEDICATED_SERVER then
-			local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+			buff_extension:add_proc_event(proc_events.on_revive, param_table)
+		end
 
-			if player then
-				local is_human_player = player:is_human_controlled()
+		local interactor_player = Managers.state.player_unit_spawn:owner(interactor_unit)
+		local target_player = Managers.state.player_unit_spawn:owner(target_unit)
 
-				if is_human_player then
-					Managers.stats:record_help_ally(player)
+		if interactor_player and target_player then
+			local reviver_position = POSITION_LOOKUP[interactor_unit]
+			local revivee_position = POSITION_LOOKUP[target_unit]
+			local state_name = "knocked_down"
 
-					local reviver_position = POSITION_LOOKUP[param_table.unit]
-					local revivee_position = POSITION_LOOKUP[param_table.revived_unit]
+			Managers.telemetry_events:player_revived_ally(interactor_player, target_player, reviver_position, revivee_position, state_name)
 
-					Managers.telemetry_events:player_revived_ally(player, reviver_position, revivee_position)
-				end
+			local is_human_player = interactor_player:is_human_controlled()
+
+			if is_human_player and Managers.stats.can_record_stats() then
+				Managers.stats:record_help_ally(interactor_player, target_player)
 			end
 		end
 	end

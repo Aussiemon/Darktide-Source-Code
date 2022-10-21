@@ -4,8 +4,6 @@ local function _include_effects(template_path)
 	local effects = require(template_path)
 
 	for name, effect in pairs(effects) do
-		fassert(not line_effects[name], "Duplicate line effect %q found!", name)
-
 		line_effects[name] = effect
 	end
 end

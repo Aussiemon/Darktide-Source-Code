@@ -83,9 +83,7 @@ PackageManagerEditor.update = function (self)
 	for i = 1, #callback_queue do
 		local item = callback_queue[i]
 
-		Profiler.start("PACKAGE CALLBACK")
 		item.callback(item.id)
-		Profiler.stop("PACKAGE CALLBACK")
 	end
 
 	return true

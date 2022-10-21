@@ -1,6 +1,7 @@
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local Luggable = require("scripts/utilities/luggable")
+local Pocketable = require("scripts/utilities/pocketable")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -150,9 +151,6 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	self._selected_voice_property = extension_init_data.selected_voice
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._archetype_property, self._selected_voice_property)
 	local default_wielded_slot_name = extension_init_data.default_wielded_slot_name
-
-	fassert(default_wielded_slot_name, "needs default_wielded_slot_name")
-
 	self._default_wielded_slot_name = default_wielded_slot_name
 	self._initialized_fixed_t = fixed_frame_t
 end
@@ -290,9 +288,6 @@ PlayerUnitVisualLoadoutExtension.update = function (self, unit, dt, t)
 			if slot.equipped and slot.wieldable then
 				local item = slot.item
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-
-				fassert(weapon_template, "weapon_template %q for item %q equipped in slot %s does not exist.", item.weapon_template, item.name, slot_name)
-
 				local fx_source_config = weapon_template.fx_sources
 				local slot_fx_sources = fx_sources[slot_name]
 
@@ -456,7 +451,15 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 				Luggable.enable_physics(first_person_component, locomotion_component, slot.unit_3p)
 			end
 
-			self:_unequip_item_from_slot(slot_name, false, latest_frame)
+			if slot_config.slot_type == "pocketable" then
+				local is_server = self._is_server
+				local unit = self._unit
+				local inventory_component = self._inventory_component
+
+				Pocketable.drop_pocketable(latest_frame, is_server, unit, inventory_component, self)
+			else
+				self:_unequip_item_from_slot(slot_name, false, latest_frame)
+			end
 		end
 	end
 
@@ -520,9 +523,6 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local equipment = self._equipment
 	local slot_config = self._slot_configuration[slot_name]
 	local slot = equipment[slot_name]
-
-	fassert(not slot.equipped, "Slot %q is already equipped with an item.", slot_name)
-
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
@@ -549,14 +549,8 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 
 	if slot.wieldable then
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-
-		fassert(weapon_template, "weapon_template %q for item %q equipped in slot %s does not exist.", item.weapon_template, item.name, slot_name)
-
 		local weapon_template_name = weapon_template.name
 		local fx_source_config = weapon_template.fx_sources
-
-		fassert(fx_source_config, "Weapon template %q does not have fx_sources table.", weapon_template_name)
-
 		local fx_sources = _register_fx_sources(self._fx_extension, slot.unit_1p, slot.unit_3p, slot.attachments_1p, slot.attachments_3p, fx_source_config, slot_name, is_in_first_person_mode)
 
 		self._weapon_extension:on_wieldable_slot_equipped(item, slot_name, slot.unit_1p, fx_sources, t, optional_existing_unit_3p, from_server_correction_occurred)
@@ -612,9 +606,6 @@ end
 PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_name, from_server_correction_occurred, fixed_frame)
 	local equipment = self._equipment
 	local slot = equipment[slot_name]
-
-	fassert(slot.equipped, "Trying to unequip slot that has no item")
-
 	local item = slot.item
 	local voice_fx_preset = item.voice_fx_preset
 
@@ -672,9 +663,6 @@ end
 PlayerUnitVisualLoadoutExtension.wield_slot = function (self, slot_name)
 	local inventory = self._inventory_component
 	local currently_wielded_slot = inventory.wielded_slot
-
-	fassert(currently_wielded_slot == self.NO_WIELDED_SLOT, "Trying to wield without unwielding first. You are probably not using the PlayerUnitVisualLoadout utility.")
-
 	inventory.wielded_slot = slot_name
 
 	if self._is_server then
@@ -689,10 +677,6 @@ end
 PlayerUnitVisualLoadoutExtension._wield_slot = function (self, slot_name)
 	local equipment = self._equipment
 	local slot = equipment[slot_name]
-
-	fassert(slot.equipped, "Trying to wield slot (%s) that is not equipped.", slot_name)
-	fassert(slot.wieldable, "Trying to wield unwieldable slot (%s)", slot_name)
-
 	local is_in_first_person_mode = self._is_in_first_person_mode
 	local equipment_component = self._equipment_component
 
@@ -738,9 +722,6 @@ end
 PlayerUnitVisualLoadoutExtension.unwield_slot = function (self, slot_name)
 	local inventory_component = self._inventory_component
 	local current_wielded_slot = inventory_component.wielded_slot
-
-	fassert(current_wielded_slot == slot_name, "Trying to unwield slot that isn't wielded")
-
 	inventory_component.wielded_slot = self.NO_WIELDED_SLOT
 	local slot_type = self._slot_configuration[slot_name].slot_type
 	local can_be_assigned_to_previously_wielded_slot = PlayerCharacterConstants.previously_wielded_slot_types[slot_type]
@@ -884,6 +865,18 @@ PlayerUnitVisualLoadoutExtension.item_in_slot = function (self, slot_name)
 	end
 
 	return item.item or item
+end
+
+PlayerUnitVisualLoadoutExtension.slot_to_item = function (self, item)
+	local equipment = self._equipment
+
+	for slot_name, slot_item in pairs(equipment) do
+		if slot_item == item then
+			return slot_name
+		end
+	end
+
+	return nil
 end
 
 PlayerUnitVisualLoadoutExtension.wielded_weapon = function (self)

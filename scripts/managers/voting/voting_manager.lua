@@ -15,9 +15,7 @@ VotingManager._get_impl_by_template = function (self, template)
 	elseif template.voting_impl == "party_immaterium" then
 		return self._immaterium_party_voting_impl
 	elseif template.voting_impl then
-		assert(false, "can't find vote impl for template.voting_impl " .. template.voting_impl)
-	else
-		assert(false, "can't find vote impl for nil")
+		-- Nothing
 	end
 end
 
@@ -65,7 +63,9 @@ VotingManager.start_voting = function (self, template_name, params)
 	local success, fail_reason = self:can_start_voting(template_name, params)
 
 	if not success then
-		return Promise.rejected(fail_reason)
+		return Promise.rejected({
+			fail_reason
+		})
 	end
 
 	local template = VotingTemplates[template_name]

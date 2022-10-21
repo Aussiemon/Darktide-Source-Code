@@ -12,7 +12,7 @@ local event_vo_demolition_zealot_female_c = {
 			0.43199,
 			1.664281,
 			2.268625,
-			1.4485
+			1.44851
 		},
 		randomize_indexes = {}
 	}

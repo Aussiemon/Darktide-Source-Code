@@ -13,6 +13,7 @@ local action_data = {
 		anim_events = "idle"
 	},
 	death = {
+		vo_event = "chaos_daemonhost_death_long",
 		anim_events = {
 			"death_01"
 		},
@@ -61,11 +62,11 @@ local action_data = {
 		execute_husk_event_name = "wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk",
 		execute_timing = 3.8,
 		start_execute_at_t = {
-			4,
+			6,
+			5,
+			5,
 			3,
-			3,
-			2,
-			1
+			2
 		},
 		effect_template = EffectTemplates.chaos_daemonhost_warp_grab,
 		damage_profile = DamageProfileTemplates.daemonhost_grab,
@@ -103,6 +104,7 @@ local action_data = {
 			"idle_2"
 		},
 		exit_passive = {
+			player_vo_event = "alerted",
 			anim_events = {
 				idle = "to_alerted",
 				idle_2 = "to_alerted_2"
@@ -116,9 +118,39 @@ local action_data = {
 			}
 		},
 		stage_settings = {
+			[STAGES.passive] = {
+				vo = {
+					on_enter = {
+						daemonhost = {
+							vo_event = "chaos_daemonhost_mantra_low"
+						}
+					},
+					looping = {
+						vo_event = "chaos_daemonhost_mantra_low",
+						cooldown_duration = {
+							5,
+							8
+						}
+					}
+				}
+			},
 			[STAGES.agitated] = {
 				anim_events = {
 					"alerted_0"
+				},
+				vo = {
+					on_enter = {
+						daemonhost = {
+							vo_event = "chaos_daemonhost_mantra_medium"
+						}
+					},
+					looping = {
+						vo_event = "chaos_daemonhost_mantra_medium",
+						cooldown_duration = {
+							10,
+							12
+						}
+					}
 				}
 			},
 			[STAGES.disturbed] = {
@@ -128,6 +160,20 @@ local action_data = {
 				suppression = {
 					distance = 2,
 					suppression_value = 5
+				},
+				vo = {
+					on_enter = {
+						daemonhost = {
+							vo_event = "chaos_daemonhost_mantra_medium"
+						}
+					},
+					looping = {
+						vo_event = "chaos_daemonhost_mantra_medium",
+						cooldown_duration = {
+							9,
+							11
+						}
+					}
 				}
 			},
 			[STAGES.about_to_wake_up] = {
@@ -137,6 +183,21 @@ local action_data = {
 				suppression = {
 					distance = 5,
 					suppression_value = 10
+				},
+				vo = {
+					on_enter = {
+						player = {
+							vo_event = "alerted",
+							is_non_threatening_player = true
+						}
+					},
+					looping = {
+						vo_event = "chaos_daemonhost_mantra_high",
+						cooldown_duration = {
+							8,
+							9
+						}
+					}
 				}
 			},
 			[STAGES.waking_up] = {
@@ -153,6 +214,20 @@ local action_data = {
 				suppression = {
 					distance = 10,
 					suppression_value = 15
+				},
+				vo = {
+					on_enter = {
+						player = {
+							vo_event = "aggroed"
+						}
+					},
+					looping = {
+						vo_event = "chaos_daemonhost_mantra_high",
+						cooldown_duration = {
+							9,
+							11
+						}
+					}
 				}
 			}
 		},

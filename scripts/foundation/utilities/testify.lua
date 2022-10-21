@@ -240,7 +240,7 @@ Testify.make_request_on_client = function (self, peer_id, request_name, wait_for
 	local channel_id = self._peers[peer_id]
 
 	if not channel_id then
-		assert("[Testify] Trying to send a Testify Request through a RPC channel that has been removed")
+		-- Nothing
 	end
 
 	RPC.rpc_testify_make_request(channel_id, peer_id, request_name, request_parameters)
@@ -266,7 +266,6 @@ Testify.rpc_testify_make_request = function (self, channel_id, peer_id, request_
 
 		response = cjson.encode(response)
 
-		fassert(self:are_rpcs_registered(), "[Testify] The peer %s has been disconnected from the server. Cannot send the rpc to reply to the Testify request.", peer_id)
 		RPC.rpc_testify_wait_for_response(channel_id, request_name, response)
 	end)
 end

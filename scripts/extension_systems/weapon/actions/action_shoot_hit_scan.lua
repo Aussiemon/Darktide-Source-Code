@@ -21,6 +21,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	local player_unit = self._player_unit
 	local world = self._world
 	local weapon_item = self._weapon.item
+	local wielded_slot = self._inventory_component.wielded_slot
 	local action_settings = self._action_settings
 	local fire_config = action_settings.fire_configuration
 	local hit_scan_template = fire_config.hit_scan_template
@@ -28,8 +29,9 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	local is_critical_strike = self._critical_strike_component.is_active
 	local direction = Quaternion.forward(rotation)
 	local instakill = false
-	local end_position = nil
+	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = nil
 	local rewind_ms = self:_rewind_ms(is_local_unit, player, position, direction, max_distance)
+	power_level = hit_scan_template.power_level or power_level
 	local collision_tests = hit_scan_template.collision_tests
 
 	if collision_tests then
@@ -58,23 +60,36 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 
 		table.sort(ALL_HITS, _hit_sort_function)
 
-		end_position = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, ALL_HITS, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item)
+		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, ALL_HITS, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
 	else
 		local hits = HitScan.raycast(physics_world, position, direction, max_distance, nil, nil, rewind_ms, is_local_unit, player, is_server)
-		end_position = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, hits, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item)
+		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, hits, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
 	end
 
+	local action_component = self._action_component
 	local attacker_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = attacker_buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = player_unit
 
-	attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	if param_table then
+		param_table.attacking_unit = player_unit
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+		param_table.hit_weakspot = hit_weakspot
+		param_table.num_hit_units = num_hit_units
+
+		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	end
 
 	end_position = end_position or position + direction * max_distance
 	local fx_settings = action_settings.fx
 	local line_effect = fx_settings and fx_settings.line_effect
 
 	self:_play_line_fx(line_effect, position, end_position)
+
+	self._shot_result.data_valid = true
+	self._shot_result.hit_minion = hit_minion
+	self._shot_result.hit_weakspot = hit_weakspot
+	self._shot_result.killing_blow = killing_blow
 end
 
 function _hit_sort_function(entry_1, entry_2)

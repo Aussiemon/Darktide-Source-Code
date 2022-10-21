@@ -9,9 +9,6 @@ end
 local _default_input_value = nil
 
 AuthoritativePlayerInputHandler.init = function (self, player, is_server)
-	fassert(is_server, "Can't run authoritative extension on client.")
-	fassert(player.remote, "Can't run authoritative extension on local client, use HumanInputHandler")
-
 	self._owner_peer_id = player:peer_id()
 	self._frame = 0
 	self._player = player
@@ -128,8 +125,6 @@ AuthoritativePlayerInputHandler.get_orientation = function (self, frame)
 	local p = cache[self._pitch_index][index]
 	local r = cache[self._roll_index][index]
 
-	fassert(y and p and r, "No YPR.")
-
 	return y, p, r
 end
 
@@ -161,16 +156,11 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 		local index_offset = start_frame - self._parsed_frame - 1
 		local size = #cache[1]
 
-		assert(index_offset <= size + 1, "Creating hole in table by filling after first unfilled index.")
-
 		for i = 1, self._input_cache_size do
 			local inputs = select(i, ...)
 
 			for j = 1, end_frame_offset + 1 do
 				local value = inputs[j]
-
-				assert(value ~= nil, "Client sent less than it claimed. Mismatch between end_frame_offset and size of data.")
-
 				cache[i][index_offset + j] = value
 			end
 		end

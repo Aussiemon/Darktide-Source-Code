@@ -10,7 +10,7 @@ local event_vo_demolition_ogryn_b = {
 		},
 		sound_events_duration = {
 			3.863052,
-			2.727979,
+			2.72799,
 			2.709635,
 			2.417542
 		},

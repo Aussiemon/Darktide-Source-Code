@@ -28,11 +28,6 @@ local GameplayInitStepManagers = class("GameplayInitStepManagers")
 
 GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
-
-	fassert(shared_state.nav_world, "Nav World not initialized.")
-	fassert(shared_state.nav_data, "Nav Data not initialized.")
-	fassert(shared_state.soft_cap_out_of_bounds_units, "Out of Bounds not initialized.")
-
 	self._shared_state = shared_state
 	local world = shared_state.world
 	local level_name = shared_state.level_name
@@ -47,10 +42,11 @@ GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local side_mission = shared_state.side_mission
 	local vo_sources_cache = shared_state.vo_sources_cache
 	local fixed_frame_time = shared_state.fixed_frame_time
+	local mission_giver_vo = shared_state.mission_giver_vo
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
 
-	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
+	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
 end
 
 GameplayInitStepManagers.update = function (self, main_dt, main_t)
@@ -61,7 +57,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 	return GameplayInitStepPresence, next_step_params
 end
 
-GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
+GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
@@ -81,7 +77,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	if is_server then
 		Managers.state.bot_nav_transition = BotNavTransitionManager:new(world, physics_world, nav_world, is_server)
 		Managers.state.minion_spawn = MinionSpawnManager:new(level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
-		Managers.state.voice_over_spawn = VoiceOverSpawnManager:new(is_server)
+		Managers.state.voice_over_spawn = VoiceOverSpawnManager:new(is_server, mission_giver_vo)
 		Managers.state.horde = HordeManager:new(nav_world, physics_world)
 		Managers.state.pacing = PacingManager:new(world, nav_world, level_name, level_seed)
 	end
@@ -105,14 +101,8 @@ end
 
 GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, level_name, network_event_delegate)
 	local game_session_manager = Managers.state.game_session
-
-	fassert(game_session_manager, "[GameplayInitStepManagers] Game Session Manager not initialized.")
-
 	local game_session = game_session_manager:game_session()
 	local extension_manager = Managers.state.extension
-
-	fassert(extension_manager, "[GameplayInitStepManagers] Extension Manager not initialized.")
-
 	local UnitTemplates = require("scripts/extension_systems/unit_templates")
 	local unit_spawner_manager = UnitSpawnerManager:new(world, extension_manager, is_server, UnitTemplates, game_session, level_name, network_event_delegate)
 	Managers.state.unit_job = UnitJobManager:new(unit_spawner_manager)

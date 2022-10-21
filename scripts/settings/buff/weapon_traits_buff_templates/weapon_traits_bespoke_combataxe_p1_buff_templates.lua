@@ -1,0 +1,51 @@
+local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local stat_buffs = BuffSettings.stat_buffs
+local proc_events = BuffSettings.proc_events
+local templates = {
+	weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_hit_parent)
+}
+templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_child"
+templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_hit_child)
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_parent)
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_child"
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_child)
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_child"
+templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_child)
+templates.weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill)
+templates.weapon_trait_bespoke_combataxe_p1_windup_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_parent)
+templates.weapon_trait_bespoke_combataxe_p1_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p1_windup_increases_power_child"
+templates.weapon_trait_bespoke_combataxe_p1_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
+templates.weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
+templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent = {
+	class_name = "weapon_trait_parent_proc_buff",
+	child_buff_template = "weapon_trait_bespoke_combataxe_p1_rending_on_one_hit_kill_child",
+	child_duration = 5,
+	predicted = false,
+	stacks_to_remove = 5,
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	add_child_proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_one_hit_kill
+}
+templates.weapon_trait_bespoke_combataxe_p1_rending_on_one_hit_kill_child = {
+	predicted = false,
+	stack_offset = -1,
+	max_stacks = 5,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.rending_multiplier] = 0.1
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+}
+templates.weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_on_first_attack)
+templates.weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_scaled_on_stamina)
+
+return templates

@@ -29,6 +29,12 @@ Factory.add_to_group(SessionStats, Factory.create_simple("complete_mission_no_de
 	Flags.save_to_backend,
 	Flags.ephemeral
 }))
+Factory.add_to_group(SessionStats, Factory.create_simple("team_kills", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_kills"), {
+	Flags.save_to_backend
+}))
+Factory.add_to_group(SessionStats, Factory.create_simple("team_deaths", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_deaths"), {
+	Flags.save_to_backend
+}))
 Factory.add_to_group(SessionStats, Factory.create_smart_reducer("collect_pickup", SessionStats.definitions.mission, {
 	"side_objective_name"
 }, {

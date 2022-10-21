@@ -4,10 +4,6 @@ local RPCS = {
 local LocalMechanismVerificationState = class("LocalMechanismVerificationState")
 
 LocalMechanismVerificationState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 	self._mechanism_matched = nil
@@ -20,13 +16,13 @@ LocalMechanismVerificationState.init = function (self, state_machine, shared_sta
 	local ticket_array = string.split_by_chunk(jwt_ticket, chunk_size)
 	local ticket_array_size = #ticket_array
 
-	Log.info("LocalMechanismVerificationState", "Sending JWT Ticket, total length %s split into %s chunks", string.len(jwt_ticket), #ticket_array)
+	Log.info("LocalMechanismVerificationState", "Sending JWT Ticket, total length %s split into %s chunks", #jwt_ticket, #ticket_array)
 
 	for i = 1, #ticket_array do
 		local ticket_part = ticket_array[i]
 		local is_last_part = i == ticket_array_size
 
-		Log.info("LocalMechanismVerificationState", "Sending JWT Ticket part %s/%s, string length %s, is_last_part: %s", i, ticket_array_size, string.len(ticket_part), is_last_part)
+		Log.info("LocalMechanismVerificationState", "Sending JWT Ticket part %s/%s, string length %s, is_last_part: %s", i, ticket_array_size, #ticket_part, is_last_part)
 		RPC.rpc_check_mechanism(shared_state.channel_id, ticket_part, is_last_part)
 	end
 end

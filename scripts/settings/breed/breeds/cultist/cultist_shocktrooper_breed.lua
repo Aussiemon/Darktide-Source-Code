@@ -28,11 +28,12 @@ local breed_data = {
 	sub_faction_name = "cultist",
 	unit_template_name = "minion",
 	spawn_anim_state = "to_ranged",
-	spawn_inventory_slot = "slot_ranged_weapon",
+	volley_fire_target = true,
+	game_object_type = "minion_ranged",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
-	game_object_type = "minion_ranged",
+	spawn_inventory_slot = "slot_ranged_weapon",
 	challenge_rating = 3,
 	bone_lod_radius = 1.05,
 	use_wounds = true,
@@ -70,7 +71,7 @@ local breed_data = {
 		[stagger_types.medium] = 1.25,
 		[stagger_types.heavy] = 2.8,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.sticky] = 1.75,
+		[stagger_types.sticky] = 0.6,
 		[stagger_types.explosion] = 6.363636363636363,
 		[stagger_types.killshot] = 1
 	},
@@ -170,9 +171,13 @@ local breed_data = {
 		target = "head_aim_target",
 		distance = 5,
 		lean_variable_name = "lean",
-		lean_variable_modifier = -0.2,
 		node = "j_neck",
-		target_node = "enemy_aim_target_03"
+		target_node = "enemy_aim_target_03",
+		lean_variable_modifier = -0.2,
+		valid_aim_combat_ranges = {
+			far = true,
+			close = true
+		}
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
@@ -324,9 +329,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

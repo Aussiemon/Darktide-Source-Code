@@ -12,8 +12,6 @@ LuggableSocket.init = function (self, unit)
 
 		if lock_offset_node == "" then
 			lock_offset_node = nil
-		else
-			fassert(Unit.has_node(unit, lock_offset_node), "[LuggableSocket] Missing custom node '%s'", lock_offset_node)
 		end
 
 		luggable_socket_extension:setup_from_component(consume_luggable, is_side_mission_socket, lock_offset_node)

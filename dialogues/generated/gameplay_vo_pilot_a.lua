@@ -1,30 +1,4 @@
 local gameplay_vo_pilot_a = {
-	event_one_down = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_pilot_a__info_event_one_down_01",
-			"loc_pilot_a__info_event_one_down_02",
-			"loc_pilot_a__info_event_one_down_03",
-			"loc_pilot_a__info_event_one_down_04",
-			"loc_pilot_a__info_event_one_down_05"
-		},
-		sound_events_duration = {
-			0.84075,
-			0.514813,
-			1.354354,
-			0.864417,
-			1.036417
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
-		randomize_indexes = {}
-	},
 	info_event_almost_done = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

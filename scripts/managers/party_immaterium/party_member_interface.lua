@@ -7,7 +7,6 @@ local party_member_interface = {
 	"presence_hud_text",
 	"account_id",
 	"profile",
-	"is_invited",
 	"is_human_controlled"
 }
 

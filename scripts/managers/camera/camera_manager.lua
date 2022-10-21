@@ -31,6 +31,7 @@ local EnvironmentBlend = require("scripts/managers/camera/environment_blend")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
 local debug = false
 local CameraManager = class("CameraManager")
@@ -78,6 +79,8 @@ CameraManager.init = function (self, world)
 	self._viewport_camera_data = {}
 	self._shading_callback = callback(self, "shading_callback")
 	self._camera_shake_enabled = true
+	local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or GameParameters.vertical_fov
+	self._fov_multiplier = vertical_fov / GameParameters.vertical_fov
 end
 
 CameraManager.add_environment = function (self, shading_environment_extension)
@@ -298,6 +301,19 @@ CameraManager.shading_callback = function (self, world, shading_env, viewport, d
 
 		ShadingEnvironment.set_scalar(shading_env, "exposure_compensation", ShadingEnvironment.scalar(shading_env, "exposure_compensation") + gamma)
 
+		local ui_bloom_value = World.get_data(world, "ui_bloom_enabled") or 0
+
+		if ui_bloom_value > 0 then
+			ShadingEnvironment.set_scalar(shading_env, "ui_bloom_enabled", 1)
+			ShadingEnvironment.set_scalar(shading_env, "ui_enable_hdr_layer", 1)
+			ShadingEnvironment.set_vector3(shading_env, "ui_bloom_threshold_offset_falloff", Vector3(World.get_data(world, "ui_bloom_threshold_offset_falloff_1") or 0, World.get_data(world, "ui_bloom_threshold_offset_falloff_2") or 0, World.get_data(world, "ui_bloom_threshold_offset_falloff_3") or 0))
+			ShadingEnvironment.set_vector3(shading_env, "ui_bloom_tint", Vector3(World.get_data(world, "ui_bloom_tint_1") or 0, World.get_data(world, "ui_bloom_tint_2") or 0, World.get_data(world, "ui_bloom_tint_3") or 0))
+		else
+			World.set_data(world, "fullscreen_blur", nil)
+			ShadingEnvironment.set_scalar(shading_env, "ui_bloom_enabled", 0)
+			ShadingEnvironment.set_scalar(shading_env, "ui_enable_hdr_layer", 0)
+		end
+
 		local blur_value = World.get_data(world, "fullscreen_blur") or 0
 
 		if blur_value > 0 then
@@ -327,8 +343,6 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 	}
 
 	if current_node then
-		fassert(next_node.node ~= current_node.node, "[CameraManager] Already in tree %s and node %s", tree_id, node_name)
-
 		local transition_template = nil
 
 		if old_tree_id ~= tree_id then
@@ -458,13 +472,7 @@ end
 CameraManager._setup_node = function (self, node_settings, parent_node, root_node)
 	local node_name = node_settings.name
 	local class_name = node_settings.class
-
-	fassert(class_name, "Missing class name in node %s", node_name)
-
 	local node_class = CLASSES[class_name]
-
-	fassert(node_class, "Invalid class name %q in node %s", class_name, node_name)
-
 	local node = node_class:new(root_node)
 
 	node:parse_parameters(node_settings, parent_node)
@@ -477,8 +485,6 @@ CameraManager._setup_node = function (self, node_settings, parent_node, root_nod
 end
 
 CameraManager.update = function (self, dt, t, viewport_name, yaw, pitch, roll)
-	Profiler.start("CameraManager")
-
 	local node_trees = self._node_trees[viewport_name]
 
 	for tree_id, tree in pairs(node_trees) do
@@ -486,8 +492,10 @@ CameraManager.update = function (self, dt, t, viewport_name, yaw, pitch, roll)
 		tree.root_node:set_aim_pitch(pitch)
 		tree.root_node:set_aim_roll(roll)
 	end
+end
 
-	Profiler.stop("CameraManager")
+CameraManager.set_fov_multiplier = function (self, multiplier)
+	self._fov_multiplier = multiplier
 end
 
 CameraManager.set_variable = function (self, viewport_name, field, value)
@@ -537,8 +545,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 	local cast_radius = smooth_radius
 
 	if len < cast_radius then
-		assert(Vector3.is_valid(cast_to), "Trying to set invalid camera position")
-
 		return cast_to
 	end
 
@@ -559,8 +565,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 			Application.warning("[CameraManager] Safe spot is intersecting with geometry")
 		end
 
-		assert(Vector3.is_valid(cast_from), "Trying to set invalid camera position")
-
 		return cast_from
 	end
 
@@ -568,8 +572,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 
 	while true do
 		if cast_distance < SWEEP_EPSILON then
-			assert(Vector3.is_valid(cast_from), "Trying to set invalid camera position")
-
 			return cast_from
 		end
 
@@ -594,8 +596,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 
 			if y < SWEEP_EPSILON then
 				local pos = hit.position
-
-				assert(Vector3.is_valid(pos), "Trying to set invalid camera position")
 
 				return pos
 			end
@@ -622,8 +622,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 			if debug then
 				drawer:sphere(cast_to, 0.2, Color(0, 0, 255))
 			end
-
-			assert(Vector3.is_valid(cast_to), "Trying to set invalid camera position")
 
 			return cast_to
 		end
@@ -674,12 +672,7 @@ CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	sequence_event_settings.end_time = start_time + duration
 
 	if previous_values then
-		fassert(duration > 0, "Camera effect sequence duration is %f", duration)
-
 		local recuperate_percentage = sequence_event_settings.event.time_to_recuperate_to
-
-		fassert(recuperate_percentage > 0, "Camera effect sequence time_to_recuperate_to is %f", recuperate_percentage)
-
 		local time_to_recover = recuperate_percentage / 100 * duration
 		sequence_event_settings.time_to_recover = time_to_recover
 		sequence_event_settings.recovery_values = self:_calculate_sequence_event_values_normal(sequence_event_settings.event.values, time_to_recover)
@@ -791,7 +784,6 @@ CameraManager._calculate_sequence_event_values_recovery = function (self, t)
 
 	if time_to_recover <= 0 then
 		table.dump(sequence_event_settings)
-		fassert(false, "time to recover is less than 0")
 	end
 
 	local starting_values = sequence_event_settings.previous_values
@@ -827,7 +819,6 @@ CameraManager._calculate_sequence_event_values_normal = function (self, event_va
 				if time_stamp_difference == 0 then
 					table.dump(current_settings, "current settings")
 					table.dump(next_settings, "next_settings")
-					assert(false, "Time stamp difference is 0, this would result in a div0")
 				end
 
 				local lerp_progress = progress / time_stamp_difference
@@ -888,9 +879,6 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 		if root_unit and ALIVE[root_unit] and current_node:use_collision() then
 			local safe_position_offset = current_node:safe_position_offset()
 			local safe_pos = Unit.world_position(root_unit, root_object or 1) + safe_position_offset:unbox()
-
-			assert(Vector3.is_valid(safe_pos), "Trying to use invalid safe position")
-
 			pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
 		end
 
@@ -900,7 +888,7 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 		Unit.set_local_position(self._rtxgi_volume, 1, pos)
 		ScatterSystem.move_observer(self._scatter_system, self._scatter_system_observers[viewport_name], pos, camera_data.rotation)
 
-		local physics_world = World.physics_world(self._world)
+		local physics_world = self._physics_world
 
 		if physics_world and PhysicsWorld.set_observer then
 			PhysicsWorld.set_observer(physics_world, Matrix4x4.from_quaternion_position(camera_data.rotation, pos))
@@ -914,8 +902,13 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 	if camera_data.vertical_fov then
 		local vertical_fov = camera_data.vertical_fov
 
-		Camera.set_vertical_fov(camera, vertical_fov)
-		Camera.set_vertical_fov(shadow_cull_camera, current_node:default_fov())
+		if current_node:should_apply_fov_multiplier() then
+			Camera.set_vertical_fov(camera, vertical_fov * self._fov_multiplier)
+			Camera.set_vertical_fov(shadow_cull_camera, current_node:default_fov())
+		else
+			Camera.set_vertical_fov(camera, vertical_fov)
+			Camera.set_vertical_fov(shadow_cull_camera, current_node:default_fov())
+		end
 	end
 
 	if camera_data.custom_vertical_fov then
@@ -954,7 +947,7 @@ CameraManager._update_angular_velocity = function (self, dt, viewport_name)
 		self._angular_velocity = Vector3Box(angular_velocity_vector * angular_delta / dt)
 	end
 
-	self._last_rotation = QuaternionBox(camera_rot)
+	QuaternionBox.store(self._last_rotation, camera_rot)
 end
 
 CameraManager._update_sound_listener = function (self, viewport_name)

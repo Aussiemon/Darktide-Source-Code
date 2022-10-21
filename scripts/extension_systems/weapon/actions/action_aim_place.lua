@@ -1,5 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
+local AimPlaceUtil = require("scripts/extension_systems/weapon/actions/utilities/aim_place_util")
 local ActionAimPlace = class("ActionAimPlace", "ActionWeaponBase")
 
 ActionAimPlace.init = function (self, action_context, ...)
@@ -15,48 +16,12 @@ end
 
 ActionAimPlace.fixed_update = function (self, dt, t)
 	local first_person_component = self._first_person_component
-	local look_position = first_person_component.position
-	local look_rotation = first_person_component.rotation
-	local look_direction = Quaternion.forward(look_rotation)
-	local place_configuration = self._action_settings.place_configuration
-	local place_distance = place_configuration.distance
+	local action_component = self._action_component
+	local action_settings = self._action_settings
+	local place_configuration = action_settings.place_configuration
 	local physics_world = self._physics_world
-	local hit, position, _, normal, actor = PhysicsWorld.raycast(physics_world, look_position, look_direction, place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
-
-	if not hit then
-		local downward_raycast_position = look_position + look_direction * place_distance
-		_, position, _, normal, actor = PhysicsWorld.raycast(physics_world, downward_raycast_position, Vector3.down(), place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
-	end
-
-	local can_place = false
-
-	if position then
-		if Vector3.dot(normal, Vector3.up()) > 0.7 then
-			can_place = true
-		end
-	else
-		position = Vector3.zero()
-	end
-
-	local unit_hit = nil
-
-	if actor then
-		unit_hit = Actor.unit(actor)
-	end
-
-	if unit_hit then
-		local unit_spawner_manager = Managers.state.unit_spawner
-		local game_object_id = unit_spawner_manager:game_object_id(unit_hit)
-		local level_index = unit_spawner_manager:level_index(unit_hit)
-
-		if not game_object_id and not level_index then
-			unit_hit = nil
-		end
-	end
-
-	local look_direction_flat = Vector3.flat(look_direction)
-	local rotation = Quaternion.look(look_direction_flat)
-	local current_rotation_step = self._action_component.rotation_step
+	local can_place, position, rotation, placed_on_unit = AimPlaceUtil.aim_placement(physics_world, place_configuration, first_person_component)
+	local current_rotation_step = action_component.rotation_step
 
 	if place_configuration.allow_rotation then
 		local rotate_input = place_configuration.rotation_input
@@ -66,6 +31,20 @@ ActionAimPlace.fixed_update = function (self, dt, t)
 		if has_input then
 			current_rotation_step = (current_rotation_step + 1) % rotation_steps
 			self._action_component.rotation_step = current_rotation_step
+			local rotation_animation_1p = place_configuration.anim_rotate_event
+			local rotation_animation_3p = place_configuration.anim_rotate_event_3p or rotation_animation_1p
+
+			if rotation_animation_1p then
+				self:trigger_anim_event(rotation_animation_1p, rotation_animation_3p)
+			end
+
+			local sound_event = place_configuration.rotate_sound_event
+
+			if sound_event then
+				local position_offset = place_configuration.sound_position_offset and place_configuration.sound_position_offset:unbox() or Vector3.zero()
+
+				self._fx_extension:trigger_exclusive_wwise_event(sound_event, position + position_offset)
+			end
 		end
 
 		local angle = math.pi * 2 / rotation_steps * current_rotation_step
@@ -73,11 +52,11 @@ ActionAimPlace.fixed_update = function (self, dt, t)
 		rotation = Quaternion.multiply(rotation, additional_rotation)
 	end
 
-	self._action_component.position = position
-	self._action_component.rotation = rotation
-	self._action_component.can_place = can_place
-	self._action_component.aiming_place = true
-	self._action_component.placed_on_unit = unit_hit
+	action_component.can_place = can_place
+	action_component.position = position
+	action_component.rotation = rotation
+	action_component.placed_on_unit = placed_on_unit
+	action_component.aiming_place = true
 end
 
 ActionAimPlace.finish = function (self, reason, data, t, time_in_action)

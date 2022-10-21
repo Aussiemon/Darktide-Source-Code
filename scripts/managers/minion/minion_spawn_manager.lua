@@ -4,6 +4,8 @@ local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_
 local MinionSpawnManagerTestify = GameParameters.testify and require("scripts/managers/minion/minion_spawn_manager_testify")
 local Vo = require("scripts/utilities/vo")
 local MinionSpawnManager = class("MinionSpawnManager")
+local MINION_QUEUE_RING_BUFFER_SIZE = 256
+local MINION_QUEUE_PARAMETERS = table.enum("breed_name", "position", "rotation", "side_id", "optional_aggro_state", "optional_target_unit", "optional_spawner_unit", "optional_group_id", "optional_mission_objective_id", "optional_attack_selection_template_name")
 
 MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
 	self._seed = level_seed
@@ -12,6 +14,16 @@ MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_uni
 	self._num_spawned_minions = 0
 	self._side_system = Managers.state.extension:system("side_system")
 	self._soft_cap_out_of_bounds_units = soft_cap_out_of_bounds_units
+	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)
+
+	for i = 1, MINION_QUEUE_RING_BUFFER_SIZE do
+		spawn_queue[i] = Script.new_array(#MINION_QUEUE_PARAMETERS)
+	end
+
+	self._spawn_queue = spawn_queue
+	self._spawn_queue_read_index = 1
+	self._spawn_queue_write_index = 1
+	self._spawn_queue_size = 0
 end
 
 MinionSpawnManager.delete_units = function (self)
@@ -26,6 +38,8 @@ MinionSpawnManager.delete_units = function (self)
 end
 
 MinionSpawnManager.update = function (self, dt, t)
+	self:_update_spawn_queue()
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(MinionSpawnManagerTestify, self)
 	end
@@ -88,9 +102,48 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 		Vo.enemy_generic_vo_event(unit, spawn_vo_event, breed.name)
 	end
 
+	if DEDICATED_SERVER then
+		Managers.telemetry_reporters:reporter("enemy_spawns"):register_event(breed)
+	end
+
 	Managers.event:trigger("minion_unit_spawned", unit)
 
 	return unit
+end
+
+MinionSpawnManager.queue_minion_to_spawn = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name)
+	local queue = self._spawn_queue
+	local write_index = self._spawn_queue_write_index
+	local queue_entry = queue[write_index]
+	queue_entry[MINION_QUEUE_PARAMETERS.breed_name] = breed_name
+	queue_entry[MINION_QUEUE_PARAMETERS.position] = Vector3Box(position)
+	queue_entry[MINION_QUEUE_PARAMETERS.rotation] = QuaternionBox(rotation)
+	queue_entry[MINION_QUEUE_PARAMETERS.side_id] = side_id
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_aggro_state] = optional_aggro_state
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_target_unit] = optional_target_unit
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_spawner_unit] = optional_spawner_unit
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_group_id] = optional_group_id
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_mission_objective_id] = optional_mission_objective_id
+	queue_entry[MINION_QUEUE_PARAMETERS.optional_attack_selection_template_name] = optional_attack_selection_template_name
+	self._spawn_queue_write_index = write_index % MINION_QUEUE_RING_BUFFER_SIZE + 1
+	self._spawn_queue_size = self._spawn_queue_size + 1
+end
+
+MinionSpawnManager._update_spawn_queue = function (self)
+	local size = self._spawn_queue_size
+
+	if size == 0 then
+		return
+	end
+
+	local queue = self._spawn_queue
+	local read_index = self._spawn_queue_read_index
+	local queue_entry = queue[read_index]
+
+	self:spawn_minion(queue_entry[MINION_QUEUE_PARAMETERS.breed_name], queue_entry[MINION_QUEUE_PARAMETERS.position]:unbox(), queue_entry[MINION_QUEUE_PARAMETERS.rotation]:unbox(), queue_entry[MINION_QUEUE_PARAMETERS.side_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_aggro_state], queue_entry[MINION_QUEUE_PARAMETERS.optional_target_unit], queue_entry[MINION_QUEUE_PARAMETERS.optional_spawner_unit], queue_entry[MINION_QUEUE_PARAMETERS.optional_group_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_mission_objective_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_attack_selection_template_name])
+
+	self._spawn_queue_read_index = read_index % MINION_QUEUE_RING_BUFFER_SIZE + 1
+	self._spawn_queue_size = self._spawn_queue_size - 1
 end
 
 MinionSpawnManager._initialize_inventory = function (self, unit, breed, blackboard, optional_attack_selection_template_name)

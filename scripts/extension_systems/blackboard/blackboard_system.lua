@@ -68,12 +68,8 @@ BlackboardSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 BlackboardSystem.physics_async_update = function (self, context, dt, t, ...)
-	Profiler.start("prioritized")
 	self:_update_blackboards_prioritized(dt, t)
-	Profiler.stop("prioritized")
-	Profiler.start("non-prioritized")
 	self:_update_blackboards(dt, t)
-	Profiler.stop("non-prioritized")
 end
 
 local function _update_blackboard(unit, blackboard, dt, t)
@@ -156,13 +152,9 @@ end
 
 BlackboardSystem.register_priority_update_unit = function (self, unit)
 	local blackboard_prioritized_updates = self._blackboard_prioritized_updates
-
-	fassert(table.index_of(blackboard_prioritized_updates, unit) == -1, "[BlackboardSystem] Tried to register priority unit twice!")
-
 	local blackboard_updates = self._blackboard_updates
 	local update_index = table.index_of(blackboard_updates, unit)
 
-	fassert(update_index ~= -1, "[BlackboardSystem] Tried to register priority unit that wasn't registered for update yet.")
 	table.swap_delete(blackboard_updates, update_index)
 
 	blackboard_prioritized_updates[#blackboard_prioritized_updates + 1] = unit
@@ -172,7 +164,6 @@ BlackboardSystem.unregister_priority_update_unit = function (self, unit)
 	local blackboard_prioritized_updates = self._blackboard_prioritized_updates
 	local index = table.index_of(blackboard_prioritized_updates, unit)
 
-	fassert(index ~= -1, "[BlackboardSystem] Tried to unregister non-priority unit!")
 	table.swap_delete(blackboard_prioritized_updates, index)
 
 	local blackboard_updates = self._blackboard_updates

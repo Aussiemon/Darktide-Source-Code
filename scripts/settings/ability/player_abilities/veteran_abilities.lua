@@ -3,12 +3,43 @@ local ranger_talent_settings = TalentSettings.veteran_2
 local squad_leader_talent_settings = TalentSettings.veteran_3
 local abilities = {
 	veteran_ranger_ranged_stance = {
+		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
 		ability_template = "ranged_stance",
-		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_type = "combat_ability",
+		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
 			buff_to_add = "veteran_ranger_ranged_stance"
+		},
+		cooldown = ranger_talent_settings.combat_ability.cooldown,
+		max_charges = ranger_talent_settings.combat_ability.max_charges,
+		archetypes = {
+			"veteran"
+		}
+	},
+	veteran_ranger_ranged_stance_weapon_handling_improved = {
+		required_weapon_type = "ranged",
+		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
+		ability_template = "ranged_stance",
+		ability_type = "combat_ability",
+		icon = "content/ui/materials/icons/abilities/ultimate/default",
+		ability_template_tweak_data = {
+			buff_to_add = "veteran_ranger_ranged_stance_weapon_handling_improved"
+		},
+		cooldown = ranger_talent_settings.combat_ability.cooldown,
+		max_charges = ranger_talent_settings.combat_ability.max_charges,
+		archetypes = {
+			"veteran"
+		}
+	},
+	veteran_ranger_ranged_stance_rending = {
+		required_weapon_type = "ranged",
+		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
+		ability_template = "ranged_stance",
+		ability_type = "combat_ability",
+		icon = "content/ui/materials/icons/abilities/ultimate/default",
+		ability_template_tweak_data = {
+			buff_to_add = "veteran_ranger_ranged_stance_rending"
 		},
 		cooldown = ranger_talent_settings.combat_ability.cooldown,
 		max_charges = ranger_talent_settings.combat_ability.max_charges,
@@ -58,7 +89,8 @@ local abilities = {
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = squad_leader_talent_settings.offensive_2.max_charges,
 		archetypes = {
-			"veteran"
+			"veteran",
+			"zealot"
 		}
 	}
 }

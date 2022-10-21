@@ -44,8 +44,6 @@ local function page_from_link(paged, link, prev_links)
 end
 
 local function page_from_hal_link(paged, hal_link, prev_links)
-	assert(paged._links[hal_link] ~= nil, "No " .. hal_link .. " link present")
-
 	local link = BackendUtilities.fetch_link(paged, hal_link)
 
 	return page_from_link(paged, link, paged._links.prev == nil and prev_links)

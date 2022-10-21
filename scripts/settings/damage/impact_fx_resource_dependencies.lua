@@ -34,11 +34,11 @@ ImpactFxResourceDependencies.impact_decal_units = function (id, data_table)
 	_cached_templates[id] = resource_packages
 
 	table.clear(TEMP_IMPACT_FX_LOOKUPS)
-	_fetch_impact_fx_lookups_recursive(data_table, TEMP_IMPACT_FX_LOOKUPS)
+	_fetch_impact_fx_lookups_recursive(data_table, TEMP_IMPACT_FX_LOOKUPS, id)
 	table.clear(TEMP_RESOURCE_PACKAGES)
 	_find_impact_decal_resources_recursive(TEMP_IMPACT_FX_LOOKUPS, TEMP_RESOURCE_PACKAGES)
 
-	for resource_name, _ in pairs(TEMP_RESOURCE_PACKAGES) do
+	for resource_name in pairs(TEMP_RESOURCE_PACKAGES) do
 		TEMP_RESOURCE_PACKAGES[resource_name] = nil
 		resource_packages[#resource_packages + 1] = resource_name
 	end
@@ -46,10 +46,10 @@ ImpactFxResourceDependencies.impact_decal_units = function (id, data_table)
 	return resource_packages
 end
 
-function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map)
+function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map, path)
 	for key, value in pairs(data_table) do
 		if type(value) == "table" and not _is_class(value) then
-			_fetch_impact_fx_lookups_recursive(value, impact_fx_map)
+			_fetch_impact_fx_lookups_recursive(value, impact_fx_map, (path or "") .. "." .. key)
 		elseif key == "damage_type" then
 			impact_fx_map[value] = impact_fx_lookup[value]
 		end

@@ -210,6 +210,14 @@ ProjectileFxExtension.on_build_up_stop = function (self)
 	end
 end
 
+ProjectileFxExtension.on_cluster = function (self)
+	local effects = self._effects
+
+	if effects and effects.cluster then
+		self:start_fx("cluster")
+	end
+end
+
 ProjectileFxExtension.start_fx = function (self, effect_type)
 	local effects = self._effects[effect_type]
 	local sfx = effects.sfx

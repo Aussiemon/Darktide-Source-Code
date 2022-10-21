@@ -44,7 +44,7 @@ local function _update_towards_position(target_position, physics_world, integrat
 end
 
 local function _update_towards_target_position(physics_world, integration_data, dt, t)
-	local target_position = integration_data.target_position:unbox()
+	local target_position = integration_data.target_position
 	local position, rotation = _update_towards_position(target_position, physics_world, integration_data, dt, t)
 
 	return position, rotation
@@ -152,7 +152,7 @@ local function _check_collisions(physics_world, integration_data, previus_positi
 			end
 
 			if integration_data.damage_extension then
-				local current_speed = Vector3.length(integration_data.velocity:unbox())
+				local current_speed = Vector3.length(integration_data.velocity)
 				local impact_result = integration_data.damage_extension:on_impact(hit.position, hit_actor, hit.hit_direction, hit.hit_normal, current_speed, force_delete)
 
 				if impact_result == projectile_impact_results.removed then
@@ -180,9 +180,7 @@ TrueFlightProjectileLocomotion.integrate = function (physics_world, integration_
 		return
 	end
 
-	Profiler.start("TrueFlightProjectileLocomotion_integrate")
-
-	local previus_position = integration_data.position:unbox()
+	local previus_position = integration_data.position
 	local target_unit = integration_data.target_unit
 	local target_position = integration_data.target_position
 	local true_flight_template = integration_data.true_flight_template
@@ -213,7 +211,7 @@ TrueFlightProjectileLocomotion.integrate = function (physics_world, integration_
 	end
 
 	if target_position then
-		local check_position = target_position:unbox()
+		local check_position = target_position
 
 		if not legitimate_target_func(integration_data, nil, check_position, previus_position) then
 			integration_data.target_position = nil
@@ -237,7 +235,7 @@ TrueFlightProjectileLocomotion.integrate = function (physics_world, integration_
 		local new_target, new_target_hit_zone = nil
 
 		if is_seeking then
-			new_target, new_target_hit_zone = _find_new_target(integration_data, integration_data.position:unbox(), dt, t)
+			new_target, new_target_hit_zone = _find_new_target(integration_data, integration_data.position, dt, t)
 		end
 
 		if new_target then
@@ -259,11 +257,11 @@ TrueFlightProjectileLocomotion.integrate = function (physics_world, integration_
 
 	new_position = _check_collisions(physics_world, integration_data, previus_position, new_position, is_server, dt, t)
 
-	ProjectileLocomotionUtility.check_suppresion(physics_world, integration_data, previus_position, new_position, is_server, dt, t)
-	integration_data.position:store(new_position)
-	integration_data.rotation:store(new_rotation)
-	integration_data.previous_position:store(previus_position)
-	Profiler.stop("TrueFlightProjectileLocomotion_integrate")
+	ProjectileLocomotionUtility.check_suppression(physics_world, integration_data, previus_position, new_position, is_server, dt, t)
+
+	integration_data.position = new_position
+	integration_data.rotation = new_rotation
+	integration_data.previous_position = previus_position
 end
 
 return TrueFlightProjectileLocomotion

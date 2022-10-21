@@ -62,12 +62,8 @@ end
 
 ScriptUnit.add_extension = function (extension_init_context, unit, extension_name, system_name, extension_init_data, ...)
 	local extension_class = CLASSES[extension_name]
-
-	fassert(extension_class, "No class found for extension with name %q", extension_name)
-
 	local extension = extension_class:new(extension_init_context, unit, extension_init_data, ...)
 
-	fassert(not ScriptUnit.has_extension(unit, system_name), "An extension already exists belonging system %q on unit %s", system_name, unit)
 	_set_extension_script(unit, system_name, extension)
 
 	return extension
@@ -82,10 +78,6 @@ ScriptUnit.remove_extension = function (unit, system_name)
 	end
 
 	local unit_extensions = Entities[unit]
-
-	fassert(unit_extensions)
-	fassert(unit_extensions[system_name], "Tried to remove system %s extension for unit %s", system_name, unit)
-
 	unit_extensions[system_name] = nil
 end
 

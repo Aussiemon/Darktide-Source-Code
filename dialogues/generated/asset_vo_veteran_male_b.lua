@@ -7,7 +7,7 @@ local asset_vo_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__zone_watertown_acid_clouds_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.290042,
+			[1.0] = 4.290021,
 			[2.0] = 4.852521
 		},
 		sound_event_weights = {
@@ -44,9 +44,9 @@ local asset_vo_veteran_male_b = {
 		},
 		sound_events_duration = {
 			3.625563,
-			3.379688,
+			3.379667,
 			4.231667,
-			3.153
+			3.152979
 		},
 		randomize_indexes = {}
 	},
@@ -88,7 +88,7 @@ local asset_vo_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__asset_sigil_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.010354,
+			[1.0] = 5.010333,
 			[2.0] = 4.64775
 		},
 		randomize_indexes = {}
@@ -106,7 +106,7 @@ local asset_vo_veteran_male_b = {
 			2.562771,
 			2.440104,
 			1.8265,
-			2.251333
+			2.251313
 		},
 		randomize_indexes = {}
 	},
@@ -120,7 +120,7 @@ local asset_vo_veteran_male_b = {
 			"loc_veteran_male_b__asset_unnatural_dark_b_04"
 		},
 		sound_events_duration = {
-			2.602188,
+			2.602167,
 			1.888688,
 			1.856229,
 			2.298125

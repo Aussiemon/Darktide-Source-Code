@@ -1,6 +1,9 @@
+local AchievementData = require("scripts/managers/achievements/achievement_data")
 local AchievementList = require("scripts/managers/achievements/achievement_list")
 local AchievementsEvents = require("scripts/managers/achievements/utility/achievements_events")
 local AchievementTracker = require("scripts/managers/achievements/utility/achievement_tracker")
+local BatchedSavingStrategy = require("scripts/managers/achievements/utility/batched_saving_strategy")
+local InstantSavingStrategy = require("scripts/managers/achievements/utility/instant_saving_strategy")
 local Promise = require("scripts/foundation/utilities/promise")
 local MasterItems = require("scripts/backend/master_items")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -10,170 +13,93 @@ local CLIENT_RPCS = {
 	"rpc_notify_commendation_progress"
 }
 
-AchievementsManager._is_client = function (self)
-	return not self._is_server
+local function _get_platform_class()
+	if IS_GDK or IS_XBS then
+		return require("scripts/managers/achievements/platforms/xbox_live_achievement")
+	end
+
+	if Backend.get_auth_method() == Backend.AUTH_METHOD_STEAM then
+		return require("scripts/managers/achievements/platforms/steam_achievement")
+	end
+
+	return require("scripts/managers/achievements/platforms/no_platform_achievement")
 end
 
-AchievementsManager._is_tracker = function (self)
-	return self._is_server
-end
+local platform_class = _get_platform_class()
 
-AchievementsManager.init = function (self, is_server, event_delegate)
-	self._is_server = is_server
+AchievementsManager.init = function (self, is_server, event_delegate, instant_saving)
 	self._network_event_delegate = event_delegate
 	self._achievements = AchievementList
 	self._backend_data = nil
 
-	if self:_is_client() then
+	if is_server then
+		local saving_strategy_class = instant_saving and InstantSavingStrategy or BatchedSavingStrategy
+
+		self:_start_tracking(saving_strategy_class)
+	else
+		self._is_client = true
+
 		self._network_event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 
 		self._unlocked = {}
-	end
-
-	if self:_is_tracker() then
-		self:verify_achievements()
-
-		self._achievement_tracker = AchievementTracker:new(self:get_achievement_definitions())
-
-		AchievementsEvents.install(self)
+		self._platform = nil
 	end
 end
 
 AchievementsManager.destroy = function (self)
-	if self:_is_client() then
+	if self._is_client then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 
 		return
 	end
 
-	if self:_is_tracker() then
-		self:untrack_all_players()
-		AchievementsEvents.uninstall(self)
+	if self._is_tracker then
+		self:_stop_tracking()
 	end
 end
 
-AchievementsManager._platform_available = function (self)
-	if rawget(_G, "Achievement") then
-		return true
-	end
+AchievementsManager._start_tracking = function (self, saving_strategy_class)
+	self._is_tracker = true
+	self._achievement_tracker = AchievementTracker:new(self:get_achievement_definitions(), saving_strategy_class, false)
 
-	return false
+	AchievementsEvents.install(self)
 end
 
-AchievementsManager._platform_is_unlocked = function (self, achievement_id)
-	if rawget(_G, "Achievement") then
-		return Achievement.unlocked(achievement_id)
-	end
+AchievementsManager._stop_tracking = function (self)
+	self:untrack_all_players()
+	AchievementsEvents.uninstall(self)
+	self._achievement_tracker:delete()
 
-	return false
+	self._achievement_tracker = nil
+	self._is_tracker = false
 end
 
-AchievementsManager._platform_unlock = function (self, ...)
-	if rawget(_G, "Achievement") then
-		Achievement.unlock(...)
-
-		return true
-	end
-
-	return false
+AchievementsManager.client_start_tracking = function (self)
+	self:_start_tracking(BatchedSavingStrategy)
+	Log.info("AchievementsManager", "client started tracking achievements")
 end
 
-AchievementsManager._platform_indicate_progress = function (self, achievement_definition, value)
-	if rawget(_G, "Achievement") then
-		Achievement.indicate_progress(achievement_definition:id(), value, achievement_definition:get_target())
-
-		return true
-	end
-
-	return false
-end
-
-local function _verify_localization(achievements, issues)
-	local missing_labels = {}
-	local missing_descriptions = {}
-
-	for _, achievement in ipairs(achievements) do
-		local label = achievement:label(true)
-
-		if not Managers.localization:exists(label) and not table.array_contains(missing_labels, label) then
-			missing_labels[#missing_labels + 1] = label
-		end
-
-		local description = achievement:description(true)
-
-		if not Managers.localization:exists(description) and not table.array_contains(missing_descriptions, description) then
-			missing_descriptions[#missing_descriptions + 1] = description
-		end
-	end
-
-	for _, label in ipairs(missing_labels) do
-		issues[#issues + 1] = string.format("Missing localization for label %s", label)
-	end
-
-	for _, description in ipairs(missing_descriptions) do
-		issues[#issues + 1] = string.format("Missing localization for description %s", description)
-	end
-end
-
-local function _verify_backend(achievements, backend_data, issues)
-	local missing_in_backend = {}
-	local only_in_backend = {}
-	local backend_ids = {}
-
-	for _, commendation in ipairs(backend_data.commendations) do
-		local id = commendation.id
-		backend_ids[id] = true
-
-		if not achievements.achievement_exists(id) then
-			only_in_backend[#only_in_backend + 1] = id
-		end
-	end
-
-	for _, achievement in ipairs(achievements) do
-		local id = achievement:id()
-
-		if not backend_ids[id] then
-			missing_in_backend[#missing_in_backend + 1] = id
-		end
-	end
-
-	for _, id in ipairs(missing_in_backend) do
-		issues[#issues + 1] = string.format("Achievement with id %s is missing in the backend.", id)
-	end
-
-	for _, id in ipairs(only_in_backend) do
-		issues[#issues + 1] = string.format("Achievement with id %s only exists in the backend.", id)
-	end
-end
-
-AchievementsManager.verify_achievements = function (self)
-	local issues = {}
-
-	_verify_localization(self._achievements, issues)
-
-	if self._backend_data then
-		_verify_backend(self._achievements, self._backend_data, issues)
-	end
-
-	if #issues > 0 then
-		Log.warning("AchievementsManager", "Achievements have the following issues : %s", table.tostring(issues, 99))
-	else
-		Log.info("AchievementsManager", "No issues found with achievement.")
-	end
-
-	return #issues == 0
+AchievementsManager.client_stop_tracking = function (self)
+	self:_stop_tracking()
+	Log.info("AchievementsManager", "client stopped tracking achievements")
 end
 
 AchievementsManager.sync_achievement_data = function (self, account_id)
-	if not math.is_uuid(account_id) then
-		return Promise.resolved()
+	local platform_promise = Promise.resolved()
+
+	if self._is_client then
+		self._platform, platform_promise = platform_class:new()
 	end
 
-	return Managers.backend.interfaces.commendations:get_commendations(account_id, true, false):next(function (data)
-		self._backend_data = data
+	if not math.is_uuid(account_id) then
+		return platform_promise
+	end
+
+	local backend_promise = Managers.backend.interfaces.commendations:get_commendations(account_id, true, true)
+
+	return Promise.all(backend_promise, platform_promise):next(function (promise_result)
+		self._backend_data = promise_result[1]
 		local commendations = self._backend_data.commendations
-		local has_platform = self:_platform_available()
-		local unlock_on_platform = {}
 		local no_rewards = {}
 
 		for _, commendation in ipairs(commendations) do
@@ -192,23 +118,56 @@ AchievementsManager.sync_achievement_data = function (self, account_id)
 				for _, reward in ipairs(rewards) do
 					achievement:add_reward(reward)
 				end
+			until true
+		end
 
-				local is_complete = commendation.complete
-				local is_plaform_achievement = achievement:is_platform()
-				local should_be_unlocked = is_complete and has_platform and is_plaform_achievement
+		local achievement_data = AchievementData()
 
-				if should_be_unlocked and not self:_platform_is_unlocked(id) then
-					unlock_on_platform[#unlock_on_platform + 1] = id
+		for _, stat in ipairs(self._backend_data.stats) do
+			achievement_data.stats[stat.stat] = stat.value
+		end
+
+		for i = 1, #commendations do
+			local achievement = commendations[i]
+			local achievement_id = achievement.id
+			local is_achievement = self:achievement_definition_from_id(achievement_id) ~= nil
+			local is_complete = achievement.complete
+
+			if is_achievement and is_complete then
+				achievement_data.completed[achievement_id] = is_complete and (achievement.at or true) or nil
+			end
+		end
+
+		for i = 1, #self._achievements do
+			repeat
+				local achievement = self._achievements[i]
+				local id = achievement:id()
+				local is_platform = self._platform:is_platform_achievement(id)
+
+				if not is_platform then
+					break
 				end
 
+				local unlocked_on_platform = self._platform:is_unlocked(id)
+
+				if unlocked_on_platform then
+					break
+				end
+
+				local is_complete = achievement:is_completed(achievement_data)
+
 				if is_complete then
-					self._unlocked[id] = true
+					self._platform:unlock_achievement(id)
+				else
+					local progress = achievement:get_progress(achievement_data)
+					local target = achievement:get_target()
+
+					self._platform:update_progress(id, progress, target)
 				end
 			until true
 		end
 
-		self:_platform_unlock(unpack(unlock_on_platform))
-		self:verify_achievements()
+		self._unlocked = achievement_data.completed
 	end):catch(function (error)
 		Log.warning("AchievementsManager", "Failed to fetch data, the error was: %s", table.tostring(error, 5))
 	end)
@@ -222,38 +181,38 @@ AchievementsManager.achievement_definition_from_id = function (self, achievement
 	return self._achievements.achievement_from_id(achievement_id)
 end
 
-AchievementsManager.track_player = function (self, session_id, player)
-	if not self:_is_tracker() then
+AchievementsManager.track_player = function (self, player)
+	if not self._is_tracker then
 		return
 	end
 
-	Log.info("AchievementsManager", "Track commendations for account %s.", player:account_id())
+	Log.info("AchievementsManager", "Track achievements for account %s.", player:account_id())
 
 	return self._achievement_tracker:track_player(player)
 end
 
-AchievementsManager.untrack_player = function (self, session_id, account_id)
-	if not self:_is_tracker() then
+AchievementsManager.untrack_player = function (self, account_id)
+	if not self._is_tracker then
 		return
 	end
 
-	Log.info("AchievementsManager", "Untrack commendations for account %s.", account_id)
+	Log.info("AchievementsManager", "Untrack achievements for account %s.", account_id)
 
 	return self._achievement_tracker:untrack_player(account_id)
 end
 
-AchievementsManager.untrack_all_players = function (self, session_id)
-	if not self:_is_tracker() then
+AchievementsManager.untrack_all_players = function (self)
+	if not self._is_tracker then
 		return
 	end
 
-	Log.info("AchievementsManager", "Untrack commendations for all accounts.")
+	Log.info("AchievementsManager", "Untrack achievements for all accounts.")
 
 	return self._achievement_tracker:untrack_all()
 end
 
 AchievementsManager.trigger_event = function (self, account_id, character_id, event_name, event_data)
-	if not self:_is_tracker() then
+	if not self._is_tracker then
 		return
 	end
 
@@ -262,7 +221,7 @@ AchievementsManager.trigger_event = function (self, account_id, character_id, ev
 end
 
 AchievementsManager.unlock_achievement = function (self, achievement_id)
-	if not self:_is_client() then
+	if not self._is_client then
 		return
 	end
 
@@ -281,10 +240,7 @@ AchievementsManager.unlock_achievement = function (self, achievement_id)
 end
 
 AchievementsManager._notify_achievement_unlock = function (self, achievement_definition)
-	local achievement_label = achievement_definition:label()
-	local notification_string = string.format("Achievement '%s' completed!", achievement_label)
-
-	Managers.event:trigger("event_add_notification_message", "default", notification_string)
+	Managers.event:trigger("event_add_notification_message", "achievement", achievement_definition)
 
 	return true
 end
@@ -305,18 +261,15 @@ AchievementsManager._notify_achievement_reward = function (self, reward)
 		end
 	end
 
-	local notification_string = "You've received a reward!"
-
-	Managers.event:trigger("event_add_notification_message", "default", notification_string)
-
 	return true
 end
 
 AchievementsManager._unlock_achievement = function (self, achievement_definition)
 	local player_notified = false
+	local id = achievement_definition:id()
 
-	if achievement_definition:is_platform() and self:_platform_available() then
-		player_notified = self:_platform_unlock(achievement_definition:id())
+	if self._platform:is_platform_achievement(id) then
+		player_notified = self._platform:unlock_achievement(id)
 	end
 
 	player_notified = player_notified or self:_notify_achievement_unlock(achievement_definition)
@@ -333,18 +286,25 @@ AchievementsManager._unlock_achievement = function (self, achievement_definition
 end
 
 AchievementsManager.rpc_notify_commendation_progress = function (self, channel_id, achievement_index, value)
-	assert(self:_is_client(), "Only clients can be notified about achievements.")
+	self:notify_commendation_progress(achievement_index, value)
+end
 
+AchievementsManager.notify_commendation_progress = function (self, achievement_index, value)
 	local achievement_definition = self._achievements[achievement_index]
+	local id = achievement_definition:id()
 
-	if achievement_definition:is_platform() and self:_platform_available() then
-		self:_platform_indicate_progress(achievement_definition, value)
+	if self._platform:is_platform_achievement(id) then
+		local target = achievement_definition:get_target()
+
+		self._platform:update_progress(id, value, target)
 	end
 end
 
 AchievementsManager.rpc_notify_commendation_complete = function (self, channel_id, achievement_index)
-	assert(self:_is_client(), "Only clients can be notified about achievements.")
+	self:notify_commendation_complete(achievement_index)
+end
 
+AchievementsManager.notify_commendation_complete = function (self, achievement_index)
 	local achievement_definition = self._achievements[achievement_index]
 
 	self:_unlock_achievement(achievement_definition)

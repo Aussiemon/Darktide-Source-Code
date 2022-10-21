@@ -26,16 +26,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.damage_taken_multiplier] = 0.82
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.damage_taken_multiplier] = 0.8
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.damage_taken_multiplier] = 0.75
-				}
 			}
 		}
 	},
@@ -59,16 +49,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.critical_strike_chance] = 0.4
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.critical_strike_chance] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.critical_strike_chance] = 0.6
 				}
 			}
 		}
@@ -94,16 +74,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.melee_impact_modifier] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.melee_impact_modifier] = 0.6
-				}
 			}
 		}
 	},
@@ -127,16 +97,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.4
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.melee_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.melee_damage] = 0.6
 				}
 			}
 		}
@@ -162,16 +122,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.movement_speed] = 1.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.6
-				}
 			}
 		}
 	},
@@ -195,16 +145,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.corruption_taken_multiplier] = 0.82
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.corruption_taken_multiplier] = 0.8
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.corruption_taken_multiplier] = 0.75
 				}
 			}
 		}
@@ -230,16 +170,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.82
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.8
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.75
-				}
 			}
 		}
 	},
@@ -263,16 +193,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.4
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.finesse_modifier_bonus] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.finesse_modifier_bonus] = 0.6
 				}
 			}
 		}
@@ -298,16 +218,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.unarmored_damage] = 0.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.unarmored_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.unarmored_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -331,16 +241,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.armored_damage] = 0.4
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.armored_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.armored_damage] = 0.6
 				}
 			}
 		}
@@ -366,16 +266,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.resistant_damage] = 0.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.resistant_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.resistant_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -399,16 +289,6 @@ local weapon_traits_melee_activated = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.berserker_damage] = 0.4
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.berserker_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.berserker_damage] = 0.6
 				}
 			}
 		}
@@ -434,16 +314,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.super_armor_damage] = 0.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.super_armor_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.super_armor_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -468,16 +338,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.disgustingly_resilient_damage] = 0.4
 				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.disgustingly_resilient_damage] = 0.5
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.disgustingly_resilient_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -486,15 +346,11 @@ local weapon_traits_melee_activated = {
 			{},
 			{},
 			{},
-			{},
-			{},
 			{}
 		}
 	},
 	weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_of_next_attack = {
 		weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_of_next_attack = {
-			{},
-			{},
 			{},
 			{},
 			{},
@@ -542,26 +398,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.4
 				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.melee_damage] = 0.5
-				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.melee_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -605,26 +441,6 @@ local weapon_traits_melee_activated = {
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.4
-				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.melee_impact_modifier] = 0.5
-				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.melee_impact_modifier] = 0.6
 				}
 			}
 		}
@@ -670,26 +486,6 @@ local weapon_traits_melee_activated = {
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.4
 				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.finesse_modifier_bonus] = 0.5
-				}
-			},
-			{
-				cooldown_duration = 0,
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
-				},
-				stat_buffs = {
-					[buff_stat_buffs.finesse_modifier_bonus] = 0.6
-				}
 			}
 		}
 	},
@@ -714,16 +510,6 @@ local weapon_traits_melee_activated = {
 				proc_events = {
 					[buff_proc_events.on_hit] = 0.25
 				}
-			},
-			{
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.275
-				}
-			},
-			{
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.3
-				}
 			}
 		}
 	},
@@ -747,16 +533,6 @@ local weapon_traits_melee_activated = {
 			{
 				proc_events = {
 					[buff_proc_events.on_hit] = 0.25
-				}
-			},
-			{
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.275
-				}
-			},
-			{
-				proc_events = {
-					[buff_proc_events.on_hit] = 0.3
 				}
 			}
 		}

@@ -1,9 +1,16 @@
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local Promise = require("scripts/foundation/utilities/promise")
+local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 
 local function validation_is_in_mission()
 	local host_type = Managers.multiplayer_session:host_type()
 
-	if host_type == MatchmakingConstants.HOST_TYPES.mission_server then
+	if host_type == HOST_TYPES.mission_server then
+		return true
+	end
+
+	if Managers.mechanism:singleplay_type() == SINGLEPLAY_TYPES.training_grounds then
 		return true
 	end
 
@@ -11,7 +18,14 @@ local function validation_is_in_mission()
 end
 
 local function _members_in_party()
-	return #Managers.party_immaterium:other_members()
+	local num_members = 0
+
+	if GameParameters.prod_like_backend then
+		local other_members = Managers.party_immaterium:other_members()
+		num_members = #other_members
+	end
+
+	return num_members
 end
 
 local main_menu_list = {
@@ -55,7 +69,7 @@ local main_menu_list = {
 					},
 					{
 						text = "loc_popup_button_cancel_leave_party",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -98,7 +112,7 @@ if PLATFORM == "win32" then
 					},
 					{
 						text = "loc_popup_button_continue_game",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -112,7 +126,7 @@ end
 
 local default_list = {
 	{
-		text = "loc_inventory_view_display_name",
+		text = "loc_character_view_display_name",
 		type = "large_button",
 		trigger_function = function ()
 			local view_name = "inventory_background_view"
@@ -192,7 +206,7 @@ local default_list = {
 					},
 					{
 						text = "loc_popup_button_leave_continue_game",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -220,7 +234,7 @@ local default_list = {
 					},
 					{
 						text = "loc_popup_button_leave_continue_mission",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -256,7 +270,7 @@ local default_list = {
 					},
 					{
 						text = "loc_popup_button_cancel_leave_party",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -286,7 +300,7 @@ local default_list = {
 					},
 					{
 						text = "loc_popup_button_continue_game",
-						template_type = "default_button_small",
+						template_type = "terminal_button_small",
 						close_on_pressed = true,
 						hotkey = "back"
 					}
@@ -338,7 +352,7 @@ if false then
 					can_exit = true,
 					debug_preview = true
 				}
-				local view_name = "cinematic_view"
+				local view_name = "splash_video_view"
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 			end

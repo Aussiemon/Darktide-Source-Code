@@ -6,7 +6,7 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						18
+						20
 					}
 				}
 			}
@@ -16,8 +16,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						18,
-						22
+						20,
+						25
 					}
 				}
 			}
@@ -63,7 +63,7 @@ local horde_compositions = {
 					name = "chaos_newly_infected",
 					amount = {
 						15,
-						18
+						20
 					}
 				}
 			}
@@ -73,8 +73,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						18,
-						22
+						20,
+						25
 					}
 				}
 			}
@@ -119,8 +119,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						33,
-						38
+						35,
+						40
 					}
 				}
 			}
@@ -176,8 +176,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						40,
-						45
+						42,
+						48
 					}
 				}
 			}
@@ -227,6 +227,63 @@ local horde_compositions = {
 			}
 		}
 	},
+	renegade_flood = {
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						46,
+						58
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						58,
+						69
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						69,
+						75
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						75,
+						87
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						89,
+						97
+					}
+				}
+			}
+		}
+	},
 	renegade_trickle_riflemen = {
 		{
 			breeds = {
@@ -244,8 +301,30 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
+						5,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
 						6,
-						8
+						7
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						8,
+						10
 					}
 				}
 			}
@@ -260,28 +339,6 @@ local horde_compositions = {
 					}
 				}
 			}
-		},
-		{
-			breeds = {
-				{
-					name = "renegade_rifleman",
-					amount = {
-						12,
-						15
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "renegade_rifleman",
-					amount = {
-						15,
-						18
-					}
-				}
-			}
 		}
 	},
 	renegade_trickle_riflemen_high = {
@@ -290,8 +347,19 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
+						7,
+						8
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
 						9,
-						11
+						10
 					}
 				}
 			}
@@ -323,19 +391,8 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
-						17,
-						19
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "renegade_rifleman",
-					amount = {
-						22,
-						24
+						18,
+						20
 					}
 				}
 			}

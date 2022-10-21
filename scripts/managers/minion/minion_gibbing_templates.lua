@@ -3,9 +3,6 @@ local gibbing_templates = {}
 local function _create_gibbing_template_entry(path)
 	local gibbing_template = require(path)
 	local name = gibbing_template.name
-
-	fassert(name, "[MinionGibbingTemplates] Missing name field in %q.", path)
-
 	gibbing_templates[name] = gibbing_template
 end
 

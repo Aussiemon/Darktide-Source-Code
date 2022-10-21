@@ -1,8 +1,6 @@
 local LocalConnectChannelState = class("LocalConnectChannelState")
 
 LocalConnectChannelState.init = function (self, state_machine, shared_state)
-	assert(shared_state.engine_lobby, "Engine lobby required")
-
 	self._shared_state = shared_state
 end
 

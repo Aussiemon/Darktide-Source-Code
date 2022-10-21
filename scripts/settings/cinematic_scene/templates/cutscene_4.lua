@@ -7,6 +7,7 @@ local cinematic_scene_templates = {
 		ignored_slots = {
 			"slot_unarmed",
 			"slot_primary",
+			"slot_secondary",
 			"slot_pocketable",
 			"slot_luggable",
 			"slot_support_ability",

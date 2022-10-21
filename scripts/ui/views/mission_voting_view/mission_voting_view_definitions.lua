@@ -88,6 +88,50 @@ local secondary_button_size = {
 	398,
 	64
 }
+outer_panel_size = {
+	688,
+	850
+}
+inner_panel_size = {
+	600,
+	600
+}
+zone_image_size = {
+	inner_panel_size[1],
+	240
+}
+header_size = {
+	inner_panel_size[1],
+	zone_image_size[2] - 120 + 54
+}
+local mission_type_size = {
+	560,
+	40
+}
+mission_difficulty_size = {
+	200,
+	mission_difficulty_panel_size[2] + 25
+}
+mission_difficulty_divider_size = {
+	1,
+	mission_difficulty_panel_size[2] + 25 - 4
+}
+local misson_rewards_size = {
+	240,
+	mission_difficulty_panel_size[2] + 25
+}
+local circumstance_icon_size = {
+	50,
+	50
+}
+local zone_image_bottom_fade_size = {
+	zone_image_size[1],
+	120
+}
+local mission_reward_size = {
+	200,
+	40
+}
 local outer_panel_y_offset = -(UIWorkspaceSettings.screen.size[2] * 0.075)
 local outer_panel_position = {
 	0,
@@ -102,17 +146,17 @@ local inner_panel_position = {
 local header_position = {
 	0,
 	0,
-	3
+	6
 }
 local title_bar_position = {
 	0,
 	0,
-	10
+	20
 }
 local zone_image_position = {
 	0,
 	54,
-	0
+	6
 }
 local body_position = {
 	0,
@@ -199,6 +243,61 @@ local timer_bar_position = {
 	15,
 	0
 }
+mission_info_panel_position = {
+	0,
+	50,
+	3
+}
+local mission_type_position = {
+	0,
+	50,
+	4
+}
+local mission_summary_position = {
+	0,
+	55,
+	4
+}
+mission_difficulty_challenge_position = {
+	0,
+	15,
+	1
+}
+details_button_position = {
+	0,
+	-accept_button_size[2] - 15,
+	10
+}
+local circumstance_icon_position = {
+	-10,
+	10,
+	5
+}
+local zone_image_bottom_fade_position = {
+	0,
+	0,
+	5
+}
+local reward_main_mission_position = {
+	0,
+	10,
+	0
+}
+local reward_salary_position = {
+	-30,
+	0,
+	0
+}
+local reward_side_mission_position = {
+	0,
+	40,
+	0
+}
+local reward_flash_mission_position = {
+	90,
+	0,
+	0
+}
 local details_widget_spacing = {
 	details_panel_size[1],
 	25
@@ -254,6 +353,20 @@ local scenegraph_definition = {
 		size = zone_image_size,
 		position = zone_image_position
 	},
+	mission_icons_pivot = {
+		vertical_alignment = "top",
+		parent = "zone_image",
+		horizontal_alignment = "left",
+		size = {
+			49.6,
+			49.6
+		},
+		position = {
+			10,
+			10,
+			0
+		}
+	},
 	body_panel = {
 		vertical_alignment = "top",
 		parent = "inner_panel",
@@ -274,6 +387,17 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = mission_info_size,
 		position = mission_info_position
+	},
+	mission_type = {
+		vertical_alignment = "top",
+		parent = "mission_info_panel",
+		horizontal_alignment = "center",
+		size = mission_type_size,
+		position = {
+			0,
+			20,
+			10
+		}
 	},
 	mission_salary = {
 		vertical_alignment = "top",
@@ -301,21 +425,49 @@ local scenegraph_definition = {
 		parent = "mission_difficulty_left",
 		horizontal_alignment = "center",
 		size = mission_difficulty_size,
-		position = mission_difficulty_position
+		position = mission_summary_position
 	},
-	mission_difficulty_challenge = {
-		vertical_alignment = "center",
-		parent = "mission_info",
+	zone_image_bottom_fade = {
+		vertical_alignment = "bottom",
+		parent = "zone_image",
 		horizontal_alignment = "center",
-		size = mission_difficulty_size,
-		position = mission_difficulty_challenge_position
+		size = zone_image_bottom_fade_size,
+		position = zone_image_bottom_fade_position
+	},
+	circumstance_icon = {
+		vertical_alignment = "top",
+		parent = "zone_image",
+		horizontal_alignment = "right",
+		size = circumstance_icon_size,
+		position = circumstance_icon_position
+	},
+	mission_rewards_challenge = {
+		vertical_alignment = "bottom",
+		parent = "mission_difficulty_right",
+		horizontal_alignment = "center",
+		size = misson_rewards_size,
+		position = mission_summary_position
+	},
+	reward_main_mission = {
+		vertical_alignment = "center",
+		parent = "mission_rewards_challenge",
+		horizontal_alignment = "center",
+		size = mission_reward_size,
+		position = reward_main_mission_position
+	},
+	reward_side_mission = {
+		vertical_alignment = "center",
+		parent = "mission_rewards_challenge",
+		horizontal_alignment = "center",
+		size = mission_reward_size,
+		position = reward_side_mission_position
 	},
 	mission_difficulty_divider = {
 		vertical_alignment = "bottom",
 		parent = "mission_info",
 		horizontal_alignment = "center",
 		size = mission_difficulty_divider_size,
-		position = mission_difficulty_position
+		position = mission_summary_position
 	},
 	mission_circumstance = {
 		vertical_alignment = "bottom",
@@ -368,7 +520,7 @@ local scenegraph_definition = {
 	},
 	toggle_details_button = {
 		vertical_alignment = "bottom",
-		parent = "body_panel",
+		parent = "accept_button",
 		horizontal_alignment = "center",
 		size = secondary_button_size,
 		position = details_button_position
@@ -408,6 +560,7 @@ mission_type_font_style.size = {
 	mission_info_size[1] - mission_type_font_style.offset[1],
 	mission_info_size[2]
 }
+mission_type_font_style.text_vertical_alignment = "top"
 local decline_button_passes = table.clone(ButtonPassTemplates.secondary_button)
 decline_button_passes[#decline_button_passes + 1] = {
 	value = "content/ui/materials/frames/hover",
@@ -445,25 +598,20 @@ local widget_definitions = {
 			style = ViewStyles.title_font_style
 		}
 	}, "title_bar"),
-	player_portrait = UIWidget.create_definition({
-		{
-			style_id = "portrait",
-			value_id = "portrait",
-			pass_type = "texture"
-		},
-		{
-			value = "content/ui/materials/nameplates/portrait_frames/default",
-			value_id = "frame",
-			pass_type = "texture",
-			style_id = "frame"
-		}
-	}, "player_portrait_center", nil, player_portrait_size, ViewStyles.player_portrait),
 	zone_image = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value_id = "texture"
 		}
 	}, "zone_image"),
+	zone_image_bottom_fade = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/bottom_fade",
+			value_id = "bottom_fade",
+			pass_type = "texture",
+			style_id = "bottom_fade"
+		}
+	}, "zone_image_bottom_fade"),
 	footer = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -495,15 +643,17 @@ local widget_definitions = {
 			value = Managers.localization:localize("loc_mission_voting_view_waiting_for_players")
 		}
 	}, "accept_button", nil, nil, ViewStyles.accept_confirmation),
+	toggle_details_button = UIWidget.create_definition(ButtonPassTemplates.secondary_button, "toggle_details_button", {
+		text = Managers.localization:localize("loc_mission_voting_view_show_details")
+	})
+}
+local buttons_widget_definitions = {
 	accept_button = UIWidget.create_definition(ButtonPassTemplates.default_button_large, "accept_button", {
 		text = Managers.localization:localize("loc_mission_voting_view_accept_mission")
 	}, nil, ViewStyles.accept_button_style),
 	decline_button = UIWidget.create_definition(decline_button_passes, "decline_button", {
 		text = Managers.localization:localize("loc_mission_voting_view_decline_mission")
-	}, nil, ViewStyles.decline_button_style),
-	toggle_details_button = UIWidget.create_definition(ButtonPassTemplates.secondary_button, "toggle_details_button", {
-		text = Managers.localization:localize("loc_mission_voting_view_show_details")
-	})
+	}, nil, ViewStyles.decline_button_style)
 }
 local mission_info_widget_definitions = {
 	mission_info = UIWidget.create_definition({
@@ -514,66 +664,86 @@ local mission_info_widget_definitions = {
 			style = ViewStyles.mission_title_font_style
 		}
 	}, "mission_info"),
-	mission_info_salary = UIWidget.create_definition({
+	mission_type = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/icons/generic/experience_rendered",
-			value_id = "experience_icon",
-			pass_type = "texture",
-			style_id = "experience_icon"
-		},
-		{
-			style_id = "experience_text",
-			value_id = "experience_text",
-			pass_type = "text"
-		},
-		{
-			value = "content/ui/materials/icons/generic/credits_rendered",
-			value_id = "credits_icon",
-			pass_type = "texture",
-			style_id = "credits_icon"
-		},
-		{
-			style_id = "credits_text",
-			value_id = "credits_text",
-			pass_type = "text"
-		}
-	}, "mission_salary", nil, nil, ViewStyles.salary),
-	mission_info_challenge = UIWidget.create_definition({
-		{
-			style_id = "difficulty_font",
+			value_id = "mission_type",
+			style_id = "mission_type",
 			pass_type = "text",
-			value = Managers.localization:localize("loc_mission_voting_view_challenge")
+			value = "",
+			style = mission_type_font_style
+		}
+	}, "mission_type"),
+	mission_danger_info = UIWidget.create_definition({
+		{
+			value_id = "danger_text",
+			style_id = "danger_text",
+			pass_type = "text",
+			value = "",
+			style = ViewStyles.mission_title_font_style
 		},
 		{
-			value = "content/ui/materials/icons/generic/toughness_rendered",
+			value_id = "danger_icon",
+			style_id = "danger_icon",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/generic/danger",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				offset = {
+					-20,
+					10,
+					0
+				},
+				size = {
+					50,
+					50
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "diffulty_icon_background",
 			pass_type = "multi_texture"
 		},
 		{
-			value = "content/ui/materials/icons/generic/toughness_rendered",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "difficulty_icon",
 			pass_type = "multi_texture"
 		}
-	}, "mission_difficulty_challenge", {
-		offset = mission_difficulty_extra_offset
-	}, nil, ViewStyles.difficulty),
-	mission_info_circumstance = UIWidget.create_definition({
+	}, "mission_difficulty_resistance", nil, nil, ViewStyles.difficulty),
+	rewards_text = UIWidget.create_definition({
 		{
-			style_id = "header",
+			value_id = "rewards_title_text",
+			style_id = "rewards_title_text",
 			pass_type = "text",
-			value = Managers.localization:localize("loc_mission_voting_view_circumstance_header")
-		},
-		{
-			style_id = "icon",
-			value_id = "icon",
-			pass_type = "texture"
-		},
-		{
-			style_id = "text",
-			value_id = "text",
-			pass_type = "text"
+			value = Utf8.upper(Localize("loc_training_grounds_rewards_title")),
+			style = ViewStyles.mission_title_font_style
 		}
-	}, "mission_circumstance", nil, nil, ViewStyles.mission_info_circumstance)
+	}, "mission_rewards_challenge"),
+	reward_main_mission = UIWidget.create_definition({
+		{
+			value_id = "reward_main_mission_text",
+			style_id = "reward_main_mission_text",
+			pass_type = "text",
+			value = "",
+			style = ViewStyles.rewards_text_style
+		}
+	}, "reward_main_mission"),
+	reward_side_mission = UIWidget.create_definition({
+		{
+			value_id = "reward_side_mission_text",
+			style_id = "reward_side_mission_text",
+			pass_type = "text",
+			value = "",
+			style = ViewStyles.rewards_text_style
+		}
+	}, "reward_side_mission"),
+	mission_info_divider = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = ViewStyles.difficulty_divider
+		}
+	}, "mission_difficulty_divider")
 }
 local details_static_widgets_definitions = {
 	details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "details_scrollbar"),
@@ -637,6 +807,8 @@ local animations = {
 				local inner_panel_height = lerp(source.inner_panel_height, targets.inner_panel_height, anim_progress)
 				local outer_panel_height = lerp(source.outer_panel_height, targets.outer_panel_height, anim_progress)
 				local outer_panel_y_offset = lerp(source.outer_panel_y_offset, targets.outer_panel_y_offset, anim_progress)
+				local bottom_fade_height = lerp(source.zone_image_bottom_fade_height, targets.zone_image_bottom_fade_height, anim_progress)
+				local circumstance_icon_height = lerp(source.circumstance_icon_height, targets.circumstance_icon_height, anim_progress)
 				ui_scenegraph.mission_info_panel.size[2] = mission_info_panel_height
 				ui_scenegraph.body_panel.size[2] = body_height
 				ui_scenegraph.body_panel.position[2] = body_panel_y_offset
@@ -644,6 +816,8 @@ local animations = {
 				ui_scenegraph.outer_panel.size[2] = outer_panel_height
 				ui_scenegraph.outer_panel.position[2] = outer_panel_y_offset
 				ui_scenegraph.zone_image.size[2] = zone_image_height
+				ui_scenegraph.zone_image_bottom_fade.size[2] = bottom_fade_height
+				ui_scenegraph.circumstance_icon.size[2] = circumstance_icon_height
 
 				return true
 			end
@@ -678,5 +852,6 @@ return settings("MissionVotingViewDefinitions", {
 	mission_info_widget_definitions = mission_info_widget_definitions,
 	details_static_widgets_definitions = details_static_widgets_definitions,
 	details_widget_spacing = details_widget_spacing,
-	details_panel_end_padding = details_panel_end_padding
+	details_panel_end_padding = details_panel_end_padding,
+	buttons_widget_definitions = buttons_widget_definitions
 })

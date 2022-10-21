@@ -5,8 +5,8 @@ local weapon_dodge_templates = {
 			lerp_basic = 0.7
 		},
 		diminishing_return_distance_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 0.6
+			lerp_perfect = 0.2,
+			lerp_basic = 0.4
 		},
 		diminishing_return_start = {
 			lerp_perfect = 2,
@@ -19,6 +19,28 @@ local weapon_dodge_templates = {
 		speed_modifier = {
 			lerp_perfect = 1,
 			lerp_basic = 1
+		}
+	},
+	smiter = {
+		distance_scale = {
+			lerp_perfect = 0.9,
+			lerp_basic = 0.6
+		},
+		diminishing_return_distance_modifier = {
+			lerp_perfect = 1,
+			lerp_basic = 0.6
+		},
+		diminishing_return_start = {
+			lerp_perfect = 2,
+			lerp_basic = 2
+		},
+		diminishing_return_limit = {
+			lerp_perfect = 1,
+			lerp_basic = 1
+		},
+		speed_modifier = {
+			lerp_perfect = 0.9,
+			lerp_basic = 0.8
 		}
 	},
 	psyker = {
@@ -135,6 +157,17 @@ local weapon_dodge_templates = {
 		distance_scale = {
 			lerp_perfect = 1.2,
 			lerp_basic = 1
+		}
+	},
+	luggable = {
+		consecutive_dodges_reset = 0.5,
+		diminishing_return_distance_modifier = 0.6,
+		diminishing_return_start = 1,
+		speed_modifier = 1,
+		diminishing_return_limit = 2,
+		distance_scale = {
+			lerp_perfect = 0.6,
+			lerp_basic = 0.5
 		}
 	}
 }

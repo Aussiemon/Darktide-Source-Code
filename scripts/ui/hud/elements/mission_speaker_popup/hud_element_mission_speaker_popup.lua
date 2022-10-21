@@ -101,7 +101,7 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 				break
 			end
 
-			if table.contains(mission_giver_voices, current_speaker_name) then
+			if table.contains(mission_giver_voices, current_speaker_name) and (currently_playing.category == "vox_prio_0" or currently_playing.category == "vox_prio_1" or currently_playing.category == nil) then
 				mission_giver_speaker_name = currently_playing.speaker_name
 			end
 		end

@@ -1,6 +1,7 @@
 require("scripts/extension_systems/first_person/character_state_orientation/default_player_orientation")
 
 local CameraHandler = require("scripts/managers/player/player_game_states/camera_handler")
+local CommunicationWheelPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/communication_wheel_player_orientation")
 local DeadPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/dead_player_orientation")
 local ForcedPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/forced_player_orientation")
 local HubPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/hub_player_orientation")
@@ -43,7 +44,7 @@ HumanGameplay.init = function (self, player, game_state_context)
 	self._dead_player_orientation = DeadPlayerOrientation:new(player, orientation)
 
 	if is_server then
-		local position, rotation, side = nil
+		local position, rotation, parent, side = nil
 
 		if LEVEL_EDITOR_TEST then
 			local camera_position = Application.get_data("LevelEditor", "camera_position")
@@ -52,9 +53,10 @@ HumanGameplay.init = function (self, player, game_state_context)
 			position = camera_position
 		else
 			local player_spawner_system = Managers.state.extension:system("player_spawner_system")
-			local spawn_position, spawn_rotation, spawn_side = player_spawner_system:next_free_spawn_point()
+			local spawn_position, spawn_rotation, spawn_parent, spawn_side = player_spawner_system:next_free_spawn_point()
 			position = spawn_position
 			rotation = spawn_rotation
+			parent = spawn_parent
 			side = spawn_side
 		end
 
@@ -62,7 +64,7 @@ HumanGameplay.init = function (self, player, game_state_context)
 		local force_spawn = true
 		local is_respawn = false
 
-		player_unit_spawn_manager:spawn_player(player, position, rotation, force_spawn, side, nil, "walking", is_respawn)
+		player_unit_spawn_manager:spawn_player(player, position, rotation, parent, force_spawn, side, nil, "walking", is_respawn)
 	end
 
 	local event_manager = Managers.event
@@ -78,18 +80,21 @@ HumanGameplay.init = function (self, player, game_state_context)
 end
 
 HumanGameplay.on_reload = function (self, refreshed_resources)
-	self:_destroy_player_hud()
-	self:_create_player_hud(self._player)
+	if self._has_own_hud then
+		self:_destroy_player_hud()
+		self:_create_player_hud(self._player)
+	end
+
+	if self._has_spectator_hud then
+		self:_destroy_spectator_hud()
+		self:_create_spectator_hud(self._spectated_player)
+	end
+
 	self._player.camera_handler:on_reload()
 end
 
 HumanGameplay._create_player_hud = function (self, player)
-	fassert(not self._has_own_hud, "Already has hud, what you doing?")
-
 	local ui_manager = Managers.ui
-
-	fassert(ui_manager, "there's no ui_manager, why you creating hud?")
-
 	local peer_id = player:peer_id()
 	local local_player_id = player:local_player_id()
 	local mission_name = self._mission_name
@@ -103,23 +108,15 @@ HumanGameplay._create_player_hud = function (self, player)
 end
 
 HumanGameplay._destroy_player_hud = function (self)
-	fassert(self._has_own_hud, "There is no hud, what you doing?")
-
 	local ui_manager = Managers.ui
 
-	fassert(ui_manager, "there's no ui_manager, what you doing?")
 	ui_manager:destroy_player_hud()
 
 	self._has_own_hud = false
 end
 
 HumanGameplay._create_spectator_hud = function (self, spectated_player)
-	fassert(not self._has_spectator_hud, "Already has spectator hud, what you doing?")
-
 	local ui_manager = Managers.ui
-
-	fassert(ui_manager, "there's no ui_manager, why you creating spectator_hud?")
-
 	local peer_id = spectated_player:peer_id()
 	local local_player_id = spectated_player:local_player_id()
 
@@ -129,11 +126,8 @@ HumanGameplay._create_spectator_hud = function (self, spectated_player)
 end
 
 HumanGameplay._destroy_spectator_hud = function (self)
-	fassert(self._has_spectator_hud, "There is no spectator hud, what you doing?")
-
 	local ui_manager = Managers.ui
 
-	fassert(ui_manager, "there's no ui_manager, what you doing?")
 	ui_manager:destroy_spectator_hud()
 
 	self._has_spectator_hud = false
@@ -157,6 +151,7 @@ HumanGameplay._create_player_orientation_classes = function (self, player)
 		yaw = 0,
 		roll = 0
 	})
+	self._communication_wheel_orientation = CommunicationWheelPlayerOrientation:new(orientation)
 end
 
 HumanGameplay._destroy_player_orientation_classes = function (self, all)
@@ -170,6 +165,7 @@ HumanGameplay._destroy_player_orientation_classes = function (self, all)
 	end
 
 	self._mission_board_orientation:destroy()
+	self._communication_wheel_orientation:destroy()
 end
 
 HumanGameplay.destroy = function (self)
@@ -338,14 +334,14 @@ HumanGameplay._player_orientation_class = function (self)
 		return self._mission_board_orientation
 	elseif SweepStickyness.is_sticking_to_unit(self._action_sweep_component) then
 		return self._smooth_force_view_player_orientation
+	elseif Managers.ui and Managers.ui:communication_wheel_active() then
+		return self._communication_wheel_orientation
 	else
 		return self._default_player_orientation
 	end
 end
 
 HumanGameplay._cb_player_activate_emote = function (self, emote, player)
-	assert(table.contains(InputHandlerSettings.ui_interaction_actions, emote))
-
 	self._emote = emote
 end
 
@@ -380,48 +376,39 @@ HumanGameplay.fixed_update = function (self, game_dt, game_t, fixed_frame)
 end
 
 HumanGameplay.update = function (self, main_dt, main_t)
-	Profiler.start("HumanGameplay:update()")
-
 	local input = self:_get_input()
-
-	Profiler.start("camera_handler_update")
-
 	local player = self._player
 	local player_orientation = self:_player_orientation_class()
 	local camera_follow_unit_or_nil = player.camera_handler:update(main_dt, main_t, player_orientation, input)
 
-	Profiler.stop("camera_handler_update")
-	Profiler.start("handle_spectating")
 	self:_update_spectating(camera_follow_unit_or_nil)
-	Profiler.stop("handle_spectating")
 
 	local ui_manager = Managers.ui
 
 	if ui_manager then
-		Profiler.start("handle_huds")
 		self:_handle_huds(camera_follow_unit_or_nil)
-		Profiler.stop("handle_huds")
-		Profiler.start("handle_view_hotkeys")
 
 		local hotkey_settings = self._hotkey_settings
 
 		ui_manager:handle_view_hotkeys(hotkey_settings)
-		Profiler.stop("handle_view_hotkeys")
 	end
 
 	local time_manager = Managers.time
 
 	if time_manager:has_timer("gameplay") then
-		Profiler.start("input_handler_update")
-
 		local dt = time_manager:delta_time("gameplay")
 		local t = time_manager:time("gameplay")
 
 		player.input_handler:update(dt, t, input)
-		Profiler.stop("input_handler_update")
 	end
 
-	Profiler.stop("HumanGameplay:update()")
+	if PLATFORM == "win32" then
+		if ui_manager and ui_manager:using_input() then
+			Application.set_in_menu(true)
+		else
+			Application.set_in_menu(false)
+		end
+	end
 end
 
 HumanGameplay._update_spectating = function (self, camera_follow_unit_or_nil)
@@ -483,14 +470,10 @@ HumanGameplay.on_player_removed = function (self, player)
 end
 
 HumanGameplay._start_spectating = function (self, spectated_player)
-	fassert(self._spectated_player == nil, "Trying to start_spectating player, but already spectating a player.")
-
 	self._spectated_player = spectated_player
 end
 
 HumanGameplay._stop_spectating = function (self)
-	fassert(self._spectated_player, "Trying to stop spectating a player, but we're not spectating.")
-
 	if self._has_spectator_hud then
 		self:_destroy_spectator_hud()
 	end

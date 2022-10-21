@@ -22,15 +22,38 @@ local stamina_trait_templates = {
 		{
 			"block_cost",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"push_cost",
 			{
+				max = 1,
+				min = 0
+			}
+		}
+	},
+	ogryn_club_p1_m1_defence_stat = {
+		{
+			"sprint_cost_per_second",
+			{
 				max = 0.75,
 				min = 0.25
+			}
+		},
+		{
+			"block_cost",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"push_cost",
+			{
+				max = 1,
+				min = 0
 			}
 		}
 	},

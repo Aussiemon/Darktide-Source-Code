@@ -41,7 +41,7 @@ GrimoireBuff.update = function (self, dt, t, portable_random)
 		local diff = previous_num_grims - num_grims
 
 		for i = 1, diff do
-			local heal_type = DamageSettings.heal_types.blessing
+			local heal_type = DamageSettings.heal_types.blessing_grim
 			local health_added = Health.add(self._unit, 30, heal_type)
 
 			if health_added > 0 then
@@ -97,10 +97,9 @@ GrimoireBuff._damage_player = function (self, power_level)
 	local unit = self._unit
 	local damage_profile = DamageProfileTemplates.grimoire_tick
 	local target_index = 0
-	local has_power_boost = false
 	local is_critical_strike = false
 
-	Attack.execute(unit, damage_profile, "target_index", target_index, "power_level", power_level, "has_power_boost", has_power_boost, "is_critical_strike", is_critical_strike, "attack_type", attack_types.buff)
+	Attack.execute(unit, damage_profile, "target_index", target_index, "power_level", power_level, "is_critical_strike", is_critical_strike, "attack_type", attack_types.buff)
 end
 
 return GrimoireBuff

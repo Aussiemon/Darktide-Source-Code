@@ -32,8 +32,6 @@ function _spread_values(movement_state_settings, spread_control_component, sprea
 	local current_immediate_yaw = spread_control_component.immediate_yaw
 
 	if movement_state_settings.immediate_spread[spread_type] then
-		fassert(movement_state_settings.immediate_spread[spread_type], "Immediate spread type [%s] does not exist!", spread_type)
-
 		local spread_type_settings = movement_state_settings.immediate_spread[spread_type]
 		local spread_settings = spread_type_settings[math.min(num_shots or 1, spread_type_settings.num_spreads)]
 		local added_pitch = spread_settings.pitch

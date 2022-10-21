@@ -1,67 +1,5 @@
 return function ()
 	define_rule({
-		name = "ability_banisher",
-		category = "player_prio_1",
-		wwise_route = 31,
-		response = "ability_banisher",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_banisher"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_banisher_impact",
-		category = "player_prio_1",
-		wwise_route = 24,
-		response = "ability_banisher_impact",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_banisher_impact"
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "ability_biomancer_high",
 		category = "player_prio_1",
 		wwise_route = 30,
@@ -89,7 +27,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -120,7 +58,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -144,68 +82,6 @@ return function ()
 			},
 			{
 				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_bullgryn",
-		category = "player_prio_1",
-		wwise_route = 30,
-		response = "ability_bullgryn",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_bullgryn"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_dash",
-		category = "player_prio_1",
-		wwise_route = 24,
-		response = "ability_dash",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_dash"
-			},
-			{
-				"user_context",
 				"enemies_close",
 				OP.GT,
 				0
@@ -213,69 +89,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_gun_lugger",
-		category = "player_prio_1",
-		wwise_route = 30,
-		response = "ability_gun_lugger",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_gun_lugger"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_gunslinger",
-		category = "player_prio_1",
-		wwise_route = 24,
-		response = "ability_gunslinger",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_gunslinger"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -306,100 +120,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_pious_stabber",
-		category = "player_prio_1",
-		wwise_route = 31,
-		response = "ability_pious_stabber",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_pious_stabber"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_protectorate_start",
-		category = "player_prio_1",
-		wwise_route = 31,
-		response = "ability_protectorate_start",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_protectorate_start"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_protectorate_stop",
-		category = "player_prio_1",
-		wwise_route = 24,
-		response = "ability_protectorate_stop",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_protectorate_stop"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -430,124 +151,15 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_shock_trooper",
-		category = "player_prio_1",
-		wwise_route = 31,
-		response = "ability_shock_trooper",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_shock_trooper"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_squad_leader",
-		category = "player_prio_1",
-		wwise_route = 30,
-		response = "ability_squad_leader",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_squad_leader"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "ability_squad_leader_shout",
-		category = "player_prio_0",
-		wwise_route = 24,
-		response = "ability_squad_leader_shout",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_squad_leader_shout"
-			}
-		},
-		on_done = {}
-	})
-	define_rule({
-		name = "ability_stance",
-		category = "player_prio_1",
-		wwise_route = 24,
-		response = "ability_stance",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability"
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_stance"
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
 		name = "ability_venting",
-		category = "player_prio_1",
-		wwise_route = 24,
+		wwise_route = 0,
 		response = "ability_venting",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -559,18 +171,37 @@ return function ()
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"overcharge_venting"
+				"ability_venting"
 			},
 			{
 				"user_context",
-				"enemies_distant",
+				"enemies_close",
+				OP.EQ,
+				0
+			},
+			{
+				"user_memory",
+				"time_since_ability_venting",
+				OP.TIMEDIFF,
 				OP.GT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_ability_venting",
+				OP.TIMESET,
 				0
 			}
 		},
-		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -657,6 +288,13 @@ return function ()
 				"ammo_hogger",
 				OP.EQ,
 				1
+			},
+			{
+				"user_memory",
+				"last_ammo_hogger",
+				OP.TIMEDIFF,
+				OP.LT,
+				10
 			}
 		},
 		on_done = {
@@ -752,7 +390,19 @@ return function ()
 				"aggroed"
 			}
 		},
-		on_done = {}
+		on_done = {
+			{
+				"faction_memory",
+				"lore_daemons_one_a",
+				OP.ADD,
+				1
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 3.7
+			}
+		}
 	})
 	define_rule({
 		name = "chaos_daemonhost_alerted",
@@ -778,9 +428,22 @@ return function ()
 				"vo_event",
 				OP.EQ,
 				"alerted"
+			},
+			{
+				"faction_memory",
+				"chaos_daemonhost_alerted",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_daemonhost_alerted",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -875,24 +538,6 @@ return function ()
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_friends_distant",
 				OP.TIMEDIFF,
@@ -910,6 +555,55 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 4
+			}
+		}
+	})
+	define_rule({
+		name = "cover_me",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "cover_me",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.SET_INCLUDES,
+				args = {
+					"cover_me"
+				}
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.LTEQ,
+				3
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GT,
+				3
+			},
+			{
+				"faction_memory",
+				"cover_me",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"cover_me",
+				OP.TIMESET
 			}
 		}
 	})
@@ -954,7 +648,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "players"
+			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1011,10 +705,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"disabled_by_enemy"
+				"pounced_by_special_attack"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_netgunner"
+			},
+			{
+				"faction_memory",
+				"last_pounced_by_special_attack",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
 			}
 		},
-		on_done = {}
+		on_done = {
+			{
+				"faction_memory",
+				"last_pounced_by_special_attack",
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		name = "enemy_kill_berserker",
@@ -1241,6 +954,12 @@ return function ()
 				"enemy_kill_daemonhost",
 				OP.ADD,
 				"1"
+			},
+			{
+				"faction_memory",
+				"lore_daemons_one_a",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -1543,124 +1262,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "enemy_kill_traitor_executor",
-		wwise_route = 0,
-		response = "enemy_kill_traitor_executor",
-		database = "gameplay_vo",
-		category = "enemy_alerts_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"enemy_kill"
-			},
-			{
-				"query_context",
-				"killed_type",
-				OP.EQ,
-				"renegade_executor"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high"
-				}
-			},
-			{
-				"user_memory",
-				"time_since_enemy_kill_traitor_executor",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_enemy_kill_traitor_executor",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"enemy_kill_renegade_executor",
-				OP.ADD,
-				"1"
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5
-			}
-		}
-	})
-	define_rule({
-		name = "enemy_kill_traitor_heavy_gunner",
-		wwise_route = 0,
-		response = "enemy_kill_traitor_heavy_gunner",
-		database = "gameplay_vo",
-		category = "enemy_alerts_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"enemy_kill"
-			},
-			{
-				"query_context",
-				"killed_type",
-				OP.EQ,
-				"renegade_gunner"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high"
-				}
-			},
-			{
-				"user_memory",
-				"time_since_enemy_kill_renegade_heavy_gunner",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_enemy_kill_renegade_heavy_gunner",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"renegade_heavy_gunner",
-				OP.ADD,
-				"1"
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5
-			}
-		}
-	})
-	define_rule({
 		name = "enemy_near_death_monster",
 		category = "enemy_alerts_prio_0",
 		wwise_route = 0,
@@ -1735,329 +1336,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "all"
-		}
-	})
-	define_rule({
-		name = "expression_affirmative",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_affirmative",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_affirmative"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_anger",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_anger",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_anger"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_awe",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_awe",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_awe"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_disgust",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_disgust",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_disgust"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_joy",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_joy",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_joy"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_negative",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_negative",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_negative"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_rage",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_rage",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_rage"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "expression_relief",
-		wwise_route = 0,
-		response = "expression_relief",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_relief"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 2
-			}
-		}
-	})
-	define_rule({
-		name = "expression_scoff",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "expression_scoff",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"expression"
-			},
-			{
-				"query_context",
-				"expression_type",
-				OP.EQ,
-				"expression_scoff"
-			},
-			{
-				"user_memory",
-				"expression",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"expression",
-				OP.TIMESET
-			}
 		}
 	})
 	define_rule({
@@ -4164,8 +3442,8 @@ return function ()
 			{
 				"user_context",
 				"enemies_close",
-				OP.LT,
-				10
+				OP.GT,
+				4
 			},
 			{
 				"user_context",
@@ -4188,12 +3466,24 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"heal_start_faction",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_heal_start",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"heal_start_faction",
 				OP.TIMESET
 			}
 		},
@@ -4291,6 +3581,13 @@ return function ()
 				"health_hogger",
 				OP.EQ,
 				1
+			},
+			{
+				"user_memory",
+				"last_health_hogger",
+				OP.TIMEDIFF,
+				OP.LT,
+				10
 			}
 		},
 		on_done = {
@@ -4391,6 +3688,12 @@ return function ()
 				"faction_memory",
 				"enemy_chaos_daemonhost",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"lore_daemons_one_a",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -4492,6 +3795,49 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "heard_horde_ambush",
+		wwise_route = 0,
+		response = "heard_horde_ambush",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_horde"
+			},
+			{
+				"query_context",
+				"horde_type",
+				OP.EQ,
+				"ambush"
+			},
+			{
+				"faction_memory",
+				"last_heard_horde",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"last_heard_horde",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 5
+			}
+		}
+	})
+	define_rule({
 		name = "heard_horde_vector",
 		wwise_route = 0,
 		response = "heard_horde_vector",
@@ -4551,70 +3897,6 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
-		}
-	})
-	define_rule({
-		name = "incoming_enemies_vox_response",
-		wwise_route = 0,
-		response = "incoming_enemies_vox_response",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"info_incoming_enemies"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"incoming_enemies_vox_response",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"incoming_enemies_vox_response",
-				OP.TIMESET,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
 		}
 	})
 	define_rule({
@@ -4693,10 +3975,10 @@ return function ()
 	})
 	define_rule({
 		name = "knocked_down_1",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "knocked_down_1",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4714,6 +3996,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1.2
+			}
 		}
 	})
 	define_rule({
@@ -4966,7 +4253,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5
+				duration = 3
 			}
 		}
 	})
@@ -5161,7 +4448,7 @@ return function ()
 				"faction_context",
 				"health",
 				OP.LT,
-				1
+				0.9
 			},
 			{
 				"user_memory",
@@ -5175,59 +4462,6 @@ return function ()
 			{
 				"user_memory",
 				"last_saw_health",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "look_at_soldiers",
-		category = "conversations_prio_1",
-		wwise_route = 0,
-		response = "look_at_soldiers",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"soldiers"
-			},
-			{
-				"query_context",
-				"distance",
-				OP.GT,
-				1
-			},
-			{
-				"query_context",
-				"distance",
-				OP.LT,
-				17
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.EQ,
-				0
-			},
-			{
-				"faction_memory",
-				"last_saw_soldiers",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"last_saw_soldiers",
 				OP.TIMESET
 			}
 		}
@@ -5800,10 +5034,10 @@ return function ()
 	})
 	define_rule({
 		name = "player_death_ogryn",
-		category = "player_prio_0",
 		wwise_route = 0,
 		response = "player_death_ogryn",
 		database = "gameplay_vo",
+		category = "player_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -5833,14 +5067,19 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
 		name = "player_death_psyker",
-		category = "player_prio_0",
 		wwise_route = 0,
 		response = "player_death_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -5870,14 +5109,19 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
 		name = "player_death_veteran",
-		category = "player_prio_0",
 		wwise_route = 0,
 		response = "player_death_veteran",
 		database = "gameplay_vo",
+		category = "player_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -5907,14 +5151,19 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
 		name = "player_death_zealot",
-		category = "player_prio_0",
 		wwise_route = 0,
 		response = "player_death_zealot",
 		database = "gameplay_vo",
+		category = "player_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -5944,6 +5193,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -5957,17 +5211,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"player_tip"
+				"player_tip_armor_hit"
 			},
 			{
 				"query_context",
-				"player_tip",
-				OP.EQ,
-				"armor_hit"
+				"player_class",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot"
+				}
 			},
 			{
-				"user_memory",
-				"last_player_tip",
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"last_armor_hit_tip",
 				OP.TIMEDIFF,
 				OP.GT,
 				90
@@ -5975,9 +5246,14 @@ return function ()
 		},
 		on_done = {
 			{
-				"user_memory",
-				"last_player_tip",
+				"faction_memory",
+				"last_armor_hit_tip",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
 			}
 		}
 	})
@@ -6455,7 +5731,9 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"medium"
+					"low",
+					"medium",
+					"high"
 				}
 			},
 			{
@@ -6472,14 +5750,17 @@ return function ()
 				"reload_failed_out_of_ammo",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "all"
 		}
 	})
 	define_rule({
 		name = "reloading",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "reloading",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -6536,14 +5817,19 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
 		}
 	})
 	define_rule({
 		name = "reloading_empty",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "reloading_empty",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -6568,7 +5854,9 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"medium"
+					"low",
+					"medium",
+					"high"
 				}
 			},
 			{
@@ -6606,6 +5894,11 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
 		}
 	})
 	define_rule({
@@ -6638,26 +5931,8 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"cover_me"
+					"cover_me_disabled_in_favor_of_class_specific"
 				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -6717,24 +5992,6 @@ return function ()
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"rapid_loosing_health_response",
 				OP.TIMEDIFF,
@@ -6750,7 +6007,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "players"
+			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -6790,24 +6047,6 @@ return function ()
 				args = {
 					"enemy_kill_monster"
 				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -6871,24 +6110,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -6967,24 +6188,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7059,24 +6262,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -7155,24 +6340,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7247,24 +6414,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -7343,24 +6492,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7435,24 +6566,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -7531,24 +6644,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7623,24 +6718,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"veteran"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -7719,24 +6796,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7811,24 +6870,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"veteran"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -7907,24 +6948,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -7999,24 +7022,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -8095,24 +7100,6 @@ return function ()
 				"zealot"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -8187,24 +7174,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -8283,24 +7252,6 @@ return function ()
 				"zealot"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMEDIFF,
@@ -8362,30 +7313,6 @@ return function ()
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_heard_horde_vector",
 				OP.TIMEDIFF,
@@ -8411,78 +7338,6 @@ return function ()
 		on_post_rule_execution = {
 			reject_events = {
 				duration = 3
-			}
-		}
-	})
-	define_rule({
-		name = "response_for_info_closer_to_target",
-		category = "player_prio_0",
-		wwise_route = 0,
-		response = "response_for_info_closer_to_target",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.GTEQ,
-				0
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"info_closer_to_target"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_memory",
-				"response_for_info_closer_to_target",
-				OP.TIMEDIFF,
-				OP.GT,
-				180
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"response_for_info_closer_to_target",
-				OP.TIMESET
-			}
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
 			}
 		}
 	})
@@ -8520,24 +7375,6 @@ return function ()
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"response_for_info_incoming_enemies",
 				OP.TIMEDIFF,
@@ -8559,11 +7396,11 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "response_for_monster_fight_start_reaction",
+		name = "response_for_ogryn_cover_me",
 		wwise_route = 0,
-		response = "response_for_monster_fight_start_reaction",
+		response = "response_for_ogryn_cover_me",
 		database = "gameplay_vo",
-		category = "player_prio_1",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -8574,7 +7411,7 @@ return function ()
 			{
 				"user_context",
 				"friends_close",
-				OP.GTEQ,
+				OP.GT,
 				0
 			},
 			{
@@ -8588,292 +7425,28 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"monster_fight_start_reaction"
+					"cover_me"
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
+				"query_context",
+				"speaker_class",
 				OP.EQ,
-				"false"
+				"ogryn"
 			},
 			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_memory",
-				"response_for_monster_fight_start_reaction",
+				"faction_memory",
+				"response_for_ogryn_cover_me",
 				OP.TIMEDIFF,
 				OP.GT,
-				180
+				10
 			}
 		},
 		on_done = {
 			{
-				"user_memory",
-				"response_for_monster_fight_start_reaction",
+				"faction_memory",
+				"response_for_ogryn_cover_me",
 				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "response_for_obj_mission_control_a",
-		wwise_route = 0,
-		response = "response_for_obj_mission_control_a",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"obj_mission_control"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"response_for_obj_mission_control_a",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"response_for_obj_mission_control_a",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "response_for_obj_mission_control_b",
-		wwise_route = 0,
-		response = "response_for_obj_mission_control_b",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"response_for_obj_mission_control_a"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"response_for_obj_mission_control_b",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"response_for_obj_mission_control_b",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "response_for_obj_mission_kill_a",
-		wwise_route = 0,
-		response = "response_for_obj_mission_kill_a",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"obj_mission_kill"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "response_for_obj_mission_kill_b",
-		wwise_route = 0,
-		response = "response_for_obj_mission_kill_b",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"response_for_obj_mission_kill_a"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				1
 			}
 		},
 		heard_speak_routing = {
@@ -8923,24 +7496,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -9000,24 +7555,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"",
 				OP.TIMEDIFF,
@@ -9075,24 +7612,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_ogryn_knocked_down_3",
 				OP.TIMEDIFF,
@@ -9145,24 +7664,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -9229,24 +7730,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -9318,24 +7801,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -9402,24 +7867,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -9484,24 +7931,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -9837,24 +8266,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_pinned_by_enemies_ogryn",
 				OP.TIMEDIFF,
@@ -9915,24 +8326,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_pinned_by_enemies_psyker",
 				OP.TIMEDIFF,
@@ -9991,24 +8384,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"veteran"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -10074,24 +8449,6 @@ return function ()
 				"zealot"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_pinned_by_enemies_zealot",
 				OP.TIMEDIFF,
@@ -10103,6 +8460,69 @@ return function ()
 			{
 				"faction_memory",
 				"response_for_pinned_by_enemies_zealot",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "response_for_psyker_cover_me",
+		wwise_route = 0,
+		response = "response_for_psyker_cover_me",
+		database = "gameplay_vo",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"cover_me"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"psyker"
+			},
+			{
+				"faction_memory",
+				"response_for_psyker_cover_me",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"response_for_psyker_cover_me",
 				OP.TIMESET
 			}
 		},
@@ -10153,24 +8573,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -10230,24 +8632,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_psyker_enemy_kill_monster",
 				OP.TIMEDIFF,
@@ -10305,24 +8689,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_psyker_knocked_down_3",
 				OP.TIMEDIFF,
@@ -10375,24 +8741,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -10461,24 +8809,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -10543,24 +8873,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -10629,24 +8941,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -10711,24 +9005,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -11025,11 +9301,11 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "response_for_seen_enemy_netgunner_flee",
+		name = "response_for_veteran_cover_me",
 		wwise_route = 0,
-		response = "response_for_seen_enemy_netgunner_flee",
+		response = "response_for_veteran_cover_me",
 		database = "gameplay_vo",
-		category = "player_prio_1",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11044,43 +9320,37 @@ return function ()
 				0
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0
+			},
+			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"seen_netgunner_flee"
+					"cover_me"
 				}
 			},
 			{
-				"user_context",
-				"is_knocked_down",
+				"query_context",
+				"speaker_class",
 				OP.EQ,
-				"false"
+				"veteran"
 			},
 			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_memory",
-				"",
+				"faction_memory",
+				"response_for_veteran_cover_me",
 				OP.TIMEDIFF,
 				OP.GT,
-				0
+				10
 			}
 		},
 		on_done = {
 			{
-				"user_memory",
-				"",
+				"faction_memory",
+				"response_for_veteran_cover_me",
 				OP.TIMESET
 			}
 		},
@@ -11092,54 +9362,6 @@ return function ()
 				duration = 0.2
 			}
 		}
-	})
-	define_rule({
-		name = "response_for_start_revive_generic",
-		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "response_for_start_revive_generic",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"start_revive_generic"
-				}
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn",
-					"psyker",
-					"veteran",
-					"zealot"
-				}
-			},
-			{
-				"user_memory",
-				"revivee",
-				OP.EQ,
-				1
-			},
-			{
-				"user_memory",
-				"last_revivee",
-				OP.TIMEDIFF,
-				OP.LT,
-				10
-			}
-		},
-		on_done = {}
 	})
 	define_rule({
 		name = "response_for_veteran_disabled_by_chaos_hound",
@@ -11179,24 +9401,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"veteran"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -11256,24 +9460,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_veteran_enemy_kill_monster",
 				OP.TIMEDIFF,
@@ -11331,24 +9517,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_veteran_knocked_down_3",
 				OP.TIMEDIFF,
@@ -11401,24 +9569,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"veteran"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -11485,24 +9635,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"ogryn"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -11574,24 +9706,6 @@ return function ()
 				"psyker"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -11661,24 +9775,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -11743,24 +9839,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -12059,6 +10137,69 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "response_for_zealot_cover_me",
+		wwise_route = 0,
+		response = "response_for_zealot_cover_me",
+		database = "gameplay_vo",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"cover_me"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"zealot"
+			},
+			{
+				"faction_memory",
+				"response_for_zealot_cover_me",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"response_for_zealot_cover_me",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "response_for_zealot_disabled_by_chaos_hound",
 		wwise_route = 0,
 		response = "response_for_zealot_disabled_by_chaos_hound",
@@ -12096,24 +10237,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -12173,24 +10296,6 @@ return function ()
 				"zealot"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_zealot_enemy_kill_monster",
 				OP.TIMEDIFF,
@@ -12248,24 +10353,6 @@ return function ()
 				"zealot"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"faction_memory",
 				"response_for_zealot_knocked_down_3",
 				OP.TIMEDIFF,
@@ -12318,24 +10405,6 @@ return function ()
 				"speaker_class",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -12404,24 +10473,6 @@ return function ()
 				"ogryn"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -12486,24 +10537,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"psyker"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -12572,24 +10605,6 @@ return function ()
 				"veteran"
 			},
 			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
 				"user_memory",
 				"last_killstreak",
 				OP.TIMEDIFF,
@@ -12654,24 +10669,6 @@ return function ()
 				"class_name",
 				OP.EQ,
 				"zealot"
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -13028,7 +11025,6 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
 					"medium",
 					"high"
 				}
@@ -13045,6 +11041,58 @@ return function ()
 			{
 				"faction_memory",
 				"seen_enemy_berserker",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "seen_enemy_bulwark_custom",
+		wwise_route = 0,
+		response = "seen_enemy_bulwark_custom",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_ogryn_bulwark",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_chaos_ogryn_bulwark",
 				OP.TIMESET
 			}
 		},
@@ -13111,6 +11159,58 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "seen_enemy_cultist_shocktrooper",
+		wwise_route = 0,
+		response = "seen_enemy_cultist_shocktrooper",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"cultist_shocktrooper"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "seen_enemy_daemonhost",
 		wwise_route = 0,
 		response = "seen_enemy_daemonhost",
@@ -13142,6 +11242,12 @@ return function ()
 				"faction_memory",
 				"enemy_chaos_daemonhost",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"lore_daemons_one_a",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -13217,19 +11323,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_enemy"
+				"seen_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
 				"renegade_grenadier"
-			},
-			{
-				"query_context",
-				"enemies_close",
-				OP.GTEQ,
-				0
 			},
 			{
 				"user_context",
@@ -13299,24 +11399,6 @@ return function ()
 					"traitor_trenchfighter_assault",
 					"cultist_melee_fighter_assault"
 				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"faction_memory",
@@ -13486,6 +11568,59 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "seen_enemy_ogryn_heavy_gunner",
+		wwise_route = 0,
+		response = "seen_enemy_ogryn_heavy_gunner",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_gunner"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"seen_gunner",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"seen_gunner",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "seen_enemy_poxwalker_bomber",
 		wwise_route = 0,
 		response = "seen_enemy_poxwalker_bomber",
@@ -13545,9 +11680,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "seen_enemy_shocktrooper",
+		name = "seen_enemy_renegade_shocktrooper",
 		wwise_route = 0,
-		response = "seen_enemy_shocktrooper",
+		response = "seen_enemy_renegade_shocktrooper",
 		database = "gameplay_vo",
 		category = "enemy_alerts_prio_1",
 		criterias = {
@@ -13634,6 +11769,12 @@ return function ()
 				"faction_memory",
 				"seen_enemy_sniper",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"snipers_spotted",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -13656,19 +11797,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_enemy"
+				"seen_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
 				"cultist_flamer"
-			},
-			{
-				"query_context",
-				"enemies_close",
-				OP.GTEQ,
-				0
 			},
 			{
 				"user_context",
@@ -13682,7 +11817,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_tox_flamer",
+				"cultist_flamer",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -13691,7 +11826,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_tox_flamer",
+				"cultist_flamer",
 				OP.TIMESET
 			}
 		},
@@ -13758,44 +11893,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "seen_horde_ambush",
-		category = "enemy_alerts_prio_0",
-		wwise_route = 0,
-		response = "seen_horde_ambush",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_horde"
-			},
-			{
-				"query_context",
-				"horde_type",
-				OP.EQ,
-				"ambush"
-			},
-			{
-				"faction_memory",
-				"last_seen_horde",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"last_seen_horde",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "seen_horde_static",
 		category = "enemy_alerts_prio_0",
 		wwise_route = 0,
@@ -13827,73 +11924,6 @@ return function ()
 				"faction_memory",
 				"last_seen_horde",
 				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "seen_netgunner_flee",
-		wwise_route = 0,
-		response = "seen_netgunner_flee",
-		database = "gameplay_vo",
-		category = "enemy_alerts_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"player_enemy_attack"
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"renegade_netgunner"
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"seen_netgunner_flee"
-			},
-			{
-				"faction_memory",
-				"seen_netgunner_flee",
-				OP.TIMEDIFF,
-				OP.GT,
-				120
-			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"seen_netgunner_flee",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 4.5
 			}
 		}
 	})
@@ -13959,14 +11989,23 @@ return function ()
 	})
 	define_rule({
 		name = "surrounded",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "surrounded",
 		database = "gameplay_vo",
+		category = "player_prio_1",
+		speaker_routing = {
+			target = "all"
+		},
 		criterias = {
 			{
 				"query_context",
 				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
 				OP.EQ,
 				"surrounded"
 			},
@@ -13980,7 +12019,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.GT,
-				10
+				15
 			},
 			{
 				"user_context",
@@ -13991,8 +12030,8 @@ return function ()
 				}
 			},
 			{
-				"user_memory",
-				"surrounded",
+				"faction_memory",
+				"last_surrounded_vo",
 				OP.TIMEDIFF,
 				OP.GT,
 				240
@@ -14000,8 +12039,8 @@ return function ()
 		},
 		on_done = {
 			{
-				"user_memory",
-				"surrounded",
+				"faction_memory",
+				"last_surrounded_vo",
 				OP.TIMESET
 			}
 		},
@@ -14041,24 +12080,6 @@ return function ()
 				args = {
 					"surrounded"
 				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
 			},
 			{
 				"user_memory",
@@ -14107,8 +12128,7 @@ return function ()
 					"krak_grenade",
 					"fire_grenade",
 					"ogryn_grenade",
-					"ogryn_grenade",
-					"ogryn_grenade"
+					"shock_grenade"
 				}
 			},
 			{
@@ -14293,8 +12313,7 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
-				OP.TIMESET,
-				"0"
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -14582,134 +12601,11 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "vox_response_affirmative",
-		wwise_route = 0,
-		response = "vox_response_affirmative",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					""
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"vox_response_affirmative",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"vox_response_affirmative",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "vox_response_move_fwd",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "vox_response_move_fwd",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"cmd_move_fwd"
-				}
-			},
-			{
-				"user_context",
-				"is_knocked_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_ledge_hanging",
-				OP.EQ,
-				"false"
-			},
-			{
-				"user_context",
-				"is_pounced_down",
-				OP.EQ,
-				"false"
-			},
-			{
-				"faction_memory",
-				"",
-				OP.LT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				1
-			}
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
 		name = "warning_exploding_barrel",
+		category = "player_prio_0",
 		wwise_route = 0,
 		response = "warning_exploding_barrel",
 		database = "gameplay_vo",
-		category = "player_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -14740,11 +12636,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.3
-			}
 		}
 	})
 	define_rule({

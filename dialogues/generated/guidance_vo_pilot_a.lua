@@ -9,10 +9,10 @@ local guidance_vo_pilot_a = {
 			"loc_pilot_a__asset_cult_breaking_wheel_04"
 		},
 		sound_events_duration = {
-			6.167376,
-			5.585835,
-			6.669875,
-			4.6475
+			6.176458,
+			5.594917,
+			6.678958,
+			4.656583
 		},
 		sound_event_weights = {
 			0.25,

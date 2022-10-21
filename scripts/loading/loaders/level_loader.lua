@@ -73,8 +73,6 @@ LevelLoader._level_load_done_callback = function (self, item_definitions)
 end
 
 LevelLoader._load_done_callback = function (self, package_id)
-	fassert(Managers.package:has_loaded_id(package_id), "[LevelLoader][_load_done_callback] Callback called on non loaded package.")
-
 	local package_name = self._package_ids[package_id]
 	local packages_to_load = self._packages_to_load
 	packages_to_load[package_name] = true
@@ -98,6 +96,8 @@ LevelLoader.is_loading_done = function (self)
 end
 
 LevelLoader.cleanup = function (self)
+	Managers.world_level_despawn:flush()
+
 	local package_manager = Managers.package
 	local packages = self._package_ids
 

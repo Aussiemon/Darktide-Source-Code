@@ -6,11 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local _input_devices = {
-	"xbox_controller",
-	"keyboard",
-	"mouse"
-}
+local InputDevice = require("scripts/managers/input/input_device")
 local HudElementPlayerWeapon = class("HudElementPlayerWeapon", "HudElementBase")
 
 HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, data)
@@ -26,7 +22,10 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._ability = data.ability
 	self._ability_type = data.ability_type
 	self._ability_extension = data.ability_extension
-	self._wield_input = self._ability_type or ItemSlotSettings[self._slot_name].wield_input
+	local slot_settings = self._slot_name and ItemSlotSettings[self._slot_name]
+	self._wield_input = self._ability_type or slot_settings.wield_input
+	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
+	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 	local weapon_template = data.weapon_template
 	self._weapon_name = data.weapon_name
 	self._weapon_template = weapon_template
@@ -94,11 +93,9 @@ HudElementPlayerWeapon.set_visible = function (self, visible, ui_renderer, use_r
 	end
 end
 
-HudElementPlayerWeapon.set_wielded = function (self, wielded, progress)
+HudElementPlayerWeapon.set_wielded = function (self, wielded)
 	self._wielded = wielded
-	local wield_animation_progress = wielded and progress or 1 - progress
-
-	self:_set_wield_anim_progress(wield_animation_progress, progress)
+	self._updated_input_text = true
 end
 
 HudElementPlayerWeapon.wielded = function (self)
@@ -141,6 +138,12 @@ end
 
 HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementPlayerWeapon.super.update(self, dt, t, ui_renderer, render_settings, input_service)
+
+	if self._updated_input_text then
+		self._updated_input_text = nil
+
+		self:_update_input()
+	end
 
 	if self._ammo_refill_progress then
 		self._ammo_refill_progress = self._ammo_refill_progress + dt * 2
@@ -364,7 +367,7 @@ local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo,
 
 	local num_amount_strings = string.format("%1d", amount)
 
-	for i = 1, string.len(num_amount_strings) do
+	for i = 1, #num_amount_strings do
 		local value = string.sub(num_amount_strings, i, i)
 
 		if amount == 0 and color_zero_values then
@@ -426,17 +429,29 @@ end
 HudElementPlayerWeapon._update_input = function (self)
 	local service_type = "Ingame"
 	local alias_name = self._wield_input
-	local alias_array_index = 1
-	local alias = Managers.input:alias_object(service_type)
-	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
+	local color_tint_text = false
+	local visible = true
 
-	self:set_input_text(input_key)
+	if InputDevice.gamepad_active then
+		if self._gamepad_wield_input then
+			alias_name = self._gamepad_wield_input
+		end
+
+		if self._hide_input_on_gamepad_wielded and self._wielded then
+			visible = false
+		end
+	end
+
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
+
+	self:set_input_text(input_key, visible)
 end
 
-HudElementPlayerWeapon.set_input_text = function (self, text)
+HudElementPlayerWeapon.set_input_text = function (self, text, visible)
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.input_text.content.text = text
+	local widget = widgets_by_name.input_text
+	widget.content.text = visible and text or " "
+	widget.dirty = true
 end
 
 HudElementPlayerWeapon.set_icon = function (self, icon)
@@ -444,6 +459,7 @@ HudElementPlayerWeapon.set_icon = function (self, icon)
 	local widget = widgets_by_name.icon
 	local content = widget.content
 	content.icon = icon
+	widget.dirty = true
 end
 
 HudElementPlayerWeapon._register_events = function (self)
@@ -468,8 +484,8 @@ HudElementPlayerWeapon._unregister_events = function (self)
 	end
 end
 
-HudElementPlayerWeapon.event_on_input_settings_changed = function (self)
-	self:_update_input()
+HudElementPlayerWeapon.event_on_input_changed = function (self)
+	self._updated_input_text = true
 end
 
 HudElementPlayerWeapon._request_player_weapon_icon = function (self, item)
@@ -509,7 +525,7 @@ HudElementPlayerWeapon._unload_weapon_icon = function (self)
 	widget.dirty = true
 end
 
-HudElementPlayerWeapon._cb_set_player_weapon_icon = function (self, grid_index, rows, columns)
+HudElementPlayerWeapon._cb_set_player_weapon_icon = function (self, grid_index, rows, columns, render_target)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.icon
 	local content = widget.content
@@ -519,6 +535,7 @@ HudElementPlayerWeapon._cb_set_player_weapon_icon = function (self, grid_index, 
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 	content.visible = true
 	local weapon_icon_size = HudElementPlayerWeaponHandlerSettings.weapon_icon_size
 	local icon_style = widget.style.icon

@@ -167,8 +167,6 @@ DecoderSynchronizerExtension._get_random_decoding_device = function (self)
 end
 
 DecoderSynchronizerExtension.unblock_decoding_progression = function (self)
-	fassert(self._is_server, "Server only method.")
-
 	local attached_devices = self._attached_devices
 	local num_devices = #attached_devices
 	local total_active = self._total_active_devices

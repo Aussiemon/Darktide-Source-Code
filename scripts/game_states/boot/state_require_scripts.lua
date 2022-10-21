@@ -29,6 +29,7 @@ StateRequireScripts._init_crashify = function (self)
 	local settings = require("scripts/settings/crashify/crashify")
 
 	Crashify.print_property("project", settings.project)
+	Crashify.print_property("project_branch", settings.branch)
 	Crashify.print_property("build", BUILD)
 	Crashify.print_property("platform", PLATFORM)
 	Crashify.print_property("title_id", "4711")
@@ -43,6 +44,10 @@ StateRequireScripts._init_crashify = function (self)
 			Crashify.print_property("steam_id", Steam.user_id())
 			Crashify.print_property("steam_user_name", Steam.user_name())
 			Crashify.print_property("steam_app_id", Steam.app_id())
+		elseif IS_GDK then
+			local device_type = XboxLive.get_device_type()
+
+			Crashify.print_property("device_type", device_type)
 		end
 
 		Crashify.print_property("machine_id", Application.machine_id())
@@ -50,6 +55,10 @@ StateRequireScripts._init_crashify = function (self)
 		Crashify.print_property("machine_id", Application.machine_id())
 	elseif PLATFORM == "xb1" then
 		Crashify.print_property("console_type", "unknown")
+	elseif PLATFORM == "xbs" then
+		local device_type = XboxLive.get_device_type()
+
+		Crashify.print_property("device_type", device_type)
 	elseif PLATFORM == "linux" then
 		Crashify.print_property("machine_id", Application.machine_id())
 	end

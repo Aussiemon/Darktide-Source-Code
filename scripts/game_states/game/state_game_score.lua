@@ -19,11 +19,13 @@ StateGameScore.on_enter = function (self, parent, params, creation_context)
 	elseif LEVEL_EDITOR_TEST or not Managers.ui then
 		Managers.mechanism:trigger_event("game_score_done")
 	else
-		self._event_registered = true
+		if Managers.progression:fetching_session_report_not_started() then
+			local session_id = Managers.connection:session_id()
 
-		for event_name, function_name in pairs(events) do
-			Managers.event:register(self, event_name, function_name)
+			Managers.progression:fetch_session_report(session_id)
 		end
+
+		self._end_view_name = "end_view"
 
 		self:_present_end_of_round_view()
 	end
@@ -32,20 +34,26 @@ StateGameScore.on_enter = function (self, parent, params, creation_context)
 end
 
 StateGameScore._present_end_of_round_view = function (self)
-	local eor_view_name = "end_view"
+	local eor_view_name = self._end_view_name
+	local game_score_end_time = Managers.progression:game_score_end_time()
+	local session_report = nil
+
+	if Managers.progression:session_report_success() then
+		session_report = Managers.progression:session_report()
+	end
+
 	local end_result = Managers.mechanism:end_result()
 	local round_won = end_result and end_result == "won"
-	local session_report = Managers.progression:session_report()
+	local played_mission = self._played_mission
 	local view_context = {
 		round_won = round_won,
-		played_mission = self._played_mission,
+		played_mission = played_mission,
 		session_report = session_report,
-		duration = self:_get_total_presentation_time(),
-		delay_before_summary = EndViewSettings.delay_before_summary
+		end_time = game_score_end_time
 	}
-	self._end_view_name = eor_view_name
 
 	Managers.ui:open_view(eor_view_name, nil, nil, nil, nil, view_context)
+	Log.info("StateGameScore", "_present_end_of_round_view, view_context: %s", table.tostring(view_context))
 end
 
 StateGameScore._get_total_presentation_time = function (self)
@@ -69,11 +77,23 @@ StateGameScore.update = function (self, main_dt, main_t)
 	context.network_receive_function(main_dt)
 	context.network_transmit_function()
 
-	if self._server_continue_time and self._server_continue_time < main_t then
-		Log.info("StateGameScore", "State Done. server_continue_time: %f main_t: %f", self._server_continue_time, main_t)
-		Managers.mechanism:trigger_event("game_score_done")
+	if Managers.connection:is_host() then
+		local game_score_done = self._game_score_done
 
-		self._server_continue_time = nil
+		if not game_score_done then
+			local game_score_end_time = Managers.progression:game_score_end_time()
+
+			if game_score_end_time then
+				local server_time = Managers.backend:get_server_time(main_t)
+
+				if game_score_end_time < server_time then
+					Log.info("StateGameScore", "State Done. game_score_end_time: %s server_time: %s", game_score_end_time, server_time)
+					Managers.mechanism:trigger_event("game_score_done")
+
+					self._game_score_done = true
+				end
+			end
+		end
 	end
 
 	return Managers.mechanism:wanted_transition()

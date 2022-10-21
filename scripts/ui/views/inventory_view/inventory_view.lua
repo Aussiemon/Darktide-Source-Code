@@ -13,6 +13,7 @@ local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_me
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local TextUtilities = require("scripts/utilities/ui/text")
 local VIEW_BY_SLOT = {
 	slot_gear_lowerbody = "inventory_cosmetics_view",
 	slot_primary = "inventory_weapons_view",
@@ -41,6 +42,8 @@ InventoryView.init = function (self, settings, context)
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
 	self._loaded_item_icons_info = {}
+	self._num_active_wallet_widgets = 0
+	self._wallet_widgets = {}
 
 	InventoryView.super.init(self, Definitions, settings)
 
@@ -94,8 +97,9 @@ InventoryView._set_active_layout_by_index = function (self, index)
 	local tab_layout = tab_context.layout
 	local is_grid_layout = tab_context.is_grid_layout
 	local camera_settings = tab_context.camera_settings
+	local ui_animation = tab_context.ui_animation
 
-	self:_switch_active_layout(tab_layout, is_grid_layout, camera_settings)
+	self:_switch_active_layout(tab_layout, is_grid_layout, camera_settings, ui_animation)
 
 	self._selected_tab_index = index
 
@@ -104,27 +108,38 @@ InventoryView._set_active_layout_by_index = function (self, index)
 	end
 end
 
-InventoryView._switch_active_layout = function (self, layout, is_grid_layout, camera_settings)
+InventoryView._switch_active_layout = function (self, layout, is_grid_layout, camera_settings, ui_animation)
 	self._active_category_layout = layout
 	self._active_category_camera_settings = camera_settings
+	self._active_category_ui_animation = ui_animation
 	self._is_grid_layout = is_grid_layout
 
 	if is_grid_layout then
-		self:_destroy_loadout_widgets()
+		self:_destroy_loadout_widgets(self._ui_renderer)
 		self:_setup_grid_layout(layout)
 	else
-		self:_reset_grid_layout()
+		self:_reset_grid_layout(self._ui_offscreen_renderer)
 		self:_setup_individual_layout(layout)
 	end
 
 	self:_set_camera_focus_by_slot_name(nil, camera_settings)
 	self:_display_title_text(nil)
+
+	if self._entry_animation_id then
+		self:_stop_animation(self._entry_animation_id)
+
+		self._entry_animation_id = nil
+	end
+
+	if ui_animation then
+		self._entry_animation_id = self:_start_animation(ui_animation, self._widgets, self)
+	end
 end
 
 InventoryView.on_back_pressed = function (self)
 	if self._active_category_layout ~= self._visible_grid_layout then
 		self:_setup_grid_layout(self._active_category_layout)
-		self:_switch_active_layout(self._active_category_layout, self._is_grid_layout, self._active_category_camera_settings)
+		self:_switch_active_layout(self._active_category_layout, self._is_grid_layout, self._active_category_camera_settings, self._active_category_ui_animation)
 		self:_display_title_text(nil)
 
 		return true
@@ -134,8 +149,8 @@ InventoryView.on_back_pressed = function (self)
 end
 
 InventoryView.on_exit = function (self)
-	self:_destroy_grid_widgets()
-	self:_destroy_loadout_widgets()
+	self:_destroy_loadout_widgets(self._ui_renderer)
+	self:_destroy_grid_widgets(self._ui_offscreen_renderer)
 
 	if Managers.ui:view_active("inventory_weapons_view") then
 		Managers.ui:close_view("inventory_weapons_view")
@@ -294,12 +309,14 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 	end
 
 	local slot = element.slot
+	local slots = element.slots
+	local view_name = element.view_name
 
 	if slot then
 		local slot_name = slot.name
 
 		if element.loadout_slot then
-			local view_name = VIEW_BY_SLOT[slot_name]
+			view_name = view_name or VIEW_BY_SLOT[slot_name]
 
 			if view_name then
 				local context = {
@@ -317,12 +334,30 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 				self:_set_camera_focus_by_slot_name(slot_name)
 				self:_display_title_text(element.slot_title)
 			end
+		elseif view_name then
+			local context = {
+				player = self._preview_player,
+				player_specialization = self._chosen_specialization,
+				preview_profile_equipped_items = self._preview_profile_equipped_items,
+				selected_slot = slot
+			}
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		else
 			local item = element.item
 
 			Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 			self:_play_voice_preview(slot_name, item)
 		end
+	elseif slots and element.loadout_slot and view_name then
+		local context = {
+			player = self._preview_player,
+			player_specialization = self._chosen_specialization,
+			preview_profile_equipped_items = self._preview_profile_equipped_items,
+			selected_slots = slots
+		}
+
+		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 	end
 end
 
@@ -370,8 +405,8 @@ InventoryView.get_group_header_highlight_text = function (self, group_header)
 	end
 end
 
-InventoryView._reset_grid_layout = function (self)
-	self:_destroy_grid_widgets()
+InventoryView._reset_grid_layout = function (self, ui_renderer)
+	self:_destroy_grid_widgets(ui_renderer)
 
 	self._visible_grid_layout = nil
 
@@ -436,7 +471,7 @@ end
 InventoryView._setup_grid_layout = function (self, layout)
 	self._widgets_by_name.grid_background.content.visible = true
 
-	self:_reset_grid_layout()
+	self:_reset_grid_layout(self._ui_offscreen_renderer)
 
 	local widgets = {}
 	local alignment_widgets = {}
@@ -550,9 +585,6 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 	local widget_type = config.widget_type
 	local widget = nil
 	local template = ContentBlueprints[widget_type]
-
-	fassert(template, "[InventoryView] - Could not find content blueprint for type: %s", widget_type)
-
 	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
@@ -582,10 +614,9 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 	end
 end
 
-InventoryView._draw_loadout_widgets = function (self, dt, t, input_service)
+InventoryView._draw_loadout_widgets = function (self, dt, t, input_service, ui_renderer)
 	local widgets = self._loadout_widgets
 	local render_settings = self._render_settings
-	local ui_renderer = self._ui_renderer
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -599,7 +630,24 @@ InventoryView._draw_loadout_widgets = function (self, dt, t, input_service)
 	UIRenderer.end_pass(ui_renderer)
 end
 
-InventoryView._draw_grid = function (self, dt, t, input_service)
+InventoryView._draw_wallet_widgets = function (self, dt, t, input_service, ui_renderer)
+	local widgets = self._wallet_widgets
+	local render_settings = self._render_settings
+	local ui_scenegraph = self._ui_scenegraph
+	local num_active_wallet_widgets = self._num_active_wallet_widgets
+
+	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+
+	for i = 1, num_active_wallet_widgets do
+		local widget = widgets[i]
+
+		UIWidget.draw(widget, ui_renderer)
+	end
+
+	UIRenderer.end_pass(ui_renderer)
+end
+
+InventoryView._draw_grid = function (self, dt, t, input_service, ui_renderer)
 	local grid = self._grid
 
 	if not grid then
@@ -611,7 +659,6 @@ InventoryView._draw_grid = function (self, dt, t, input_service)
 	local interaction_widget = widgets_by_name.grid_interaction
 	local is_grid_hovered = not self._using_cursor_navigation or interaction_widget.content.hotspot.is_hover or false
 	local render_settings = self._render_settings
-	local ui_renderer = self._ui_offscreen_renderer
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -633,7 +680,7 @@ InventoryView._draw_grid = function (self, dt, t, input_service)
 	UIRenderer.end_pass(ui_renderer)
 end
 
-InventoryView._destroy_loadout_widgets = function (self)
+InventoryView._destroy_loadout_widgets = function (self, ui_renderer)
 	local widgets = self._loadout_widgets
 
 	if widgets then
@@ -651,7 +698,7 @@ InventoryView._destroy_loadout_widgets = function (self)
 			if destroy then
 				local element = widget.element
 
-				destroy(self, widget, element)
+				destroy(self, widget, element, ui_renderer)
 			end
 		end
 	end
@@ -660,7 +707,7 @@ InventoryView._destroy_loadout_widgets = function (self)
 	self._loadout_widget_navigation_grid = nil
 end
 
-InventoryView._destroy_grid_widgets = function (self)
+InventoryView._destroy_grid_widgets = function (self, ui_renderer)
 	local widgets = self._grid_widgets
 
 	if widgets then
@@ -673,13 +720,13 @@ InventoryView._destroy_grid_widgets = function (self)
 			if destroy then
 				local element = widget.element
 
-				destroy(self, widget, element)
+				destroy(self, widget, element, ui_renderer)
 			end
 		end
 	end
 end
 
-InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_service)
+InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_service, ui_renderer)
 	if widgets then
 		local handle_input = false
 
@@ -690,7 +737,7 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 			local update = template and template.update
 
 			if update then
-				update(self, widget, input_service, dt, t)
+				update(self, widget, input_service, dt, t, ui_renderer)
 			end
 		end
 
@@ -886,23 +933,27 @@ InventoryView.update = function (self, dt, t, input_service)
 
 		local widgets = self._grid_widgets
 
-		self:_update_blueprint_widgets(widgets, dt, t, input_service)
+		self:_update_blueprint_widgets(widgets, dt, t, input_service, self._ui_offscreen_renderer)
 	end
 
 	local loadout_widgets = self._loadout_widgets
 
 	if loadout_widgets then
-		self:_update_blueprint_widgets(loadout_widgets, dt, t, input_service)
+		self:_update_blueprint_widgets(loadout_widgets, dt, t, input_service, self._ui_renderer)
 	end
 
 	return InventoryView.super.update(self, dt, t, input_service)
 end
 
 InventoryView.draw = function (self, dt, t, input_service, layer)
-	self:_draw_grid(dt, t, input_service)
+	self:_draw_grid(dt, t, input_service, self._ui_offscreen_renderer)
 
 	if self._loadout_widgets then
-		self:_draw_loadout_widgets(dt, t, input_service)
+		self:_draw_loadout_widgets(dt, t, input_service, self._ui_renderer)
+	end
+
+	if self._num_active_wallet_widgets > 0 then
+		self:_draw_wallet_widgets(dt, t, input_service, self._ui_renderer)
 	end
 
 	InventoryView.super.draw(self, dt, t, input_service, layer)
@@ -933,7 +984,7 @@ InventoryView._request_wallets_update = function (self)
 end
 
 InventoryView._update_wallets_presentation = function (self, wallets_data, hide_presentation)
-	local text = ""
+	local num_active_widgets = 0
 
 	if not hide_presentation then
 		local sorted_wallet_settings = {}
@@ -943,19 +994,40 @@ InventoryView._update_wallets_presentation = function (self, wallets_data, hide_
 			return a.sort_order < b.sort_order
 		end)
 
-		for i = 1, #sorted_wallet_settings do
+		local widgets = self._wallet_widgets
+		local wallet_entry_definition = self._definitions.wallet_entry_definition
+
+		for i = #sorted_wallet_settings, 1, -1 do
 			local wallet_settings = sorted_wallet_settings[i]
-			local wallet_type = wallet_settings.type
-			local backend_index = wallet_settings.backend_index
-			local wallet = wallets_data and wallets_data:by_type(wallet_type)
-			local string_symbol = wallet_settings.string_symbol
-			local balance = wallet and wallet.balance
-			local amount = balance and balance.amount or 0
-			text = text .. tostring(amount) .. " " .. string_symbol .. "\n"
+
+			if wallet_settings.show_in_character_menu then
+				num_active_widgets = num_active_widgets + 1
+				local widget = widgets[num_active_widgets]
+
+				if not widget then
+					widget = self:_create_widget("wallet_entry_" .. tostring(#widgets + 1), wallet_entry_definition)
+					widgets[#widgets + 1] = widget
+				end
+
+				local wallet_type = wallet_settings.type
+				local backend_index = wallet_settings.backend_index
+				local wallet = wallets_data and wallets_data:by_type(wallet_type)
+				local string_symbol = wallet_settings.string_symbol
+				local balance = wallet and wallet.balance
+				local amount = balance and balance.amount or 0
+				local text = TextUtilities.format_currency(amount)
+				widget.content.text = text
+				widget.content.icon = wallet_settings.icon_texture_small
+				widget.offset[2] = -((num_active_widgets - 1) * 50)
+			end
+		end
+
+		if not self._wallet_animation_id then
+			self._wallet_animation_id = self:_start_animation("wallet_on_enter", widgets, self)
 		end
 	end
 
-	self._widgets_by_name.wallet_text.content.text = text
+	self._num_active_wallet_widgets = num_active_widgets
 end
 
 return InventoryView

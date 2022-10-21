@@ -9,9 +9,6 @@ local husk_data_component_config = {
 		"hub_active_stopping",
 		"move_method"
 	},
-	locomotion = {
-		"parent_unit"
-	},
 	first_person = {
 		"position",
 		"rotation",
@@ -77,6 +74,7 @@ local husk_data_component_config = {
 	inventory = {
 		"slot_primary",
 		"slot_secondary",
+		"slot_pocketable",
 		"wielded_slot"
 	},
 	slot_primary = {
@@ -109,6 +107,9 @@ local husk_data_component_config = {
 	critical_strike = {
 		"is_active"
 	},
+	exploding_character_state = {
+		"is_exploding"
+	},
 	sprint_character_state = {
 		"is_sprinting",
 		"sprint_overtime"
@@ -136,7 +137,9 @@ local husk_data_component_config = {
 		"recoil_template_name"
 	},
 	action_sweep = {
-		"is_sticky"
+		"is_sticky",
+		"sweep_aborted_unit",
+		"sweep_aborted_actor_index"
 	},
 	grenade_ability = {
 		"active"

@@ -76,6 +76,14 @@ SideRelationProximityExtension.job_completed = function (self)
 	return self._job_logic:job_completed()
 end
 
+SideRelationProximityExtension.cancel_job = function (self)
+	return self._job_logic:cancel_job()
+end
+
+SideRelationProximityExtension.is_job_canceled = function (self)
+	return self._job_logic:is_job_canceled()
+end
+
 local dead_units = {}
 
 SideRelationProximityExtension._update_unit_alive_check = function (self, unit, dt, t)

@@ -3,6 +3,7 @@ local DisruptiveStateTransition = require("scripts/extension_systems/character_s
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerCharacterStateLedgeVaulting = class("PlayerCharacterStateLedgeVaulting", "PlayerCharacterStateBase")
 
@@ -18,6 +19,7 @@ PlayerCharacterStateLedgeVaulting.init = function (self, character_state_init_co
 	ledge_vaulting_character_state_component.forward = Vector3.zero()
 	ledge_vaulting_character_state_component.traverse_velocity = Vector3.zero()
 	ledge_vaulting_character_state_component.is_step_up = false
+	ledge_vaulting_character_state_component.was_sprinting = false
 	self._ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
@@ -36,6 +38,7 @@ PlayerCharacterStateLedgeVaulting.on_enter = function (self, unit, dt, t, previo
 	ledge_vaulting.right = right_point
 	local forward = ledge.forward:unbox()
 	ledge_vaulting.forward = forward
+	ledge_vaulting.was_sprinting = params.was_sprinting or false
 	local enter_velocity = self._locomotion_component.velocity_current
 	local enter_velocity_flat = Vector3.flat(enter_velocity)
 	local speed = Vector3.length(enter_velocity_flat)
@@ -152,13 +155,20 @@ PlayerCharacterStateLedgeVaulting.on_exit = function (self, unit, t, next_state)
 	end
 
 	self._locomotion_steering_component.calculate_fall_velocity = true
+	local movement_state_component = self._movement_state_component
+	local is_crouching = movement_state_component.is_crouching
 	local first_person_extension = self._first_person_extension
 
-	if Crouch.can_exit(unit) then
+	if is_crouching and next_state ~= "sliding" and Crouch.can_exit(unit) then
 		Crouch.exit(unit, first_person_extension, animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
-		first_person_extension:set_wanted_player_height("default", 1)
-	else
+
+		is_crouching = false
+	end
+
+	if is_crouching then
 		first_person_extension:set_wanted_player_height("crouch", 0.3)
+	else
+		first_person_extension:set_wanted_player_height("default", 1)
 	end
 
 	self._movement_state_component.is_dodging = false
@@ -206,12 +216,12 @@ PlayerCharacterStateLedgeVaulting.fixed_update = function (self, unit, dt, t, ne
 
 	local passed_by_ledge_and_enough_distance = passed_by_ledge and PASSED_BY_LEDGE_DISTANCE_SQ <= distance_to_ledge_flat_sq
 
-	return self:_check_transition(unit, t, next_state_params, passed_by_ledge_and_enough_distance)
+	return self:_check_transition(unit, t, next_state_params, passed_by_ledge_and_enough_distance, weapon_template)
 end
 
 local LEDGE_CLIMB_TIMEOUT = 0.8
 
-PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, next_state_params, passed_by_ledge)
+PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, next_state_params, passed_by_ledge, weapon_template)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -237,7 +247,30 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 
 	if passed_by_ledge or LEDGE_CLIMB_TIMEOUT < time_in_state then
 		if self._inair_state_component.on_ground then
-			return "walking"
+			local movement_state_component = self._movement_state_component
+			local input_extension = self._input_extension
+			local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+			local locomotion_component = self._locomotion_component
+			local velocity_current = locomotion_component.velocity_current
+			local look_rotation = self._first_person_component.rotation
+			local flat_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(look_rotation)))
+			local wants_slide = is_crouching and self._constants.slide_move_speed_threshold < Vector3.dot(velocity_current, flat_look_direction)
+
+			if wants_slide then
+				if self._ledge_vaulting_character_state_component.was_sprinting then
+					next_state_params.friction_function = "sprint"
+				end
+
+				return "sliding"
+			elseif Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_extension, locomotion_component, self._weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+				if self._ledge_vaulting_character_state_component.was_sprinting then
+					next_state_params.disable_sprint_start_slowdown = true
+				end
+
+				return "sprinting"
+			else
+				return "walking"
+			end
 		else
 			return "falling"
 		end

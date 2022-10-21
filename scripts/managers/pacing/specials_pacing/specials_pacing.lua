@@ -11,8 +11,12 @@ SpecialsPacing.init = function (self, nav_world)
 	self._nav_world = nav_world
 	self._fx_system = Managers.state.extension:system("fx_system")
 	self._timer_modifier = 1
+	self._max_alive_specials_multiplier = 1
 	self._rush_prevention_cooldown = 0
 	self._frozen = false
+	self._speed_running_prevention_cooldown = 0
+	self._next_speed_running_check_t = 0
+	self._num_speed_running_checks = 0
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
@@ -20,6 +24,7 @@ SpecialsPacing.on_spawn_points_generated = function (self, template)
 
 	self:_setup(template, first_spawn_timer_modifer)
 
+	self._template = template
 	local main_path_manager = Managers.state.main_path
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 
@@ -34,7 +39,7 @@ SpecialsPacing.on_spawn_points_generated = function (self, template)
 	self._destroy_special_distance_sq = template.destroy_special_distance^2
 end
 
-local function _setup_specials_slot(specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+local function _setup_specials_slot(specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 	local breed_name = optional_breed_name
 
 	if optional_breed_name == nil then
@@ -68,7 +73,7 @@ local function _setup_specials_slot(specials_slot, template, timer_modifier, opt
 	end
 
 	specials_slot.foreshadow_triggered = false
-	specials_slot.alone_target_override = false
+	specials_slot.disabler_override = false
 	specials_slot.coordinated_strike = optional_coordinated_strike
 	specials_slot.target_unit = optional_target_unit
 	specials_slot.injected = optional_injected
@@ -76,11 +81,13 @@ local function _setup_specials_slot(specials_slot, template, timer_modifier, opt
 	specials_slot.spawner_group = optional_spawner_group
 	specials_slot.spawner_queue_id = nil
 	specials_slot.spawner = nil
+	specials_slot.disabler_is_active = nil
+	specials_slot.optional_is_prevention = optional_is_prevention
 end
 
 SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	self._template = template
-	local max_alive_specials = template.max_alive_specials
+	local max_alive_specials = math.ceil(template.max_alive_specials * self._max_alive_specials_multiplier)
 	local specials_slots = Script.new_array(max_alive_specials)
 	self._num_spawned_specials = 0
 	self._max_alive_specials = max_alive_specials
@@ -104,14 +111,23 @@ SpecialsPacing.set_timer_modifier = function (self, modifier)
 	self._timer_modifier = modifier
 end
 
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MIN = 5
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MAX = 20
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MIN = 8
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MAX = 30
+
 SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	if self._disabled then
 		return
 	end
 
-	Profiler.start("specials_pacing_update_specials")
-
-	local specials_allowed = Managers.state.pacing:spawn_type_enabled("specials") and not self._frozen
+	local main_path_manager = Managers.state.main_path
+	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local time_since_forward_behind_changed = main_path_manager:time_since_behind_travel_changed(target_side_id)
+	local travel_distance_allowed_forward = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MAX < time_since_forward_travel_changed
+	local travel_distance_allowed_behind = time_since_forward_behind_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MAX < time_since_forward_behind_changed
+	local travel_distance_allowed = travel_distance_allowed_forward or travel_distance_allowed_behind
+	local specials_allowed = travel_distance_allowed and Managers.state.pacing:spawn_type_enabled("specials") and not self._frozen
 	local specials_slots = self._specials_slots
 	local max_alive_specials = self._max_alive_specials
 	local template = self._template
@@ -124,9 +140,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 			if HEALTH_ALIVE[unit] then
 				if specials_slot.next_stuck_check_t <= t then
-					Profiler.start("check_stuck_special")
 					self:_check_stuck_special(unit, specials_slot, template, target_side_id, t)
-					Profiler.stop("check_stuck_special")
 				end
 			else
 				self._num_spawned_specials = self._num_spawned_specials - 1
@@ -144,12 +158,15 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 			if not spawner:is_spawning() then
 				local spawned_minions_by_queue_id = spawner:spawned_minions_by_queue_id(spawner_queue_id)
-				local spawned_unit = spawned_minions_by_queue_id[1]
 
-				self:_on_special_spawned(specials_slot, spawned_unit)
+				if spawned_minions_by_queue_id then
+					local spawned_unit = spawned_minions_by_queue_id[1]
+
+					self:_on_special_spawned(specials_slot, spawned_unit)
+				end
 			end
 		elseif specials_slot.spawn_timer <= 0 then
-			self:_check_alone_target_override(template, target_side_id, specials_slot)
+			self:_check_disabler_override(template, target_side_id, specials_slot)
 
 			local success, spawned_unit, spawner_queue_id, spawner = self:_spawn_special(specials_slot, side_id, target_side_id)
 
@@ -174,9 +191,9 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - dt, 0)
 
 				if specials_slot.foreshadow_stinger_timer <= 0 then
-					local alone_target_override = self:_check_alone_target_override(template, target_side_id, specials_slot)
+					local disabler_override = self:_check_disabler_override(template, target_side_id, specials_slot)
 
-					if not alone_target_override then
+					if not disabler_override then
 						local _, _, path_position = Managers.state.main_path:ahead_unit(target_side_id)
 
 						if path_position then
@@ -184,6 +201,14 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 							specials_slot.foreshadow_triggered = true
 						end
+					end
+
+					local breed_name = specials_slot.breed_name
+					local breed = Breeds[breed_name]
+					local tags = breed.tags
+
+					if tags.disabler then
+						specials_slot.disabler_is_active = true
 					end
 				end
 			end
@@ -196,13 +221,11 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 		end
 	end
 
-	Profiler.stop("specials_pacing_update_specials")
-
 	if specials_allowed then
-		Profiler.start("specials_pacing_update_rush_prevention")
-		self:_update_rush_prevention(side_id, target_side_id, template, t)
-		Profiler.stop("specials_pacing_update_rush_prevention")
+		self:_update_rush_prevention(target_side_id, template, t)
 	end
+
+	self:_update_speed_running_prevention(target_side_id, template, t)
 end
 
 SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_side_id)
@@ -243,6 +266,8 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 
 				return true, nil, spawner_queue_id, nearby_spawner
 			else
+				Log.info("SpecialsPacing", "Failed to spawn special %s. No occluded positions OR spawners nearby.", breed_name)
+
 				return false
 			end
 		end
@@ -262,8 +287,15 @@ SpecialsPacing._on_special_spawned = function (self, specials_slot, spawned_unit
 	local breed_name = specials_slot.breed_name
 	local spawn_stinger = self._template.spawn_stingers[breed_name]
 
-	if spawn_stinger then
+	if spawn_stinger and ALIVE[spawned_unit] then
 		self._fx_system:trigger_wwise_event(spawn_stinger, nil, spawned_unit)
+	end
+
+	local breed = Breeds[breed_name]
+	local tags = breed.tags
+
+	if tags.disabler then
+		specials_slot.disabler_is_active = true
 	end
 end
 
@@ -426,9 +458,28 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 	end
 end
 
-SpecialsPacing._check_alone_target_override = function (self, template, target_side_id, specials_slot)
-	if specials_slot.alone_target_override then
+SpecialsPacing._check_disabler_override = function (self, template, target_side_id, specials_slot)
+	if specials_slot.optional_is_prevention or specials_slot.disabler_override or specials_slot.disabler_is_active then
 		return false
+	end
+
+	local breed_name = specials_slot.breed_name
+	local breed = Breeds[breed_name]
+	local tags = breed.tags
+
+	if not tags.disabler then
+		return false
+	end
+
+	local specials_slots = self._specials_slots
+	local num_active_disablers = 0
+
+	for i = 1, self._max_alive_specials do
+		local other_specials_slot = specials_slots[i]
+
+		if other_specials_slot.disabler_is_active then
+			num_active_disablers = num_active_disablers + 1
+		end
 	end
 
 	local side_system = Managers.state.extension:system("side_system")
@@ -445,45 +496,46 @@ SpecialsPacing._check_alone_target_override = function (self, template, target_s
 
 		if not requires_help then
 			num_non_disabled_players = num_non_disabled_players + 1
-
-			if num_non_disabled_players > 1 then
-				return false
-			end
 		end
 	end
 
-	if template.skip_disablers_when_one_target_alive then
-		local breed_name = specials_slot.breed_name
-		local breed = Breeds[breed_name]
-		local tags = breed.tags
+	if num_non_disabled_players == 0 then
+		return false
+	end
 
-		if tags.disabler then
-			local scrambler_breeds = template.breeds.scramblers
-			local new_breed_name = scrambler_breeds[math.random(1, #scrambler_breeds)]
-			specials_slot.breed_name = new_breed_name
-			local foreshadow_stinger = template.foreshadow_stingers[new_breed_name]
-			local foreshadow_stinger_timer = template.foreshadow_stinger_timers[new_breed_name]
+	local num_allowed_disablers_per_alive_targets = template.num_allowed_disablers_per_alive_targets[num_non_disabled_players]
+	local allowed_disablers = num_allowed_disablers_per_alive_targets - num_active_disablers
 
-			if foreshadow_stinger and foreshadow_stinger_timer then
-				specials_slot.foreshadow_stinger = foreshadow_stinger
-				specials_slot.foreshadow_stinger_timer = foreshadow_stinger_timer
-			else
-				specials_slot.foreshadow_stinger = nil
-				specials_slot.foreshadow_stinger_timer = nil
-			end
+	if allowed_disablers <= 0 then
+		local scrambler_breeds = template.breeds.scramblers
+		local new_breed_name = scrambler_breeds[math.random(1, #scrambler_breeds)]
+		specials_slot.breed_name = new_breed_name
+		local foreshadow_stinger = template.foreshadow_stingers[new_breed_name]
+		local foreshadow_stinger_timer = template.foreshadow_stinger_timers[new_breed_name]
 
-			specials_slot.alone_target_override = true
-
-			Log.info("SpecialsPacing", "Replaced %s breed with %s because of alone target override", breed_name, new_breed_name)
-
-			return true
+		if foreshadow_stinger and foreshadow_stinger_timer then
+			specials_slot.foreshadow_stinger = foreshadow_stinger
+			specials_slot.foreshadow_stinger_timer = foreshadow_stinger_timer
+		else
+			specials_slot.foreshadow_stinger = nil
+			specials_slot.foreshadow_stinger_timer = nil
 		end
+
+		specials_slot.disabler_override = true
+		specials_slot.disabler_is_active = nil
+
+		Log.info("SpecialsPacing", "Replaced %s breed with %s because of disabler override", breed_name, new_breed_name)
+
+		return true
 	end
 
 	return false
 end
 
-local COORDINATED_STRIKE_TIMER_OFFSET = 3
+local COORDINATED_STRIKE_TIMER_OFFSET_RANGE = {
+	2,
+	4
+}
 
 SpecialsPacing._check_and_activate_coordinated_strike = function (self, template, current_special_slot)
 	if self._num_spawned_specials > 0 or current_special_slot.coordinated_strike then
@@ -516,13 +568,13 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 		_setup_specials_slot(specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
 
-		coordinated_strike_timer = coordinated_strike_timer + COORDINATED_STRIKE_TIMER_OFFSET
+		coordinated_strike_timer = coordinated_strike_timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
 	end
 
 	return true
 end
 
-SpecialsPacing._update_rush_prevention = function (self, side_id, target_side_id, template, t)
+SpecialsPacing._update_rush_prevention = function (self, target_side_id, template, t)
 	local rush_prevention_breeds = template.rush_prevention_breeds
 
 	if not rush_prevention_breeds or t < self._rush_prevention_cooldown then
@@ -606,10 +658,83 @@ SpecialsPacing._update_rush_prevention = function (self, side_id, target_side_id
 	end
 end
 
-SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+SpecialsPacing._update_speed_running_prevention = function (self, target_side_id, template, t)
+	local speed_running_prevention_breeds = template.speed_running_prevention_breeds
+
+	if not speed_running_prevention_breeds or t < self._speed_running_prevention_cooldown then
+		return
+	end
+
+	local ahead_unit, ahead_travel_distance = Managers.state.main_path:ahead_unit(target_side_id)
+
+	if not ahead_unit then
+		return
+	end
+
+	local required_challenge_rating = template.speed_running_required_challenge_rating
+	local challenge_rating = Managers.state.pacing:total_challenge_rating()
+
+	if challenge_rating < required_challenge_rating then
+		return
+	end
+
+	local next_speed_running_check_t = self._next_speed_running_check_t
+
+	if t < next_speed_running_check_t then
+		return
+	end
+
+	self._next_speed_running_check_t = t + template.speed_running_check_frequency
+	local previous_speed_running_distance = self._previous_speed_running_distance
+
+	if not previous_speed_running_distance then
+		self._previous_speed_running_distance = ahead_travel_distance
+
+		return
+	end
+
+	local distance_diff = ahead_travel_distance - previous_speed_running_distance
+	local speed_running_required_distance = template.speed_running_required_distance
+	self._previous_speed_running_distance = ahead_travel_distance
+
+	if distance_diff < speed_running_required_distance then
+		self._num_speed_running_checks = 0
+		self._previous_speed_running_distance = nil
+
+		return
+	end
+
+	self._num_speed_running_checks = self._num_speed_running_checks + 1
+
+	Log.info("SpecialsPacing", "Identitying speed running.. %d %.02f", self._num_speed_running_checks, distance_diff)
+
+	local num_required_speed_running_checks = template.num_required_speed_running_checks
+
+	if self._num_speed_running_checks < num_required_speed_running_checks then
+		return
+	end
+
+	local speed_running_prevention_breed_name = speed_running_prevention_breeds[math.random(1, #speed_running_prevention_breeds)]
+
+	Log.info("SpecialsPacing", "Trying to inject speed running prevention breed ahead %s.", speed_running_prevention_breed_name)
+
+	local ignore_allowance = true
+	local is_prevention = true
+	local success = self:try_inject_special(speed_running_prevention_breed_name, "ahead", ahead_unit, nil, ignore_allowance, is_prevention)
+
+	if success then
+		self._num_speed_running_checks = 0
+		self._previous_speed_running_distance = nil
+	end
+
+	local cooldown = success and template.speed_running_prevention_cooldown or template.speed_running_prevention_failed_cooldown
+	self._speed_running_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
+end
+
+SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_ignore_allowance, optional_is_prevention)
 	local specials_allowed = Managers.state.pacing:spawn_type_allowed("specials")
 
-	if not specials_allowed then
+	if not optional_ignore_allowance and not specials_allowed then
 		return false
 	end
 
@@ -637,13 +762,21 @@ SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefere
 	local spawn_timer = foreshadow_stinger_timer or 0
 	local injected = true
 
-	_setup_specials_slot(chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+	_setup_specials_slot(chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 
 	return true
 end
 
 SpecialsPacing.freeze = function (self, should_freeze)
 	self._frozen = should_freeze
+end
+
+SpecialsPacing.set_max_alive_specials_multiplier = function (self, multiplier)
+	self._max_alive_specials_multiplier = multiplier
+	local template = self._template
+	local first_spawn_timer_modifer = template.first_spawn_timer_modifer
+
+	self:_setup(template, first_spawn_timer_modifer)
 end
 
 return SpecialsPacing

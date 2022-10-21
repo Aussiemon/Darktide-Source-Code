@@ -1,4 +1,5 @@
 local Promise = require("scripts/foundation/utilities/promise")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 
 local function _open_voting_view(context)
 	local transition_time = nil
@@ -30,26 +31,29 @@ local mission_vote_matchmaking_immaterium = {
 	},
 	static_params = {
 		matchmaker_type = "mission"
-	}
+	},
+	on_started = function (voting_id, template, params)
+		if Managers.ui:view_active("system_view") then
+			Managers.ui:close_view("system_view")
+		end
+
+		if GameParameters.debug_mission then
+			Managers.voting:cast_vote(voting_id, "yes")
+		elseif not Managers.voting:has_voted(voting_id, Managers.party_immaterium:get_myself():unique_id()) then
+			if params.qp == "true" then
+				Managers.voting:cast_vote(voting_id, "yes")
+			else
+				local view_context = {
+					voting_id = voting_id,
+					backend_mission_id = params.backend_mission_id,
+					mission_data = cjson.decode(params.mission_data).mission
+				}
+
+				_open_voting_view(view_context)
+			end
+		end
+	end
 }
-
-mission_vote_matchmaking_immaterium.on_started = function (voting_id, template, params)
-	if Managers.ui:view_active("system_view") then
-		Managers.ui:close_view("system_view")
-	end
-
-	if GameParameters.debug_mission then
-		Managers.voting:cast_vote(voting_id, "yes")
-	elseif not Managers.voting:has_voted(voting_id, Managers.party_immaterium:get_myself():unique_id()) then
-		local view_context = {
-			voting_id = voting_id,
-			backend_mission_id = params.backend_mission_id,
-			mission_data = cjson.decode(params.mission_data).mission
-		}
-
-		_open_voting_view(view_context)
-	end
-end
 
 mission_vote_matchmaking_immaterium.on_completed = function (voting_id, template, vote_state, result)
 	_close_voting_view()
@@ -95,8 +99,9 @@ mission_vote_matchmaking_immaterium.on_vote_casted = function (voting_id, templa
 				local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
 					member_character_name = presence:character_name()
 				})
+				local sound_event = UISoundEvents.mission_vote_player_declined
 
-				Managers.event:trigger("event_add_notification_message", "default", message)
+				Managers.event:trigger("event_add_notification_message", "default", message, nil, sound_event)
 			end)
 		end
 	end

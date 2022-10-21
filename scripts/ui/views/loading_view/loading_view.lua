@@ -2,6 +2,7 @@ local definition_path = "scripts/ui/views/loading_view/loading_view_definitions"
 local LoadingViewSettings = require("scripts/ui/views/loading_view/loading_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local InputUtils = require("scripts/managers/input/input_utils")
 local temp_loading_hints = {
 	"loc_loading_hint_000",
 	"loc_loading_hint_001",
@@ -335,6 +336,7 @@ LoadingView.on_enter = function (self)
 
 	self:_cycle_next_hint()
 	self:_update_input_display()
+	self:_register_event("event_on_active_input_changed", "event_on_input_changed")
 end
 
 LoadingView.draw = function (self, dt, t, input_service, layer)
@@ -350,18 +352,20 @@ LoadingView.on_exit = function (self)
 	LoadingView.super.on_exit(self)
 end
 
+LoadingView.event_on_input_changed = function (self)
+	self:_update_input_display()
+end
+
 LoadingView._update_input_display = function (self)
 	local text = "loc_next"
 	local widgets_by_name = self._widgets_by_name
 	local text_widget = widgets_by_name.hint_input_description
-	text_widget.content.text = self:_localize(text)
-	local description_length = self:_widget_text_length("hint_input_description")
-	local input_icon_widget = widgets_by_name.hint_input_icon
-	local input_icon_width, _ = self:_scenegraph_size(input_icon_widget.scenegraph_id)
-	local spacing = 5
-	local total_length = description_length + input_icon_width + spacing
-	input_icon_widget.offset[1] = -(total_length * 0.5 - input_icon_width * 0.5)
-	text_widget.offset[1] = (input_icon_width + spacing) * 0.5
+	local localized_text = self:_localize(text)
+	local service_type = "View"
+	local alias_name = "next"
+	local color_tint_text = true
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
+	text_widget.content.text = input_key .. " " .. localized_text
 end
 
 LoadingView._widget_text_length = function (self, widget_id)
@@ -380,7 +384,7 @@ LoadingView._widget_text_length = function (self, widget_id)
 end
 
 LoadingView._handle_input = function (self, input_service)
-	if input_service:get("left_pressed") or input_service:get("confirm_pressed") then
+	if input_service:get("next") then
 		self:_cycle_next_hint()
 	end
 end

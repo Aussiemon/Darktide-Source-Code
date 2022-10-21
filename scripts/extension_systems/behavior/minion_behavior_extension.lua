@@ -5,6 +5,7 @@ local MinionBehaviorExtension = class("MinionBehaviorExtension")
 MinionBehaviorExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local blackboard = BLACKBOARDS[unit]
 	self._blackboard = blackboard
+	self._unit = unit
 	local breed = extension_init_data.breed
 	self._breed = breed
 	self._nearby_units_broadphase_config = breed.nearby_units_broadphase_config
@@ -24,6 +25,11 @@ MinionBehaviorExtension._init_brain = function (self, unit, breed, blackboard, b
 	local behavior_system = Managers.state.extension:system("behavior_system")
 	local behavior_tree = behavior_system:behavior_tree(behavior_tree_name)
 	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree)
+end
+
+MinionBehaviorExtension.override_brain = function (self, behavior_tree_name, t)
+	self._brain:shutdown_behavior_tree(t, false)
+	self:_init_brain(self._unit, self._breed, self._blackboard, behavior_tree_name)
 end
 
 MinionBehaviorExtension._init_blackboard_components = function (self, blackboard, breed, unit, world, physics_world, game_session, optional_selected_attack_names)
@@ -130,7 +136,9 @@ end
 MinionBehaviorExtension.update = function (self, unit, dt, t, ...)
 	local brain = self._brain
 
-	brain:update(unit, dt, t)
+	if brain:active() then
+		brain:update(unit, dt, t)
+	end
 end
 
 MinionBehaviorExtension.brain = function (self)

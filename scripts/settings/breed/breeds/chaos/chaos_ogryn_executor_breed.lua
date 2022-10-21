@@ -21,13 +21,13 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_executor"
 local breed_data = {
-	detection_radius = 13,
 	spawn_inventory_slot = "slot_melee_weapon",
 	walk_speed = 2,
-	use_bone_lod = true,
-	use_navigation_path_splines = true,
-	sub_faction_name = "chaos",
 	can_patrol = true,
+	use_navigation_path_splines = true,
+	use_bone_lod = true,
+	sub_faction_name = "chaos",
+	detection_radius = 13,
 	unit_template_name = "minion",
 	push_multiplier = 2.5,
 	slot_template = "chaos_ogryn",
@@ -53,6 +53,7 @@ local breed_data = {
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	hit_mass = 20,
+	reduced_hit_mass = 5,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -66,29 +67,29 @@ local breed_data = {
 	armor_type = armor_types.super_armor,
 	gib_template = MinionGibbingTemplates.chaos_ogryn_executor,
 	stagger_durations = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 3.5,
+		[stagger_types.light] = 0.75,
+		[stagger_types.medium] = 1.5,
+		[stagger_types.heavy] = 2.75,
 		[stagger_types.explosion] = 3,
 		[stagger_types.killshot] = 1,
 		[stagger_types.light_ranged] = 1,
-		[stagger_types.sticky] = 1.75
+		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 3,
+		[stagger_types.light] = 0.25,
+		[stagger_types.medium] = 0.5,
+		[stagger_types.heavy] = 5,
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 1,
-		[stagger_types.sticky] = 3,
+		[stagger_types.sticky] = 0.25,
 		[stagger_types.killshot] = 6
 	},
 	stagger_thresholds = {
-		[stagger_types.light] = 6,
-		[stagger_types.medium] = 20,
-		[stagger_types.heavy] = 50,
+		[stagger_types.light] = 10,
+		[stagger_types.medium] = 30,
+		[stagger_types.heavy] = 60,
 		[stagger_types.light_ranged] = 10,
-		[stagger_types.sticky] = 5
+		[stagger_types.sticky] = 10
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_ogryn_executor,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_ogryn_executor_sounds"),
@@ -110,8 +111,8 @@ local breed_data = {
 	},
 	attack_intensity_cooldowns = {
 		melee = {
-			0.25,
-			0.5
+			0.1,
+			0.25
 		},
 		moving_melee = {
 			0.25,
@@ -289,9 +290,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -382,30 +380,27 @@ local breed_data = {
 	},
 	wounds_config = {
 		apply_threshold_filtering = true,
-		health_percent_throttle = 0.3,
 		always_show_killing_blow = false,
+		radius_multiplier = 1,
+		health_percent_throttle = 0.3,
 		thresholds = {
-			[damage_types.blunt] = 0.6,
-			[damage_types.blunt_heavy] = 0.5,
-			[damage_types.blunt_thunder] = 0.5,
-			[damage_types.plasma] = 0.3,
-			[damage_types.rippergun_pellet] = 0.35,
-			[damage_types.auto_bullet] = 0.35,
-			[damage_types.pellet] = 0.35,
-			[damage_types.boltshell] = 0.5,
-			[damage_types.laser] = 0.85,
-			[damage_types.power_sword] = 0.5,
-			[damage_types.sawing_stuck] = 0.5,
-			[damage_types.slashing_force_stuck] = 0.5,
-			[damage_types.combat_blade] = 0.5
+			[damage_types.blunt] = 0.25,
+			[damage_types.blunt_heavy] = 0.25,
+			[damage_types.blunt_thunder] = 0.25,
+			[damage_types.plasma] = 0.25,
+			[damage_types.rippergun_pellet] = 0.25,
+			[damage_types.auto_bullet] = 0.25,
+			[damage_types.pellet] = 0.25,
+			[damage_types.boltshell] = 0.25,
+			[damage_types.laser] = 0.25,
+			[damage_types.power_sword] = 0.25,
+			[damage_types.sawing_stuck] = 0.25,
+			[damage_types.slashing_force_stuck] = 0.25,
+			[damage_types.combat_blade] = 0.25
 		}
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
-	},
-	hitzone_armor_override = {
-		[hit_zone_names.upper_left_leg] = armor_types.resistant,
-		[hit_zone_names.upper_right_leg] = armor_types.resistant
 	},
 	hitzone_damage_multiplier = {
 		ranged = {

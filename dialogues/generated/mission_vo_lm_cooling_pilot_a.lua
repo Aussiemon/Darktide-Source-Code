@@ -1,27 +1,24 @@
 local mission_vo_lm_cooling_pilot_a = {
-	info_bypass_mission_cooling = {
+	mission_cooling_leaving_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_pilot_a__info_bypass_01",
-			"loc_pilot_a__info_bypass_02",
-			"loc_pilot_a__info_bypass_03",
-			"loc_pilot_a__info_bypass_04",
-			"loc_pilot_a__info_bypass_05"
+			"loc_pilot_a__cmd_mission_completed_response_01",
+			"loc_pilot_a__cmd_mission_completed_response_02",
+			"loc_pilot_a__cmd_mission_completed_response_03",
+			"loc_pilot_a__cmd_mission_completed_response_04"
 		},
 		sound_events_duration = {
-			4.70048,
-			4.272188,
-			3.770459,
-			3.468355,
-			4.910125
+			3.689583,
+			4.107542,
+			2.011313,
+			2.550854
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	}

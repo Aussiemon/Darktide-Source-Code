@@ -545,6 +545,24 @@ local damage_trait_templates = {
 				max = 0.95,
 				min = 0.1
 			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.95,
+				min = 0.1
+			}
 		}
 	},
 	default_armor_pierce_perk = {
@@ -591,6 +609,18 @@ local damage_trait_templates = {
 		{
 			"targets",
 			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.super_armor,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			0.05
+		},
+		{
 			"armor_damage_modifier",
 			"attack",
 			armor_types.super_armor,
@@ -1335,6 +1365,24 @@ local damage_trait_templates = {
 				max = 0.5,
 				min = 0
 			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.5,
+				min = 0
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.5,
+				min = 0
+			}
 		}
 	},
 	thunderhammer_control_stat = {
@@ -1412,6 +1460,94 @@ local damage_trait_templates = {
 			{
 				max = 0.75,
 				min = 0.25
+			}
+		}
+	},
+	ogryn_club_control_stat = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			5,
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"cleave_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	ogryn_club_push_control_stat = {
+		{
+			"power_distribution",
+			"impact",
+			{
+				max = 0.95,
+				min = 0.05
 			}
 		}
 	},
@@ -1551,6 +1687,18 @@ local damage_trait_templates = {
 		{
 			"targets",
 			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.super_armor,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			0.05
+		},
+		{
 			"armor_damage_modifier",
 			"attack",
 			armor_types.super_armor,
@@ -1957,6 +2105,33 @@ local damage_trait_templates = {
 				max = 0.75,
 				min = 0.25
 			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	},
 	powersword_finesse_stat = {
@@ -2297,6 +2472,24 @@ local damage_trait_templates = {
 		{
 			"targets",
 			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			0.05
+		},
+		{
 			"armor_damage_modifier",
 			"attack",
 			armor_types.disgustingly_resilient,
@@ -3457,6 +3650,33 @@ local damage_trait_templates = {
 				max = 0.75,
 				min = 0.25
 			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	},
 	combatsword_finesse_stat = {
@@ -3797,6 +4017,24 @@ local damage_trait_templates = {
 		{
 			"targets",
 			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			0.05
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			0.05
+		},
+		{
 			"armor_damage_modifier",
 			"attack",
 			armor_types.disgustingly_resilient,
@@ -4310,6 +4548,200 @@ local damage_trait_templates = {
 			{
 				max = 1,
 				min = 0
+			}
+		}
+	},
+	powermaul_cleave_damage_stat = {
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.25
 			}
 		}
 	}

@@ -1,12 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 local weapon_traits_ranged_explosive = {
-	weapon_traits_ranged_explosive_wield_explosion_resore_toughness = {
-		weapon_traits_ranged_explosive_wield_explosion_resore_toughness_buff = {
+	weapon_traits_ranged_explosive_wield_explosion_restore_toughness = {
+		weapon_traits_ranged_explosive_wield_explosion_restore_toughness_buff = {
 			{
 				cooldown_duration = 10,
 				proc_events = {
@@ -27,18 +24,6 @@ local weapon_traits_ranged_explosive = {
 			},
 			{
 				cooldown_duration = 7,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 1
-				}
-			},
-			{
-				cooldown_duration = 6,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 1
-				}
-			},
-			{
-				cooldown_duration = 5,
 				proc_events = {
 					[buff_proc_events.on_explosion_hit] = 1
 				}
@@ -67,18 +52,6 @@ local weapon_traits_ranged_explosive = {
 			},
 			{
 				cooldown_duration = 7,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 1
-				}
-			},
-			{
-				cooldown_duration = 6,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 1
-				}
-			},
-			{
-				cooldown_duration = 5,
 				proc_events = {
 					[buff_proc_events.on_explosion_hit] = 1
 				}
@@ -122,24 +95,6 @@ local weapon_traits_ranged_explosive = {
 				stat_buffs = {
 					[buff_stat_buffs.damage] = 0.4
 				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.damage] = 0.6
-				}
 			}
 		}
 	},
@@ -179,24 +134,6 @@ local weapon_traits_ranged_explosive = {
 				},
 				stat_buffs = {
 					[buff_stat_buffs.explosion_impact_modifier] = 0.4
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.explosion_impact_modifier] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.explosion_impact_modifier] = 0.6
 				}
 			}
 		}
@@ -238,24 +175,6 @@ local weapon_traits_ranged_explosive = {
 				stat_buffs = {
 					[buff_stat_buffs.critical_strike_chance] = 0.4
 				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.critical_strike_chance] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.critical_strike_chance] = 0.6
-				}
 			}
 		}
 	},
@@ -295,24 +214,6 @@ local weapon_traits_ranged_explosive = {
 				},
 				stat_buffs = {
 					[buff_stat_buffs.unarmored_damage] = 0.4
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.unarmored_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.unarmored_damage] = 0.6
 				}
 			}
 		}
@@ -354,24 +255,6 @@ local weapon_traits_ranged_explosive = {
 				stat_buffs = {
 					[buff_stat_buffs.armored_damage] = 0.4
 				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.armored_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.armored_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -411,24 +294,6 @@ local weapon_traits_ranged_explosive = {
 				},
 				stat_buffs = {
 					[buff_stat_buffs.resistant_damage] = 0.4
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.resistant_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.resistant_damage] = 0.6
 				}
 			}
 		}
@@ -470,24 +335,6 @@ local weapon_traits_ranged_explosive = {
 				stat_buffs = {
 					[buff_stat_buffs.berserker_damage] = 0.4
 				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.berserker_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.berserker_damage] = 0.6
-				}
 			}
 		}
 	},
@@ -527,24 +374,6 @@ local weapon_traits_ranged_explosive = {
 				},
 				stat_buffs = {
 					[buff_stat_buffs.super_armor_damage] = 0.4
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.super_armor_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.super_armor_damage] = 0.6
 				}
 			}
 		}
@@ -586,34 +415,11 @@ local weapon_traits_ranged_explosive = {
 				stat_buffs = {
 					[buff_stat_buffs.disgustingly_resilient_damage] = 0.4
 				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.disgustingly_resilient_damage] = 0.5
-				}
-			},
-			{
-				active_duration = 5,
-				proc_events = {
-					[buff_proc_events.on_explosion_hit] = 0.1
-				},
-				stat_buffs = {
-					[buff_stat_buffs.disgustingly_resilient_damage] = 0.6
-				}
 			}
 		}
 	},
 	weapon_traits_ranged_explosive_wield_bleed_on_hit = {
 		weapon_traits_ranged_explosive_wield_bleed_on_hit_buff = {
-			{},
-			{},
-			{},
-			{},
-			{},
 			{}
 		}
 	}

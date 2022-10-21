@@ -1,18 +1,14 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Armor = {}
 local default_armor = ArmorSettings.types.unarmored
-local _check_toughness, _get_character_armor_type = nil
+local _check_toughness, _character_armor_type = nil
 
-Armor.armor_type = function (unit, breed, hit_zone_name, attack_type)
-	local armor_type = nil
-
-	if breed then
-		armor_type = _get_character_armor_type(unit, breed, hit_zone_name, attack_type)
+Armor.armor_type = function (unit, breed_or_nil, hit_zone_name_or_nil, attack_type)
+	if breed_or_nil then
+		return _character_armor_type(unit, breed_or_nil, hit_zone_name_or_nil, attack_type)
 	else
-		armor_type = default_armor
+		return default_armor
 	end
-
-	return armor_type
 end
 
 Armor.aborts_attack = function (unit, breed_or_nil, hit_zone_name_or_nil)
@@ -21,7 +17,7 @@ Armor.aborts_attack = function (unit, breed_or_nil, hit_zone_name_or_nil)
 	return ArmorSettings.aborts_attack[armor_type] or false
 end
 
-function _get_character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or_nil)
+function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or_nil)
 	local armor_type = nil
 	local has_toughess, toughness_armor_type = _check_toughness(unit, breed)
 

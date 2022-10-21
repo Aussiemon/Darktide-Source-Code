@@ -25,6 +25,12 @@ SweepTrail.init = function (self, unit)
 	self:enable(unit)
 end
 
+SweepTrail.editor_init = function (self, unit)
+	self._in_editor = true
+
+	self:init(unit)
+end
+
 SweepTrail.enable = function (self, unit)
 	self:set_critical_strike(unit, false)
 	self:set_powered(unit, false)
@@ -55,7 +61,7 @@ SweepTrail.set_critical_strike = function (self, unit, is_enabled)
 end
 
 SweepTrail.set_powered = function (self, unit, is_enabled)
-	if not self._powered then
+	if not self._is_powered then
 		return
 	end
 

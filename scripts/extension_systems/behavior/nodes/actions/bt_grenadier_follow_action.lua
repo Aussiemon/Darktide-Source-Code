@@ -4,6 +4,7 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
+local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
 local Vo = require("scripts/utilities/vo")
 local BtGrenadierFollowAction = class("BtGrenadierFollowAction", "BtNode")
@@ -16,6 +17,7 @@ BtGrenadierFollowAction.enter = function (self, unit, breed, blackboard, scratch
 	scratchpad.combat_vector_extension = ScriptUnit.extension(unit, "combat_vector_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
+	scratchpad.nav_world = navigation_extension:nav_world()
 	local combat_vector_component = blackboard.combat_vector
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.combat_vector_component = combat_vector_component
@@ -35,9 +37,9 @@ BtGrenadierFollowAction.enter = function (self, unit, breed, blackboard, scratch
 	scratchpad.skulking_vo_interval_t = DialogueBreedSettings[breed.name].skulking_vo_interval_t
 	scratchpad.next_skulk_vo_t = t + scratchpad.skulking_vo_interval_t
 	scratchpad.check_grenade_trajectory_t = t + action_data.check_grenade_trajectory_frequency
-	scratchpad.current_combat_vector_position = Vector3Box()
+	scratchpad.current_move_position = Vector3Box()
 
-	self:_move_to_combat_vector(scratchpad, combat_vector_component, navigation_extension)
+	self:_move(scratchpad, combat_vector_component, navigation_extension)
 end
 
 BtGrenadierFollowAction.init_values = function (self, blackboard)
@@ -59,7 +61,7 @@ BtGrenadierFollowAction.leave = function (self, unit, breed, blackboard, scratch
 	scratchpad.navigation_extension:set_enabled(false)
 end
 
-local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
+local MIN_MOVE_DISTANCE_CHANGE_SQ = 9
 local NUM_FAILED_ATTEMPTS_FOR_NEW_LOCATION = 10
 
 BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -90,11 +92,11 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 
 	local combat_vector_component = scratchpad.combat_vector_component
 	local wanted_position = combat_vector_component.position:unbox()
-	local current_combat_vector_position = scratchpad.current_combat_vector_position:unbox()
-	local distance_sq = Vector3.distance_squared(current_combat_vector_position, wanted_position)
+	local current_move_position = scratchpad.current_move_position:unbox()
+	local distance_sq = Vector3.distance_squared(current_move_position, wanted_position)
 
-	if MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ < distance_sq then
-		self:_move_to_combat_vector(scratchpad, combat_vector_component, scratchpad.navigation_extension)
+	if MIN_MOVE_DISTANCE_CHANGE_SQ < distance_sq then
+		self:_move(scratchpad, combat_vector_component, scratchpad.navigation_extension)
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
@@ -250,11 +252,23 @@ BtGrenadierFollowAction._ray_cast = function (self, physics_world, from, to)
 	return result, hit_position, hit_distance, normal
 end
 
-BtGrenadierFollowAction._move_to_combat_vector = function (self, scratchpad, combat_vector_component, navigation_extension)
-	local wanted_position = combat_vector_component.position:unbox()
+BtGrenadierFollowAction._move = function (self, scratchpad, combat_vector_component, navigation_extension)
+	local has_combat_vector_position = combat_vector_component.has_position
+	local wanted_position = nil
 
-	navigation_extension:move_to(wanted_position)
-	scratchpad.current_combat_vector_position:store(wanted_position)
+	if has_combat_vector_position then
+		wanted_position = combat_vector_component.position:unbox()
+	else
+		local target_unit = scratchpad.perception_component.target_unit
+		local target_position = POSITION_LOOKUP[target_unit]
+		local nav_world = scratchpad.nav_world
+		wanted_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position)
+	end
+
+	if wanted_position then
+		navigation_extension:move_to(wanted_position)
+		scratchpad.current_move_position:store(wanted_position)
+	end
 end
 
 BtGrenadierFollowAction._start_move_anim = function (self, unit, t, behavior_component, scratchpad, action_data)

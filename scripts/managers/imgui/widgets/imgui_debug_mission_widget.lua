@@ -179,14 +179,14 @@ Widget.render = function (widget)
 	render_mission_dropdown(widget)
 	Imgui.same_line(10)
 
-	current_value.resistance = Imgui.input_float(widget.resistance_label, current_value.resistance, "%.0f")
-
-	tooltip("Resistance")
-	Imgui.same_line(10)
-
 	current_value.challenge = Imgui.input_float(widget.challenge_label, current_value.challenge, "%.0f")
 
 	tooltip("Challenge")
+	Imgui.same_line(10)
+
+	current_value.resistance = Imgui.input_float(widget.resistance_label, current_value.resistance, "%.0f")
+
+	tooltip("Resistance")
 	render_circumstance_dropdown(widget)
 	Imgui.same_line(10)
 	render_side_mission_dropdown(widget)

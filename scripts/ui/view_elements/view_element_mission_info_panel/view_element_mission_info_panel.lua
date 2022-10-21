@@ -21,7 +21,7 @@ local function _format_mission_timer_text(time_left)
 	return tostring(timer_text)
 end
 
-function _clear_widgets_alpha(widgets)
+local function _clear_widgets_alpha(widgets)
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		widget.alpha_multiplier = 0
@@ -230,9 +230,6 @@ ViewElementMissionInfoPanel._create_list_widgets = function (self, content, num_
 		local entry = content[i]
 		local template_name = entry.template
 		local template = blueprint_templates[template_name]
-
-		fassert(template, "[MissionBoardDetailsView] - Could not find content blueprint for: %s", template_name)
-
 		local widget_definition = widget_definitions[template_name]
 
 		if not widget_definition and template.pass_template then
@@ -383,7 +380,7 @@ ViewElementMissionInfoPanel._transition_to_state_status_report = function (self,
 	local panel_styles = MissionInfoPanelStyles.panel
 	local target_panel_height = math.clamp(grid_height, panel_styles.default_size[2], panel_styles.max_size[2])
 	local status_report_animation_params = self._status_report_animation_params
-	status_report_animation_params.is_event = happening_data.name and string.len(happening_data.name) > 1
+	status_report_animation_params.is_event = happening_data.name and #happening_data.name > 1
 	local target_heights = status_report_animation_params.target_heights
 	target_heights.panel = target_panel_height
 	target_heights.list_mask = target_panel_height
@@ -434,9 +431,6 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	local new_list_widgets = self._old_details_list_widgets
 	local old_list_widgets = self._details_list_widgets
 	self._old_details_list_widgets = old_list_widgets
-
-	assert(#new_list_widgets == 0)
-
 	local list_alignments = _list_alignments
 
 	_table_clear(list_alignments)

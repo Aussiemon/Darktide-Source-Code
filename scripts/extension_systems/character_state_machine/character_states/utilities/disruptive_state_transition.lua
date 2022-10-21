@@ -26,8 +26,8 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 
 		if not explode_action then
 			local player = Managers.state.player_unit_spawn:owner(unit)
-			local archetype_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
-			explode_action = archetype_warp_charge_template.explode_action
+			local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+			explode_action = specialization_warp_charge_template.explode_action
 			slot_to_wield = "slot_unarmed"
 		end
 
@@ -58,6 +58,10 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 
 		if disabling_type == "mutant_charged" then
 			return "mutant_charged"
+		end
+
+		if disabling_type == "consumed" then
+			return "consumed"
 		end
 	end
 

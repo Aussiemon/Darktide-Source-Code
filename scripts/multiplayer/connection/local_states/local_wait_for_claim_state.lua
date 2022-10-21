@@ -1,10 +1,6 @@
 local LocalWaitForClaimState = class("LocalWaitForClaimState")
 
 LocalWaitForClaimState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.reserve_timeout) == "number", "Numeric reserve timeout required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.ready_to_claim_slots) == "boolean", "Boolean claim slot flag required")
-
 	self._shared_state = shared_state
 	self._time = 0
 end

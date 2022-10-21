@@ -1,11 +1,12 @@
 require("scripts/foundation/utilities/error")
 
-local destroyed_mt = {}
+local destroyed_mt = {
+	__index = function (t, k)
+		local message = string.format("Cannot access property %q on destroyed object of type %s", tostring(k), rawget(t, "__class_name") or "<unknown>")
 
-destroyed_mt.__index = function (t, k)
-	ferror("Tried accessing %s on destroyed object of type %s", tostring(k), t.__class_name)
-end
-
+		error(message, 3)
+	end
+}
 local special_functions = {
 	__index = true,
 	super = true,
@@ -25,15 +26,11 @@ function assert_type(object, asserted_base_class)
 end
 
 function class(class_name, super_name)
-	fassert(type(class_name) == "string", "Didn't pass in class_name %q as a string", tostring(class_name))
-
 	local class_table = CLASSES[class_name]
 	local super = nil
 
 	if super_name then
 		super = CLASSES[super_name]
-
-		fassert(super, "Class %q trying to inherit from nonexistant %q", class_name, super_name)
 	end
 
 	if not class_table then
@@ -61,6 +58,7 @@ function class(class_name, super_name)
 				self:destroy(...)
 			end
 
+			self.__class_name = class_name
 			self.__deleted = true
 
 			setmetatable(self, destroyed_mt)

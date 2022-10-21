@@ -72,29 +72,16 @@ local function _test_template(template, name, template_type)
 
 		for path_index = 1, num_paths do
 			local path = entry[path_index]
-			local is_table = type(path) == "table"
-
-			fassert(not is_table, "WeaponTraitTemplate %q of type %q. Entry %i path index %i has path that is a table. Not supported.", name, template_type, i, path_index)
+			slot16 = type(path) == "table"
 		end
 
 		local lerp_value = entry[lerp_value_id]
 		local is_number = type(lerp_value) == "number"
 		local is_table = type(lerp_value) == "table"
-
-		if is_table then
-			local have_max = not not lerp_value.max
-			local have_min = not not lerp_value.min
-			local have_lerp_values = have_max and have_min
-
-			fassert(have_lerp_values, "WeaponTraitTemplate %q of type %q. Entry %i does not end in a table that have min or max lerp values.", name, template_type, i)
-		else
-			fassert(is_number, "WeaponTraitTemplate %q of type %q. Entry %i does not end on a number.", name, template_type, i)
-		end
+		slot16 = is_table and have_max and have_min
 	end
 
 	local default_lerp_value = template.DEFAULT_LERP_VALUE
-
-	fassert(default_lerp_value == nil, "WeaponTraitTemplate %q of type %q. Defined DEFAULT_LERP_VALUE as a string, should use unique table identifier (should look like this [DEFAULT_LERP_VALUE] = lerp_value).", name, template_type)
 end
 
 local function _extract_trait_templates(type, path)
@@ -102,7 +89,6 @@ local function _extract_trait_templates(type, path)
 	local collection = require(path)
 
 	for name, template in pairs(collection) do
-		fassert(type_templates[name] == nil, "Found duplicate entry (%q) when parsing %q", name, path)
 		_inject_weapon_movement_states(template)
 		_test_template(template, name, type)
 

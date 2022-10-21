@@ -41,10 +41,6 @@ local REGISTER_FOR_CROWD_DISPERSION = {
 
 NavGraphExtension._create_nav_graphs = function (self)
 	local nav_graphs = self._nav_graphs
-
-	fassert(#nav_graphs == 0, "[NavGraphExtension][Unit:%s] Trying to create nav graphs multiple times.", self._unit_id)
-	Profiler.start("NavGraphExtension_create_nav_graphs")
-
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local nav_world = self._nav_world
 	local smart_objects = self._smart_objects
@@ -73,8 +69,6 @@ NavGraphExtension._create_nav_graphs = function (self)
 			smart_object_id_to_nav_graph[smart_object_id] = nav_graph
 		end
 	end
-
-	Profiler.stop("NavGraphExtension_create_nav_graphs")
 end
 
 NavGraphExtension.destroy = function (self)
@@ -90,12 +84,7 @@ end
 local TEMP_SMART_OBJECT_IDS = {}
 
 NavGraphExtension.setup_from_component = function (self, component, unit, enabled_on_spawn, optional_simple_smart_objects, optional_smart_objects)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local component_guid = component.guid
-
-	fassert(not self:_check_component_registered(component_guid), "[NavGraphExtension][Unit:%s] Component(%s) already registered.", self._unit_id, component_guid)
-
 	self._enabled_on_spawn = enabled_on_spawn
 	local smart_objects = self._smart_objects
 	local component_lookup = self._smart_object_id_to_component
@@ -150,9 +139,6 @@ NavGraphExtension._check_component_registered = function (self, component_guid)
 end
 
 NavGraphExtension.add_smart_object = function (self, smart_object, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-	fassert(self:smart_object_from_id(smart_object_id) == nil, "[NavGraphExtension][Unit:%s] Smart object (%d) has already been added.", self._unit_id, smart_object_id)
-
 	local smart_objects = self._smart_objects
 	smart_objects[#smart_objects + 1] = smart_object
 
@@ -163,9 +149,6 @@ end
 
 NavGraphExtension._create_nav_graph = function (self, smart_object, smart_object_id)
 	local smart_object_id_to_nav_graph = self._smart_object_id_to_nav_graph
-
-	fassert(smart_object_id_to_nav_graph[smart_object_id] == nil, "[NavGraphExtension][Unit:%s] Nav graph for smart object (%d) has already been created.", self._unit_id, smart_object_id)
-
 	local nav_world = self._nav_world
 	local debug_color = Color.orange()
 	local layer_type = smart_object:layer_type()
@@ -190,8 +173,6 @@ NavGraphExtension._create_nav_graph = function (self, smart_object, smart_object
 end
 
 NavGraphExtension.remove_smart_object = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local smart_object_index_to_remove = nil
 	local smart_objects = self._smart_objects
 
@@ -204,8 +185,6 @@ NavGraphExtension.remove_smart_object = function (self, smart_object_id)
 			break
 		end
 	end
-
-	fassert(smart_object_index_to_remove ~= nil, "[NavGraphExtension][Unit:%s] Tried to remove non-existing smart object (%d).", self._unit_id, smart_object_id)
 
 	local smart_object_id_to_nav_graph = self._smart_object_id_to_nav_graph
 	local nav_graph = smart_object_id_to_nav_graph[smart_object_id]
@@ -223,14 +202,10 @@ NavGraphExtension.remove_smart_object = function (self, smart_object_id)
 end
 
 NavGraphExtension.smart_objects = function (self)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	return self._smart_objects
 end
 
 NavGraphExtension.smart_object_from_id = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local smart_objects = self._smart_objects
 
 	for i = 1, #smart_objects do
@@ -245,15 +220,12 @@ NavGraphExtension.smart_object_from_id = function (self, smart_object_id)
 end
 
 NavGraphExtension.add_nav_graph_to_database = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local nav_graph = self._smart_object_id_to_nav_graph[smart_object_id]
 	local unit_id = self._unit_id
 
 	if nav_graph then
 		local nav_graph_added = self._nav_graph_added
 
-		fassert(not nav_graph_added[nav_graph], "[NavGraphExtension][Unit:%s] Nav graph already added for smart object (%d).", unit_id, smart_object_id)
 		GwNavGraph.add_to_database(nav_graph)
 
 		nav_graph_added[nav_graph] = true
@@ -261,8 +233,6 @@ NavGraphExtension.add_nav_graph_to_database = function (self, smart_object_id)
 end
 
 NavGraphExtension.add_nav_graphs_to_database = function (self)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local nav_graphs = self._nav_graphs
 	local nav_graph_added = self._nav_graph_added
 
@@ -278,24 +248,16 @@ NavGraphExtension.add_nav_graphs_to_database = function (self)
 end
 
 NavGraphExtension.remove_nav_graph_from_database = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local nav_graph = self._smart_object_id_to_nav_graph[smart_object_id]
 	local unit_id = self._unit_id
-
-	fassert(nav_graph ~= nil, "[NavGraphExtension][Unit:%s] Tried to remove non-existing nav graph for smart object (%d).", unit_id, smart_object_id)
-
 	local nav_graph_added = self._nav_graph_added
 
-	fassert(nav_graph_added[nav_graph], "[NavGraphExtension][Unit:%s] Nav graph has already been removed for smart object (%d).", unit_id, smart_object_id)
 	GwNavGraph.remove_from_database(nav_graph)
 
 	nav_graph_added[nav_graph] = false
 end
 
 NavGraphExtension.remove_nav_graphs_from_database = function (self)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local nav_graphs = self._nav_graphs
 	local nav_graph_added = self._nav_graph_added
 
@@ -311,8 +273,6 @@ NavGraphExtension.remove_nav_graphs_from_database = function (self)
 end
 
 NavGraphExtension.nav_graph_added = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	local nav_graph = self._smart_object_id_to_nav_graph[smart_object_id]
 
 	if nav_graph == nil then
@@ -325,8 +285,6 @@ NavGraphExtension.nav_graph_added = function (self, smart_object_id)
 end
 
 NavGraphExtension.unit = function (self)
-	fassert(self._is_server, "[NavGraphExtension] Smart objects are only supported on server.")
-
 	return self._unit
 end
 

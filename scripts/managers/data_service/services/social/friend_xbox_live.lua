@@ -2,26 +2,14 @@ local FriendInterface = require("scripts/managers/data_service/services/social/f
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local FriendXboxLive = class("FriendXboxLive")
 
-FriendXboxLive.init = function (self, xuid, user_presence_data, name, is_blocked)
-	self._id = xuid
-	self._name = name
+FriendXboxLive.init = function (self, friend_data, is_blocked)
+	self._id = friend_data.xuid
+	self._name = friend_data.gamertag
 	self._is_blocked = is_blocked
-	self._user_presence_data = user_presence_data
-	local online_state = user_presence_data.online_state
-	local title_active = user_presence_data.title_active
+	self._friend_data = friend_data
 
-	if online_state == XSocialState.Online then
-		if title_active then
-			self._online_state = SocialConstants.OnlineStatus.online
-		else
-			self._online_state = SocialConstants.OnlineStatus.platform_online
-		end
-	elseif online_state == XSocialState.Offline then
-		self._online_state = SocialConstants.OnlineStatus.offline
-	elseif online_state == XSocialState.Away then
-		self._online_state = SocialConstants.OnlineStatus.offline
-	elseif online_state == XSocialState.Unkown then
-		self._online_state = SocialConstants.OnlineStatus.offline
+	if friend_data.is_online then
+		self._online_state = SocialConstants.OnlineStatus.platform_online
 	else
 		self._online_state = SocialConstants.OnlineStatus.offline
 	end
@@ -48,7 +36,7 @@ FriendXboxLive.is_friend = function (self)
 end
 
 FriendXboxLive.is_blocked = function (self)
-	return self._is_blocked
+	return self._is_blocked or Managers.account:is_blocked(self._id)
 end
 
 FriendXboxLive.online_status = function (self)

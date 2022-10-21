@@ -5,18 +5,18 @@ local ToughnessSettings = require("scripts/settings/toughness/toughness_settings
 local template_types = ToughnessSettings.template_types
 local toughness_templates = {
 	renegade_captain = {
-		regeneration_delay = 8,
+		regeneration_delay = 6,
 		regeneration_speed = 100,
 		linked_actor = "c_captain_void_shield",
-		regenerate_full_delay = 17.5,
-		max_hit_percent = 0.075,
+		regenerate_full_delay = 20,
+		max_hit_percent = 0.08,
 		template_type = template_types.minion,
 		max = {
-			2000,
-			3000,
 			4500,
 			6000,
-			7500
+			7500,
+			9000,
+			11500
 		},
 		effect_template = EffectTemplates.renegade_captain_void_shield,
 		depleted_settings = {

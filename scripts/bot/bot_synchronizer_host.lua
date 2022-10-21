@@ -45,6 +45,9 @@ BotSynchronizerHost.update = function (self)
 			local viewport_name = "player" .. local_player_id
 			local slot = Managers.player:claim_slot()
 			local player = player_manager:add_bot_player(BotPlayer, nil, self._peer_id, local_player_id, profile, slot, viewport_name)
+
+			Managers.telemetry_events:client_connected(player)
+
 			spawn_item.state = SPAWN_STATES.syncing_profile
 			local package_synchronization_manager = Managers.package_synchronization
 			local package_synchronizer_host = package_synchronization_manager:synchronizer_host()
@@ -76,9 +79,6 @@ end
 
 BotSynchronizerHost.add_bot = function (self, local_player_id, player_profile)
 	local spawn_group = self._spawn_group or {}
-
-	fassert(spawn_group[local_player_id] == nil, "Trying to spawn bot with same player id")
-
 	spawn_group[local_player_id] = {
 		state = SPAWN_STATES.spawn,
 		profile = player_profile
@@ -120,6 +120,8 @@ BotSynchronizerHost.remove_bot = function (self, local_player_id)
 
 		return
 	end
+
+	Managers.telemetry_events:client_disconnected(player)
 
 	local package_synchronization_manager = Managers.package_synchronization
 	local package_synchronizer_host = package_synchronization_manager:synchronizer_host()

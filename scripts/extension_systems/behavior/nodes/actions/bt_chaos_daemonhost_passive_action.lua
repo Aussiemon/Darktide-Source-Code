@@ -8,6 +8,7 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Threat = require("scripts/utilities/threat")
+local Vo = require("scripts/utilities/vo")
 local STAGES = DaemonhostSettings.stages
 local BtChaosDaemonhostPassiveAction = class("BtChaosDaemonhostPassiveAction", "BtNode")
 
@@ -36,6 +37,7 @@ BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, 
 	scratchpad.anger_tick = 0
 	scratchpad.flashing_units = {}
 	scratchpad.distance_threat_units = {}
+	scratchpad.next_vo_trigger_t = 0
 
 	Threat.set_threat_decay_enabled(unit, false)
 
@@ -172,6 +174,35 @@ BtChaosDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scra
 			local relation = "allied"
 
 			Suppression.apply_area_minion_suppression(unit, suppression_settings, from_position, relation)
+		end
+
+		local vo_settings = stage_settings.vo
+
+		if vo_settings then
+			local on_enter_vo_settings = vo_settings.on_enter
+
+			if on_enter_vo_settings then
+				local player_vo = on_enter_vo_settings.player
+
+				if player_vo then
+					local vo_event = player_vo.vo_event
+					local non_threatening_player = player_vo.is_non_threatening_player
+
+					Vo.random_player_enemy_alert_event(unit, breed, vo_event, non_threatening_player)
+
+					if vo_event == "aggroed" then
+						Vo.set_dynamic_smart_tag(unit, vo_event)
+					end
+				end
+
+				local daemonhost_vo = on_enter_vo_settings.daemonhost
+
+				if daemonhost_vo then
+					local vo_event = daemonhost_vo.vo_event
+
+					Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
+				end
+			end
 		end
 	end
 
@@ -423,6 +454,13 @@ BtChaosDaemonhostPassiveAction._update = function (self, unit, breed, blackboard
 
 			local duration = exit_passive_data.durations[exit_passive_anim_event]
 			scratchpad.exit_passive_t = t + duration
+			local player_vo_event = exit_passive_data.player_vo_event
+
+			if player_vo_event then
+				local optional_non_threatening_player = true
+
+				Vo.random_player_enemy_alert_event(unit, breed, player_vo_event, optional_non_threatening_player)
+			end
 		end
 	else
 		local next_anger_t = scratchpad.next_anger_t
@@ -442,6 +480,8 @@ BtChaosDaemonhostPassiveAction._update = function (self, unit, breed, blackboard
 			self:_switch_stage(unit, breed, scratchpad, action_data, wanted_stage, t)
 		end
 	end
+
+	self:_update_looping_vo(unit, breed, scratchpad, action_data, stage, t)
 end
 
 BtChaosDaemonhostPassiveAction._check_flashlight = function (self, from, target_unit, flashlight_settings, perception_extension)
@@ -511,6 +551,33 @@ BtChaosDaemonhostPassiveAction.run = function (self, unit, breed, blackboard, sc
 	end
 
 	return "running"
+end
+
+BtChaosDaemonhostPassiveAction._update_looping_vo = function (self, unit, breed, scratchpad, action_data, stage, t)
+	local stage_settings = action_data.stage_settings[stage]
+
+	if stage_settings and stage_settings.vo and stage_settings.vo.looping then
+		local next_vo_trigger_t = scratchpad.next_vo_trigger_t
+
+		if next_vo_trigger_t < t then
+			local vo_settings = stage_settings.vo.looping
+			local vo_event = vo_settings.vo_event
+
+			if type(vo_event) == "table" then
+				vo_event = math.random_array_entry(vo_event)
+			end
+
+			Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
+
+			local cooldown_duration = vo_settings.cooldown_duration
+
+			if type(cooldown_duration) == "table" then
+				cooldown_duration = math.random_range(cooldown_duration[1], cooldown_duration[2])
+			end
+
+			scratchpad.next_vo_trigger_t = t + cooldown_duration
+		end
+	end
 end
 
 return BtChaosDaemonhostPassiveAction

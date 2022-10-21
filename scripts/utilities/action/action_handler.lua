@@ -6,6 +6,7 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local ActionHandler = class("ActionHandler")
+local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
 local EMPTY_TABLE = {}
 local _get_active_template = nil
 
@@ -22,6 +23,7 @@ ActionHandler.init = function (self, unit, data)
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
 	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
+	self._exploding_character_state_component = unit_data_extension:read_component("exploding_character_state")
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._targeting_component = unit_data_extension:read_component("action_module_targeting")
@@ -38,6 +40,7 @@ ActionHandler.add_component = function (self, component_name)
 	component.sprint_ready_time = 0
 	component.is_infinite_duration = false
 	component.special_active_at_start = false
+	component.combo_count = 0
 	self._registered_components[component_name] = {
 		id = component_name,
 		component = component
@@ -78,7 +81,7 @@ ActionHandler.wanted_character_state_transition = function (self)
 			local wanted_character_state, character_state_params = running_action:wanted_character_state_transition()
 
 			if wanted_character_state then
-				fassert(not wanted_state, "Two character state changes attempted simultaniously from two different actions")
+				-- Nothing
 			end
 
 			wanted_state = wanted_character_state
@@ -107,6 +110,7 @@ ActionHandler.fixed_update = function (self, dt, t)
 
 	for id, handler_data in pairs(registered_components) do
 		local running_action = handler_data.running_action
+		local component = handler_data.component
 
 		if running_action then
 			local action_complete = self:_update_action(handler_data, running_action, dt, t)
@@ -122,6 +126,13 @@ ActionHandler.fixed_update = function (self, dt, t)
 					action_input_extension:action_transitioned_with_automatic_input(id, stop_input, t)
 				end
 			end
+		end
+
+		local action_end_time = component.end_t
+		local time_since_end = t - action_end_time
+
+		if time_since_end > 0.2 then
+			component.combo_count = 0
 		end
 	end
 end
@@ -191,7 +202,7 @@ end
 local interrupting_action_data = {}
 local action_start_params = {}
 
-ActionHandler.start_action = function (self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params)
+ActionHandler.start_action = function (self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
 	local running_action = handler_data.running_action
@@ -213,6 +224,9 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	end
 
 	local action = action_objects[action_name]
+	local is_chain_action = transition_type == "chain"
+	action_start_params.is_chain_action = running_action and is_chain_action
+	action_start_params.combo_count = component.combo_count
 	action_start_params.used_input = used_input
 	action_start_params.auto_completed = self._action_input_extension:last_action_auto_completed(id)
 	handler_data.running_action = action
@@ -243,10 +257,8 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	end
 
 	action:start(action_settings, t, time_scale, action_start_params)
-
-	local is_chain = transition_type == "chain"
-
-	self:_anim_event(action_settings, action, is_chain, condition_func_params)
+	self:_anim_event(action_settings, action, is_chain_action, condition_func_params)
+	self:_update_combo_count(running_action, action_settings, component, automatic_input, reset_combo_override)
 end
 
 ActionHandler._calculate_action_total_time = function (self, action_settings, action_params, time_scale)
@@ -275,17 +287,17 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local time_scale = weapon_handling_template.time_scale or 1
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
-	local action_stat_buff_keywords = action_settings.stat_buff_keywords
+	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
-	if not action_stat_buff_keywords then
+	if not action_time_scale_stat_buffs then
 		return time_scale
 	end
 
 	local num_applied_stat_buffs = 0
 	local total_modifier = 0
 
-	for i = 1, #action_stat_buff_keywords do
-		local keyword = action_stat_buff_keywords[i]
+	for i = 1, #action_time_scale_stat_buffs do
+		local keyword = action_time_scale_stat_buffs[i]
 		local stat_buff_value = stat_buffs[keyword]
 
 		if stat_buff_value then
@@ -332,6 +344,25 @@ ActionHandler._anim_event = function (self, action_settings, action, is_chain, c
 		action:trigger_anim_event(anim_event, anim_event_3p, action_time_offset, anim_variables_func(action_settings, condition_func_params))
 	else
 		action:trigger_anim_event(anim_event, anim_event_3p, action_time_offset)
+	end
+end
+
+ActionHandler._update_combo_count = function (self, running_action, action_settings, component, automatic_input, reset_combo_override)
+	if reset_combo_override or not running_action and not automatic_input then
+		component.combo_count = 0
+
+		return
+	end
+
+	local increase_combo = ActionAvailability.increases_action_combo(action_settings)
+	local hold_combo = ActionAvailability.holds_action_combo(action_settings)
+	local reset_combo = not increase_combo and not hold_combo
+
+	if reset_combo then
+		component.combo_count = 0
+	elseif increase_combo then
+		local new_combo_count = math.min(component.combo_count + 1, MAX_COMBO_COUNT)
+		component.combo_count = new_combo_count
 	end
 end
 
@@ -405,11 +436,11 @@ ActionHandler.stop_action = function (self, id, reason, data, t, actions, action
 				local start_t = component.start_t
 				local time_scale = component.time_scale
 				local current_action_t = t - start_t
-				local chain_action_validated, action_name, action_settings = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, nil)
+				local chain_action_validated, action_name, action_settings, reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, nil)
 
 				if chain_action_validated then
 					self._action_input_extension:action_transitioned_with_automatic_input(id, finish_reason_input, t)
-					self:start_action(id, action_objects, action_name, action_params, action_settings, nil, t, "chain", condition_func_params)
+					self:start_action(id, action_objects, action_name, action_params, action_settings, nil, t, "chain", condition_func_params, reset_combo)
 
 					finish_action = false
 				end
@@ -439,8 +470,6 @@ end
 ActionHandler.has_running_action = function (self, id)
 	local handler_data = self._registered_components[id]
 
-	fassert(handler_data, "Unknown id %q", id)
-
 	return handler_data.running_action ~= nil
 end
 
@@ -461,7 +490,7 @@ ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_p
 	local t = fixed_frame * GameParameters.fixed_time_step
 	local registered_components = self._registered_components
 	local handler_data = registered_components[id]
-	local action_name, action_settings, used_input, transition_type, automatic_input = self:_check_new_actions(handler_data, actions, condition_func_params, t, action_params)
+	local action_name, action_settings, used_input, transition_type, automatic_input, reset_combo = self:_check_new_actions(handler_data, actions, condition_func_params, t, action_params)
 
 	if action_name and not self._block_actions then
 		if automatic_input then
@@ -470,7 +499,7 @@ ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_p
 			self._action_input_extension:consume_next_input(id, t)
 		end
 
-		self:start_action(id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params)
+		self:start_action(id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo)
 	else
 		automatic_input = self:_update_stop_input(id, handler_data, t)
 
@@ -498,7 +527,9 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 
 	if is_sprinting then
-		if not ActionAvailability.available_in_sprint(action_settings) then
+		local buff_extension = ScriptUnit.has_extension(self._unit, "buff_system")
+
+		if not ActionAvailability.available_in_sprint(action_settings, buff_extension) then
 			return false
 		end
 	else
@@ -523,6 +554,12 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 		end
 	end
 
+	local is_exploding = self._exploding_character_state_component.is_exploding
+
+	if is_exploding and not ActionAvailability.allowed_while_exploding(action_settings) then
+		return false
+	end
+
 	if ActionAvailability.needs_ammo(action_settings) then
 		local inventory_component = self._inventory_component
 		local wielded_slot = inventory_component.wielded_slot
@@ -543,19 +580,20 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	local conditional_state_to_action_input = current_action_settings.conditional_state_to_action_input or EMPTY_TABLE
 	local time_scale = component.time_scale
 	local current_action_t = t - current_action_start_t
-	local wanted_action_name, wanted_action_settings, wanted_used_input, automatic_input = nil
+	local wanted_action_name, wanted_action_settings, wanted_used_input, automatic_input, reset_combo = nil
 
 	if action_input then
 		local chain_action = allowed_chain_actions[action_input]
 
 		if chain_action then
-			local chain_action_validated, action_name, action_settings = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+			local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
 
 			if chain_action_validated then
 				wanted_action_name = action_name
 				wanted_action_settings = action_settings
 				wanted_used_input = used_input
 				automatic_input = nil
+				reset_combo = action_reset_combo
 			end
 		end
 	end
@@ -572,13 +610,14 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 				local chain_action = allowed_chain_actions[running_action_input]
 
 				if chain_action then
-					local chain_action_validated, action_name, action_settings = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+					local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
 
 					if chain_action_validated then
 						wanted_action_name = action_name
 						wanted_action_settings = action_settings
 						wanted_used_input = nil
 						automatic_input = running_action_input
+						reset_combo = action_reset_combo
 					end
 				end
 			end
@@ -595,13 +634,14 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 			local chain_action = allowed_chain_actions[conditional_action_input]
 
 			if chain_action and func(condition_func_params, action_params, remaining_time) then
-				local chain_action_validated, action_name, action_settings = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
 
 				if chain_action_validated then
 					wanted_action_name = action_name
 					wanted_action_settings = action_settings
 					wanted_used_input = nil
 					automatic_input = conditional_action_input
+					reset_combo = action_reset_combo
 
 					break
 				end
@@ -610,9 +650,9 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	end
 
 	if wanted_action_name then
-		return wanted_action_name, wanted_action_settings, wanted_used_input, "chain", automatic_input
+		return wanted_action_name, wanted_action_settings, wanted_used_input, "chain", automatic_input, reset_combo
 	else
-		return nil, nil, nil, nil, nil, nil
+		return nil, nil, nil, nil, nil, nil, false
 	end
 end
 
@@ -623,9 +663,10 @@ ActionHandler._validate_chain_action = function (self, chain_action, t, current_
 	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or chain_until and current_action_t <= chain_until) and true
 	local action_name = chain_action.action_name
 	local action_settings = actions[action_name]
+	local reset_combo = chain_action.reset_combo
 	local action_is_validated = chain_validated and self:_validate_action(action_settings, condition_func_params, t, used_input)
 
-	return action_is_validated, action_name, action_settings
+	return action_is_validated, action_name, action_settings, reset_combo
 end
 
 ActionHandler._valid_action_from_action_input = function (self, actions, action_input, t, condition_func_params, used_input)
@@ -848,8 +889,6 @@ function _get_active_template(component)
 	local template_name = component.template_name
 	local weapon_template = WeaponTemplate.current_weapon_template(component)
 	local template = weapon_template or AbilityTemplates[template_name]
-
-	fassert(template, "Failed fetching template %q, could not be found.", template_name)
 
 	return template
 end

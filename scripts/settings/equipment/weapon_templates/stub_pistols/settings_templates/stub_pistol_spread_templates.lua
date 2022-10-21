@@ -130,7 +130,7 @@ spread_templates.default_stub_pistol_killshot = {
 			min_pitch = 0
 		},
 		immediate_spread = {
-			num_shots_clear_time = 0.4,
+			num_shots_clear_time = 0.5,
 			alternate_fire_start = {
 				{
 					pitch = {

@@ -3,6 +3,7 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 local FirstPersonView = require("scripts/utilities/first_person_view")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
+local Pocketable = require("scripts/utilities/pocketable")
 local Vo = require("scripts/utilities/vo")
 local PlayerCharacterStateDead = class("PlayerCharacterStateDead", "PlayerCharacterStateBase")
 local SFX_SOURCE = "head"
@@ -24,9 +25,11 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 	local ignore_immunity = true
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
+	local is_server = self._is_server
 
 	Interrupt.ability_and_action(t, unit, "dead", nil, ignore_immunity)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
+	Pocketable.drop_pocketable(t, is_server, unit, inventory_component, visual_loadout_extension)
 
 	local health_ext = ScriptUnit.extension(unit, "health_system")
 
@@ -40,8 +43,6 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 
 		self._triggered_ragdoll = true
 	end
-
-	local is_server = self._is_server
 
 	if is_server then
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)

@@ -16,7 +16,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"luggable_wield"
+				"luggable_wield_battery"
 			},
 			{
 				"global_context",
@@ -29,6 +29,12 @@ return function ()
 				"luggable_mission_pick_up",
 				OP.EQ,
 				0
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_view_a",
+				OP.EQ,
+				1
 			}
 		},
 		on_done = {
@@ -89,7 +95,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -187,7 +193,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

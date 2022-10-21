@@ -4,8 +4,8 @@ local EACError = class("EACError")
 
 EACError.init = function (self, error_reason, optional_info)
 	self._error_reason = error_reason
-	self._optional_error_code = optional_info.error_code
-	self._options = optional_info.options
+	self._optional_error_code = optional_info and optional_info.error_code
+	self._options = optional_info and optional_info.options
 end
 
 EACError.level = function (self)

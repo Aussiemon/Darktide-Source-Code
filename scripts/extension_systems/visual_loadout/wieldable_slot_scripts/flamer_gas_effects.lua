@@ -63,7 +63,8 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 	if fire_configuration then
 		local effects = action_settings.fx
 		local stream_effect_data = effects.stream_effect
-		local stream_effect_name = self._is_local_unit and stream_effect_data.name or stream_effect_data.name_3p
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+		local stream_effect_name = should_play_husk_effect and stream_effect_data.name_3p or stream_effect_data.name
 		local effect_duration = effects.duration
 		local weapon_extension = self._weapon_extension
 		local fire_time = 0.3
@@ -88,20 +89,39 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 			local max_length = self._action_flamer_gas_component.range
 			local direction = Vector3.normalize(from_pos + Vector3.multiply(Quaternion.forward(first_person_rotation), max_length) - from_pos)
 			local rotation = Quaternion.look(direction)
-
-			if not stream_effect_id then
-				self._stream_effect_id = World.create_particles(world, stream_effect_name, from_pos, rotation)
-			else
-				World.move_particles(world, stream_effect_id, from_pos, rotation)
-			end
-
-			local speed = stream_effect_data.speed
 			local distance = max_length
 
 			if position_valid then
 				distance = Vector3.distance(from_pos, to_pos)
 			end
 
+			local wanted_sound_source_pos = from_pos + direction * math.min(4, distance)
+
+			if not stream_effect_id then
+				self._stream_effect_id = World.create_particles(world, stream_effect_name, from_pos, rotation)
+				local looping_sfx = effects.looping_3d_sound_effect
+
+				if looping_sfx then
+					self._looping_source_id = WwiseWorld.make_manual_source(self._wwise_world, wanted_sound_source_pos, rotation)
+
+					WwiseWorld.trigger_resource_event(self._wwise_world, looping_sfx, self._looping_source_id)
+
+					self._source_position = Vector3Box(wanted_sound_source_pos)
+					self._stop_looping_sfx_event = effects.stop_looping_3d_sound_effect
+				end
+			else
+				World.move_particles(world, stream_effect_id, from_pos, rotation)
+
+				if self._looping_source_id then
+					local current_pos = self._source_position:unbox()
+					local new_pos = Vector3.lerp(current_pos, wanted_sound_source_pos, dt * 7)
+
+					self._source_position:store(new_pos)
+					WwiseWorld.set_source_position(self._wwise_world, self._looping_source_id, new_pos)
+				end
+			end
+
+			local speed = stream_effect_data.speed
 			local life = distance / speed
 			local variable_index = World.find_particles_variable(self._world, stream_effect_name, "life")
 
@@ -112,9 +132,6 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 				local impact_index = self._impact_index
 				local impact_data = self._impact_data
 				local data = impact_data[impact_index]
-
-				fassert(data.time == nil, "Tried adding a flamer impact effect without an available empty table, increase tables in init")
-
 				local normal = position_finder_component.normal
 
 				data.position:store(to_pos)
@@ -151,6 +168,16 @@ FlamerGasEffects._destroy_effects = function (self)
 		World.stop_spawning_particles(world, stream_effect_id)
 
 		self._stream_effect_id = nil
+	end
+
+	local source_id = self._looping_source_id
+
+	if source_id then
+		WwiseWorld.trigger_resource_event(self._wwise_world, self._stop_looping_sfx_event, self._looping_source_id)
+		WwiseWorld.destroy_manual_source(self._wwise_world, self._looping_source_id)
+
+		self._looping_source_id = nil
+		self._source_position = nil
 	end
 end
 

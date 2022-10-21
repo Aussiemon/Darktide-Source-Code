@@ -215,7 +215,8 @@ local boss_name_templates = {
 		"loc_renegade_captain_male_name_213"
 	},
 	plague_ogryn = "loc_plague_ogryn_name",
-	daemonhost = "loc_daemonhost_name"
+	daemonhost = "loc_daemonhost_name",
+	beast_of_nurgle = "loc_breed_display_name_chaos_beast_of_nurgle"
 }
 
 return settings("BossNameTemplates", boss_name_templates)

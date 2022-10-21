@@ -81,7 +81,10 @@ damage_templates.light_push = {
 	shield_override_stagger_strength = 10,
 	power_distribution = {
 		attack = 0,
-		impact = 4
+		impact = {
+			4,
+			8
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -111,13 +114,102 @@ damage_templates.light_push = {
 		default_target = {}
 	}
 }
+damage_templates.default_push = {
+	is_push = true,
+	shield_override_stagger_strength = 20,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = {
+			8,
+			12
+		}
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.5,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 1
+		}
+	},
+	stagger_duration_modifier = {
+		0.5,
+		0.75
+	},
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.ninja_push = {
+	is_push = true,
+	shield_override_stagger_strength = 15,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = {
+			6,
+			10
+		}
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.5,
+			[armor_types.disgustingly_resilient] = 0.75,
+			[armor_types.void_shield] = 0.75,
+			[armor_types.prop_armor] = 1
+		}
+	},
+	stagger_duration_modifier = {
+		0.5,
+		0.75
+	},
+	targets = {
+		default_target = {}
+	}
+}
 damage_templates.push_test = {
 	is_push = true,
 	stagger_category = "melee",
 	shield_override_stagger_strength = 20,
 	power_distribution = {
 		attack = 0,
-		impact = 7
+		impact = {
+			5,
+			9
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -226,7 +318,10 @@ damage_templates.ogryn_push = {
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 8
+		impact = {
+			8,
+			16
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -394,7 +489,7 @@ damage_templates.knocked_down_tick = {
 damage_templates.netted_tick = {
 	ignore_toughness = true,
 	stagger_category = "melee",
-	permanent_damage_ratio = 1,
+	permanent_damage_ratio = 0.9,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = 1,
@@ -547,6 +642,26 @@ overrides.falling_heavy = {
 		{
 			"disorientation_type",
 			"falling_heavy"
+		}
+	}
+}
+damage_templates.kill_volume_and_ofF_navmesh = {
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	power_distribution = {
+		attack = 0.1,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	}
 }

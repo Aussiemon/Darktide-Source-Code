@@ -7,6 +7,12 @@ local mission_objective_templates = {
 				mission_objective_type = "goal",
 				header = "loc_objective_common_default_header"
 			},
+			objective_test = {
+				description = "loc_objective_common_default_desc",
+				use_music_event = "None",
+				mission_objective_type = "goal",
+				header = "loc_objective_common_default_header"
+			},
 			timed_test = {
 				description = "loc_objective_common_timed_test_desc",
 				progress_bar = true,

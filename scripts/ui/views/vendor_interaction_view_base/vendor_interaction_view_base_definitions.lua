@@ -87,31 +87,31 @@ local scenegraph_definition = {
 			1
 		}
 	},
-	title_text = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
-		horizontal_alignment = "left",
-		size = {
-			700,
-			50
-		},
-		position = {
-			180,
-			-580,
-			1
-		}
-	},
 	info_box = {
 		vertical_alignment = "top",
-		parent = "title_text",
+		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
 			700,
 			400
 		},
 		position = {
+			180,
+			500,
+			1
+		}
+	},
+	title_text = {
+		vertical_alignment = "top",
+		parent = "description_text",
+		horizontal_alignment = "left",
+		size = {
+			700,
+			50
+		},
+		position = {
 			0,
-			50,
+			-70,
 			1
 		}
 	},
@@ -139,7 +139,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			10,
 			1
 		}
 	},
@@ -174,8 +174,6 @@ title_text_font_style.offset = {
 }
 title_text_font_style.text_horizontal_alignment = "left"
 title_text_font_style.text_vertical_alignment = "top"
-title_text_font_style.text_color = Color.white(255, true)
-title_text_font_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 local description_text_font_style = table.clone(UIFontSettings.body)
 description_text_font_style.offset = {
 	0,
@@ -184,26 +182,11 @@ description_text_font_style.offset = {
 }
 description_text_font_style.text_horizontal_alignment = "left"
 description_text_font_style.text_vertical_alignment = "top"
+description_text_font_style.size = {
+	700,
+	50
+}
 local widget_definitions = {
-	background = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/backgrounds/panel_horizontal_half",
-			pass_type = "texture",
-			style = {
-				offset = {
-					0,
-					0,
-					0
-				},
-				color = {
-					200,
-					0,
-					0,
-					0
-				}
-			}
-		}
-	}, "screen"),
 	canvas_overlay = UIWidget.create_definition({
 		{
 			pass_type = "rect",
@@ -352,13 +335,53 @@ local animations = {
 	},
 	on_option_enter = {
 		{
-			name = "init",
-			end_time = 0,
+			name = "fade_in",
+			end_time = 0.3,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent:_blur_fade_out(0.3, math.easeCubic)
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				local alpha_multiplier = 1 - anim_progress
+
+				for i = 1, #widgets do
+					widgets[i].alpha_multiplier = alpha_multiplier
+				end
+
+				local canvas_overlay = parent._widgets_by_name.canvas_overlay
+				canvas_overlay.alpha_multiplier = math.min(1 - alpha_multiplier, canvas_overlay.alpha_multiplier or 0)
+			end,
+			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
 			end
-		},
+		}
+	},
+	on_option_exit = {
+		{
+			name = "fade_in",
+			end_time = 0.3,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent:_blur_fade_out(0.3, math.easeCubic)
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(progress)
+				local alpha_multiplier = anim_progress
+
+				for i = 1, #widgets do
+					widgets[i].alpha_multiplier = alpha_multiplier
+				end
+
+				local canvas_overlay = parent._widgets_by_name.canvas_overlay
+				canvas_overlay.alpha_multiplier = math.min(1 - alpha_multiplier, canvas_overlay.alpha_multiplier or 0)
+			end,
+			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				return
+			end
+		}
+	},
+	on_option_enter_blurred = {
 		{
 			name = "fade_in",
 			end_time = 0.3,
@@ -381,15 +404,7 @@ local animations = {
 			end
 		}
 	},
-	on_option_exit = {
-		{
-			name = "init",
-			end_time = 0.3,
-			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				return
-			end
-		},
+	on_option_exit_blurred = {
 		{
 			name = "fade_in",
 			end_time = 0.3,

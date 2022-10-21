@@ -58,7 +58,7 @@ local ability_template = {
 			}
 		},
 		action_state_change = {
-			allowed_during_sprint = false,
+			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			use_ability_charge = true,
 			uninterruptible = true,

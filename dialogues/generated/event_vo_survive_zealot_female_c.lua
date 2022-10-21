@@ -10,7 +10,7 @@ local event_vo_survive_zealot_female_c = {
 		},
 		sound_events_duration = {
 			3.287823,
-			3.777875,
+			3.777885,
 			3.593042,
 			4.753688
 		},
@@ -27,9 +27,9 @@ local event_vo_survive_zealot_female_c = {
 		},
 		sound_events_duration = {
 			3.78699,
-			3.60601,
-			4.2985,
-			3.905115
+			3.606021,
+			4.29851,
+			3.905125
 		},
 		randomize_indexes = {}
 	}

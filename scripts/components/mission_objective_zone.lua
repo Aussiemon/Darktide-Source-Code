@@ -16,10 +16,9 @@ MissionObjectiveZone.init = function (self, unit)
 		elseif zone_type == ZONE_TYPES.scan then
 			local num_scannable_objects = self:get_data(unit, "num_scannable_objects")
 			local max_scannable_objects_per_player = self:get_data(unit, "max_scannable_objects_per_player")
+			local item_to_equip = self:get_data(unit, "item_to_equip")
 
-			mission_objective_zone_extension:setup_from_component(num_scannable_objects, max_scannable_objects_per_player, ZONE_TYPES.scan)
-		else
-			fassert(false, "[MissionObjectiveZone](component) Need to choose a zone type for Unit: [%s], [%s]", unit, Unit.id_string(unit))
+			mission_objective_zone_extension:setup_from_component(num_scannable_objects, max_scannable_objects_per_player, ZONE_TYPES.scan, item_to_equip)
 		end
 	end
 end
@@ -83,6 +82,12 @@ MissionObjectiveZone.component_data = {
 		value = 5,
 		ui_name = "Max amount scannable objects per player",
 		max = 5
+	},
+	item_to_equip = {
+		ui_type = "resource",
+		value = "",
+		ui_name = "Item to Equip (scanner, decoder...)",
+		filter = "item"
 	},
 	extensions = {
 		"MissionObjectiveZoneBaseExtension"

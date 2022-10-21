@@ -7,12 +7,6 @@ local RPCS = {
 local RemoteMechanismVerificationState = class("RemoteMechanismVerificationState")
 
 RemoteMechanismVerificationState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.is_dedicated_server) == "boolean", "Dedicated server state required")
-	assert(type(shared_state.host_type) == "string", "host_type required.")
-
 	self._shared_state = shared_state
 	self._is_dedicated_server = shared_state.is_dedicated_server
 	self._host_type = shared_state.host_type
@@ -80,12 +74,12 @@ RemoteMechanismVerificationState.rpc_check_mechanism = function (self, channel_i
 		return self:_failed("JWT already received")
 	end
 
-	Log.info("RemoteMechanismVerificationState", "Recieved JWT Ticket part length: %s, is_last_part: %s, ", string.len(jwt_ticket_part), is_last_part)
+	Log.info("RemoteMechanismVerificationState", "Recieved JWT Ticket part length: %s, is_last_part: %s, ", #jwt_ticket_part, is_last_part)
 
 	self._jwt_ticket = self._jwt_ticket .. jwt_ticket_part
 
 	if is_last_part then
-		Log.info("RemoteMechanismVerificationState", "Recieved JWT Ticket final part, total length: %s", string.len(self._jwt_ticket))
+		Log.info("RemoteMechanismVerificationState", "Recieved JWT Ticket final part, total length: %s", #self._jwt_ticket)
 
 		self._jwt_ticket_recieved = true
 
@@ -95,9 +89,6 @@ end
 
 RemoteMechanismVerificationState._check_mechanism = function (self, jwt_ticket)
 	local host_type = self._host_type
-
-	assert(host_type == HOST_TYPES.mission_server or host_type == HOST_TYPES.hub_server, "invalid host type")
-
 	local server_manager = Managers.hub_server or Managers.mission_server
 	local is_valid, verified_jwt_header, verified_jwt_payload = JwtTicketUtils.verify_jwt_ticket(jwt_ticket, server_manager:jwt_sign_public_key())
 

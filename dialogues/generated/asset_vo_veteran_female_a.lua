@@ -8,7 +8,7 @@ local asset_vo_veteran_female_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 4.083583,
-			[2.0] = 2.327188
+			[2.0] = 2.327167
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -58,8 +58,8 @@ local asset_vo_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__level_hab_block_goo_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.409708,
-			[2.0] = 3.016833
+			[1.0] = 3.409688,
+			[2.0] = 3.016813
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -75,7 +75,7 @@ local asset_vo_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__asset_grease_pit_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.38975,
+			[1.0] = 3.389729,
 			[2.0] = 2.910729
 		},
 		randomize_indexes = {}
@@ -105,8 +105,8 @@ local asset_vo_veteran_female_a = {
 		sound_events_duration = {
 			1.658188,
 			2.584229,
-			1.827104,
-			1.669458
+			1.827083,
+			1.669438
 		},
 		randomize_indexes = {}
 	},
@@ -121,9 +121,9 @@ local asset_vo_veteran_female_a = {
 		},
 		sound_events_duration = {
 			2.632938,
-			1.563938,
+			1.563917,
 			2.693625,
-			1.908979
+			1.908958
 		},
 		randomize_indexes = {}
 	},

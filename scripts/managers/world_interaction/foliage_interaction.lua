@@ -6,8 +6,6 @@ FoliageInteraction.init = function (self, gui, settings)
 end
 
 FoliageInteraction.update = function (self, dt, t)
-	Profiler.start("Update Foliage")
-
 	local local_player = Managers.player:local_player(1)
 	local local_player_unit = local_player and local_player.player_unit
 
@@ -15,15 +13,11 @@ FoliageInteraction.update = function (self, dt, t)
 		self:_update_foliage_players(dt, t)
 		self:_update_foliage_ai(local_player_unit, dt, t)
 	end
-
-	Profiler.stop("Update Foliage")
 end
 
 local TEXTURE_SIZE = {}
 
 FoliageInteraction._update_foliage_players = function (self, dt, t)
-	Profiler.start("- Update Players Foliage")
-
 	local foliage_settings = self._settings
 	local material_name = foliage_settings.default_foliage_material
 	local window_size = math.clamp(foliage_settings.window_size, 1, 100)
@@ -83,13 +77,9 @@ FoliageInteraction._update_foliage_players = function (self, dt, t)
 			end
 		end
 	end
-
-	Profiler.stop("- Update Players Foliage")
 end
 
 FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t)
-	Profiler.start("- Update AI Foliage")
-
 	local foliage_settings = self._settings
 	local material_name = foliage_settings.default_foliage_material
 	local window_size = math.clamp(foliage_settings.window_size, 1, 100)
@@ -137,8 +127,6 @@ FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t
 			end
 		end
 	end
-
-	Profiler.stop("- Update AI Foliage")
 end
 
 return FoliageInteraction

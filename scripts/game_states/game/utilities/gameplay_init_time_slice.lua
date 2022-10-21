@@ -10,8 +10,10 @@ GameplayInitTimeSlice.pre_loop = function ()
 	return performance_counter_handle, duration_ms
 end
 
-GameplayInitTimeSlice.pre_process = function (performance_counter_handle, duration_ms)
-	if duration_ms < GameplayInitTimeSlice.MAX_DT_IN_MSEC then
+GameplayInitTimeSlice.pre_process = function (performance_counter_handle, duration_ms, max_dt_in_msec)
+	local max_dt_in_msec = max_dt_in_msec or GameplayInitTimeSlice.MAX_DT_IN_MSEC
+
+	if duration_ms < max_dt_in_msec then
 		local start_timer = Application.time_since_query(performance_counter_handle)
 
 		return start_timer

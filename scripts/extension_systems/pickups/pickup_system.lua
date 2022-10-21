@@ -3,10 +3,11 @@ require("scripts/extension_systems/pickups/pickup_spawner_extension")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
+local MainPathQueries = require("scripts/utilities/main_path_queries")
+local Ammo = require("scripts/utilities/ammo")
+local Health = require("scripts/utilities/health")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
 local PICKUPS_BY_NAME = Pickups.by_name
-local PICKUPS_BY_GROUP = Pickups.by_group
-local PICKUPS_DATA = Pickups.data
 local PickupSystem = class("PickupSystem", "ExtensionSystemBase")
 
 PickupSystem.init = function (self, context, system_init_data, ...)
@@ -25,6 +26,10 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._pickup_to_interactors = {}
 	self._pickup_spawner_extensions = {}
 	self._managed_spawner_extensions = {}
+	self._rubberband_pool = nil
+	self._rubberband_pool_start_count = {}
+	self._rubberband_pool_remaining = {}
+	self._rubberband_pool_special_spawned = {}
 end
 
 PickupSystem._fetch_settings = function (self, mission, circumstance_name)
@@ -62,13 +67,9 @@ PickupSystem.delete_units = function (self)
 end
 
 PickupSystem.on_gameplay_post_init = function (self, level)
-	Profiler.start("populate_pickups")
-
 	if self._is_server then
 		self:_populate_pickups()
 	end
-
-	Profiler.stop("populate_pickups")
 end
 
 PickupSystem._random = function (self, ...)
@@ -80,9 +81,6 @@ end
 
 PickupSystem._shuffle = function (self, source)
 	local seed = self._seed
-
-	fassert(seed and type(seed) == "number", "Bad seed input!")
-
 	self._seed = table.shuffle(source, seed)
 end
 
@@ -115,17 +113,17 @@ local function _compare_absolute_spawner_position(a, b)
 	local percentage_a = a:percentage_through_level()
 	local percentage_b = b:percentage_through_level()
 
-	fassert(percentage_a and percentage_b, "You need to rebuild paths (pickup spawners broke)")
-
 	return percentage_a < percentage_b
 end
 
-PickupSystem._override_table = function (self, original, override)
-	for key, value in pairs(override) do
+PickupSystem._add_to_table = function (self, original, addition)
+	for key, value in pairs(addition) do
 		if type(value) == "table" then
-			self:_override_table(original[key], value)
+			self:_add_to_table(original[key], value)
+		elseif original[key] then
+			original[key] = original[key] + addition[key]
 		else
-			original[key] = override[key]
+			original[key] = addition[key]
 		end
 	end
 end
@@ -163,29 +161,40 @@ PickupSystem._populate_pickups = function (self)
 		pickup_spawners[i]:spawn_guaranteed()
 	end
 
+	local difficulty_manager = Managers.state.difficulty
+	local difficulty = math.floor((difficulty_manager:get_challenge() + difficulty_manager:get_resistance()) / 2)
+
 	if mission_pickup_settings then
-		local pickup_settings = nil
+		local distribution_pool = PickupSettings.distribution_pool
+		local selected_pools = self:_get_pickup_pool_from_difficulty(distribution_pool, difficulty)
+		local pickup_settings_override = self:_get_pickup_pool_from_difficulty(mission_pickup_settings, difficulty)
 
-		if mission_pickup_settings.default then
-			pickup_settings = mission_pickup_settings.default
-		else
-			local difficulty_manager = Managers.state.difficulty
-			local difficulty = math.floor((difficulty_manager:get_challenge() + difficulty_manager:get_resistance()) / 2)
-			local distribution_pool = PickupSettings.distribution_pool
-			pickup_settings = self:_get_pickup_pool_from_difficulty(distribution_pool, difficulty)
-			local pickup_settings_override = self:_get_pickup_pool_from_difficulty(mission_pickup_settings, difficulty)
+		self:_add_to_table(selected_pools, pickup_settings_override)
 
-			self:_override_table(pickup_settings, pickup_settings_override)
+		if selected_pools.rubberband_pool then
+			local rubberband_pool = selected_pools.rubberband_pool
+			local start_count = {}
+			local spawned = {}
+
+			for type, pickup_table in pairs(rubberband_pool) do
+				local type_size = 0
+
+				for pickup, value in pairs(pickup_table) do
+					type_size = type_size + value
+				end
+
+				start_count[type] = type_size
+				spawned[type] = type_size
+			end
+
+			self._rubberband_pool = rubberband_pool
+			self._rubberband_pool_start_count = start_count
+			self._rubberband_pool_remaining = spawned
+			selected_pools.rubberband_pool = nil
 		end
 
-		local primary_pickup_settings = pickup_settings.primary or pickup_settings
-
-		self:_spawn_spread_pickups(DISTRIBUTION_TYPES.primary, primary_pickup_settings)
-
-		local secondary_pickup_settings = pickup_settings.secondary
-
-		if secondary_pickup_settings then
-			self:_spawn_spread_pickups(DISTRIBUTION_TYPES.secondary, secondary_pickup_settings)
+		for distribution_type, pickup_settings in pairs(selected_pools) do
+			self:_spawn_spread_pickups(distribution_type, pickup_settings)
 		end
 	end
 
@@ -204,15 +213,179 @@ PickupSystem._populate_pickups = function (self)
 	end
 end
 
+local function current_grenade_percentage(player_unit)
+	local ABILITY_TYPE = "grenade_ability"
+	local ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
+
+	if not ability_extension then
+		return 1
+	end
+
+	local ability_equipped = ability_extension:ability_is_equipped(ABILITY_TYPE)
+
+	if not ability_equipped then
+		return 1
+	end
+
+	local max_grenade_charges = ability_extension:max_ability_charges(ABILITY_TYPE)
+	local remaining_grenade_charges = ability_extension:remaining_ability_charges(ABILITY_TYPE)
+
+	return remaining_grenade_charges / max_grenade_charges
+end
+
+local function lerp(a, b, t)
+	return a + (b - a) * t
+end
+
+local weights = {}
+
+PickupSystem.get_rubberband_pickup = function (self, distribution_type, percentage_through_level, pickup_options)
+	local AMMO = 1
+	local GRENADE = 2
+	local HEALTH = 3
+	local RubberbandSettings = PickupSettings.rubberband
+	local pool = self._rubberband_pool
+	local start_count = self._rubberband_pool_start_count
+	local remaining = self._rubberband_pool_remaining
+	local special_spawned = self._rubberband_pool_special_spawned
+
+	if not pool or not RubberbandSettings.status_weight[distribution_type] then
+		return
+	end
+
+	local players = Managers.player:players()
+	local player_count = 0
+	local total_ammo = 0
+	local total_grenades = 0
+	local total_health = 0
+
+	for _, player in pairs(players) do
+		local player_unit = player.player_unit
+
+		if player_unit then
+			player_count = player_count + 1
+			total_ammo = total_ammo + 1 - Ammo.current_total_percentage(player_unit)
+			total_grenades = total_grenades + 1 - current_grenade_percentage(player_unit)
+			total_health = total_health + 1 - Health.current_health_percent(player_unit)
+		end
+	end
+
+	local min, max = unpack(RubberbandSettings.status_weight[distribution_type])
+	local block_distance = RubberbandSettings.special_block_distance
+
+	table.clear(weights)
+
+	if remaining.ammo > 0 then
+		weights[AMMO] = remaining.ammo / start_count.ammo * (RubberbandSettings.distribution_type_weight.ammo[distribution_type] or 1) * lerp(min, max, total_ammo / player_count) * RubberbandSettings.base_spawn_rate
+	else
+		weights[AMMO] = 0
+	end
+
+	if remaining.grenade > 0 then
+		weights[GRENADE] = remaining.grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * lerp(min, max, total_grenades / player_count) * RubberbandSettings.base_spawn_rate
+	else
+		weights[GRENADE] = 0
+	end
+
+	local health_special_spawned = special_spawned.medical_crate_pocketable
+
+	if remaining.health > 0 and (not health_special_spawned or percentage_through_level >= health_special_spawned + block_distance) then
+		weights[HEALTH] = remaining.health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * lerp(min, max, total_health / player_count) * RubberbandSettings.base_spawn_rate
+	else
+		weights[HEALTH] = 0
+	end
+
+	self._rubberband_info = string.format("Rubberband request (%s): Ammo: %s, Grenade %s, Health: %s", distribution_type, math.round_with_precision(weights[AMMO] * 100, 2), math.round_with_precision(weights[GRENADE] * 10, 2), math.round_with_precision(weights[HEALTH] * 100, 2))
+	local total_weight = 0
+
+	for i = 1, #weights do
+		total_weight = total_weight + weights[i]
+		weights[i] = total_weight
+	end
+
+	local new_seed, rnd = math.next_random(self._seed)
+	self._seed = new_seed
+	rnd = rnd * math.max(total_weight, 1)
+	self._rubberband_info = self._rubberband_info .. string.format(" (%s/%s)", math.round_with_precision(rnd * 100, 2), math.round_with_precision(total_weight * 100, 2))
+
+	if rnd <= weights[AMMO] then
+		pool = pool.ammo
+		local SMALL_CLIP = 1
+		local LARGE_CLIP = 2
+		local AMMO_CACHE = 3
+
+		table.clear(weights)
+
+		weights[SMALL_CLIP] = pool.small_clip / (total_ammo + 0.01)
+		weights[LARGE_CLIP] = pool.large_clip
+		local ammo_special_spawned = special_spawned.ammo_cache_pocketable
+
+		if not ammo_special_spawned or percentage_through_level >= ammo_special_spawned + block_distance then
+			weights[AMMO_CACHE] = pool.ammo_cache_pocketable * total_ammo
+		end
+
+		total_weight = 0
+
+		for i = 1, #weights do
+			total_weight = total_weight + weights[i]
+			weights[i] = total_weight
+		end
+
+		if total_weight <= 0 then
+			self._rubberband_info = self._rubberband_info .. ", picked ammo, spawned: nothing"
+
+			return nil
+		end
+
+		self._seed, rnd = math.next_random(self._seed)
+		rnd = rnd * total_weight
+		remaining.ammo = remaining.ammo - 1
+
+		if rnd <= weights[SMALL_CLIP] then
+			self._rubberband_info = self._rubberband_info .. ", spawned: small clip"
+			pool.small_clip = pool.small_clip - 1
+
+			return "small_clip"
+		elseif rnd <= weights[LARGE_CLIP] then
+			self._rubberband_info = self._rubberband_info .. ", spawned: large clip"
+			pool.large_clip = pool.large_clip - 1
+
+			return "large_clip"
+		else
+			self._rubberband_info = self._rubberband_info .. ", spawned: ammo cache"
+			pool.ammo_cache_pocketable = pool.ammo_cache_pocketable - 1
+			special_spawned.ammo_cache_pocketable = percentage_through_level
+
+			return "ammo_cache_pocketable"
+		end
+	elseif rnd <= weights[GRENADE] then
+		self._rubberband_info = self._rubberband_info .. ", spawned: small grenade"
+		remaining.grenade = remaining.grenade - 1
+		pool.grenade.small_grenade = pool.grenade.small_grenade - 1
+
+		return "small_grenade"
+	elseif rnd <= weights[HEALTH] then
+		self._rubberband_info = self._rubberband_info .. ", spawned: medical crate"
+		remaining.health = remaining.health - 1
+		pool.health.medical_crate_pocketable = pool.health.medical_crate_pocketable - 1
+		special_spawned.medical_crate_pocketable = percentage_through_level
+
+		return "medical_crate_pocketable"
+	else
+		self._rubberband_info = self._rubberband_info .. ", spawned: nothing"
+
+		return nil
+	end
+end
+
 local pickup_options_weight = {}
 
-PickupSystem.get_pickup_choice = function (self, distribution_type, pickup_options)
+PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	table.clear(pickup_options_weight)
-	fassert(distribution_type == DISTRIBUTION_TYPES.guaranteed, "[PickupSystem] get_pickup_choice() does not handle distribution type: %s", distribution_type)
 
 	local guaranteed_spawned_pickups = self._guaranteed_spawned_pickups
 	local num_options = #pickup_options
-	local total_weight = 1
+	local total_weight = 0
 
 	for i = 1, num_options do
 		local pickup_name = pickup_options[i]
@@ -229,12 +402,12 @@ PickupSystem.get_pickup_choice = function (self, distribution_type, pickup_optio
 		pickup_options_weight[i] = total_weight
 	end
 
-	local new_seed, random_index = math.next_random(self._seed, 1, total_weight * 1000)
+	local new_seed, rnd = math.next_random(self._seed)
 	self._seed = new_seed
-	random_index = math.round(random_index / 1000)
+	rnd = rnd * total_weight
 	local pickup_index = 1
 
-	while random_index <= pickup_options_weight[pickup_index] do
+	while pickup_options_weight[pickup_index] < rnd do
 		if pickup_index == num_options then
 			break
 		end
@@ -253,49 +426,26 @@ local section_spawners = {}
 local used_spawners = {}
 local usable_spawners = {}
 
-PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_settings)
+PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_pool)
 	local num_spawners = #self._pickup_spawner_extensions
 	local pickup_spawners = self._pickup_spawner_extensions
 
 	table.clear(usable_spawners)
 
 	for i = 1, num_spawners do
-		pickup_spawners[i]:register_spawn_locations(usable_spawners, distribution_type, pickup_settings)
+		pickup_spawners[i]:register_spawn_locations(usable_spawners, distribution_type, pickup_pool)
 	end
 
-	for pickup_type, value in pairs(pickup_settings) do
+	for pickup_type, value in pairs(pickup_pool) do
 		table.clear(pickups_to_spawn)
 
-		if type(value) == "table" then
-			for pickup_name, amount in pairs(value) do
-				for i = 1, amount do
-					pickups_to_spawn[#pickups_to_spawn + 1] = pickup_name
-				end
-			end
-
-			self:_shuffle(pickups_to_spawn)
-		else
-			local pickups = PICKUPS_BY_GROUP[pickup_type]
-
-			for i = 1, value do
-				local spawn_value = self:_random()
-				local spawn_weighting_total = 0
-				local selected_pickup = false
-
-				for pickup_name, settings in pairs(pickups) do
-					spawn_weighting_total = spawn_weighting_total + settings.spawn_weighting
-
-					if spawn_value <= spawn_weighting_total then
-						pickups_to_spawn[#pickups_to_spawn + 1] = pickup_name
-						selected_pickup = true
-
-						break
-					end
-				end
-
-				fassert(selected_pickup, "[PickupSystem] Problem selecting a pickup to spawn, spawn_weighting_total = %s, spawn_value = %s", spawn_weighting_total, spawn_value)
+		for pickup_name, amount in pairs(value) do
+			for i = 1, amount do
+				pickups_to_spawn[#pickups_to_spawn + 1] = pickup_name
 			end
 		end
+
+		self:_shuffle(pickups_to_spawn)
 
 		local num_sections = #pickups_to_spawn
 		local section_size = 1 / num_sections
@@ -335,10 +485,6 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 			if num_section_spawners > 0 and spawn_debt >= 0 then
 				local remaining_sections = num_sections - i + 1
 				local pickups_in_section = math.min(1 + math.ceil(spawn_debt / remaining_sections), num_section_spawners)
-				local rnd = self:_random()
-				local near_pickup_spawn_chance = PICKUPS_DATA.near_pickup_spawn_chance[pickup_type]
-				local bonus_spawn = remaining_sections ~= 1 and pickups_in_section == 1 and rnd < near_pickup_spawn_chance
-				pickups_in_section = pickups_in_section + (bonus_spawn and 1 or 0)
 
 				self:_shuffle(section_spawners)
 
@@ -355,8 +501,6 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 						local function _compare_relative_spawner_position(a, b)
 							local percentage_a = a.extension:percentage_through_level()
 							local percentage_b = b.extension:percentage_through_level()
-
-							fassert(percentage_a and percentage_b, "You need to rebuild paths (pickup spawners broke)")
 
 							return math.abs(percentage_through_level - percentage_a) < math.abs(percentage_through_level - percentage_b)
 						end
@@ -404,8 +548,6 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 
 		if spawn_debt > 0 then
 			local num_pickups_to_spawn = #pickups_to_spawn
-
-			fassert(spawn_debt == num_pickups_to_spawn, "The spawn debt (%d) does not match pickups left in pickups_to_spawn (%d)", spawn_debt, num_pickups_to_spawn)
 
 			if #usable_spawners > 0 then
 				self:_shuffle(usable_spawners)
@@ -482,13 +624,8 @@ PickupSystem.has_interacted = function (self, pickup_unit, player_session_id)
 end
 
 PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, pickup_spawner, placed_on_unit, spawn_interaction_cooldown)
-	fassert(self._is_server, "Only server should spawn pickup units")
-
 	local pickup_settings = PICKUPS_BY_NAME[pickup_name]
 	local unit_template_name = pickup_settings.unit_template_name
-
-	fassert(unit_template_name, "[PickupSystem] must specify unit_template_name for pickup %s ", pickup_name)
-
 	local unit_name = pickup_settings.unit_name
 
 	if pickup_settings.spawn_offset then
@@ -536,7 +673,6 @@ PickupSystem.despawn_pickup = function (self, pickup_unit)
 		end
 	end
 
-	fassert(deleted_index ~= nil, "[PickupSystem][despawn_pickup] Unit(%s) not managed by this spawner.", tostring(pickup_unit))
 	table.swap_delete(self._spawned_pickups, deleted_index)
 end
 
@@ -571,7 +707,7 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 		type_list[size] = type_list[size] + 1
 	end
 
-	if DEDICATED_SERVER then
+	if Managers.stats.can_record_stats() then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local owning_player = player_unit_spawn_manager:owner(interactor_unit)
 

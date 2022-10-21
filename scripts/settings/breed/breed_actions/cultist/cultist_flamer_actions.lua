@@ -218,18 +218,22 @@ local action_data = {
 		}
 	},
 	shoot = {
-		place_liquid_timing_speed = 7,
-		collision_filter = "filter_minion_shooting",
-		attack_duration = 2.5,
-		range_percentage_front = 0.5,
-		sphere_cast_frequency = 0.25,
-		exit_after_cooldown = true,
-		range_back = 3,
-		on_hit_buff = "cultist_flamer_hit_by_flame",
-		attack_intensity_type = "ranged",
-		vo_event = "start_shooting",
-		max_liquid_paint_distance = 3,
 		liquid_paint_brush_size = 1,
+		max_liquid_paint_distance = 3,
+		attack_duration = 1.8,
+		sphere_cast_frequency = 0.25,
+		collision_filter = "filter_minion_shooting_no_friendly_fire",
+		range_percentage_front = 0.5,
+		place_liquid_timing_speed = 7,
+		attack_finished_grace_period = 0.3,
+		attack_intensity_type = "ranged",
+		on_hit_buff = "cultist_flamer_hit_by_flame",
+		vo_event = "start_shooting",
+		push_minions_side_relation = "allied",
+		exit_after_cooldown = true,
+		push_minions_power_level = 200,
+		push_minions_radius = 1.25,
+		range_back = 3,
 		aim_anim_events = {
 			"hip_fire"
 		},
@@ -247,9 +251,6 @@ local action_data = {
 		attack_intensities = {
 			ranged = 0.1
 		},
-		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
-		num_shots = shooting_difficulty_settings.num_shots,
-		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		effect_template = EffectTemplates.cultist_flamer,
 		inventory_slot = CultistFlamerSettings.inventory_slot,
 		fx_source_name = CultistFlamerSettings.fx_source_name,
@@ -262,7 +263,8 @@ local action_data = {
 		stagger_type_reduction = {
 			ranged = 20,
 			killshot = 20
-		}
+		},
+		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion
 	},
 	melee_attack = {
 		weapon_reach = 4,

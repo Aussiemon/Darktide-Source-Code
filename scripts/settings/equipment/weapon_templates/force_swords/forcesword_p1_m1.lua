@@ -3,10 +3,12 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeForceswordP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcesword_p1")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -199,7 +201,26 @@ weapon_template.actions = {
 			},
 			start_modifier = 1.5
 		},
-		allowed_chain_actions = {}
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left"
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_activate_special"
+			}
+		}
 	},
 	action_melee_start_left = {
 		sprint_enabled_time = 0.5,
@@ -311,17 +332,16 @@ weapon_template.actions = {
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
+		range_mod = 1.25,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.3,
 		damage_window_end = 0.5,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_left_diagonal_down",
-		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
 		total_time = 1.3,
 		action_movement_curve = {
 			{
@@ -416,7 +436,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -424,21 +444,20 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_left_heavy = {
-		first_person_hit_stop_anim = "hit_stop",
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		allowed_during_sprint = true,
-		num_frames_before_process = 0,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.2,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_2",
+		max_num_saved_entries = 20,
+		kind = "sweep",
+		num_frames_before_process = 0,
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "hit_stop",
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_heavy_left",
 		anim_event = "heavy_attack_left_diagonal_down",
-		weapon_handling_template = "time_scale_1_2",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -515,7 +534,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -609,21 +628,20 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
+		range_mod = 1.25,
 		first_person_hit_stop_anim = "hit_stop",
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		hit_armor_anim = "attack_hit_shield",
 		num_frames_before_process = 0,
+		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.35,
 		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
-		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -719,7 +737,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -740,7 +758,6 @@ weapon_template.actions = {
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_heavy_right",
 		anim_event = "heavy_attack_right_diagonal_down",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -820,7 +837,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -910,20 +927,19 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
+		damage_window_start = 0.3,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
+		anim_event_3p = "attack_stab_01",
 		num_frames_before_process = 0,
-		damage_window_start = 0.3,
+		weapon_handling_template = "time_scale_1_65",
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_stab_01",
-		anim_event = "attack_stab_01",
-		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
+		anim_event = "attack_stab_01",
 		total_time = 1.25,
 		action_movement_curve = {
 			{
@@ -1019,7 +1035,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -1027,19 +1043,15 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_block = {
+		kind = "block",
 		weapon_handling_template = "time_scale_1_65",
 		start_input = "block",
 		anim_end_event = "parry_finished",
-		kind = "block",
 		minimum_hold_time = 0.3,
 		block_vfx_name = "content/fx/particles/weapons/swords/forcesword/psyker_block",
 		anim_event = "parry_pose",
 		stop_input = "block_release",
 		total_time = math.huge,
-		block_attack_types = {
-			ranged = true,
-			melee = true
-		},
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -1137,9 +1149,8 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		push_radius = 4,
 		kind = "push",
-		anim_event = "attack_push",
-		power_level = 500,
 		weapon_handling_template = "time_scale_1",
+		anim_event = "attack_push",
 		total_time = 0.4,
 		action_movement_curve = {
 			{
@@ -1183,11 +1194,11 @@ weapon_template.actions = {
 				chain_time = 0.4
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.warp,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.warp,
 		fx = {
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry",
@@ -1262,7 +1273,6 @@ weapon_template.actions = {
 		kind = "damage_target",
 		charge_template = "forcesword_p1_m1_use_single_target",
 		anim_event = "parry_push_finish",
-		power_level = 500,
 		prevent_sprint = true,
 		total_time = 0.4,
 		action_movement_curve = {
@@ -1421,11 +1431,7 @@ weapon_template.stamina_template = "forcesword_p1_m1"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcesword_p1_m1"
 weapon_template.movement_curve_modifier_template = "forcesword_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.forcesword
 weapon_template.overclocks = {
 	warp_charge_cost_up_dps_down = {
 		forcesword_p1_m1_dps_stat = -0.1,
@@ -1572,6 +1578,10 @@ local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
 
 table.append(weapon_template.traits, melee_activated_traits)
 
+local bespoke_forcesword_p1_traits = table.keys(WeaponTraitsBespokeForceswordP1)
+
+table.append(weapon_template.traits, bespoke_forcesword_p1_traits)
+
 weapon_template.perks = {
 	forcesword_p1_m1_dps_perk = {
 		description = "loc_trait_description_forcesword_p1_m1_dps_perk",
@@ -1687,31 +1697,56 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_forcesword_p1_m1_description_1",
-		icon_type = "crosshair"
+		display_name = "loc_weapon_keyword_fast_attack"
 	},
 	{
-		display_name = "loc_weapon_keyword_forcesword_p1_m1_description_2",
-		icon_type = "shield"
-	},
-	{
-		display_name = "loc_weapon_keyword_forcesword_p1_m1_description_3",
-		icon_type = "shield"
+		display_name = "loc_weapon_keyword_warp_weapon"
 	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_forcesword_p1_m1_attack_primary",
-		type = "ninja_fencer"
+		display_name = "loc_gestalt_ninja_fencer",
+		type = "ninja_fencer",
+		attack_chain = {
+			"linesman",
+			"ninja_fencer",
+			"ninja_fencer"
+		}
 	},
 	secondary = {
-		display_name = "loc_forcesword_p1_m1_attack_secondary",
-		type = "ninja_fencer"
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter"
+		}
 	},
 	special = {
 		display_name = "loc_forcesword_p1_m1_attack_special",
-		type = "ninja_fencer"
+		type = "activate"
 	}
 }
+
+weapon_template.weapon_special_action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local correct_scenario = scenario_system:get_current_scenario_name() == "weapon_special"
+	local player_unit = player.player_unit
+	local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
+	local inventory_slot_component = unit_data_ext:read_component(wielded_slot_id)
+	local special_active = inventory_slot_component.special_active
+
+	return correct_scenario and not special_active
+end
+
+weapon_template.weapon_special_action_revved_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local correct_scenario = scenario_system:get_current_scenario_name() == "weapon_special"
+	local player_unit = player.player_unit
+	local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
+	local inventory_slot_component = unit_data_ext:read_component(wielded_slot_id)
+	local special_active = inventory_slot_component.special_active
+
+	return correct_scenario and special_active
+end
 
 return weapon_template

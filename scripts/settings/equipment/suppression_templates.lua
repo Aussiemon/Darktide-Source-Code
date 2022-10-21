@@ -18,6 +18,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_suppression_templates", suppression_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_suppression_templates", suppression_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_rifles/settings_templates/stub_rifle_suppression_templates", suppression_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_suppression_templates", suppression_templates, loaded_template_files)
 
 local function _inherit(move_state_settings, inheritance_settings)
 	local new_move_state_settings = table.clone(suppression_templates[inheritance_settings[1]][inheritance_settings[2]])
@@ -38,17 +39,9 @@ end
 for name, template in pairs(suppression_templates) do
 	for _, movement_state in pairs(weapon_movement_states) do
 		local move_state_settings = template[movement_state]
-
-		fassert(move_state_settings, "Missing movement state [\"%s\"] for suppression template [\"%s\"] and movement state [\"%s\"]!", movement_state, name, movement_state)
-
 		local inheritance_settings = move_state_settings.inherits
 
 		if inheritance_settings then
-			fassert(inheritance_settings[1], "Inheritance wanted for suppression template [\"%s\"], but no parent template to inherit from defined!", name)
-			fassert(suppression_templates[inheritance_settings[1]], "Trying to inherit non-existent template [\"%s\"] in suppression template [\"%s\"]!", inheritance_settings[1], name)
-			fassert(inheritance_settings[2], "Inheritance wanted for suppression template [\"%s\"], but no movement state to inherit from defined!", name)
-			fassert(template[inheritance_settings[2]], "Trying to inherit non-existent movement state [\"%s\"] in suppression template [\"%s\"]!", inheritance_settings[2], name)
-
 			local new_move_state_settings = _inherit(move_state_settings, inheritance_settings)
 			suppression_templates[name][movement_state] = new_move_state_settings
 		end

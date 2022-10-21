@@ -5,7 +5,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local info_box_size = {
-	1100,
+	1250,
 	200
 }
 local equip_button_size = {
@@ -30,6 +30,10 @@ local mask_size = {
 }
 local grid_settings = {
 	scrollbar_width = 7,
+	widget_icon_load_margin = 400,
+	use_select_on_focused = true,
+	use_is_focused_for_navigation = false,
+	use_terminal_background = true,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -143,7 +147,7 @@ local scenegraph_definition = {
 		size = info_box_size,
 		position = {
 			-100,
-			-100,
+			-125,
 			3
 		}
 	},
@@ -153,7 +157,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			info_box_size[1] - (equip_button_size[1] + 30),
-			10
+			20
 		},
 		position = {
 			0,
@@ -185,7 +189,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			10,
-			-45,
+			-30,
 			3
 		}
 	},
@@ -210,12 +214,26 @@ local scenegraph_definition = {
 		size = equip_button_size,
 		position = {
 			0,
-			0,
+			-8,
 			1
+		}
+	},
+	weapon_stats_pivot = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-1340,
+			110,
+			3
 		}
 	}
 }
-local display_name_style = table.clone(UIFontSettings.header_3)
+local display_name_style = table.clone(UIFontSettings.header_2)
 display_name_style.text_horizontal_alignment = "left"
 display_name_style.text_vertical_alignment = "bottom"
 local widget_definitions = {
@@ -267,31 +285,24 @@ local widget_definitions = {
 			}
 		}
 	}, "corner_bottom_right"),
-	display_name_divider = UIWidget.create_definition({
+	display_name = UIWidget.create_definition({
+		{
+			value = "",
+			value_id = "text",
+			pass_type = "text",
+			style = display_name_style
+		}
+	}, "display_name"),
+	display_name_divider2 = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/dividers/horizontal_dynamic_lower"
+			value = "content/ui/materials/dividers/skull_rendered_left_01"
 		}
 	}, "display_name_divider"),
-	display_name_divider_glow = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/effects/wide_upward_glow",
-			style_id = "texture",
-			pass_type = "texture",
-			style = {
-				color = {
-					0,
-					0,
-					0,
-					0
-				}
-			}
-		}
-	}, "display_name_divider_glow"),
 	equip_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "equip_button", {
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.apparel_equip
 		}
 	})
 }

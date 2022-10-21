@@ -17,6 +17,7 @@ PlayerUnitAnimationExtension.init = function (self, extension_init_context, unit
 	self._animation_state_component = animation_state
 	self._weapon_action_component = unit_data:read_component("weapon_action")
 	self._character_state_component = unit_data:read_component("character_state")
+	self._alternate_fire_component = unit_data:read_component("alternate_fire")
 	self._local_wielded_weapon_template = ""
 	self._anim_variable_ids_third_person = {}
 	self._anim_variable_ids_first_person = {}
@@ -148,8 +149,14 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 		set_state_machine = true
 	end
 
-	local character_state = self._character_state_component
 	local mispredict_warrants_animation_rollback = false
+	local alternate_fire = self._alternate_fire_component
+
+	if alternate_fire.is_active ~= simulated_components.alternate_fire.is_active then
+		mispredict_warrants_animation_rollback = true
+	end
+
+	local character_state = self._character_state_component
 
 	if character_state.state_name ~= simulated_components.character_state.state_name or weapon_action_component.current_action_name ~= simulated_components.weapon_action.current_action_name then
 		mispredict_warrants_animation_rollback = true

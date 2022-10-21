@@ -3,7 +3,7 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
 local MechanismAdventure = class("MechanismAdventure", "MechanismBase")
-local READY_FOR_SCORE_TIMEOUT = 20
+local READY_FOR_SCORE_TIMEOUT = 400
 
 MechanismAdventure.init = function (self, ...)
 	MechanismAdventure.super.init(self, ...)
@@ -20,9 +20,6 @@ MechanismAdventure.init = function (self, ...)
 		self._is_owner = true
 		self._is_owner_mission_server = Managers.connection:is_dedicated_mission_server()
 		local mission_name = context.mission_name
-
-		fassert(mission_name, "Mechanism %q needs a mission_name in context.", self.name)
-
 		local challenge, resistance, circumstance_name, side_mission, backend_mission_id = nil
 
 		if self._is_owner_mission_server then
@@ -55,10 +52,12 @@ MechanismAdventure.init = function (self, ...)
 		data.game_score_done = false
 		data.challenge = challenge
 		data.resistance = resistance
+		data.mission_giver_vo_override = context.mission_giver_vo_override or "none"
 		data.backend_mission_id = backend_mission_id
 		data.ready_voting_completed = false
+		local do_vote = self._is_owner_mission_server
 
-		if self._is_owner_mission_server then
+		if do_vote then
 			local voting_params = {
 				mission_data = data
 			}
@@ -79,13 +78,14 @@ end
 MechanismAdventure.sync_data = function (self, channel_id)
 	local data = self._mechanism_data
 
-	RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, data.backend_mission_id, data.ready_voting_completed)
+	RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed)
 end
 
-MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, backend_mission_id, ready_voting_completed)
+MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, mission_giver_vo_override_id, backend_mission_id, ready_voting_completed)
 	local mission_name = NetworkLookup.missions[mission_name_id]
 	local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
 	local side_mission = NetworkLookup.mission_objective_names[side_mission_id]
+	local mission_giver_vo_override = NetworkLookup.mission_giver_vo_overrides[mission_giver_vo_override_id]
 	self._state_index = state_index
 	self._state = self._states_lookup[state_index]
 	local end_result = NetworkLookup.game_mode_outcomes[end_result_id]
@@ -105,6 +105,7 @@ MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_i
 	data.game_score_done = game_score_done
 	data.challenge = challenge
 	data.resistance = resistance
+	data.mission_giver_vo_override = mission_giver_vo_override
 	data.backend_mission_id = backend_mission_id
 	data.ready_voting_completed = ready_voting_completed
 
@@ -132,8 +133,6 @@ MechanismAdventure.game_score_done = function (self)
 end
 
 MechanismAdventure.game_mode_end = function (self, reason, session_id)
-	fassert(self._state == "adventure", "Game mode end while not in adventure.")
-
 	self._mechanism_data.end_result = reason
 	self._mechanism_data.session_id = session_id
 
@@ -154,18 +153,18 @@ MechanismAdventure.client_exit_gameplay = function (self)
 	self:_set_state("client_exit_gameplay")
 end
 
-MechanismAdventure.ready_for_game_score = function (self, peer_id, success)
-	if success then
-		Log.info("MechanismAdventure", "Peer %s is ready for state 'score'", peer_id)
-
-		self._peers_ready_for_score[peer_id] = true
-	else
-		Log.info("MechanismAdventure", "Kicking peer %s, reason: 'kicked_on_session_report_fail'", peer_id)
-		Managers.connection:kick(peer_id, "kicked_on_session_report_fail")
-	end
+MechanismAdventure.failed_fetching_session_report = function (self, peer_id)
+	Log.info("MechanismAdventure", "Peer %s failed fetching session report", peer_id)
 end
 
 local not_ready_peers = {}
+
+MechanismAdventure._on_vote_finished = function (self)
+	Managers.mechanism:trigger_event("all_players_ready")
+
+	self._voting_id = nil
+	self._mechanism_data.ready_voting_completed = true
+end
 
 MechanismAdventure._check_state_change = function (self, state, data)
 	local changed, done = nil
@@ -175,10 +174,7 @@ MechanismAdventure._check_state_change = function (self, state, data)
 			local finished, result, abort_reason = Managers.voting:voting_result(self._voting_id)
 
 			if finished then
-				Managers.mechanism:trigger_event("all_players_ready")
-
-				self._voting_id = nil
-				self._mechanism_data.ready_voting_completed = true
+				self:_on_vote_finished()
 			end
 		end
 
@@ -190,43 +186,6 @@ MechanismAdventure._check_state_change = function (self, state, data)
 		end
 	elseif state == "adventure" then
 		if data.end_result then
-			self:_set_state("victory_defeat")
-
-			changed = true
-			done = false
-		end
-	elseif state == "victory_defeat" then
-		if self._is_owner then
-			local ready_peers = self._peers_ready_for_score
-
-			table.clear(not_ready_peers)
-
-			for channel_id, _ in pairs(Managers.mechanism:clients()) do
-				local peer_id = Network.peer_id(channel_id)
-
-				if not ready_peers[peer_id] then
-					not_ready_peers[#not_ready_peers + 1] = peer_id
-				end
-			end
-
-			if #not_ready_peers == 0 and (DEDICATED_SERVER or ready_peers[Network.peer_id()]) then
-				Log.info("MechanismAdventure", "All peers ready for state 'score'")
-				Managers.mechanism:trigger_event("victory_defeat_done")
-			elseif self._peers_ready_for_score_timeout < Managers.time:time("main") then
-				Log.info("MechanismAdventure", "Timeout while waiting for peers ready for state 'score'")
-
-				for i = 1, #not_ready_peers do
-					local peer_id = not_ready_peers[i]
-
-					Log.info("MechanismAdventure", "Kicking peer %s, reason: 'kicked_on_session_report_timeout'", peer_id)
-					Managers.connection:kick(peer_id, "kicked_on_session_report_timeout")
-				end
-
-				Managers.mechanism:trigger_event("victory_defeat_done")
-			end
-		end
-
-		if data.victory_defeat_done then
 			self:_set_state("score")
 
 			changed = true
@@ -237,7 +196,8 @@ MechanismAdventure._check_state_change = function (self, state, data)
 					Log.info("MechanismAdventure", "response:%s", table.tostring(response))
 
 					return Managers.voting:start_voting("stay_in_party", {
-						new_party_id = response.party_id
+						new_party_id = response.party_id,
+						new_party_invite_token = response.invite_token
 					}):next(function (voting_id)
 						Log.info("MechanismAdventure", "stay_in_party_voting_id:%s", voting_id)
 
@@ -298,6 +258,7 @@ MechanismAdventure.wanted_transition = function (self)
 				level = data.level_name,
 				mission_name = data.mission_name,
 				circumstance_name = data.circumstance_name,
+				mission_giver_vo = data.mission_giver_vo_override,
 				side_mission = data.side_mission
 			}
 
@@ -307,6 +268,7 @@ MechanismAdventure.wanted_transition = function (self)
 				level = data.level_name,
 				mission_name = data.mission_name,
 				circumstance_name = data.circumstance_name,
+				mission_giver_vo = data.mission_giver_vo_override,
 				side_mission = data.side_mission,
 				next_state = StateGameplay,
 				next_state_params = {
@@ -342,6 +304,15 @@ MechanismAdventure.wanted_transition = function (self)
 	else
 		return false
 	end
+end
+
+MechanismAdventure.game_score_end_time = function (self, end_time)
+	if self._is_owner then
+		return
+	end
+
+	Managers.progression:set_game_score_end_time(end_time)
+	Log.info("MechanismAdventure", "set_game_score_end_time: %s", end_time)
 end
 
 MechanismAdventure.is_allowed_to_reserve_slots = function (self, peer_ids)

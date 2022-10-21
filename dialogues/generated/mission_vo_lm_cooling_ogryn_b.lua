@@ -3,14 +3,14 @@ local mission_vo_lm_cooling_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
 		sound_events = {
-			"loc_ogryn_b__region_mechanicus_01",
-			"loc_ogryn_b__region_mechanicus_02",
-			"loc_ogryn_b__region_mechanicus_03"
+			"loc_ogryn_b__zone_tank_foundry_01",
+			"loc_ogryn_b__zone_tank_foundry_02",
+			"loc_ogryn_b__zone_tank_foundry_03"
 		},
 		sound_events_duration = {
-			5.661594,
-			4.112792,
-			3.783052
+			6.492917,
+			5.764573,
+			4.617333
 		},
 		sound_event_weights = {
 			0.3333333,
@@ -41,7 +41,7 @@ local mission_vo_lm_cooling_ogryn_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.165896,
-			[2.0] = 3.415167
+			[2.0] = 3.415156
 		},
 		randomize_indexes = {}
 	},
@@ -54,7 +54,7 @@ local mission_vo_lm_cooling_ogryn_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.658938,
-			[2.0] = 1.708365
+			[2.0] = 1.708354
 		},
 		randomize_indexes = {}
 	},
@@ -97,20 +97,7 @@ local mission_vo_lm_cooling_ogryn_b = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_heat = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cooling_heat_01",
-			[2.0] = "loc_ogryn_b__mission_cooling_heat_02"
-		},
-		sound_events_duration = {
-			[1.0] = 2.840385,
-			[2.0] = 4.307865
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_heat_response_two = {
+	mission_cooling_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
@@ -126,16 +113,16 @@ local mission_vo_lm_cooling_ogryn_b = {
 			"loc_ogryn_b__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.409448,
+			3.01275,
+			1.793698,
+			2.30924,
+			3.229344,
+			5.244063,
+			3.821292,
+			2.978958,
+			3.775854,
+			5.305125
 		},
 		sound_event_weights = {
 			0.1,
@@ -151,6 +138,39 @@ local mission_vo_lm_cooling_ogryn_b = {
 		},
 		randomize_indexes = {}
 	},
+	mission_cooling_heat = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_b__mission_cooling_heat_01",
+			[2.0] = "loc_ogryn_b__mission_cooling_heat_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.840396,
+			[2.0] = 4.307875
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat_response_two = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_b__region_mechanicus_01",
+			"loc_ogryn_b__region_mechanicus_02",
+			"loc_ogryn_b__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			5.661594,
+			4.112792,
+			3.783052
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
+		},
+		randomize_indexes = {}
+	},
 	mission_cooling_leaving = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -159,7 +179,7 @@ local mission_vo_lm_cooling_ogryn_b = {
 			[2.0] = "loc_ogryn_b__mission_cooling_leaving_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.945177,
+			[1.0] = 1.945188,
 			[2.0] = 1.670177
 		},
 		randomize_indexes = {}
@@ -187,19 +207,6 @@ local mission_vo_lm_cooling_ogryn_b = {
 		sound_events_duration = {
 			[1.0] = 5.549583,
 			[2.0] = 2.614365
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_production_line = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cooling_production_line_01",
-			[2.0] = "loc_ogryn_b__mission_cooling_production_line_02"
-		},
-		sound_events_duration = {
-			[1.0] = 6.657604,
-			[2.0] = 4.755115
 		},
 		randomize_indexes = {}
 	},

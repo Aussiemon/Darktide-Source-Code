@@ -44,7 +44,7 @@ local asset_vo_veteran_female_b = {
 		},
 		sound_events_duration = {
 			3.246667,
-			2.382333,
+			2.382313,
 			2.754271,
 			5.691583
 		},
@@ -76,7 +76,7 @@ local asset_vo_veteran_female_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 4.703229,
-			[2.0] = 3.906208
+			[2.0] = 3.906188
 		},
 		randomize_indexes = {}
 	},
@@ -120,9 +120,9 @@ local asset_vo_veteran_female_b = {
 			"loc_veteran_female_b__asset_unnatural_dark_b_04"
 		},
 		sound_events_duration = {
-			2.525875,
+			2.525896,
 			1.652917,
-			1.894667,
+			1.894688,
 			1.556396
 		},
 		randomize_indexes = {}
@@ -136,7 +136,7 @@ local asset_vo_veteran_female_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.511083,
-			[2.0] = 3.806083
+			[2.0] = 3.806063
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

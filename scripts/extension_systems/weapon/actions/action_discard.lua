@@ -37,15 +37,13 @@ ActionDiscard._discard = function (self, action_settings)
 	local rotation = self._action_component.rotation
 	local pickup_name = action_settings.pickup_name
 	local player_or_nil = Managers.state.player_unit_spawn:owner(self._player_unit)
+	local item_name = pickup_name or action_settings.deployable_settings.unit_template
+	local is_human = player_or_nil and player_or_nil:is_human_controlled()
 
-	if DEDICATED_SERVER then
-		local item_name = pickup_name or action_settings.deployable_settings.unit_template
-		local is_human = player_or_nil and player_or_nil:is_human_controlled()
+	Managers.telemetry_reporters:reporter("placed_items"):register_event(player_or_nil, item_name)
 
-		if is_human then
-			Managers.stats:record_place_item(player_or_nil, item_name)
-			Managers.telemetry_events:player_placed_item(player_or_nil, item_name)
-		end
+	if Managers.stats.can_record_stats() and is_human then
+		Managers.stats:record_place_item(player_or_nil, item_name)
 	end
 
 	if pickup_name then

@@ -264,8 +264,6 @@ PlayerHuskVisualLoadoutExtension._update_item_visibility = function (self, is_in
 end
 
 PlayerHuskVisualLoadoutExtension.wield_slot = function (self, slot_name)
-	fassert(self._wielded_slot == PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT, "Already wielding a slot.")
-
 	self._wielded_slot = slot_name
 	local first_person_mode = self._first_person_extension:is_in_first_person_mode()
 	local equipment_component = self._equipment_component
@@ -303,8 +301,6 @@ PlayerHuskVisualLoadoutExtension.unit_3p_from_slot = function (self, slot_name)
 end
 
 PlayerHuskVisualLoadoutExtension.unwield_slot = function (self, slot_name)
-	fassert(self._wielded_slot ~= PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT, "Not wielding a slot.")
-
 	local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
 	if slot_scripts then

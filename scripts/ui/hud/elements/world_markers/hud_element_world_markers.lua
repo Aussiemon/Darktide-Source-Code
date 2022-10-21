@@ -95,7 +95,8 @@ HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type
 	local marker = {
 		scale = 1,
 		type = marker_type,
-		unit = unit
+		unit = unit,
+		position = Vector3Box()
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
@@ -119,7 +120,8 @@ HudElementWorldMarkers.event_add_world_marker_position = function (self, marker_
 	local marker = {
 		scale = 1,
 		type = marker_type,
-		world_position = Vector3Box(world_position)
+		world_position = Vector3Box(world_position),
+		position = Vector3Box()
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
@@ -203,8 +205,6 @@ HudElementWorldMarkers._draw_widgets = function (self, dt, t, input_service, ui_
 end
 
 HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service, ui_renderer, render_settings)
-	Profiler.start("world_markers")
-
 	local raycasts_allowed = self._raycast_frame_counter == 0
 	self._raycast_frame_counter = (self._raycast_frame_counter + 1) % HudElementWorldMarkersSettings.raycasts_frame_delay
 	local camera = self._camera
@@ -291,7 +291,8 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						marker_position.z = marker_position.z + position_offset[3]
 					end
 
-					marker.position = Vector3Box(marker_position)
+					Vector3Box.store(marker.position, marker_position)
+
 					local distance = Vector3.distance(marker_position, camera_position)
 					content.distance = distance
 					marker.distance = distance
@@ -430,8 +431,6 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 
 		table.clear(temp_array_markers_to_remove)
 	end
-
-	Profiler.stop("world_markers")
 end
 
 HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -482,26 +481,28 @@ end
 
 HudElementWorldMarkers._get_fade = function (self, fade_settings, distance)
 	local easing_function = fade_settings.easing_function
-
-	fassert(fade_settings.distance_min < fade_settings.distance_max, "[HudElementWorldMarkers][_get_fade] distances setup incorrectly.")
+	local return_value = nil
 
 	if fade_settings.distance_max < distance then
-		return fade_settings.fade_from
+		return_value = fade_settings.fade_from
 	elseif distance < fade_settings.distance_min then
-		return fade_settings.fade_to
+		return_value = fade_settings.fade_to
 	else
 		local distance_fade_fraction = 1 - (distance - fade_settings.distance_min) / (fade_settings.distance_max - fade_settings.distance_min)
 		local eased_distance_fade_fraction = easing_function(distance_fade_fraction)
 		local adjusted_fade = fade_settings.fade_from + eased_distance_fade_fraction * (fade_settings.fade_to - fade_settings.fade_from)
+		return_value = adjusted_fade
+	end
 
-		return adjusted_fade
+	if fade_settings.invert then
+		return 1 - return_value
+	else
+		return return_value
 	end
 end
 
 HudElementWorldMarkers._get_scale = function (self, scale_settings, distance)
 	local easing_function = scale_settings.easing_function
-
-	fassert(scale_settings.distance_min < scale_settings.distance_max, "[HudElementWorldMarkers][_get_scale] distances setup incorrectly.")
 
 	if scale_settings.distance_max < distance then
 		return scale_settings.scale_from
@@ -550,7 +551,7 @@ end
 HudElementWorldMarkers._get_screen_offset = function (self, scale)
 	local position = UIScenegraph.world_position(self._ui_scenegraph, "screen", scale)
 
-	return position.x, position.y
+	return Vector3.to_elements(position)
 end
 
 HudElementWorldMarkers._convert_world_to_screen_position = function (self, camera, world_position)
@@ -657,9 +658,6 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 	end
 
 	local raycast_object = self._raycast_object
-
-	fassert(raycast_object, "Missing raycast object")
-
 	local camera_position = Camera.local_position(self._camera)
 	local raycasts_per_frame = HudElementWorldMarkersSettings.raycasts_per_frame
 	local num_raycast_to_check = math.min(num_raycast_queue, raycasts_per_frame)
@@ -668,7 +666,7 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 		local marker = marker_raycast_queue[i]
 		local widget = marker.widget
 		local content = widget.content
-		local marker_position = marker.position:unbox()
+		local marker_position = Vector3Box.unbox(marker.position)
 		local ray_dir = Vector3.normalize(marker_position - camera_position)
 		local ray_length = content.distance
 

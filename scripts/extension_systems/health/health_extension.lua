@@ -3,9 +3,6 @@ local HealthExtension = class("HealthExtension")
 
 HealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local health = extension_init_data.health or Unit.get_data(unit, "health")
-
-	fassert(health, "health is not defined in either extension_init_data or the unit_data")
-
 	self._health = health
 	self._unit = unit
 	self._is_unkillable = not not extension_init_data.is_unkillable
@@ -20,6 +17,8 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	if has_health_bar then
 		Managers.event:trigger("add_world_marker_unit", "damage_indicator", unit)
 	end
+
+	self._damaging_players = {}
 end
 
 HealthExtension.game_object_initialized = function (self, session, object_id)
@@ -102,6 +101,23 @@ HealthExtension.add_damage = function (self, damage_amount, permanent_damage, hi
 	GameSession.set_game_object_field(game_session, game_object_id, "damage", network_damage)
 
 	self._damage = new_damage
+
+	if damage_amount > 0 then
+		local player_unit_spawn_manager = Managers.state and Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager and player_unit_spawn_manager:owner(attacking_unit)
+
+		if player then
+			local damaging_players = self._damaging_players
+
+			if not table.array_contains(damaging_players, player) then
+				damaging_players[#damaging_players + 1] = player
+			end
+		end
+	end
+
+	local actual_damage_dealt = math.clamp(damage_amount, 0, health - current_damage)
+
+	return actual_damage_dealt
 end
 
 HealthExtension.add_heal = function (self, heal_amount, heal_type)
@@ -118,6 +134,14 @@ HealthExtension.add_heal = function (self, heal_amount, heal_type)
 	self._damage = new_damage
 
 	return actual_heal_amount
+end
+
+HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit)
+	self._last_damaging_unit = last_damaging_unit
+end
+
+HealthExtension.last_damaging_unit = function (self)
+	return self._last_damaging_unit
 end
 
 HealthExtension.health_depleted = function (self)
@@ -145,9 +169,7 @@ HealthExtension.kill = function (self)
 		return
 	end
 
-	local side_system = Managers.state.extension:system("side_system")
-
-	side_system:remove_unit_from_tag_units(self._unit)
+	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil
 	self._is_dead = true
@@ -161,6 +183,10 @@ end
 
 HealthExtension.max_wounds = function (self)
 	return 1
+end
+
+HealthExtension.damaging_players = function (self)
+	return self._damaging_players
 end
 
 implements(HealthExtension, HealthExtensionInterface)

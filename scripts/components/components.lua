@@ -329,15 +329,11 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 end
 
 function component(component_name, super_name, ...)
-	fassert(type(component_name) == "string", "Didn't pass in component_name %q as a string", tostring(component_name))
-
 	local component_table = Components[component_name]
 	local super = nil
 
 	if super_name then
 		super = Components[super_name]
-
-		fassert(super, "Component %q trying to inherit from nonexistant %q", component_name, super_name)
 	end
 
 	if not component_table then
@@ -503,6 +499,7 @@ _require_component("scripts/components/mission_objective_target")
 _require_component("scripts/components/mission_objective_zone_scannable")
 _require_component("scripts/components/mission_objective_zone_synchronizer")
 _require_component("scripts/components/mission_objective_zone")
+_require_component("scripts/components/mission_path_blocker")
 _require_component("scripts/components/monster_spawner")
 _require_component("scripts/components/moveable_platform")
 _require_component("scripts/components/nav_block")
@@ -510,6 +507,7 @@ _require_component("scripts/components/nav_graph")
 _require_component("scripts/components/networked_timer")
 _require_component("scripts/components/networked_unique_randomize")
 _require_component("scripts/components/npc_animation")
+_require_component("scripts/components/onboarding_objective_target")
 _require_component("scripts/components/overheat_display")
 _require_component("scripts/components/particle_effect")
 _require_component("scripts/components/perlin_light")

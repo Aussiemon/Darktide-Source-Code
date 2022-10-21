@@ -1,3 +1,4 @@
+local Health = require("scripts/utilities/health")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerHuskHealthExtension = class("PlayerHuskHealthExtension")
@@ -130,23 +131,23 @@ PlayerHuskHealthExtension.max_health = function (self)
 end
 
 PlayerHuskHealthExtension.add_damage = function (self)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:add_damage() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.add_heal = function (self)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:add_heal() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.remove_wounds = function (self)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:remove_wounds() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.entered_knocked_down = function (self)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:entered_knocked_down() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.exited_knocked_down = function (self)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:exited_knocked_down() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.health_depleted = function (self)
@@ -174,39 +175,28 @@ PlayerHuskHealthExtension.should_die = function (self)
 end
 
 PlayerHuskHealthExtension.set_unkillable = function (self, should_be_unkillable)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:set_unkillable() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.set_invulnerable = function (self, should_be_invulnerable)
-	fassert(false, "Not allowed to call PlayerHuskHealthExtension:set_invulnerable() on husks!")
+	return
 end
 
 PlayerHuskHealthExtension.kill = function (self)
 	self._is_dead = true
-	local side_system = Managers.state.extension:system("side_system")
 
-	side_system:remove_unit_from_tag_units(self._unit)
+	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil
 end
 
-PlayerHuskHealthExtension._calculate_num_wounds = function (self)
+PlayerHuskHealthExtension.num_wounds = function (self)
+	local permanent_damage = self:permanent_damage_taken()
 	local max_wounds = self:max_wounds()
 	local max_health = self:max_health()
-	local permanent_damage = self:permanent_damage_taken()
-	local health_per_wound = max_wounds > 0 and max_health / max_wounds or 0
+	local num_wounds = Health.calculate_num_segments(permanent_damage, max_health, max_wounds)
 
-	if health_per_wound <= 0 then
-		return 0
-	end
-
-	local wanted_wounds = math.max(max_wounds - math.floor(permanent_damage / health_per_wound), 0)
-
-	return wanted_wounds
-end
-
-PlayerHuskHealthExtension.num_wounds = function (self)
-	return self:_calculate_num_wounds()
+	return num_wounds
 end
 
 PlayerHuskHealthExtension.max_wounds = function (self)

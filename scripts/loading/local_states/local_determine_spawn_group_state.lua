@@ -5,9 +5,6 @@ local RPCS = {
 local LocalDetermineSpawnGroupState = class("LocalDetermineSpawnGroupState")
 
 LocalDetermineSpawnGroupState.init = function (self, state_machine, shared_state)
-	fassert(type(shared_state.network_delegate) == "table", "Network delegate required")
-	fassert(type(shared_state.host_channel_id) == "number", "Host channel required")
-
 	self._shared_state = shared_state
 	self._got_response = false
 

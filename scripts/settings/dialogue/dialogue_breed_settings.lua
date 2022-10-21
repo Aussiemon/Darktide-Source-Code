@@ -4,13 +4,15 @@ local dialogue_breed_settings = {
 		"pilot",
 		"tech_priest",
 		"explicator",
+		"training_ground_psyker",
 		"voice_preview"
 	},
 	voice_classes_npc = {
 		"sergeant",
 		"pilot",
 		"tech_priest",
-		"explicator"
+		"explicator",
+		"training_ground_psyker"
 	},
 	chaos_hound = {
 		trigger_seen_vo = true,
@@ -194,6 +196,7 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = false,
 		dialogue_memory_faction_name = "npc",
+		level_requirement = 0,
 		prop_name = "voice_over_2d",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "voice_profile",
@@ -283,6 +286,7 @@ local dialogue_breed_settings = {
 		wwise_voices = {
 			"mourningstar_servitor_a",
 			"mourningstar_servitor_b",
+			"mourningstar_servitor_c",
 			"mourningstar_servitor_d"
 		},
 		random_talk_settings = {
@@ -366,7 +370,7 @@ local dialogue_breed_settings = {
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
 		can_trigger_vo = true,
-		wwise_voice_switch_group = "enemy_voice_profile",
+		wwise_voice_switch_group = "switch_voice_enemy_traitor_gunner",
 		wwise_voices = {
 			"enemy_traitor_gunner_a"
 		}
@@ -407,7 +411,7 @@ local dialogue_breed_settings = {
 		}
 	},
 	chaos_ogryn_bulwark = {
-		trigger_seen_vo = false,
+		trigger_seen_vo = true,
 		is_network_synced = false,
 		trigger_heard_vo = false,
 		vo_class_name = "chaos_ogryn_bulwark",
@@ -437,20 +441,26 @@ local dialogue_breed_settings = {
 		}
 	},
 	renegade_captain = {
-		trigger_seen_vo = false,
+		trigger_seen_vo = true,
 		is_network_synced = false,
 		trigger_heard_vo = false,
 		skulking_vo_interval_t = 2,
-		no_damage_vo_event = "no_damage_taunt",
+		randomize_voice = true,
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
+		follow_vo_interval_t = 1,
+		assault_vo_interval_t = 1,
 		vo_class_name = "renegade_captain",
 		spawn_vo_event = "taunt",
 		can_trigger_vo = true,
-		wwise_voice_switch_group = "enemy_voice_profile",
+		wwise_voice_switch_group = "switch_voice_enemy_captain",
 		wwise_voices = {
-			"enemy_captain_officer_a"
+			"enemy_captain_officer_a",
+			"enemy_captain_maniac_a",
+			"enemy_captain_brute_a",
+			"enemy_captain_sadist_b",
+			"enemy_captain_spiritual_b"
 		},
 		vo_events = {
 			event_trickle_wave_spawned = "reinforcements"
@@ -482,6 +492,7 @@ local dialogue_breed_settings = {
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
 		spawn_vo_event = "spawned",
+		dynamic_smart_tag = "renegade_netgunner",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_traitor_netgunner",
 		wwise_voices = {
@@ -506,11 +517,10 @@ local dialogue_breed_settings = {
 		trigger_seen_vo = true,
 		is_network_synced = false,
 		trigger_heard_vo = false,
-		no_damage_vo_event = "no_damage_taunt",
+		vo_class_name = "renegade_shocktrooper",
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
-		vo_class_name = "renegade_shocktrooper",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_traitor_shocktrooper",
 		wwise_voices = {
@@ -549,7 +559,7 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
-		can_trigger_vo = false,
+		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_cultist_shocktrooper",
 		wwise_voices = {
 			"enemy_cultist_shocktrooper_a"
@@ -569,11 +579,12 @@ local dialogue_breed_settings = {
 		wwise_voice_switch_group = "switch_voice_enemy_cultist_melee_fighter",
 		wwise_voices = {
 			"enemy_cultist_melee_fighter_a",
-			"enemy_cultist_melee_fighter_b"
+			"enemy_cultist_melee_fighter_b",
+			"enemy_cultist_melee_fighter_c"
 		}
 	},
 	cultist_assault = {
-		trigger_seen_vo = true,
+		trigger_seen_vo = false,
 		is_network_synced = false,
 		trigger_heard_vo = false,
 		vo_class_name = "cultist_assault",
@@ -582,7 +593,7 @@ local dialogue_breed_settings = {
 		dialogue_memory_faction_name = "enemy",
 		follow_vo_interval_t = 2,
 		assault_vo_interval_t = 2,
-		can_trigger_vo = false,
+		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_cultist_rusher",
 		wwise_voices = {
 			"enemy_cultist_rusher_male_a",
@@ -592,29 +603,16 @@ local dialogue_breed_settings = {
 	cultist_gunner = {
 		trigger_seen_vo = true,
 		is_network_synced = false,
-		trigger_heard_vo = false,
+		trigger_heard_vo = true,
 		vo_class_name = "cultist_gunner",
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
-		can_trigger_vo = false,
+		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_enemy_cultist_gunner",
 		wwise_voices = {
 			"enemy_cultist_gunner_a"
 		}
-	},
-	cultist_executor = {
-		trigger_seen_vo = true,
-		vo_class_name = "cultist_executor",
-		is_network_synced = false,
-		trigger_heard_vo = false,
-		follow_vo_interval_t = 2,
-		has_dialogue_extension = false,
-		vo_triggers_enemy_kill_query = true,
-		dialogue_memory_faction_name = "enemy",
-		assault_vo_interval_t = 2,
-		can_trigger_vo = false,
-		wwise_voice_switch_group = "enemy_voice_profile"
 	},
 	cultist_grenadier = {
 		trigger_seen_vo = true,
@@ -666,6 +664,8 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
+		follow_vo_interval_t = 2,
+		assault_vo_interval_t = 2,
 		dialogue_source_name = "cultist_berzerker",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_enemy_cultist_berzerker",
@@ -681,10 +681,42 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = false,
 		dialogue_memory_faction_name = "npc",
+		level_requirement = 11,
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "voice_profile",
 		wwise_voices = {
-			"contract_vendor"
+			"contract_vendor_a"
+		}
+	},
+	credit_store_servitor = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "credit_store_servitor",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		level_requirement = 2,
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"credit_store_servitor_a"
+		}
+	},
+	training_ground_psyker = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "training_ground_psyker",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		level_requirement = 0,
+		prop_name = "voice_over_2d",
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"training_ground_psyker_a"
 		}
 	}
 }

@@ -437,7 +437,7 @@ return function ()
 	define_rule({
 		name = "chaos_newly_infected_assault",
 		category = "enemy_vo_prio_1",
-		wwise_route = 20,
+		wwise_route = 43,
 		response = "chaos_newly_infected_assault",
 		database = "enemy_vo",
 		criterias = {
@@ -504,7 +504,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"idle"
+				"passive_idle"
 			},
 			{
 				"query_context",
@@ -517,25 +517,25 @@ return function ()
 				"chaos_newly_infected_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_newly_infected_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				10
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"enemey_memory_idle",
+				"chaos_newly_infected_idle",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_idle",
+				"faction_memory_chaos_newly_infected_idle",
 				OP.TIMESET
 			}
 		}
@@ -591,6 +591,9 @@ return function ()
 				"faction_memory_chaos_newly_infected_melee_idle",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -975,7 +978,7 @@ return function ()
 	define_rule({
 		name = "cultist_berzerker_alerted_idle",
 		category = "enemy_vo_prio_1",
-		wwise_route = 10,
+		wwise_route = 28,
 		response = "cultist_berzerker_alerted_idle",
 		database = "enemy_vo",
 		criterias = {
@@ -1002,7 +1005,7 @@ return function ()
 				"enemy_memory_cultist_berzerker_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				7
 			},
 			{
 				"faction_memory",
@@ -1079,7 +1082,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1
+				duration = 0.5
 			}
 		}
 	})
@@ -1113,7 +1116,7 @@ return function ()
 				"enemy_memory_cultist_flamer_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				4
 			},
 			{
 				"faction_memory",
@@ -1133,6 +1136,11 @@ return function ()
 				"faction_memory",
 				"faction_memory_cultist_flamer_start_shooting",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
 			}
 		}
 	})
@@ -1243,7 +1251,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1
+				duration = 0.5
 			}
 		}
 	})
@@ -1570,7 +1578,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"death"
+				"long_death"
 			},
 			{
 				"query_context",
@@ -1657,6 +1665,9 @@ return function ()
 				"faction_memory_cultist_melee_fighter_melee_idle",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1682,7 +1693,7 @@ return function ()
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_melee"
+				"cultist_assault"
 			},
 			{
 				"user_memory",
@@ -1709,6 +1720,67 @@ return function ()
 				"faction_memory",
 				"faction_memory_cultist_rusher_switch_to_melee",
 				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "cultist_rusher_take_cover",
+		wwise_route = 33,
+		response = "cultist_rusher_take_cover",
+		database = "enemy_vo",
+		category = "enemy_vo_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"take_cover"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"cultist_assault"
+			},
+			{
+				"user_memory",
+				"cultist_assault_take_cover",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"faction_memory",
+				"faction_memory_cultist_assault_take_cover",
+				OP.TIMEDIFF,
+				OP.GT,
+				8
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"cultist_assault_take_cover",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"faction_memory_cultist_assault_take_cover",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
 			}
 		}
 	})
@@ -1874,7 +1946,7 @@ return function ()
 	define_rule({
 		name = "enemy_cultist_berzerker_assault",
 		category = "enemy_vo_prio_1",
-		wwise_route = 10,
+		wwise_route = 28,
 		response = "enemy_cultist_berzerker_assault",
 		database = "enemy_vo",
 		criterias = {
@@ -1919,7 +1991,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"faction_memory_rusher_assault",
+				"faction_memory_cultist_berzerker_assault",
 				OP.TIMESET
 			}
 		}
@@ -2041,20 +2113,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"ranged_idle_player_low_on_health"
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.EQ,
+				"response_for_critical_health"
 			},
 			{
 				"user_memory",
-				"ranged_idle_player_low_on_health",
+				"last_replied_critical_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				30
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"ranged_idle_player_low_on_health",
+				"last_replied_critical_health",
 				OP.TIMESET
 			}
 		}
@@ -2122,24 +2200,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_long_death",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
 				OP.TIMESET
 			}
 		}
@@ -2174,14 +2240,14 @@ return function ()
 				"enemy_memory_renegade_captain_reinforcements",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				25
 			},
 			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
+				"user_memory",
+				"enemy_memory_renegade_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				1
 			}
 		},
 		on_done = {
@@ -2189,20 +2255,15 @@ return function ()
 				"user_memory",
 				"enemy_memory_renegade_captain_reinforcements",
 				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
-				OP.TIMESET
 			}
 		}
 	})
 	define_rule({
 		name = "renegade_captain_taunt",
-		category = "enemy_vo_prio_0",
-		wwise_route = 7,
+		wwise_route = 39,
 		response = "renegade_captain_taunt",
 		database = "enemy_vo",
+		category = "enemy_vo_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -2225,16 +2286,9 @@ return function ()
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt",
-				OP.EQ,
+				OP.GTEQ,
 				OP.GT,
 				0
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
 			}
 		},
 		on_done = {
@@ -2243,16 +2297,14 @@ return function ()
 				"enemy_memory_renegade_captain_taunt",
 				OP.ADD,
 				"1"
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
-				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2
+				duration = 0.5
 			}
 		}
 	})
@@ -2286,11 +2338,11 @@ return function ()
 				"enemy_memory_renegade_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				35
 			},
 			{
 				"user_memory",
-				"faction_memory_renegade_captain_taunt",
+				"enemy_memory_renegade_captain_taunt",
 				OP.GT,
 				OP.GT,
 				0
@@ -2301,11 +2353,11 @@ return function ()
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt_combat",
 				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_renegade_captain",
-				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 2
 			}
 		}
 	})

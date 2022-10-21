@@ -138,10 +138,9 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 	local font_size = 24
 	local font_type = "arial"
 	local _, _, font_max_y = UIFonts.font_height(gui, font_type, font_size)
-	local box_size = {
-		1000,
-		math.abs(font_max_y)
-	}
+	local box_w = 1000
+	local box_half_w = box_w * 0.5
+	local box_size = Vector2(box_w, math.abs(font_max_y))
 	local text_color_table = {
 		255,
 		255,
@@ -149,9 +148,9 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 		255
 	}
 	local text_options = {
-		"horizontal_align_center",
-		"vertical_align_bottom",
-		"shadow"
+		shadow = true,
+		horizontal_alignment = Gui.HorizontalAlignRight,
+		vertical_alignment = Gui.VerticalAlignBottom
 	}
 	font_size = math.floor(16 * scale)
 	local title_text = GameParameters.watermark_overlay_text or ""
@@ -187,18 +186,18 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 
 				temp_position[1] = start_pos_x + temp_size[1] * (x - 1)
 
-				UIRenderer.draw_rect(ui_renderer, temp_position, temp_size, color)
+				UIRenderer.draw_rect(ui_renderer, Vector3(temp_position[1], temp_position[2], temp_position[3]), temp_size, color)
 			end
 		end
 
-		temp_position[1] = start_pos_x + qr_total_width * 0.5 - box_size[1] * 0.5
+		temp_position[1] = start_pos_x + qr_total_width * 0.5 - box_half_w
 		temp_position[2] = start_pos_y + qr_total_height
 
-		UIRenderer.draw_text(ui_renderer, title_text, font_size, font_type, temp_position, box_size, text_color_table, text_options)
+		UIRenderer.draw_text(ui_renderer, title_text, font_size, font_type, Vector3(temp_position[1], temp_position[2], temp_position[3]), box_size, text_color_table, text_options)
 
 		temp_position[2] = temp_position[2] + 25
 
-		UIRenderer.draw_text(ui_renderer, description_text, font_size, font_type, temp_position, box_size, text_color_table, text_options)
+		UIRenderer.draw_text(ui_renderer, description_text, font_size, font_type, Vector3(temp_position[1], temp_position[2], temp_position[3]), box_size, text_color_table, text_options)
 	end
 end
 

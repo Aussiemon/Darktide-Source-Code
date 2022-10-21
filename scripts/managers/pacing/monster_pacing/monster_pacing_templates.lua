@@ -3,9 +3,6 @@ local monster_pacing_templates = {}
 local function _create_monster_pacing_template_entry(path)
 	local monster_template = require(path)
 	local name = monster_template.name
-
-	fassert(name, "[MonsterPacingTemplates] Missing name field in %q.", path)
-
 	monster_pacing_templates[name] = monster_template
 end
 

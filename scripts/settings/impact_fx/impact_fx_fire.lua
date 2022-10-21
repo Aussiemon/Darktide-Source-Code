@@ -6,12 +6,10 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal = {
 	extents = {
 		min = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		},
 		max = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		}

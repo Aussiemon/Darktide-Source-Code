@@ -1,5 +1,6 @@
 local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local Promise = require("scripts/foundation/utilities/promise")
+local VotingManagerImmateriumPartyTestify = GameParameters.testify and require("scripts/managers/voting/voting_by_immaterium_party_impl_testify")
 
 local function _info(...)
 	Log.info("VotingManagerImmateriumParty", ...)
@@ -53,7 +54,9 @@ VotingManagerImmateriumParty.start_voting = function (self, template_name, param
 	local success, fail_reason = self:can_start_voting(template_name, params)
 
 	if not success then
-		return Promise.rejected(fail_reason)
+		return Promise.rejected({
+			fail_reason
+		})
 	end
 
 	local template = VotingTemplates[template_name]
@@ -104,6 +107,10 @@ VotingManagerImmateriumParty.can_cast_vote = function (self, voting_id, option, 
 	return true
 end
 
+VotingManagerImmateriumParty.current_vote = function (self)
+	return self:_current_vote()
+end
+
 VotingManagerImmateriumParty.cast_vote = function (self, voting_id, option)
 	local current_vote = self:_current_vote()
 	local success, fail_reason = self:can_cast_vote(voting_id, option, self:_get_myself():unique_id())
@@ -131,6 +138,10 @@ end
 VotingManagerImmateriumParty.update = function (self, dt, t)
 	if not Managers.party_immaterium then
 		return
+	end
+
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(VotingManagerImmateriumPartyTestify, self, true)
 	end
 
 	local current_vote = self:_current_vote()
@@ -173,6 +184,16 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 				if result == "approved" or result == "rejected" then
 					_info("Party Vote Completed: " .. result)
 					template.on_completed(vote_id, template, current_vote, result)
+
+					if DEDICATED_SERVER then
+						local votes = {}
+
+						for _, value in pairs(current_vote.votes) do
+							votes[value] = (votes[value] or 0) + 1
+						end
+
+						Managers.telemetry_events:vote_completed(template.name, result, votes)
+					end
 				else
 					_info("Party Vote Aborted: " .. result .. ":" .. abort_reason)
 					template.on_aborted(vote_id, template, current_vote.params, abort_reason)
@@ -207,7 +228,7 @@ end
 VotingManagerImmateriumParty.votes = function (self, voting_id)
 	local current_vote = self:_current_vote()
 
-	if self:_wrap_vote_id(current_vote.id == voting_id) then
+	if self:_wrap_vote_id(current_vote.id) == voting_id then
 		local result = {}
 
 		for k, v in pairs(current_vote.votes) do
@@ -278,7 +299,7 @@ VotingManagerImmateriumParty.is_host = function (self, voting_id)
 end
 
 VotingManagerImmateriumParty.complete_vote = function (self, voting_id)
-	assert(false, "Cant use complete_vote in immaterium_party")
+	return
 end
 
 return VotingManagerImmateriumParty

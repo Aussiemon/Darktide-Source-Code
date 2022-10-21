@@ -1,5 +1,6 @@
 local categories = {
 	"Abilities",
+	"Achievements",
 	"Action Input",
 	"Action",
 	"Animation",
@@ -7,8 +8,8 @@ local categories = {
 	"Backend",
 	"Blackboard",
 	"Bot Character",
-	"Breed",
 	"Breed Picker",
+	"Breed",
 	"Buffs",
 	"Camera",
 	"Capture Zone",
@@ -33,7 +34,6 @@ local categories = {
 	"Error",
 	"Event",
 	"Feature Info",
-	"Flamer",
 	"Framerate",
 	"Free Flight",
 	"Game Flow",
@@ -41,6 +41,7 @@ local categories = {
 	"Gameplay State",
 	"Groups",
 	"Health Station",
+	"Hit Mass",
 	"Horde Picker",
 	"Hordes",
 	"Hub",
@@ -51,6 +52,7 @@ local categories = {
 	"LegacyV2ProximitySystem",
 	"Level & Mission",
 	"Liquid Area",
+	"Liquid Beam",
 	"Loading",
 	"Localization",
 	"Locomotion",
@@ -61,10 +63,9 @@ local categories = {
 	"Minions",
 	"Misc",
 	"Mission Objectives",
-	"Mood",
 	"Monsters",
+	"Mood",
 	"Moveable Platform",
-	"Wwise States",
 	"Mutant Charger",
 	"Navigation",
 	"Netgunner",
@@ -83,29 +84,32 @@ local categories = {
 	"Projectile Locomotion",
 	"Projectile",
 	"ProximitySystem",
+	"Push",
 	"QA",
 	"Respawn",
 	"Roamers",
 	"Script Components",
 	"Shading Environment",
-	"Smart Targeting",
 	"Smart Tagging",
+	"Smart Targeting",
 	"Social Features",
 	"Specials",
 	"Stagger",
 	"Stories",
 	"Sweep Spline",
+	"Talents",
 	"Terror Event",
 	"Time Scaling",
 	"UI",
 	"Version Info",
 	"Volume",
-	"Weapon",
 	"Weapon Aim Assist",
 	"Weapon Effects",
 	"Weapon Handling",
 	"Weapon Traits",
 	"Weapon Variables",
+	"Weapon",
+	"Wwise States",
 	"Wwise"
 }
 
@@ -216,7 +220,8 @@ local _debug_text_font_options = {
 	"content/ui/fonts/proxima_nova_bold",
 	"content/ui/fonts/darktide_custom_regular",
 	"content/ui/fonts/friz_quadrata",
-	"content/ui/fonts/rexlia"
+	"content/ui/fonts/rexlia",
+	"content/ui/fonts/machine_medium"
 }
 
 table.array_remove_if(_debug_text_font_options, function (font)
@@ -324,23 +329,27 @@ params.enable_commendations = {
 	value = true,
 	category = "Backend"
 }
+params.backend_debug_log = {
+	value = false,
+	category = "Backend"
+}
+params.backend_telemetry_enable = {
+	value = false,
+	category = "Backend"
+}
 params.backend_telemetry_debug = {
 	value = false,
 	category = "Backend"
 }
 params.backend_telemetry_service_url = {
-	value = "https://telemetry-utvxrq72na-ez.a.run.app/events",
+	value = "https://telemetry.fatsharkgames.com/events",
 	category = "Backend"
 }
-params.backend_debug_log = {
-	value = false,
-	category = "Backend"
-}
-params.enable_chat_hud = {
+params.verbose_chat_log = {
 	value = false,
 	category = "Chat"
 }
-params.verbose_chat_log = {
+params.disable_chat = {
 	value = false,
 	category = "Chat"
 }
@@ -404,6 +413,18 @@ params.debug_pickup_picker_font_size = {
 	value = 22,
 	category = "Pickup Picker"
 }
+params.debug_hit_mass = {
+	value = false,
+	category = "Hit Mass"
+}
+params.debug_lunge_hit_mass = {
+	value = false,
+	category = "Hit Mass"
+}
+params.debug_print_wwise_hit_mass = {
+	value = false,
+	category = "Hit Mass"
+}
 params.debug_horde_picker_selected_name = {
 	value = "",
 	hidden = true,
@@ -432,6 +453,30 @@ params.debug_pickup_spawners = {
 params.show_spawned_pickups = {
 	value = false,
 	category = "Pickups"
+}
+params.projectile_aim_disable_aim_offset = {
+	value = false,
+	category = "Projectile Locomotion"
+}
+params.debug_projectile_aim = {
+	value = false,
+	category = "Projectile Locomotion"
+}
+params.projectile_aim_time_step_multiplier = {
+	value = 1,
+	category = "Projectile Locomotion"
+}
+params.projectile_aim_max_steps = {
+	value = 500,
+	category = "Projectile Locomotion"
+}
+params.projectile_aim_max_number_of_bounces = {
+	value = 10,
+	category = "Projectile Locomotion"
+}
+params.disable_projectile_collision = {
+	value = false,
+	category = "Projectile Locomotion"
 }
 params.debug_projectile_locomotion_aiming = {
 	value = false,
@@ -826,6 +871,18 @@ params.debug_sliding_character_state = {
 	value = false,
 	category = "Player Character"
 }
+params.debug_likely_stuck = {
+	value = false,
+	category = "Player Character"
+}
+params.disable_likely_stuck_implementation = {
+	value = false,
+	category = "Player Character"
+}
+params.debug_push_velocity = {
+	value = false,
+	category = "Player Character"
+}
 params.debug_wwise_states = {
 	value = false,
 	category = "Wwise States"
@@ -954,7 +1011,7 @@ params.debug_wwise_states_override_h_combat_effects = {
 		"horde"
 	},
 	on_value_set = function (new_value, old_value)
-		Managers.wwise_game_sync:debug_set_override_state("sfx_combat", new_value)
+		Managers.wwise_game_sync:debug_set_override_state("minion_aggro_intensity", new_value)
 	end
 }
 params.debug_wwise_states_override_i_options = {
@@ -994,10 +1051,6 @@ params.no_ability_cooldowns = {
 			RPC.rpc_debug_client_request_no_ability_cooldowns(channel, new_value)
 		end
 	end
-}
-params.debug_lunge_hit_mass = {
-	value = false,
-	category = "Abilities"
 }
 params.debug_bots = {
 	value = false,
@@ -1174,10 +1227,6 @@ params.use_bass_boost = {
 		end
 	end
 }
-params.debug_print_wwise_hit_mass = {
-	value = false,
-	category = "Wwise"
-}
 params.debug_draw_closest_point_on_line_sounds = {
 	value = false,
 	category = "Wwise"
@@ -1272,6 +1321,10 @@ params.debug_pathfinder_queue = {
 	category = "Navigation"
 }
 params.draw_smartobject_fails = {
+	value = false,
+	category = "Navigation"
+}
+params.debug_nav_tag_volume_creation_times = {
 	value = false,
 	category = "Navigation"
 }
@@ -1432,6 +1485,14 @@ params.show_minion_anim_event = {
 	value = false,
 	category = "Animation"
 }
+params.show_minion_anim_event_history = {
+	value = false,
+	category = "Animation"
+}
+params.minion_anim_event_history_count = {
+	value = 10,
+	category = "Animation"
+}
 params.debug_minion_animation_logging = {
 	value = false,
 	category = "Animation"
@@ -1565,7 +1626,15 @@ params.debug_sweep_stickyness = {
 	value = false,
 	category = "Action"
 }
+params.draw_chain_lightning_targeting_action_module = {
+	value = false,
+	category = "Action"
+}
 params.draw_closest_targeting_action_module = {
+	value = false,
+	category = "Action"
+}
+params.debug_print_action_combo = {
 	value = false,
 	category = "Action"
 }
@@ -1748,7 +1817,12 @@ params.debug_minion_wounds_shape = {
 }
 params.debug_minion_gibbing = {
 	value = false,
-	category = "Minions"
+	category = "Minions",
+	on_value_set = function (new_value, old_value)
+		if new_value ~= old_value then
+			Debug:clear_world_text("minion_gibbing")
+		end
+	end
 }
 params.debug_disable_minion_stagger = {
 	value = false,
@@ -1885,6 +1959,10 @@ params.calculate_offset_from_peeking_to_aiming_in_cover = {
 	value = false,
 	category = "Minions"
 }
+params.kill_debug_spawned_minions_outside_navmesh = {
+	value = true,
+	category = "Minions"
+}
 params.debug_stats = {
 	value = false,
 	category = "Misc"
@@ -1906,6 +1984,18 @@ params.allow_server_control_from_client = {
 	category = "Misc"
 }
 params.debug_idle_fullbody_animation_variable = {
+	value = false,
+	category = "Misc"
+}
+params.use_screen_timestamp = {
+	value = false,
+	category = "Misc"
+}
+params.store_callstack_on_delete = {
+	value = false,
+	category = "Misc"
+}
+params.disable_server_metrics_prints = {
 	value = false,
 	category = "Misc"
 }
@@ -1994,9 +2084,9 @@ params.debug_daemonhost = {
 	value = false,
 	category = "Daemonhost"
 }
-params.debug_flamer = {
+params.debug_liquid_beam = {
 	value = false,
-	category = "Flamer"
+	category = "Liquid Beam"
 }
 params.debug_covers = {
 	value = false,
@@ -2014,15 +2104,19 @@ params.debug_auto_kill_corruptor_pustules = {
 	value = false,
 	category = "Corruptors"
 }
-params.debug_roamer_population = {
+params.debug_roamer_pacing = {
 	value = false,
 	category = "Roamers"
 }
-params.disable_roamer_population = {
+params.disable_roamer_pacing = {
 	value = false,
 	category = "Roamers"
 }
 params.debug_patrols = {
+	value = false,
+	category = "Roamers"
+}
+params.disable_cultists = {
 	value = false,
 	category = "Roamers"
 }
@@ -2043,6 +2137,10 @@ params.debug_horde_pacing = {
 	category = "Hordes"
 }
 params.debug_groups = {
+	value = false,
+	category = "Groups"
+}
+params.debug_group_sfx = {
 	value = false,
 	category = "Groups"
 }
@@ -2104,6 +2202,7 @@ params.debug_pacing = {
 }
 params.disable_pacing = {
 	value = false,
+	name = "disable_pacing, Keybind: L-SHIFT + X",
 	category = "Pacing",
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
@@ -2235,21 +2334,22 @@ params.hide_hud_world_markers = {
 	value = false,
 	category = "Hud"
 }
+local SHOW_INFO = BUILD == "dev" or BUILD == "debug"
 params.render_version_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_build_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_engine_revision_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_content_revision_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_backend_url = {
 	value = false,
@@ -2301,7 +2401,7 @@ params.show_main_objective_type = {
 }
 params.show_num_hub_players = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_unique_instance_id = {
 	value = true,
@@ -2317,7 +2417,7 @@ params.show_deployment_id = {
 }
 params.show_camera_position_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_camera_rotation_info = {
 	value = false,
@@ -2325,19 +2425,19 @@ params.show_camera_rotation_info = {
 }
 params.show_player_1p_position_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_player_3p_position_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_mechanism_name = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_network_info = {
 	category = "Version Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.show_progression_info = {
 	value = false,
@@ -2365,7 +2465,7 @@ params.show_vo_story_stage_info = {
 }
 params.render_feature_info = {
 	category = "Feature Info",
-	value = BUILD == "dev" or BUILD == "debug"
+	value = SHOW_INFO
 }
 params.perfhud_artist = {
 	value = false,
@@ -2476,35 +2576,35 @@ params.perfhud_network_messages = {
 	value = false,
 	category = "PerfHud",
 	on_value_set = function (new_value)
-		Application.console_command("perfhud", "network", "network_messages")
+		Application.console_command("perfhud", "network_messages")
 	end
 }
 params.perfhud_network_peers = {
 	value = false,
 	category = "PerfHud",
 	on_value_set = function (new_value)
-		Application.console_command("perfhud", "network", "network_peers")
+		Application.console_command("perfhud", "network_peers")
 	end
 }
 params.perfhud_network_peers_bytes = {
 	value = false,
 	category = "PerfHud",
 	on_value_set = function (new_value)
-		Application.console_command("perfhud", "network", "network_peers", "bytes")
+		Application.console_command("perfhud", "network_peers", "bytes")
 	end
 }
 params.perfhud_network_peers_kbps = {
 	value = false,
 	category = "PerfHud",
 	on_value_set = function (new_value)
-		Application.console_command("perfhud", "network", "network_peers", "kbps")
+		Application.console_command("perfhud", "network_peers", "kbps")
 	end
 }
 params.perfhud_network_ping = {
 	value = false,
 	category = "PerfHud",
 	on_value_set = function (new_value)
-		Application.console_command("perfhud", "network", "network_ping")
+		Application.console_command("perfhud", "network_ping")
 	end
 }
 params.perfhud_texture_streaming = {
@@ -2534,6 +2634,10 @@ params.perfhud_backend_server = {
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "backend", "server")
 	end
+}
+params.ui_developer_mode = {
+	value = false,
+	category = "UI"
 }
 params.ui_debug_3d_rendering = {
 	value = false,
@@ -3064,10 +3168,6 @@ params.debug_draw_projectiles = {
 	value = false,
 	category = "Projectile"
 }
-params.debug_draw_projectiles_stikyness = {
-	value = false,
-	category = "Projectile"
-}
 params.debug_projectile_penetration = {
 	value = false,
 	category = "Projectile"
@@ -3079,6 +3179,14 @@ params.debug_draw_projectile_aiming = {
 params.debug_projectile_husk_interpolation = {
 	value = false,
 	category = "Projectile"
+}
+params.debug_draw_ballistic_raycast = {
+	value = false,
+	category = "Projectile"
+}
+params.debug_push_attacks = {
+	value = false,
+	category = "Push"
 }
 params.debug_script_components = {
 	value = false,
@@ -3115,6 +3223,21 @@ params.disable_game_end_conditions = {
 params.debug_end_zone_conditions = {
 	value = false,
 	category = "Game Mode"
+}
+params.disable_achievement_backend_update = {
+	value = false,
+	category = "Achievements",
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_disable_achievement_backend_update(channel, new_value)
+		end
+	end
 }
 params.debug_shading_environment = {
 	value = false,
@@ -3392,11 +3515,19 @@ params.debug_use_local_social_backend = {
 	value = false,
 	category = "Social Features"
 }
+params.use_localized_talent_names_in_debug_menu = {
+	value = false,
+	category = "Talents"
+}
 params.always_max_overheat = {
 	value = false,
 	category = "Weapon"
 }
 params.debug_allow_full_magazine_reload = {
+	value = false,
+	category = "Weapon"
+}
+params.debug_reload_state = {
 	value = false,
 	category = "Weapon"
 }
@@ -3417,6 +3548,10 @@ params.debug_show_weapon_charge_level = {
 	category = "Weapon"
 }
 params.debug_weapon_special = {
+	value = false,
+	category = "Weapon"
+}
+params.debug_shooting_status = {
 	value = false,
 	category = "Weapon"
 }
@@ -3472,6 +3607,10 @@ params.debug_alternate_fire = {
 	value = false,
 	category = "Weapon"
 }
+params.debug_chain_lightning = {
+	value = false,
+	category = "Weapon"
+}
 params.debug_aim_assist = {
 	value = false,
 	category = "Weapon Aim Assist"
@@ -3487,6 +3626,10 @@ params.enable_mouse_and_keyboard_aim_assist = {
 params.visualize_aim_assist_trajectory = {
 	value = false,
 	category = "Weapon Aim Assist"
+}
+params.debug_sticky_effects = {
+	value = false,
+	category = "Weapon Effects"
 }
 params.debug_plasmagun_overheat_effects = {
 	value = false,
@@ -3540,6 +3683,10 @@ params.weapon_traits_randomization_step = {
 	category = "Weapon Traits"
 }
 params.weapon_traits_testify = {
+	value = false,
+	category = "Weapon Traits"
+}
+params.use_localized_weapon_trait_names_in_debug_menu = {
 	value = false,
 	category = "Weapon Traits"
 }
@@ -3615,6 +3762,24 @@ params.debug_moods = {
 	value = false,
 	category = "Mood"
 }
+params.mood_override = {
+	value = false,
+	category = "Mood",
+	options_function = function ()
+		local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
+		local mood_types = MoodSettings.mood_types
+		local options = {}
+
+		for mood_type, _ in pairs(mood_types) do
+			options[#options + 1] = mood_type
+		end
+
+		table.sort(options)
+		table.insert(options, 1, false)
+
+		return options
+	end
+}
 params.disable_impact_vfx = {
 	value = false,
 	category = "Damage Interface"
@@ -3658,11 +3823,11 @@ params.surface_effect_material_override = {
 		return options
 	end
 }
-params.enable_no_surface_effect_material_fallback = {
+params.debug_draw_missing_surface_materials = {
 	value = false,
 	category = "Damage Interface"
 }
-params.debug_draw_missing_surface_materials = {
+params.debug_draw_shotshell_impacts = {
 	value = false,
 	category = "Damage Interface"
 }
@@ -3783,6 +3948,15 @@ params.use_far_third_person_camera = {
 	value = false,
 	category = "Camera"
 }
+params.override_1p_camera_movement_offset = {
+	value = false,
+	category = "Camera"
+}
+params.override_1p_camera_movement_offset_lerp = {
+	value = 1,
+	category = "Camera",
+	num_decimals = 2
+}
 params.free_flight_follow_path_speed = {
 	value = 7.4,
 	num_decimals = 1,
@@ -3853,12 +4027,8 @@ params.debug_focal_scale = {
 	category = "Stories"
 }
 params.skip_prologue = {
-	value = true,
-	category = "Game Flow"
-}
-params.force_prologue = {
-	value = false,
-	category = "Game Flow"
+	category = "Game Flow",
+	value = BUILD ~= "release"
 }
 params.debug_ledge_finder_rays = {
 	value = false,
@@ -3971,11 +4141,14 @@ params.stall_warnings_enabled = {
 		Application.set_stall_warnings_enabled(new_value)
 	end
 }
-params.debug_draw_material_query = {
-	value = false
-}
 params.debug_material_queries = {
-	value = false
+	value = false,
+	options = {
+		false,
+		"both",
+		"succeeded",
+		"failed"
+	}
 }
 params.networked_flow_state = {
 	value = false
@@ -3996,7 +4169,7 @@ for param, config in pairs(params) do
 	local category = config.category
 
 	if category then
-		fassert(table.contains(categories, category), "Development Parameter %q has undefined category %q!", param, category)
+		-- Nothing
 	end
 end
 

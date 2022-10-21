@@ -22,7 +22,6 @@ local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 damage_templates.default_autopistol_assault = {
 	stagger_category = "killshot",
-	gibbing_power = 0,
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 35,
@@ -99,6 +98,7 @@ damage_templates.default_autopistol_assault = {
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.autogun,
 	damage_type = damage_types.auto_bullet,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.ballistic,
 	suppression_attack_delay = {
 		0.05,
@@ -134,7 +134,6 @@ damage_templates.default_autopistol_assault = {
 }
 damage_templates.default_autopistol_snp = {
 	stagger_category = "killshot",
-	gibbing_power = 0,
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 35,
@@ -211,6 +210,7 @@ damage_templates.default_autopistol_snp = {
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.autogun,
 	damage_type = damage_types.auto_bullet,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.ballistic,
 	suppression_attack_delay = {
 		0.05,

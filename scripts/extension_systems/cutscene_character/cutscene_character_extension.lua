@@ -12,6 +12,8 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 	self._breed_name = "none"
 	self._player_unique_id = nil
 	self._prop_items = {}
+	self._resource_list = {}
+	self._packages_loading = 0
 end
 
 CutsceneCharacterExtension.destroy = function (self)
@@ -132,18 +134,54 @@ CutsceneCharacterExtension._set_loadout = function (self, items)
 end
 
 CutsceneCharacterExtension.has_player_assigned = function (self)
-	return self._player_unique_id ~= nil
+	return self._player_unique_id ~= nil or self._packages_loading > 0
+end
+
+CutsceneCharacterExtension._on_package_loaded = function (self, player_unique_id, items, id)
+	self._resource_list[id] = true
+	self._packages_loading = self._packages_loading - 1
+
+	if self._packages_loading == 0 then
+		if self:_set_loadout(items) then
+			self._player_unique_id = player_unique_id
+		else
+			local package_manager = Managers.package
+
+			for package_id, _ in pairs(self._resource_list) do
+				package_manager:release(package_id)
+			end
+		end
+	end
 end
 
 CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique_id, items)
-	if self:_set_loadout(items) then
-		self._player_unique_id = player_unique_id
+	local on_load_callback = callback(self, "_on_package_loaded", player_unique_id, items)
+	local profile = Managers.player:player_from_unique_id(player_unique_id):profile()
+	local package_manager = Managers.package
+	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
+	local packages = package_synchronizer_client:resolve_profile_packages(profile)
+
+	for alias, package_data in pairs(packages) do
+		for package, _ in pairs(package_data.dependencies) do
+			local id = package_manager:load(package, "CutsceneCharacterExtension", on_load_callback, true)
+			self._resource_list[id] = false
+			self._packages_loading = self._packages_loading + 1
+		end
 	end
 end
 
 CutsceneCharacterExtension.unassign_player_loadout = function (self)
 	if self:_clear_loadout() then
+		local package_manager = Managers.package
+
+		for id, _ in pairs(self._resource_list) do
+			package_manager:release(id)
+		end
+
+		table.clear(self._resource_list)
+
 		self._player_unique_id = nil
+		self._packages_loading = 0
 	end
 end
 

@@ -39,15 +39,10 @@ BoneLodManager.unregister_unit = function (self, registration_id)
 end
 
 BoneLodManager.register_bone_lod_viewport = function (self, viewport)
-	fassert(self._bone_lod_viewport == nil, "[BoneLodManager] A viewport has already been registered.")
-
 	self._bone_lod_viewport = viewport
 end
 
 BoneLodManager.unregister_bone_lod_viewport = function (self, viewport)
-	fassert(self._bone_lod_viewport, "[BoneLodManager] No viewport has been registered.")
-	fassert(self._bone_lod_viewport == viewport, "[BoneLodManager] Trying to unregister a different viewport.")
-
 	self._bone_lod_viewport = nil
 end
 

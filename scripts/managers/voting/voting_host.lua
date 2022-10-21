@@ -42,8 +42,6 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 		local initial_vote_option = initial_votes_by_peer[peer_id]
 
 		if initial_vote_option then
-			fassert(self:has_option(initial_vote_option), "Initial voting option %q not found", initial_vote_option)
-
 			self._votes[peer_id] = initial_vote_option
 			initial_votes_list[i] = NetworkLookup.voting_options[initial_vote_option]
 
@@ -129,9 +127,18 @@ VotingHost.on_member_left = function (self, peer_id)
 	_info("Voting member %s left voting %q", peer_id, self._voting_id)
 end
 
-VotingHost.on_voting_aborted = function (self, reason)
+VotingHost.on_voting_aborted = function (self, reason, disconnected_peer_id)
 	self._state = STATES.aborted
 	self._abort_reason = reason
+
+	if disconnected_peer_id then
+		local member_list = self._member_list
+		local index = table.index_of(member_list, disconnected_peer_id)
+
+		table.remove(member_list, index)
+
+		self._votes[disconnected_peer_id] = nil
+	end
 
 	self:_send_rpc_members("rpc_voting_aborted", self._voting_id, reason)
 	_info("Voting %q aborted, reason: %s", self._voting_id, reason)

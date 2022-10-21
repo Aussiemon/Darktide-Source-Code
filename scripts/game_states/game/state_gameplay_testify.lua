@@ -5,6 +5,8 @@ local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local PlayerVisibility = require("scripts/utilities/player_visibility")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
@@ -13,7 +15,9 @@ local WeaponTraitsRangedExplosive = require("scripts/settings/equipment/weapon_t
 local WeaponTraitsRangedHighFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
 local WeaponTraitsRangedOverheat = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
 local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
-local GibbingPower = GibbingSettings.gibbing_power
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local gibbing_power = GibbingSettings.gibbing_power
+local level_trigger_event = Level.trigger_event
 local melee_damage_type_index = 1
 local melee_damage_types = {
 	"blunt_thunder",
@@ -49,6 +53,7 @@ local ranged_damage_types = {
 	"pellet",
 	"plasma",
 	"rippergun_pellet",
+	"rippergun_flechette",
 	"shell",
 	"smite",
 	"biomancer_soul",
@@ -220,7 +225,7 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "laser"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 1500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
 	hit_minion_with_melee_weapon_special_attack = function (params, _)
@@ -233,7 +238,7 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "metal_slashing_heavy"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 1500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
 	hit_minion_with_plasmagun_attack = function (params, _)
@@ -246,7 +251,7 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "plasma"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 1500, "charge_level", 1, "dropoff_scalar", 0, "attack_direction", Vector3(1, 0, 0), "instakill", false, "hit_zone_name", "head", "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", player_unit, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "attack_direction", Vector3(1, 0, 0), "instakill", false, "hit_zone_name", "head", "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", player_unit, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
 	hit_minion_with_warp_charge_explosion = function (params, _)
@@ -255,12 +260,11 @@ local StateGameplayTestify = {
 		local hit_position = POSITION_LOOKUP[unit]
 		local world = Managers.world:world("level_world")
 		local physics_world = World.physics_world(world)
-		local power_level = 1500
 		local charge_level = 1
 		local attack_type = AttackSettings.attack_types.explosion
 		local explosion_template = ExplosionTemplates.default_force_staff_demolition
 
-		Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), player_unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 	end,
 	apply_select_traits = function (params)
 		local player = params.player
@@ -304,11 +308,15 @@ local StateGameplayTestify = {
 			local gib_settings = parameters.gib_settings
 			local damage_profile = table.clone(DamageProfileTemplates.minion_instakill)
 			damage_profile.gibbing_type = gibbing_type
-			damage_profile.gibbing_power = gib_settings.gibbing_threshold or GibbingPower.always
+			damage_profile.gibbing_power = gib_settings.gibbing_threshold or gibbing_power.always
 			local hit_zone_name = parameters.hit_zone_name
 
 			Attack.execute(unit, damage_profile, "hit_zone_name", hit_zone_name, "instakill", true)
 		end
+	end,
+	hide_players = function ()
+		Log.info("StateGameplayTestify", "Hiding players")
+		PlayerVisibility.hide_players()
 	end,
 	load_mission = function (mission_key, _)
 		FlowCallbacks.load_mission({
@@ -322,6 +330,13 @@ local StateGameplayTestify = {
 		Managers.telemetry_events:memory_usage(mission_name, index, memory_usage)
 		Testify:respond_to_request("memory_usage")
 	end,
+	play_cutscene = function (cutscene_name)
+		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)
+
+		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+		cinematic_scene_system:play_cutscene(cutscene_name)
+	end,
 	send_lua_trace_statistics_to_telemetry = function (lua_trace_data, state_gameplay)
 		local mission_name = Managers.state.mission:mission_name()
 		local index = lua_trace_data.index
@@ -329,6 +344,10 @@ local StateGameplayTestify = {
 
 		Managers.telemetry_events:lua_trace_stats(mission_name, index, lua_trace_stats)
 		Testify:respond_to_request("send_lua_trace_statistics_to_telemetry")
+	end,
+	show_players = function ()
+		Log.info("StateGameplayTestify", "Showing players")
+		PlayerVisibility.show_players()
 	end,
 	start_measuring_performance = function (_, state_gameplay)
 		state_gameplay:init_performance_reporter()
@@ -377,6 +396,10 @@ local StateGameplayTestify = {
 		os.execute("mkdir -p " .. "\"" .. output_dir .. "\"")
 		FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype)
 	end,
+	trigger_external_event = function (event_name)
+		Log.info("StateGameplayTestify", "Triggering external event %s", event_name)
+		level_trigger_event(Managers.state.mission:mission_level(), event_name)
+	end,
 	unit_health_values = function (unit, _)
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
@@ -390,6 +413,24 @@ local StateGameplayTestify = {
 				current_health = "na",
 				max_health = "na"
 			}
+		end
+	end,
+	wait_for_cutscene_to_finish = function (cutscene_name)
+		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
+
+		if is_cinematic_active then
+			return Testify.RETRY
+		end
+
+		Log.info("StateGameplayTestify", "Cutscene %s has finished playing", cutscene_name)
+	end,
+	wait_for_cutscene_to_start = function (cutscene_name)
+		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
+
+		if not is_cinematic_active then
+			return Testify.RETRY
 		end
 	end,
 	wait_for_state_gameplay_reached = function (_, _)

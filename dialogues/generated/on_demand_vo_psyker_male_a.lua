@@ -40,9 +40,9 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__com_wheel_vo_follow_you_06"
 		},
 		sound_events_duration = {
-			1.122375,
-			1.263438,
-			0.937896,
+			1.122354,
+			1.263417,
+			0.937875,
 			0.891229,
 			1.293854,
 			1.568042
@@ -62,11 +62,11 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			2.802958,
-			2.628875,
+			2.628854,
 			2.199583,
 			2.577771,
 			1.455042,
-			1.631458
+			1.631438
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -120,11 +120,11 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.105625,
-			1.145396,
+			1.145375,
 			1.472583,
-			1.133167,
+			1.133146,
 			1.024729,
-			1.259354
+			1.259333
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -148,8 +148,8 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__com_wheel_vo_need_health_06"
 		},
 		sound_events_duration = {
-			1.378333,
-			0.889146,
+			1.378313,
+			0.889125,
 			0.984333,
 			1.1175,
 			1.697104,
@@ -177,8 +177,8 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__com_wheel_vo_need_that_06"
 		},
 		sound_events_duration = {
-			0.853646,
-			1.120521,
+			0.853625,
+			1.1205,
 			0.707292,
 			0.918,
 			1.178,
@@ -228,11 +228,11 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.130813,
-			1.153333,
-			0.986813,
-			1.2715,
-			1.097979,
-			1.190583
+			1.153313,
+			0.986792,
+			1.271479,
+			1.097958,
+			1.190563
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -260,8 +260,8 @@ local on_demand_vo_psyker_male_a = {
 			1.540729,
 			0.929229,
 			0.804667,
-			1.169875,
-			1.279542
+			1.169854,
+			1.279521
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -286,11 +286,11 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			0.919479,
-			0.870396,
+			0.870375,
 			1.140938,
 			1.125729,
 			1.079167,
-			0.995417
+			0.995396
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -299,6 +299,58 @@ local on_demand_vo_psyker_male_a = {
 			0.1666667,
 			0.1666667,
 			0.1666667
+		},
+		randomize_indexes = {}
+	},
+	response_for_seen_enemy_netgunner_flee = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__response_for_seen_netgunner_flee_07"
+		},
+		sound_events_duration = {
+			[1.0] = 2.891458
+		},
+		sound_event_weights = {
+			[1.0] = 1
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__smart_tag_vo_enemy_berserker_01",
+			"loc_psyker_male_a__smart_tag_vo_enemy_berserker_02",
+			"loc_psyker_male_a__smart_tag_vo_enemy_berserker_03",
+			"loc_psyker_male_a__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			0.908708,
+			0.952563,
+			0.936729,
+			1.079667
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_captain = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_01",
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_02",
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_03",
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_04",
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_05",
+			"loc_psyker_male_a__smart_tag_vo_enemy_captain_06"
+		},
+		sound_events_duration = {
+			1.426833,
+			1.605771,
+			1.845667,
+			1.93675,
+			2.266313,
+			3.151104
 		},
 		randomize_indexes = {}
 	},
@@ -317,9 +369,9 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			0.582729,
-			0.720833,
+			0.720813,
 			1.122417,
-			1.156771,
+			1.15675,
 			0.778083,
 			0.785333,
 			0.894167,
@@ -347,7 +399,7 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_chaos_mutant_charger_04"
 		},
 		sound_events_duration = {
-			0.905979,
+			0.905958,
 			1.004208,
 			0.9515,
 			0.966875
@@ -370,7 +422,7 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_chaos_ogryn_armored_executor_04"
 		},
 		sound_events_duration = {
-			0.960521,
+			0.9605,
 			1.150958,
 			1.084104,
 			1.097646
@@ -418,7 +470,7 @@ local on_demand_vo_psyker_male_a = {
 		sound_events_duration = {
 			0.838917,
 			1.066458,
-			0.74175,
+			0.741771,
 			0.913604
 		},
 		sound_event_weights = {
@@ -439,9 +491,9 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_chaos_poxwalker_bomber_04"
 		},
 		sound_events_duration = {
-			1.300625,
+			1.300604,
 			1.290146,
-			1.212667,
+			1.212646,
 			1.481063
 		},
 		sound_event_weights = {
@@ -462,7 +514,7 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_cultist_flamer_04"
 		},
 		sound_events_duration = {
-			1.158833,
+			1.158813,
 			1.138583,
 			1.169854,
 			0.955479
@@ -479,10 +531,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_cultist_grenadier_04"
 		},
 		sound_events_duration = {
-			0.919125,
-			0.899875,
+			0.919104,
+			0.899854,
 			1.053938,
-			1.111813
+			1.111792
 		},
 		sound_event_weights = {
 			0.25,
@@ -505,7 +557,7 @@ local on_demand_vo_psyker_male_a = {
 			1.145542,
 			1.200479,
 			0.802333,
-			0.996979
+			0.996958
 		},
 		sound_event_weights = {
 			0.25,
@@ -525,10 +577,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_cultist_shocktrooper_04"
 		},
 		sound_events_duration = {
-			1.448917,
+			1.448896,
 			1.189958,
 			1.340396,
-			1.581479
+			1.581458
 		},
 		sound_event_weights = {
 			0.25,
@@ -561,6 +613,47 @@ local on_demand_vo_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_daemonhost_witch_not_alerted = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_a__seen_enemy_daemonhost_01",
+			"loc_psyker_male_a__seen_enemy_daemonhost_02",
+			"loc_psyker_male_a__seen_enemy_daemonhost_03",
+			"loc_psyker_male_a__seen_enemy_daemonhost_04",
+			"loc_psyker_male_a__seen_enemy_daemonhost_05",
+			"loc_psyker_male_a__seen_enemy_daemonhost_06",
+			"loc_psyker_male_a__seen_enemy_daemonhost_07",
+			"loc_psyker_male_a__seen_enemy_daemonhost_08",
+			"loc_psyker_male_a__seen_enemy_daemonhost_09",
+			"loc_psyker_male_a__seen_enemy_daemonhost_10"
+		},
+		sound_events_duration = {
+			1.903167,
+			1.899271,
+			1.634229,
+			1.137208,
+			3.038354,
+			2.023542,
+			3.190729,
+			3.131917,
+			2.224563,
+			2.668938
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -572,9 +665,9 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			0.875813,
-			0.899396,
+			0.899375,
 			0.754792,
-			0.761854
+			0.761833
 		},
 		sound_event_weights = {
 			0.25,
@@ -642,8 +735,8 @@ local on_demand_vo_psyker_male_a = {
 		sound_events_duration = {
 			1.307479,
 			1.205813,
-			1.281875,
-			1.279604
+			1.281854,
+			1.279583
 		},
 		sound_event_weights = {
 			0.25,
@@ -666,7 +759,7 @@ local on_demand_vo_psyker_male_a = {
 			1.333854,
 			1.290875,
 			1.252708,
-			1.029625
+			1.029604
 		},
 		sound_event_weights = {
 			0.25,
@@ -686,10 +779,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_enemy_traitor_scout_shocktrooper_04"
 		},
 		sound_events_duration = {
-			1.306646,
-			1.422771,
-			1.394,
-			1.543146
+			1.306625,
+			1.42275,
+			1.393979,
+			1.543125
 		},
 		sound_event_weights = {
 			0.25,
@@ -734,7 +827,7 @@ local on_demand_vo_psyker_male_a = {
 		sound_events_duration = {
 			0.823083,
 			0.718333,
-			0.722167,
+			0.722146,
 			0.778146
 		},
 		sound_event_weights = {
@@ -755,10 +848,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_battery_04"
 		},
 		sound_events_duration = {
-			1.089396,
+			1.089375,
 			1.147104,
-			1.214292,
-			1.140271
+			1.214271,
+			1.14025
 		},
 		sound_event_weights = {
 			0.25,
@@ -780,8 +873,8 @@ local on_demand_vo_psyker_male_a = {
 		sound_events_duration = {
 			1.516438,
 			1.285417,
-			1.46475,
-			1.248125
+			1.464729,
+			1.248104
 		},
 		sound_event_weights = {
 			0.25,
@@ -801,9 +894,9 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_control_rod_04"
 		},
 		sound_events_duration = {
-			1.309167,
+			1.309146,
 			1.365979,
-			1.353729,
+			1.353708,
 			1.390854
 		},
 		sound_event_weights = {
@@ -824,10 +917,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_deployed_ammo_crate_04"
 		},
 		sound_events_duration = {
-			1.18625,
+			1.186229,
 			1.053729,
 			1.082125,
-			1.306708
+			1.306688
 		},
 		sound_event_weights = {
 			0.25,
@@ -847,10 +940,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_deployed_medical_crate_04"
 		},
 		sound_events_duration = {
-			1.313208,
+			1.313188,
 			1.465542,
-			1.166583,
-			1.500604
+			1.166563,
+			1.500583
 		},
 		sound_event_weights = {
 			0.25,
@@ -870,9 +963,9 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_forge_metal_04"
 		},
 		sound_events_duration = {
-			1.215521,
-			1.109396,
-			1.082333,
+			1.2155,
+			1.109375,
+			1.082313,
 			1.251604
 		},
 		sound_event_weights = {
@@ -894,9 +987,9 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.268438,
-			1.313792,
-			1.33075,
-			1.476771
+			1.313771,
+			1.330729,
+			1.47675
 		},
 		sound_event_weights = {
 			0.25,
@@ -934,8 +1027,8 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.456938,
-			1.089542,
-			1.019563,
+			1.089521,
+			1.019542,
 			1.148229
 		},
 		randomize_indexes = {}
@@ -967,10 +1060,10 @@ local on_demand_vo_psyker_male_a = {
 			"loc_psyker_male_a__smart_tag_vo_pickup_side_mission_grimoire_04"
 		},
 		sound_events_duration = {
-			0.886083,
+			0.886063,
 			1.012354,
 			0.849917,
-			1.078354
+			1.078333
 		},
 		randomize_indexes = {}
 	},
@@ -985,9 +1078,50 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.190667,
-			1.322625,
-			1.167458,
-			1.471792
+			1.322604,
+			1.167438,
+			1.471771
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_seen_netgunner_flee = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_a__seen_netgunner_flee_01",
+			"loc_psyker_male_a__seen_netgunner_flee_02",
+			"loc_psyker_male_a__seen_netgunner_flee_03",
+			"loc_psyker_male_a__seen_netgunner_flee_04",
+			"loc_psyker_male_a__seen_netgunner_flee_05",
+			"loc_psyker_male_a__seen_netgunner_flee_06",
+			"loc_psyker_male_a__seen_netgunner_flee_07",
+			"loc_psyker_male_a__seen_netgunner_flee_08",
+			"loc_psyker_male_a__seen_netgunner_flee_09",
+			"loc_psyker_male_a__seen_netgunner_flee_10"
+		},
+		sound_events_duration = {
+			1.499021,
+			2.048833,
+			1.082583,
+			1.403292,
+			2.430521,
+			2.394,
+			1.521917,
+			1.688771,
+			3.697271,
+			2.213417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1002,7 +1136,7 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			0.953021,
-			1.029333,
+			1.029313,
 			0.990354,
 			1.194604
 		},
@@ -1021,7 +1155,7 @@ local on_demand_vo_psyker_male_a = {
 			1.773354,
 			1.801938,
 			1.220875,
-			1.610917
+			1.610938
 		},
 		sound_event_weights = {
 			0.25,
@@ -1044,11 +1178,11 @@ local on_demand_vo_psyker_male_a = {
 		},
 		sound_events_duration = {
 			1.272708,
-			1.406563,
-			1.41125,
+			1.406542,
+			1.411229,
 			1.168563,
-			1.770979,
-			1.120917
+			1.770958,
+			1.120896
 		},
 		sound_event_weights = {
 			0.1666667,

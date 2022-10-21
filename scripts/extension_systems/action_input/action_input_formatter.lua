@@ -36,9 +36,6 @@ ActionInputFormatter.format = function (action_input_type, templates, raw_inputs
 			network_lookup[num_action_inputs] = NO_ACTION_INPUT
 			network_lookup[NO_ACTION_INPUT] = num_action_inputs
 			num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
-
-			fassert(num_action_inputs <= max_action_inputs, "Too many action inputs defined for template (%s).", name)
-
 			local hierarchy_data = template.action_input_hierarchy
 
 			if hierarchy_data then
@@ -60,9 +57,6 @@ end
 
 function _read_action_inputs(name, action_inputs, sequences, network_lookup, total_num_action_inputs)
 	for action_input, data in pairs(action_inputs) do
-		fassert(action_input ~= NO_ACTION_INPUT, "Can't use %q as action_input name. Reserved by system.", action_input)
-		fassert(network_lookup[action_input] == nil, "Multiple action inputs with the same name %q", action_input)
-
 		local network_lookup_i = #network_lookup + 1
 		network_lookup[network_lookup_i] = action_input
 		network_lookup[action_input] = network_lookup_i
@@ -86,11 +80,7 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 			if inputs then
 				for j = 1, #inputs do
 					local sub_element = inputs[j]
-
-					fassert(sub_element.input, "no input defined in input sequence's inputs table for input %q in template %q", action_input, name)
 				end
-			else
-				fassert(element.input, "no input or inputs defined in input sequence for input %q in template %q", action_input, name)
 			end
 
 			config.elements[i] = element
@@ -108,8 +98,6 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 	local best_children_hierarchy_depth = nil
 
 	for action_input, children in pairs(hierarchy_data) do
-		fassert(sequences[action_input], "action_input_hierarchy refering to non-existant action_input %q", action_input)
-
 		if type(children) == "table" then
 			local child_hierarchy_depth = _read_hierarchy(children, sequences, hierarchy_depth)
 
@@ -119,9 +107,7 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 		else
 			local stay = children == "stay"
 			local base = children == "base"
-			local previous = children == "previous"
-
-			fassert(stay or base or previous, "Unknown hierarchy transition %q for action_input %q", tostring(children), action_input)
+			slot11 = children == "previous"
 		end
 	end
 

@@ -4,12 +4,23 @@ local StateMainMenuTestify = {}
 StateMainMenuTestify.create_random_character = function (_, state_main_menu)
 	Managers.time:register_timer("character_creation_timer", "main")
 
-	state_main_menu._character_create = CharacterCreate:new(state_main_menu._item_definitions)
+	local character_create = state_main_menu:new_character_create()
 
-	state_main_menu._character_create:set_name("Testify")
-	state_main_menu._character_create:upload_profile()
+	character_create:set_name("Testify")
 
-	state_main_menu._wait_for_character_profile_upload = true
+	local profile = character_create:profile()
+
+	for class_name, class_data in pairs(profile.archetype.specializations) do
+		if class_data.title and not class_data.disabled then
+			character_create:set_specialization(class_name)
+
+			break
+		end
+	end
+
+	character_create:randomize_backstory_properties()
+	character_create:upload_profile()
+	state_main_menu:set_wait_for_character_profile_upload(true)
 end
 
 StateMainMenuTestify.wait_for_profile_synchronization = function (_, state_main_menu)

@@ -140,27 +140,30 @@ ViewElementInventoryWeaponPreview.event_register_item_camera = function (self, c
 
 	self._level_spawned = true
 	self._camera = camera_unit
-	self._camera_zoomed = false
+	self._camera_center_aligned = false
 end
 
-ViewElementInventoryWeaponPreview.switch_zoom = function (self)
+ViewElementInventoryWeaponPreview.center_align = function (self, duration, additional_position_offset)
 	local world_spawner = self._world_spawner
-	local time = 1
+	local time = duration or 1
 	local func_ptr = math.easeOutCubic
-	self._camera_zoomed = not self._camera_zoomed
+	self._camera_center_aligned = not self._camera_center_aligned
+	local extra_position_x = additional_position_offset[1] or 0
+	local extra_position_y = additional_position_offset[2] or 0
+	local extra_position_z = additional_position_offset[3] or 0
 	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local slot_camera_unit = self._camera_zoomed and self._zoomed_camera or self._camera
+	local slot_camera_unit = self._camera_center_aligned and self._zoomed_camera or self._camera
 	local target_world_position = slot_camera_unit and Unit.world_position(slot_camera_unit, 1) or default_camera_world_position
 	local target_world_rotation = slot_camera_unit and Unit.world_rotation(slot_camera_unit, 1) or default_camera_world_rotation
 	local camera_world_position = default_camera_world_position
 	local camera_world_rotation = default_camera_world_rotation
 
-	world_spawner:set_camera_position_axis_offset("x", target_world_position.x - camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", target_world_position.y - camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", target_world_position.z - camera_world_position.z, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("x", target_world_position.x - camera_world_position.x + extra_position_x, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("y", target_world_position.y - camera_world_position.y + extra_position_y, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("z", target_world_position.z - camera_world_position.z + extra_position_z, time, func_ptr)
 
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 	local target_world_rotation_x, target_world_rotation_y, target_world_rotation_z = Quaternion.to_euler_angles_xyz(target_world_rotation)
@@ -239,9 +242,11 @@ ViewElementInventoryWeaponPreview._get_spawn_position = function (self)
 end
 
 ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction)
+	local world_spawner = self._world_spawner
 	self._weapon_zoom_fraction = fraction
+	local amount = fraction * 1
 
-	self:_update_viewport()
+	world_spawner:set_camera_position_axis_offset("y", amount, 0, math.easeOutCubic)
 end
 
 ViewElementInventoryWeaponPreview.set_weapon_position_normalized = function (self, x_scale, y_scale)

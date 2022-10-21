@@ -30,9 +30,6 @@ end
 
 OutlineSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local settings = OutlineSettings[extension_name]
-
-	fassert(settings, "No outline settings found for extension %s", extension_name)
-
 	local extension = nil
 
 	if extension_name == "PlayerUnitOutlineExtension" then

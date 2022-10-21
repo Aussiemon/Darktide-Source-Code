@@ -5,12 +5,14 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeCombataxeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p1")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -76,17 +78,36 @@ weapon_template.actions = {
 			},
 			start_modifier = 1.5
 		},
-		allowed_chain_actions = {}
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left"
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_special_stab"
+			}
+		}
 	},
 	action_melee_start_left = {
 		anim_event_3p = "attack_swing_charge_down",
-		chain_anim_event = "heavy_charge_down",
+		chain_anim_event = "heavy_charge_down_left",
 		start_input = "start_attack",
 		kind = "windup",
 		chain_anim_event_3p = "attack_swing_charge_down",
 		anim_end_event = "attack_finished",
 		allowed_during_sprint = true,
-		anim_event = "heavy_charge_down",
+		anim_event = "heavy_charge_down_left",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -161,7 +182,6 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_left_diagonal_down",
-		power_level = 500,
 		total_time = 1.3,
 		action_movement_curve = {
 			{
@@ -232,7 +252,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -249,12 +269,11 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
 		range_mod = 1.25,
+		attack_direction_override = "down",
 		damage_window_end = 0.3333333333333333,
 		anim_end_event = "attack_finished",
-		attack_direction_override = "down",
 		anim_event_3p = "attack_swing_heavy_down",
 		anim_event = "heavy_attack_left_down",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -287,11 +306,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.73
+				chain_time = 0.63
 			},
 			special_action = {
 				action_name = "action_special_stab",
-				chain_time = 0.73
+				chain_time = 0.63
 			},
 			block = {
 				action_name = "action_block"
@@ -312,7 +331,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -322,7 +341,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_down",
-		anim_event = "heavy_charge_down",
+		anim_event = "heavy_charge_down_right",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -372,7 +391,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -391,12 +410,11 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_right_diagonal",
 		num_frames_before_process = 0,
-		damage_window_end = 0.55,
 		range_mod = 1.25,
+		damage_window_end = 0.55,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_right_diagonal_down",
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -466,7 +484,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -481,12 +499,11 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		num_frames_before_process = 0,
-		damage_window_end = 0.26666666666666666,
 		attack_direction_override = "down",
+		damage_window_end = 0.26666666666666666,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down",
 		anim_event = "heavy_attack_right_down",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -546,7 +563,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -627,12 +644,11 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_left",
 		num_frames_before_process = 0,
-		damage_window_end = 0.45,
 		range_mod = 1.25,
+		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_left",
-		power_level = 500,
 		total_time = 1.3,
 		action_movement_curve = {
 			{
@@ -702,7 +718,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -776,12 +792,11 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		num_frames_before_process = 0,
 		attack_direction_override = "right",
+		range_mod = 1.35,
 		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
-		range_mod = 1.35,
 		uninterruptible = true,
 		anim_event = "heavy_attack_right_diagonal_down",
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -844,8 +859,8 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.medium_axe_linesman,
-		damage_type = damage_types.blunt,
-		stat_buff_keywords = {
+		damage_type = damage_types.metal_slashing_heavy,
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -855,7 +870,6 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -895,11 +909,11 @@ weapon_template.actions = {
 				chain_time = 0.4
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
 	action_special_stab = {
@@ -912,13 +926,12 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1_3",
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
-		damage_window_end = 0.36666666666666664,
-		range_mod = 1.25,
-		anim_end_event = "attack_finished",
 		attack_direction_override = "push",
+		damage_window_end = 0.36666666666666664,
+		anim_end_event = "attack_finished",
+		range_mod = 1.25,
 		anim_event_3p = "attack_swing_stab",
 		anim_event = "attack_stab_01",
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -966,7 +979,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.axe_stab,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -1009,14 +1022,10 @@ weapon_template.keywords = {
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
-weapon_template.stamina_template = "default"
+weapon_template.stamina_template = "smiter"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.4,
-	walking = 0.33,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.combat_axe
 weapon_template.overclocks = {
 	armor_pierce_up_dps_down = {
 		combataxe_p1_m1_armor_pierce_stat = 0.1,
@@ -1196,6 +1205,10 @@ local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
 
 table.append(weapon_template.traits, melee_common_traits)
 
+local bespoke_combataxe_p1_traits = table.keys(WeaponTraitsBespokeCombataxeP1)
+
+table.append(weapon_template.traits, bespoke_combataxe_p1_traits)
+
 weapon_template.perks = {
 	combataxe_p1_m1_dps_perk = {
 		description = "loc_trait_description_combataxe_p1_m1_dps_perk",
@@ -1346,6 +1359,37 @@ weapon_template.perks = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
 			}
 		}
+	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_smiter"
+	},
+	{
+		display_name = "loc_weapon_keyword_versatile"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter",
+			"smiter"
+		}
+	},
+	secondary = {
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter"
+		}
+	},
+	special = {
+		display_name = "loc_weapon_special_special_attack",
+		type = "special_attack"
 	}
 }
 

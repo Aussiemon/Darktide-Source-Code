@@ -5,7 +5,6 @@ local ForceRotation = require("scripts/extension_systems/locomotion/utilities/fo
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
-local Netted = require("scripts/extension_systems/character_state_machine/character_states/utilities/netted")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerCharacterStateWarpGrabbed = class("PlayerCharacterStateWarpGrabbed", "PlayerCharacterStateBase")
 local SFX_SOURCE = "head"
@@ -23,9 +22,9 @@ PlayerCharacterStateWarpGrabbed.init = function (self, character_state_init_cont
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.target_drag_position = Vector3.zero()
 	self._disabled_character_state_component = disabled_character_state_component
-	self._drag_start_anim_played = false
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
 	self._execute_anim_played = false
+	self._entered_state_t = nil
 end
 
 PlayerCharacterStateWarpGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -39,18 +38,14 @@ PlayerCharacterStateWarpGrabbed.on_enter = function (self, unit, dt, t, previous
 		self._animation_extension:anim_event("to_grabbed")
 
 		local locomotion_steering_component = self._locomotion_steering_component
-		locomotion_steering_component.move_method = "anim_driven"
+		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
 		self._movement_state_component.method = "idle"
 		local disabling_unit = self._disabled_state_input.disabling_unit
-		local locomotion_component = self._locomotion_component
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-		local drag_position = Netted.calculate_drag_position(locomotion_component, navigation_extension, disabling_unit, self._nav_world)
 		local disabled_character_state_component = self._disabled_character_state_component
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
-		disabled_character_state_component.target_drag_position = drag_position
 		disabled_character_state_component.disabling_type = "warp_grabbed"
 		local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 		local disabling_unit_rotation = Unit.world_rotation(disabling_unit, 1)
@@ -68,15 +63,11 @@ PlayerCharacterStateWarpGrabbed.on_enter = function (self, unit, dt, t, previous
 	else
 		self._animation_extension:anim_event("revive_abort")
 	end
+
+	self._entered_state_t = t
 end
 
 PlayerCharacterStateWarpGrabbed.on_exit = function (self, unit, t, next_state)
-	if not self._reached_drag_position then
-		self:_on_drag_completed(t)
-	end
-
-	self._reached_drag_position = false
-	self._drag_start_anim_played = false
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
 	if locomotion_force_rotation_component.use_force_rotation then
@@ -89,15 +80,44 @@ PlayerCharacterStateWarpGrabbed.on_exit = function (self, unit, t, next_state)
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
 	local inventory_component = self._inventory_component
-	local previously_wielded_slot_name = inventory_component.previously_wielded_slot
 
-	PlayerUnitVisualLoadout.wield_slot(previously_wielded_slot_name, unit, t)
+	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 
 	local disabled_character_state_component = self._disabled_character_state_component
+	local disabling_unit = disabled_character_state_component.disabling_unit
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
-	disabled_character_state_component.target_drag_position = Vector3.zero()
 	disabled_character_state_component.disabling_type = "none"
+
+	if self._is_server then
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+
+			if HEALTH_ALIVE[disabling_unit] then
+				local target_blackboard = BLACKBOARDS[disabling_unit]
+
+				if target_blackboard then
+					local stagger_component = target_blackboard.stagger
+					local not_staggered = stagger_component.num_triggered_staggers == 0
+
+					if not_staggered then
+						rescued_by_player = false
+					end
+				end
+			end
+
+			local state_name = "warp_grabbed"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
+	end
 end
 
 PlayerCharacterStateWarpGrabbed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
@@ -129,14 +149,6 @@ PlayerCharacterStateWarpGrabbed._check_transition = function (self, unit, t, nex
 	end
 
 	return nil
-end
-
-PlayerCharacterStateWarpGrabbed._on_drag_completed = function (self, t)
-	FirstPersonView.exit(t, self._first_person_mode_component)
-
-	local locomotion_steering_component = self._locomotion_steering_component
-	locomotion_steering_component.velocity_wanted = Vector3.zero()
-	self._reached_drag_position = true
 end
 
 return PlayerCharacterStateWarpGrabbed

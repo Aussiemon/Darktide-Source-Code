@@ -18,8 +18,6 @@ UrlLoaderManager.load_texture = function (self, url, require_auth)
 end
 
 UrlLoaderManager.unload_texture = function (self, texture)
-	fassert(texture.url, "Expected property texture.url to be set")
-	fassert(not texture.destroyed, "Texture with url: %s already destroyed", self.url)
 	Backend.unload_texture(texture.texture)
 
 	texture.destroyed = true

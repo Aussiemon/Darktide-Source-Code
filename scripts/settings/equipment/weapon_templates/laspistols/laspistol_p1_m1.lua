@@ -1,9 +1,11 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
@@ -158,16 +160,17 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		sprint_requires_press_to_interrupt = true,
-		recoil_template = "default_laspistol_assault",
-		start_input = "shoot_pressed",
-		kind = "shoot_hit_scan",
+		ammunition_usage = 2,
 		sprint_ready_up_time = 0.2,
+		weapon_handling_template = "immediate_single_shot",
+		kind = "shoot_hit_scan",
 		spread_template = "default_laspistol_assault",
 		abort_sprint = true,
-		weapon_handling_template = "immediate_single_shot",
+		start_input = "shoot_pressed",
 		allowed_during_sprint = true,
-		ammunition_usage = 1,
+		recoil_template = "default_laspistol_assault",
+		sprint_requires_press_to_interrupt = true,
+		allow_shots_with_less_than_required_ammo = true,
 		total_time = 0.5,
 		action_movement_curve = {
 			{
@@ -240,8 +243,9 @@ weapon_template.actions = {
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		weapon_handling_template = "immediate_single_shot",
-		ammunition_usage = 1,
+		allow_shots_with_less_than_required_ammo = true,
 		crosshair_type = "ironsight",
+		ammunition_usage = 2,
 		allowed_during_sprint = true,
 		total_time = 0.3,
 		action_movement_curve = {
@@ -379,7 +383,7 @@ weapon_template.actions = {
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -497,16 +501,15 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		kind = "push",
 		priority = 0,
+		charge_template = "handgun_push_charge",
 		ability_keyword = "psyker",
 		crosshair_type = "dot",
 		ability_type = "grenade_ability",
 		activation_cooldown = 2.3,
-		charge_template = "handgun_push_charge",
 		activate_special = true,
 		damage_time = 0.4,
 		uninterruptible = true,
 		anim_event = "weapon_special_psyker",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -581,7 +584,7 @@ weapon_template.actions = {
 }
 weapon_template.base_stats = {
 	laspistol_dps_stat = {
-		display_name = "loc_trait_display_stubrevolver_dps_stat",
+		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
@@ -745,11 +748,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
 weapon_template.can_use_while_vaulting = true
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 
@@ -758,5 +757,34 @@ table.append(weapon_template.traits, ranged_common_traits)
 local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
+
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_mobile"
+	},
+	{
+		display_name = "loc_weapon_keyword_high_ammo_count"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
+	},
+	special = {
+		display_name = "loc_grenade_input_description_quick_throw",
+		type = "quick_grenade"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
+}
 
 return weapon_template

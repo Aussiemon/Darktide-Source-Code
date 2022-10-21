@@ -15,16 +15,16 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__cmd_hacking_decode_resuming_10"
 		},
 		sound_events_duration = {
-			6.496646,
-			3.4615,
-			4.892375,
-			5.230959,
-			4.03025,
-			3.030042,
-			2.865084,
-			3.072584,
-			3.647292,
-			3.98625
+			6.505729,
+			3.470583,
+			4.901458,
+			5.240042,
+			4.039333,
+			3.039125,
+			2.874167,
+			3.081667,
+			3.656375,
+			3.995333
 		},
 		randomize_indexes = {}
 	},
@@ -38,10 +38,10 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__cmd_hacking_find_another_04"
 		},
 		sound_events_duration = {
-			4.322855,
-			4.803646,
-			3.850584,
-			4.408375
+			4.331938,
+			4.812729,
+			3.859667,
+			4.417458
 		},
 		randomize_indexes = {}
 	},
@@ -61,16 +61,16 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__cmd_hacking_fix_decode_10"
 		},
 		sound_events_duration = {
-			4.698917,
-			5.919396,
-			5.464272,
-			3.787771,
-			3.50698,
-			4.779542,
-			4.830959,
-			4.89573,
-			4.830875,
-			6.150334
+			4.708,
+			5.928479,
+			5.473354,
+			3.796854,
+			3.516063,
+			4.788625,
+			4.840042,
+			4.904813,
+			4.839958,
+			6.159417
 		},
 		randomize_indexes = {}
 	},
@@ -85,11 +85,11 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__cmd_hacking_fix_decode_response_05"
 		},
 		sound_events_duration = {
-			2.316355,
-			3.819896,
-			2.722292,
-			1.566688,
-			2.492417
+			2.325438,
+			3.828979,
+			2.731375,
+			1.575771,
+			2.5015
 		},
 		randomize_indexes = {}
 	},
@@ -103,10 +103,10 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__cmd_hacking_place_device_04"
 		},
 		sound_events_duration = {
-			3.456063,
-			4.832542,
-			4.243334,
-			4.172563
+			3.465146,
+			4.841625,
+			4.252417,
+			4.181646
 		},
 		randomize_indexes = {}
 	},
@@ -120,10 +120,33 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__info_hacking_decoding_in_progress_04"
 		},
 		sound_events_duration = {
-			2.136417,
-			2.17125,
-			2.494813,
-			3.126125
+			2.1455,
+			2.180333,
+			2.503896,
+			3.135208
+		},
+		randomize_indexes = {}
+	},
+	info_hacking_decoding_in_progress_vox_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_pilot_a__info_hacking_decoding_in_progress_01",
+			"loc_pilot_a__info_hacking_decoding_in_progress_02",
+			"loc_pilot_a__info_hacking_decoding_in_progress_03",
+			"loc_pilot_a__info_hacking_decoding_in_progress_04"
+		},
+		sound_events_duration = {
+			1.7455,
+			1.780333,
+			2.103896,
+			2.735208
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -137,10 +160,16 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__info_hacking_mission_almost_done_04"
 		},
 		sound_events_duration = {
-			2.003334,
-			1.650875,
-			1.89675,
-			2.937146
+			2.012417,
+			1.659958,
+			1.905833,
+			2.946229
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -154,10 +183,36 @@ local event_vo_hacking_pilot_a = {
 			"loc_pilot_a__info_hacking_mission_complete_04"
 		},
 		sound_events_duration = {
-			2.467063,
-			1.952813,
-			2.837625,
-			2.541563
+			2.476146,
+			1.961896,
+			2.846708,
+			2.550646
+		},
+		randomize_indexes = {}
+	},
+	vox_introduction_hacking_event = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_pilot_a__vox_introduction_pilot_01",
+			"loc_pilot_a__vox_introduction_pilot_02",
+			"loc_pilot_a__vox_introduction_pilot_03",
+			"loc_pilot_a__vox_introduction_pilot_04",
+			"loc_pilot_a__vox_introduction_pilot_05"
+		},
+		sound_events_duration = {
+			1.22,
+			1.402333,
+			1.370521,
+			2.085542,
+			1.117104
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	}

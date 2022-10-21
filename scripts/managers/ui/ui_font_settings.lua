@@ -3,10 +3,11 @@ require("scripts/foundation/utilities/color")
 local ui_font_settings = {
 	header_1 = {
 		font_size = 55,
+		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
 		text_vertical_alignment = "center",
-		font_type = "itc_novarese_bold",
+		font_type = "machine_medium",
 		text_horizontal_alignment = "left",
-		text_color = Color.ui_brown_light(255, true),
+		text_color = Color.white(255, true),
 		offset = {
 			0,
 			0,
@@ -15,15 +16,15 @@ local ui_font_settings = {
 	},
 	header_2 = {
 		font_size = 36,
-		font_type = "itc_novarese_bold",
-		text_color = Color.ui_brown_light(255, true),
-		default_color = Color.ui_brown_light(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
+		font_type = "proxima_nova_bold",
+		text_color = Color.terminal_text_header(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
 		disabled_color = Color.ui_grey_light(255, true)
 	},
 	header_3 = {
 		font_size = 26,
-		font_type = "itc_novarese_bold",
+		font_type = "proxima_nova_bold",
 		text_color = Color.ui_brown_light(255, true),
 		default_color = Color.ui_brown_light(255, true),
 		hover_color = Color.ui_brown_super_light(255, true),
@@ -110,20 +111,30 @@ local ui_font_settings = {
 	},
 	terminal_header_2 = {
 		font_size = 36,
-		font_type = "itc_novarese_medium",
-		text_color = Color.ui_orange_light(255, true)
+		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
+		disabled_material = "content/ui/materials/font_gradients/slug_font_gradient_header_toggled",
+		font_type = "proxima_nova_bold",
+		text_color = Color.white(255, true),
+		default_color = Color.white(255, true),
+		hover_color = Color.ui_brown_super_light(255, true),
+		disabled_color = Color.ui_grey_light(255, true)
 	},
 	terminal_header_3 = {
 		font_size = 30,
+		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
+		disabled_material = "content/ui/materials/font_gradients/slug_font_gradient_header_toggled",
 		font_type = "proxima_nova_bold",
-		text_color = Color.ui_orange_light(255, true)
+		text_color = Color.white(255, true),
+		default_color = Color.white(255, true),
+		hover_color = Color.ui_brown_super_light(255, true),
+		disabled_color = Color.ui_grey_light(255, true)
 	},
 	body = {
 		line_spacing = 1.2,
 		font_size = 24,
 		font_type = "proxima_nova_bold",
-		text_color = Color.ui_grey_light(255, true),
-		default_color = Color.ui_grey_light(255, true)
+		text_color = Color.text_default(255, true),
+		default_color = Color.text_default(255, true)
 	},
 	body_small = {
 		font_size = 18,
@@ -156,10 +167,15 @@ local ui_font_settings = {
 		text_vertical_alignment = "center",
 		drop_shadow = true,
 		font_type = "proxima_nova_bold",
-		default_color = Color.ui_brown_light(255, true),
-		text_color = Color.ui_brown_light(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
-		disabled_color = Color.ui_grey_light(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		text_color = Color.terminal_text_header(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
+		disabled_color = {
+			255,
+			60,
+			60,
+			60
+		},
 		offset = {
 			0,
 			-2,
@@ -171,12 +187,7 @@ local ui_font_settings = {
 		text_vertical_alignment = "center",
 		font_type = "proxima_nova_bold",
 		text_horizontal_alignment = "left",
-		text_color = {
-			255,
-			197,
-			159,
-			121
-		}
+		text_color = Color.text_default(255, true)
 	},
 	nameplates = {
 		drop_shadow = true,
@@ -189,17 +200,6 @@ local ui_font_settings = {
 			255,
 			255,
 			255
-		}
-	},
-	end_of_round_nameplates_name = {
-		font_size = 28,
-		font_type = "itc_novarese_medium",
-		drop_shadow = true,
-		text_color = {
-			255,
-			197,
-			157,
-			117
 		}
 	},
 	end_of_round_nameplates_guild = {
@@ -263,15 +263,24 @@ local ui_font_settings = {
 			0
 		}
 	},
+	input_legend_button = {
+		font_size = 24,
+		text_vertical_alignment = "center",
+		font_type = "proxima_nova_bold",
+		text_horizontal_alignment = "center",
+		text_color = Color.ui_grey_medium(255, true),
+		default_text_color = Color.ui_grey_medium(255, true),
+		hover_color = Color.white(255, true)
+	},
 	list_button = {
 		text_horizontal_alignment = "left",
 		font_size = 24,
 		text_vertical_alignment = "center",
 		drop_shadow = true,
 		font_type = "proxima_nova_bold",
-		default_color = Color.ui_brown_light(255, true),
-		text_color = Color.ui_brown_light(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		text_color = Color.terminal_text_header(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
 		disabled_color = Color.ui_grey_light(255, true),
 		offset = {
 			50,
@@ -370,6 +379,13 @@ local ui_font_settings = {
 		font_type = "proxima_nova_bold",
 		text_horizontal_alignment = "left",
 		text_color = Color.ui_brown_super_light(255, true)
+	},
+	mission_voting_details = {
+		font_size = 24,
+		text_vertical_alignment = "center",
+		font_type = "proxima_nova_medium",
+		text_horizontal_alignment = "left",
+		text_color = Color.ui_grey_medium(255, true)
 	},
 	tab_menu_button = {
 		text_horizontal_alignment = "center",

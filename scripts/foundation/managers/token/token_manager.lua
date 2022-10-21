@@ -18,8 +18,6 @@ TokenManager.register_token = function (self, token, callback, timeout)
 end
 
 TokenManager.abort = function (self, token)
-	fassert(not self._is_updating_tokens, "Can't abort tokens from token update since removing tokens would trash the loop.")
-
 	local tokens = self._tokens
 
 	for index, entry in ipairs(tokens) do

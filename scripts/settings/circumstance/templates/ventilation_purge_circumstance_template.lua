@@ -6,7 +6,8 @@ local circumstance_templates = {
 			"mutator_snipers"
 		},
 		ui = {
-			icon = "content/ui/materials/icons/circumstances/poison",
+			description = "loc_circumstance_ventilation_purge_description",
+			icon = "content/ui/materials/icons/circumstances/ventilation_purge_01",
 			display_name = "loc_circumstance_ventilation_purge_title",
 			favourable_to_players = true
 		}

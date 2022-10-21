@@ -37,9 +37,6 @@ ClosestTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(hit_units)
 
 	local num_results = broadphase:query(query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
-
-	Debug:fixed_update_text("%.f", num_results)
-
 	local num_targets = 0
 
 	for i = 1, num_results do

@@ -368,7 +368,7 @@ AchievementsView._populate_categories_column = function (self)
 
 	local function select_widget_function(widget, config)
 		local grid = categories_grid
-		local grid_index = config.widget_index
+		local grid_index = grid:widget_index(widget)
 
 		grid:select_grid_index(grid_index)
 	end

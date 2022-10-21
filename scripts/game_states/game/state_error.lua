@@ -21,13 +21,15 @@ StateError._cleanup = function (self)
 	Managers.multiplayer_session:reset("reset_from_state_error")
 	Managers.mechanism:leave_mechanism()
 
-	local peer_id = Network.peer_id()
-	local player_manager = Managers.player
-	local local_players = player_manager:players_at_peer(peer_id)
+	if Managers.connection:is_initialized() then
+		local peer_id = Network.peer_id()
+		local player_manager = Managers.player
+		local local_players = player_manager:players_at_peer(peer_id)
 
-	if local_players then
-		for local_player_id, player in pairs(local_players) do
-			player_manager:remove_player(peer_id, local_player_id)
+		if local_players then
+			for local_player_id, player in pairs(local_players) do
+				player_manager:remove_player(peer_id, local_player_id)
+			end
 		end
 	end
 

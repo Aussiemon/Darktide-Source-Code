@@ -9,6 +9,10 @@ local ARGS = {
 		name = "item_slot_name"
 	},
 	{
+		block_prediction = true,
+		name = "parent_buff_template"
+	},
+	{
 		name = "owner_unit"
 	},
 	{

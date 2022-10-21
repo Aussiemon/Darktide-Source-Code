@@ -51,9 +51,9 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	self:_setup_charge_template(action_settings)
 
 	if action_settings.unaim and self._alternate_fire_component.is_active then
-		local skipp_unaim_anim = action_settings.skipp_unaim_anim
+		local skip_unaim_anim = action_settings.skip_unaim_anim
 
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skipp_unaim_anim)
+		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit)
 	end
 
 	local use_ability_charge = action_settings.use_ability_charge
@@ -93,38 +93,31 @@ ActionWeaponBase._check_for_critical_strike = function (self)
 	local critical_strike_component = self._critical_strike_component
 	local player = self._player
 	local weapon_extension = self._weapon_extension
+	local buff_extension = self._buff_extension
 	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
 	local is_ranged = WeaponTemplate.is_ranged(self._weapon_template)
 	local is_melee = WeaponTemplate.is_melee(self._weapon_template)
-	local chance = CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee)
+	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike")
+	local chance = nil
 
-	if is_ranged then
-		local buff_extension = self._buff_extension
-		local guaranteed_crit = buff_extension:has_keyword("guaranteed_ranged_critical_strike")
-
-		if guaranteed_crit then
-			chance = 1
-		end
-	end
-
-	if is_melee then
-		local buff_extension = self._buff_extension
-		local guaranteed_crit = buff_extension:has_keyword("guaranteed_melee_critical_strike")
-
-		if guaranteed_crit then
-			chance = 1
-		end
+	if guaranteed_crit then
+		chance = 1
+	else
+		chance = CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee)
 	end
 
 	local is_critical_strike, new_prd_state, new_seed = CriticalStrike.is_critical_strike(chance, prd_state, seed)
 
 	if is_critical_strike then
 		local param_table = self._buff_extension:request_proc_event_param_table()
-		param_table.attacker_unit = self._player_unit
 
-		self._buff_extension:add_proc_event(proc_events.on_critical_strike, param_table)
+		if param_table then
+			param_table.attacker_unit = self._player_unit
+
+			self._buff_extension:add_proc_event(proc_events.on_critical_strike, param_table)
+		end
 	end
 
 	self._critical_strike_component.prd_state = new_prd_state
@@ -150,8 +143,6 @@ ActionWeaponBase._add_weapon_blood = function (self, amount)
 end
 
 ActionWeaponBase._set_weapon_special = function (self, active, t)
-	local param_table = self._buff_extension:request_proc_event_param_table()
-	param_table.t = t
 	local last_start_time = self._inventory_slot_component.special_active_start_t
 	self._inventory_slot_component.special_active = active
 
@@ -160,7 +151,13 @@ ActionWeaponBase._set_weapon_special = function (self, active, t)
 		local proc_cooldown_time = 0.5
 
 		if t > last_start_time + proc_cooldown_time then
-			self._buff_extension:add_proc_event(proc_events.on_weapon_special, param_table)
+			local param_table = self._buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.t = t
+
+				self._buff_extension:add_proc_event(proc_events.on_weapon_special, param_table)
+			end
 		end
 	end
 end

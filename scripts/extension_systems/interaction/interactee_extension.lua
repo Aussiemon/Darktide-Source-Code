@@ -3,6 +3,7 @@ local InteractionSettings = require("scripts/settings/interaction/interaction_se
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
 local MasterItems = require("scripts/backend/master_items")
 local InteracteeExtension = class("InteracteeExtension")
+local emissive_colors = InteractionSettings.emissive_colors
 local interaction_results = InteractionSettings.results
 
 InteracteeExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, game_object_id)
@@ -70,9 +71,6 @@ InteracteeExtension.set_interaction_context = function (self, interaction_type, 
 
 		if not interactions[interaction_type] then
 			local interaction_template = InteractionTemplates[interaction_type]
-
-			fassert(interaction_template, "[InteracteeExtension:set_interaction_context()] interaction template for type %q does not exist!", interaction_type)
-
 			local interaction_class_name = interaction_template.interaction_class_name
 			interactions[interaction_type] = Interactions[interaction_class_name]:new(interaction_template)
 		end
@@ -174,11 +172,11 @@ InteracteeExtension.update_light = function (self)
 	local color_box = nil
 
 	if self._used then
-		color_box = InteractionSettings.emissive_colors.used
+		color_box = emissive_colors.used
 	elseif self._active then
-		color_box = InteractionSettings.emissive_colors.active
+		color_box = emissive_colors.active
 	else
-		color_box = InteractionSettings.emissive_colors.unactive
+		color_box = emissive_colors.inactive
 	end
 
 	local color = color_box:unbox()
@@ -291,6 +289,24 @@ InteracteeExtension.action_text = function (self)
 	local interaction = self._interactions[active_interaction_type]
 
 	return override_context.action_text or interaction:action_text()
+end
+
+InteracteeExtension.set_description = function (self, description)
+	local active_interaction_type = self._active_interaction_type
+
+	if active_interaction_type then
+		local override_context = self._override_contexts[active_interaction_type]
+		override_context.description = description
+	end
+end
+
+InteracteeExtension.set_duration = function (self, duration)
+	local active_interaction_type = self._active_interaction_type
+
+	if active_interaction_type then
+		local override_context = self._override_contexts[active_interaction_type]
+		override_context.duration = duration
+	end
 end
 
 InteracteeExtension.description = function (self)

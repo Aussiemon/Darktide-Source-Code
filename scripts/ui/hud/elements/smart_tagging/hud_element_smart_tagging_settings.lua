@@ -1,5 +1,5 @@
 local hud_element_smart_tagging_settings = {
-	anim_speed = 3,
+	anim_speed = 8,
 	min_radius = 185,
 	wheel_slots = 8,
 	max_radius = 190,

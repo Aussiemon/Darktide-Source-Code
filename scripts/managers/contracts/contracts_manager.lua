@@ -6,32 +6,47 @@ local CLIENT_RPCS = {
 	"rpc_notify_contract_task_complete"
 }
 
-ContractsManager._is_client = function (self)
-	return not self._is_server
-end
-
-ContractsManager._is_tracker = function (self)
-	return self._is_server
-end
-
 ContractsManager.init = function (self, is_server, event_delegate)
 	self._is_server = is_server
 	self._network_event_delegate = event_delegate
 
-	if self:_is_client() then
-		self._network_event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
-	end
+	if is_server then
+		self:_start_tracking()
+	else
+		self._is_client = true
 
-	if self:_is_tracker() then
-		self._tracking = {}
-		self._stat_id = {}
+		self._network_event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 end
 
 ContractsManager.destroy = function (self)
-	if self:_is_client() then
+	if self._is_client then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
+end
+
+ContractsManager._start_tracking = function (self)
+	self._is_tracker = true
+	self._tracking = {}
+	self._stat_id = {}
+end
+
+ContractsManager._stop_tracking = function (self)
+	self:untrack_all()
+
+	self._is_tracker = false
+	self._tracking = nil
+	self._stat_id = nil
+end
+
+ContractsManager.client_start_tracking = function (self)
+	self:_start_tracking()
+	Log.info("ContractsManager", "client started tracking contracts")
+end
+
+ContractsManager.client_stop_tracking = function (self)
+	self:_stop_tracking()
+	Log.info("ContractsManager", "client stopped tracking contracts")
 end
 
 ContractsManager._add_player = function (self, player)
@@ -42,7 +57,8 @@ ContractsManager._add_player = function (self, player)
 		connection_channel = player:connection_channel_id(),
 		contracts_loaded = false,
 		stat_id = Managers.stats:add_tracker(self, player, SessionStats, ContractsManager._on_stat_change),
-		triggers = {}
+		triggers = {},
+		remote_player = player.remote
 	}
 	self._stat_id[player_data.stat_id] = character_id
 	self._tracking[character_id] = player_data
@@ -85,7 +101,7 @@ ContractsManager._pull_contracts = function (self, character_id)
 	local player_data = self._tracking[character_id]
 	local account_id = player_data.account_id
 
-	return Managers.backend.interfaces.contracts:get_current_contract(character_id, account_id):next(function (data)
+	return Managers.backend.interfaces.contracts:get_current_contract(character_id, account_id, false):next(function (data)
 		player_data.contracts_loaded = true
 		local tasks_left = self:_parse_backend_contract(data)
 
@@ -103,8 +119,6 @@ ContractsManager._pull_contracts = function (self, character_id)
 end
 
 ContractsManager.track_player = function (self, player)
-	assert(self:_is_tracker(), "Can't track contracts as a non-tracker.")
-
 	local character_id = player:character_id()
 
 	if not math.is_uuid(character_id) then
@@ -149,9 +163,14 @@ end
 
 ContractsManager._complete_task = function (self, character_id, task)
 	local player_data = self._tracking[character_id]
+	local remote_player = player_data.remote_player
 	local rpc_channel = player_data.connection_channel
 
-	RPC.rpc_notify_contract_task_complete(rpc_channel, task.uuid)
+	if remote_player then
+		RPC.rpc_notify_contract_task_complete(rpc_channel, task.uuid)
+	else
+		self:notify_contract_task_complete(task.uuid)
+	end
 end
 
 ContractsManager._on_stat_change = function (self, id, trigger_id, trigger_value, ...)
@@ -208,14 +227,13 @@ local function _get_character_id()
 	return player_profile.character_id
 end
 
-ContractsManager.rpc_notify_contract_task_complete = function (self, _, task_id)
-	assert(self:_is_client(), "Trying to unlock contract on non-client!")
-	Managers.backend.interfaces.contracts:get_current_task(_get_character_id(), task_id):next(function (data)
-		local criteria = data.criteria
-		local title, _, _ = CriteriaParser.localize_criteria(criteria)
-		local notification_string = string.format("You've completed: '%s'!", title)
+ContractsManager.rpc_notify_contract_task_complete = function (self, channel_id, task_id)
+	self:notify_contract_task_complete(task_id)
+end
 
-		Managers.event:trigger("event_add_notification_message", "default", notification_string)
+ContractsManager.notify_contract_task_complete = function (self, task_id)
+	Managers.backend.interfaces.contracts:get_current_task(_get_character_id(), task_id):next(function (data)
+		Managers.event:trigger("event_add_notification_message", "contract", data)
 	end)
 end
 

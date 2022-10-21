@@ -6,11 +6,11 @@ local respawn_beacon_guard_settings = {
 		num_guards = 2,
 		side_id = 2,
 		breeds = {
-			cultists = {
+			cultist = {
 				"cultist_melee",
 				"cultist_assault"
 			},
-			traitor_guards = {
+			renegade = {
 				"renegade_melee",
 				"renegade_rifleman"
 			}
@@ -23,11 +23,11 @@ local respawn_beacon_guard_settings = {
 		num_guards = 2,
 		side_id = 2,
 		breeds = {
-			cultists = {
+			cultist = {
 				"cultist_melee",
 				"cultist_assault"
 			},
-			traitor_guards = {
+			renegade = {
 				"renegade_melee",
 				"renegade_rifleman"
 			}
@@ -40,13 +40,13 @@ local respawn_beacon_guard_settings = {
 		num_guards = 3,
 		side_id = 2,
 		breeds = {
-			cultists = {
+			cultist = {
 				"cultist_melee",
 				"cultist_assault",
 				"cultist_berzerker",
 				"cultist_gunner"
 			},
-			traitor_guards = {
+			renegade = {
 				"renegade_melee",
 				"renegade_rifleman",
 				"renegade_executor",
@@ -61,11 +61,11 @@ local respawn_beacon_guard_settings = {
 		num_guards = 3,
 		side_id = 2,
 		breeds = {
-			cultists = {
+			cultist = {
 				"cultist_berzerker",
 				"cultist_gunner"
 			},
-			traitor_guards = {
+			renegade = {
 				"renegade_rifleman",
 				"renegade_executor",
 				"renegade_gunner"
@@ -79,14 +79,14 @@ local respawn_beacon_guard_settings = {
 		num_guards = 3,
 		side_id = 2,
 		breeds = {
-			cultists = {
+			cultist = {
 				"cultist_assault",
 				"cultist_gunner",
 				"chaos_ogryn_bulwark",
 				"cultist_berzerker",
 				"chaos_ogryn_gunner"
 			},
-			traitor_guards = {
+			renegade = {
 				"renegade_rifleman",
 				"renegade_gunner",
 				"chaos_ogryn_bulwark",

@@ -177,6 +177,30 @@ local widget_definitions = {
 			}
 		}
 	}, "bar"),
+	pocketable = UIWidget.create_definition({
+		{
+			value_id = "texture",
+			pass_type = "texture",
+			style_id = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "right",
+				size = {
+					80,
+					35
+				},
+				offset = {
+					90,
+					0,
+					3
+				},
+				color = UIHudSettings.color_tint_main_1
+			},
+			visibility_function = function (content)
+				return content.texture ~= nil
+			end
+		}
+	}, "panel_background"),
 	player_color_bar = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/backgrounds/gradient_horizontal_thin_edge",
@@ -247,15 +271,15 @@ local widget_definitions = {
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "right",
+				horizontal_alignment = "left",
 				size = {
 					28,
 					28
 				},
 				offset = {
-					25,
+					2,
 					0,
-					6
+					8
 				},
 				color = UIHudSettings.color_tint_main_1
 			}

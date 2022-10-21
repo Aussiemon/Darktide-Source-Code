@@ -90,19 +90,11 @@ local _generate_pick_x = {
 ParameterFunctions.pick = function (stat_definition, ...)
 	local indices = {}
 	local stat_params = stat_definition:get_parameters()
-
-	fassert(stat_params, "Stat '%s' has no parameters to pick from.", stat_definition:get_id())
-
 	local amount_to_pick = select("#", ...)
-
-	fassert(_generate_pick_x[amount_to_pick], "No function defined to pick '%d' parameters.", amount_to_pick)
 
 	for index = 1, amount_to_pick do
 		local desired_param_name = select(index, ...)
 		local desired_index = table.index_of(stat_params, desired_param_name)
-
-		fassert(desired_index ~= -1, "Stat '%s' lacks the desired parameter '%s'.", stat_definition:get_id(), desired_param_name)
-
 		indices[index] = desired_index
 	end
 
@@ -118,9 +110,6 @@ ParameterFunctions.smart_pick = function (stat_definition, names, transforms)
 	for index = 1, size do
 		local desired_param_name = names[index]
 		local desired_index = table.index_of(stat_params, desired_param_name)
-
-		fassert(desired_index > 0, "Stat with id '%s' has no parameter with name '%s'.", stat_definition:get_id(), desired_param_name)
-
 		indices[index] = desired_index
 	end
 

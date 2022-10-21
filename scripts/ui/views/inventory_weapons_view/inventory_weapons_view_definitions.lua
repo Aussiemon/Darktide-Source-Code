@@ -4,7 +4,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local title_height = 70
+local title_height = 108
 local edge_padding = 44
 local grid_width = 640
 local grid_height = 860
@@ -22,6 +22,10 @@ local mask_size = {
 }
 local grid_settings = {
 	scrollbar_width = 7,
+	widget_icon_load_margin = 400,
+	use_select_on_focused = true,
+	use_is_focused_for_navigation = false,
+	use_terminal_background = true,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -35,8 +39,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			180,
-			310
+			130,
+			272
 		},
 		position = {
 			0,
@@ -49,8 +53,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			180,
-			310
+			130,
+			272
 		},
 		position = {
 			0,
@@ -63,8 +67,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			180,
-			120
+			70,
+			202
 		},
 		position = {
 			0,
@@ -77,8 +81,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			180,
-			120
+			70,
+			202
 		},
 		position = {
 			0,
@@ -115,7 +119,7 @@ local scenegraph_definition = {
 		}
 	},
 	weapon_stats_pivot = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
@@ -124,7 +128,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140,
-			-450,
+			100,
 			3
 		}
 	},
@@ -142,6 +146,20 @@ local scenegraph_definition = {
 			3
 		}
 	},
+	weapon_actions_pivot = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-560,
+			100,
+			3
+		}
+	},
 	equip_button = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
@@ -151,7 +169,7 @@ local scenegraph_definition = {
 			76
 		},
 		position = {
-			-433,
+			-162,
 			-120,
 			1
 		}
@@ -174,13 +192,7 @@ local scenegraph_definition = {
 local widget_definitions = {
 	corner_top_left = UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_upper"
-		}
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/metal_01_upper",
+			value_id = "texture",
 			pass_type = "texture_uv",
 			style = {
 				uvs = {
@@ -194,36 +206,30 @@ local widget_definitions = {
 					}
 				}
 			}
+		}
+	}, "corner_top_left"),
+	corner_top_right = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value_id = "texture"
 		}
 	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_lower"
+			value_id = "texture"
 		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/metal_01_lower",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
+			pass_type = "texture",
+			value_id = "texture"
 		}
 	}, "corner_bottom_right"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_customize_enter
+			on_pressed_sound = UISoundEvents.weapons_equip_weapon
 		}
 	}),
 	background = UIWidget.create_definition({
@@ -237,7 +243,7 @@ local widget_definitions = {
 					0
 				},
 				color = {
-					200,
+					100,
 					0,
 					0,
 					0
@@ -252,6 +258,39 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_close_pressed",
 		display_name = "loc_settings_menu_close_menu",
 		alignment = "left_alignment"
+	},
+	{
+		input_action = "hotkey_item_customize",
+		display_name = "loc_weapon_inventory_customize_button",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_customize_pressed",
+		visibility_function = function (parent)
+			local is_previewing_weapon = parent:is_previewing_weapon()
+
+			return is_previewing_weapon
+		end
+	},
+	{
+		input_action = "hotkey_item_inspect",
+		display_name = "loc_weapon_inventory_inspect_button",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_inspect_pressed",
+		visibility_function = function (parent)
+			local is_previewing_weapon = parent:is_previewing_weapon()
+
+			return is_previewing_weapon
+		end
+	},
+	{
+		input_action = "hotkey_item_discard",
+		display_name = "loc_inventory_item_discard",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_discard_held",
+		visibility_function = function (parent)
+			local is_item_equipped = parent:is_selected_item_equipped()
+
+			return not is_item_equipped
+		end
 	}
 }
 

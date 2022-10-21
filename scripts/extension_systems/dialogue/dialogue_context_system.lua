@@ -12,9 +12,6 @@ DialogueContextSystem.init = function (self, extension_system_creation_context, 
 	self._is_server = extension_system_creation_context.is_server
 	self._next_player_key = nil
 	self._unit_extension_data = {}
-
-	fassert(system_init_data, "DialogueContextSystem expects a non nil system_init_data")
-
 	self._start_dialogue_modifier = nil
 	local mission = system_init_data.mission
 

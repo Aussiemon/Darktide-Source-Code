@@ -53,7 +53,7 @@ ChargeActionModule.finish = function (self, reason, data, t, force_reset)
 		new_action_kind = data.new_action_kind
 	end
 
-	if force_reset or reason == "hold_input_released" or reason == "stunned" or new_action_kind == "unaim" and reason == "new_interrupting_action" then
+	if force_reset or reason == "hold_input_released" or reason == "stunned" or (new_action_kind == "unaim" or new_action_kind == "unwield") and reason == "new_interrupting_action" then
 		local action_module_charge_component = self._action_module_charge_component
 		action_module_charge_component.charge_complete_time = 0
 		action_module_charge_component.charge_level = 0

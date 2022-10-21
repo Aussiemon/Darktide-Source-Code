@@ -147,98 +147,6 @@ local daemonhost_settings = {
 			particle_effect = "content/fx/particles/enemies/daemonhost/daemonhost_ambient_fog"
 		}
 	},
-	vo = {
-		[STAGES.passive] = {
-			on_enter = {
-				daemonhost = {
-					vo_event = "chaos_daemonhost_mantra_low"
-				}
-			},
-			looping = {
-				vo_event = "chaos_daemonhost_mantra_low",
-				cooldown_duration = {
-					5,
-					8
-				}
-			}
-		},
-		[STAGES.agitated] = {
-			on_enter = {
-				daemonhost = {
-					vo_event = "chaos_daemonhost_mantra_medium"
-				}
-			},
-			looping = {
-				vo_event = "chaos_daemonhost_mantra_medium",
-				cooldown_duration = {
-					10,
-					12
-				}
-			}
-		},
-		[STAGES.disturbed] = {
-			on_enter = {
-				player = {
-					vo_event = "alerted",
-					is_non_threatening_player = true
-				},
-				daemonhost = {
-					vo_event = "chaos_daemonhost_mantra_medium"
-				}
-			},
-			looping = {
-				vo_event = "chaos_daemonhost_mantra_medium",
-				cooldown_duration = {
-					9,
-					11
-				}
-			}
-		},
-		[STAGES.about_to_wake_up] = {
-			on_enter = {
-				daemonhost = {
-					vo_event = "chaos_daemonhost_mantra_high"
-				}
-			},
-			looping = {
-				vo_event = "chaos_daemonhost_mantra_high",
-				cooldown_duration = {
-					8,
-					9
-				}
-			}
-		},
-		[STAGES.waking_up] = {
-			on_enter = {
-				player = {
-					vo_event = "aggroed"
-				}
-			},
-			looping = {
-				vo_event = "chaos_daemonhost_mantra_high",
-				cooldown_duration = {
-					9,
-					11
-				}
-			}
-		},
-		[STAGES.aggroed] = {
-			looping = {
-				vo_event = "chaos_daemonhost_aggro",
-				cooldown_duration = {
-					9,
-					11
-				}
-			}
-		},
-		[STAGES.death_normal] = {
-			on_enter = {
-				daemonhost = {
-					vo_event = "chaos_daemonhost_death_long"
-				}
-			}
-		}
-	},
 	death = {
 		[STAGES.death_leave] = {
 			alpha_clip = {
@@ -281,8 +189,8 @@ local daemonhost_settings = {
 		1,
 		2,
 		2,
-		3,
-		3
+		2,
+		2
 	}
 }
 

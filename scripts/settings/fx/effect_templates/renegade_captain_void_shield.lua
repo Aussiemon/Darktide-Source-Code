@@ -2,6 +2,7 @@ local SHIELD_INVENTORY_SLOT_NAME = "slot_fx_void_shield"
 local SHIELD_POWER_MATERIAL_KEY = "shield_power"
 local SHIELD_REDNESS_MATERIAL_KEY = "redness"
 local SHIELD_REDNESS_THRESHOLD = 0.3
+local LIGHT_NAME = "shield_light"
 local NUM_IMPACT_FX_ENTRIES = 4
 local IMPACT_FX_DURATION = 0.25
 local IMPACT_FX_POSITION_KEY = "impact_position_0%s"
@@ -16,7 +17,8 @@ for i = 1, NUM_IMPACT_FX_ENTRIES do
 end
 
 local STATES = table.enum("active", "depleted")
-local _get_network_values, _switch_state, _set_shield_power, _set_shield_redness = nil
+local _get_network_values, _switch_state, _flicker_shield, _set_shield_power, _set_shield_redness = nil
+local HIT_SHIELD_EXTRA_LIGHT_DURATION = 0.1
 local effect_template = {
 	name = "renegade_captain_void_shield",
 	start = function (template_data, template_context)
@@ -36,6 +38,11 @@ local effect_template = {
 		template_data.previous_impact_fx_index = 0
 		template_data.processed_attacks_index = 0
 		template_data.state = STATES.active
+		local light = Unit.light(unit, LIGHT_NAME)
+
+		Light.set_enabled(light, true)
+
+		template_data.light = light
 	end,
 	update = function (template_data, template_context, dt, t)
 		local game_session = template_data.game_session
@@ -51,7 +58,7 @@ local effect_template = {
 		if template_data.state == STATES.active then
 			local shield_unit = template_data.shield_unit
 
-			_set_shield_power(shield_unit, percent)
+			_set_shield_power(shield_unit, percent, template_data, t)
 
 			if percent < SHIELD_REDNESS_THRESHOLD then
 				local normalized_percent = math.normalize_01(percent, 0, SHIELD_REDNESS_THRESHOLD)
@@ -91,14 +98,19 @@ local effect_template = {
 				end
 
 				template_data.processed_attacks_index = num_stored_attacks
+				template_data.hit_shield_duration = t + HIT_SHIELD_EXTRA_LIGHT_DURATION
 			end
+		elseif template_data.state == STATES.depleted then
+			local shield_unit = template_data.shield_unit
+
+			_flicker_shield(shield_unit, template_data, t)
 		end
 	end,
 	stop = function (template_data, template_context)
 		local shield_unit = template_data.shield_unit
 
 		if Unit.alive(shield_unit) then
-			_set_shield_power(shield_unit, 1)
+			_set_shield_power(shield_unit, 1, template_data)
 		end
 
 		local wwise_world = template_context.wwise_world
@@ -112,7 +124,12 @@ function _switch_state(template_data, template_context, new_state)
 	local shield_unit = template_data.shield_unit
 
 	if new_state == STATES.depleted then
-		_set_shield_power(shield_unit, 1)
+		_set_shield_power(shield_unit, 1, template_data)
+
+		local green = 0.23529411764705882
+		local color_filter = Vector3(1, green, 0.09803921568627451)
+
+		Light.set_color_filter(template_data.light, color_filter)
 	elseif new_state == STATES.active then
 		_set_shield_redness(shield_unit, 0)
 	end
@@ -120,10 +137,53 @@ function _switch_state(template_data, template_context, new_state)
 	template_data.state = new_state
 end
 
-function _set_shield_power(shield_unit, power)
+local MAX_INTENSITY_LUMEN = 400
+local MAX_INTENSITY_LUMEN_HIT_SHIELD = 1000
+local FLICKER_DURATION = {
+	0.1,
+	0.3
+}
+local FLICKER_FREQUENCY = {
+	0.1,
+	0.3
+}
+
+function _flicker_shield(shield_unit, template_data, t)
+	local light = template_data.light
+
+	if template_data.next_flicker_t then
+		if template_data.next_flicker_t < t then
+			template_data.flicker_duration = t + math.random_range(FLICKER_DURATION[1], FLICKER_DURATION[2])
+			template_data.next_flicker_t = nil
+
+			Light.set_intensity(light, 0)
+		else
+			return
+		end
+	end
+
+	if not template_data.flicker_duration or template_data.flicker_duration and template_data.flicker_duration <= t then
+		template_data.next_flicker_t = t + math.random_range(FLICKER_FREQUENCY[1], FLICKER_FREQUENCY[2])
+
+		Light.set_intensity(light, MAX_INTENSITY_LUMEN * 0.2)
+	end
+end
+
+function _set_shield_power(shield_unit, power, template_data, t)
 	local include_children = true
 
 	Unit.set_scalar_for_materials(shield_unit, SHIELD_POWER_MATERIAL_KEY, power, include_children)
+
+	local has_hit_shield = t and template_data.hit_shield_duration and t <= template_data.hit_shield_duration
+	local lumen = (1 - power) * (has_hit_shield and MAX_INTENSITY_LUMEN_HIT_SHIELD or MAX_INTENSITY_LUMEN)
+	local light = template_data.light
+
+	Light.set_intensity(light, lumen)
+
+	local green = math.max(power, 0.23529411764705882)
+	local color_filter = Vector3(1, green, 0.09803921568627451)
+
+	Light.set_color_filter(light, color_filter)
 end
 
 function _set_shield_redness(shield_unit, redness)

@@ -22,9 +22,6 @@ MinionMultiTeleporter.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
 	self._unit_id = unit_id
 	self._nav_world = nav_world
-
-	fassert(nav_world, "[MinionMultiTeleporter][init] Missing 'nav_world'.")
-
 	self._smart_object_id_lookup = smart_object_id_lookup
 	local nav_graph_extension = ScriptUnit.fetch_component_extension(unit, "nav_graph_system")
 	self._nav_graph_extension = nav_graph_extension
@@ -91,17 +88,9 @@ MinionMultiTeleporter.teleporter_units = function (self)
 end
 
 MinionMultiTeleporter.add_smart_object = function (self, destination_unit, destination_unit_id)
-	fassert(self._is_server, "[MinionMultiTeleporter] Smart objects are only supported on server.")
-
 	local unit_id = self._unit_id
-
-	fassert(self.is_valid, "[MinionMultiTeleporter][Unit:%s] Trying to add smart object to invalid unit.", unit_id)
-
 	local smart_object_id_lookup = self._smart_object_id_lookup
 	local existing_smart_object_id = smart_object_id_lookup[destination_unit]
-
-	fassert(existing_smart_object_id == nil, "[MinionMultiTeleporter][Unit:%s] Already has smart object to destination unit (%s).", unit_id, destination_unit_id)
-
 	local smart_object, smart_object_id = MinionMultiTeleporterQueries.generate_smart_object(self._unit, self._nav_world, destination_unit)
 
 	self._nav_graph_extension:add_smart_object(smart_object, smart_object_id)
@@ -110,9 +99,6 @@ MinionMultiTeleporter.add_smart_object = function (self, destination_unit, desti
 end
 
 MinionMultiTeleporter.remove_smart_object = function (self, destination_unit)
-	fassert(self._is_server, "[MinionMultiTeleporter] Smart objects are only supported on server.")
-	fassert(self.is_valid, "[MinionMultiTeleporter][Unit:%s] Trying to remove smart object from invalid unit.", self._unit_id)
-
 	local smart_object_id_lookup = self._smart_object_id_lookup
 	local smart_object_id = smart_object_id_lookup[destination_unit]
 
@@ -122,18 +108,12 @@ MinionMultiTeleporter.remove_smart_object = function (self, destination_unit)
 end
 
 MinionMultiTeleporter.enable_smart_object = function (self, destination_unit)
-	fassert(self._is_server, "[MinionMultiTeleporter] Smart objects are only supported on server.")
-	fassert(self.is_valid, "[MinionMultiTeleporter][Unit:%s] Trying to enable smart object for invalid unit.", self._unit_id)
-
 	local smart_object_id = self._smart_object_id_lookup[destination_unit]
 
 	self._nav_graph_extension:add_nav_graph_to_database(smart_object_id)
 end
 
 MinionMultiTeleporter.disable_smart_object = function (self, destination_unit)
-	fassert(self._is_server, "[MinionMultiTeleporter] Smart objects are only supported on server.")
-	fassert(self.is_valid, "[MinionMultiTeleporter][Unit:%s] Trying to disable smart object for invalid unit.", self._unit_id)
-
 	local smart_object_id = self._smart_object_id_lookup[destination_unit]
 
 	self._nav_graph_extension:remove_nav_graph_from_database(smart_object_id)
@@ -305,7 +285,6 @@ MinionMultiTeleporter.flow_enable = function (self)
 	local unit = self._unit
 	local toggleable = self:get_data(unit, "toggleable")
 
-	fassert(toggleable, "[MinionMultiTeleporter][Unit:%s] Tried to enable smart objects on non-toggleable teleporter!", self._unit_id)
 	self._nav_graph_extension:add_nav_graphs_to_database()
 
 	local teleporter_units = MinionMultiTeleporter._teleporter_units
@@ -325,7 +304,6 @@ MinionMultiTeleporter.flow_disable = function (self)
 	local unit = self._unit
 	local toggleable = self:get_data(unit, "toggleable")
 
-	fassert(toggleable, "[MinionMultiTeleporter][Unit:%s] Tried to disable smart objects on non-toggleable teleporter!", self._unit_id)
 	self._nav_graph_extension:remove_nav_graphs_from_database()
 
 	local teleporter_units = MinionMultiTeleporter._teleporter_units

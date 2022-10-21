@@ -160,16 +160,16 @@ ProfileSynchronizerHost.override_slot = function (self, peer_id, local_player_id
 	local player = Managers.player:player(peer_id, local_player_id)
 	local new_profile = table.clone_instance(player:profile())
 	local loadout_item_ids = new_profile.loadout_item_ids
-	loadout_item_ids[slot_name] = item_name .. slot_name
+	loadout_item_ids[slot_name] = item_name and item_name .. slot_name or nil
 	local loadout_item_data = new_profile.loadout_item_data
 	loadout_item_data[slot_name] = {
 		id = item_name
 	}
 
-	self:_profile_changed_override(peer_id, local_player_id, new_profile)
+	self:override_singleplay_profile(peer_id, local_player_id, new_profile)
 end
 
-ProfileSynchronizerHost._profile_changed_override = function (self, peer_id, local_player_id, new_profile)
+ProfileSynchronizerHost.override_singleplay_profile = function (self, peer_id, local_player_id, new_profile)
 	local profile_json = ProfileUtils.pack_profile(new_profile)
 	local profile_chunks = {}
 

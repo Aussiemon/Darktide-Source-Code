@@ -11,9 +11,7 @@ HudElementTeamPlayerPanelHub.update = function (self, dt, t, ui_renderer, render
 end
 
 HudElementTeamPlayerPanelHub.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.start("HudElementTeamPlayerPanelHub:draw")
 	HudElementTeamPlayerPanelHub.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.stop("HudElementTeamPlayerPanelHub:draw")
 end
 
 return HudElementTeamPlayerPanelHub

@@ -50,9 +50,6 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 			local parent = scene_object_data.parent
 
 			if parent and not scene_object_data.world_position then
-				fassert(scenegraph[parent], "No such parent %s in scene graph for object %s", parent, name)
-				fassert(parent ~= name, "Object %q can't have itself as parent", name)
-
 				local parent_data = scenegraph[parent]
 
 				if parent_data.world_position then
@@ -63,10 +60,6 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 						0
 					}
 					scene_object_data.local_position = position
-
-					fassert(parent_data.world_position, "[UIScenegraph] - No world position for parent: %s", parent)
-					fassert(parent_data.world_position[3], "[UIScenegraph] - No layer for parent: %s", parent)
-
 					local parent_world_position = Vector3.from_array(parent_data.world_position)
 					local local_position = Vector3.from_array(position)
 					scene_object_data.world_position = Vector3.to_array(local_position + parent_world_position, {})
@@ -152,8 +145,6 @@ local scenegraph_cached_update_children = EngineOptimized.scenegraph_cached_upda
 local scenegraph_update_children = EngineOptimized.scenegraph_update_children
 
 UIScenegraph.update_scenegraph = function (scenegraph, scale)
-	Profiler.start("UIScenegraph.update_scenegraph")
-
 	local default_scale = RESOLUTION_LOOKUP.scale
 	local default_inverse_scale = 1 / default_scale
 	scale = scale or default_scale
@@ -229,7 +220,6 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 
 			size_x = w_inverse_scale
 
-			fassert(not scenegraph_object.horizontal_alignment, "UIScenegraph - Scenegraph scale (%s) do not support horizontal_alignment", scenegraph_object_scale)
 			_handle_alignment(current_world_position, scenegraph_object, nil, size_y, nil, parent_size_y)
 		elseif scenegraph_object_scale == "fit_height" then
 			Vector3_set_y(current_world_position, safe_rect_offset_y)
@@ -237,7 +227,6 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 
 			size_y = h_inverse_scale
 
-			fassert(not scenegraph_object.vertical_alignment, "UIScenegraph - Scenegraph scale (%s) do not support vertical_alignment", scenegraph_object_scale)
 			_handle_alignment(current_world_position, scenegraph_object, size_x, nil, parent_size_x, nil)
 		end
 
@@ -247,18 +236,12 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 
 		if children then
 			if scenegraph.is_static then
-				Profiler.start("UIScenegraph.update_scenegraph_children_static")
 				scenegraph_cached_update_children(scenegraph_object.scene_graph_ref, current_world_position, children, scenegraph_object.num_children, size_x, size_y)
-				Profiler.stop("UIScenegraph.update_scenegraph_children_static")
 			else
-				Profiler.start("UIScenegraph.update_scenegraph_children_dynamic")
 				scenegraph_update_children(current_world_position, children, scenegraph_object.num_children, size_x, size_y)
-				Profiler.stop("UIScenegraph.update_scenegraph_children_dynamic")
 			end
 		end
 	end
-
-	Profiler.stop("UIScenegraph.update_scenegraph")
 end
 
 UIScenegraph.get_scenegraph_id_screen_scale = function (scenegraph, scenegraph_object_name, scale)
@@ -275,8 +258,6 @@ UIScenegraph.get_scenegraph_id_screen_scale = function (scenegraph, scenegraph_o
 end
 
 UIScenegraph.world_position = function (scenegraph, scenegraph_object_name, scale)
-	fassert(rawget(scenegraph, scenegraph_object_name), "No such object name in scenegraph: %s", tostring(scenegraph_object_name))
-
 	local world_position = scenegraph[scenegraph_object_name].world_position
 
 	if scale then

@@ -30,13 +30,9 @@ MissionObjectiveZoneCaptureExtension.update = function (self, dt, t)
 		return
 	end
 
-	Profiler.start("MissionObjectiveZoneCaptureExtension:update()")
-
 	if self._is_server then
 		self:_update_server()
 	end
-
-	Profiler.stop("MissionObjectiveZoneCaptureExtension:update()")
 end
 
 MissionObjectiveZoneCaptureExtension._update_server = function (self)

@@ -18,12 +18,16 @@ DoorControlPanelExtension.setup_from_component = function (self, start_active)
 end
 
 DoorControlPanelExtension.extensions_ready = function (self, world, unit)
+	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
+end
+
+DoorControlPanelExtension.on_gameplay_post_init = function (self, level)
 	if not self._is_server then
 		return
 	end
 
+	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
-	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 
 	if self:is_active() then
 		interactee_extension:set_active(true)
@@ -47,8 +51,6 @@ DoorControlPanelExtension.is_active = function (self)
 end
 
 DoorControlPanelExtension.set_active = function (self, active)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
-
 	if active and not self:is_active() then
 		self:_activate()
 	elseif not active and self:is_active() then
@@ -57,8 +59,6 @@ DoorControlPanelExtension.set_active = function (self, active)
 end
 
 DoorControlPanelExtension._activate = function (self)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
-
 	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 
@@ -67,12 +67,11 @@ DoorControlPanelExtension._activate = function (self)
 
 	self._state = STATES.active
 
+	self:_sync_server_state(nil, self._state)
 	self:_update_appearance(self._state)
 end
 
 DoorControlPanelExtension._deactivate = function (self)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
-
 	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 
@@ -81,18 +80,15 @@ DoorControlPanelExtension._deactivate = function (self)
 
 	self._state = STATES.inactive
 
+	self:_sync_server_state(nil, self._state)
 	self:_update_appearance(self._state)
 end
 
 DoorControlPanelExtension.register_door = function (self, door_extension)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
-
 	self._door_extension = door_extension
 end
 
 DoorControlPanelExtension.toggle_door_state = function (self, interactor_unit)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
-
 	local door_extension = self._door_extension
 
 	if door_extension:can_open(interactor_unit) then
@@ -115,7 +111,6 @@ DoorControlPanelExtension._activate_lightbulbs = function (self, val)
 end
 
 DoorControlPanelExtension._play_anim = function (self, anim_event)
-	fassert(self._is_server, "[DoorControlPanelExtension] Server only method.")
 	self._animation_extension:anim_event(anim_event)
 end
 

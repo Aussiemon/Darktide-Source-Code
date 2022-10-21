@@ -13,6 +13,7 @@ BroadphaseExtension.init = function (self, extension_init_context, unit, extensi
 	self._broadphase_node_name = extension_init_data.node_name
 	self._broadphase_node_id = nil
 	self._broadphase_id = nil
+	self._moving = extension_init_data.moving
 
 	if self._broadphase_categories then
 		self:_add_to_broadphase()
@@ -24,8 +25,6 @@ BroadphaseExtension.destroy = function (self)
 end
 
 BroadphaseExtension.setup_from_component = function (self, broadphase_category, broadphase_radius, broadphase_node_name)
-	fassert(self._broadphase_categories == nil, "[BroadphaseExtension][Unit:%s] Component already registered.", Unit.id_string(self._unit))
-
 	self._broadphase_categories = broadphase_category
 	self._broadphase_radius = broadphase_radius
 	self._broadphase_node_name = broadphase_node_name
@@ -34,8 +33,6 @@ BroadphaseExtension.setup_from_component = function (self, broadphase_category, 
 end
 
 BroadphaseExtension._add_to_broadphase = function (self)
-	fassert(self._broadphase_categories, "[BroadphaseExtension][Unit:%s] Broadphase categories not set.", Unit.id_string(self._unit))
-
 	local unit = self._unit
 	local broadphase = self._broadphase
 	local broadphase_radius = self._broadphase_radius
@@ -53,13 +50,6 @@ BroadphaseExtension._remove_from_broadphase = function (self)
 
 		self._broadphase_id = nil
 	end
-end
-
-BroadphaseExtension.update = function (self, unit, ...)
-	local optional_node = self._broadphase_node_id
-	local position = optional_node and unit_world_position(unit, optional_node) or POSITION_LOOKUP[unit]
-
-	broadphase_move(self._broadphase, self._broadphase_id, position)
 end
 
 return BroadphaseExtension

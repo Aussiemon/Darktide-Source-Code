@@ -19,32 +19,34 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "cultist_berzerker"
 local breed_data = {
-	detection_radius = 15,
 	display_name = "loc_breed_display_name_cultist_berzerker",
 	run_speed = 6.5,
+	game_object_type = "minion_melee",
 	use_bone_lod = true,
 	spawn_anim_state = "to_melee",
-	game_object_type = "minion_melee",
+	volley_fire_target = true,
 	unit_template_name = "minion",
 	power_level_type = "renegade_default_melee",
 	faction_name = "chaos",
+	detection_radius = 15,
+	reverse_stagger_count = true,
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_cultist_melee_elite/third_person/animations/chaos_cultist_berzerker",
-	use_avoidance = true,
-	stagger_resistance = 1,
-	base_height = 1.9,
 	walk_speed = 2.3,
+	stagger_resistance = 1,
+	use_avoidance = true,
+	base_height = 1.9,
 	player_locomotion_constrain_radius = 0.4,
-	challenge_rating = 4,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 1,
 	use_wounds = true,
-	slot_template = "cultist_berzerker",
-	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
+	activate_slot_system_on_spawn = true,
+	slot_template = "cultist_berzerker",
 	base_unit = "content/characters/enemy/chaos_cultist_melee_elite/third_person/base",
+	challenge_rating = 4,
 	hit_mass = 5,
 	bone_lod_radius = 1.1,
 	name = breed_name,
@@ -62,25 +64,25 @@ local breed_data = {
 		[stagger_types.medium] = 1,
 		[stagger_types.heavy] = 3,
 		[stagger_types.explosion] = 5.5,
-		[stagger_types.light_ranged] = 0.25,
+		[stagger_types.light_ranged] = 0.75,
 		[stagger_types.killshot] = 1.85,
-		[stagger_types.sticky] = 1.75
+		[stagger_types.sticky] = 0.75
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 2,
-		[stagger_types.medium] = 2,
+		[stagger_types.light] = 0.4,
+		[stagger_types.medium] = 0.5,
 		[stagger_types.heavy] = 1.75,
-		[stagger_types.light_ranged] = 5,
-		[stagger_types.killshot] = 5,
+		[stagger_types.light_ranged] = 0.5,
+		[stagger_types.killshot] = 0.5,
 		[stagger_types.sticky] = 0.25
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
 		[stagger_types.medium] = 10,
 		[stagger_types.heavy] = 30,
-		[stagger_types.light_ranged] = 2,
-		[stagger_types.killshot] = 2,
-		[stagger_types.sticky] = 5
+		[stagger_types.light_ranged] = 10,
+		[stagger_types.killshot] = 10,
+		[stagger_types.sticky] = 3
 	},
 	inventory = MinionVisualLoadoutTemplates.cultist_berzerker,
 	sounds = require("scripts/settings/breed/breeds/cultist/cultist_berzerker_sounds"),
@@ -290,9 +292,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

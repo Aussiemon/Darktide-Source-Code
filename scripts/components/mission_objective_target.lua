@@ -32,9 +32,6 @@ MissionObjectiveTarget._retrieve_objective_name = function (self, unit)
 
 	if is_side_mission then
 		local side_objective_type = self:get_data(unit, "side_objective_type")
-
-		fassert(side_objective_type ~= "none", "[MissionObjectiveTarget][_retrieve_objective_name] Need to set a side_objective_type on Unit with name: [´%s], id: [%s]", unit, Unit.id_string(unit))
-
 		local side_mission = Managers.state.mission:side_mission()
 
 		if side_mission and side_objective_type == side_mission.side_objective_type then

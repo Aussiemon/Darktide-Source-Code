@@ -97,10 +97,6 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 
 	for i = 1, num_pack_unpack_actions do
 		local action = pack_unpack_actions[i]
-
-		fassert(action_lookup[action], "pack_unpack_actions contain unknown action %q", action)
-		fassert(action_network_type[action], "pack_unpack_actions: %q needs a network_type defined in action_network_type.", action)
-
 		pack_unpack_action_to_network_type_index[action] = Network.type_index(action_network_type[action])
 	end
 
@@ -123,9 +119,6 @@ HumanInputHandler.initialize_client_fixed_frame = function (self, frame, input_s
 end
 
 HumanInputHandler._buffer_index = function (self, frame)
-	fassert(frame >= 0, "Trying to access negative frame %i", frame)
-	fassert(frame > (self._frame or 0) - self._input_buffer_size, "Buffer has already wrapped around, %i out of bounds (frame: %i)", frame, self._frame)
-
 	if self._last_frame_parsed and frame <= self._last_frame_parsed then
 		frame = self._frame
 	end
@@ -168,8 +161,6 @@ HumanInputHandler.fixed_update = function (self, dt, t, frame, input_service, ya
 		end
 	end
 
-	fassert(frame == self._frame, "Frame mismatch. got %i, expected %i", frame, self._frame)
-
 	local index = self:_buffer_index(frame)
 	local cache = self._input_cache
 
@@ -187,16 +178,12 @@ HumanInputHandler.get_orientation = function (self, frame)
 	local p = cache[self._pitch_index][index]
 	local r = cache[self._roll_index][index]
 
-	fassert(y and p and r, "no pitch yaw or roll")
-
 	return y, p, r
 end
 
 HumanInputHandler.get = function (self, action, frame)
 	local index = self:_buffer_index(frame)
 	local action_lookup = self._action_lookup[action]
-
-	fassert(action_lookup, "Unrecognized action %s", action)
 
 	return self._input_cache[action_lookup][index]
 end
@@ -296,7 +283,6 @@ HumanInputHandler.update = function (self, dt, t, input_service)
 			end
 		end
 
-		fassert(send_array[1][1 + end_frame_offset] ~= nil, "Trying so send less than planned.")
 		Managers.state.game_session:send_rpc_server("rpc_player_input_array", self._player:local_player_id(), start_frame, end_frame_offset, unpack(send_array))
 
 		self._last_sent_frame = frame

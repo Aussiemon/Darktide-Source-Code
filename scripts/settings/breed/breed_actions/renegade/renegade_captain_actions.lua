@@ -5,6 +5,7 @@ local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local MinionPushFxTemplates = require("scripts/settings/fx/minion_push_fx_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
@@ -24,8 +25,12 @@ local action_data = {
 		anim_events = "idle"
 	},
 	death = {
+		ignore_hit_during_death_ragdoll = true,
 		instant_ragdoll_chance = 0,
 		death_animations = {
+			default = {
+				"death_burn_3"
+			},
 			[hit_zone_names.head] = {
 				"death_burn_3"
 			},
@@ -57,6 +62,12 @@ local action_data = {
 				"death_burn_3"
 			},
 			[hit_zone_names.captain_void_shield] = {
+				"death_burn_3"
+			},
+			[hit_zone_names.afro] = {
+				"death_burn_3"
+			},
+			[hit_zone_names.center_mass] = {
 				"death_burn_3"
 			}
 		},
@@ -90,6 +101,10 @@ local action_data = {
 			death_leg_both = 4.5,
 			death_shot_head_fwd = 2.3666666666666667,
 			death_decapitate_2 = 3.1666666666666665
+		},
+		death_animation_vo = {
+			death_burn_3 = "long_death",
+			death_arm_left = "long_death"
 		}
 	},
 	melee_combat_idle = {
@@ -175,7 +190,7 @@ local action_data = {
 		move_to_cooldown = 0.25,
 		speed = 4.2,
 		max_distance_to_target = 8,
-		considerations = UtilityConsiderations.ranged_follow,
+		considerations = UtilityConsiderations.ranged_follow_no_los,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
@@ -225,6 +240,7 @@ local action_data = {
 		move_to_fail_cooldown = 1,
 		suppressive_fire = true,
 		attack_intensity_type = "ranged",
+		reset_dodge_check_after_each_shot = true,
 		move_to_cooldown = 0.25,
 		min_distance_to_target = 6,
 		fx_source_name = "muzzle",
@@ -498,7 +514,7 @@ local action_data = {
 		enter_walk_distance = 4,
 		leave_walk_distance = 6,
 		run_anim_event = "move_fwd",
-		vo_event = "melee_idle",
+		vo_event = "taunt_combat",
 		walk_anim_event = "move_start_fwd",
 		considerations = UtilityConsiderations.melee_follow,
 		start_move_anim_events = {
@@ -574,7 +590,7 @@ local action_data = {
 			melee = 0.25
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_melee_default,
-		damage_type = damage_types.minion_melee_sharp
+		damage_type = damage_types.minion_powered_sharp
 	},
 	power_sword_moving_melee_attack = {
 		height = 3,
@@ -620,7 +636,7 @@ local action_data = {
 			attack_move_02 = 0.11494252873563218
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_melee_default,
-		damage_type = damage_types.minion_melee_sharp,
+		damage_type = damage_types.minion_powered_sharp,
 		stagger_type_reduction = {
 			ranged = 20
 		},
@@ -766,11 +782,11 @@ local action_data = {
 			}
 		},
 		attack_anim_durations = {
-			attack_swing_combo_02 = 3.7333333333333334,
-			attack_swing_combo_01 = 2.6666666666666665,
-			attack_swing_combo_05 = 3.066666666666667,
-			attack_swing_combo_04 = 2.933333333333333,
-			attack_swing_combo_03 = 3.12
+			attack_swing_combo_02 = 3.466666666666667,
+			attack_swing_combo_01 = 2.4,
+			attack_swing_combo_05 = 2.8,
+			attack_swing_combo_04 = 2.6666666666666665,
+			attack_swing_combo_03 = 2.8533333333333335
 		},
 		attack_override_damage_data = {
 			attack_swing_combo_01 = {
@@ -793,7 +809,7 @@ local action_data = {
 			attack_swing_combo_03 = 0
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_melee_default,
-		damage_type = damage_types.minion_melee_sharp,
+		damage_type = damage_types.minion_powered_sharp,
 		multi_target_config = {
 			rotation_speed = 4.5,
 			max_switches = 2,
@@ -813,23 +829,27 @@ local action_data = {
 	},
 	power_sword_melee_sweep = {
 		ignore_blocked = true,
-		utility_weight = 20,
-		attack_type = "broadphase",
-		collision_filter = "filter_minion_melee",
+		utility_weight = 30,
+		vo_event = "taunt_combat",
+		attack_type = "sweep",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		move_speed_variable_lerp_speed = 4,
-		weapon_reach = 4.5,
-		broadphase_node = "root_point",
+		weapon_reach = 4,
 		move_speed_variable_name = "moving_attack_fwd_speed",
-		dodge_weapon_reach = 4,
+		sweep_node = "j_lefthandmiddle1",
+		hit_zone_name = "center_mass",
 		considerations = UtilityConsiderations.renegade_captain_power_sword_melee_sweep,
 		attack_anim_events = {
 			"attack_heavy_swing"
 		},
-		attack_anim_durations = {
-			attack_heavy_swing = 3.6666666666666665
+		attack_sweep_damage_timings = {
+			attack_heavy_swing = {
+				2.1666666666666665,
+				2.3333333333333335
+			}
 		},
-		attack_anim_damage_timings = {
-			attack_heavy_swing = 2.1666666666666665
+		attack_anim_durations = {
+			attack_heavy_swing = 3.3333333333333335
 		},
 		attack_intensities = {
 			melee = 0.25,
@@ -838,6 +858,7 @@ local action_data = {
 			ranged = 1
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_power_sword_melee_sweep,
+		offtarget_damage_profile = DamageProfileTemplates.renegade_captain_offtarget_melee,
 		stagger_type_reduction = {
 			ranged = 100
 		},
@@ -853,7 +874,7 @@ local action_data = {
 		enter_walk_distance = 4,
 		leave_walk_distance = 6,
 		run_anim_event = "move_fwd",
-		vo_event = "melee_idle",
+		vo_event = "taunt_combat",
 		walk_anim_event = "move_fwd_walk",
 		considerations = UtilityConsiderations.melee_follow,
 		start_move_anim_events = {
@@ -892,10 +913,10 @@ local action_data = {
 			move_start_left = 0
 		},
 		start_rotation_durations = {
-			move_start_right = 1.4333333333333333,
+			move_start_right = 0.9333333333333333,
 			move_start_fwd = 0.26666666666666666,
-			move_start_bwd = 1.4333333333333333,
-			move_start_left = 1.5
+			move_start_bwd = 1.1333333333333333,
+			move_start_left = 0.8333333333333334
 		},
 		start_move_event_anim_speed_durations = {
 			move_start_fwd = 1.2666666666666666
@@ -936,7 +957,12 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_powermaul_melee_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
-		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave
+		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave,
+		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
+		effect_template_start_timings = {
+			attack_01 = 0,
+			attack_02 = 0
+		}
 	},
 	powermaul_moving_melee_cleave = {
 		height = 3,
@@ -944,7 +970,7 @@ local action_data = {
 		utility_weight = 1,
 		range = 4,
 		attack_type = "oobb",
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_range = 2.75,
 		moving_attack = true,
 		power_level_type = "melee_two_hand",
@@ -1001,7 +1027,11 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_powermaul_melee_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
-		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave
+		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave,
+		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
+		effect_template_start_timings = {
+			attack_move_01 = 0
+		}
 	},
 	powermaul_melee_attack = {
 		weapon_reach = 3.5,
@@ -1028,7 +1058,12 @@ local action_data = {
 			ranged = 1
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_melee_default,
-		damage_type = damage_types.minion_melee_blunt_elite
+		damage_type = damage_types.minion_melee_blunt_elite,
+		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
+		effect_template_start_timings = {
+			attack_04 = 0,
+			attack_03 = 0
+		}
 	},
 	powermaul_moving_melee_attack = {
 		power_level_type = "melee_two_hand",
@@ -1088,16 +1123,21 @@ local action_data = {
 					distance = 0.84
 				}
 			}
+		},
+		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
+		effect_template_start_timings = {
+			attack_move_02 = 0
 		}
 	},
 	powermaul_ground_slam = {
 		height = 3,
 		ignore_blocked = true,
 		utility_weight = 1,
-		attack_type = "oobb",
+		vo_event = "taunt_combat",
 		stagger_reduction = 40,
 		collision_filter = "filter_minion_melee",
 		power_level_type = "melee_two_hand",
+		attack_type = "oobb",
 		range = 5,
 		width = 2.5,
 		considerations = UtilityConsiderations.renegade_captain_powermaul_ground_slam_attack,
@@ -1164,13 +1204,13 @@ local action_data = {
 			"force_shield_knockback"
 		},
 		attack_anim_damage_timings = {
-			force_shield_knockback = 0.38095238095238093
+			force_shield_knockback = 0.5523809523809524
 		},
 		attack_anim_durations = {
 			force_shield_knockback = 1.1428571428571428
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_void_shield_explosion,
-		damage_type = damage_types.minion_melee_sharp,
+		damage_type = damage_types.minion_powered_sharp,
 		effect_template = EffectTemplates.void_shield_explosion
 	},
 	throw_frag_grenade = {
@@ -1247,7 +1287,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings_netgun.num_shots
 	},
 	charge = {
-		rotation_speed = 6,
+		charged_past_dot = 0.1,
 		close_rotation_speed = 2,
 		close_distance = 8,
 		max_dot_lean_value = 0.1,
@@ -1255,19 +1295,19 @@ local action_data = {
 		wall_raycast_distance = 3,
 		max_slowdown_percentage = 0.15,
 		default_lean_value = 1,
-		push_minions_radius = 3,
 		left_lean_value = 0,
 		min_time_navigating = 0.5,
-		charged_past_dot = 0.1,
+		push_minions_radius = 3,
 		trigger_move_to_target = true,
 		charge_max_speed_at = 2,
 		attack_anim = "attack_charge_hit_player",
 		charged_past_duration = 1.25,
+		collision_radius = 1.8,
 		power_level = 150,
+		attack_anim_damage_timing = 0.25,
 		min_time_spent_charging = 1,
-		attack_anim_damage_timing = 0.3,
-		wall_stun_time = 1.5,
 		dodge_rotation_speed = 0.01,
+		wall_stun_time = 1.5,
 		target_extrapolation_length_scale = 0.5,
 		max_slowdown_angle = 40,
 		min_slowdown_angle = 20,
@@ -1275,10 +1315,9 @@ local action_data = {
 		wall_raycast_node_name = "j_spine",
 		push_minions_side_relation = "allied",
 		charge_speed_min = 6,
-		attack_anim_duration = 1,
 		push_minions_power_level = 150,
 		right_lean_value = 2,
-		collision_radius = 1.8,
+		rotation_speed = 6,
 		charge_speed_max = 11,
 		considerations = UtilityConsiderations.renegade_captain_charge,
 		charge_anim_events = {
@@ -1288,6 +1327,15 @@ local action_data = {
 			attack_charge_start_fwd = 0.36666666666666664
 		},
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
+		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
+		push_minions_fx_cooldown = {
+			0.03,
+			0.18
+		},
+		attack_anim_duration = {
+			slot_power_sword = 0.5,
+			slot_powermaul = 1.1944444444444444
+		},
 		collision_angle = math.degrees_to_radians(100),
 		damage_profile = DamageProfileTemplates.renegade_captain_charge,
 		damage_type = damage_types.minion_charge,
@@ -1302,20 +1350,20 @@ local action_data = {
 		}
 	},
 	shotgun_shoot = {
-		attack_intensity_type = "ranged",
+		attack_intensity_type = "elite_ranged",
 		ignore_backstab_sfx = true,
 		can_strafe_shoot = true,
 		first_shoot_timing = 1.2,
 		degree_per_direction = 10,
 		strafe_end_anim_event = "hip_fire",
 		move_to_fail_cooldown = 1,
-		randomized_direction_degree_range = 160,
+		randomized_direction_degree_range = 180,
 		dodge_tell_sfx_delay = 0.13333333333333333,
-		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
+		dodge_tell_sfx = "wwise/events/weapon/play_minion_captain_shotgun_mech",
 		inventory_slot = "slot_shotgun",
-		max_distance_to_target = 10,
+		max_distance_to_target = 12,
 		strafe_speed = 2.3,
-		utility_weight = 1,
+		utility_weight = 10,
 		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
 		strafe_shoot_distance = 3,
 		exit_after_cooldown = true,
@@ -1323,7 +1371,7 @@ local action_data = {
 		strafe_shoot_ranged_position_fallback = true,
 		suppressive_fire = true,
 		move_to_cooldown = 0.25,
-		min_distance_to_target = 6,
+		min_distance_to_target = 7,
 		fx_source_name = "muzzle",
 		considerations = UtilityConsiderations.renegade_captain_shotgun_shoot,
 		aim_anim_events = {
@@ -1333,16 +1381,17 @@ local action_data = {
 			hip_fire = shooting_difficulty_settings_shotgun.aim_durations
 		},
 		aim_stances = {
-			hip_fire = "shotgun_standing"
+			hip_fire = "standing"
 		},
 		attack_intensities = {
-			ranged = 4
+			ranged = 2,
+			elite_ranged = 2
 		},
 		shoot_cooldown = shooting_difficulty_settings_shotgun.shoot_cooldown,
 		num_shots = shooting_difficulty_settings_shotgun.num_shots,
 		time_per_shot = shooting_difficulty_settings_shotgun.time_per_shot,
 		dodge_window = shooting_difficulty_settings_shotgun.shoot_dodge_window,
-		shoot_template = BreedShootTemplates.renegade_shocktrooper_default,
+		shoot_template = BreedShootTemplates.renegade_captain_shotgun,
 		strafe_anim_events = {
 			bwd = "move_bwd_walk_aim",
 			fwd = "move_fwd_walk_aim",

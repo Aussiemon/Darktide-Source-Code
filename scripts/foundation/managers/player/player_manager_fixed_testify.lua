@@ -88,7 +88,7 @@ PlayerManagerFixedTestify.reset_magazine_ammo = function (data, _, t)
 	local slot_secondary = components.slot_secondary
 
 	for i = 1, #slot_secondary do
-		if slot_secondary[i].max_ammunition_clip ~= 1 then
+		if slot_secondary[i].max_ammunition_clip > 1 then
 			slot_secondary[i].current_ammunition_clip = slot_secondary[i].max_ammunition_clip - 1
 		end
 	end

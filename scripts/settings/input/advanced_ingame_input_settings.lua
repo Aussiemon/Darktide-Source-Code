@@ -90,13 +90,13 @@ local advanced_ingame_input_settings = {
 			description = "loc_ingame_quick_wield",
 			sort_order = 9
 		},
-		wield_prev = {
+		wield_scroll_down = {
 			"mouse_wheel_down",
 			group = "input_group_combat",
 			description = "loc_ingame_wield_prev",
 			sort_order = 10
 		},
-		wield_next = {
+		wield_scroll_up = {
 			"mouse_wheel_up",
 			group = "input_group_combat",
 			description = "loc_ingame_wield_next",
@@ -213,31 +213,28 @@ local advanced_ingame_input_settings = {
 			description = "loc_ingame_sprint",
 			sort_order = 8
 		},
-		walk = {
-			"keyboard_left alt",
-			group = "input_group_movement",
-			description = "loc_ingame_walk",
-			sort_order = 9
-		},
 		look_raw = {
 			"mouse_mouse",
 			group = "input_group_movement",
-			description = "loc_ingame_look_raw",
-			sort_order = 10
+			bindable = false,
+			sort_order = 9,
+			description = "loc_ingame_look_raw"
 		},
 		look_raw_controller = {
 			"xbox_controller_right",
 			"ps4_controller_right",
 			group = "input_group_movement",
-			description = "loc_ingame_look_raw_controller",
-			sort_order = 11
+			bindable = false,
+			sort_order = 10,
+			description = "loc_ingame_look_raw_controller"
 		},
 		move_controller = {
 			"xbox_controller_left",
 			"ps4_controller_left",
 			group = "input_group_movement",
-			description = "loc_ingame_move_controller",
-			sort_order = 12
+			bindable = false,
+			sort_order = 11,
+			description = "loc_ingame_move_controller"
 		}
 	},
 	settings = {
@@ -357,20 +354,16 @@ local advanced_ingame_input_settings = {
 			key_alias = "sprint",
 			type = "held"
 		},
-		walk = {
-			key_alias = "walk",
-			type = "held"
-		},
 		quick_wield = {
 			key_alias = "quick_wield",
 			type = "pressed"
 		},
-		wield_prev = {
-			key_alias = "wield_prev",
+		wield_scroll_down = {
+			key_alias = "wield_scroll_down",
 			type = "pressed"
 		},
-		wield_next = {
-			key_alias = "wield_next",
+		wield_scroll_up = {
+			key_alias = "wield_scroll_up",
 			type = "pressed"
 		},
 		wield_1 = {
@@ -412,6 +405,10 @@ local advanced_ingame_input_settings = {
 		smart_tag = {
 			key_alias = "smart_tag",
 			type = "held"
+		},
+		smart_tag_pressed = {
+			key_alias = "smart_tag",
+			type = "pressed"
 		},
 		look_raw = {
 			key_alias = "look_raw",

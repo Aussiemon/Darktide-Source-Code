@@ -71,7 +71,7 @@ end
 ActionVentOverheat._deal_damage = function (self)
 	local current_heat = self._inventory_slot_component.overheat_current_percentage
 	local overheat_config = self._weapon_template.overheat_configuration
-	local low_threshold = overheat_config.low_threshold
+	local low_threshold = overheat_config.thresholds.low
 
 	if current_heat <= low_threshold then
 		return

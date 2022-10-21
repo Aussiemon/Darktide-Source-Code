@@ -3,11 +3,13 @@ local Herding = require("scripts/utilities/herding")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local MinionRagdoll = class("MinionRagdoll")
 local ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME = 50
+local ESTIMATED_MAX_REMOVED_RAGDOLLS_PER_FRAME = 50
 local RAGDOLL_PUSH_CACHE_SIZE = 50
 
 MinionRagdoll.init = function (self)
 	self._num_ragdolls = 0
 	self._ragdolls = {}
+	self._removed_ragdolls = Script.new_map(ESTIMATED_MAX_REMOVED_RAGDOLLS_PER_FRAME)
 	self._delayed_ragdoll_anim_events = Script.new_array(ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME)
 	self._new_delayed_ragdoll_anim_events = Script.new_array(ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME)
 	local delayed_ragdoll_push_cache = Script.new_array(RAGDOLL_PUSH_CACHE_SIZE)
@@ -33,6 +35,14 @@ end
 local POSITION_NODE_NAME = "j_hips"
 
 MinionRagdoll.update = function (self, soft_cap_out_of_bounds_units)
+	local removed_ragdolls = self._removed_ragdolls
+
+	for unit, _ in pairs(removed_ragdolls) do
+		if not ALIVE[unit] then
+			removed_ragdolls[unit] = nil
+		end
+	end
+
 	local Unit_animation_event = Unit.animation_event
 	local delayed_ragdoll_anim_events = self._delayed_ragdoll_anim_events
 
@@ -121,7 +131,7 @@ MinionRagdoll.create_ragdoll = function (self, death_data)
 	local ragdolls = self._ragdolls
 	ragdolls[#ragdolls + 1] = unit
 	self._num_ragdolls = self._num_ragdolls + 1
-	local max_ragdolls = Application.user_setting("performance_settings", "max_ragdolls")
+	local max_ragdolls = Application.user_setting("performance_settings", "max_ragdolls") or GameParameters.default_max_ragdolls
 
 	while max_ragdolls < self._num_ragdolls do
 		local first_ragdoll_unit = ragdolls[1]
@@ -131,9 +141,9 @@ MinionRagdoll.create_ragdoll = function (self, death_data)
 
 	local do_ragdoll_push = death_data.do_ragdoll_push
 	local hit_zone_name = death_data.hit_zone_name
-	local attack_direction = death_data.attack_direction:unbox()
 
-	if do_ragdoll_push and hit_zone_name and attack_direction then
+	if do_ragdoll_push and hit_zone_name then
+		local attack_direction = death_data.attack_direction:unbox()
 		local damage_profile_name = death_data.damage_profile_name
 		local damage_profile = DamageProfileTemplates[damage_profile_name]
 		local herding_template_name_or_nil = death_data.herding_template_name
@@ -179,11 +189,25 @@ MinionRagdoll._remove_ragdoll = function (self, unit)
 
 	Managers.state.decal:remove_linked_decals(unit)
 	Managers.state.unit_spawner:mark_for_deletion(unit)
+
+	self._removed_ragdolls[unit] = true
+end
+
+MinionRagdoll.remove_ragdoll_safe = function (self, unit)
+	local ragdolls = self._ragdolls
+
+	if table.find(ragdolls, unit) then
+		self:_remove_ragdoll(unit)
+	end
 end
 
 local DEFAULT_PUSH_FORCE = 250
 
 MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil)
+	if self._removed_ragdolls[unit] then
+		return
+	end
+
 	local push_force = DEFAULT_PUSH_FORCE
 
 	if damage_profile.ragdoll_push_force then
@@ -204,9 +228,6 @@ MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_prof
 	local breed = unit_data_extension:breed()
 	local hit_zone_ragdoll_pushes = breed.hit_zone_ragdoll_pushes
 	local push_force_data = hit_zone_ragdoll_pushes[hit_zone_name]
-
-	fassert(push_force_data, "%s hit zone does not have any ragdoll push data", hit_zone_name)
-
 	local current_cache_index = self._delayed_ragdoll_push_index
 
 	if current_cache_index < RAGDOLL_PUSH_CACHE_SIZE then

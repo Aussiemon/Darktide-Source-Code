@@ -7,12 +7,10 @@ local default_armor_decal = nil
 local default_shield_block_decal = {
 	extents = {
 		min = {
-			z = 0.25,
 			x = 0.1,
 			y = 0.1
 		},
 		max = {
-			z = 0.25,
 			x = 0.1,
 			y = 0.1
 		}
@@ -945,17 +943,9 @@ local default_surface_fx = {
 local surface_decal = {
 	concrete = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
@@ -964,17 +954,9 @@ local surface_decal = {
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
@@ -983,17 +965,9 @@ local surface_decal = {
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
@@ -1004,344 +978,276 @@ local surface_decal = {
 	},
 	metal_solid = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
 			},
 			units = {
-				"content/fx/units/vfx_decal_metal_bullethole"
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
 			},
 			units = {
-				"content/fx/units/vfx_decal_metal_bullethole"
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
 			},
 			units = {
-				"content/fx/units/vfx_decal_metal_bullethole"
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		}
+	},
+	metal_sheet = {
+		[hit_types.stop] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		},
+		[hit_types.penetration_entry] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		},
+		[hit_types.penetration_exit] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		}
+	},
+	metal_catwalk = {
+		[hit_types.stop] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		},
+		[hit_types.penetration_entry] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		},
+		[hit_types.penetration_exit] = {
+			uniform_extents = {
+				max = 0.15,
+				min = 0.15
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_metal_large_01",
+				"content/fx/units/weapons/small_caliber_metal_medium_01",
+				"content/fx/units/weapons/small_caliber_metal_small_01"
 			}
 		}
 	},
 	cloth = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_cloth_large_01",
+				"content/fx/units/weapons/small_caliber_cloth_medium_01",
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_cloth_large_01",
+				"content/fx/units/weapons/small_caliber_cloth_medium_01",
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_cloth_large_01",
+				"content/fx/units/weapons/small_caliber_cloth_medium_01",
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
 			}
 		}
 	},
 	glass_breakable = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.4,
+				min = 0.4
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.4,
+				min = 0.4
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.4,
+				min = 0.4
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		}
 	},
 	glass_unbreakable = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_glass_large_01",
+				"content/fx/units/weapons/small_caliber_glass_medium_01",
+				"content/fx/units/weapons/small_caliber_glass_small_01"
 			}
 		}
 	},
 	wood_solid = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_wood_large_01",
+				"content/fx/units/weapons/small_caliber_wood_medium_01",
+				"content/fx/units/weapons/small_caliber_wood_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_wood_large_01",
+				"content/fx/units/weapons/small_caliber_wood_medium_01",
+				"content/fx/units/weapons/small_caliber_wood_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_wood_large_01",
+				"content/fx/units/weapons/small_caliber_wood_medium_01",
+				"content/fx/units/weapons/small_caliber_wood_small_01"
 			}
 		}
 	},
 	wood_plywood = {
 		[hit_types.stop] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_wood_large_01",
+				"content/fx/units/weapons/small_caliber_wood_medium_01",
+				"content/fx/units/weapons/small_caliber_wood_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_wood_large_01",
+				"content/fx/units/weapons/small_caliber_wood_medium_01",
+				"content/fx/units/weapons/small_caliber_wood_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
-			extents = {
-				min = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				},
-				max = {
-					z = 0.2,
-					x = 0.2,
-					y = 0.2
-				}
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",

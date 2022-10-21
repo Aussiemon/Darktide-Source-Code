@@ -1,5 +1,7 @@
 require("scripts/extension_systems/buff/buffs/buff")
 
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local ProcBuff = class("ProcBuff", "Buff")
 
 ProcBuff.init = function (self, context, template, start_time, instance_id, ...)
@@ -7,15 +9,17 @@ ProcBuff.init = function (self, context, template, start_time, instance_id, ...)
 
 	local cooldown = self:_cooldown_duration()
 	local active_duration = self:_active_duration()
-	local t = Managers.time:time("gameplay")
 
 	if cooldown then
-		self._active_start_time = t - (cooldown + active_duration)
+		self._active_start_time = start_time - (cooldown + active_duration)
 	else
-		self._active_start_time = t - active_duration
+		self._active_start_time = start_time - active_duration
 	end
 
 	self._active_vfx = {}
+	self._num_proc_keywords = template.proc_keywords and #template.proc_keywords
+	self._num_inactive_keywords = template.inactive_keywords and #template.inactive_keywords
+	self._num_off_cooldown_keywords = template.off_cooldown_keywords and #template.off_cooldown_keywords
 end
 
 ProcBuff.set_buff_component = function (self, buff_component, component_keys, component_index)
@@ -47,7 +51,9 @@ ProcBuff.destroy = function (self)
 		buff_component[active_start_time] = 0
 	end
 
-	self:_stop_proc_active_fx()
+	local t = Managers.time:time("gameplay")
+
+	self:_stop_proc_active_fx(t)
 	ProcBuff.super.destroy(self)
 end
 
@@ -117,7 +123,7 @@ ProcBuff._can_activate = function (self, t)
 	local has_cooldown = cooldown >= 0
 
 	if has_cooldown then
-		local is_active = self:_is_active(t)
+		local is_active = self:_is_active(t) and not self._template.allow_proc_while_active
 		local is_cooling_down = self:_is_cooling_down(t)
 
 		return not is_active and not is_cooling_down
@@ -161,7 +167,7 @@ ProcBuff.update = function (self, dt, t, portable_random)
 	elseif has_activated and not is_active then
 		self._has_activated = false
 
-		self:_stop_proc_active_fx()
+		self:_stop_proc_active_fx(t)
 
 		local proc_end_func = template.proc_end_func
 
@@ -173,69 +179,72 @@ end
 
 ProcBuff._can_add_stat_and_keywords = function (self, t)
 	local template = self._template
-	local condition_func = template.conditional_proc_func
-	local condition_ok = not condition_func or condition_func(self._template_data, self._template_context)
+	local conditional_proc_func = template.conditional_proc_func
+	local condition_ok = not conditional_proc_func or conditional_proc_func(self._template_data, self._template_context)
 	local is_active = self:_is_active(t) and condition_ok
 
 	return is_active
 end
 
-ProcBuff.update_keywords = function (self, current_key_words)
+ProcBuff.update_keywords = function (self, current_key_words, t)
 	ProcBuff.super.update_keywords(self, current_key_words)
 
 	local template = self._template
-	local t = Managers.time:time("gameplay")
-	local is_active = self:_can_add_stat_and_keywords(t)
-	local proc_keywords = self._template.proc_keywords
 
-	if proc_keywords and is_active then
-		for _, keyword in pairs(proc_keywords) do
-			current_key_words[keyword] = true
+	if self:_can_add_stat_and_keywords(t) then
+		if self._num_proc_keywords then
+			local proc_keywords = template.proc_keywords
+
+			for i = 1, self._num_proc_keywords do
+				current_key_words[proc_keywords[i]] = true
+			end
+		end
+	elseif self._num_inactive_keywords then
+		local inactive_keywords = template.inactive_keywords
+
+		for i = 1, self._num_inactive_keywords do
+			current_key_words[inactive_keywords[i]] = true
 		end
 	end
 
-	local inactive_keywords = self._template.inactive_keywords
+	if self._num_off_cooldown_keywords and not self:_is_cooling_down(t) then
+		local off_cooldown_keywords = template.off_cooldown_keywords
 
-	if inactive_keywords and not is_active then
-		for _, keyword in pairs(inactive_keywords) do
-			current_key_words[keyword] = true
-		end
-	end
-
-	local is_cooling_down = self:_is_cooling_down(t)
-	local off_cooldown_keywords = template.off_cooldown_keywords
-
-	if off_cooldown_keywords and not is_cooling_down then
-		for _, keyword in pairs(off_cooldown_keywords) do
-			current_key_words[keyword] = true
+		for i = 1, self._num_off_cooldown_keywords do
+			current_key_words[off_cooldown_keywords[i]] = true
 		end
 	end
 
 	return current_key_words
 end
 
-ProcBuff.update_stat_buffs = function (self, current_stat_buffs)
-	ProcBuff.super.update_stat_buffs(self, current_stat_buffs)
+ProcBuff.update_stat_buffs = function (self, current_stat_buffs, t)
+	ProcBuff.super.update_stat_buffs(self, current_stat_buffs, t)
 
 	local template = self._template
-	local t = Managers.time:time("gameplay")
 	local is_active = self:_can_add_stat_and_keywords(t)
-	local proc_stat_buffs = template.proc_stat_buffs
+	local template_override_data = self._template_override_data
+	local override_proc_stat_buffs = template_override_data and template_override_data.proc_stat_buffs
+	local proc_stat_buffs = override_proc_stat_buffs or template.proc_stat_buffs
 
 	if proc_stat_buffs and is_active then
 		self:_calculate_stat_buffs(current_stat_buffs, proc_stat_buffs)
 	end
 end
 
+local PROCCED_PROC_EVENTS = {}
+
 ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, portable_random, local_portable_random)
 	local template = self._template
 	local activated_proc = false
+	local procced_proc_events = PROCCED_PROC_EVENTS
 
-	for i = 1, num_proc_events do
-		local proc_event_data = proc_events[i]
-		local proc_event_name = proc_event_data.name
+	table.clear(procced_proc_events)
+
+	for i = 1, num_proc_events * PROC_EVENTS_STRIDE, PROC_EVENTS_STRIDE do
+		local proc_event_name = proc_events[i]
+		local params = proc_events[i + 1]
 		local proc_chance = self:_proc_chance(proc_event_name)
-		local params = proc_event_data.params
 		local is_local_proc_event = params.is_local_proc_event
 		local is_predicted_buff = template.predicted
 		local template_data = self._template_data
@@ -243,22 +252,23 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 
 		if proc_chance and self:_can_activate(t) then
 			local portable_random_to_use = (is_local_proc_event or not is_predicted_buff) and local_portable_random or portable_random
-			local auto_tester = DevParameters.weapon_traits_testify
-			local will_proc = proc_chance == 1 or auto_tester
+			local will_proc = proc_chance == 1
 			local random_value = will_proc and 0 or portable_random_to_use:next_random()
 
 			if random_value < proc_chance then
 				local check_proc_func = template.check_proc_func
-				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context)
-				local condition_func = template.conditional_proc_func
-				local condition_ok = not condition_func or condition_func(template_data, template_context)
+				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context, t)
+				local conditional_proc_func = template.conditional_proc_func
+				local condition_ok = not conditional_proc_func or conditional_proc_func(template_data, template_context, t)
 
 				if is_check_ok and condition_ok then
 					local proc_func = template.proc_func
 
 					if proc_func then
-						proc_func(params, template_data, template_context)
+						proc_func(params, template_data, template_context, t)
 					end
+
+					procced_proc_events[proc_event_name] = true
 
 					if not is_local_proc_event then
 						activated_proc = true
@@ -278,13 +288,22 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 				if specific_proc_func and specific_proc_func[proc_event_name] then
 					local func = specific_proc_func[proc_event_name]
 
-					func(params, template_data, template_context)
+					func(params, template_data, template_context, t)
+				end
+
+				local proc_extends_time = template.proc_extends_time
+
+				if proc_extends_time then
+					local time = template.proc_extends_time_func(template_data, template_context)
+					local start_time = self:start_time()
+
+					self:set_start_time(start_time + time)
 				end
 			end
 		end
 	end
 
-	return activated_proc
+	return activated_proc, procced_proc_events
 end
 
 ProcBuff._proc_chance = function (self, proc_event_name)
@@ -300,7 +319,6 @@ end
 ProcBuff._start_proc_fx = function (self)
 	local template_context = self._template_context
 	local template = self._template
-	local world = template_context.world
 	local wwise_world = template_context.wwise_world
 	local proc_effects = template.proc_effects
 	local is_local_unit = template_context.is_local_unit
@@ -355,7 +373,7 @@ ProcBuff._start_proc_active_fx = function (self)
 	end
 end
 
-ProcBuff._stop_proc_active_fx = function (self)
+ProcBuff._stop_proc_active_fx = function (self, t)
 	local template = self._template
 	local template_context = self._template_context
 	local world = template_context.world
@@ -385,7 +403,7 @@ ProcBuff._stop_proc_active_fx = function (self)
 		if player_effects and is_local_unit then
 			local player_looping_wwise_stop_event = player_effects.looping_wwise_stop_event
 
-			if player_looping_wwise_stop_event then
+			if player_looping_wwise_stop_event and self:_is_active(t) then
 				WwiseWorld.trigger_resource_event(wwise_world, player_looping_wwise_stop_event)
 			end
 
@@ -395,30 +413,6 @@ ProcBuff._stop_proc_active_fx = function (self)
 				Wwise.set_state(wwise_state.group, wwise_state.off_state)
 			end
 		end
-	end
-end
-
-ProcBuff.debug_draw = function (self, gui, t, position, box_width, box_height, scale, opacity, text_size, debug_font_mtrl)
-	ProcBuff.super.debug_draw(self, gui, t, position, box_width, box_height, scale, opacity, text_size, debug_font_mtrl)
-
-	local active_start_time = self:active_start_time()
-	local active_duration = self:_active_duration()
-
-	if self:_is_active(t) and active_duration > 0 then
-		local active_rect_scalar = (t - active_start_time) / active_duration
-		local active_rect_size = Vector3(box_width * active_rect_scalar, box_height / 2, 0) * scale
-		local active_rect_color = Color(230 * opacity, 200, 200, 10)
-
-		Gui.rect(gui, position + Vector3(0, box_height / 2, 0) * scale, active_rect_size, active_rect_color)
-	end
-
-	if self:_is_cooling_down(t) then
-		local cooldown_duration = self:_cooldown_duration()
-		local cooldown_rect_scalar = (t - active_start_time - active_duration) / cooldown_duration
-		local cooldown_rect_size = Vector3(box_width * cooldown_rect_scalar, box_height / 4, 0) * scale
-		local cooldown_rect_color = Color(230 * opacity, 200, 0, 10)
-
-		Gui.rect(gui, position + Vector3(0, 3 * box_height / 4, 0) * scale, cooldown_rect_size, cooldown_rect_color)
 	end
 end
 

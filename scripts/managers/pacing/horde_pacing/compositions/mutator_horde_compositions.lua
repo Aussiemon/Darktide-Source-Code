@@ -27,8 +27,19 @@ local horde_compositions = {
 				{
 					name = "chaos_hound",
 					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_hound",
+					amount = {
 						2,
-						3
+						2
 					}
 				}
 			}
@@ -38,19 +49,8 @@ local horde_compositions = {
 				{
 					name = "chaos_hound",
 					amount = {
-						3,
-						4
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_hound",
-					amount = {
-						3,
-						4
+						2,
+						2
 					}
 				}
 			}

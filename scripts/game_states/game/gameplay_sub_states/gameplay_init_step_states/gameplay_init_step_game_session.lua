@@ -36,6 +36,8 @@ GameplayInitStepGameSession._init_game_session = function (self, is_server, netw
 	end
 
 	Managers.state.game_session = game_session_manager
+
+	Managers.progression:clear_session_report()
 end
 
 implements(GameplayInitStepGameSession, GameplayInitStepInterface)

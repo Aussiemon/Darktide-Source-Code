@@ -18,9 +18,9 @@ local function weapon_template_tests(weapon_templates)
 		if weapon_template_name then
 			local weapon_template = weapon_templates[weapon_template_name]
 
-			if not weapon_template then
-				if testable or unstable then
-					fassert(weapon_template ~= nil, "[WeaponTemplateTests], Weapon template %q defined for item %q with workflow state %q does not exist.", weapon_template_name, item_name, workflow_state)
+			if not weapon_template and not testable then
+				if unstable then
+					-- Nothing
 				elseif wip then
 					Log.error("WeaponTemplateTests", "Weapon template %q defined for item %q with workflow state %q does not exist.", weapon_template_name, item_name, workflow_state)
 				end

@@ -75,9 +75,12 @@ MissionObjectiveSide._proc_mission_objective_at_max_progression = function (self
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.unit = player_unit
 
-	buff_extension:add_proc_event(proc_event, param_table)
+	if param_table then
+		param_table.unit = player_unit
+
+		buff_extension:add_proc_event(proc_event, param_table)
+	end
 end
 
 MissionObjectiveSide._set_side_mission_type = function (self, side_mission_type)

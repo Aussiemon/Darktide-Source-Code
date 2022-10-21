@@ -16,8 +16,6 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 
 	if side_mission_name ~= "default" then
 		side_mission = MissionObjectiveTemplates.side_mission.objectives[side_mission_name]
-
-		fassert(side_mission.is_side_mission, "[MissionManager][set_side_mission]  %s missing field 'is_side_mission = true'.", side_mission_name)
 	end
 
 	self._mission_level = level
@@ -56,9 +54,11 @@ MissionManager.side_mission_name = function (self)
 	return self._side_mission_name
 end
 
-MissionManager._set_side_mission_type = function (self, side_mission_type)
-	fassert(SIDE_MISSION_TYPES[side_mission_type], "[MissionManager] side mission type: [%s] is not specified in SIDE_MISSION_TYPES.", side_mission_type)
+MissionManager.force_third_person_mode = function (self)
+	return self._mission.force_third_person_mode or false
+end
 
+MissionManager._set_side_mission_type = function (self, side_mission_type)
 	self._side_mission_type = side_mission_type
 end
 

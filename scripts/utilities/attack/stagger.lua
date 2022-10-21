@@ -12,11 +12,8 @@ local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, 
 local EMPTY_STAT_BUFFS = {}
 local DEFAULT_ACCUMULATIVE_MULTIPLIER = 0.5
 
-Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
+Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
 	local breed = _get_breed(unit)
-
-	fassert(Breed.is_minion(breed), "You are only allowed to apply staggers to minions!")
-
 	local stagger_component = Blackboard.write_component(BLACKBOARDS[unit], "stagger")
 
 	if stagger_component.controlled_stagger then
@@ -33,8 +30,8 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local stagger_count = _get_stagger_count(unit, breed)
 	local armor_type = Armor.armor_type(unit, breed)
 	local t = Managers.time:time("gameplay")
-	local decay_time = StaggerSettings.stagger_pool_decay_time
-	local decay_delay = StaggerSettings.stagger_pool_decay_delay
+	local decay_time = breed.stagger_pool_decay_time or StaggerSettings.stagger_pool_decay_time
+	local decay_delay = breed.stagger_pool_decay_delay or StaggerSettings.stagger_pool_decay_delay
 	local stagger_strength_pool = stagger_component.stagger_strength_pool
 	local stagger_pool_last_modified = stagger_component.stagger_pool_last_modified
 	local time_since_last = t - stagger_pool_last_modified
@@ -48,7 +45,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system") or attacking_unit_owner_unit and ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local attacker_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs() or EMPTY_STAT_BUFFS
 	local stagger_reduction_override_or_nil, action_controlled_stagger = _get_action_data_overrides(unit, breed, damage_profile)
-	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, has_power_boost, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield)
+	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield)
 	local accumulative_multiplier = damage_profile.accumulative_stagger_strength_multiplier or DEFAULT_ACCUMULATIVE_MULTIPLIER
 
 	if type(accumulative_multiplier) == "table" then
@@ -56,7 +53,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 		accumulative_multiplier = DamageProfile.lerp_damage_profile_entry(accumulative_multiplier, lerp_value)
 	end
 
-	if breed.ignore_stagger_accumulation then
+	if breed.ignore_stagger_accumulation or breed.only_accumulate_stagger_on_weakspot and not hit_weakspot then
 		accumulative_multiplier = 0
 	end
 
@@ -138,6 +135,11 @@ function _get_system_overrides(unit, damage_profile, stagger_type, duration_scal
 	return stagger_type, duration_scale, length_scale
 end
 
+local RUNNING_STAGGER_DEFAULT_MIN_DISTANCE = 5
+local CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES = {
+	sticky = true
+}
+
 function _get_action_data_overrides(unit, breed, damage_profile)
 	local stagger_reduction, action_controlled_stagger = nil
 	local stagger_type = damage_profile.stagger_category
@@ -149,13 +151,26 @@ function _get_action_data_overrides(unit, breed, damage_profile)
 		if action_data_or_nil then
 			local action_data = action_data_or_nil
 			local stagger_type_reduction = action_data.stagger_type_reduction and action_data.stagger_type_reduction[stagger_type]
-			stagger_reduction = stagger_type_reduction
+			local stagger_base_reduction = action_data.stagger_reduction
+			stagger_reduction = stagger_type_reduction or stagger_base_reduction
 
 			if action_data.controlled_stagger then
 				local locomotion_extension = ScriptUnit.has_extension(unit, "locomotion_system")
 
 				if not locomotion_extension then
 					return
+				end
+
+				if CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES[stagger_type] then
+					return
+				end
+
+				local min_distance = action_data.controlled_stagger_min_distance or RUNNING_STAGGER_DEFAULT_MIN_DISTANCE
+				local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+				local distance_to_destination = navigation_extension:distance_to_destination()
+
+				if distance_to_destination < min_distance then
+					return stagger_reduction, false
 				end
 
 				local within_speed_threshold = true

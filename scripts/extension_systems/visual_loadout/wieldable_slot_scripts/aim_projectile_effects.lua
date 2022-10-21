@@ -6,7 +6,12 @@ local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utili
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
 local AimProjectileEffects = class("AimProjectileEffects")
-local SPAWN_POS = Vector3Box(400, 400, 400)
+local MAX_NUMBER_OF_SPLINE = 2
+local MAX_INTEGRATION_STEPS = 100
+local MAX_POSITION_STEPS = 30
+local AIM_TRAJECTORY_EFFECT_DEFAULT_MATERIAL = "content/fx/materials/master/trajectory"
+local AIM_TRAJECTORY_EFFECT_DEFAULT_RADIUS = 0.05
+local _calculate_arc_position = nil
 
 AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._world = context.world
@@ -22,6 +27,19 @@ AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_s
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._integration_data = ProjectileIntegrationData.allocate_integration_data()
+	self._aim_data = {}
+
+	for i = 1, MAX_INTEGRATION_STEPS do
+		self._aim_data[i] = {}
+	end
+
+	self._position_data = {}
+
+	for i = 1, MAX_POSITION_STEPS do
+		self._position_data[i] = {}
+	end
+
+	self._splines = {}
 end
 
 AimProjectileEffects._trajectory_settings_from_aim_action = function (self, action_settings, trajectory_settings)
@@ -66,6 +84,15 @@ AimProjectileEffects._trajectory_settings = function (self, t)
 
 	self:_trajectory_settings_from_aim_action(action_settings, _trajectory_settings)
 
+	local weapon_templates = self._weapon_template
+	local projectile_template = weapon_templates.projectile_template
+
+	if projectile_template then
+		local imapct_settings = projectile_template.damage.impact
+		local destory_on_impact = imapct_settings and imapct_settings.delete_on_impact or imapct_settings.explosion_template
+		_trajectory_settings.stop_on_impact = destory_on_impact
+	end
+
 	return true, _trajectory_settings
 end
 
@@ -74,30 +101,21 @@ AimProjectileEffects.post_update = function (self, unit, dt, t)
 		return
 	end
 
-	Profiler.start("AimProjectileEffects_update")
-
 	local draw_trajectory, trajectory_settings = self:_trajectory_settings(t)
 
 	if draw_trajectory then
-		-- Nothing
-	elseif self:_trajectory_vfx_is_active() then
-		self:_stop_trajectory_vfx()
+		self:_update_trajectory(trajectory_settings, dt, t)
+	elseif self:_trajectory_is_active() then
+		self:_stop_trajectory()
 	end
-
-	Profiler.stop("AimProjectileEffects_update")
 end
 
-AimProjectileEffects._update_fx = function (self, trajectory_settings)
-	self:_update_trajectory_fx(trajectory_settings)
-end
-
-AimProjectileEffects._update_trajectory_fx = function (self, trajectory_settings)
-	local projectile_locomotion_template = trajectory_settings.projectile_locomotion_template
-
-	if not projectile_locomotion_template and projectile_locomotion_template.vfx then
+AimProjectileEffects._update_trajectory = function (self, trajectory_settings, dt, t)
+	if not self:_can_update_trajectory(trajectory_settings) then
 		return
 	end
 
+	local projectile_locomotion_template = trajectory_settings.projectile_locomotion_template
 	local rotation = trajectory_settings.rotation
 	local speed = trajectory_settings.speed
 	local momentum = trajectory_settings.momentum
@@ -116,12 +134,14 @@ AimProjectileEffects._update_trajectory_fx = function (self, trajectory_settings
 
 	local throw_config = projectile_locomotion_template.throw_parameters[throw_type]
 	local max_iterations = throw_config.aim_max_iterations
+	local time_step_multiplier = throw_config.aim_time_step_multiplier or 1
+	local max_number_of_bounces = math.clamp(throw_config.aim_max_number_of_bounces or MAX_NUMBER_OF_SPLINE, 1, MAX_NUMBER_OF_SPLINE)
 
-	if not self:_trajectory_vfx_is_active() then
-		self:_start_trajectory_vfx(projectile_locomotion_template)
+	if not self:_trajectory_is_active() then
+		self:_start_trajectory(trajectory_settings)
 	end
 
-	local aim_data, number_of_iterations_done = self:_get_trajactory_data(integration_data, max_iterations, stop_on_impact)
+	local aim_data, number_of_iterations_done, total_distance, arc_distances = self:_get_trajactory_data(integration_data, max_iterations, stop_on_impact, time_step_multiplier, max_number_of_bounces)
 	local local_start_offset = trajectory_settings.start_offset
 	local arc_offset = Vector3.zero()
 
@@ -132,115 +152,7 @@ AimProjectileEffects._update_trajectory_fx = function (self, trajectory_settings
 		arc_offset = gun_posistion - first_position
 	end
 
-	local max_positions = self._trajectory_vfx.max_position_indices
-	local position_distance = self._trajectory_vfx.particle_distance
-	local distributed_positions, total_distance = self:_get_points_distrubuted_by_distance(aim_parameters.position, aim_data, position_distance, max_positions)
-
-	if total_distance > 0 then
-		for i = 1, max_positions do
-			local data = distributed_positions[i]
-			local position, _ = self:_calculate_arc_position(data, total_distance, arc_offset)
-
-			self:_set_particle_position(i, position)
-		end
-	end
-end
-
-AimProjectileEffects._calculate_arc_position = function (self, position_data, total_distance, arc_offset)
-	local new_position = position_data.position
-	local distance = position_data.distance
-	local lerp = 1 - distance / total_distance
-	lerp = lerp * lerp
-	local final_offset = arc_offset * lerp
-	local arc_position = new_position + final_offset
-
-	return arc_position, final_offset
-end
-
-local _aim_data = {}
-
-AimProjectileEffects._get_trajactory_data = function (self, integration_data, max_iterations, stop_on_impact)
-	table.clear(_aim_data)
-
-	local number_of_iterations_done = 0
-	local fixed_frame_time = DefaultGameParameters.fixed_time_step
-
-	for i = 1, max_iterations do
-		local old_position = integration_data.position:unbox()
-
-		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time)
-
-		local new_position = integration_data.position:unbox()
-		local has_hit = integration_data.has_hit
-		_aim_data[#_aim_data + 1] = {
-			old_position = old_position,
-			new_position = new_position,
-			has_hit = has_hit
-		}
-		number_of_iterations_done = i
-		local continue = integration_data.integrate
-
-		if not continue then
-			break
-		end
-
-		if has_hit and stop_on_impact then
-			break
-		end
-	end
-
-	return _aim_data, number_of_iterations_done
-end
-
-local position_table = {}
-
-AimProjectileEffects._get_points_distrubuted_by_distance = function (self, start_position, aim_data, distance_between_dots, number_of_dots)
-	table.clear(position_table)
-
-	local current_position = start_position
-	local next_point = aim_data[1].new_position
-	local current_index = 1
-	local number_of_aim_data = #aim_data
-	local start_delta = next_point - start_position
-	local current_drection = Vector3.normalize(start_delta)
-	local current_length = Vector3.length(start_delta)
-	local total_distance = 0
-
-	for i = 1, number_of_dots do
-		position_table[i] = {
-			position = current_position,
-			distance = total_distance
-		}
-		local current_segment_length_left = distance_between_dots
-
-		while current_segment_length_left > 0 do
-			if distance_between_dots < current_length then
-				current_position = current_position + current_drection * current_segment_length_left
-				current_length = current_length - current_segment_length_left
-				current_segment_length_left = 0
-				total_distance = total_distance + current_segment_length_left
-			else
-				current_segment_length_left = current_segment_length_left - current_length
-				local old_point = next_point
-				current_index = current_index + 1
-
-				if number_of_aim_data < current_index then
-					current_position = next_point
-
-					break
-				end
-
-				total_distance = total_distance + current_length
-				next_point = aim_data[current_index].new_position
-				local new_delta = next_point - old_point
-				current_drection = Vector3.normalize(new_delta)
-				current_length = Vector3.length(new_delta)
-				current_position = old_point
-			end
-		end
-	end
-
-	return position_table, total_distance
+	self:_set_trajectory_positions(aim_parameters.position, aim_data, number_of_iterations_done, arc_offset, total_distance, arc_distances, dt)
 end
 
 AimProjectileEffects.update_first_person_mode = function (self, first_person_mode)
@@ -252,50 +164,228 @@ AimProjectileEffects.wield = function (self)
 end
 
 AimProjectileEffects.unwield = function (self)
-	self:_stop_trajectory_vfx()
+	self:_stop_trajectory()
 end
 
 AimProjectileEffects.destroy = function (self)
-	self:_stop_trajectory_vfx()
+	self:_stop_trajectory()
 end
 
-AimProjectileEffects._start_trajectory_vfx = function (self, locomotion_template)
+local function _add_aim_data(aim_data, new_position, old_position, has_hit, distance_in_arc, distance_traveled)
+	aim_data.old_position = old_position
+	aim_data.new_position = new_position
+	aim_data.has_hit = has_hit
+	local delta_distance = Vector3.distance(old_position, new_position)
+	distance_in_arc = distance_in_arc + delta_distance
+	aim_data.distance_in_arc = distance_in_arc
+	distance_traveled = distance_traveled + delta_distance
+	aim_data.distance = distance_traveled
+	aim_data.detla_distance = delta_distance
+
+	return distance_in_arc, distance_traveled
+end
+
+local _arc_distances = {}
+
+AimProjectileEffects._get_trajactory_data = function (self, integration_data, max_iterations, stop_on_impact, time_step_multiplier, max_number_of_bounces)
+	max_iterations = math.min(max_iterations, MAX_INTEGRATION_STEPS)
+	local fixed_frame_time = DefaultGameParameters.fixed_time_step
+	local number_of_iterations_done = 0
+	local number_of_bounces = 0
+	local distance_traveled = 0
+	local distance_in_arc = 0
+	local is_server = false
+	local fake_t = 0
+
+	table.clear(_arc_distances)
+
+	local current_daim_data_index = 1
+	local aim_data = self._aim_data
+
+	for i = 1, max_iterations - 2 * MAX_NUMBER_OF_SPLINE do
+		local old_position = integration_data.position
+
+		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time, fake_t, is_server, time_step_multiplier)
+
+		fake_t = fake_t + fixed_frame_time * time_step_multiplier
+		local new_position = integration_data.position
+		local has_hit = integration_data.has_hit
+		local pre_bounce_arc_lenght = distance_in_arc
+
+		if has_hit then
+			local hit_position = integration_data.last_hit_position
+			pre_bounce_arc_lenght, distance_traveled = _add_aim_data(aim_data[current_daim_data_index], hit_position, old_position, true, distance_in_arc, distance_traveled)
+			distance_in_arc = 0
+			distance_in_arc, distance_traveled = _add_aim_data(aim_data[current_daim_data_index + 1], new_position, hit_position, false, distance_in_arc, distance_traveled)
+			current_daim_data_index = current_daim_data_index + 2
+			number_of_iterations_done = number_of_iterations_done + 2
+		else
+			distance_in_arc, distance_traveled = _add_aim_data(aim_data[current_daim_data_index], new_position, old_position, false, distance_in_arc, distance_traveled)
+			current_daim_data_index = current_daim_data_index + 1
+			number_of_iterations_done = number_of_iterations_done + 1
+		end
+
+		_arc_distances[number_of_bounces + 1] = pre_bounce_arc_lenght
+		number_of_bounces = number_of_bounces + (has_hit and 1 or 0)
+		local continue = integration_data.integrate
+
+		if not continue then
+			break
+		end
+
+		local hit_unit = integration_data.last_hit_unit
+		local hit_minion = hit_unit and HEALTH_ALIVE[hit_unit]
+
+		if hit_minion or has_hit and (stop_on_impact or max_number_of_bounces <= number_of_bounces) then
+			break
+		end
+
+		if i == max_iterations then
+			break
+		end
+	end
+
+	return self._aim_data, number_of_iterations_done, distance_traveled, _arc_distances
+end
+
+AimProjectileEffects._can_update_trajectory = function (self, trajectory_settings)
+	local can_update = nil
+	can_update = self:_can_update_trajectory_spline(trajectory_settings)
+
+	return can_update
+end
+
+AimProjectileEffects._start_trajectory = function (self, trajectory_settings)
+	self:_start_trajectory_spline(trajectory_settings)
+end
+
+AimProjectileEffects._stop_trajectory = function (self)
+	self:_stop_trajectory_spline()
+end
+
+AimProjectileEffects._trajectory_is_active = function (self)
+	local is_alive = nil
+	is_alive = self:_trajectory_is_active_spline()
+
+	return is_alive
+end
+
+AimProjectileEffects._set_trajectory_positions = function (self, start_position, aim_data, number_of_aim_data, arc_offset, total_distance, arc_distances, dt)
+	self:_set_trajectory_positions_spline(start_position, aim_data, number_of_aim_data, arc_offset, total_distance, arc_distances, dt)
+end
+
+AimProjectileEffects._can_update_trajectory_spline = function (self, trajectory_settings)
+	return true
+end
+
+AimProjectileEffects._start_trajectory_spline = function (self, trajectory_settings)
+	local locomotion_template = trajectory_settings.projectile_locomotion_template
 	local vfx_config = locomotion_template.vfx
 	local trajectory_vfx_config = vfx_config.trajectory
-	local effect_name = trajectory_vfx_config.effect_name
-	local particle_id = World.create_particles(self._world, effect_name, SPAWN_POS:unbox())
-	self._trajectory_vfx = {
-		effect_name = effect_name,
-		particle_id = particle_id,
-		position_prefix = trajectory_vfx_config.position_prefix,
-		max_position_indices = trajectory_vfx_config.max_position_indices,
-		particle_distance = trajectory_vfx_config.particle_distance
-	}
-end
+	local material = trajectory_vfx_config.material_name or AIM_TRAJECTORY_EFFECT_DEFAULT_MATERIAL
+	local radius = trajectory_vfx_config.radius or AIM_TRAJECTORY_EFFECT_DEFAULT_RADIUS
 
-AimProjectileEffects._stop_trajectory_vfx = function (self)
-	if self._trajectory_vfx then
-		local particle_id = self._trajectory_vfx.particle_id
-
-		World.destroy_particles(self._world, particle_id)
-
-		self._trajectory_vfx = nil
+	for i = 1, MAX_NUMBER_OF_SPLINE do
+		self._splines[i] = World.create_spline_object_drawer(self._world, material, radius, Color.white())
 	end
 end
 
-AimProjectileEffects._trajectory_vfx_is_active = function (self)
-	return self._trajectory_vfx ~= nil
+AimProjectileEffects._stop_trajectory_spline = function (self)
+	if #self._splines > 0 then
+		for i = 1, MAX_NUMBER_OF_SPLINE do
+			World.destroy_spline_object_drawer(self._world, self._splines[i])
+
+			self._splines[i] = nil
+		end
+	end
 end
 
-AimProjectileEffects._set_particle_position = function (self, position_index, new_position)
-	local vfx = self._trajectory_vfx
-	local position_prefix = vfx.position_prefix
-	local effect_name = vfx.effect_name
-	local particle_id = vfx.particle_id
-	local position_particle_name = string.format("%s%d", position_prefix, position_index)
-	local variable_index = World.find_particles_variable(self._world, effect_name, position_particle_name)
+AimProjectileEffects._trajectory_is_active_spline = function (self)
+	return self._splines and #self._splines > 0
+end
 
-	World.set_particles_variable(self._world, particle_id, variable_index, new_position)
+local position_tabel = {}
+
+AimProjectileEffects._set_trajectory_positions_spline = function (self, start_position, aim_data, number_of_aim_data, arc_offset, total_distance, arc_distances, dt)
+	if number_of_aim_data == 1 then
+		for i = 1, MAX_NUMBER_OF_SPLINE do
+			local spline = self._splines[i]
+
+			SplineObjectDrawer.reset(spline)
+			SplineObjectDrawer.dispatch(spline)
+		end
+
+		return
+	end
+
+	local number_of_points = 7
+	local spline_start_index = 1
+	local first_arc_distance = arc_distances[1]
+	local arc_lerp = math.clamp01(first_arc_distance / 3 - 0.2)
+	arc_offset = Vector3.lerp(Vector3.zero(), arc_offset, arc_lerp)
+
+	for j = 1, MAX_NUMBER_OF_SPLINE do
+		local spline = self._splines[j]
+		local number_of_aim_data_left = number_of_aim_data - spline_start_index
+
+		if j <= #arc_distances and number_of_aim_data_left > 1 then
+			local arc_distance = arc_distances[j]
+			local distance_between_points = arc_distance / (number_of_points - 1)
+			local is_first_arc = j == 1
+
+			table.clear(position_tabel)
+
+			local first_aim_data = aim_data[spline_start_index]
+			local first_position = first_aim_data.old_position
+			position_tabel[1] = _calculate_arc_position(first_position, 0, arc_distance, arc_offset, is_first_arc)
+
+			if first_aim_data.has_hit then
+				position_tabel[2] = _calculate_arc_position(first_aim_data.new_position, first_aim_data.distance_in_arc, arc_distance, arc_offset, is_first_arc)
+				spline_start_index = spline_start_index + 1
+			else
+				local current_step = first_aim_data.distance_in_arc + (is_first_arc and 0 or 0.5 * distance_between_points)
+				local next_pos = 2
+
+				for i = spline_start_index + 1, number_of_aim_data do
+					local current_aim_data = aim_data[i]
+					spline_start_index = i
+					current_step = current_step + current_aim_data.detla_distance
+
+					if distance_between_points < current_step or current_aim_data.has_hit then
+						current_step = 0
+						local position = _calculate_arc_position(current_aim_data.new_position, current_aim_data.distance_in_arc, arc_distance, arc_offset, is_first_arc)
+						position_tabel[next_pos] = position
+						next_pos = next_pos + 1
+					end
+
+					if current_aim_data.has_hit then
+						spline_start_index = spline_start_index + 1
+
+						break
+					end
+				end
+			end
+
+			position_tabel[#position_tabel + 1] = position_tabel[#position_tabel]
+
+			table.insert(position_tabel, 1, position_tabel[1])
+			SplineObjectDrawer.reset(spline)
+			SplineObjectDrawer.add_spline(spline, position_tabel)
+			SplineObjectDrawer.dispatch(spline)
+		else
+			SplineObjectDrawer.reset(spline)
+			SplineObjectDrawer.dispatch(spline)
+		end
+	end
+end
+
+function _calculate_arc_position(position, distance, total_distance, arc_offset, use_offset)
+	local lerp = math.clamp01(1 - distance / total_distance)
+	lerp = lerp * lerp
+	local final_offset = use_offset and arc_offset * lerp or Vector3.zero()
+	local arc_position = position + final_offset
+
+	return arc_position, final_offset
 end
 
 return AimProjectileEffects

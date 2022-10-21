@@ -358,8 +358,7 @@ local PlayerComponentConfig = {
 		disable_push_velocity = "bool",
 		move_method = {
 			"script_driven",
-			"script_driven_hub",
-			"anim_driven"
+			"script_driven_hub"
 		}
 	},
 	locomotion_force_rotation = {
@@ -384,6 +383,7 @@ local PlayerComponentConfig = {
 		is_crouching = "bool",
 		can_jump = "bool",
 		is_dodging = "bool",
+		can_exit_crouch = "bool",
 		method = {
 			"falling",
 			"jumping",
@@ -431,11 +431,19 @@ local PlayerComponentConfig = {
 		cooldown = "fixed_frame_offset",
 		sprint_overtime = "fixed_frame_offset",
 		last_sprint_time = "fixed_frame_offset",
+		use_sprint_start_slowdown = "bool",
 		is_sprinting = "bool",
 		wants_sprint_camera = "bool",
 		is_sprint_jumping = "bool"
 	},
+	slide_character_state = {
+		friction_function = {
+			"default",
+			"sprint"
+		}
+	},
 	ledge_vaulting_character_state = {
+		was_sprinting = "bool",
 		traverse_velocity = "Vector3",
 		is_step_up = "bool",
 		forward = "Vector3",
@@ -457,20 +465,25 @@ local PlayerComponentConfig = {
 	inair_state = {
 		inair_entered_t = "fixed_frame_offset",
 		fell_from_height = "high_precision_position_component",
+		standing_frames = "mover_frames",
+		flying_frames = "mover_frames",
 		on_ground = "bool"
 	},
 	locomotion = {
-		parent_unit = "Unit",
-		position = "Vector3",
+		parent_unit = "locomotion_parent",
+		position = "locomotion_position",
 		velocity_current = "Vector3",
-		rotation = "Quaternion"
+		rotation = "locomotion_rotation"
 	},
 	player_unit_linker = {
 		parent_unit = "Unit",
 		linked = "bool",
 		parent_node = {
 			"none",
-			"j_leftweaponattach"
+			"j_leftweaponattach",
+			"j_tongue_mouth",
+			"j_spine",
+			"root_point"
 		},
 		node = {
 			"none",
@@ -478,13 +491,13 @@ local PlayerComponentConfig = {
 		}
 	},
 	first_person = {
-		previous_rotation = "Quaternion",
+		previous_rotation = "locomotion_rotation",
 		height = "character_height",
 		height_change_duration = "short_time",
 		wanted_height = "character_height",
 		old_height = "character_height",
-		position = "Vector3",
-		rotation = "Quaternion",
+		position = "locomotion_position",
+		rotation = "locomotion_rotation",
 		height_change_start_time = "fixed_frame_offset"
 	},
 	force_look_rotation = {
@@ -525,6 +538,7 @@ local PlayerComponentConfig = {
 		consecutive_dodges = "consecutive_dodges",
 		consecutive_dodges_cooldown = "fixed_frame_offset",
 		cooldown = "fixed_frame_offset",
+		started_from_crouch = "bool",
 		jump_override_time = "fixed_frame_offset",
 		distance_left = "short_distance"
 	},
@@ -559,6 +573,7 @@ local PlayerComponentConfig = {
 		disorientation_type = DISORIENTATION_TYPES
 	},
 	exploding_character_state = {
+		is_exploding = "bool",
 		slot_name = INVENTORY_SLOTS,
 		reason = {
 			"overheat",
@@ -577,7 +592,8 @@ local PlayerComponentConfig = {
 			"netted",
 			"pounced",
 			"warp_grabbed",
-			"mutant_charged"
+			"mutant_charged",
+			"consumed"
 		},
 		trigger_animation = {
 			"none",
@@ -599,7 +615,8 @@ local PlayerComponentConfig = {
 			"netted",
 			"pounced",
 			"warp_grabbed",
-			"mutant_charged"
+			"mutant_charged",
+			"consumed"
 		}
 	},
 	debug_state_input = {
@@ -620,6 +637,7 @@ local PlayerComponentConfig = {
 		interaction_template = INTERACTION_TEMPLATES
 	},
 	falling_character_state = {
+		likely_stuck = "bool",
 		was_ledge_hanging = "bool",
 		has_reached_damagable_distance = "bool"
 	},
@@ -633,6 +651,7 @@ local PlayerComponentConfig = {
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
 		start_t = "fixed_frame_offset",
+		combo_count = "action_combo_count",
 		time_scale = "action_time_scale",
 		end_t = "fixed_frame_offset",
 		template_name = WEAPON_TEMPLATES,
@@ -644,6 +663,7 @@ local PlayerComponentConfig = {
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
 		start_t = "fixed_frame_offset",
+		combo_count = "action_combo_count",
 		time_scale = "action_time_scale",
 		end_t = "fixed_frame_offset",
 		template_name = ABILITY_TEMPLATES,
@@ -655,6 +675,7 @@ local PlayerComponentConfig = {
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
 		start_t = "fixed_frame_offset",
+		combo_count = "action_combo_count",
 		time_scale = "action_time_scale",
 		end_t = "fixed_frame_offset",
 		template_name = ABILITY_TEMPLATES,
@@ -799,12 +820,10 @@ local PlayerComponentConfig = {
 	},
 	interaction = {
 		done_time = "fixed_frame_time",
-		focus_actor_node_index = "actor_node_index",
 		target_unit = "Unit",
-		start_time = "fixed_frame_time",
-		focus_unit = "Unit",
 		duration = "fixed_frame_offset",
 		target_actor_node_index = "actor_node_index",
+		start_time = "fixed_frame_time",
 		type = INTERACTION_TEMPLATES,
 		state = INTERACTION_STATES
 	},
@@ -892,13 +911,8 @@ local inventory_component_data = PlayerCharacterConstants.inventory_component_da
 
 for slot_name, config in pairs(slot_configuration) do
 	if config.wieldable then
-		fassert(PlayerComponentConfig[slot_name] == nil, "%s is not free.", slot_name)
-
 		local slot_type = config.slot_type
 		local component_data = inventory_component_data[slot_type]
-
-		fassert(component_data, "slot_type of name '%s' does not have a component configuration in PlayerCharacterConstants", slot_type)
-
 		local component_config = {}
 
 		for key, data in pairs(component_data) do
@@ -945,15 +959,11 @@ for looping_particle_alias, config in pairs(PlayerCharacterLoopingParticleAliase
 
 		if external_properties then
 			for property_name, possible_properties in pairs(external_properties) do
-				fassert(looping_particle_component[property_name] == nil, "Can't have the same property twice in external_properties (%q)", property_name)
-
 				local properties = table.clone(possible_properties)
 				properties[#properties + 1] = "n/a"
 				looping_particle_component[property_name] = properties
 			end
 		end
-
-		fassert(PlayerComponentConfig[looping_particle_alias] == nil, "Already contains a component named %q", looping_particle_alias)
 
 		PlayerComponentConfig[looping_particle_alias] = looping_particle_component
 	end
@@ -970,9 +980,6 @@ for looping_sound_alias, config in pairs(PlayerCharacterLoopingSoundAliases) do
 		end
 
 		local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
-
-		fassert(PlayerComponentConfig[component_name] == nil, "Already contains a component named %q", component_name)
-
 		PlayerComponentConfig[component_name] = looping_sound_component
 	end
 end

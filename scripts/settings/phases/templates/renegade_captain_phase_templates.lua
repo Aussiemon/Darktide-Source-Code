@@ -28,8 +28,8 @@ local renegade_captain_templates = {
 				hellgun = {
 					wanted_weapon_slot = "slot_hellgun",
 					duration = {
-						10,
-						20
+						20,
+						25
 					}
 				},
 				netgun = {
@@ -42,15 +42,15 @@ local renegade_captain_templates = {
 				bolt_pistol = {
 					wanted_weapon_slot = "slot_bolt_pistol",
 					duration = {
-						10,
-						15
+						20,
+						25
 					}
 				},
 				plasma_pistol = {
 					wanted_weapon_slot = "slot_plasma_pistol",
 					duration = {
-						10,
-						15
+						20,
+						25
 					}
 				},
 				shotgun = {

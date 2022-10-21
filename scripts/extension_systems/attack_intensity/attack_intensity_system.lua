@@ -46,14 +46,8 @@ AttackIntensitySystem.on_remove_extension = function (self, unit, extension_name
 end
 
 AttackIntensitySystem.update = function (self, context, dt, t, ...)
-	Profiler.start("attack_intensity_system")
-	Profiler.start("minion_attack_intensity")
 	self:_update_minion_extensions(dt, t)
-	Profiler.stop("minion_attack_intensity")
-	Profiler.start("player_attack_intensity")
 	self:_update_player_extensions(dt, t)
-	Profiler.stop("player_attack_intensity")
-	Profiler.stop("attack_intensity_system")
 end
 
 local NUM_UPDATES_PER_FRAME = 2

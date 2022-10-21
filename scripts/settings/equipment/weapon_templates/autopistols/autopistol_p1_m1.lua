@@ -1,14 +1,17 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
+local WeaponTraitsBespokeAutopistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autopistol_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -198,14 +201,14 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		sprint_ready_up_time = 0.2,
-		weapon_handling_template = "autogun_full_auto_fast",
 		kind = "shoot_hit_scan",
-		spread_template = "default_autopistol_assault",
+		weapon_handling_template = "autogun_full_auto_fast",
 		start_input = "shoot",
-		recoil_template = "default_autopistol_assault",
 		sprint_requires_press_to_interrupt = true,
+		sprint_ready_up_time = 0.2,
 		ammunition_usage = 1,
+		recoil_template = "default_autopistol_assault",
+		spread_template = "default_autopistol_assault",
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -268,20 +271,23 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return false
 		end,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
+		},
+		buff_keywords = {
+			buff_keywords.allow_hipfire_during_sprint
 		}
 	},
 	action_shoot_zoomed = {
 		start_input = "zoom_shoot",
-		minimum_hold_time = 0.05,
 		recoil_template = "default_autopistol_spraynpray",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		spread_template = "default_autopistol_spraynpray",
 		weapon_handling_template = "autogun_full_auto_fast",
 		ammunition_usage = 1,
+		minimum_hold_time = 0.05,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -377,7 +383,7 @@ weapon_template.actions = {
 				action_name = "action_reload"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		},
@@ -397,9 +403,6 @@ weapon_template.actions = {
 			},
 			grenade_ability = {
 				action_name = "grenade_ability"
-			},
-			zoom_release = {
-				action_name = "action_unzoom"
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -446,11 +449,11 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 2.15,
 		action_movement_curve = {
@@ -503,14 +506,16 @@ weapon_template.actions = {
 				chain_time = 1.9
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_toggle_flashlight = {
 		kind = "toogle_special",
+		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
 		activation_time = 0,
+		skip_3p_anims = true,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -535,6 +540,8 @@ weapon_template.actions = {
 		crosshair_type = "none",
 		start_input = "zoom_weapon_special",
 		activation_time = 0,
+		anim_event = "toggle_flashlight",
+		skip_3p_anims = true,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -657,11 +664,7 @@ weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
 weapon_template.movement_curve_modifier_template = "autopistol_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.base_stats = {
 	autopistol_p1_m1_dps_stat = {
 		description = "loc_trait_description_autopistol_p1_m1_dps_stat",
@@ -711,7 +714,7 @@ weapon_template.base_stats = {
 	},
 	autopistol_p1_m1_control_stat = {
 		description = "loc_trait_description_autopistol_p1_m1_dps_stat",
-		display_name = "loc_stats_display_control_stat",
+		display_name = "loc_stats_display_control_stat_ranged",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
@@ -738,5 +741,38 @@ weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 
 table.append(weapon_template.traits, ranged_common_traits)
+
+local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeAutopistolP1)
+
+table.append(weapon_template.traits, bespoke_autogun_p1_traits)
+
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_rapid_fire"
+	},
+	{
+		display_name = "loc_weapon_keyword_mobile"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "full_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "full_auto",
+		display_name = "loc_ranged_attack_secondary_braced",
+		type = "brace"
+	},
+	special = {
+		display_name = "loc_weapon_special_flashlight",
+		type = "flashlight"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
+}
 
 return weapon_template

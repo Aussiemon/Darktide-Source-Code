@@ -9,13 +9,13 @@ MinionSpawner.init = function (self, unit, is_server)
 	local spawner_extension = ScriptUnit.fetch_component_extension(unit, "minion_spawner_system")
 
 	if spawner_extension then
-		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data = self:_get_data(unit)
+		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing = self:_get_data(unit)
 		self._anim_data = anim_data
 		local tm = Unit.world_pose(unit, 1)
 		local spawn_position = Matrix4x4.transform(tm, spawn_position_offset:unbox())
 		local exit_position = Matrix4x4.transform(tm, exit_position_offset:unbox())
 
-		spawner_extension:setup_from_component(spawner_groups, spawn_position, exit_position)
+		spawner_extension:setup_from_component(spawner_groups, spawn_position, exit_position, exclude_from_pacing)
 	end
 end
 
@@ -44,7 +44,9 @@ MinionSpawner._get_data = function (self, unit)
 		}
 	end
 
-	return spawner_groups, spawn_position_offset, exit_position_offset, anim_data
+	local exclude_from_pacing = self:get_data(unit, "exclude_from_pacing")
+
+	return spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing
 end
 
 MinionSpawner.destroy = function (self)
@@ -276,6 +278,11 @@ MinionSpawner.component_data = {
 		size = 0,
 		ui_name = "Spawner Groups",
 		category = "Spawner Groups"
+	},
+	exclude_from_pacing = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Exclude From Pacing"
 	},
 	inputs = {
 		debug_started_animation = {

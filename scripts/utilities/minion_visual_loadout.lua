@@ -33,21 +33,17 @@ end
 
 MinionVisualLoadout.resolve = function (inventory_template, optional_zone_id, optional_used_weapon_slot_names, breed_name, inventory_seed)
 	local inventory = inventory_template[optional_zone_id] or inventory_template.default
-
-	fassert(not inventory_template.has_gib_overrides or #inventory > 0, "[MinionVisualLoadout] Tried to resolve inventory with zone id %q for breed %q but that inventory was empty.", optional_zone_id or "default", breed_name)
-
-	if inventory_template.has_gib_overrides then
-		local inventory_index = nil
-		inventory_seed, inventory_index = math.next_random(inventory_seed, 1, #inventory)
-		inventory = inventory[inventory_index]
-	end
+	local inventory_index = nil
+	inventory_seed, inventory_index = math.next_random(inventory_seed, 1, #inventory)
+	inventory = inventory[inventory_index]
 
 	if optional_used_weapon_slot_names then
 		inventory = table.clone(inventory)
+		local inventory_slots = inventory.slots
 
-		for slot_name, slot_data in pairs(inventory) do
+		for slot_name, slot_data in pairs(inventory_slots) do
 			if slot_data.is_weapon and not optional_used_weapon_slot_names[slot_name] then
-				inventory[slot_name] = nil
+				inventory_slots[slot_name] = nil
 			end
 		end
 	end

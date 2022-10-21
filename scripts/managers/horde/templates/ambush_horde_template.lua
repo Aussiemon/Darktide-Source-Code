@@ -68,9 +68,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	end
 
 	local spawn_list, num_to_spawn = _compose_spawn_list(composition)
-	local spawned_minions = Script.new_array(num_to_spawn)
 	local horde = {
-		spawned_minions = spawned_minions,
 		template_name = horde_template.name,
 		side = side,
 		target_side = target_side
@@ -142,11 +140,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			breed_list[#breed_list + 1] = breed_name
 		end
 
-		local queue_id = spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
-		spawned_minions[#spawned_minions + 1] = {
-			queue_id = queue_id,
-			spawner_extension = spawner
-		}
+		spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
 	end
 
 	local spawns_left = num_to_spawn - num_spawned
@@ -160,8 +154,9 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 			if spawn_position then
 				local breed_name = spawn_list[i]
-				local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
-				spawned_minions[#spawned_minions + 1] = unit
+
+				minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
+
 				num_spawned = num_spawned + 1
 			end
 		end

@@ -1,65 +1,83 @@
 local MissionSettings = require("scripts/settings/mission/mission_settings")
 local zone_ids = MissionSettings.mission_zone_ids
-local basic_cultist_shocktrooper_template = {
-	slot_body = {
-		items = {
-			"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_elite_a"
-		}
-	},
-	slot_face = {
-		items = {
-			"content/items/characters/minions/chaos_cultists/attachments_base/face_02"
-		}
-	},
-	slot_ranged_weapon = {
-		drop_on_death = true,
-		is_weapon = true,
-		items = {
-			"content/items/weapons/minions/ranged/renegade_shotgun"
-		}
-	},
-	slot_melee_weapon = {
-		drop_on_death = true,
-		is_weapon = true,
-		items = {
-			"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_05",
-			"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
-		}
-	},
-	slot_flesh = {
-		starts_invisible = true,
-		items = {
-			"content/items/characters/minions/gib_items/newly_infected_flesh"
-		}
-	},
-	envrionmental_override = {
-		is_material_override_slot = true,
-		items = {
-			"content/items/characters/minions/generic_items/empty_minion_item"
-		}
-	},
-	skin_color_override = {
-		is_material_override_slot = true,
-		items = {
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_01",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_02",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_03"
-		}
-	}
-}
 local templates = {
-	cultist_shocktrooper = {
-		has_gib_overrides = true,
-		default = {},
-		[zone_ids.tank_foundry] = {}
+	cultist_shocktrooper = {}
+}
+local basic_cultist_shocktrooper_template = {
+	slots = {
+		slot_body = {
+			items = {
+				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_elite_a",
+				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_elite_a_var_01"
+			}
+		},
+		slot_mask = {
+			items = {
+				"content/items/characters/minions/chaos_cultists/attachments_gear/mask_01",
+				"content/items/characters/minions/generic_items/empty_minion_item"
+			}
+		},
+		slot_face = {
+			items = {
+				"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_05",
+				"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_06"
+			}
+		},
+		slot_ranged_weapon = {
+			drop_on_death = true,
+			is_weapon = true,
+			items = {
+				"content/items/weapons/minions/ranged/renegade_shotgun"
+			}
+		},
+		slot_melee_weapon = {
+			drop_on_death = true,
+			is_weapon = true,
+			items = {
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_05",
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
+			}
+		},
+		slot_flesh = {
+			starts_invisible = true,
+			items = {
+				"content/items/characters/minions/gib_items/newly_infected_flesh"
+			}
+		},
+		envrionmental_override = {
+			is_material_override_slot = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item"
+			}
+		},
+		skin_color_override = {
+			is_material_override_slot = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_01",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_02",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_03"
+			}
+		}
 	}
 }
-templates.cultist_shocktrooper.default[1] = table.clone(basic_cultist_shocktrooper_template)
+local default_1 = table.clone(basic_cultist_shocktrooper_template)
+templates.cultist_shocktrooper.default = {
+	default_1
+}
 local foundry_1 = table.clone(basic_cultist_shocktrooper_template)
-foundry_1.envrionmental_override.items = {
+foundry_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.cultist_shocktrooper.tank_foundry[1] = foundry_1
+templates.cultist_shocktrooper[zone_ids.tank_foundry] = {
+	foundry_1
+}
+local watertown_1 = table.clone(basic_cultist_shocktrooper_template)
+watertown_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+templates.cultist_shocktrooper[zone_ids.watertown] = {
+	watertown_1
+}
 
 return templates

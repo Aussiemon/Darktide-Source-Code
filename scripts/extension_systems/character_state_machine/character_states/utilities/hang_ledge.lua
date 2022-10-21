@@ -1,7 +1,9 @@
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local NavQueries = require("scripts/utilities/nav_queries")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local LEDGE_TRIGGER_NODE_NAME = "g_ledge_trigger"
 local HAND_HOLD_NODE_NAME = "g_hand_hold_area"
+local RESPAWN_AREA_NODE_NAME = "g_respawn_area"
+local CLOSE_NAVMESH_POSITION = 16
 local HangLedge = {}
 local _is_position_in_line_of_sight = nil
 
@@ -101,7 +103,7 @@ HangLedge.calculate_pull_up_end_position = function (nav_world, hang_ledge_unit,
 	local hand_hold_right_vector = Quaternion.right(hand_hold_rotation)
 	local direction = hanging_unit_position - hand_hold_position
 	local position_offset = Vector3.dot(hand_hold_right_vector, direction)
-	local respawn_node = Unit.node(hang_ledge_unit, "g_respawn_area")
+	local respawn_node = Unit.node(hang_ledge_unit, RESPAWN_AREA_NODE_NAME)
 	local respawn_position = Unit.world_position(hang_ledge_unit, respawn_node)
 	local respawn_rotation = Unit.world_rotation(hang_ledge_unit, respawn_node)
 	local respawn_right_vector = Quaternion.right(respawn_rotation)
@@ -110,8 +112,8 @@ HangLedge.calculate_pull_up_end_position = function (nav_world, hang_ledge_unit,
 	local is_close = false
 
 	if new_position_on_nav then
-		local distance = Vector3.distance(new_position, new_position_on_nav)
-		is_close = distance < 4
+		local distance_squared = Vector3.distance_squared(new_position, new_position_on_nav)
+		is_close = distance_squared <= CLOSE_NAVMESH_POSITION
 
 		if is_close then
 			new_position = new_position_on_nav

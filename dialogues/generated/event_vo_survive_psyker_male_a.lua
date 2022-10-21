@@ -11,8 +11,8 @@ local event_vo_survive_psyker_male_a = {
 		sound_events_duration = {
 			1.529229,
 			1.69625,
-			2.095854,
-			2.13975
+			2.095833,
+			2.139729
 		},
 		randomize_indexes = {}
 	},

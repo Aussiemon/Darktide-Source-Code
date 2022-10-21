@@ -8,13 +8,13 @@ local category_settings = {
 	{
 		path = "scripts/settings/options/render_settings",
 		validation_function = function ()
-			return PLATFORM == "win32"
+			return IS_GDK or IS_XBS or IS_WINDOWS
 		end
 	},
 	{
 		path = "scripts/settings/options/keybind_settings",
 		validation_function = function ()
-			return PLATFORM == "win32"
+			return IS_GDK or IS_XBS or IS_WINDOWS
 		end
 	},
 	{

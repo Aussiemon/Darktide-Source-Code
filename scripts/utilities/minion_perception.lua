@@ -21,8 +21,6 @@ MinionPerception.attempt_aggro = function (perception_extension)
 end
 
 MinionPerception.set_target_lock = function (unit, perception_component, should_lock)
-	fassert(should_lock ~= perception_component.lock_target, "[MinionPerception] Tried to lock/unlock twice!")
-
 	perception_component.lock_target = should_lock
 
 	if not should_lock then

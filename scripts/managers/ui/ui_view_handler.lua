@@ -8,7 +8,6 @@ UIViewHandler.MIN_LAYER = 1
 UIViewHandler.MAX_LAYER = 999
 UIViewHandler.LAYERS_PER_VIEW = 50
 UIViewHandler.TRANSITION_SPEED = 4
-local DO_RELOAD = false
 local TEMP_DRAWN_VIEWS = {}
 
 UIViewHandler.init = function (self, view_list, timer_name)
@@ -24,26 +23,22 @@ UIViewHandler.init = function (self, view_list, timer_name)
 	self._registered_view_worlds = {}
 	self._curent_frame_view_layers = {}
 	self._transition_ui = ViewTransitionUI:new()
-	DO_RELOAD = false
 
 	Managers.event:register(self, "trigger_view_widget_pressed", "cb_trigger_view_widget_pressed")
 end
 
 UIViewHandler.cb_trigger_view_widget_pressed = function (self, view_name, widget_name, optional_content_id)
 	local view_data = self._active_views_data[view_name]
-
-	fassert(view_data, "[UIViewHandler] - Cannot trigger widget pressed. View with name: %s is not active.", view_name)
-
 	local instance = view_data.instance
 
 	instance:trigger_widget_pressed(widget_name)
 end
 
-UIViewHandler.open_view = function (self, view_name, transition_time, close_previous, close_all, close_transition_time, context)
+UIViewHandler.open_view = function (self, view_name, transition_time, close_previous, close_all, close_transition_time, context, settings_override)
 	local num_active_views = self._num_active_views
 	local has_active_views = num_active_views > 0
 
-	self:_open(view_name, transition_time, context)
+	self:_open(view_name, transition_time, context, settings_override)
 
 	if not has_active_views then
 		return
@@ -114,8 +109,6 @@ end
 UIViewHandler.close_view = function (self, view_name, force_close)
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
-
-	fassert(view_data, "[UIViewHandler] - View with name: %s is not active", view_name)
 
 	if view_data.closing then
 		Log.error("UIViewHandler", "View with name: %s has already been marked for destruction", view_name)
@@ -338,8 +331,6 @@ end
 UIViewHandler.settings_by_view_name = function (self, view_name)
 	local view_list = self._view_list
 	local view_settings = view_list[view_name]
-
-	fassert(view_settings, "[UIViewHandler] - View list does not include View with name: %s.", view_name)
 
 	return view_settings
 end
@@ -624,9 +615,6 @@ UIViewHandler._force_close = function (self, view_name)
 	local active_views_array = self._active_views_array
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
-
-	fassert(view_data, "[UIViewHandler] - View with name: %s is not active", view_name)
-
 	local instance = view_data.instance
 	local on_exit = instance.on_exit
 
@@ -657,18 +645,33 @@ UIViewHandler._force_close = function (self, view_name)
 	end
 end
 
-UIViewHandler._open = function (self, view_name, opening_duration, context)
+UIViewHandler._open = function (self, view_name, opening_duration, context, settings_override)
 	local active_views_array = self._active_views_array
 	local active_views_data = self._active_views_data
-
-	fassert(not active_views_data[view_name], "[UIViewHandler] - View with name: %s is already active.", view_name)
-
 	local t = self:_get_time()
 	local index = #active_views_array + 1
 	local view_list = self._view_list
 	local view_settings = view_list[view_name]
 
-	fassert(view_settings, "[UIViewHandler] - View list does not include View with name: %s.", view_name)
+	if settings_override then
+		view_settings = table.clone_instance(view_settings)
+
+		if settings_override.disable_game_world ~= nil then
+			view_settings.disable_game_world = settings_override.disable_game_world
+		end
+
+		if settings_override.game_world_blur ~= nil then
+			view_settings.game_world_blur = settings_override.game_world_blur
+		end
+
+		if settings_override.use_transition_ui ~= nil then
+			view_settings.use_transition_ui = settings_override.use_transition_ui
+		end
+
+		if settings_override.parent_transition_view ~= nil then
+			view_settings.parent_transition_view = settings_override.parent_transition_view
+		end
+	end
 
 	local view_data = {
 		hide_while_fade_in = true,
@@ -718,8 +721,6 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 	if not registered_view_worlds[view_name] then
 		registered_view_worlds[view_name] = {}
 	end
-
-	fassert(not registered_view_worlds[view_name][world_name], "[UIViewHandler] - Trying to register layer connection to view (%s) with already registered world (%s).", view_name, world_name)
 
 	registered_view_worlds[view_name][world_name] = {
 		layer_offset = layer,

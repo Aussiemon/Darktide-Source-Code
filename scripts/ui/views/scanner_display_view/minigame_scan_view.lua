@@ -111,9 +111,6 @@ MinigameScanView._draw_skulls = function (self, ui_renderer)
 	if zone_scan_extension then
 		local scanned_objects = zone_scan_extension:num_objets_banked()
 		local max_scannable_per_player = zone_scan_extension:num_scannables_in_zone()
-
-		fassert(max_scannable_per_player <= ScannerDisplayViewSettings.scan_num_skulls_columns * ScannerDisplayViewSettings.scan_num_skulls_rows, "[MinigameScanView][_draw_skulls] Not enough skulls to represent amounts of scannable objects. This view needs redesign.")
-
 		local skull_widgets = self._skull_widgets
 		local cog_widgets = self._cog_widgets
 

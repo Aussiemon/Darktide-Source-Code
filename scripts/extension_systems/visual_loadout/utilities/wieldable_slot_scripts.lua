@@ -3,7 +3,6 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_pro
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device")
@@ -20,13 +19,13 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/pocketable")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_force_field_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/skull_decoder_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/thunder_hammer_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects")
@@ -51,9 +50,6 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 		if script_class then
 			local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
-
-			fassert(wieldable_slot_scripts[slot.name][i] == nil, "Trying to overwrite already existing wieldable slot script on index %d with %q on %q", i, script_name, item.name)
-
 			wieldable_slot_scripts[slot.name][i] = script
 		end
 	end

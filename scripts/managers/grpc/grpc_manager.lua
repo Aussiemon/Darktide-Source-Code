@@ -183,9 +183,9 @@ GRPCManager.debug_get_parties = function (self, compatibility)
 	return promise, id
 end
 
-GRPCManager.join_party = function (self, party_id, compatibility, optional_matchmaking_ticket)
+GRPCManager.join_party = function (self, party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket)
 	local promise = Promise:new()
-	local id = gRPC.join_party(party_id, compatibility, optional_matchmaking_ticket)
+	local id = gRPC.join_party(party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket)
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -199,9 +199,9 @@ GRPCManager.create_empty_party = function (self, compatibility)
 	return promise, id
 end
 
-GRPCManager.invite_to_party = function (self, party_id, invitee_account_id)
+GRPCManager.invite_to_party = function (self, party_id, platform, platform_user_id)
 	local promise = Promise:new()
-	local id = gRPC.invite_to_party(party_id, invitee_account_id)
+	local id = gRPC.invite_to_party(party_id, platform, platform_user_id)
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -215,9 +215,9 @@ GRPCManager.get_party = function (self, party_id)
 	return promise, id
 end
 
-GRPCManager.cancel_invite_to_party = function (self, party_id, invitee_account_id, answer_code)
+GRPCManager.cancel_invite_to_party = function (self, party_id, invite_token, answer_code)
 	local promise = Promise:new()
-	local id = gRPC.cancel_invite_to_party(party_id, invitee_account_id, answer_code)
+	local id = gRPC.cancel_invite_to_party(party_id, invite_token, answer_code)
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -279,6 +279,22 @@ GRPCManager.answer_party_vote = function (self, vote_id, party_id, yes, myParams
 	return promise, id
 end
 
+GRPCManager.create_single_player_game = function (self, party_id, ticket)
+	local promise = Promise:new()
+	local id = gRPC.create_single_player_game(party_id, ticket)
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.cancel_matchmaking = function (self, party_id)
+	local promise = Promise:new()
+	local id = gRPC.cancel_matchmaking(party_id)
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
 GRPCManager.request_vivox_token = function (self, party_id, type)
 	local promise = Promise:new()
 	local id = gRPC.request_vivox_token(party_id, type)
@@ -288,8 +304,6 @@ GRPCManager.request_vivox_token = function (self, party_id, type)
 end
 
 GRPCManager.allocate_party_id = function (self)
-	assert(DEDICATED_SERVER, "allocate_party_id() was called by a client")
-
 	local promise = Promise:new()
 	local id = gRPC.allocate_party_id()
 	self._async_promises[id] = promise

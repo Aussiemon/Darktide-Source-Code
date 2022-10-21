@@ -1,8 +1,6 @@
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ForceLookRotation = {
 	start = function (force_look_rotation_component, current_rotation, wanted_pitch, wanted_yaw, start_time, duration)
-		fassert(not force_look_rotation_component.use_force_look_rotation, "Already forcing first person look rotation, exit first before enter")
-
 		local yaw, pitch, _ = Quaternion.to_yaw_pitch_roll(current_rotation)
 		force_look_rotation_component.use_force_look_rotation = true
 		force_look_rotation_component.start_yaw = yaw
@@ -35,8 +33,6 @@ local ForceLookRotation = {
 		return yaw_override * dt, pitch_override * dt
 	end,
 	stop = function (force_look_rotation_component)
-		fassert(force_look_rotation_component.use_force_look_rotation, "Not forcing first person look rotation")
-
 		force_look_rotation_component.use_force_look_rotation = false
 		force_look_rotation_component.start_yaw = 0
 		force_look_rotation_component.start_pitch = 0

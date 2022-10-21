@@ -93,28 +93,28 @@ local killshot_scale = {
 	{
 		1,
 		{
-			1,
-			1
+			2,
+			2
 		}
 	},
 	{
-		6,
+		4,
 		{
 			0.2,
-			0.5
+			0.3
 		}
 	},
 	{
 		15,
 		{
-			0.15,
-			0.3
+			0.175,
+			0.2
 		}
 	},
 	{
 		30,
 		{
-			0.3,
+			0.1,
 			0.1
 		}
 	}
@@ -163,14 +163,194 @@ local killshot_random_scale = {
 		}
 	}
 }
+local killshot_p1_m2_scale = {
+	{
+		1,
+		{
+			2,
+			2
+		}
+	},
+	{
+		4,
+		{
+			0.2,
+			0.3
+		}
+	},
+	{
+		15,
+		{
+			0.125,
+			0.15
+		}
+	},
+	{
+		30,
+		{
+			0.07,
+			0.07
+		}
+	}
+}
+local killshot_p1_m2_random_scale = {
+	{
+		1,
+		{
+			0.1,
+			0.25
+		}
+	},
+	{
+		3,
+		{
+			0.2,
+			0.5
+		}
+	},
+	{
+		6,
+		{
+			0.3,
+			0.7
+		}
+	},
+	{
+		10,
+		{
+			0.5,
+			1
+		}
+	},
+	{
+		20,
+		{
+			0.4,
+			0.6
+		}
+	},
+	{
+		30,
+		{
+			0.5,
+			0.4
+		}
+	}
+}
+local spraynpray_scale = {
+	{
+		1,
+		{
+			0.5,
+			0.7
+		}
+	},
+	{
+		3,
+		{
+			0.6,
+			0.8
+		}
+	},
+	{
+		6,
+		{
+			0.65,
+			1
+		}
+	},
+	{
+		12,
+		{
+			0.45,
+			1.05
+		}
+	},
+	{
+		20,
+		{
+			0.275,
+			1
+		}
+	},
+	{
+		30,
+		{
+			0.175,
+			0.9
+		}
+	},
+	{
+		40,
+		{
+			0.125,
+			0.75
+		}
+	}
+}
+local spraynpray_random_scale = {
+	{
+		1,
+		{
+			0.75,
+			1.05
+		}
+	},
+	{
+		3,
+		{
+			0.98,
+			1.2
+		}
+	},
+	{
+		6,
+		{
+			1.01,
+			1.5
+		}
+	},
+	{
+		12,
+		{
+			0.68,
+			1.58
+		}
+	},
+	{
+		20,
+		{
+			0.41,
+			1.5
+		}
+	},
+	{
+		30,
+		{
+			0.26,
+			1.35
+		}
+	},
+	{
+		40,
+		{
+			0.19,
+			1.13
+		}
+	}
+}
 local num_shot = 30
 local pitch_base = 0.2
 local yaw_base = 0
 local lerp_distance = 0.75
-local killshot_offset_range = generate_offset_range(num_shot, 0.125, 0, lerp_distance, create_scale(killshot_scale))
-local killshot_random_range = generate_offset_range(30, 0.04, 0.03, 0.75, create_scale(killshot_random_scale))
 local assault_offset_range = generate_offset_range(30, 0.015, 0, 0.95, create_scale(assault_scale))
 local assault_random_range = generate_offset_range(30, 0.01, 0.02, 0.95, create_scale(assault_random_scale))
+local killshot_p1_m2_offset_range = generate_offset_range(num_shot, 0.1, 0, lerp_distance, create_scale(killshot_p1_m2_scale))
+local killshot_p1_m2_random_range = generate_offset_range(30, 0.025, 0.065, 0.75, create_scale(killshot_p1_m2_random_scale))
+local killshot_offset_range = generate_offset_range(num_shot, 0.125, 0, lerp_distance, create_scale(killshot_scale))
+local killshot_random_range = generate_offset_range(30, 0.04, 0.05, 0.75, create_scale(killshot_random_scale))
+local spraynpray_offset_range = generate_offset_range(40, 0.01, 0, 0.95, create_scale(spraynpray_scale))
+local spraynpray_random_range = generate_offset_range(40, 0.01, 0.03, 0.95, create_scale(spraynpray_random_scale))
 recoil_templates.default_autogun_assault = {
 	still = {
 		camera_recoil_percentage = 0.75,
@@ -613,95 +793,112 @@ recoil_templates.default_autogun_spraynpray = {
 }
 recoil_templates.hip_autogun_spraynpray = {
 	still = {
-		camera_recoil_percentage = 0.85,
-		new_influence_percent = 0.25,
-		rise_duration = 0.075,
+		camera_recoil_percentage = 0.75,
+		decay_grace = 0.1,
+		rise_duration = 0.05,
 		rise = {
-			0.4,
-			0.25,
-			0.175,
-			0.2,
-			0.1
-		},
-		decay = {
-			shooting = 1,
-			idle = 1.75
-		},
-		offset_range = {
 			{
-				pitch = {
-					0.1,
-					0.125
-				},
-				yaw = {
-					-0.02,
-					0.02
-				}
+				lerp_perfect = 0.15,
+				lerp_basic = 0.5
 			},
 			{
-				pitch = {
-					0.075,
-					0.1
-				},
-				yaw = {
-					-0.02,
-					0.02
-				}
+				lerp_perfect = 0.075,
+				lerp_basic = 0.175
 			},
 			{
-				pitch = {
-					0.05,
-					0.075
-				},
-				yaw = {
-					-0.03,
-					0.03
-				}
+				lerp_perfect = 0.075,
+				lerp_basic = 0.175
 			},
 			{
-				pitch = {
-					0.02,
-					0.04
-				},
-				yaw = {
-					-0.03,
-					0.03
-				}
+				lerp_perfect = 0.025,
+				lerp_basic = 0.1
+			},
+			{
+				lerp_perfect = 0.025,
+				lerp_basic = 0.2
+			},
+			{
+				lerp_perfect = 0.025,
+				lerp_basic = 0.15
 			}
 		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.75,
+				lerp_basic = 0.5
+			},
+			idle = {
+				lerp_perfect = 3,
+				lerp_basic = 2.5
+			}
+		},
+		offset = assault_offset_range,
+		offset_random_range = assault_random_range,
 		offset_limit = {
-			yaw = 2,
-			pitch = 2
+			yaw = 1,
+			pitch = 1
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.25,
+			lerp_basic = 0.5
 		},
 		aim_assist = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
-			intensity = 1,
+			intensity = 4,
 			lerp_scalar = 1
 		}
 	},
 	moving = {
-		new_influence_percent = 0.25,
 		inherits = {
-			"hip_autogun_spraynpray",
+			"default_autogun_assault",
 			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.55
 		}
 	},
 	crouch_still = {
-		new_influence_percent = 0.25,
 		inherits = {
-			"hip_autogun_spraynpray",
+			"default_autogun_assault",
 			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.25
 		}
 	},
 	crouch_moving = {
-		new_influence_percent = 0.25,
 		inherits = {
-			"hip_autogun_spraynpray",
+			"default_autogun_assault",
 			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.2,
+			lerp_basic = 0.4
 		}
 	}
+}
+recoil_templates.ads_autogun_spraynpray = table.clone(recoil_templates.hip_autogun_spraynpray)
+recoil_templates.ads_autogun_spraynpray.still.offset = spraynpray_offset_range
+recoil_templates.ads_autogun_spraynpray.still.offset_random_range = spraynpray_random_range
+recoil_templates.ads_autogun_spraynpray.still.new_influence_percent = {
+	lerp_perfect = 0.25,
+	lerp_basic = 0.5
+}
+recoil_templates.ads_autogun_spraynpray.moving.new_influence_percent = {
+	lerp_perfect = 0.5,
+	lerp_basic = 0.6
+}
+recoil_templates.ads_autogun_spraynpray.crouch_still.new_influence_percent = {
+	lerp_perfect = 0.15,
+	lerp_basic = 0.25
+}
+recoil_templates.ads_autogun_spraynpray.crouch_moving.new_influence_percent = {
+	lerp_perfect = 0.2,
+	lerp_basic = 0.4
 }
 pitch_default = 0.03
 local firerate = 0.096
@@ -712,7 +909,7 @@ local shot_rise = decay_time * shot_decay
 recoil_templates.default_autogun_killshot = {
 	still = {
 		camera_recoil_percentage = 0.5,
-		decay_grace = 0.2,
+		decay_grace = 0.1,
 		rise_duration = rise_time,
 		rise = {
 			{
@@ -738,8 +935,8 @@ recoil_templates.default_autogun_killshot = {
 		},
 		decay = {
 			shooting = {
-				lerp_perfect = 2,
-				lerp_basic = 1
+				lerp_perfect = 0.5,
+				lerp_basic = 0.25
 			},
 			idle = {
 				lerp_perfect = 1.5,
@@ -753,8 +950,8 @@ recoil_templates.default_autogun_killshot = {
 			pitch = 2
 		},
 		new_influence_percent = {
-			lerp_perfect = 0.15,
-			lerp_basic = 0.25
+			lerp_perfect = 0.1,
+			lerp_basic = 0.15
 		},
 		aim_assist = {
 			reduction_per_shot = 0.25,
@@ -762,8 +959,8 @@ recoil_templates.default_autogun_killshot = {
 		},
 		visual_recoil_settings = {
 			intensity = 4,
-			lerp_scalar = 0.4,
-			yaw_intensity = 3
+			lerp_scalar = 0.8,
+			yaw_intensity = 6
 		}
 	},
 	moving = {
@@ -784,6 +981,174 @@ recoil_templates.default_autogun_killshot = {
 		new_influence_percent = {
 			lerp_perfect = 0.15,
 			lerp_basic = 0.35
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		}
+	}
+}
+recoil_templates.autogun_p1_m2_killshot = {
+	still = {
+		camera_recoil_percentage = 0.5,
+		decay_grace = 0.1,
+		rise_duration = rise_time,
+		rise = {
+			{
+				lerp_perfect = 0.25,
+				lerp_basic = 0.5
+			},
+			{
+				lerp_perfect = 0.175,
+				lerp_basic = 0.35
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.5 * 0.5
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.5 * 0.5
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.25 * 0.5
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.5,
+				lerp_basic = 0.25
+			},
+			idle = {
+				lerp_perfect = 1.5,
+				lerp_basic = 0.5
+			}
+		},
+		offset = killshot_p1_m2_offset_range,
+		offset_random_range = killshot_p1_m2_random_range,
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.1,
+			lerp_basic = 0.15
+		},
+		aim_assist = {
+			reduction_per_shot = 0.25,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
+		},
+		visual_recoil_settings = {
+			intensity = 4,
+			lerp_scalar = 0.5,
+			yaw_intensity = 6
+		}
+	},
+	moving = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.3
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.35
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		}
+	}
+}
+recoil_templates.autogun_p1_m1_killshot = {
+	still = {
+		camera_recoil_percentage = 0.5,
+		decay_grace = 0.1,
+		rise_duration = rise_time,
+		rise = {
+			{
+				lerp_perfect = 0.25,
+				lerp_basic = 0.6
+			},
+			{
+				lerp_perfect = 0.175,
+				lerp_basic = 0.35
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.5 * 0.5
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.5 * 0.5
+			},
+			{
+				lerp_basic = shot_rise * 1.25,
+				lerp_perfect = shot_rise * 1.25 * 0.5
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.5,
+				lerp_basic = 0.25
+			},
+			idle = {
+				lerp_perfect = 1.5,
+				lerp_basic = 0.5
+			}
+		},
+		offset = killshot_offset_range,
+		offset_random_range = killshot_random_range,
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.1,
+			lerp_basic = 0.35
+		},
+		aim_assist = {
+			reduction_per_shot = 0.25,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
+		},
+		visual_recoil_settings = {
+			intensity = 4,
+			lerp_scalar = 0.8,
+			yaw_intensity = 6
+		}
+	},
+	moving = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.4
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"default_autogun_killshot",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.45
 		}
 	},
 	crouch_moving = {

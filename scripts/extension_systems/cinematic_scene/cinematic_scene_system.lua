@@ -13,7 +13,8 @@ local CinematicSceneSystem = class("CinematicSceneSystem", "ExtensionSystemBase"
 local NUM_CPT_PER_UNIT = 1
 local NUM_PLAYER_SPAWN = 4
 local CLIENT_RPCS = {
-	"rpc_play_cutscene"
+	"rpc_play_cutscene",
+	"rpc_cinematic_intro_played"
 }
 local SERVER_RPCS = {
 	"rpc_request_play_cutscene"
@@ -35,6 +36,26 @@ local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.cutscene_10] = "cutscene_view"
 }
 
+local function get_origin_level_names(cinematic_name)
+	local component_system = Managers.state.extension:system("component_system")
+	local scenes = component_system:get_units_from_component_name("CinematicScene")
+	local origin_level_names = {}
+
+	for _, scene_unit in ipairs(scenes) do
+		local scene_components = component_system:get_components(scene_unit, "CinematicScene")
+		local scene_component = scene_components[1]
+		local scene_unit_type = scene_component:unit_type()
+		local origin_level_name = scene_component:origin_level_name()
+		local scene_cinematic_name = scene_component:cinematic_name()
+
+		if scene_unit_type == "destination" and origin_level_name and scene_cinematic_name == cinematic_name then
+			origin_level_names[#origin_level_names + 1] = origin_level_name
+		end
+	end
+
+	return origin_level_names
+end
+
 CinematicSceneSystem.init = function (self, extension_init_context, system_init_data, ...)
 	CinematicSceneSystem.super.init(self, extension_init_context, system_init_data, ...)
 
@@ -51,6 +72,7 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 	self._unit_spawner = UIUnitSpawner:new(world)
 	self._spawn_slots = {}
 	self._intro_played = false
+	self._intro_loading_started = false
 
 	if Managers.ui and Managers.ui:view_active("cutscene_view") then
 		Managers.ui:close_view("cutscene_view", true)
@@ -65,11 +87,22 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 			network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 		end
 	end
+
+	local mission = system_init_data.mission
+	local mission_cinematics = mission.cinematics or {}
+
+	if not mission_cinematics[CINEMATIC_NAMES.intro_abc] then
+		self._intro_played = true
+	end
+end
+
+CinematicSceneSystem._on_preload_cinematic = function (self)
+	if not self._intro_played and not self._intro_loading_started then
+		self:load_cutscene(CINEMATIC_NAMES.intro_abc)
+	end
 end
 
 CinematicSceneSystem._on_spawn_group_loaded = function (self)
-	fassert(self._is_server, "[CinematicSceneSystem] Server only method.")
-
 	if self._intro_played == false then
 		self:play_cutscene(CINEMATIC_NAMES.intro_abc)
 
@@ -98,6 +131,7 @@ CinematicSceneSystem.destroy = function (self, ...)
 		end
 
 		Managers.event:unregister(self, "spawn_group_loaded")
+		Managers.event:unregister(self, "preload_cinematic")
 	end
 
 	local network_event_delegate = self._network_event_delegate
@@ -118,13 +152,18 @@ CinematicSceneSystem.on_gameplay_post_init = function (self, level)
 
 	if self._is_server then
 		Managers.event:register(self, "spawn_group_loaded", "_on_spawn_group_loaded")
+		Managers.event:register(self, "preload_cinematic", "_on_preload_cinematic")
 
 		local host_type = Managers.multiplayer_session:host_type()
 
-		if host_type == HOST_TYPES.player or host_type == HOST_TYPES.singleplay then
+		if host_type == HOST_TYPES.player or host_type == HOST_TYPES.singleplay or HOST_TYPES.singleplay_backend_session then
 			self:_on_spawn_group_loaded()
 		end
 	end
+end
+
+CinematicSceneSystem.rpc_cinematic_intro_played = function (self)
+	self._intro_played = true
 end
 
 CinematicSceneSystem.intro_played = function (self)
@@ -164,11 +203,7 @@ CinematicSceneSystem._can_play = function (self, cinematic_name, check_currently
 end
 
 CinematicSceneSystem._cinematic_played = function (self, cinematic_name, cinematic_category)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
-
 	self._cinematics_left_to_play = self._cinematics_left_to_play - 1
-
-	fassert(self._cinematics_left_to_play >= 0, "[CinematicSceneSystem][_cinematic_played] Unexpected amount of call to method (%d).", self._cinematics_left_to_play)
 
 	if self._cinematics_left_to_play == 0 then
 		self:_uninitialize_cutscene_characters(cinematic_name)
@@ -184,8 +219,6 @@ CinematicSceneSystem._cinematic_played = function (self, cinematic_name, cinemat
 end
 
 CinematicSceneSystem._send_cinematic_played_flow_event = function (self, cinematic_name)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
-
 	local sub_cinematics = self._cinematics[cinematic_name]
 	local sub_cinematics_setup = self._cinematics_setups[cinematic_name]
 
@@ -201,6 +234,26 @@ CinematicSceneSystem._send_cinematic_played_flow_event = function (self, cinemat
 	end
 end
 
+CinematicSceneSystem._on_level_loaded = function (self, cinematic_name)
+	return
+end
+
+CinematicSceneSystem.load_cutscene = function (self, cinematic_name, client_channel_id)
+	local origin_level_names = get_origin_level_names(cinematic_name)
+
+	if #origin_level_names == 0 then
+		Managers.event:trigger("cutscene_loaded_all_clients")
+	else
+		local template = CinematicSceneTemplates[cinematic_name]
+		local hotjoin_only = template.hotjoin_only
+		local on_level_loaded_cb = callback(self, "_on_level_loaded", cinematic_name)
+
+		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_loaded_cb, nil, hotjoin_only, true)
+
+		self._intro_loading_started = true
+	end
+end
+
 CinematicSceneSystem.play_cutscene = function (self, cinematic_name, client_channel_id)
 	if client_channel_id ~= nil then
 		local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
@@ -212,24 +265,25 @@ CinematicSceneSystem.play_cutscene = function (self, cinematic_name, client_chan
 		if not require_levels then
 			self:_play_cutscene(cinematic_name)
 		else
-			self:_activate_view(cinematic_name)
+			local is_loading = true
+
+			self:_activate_view(cinematic_name, is_loading)
 			self:_set_cinematic_name(cinematic_name)
 		end
 	end
 
-	self._intro_played = true
+	if cinematic_name == CINEMATIC_NAMES.intro_abc then
+		self._intro_played = true
+	end
 end
 
 CinematicSceneSystem.request_play_cutscene = function (self, cinematic_name)
-	fassert(not self._is_server, "[CinematicSceneSystem] Client only function")
-
 	local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
 
 	Managers.connection:send_rpc_server("rpc_request_play_cutscene", cinematic_name_id)
 end
 
 CinematicSceneSystem._on_level_prepared = function (self, cinematic_name, client_channel_id)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
 	self:_play_cutscene(cinematic_name, client_channel_id)
 
 	if client_channel_id then
@@ -238,7 +292,6 @@ CinematicSceneSystem._on_level_prepared = function (self, cinematic_name, client
 end
 
 CinematicSceneSystem._play_cutscene = function (self, cinematic_name, client_channel_id)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
 	self:_initialize_cinematic(cinematic_name)
 
 	if self:_can_play(cinematic_name, false, true, true) then
@@ -265,23 +318,7 @@ CinematicSceneSystem._play_cutscene = function (self, cinematic_name, client_cha
 end
 
 CinematicSceneSystem._prepare_cutscene_levels = function (self, cinematic_name, client_channel_id)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
-
-	local component_system = Managers.state.extension:system("component_system")
-	local scenes = component_system:get_units_from_component_name("CinematicScene")
-	local origin_level_names = {}
-
-	for _, scene_unit in ipairs(scenes) do
-		local scene_components = component_system:get_components(scene_unit, "CinematicScene")
-		local scene_component = scene_components[1]
-		local scene_unit_type = scene_component:unit_type()
-		local origin_level_name = scene_component:origin_level_name()
-		local scene_cinematic_name = scene_component:cinematic_name()
-
-		if scene_unit_type == "destination" and origin_level_name and scene_cinematic_name == cinematic_name then
-			origin_level_names[#origin_level_names + 1] = origin_level_name
-		end
-	end
+	local origin_level_names = get_origin_level_names(cinematic_name)
 
 	if #origin_level_names == 0 then
 		return false
@@ -290,7 +327,7 @@ CinematicSceneSystem._prepare_cutscene_levels = function (self, cinematic_name, 
 		local hotjoin_only = template.hotjoin_only
 		local on_level_prepared_callback = callback(self, "_on_level_prepared", cinematic_name, client_channel_id)
 
-		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_prepared_callback, client_channel_id, hotjoin_only)
+		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_prepared_callback, client_channel_id, hotjoin_only, false)
 
 		return true
 	end
@@ -325,11 +362,7 @@ CinematicSceneSystem._queue_cinematics = function (self, cinematic_name, client_
 end
 
 CinematicSceneSystem._initialize_cinematic = function (self, cinematic_name)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
-
 	local sub_cinematics = self._cinematics[cinematic_name]
-
-	fassert(CinematicSceneTemplates[cinematic_name], "[CinematicSceneSystem][_initialize_cinematic] Missing template for cinematic.")
 
 	if sub_cinematics then
 		local sub_cinematics_setup = self:_initialize_sub_cinematics(cinematic_name, sub_cinematics)
@@ -352,14 +385,11 @@ CinematicSceneSystem._initialize_cinematic = function (self, cinematic_name)
 end
 
 CinematicSceneSystem._uninitialize_cinematic = function (self, cinematic_name)
-	fassert(self._is_server or self._in_hub, "[CinematicSceneSystem] Server or in hub only method.")
 	Managers.state.cinematic:unload_levels(cinematic_name)
 	table.clear(self._cinematics_setups[cinematic_name])
 end
 
 CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name, sub_cinematics)
-	fassert(self._level, "[_initialize_sub_cinematics] Level not set.")
-
 	local sub_cinematics_setup = {}
 
 	for _, cinematic_category in ipairs(sub_cinematics) do
@@ -613,14 +643,18 @@ CinematicSceneSystem._set_cinematic_name = function (self, cinematic_name)
 end
 
 CinematicSceneSystem.client_set_scene = function (self, cinematic_name)
-	fassert(not self._is_server, "[CinematicSceneSystem] Client only method.")
 	self:_initialize_cutscene_characters(cinematic_name)
 	self:_activate_view(cinematic_name)
 	self:_set_cinematic_name(cinematic_name)
+
+	if cinematic_name == CINEMATIC_NAMES.intro_abc then
+		self._intro_played = true
+
+		Log.info("CinematicSceneSystem", "client_set_scene, intro_played= true")
+	end
 end
 
 CinematicSceneSystem.client_unset_scene = function (self, cinematic_name)
-	fassert(not self._is_server, "[CinematicSceneSystem] Client only method.")
 	self:_uninitialize_cutscene_characters(cinematic_name)
 	self:_activate_view(CINEMATIC_NAMES.none)
 	self:_set_cinematic_name(CINEMATIC_NAMES.none)
@@ -630,7 +664,11 @@ CinematicSceneSystem.is_active = function (self)
 	return self._current_cinematic_name ~= CINEMATIC_NAMES.none
 end
 
-CinematicSceneSystem._activate_view = function (self, cinematic_name)
+CinematicSceneSystem.is_cinematic_active = function (self, cinematic_name)
+	return self._current_cinematic_name == cinematic_name
+end
+
+CinematicSceneSystem._activate_view = function (self, cinematic_name, is_loading)
 	local ui_manager = Managers.ui
 
 	if ui_manager then
@@ -643,8 +681,11 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name)
 
 			if not ui_manager:view_active(view) then
 				local view_context = {}
+				local view_settings_override = is_loading and {
+					use_transition_ui = false
+				}
 
-				ui_manager:open_view(view, nil, nil, nil, nil, view_context)
+				ui_manager:open_view(view, nil, nil, nil, nil, view_context, view_settings_override)
 			end
 		elseif not activate and is_active then
 			local view = CINEMATIC_VIEWS[current_cinematic_name]
@@ -659,16 +700,12 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name)
 end
 
 CinematicSceneSystem.rpc_play_cutscene = function (self, channel_id, cinematic_name_id)
-	fassert(not self._is_server, "[CinematicSceneSystem] Client only method.")
-
 	local cinematic_name = NetworkLookup.cinematic_scene_names[cinematic_name_id]
 
 	self:play_cutscene(cinematic_name)
 end
 
 CinematicSceneSystem.rpc_request_play_cutscene = function (self, channel_id, cinematic_name_id)
-	fassert(self._is_server, "[CinematicSceneSystem] Server only method.")
-
 	local cinematic_name = NetworkLookup.cinematic_scene_names[cinematic_name_id]
 
 	self:play_cutscene(cinematic_name, channel_id)

@@ -12,9 +12,6 @@ MinionToughnessHuskExtension.init = function (self, extension_init_context, unit
 	local breed = extension_init_data.breed
 	self._toughness_template = breed.toughness_template
 	self._stored_attacks = {}
-
-	assert(not extension_init_context.is_server, "Only the clients should have MinionToughnessHuskExtensions registered")
-
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, game_object_id, unpack(CLIENT_RPCS))

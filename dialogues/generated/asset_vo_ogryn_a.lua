@@ -106,7 +106,7 @@ local asset_vo_ogryn_a = {
 			3.315938,
 			1.801677,
 			2.59475,
-			1.536708
+			1.536719
 		},
 		randomize_indexes = {}
 	},

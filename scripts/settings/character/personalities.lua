@@ -1,6 +1,6 @@
 local personalities = {
 	male_veteran_1 = {
-		description = "loc_personality_male_veteran_1_description",
+		description = "loc_veteran_male_a__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_veteran_1",
 		character_voice = "veteran_male_a",
@@ -15,7 +15,7 @@ local personalities = {
 		}
 	},
 	male_veteran_2 = {
-		description = "loc_personality_male_veteran_2_description",
+		description = "loc_veteran_male_b__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_veteran_2",
 		character_voice = "veteran_male_b",
@@ -30,7 +30,7 @@ local personalities = {
 		}
 	},
 	male_veteran_3 = {
-		description = "loc_personality_male_veteran_3_description",
+		description = "loc_veteran_male_c__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_veteran_3",
 		character_voice = "veteran_male_c",
@@ -45,7 +45,7 @@ local personalities = {
 		}
 	},
 	female_veteran_1 = {
-		description = "loc_personality_female_veteran_1_description",
+		description = "loc_veteran_female_a__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_veteran_1",
 		character_voice = "veteran_female_a",
@@ -60,7 +60,7 @@ local personalities = {
 		}
 	},
 	female_veteran_2 = {
-		description = "loc_personality_female_veteran_2_description",
+		description = "loc_veteran_female_b__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_veteran_2",
 		character_voice = "veteran_female_b",
@@ -75,7 +75,7 @@ local personalities = {
 		}
 	},
 	female_veteran_3 = {
-		description = "loc_personality_female_veteran_3_description",
+		description = "loc_veteran_female_c__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_veteran_3",
 		character_voice = "veteran_female_c",
@@ -90,7 +90,7 @@ local personalities = {
 		}
 	},
 	male_zealot_1 = {
-		description = "loc_personality_male_zealot_1_description",
+		description = "loc_zealot_male_a__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_zealot_1",
 		character_voice = "zealot_male_a",
@@ -105,7 +105,7 @@ local personalities = {
 		}
 	},
 	male_zealot_2 = {
-		description = "loc_personality_male_zealot_2_description",
+		description = "loc_zealot_male_b__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_zealot_2",
 		character_voice = "zealot_male_b",
@@ -120,7 +120,7 @@ local personalities = {
 		}
 	},
 	male_zealot_3 = {
-		description = "loc_personality_male_zealot_3_description",
+		description = "loc_zealot_male_c__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_zealot_3",
 		character_voice = "zealot_male_c",
@@ -135,7 +135,7 @@ local personalities = {
 		}
 	},
 	female_zealot_1 = {
-		description = "loc_personality_female_zealot_1_description",
+		description = "loc_zealot_female_a__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_zealot_1",
 		character_voice = "zealot_female_a",
@@ -150,7 +150,7 @@ local personalities = {
 		}
 	},
 	female_zealot_2 = {
-		description = "loc_personality_female_zealot_2_description",
+		description = "loc_zealot_female_b__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_zealot_2",
 		character_voice = "zealot_female_b",
@@ -165,7 +165,7 @@ local personalities = {
 		}
 	},
 	female_zealot_3 = {
-		description = "loc_personality_female_zealot_3_description",
+		description = "loc_zealot_female_c__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_zealot_3",
 		character_voice = "zealot_female_c",
@@ -180,7 +180,7 @@ local personalities = {
 		}
 	},
 	male_psyker_1 = {
-		description = "loc_personality_male_psyker_1_description",
+		description = "loc_psyker_male_a__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_psyker_1",
 		character_voice = "psyker_male_a",
@@ -195,7 +195,7 @@ local personalities = {
 		}
 	},
 	male_psyker_2 = {
-		description = "loc_personality_male_psyker_2_description",
+		description = "loc_psyker_male_b__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_psyker_2",
 		character_voice = "psyker_male_b",
@@ -210,7 +210,7 @@ local personalities = {
 		}
 	},
 	male_psyker_3 = {
-		description = "loc_personality_male_psyker_3_description",
+		description = "loc_psyker_male_c__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_psyker_3",
 		character_voice = "psyker_male_c",
@@ -225,7 +225,7 @@ local personalities = {
 		}
 	},
 	female_psyker_1 = {
-		description = "loc_personality_female_psyker_1_description",
+		description = "loc_psyker_female_a__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_psyker_1",
 		character_voice = "psyker_female_a",
@@ -240,7 +240,7 @@ local personalities = {
 		}
 	},
 	female_psyker_2 = {
-		description = "loc_personality_female_psyker_2_description",
+		description = "loc_psyker_female_b__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_psyker_2",
 		character_voice = "psyker_female_b",
@@ -255,7 +255,7 @@ local personalities = {
 		}
 	},
 	female_psyker_3 = {
-		description = "loc_personality_female_psyker_3_description",
+		description = "loc_psyker_female_c__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_psyker_3",
 		character_voice = "psyker_female_c",
@@ -270,7 +270,7 @@ local personalities = {
 		}
 	},
 	ogryn_1 = {
-		description = "loc_personality_ogryn_1_description",
+		description = "loc_ogryn_a__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_ogryn_1",
 		character_voice = "ogryn_a",
@@ -285,7 +285,7 @@ local personalities = {
 		}
 	},
 	ogryn_2 = {
-		description = "loc_personality_ogryn_2_description",
+		description = "loc_ogryn_b__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_ogryn_2",
 		character_voice = "ogryn_b",
@@ -300,7 +300,7 @@ local personalities = {
 		}
 	},
 	ogryn_3 = {
-		description = "loc_personality_ogryn_3_description",
+		description = "loc_ogryn_c__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_ogryn_3",
 		character_voice = "ogryn_c",

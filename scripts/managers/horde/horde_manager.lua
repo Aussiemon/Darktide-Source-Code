@@ -21,24 +21,15 @@ HordeManager.init = function (self, nav_world, physics_world)
 end
 
 HordeManager.horde = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)
-	fassert(HORDE_TYPES[horde_type], "[HordeManager] Horde type %q does not exist!", horde_type)
-	Profiler.start("HordeManager:horde")
-
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side(side_id)
 	local target_side = side_system:get_side(target_side_id)
 	local horde_template = HordeTemplates[horde_template_name]
-
-	fassert(horde_template, "[HordeManager] Couldn't find horde template called %s.", horde_template_name)
-
 	local physics_world = self._physics_world
 	local nav_world = self._nav_world
 	local horde, horde_position, target_unit = horde_template.execute(physics_world, nav_world, side, target_side, composition, ...)
 	local hordes = self._hordes
 	hordes[horde_type][#hordes[horde_type] + 1] = horde
-
-	Profiler.stop("HordeManager:horde")
-
 	local success = horde ~= nil
 	local group_id = horde and horde.group_id
 
@@ -102,10 +93,12 @@ HordeManager.update = function (self, dt, t)
 				table.swap_delete(hordes, horde_index)
 
 				num_hordes = num_hordes - 1
-			else
+			elseif group.min_members_spawned then
 				local group_members = group.members
 				local num_group_members = #group_members
 				total_alive_horde_minions = total_alive_horde_minions + num_group_members
+				horde_index = horde_index + 1
+			else
 				horde_index = horde_index + 1
 			end
 		end

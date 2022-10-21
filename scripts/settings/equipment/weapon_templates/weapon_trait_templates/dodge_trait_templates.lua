@@ -38,6 +38,43 @@ local dodge_trait_templates = {
 			}
 		}
 	},
+	ogryn_dodge_stat = {
+		{
+			"distance_scale",
+			{
+				max = 0.6,
+				min = 0.4
+			}
+		},
+		{
+			"diminishing_return_distance_modifier",
+			{
+				max = 0.6,
+				min = 0.4
+			}
+		},
+		{
+			"diminishing_return_start",
+			{
+				max = 0.7,
+				min = 0.3
+			}
+		},
+		{
+			"diminishing_return_limit",
+			{
+				max = 0.7,
+				min = 0.3
+			}
+		},
+		{
+			"speed_modifier",
+			{
+				max = 0.6,
+				min = 0.4
+			}
+		}
+	},
 	default_dodge_perk = {
 		{
 			"distance_scale",

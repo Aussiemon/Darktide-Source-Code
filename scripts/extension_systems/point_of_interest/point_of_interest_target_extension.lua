@@ -15,13 +15,14 @@ PointOfInterestTargetExtension.init = function (self, extension_init_context, un
 	self._unit_node = nil
 	self._has_been_seen = false
 	self._collision_filter = "filter_look_at_object_ray"
+	self._disabled = false
 
 	if Unit.has_node(unit, "j_spine") then
 		Unit.node(unit, "j_spine")
 	end
 end
 
-PointOfInterestTargetExtension.setup_from_component = function (self, view_distance, is_dynamic, tag, faction_event, faction_breed_name)
+PointOfInterestTargetExtension.setup_from_component = function (self, view_distance, is_dynamic, tag, faction_event, dialogue_target_filter, faction_breed_name, mission_giver_selected_voice, disabled)
 	self._view_distance_sq = view_distance * view_distance
 	self._is_dynamic = is_dynamic
 	self._tag = tag
@@ -31,6 +32,9 @@ PointOfInterestTargetExtension.setup_from_component = function (self, view_dista
 	end
 
 	self._faction_breed_name = faction_breed_name
+	self._dialogue_target_filter = dialogue_target_filter or "none"
+	self._mission_giver_selected_voice = mission_giver_selected_voice
+	self._disabled = disabled
 end
 
 PointOfInterestTargetExtension.is_dynamic = function (self)
@@ -68,12 +72,28 @@ PointOfInterestTargetExtension.faction_breed_name = function (self)
 	return self._faction_breed_name
 end
 
+PointOfInterestTargetExtension.dialogue_target_filter = function (self)
+	return self._dialogue_target_filter
+end
+
+PointOfInterestTargetExtension.mission_giver_selected_voice = function (self)
+	return self._mission_giver_selected_voice
+end
+
 PointOfInterestTargetExtension.set_has_been_seen = function (self)
 	self._has_been_seen = true
 end
 
 PointOfInterestTargetExtension.set_tag = function (self, tag)
 	self._tag = tag
+end
+
+PointOfInterestTargetExtension.set_disabled = function (self)
+	self._disabled = true
+end
+
+PointOfInterestTargetExtension.disabled = function (self)
+	return self._disabled
 end
 
 PointOfInterestTargetExtension.collision_filter = function (self)

@@ -42,6 +42,7 @@ local base_template = {
 		target_distance_z = "number",
 		target_changed_t = "number",
 		ignore_alerted_los = "boolean",
+		target_position = "Vector3Box",
 		target_changed = "boolean",
 		target_unit = "Unit",
 		aggro_state = "string"

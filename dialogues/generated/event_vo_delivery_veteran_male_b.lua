@@ -7,7 +7,7 @@ local event_vo_delivery_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.160521,
+			[1.0] = 2.1605,
 			[2.0] = 2.113333
 		},
 		sound_event_weights = {
@@ -24,7 +24,7 @@ local event_vo_delivery_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.160521,
+			[1.0] = 2.1605,
 			[2.0] = 2.113333
 		},
 		sound_event_weights = {
@@ -41,7 +41,7 @@ local event_vo_delivery_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.160521,
+			[1.0] = 2.1605,
 			[2.0] = 2.113333
 		},
 		sound_event_weights = {
@@ -58,7 +58,7 @@ local event_vo_delivery_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.160521,
+			[1.0] = 2.1605,
 			[2.0] = 2.113333
 		},
 		sound_event_weights = {

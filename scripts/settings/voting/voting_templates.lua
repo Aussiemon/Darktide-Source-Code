@@ -5,11 +5,11 @@ local voting_templates = {
 
 local function _validate_template_data(data)
 	if data.evaluate_delay and data.duration then
-		fassert(data.evaluate_delay <= data.duration, "VotingTemplate %s error: data.evaluate_delay < data.duration", data.name)
+		-- Nothing
 	end
 
 	if data.duration then
-		fassert(data.timeout_option, "VotingTemplate %s error: duration defined but no timeout_option", data.name)
+		-- Nothing
 	end
 end
 
@@ -17,8 +17,6 @@ local function _create_voting_template_entry(path)
 	local voting_template_data = require(path)
 	local voting_template_name = voting_template_data.name
 
-	fassert(voting_template_name, "Voting Template %q is missing a name.", path)
-	fassert(voting_templates[voting_template_name] == nil, "Multiple voting templates with name %q", voting_template_name)
 	_validate_template_data(voting_template_data)
 
 	voting_templates[voting_template_name] = voting_template_data

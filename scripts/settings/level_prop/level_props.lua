@@ -3,9 +3,6 @@ local props = {}
 local function _create_prop_entry(path)
 	local prop_data = require(path)
 	local prop_name = prop_data.name
-
-	fassert(prop_name, "[LevelProps] Missing name field in %q.", path)
-
 	props[prop_name] = prop_data
 end
 

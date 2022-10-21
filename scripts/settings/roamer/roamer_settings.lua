@@ -1,5 +1,6 @@
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
+local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local roamer_settings = {
 	density_types = {
 		"none",
@@ -7,7 +8,7 @@ local roamer_settings = {
 		"low"
 	},
 	faction_types = {
-		"traitor_guards"
+		"renegade"
 	},
 	encampment_types = {
 		"poxwalkers"
@@ -15,36 +16,36 @@ local roamer_settings = {
 }
 local default_packs = {
 	melee_low = {
-		traitor_guards = RoamerPacks.renegade_melee_low,
-		cultists = RoamerPacks.cultist_melee_low
+		renegade = RoamerPacks.renegade_melee_low,
+		cultist = RoamerPacks.cultist_melee_low
 	},
 	melee_high = {
-		traitor_guards = RoamerPacks.renegade_melee_high,
-		cultists = RoamerPacks.cultist_melee_high
+		renegade = RoamerPacks.renegade_melee_high,
+		cultist = RoamerPacks.cultist_melee_high
 	},
 	close_low = {
-		traitor_guards = RoamerPacks.renegade_close_low,
-		cultists = RoamerPacks.cultist_close_low
+		renegade = RoamerPacks.renegade_close_low,
+		cultist = RoamerPacks.cultist_close_low
 	},
 	close_high = {
-		traitor_guards = RoamerPacks.renegade_close_high,
-		cultists = RoamerPacks.cultist_close_high
+		renegade = RoamerPacks.renegade_close_high,
+		cultist = RoamerPacks.cultist_close_high
 	},
 	far_low = {
-		traitor_guards = RoamerPacks.renegade_far_low,
-		cultists = RoamerPacks.cultist_far_low
+		renegade = RoamerPacks.renegade_far_low,
+		cultist = RoamerPacks.cultist_far_low
 	},
 	far_high = {
-		traitor_guards = RoamerPacks.renegade_far_high,
-		cultists = RoamerPacks.cultist_far_high
+		renegade = RoamerPacks.renegade_far_high,
+		cultist = RoamerPacks.cultist_far_high
 	},
 	none = {
-		traitor_guards = RoamerPacks.renegade_traitor_mix_none,
-		cultists = RoamerPacks.cultist_infected_mix_none
+		renegade = RoamerPacks.renegade_traitor_mix_none,
+		cultist = RoamerPacks.cultist_infected_mix_none
 	},
 	encampment = {
-		traitor_guards = RoamerPacks.chaos_poxwalker_encampment,
-		cultists = RoamerPacks.chaos_poxwalker_encampment
+		renegade = RoamerPacks.chaos_poxwalker_encampment,
+		cultist = RoamerPacks.chaos_poxwalker_encampment
 	}
 }
 roamer_settings.density_settings = {
@@ -55,11 +56,11 @@ roamer_settings.density_settings = {
 				6
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					2,
 					2
 				},
-				cultists = {
+				cultist = {
 					2,
 					2
 				}
@@ -89,11 +90,11 @@ roamer_settings.density_settings = {
 				2
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					4,
 					5
 				},
-				cultists = {
+				cultist = {
 					4,
 					5
 				}
@@ -123,11 +124,11 @@ roamer_settings.density_settings = {
 				6
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					1,
 					1
 				},
-				cultists = {
+				cultist = {
 					1,
 					1
 				}
@@ -162,13 +163,13 @@ roamer_settings.density_settings = {
 				1
 			},
 			num_roamers_range = {
-				traitor_guards = {
-					40,
-					50
+				renegade = {
+					30,
+					40
 				},
-				cultists = {
-					40,
-					50
+				cultist = {
+					30,
+					40
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -196,11 +197,11 @@ roamer_settings.density_settings = {
 				4
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					2,
 					3
 				},
-				cultists = {
+				cultist = {
 					3,
 					4
 				}
@@ -230,11 +231,11 @@ roamer_settings.density_settings = {
 				3
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					4,
 					6
 				},
-				cultists = {
+				cultist = {
 					6,
 					8
 				}
@@ -264,11 +265,11 @@ roamer_settings.density_settings = {
 				6
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					1,
 					1
 				},
-				cultists = {
+				cultist = {
 					1,
 					2
 				}
@@ -303,13 +304,13 @@ roamer_settings.density_settings = {
 				1
 			},
 			num_roamers_range = {
-				traitor_guards = {
-					50,
-					60
+				renegade = {
+					40,
+					50
 				},
-				cultists = {
-					50,
-					60
+				cultist = {
+					40,
+					50
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -337,11 +338,11 @@ roamer_settings.density_settings = {
 				5
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					2,
 					4
 				},
-				cultists = {
+				cultist = {
 					3,
 					5
 				}
@@ -371,11 +372,11 @@ roamer_settings.density_settings = {
 				4
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					7,
 					9
 				},
-				cultists = {
+				cultist = {
 					9,
 					11
 				}
@@ -405,11 +406,11 @@ roamer_settings.density_settings = {
 				5
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					1,
 					1
 				},
-				cultists = {
+				cultist = {
 					1,
 					2
 				}
@@ -430,7 +431,8 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none
-			}
+			},
+			limits = RoamerLimits.none
 		},
 		poxwalkers = {
 			try_fill_one_sub_zone = true,
@@ -444,13 +446,13 @@ roamer_settings.density_settings = {
 				1
 			},
 			num_roamers_range = {
-				traitor_guards = {
-					60,
-					70
+				renegade = {
+					40,
+					50
 				},
-				cultists = {
-					60,
-					70
+				cultist = {
+					40,
+					50
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -458,7 +460,7 @@ roamer_settings.density_settings = {
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 70
+					num_slots = 60
 				}
 			},
 			packs = {
@@ -478,11 +480,11 @@ roamer_settings.density_settings = {
 				4
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					3,
 					5
 				},
-				cultists = {
+				cultist = {
 					3,
 					5
 				}
@@ -512,11 +514,11 @@ roamer_settings.density_settings = {
 				4
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					8,
 					10
 				},
-				cultists = {
+				cultist = {
 					8,
 					10
 				}
@@ -546,11 +548,11 @@ roamer_settings.density_settings = {
 				4
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					1,
 					1
 				},
-				cultists = {
+				cultist = {
 					1,
 					1
 				}
@@ -571,7 +573,8 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none
-			}
+			},
+			limits = RoamerLimits.none
 		},
 		poxwalkers = {
 			try_fill_one_sub_zone = true,
@@ -585,13 +588,13 @@ roamer_settings.density_settings = {
 				1
 			},
 			num_roamers_range = {
-				traitor_guards = {
-					70,
-					80
+				renegade = {
+					50,
+					60
 				},
-				cultists = {
-					70,
-					80
+				cultist = {
+					50,
+					60
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -599,7 +602,7 @@ roamer_settings.density_settings = {
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 80
+					num_slots = 70
 				}
 			},
 			packs = {
@@ -619,11 +622,11 @@ roamer_settings.density_settings = {
 				5
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					4,
 					6
 				},
-				cultists = {
+				cultist = {
 					4,
 					6
 				}
@@ -653,11 +656,11 @@ roamer_settings.density_settings = {
 				5
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					9,
 					11
 				},
-				cultists = {
+				cultist = {
 					9,
 					11
 				}
@@ -687,11 +690,11 @@ roamer_settings.density_settings = {
 				3
 			},
 			num_roamers_range = {
-				traitor_guards = {
+				renegade = {
 					1,
 					1
 				},
-				cultists = {
+				cultist = {
 					1,
 					1
 				}
@@ -712,7 +715,8 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none
-			}
+			},
+			limits = RoamerLimits.none
 		},
 		poxwalkers = {
 			try_fill_one_sub_zone = true,
@@ -726,13 +730,13 @@ roamer_settings.density_settings = {
 				1
 			},
 			num_roamers_range = {
-				traitor_guards = {
-					80,
-					90
+				renegade = {
+					60,
+					70
 				},
-				cultists = {
-					80,
-					90
+				cultist = {
+					60,
+					70
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -740,7 +744,7 @@ roamer_settings.density_settings = {
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 90
+					num_slots = 80
 				}
 			},
 			packs = {
@@ -760,7 +764,6 @@ for i = 1, #density_types do
 	local density_type = density_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
-		fassert(roamer_settings.density_settings[j][density_type], "Missing density settings for density type %s with resistance %d in roamer_settings.lua", density_type, j)
 	end
 end
 
@@ -770,7 +773,6 @@ for i = 1, #encampment_types do
 	local encampment_type = encampment_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
-		fassert(roamer_settings.density_settings[j][encampment_type], "Missing density settings for encampment_type %s with resistance %d in roamer_settings.lua", encampment_type, j)
 	end
 end
 
@@ -808,6 +810,12 @@ roamer_settings.pause_spawn_type_when_aggroed = {
 			60,
 			40
 		}
+	}
+}
+roamer_settings.trigger_horde_when_aggroed = {
+	poxwalkers = {
+		horde_template_name = "flood_horde",
+		composition = HordeCompositions.renegade_flood
 	}
 }
 

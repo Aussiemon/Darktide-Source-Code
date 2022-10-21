@@ -1,16 +1,17 @@
 require("scripts/extension_systems/buff/buffs/buff")
 
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local PsykerBiomancerPassiveBuff = class("PsykerBiomancerPassiveBuff", "ProcBuff")
 
 PsykerBiomancerPassiveBuff.update_proc_events = function (self, t, proc_events, num_proc_events, portable_random, local_portable_random)
 	local template = self._template
 	local template_proc_events = template.proc_events
 
-	for i = 1, num_proc_events do
-		local proc_event_data = proc_events[i]
-		local proc_event_name = proc_event_data.name
+	for i = 1, num_proc_events * 2, PROC_EVENTS_STRIDE do
+		local proc_event_name = proc_events[i]
+		local params = proc_events[i + 1]
 		local proc_chance = template_proc_events[proc_event_name]
-		local params = proc_event_data.params
 		local is_local_proc_event = params.is_local_proc_event
 		local template_data = self._template_data
 		local template_context = self._template_context

@@ -229,7 +229,7 @@ function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_directi
 	local breed_or_nil = target_unit_data_extension and target_unit_data_extension:breed()
 	local target_is_player = Breed.is_player(breed_or_nil)
 
-	if target_is_player and (attack_result == attack_results.damaged or attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_broken or attack_result == attack_results.friendly_fire or attack_result == attack_results.blocked) then
+	if target_is_player and (attack_result == attack_results.damaged or attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee or attack_result == attack_results.toughness_broken or attack_result == attack_results.friendly_fire or attack_result == attack_results.blocked) then
 		local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
 		local rotation = first_person_component.rotation
@@ -248,22 +248,22 @@ function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_directi
 		local have_normal_damage = not damage_profile.permanent_damage_ratio or damage_profile.permanent_damage_ratio < 1
 		local mood_extension = ScriptUnit.has_extension(attacked_unit, "mood_system")
 		local t = Managers.time:time("gameplay")
-		local skipp_rpc = true
+		local skip_rpc = true
 
 		if mood_extension then
 			if attack_result == attack_results.damaged then
 				if have_normal_damage then
-					mood_extension:add_timed_mood(t, mood_types.damage_taken, skipp_rpc)
+					mood_extension:add_timed_mood(t, mood_types.damage_taken, skip_rpc)
 				end
 
 				if have_permanent_damage then
-					mood_extension:add_timed_mood(t, mood_types.coruption_taken, skipp_rpc)
+					mood_extension:add_timed_mood(t, mood_types.coruption_taken, skip_rpc)
 				end
 			elseif attack_result == attack_results.toughness_broken then
-				mood_extension:add_timed_mood(t, "toughness_broken", skipp_rpc)
-				mood_extension:add_timed_mood(t, "toughness_absorbed", skipp_rpc)
-			elseif attack_result == attack_results.toughness_absorbed then
-				mood_extension:add_timed_mood(t, "toughness_absorbed", skipp_rpc)
+				mood_extension:add_timed_mood(t, "toughness_broken", skip_rpc)
+				mood_extension:add_timed_mood(t, "toughness_absorbed", skip_rpc)
+			elseif attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee then
+				mood_extension:add_timed_mood(t, "toughness_absorbed", skip_rpc)
 			end
 		end
 	end

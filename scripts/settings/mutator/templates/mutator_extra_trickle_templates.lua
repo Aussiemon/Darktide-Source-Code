@@ -10,10 +10,10 @@ local mutator_templates = {
 		trickle_horde_templates = {
 			{
 				num_trickle_hordes_active_for_cooldown = 20,
-				optional_main_path_offset = 40,
+				optional_main_path_offset = 45,
 				horde_compositions = {
 					trickle_horde = {
-						traitor_guards = {
+						renegade = {
 							none = {
 								HordeCompositions.mutator_chaos_hounds
 							},
@@ -27,7 +27,7 @@ local mutator_templates = {
 								HordeCompositions.mutator_chaos_hounds
 							}
 						},
-						cultists = {
+						cultist = {
 							none = {
 								HordeCompositions.mutator_chaos_hounds
 							},
@@ -44,8 +44,8 @@ local mutator_templates = {
 					}
 				},
 				trickle_horde_travel_distance_range = {
-					30,
-					45
+					40,
+					60
 				},
 				trickle_horde_cooldown = {
 					40,
@@ -67,7 +67,7 @@ local mutator_templates = {
 				optional_main_path_offset = 40,
 				horde_compositions = {
 					trickle_horde = {
-						traitor_guards = {
+						renegade = {
 							none = {
 								HordeCompositions.mutator_snipers
 							},
@@ -81,7 +81,7 @@ local mutator_templates = {
 								HordeCompositions.mutator_snipers
 							}
 						},
-						cultists = {
+						cultist = {
 							none = {
 								HordeCompositions.mutator_snipers
 							},
@@ -98,8 +98,8 @@ local mutator_templates = {
 					}
 				},
 				trickle_horde_travel_distance_range = {
-					30,
-					45
+					40,
+					60
 				},
 				trickle_horde_cooldown = {
 					40,

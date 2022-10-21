@@ -11,7 +11,7 @@ local event_vo_demolition_psyker_female_c = {
 		sound_events_duration = {
 			2.534833,
 			2.780698,
-			2.668479,
+			2.668469,
 			2.109292
 		},
 		randomize_indexes = {}

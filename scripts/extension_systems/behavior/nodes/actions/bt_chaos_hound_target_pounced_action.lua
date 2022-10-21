@@ -162,10 +162,11 @@ BtChaosHoundTargetPouncedAction._damage_target = function (self, scratchpad, uni
 	local damage_profile = action_data.damage_profile
 	local damage_type = action_data.damage_type
 	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(action_data.power_level)
+	local attack_type = AttackSettings.attack_types.melee
 	local jaw_node = Unit.node(unit, action_data.hit_position_node)
 	local hit_position = Unit.world_position(unit, jaw_node)
 
-	Attack.execute(pounce_target, damage_profile, "power_level", power_level, "hit_world_position", hit_position, "attacking_unit", unit, "damage_type", damage_type)
+	Attack.execute(pounce_target, damage_profile, "power_level", power_level, "hit_world_position", hit_position, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
 end
 
 return BtChaosHoundTargetPouncedAction

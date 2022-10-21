@@ -7,6 +7,7 @@ local HudLoader = require("scripts/loading/loaders/hud_loader")
 local LevelLoader = require("scripts/loading/loaders/level_loader")
 local LoadingClient = require("scripts/loading/loading_client")
 local LoadingHost = require("scripts/loading/loading_host")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Missions = require("scripts/settings/mission/mission_templates")
 local MultiplayerSession = require("scripts/managers/multiplayer/multiplayer_session")
 local MultiplayerSessionDisconnectError = require("scripts/managers/error/errors/multiplayer_session_disconnect_error")
@@ -15,8 +16,10 @@ local MultiplayerSessionManagerTestify = GameParameters.testify and require("scr
 local NameGenerator = require("scripts/multiplayer/utilities/name_generator")
 local PartyImmateriumMissionSessionBoot = require("scripts/multiplayer/party_immaterium_mission_session_boot")
 local PartyImmateriumHubSessionBoot = require("scripts/multiplayer/party_immaterium_hub_session_boot")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local StateLoading = require("scripts/game_states/game/state_loading")
 local ViewLoader = require("scripts/loading/loaders/view_loader")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MultiplayerSessionManager = class("MultiplayerSessionManager")
 
 local function _info(...)
@@ -34,10 +37,39 @@ MultiplayerSessionManager.destroy = function (self)
 	end
 end
 
+MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_reason)
+	local rpc_sent = false
+	local host_type = self:host_type()
+
+	if host_type == HOST_TYPES.mission_server and leave_reason == "leave_mission" then
+		local host_channel = Managers.connection:host_channel()
+
+		if host_channel then
+			for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
+				local account_id = player:account_id()
+
+				if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+					RPC.rpc_ignore_disconnected_slot_reservation(host_channel, account_id)
+
+					rpc_sent = true
+				end
+			end
+		end
+	end
+
+	return rpc_sent
+end
+
 MultiplayerSessionManager.leave = function (self, reason)
 	Log.info("MultiplayerSessionManager", "Leaving multiplayer session on next post update with reason %s ...", reason)
 
 	self._leave_reason = reason
+
+	if self:_rpc_ignore_slot_reservation(reason) then
+		self._leave_delay = 2
+	else
+		self._leave_delay = 0
+	end
 end
 
 MultiplayerSessionManager._leave = function (self, reason)
@@ -67,8 +99,6 @@ MultiplayerSessionManager.reset = function (self, reason)
 end
 
 MultiplayerSessionManager.boot_singleplayer_session = function (self)
-	fassert(not self._session_boot, "Trying to connect with existing connection.")
-
 	local new_session = MultiplayerSession:new()
 	self._session_boot = SingleplayerSessionBoot:new(new_session)
 
@@ -121,12 +151,10 @@ MultiplayerSessionManager.host_type = function (self)
 end
 
 MultiplayerSessionManager.error_transition = function (self)
-	fassert(self:is_stranded(), "Calling error transition when not stranded.")
-
 	return Managers.mechanism:wanted_transition()
 end
 
-MultiplayerSessionManager.start_singleplayer_session = function (self, mission_name)
+MultiplayerSessionManager.start_singleplayer_session = function (self, mission_name, singeplay_type)
 	self:boot_singleplayer_session()
 
 	local mechanism_manager = Managers.mechanism
@@ -134,7 +162,8 @@ MultiplayerSessionManager.start_singleplayer_session = function (self, mission_n
 	local mechanism_name = mission_settings.mechanism_name
 
 	mechanism_manager:change_mechanism(mechanism_name, {
-		mission_name = mission_name
+		mission_name = mission_name,
+		singleplay_type = singeplay_type
 	})
 
 	return mechanism_manager:wanted_transition()
@@ -153,9 +182,6 @@ MultiplayerSessionManager._find_available_immaterium_session = function (self)
 end
 
 MultiplayerSessionManager.find_available_session = function (self)
-	fassert(not self._session, "Trying to find session when already has session.")
-	fassert(not self._session_boot, "Trying to find session when already booting session.")
-
 	if GameParameters.prod_like_backend then
 		return self:_find_available_immaterium_session()
 	end
@@ -197,15 +223,6 @@ MultiplayerSessionManager.update = function (self, dt)
 		if not session_boot then
 			self:_handle_session_error(current_session)
 		end
-	end
-
-	if current_session and current_session:server_needs_reboot() then
-		self._session = nil
-		local params = {
-			left_session_reason = "server_needs_reboot"
-		}
-
-		Managers.mechanism:change_mechanism("left_session", params)
 	end
 
 	if session_boot then
@@ -278,8 +295,6 @@ MultiplayerSessionManager.update = function (self, dt)
 				local loading_client = LoadingClient:new(Managers.connection:network_event_delegate(), host_channel_id, loaders)
 
 				Managers.loading:set_client(loading_client)
-			else
-				fassert(false, "Session Boot returned unsupported connection class %s", connection_class_name)
 			end
 		elseif boot_state == "failed" then
 			local session_object = session_boot:event_object()
@@ -329,30 +344,23 @@ end
 
 MultiplayerSessionManager.post_update = function (self)
 	if self._leave_reason then
-		self:_leave(self._leave_reason)
+		if self._leave_delay > 0 then
+			self._leave_delay = self._leave_delay - 1
+		else
+			self:_leave(self._leave_reason)
 
-		self._leave_reason = nil
+			self._leave_reason = nil
+			self._leave_delay = nil
+		end
 	end
 end
 
 MultiplayerSessionManager.aws_matchmaking = function (self)
-	local platform = Managers.connection.platform
-
-	if platform == "lan" then
-		return false
-	elseif platform == "wan_server" or platform == "wan_client" then
-		return true
-	else
-		return GameParameters.aws_matchmaking
-	end
+	return true
 end
 
 MultiplayerSessionManager.use_hub_server = function (self)
-	if Managers.connection.platform == "lan" then
-		return DevParameters.debug_join_hub_server
-	else
-		return DevParameters.debug_join_hub_server or self:aws_matchmaking()
-	end
+	return self:aws_matchmaking()
 end
 
 return MultiplayerSessionManager

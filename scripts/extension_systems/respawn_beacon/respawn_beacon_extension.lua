@@ -3,6 +3,7 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local RespawnBeaconGuardSettings = require("scripts/extension_systems/respawn_beacon/respawn_beacon_guard_settings")
 local RespawnBeaconQueries = require("scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RespawnBeaconExtension = class("RespawnBeaconExtension")
 RespawnBeaconExtension.UPDATE_DISABLED_BY_DEFAULT = true
 local _player_max_radius_height = nil
@@ -14,7 +15,6 @@ RespawnBeaconExtension.init = function (self, extension_init_context, unit, exte
 	self._owner_system = extension_init_context.owner_system
 	self._unit = unit
 	self._player_unit_spawn_manager = Managers.state.player_unit_spawn
-	self._spawn_on_navmesh_only = true
 	self._side = nil
 	self._has_spawned_guards = false
 	self._guards = {}
@@ -24,21 +24,18 @@ RespawnBeaconExtension.update = function (self, unit, dt, t)
 	return
 end
 
-RespawnBeaconExtension.setup_from_component = function (self, spawn_on_navmesh_only, side)
-	self._spawn_on_navmesh_only = spawn_on_navmesh_only
+RespawnBeaconExtension.setup_from_component = function (self, side)
 	self._side = side
 	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height, self._spawn_on_navmesh_only)
+	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
 end
 
 RespawnBeaconExtension.respawn_players = function (self)
 	local player_unit_spawn_manager = self._player_unit_spawn_manager
 	local players_to_spawn = player_unit_spawn_manager:players_to_spawn()
-	local valid_spawn_positions = self:get_best_respawn_positions()
+	local valid_spawn_positions = self:best_respawn_positions()
 	local beacon_unit = self._unit
-	local volume_node = Unit.node(beacon_unit, "c_respawn_volume")
-	local volume_rotation = Unit.world_rotation(beacon_unit, volume_node)
-	local spawn_rotation = Quaternion.look(Quaternion.forward(volume_rotation), Vector3.up())
+	local beacon_position = Unit.world_position(beacon_unit, Unit.node(beacon_unit, "aim_target"))
 	local side = self._side
 	local force_spawn = false
 	local is_respawn = true
@@ -49,14 +46,18 @@ RespawnBeaconExtension.respawn_players = function (self)
 
 		if spawn_position then
 			self:_try_spawn_guards(spawn_position, beacon_unit, valid_spawn_positions)
-			player_unit_spawn_manager:spawn_player(player, spawn_position, spawn_rotation, force_spawn, side, nil, "hogtied", is_respawn)
+
+			local spawn_parent = nil
+			local spawn_rotation = Quaternion.look(beacon_position - spawn_position, Vector3.up())
+
+			player_unit_spawn_manager:spawn_player(player, spawn_position, spawn_rotation, spawn_parent, force_spawn, side, nil, "hogtied", is_respawn)
 		end
 	end
 end
 
-RespawnBeaconExtension.get_best_respawn_positions = function (self)
+RespawnBeaconExtension.best_respawn_positions = function (self)
 	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height, self._spawn_on_navmesh_only)
+	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
 
 	return valid_spawn_positions
 end
@@ -81,7 +82,11 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 	end
 
 	local settings = Managers.state.difficulty:get_table_entry_by_challenge(RespawnBeaconGuardSettings)
-	local _, travel_distance = MainPathQueries.closest_position(spawn_position)
+	local nav_spawn_points = main_path_manager:nav_spawn_points()
+	local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, spawn_position)
+	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+	local end_index = start_index + 1
+	local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(spawn_position, start_index, end_index)
 	local travel_distance_threshold = settings.travel_distance_threshold
 	local diff = math.max(travel_distance - furthest_travel_distance, 0)
 
@@ -99,6 +104,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 	local degree_per_direction = degree_range / num_guards
 	local position_offset = settings.position_offset_range
 	local current_degree = -(degree_range / 2)
+	local has_spawned_guards = false
 
 	for i = 1, num_guards do
 		current_degree = current_degree + degree_per_direction
@@ -127,11 +133,12 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 				local breed_name = faction_breeds[math.random(1, #faction_breeds)]
 				local guard_unit = minion_spawn_manager:spawn_minion(breed_name, navmesh_position, Quaternion.look(wanted_direction), settings.side_id)
 				self._guards[#self._guards + 1] = guard_unit
+				has_spawned_guards = true
 			end
 		end
 	end
 
-	self._has_spawned_guards = true
+	self._has_spawned_guards = has_spawned_guards
 end
 
 RespawnBeaconExtension.despawn_guards = function (self)

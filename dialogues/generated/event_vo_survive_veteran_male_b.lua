@@ -29,7 +29,7 @@ local event_vo_survive_veteran_male_b = {
 			3.884208,
 			2.632438,
 			3.0375,
-			2.8835
+			2.883479
 		},
 		randomize_indexes = {}
 	}

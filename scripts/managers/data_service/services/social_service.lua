@@ -357,11 +357,12 @@ end
 
 SocialService.fetch_blocked_accounts = function (self)
 	local blocked_accounts_promise = self._blocked_accounts_list_promise
+	self._blocked_accounts_list_changed = true
 
 	if self._blocked_accounts_list_changed and not blocked_accounts_promise:is_pending() then
 		blocked_accounts_promise = self._backend_interfaces:fetch_blocked_accounts():next(function (data)
-			self._max_blocked_accounts = data.maxBlocks
-			local blocked_accounts = data.blockList
+			self._max_blocked_accounts = data.maxBlocks or 0
+			local blocked_accounts = data.blockList or {}
 
 			self:_update_blocked_players(blocked_accounts)
 
@@ -434,6 +435,20 @@ SocialService.can_join_party = function (self, player_info)
 		end
 	end
 
+	if self:is_in_mission() then
+		local reason = "loc_social_party_join_rejection_reason_you_are_in_mission"
+
+		return false, reason
+	end
+
+	local player_activity = player_info:player_activity_id()
+
+	if player_activity == "matchmaking" then
+		local reason = "loc_social_party_join_rejection_reason_player_in_matchmaking"
+
+		return false, reason
+	end
+
 	if self:is_in_matchmaking() then
 		local reason = "loc_social_party_join_rejection_reason_you_are_in_matchmaking"
 
@@ -470,8 +485,16 @@ SocialService.can_invite_to_party = function (self, player_info)
 		return false, reason
 	end
 
-	if player_info:player_activity_id() == "mission" then
+	local player_activity = player_info:player_activity_id()
+
+	if player_activity == "mission" then
 		local reason = "loc_social_party_join_rejection_reason_player_in_mission"
+
+		return false, reason
+	end
+
+	if player_activity == "matchmaking" then
+		local reason = "loc_social_party_join_rejection_reason_player_in_matchmaking"
 
 		return false, reason
 	end
@@ -494,20 +517,32 @@ SocialService.send_party_invite = function (self, invitee_player_info)
 		end)
 	elseif player_online_status == OnlineStatus.platform_online then
 		local party_id = Managers.party_immaterium:party_id()
+		local platform = invitee_player_info:platform()
 		local platform_user_id = invitee_player_info:platform_user_id()
 
-		if party_id and platform_user_id then
-			self._invites:send_invite(platform_user_id, party_id)
+		if party_id and platform and platform_user_id then
+			Managers.party_immaterium:get_invite_code_for_platform_invite(platform, platform_user_id):next(function (invite_code)
+				self._invites:send_invite(platform_user_id, invite_code)
+			end):catch(function (error)
+				_warning("invite_platform_user_to_party failed with " .. table.tostring(error, 3))
+			end)
 		end
 	end
 end
 
 SocialService.cancel_party_invite = function (self, invitee_player_info)
-	Managers.party_immaterium:cancel_party_invite(invitee_player_info:account_id())
+	local invite = Managers.party_immaterium:get_invite_by_account_id(invitee_player_info:account_id())
+
+	if invite then
+		Managers.party_immaterium:cancel_party_invite(invite.invite_token)
+	end
 end
 
-SocialService.join_party = function (self, party_id)
-	return Managers.party_immaterium:join_party(party_id)
+SocialService.join_party = function (self, party_id, context_account_id)
+	return Managers.party_immaterium:join_party({
+		party_id = party_id,
+		context_account_id = context_account_id
+	})
 end
 
 SocialService.leave_party = function (self)
@@ -664,7 +699,7 @@ SocialService.has_unread_notifications = function (self)
 	return self._invites:has_invite()
 end
 
-SocialService.can_mute_player_in_text_chat = function (self, account_id)
+SocialService.can_toggle_mute_in_text_chat = function (self, account_id, platform_user_id)
 	local player_info = account_id and self._players_by_account_id[account_id]
 
 	if not player_info or player_info:online_status() ~= OnlineStatus.online then
@@ -673,7 +708,31 @@ SocialService.can_mute_player_in_text_chat = function (self, account_id)
 		return false, reason
 	end
 
-	return false, "loc_social_fail_reason_not_implemented"
+	if player_info:is_blocked() then
+		return false
+	end
+
+	if Managers.account:is_muted(platform_user_id) then
+		local reason = "loc_social_fail_reason_platform_muted"
+
+		return false, reason
+	end
+
+	if IS_GDK or IS_XBS then
+		local platform = player_info:platform()
+
+		if platform ~= self:platform() then
+			local relation = player_info:is_friend() and XblAnonymousUserType.CrossNetworkFriend or XblAnonymousUserType.CrossNetworkUser
+
+			if Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingText) then
+				local reason = "loc_social_fail_reason_platform_muted"
+
+				return false, reason
+			end
+		end
+	end
+
+	return true
 end
 
 SocialService.mute_player_in_text_chat = function (self, account_id, is_muted)
@@ -682,7 +741,7 @@ SocialService.mute_player_in_text_chat = function (self, account_id, is_muted)
 	player_info:set_is_text_muted(is_muted)
 end
 
-SocialService.can_mute_player_in_voice_chat = function (self, account_id)
+SocialService.can_toggle_mute_in_voice_chat = function (self, account_id, platform_user_id)
 	local player_info = account_id and self._players_by_account_id[account_id]
 
 	if not player_info or player_info:online_status() ~= OnlineStatus.online then
@@ -691,7 +750,31 @@ SocialService.can_mute_player_in_voice_chat = function (self, account_id)
 		return false, reason
 	end
 
-	return false, "loc_social_fail_reason_not_implemented"
+	if player_info:is_blocked() then
+		return false
+	end
+
+	if Managers.account:is_muted(platform_user_id) then
+		local reason = "loc_social_fail_reason_platform_muted"
+
+		return false, reason
+	end
+
+	if IS_GDK or IS_XBS then
+		local platform = player_info:platform()
+
+		if platform ~= self:platform() then
+			local relation = player_info:is_friend() and XblAnonymousUserType.CrossNetworkFriend or XblAnonymousUserType.CrossNetworkUser
+
+			if Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingVoice) then
+				local reason = "loc_social_fail_reason_platform_muted"
+
+				return false, reason
+			end
+		end
+	end
+
+	return true
 end
 
 SocialService.mute_player_in_voice_chat = function (self, account_id, is_muted)
@@ -827,7 +910,8 @@ SocialService._update_blocked_players = function (self, blocked_accounts)
 
 	table.clear_array(blocked_players_list, #blocked_players_list)
 
-	local previous_blocked_players = self._blocked_accounts_list
+	local blocked_accounts_list = self._blocked_accounts_list
+	local previous_blocked_players = table.clone_instance(self._blocked_accounts_list)
 	local players_by_account_id = self._players_by_account_id
 
 	for account_id, account_info in pairs(blocked_accounts) do
@@ -839,6 +923,7 @@ SocialService._update_blocked_players = function (self, blocked_accounts)
 		player_info:set_is_blocked(true)
 
 		blocked_players_list[#blocked_players_list + 1] = player_info
+		blocked_accounts_list[account_id] = player_info
 	end
 
 	for account_id in pairs(previous_blocked_players) do
@@ -847,9 +932,35 @@ SocialService._update_blocked_players = function (self, blocked_accounts)
 		if player_info then
 			player_info:set_is_blocked(false)
 		end
+
+		blocked_accounts_list[account_id] = nil
 	end
 
-	self._blocked_accounts_list = blocked_accounts
+	self._num_blocked_accounts = #blocked_players_list
+
+	self:_update_platform_blocked_players()
+end
+
+SocialService._update_platform_blocked_players = function (self)
+	local players = Managers.player:human_players()
+	local blocked_players_list = self._blocked_players_list
+	local blocked_accounts_list = self._blocked_accounts_list
+
+	for unique_id, player in pairs(players) do
+		if player:is_human_controlled() then
+			local player_info = self:_get_player_info_for_player(player)
+			local platform_user_id = player_info:platform_user_id()
+			local is_blocked = Managers.account:is_blocked(platform_user_id)
+
+			if is_blocked then
+				player_info:set_is_blocked(true)
+
+				blocked_players_list[#blocked_players_list + 1] = player_info
+				blocked_accounts_list[player_info:account_id()] = player_info
+			end
+		end
+	end
+
 	self._num_blocked_accounts = #blocked_players_list
 end
 

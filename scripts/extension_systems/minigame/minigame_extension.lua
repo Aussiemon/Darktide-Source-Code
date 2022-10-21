@@ -15,7 +15,6 @@ MinigameExtension.init = function (self, extension_init_context, unit, ...)
 end
 
 MinigameExtension.hot_join_sync = function (self, unit, sender, channel)
-	fassert(self._is_server, "[MinigameSystem][hot_join_sync] server only method")
 	self._minigame:hot_join_sync(sender, channel)
 
 	local unit_spawner_manager = Managers.state.unit_spawner
@@ -31,9 +30,6 @@ end
 
 MinigameExtension.setup_from_component = function (self, minigame_type, decode_symbols_sweep_duration)
 	self._minigame_type = minigame_type
-
-	fassert(self._minigame == nil, "[MinigameExtension][setup_from_component] Extension supports only 1 component per unit.")
-
 	local minigame_context = {
 		decode_target_margin = MinigameSettings.decode_target_margin,
 		decode_symbols_sweep_duration = decode_symbols_sweep_duration,
@@ -57,8 +53,6 @@ MinigameExtension.minigame_type = function (self)
 end
 
 MinigameExtension.minigame = function (self, type)
-	fassert(self._minigame_type == type, "[MinigameExtension][minigame] minigame_type(%s) mismatch.", self._minigame_type)
-
 	return self._minigame
 end
 
@@ -110,13 +104,10 @@ MinigameExtension.completed = function (self)
 end
 
 MinigameExtension.setup_game = function (self)
-	fassert(self._is_server, "[MinigameExtension] Server only method.")
 	self._minigame:setup_game()
 end
 
 MinigameExtension.on_action_pressed = function (self, t)
-	fassert(self._is_server, "[MinigameExtension] Server only method.")
-
 	if self._current_state == STATES.active then
 		self._minigame:on_action_pressed(t)
 	end

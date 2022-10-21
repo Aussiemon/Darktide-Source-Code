@@ -38,6 +38,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_clubs/settings_templates/ogryn_club_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_clubs/settings_templates/ogryn_shovel_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_power_mauls/settings_templates/ogryn_power_maul_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_mauls/settings_templates/power_maul_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_swords/settings_templates/power_sword_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_damage_profile_templates", templates, loaded_files)
@@ -45,6 +46,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thunder_hammers/settings_templates/thunder_hammer_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_damage_profile_templates", templates, loaded_files)
 
 for name, damage_profile in pairs(templates) do
 	damage_profile.name = name

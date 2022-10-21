@@ -152,12 +152,13 @@ local breed_data = {
 		disorientation_type = "disorientation_type"
 	},
 	hit_reaction_stun_types = {
-		toughness_broken_default = "medium",
+		toughness_absorbed_melee = "toughness_melee",
+		toughness_broken_ranged_sprinting = "ranged_sprinting",
 		toughness_broken_ranged = "ranged",
-		thougness_absorbed_ranged_sprinting = "ranged_sprinting",
-		thougness_absorbed_default = "toughness",
+		toughness_broken_default = "medium",
+		toughness_absorbed_default = "toughness",
 		fumbled = "fumbled",
-		toughness_broken_ranged_sprinting = "ranged_sprinting"
+		toughness_absorbed_ranged_sprinting = "ranged_sprinting"
 	},
 	ledge_finder_tweak_data = {
 		player_width = 0.5,

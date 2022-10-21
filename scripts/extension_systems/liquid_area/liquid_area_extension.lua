@@ -1,3 +1,4 @@
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local HexGrid = require("scripts/foundation/utilities/hex_grid")
 local LiquidAreaSettings = require("scripts/settings/liquid_area/liquid_area_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
@@ -23,9 +24,6 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	self._traverse_logic = traverse_logic
 	local unit_position = POSITION_LOOKUP[unit]
 	local nav_mesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, NAV_MESH_LATERAL, DISTANCE_FROM_NAV_MESH)
-
-	fassert(nav_mesh_position, "[LiquidAreaExtension] Couldn't find nav mesh at position %s.", unit_position)
-
 	local template = extension_init_data.template
 	local cell_size = template.cell_size
 	local max_liquid = extension_init_data.optional_max_liquid or template.max_liquid
@@ -240,9 +238,6 @@ local LIQUID_FULL_AMOUNT = 1
 LiquidAreaExtension._set_filled = function (self, real_index)
 	local flow = self._flow
 	local liquid = flow[real_index]
-
-	fassert(not liquid.full, "[LiquidAreaExtension] Tried to set liquid that was already full as active.")
-
 	liquid.full = true
 	liquid.amount = LIQUID_FULL_AMOUNT
 	local world = self._world
@@ -335,7 +330,7 @@ LiquidAreaExtension.destroy = function (self)
 		World.stop_spawning_particles(world, additional_unit_particle_id)
 	end
 
-	local t = Managers.time:time("gameplay")
+	local t = FixedFrame.get_latest_fixed_time()
 
 	for unit, buff_indices in pairs(self._buff_affected_units) do
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
@@ -413,9 +408,7 @@ LiquidAreaExtension.update = function (self, unit, dt, t, context, listener_posi
 		self._recalculate_broadphase_size = false
 	end
 
-	Profiler.start("_update_collision_detection")
 	self:_update_collision_detection(t)
-	Profiler.stop("_update_collision_detection")
 
 	if self._wwise_source_id and listener_position_or_nil then
 		local broadphase_center = self._broadphase_center:unbox()

@@ -8,6 +8,7 @@ CutsceneView.init = function (self, settings, context)
 
 	CutsceneView.super.init(self, Definitions, settings)
 
+	self._pass_input = false
 	self._can_exit = not context or context.can_exit
 end
 
@@ -17,7 +18,7 @@ CutsceneView.on_enter = function (self)
 end
 
 CutsceneView.is_using_input = function (self)
-	return false
+	return true
 end
 
 CutsceneView._set_background_visibility = function (self, visible)

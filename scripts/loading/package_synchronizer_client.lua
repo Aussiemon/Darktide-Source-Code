@@ -79,7 +79,7 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 	for local_player_id, player in pairs(players) do
 		local profile = player:profile()
-		local profile_packages = self:_resolve_profile_packages(profile)
+		local profile_packages = self:resolve_profile_packages(profile)
 		packages[local_player_id] = profile_packages
 	end
 
@@ -118,7 +118,7 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 	else
 		local player = Managers.player:player(peer_id, local_player_id)
 		local profile = player:profile()
-		local profile_packages = self:_resolve_profile_packages(profile)
+		local profile_packages = self:resolve_profile_packages(profile)
 		local peer_packages = data.peer_packages
 		peer_packages[local_player_id] = profile_packages
 	end
@@ -147,13 +147,10 @@ PackageSynchronizerClient.remove_bot = function (self, peer_id, local_player_id)
 end
 
 local function _add_package_chunk(alias, dependencies, packages)
-	fassert(packages[alias], "[[PackageSynchronizerClient]] Tried assigning dependencies to alias %s that doesnt exist in PlayerPackageAliases", alias)
-	fassert(not next(packages[alias].dependencies), "[[PackageSynchronizerClient]] Tried adding profile_packages with alias: %s, but it already has dependencies", alias)
-
 	packages[alias].dependencies = dependencies
 end
 
-PackageSynchronizerClient._resolve_profile_packages = function (self, profile)
+PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 	local profile_packages = {}
 	local sound_dependencies = {}
 	local particle_dependencies = {}
@@ -510,7 +507,7 @@ end
 PackageSynchronizerClient.player_profile_packages_changed = function (self, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local profile = player:profile()
-	local new_profile_packages = self:_resolve_profile_packages(profile)
+	local new_profile_packages = self:resolve_profile_packages(profile)
 	local data = self._packages[peer_id]
 	local player_packages = data.peer_packages[local_player_id]
 	local package_ids = {}

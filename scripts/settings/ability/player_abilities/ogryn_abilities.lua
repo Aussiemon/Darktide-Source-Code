@@ -1,6 +1,7 @@
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local bonebreaker_talent_settings = TalentSettings.ogryn_2
+local gunlugger_talent_settings = TalentSettings.ogryn_1
 local abilities = {
 	ogryn_charge = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
@@ -30,6 +31,20 @@ local abilities = {
 			"ogryn"
 		}
 	},
+	ogryn_charge_damage = {
+		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
+		ability_template = "ogryn_charge",
+		icon = "content/ui/materials/icons/abilities/combat/default",
+		ability_type = "combat_ability",
+		ability_template_tweak_data = {
+			lunge_template_name = LungeTemplates.ogryn_charge_damage.name
+		},
+		cooldown = bonebreaker_talent_settings.combat_ability_1.cooldown,
+		max_charges = bonebreaker_talent_settings.combat_ability_1.max_charges,
+		archetypes = {
+			"ogryn"
+		}
+	},
 	ogryn_charge_increased_distance = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
 		ability_template = "ogryn_charge",
@@ -44,16 +59,16 @@ local abilities = {
 			"ogryn"
 		}
 	},
-	ogryn_charge_damage = {
+	ogryn_charge_bleed = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
 		ability_template = "ogryn_charge",
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		ability_type = "combat_ability",
 		ability_template_tweak_data = {
-			lunge_template_name = LungeTemplates.ogryn_charge_damage.name
+			lunge_template_name = LungeTemplates.ogryn_charge_bleed.name
 		},
-		cooldown = bonebreaker_talent_settings.combat_ability_1.cooldown,
-		max_charges = bonebreaker_talent_settings.combat_ability_1.max_charges,
+		cooldown = bonebreaker_talent_settings.combat_ability_3.cooldown,
+		max_charges = bonebreaker_talent_settings.combat_ability_3.max_charges,
 		archetypes = {
 			"ogryn"
 		}
@@ -70,29 +85,27 @@ local abilities = {
 		}
 	},
 	ogryn_ranged_stance = {
+		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_gunlugger_hud",
 		ability_template = "gunlugger_stance",
-		cooldown = 30,
-		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_type = "combat_ability",
-		max_charges = 1,
+		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
 			buff_to_add = "ogryn_ranged_stance"
 		},
+		cooldown = gunlugger_talent_settings.combat_ability.cooldown,
+		max_charges = gunlugger_talent_settings.combat_ability.max_charges,
 		archetypes = {
 			"ogryn"
 		}
 	},
-	ogryn_ranged_stance_double_charge = {
-		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_gunlugger_hud",
-		ability_template = "gunlugger_stance",
-		cooldown = 30,
-		icon = "content/ui/materials/icons/abilities/ultimate/default",
-		ability_type = "combat_ability",
-		max_charges = 2,
-		ability_template_tweak_data = {
-			buff_to_add = "ogryn_ranged_stance"
-		},
+	ogryn_grenade_box = {
+		ability_type = "grenade_ability",
+		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
+		stat_buff = "extra_max_amount_of_grenades",
+		inventory_item_name = "content/items/weapons/player/grenade_box_ogryn",
+		icon = "content/ui/materials/icons/abilities/combat/default",
+		max_charges = bonebreaker_talent_settings.grenade.max_charges,
 		archetypes = {
 			"ogryn"
 		}

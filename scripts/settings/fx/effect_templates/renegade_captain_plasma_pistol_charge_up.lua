@@ -3,7 +3,7 @@ local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local START_SOUND_EVENT = "wwise/events/weapon/play_minion_plasmapistol_charge"
 local STOP_SOUND_EVENT = "wwise/events/weapon/stop_minion_plasmapistol_charge"
-local MUZZLE_VFX = "content/fx/particles/debug/fx_debug_1m_burst"
+local MUZZLE_VFX = "content/fx/particles/enemies/renegade_captain/enemy_plasma_scope_flash"
 local FX_SOURCE_NAME = "muzzle"
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
@@ -35,7 +35,7 @@ local effect_template = {
 		local position = Unit.world_position(attachment_unit, node_index)
 		local vfx_particle_id = World.create_particles(world, MUZZLE_VFX, position, Quaternion.identity())
 
-		World.link_particles(world, vfx_particle_id, unit, node_index, Matrix4x4.identity(), "stop")
+		World.link_particles(world, vfx_particle_id, attachment_unit, node_index, Matrix4x4.identity(), "stop")
 
 		template_data.vfx_particle_id = vfx_particle_id
 	end,

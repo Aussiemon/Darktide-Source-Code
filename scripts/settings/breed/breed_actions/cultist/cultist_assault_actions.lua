@@ -385,15 +385,18 @@ local action_data = {
 		}
 	},
 	follow = {
+		max_distance_to_target = 22,
 		min_distance_to_target = 14,
 		utility_weight = 1,
-		max_distance_to_target = 22,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.ranged_follow,
 		idle_anim_events = {
 			"idle",
@@ -432,18 +435,46 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	ranged_follow_no_los = {
+		max_distance_to_target = 18,
 		min_distance_to_target = 10,
 		utility_weight = 1,
-		max_distance_to_target = 18,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.ranged_follow_no_los,
 		idle_anim_events = {
 			"idle",
@@ -482,19 +513,47 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	move_to_combat_vector = {
-		range = "close",
-		utility_weight = 1,
+		max_distance_to_target = 18,
 		min_distance_to_target = 10,
+		utility_weight = 1,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		range = "close",
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		max_distance_to_target = 18,
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.move_to_combat_vector,
 		idle_anim_events = {
 			"idle",
@@ -533,6 +592,31 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	run_stop_and_shoot = {
@@ -603,21 +687,49 @@ local action_data = {
 	},
 	assault = {
 		max_distance_to_target = 12,
-		speed = 6.2,
 		utility_weight = 10,
 		vo_event = "assault",
+		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		degree_per_direction = 10,
+		is_assaulting = true,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 60,
 		move_anim_event = "assault_fwd",
-		degree_per_direction = 10,
+		speed = 6.2,
 		move_to_cooldown = 0.25,
 		min_distance_to_target = 8,
-		is_assaulting = true,
 		considerations = UtilityConsiderations.assault_far,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
 			"idle_3"
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	shoot_close = {
@@ -671,16 +783,51 @@ local action_data = {
 		first_shoot_timing = 0.5,
 		utility_weight = 10,
 		new_combat_vector_position_min_distance = 8,
+		inventory_slot = "slot_ranged_weapon",
 		suppressive_fire = true,
 		attack_intensity_type = "ranged",
-		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
 		considerations = UtilityConsiderations.shoot_close,
 		aim_anim_events = {
 			"aim_standing"
 		},
 		aim_duration = {
-			aim_standing = shooting_difficulty_settings.aim_durations
+			aim_standing = shooting_difficulty_settings.aim_durations,
+			turn_shoot_bwd = shooting_difficulty_settings.aim_durations,
+			turn_shoot_left = shooting_difficulty_settings.aim_durations,
+			turn_shoot_right = shooting_difficulty_settings.aim_durations
+		},
+		shoot_turn_anims = {
+			bwd = "turn_shoot_bwd",
+			left = "turn_shoot_left",
+			right = "turn_shoot_right"
+		},
+		start_move_anim_data = {
+			turn_shoot_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			turn_shoot_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			turn_shoot_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			turn_shoot_right = 0,
+			turn_shoot_bwd = 0,
+			turn_shoot_left = 0
+		},
+		start_rotation_durations = {
+			turn_shoot_right = 0.6410256410256411,
+			turn_shoot_bwd = 0.5714285714285714,
+			turn_shoot_left = 0.6410256410256411
+		},
+		aim_stances = {
+			aim_standing = "standing"
 		},
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
@@ -947,7 +1094,6 @@ local action_data = {
 	switch_weapon = {
 		vo_event = "switch_to_melee",
 		slot_melee_weapon = {
-			anim_state = "to_melee",
 			switch_anim_events = {
 				"equip_sword"
 			},
@@ -975,10 +1121,13 @@ local action_data = {
 		considerations = UtilityConsiderations.has_cover
 	},
 	move_to_cover = {
-		sprint_target_distance = 20,
-		anim_driven_min_distance = 3,
 		move_type_switch_stickiness = 2,
 		sprint_anim_event = "assault_fwd",
+		anim_driven_min_distance = 3,
+		sprint_target_distance = 20,
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
+		controlled_stagger = true,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
@@ -1020,14 +1169,39 @@ local action_data = {
 		speeds = {
 			jogging = 4.2,
 			sprinting = 5.6
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	move_to_cover_shoot = {
 		utility_weight = 20,
+		inventory_slot = "slot_ranged_weapon",
+		exit_after_cooldown = true,
 		suppressive_fire = true,
 		attack_intensity_type = "ranged",
-		exit_after_cooldown = true,
-		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
 		considerations = UtilityConsiderations.move_to_cover_shoot,
 		aim_anim_events = {
@@ -1036,7 +1210,39 @@ local action_data = {
 		},
 		aim_duration = {
 			aim_standing = shooting_difficulty_settings.aim_durations,
-			aim_crouching = shooting_difficulty_settings.aim_durations
+			aim_crouching = shooting_difficulty_settings.aim_durations,
+			turn_shoot_bwd = shooting_difficulty_settings.aim_durations,
+			turn_shoot_left = shooting_difficulty_settings.aim_durations,
+			turn_shoot_right = shooting_difficulty_settings.aim_durations
+		},
+		shoot_turn_anims = {
+			bwd = "turn_shoot_bwd",
+			left = "turn_shoot_left",
+			right = "turn_shoot_right"
+		},
+		start_move_anim_data = {
+			turn_shoot_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			turn_shoot_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			turn_shoot_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			turn_shoot_right = 0,
+			turn_shoot_bwd = 0,
+			turn_shoot_left = 0
+		},
+		start_rotation_durations = {
+			turn_shoot_right = 0.6410256410256411,
+			turn_shoot_bwd = 0.5714285714285714,
+			turn_shoot_left = 0.6410256410256411
 		},
 		aim_stances = {
 			aim_standing = "standing",

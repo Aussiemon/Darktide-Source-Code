@@ -1,9 +1,11 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local card_width = 530
+local card_folded_height = 65
+local card_fully_expanded_height = 515
+local card_normal_height = 375
 local icon_background_width = 170
 local content_margin = 40
 local wallet_panel_frame_size = {
@@ -34,13 +36,13 @@ local in_focus_color = {
 }
 local end_player_view_styles = {
 	wallet_spacing = 25,
-	card_folded_height = 65,
-	card_normal_height = 375,
 	card_fully_expanded_offset_y = -95,
 	card_content_empty_row_height = 40,
 	card_content_text_offset_y = 170,
-	card_fully_expanded_height = 515,
 	card_width = card_width,
+	card_folded_height = card_folded_height,
+	card_fully_expanded_height = card_fully_expanded_height,
+	card_normal_height = card_normal_height,
 	card_offset_x = card_width + 70,
 	wallet_panel_size = wallet_panel_frame_size,
 	item_insignia_size = {
@@ -72,7 +74,7 @@ character_progress_text_style.text_horizontal_alignment = "right"
 end_player_view_styles.experience_gain = {}
 local experience_gain_style = end_player_view_styles.experience_gain
 experience_gain_style.rect = {}
-experience_gain_rect_style = experience_gain_style.rect
+local experience_gain_rect_style = experience_gain_style.rect
 experience_gain_rect_style.size = {
 	2,
 	35
@@ -83,20 +85,22 @@ experience_gain_rect_style.offset = {
 	30,
 	0
 }
+experience_gain_rect_style.internal_offset_x = 0
 experience_gain_rect_style.color = Color.ui_terminal(255, true)
 experience_gain_style.text = table.clone(UIFontSettings.body_small)
 local experience_gain_text_style = experience_gain_style.text
 experience_gain_text_style.size = {
-	nil,
+	100,
 	18
 }
 experience_gain_text_style.text_horizontal_alignment = "right"
 experience_gain_text_style.vertical_alignment = "bottom"
 experience_gain_text_style.offset = {
-	-8,
+	0,
 	28,
 	0
 }
+experience_gain_text_style.internal_offset_x = -8
 experience_gain_text_style.text_color = Color.ui_terminal(255, true)
 end_player_view_styles.wallet_panel = {}
 local wallet_panel_style = end_player_view_styles.wallet_panel
@@ -134,16 +138,51 @@ wallet_panel_text_style.offset = {
 	0,
 	3
 }
+wallet_panel_text_style.highlighted_color = Color.ui_terminal(255, true)
+wallet_panel_text_style.highlighted_size = 26
+wallet_panel_text_style.default_size = wallet_panel_text_style.font_size
+wallet_panel_text_style.animation_time = 0.3
+end_player_view_styles.currency_gain = {}
+local currency_gain_style = end_player_view_styles.currency_gain
+currency_gain_style.size = {
+	end_player_view_styles.wallet_panel_size[1],
+	34
+}
+currency_gain_style.rect = {}
+local currency_gain_rect_style = currency_gain_style.rect
+currency_gain_rect_style.size = {
+	2,
+	31
+}
+currency_gain_rect_style.horizontal_alignment = "right"
+currency_gain_rect_style.vertical_alignment = "bottom"
+currency_gain_rect_style.offset = {
+	-10,
+	32,
+	0
+}
+currency_gain_rect_style.color = Color.ui_terminal(255, true)
+currency_gain_style.text = table.clone(UIFontSettings.body_small)
+local currency_gain_text_style = currency_gain_style.text
+currency_gain_text_style.size = {
+	nil,
+	18
+}
+currency_gain_text_style.text_horizontal_alignment = "right"
+currency_gain_text_style.vertical_alignment = "bottom"
+currency_gain_text_style.offset = {
+	-28,
+	28,
+	0
+}
+currency_gain_text_style.text_color = Color.ui_terminal(255, true)
 end_player_view_styles.blueprints = {}
 local blueprint_styles = end_player_view_styles.blueprints
 blueprint_styles.pass_styles = {}
 local blueprint_pass_styles = blueprint_styles.pass_styles
 blueprint_pass_styles.item_icon_landscape = {}
 local item_icon_landscape_style = blueprint_pass_styles.item_icon_landscape
-item_icon_landscape_style.size = {
-	192,
-	128
-}
+item_icon_landscape_style.size = table.clone(UISettings.weapon_icon_size)
 item_icon_landscape_style.material_values = {
 	use_placeholder_texture = 1
 }
@@ -151,30 +190,17 @@ item_icon_landscape_style.hdr = false
 item_icon_landscape_style.horizontal_alignment = "center"
 item_icon_landscape_style.offset = {
 	0,
-	104,
-	2
+	32,
+	5
 }
 item_icon_landscape_style.offset_original = table.clone(item_icon_landscape_style.offset)
 item_icon_landscape_style.offset_compressed = {
 	0,
-	88,
+	16,
 	2
 }
 item_icon_landscape_style.color = start_color
-item_icon_landscape_style.sound_event_on_show = UISoundEvents.end_screen_summary_reward_in
-blueprint_pass_styles.item_icon_portrait = table.clone(item_icon_landscape_style)
-local item_icon_portrait_style = blueprint_pass_styles.item_icon_portrait
-item_icon_portrait_style.size = {
-	128,
-	192
-}
-item_icon_portrait_style.offset = {
-	0,
-	72,
-	2
-}
-item_icon_portrait_style.offset_original = nil
-item_icon_portrait_style.offset_compressed = nil
+item_icon_landscape_style.sound_event_on_show = ViewSettings.item_rarity_sounds[1]
 blueprint_pass_styles.item_icon_square = table.clone(item_icon_landscape_style)
 local item_icon_square_style = blueprint_pass_styles.item_icon_square
 item_icon_square_style.size = {
@@ -208,9 +234,13 @@ card_content_small_text_style.size = {
 }
 card_content_small_text_style.text_color = start_color
 local card_frame_style = {
+	card_folded_height = card_folded_height,
+	card_fully_expanded_height = card_fully_expanded_height,
 	start_color = start_color,
 	dimmed_out_color = dimmed_out_color,
 	in_focus_color = in_focus_color,
+	default_frame_dimmed_out_color = dimmed_out_color,
+	default_frame_in_focus_color = in_focus_color,
 	dimmed_out_text_color = Color.ui_grey_medium(255, true),
 	dimmed_out_gradiented_text_color = {
 		255,
@@ -219,6 +249,7 @@ local card_frame_style = {
 		192
 	},
 	in_focus_text_color = table.clone(UIFontSettings.body.default_color),
+	expand_sound = UISoundEvents.end_screen_summary_card_expand,
 	folded_size = end_player_view_styles.card_folded_size,
 	background = {}
 }
@@ -234,40 +265,40 @@ card_background_style.size_addition = {
 }
 card_background_style.color = Color.black(192, true)
 card_background_style.vertical_alignment = "top"
-card_frame_style.frame_top = {}
-local card_frame_top_style = card_frame_style.frame_top
-card_frame_top_style.size = {
+card_frame_style.frame_default_top = {}
+local card_frame_default_top_style = card_frame_style.frame_default_top
+card_frame_default_top_style.size = {
 	530,
 	200
 }
-card_frame_top_style.offset = {
+card_frame_default_top_style.offset = {
 	0,
 	-180,
 	3
 }
-card_frame_style.frame_middle = {}
-local card_frame_middle_style = card_frame_style.frame_middle
-card_frame_middle_style.size = {
+card_frame_style.frame_default_middle = {}
+local card_frame_default_middle_style = card_frame_style.frame_default_middle
+card_frame_default_middle_style.size = {
 	530
 }
-card_frame_middle_style.size_addition = {
+card_frame_default_middle_style.size_addition = {
 	0,
 	-20
 }
-card_frame_middle_style.vertical_alignment = "bottom"
-card_frame_middle_style.offset = {
+card_frame_default_middle_style.vertical_alignment = "bottom"
+card_frame_default_middle_style.offset = {
 	0,
 	-40,
 	1
 }
-card_frame_style.frame_bottom = {}
-local card_frame_bottom_style = card_frame_style.frame_bottom
-card_frame_bottom_style.size = {
+card_frame_style.frame_default_bottom = {}
+local card_frame_default_bottom_style = card_frame_style.frame_default_bottom
+card_frame_default_bottom_style.size = {
 	530,
 	53
 }
-card_frame_bottom_style.vertical_alignment = "bottom"
-card_frame_bottom_style.offset = {
+card_frame_default_bottom_style.vertical_alignment = "bottom"
+card_frame_default_bottom_style.offset = {
 	0,
 	0,
 	3
@@ -286,6 +317,12 @@ card_label_style.offset = {
 	4
 }
 card_label_style.text_color = start_color
+card_label_style.color = {
+	64,
+	255,
+	0,
+	255
+}
 blueprint_styles.experience_card = table.clone(card_frame_style)
 local xp_card_style = blueprint_styles.experience_card
 xp_card_style.experience_icon_background = {}
@@ -329,56 +366,77 @@ diamantine_icon_background_style.offset[1] = icon_background_width * 0.75
 salary_card_styles.diamantine_icon = table.clone(xp_icon_style)
 local salary_card_diamantine_icon_style = salary_card_styles.diamantine_icon
 salary_card_diamantine_icon_style.offset[1] = diamantine_icon_background_style.offset[1] + xp_icon_style.offset[1]
-blueprint_styles.item_reward_card = table.clone(card_frame_style)
-local item_reward_card_style = blueprint_styles.item_reward_card
-item_reward_card_style.item_display_name = table.clone(UIFontSettings.grid_title)
-local item_reward_item_name_style = item_reward_card_style.item_display_name
-item_reward_item_name_style.text_horizontal_alignment = "center"
-item_reward_item_name_style.text_vertical_alignment = "bottom"
-item_reward_item_name_style.offset = {
+blueprint_styles.level_up_card = table.clone(card_frame_style)
+local level_up_card_style = blueprint_styles.level_up_card
+level_up_card_style.expand_sound = UISoundEvents.end_screen_level_up_card_expand
+level_up_card_style.frame_levelup_top = table.clone(level_up_card_style.frame_default_top)
+local level_up_frame_top_style = level_up_card_style.frame_levelup_top
+level_up_frame_top_style.offset[3] = 4
+level_up_card_style.frame_levelup_bottom = table.clone(level_up_card_style.frame_default_bottom)
+local level_up_frame_bottom_style = level_up_card_style.frame_levelup_bottom
+level_up_frame_bottom_style.offset[3] = 4
+local level_up_label_style = level_up_card_style.label
+level_up_label_style.offset[3] = 5
+level_up_card_style.spires = table.clone(level_up_frame_top_style)
+local level_up_spires_style = level_up_card_style.spires
+level_up_spires_style.offset = {
+	0,
+	-100,
+	2
+}
+level_up_spires_style.start_offset_y = level_up_spires_style.offset[2]
+level_up_spires_style.target_offset_y = card_frame_default_top_style.offset[2]
+level_up_card_style.frame_detail = table.clone(level_up_frame_top_style)
+local level_up_frame_detail_style = level_up_card_style.frame_detail
+level_up_frame_detail_style.offset[3] = 2
+level_up_frame_detail_style.start_offset_y = level_up_frame_detail_style.offset[2]
+level_up_frame_detail_style.target_offset_y = -200
+level_up_card_style.frame_levelup_effect = {}
+local level_up_card_frame_effect_style = level_up_card_style.frame_levelup_effect
+level_up_card_frame_effect_style.size_addition = {
+	110,
+	249 - level_up_frame_top_style.offset[2]
+}
+level_up_card_frame_effect_style.offset = {
+	-55,
+	-44 + level_up_frame_top_style.offset[2],
+	2
+}
+level_up_card_frame_effect_style.color = start_color
+level_up_card_style.item_icon_base_offset_y = 72
+level_up_card_style.item_display_name = table.clone(UIFontSettings.grid_title)
+local level_up_item_name_style = level_up_card_style.item_display_name
+level_up_item_name_style.text_horizontal_alignment = "center"
+level_up_item_name_style.text_vertical_alignment = "bottom"
+level_up_item_name_style.offset = {
 	content_margin,
 	8,
 	2
 }
-item_reward_item_name_style.size = {
+level_up_item_name_style.size = {
 	card_width - content_margin * 2,
 	60
 }
-item_reward_item_name_style.text_color = start_color
-item_reward_card_style.item_sub_display_name = table.clone(UIFontSettings.body)
-local item_reward_item_sub_name_style = item_reward_card_style.item_sub_display_name
-item_reward_item_sub_name_style.text_horizontal_alignment = "center"
-item_reward_item_sub_name_style.offset = {
+level_up_item_name_style.text_color = start_color
+level_up_card_style.item_sub_display_name = table.clone(UIFontSettings.body)
+local level_up_item_sub_name_style = level_up_card_style.item_sub_display_name
+level_up_item_sub_name_style.text_horizontal_alignment = "center"
+level_up_item_sub_name_style.offset = {
 	content_margin,
-	264,
+	192 + level_up_card_style.item_icon_base_offset_y,
 	2
 }
-item_reward_item_sub_name_style.size = {
+level_up_item_sub_name_style.offset_original = table.clone(level_up_item_sub_name_style.offset)
+level_up_item_sub_name_style.offset_compressed = {
+	content_margin,
+	level_up_item_sub_name_style.offset[2] - 96,
+	2
+}
+level_up_item_sub_name_style.size = {
 	card_width - content_margin * 2,
 	60
 }
-item_reward_item_sub_name_style.text_color = start_color
-blueprint_styles.level_up_card = table.clone(item_reward_card_style)
-local level_up_card_style = blueprint_styles.level_up_card
-level_up_card_style.level_up_frame = {}
-local level_up_card_frame_style = level_up_card_style.level_up_frame
-level_up_card_frame_style.size_addition = {
-	110,
-	249 - card_frame_top_style.offset[2]
-}
-level_up_card_frame_style.offset = {
-	-55,
-	-44 + card_frame_top_style.offset[2],
-	2
-}
-level_up_card_frame_style.color = start_color
-local level_up_item_sub_display_name = level_up_card_style.item_sub_display_name
-level_up_item_sub_display_name.offset_original = table.clone(level_up_item_sub_display_name.offset)
-level_up_item_sub_display_name.offset_compressed = {
-	content_margin,
-	level_up_item_sub_display_name.offset[2] - 96,
-	2
-}
+level_up_item_sub_name_style.text_color = start_color
 level_up_card_style.unlocked_talents_label = table.clone(UIFontSettings.header_5)
 local unlocked_talents_label_style = level_up_card_style.unlocked_talents_label
 unlocked_talents_label_style.text_horizontal_alignment = "center"
@@ -395,24 +453,6 @@ unlocked_talents_label_style.offset_compressed = {
 }
 unlocked_talents_label_style.text_color = start_color
 unlocked_talents_label_style.sound_event_on_show = UISoundEvents.end_screen_summary_talents_unlocked
-level_up_card_style.talent_group_name = table.clone(item_reward_item_name_style)
-local talent_group_name_style = level_up_card_style.talent_group_name
-talent_group_name_style.size = {
-	nil,
-	25
-}
-talent_group_name_style.vertical_alignment = "top"
-talent_group_name_style.offset = {
-	0,
-	350,
-	2
-}
-talent_group_name_style.offset_original = table.clone(talent_group_name_style.offset)
-talent_group_name_style.offset_compressed = {
-	0,
-	talent_group_name_style.offset[2] - 96,
-	2
-}
 level_up_card_style.talent_icon_center = {}
 local talent_icon_center_style = level_up_card_style.talent_icon_center
 talent_icon_center_style.size = {
@@ -422,7 +462,7 @@ talent_icon_center_style.size = {
 talent_icon_center_style.horizontal_alignment = "center"
 talent_icon_center_style.offset = {
 	0,
-	370,
+	350,
 	1
 }
 talent_icon_center_style.offset_original = table.clone(talent_icon_center_style.offset)
@@ -432,6 +472,7 @@ talent_icon_center_style.offset_compressed = {
 	2
 }
 talent_icon_center_style.color = start_color
+talent_icon_center_style.material_values = {}
 level_up_card_style.talent_icon_left = table.clone(talent_icon_center_style)
 local talent_icon_left_style = level_up_card_style.talent_icon_left
 talent_icon_left_style.offset[1] = -125
@@ -442,22 +483,11 @@ local talent_icon_right_style = level_up_card_style.talent_icon_right
 talent_icon_right_style.offset[1] = 125
 talent_icon_right_style.offset_original[1] = talent_icon_right_style.offset[1]
 talent_icon_right_style.offset_compressed[1] = 70
-level_up_card_style.talent_icon_frame_center = table.clone(talent_icon_center_style)
-local talent_icon_frame_center_style = level_up_card_style.talent_icon_frame_center
-talent_icon_frame_center_style.offset[3] = 3
-level_up_card_style.talent_icon_frame_left = table.clone(talent_icon_left_style)
-local talent_icon_left_frame_style = level_up_card_style.talent_icon_frame_left
-talent_icon_left_frame_style.offset[3] = 3
-level_up_card_style.talent_icon_frame_right = table.clone(talent_icon_right_style)
-local talent_icon_frame_right_style = level_up_card_style.talent_icon_frame_right
-talent_icon_frame_right_style.offset[3] = 3
-local talents_only_icon_offset_y = 82
+local talents_only_icon_offset_y = 62
 blueprint_styles.level_up_talents_only_card = table.clone(level_up_card_style)
 local level_up_talents_only_card_style = blueprint_styles.level_up_talents_only_card
 local talents_only_unlocked_talents_label_style = level_up_talents_only_card_style.unlocked_talents_label
 talents_only_unlocked_talents_label_style.offset[2] = 32
-local talents_only_talent_group_name_style = level_up_talents_only_card_style.talent_group_name
-talents_only_talent_group_name_style.offset[2] = 62
 local talents_only_talent_icon_center_style = level_up_talents_only_card_style.talent_icon_center
 talents_only_talent_icon_center_style.offset[2] = talents_only_icon_offset_y
 level_up_talents_only_card_style.talent_icon_left = table.clone(talent_icon_left_style)
@@ -466,15 +496,121 @@ talents_only_talent_icon_left_style.offset[2] = talents_only_icon_offset_y
 level_up_talents_only_card_style.talent_icon_right = table.clone(talent_icon_right_style)
 local talents_only_talent_icon_right_style = level_up_talents_only_card_style.talent_icon_right
 talents_only_talent_icon_right_style.offset[2] = talents_only_icon_offset_y
-level_up_talents_only_card_style.talent_icon_frame_center = table.clone(talent_icon_frame_center_style)
-local talents_only_talent_icon_frame_center_style = level_up_talents_only_card_style.talent_icon_frame_center
-talents_only_talent_icon_frame_center_style.offset[2] = talents_only_icon_offset_y
-level_up_talents_only_card_style.talent_icon_frame_left = table.clone(talent_icon_left_frame_style)
-local talents_only_talent_icon_left_frame_style = level_up_talents_only_card_style.talent_icon_frame_left
-talents_only_talent_icon_left_frame_style.offset[2] = talents_only_icon_offset_y
-level_up_talents_only_card_style.talent_icon_frame_right = table.clone(talent_icon_frame_right_style)
-local talents_only_talent_icon_frame_right_style = level_up_talents_only_card_style.talent_icon_frame_right
-talents_only_talent_icon_frame_right_style.offset[2] = talents_only_icon_offset_y
+local item_reward_card_width = 500
+local item_reward_content_margin = 86
+local item_reward_icon_base_offset_y = 104
+blueprint_styles.item_reward_card = table.clone(card_frame_style)
+local item_reward_card_style = blueprint_styles.item_reward_card
+item_reward_card_style.size = {
+	item_reward_card_width,
+	300
+}
+item_reward_card_style.card_folded_height = item_reward_card_style.size[2]
+item_reward_card_style.item_icon_base_offset_y = item_reward_icon_base_offset_y
+item_reward_card_style.expand_sound = UISoundEvents.end_screen_item_drop_card_expand
+item_reward_card_style.frame_default_top = nil
+item_reward_card_style.frame_default_middle = nil
+item_reward_card_style.frame_default_bottom = nil
+item_reward_card_style.frame_top = {}
+local item_reward_card_frame_top_style = item_reward_card_style.frame_top
+item_reward_card_frame_top_style.size = {
+	item_reward_card_width,
+	356
+}
+item_reward_card_frame_top_style.offset = {
+	0,
+	-230,
+	4
+}
+item_reward_card_style.frame_middle = {}
+local item_reward_card_frame_middle_style = item_reward_card_style.frame_middle
+item_reward_card_frame_middle_style.size = {
+	item_reward_card_width
+}
+item_reward_card_frame_middle_style.size_addition = {
+	0,
+	-170
+}
+item_reward_card_frame_middle_style.vertical_alignment = "bottom"
+item_reward_card_frame_middle_style.offset = {
+	0,
+	-178,
+	2
+}
+item_reward_card_style.frame_bottom = {}
+local item_reward_card_bottom_style = item_reward_card_style.frame_bottom
+item_reward_card_bottom_style.size = {
+	item_reward_card_width,
+	178
+}
+item_reward_card_bottom_style.vertical_alignment = "bottom"
+item_reward_card_bottom_style.offset = {
+	0,
+	0,
+	2
+}
+local item_reward_card_background_style = item_reward_card_style.background
+item_reward_card_background_style.offset = {
+	50,
+	0,
+	0
+}
+item_reward_card_background_style.size_addition = {
+	-(item_reward_card_background_style.offset[1] * 2),
+	-(item_reward_card_background_style.offset[2] + 32)
+}
+local item_reward_card_label_style = item_reward_card_style.label
+item_reward_card_label_style.size = {
+	354,
+	78
+}
+item_reward_card_label_style.offset = {
+	0,
+	-75,
+	5
+}
+item_reward_card_style.item_display_name = table.clone(level_up_item_name_style)
+local item_reward_item_name_style = item_reward_card_style.item_display_name
+item_reward_item_name_style.offset = {
+	item_reward_content_margin,
+	50,
+	2
+}
+item_reward_item_name_style.size = {
+	item_reward_card_width - item_reward_content_margin * 2,
+	60
+}
+item_reward_item_name_style.text_color = start_color
+item_reward_item_name_style.color = {
+	64,
+	255,
+	0,
+	255
+}
+item_reward_card_style.item_sub_display_name = table.clone(level_up_item_sub_name_style)
+local item_reward_item_sub_name_style = item_reward_card_style.item_sub_display_name
+item_reward_item_sub_name_style.offset = {
+	item_reward_content_margin,
+	192 + item_reward_icon_base_offset_y,
+	2
+}
+item_reward_item_sub_name_style.offset_original = table.clone(item_reward_item_sub_name_style.offset)
+item_reward_item_sub_name_style.offset_compressed = {
+	item_reward_content_margin,
+	item_reward_item_sub_name_style.offset[2] - 96,
+	2
+}
+item_reward_item_sub_name_style.size = {
+	item_reward_card_width - item_reward_content_margin * 2,
+	60
+}
+item_reward_item_sub_name_style.text_color = start_color
+item_reward_item_sub_name_style.color = {
+	64,
+	255,
+	0,
+	255
+}
 blueprint_styles.empty_test_card = table.clone(card_frame_style)
 
 return settings("EndPlayerViewStyles", end_player_view_styles)

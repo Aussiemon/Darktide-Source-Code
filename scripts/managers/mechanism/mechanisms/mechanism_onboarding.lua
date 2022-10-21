@@ -4,23 +4,22 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
+local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local MechanismOnboarding = class("MechanismOnboarding", "MechanismBase")
 
 MechanismOnboarding.init = function (self, ...)
 	MechanismOnboarding.super.init(self, ...)
-	fassert(not DEDICATED_SERVER, "Onboarding expected to be hosted locally by a player but was run on a dedicated server")
 
 	local context = self._context
 	self._mission_name = context.mission_name
-	self._level_name = Missions[self._mission_name].level
-	local players = Managers.player:players_at_peer(Network.peer_id())
+	local mission_settings = Missions[self._mission_name]
+	self._level_name = mission_settings.level
+	self._singleplay_type = context.singleplay_type
+	self._init_scenario = context.init_scenario
 
-	for local_player_id, player in pairs(players) do
-		local profile = ProfileUtils.replace_profile_for_prologue(player:profile())
-
-		player:set_profile(profile)
-	end
+	Managers.event:register(self, "training_grounds_scenario_system_initialized", "_event_scenario_system_initialized")
 end
 
 MechanismOnboarding.sync_data = function (self)
@@ -72,19 +71,22 @@ MechanismOnboarding.wanted_transition = function (self)
 	elseif state == "gameplay" then
 		return false
 	elseif state == "game_mode_ended" then
-		local next_mission_name = nil
+		local story_name = Managers.narrative.STORIES.onboarding
+		local current_chapter = Managers.narrative:current_chapter(story_name)
+		local is_onboarding = self._singleplay_type == SINGLEPLAY_TYPES.onboarding
 
-		if next_mission_name then
-			self._mission_name = next_mission_name
-			self._level_name = Missions[self._mission_name].level
+		if is_onboarding and current_chapter then
+			local chapter_data = current_chapter.data
+			local mission_name = chapter_data.mission_name
+			self._mission_name = mission_name
+			self._level_name = Missions[mission_name].level
 
 			self:_set_state("init")
 
 			return false
 		else
 			Log.info("MechanismOnboarding", "Last onboarding mission ended, joining hub...")
-			self:_save_prologue_completed()
-			Managers.multiplayer_session:leave("onboarding_ended")
+			Managers.multiplayer_session:leave("leave_to_hub")
 			self:_set_state("joining_hub_server")
 
 			return false
@@ -92,17 +94,6 @@ MechanismOnboarding.wanted_transition = function (self)
 	elseif state == "joining_hub_server" then
 		return false
 	end
-end
-
-MechanismOnboarding._save_prologue_completed = function (self)
-	local local_player_id = 1
-	local local_player = Managers.player:local_player(local_player_id)
-	local profile = local_player:profile()
-	local character_id = profile.character_id
-
-	Managers.data_service.profiles:set_prologue_completed(character_id)
-	Managers.achievements:unlock_achievement("prologue")
-	Log.info("MechanismOnboarding", "Saved prologue completed for character_id %q", character_id)
 end
 
 MechanismOnboarding.is_allowed_to_reserve_slots = function (self, peer_ids)
@@ -115,6 +106,26 @@ end
 
 MechanismOnboarding.peer_freed_slot = function (self, peer_id)
 	return
+end
+
+MechanismOnboarding.destroy = function (self)
+	Managers.event:unregister(self, "training_grounds_scenario_system_initialized")
+end
+
+MechanismOnboarding._event_scenario_system_initialized = function (self, scenario_system)
+	local init_scenario = self._init_scenario
+
+	if init_scenario then
+		scenario_system:set_init_scenario(init_scenario.alias, init_scenario.name)
+	end
+
+	self._init_scenario = nil
+
+	Managers.event:unregister(self, "training_grounds_scenario_system_initialized")
+end
+
+MechanismOnboarding.singleplay_type = function (self)
+	return self._singleplay_type
 end
 
 implements(MechanismOnboarding, MechanismBase.INTERFACE)

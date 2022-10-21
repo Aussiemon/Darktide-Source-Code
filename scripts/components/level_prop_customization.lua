@@ -28,9 +28,10 @@ LevelPropCustomization._spawn_children = function (self)
 	local children_unit_spawn_info = self:get_data(unit, "children_units")
 
 	for _, child_unit_spawn_info in ipairs(children_unit_spawn_info) do
+		local enabled = child_unit_spawn_info.enabled
 		local child_unit_name = child_unit_spawn_info.child_unit
 
-		if child_unit_name ~= "" then
+		if enabled and child_unit_name ~= "" then
 			local parent_node_name = child_unit_spawn_info.parent_node_name
 			local parent_node = 1
 
@@ -62,7 +63,6 @@ LevelPropCustomization._spawn_children = function (self)
 				Unit.set_unit_objects_visibility(child_unit, false, false, VisibilityContexts.SHADOW_CASTER_CONTEXT)
 			end
 
-			fassert(child_unit, "[LevelPropCustomization] Could not spawn child unit.")
 			table.insert(self._child_units, child_unit)
 		end
 	end
@@ -135,6 +135,12 @@ LevelPropCustomization.component_data = {
 				value = true,
 				ui_name = "Cast Shadows",
 				category = "Child"
+			},
+			enabled = {
+				ui_type = "check_box",
+				value = true,
+				ui_name = "Enabled",
+				category = "Child"
 			}
 		},
 		control_order = {
@@ -142,7 +148,8 @@ LevelPropCustomization.component_data = {
 			"child_unit",
 			"child_scale",
 			"is_static",
-			"cast_shadows"
+			"cast_shadows",
+			"enabled"
 		}
 	}
 }

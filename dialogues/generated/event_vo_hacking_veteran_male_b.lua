@@ -7,8 +7,8 @@ local event_vo_hacking_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__response_to_hacking_fix_decode_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.27525,
-			[2.0] = 2.564667
+			[1.0] = 2.275229,
+			[2.0] = 2.564646
 		},
 		randomize_indexes = {}
 	}

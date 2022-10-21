@@ -6,10 +6,9 @@ RespawnBeacon.init = function (self, unit)
 	local respawn_beacon_extension = ScriptUnit.fetch_component_extension(unit, "respawn_beacon_system")
 
 	if respawn_beacon_extension then
-		local spawn_on_navmesh_only = self:get_data(unit, "spawn_on_navmesh_only")
 		local side = self:get_data(unit, "side")
 
-		respawn_beacon_extension:setup_from_component(spawn_on_navmesh_only, side)
+		respawn_beacon_extension:setup_from_component(side)
 	end
 end
 
@@ -167,8 +166,7 @@ RespawnBeacon._generate_spawn_slots = function (self, unit)
 		local physics_world = self._physics_world
 		local player_radius = 1
 		local player_height = 2.3
-		local spawn_on_navmesh_only = true
-		local valid_positions, on_nav_positions, fitting_positions, volume_positions = RespawnBeaconQueries.spawn_locations(nav_world, physics_world, unit, player_radius, player_height, spawn_on_navmesh_only)
+		local valid_positions, on_nav_positions, fitting_positions, volume_positions = RespawnBeaconQueries.spawn_locations(nav_world, physics_world, unit, player_radius, player_height)
 
 		self:_store_positions(valid_positions, on_nav_positions, fitting_positions, volume_positions)
 	end
@@ -254,11 +252,6 @@ RespawnBeacon.destroy = function (self, unit)
 end
 
 RespawnBeacon.component_data = {
-	spawn_on_navmesh_only = {
-		ui_type = "check_box",
-		value = true,
-		ui_name = "Spawn on navmesh only"
-	},
 	side = {
 		value = "heroes",
 		ui_type = "combo_box",

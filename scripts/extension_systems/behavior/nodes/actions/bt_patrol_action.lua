@@ -59,6 +59,8 @@ BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.previous_speed = walk_speed
+	scratchpad.next_patrol_update_t = 0
+	scratchpad.previous_move_to_position = Vector3Box()
 end
 
 BtPatrolAction.init_values = function (self, blackboard)
@@ -110,12 +112,13 @@ local WAIT_AT_DESTINATION_TIME_RANGE = {
 }
 
 BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
+	local is_patrol_leader = scratchpad.is_patrol_leader
+
 	self:_update_patrolling(unit, breed, blackboard, scratchpad, action_data, dt, t)
 
 	local patrol_component = scratchpad.patrol_component
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
-	local is_patrol_leader = scratchpad.is_patrol_leader
 
 	if is_patrol_leader then
 		local navigation_extension = scratchpad.navigation_extension
@@ -150,7 +153,7 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 	local move_state = behavior_component.move_state
 
-	if move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t then
+	if (not scratchpad.start_move_cooldown or scratchpad.start_move_cooldown <= t) and (move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t) then
 		self:_start_move_anim(unit, scratchpad, behavior_component, action_data, t)
 	end
 
@@ -165,11 +168,6 @@ local MAX_VARIABLE_VALUE = 2
 
 BtPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_component, action_data, t)
 	behavior_component.move_state = "moving"
-
-	self:_start_patrol_anim(unit, scratchpad, behavior_component, action_data, t)
-end
-
-BtPatrolAction._start_patrol_anim = function (self, unit, scratchpad, behavior_component, action_data, t)
 	local move_event = Animation.random_event(action_data.anim_events or DEFAULT_MOVE_ANIM_EVENT)
 	local speed = action_data.speeds[move_event] or DEFAULT_SPEED
 
@@ -185,6 +183,8 @@ BtPatrolAction._start_patrol_anim = function (self, unit, scratchpad, behavior_c
 	if duration then
 		scratchpad.patrol_anim_end_at_t = t + duration
 	end
+
+	scratchpad.start_move_cooldown = t + 1
 end
 
 local AHEAD_TRAVEL_DISTANCE_RANDOM_RANGE = {
@@ -227,9 +227,10 @@ local MAX_SPEED_UP_SPEED = 0.1
 local SLOW_DOWN_SPEED = 0.65
 local LERP_FOLLOW_DIRECTION_SPEED = 0.5
 local SPEED_LERP_SPEED = 2
+local MIN_DISTANCE_SQ_TO_MOVE = 0.010000000000000002
 
 BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if scratchpad.is_patrol_leader or scratchpad.delayed_alert then
+	if scratchpad.is_patrol_leader or scratchpad.delayed_alert or scratchpad.start_move_cooldown and t < scratchpad.start_move_cooldown then
 		return
 	end
 
@@ -300,18 +301,26 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 
 	local back_offset = is_third and 2 or 1
 	patrol_position = patrol_position + follow_unit_bwd * PATORL_OFFSET_BACK * back_offset
+	local follow_unit_leader_speed = patrol_leader_nav_extension:max_speed()
+	local navigation_extension = scratchpad.navigation_extension
+
+	if Vector3.distance_squared(patrol_position, scratchpad.previous_move_to_position:unbox()) <= MIN_DISTANCE_SQ_TO_MOVE then
+		navigation_extension:set_max_speed(follow_unit_leader_speed)
+
+		return
+	end
+
+	scratchpad.previous_move_to_position:store(patrol_position)
+
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, patrol_position, ABOVE, BELOW, HOTIZONTAL)
 
 	if not position_on_navmesh then
 		return
 	end
 
-	local navigation_extension = scratchpad.navigation_extension
-
 	navigation_extension:move_to(position_on_navmesh)
 
 	local distance_to_patrol_position = Vector3.distance(POSITION_LOOKUP[unit], position_on_navmesh)
-	local follow_unit_leader_speed = patrol_leader_nav_extension:max_speed()
 	local new_speed = nil
 
 	if SPEED_UP_DISTANCE < distance_to_patrol_position then

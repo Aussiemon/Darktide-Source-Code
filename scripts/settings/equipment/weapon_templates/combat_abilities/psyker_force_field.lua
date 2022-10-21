@@ -1,19 +1,27 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local buff_keywords = BuffSettings.keywords
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
 		aim_force_field = {
-			buffer_time = 0
+			buffer_time = 0,
+			input_sequence = {
+				{
+					value = true,
+					input = "combat_ability_hold"
+				}
+			}
 		},
 		place_force_field = {
 			buffer_time = 0.6,
 			input_sequence = {
 				{
-					value = true,
-					input = "action_one_pressed"
+					value = false,
+					input = "combat_ability_hold",
+					time_window = math.huge
 				}
 			}
 		},
@@ -23,7 +31,7 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "combat_ability_pressed"
+					input = "action_two_pressed"
 				}
 			}
 		},
@@ -53,7 +61,6 @@ local weapon_template = {
 	action_input_hierarchy = {
 		grenade_ability = "stay",
 		wield = "stay",
-		place_force_field = "stay",
 		cancel = "stay",
 		unwield_to_previous = "stay",
 		aim_force_field = {
@@ -85,7 +92,7 @@ local weapon_template = {
 			kind = "wield",
 			uninterruptible = true,
 			anim_event = "equip",
-			total_time = 0.5,
+			total_time = 0.25,
 			conditional_state_to_action_input = {
 				auto_chain = {
 					input_name = "aim_force_field"
@@ -106,8 +113,11 @@ local weapon_template = {
 			place_configuration = {
 				rotation_steps = 4,
 				allow_rotation = true,
+				rotation_input = "action_one_pressed",
 				distance = 10,
-				rotation_input = "action_two_pressed"
+				rotate_sound_event = "wwise/events/player/play_ability_psyker_protectorate_shield_rotate",
+				anim_rotate_event = "ability_rotate_shield",
+				sound_position_offset = Vector3Box(Vector3.up() * 1.5)
 			},
 			action_movement_curve = {
 				{
@@ -130,7 +140,7 @@ local weapon_template = {
 				},
 				place_force_field = {
 					action_name = "action_place_force_field",
-					chain_time = 0.5
+					chain_time = 0.1
 				},
 				cancel = {
 					action_name = "action_cancel"
@@ -141,13 +151,18 @@ local weapon_template = {
 			}
 		},
 		action_place_force_field = {
+			use_aim_data = true,
 			uninterruptible = true,
-			ability_type = "combat_ability",
-			allowed_during_sprint = false,
-			kind = "place_force_field",
 			use_ability_charge = true,
+			ability_type = "combat_ability",
+			kind = "place_force_field",
+			vo_tag = "ability_protectorate_start",
+			place_time = 0.2,
+			unwield_slot = true,
+			allowed_during_sprint = false,
+			anim_event = "attack_shoot",
 			functional_unit = "content/characters/player/human/attachments_combat/psyker_shield/shield",
-			total_time = 0.4,
+			total_time = 0.8,
 			action_movement_curve = {
 				{
 					modifier = 0.4,
@@ -173,9 +188,9 @@ local weapon_template = {
 			anim_end_event = "attack_finished",
 			kind = "dummy",
 			uninterruptible = true,
-			anim_event = "attack_shoot",
+			anim_event = "attack_charge_cancel",
 			anim_time_scale = 1,
-			total_time = 0.5,
+			total_time = 0.22,
 			action_movement_curve = {
 				{
 					modifier = 0.5,
@@ -221,7 +236,7 @@ local weapon_template = {
 		}
 	},
 	anim_state_machine_3p = "content/characters/player/human/third_person/animations/chain_lightning",
-	anim_state_machine_1p = "content/characters/player/human/first_person/animations/chain_lightning",
+	anim_state_machine_1p = "content/characters/player/human/first_person/animations/psyker_shield",
 	spread_template = "no_spread",
 	ammo_template = "no_ammo",
 	uses_ammunition = false,
@@ -237,11 +252,7 @@ local weapon_template = {
 	sprint_template = "default",
 	stamina_template = "default",
 	toughness_template = "default",
-	footstep_intervals = {
-		crouch_walking = 0.61,
-		walking = 0.4,
-		sprinting = 0.37
-	}
+	footstep_intervals = FootstepIntervalsTemplates.default
 }
 
 return weapon_template

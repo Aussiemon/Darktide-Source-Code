@@ -15,6 +15,7 @@ PlayerCharacterStateExploding.init = function (self, ...)
 	local state_component = unit_data_extension:write_component("exploding_character_state")
 	state_component.slot_name = "none"
 	state_component.reason = "overheat"
+	state_component.is_exploding = false
 	self._exploding_character_state_component = state_component
 	self._intoxicated_movement_component = unit_data_extension:write_component("intoxicated_movement")
 	self._character_state_random_component = unit_data_extension:write_component("character_state_random")
@@ -25,12 +26,10 @@ PlayerCharacterStateExploding.on_enter = function (self, unit, dt, t, previous_s
 	local reason = params.reason
 	local wield_slot = params.wield_slot
 	local explode_action = params.explode_action
-
-	fassert(explode_action, "Entering PlayerCharacterStateExploding without an explode_action")
-
 	local state_component = self._exploding_character_state_component
 	state_component.slot_name = slot_name
 	state_component.reason = reason
+	state_component.is_exploding = true
 	local locomotion_steering = self._locomotion_steering_component
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
@@ -49,6 +48,9 @@ PlayerCharacterStateExploding.on_enter = function (self, unit, dt, t, previous_s
 end
 
 PlayerCharacterStateExploding.on_exit = function (self, unit, t, next_state)
+	local state_component = self._exploding_character_state_component
+	state_component.is_exploding = false
+
 	IntoxicatedMovement.initialize_component(self._intoxicated_movement_component)
 end
 

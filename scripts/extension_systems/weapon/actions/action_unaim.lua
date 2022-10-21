@@ -16,10 +16,10 @@ end
 ActionUnaim.start = function (self, action_settings, t, ...)
 	ActionUnaim.super.start(self, action_settings, t, ...)
 
-	local skipp_unaim_anim = action_settings.skipp_unaim_anim
+	local skip_unaim_anim = action_settings.skip_unaim_anim
 
 	if self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skipp_unaim_anim)
+		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit)
 	end
 end
 

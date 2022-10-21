@@ -17,8 +17,6 @@ FreeFlightFollowPath.start = function (self)
 	local main_path_manager = Managers.state.main_path
 	local is_in_free_flight = Managers.free_flight and Managers.free_flight:is_in_free_flight()
 
-	fassert(main_path_manager:is_main_path_ready(), "[FreeFlightFollowPath] Main Path Manager is not ready.")
-
 	if not is_in_free_flight then
 		Log.warning("FreeFlightFollowPath", "[start] Free Flight is not active.")
 	elseif not self._is_active then
@@ -78,8 +76,6 @@ FreeFlightFollowPath.active = function (self)
 end
 
 FreeFlightFollowPath.is_arrived = function (self)
-	fassert(self._active, "[FreeFlightFollowPath] is not active.")
-
 	return self._current_path_index == #self._path
 end
 

@@ -7,8 +7,6 @@ local player_package_aliases = {
 }
 
 for index, alias in ipairs(PlayerCharacterConstants.player_package_aliases) do
-	fassert(table.find(player_package_aliases, alias), "[PlayerPackageAliases] - Trying to add package alias that has already been added: %s", alias)
-
 	player_package_aliases[#player_package_aliases + 1] = alias
 end
 

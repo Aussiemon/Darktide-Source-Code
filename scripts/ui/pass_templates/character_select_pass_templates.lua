@@ -18,12 +18,11 @@ local CharacterSelectPassTemplates = {
 	character_create_size = character_create_size
 }
 local list_button_hotspot_default_style = {
+	anim_select_speed = 8,
 	anim_hover_speed = 8,
 	anim_input_speed = 8,
-	anim_select_speed = 8,
 	anim_focus_speed = 8,
-	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click
+	on_hover_sound = UISoundEvents.default_mouse_hover
 }
 local list_button_highlight_size_addition = 10
 

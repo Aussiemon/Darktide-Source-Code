@@ -77,7 +77,7 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 		end
 
 		if weapon_template and not player_weapons[slot_id] then
-			local can_add_weapons = num_weapons < self._max_slots
+			local can_add_weapons = num_weapons < self._max_slots and not weapon_template.hide_slot
 
 			if can_add_weapons then
 				local ability_type = item_slot_settings.ability_type
@@ -195,6 +195,15 @@ end
 HudElementPlayerWeaponHandler._set_wielded_slot = function (self, wielded_slot)
 	self._wielded_slot = wielded_slot
 	self._wield_anim_progress = 0
+	local player_weapons_array = self._player_weapons_array
+
+	for _, data in ipairs(player_weapons_array) do
+		local weapon = data.weapon
+		local slot_id = data.slot_id
+		local wielded = wielded_slot == slot_id
+
+		weapon:set_wielded(wielded)
+	end
 end
 
 HudElementPlayerWeaponHandler.update = function (self, dt, t, ui_renderer, render_settings, input_service)

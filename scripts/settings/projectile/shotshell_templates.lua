@@ -129,18 +129,8 @@ for name, template in pairs(shotshell_templates) do
 	template.name = name
 	template.same_side_suppression_enabled = false
 
-	fassert(template.range, "Projectile template [\"%s\"] is missing 'range' setting", name)
-	fassert(template.num_pellets, "Projectile template [\"%s\"] is missing 'num_pellets' setting", name)
-	fassert(template.pellets_per_frame, "Projectile template [\"%s\"] is missing 'pellets_per_frame' setting", name)
-	fassert(template.num_spread_circles, "Projectile template [\"%s\"] is missing 'num_spread_circles' setting", name)
-	fassert(template.spread_pitch, "Projectile template [\"%s\"] is missing 'spread_pitch' setting", name)
-	fassert(template.spread_yaw, "Projectile template [\"%s\"] is missing 'spread_yaw' setting", name)
-	fassert(template.damage, "Projectile template [\"%s\"] is missing 'damage' setting", name)
-	fassert(template.damage.impact, "Projectile template [\"%s\"] is missing 'impact' setting under 'damage'", name)
-	fassert(template.damage.impact.damage_profile, "Projectile template [\"%s\"] is missing 'damage_profile' setting under 'damage.impact'", name)
-
 	if template.damage.penetration then
-		fassert(template.damage.penetration.depth, "Projectile template [\"%s\"] is missing 'depth' setting under 'damage.penetration'", name)
+		-- Nothing
 	end
 end
 

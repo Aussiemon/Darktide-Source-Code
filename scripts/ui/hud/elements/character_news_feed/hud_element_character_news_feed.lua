@@ -84,17 +84,18 @@ HudElementCharacterNewsFeed.destroy = function (self)
 end
 
 HudElementCharacterNewsFeed._fetch_new_items = function (self)
-	local new_items_ids = ItemUtils.new_item_ids()
+	local new_item_notifications = ItemUtils.new_item_notification_ids()
 
-	if new_items_ids then
+	if new_item_notifications and not table.is_empty(new_item_notifications) then
 		local new_items_by_inventory = {}
 
-		for i = 1, #new_items_ids do
-			local gear_id = new_items_ids[i]
+		for gear_id, _ in pairs(new_item_notifications) do
 			local has_item, item = self:_has_item_in_inventory(gear_id)
 
 			if has_item then
 				new_items_by_inventory[#new_items_by_inventory + 1] = item
+			else
+				ItemUtils.unmark_item_notification_id_as_new(gear_id)
 			end
 		end
 
@@ -131,7 +132,7 @@ HudElementCharacterNewsFeed._present_next_new_item = function (self, dt)
 
 	local gear_id = item.gear_id
 
-	ItemUtils.unmark_item_id_as_new(gear_id)
+	ItemUtils.unmark_item_notification_id_as_new(gear_id)
 
 	if #new_presentation_items > 0 then
 		self._item_presentation_delay = HudElementCharacterNewsFeedSettings.item_presentation_delay

@@ -20,6 +20,7 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_grenadier"
 local breed_data = {
 	display_name = "loc_breed_display_name_renegade_grenadier",
+	volley_fire_target = true,
 	run_speed = 4.8,
 	use_bone_lod = true,
 	unit_template_name = "minion",
@@ -32,15 +33,15 @@ local breed_data = {
 	walk_speed = 2.3,
 	navigation_propagation_box_extent = 200,
 	base_height = 2,
-	player_locomotion_constrain_radius = 0.5,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	player_locomotion_constrain_radius = 0.5,
 	stagger_reduction = 0,
+	challenge_rating = 2,
 	use_wounds = true,
 	stagger_reduction_ranged = 20,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_ranged",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	challenge_rating = 2,
 	hit_mass = 2,
 	bone_lod_radius = 1.3,
 	has_direct_ragdoll_flow_event = true,
@@ -297,9 +298,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

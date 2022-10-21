@@ -3,9 +3,10 @@ local MasterItems = require("scripts/backend/master_items")
 local BotManagerTestify = {
 	spawn_bot = function (_, bot_manager)
 		local is_server = Managers.state.game_session:is_server()
+		local profile_id = math.random(1, 6)
+		local profile_name = "bot_" .. profile_id
 
-		fassert(is_server, "[BotManagerTestify] only server can spawn bots!")
-		BotSpawning.spawn_bot_character("darktide_seven_01")
+		BotSpawning.spawn_bot_character(profile_name)
 	end
 }
 

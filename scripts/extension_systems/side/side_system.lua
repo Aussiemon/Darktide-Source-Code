@@ -16,6 +16,12 @@ SideSystem.init = function (self, extension_system_creation_context, system_init
 
 	self.side_by_unit = {}
 	self._unit_extension_data = {}
+
+	Managers.event:register(self, "unit_died", "_event_unit_died")
+end
+
+SideSystem.destroy = function (self)
+	Managers.event:unregister(self, "unit_died")
 end
 
 SideSystem._create_sides = function (self, side_compositions)
@@ -27,17 +33,11 @@ SideSystem._create_sides = function (self, side_compositions)
 	for i = 1, num_sides do
 		local definition = side_compositions[i]
 		local side_name = definition.name
-
-		fassert(side_lookup[side_name] == nil, "[SideSystem] Duplicate side %q exists in side_composition.", side_name)
-		fassert(definition.color_name ~= nil, "[SideSystem] Missing color_name for side %q in side_composition.", side_name)
-
 		local side = Side:new(definition, i)
 		sides[i] = side
 		side_lookup[side_name] = side
 		side_names[i] = side_name
 	end
-
-	fassert(table.is_empty(sides) == false, "[SideSystem] No sides specified in side_composition.")
 
 	return sides, side_lookup, side_names
 end
@@ -56,9 +56,6 @@ SideSystem._setup_relations = function (self, side_compositions, sides, side_loo
 
 			for j = 1, #side_list do
 				local relation_side_name = side_list[j]
-
-				fassert(side_lookup[relation_side_name], "[SideSystem] Side %q does not exist.", relation_side_name)
-
 				temp_sides[#temp_sides + 1] = side_lookup[relation_side_name]
 			end
 
@@ -79,8 +76,6 @@ SideSystem._setup_relations = function (self, side_compositions, sides, side_loo
 			for k = 1, #current_sides do
 				local relation_side = current_sides[k]
 				local relation_sides = relation_side:relation_sides(relation)
-
-				fassert(table.find(relation_sides, side), "[SideSystem] Asymmetrical %q relation between side %d and %d.", relation, i, relation_side.side_id)
 			end
 		end
 	end
@@ -109,12 +104,20 @@ SideSystem.register_extension_update = function (self, unit, extension_name, ext
 end
 
 SideSystem.on_remove_extension = function (self, unit, extension_name)
-	self:remove_unit_from_tag_units(unit)
+	self:_remove_unit_from_tag_units(unit, self._unit_extension_data[unit])
 	self:_remove_unit_from_side(unit)
 
 	self._unit_extension_data[unit] = nil
 
 	ScriptUnit.remove_extension(unit, self._name)
+end
+
+SideSystem._event_unit_died = function (self, unit)
+	local side_extension = self._unit_extension_data[unit]
+
+	if side_extension then
+		self:_remove_unit_from_tag_units(unit, side_extension)
+	end
 end
 
 SideSystem.sides = function (self)
@@ -187,9 +190,7 @@ SideSystem._remove_unit_from_side = function (self, unit)
 	self.side_by_unit[unit] = nil
 end
 
-SideSystem.remove_unit_from_tag_units = function (self, unit)
-	local side_extension = self._unit_extension_data[unit]
-
+SideSystem._remove_unit_from_tag_units = function (self, unit, side_extension)
 	if side_extension.is_removed_from_tag_units then
 		return
 	end
@@ -296,7 +297,7 @@ local function _is_valid_target(unit, side_extension)
 
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-	if buff_extension and buff_extension:has_keyword(keywords.invisible) then
+	if buff_extension and (buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable)) then
 		return false
 	end
 
@@ -319,8 +320,6 @@ local function _is_valid_target(unit, side_extension)
 end
 
 SideSystem._update_frame_tables = function (self, side)
-	Profiler.start("SideSystem:_update_frame_tables()")
-
 	local unit_extension_data = self._unit_extension_data
 	local player_units = side.player_units
 	local player_unit_positions = side.player_unit_positions
@@ -375,13 +374,9 @@ SideSystem._update_frame_tables = function (self, side)
 			end
 		end
 	end
-
-	Profiler.stop("SideSystem:_update_frame_tables()")
 end
 
 SideSystem._update_enemy_frame_tables = function (self, side)
-	Profiler.start("SideSystem:_update_enemy_frame_tables()")
-
 	local unit_extension_data = self._unit_extension_data
 	local enemy_player_units = side.enemy_player_units
 	local enemy_player_unit_positions = side.enemy_player_unit_positions
@@ -455,8 +450,6 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 			ai_target_units[unit] = num_ai_target_units
 		end
 	end
-
-	Profiler.stop("SideSystem:_update_enemy_frame_tables()")
 end
 
 return SideSystem

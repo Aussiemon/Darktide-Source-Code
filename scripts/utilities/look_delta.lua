@@ -17,7 +17,7 @@ local LookDelta = {
 		local new_look_delta_x = look_delta_x * settings.delta_x_modifier
 		local new_look_delta_y = look_delta_y * settings.delta_y_modifier
 		local lerp_constant_x = settings.lerp_constant_x_func(new_look_delta_x)
-		local lerp_constant_y = settings.lerp_constant_x_func(new_look_delta_y)
+		local lerp_constant_y = settings.lerp_constant_y_func(new_look_delta_y)
 
 		if math.abs(new_look_delta_x) <= settings.deadzone_x then
 			new_look_delta_x = 0

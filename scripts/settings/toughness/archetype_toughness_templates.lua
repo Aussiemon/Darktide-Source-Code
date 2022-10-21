@@ -1,26 +1,26 @@
 local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
+local TalentSettings = require("scripts/settings/buff/talent_settings")
 local replenish_types = ToughnessSettings.replenish_types
 local template_types = ToughnessSettings.template_types
+local gunlugger_talent_settings = TalentSettings.ogryn_1
 local archetype_toughness_templates = {
 	veteran = {
 		regeneration_delay = 3,
 		max = 200,
 		template_type = template_types.player,
 		regeneration_speed = {
-			still = 5,
-			moving = 5
+			still = 2.5,
+			moving = 2.5
 		},
 		state_damage_modifiers = {
 			sliding = 0.5,
-			dodging = 0.5,
+			dodging = 1,
 			sprinting = 2
 		},
 		on_depleted_function = ToughnessDepleted.spill_over,
 		recovery_percentages = {
-			[replenish_types.melee_kill] = 0.15,
-			[replenish_types.melee_kill_reduced] = 0.05,
-			[replenish_types.weakspot_proc_buff] = 0.15
+			[replenish_types.melee_kill] = 0.075
 		}
 	},
 	psyker = {
@@ -38,32 +38,10 @@ local archetype_toughness_templates = {
 		},
 		on_depleted_function = ToughnessDepleted.spill_over,
 		recovery_percentages = {
-			[replenish_types.melee_kill] = 0.1,
-			[replenish_types.melee_kill_reduced] = 0.05,
-			[replenish_types.weakspot_proc_buff] = 0.15
+			[replenish_types.melee_kill] = 0.05
 		}
 	},
 	zealot = {
-		regeneration_delay = 3,
-		max = 150,
-		template_type = template_types.player,
-		regeneration_speed = {
-			still = 5,
-			moving = 5
-		},
-		state_damage_modifiers = {
-			sliding = 0,
-			dodging = 0.5,
-			sprinting = 0.5
-		},
-		on_depleted_function = ToughnessDepleted.block,
-		recovery_percentages = {
-			[replenish_types.melee_kill] = 0.2,
-			[replenish_types.melee_kill_reduced] = 0.05,
-			[replenish_types.weakspot_proc_buff] = 0.15
-		}
-	},
-	ogryn = {
 		regeneration_delay = 3,
 		max = 100,
 		template_type = template_types.player,
@@ -76,12 +54,28 @@ local archetype_toughness_templates = {
 			dodging = 0.5,
 			sprinting = 0.5
 		},
-		on_depleted_function = ToughnessDepleted.block,
+		on_depleted_function = ToughnessDepleted.spill_over,
 		recovery_percentages = {
-			[replenish_types.melee_kill] = 0.15,
-			[replenish_types.melee_kill_reduced] = 0.05,
-			[replenish_types.weakspot_proc_buff] = 0.15,
-			[replenish_types.ogryn_braced_regen] = 0.02,
+			[replenish_types.melee_kill] = 0.05
+		}
+	},
+	ogryn = {
+		regeneration_delay = 3,
+		max = 100,
+		template_type = template_types.player,
+		regeneration_speed = {
+			still = 2.5,
+			moving = 2.5
+		},
+		state_damage_modifiers = {
+			sliding = 1,
+			dodging = 1,
+			sprinting = 1
+		},
+		on_depleted_function = ToughnessDepleted.spill_over,
+		recovery_percentages = {
+			[replenish_types.melee_kill] = 0.05,
+			[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen,
 			[replenish_types.bonebreaker_heavy_hit] = 0.05
 		}
 	}

@@ -48,6 +48,10 @@ DifficultyManager.get_resistance = function (self)
 	return self._resistance
 end
 
+DifficultyManager.get_difficulty = function (self)
+	return self:get_challenge()
+end
+
 DifficultyManager.set_challenge = function (self, new_challenge)
 	self._challenge = new_challenge
 end
@@ -66,10 +70,10 @@ DifficultyManager.friendly_fire_enabled = function (self, target_is_player, targ
 	return true
 end
 
-DifficultyManager.player_wounds = function (self, class)
-	local wounds_settings = PlayerDifficultySettings.wounds[class]
-	local current_challenge = self._challenge
-	local max_wounds = wounds_settings[math.min(#wounds_settings, current_challenge)]
+DifficultyManager.player_wounds = function (self, specialization)
+	local wounds_settings = PlayerDifficultySettings.specialization_wounds[specialization]
+	local challenge = self._challenge
+	local max_wounds = wounds_settings[math.min(#wounds_settings, challenge)]
 
 	return max_wounds
 end

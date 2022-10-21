@@ -6,12 +6,10 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal = {
 	extents = {
 		min = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		},
 		max = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		}
@@ -23,12 +21,10 @@ local default_armor_decal = {
 local default_shield_block_decal = {
 	extents = {
 		min = {
-			z = 0.35,
 			x = 1,
 			y = 1
 		},
 		max = {
-			z = 0.35,
 			x = 1,
 			y = 1
 		}
@@ -474,7 +470,7 @@ local player = {
 	sfx = {
 		damage = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
+				event = "wwise/events/player/play_player_get_hit_plasma",
 				hit_direction_interface = true
 			},
 			{
@@ -484,7 +480,7 @@ local player = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
+				event = "wwise/events/player/play_player_get_hit_plasma",
 				hit_direction_interface = true
 			},
 			{
@@ -494,7 +490,7 @@ local player = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
+				event = "wwise/events/player/play_player_get_hit_plasma",
 				hit_direction_interface = true
 			},
 			{
@@ -510,7 +506,7 @@ local player = {
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
+				event = "wwise/events/player/play_bullet_hits_laser_damage_negated",
 				hit_direction_interface = true
 			},
 			{

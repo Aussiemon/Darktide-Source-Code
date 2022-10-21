@@ -11,6 +11,7 @@ local CharacterSelectPassTemplates = require("scripts/ui/pass_templates/characte
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local TextUtils = require("scripts/utilities/ui/text")
 local MasterItems = require("scripts/backend/master_items")
+local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -90,7 +91,6 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 		return
 	end
 
-	self._widgets_by_name.friends_online.text_count = 0
 	local text_style = self._widgets_by_name.friends_online.style.text
 	local text_value = self._widgets_by_name.friends_online.content.text
 	local icon_style = self._widgets_by_name.friends_online.style.icon
@@ -106,13 +106,30 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 
 	self:_set_scenegraph_size("party_count", text_count_style.offset[1] + text_count_width, nil)
 
-	local num_friends = #friends
+	local num_friends = 0
+
+	for i = 1, #friends do
+		local player_info = friends[i]
+		local is_blocked = player_info:is_blocked()
+		local is_online = SocialConstants.OnlineStatus.online == player_info:online_status()
+		local is_friend = SocialConstants.FriendStatus.friend == player_info:friend_status()
+
+		if not is_blocked and is_online and is_friend then
+			num_friends = num_friends + 1
+		end
+	end
+
 	self._widgets_by_name.friends_online.content.text_count = num_friends
 end
 
 MainMenuView.cb_update_strike_team_count = function (self, party)
 	if not self._destroyed then
-		local num_party = #party > 1 and #party or 1
+		local num_party = 0
+
+		for unique_id, player_info in pairs(party) do
+			num_party = num_party + 1
+		end
+
 		local max_party_limit = MainMenuViewSettings.max_party_size
 		self._widgets_by_name.strike_team.content.text_count = string.format("%d/%d", num_party, max_party_limit)
 		local text_style = self._widgets_by_name.strike_team.style.text
@@ -194,16 +211,16 @@ MainMenuView._event_selected_profile_changed = function (self, profile)
 			end
 		end
 
-		self:_set_selected_character_list_index(selected_index)
+		self:_on_character_widget_selected(selected_index)
 	else
-		self:_set_selected_character_list_index(1)
+		self:_on_character_widget_selected(1)
 	end
 end
 
 MainMenuView._on_character_widget_selected = function (self, index)
 	local character_list_widgets = self._character_list_widgets
 	local widget = character_list_widgets[index]
-	local profile = widget.content.profile
+	local profile = widget and widget.content.profile
 
 	if profile then
 		if profile == self._selected_profile then
@@ -211,14 +228,12 @@ MainMenuView._on_character_widget_selected = function (self, index)
 		else
 			Managers.event:trigger("event_request_select_new_profile", profile)
 		end
-	else
-		self:_set_selected_character_list_index(1)
+
+		local scroll_progress = self._character_list_grid:get_scrollbar_percentage_by_index(index)
+
+		self._character_list_grid:focus_grid_index(index, scroll_progress, true)
+		self:_play_sound(UISoundEvents.main_menu_select_character)
 	end
-
-	local scroll_progress = self._character_list_grid:get_scrollbar_percentage_by_index(index)
-
-	self._character_list_grid:focus_grid_index(index, scroll_progress, true)
-	self:_play_sound(UISoundEvents.main_menu_select_character)
 end
 
 MainMenuView._set_selected_character_list_index = function (self, index)
@@ -355,10 +370,14 @@ MainMenuView.update = function (self, dt, t, input_service)
 		Testify:poll_requests_through_handler(MainMenuViewTestify, self)
 	end
 
-	if self._widgets_by_name.play_button.content.hotspot.is_focused or self._widgets_by_name.play_button.content.hotspot.is_hover then
+	if (self._widgets_by_name.play_button.content.hotspot.is_focused or self._widgets_by_name.play_button.content.hotspot.is_hover) and not self._widgets_by_name.play_button.content.active then
 		self._widgets_by_name.play_button.content.active = true
-	else
+
+		self:_play_sound(UISoundEvents.main_menu_start_button_hover_enter)
+	elseif not self._widgets_by_name.play_button.content.hotspot.is_focused and not self._widgets_by_name.play_button.content.hotspot.is_hover and self._widgets_by_name.play_button.content.active == true then
 		self._widgets_by_name.play_button.content.active = false
+
+		self:_play_sound(UISoundEvents.main_menu_start_button_hover_leave)
 	end
 
 	return MainMenuView.super.update(self, dt, t, input_service)
@@ -433,6 +452,8 @@ MainMenuView._handle_input = function (self, input_service)
 			self:_on_create_character_pressed()
 		elseif IS_XBS and input_service:get("cycle_list_secondary") then
 			Managers.account:show_profile_picker()
+		elseif IS_XBS and input_service:get("back") then
+			Managers.account:return_to_title_screen()
 		end
 	end
 end
@@ -443,6 +464,7 @@ MainMenuView._on_play_pressed = function (self)
 end
 
 MainMenuView._on_create_character_pressed = function (self)
+	self:_play_sound(UISoundEvents.character_create_enter)
 	Managers.event:trigger("event_create_new_character_start")
 end
 
@@ -459,7 +481,9 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 		options = {
 			{
 				text = "loc_main_menu_delete_character_popup_confirm",
+				stop_exit_sound = true,
 				close_on_pressed = true,
+				on_pressed_sound = UISoundEvents.delete_character_confirm,
 				callback = callback(function ()
 					local character_id = profile.character_id
 
@@ -468,7 +492,7 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 			},
 			{
 				text = "loc_main_menu_delete_character_popup_cancel",
-				template_type = "default_button_small",
+				template_type = "terminal_button_small",
 				close_on_pressed = true,
 				hotkey = "back"
 			}
@@ -712,12 +736,13 @@ MainMenuView._load_portrait_icon = function (self, profile, widget)
 	widget.content.icon_load_id = icon_load_id
 end
 
-MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, columns)
+MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.character_portrait.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 MainMenuView._unload_portrait_icon = function (self, widget)

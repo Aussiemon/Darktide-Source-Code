@@ -1,10 +1,3 @@
-assert(DialogueLookup[DialogueLookup_n + 1] == nil)
-assert(DialogueLookup[DialogueLookup_n + 2] == nil)
-assert(DialogueLookup[DialogueLookup_n + 3] == nil)
-assert(DialogueLookup[DialogueLookup_n + 4] == nil)
-assert(DialogueLookup[DialogueLookup_n + 5] == nil)
-assert(DialogueLookup[DialogueLookup_n + 6] == nil)
-
 DialogueLookup[DialogueLookup_n + 1] = "event_demolition_first_corruptor_destroyed_a"
 DialogueLookup[DialogueLookup_n + 2] = "event_demolition_first_corruptor_destroyed_b"
 DialogueLookup[DialogueLookup_n + 3] = "event_demolition_last_corruptor"

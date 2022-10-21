@@ -9,9 +9,6 @@ local smart_object_settings = {
 local function _create_template_entry(path)
 	local template = require(path)
 	local name = string.match(path, "^.+/(.+)_smart_object_template$")
-
-	fassert(name, "[SmartObjectSettings] Couldn't find name from template filename.", path)
-
 	minion_smart_object_templates[name] = template
 end
 

@@ -121,6 +121,34 @@ ImguiWidgetUtilities.filter_functions = {
 				result_index = result_index + 1
 			end
 		end
+	end,
+	match_substring_replace_underscore = function (source_table, result_table, filter_string)
+		filter_string = string.lower(filter_string)
+		local initial_index = 1
+		local use_plain_search = true
+		local filter_table = {}
+		local result_index = 1
+
+		for i = 1, #source_table do
+			local value = source_table[i]
+
+			if string.find(string.lower(value), filter_string, initial_index, use_plain_search) then
+				filter_table[value] = true
+				result_table[result_index] = value
+				result_index = result_index + 1
+			end
+		end
+
+		filter_string = string.gsub(filter_string, " ", "_")
+
+		for i = 1, #source_table do
+			local value = source_table[i]
+
+			if string.find(string.lower(value), filter_string, initial_index, use_plain_search) and not filter_table[value] then
+				result_table[result_index] = value
+				result_index = result_index + 1
+			end
+		end
 	end
 }
 

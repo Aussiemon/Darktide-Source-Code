@@ -11,7 +11,7 @@ local gameplay_vo_tech_priest_a = {
 		},
 		sound_events_duration = {
 			1.554313,
-			2.029417,
+			2.029438,
 			2.825521,
 			2.296688,
 			2.867792

@@ -16,7 +16,7 @@ PropAnimationExtension.init = function (self, extension_init_context, unit, exte
 	self._game_session = nil
 	self._variables = {}
 	local next_seed = math.random_seed()
-	local num_seeds, seeds = Unit.animation_get_seeds(unit)
+	local seeds, num_seeds = Unit.animation_get_seeds(unit)
 
 	for i = 1, num_seeds do
 		local seed = nil
@@ -28,8 +28,6 @@ PropAnimationExtension.init = function (self, extension_init_context, unit, exte
 end
 
 PropAnimationExtension.game_object_initialized = function (self, game_session, game_object_id)
-	fassert(not self._is_level_unit, "[PropAnimationExtension][game_object_initialized] Game object initialized on a level unit.")
-
 	self._unit_id = game_object_id
 	self._is_level_unit = false
 	self._game_session = game_session
@@ -52,8 +50,8 @@ PropAnimationExtension.setup_from_component = function (self, animation_variable
 end
 
 PropAnimationExtension.hot_join_sync = function (self, unit, sender, channel)
-	local _, anim_states = Unit.animation_get_state(unit)
-	local _, seeds = Unit.animation_get_seeds(unit)
+	local anim_states = Unit.animation_get_state(unit)
+	local seeds = Unit.animation_get_seeds(unit)
 	local unit_id = self._unit_id
 	local is_level_unit = self._is_level_unit
 
@@ -61,8 +59,6 @@ PropAnimationExtension.hot_join_sync = function (self, unit, sender, channel)
 end
 
 PropAnimationExtension.anim_event = function (self, event_name)
-	fassert(self._is_server, "[PropAnimationExtension] Server only method.")
-
 	local unit = self._unit
 	local unit_id = self._unit_id
 	local is_level_unit = self._is_level_unit
@@ -72,8 +68,6 @@ PropAnimationExtension.anim_event = function (self, event_name)
 end
 
 PropAnimationExtension.anim_event_with_variable_float = function (self, event_name, variable_name, variable_value)
-	fassert(self._is_server, "[PropAnimationExtension] Server only method.")
-
 	local unit = self._unit
 	local unit_id = self._unit_id
 	local is_level_unit = self._is_level_unit
@@ -87,8 +81,6 @@ PropAnimationExtension.anim_event_with_variable_float = function (self, event_na
 end
 
 PropAnimationExtension.set_variable = function (self, name, value)
-	fassert(self._is_server, "[PropAnimationExtension] Server only method.")
-
 	local unit = self._unit
 	local unit_id = self._unit_id
 	local is_level_unit = self._is_level_unit

@@ -23,6 +23,25 @@ local dialogue_category_config = {
 			enemy_alerts_prio_0 = true
 		}
 	},
+	vox_prio_1 = {
+		mutually_exclusive = true,
+		interrupted_by = {},
+		playable_during_category = {
+			default = true,
+			enemy_high_prio = true,
+			conversations_prio_0 = true,
+			conversations_prio_1 = true,
+			enemy_basic_prio = true,
+			player_prio_1 = true,
+			enemy_vo_prio_1 = true,
+			enemy_vo_prio_0 = true,
+			enemy_alerts_prio_1 = true,
+			player_prio_2 = true,
+			player_on_demand_vo = true,
+			player_prio_0 = false,
+			enemy_alerts_prio_0 = true
+		}
+	},
 	enemy_alerts_prio_0 = {
 		mutually_exclusive = true,
 		interrupted_by = {},
@@ -238,12 +257,30 @@ local dialogue_category_config = {
 			player_prio_1 = true,
 			enemy_vo_prio_1 = true,
 			enemy_vo_prio_0 = true,
+			npc_prio_0 = false,
 			enemy_alerts_prio_1 = true,
 			player_prio_2 = true,
 			player_on_demand_vo = true,
 			player_prio_0 = true,
 			enemy_alerts_prio_0 = true
 		}
+	},
+	playable_during_cinematic = {
+		conversations_prio_1 = false,
+		enemy_vo_prio_1 = false,
+		conversations_prio_0 = false,
+		vox_prio_0 = false,
+		npc_prio_0 = false,
+		cutscene_prio_high = true,
+		cutscene = true,
+		vox_prio_1 = false,
+		player_prio_1 = false,
+		enemy_alerts_prio_1 = false,
+		player_prio_2 = false,
+		enemy_vo_prio_0 = false,
+		player_on_demand_vo = false,
+		player_prio_0 = false,
+		enemy_alerts_prio_0 = false
 	}
 }
 

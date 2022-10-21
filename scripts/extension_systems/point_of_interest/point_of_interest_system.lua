@@ -80,15 +80,9 @@ PointOfInterestSystem.update = function (self, context, dt, t, ...)
 		return
 	end
 
-	Profiler.start("update dynamic targets")
 	self:_update_dynamic_targets()
-	Profiler.stop("update dynamic targets")
-	Profiler.start("update seen recently")
 	self:_update_seen_recently(t)
-	Profiler.stop("update seen recently")
-	Profiler.start("update look at")
 	self:_update_lookat(t)
-	Profiler.stop("update look at")
 end
 
 PointOfInterestSystem._update_dynamic_targets = function (self)
@@ -163,6 +157,11 @@ PointOfInterestSystem._update_lookat = function (self, t)
 			local view_distance_sq = target_extension:view_distance_sq()
 			local view_half_angle = observer_extension:view_half_angle()
 			local in_range, observer_to_target_vector, observer_target_direction, _, _ = PointOfInterestUtilities.is_in_range(observer_position, target_center, observer_forward, view_distance_sq, view_half_angle)
+			local disabled = target_extension:disabled()
+
+			if disabled == true then
+				break
+			end
 
 			if in_range and not darkness_system:is_in_darkness(target_center) then
 				local observer_to_target_length = Vector3.length(observer_to_target_vector)
@@ -173,15 +172,19 @@ PointOfInterestSystem._update_lookat = function (self, t)
 					target_extension:set_has_been_seen()
 					observer_extension:set_last_lookat_trigger(t)
 
-					local faction_event = target_extension:faction_event()
+					local faction_event = target_extension:faction_event() or "look_at"
+					local dialogue_target_filter = target_extension:dialogue_target_filter()
+					local mission_giver_selected_voice = target_extension:mission_giver_selected_voice()
 					local tag = target_extension:tag()
 
-					if faction_event then
+					if dialogue_target_filter == "none" and faction_event then
+						Vo.look_at_event(dialogue_extension, tag, observer_to_target_length)
+					elseif dialogue_target_filter == "faction" then
 						local faction_breed_name = target_extension:faction_breed_name()
 
 						Vo.faction_look_at_event(dialogue_extension, faction_event, faction_breed_name, tag, observer_to_target_length)
-					else
-						Vo.look_at_event(dialogue_extension, tag, observer_to_target_length)
+					elseif dialogue_target_filter == "mission_giver_mission_default" or dialogue_target_filter == "mission_giver_selected_voice" then
+						Vo.mission_giver_point_of_interest_vo(dialogue_target_filter, tag, mission_giver_selected_voice, observer_to_target_length)
 					end
 
 					seen_recently[target_unit] = t

@@ -32,6 +32,8 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 
 		event_manager:register(self, event[1], event[2])
 	end
+
+	self._mechanism_manager = Managers.mechanism
 end
 
 HudElementCombatFeed._can_spawn_message = function (self)
@@ -93,6 +95,10 @@ HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
 end
 
 HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, attacked_unit)
+	if self._mechanism_manager:mechanism_name() == "onboarding" then
+		return
+	end
+
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
 	temp_kill_message_localization_params.killer = killer

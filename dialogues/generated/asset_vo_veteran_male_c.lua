@@ -1,4 +1,21 @@
 local asset_vo_veteran_male_c = {
+	asset_acid_clouds = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__zone_watertown_acid_clouds_01",
+			[2.0] = "loc_veteran_male_c__zone_watertown_acid_clouds_02"
+		},
+		sound_events_duration = {
+			[1.0] = 0.942958,
+			[2.0] = 1.41274
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
+		},
+		randomize_indexes = {}
+	},
 	asset_foul_smoke = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -54,8 +71,8 @@ local asset_vo_veteran_male_c = {
 		sound_events_duration = {
 			2.229917,
 			1.620958,
-			3.123646,
-			2.188083
+			3.123635,
+			2.188073
 		},
 		randomize_indexes = {}
 	},

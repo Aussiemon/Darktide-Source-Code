@@ -17,18 +17,17 @@ end
 
 FirstPersonAnimationCamera.update = function (self, dt, position, rotation, data)
 	local root_unit = self._root_unit
-	local new_position, new_rotation = nil
+	local rot_offset = Quaternion.identity()
+	local pos_offset = Vector3.zero()
 
 	if ALIVE[root_unit] then
 		local pose = Unit.local_pose(self._first_person_unit, self._animation_object_id)
-		local pos_offset = Matrix4x4.translation(pose)
-		local rot_offset = Matrix4x4.rotation(pose)
-		new_position = position + pos_offset
-		new_rotation = Quaternion.multiply(rotation, rot_offset)
-	else
-		new_position = position
-		new_rotation = rotation
+		pos_offset = Matrix4x4.translation(pose)
+		rot_offset = Matrix4x4.rotation(pose)
 	end
+
+	local new_rotation = Quaternion.multiply(rotation, rot_offset)
+	local new_position = position + Quaternion.rotate(new_rotation, pos_offset)
 
 	BaseCamera.update(self, dt, new_position, new_rotation, data)
 end

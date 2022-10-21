@@ -22,13 +22,11 @@ local function _create_surface_decal(surface_decals, surface_type, hit_type, min
 			extents = {
 				min = {
 					x = min_extents.x,
-					y = min_extents.y,
-					z = min_extents.z
+					y = min_extents.y
 				},
 				max = {
 					x = max_extents.x,
-					y = max_extents.y,
-					z = max_extents.z
+					y = max_extents.y
 				}
 			},
 			units = {}

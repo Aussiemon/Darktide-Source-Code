@@ -24,8 +24,6 @@ UnitJobManager.delete_units = function (self)
 end
 
 UnitJobManager.register = function (self, unit, job_class)
-	assert(self._units[unit] == nil, "Already registered unit %q to UnitJobManager", unit)
-
 	self._units[unit] = job_class
 end
 
@@ -34,7 +32,7 @@ UnitJobManager.update = function (self, dt, t)
 	local units = self._units
 
 	for unit, job_class in pairs(units) do
-		if job_class:job_completed() then
+		if job_class:job_completed() or job_class:is_job_canceled() then
 			unit_spawner_manager:mark_for_deletion(unit)
 
 			units[unit] = nil

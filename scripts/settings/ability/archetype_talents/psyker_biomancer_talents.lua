@@ -1,17 +1,24 @@
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
+local TalentSettings = require("scripts/settings/buff/talent_settings")
+local talent_settings = TalentSettings.psyker_2
+local math_round = math.round
+math_round = math_round or function (value)
+	if value >= 0 then
+		return math.floor(value + 0.5)
+	else
+		return math.ceil(value - 0.5)
+	end
+end
+local max_souls_talent = talent_settings.offensive_2_1.max_souls_talent
 local archetype_talents = {
 	archetype = "psyker",
 	specialization = "psyker_2",
 	talents = {
 		psyker_2_combat = {
-			large_icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_combat",
+			large_icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_combat",
 			name = "F-Ability - Shout, knocking down enemies in front of you in a cone, and remove all accumilated warp charge",
 			display_name = "loc_talent_psyker_2_combat",
 			description = "loc_talent_psyker_2_combat_description",
-			icon_position = {
-				8,
-				4
-			},
 			player_ability = {
 				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_discharge_shout
@@ -26,24 +33,21 @@ local archetype_talents = {
 			name = "G-Ability - Target enemies to charge a Smite attack, dealing a high amount of damage",
 			hud_icon = "content/ui/materials/icons/abilities/default",
 			display_name = "loc_ability_psyker_smite",
-			icon = "content/ui/materials/icons/abilities/combat/default",
-			icon_position = {
-				9,
-				5
-			},
+			icon = "content/ui/textures/icons/talents/menu/talent_default",
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.psyker_smite
 			}
 		},
 		psyker_2_base_1 = {
-			description = "loc_talent_psyker_biomancy_passive_1_description",
-			name = "Passive - Smite kills stores the soul of your enemy, increasing smite damage. Lasts for 20 seconds, stacking up to 4",
-			display_name = "loc_talent_psyker_2_base_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_base_1",
-			icon_position = {
-				10,
-				6
+			description = "loc_talent_biomancer_souls_desc",
+			name = "Killing an enemy with Smite retains their soul. Each soul increase the damage you do. Souls are retained for 20 seconds and you can hold up to 4 souls at the same time.",
+			display_name = "loc_talent_biomancer_souls",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_base_1",
+			format_values = {
+				damage = talent_settings.passive_1.damage * 100 / max_souls_talent,
+				stack = talent_settings.passive_1.base_max_souls,
+				time = talent_settings.passive_1.soul_duration
 			},
 			passive = {
 				buff_template_name = "psyker_biomancer_passive",
@@ -51,13 +55,12 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_base_2 = {
-			description = "loc_talent_psyker_biomancy_passive_2_description",
+			description = "loc_talent_psyker_2_base_2_description",
 			name = "Passive - Reduced warp charge generated",
 			display_name = "loc_talent_psyker_2_base_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_base_2",
-			icon_position = {
-				10,
-				5
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_base_2",
+			format_values = {
+				warp_charge_amount = math_round((1 - talent_settings.passive_2.warp_charge_amount) * 100)
 			},
 			passive = {
 				buff_template_name = "psyker_biomancer_base_passive",
@@ -65,13 +68,12 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_base_3 = {
-			description = "loc_talent_psyker_biomancy_passive_3_description",
+			description = "loc_talent_psyker_2_base_3_description",
 			name = "Aura - Increased damage versus elites and specials",
 			display_name = "loc_talent_psyker_2_base_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_base_3",
-			icon_position = {
-				11,
-				6
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_base_3",
+			format_values = {
+				damage = talent_settings.coherency.damage_vs_elites * 100
 			},
 			coherency = {
 				buff_template_name = "psyker_biomancer_coherency_damage_vs_elites",
@@ -79,185 +81,174 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_1_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_1_ability_1_description",
-			name = "Killing an enemy with your smite ability replenishes toughness over a short time, stacking up to 3 times",
-			display_name = "loc_talent_psyker_2_tier_1_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_1_name_1",
-			icon_position = {
-				8,
-				8
+			description = "loc_talent_biomancer_toughness_regen_on_smite_desc",
+			name = "Replenish toughness over time after killing an enemy with Smite.",
+			display_name = "loc_talent_biomancer_toughness_regen_on_smite",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_1",
+			format_values = {
+				toughness = talent_settings.toughness_1.percent_toughness * talent_settings.toughness_1.duration * 100,
+				time = talent_settings.toughness_1.duration
 			},
 			passive = {
 				buff_template_name = "psyker_biomancer_smite_kills_replenish_toughness_stacking",
-				identifier = "mixed"
+				identifier = "toughness"
 			}
 		},
 		psyker_2_tier_1_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_1_ability_2_description",
-			name = "All kills have an 8 percent chance to generate a soul",
-			display_name = "loc_talent_psyker_2_tier_1_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_1_name_2",
-			icon_position = {
-				7,
-				7
+			description = "loc_talent_biomancer_toughness_on_warp_kill_desc",
+			name = "Replenish toughness when killing an enemy with warp powered attacks.",
+			display_name = "loc_talent_biomancer_toughness_on_warp_kill",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_2",
+			format_values = {
+				toughness = talent_settings.toughness_2.percent_toughness * 100
 			},
-			special_rule = {
-				special_rule_name = "psyker_biomancer_all_kills_can_generate_souls",
-				identifier = "psyker_biomancer_all_kills_can_generate_souls"
+			passive = {
+				buff_template_name = "psyker_biomancer_toughness_on_warp_kill",
+				identifier = "toughness"
 			}
 		},
 		psyker_2_tier_1_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_1_ability_3_description",
-			name = "Gain increased non-warp damage the higher your warp charge",
-			display_name = "loc_talent_psyker_2_tier_1_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_1_name_3",
-			icon_position = {
-				8,
-				7
+			description = "loc_talent_biomancer_toughness_from_vent_desc",
+			name = "Replenish toughness for each % of warp charge ventilated.",
+			display_name = "loc_talent_biomancer_toughness_from_vent",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_3",
+			format_values = {
+				warp_charge = 10,
+				toughness = talent_settings.toughness_3.multiplier * 10
 			},
 			passive = {
-				buff_template_name = "psyker_biomancer_warp_charge_increase_non_warp_damage",
-				identifier = "mixed"
+				buff_template_name = "psyker_biomancer_toughness_on_vent",
+				identifier = "toughness"
 			}
 		},
 		psyker_2_tier_2_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_2_ability_1_description",
-			name = "Melee kills have a chance to reduce warp charge",
-			display_name = "loc_talent_psyker_2_tier_2_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_2_name_1",
-			icon_position = {
-				5,
-				5
+			description = "loc_talent_biomancer_damage_from_warp_charge_desc",
+			name = "Gain damage with warp attacks based on your current warp charge amount.",
+			display_name = "loc_talent_biomancer_damage_from_warp_charge",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_1",
+			format_values = {
+				min_damage = talent_settings.offensive_1_1.damage_min * 100,
+				max_damage = talent_settings.offensive_1_1.damage * 100
 			},
 			passive = {
-				buff_template_name = "psyker_biomancer_melee_kills_reduce_warp_charge",
-				identifier = "offensive"
+				buff_template_name = "psyker_biomancer_warp_charge_increase_force_weapon_damage",
+				identifier = "offensive_1"
 			}
 		},
 		psyker_2_tier_2_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_2_ability_2_description",
-			name = "Each soul stored increases damage",
-			display_name = "loc_talent_psyker_2_tier_2_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_2_name_2",
-			icon_position = {
-				5,
-				6
+			description = "loc_talent_biomancer_reduced_warp_charge_cost_venting_speed_desc",
+			name = "Reduces warp charge generation and reduces warp charge venting speed per soul.",
+			display_name = "loc_talent_biomancer_reduced_warp_charge_cost_venting_speed",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_2",
+			format_values = {
+				warp_charge_generation = talent_settings.offensive_1_2.warp_charge_capacity * 100 / max_souls_talent,
+				venting_speed = talent_settings.offensive_1_2.vent_speed * 100 / max_souls_talent
 			},
 			passive = {
-				buff_template_name = "psyker_biomancer_damage_per_soul",
-				identifier = "offensive"
+				buff_template_name = "psyker_biomancer_souls_increase_warp_charge_decrease_venting",
+				identifier = "offensive_1"
 			}
 		},
 		psyker_2_tier_2_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_2_ability_3_description",
-			name = "Your shout ability deals damage based on your warp charge",
-			display_name = "loc_talent_psyker_2_tier_2_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_2_name_3",
-			icon_position = {
-				6,
-				6
+			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc",
+			name = "Killing an elite enemy with Smite applies one stack of warpfire to all nearby enemies.",
+			display_name = "loc_talent_biomancer_smite_kills_add_warp_fire",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_3",
+			format_values = {
+				range = talent_settings.offensive_1_3.distance
 			},
 			passive = {
-				buff_template_name = "psyker_biomancer_warp_charge_shout",
-				identifier = "offensive"
-			},
-			special_rule = {
-				special_rule_name = "psyker_biomancer_discharge_damage_per_warp_charge",
-				identifier = "psyker_biomancer_discharge_damage_per_warp_charge"
+				buff_template_name = "psyker_biomancer_smite_kills_add_warpfire",
+				identifier = "offensive_1"
 			}
 		},
 		psyker_2_tier_3_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_3_ability_1_description",
-			name = "Reduces movement speed reduction when venting",
-			display_name = "loc_talent_psyker_2_tier_3_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_3_name_1",
-			icon_position = {
-				2,
-				4
+			description = "loc_talent_biomancer_souls_on_kill_coop_desc",
+			name = "Whenever you or an ally in coherency kills an enemy you have a chance to gain a soul.",
+			display_name = "loc_talent_biomancer_souls_on_kill_coop",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_1",
+			format_values = {
+				soul_chance = talent_settings.coop_1.on_kill_proc_chance * 100
 			},
-			passive = {
-				buff_template_name = "psyker_biomancer_venting_improvements",
-				identifier = "defensive"
+			coherency = {
+				buff_template_name = "psyker_biomancer_coherency_souls_on_kill",
+				identifier = "souls_on_kill"
+			},
+			special_rule = {
+				special_rule_name = "psyker_biomancer_coherency_souls_on_kill",
+				identifier = "psyker_biomancer_coherency_souls_on_kill"
 			}
 		},
 		psyker_2_tier_3_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_3_ability_3_description",
-			name = "Increased toughness regeneration for each soul stored",
-			display_name = "loc_talent_psyker_2_tier_3_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_3_name_2",
-			icon_position = {
-				3,
-				4
-			},
-			special_rule = {
-				special_rule_name = "psyker_biomancer_toughness_regen_soul",
-				identifier = "psyker_biomancer_toughness_regen_soul"
-			}
-		},
-		psyker_2_tier_3_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_3_ability_2_description",
-			name = "Increased passive warp charge dissipation",
-			display_name = "loc_talent_psyker_2_tier_3_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_3_name_3",
-			icon_position = {
-				4,
-				4
-			},
-			passive = {
-				buff_template_name = "psyker_biomancer_increase_passive_warp_charge_dissipation",
-				identifier = "defensive"
-			}
-		},
-		psyker_2_tier_4_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_4_ability_1_description",
-			name = "Killing an elite restores combat ability cooldown for all allies in coherency",
-			display_name = "loc_talent_psyker_2_tier_4_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_4_name_1",
-			icon_position = {
-				4,
-				1
+			description = "loc_talent_biomancer_elite_kills_give_cooldown_coop_desc",
+			name = "Killing an elite enemy restores combat ability cooldown to allies in coherency",
+			display_name = "loc_talent_biomancer_elite_kills_give_cooldown_coop",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_2",
+			format_values = {
+				cooldown = talent_settings.coop_2.percent * 100
 			},
 			passive = {
 				buff_template_name = "psyker_biomancer_cooldown_reduction_on_elite_kill_for_coherency",
-				identifier = "coherency"
+				identifier = "coop"
 			}
 		},
-		psyker_2_tier_4_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_4_ability_2_description",
-			name = "Increased efficiency of your aura",
-			display_name = "loc_talent_psyker_2_tier_4_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_4_name_2",
-			icon_position = {
-				5,
-				2
-			},
-			coherency = {
-				buff_template_name = "psyker_biomancer_coherency_damage_vs_elites_improved",
-				identifier = "damage_vs_elite"
-			}
-		},
-		psyker_2_tier_4_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_4_ability_3_description",
-			name = "Damaging an enemy with your smite ability debuffs them, increasing damage taken from all sources",
-			display_name = "loc_talent_psyker_2_tier_4_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_4_name_3",
-			icon_position = {
-				5,
-				3
+		psyker_2_tier_3_name_3 = {
+			description = "loc_talent_biomancer_smite_increases_non_warp_damage_desc",
+			name = "Damaging an enemy with your smite ability causes them to take increased damage from all non-warp sources for {time:%d} seconds.",
+			display_name = "loc_talent_biomancer_smite_increases_non_warp_damage",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_3",
+			format_values = {
+				damage = math_round((talent_settings.coop_3.damage_taken_multiplier - 1) * 100),
+				time = talent_settings.coop_3.duration
 			},
 			passive = {
 				buff_template_name = "psyker_biomancer_smite_makes_victim_vulnerable",
 				identifier = "coop"
 			}
 		},
+		psyker_2_tier_4_name_1 = {
+			description = "loc_talent_biomancer_block_costs_warp_charge_desc",
+			name = "While below critical warp charge, blocking an attack causes you to gain warp charge instead of losing stamina.",
+			display_name = "loc_talent_biomancer_block_costs_warp_charge",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_4_1",
+			format_values = {},
+			passive = {
+				buff_template_name = "psyker_biomancer_block_costs_warp_charge",
+				identifier = "defensive"
+			}
+		},
+		psyker_2_tier_4_name_2 = {
+			description = "loc_talent_biomancer_toughness_damage_reduction_from_warp_charge_desc",
+			name = "Take reduced toughness damage based on your current warp charge amount.",
+			display_name = "loc_talent_biomancer_toughness_damage_reduction_from_warp_charge",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_4_2",
+			format_values = {
+				min_damage = math_round((1 - talent_settings.defensive_2.min_toughness_damage_multiplier) * 100),
+				max_damage = math_round((1 - talent_settings.defensive_2.max_toughness_damage_multiplier) * 100)
+			},
+			passive = {
+				buff_template_name = "psyker_biomancer_warp_charge_reduces_toughness_damage_taken",
+				identifier = "defensive"
+			}
+		},
+		psyker_2_tier_4_name_3 = {
+			description = "loc_talent_biomancer_venting_doesnt_slow_desc",
+			name = "Venting no longer slows your movement speed.",
+			display_name = "loc_talent_biomancer_venting_doesnt_slow",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_4_3",
+			format_values = {},
+			passive = {
+				buff_template_name = "psyker_biomancer_venting_improvements",
+				identifier = "defensive"
+			}
+		},
 		psyker_2_tier_5_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_5_ability_1_description",
-			name = "Increased max number of souls stored from 4 to 5",
-			display_name = "loc_talent_psyker_2_tier_5_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_5_name_1",
-			icon_position = {
-				11,
-				1
+			description = "loc_talent_biomancer_increased_souls_desc",
+			name = "Increases the maximum amount of souls you can have to 6.",
+			display_name = "loc_talent_biomancer_increased_souls",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_1",
+			format_values = {
+				soul_amount = max_souls_talent
 			},
 			special_rule = {
 				special_rule_name = "psyker_biomancer_increased_max_souls",
@@ -265,41 +256,37 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_5_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_5_ability_2_description",
-			name = "Reduce warp charge generation and warp charge from venting, per soul stored",
-			display_name = "loc_talent_psyker_2_tier_5_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_5_name_2",
-			icon_position = {
-				11,
-				2
-			},
-			passive = {
-				buff_template_name = "psyker_biomancer_souls_increase_warp_charge_decrease_venting",
-				identifier = "specialization_passive"
+			description = "loc_talent_biomancer_warpfire_on_max_souls_desc",
+			name = "While you have maximum souls, gaining a soul instead applies a stack of warpfire to a nearby enemy, prioritizing elite enemies.",
+			display_name = "loc_talent_biomancer_warpfire_on_max_souls",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_2",
+			format_values = {},
+			special_rule = {
+				special_rule_name = "psyker_biomancer_warpfire_on_max_souls",
+				identifier = "psyker_biomancer_warpfire_on_max_souls"
 			}
 		},
 		psyker_2_tier_5_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_5_ability_3_description",
-			name = "Increase the duration souls are stored to 60 seconds",
-			display_name = "loc_talent_psyker_2_tier_5_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_5_name_3",
-			icon_position = {
-				10,
-				3
+			description = "loc_talent_biomancer_smite_on_hit_desc",
+			name = "All attacks have a chance on hit to smite the target. This cannot occur while at critical warp charge and has a cooldown.",
+			display_name = "loc_talent_biomancer_smite_on_hit",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_3",
+			format_values = {
+				smite_chance = talent_settings.offensive_2_3.smite_chance * 100,
+				time = talent_settings.offensive_2_3.cooldown
 			},
-			special_rule = {
-				special_rule_name = "psyker_biomancer_increased_souls_duration",
-				identifier = "psyker_biomancer_increased_souls_duration"
+			passive = {
+				buff_template_name = "psyker_biomancer_smite_on_hit",
+				identifier = "offensive_2"
 			}
 		},
 		psyker_2_tier_6_name_1 = {
-			description = "loc_talent_psyker_biomancy_tier_6_ability_1_description",
-			name = "Souls are consumed when you use your combat ability, but restores cooldown based on number of souls",
-			display_name = "loc_talent_psyker_2_tier_6_name_1",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_6_name_1",
-			icon_position = {
-				12,
-				4
+			description = "loc_talent_biomancer_combat_ability_cooldown_per_soul_desc",
+			name = "Using Unleash the warp removes all souls and reduces the cooldown for each soul removed.",
+			display_name = "loc_talent_biomancer_combat_ability_cooldown_per_soul",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_6_1",
+			format_values = {
+				cooldown = talent_settings.combat_ability_1.cooldown_reduction_percent * 100
 			},
 			special_rule = {
 				special_rule_name = "psyker_biomancer_restore_cooldown_per_soul",
@@ -307,31 +294,36 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_6_name_2 = {
-			description = "loc_talent_psyker_biomancy_tier_6_ability_2_description",
-			name = "Souls are consumed when you use your combat ability, but apply warpfire to enemies hit based on number of souls",
-			display_name = "loc_talent_psyker_2_tier_6_name_2",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_6_name_2",
-			icon_position = {
-				13,
-				4
+			description = "loc_talent_biomancer_combat_ability_warpfire_desc",
+			name = "Using Unleash the Warp removes all souls and applies stacks of warpfire to all enemies hit. Enemies that die from warpfire have a chance to grant you a soul.",
+			display_name = "loc_talent_biomancer_combat_ability_warpfire",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_6_2",
+			format_values = {
+				stacks = 1,
+				soul_chance = talent_settings.combat_ability_2.soul_chance * 100
 			},
 			special_rule = {
 				special_rule_name = "psyker_biomancer_discharge_applies_warpfire",
+				identifier = "psyker_biomancer_discharge_applies_warpfire"
+			},
+			passive = {
+				buff_template_name = "psyker_biomancer_warpfire_grants_souls",
 				identifier = "combat_ability"
 			}
 		},
 		psyker_2_tier_6_name_3 = {
-			description = "loc_talent_psyker_biomancy_tier_6_ability_3_description",
-			name = "For 10 seconds after using your combat abilty, your Smite ability casts faster and costs less warp charge",
-			display_name = "loc_talent_psyker_2_tier_6_name_3",
-			icon = "content/ui/materials/icons/talents/psyker_2/psyker_2_tier_6_name_3",
-			icon_position = {
-				14,
-				4
+			description = "loc_talent_biomancer_combat_ability_smite_speed_desc",
+			name = "For seconds after using your combat ability, your smite will charge faster and cost less warp charge.",
+			display_name = "loc_talent_biomancer_combat_ability_smite_speed",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_6_3",
+			format_values = {
+				time = talent_settings.combat_ability_3.duration,
+				charge_speed = math_round((1 - talent_settings.combat_ability_3.smite_attack_speed) * 100),
+				warp_charge = talent_settings.combat_ability_3.warp_charge_amount_smite * 100
 			},
 			special_rule = {
 				special_rule_name = "psyker_biomancer_efficient_smites",
-				identifier = "combat_ability"
+				identifier = "psyker_biomancer_efficient_smites"
 			}
 		}
 	}

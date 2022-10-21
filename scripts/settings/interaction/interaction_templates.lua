@@ -29,10 +29,9 @@ local interaction_templates = {
 		interaction_class_name = "chest"
 	},
 	decoding = {
-		description = "loc_decoding",
-		ui_interaction_type = "mission",
-		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
 		action_text = "loc_action_interaction_decode",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
+		ui_interaction_type = "mission",
 		duration = 0,
 		interaction_class_name = "decoding"
 	},
@@ -45,15 +44,14 @@ local interaction_templates = {
 		interaction_class_name = "door_control_panel"
 	},
 	setup_decoding = {
-		description = "loc_decoding",
+		wield_slot = "slot_device",
 		ui_interaction_type = "mission",
 		stop_anim_event = "servo_finished",
 		start_anim_event = "servo_start",
-		wield_slot = "slot_device",
 		interrupt_anim_event = "servo_interrupt",
-		action_text = "loc_action_interaction_decode",
+		action_text = "loc_action_interaction_plant",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
-		duration = 4,
+		duration = 3.8,
 		interaction_class_name = "setup_decoding"
 	},
 	grenade = {
@@ -117,15 +115,6 @@ local interaction_templates = {
 		interaction_class_name = "inbox",
 		ui_view_name = "inbox_view"
 	},
-	body_shop = {
-		action_text = "loc_action_interaction_view",
-		ui_interaction_type = "point_of_interest",
-		interaction_icon = "content/ui/materials/hud/interactions/icons/barber",
-		description = "loc_training_ground_view",
-		duration = 0,
-		interaction_class_name = "body_shop",
-		ui_view_name = "body_shop_view"
-	},
 	vendor = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",
@@ -144,15 +133,6 @@ local interaction_templates = {
 		interaction_class_name = "marks_vendor",
 		ui_view_name = "marks_vendor_view"
 	},
-	premium_vendor = {
-		action_text = "loc_action_interaction_view",
-		ui_interaction_type = "point_of_interest",
-		interaction_icon = "content/ui/materials/hud/interactions/icons/premium_store",
-		description = "loc_premium_vendor_view_title",
-		duration = 0,
-		interaction_class_name = "premium_vendor",
-		ui_view_name = "premium_vendor_view"
-	},
 	training_ground = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",
@@ -160,7 +140,7 @@ local interaction_templates = {
 		description = "loc_training_ground_view",
 		duration = 0,
 		interaction_class_name = "training_ground",
-		ui_view_name = "training_ground_view"
+		ui_view_name = "training_grounds_view"
 	},
 	contracts = {
 		action_text = "loc_action_interaction_view",
@@ -290,14 +270,15 @@ local interaction_templates = {
 		anim_duration_variable_name_3p = "assist_interaction_duration"
 	},
 	servo_skull_activator = {
-		action_text = "loc_interactable_servo_skull_scanner_deploy",
+		description = "loc_interactable_servo_skull_scanner",
 		ui_interaction_type = "mission",
-		stop_anim_event_3p = "interaction_end",
-		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
+		action_text = "loc_interactable_servo_skull_scanner_deploy",
+		wield_slot = "slot_device",
 		start_anim_event_3p = "interaction_revive",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
+		stop_anim_event_3p = "interaction_end",
 		duration = 1,
-		interaction_class_name = "servo_skull_activator",
-		description = "loc_interactable_servo_skull_scanner"
+		interaction_class_name = "servo_skull_activator"
 	},
 	side_mission = {
 		action_text = "loc_action_interaction_pickup",

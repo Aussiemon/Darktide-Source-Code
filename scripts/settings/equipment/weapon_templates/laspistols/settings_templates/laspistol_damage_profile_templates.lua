@@ -81,7 +81,7 @@ damage_templates.default_laspistol_killshot = {
 	},
 	critical_strike = {
 		cleave_distribution = single_cleave,
-		gibbing_power = gibbing_power.light,
+		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
@@ -95,7 +95,7 @@ damage_templates.default_laspistol_killshot = {
 		}
 	},
 	damage_type = damage_types.laser,
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	suppression_value = {
 		0.5,

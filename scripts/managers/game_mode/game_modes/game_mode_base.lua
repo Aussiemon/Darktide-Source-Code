@@ -37,7 +37,7 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 
 		if bot_backfilling_allowed then
 			self:_register_bot_events()
-			self:_validate_bot_count()
+			self:_validate_bot_backfill()
 
 			while self._queued_bots_n > 0 do
 				self:_handle_bot_spawning()
@@ -48,6 +48,13 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 
 		self._network_event_delegate = network_event_delegate
 	end
+
+	if not DEDICATED_SERVER and settings.cache_local_player_profile then
+		local local_player_id = 1
+		local player = Managers.player:local_player(local_player_id)
+		local player_profile = player:profile()
+		self._cached_player_profile = table.clone_instance(player_profile)
+	end
 end
 
 GameModeBase.destroy = function (self)
@@ -57,6 +64,15 @@ GameModeBase.destroy = function (self)
 		end
 	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	local settings = self._settings
+
+	if not DEDICATED_SERVER and settings.cache_local_player_profile then
+		local cached_profile = self._cached_player_profile
+		local player = Managers.player:local_player(1)
+
+		player:set_profile(cached_profile)
 	end
 end
 
@@ -143,8 +159,8 @@ GameModeBase.hot_join_sync = function (self, sender, channel)
 end
 
 GameModeBase._register_bot_events = function (self)
-	Managers.event:register(self, "host_game_session_manager_player_joined", "_validate_bot_count")
-	Managers.event:register(self, "multiplayer_session_client_disconnected", "_validate_bot_count")
+	Managers.event:register(self, "host_game_session_manager_player_joined", "_on_client_joined")
+	Managers.event:register(self, "multiplayer_session_client_disconnected", "_on_client_left")
 end
 
 GameModeBase._unregister_bot_events = function (self)
@@ -152,44 +168,65 @@ GameModeBase._unregister_bot_events = function (self)
 	Managers.event:unregister(self, "multiplayer_session_client_disconnected")
 end
 
-GameModeBase._validate_bot_count = function (self)
-	if not Managers.bot then
-		return
-	end
+GameModeBase._validate_bot_backfill = function (self)
+	local available_slots = self:_num_available_bot_slots()
 
-	local bot_synchronizer_host = Managers.bot:synchronizer_host()
-
-	if not bot_synchronizer_host then
-		return
-	end
-
-	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
-	local max_players = GameParameters.max_players
-	local num_players = Managers.player:num_human_players()
-	local max_bots = bot_backfilling_allowed and self._settings.max_bots or 0
-	local num_bots = bot_synchronizer_host:num_bots() + self._queued_bots_n
-	local desired_bot_count = max_players - num_players
-	desired_bot_count = math.clamp(desired_bot_count, 0, max_bots)
-
-	if desired_bot_count < num_bots then
-		local bots_to_remove = num_bots - desired_bot_count
-
-		for ii = 1, bots_to_remove do
+	if available_slots < 0 then
+		for ii = 0, available_slots + 1, -1 do
 			if self._queued_bots_n > 0 then
 				self._queued_bots_n = self._queued_bots_n - 1
 			else
 				BotSpawning.despawn_best_bot()
 			end
 		end
-	elseif num_bots < desired_bot_count then
-		local bots_to_spawn = desired_bot_count - num_bots
-		self._queued_bots_n = self._queued_bots_n + bots_to_spawn
+	elseif available_slots > 0 then
+		self._queued_bots_n = self._queued_bots_n + available_slots
 	end
+end
+
+GameModeBase._on_client_joined = function (self, peer_id)
+	local players_at_peer = Managers.player:players_at_peer(peer_id)
+	local num_players_joining = table.size(players_at_peer)
+	local available_slots = self:_num_available_bot_slots()
+	local bots_to_remove = math.min(num_players_joining, -available_slots)
+
+	for i = 1, bots_to_remove do
+		if self._queued_bots_n > 0 then
+			self._queued_bots_n = self._queued_bots_n - 1
+		else
+			BotSpawning.despawn_best_bot()
+		end
+	end
+end
+
+GameModeBase._on_client_left = function (self, removed_players_data)
+	if not Managers.bot then
+		return
+	end
+
+	local available_slots = self:_num_available_bot_slots()
+	local num_players_leaving = #removed_players_data
+	local bots_to_add = math.min(available_slots, num_players_leaving)
+	self._queued_bots_n = self._queued_bots_n + bots_to_add
+end
+
+GameModeBase._num_available_bot_slots = function (self)
+	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
+	local max_players = GameParameters.max_players
+	local num_players = Managers.player:num_ready_human_players()
+	local bot_synchronizer_host = Managers.bot:synchronizer_host()
+	local max_bots = bot_backfilling_allowed and self._settings.max_bots or 0
+	local num_bots = bot_synchronizer_host:num_bots() + self._queued_bots_n
+	local desired_bot_count = max_players - num_players
+	desired_bot_count = math.clamp(desired_bot_count, 0, max_bots)
+
+	return desired_bot_count - num_bots
 end
 
 GameModeBase._handle_bot_spawning = function (self)
 	if self._queued_bots_n > 0 then
-		local profile_name = "darktide_seven_01"
+		local profile_id = math.random(1, 6)
+		local profile_name = "bot_" .. profile_id
 
 		BotSpawning.spawn_bot_character(profile_name)
 

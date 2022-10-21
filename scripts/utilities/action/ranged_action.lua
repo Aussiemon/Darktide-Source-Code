@@ -19,11 +19,11 @@ local RangedAction = {
 		local dropoff_scalar = DamageProfile.dropoff_scalar(hit_distance, damage_profile, lerp_values)
 		local attack_type = AttackSettings.attack_types.ranged
 		local herding_template = damage_profile.herding_template
-		local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "power_level", power_level, "charge_level", charge_level, "dropoff_scalar", dropoff_scalar, "attack_direction", attack_direction, "instakill", instakill, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", attacker_unit, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", weapon_item_or_nil)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "power_level", power_level, "charge_level", charge_level, "dropoff_scalar", dropoff_scalar, "attack_direction", attack_direction, "instakill", instakill, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", attacker_unit, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", weapon_item_or_nil)
 
-		return damage_dealt, attack_result, damage_efficiency
+		return damage_dealt, attack_result, damage_efficiency, hit_weakspot
 	end,
-	armor_explosion = function (is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, attack_direction, damage_config, power_level, charge_level, weapon_item_or_nil)
+	armor_explosion = function (is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, attack_direction, damage_config, power_level, charge_level, weapon_item_or_nil, orgin_slot_or_nil)
 		if not is_server then
 			return false
 		end
@@ -59,11 +59,11 @@ local RangedAction = {
 		local estimated_unit_diameter = breed_or_nil.player_locomotion_constrain_radius or breed_or_nil.broadphase_radius or 1
 		local estimated_exit_position = hit_position + attack_direction * estimated_unit_diameter
 
-		Explosion.create_explosion(world, physics_world, estimated_exit_position, hit_normal, attacker_unit, armor_explosion_template, power_level, charge_level, attack_type, nil, weapon_item_or_nil)
+		Explosion.create_explosion(world, physics_world, estimated_exit_position, hit_normal, attacker_unit, armor_explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, orgin_slot_or_nil)
 
 		return true
 	end,
-	hitmass_explosion = function (is_server, world, physics_world, hit_mass_budget_attack, hit_mass_budget_impact, attacker_unit, hit_unit, hit_position, hit_normal, hit_distance, attack_direction, damage_config, attack_result, power_level, charge_level, weapon_item_or_nil)
+	hitmass_explosion = function (is_server, world, physics_world, hit_mass_budget_attack, hit_mass_budget_impact, attacker_unit, hit_unit, hit_position, hit_normal, hit_distance, attack_direction, damage_config, attack_result, power_level, charge_level, weapon_item_or_nil, orgin_slot_or_nil)
 		if not is_server then
 			return false
 		end
@@ -106,7 +106,7 @@ local RangedAction = {
 
 		local attack_type = AttackSettings.attack_types.explosion
 
-		Explosion.create_explosion(world, physics_world, explosion_position, hit_normal, attacker_unit, explosion_template, power_level, charge_level, attack_type, nil, weapon_item_or_nil)
+		Explosion.create_explosion(world, physics_world, explosion_position, hit_normal, attacker_unit, explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, orgin_slot_or_nil)
 
 		return true
 	end

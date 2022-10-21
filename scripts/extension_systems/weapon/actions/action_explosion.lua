@@ -24,6 +24,7 @@ ActionExplosion.start = function (self, action_settings, t, ...)
 	end
 
 	self:_pay_warp_charge_cost(t, charge_level)
+	self:_check_for_critical_strike()
 
 	if self._is_server then
 		self:_explode(charge_level)
@@ -32,14 +33,21 @@ end
 
 ActionExplosion._explode = function (self, charge_level)
 	local action_settings = self._action_settings
-	local explosion_template = action_settings.explosion_template
-	local power_level = action_settings.power_level
 	local position_component = self._action_module_position_finder_component
-	local position = position_component.position
-	local attack_type = AttackSettings.attack_types.explosion
 	local player_unit = self._player_unit
+	local weapon = self._weapon
+	local item = weapon and weapon.item
+	local origin_item_slot = self._inventory_component.wielded_slot
+	local physics_world = self._physics_world
+	local world = self._world
+	local attack_type = AttackSettings.attack_types.explosion
+	local explosion_template = action_settings.explosion_template
+	local position = position_component.position
+	local power_level = action_settings.power_level
+	local ignore_cover = true
+	local is_critical_strike = self._critical_strike_component.is_active
 
-	Explosion.create_explosion(self._world, self._physics_world, position, Vector3.up(), player_unit, explosion_template, power_level, charge_level, attack_type, nil, self._weapon.item)
+	Explosion.create_explosion(world, physics_world, position, Vector3.up(), player_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item, origin_item_slot)
 end
 
 ActionExplosion.finish = function (self, reason, data, t, time_in_action)

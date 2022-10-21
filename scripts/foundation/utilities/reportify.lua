@@ -6,6 +6,7 @@ Reportify.setup = function (self)
 	self.has_setup = true
 	self.content_revision = APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or ""
 	self.engine_revision = BUILD_IDENTIFIER or Application.build_identifier() or ""
+	self.log_file_path = Application.get_filelog_local() or ""
 	self.project = "BSP"
 end
 
@@ -27,6 +28,7 @@ Reportify.get_data = function (self)
 		},
 		custom = {
 			level = self:_get_level(),
+			log_file_path = self.log_file_path,
 			position = pos,
 			rotation = rot,
 			archetype = player_info.archetype_name,

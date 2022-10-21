@@ -46,7 +46,7 @@ end
 
 GameplayInitStepPlayerEnterGame._player_state_enter = function (self, world, physics_world, level, themes, mission_name, is_server, gameplay_state, clock_handler_client)
 	if not is_server then
-		fassert(clock_handler_client, "[GameplayInitStepPlayerEnterGame] Adaptive Clock Handler Client not initialized.")
+		-- Nothing
 	end
 
 	local player_game_state_mapping = {

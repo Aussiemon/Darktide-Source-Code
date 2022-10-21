@@ -1,3 +1,4 @@
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HubMovementSettingsTemplates = require("scripts/settings/player_character/hub_movement_settings_templates")
@@ -5,6 +6,7 @@ local ReloadTemplates = require("scripts/settings/equipment/reload_templates/rel
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local damage_types = DamageSettings.damage_types
 local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
+local keywords = BuffSettings.keywords
 local RELOAD_STATES = {
 	"none"
 }
@@ -22,27 +24,28 @@ for _, reload_template in pairs(ReloadTemplates) do
 end
 
 local constants = {
-	climb_speed_lerp_interval = 22.5,
 	knocked_down_damage_tick_buff = "knocked_down_damage_tick",
-	acceleration = 19,
+	ladder_top_entering_animation_time = 1,
 	climb_speed = 1.75,
 	player_speed_scale = 1,
-	warp_grabbed_drag_speed = 3,
-	ladder_top_entering_animation_time = 1,
-	air_move_speed_scale = 0.75,
-	air_acceleration = 3,
+	jump_step_up_speed = 2,
 	warp_grabbed_drag_slowdown_distance = 4.5,
+	max_dynamic_weapon_buffs = 4,
 	knocked_down_damage_reduction_buff = "knocked_down_damage_reduction",
+	step_up_max_fall_speed = 2.1,
+	air_move_speed_scale = 0.75,
 	step_up_min_fall_speed = -0.1,
+	slide_move_speed_threshold = 4.2,
 	respawn_beacon_spot_radius = 1,
 	horizontal_climb_scale = 0.25,
-	ladder_top_leaving_time = 1,
-	step_up_max_fall_speed = 2.1,
-	max_dynamic_weapon_buffs = 4,
+	warp_grabbed_drag_speed = 3,
+	ladder_jumping_cooldown = 1,
 	hang_ledge_collision_capsule_radius = 0.5,
 	time_until_fall_down_from_hang_ledge = 30,
-	walk_move_speed = 1.9,
+	respawn_beacon_spot_height = 2.3,
+	air_acceleration = 3,
 	max_component_buffs = 10,
+	beast_of_nurgle_consumed_buff = "chaos_beast_of_nurgle_being_eaten",
 	slide_commit_time = 0.65,
 	backward_move_scale = 0.5,
 	husk_position_lerp_speed = 20,
@@ -54,16 +57,19 @@ local constants = {
 	duration_to_hanging_position_from_hang_ledge = 0.2,
 	ladder_top_leaving_animation_time = 1,
 	ledge_hanging_to_ground_safe_distance = 1.2,
+	ladder_distrupted_backwards_force = 1.7,
 	deceleration = 6,
 	jump_speed = 4,
 	hang_ledge_spawn_offset = 0.5,
 	hub_gravity = 35.46,
 	max_meta_buffs = 10,
 	ladder_jump_backwards_force = 8.5,
+	acceleration = 19,
+	ladder_top_leaving_time = 1,
 	step_up_max_distance = 1.5,
+	climb_speed_lerp_interval = 22.5,
 	netted_drag_destination_size = 0.25,
-	respawn_beacon_spot_height = 2.3,
-	jump_step_up_speed = 2,
+	time_before_slope_protection = 0.25,
 	move_speed = 4,
 	ladder_top_entering_time = 1,
 	warp_grabbed_drag_destination_size = 0.15,
@@ -135,7 +141,13 @@ local constants = {
 	climb_pitch_offset = math.pi / 8,
 	air_directional_speed_scale_angle = math.pi / 2,
 	air_drag_angle = math.pi / 6,
-	slide_friction_function = function (speed, slide_time)
+	sprint_slide_friction_function = function (speed, slide_time, buff_extension)
+		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
+
+		if has_zero_slide_friction then
+			return -1
+		end
+
 		local grace_time = 0.5
 		local lerp_time = 0.2
 
@@ -148,6 +160,32 @@ local constants = {
 
 			if slide_time < grace_time + lerp_time then
 				return math.lerp(0, friction_speed, (slide_time - grace_time) / lerp_time)
+			else
+				return friction_speed
+			end
+		end
+	end,
+	slide_friction_function = function (speed, slide_time, buff_extension)
+		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
+
+		if has_zero_slide_friction then
+			return 0
+		end
+
+		local max_slide_speed = 4.5
+		local friction_threshold = 7
+
+		if max_slide_speed < speed then
+			local p = speed / max_slide_speed - 1
+
+			return math.lerp(12, 30, p * p * p)
+		else
+			local lerp_time = 0.2
+			local speed_threshold = 4
+			local friction_speed = speed < speed_threshold and math.lerp(12, friction_threshold, speed / speed_threshold) or friction_threshold
+
+			if slide_time < lerp_time then
+				return math.lerp(0, friction_speed, slide_time / lerp_time)
 			else
 				return friction_speed
 			end
@@ -560,15 +598,14 @@ local constants = {
 		}
 	}
 }
+constants.move_speed_sq = constants.move_speed^2
+constants.slide_move_speed_threshold_sq = constants.slide_move_speed_threshold^2
 local inventory_component_data = constants.inventory_component_data
 local weapon_component_data = inventory_component_data.weapon
 
 for _, lookups in pairs(buff_target_component_lookups) do
 	for i = 1, #lookups do
 		local key = lookups[i]
-
-		fassert(weapon_component_data[key] == nil, "weapon_component_data already has %q defined.", key)
-
 		weapon_component_data[key] = {
 			default_value = -1,
 			network_type = "buff_id"
@@ -583,23 +620,19 @@ local wield_inputs = {
 	},
 	{
 		value = true,
-		input = "wield_prev"
+		input = "wield_scroll_down"
 	},
 	{
 		value = true,
-		input = "wield_next"
+		input = "wield_scroll_up"
 	}
 }
 local slot_configuration = constants.slot_configuration
 
 for slot_name, config in pairs(slot_configuration) do
-	fassert(config.name == nil, "Variable name \"name\" is occupied.")
-
 	config.name = slot_name
 
 	if config.wieldable and config.wield_input then
-		fassert(not table.find(wield_inputs, config.wield_input), "Same wield input %q to multiple slots.", config.wield_input)
-
 		wield_inputs[#wield_inputs + 1] = {
 			value = true,
 			input = config.wield_input
@@ -648,13 +681,10 @@ for slot_name, config in pairs(slot_configuration) do
 	if slot_dependencies then
 		for _, slot_dependency in pairs(slot_dependencies) do
 			local slot_dependency_config = slot_configuration[slot_dependency]
-
-			fassert(slot_dependency_config, "Slot %s does not exist in player constants slot config and is not a valid dependency, please fix the player constants.", slot_dependency)
-
 			local slot_dependency_config_dependencies = slot_dependency_config.slot_dependencies
 
 			if slot_dependency_config_dependencies then
-				fassert(not table.contains(slot_dependency_config_dependencies, slot_name), "Slot %s is introducing a circular dependency by including a dependency on slot %s, please fix the player constants.", slot_name, slot_dependency)
+				-- Nothing
 			end
 		end
 	end
@@ -678,10 +708,8 @@ local quick_wield_configuration = constants.quick_wield_configuration
 
 for from_slot, to_slot in pairs(quick_wield_configuration) do
 	if from_slot ~= "default" then
-		fassert(slot_configuration[from_slot], "quick_wield_config has a slot_name %q that does not exist in slot_configuration.", from_slot)
+		-- Nothing
 	end
-
-	fassert(slot_configuration[to_slot], "quick_wield_config has a slot_name %q that does not exist in slot_configuration.", to_slot)
 end
 
 return settings("PlayerCharacterConstants", constants)

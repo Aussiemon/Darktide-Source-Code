@@ -6,6 +6,7 @@ local reload_template = {
 		"replace_canister"
 	},
 	lift_weapon = {
+		overheat_clear_speed = 1,
 		anim_1p = "reload",
 		time = 9,
 		state_transitions = {
@@ -15,19 +16,19 @@ local reload_template = {
 		},
 		functionality = {
 			refill_ammunition = 6.7,
-			clear_overheat = 3.1,
-			remove_ammunition = 3.1
+			clear_overheat = 2.5,
+			remove_ammunition = 2
 		}
 	},
 	remove_canister = {
 		anim_1p = "reload_middle",
 		time = 4.5,
 		state_transitions = {
-			replace_canister = 2.8,
-			lift_weapon = 3.6
+			replace_canister = 2.1,
+			lift_weapon = 3
 		},
 		functionality = {
-			refill_ammunition = 3.1
+			refill_ammunition = 3
 		}
 	},
 	replace_canister = {

@@ -9,10 +9,10 @@ local guidance_vo_sergeant_a = {
 			"loc_sergeant_a__asset_cult_breaking_wheel_04"
 		},
 		sound_events_duration = {
-			6.667167,
-			5.5565,
-			5.825376,
-			6.408855
+			6.67625,
+			4.805917,
+			4.692167,
+			6.290104
 		},
 		sound_event_weights = {
 			0.25,
@@ -33,7 +33,7 @@ local guidance_vo_sergeant_a = {
 		},
 		sound_events_duration = {
 			8.447042,
-			5.964813,
+			5.3585,
 			5.754958,
 			4.521771
 		},

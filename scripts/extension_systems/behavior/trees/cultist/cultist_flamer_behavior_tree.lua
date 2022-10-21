@@ -23,7 +23,7 @@ local COMBAT = {
 		action_data = action_data.follow
 	},
 	{
-		"BtShootFlamerAction",
+		"BtShootLiquidBeamAction",
 		name = "shoot",
 		action_data = action_data.shoot
 	},

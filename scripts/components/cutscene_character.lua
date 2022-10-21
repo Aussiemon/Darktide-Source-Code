@@ -83,12 +83,7 @@ CutsceneCharacter.component_data = {
 			"Path of Trust 06",
 			"Path of Trust 07",
 			"Path of Trust 08",
-			"Path of Trust 09",
-			"Path of Trust 10",
-			"Path of Trust 11",
-			"Path of Trust 12",
-			"Path of Trust 13",
-			"Traitor Captain Intro"
+			"Path of Trust 09"
 		},
 		options_values = {
 			"none",
@@ -114,12 +109,7 @@ CutsceneCharacter.component_data = {
 			"path_of_trust_06",
 			"path_of_trust_07",
 			"path_of_trust_08",
-			"path_of_trust_09",
-			"path_of_trust_10",
-			"path_of_trust_11",
-			"path_of_trust_12",
-			"path_of_trust_13",
-			"traitor_captain_intro"
+			"path_of_trust_09"
 		}
 	},
 	character_type = {

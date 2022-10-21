@@ -17,7 +17,7 @@ end
 HudElementCutsceneFading.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementCutsceneFading.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
-	local fade_progress = 0
+	local fade_progress = nil
 
 	if self._fade_duration then
 		if self._fading_in then
@@ -36,10 +36,10 @@ HudElementCutsceneFading.update = function (self, dt, t, ui_renderer, render_set
 		fade_progress = 1
 	end
 
-	local anim_progress = fade_progress
+	local anim_progress = fade_progress or 0
 
 	if self._fade_easing_function then
-		anim_progress = self._fade_easing_function(fade_progress)
+		anim_progress = self._fade_easing_function(anim_progress)
 	end
 
 	self._fade_ui:update(dt, t, fade_progress ~= nil, anim_progress)

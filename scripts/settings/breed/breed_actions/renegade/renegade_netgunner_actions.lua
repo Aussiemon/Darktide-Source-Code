@@ -100,6 +100,7 @@ local action_data = {
 		leave_when_reached_destination = true,
 		is_assaulting = true,
 		move_type = "combat_vector",
+		vo_event = "seen_netgunner_flee",
 		run_speed = 5,
 		move_anim_event = "assault_fwd"
 	},

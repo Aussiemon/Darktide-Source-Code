@@ -16,7 +16,7 @@ BotPlayer.is_human_controlled = function (self)
 end
 
 BotPlayer.name = function (self)
-	local display_name = self._profile.display_name
+	local display_name = self._profile.display_name or self._profile.name
 
 	if display_name then
 		return display_name

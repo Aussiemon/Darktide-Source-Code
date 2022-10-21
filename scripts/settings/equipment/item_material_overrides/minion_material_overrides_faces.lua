@@ -253,6 +253,21 @@ local material_overrides = {
 				0.013
 			}
 		}
+	},
+	chaos_ogryn_face_tattoo_05 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_ogryn/attachments_base/textures/tattoos/head_a_tattoo_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.2,
+				0.05,
+				0,
+				0.013
+			}
+		}
 	}
 }
 

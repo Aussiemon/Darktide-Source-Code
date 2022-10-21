@@ -2,6 +2,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local FlamerGasTemplates = require("scripts/settings/projectile/flamer_gas_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
@@ -194,11 +195,13 @@ weapon_template.actions = {
 			start_modifier = 0.5
 		},
 		fx = {
-			pre_shoot_sfx_alias = "ranged_pre_shoot",
-			looping_shoot_sfx_alias = "ranged_shooting",
-			impact_effect = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_impact_delay",
-			pre_shoot_abort_sfx_alias = "ranged_abort",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
+			stop_looping_3d_sound_effect = "wwise/events/weapon/stop_flamethrower_fire_loop_3d",
+			looping_shoot_sfx_alias = "ranged_shooting",
+			pre_shoot_abort_sfx_alias = "ranged_abort",
+			pre_shoot_sfx_alias = "ranged_pre_shoot",
+			impact_effect = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_impact_delay",
+			looping_3d_sound_effect = "wwise/events/weapon/play_flamethrower_fire_loop_3d",
 			duration = 0.3,
 			stream_effect = {
 				speed = 23,
@@ -270,9 +273,11 @@ weapon_template.actions = {
 		},
 		fx = {
 			pre_shoot_sfx_alias = "ranged_pre_shoot",
+			stop_looping_3d_sound_effect = "wwise/events/weapon/stop_flamethrower_fire_loop_3d",
 			looping_shoot_sfx_alias = "ranged_shooting",
 			impact_effect = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_impact_delay",
 			pre_shoot_abort_sfx_alias = "ranged_abort",
+			looping_3d_sound_effect = "wwise/events/weapon/play_flamethrower_fire_loop_3d",
 			stream_effect = {
 				speed = 15,
 				name = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_code_control",
@@ -384,7 +389,7 @@ weapon_template.actions = {
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 4,
 		allowed_chain_actions = {
@@ -406,7 +411,6 @@ weapon_template.actions = {
 		kind = "push",
 		damage_time = 0.2,
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -454,12 +458,12 @@ weapon_template.actions = {
 				chain_time = 0.6
 			}
 		},
-		inner_push_rad = math.pi * 0.4,
-		outer_push_rad = math.pi * 0.75,
-		inner_damage_profile = DamageProfileTemplates.push_test,
-		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
-		outer_damage_type = damage_types.physical
+		inner_push_rad = math.pi * 0.1,
+		outer_push_rad = math.pi * 0.2,
+		inner_damage_profile = DamageProfileTemplates.weapon_special_push,
+		inner_damage_type = damage_types.blunt_heavy,
+		outer_damage_profile = DamageProfileTemplates.weapon_special_push_outer,
+		outer_damage_type = damage_types.blunt_heavy
 	},
 	action_inspect = {
 		skip_3p_anims = true,
@@ -550,11 +554,7 @@ weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {
 	ammo_up_size_of_flame_down = {
 		flamer_p1_m1_size_of_flame_stat = -0.1,
@@ -710,6 +710,34 @@ weapon_template.perks = {
 			}
 		}
 	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_crowd_control"
+	},
+	{
+		display_name = "loc_weapon_keyword_close_combat"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "full_auto",
+		display_name = "loc_ranged_attack_secondary_braced",
+		type = "brace"
+	},
+	special = {
+		display_name = "loc_weapon_special_weapon_bash",
+		type = "melee"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 20,
+	min = 5
 }
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)

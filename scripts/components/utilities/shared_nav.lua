@@ -1,8 +1,6 @@
 local SharedNav = {}
 
 SharedNav.create_nav_info = function ()
-	fassert(rawget(_G, "LevelEditor"), "[create_nav_info] LevelEditor only method.")
-
 	local component_nav_info = {
 		nav_world = nil,
 		nav_tag_cost_table = nil,
@@ -71,8 +69,6 @@ local function _editor_setup_shared_nav_world(nav_info, with_traverse_logic)
 end
 
 SharedNav.check_new_navmesh_generated = function (nav_info, component_nav_guid, with_traverse_logic)
-	fassert(rawget(_G, "LevelEditor"), "[check_new_navmesh_generated] LevelEditor only method.")
-
 	local nav_gen_guid = LevelEditor:nav_gen_guid()
 
 	if nav_info.nav_gen_guid ~= nav_gen_guid or nav_info.nav_world == nil then

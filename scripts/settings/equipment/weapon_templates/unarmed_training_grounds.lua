@@ -3,6 +3,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
@@ -105,5 +106,10 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
+weapon_template.breed_footstep_intervals = {
+	human = FootstepIntervalsTemplates.unarmed_human,
+	ogryn = FootstepIntervalsTemplates.unarmed_ogryn
+}
+weapon_template.hide_slot = true
 
 return weapon_template

@@ -17,8 +17,6 @@ math.sign = function (x)
 end
 
 math.normalize_01 = function (value, min, max)
-	fassert(min < max, "invalid range")
-
 	return math.clamp((value - min) / (max - min), 0, 1)
 end
 
@@ -112,8 +110,6 @@ math.round = function (value)
 end
 
 math.smoothstep = function (value, min, max)
-	fassert(min ~= max, "Division by zero.")
-
 	local x = math.clamp((value - min) / (max - min), 0, 1)
 
 	return x^3 * (x * (x * 6 - 15) + 10)
@@ -240,8 +236,6 @@ math.point_is_inside_2d_triangle = function (pos, p1, p2, p3)
 end
 
 math.cartesian_to_polar = function (x, y)
-	fassert(x ~= 0 and y ~= 0, "Can't convert a zero vector to polar coordinates")
-
 	local radius = math.sqrt(x * x + y * y)
 	local theta = math.atan(y / x) * 180 / math.pi
 
@@ -610,8 +604,6 @@ math.rand_normal = function (min, max, variance, strict_min, strict_max)
 end
 
 math.rand_utf8_string = function (string_length, ignore_chars)
-	fassert(string_length > 0, "String length passed to math.rand_string has to be greater than 0")
-
 	ignore_chars = ignore_chars or {
 		"\"",
 		"'",
@@ -648,7 +640,7 @@ math.is_uuid = function (value)
 		return false
 	end
 
-	if string.len(value) ~= 36 then
+	if #value ~= 36 then
 		return false
 	end
 
@@ -669,13 +661,6 @@ math.get_uniformly_random_point_inside_sector = function (radius1, radius2, angl
 	local dy = r * math.cos(angle)
 
 	return dx, dy
-end
-
-math.random_inside_unit_circle = function ()
-	local x = math.random() * 2 - 1
-	local y = math.random() * 2 - 1
-
-	return x, y
 end
 
 math.centroid = function (points)
@@ -738,7 +723,6 @@ math.get_median_value = function (t)
 	local target_table = {}
 
 	for index, value in pairs(t) do
-		fassert(type(value) == "number", "Item '" .. index .. "' is not a number. Only tables with all numerical values are allowed.")
 		table.insert(target_table, value)
 	end
 

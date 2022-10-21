@@ -24,7 +24,7 @@ GameplayInitStepExtensionUnits.update = function (self, main_dt, main_t)
 	end
 
 	local extension_manager = Managers.state.extension
-	local are_units_added_and_registered = extension_manager:update_time_slice_add_and_register_units()
+	local are_units_added_and_registered = extension_manager:update_time_slice_add_and_register_level_units()
 
 	if not are_units_added_and_registered then
 		return nil, nil
@@ -49,7 +49,7 @@ GameplayInitStepExtensionUnits._init_extension_unit_registration = function (sel
 	local units = Level.units(level, true)
 	local optional_category = nil
 
-	extension_manager:init_time_slice_add_and_register_units(world, units, optional_category)
+	extension_manager:init_time_slice_add_and_register_level_units(world, units, optional_category)
 end
 
 implements(GameplayInitStepExtensionUnits, GameplayInitStepInterface)

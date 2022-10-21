@@ -13,6 +13,24 @@ hitscan_templates.default_autogun_bullet = {
 		}
 	}
 }
+hitscan_templates.autogun_p1_m2_bullet = {
+	power_level = 350,
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_autogun_assault
+		}
+	}
+}
+hitscan_templates.autogun_p1_m1_bullet = {
+	power_level = 700,
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_autogun_assault
+		}
+	}
+}
 overrides.snp_autogun_bullet = {
 	parent_template_name = "default_autogun_bullet",
 	overrides = {

@@ -78,8 +78,11 @@ local breed_data = {
 		[stagger_types.killshot] = 0.5
 	},
 	stagger_thresholds = {
-		[stagger_types.light_ranged] = 2,
-		[stagger_types.killshot] = 2,
+		[stagger_types.light] = 4,
+		[stagger_types.medium] = 8,
+		[stagger_types.heavy] = 16,
+		[stagger_types.light_ranged] = 5,
+		[stagger_types.killshot] = 5,
 		[stagger_types.sticky] = 5
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_rifleman,
@@ -87,7 +90,6 @@ local breed_data = {
 	vfx = require("scripts/settings/breed/breeds/renegade/renegade_common_vfx"),
 	behavior_tree_name = breed_name,
 	animation_variables = {
-		"moving_attack_fwd_speed",
 		"anim_move_speed",
 		"lean"
 	},
@@ -101,11 +103,11 @@ local breed_data = {
 		max_distance_modifier_percentage = 0.7,
 		suppressed_max_distance_from_combat_vector = 50,
 		max_distance_from_target = 50,
-		max_distance_from_target_z_below = -1,
+		max_distance_from_target_z_below = -10,
 		search_radius = 35,
-		max_distance_from_combat_vector = 40,
+		max_distance_from_combat_vector = 60,
 		suppressed_max_distance_from_target = 60,
-		max_distance_from_target_z = 5,
+		max_distance_from_target_z = 10,
 		suppressed_search_radius = 50,
 		cover_combat_ranges = {
 			far = true
@@ -176,14 +178,18 @@ local breed_data = {
 		threat_decay_per_second = 5
 	},
 	aim_config = {
-		lerp_speed = 5,
+		lean_variable_name = "lean",
 		target = "head_aim_target",
 		distance = 5,
-		lean_variable_name = "lean",
+		target_node = "enemy_aim_target_03",
+		lerp_speed = 5,
 		lean_variable_modifier = -0.2,
 		node = "j_neck",
-		target_node = "enemy_aim_target_03",
-		require_line_of_sight = true
+		require_line_of_sight = true,
+		valid_aim_combat_ranges = {
+			far = true,
+			close = true
+		}
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
@@ -335,9 +341,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

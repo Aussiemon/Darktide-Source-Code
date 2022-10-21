@@ -22,17 +22,13 @@ local template_names = {
 	"base_combat_attack",
 	"base_stance",
 	"dash",
-	"gunlugger_stance",
 	"melee_stance",
 	"ogryn_charge",
-	"psyker_proximity_tag",
 	"psyker_stance",
 	"psyker_shout",
 	"ranged_stance",
 	"squad_leader_shout",
-	"targeted_dash",
-	"zealot_invisibility",
-	"zealot_shout"
+	"targeted_dash"
 }
 
 _require_ability_templates(path_prefix, template_names)

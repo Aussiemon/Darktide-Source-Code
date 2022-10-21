@@ -1,5 +1,6 @@
 local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
+local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
@@ -12,6 +13,7 @@ local HitScan = require("scripts/utilities/attack/hit_scan")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionBackstabSettings = require("scripts/settings/minion_backstab/minion_backstab_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local MinionPushFx = require("scripts/utilities/minion_push_fx")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
@@ -42,18 +44,24 @@ MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
 		end
 	end
 
+	local valid_angle, dot, flat_to_target_direction = MinionAttack.aim_at_position(unit, scratchpad, t, action_data, target_position)
+
+	return valid_angle, dot, flat_to_target_direction
+end
+
+MinionAttack.aim_at_position = function (unit, scratchpad, t, action_data, target_position)
 	local aim_node = Unit.node(unit, scratchpad.aim_node_name)
 	local unit_position = Unit.world_position(unit, aim_node)
 	local to_target = target_position - unit_position
-	local to_target_direction = Vector3.normalize(to_target)
-	local flat_to_target_direction = Vector3.flat(to_target_direction)
+	local flat_to_target = Vector3.flat(to_target)
+	local to_target_direction = Vector3.normalize(flat_to_target)
 	local unit_rotation = Unit.local_rotation(unit, 1)
 	local unit_forward = Quaternion.forward(unit_rotation)
-	local dot = Vector3.dot(unit_forward, flat_to_target_direction)
+	local dot = Vector3.dot(unit_forward, to_target_direction)
 	local valid_angle = true
 
 	if scratchpad.start_rotation_timing == nil and dot < AIM_DOT_THRESHOLD then
-		local wanted_rotation = Quaternion.look(flat_to_target_direction)
+		local wanted_rotation = Quaternion.look(to_target_direction)
 
 		scratchpad.locomotion_extension:set_wanted_rotation(wanted_rotation)
 
@@ -63,7 +71,7 @@ MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
 	scratchpad.current_aim_position:store(target_position)
 	MinionAttack.update_scope_reflection(unit, scratchpad, t, action_data)
 
-	return valid_angle, dot, flat_to_target_direction
+	return valid_angle, dot, to_target_direction
 end
 
 MinionAttack.update_scope_reflection = function (unit, scratchpad, t, action_data)
@@ -189,10 +197,22 @@ local function _spread_direction(target_unit, minion_unit, shoot_direction, spre
 end
 
 MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier)
+	local toughness_broken_grace_settings = AttackIntensitySettings.toughness_broken_grace
+	local diff_toughness_broken_grace_settings = Managers.state.difficulty:get_table_entry_by_challenge(toughness_broken_grace_settings)
+	local toughness_extension = ScriptUnit.has_extension(target_unit, "toughness_system")
+	local toughness_broken_grace = diff_toughness_broken_grace_settings.duration
+	local toughness_broken_grace_spread_multiplier = diff_toughness_broken_grace_settings.spread_multiplier
+	local should_hit = true
+
+	if not shoot_template.shotgun_blast and toughness_extension and toughness_extension:time_since_toughness_broken() < toughness_broken_grace then
+		should_hit = false
+	end
+
 	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name)
 	local from_position = Unit.world_position(attachment_unit, node)
 	local shoot_direction = Vector3.normalize(shoot_position - from_position)
-	local spread_direction = _spread_direction(target_unit, unit, shoot_direction, shoot_template.spread, optional_spread_multiplier)
+	local spread = should_hit and shoot_template.spread or shoot_template.spread * toughness_broken_grace_spread_multiplier
+	local spread_direction = _spread_direction(target_unit, unit, shoot_direction, spread, optional_spread_multiplier)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local power_level = Managers.state.difficulty:get_minion_attack_power_level(breed, "ranged")
@@ -202,7 +222,14 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	local collision_filter = shoot_template.collision_filter
 	local hits = HitScan.raycast(physics_world, from_position, spread_direction, range, nil, collision_filter)
 	local is_server = true
-	local end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil)
+	local end_position = nil
+
+	if should_hit then
+		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+	elseif hits then
+		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * 0.25, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+	end
+
 	end_position = end_position or from_position + spread_direction * range
 	local min_position = NetworkConstants.min_position
 	local max_position = NetworkConstants.max_position
@@ -222,9 +249,14 @@ MinionAttack.init_scratchpad_shooting_variables = function (unit, scratchpad, ac
 	local spawn_component = blackboard.spawn
 	scratchpad.world = spawn_component.world
 	scratchpad.physics_world = spawn_component.physics_world
-	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	local weapon_item = visual_loadout_extension:slot_item(action_data.inventory_slot)
-	scratchpad.weapon_item = weapon_item
+	local inventory_slot = action_data.inventory_slot
+
+	if inventory_slot then
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local weapon_item = visual_loadout_extension:slot_item(inventory_slot)
+		scratchpad.weapon_item = weapon_item
+	end
+
 	scratchpad.current_aim_position = Vector3Box()
 	scratchpad.aim_node_name = breed.aim_config.node
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
@@ -289,8 +321,12 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 	local first_shoot_timing = optional_shoot_timing or DEFAULT_FIRST_SHOOT_TIMING
 	scratchpad.next_shoot_timing = t + first_shoot_timing
 	local num_shots = action_data.num_shots
-	local diff_num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
-	scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2])
+
+	if num_shots then
+		local diff_num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
+		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2])
+	end
+
 	scratchpad.shooting = true
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
@@ -593,7 +629,7 @@ end
 
 local FRIENDLY_BROADPHASE_RESULTS = {}
 
-MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data)
+MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data, t, optional_from_position)
 	table.clear(FRIENDLY_BROADPHASE_RESULTS)
 
 	local broadphase_system = scratchpad.broadphase_system
@@ -603,7 +639,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data)
 	local broadphase_relation = action_data.push_minions_side_relation
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = action_data.push_minions_radius
-	local from = POSITION_LOOKUP[unit]
+	local from = optional_from_position or POSITION_LOOKUP[unit]
 	local num_results = broadphase:query(from, radius, FRIENDLY_BROADPHASE_RESULTS, target_side_names)
 
 	if num_results < 1 then
@@ -614,6 +650,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data)
 	local damage_profile = action_data.push_minions_damage_profile
 	local damage_type = action_data.push_minions_damage_type
 	local pushed_minions = scratchpad.pushed_minions
+	local push_minions_fx_template = action_data.push_minions_fx_template
 
 	for i = 1, num_results do
 		local hit_unit = FRIENDLY_BROADPHASE_RESULTS[i]
@@ -637,13 +674,19 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data)
 					pushed_minions[hit_unit] = true
 
 					Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
+
+					if push_minions_fx_template and (not scratchpad.push_minions_fx_cooldown or scratchpad.push_minions_fx_cooldown <= t) then
+						MinionPushFx.play_fx(unit, hit_unit, push_minions_fx_template)
+
+						scratchpad.push_minions_fx_cooldown = t + math.random_range(action_data.push_minions_fx_cooldown[1], action_data.push_minions_fx_cooldown[2])
+					end
 				end
 			end
 		end
 	end
 end
 
-local _check_max_z_diff, _check_weapon_reach, _get_weapon_reach, _melee_hit, _melee_with_broadphase, _melee_with_oobb, _melee_with_weapon_reach, _sucessfull_dodge = nil
+local _check_max_z_diff, _check_weapon_reach, _get_weapon_reach, _melee_hit, _melee_with_broadphase, _melee_with_oobb, _melee_with_weapon_reach = nil
 local DEFAULT_DODGE_REACH = 2.75
 
 MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
@@ -680,7 +723,7 @@ MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit,
 			end
 
 			if not hit and is_dodging then
-				_sucessfull_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
+				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
 
 				sweep_hit_units_cache[hit_unit] = true
 			end
@@ -702,12 +745,10 @@ MinionAttack.melee = function (unit, breed, scratchpad, blackboard, target_unit,
 		hit = _melee_with_weapon_reach(unit, breed, scratchpad, blackboard, target_unit, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
 	end
 
-	if not hit then
-		local ground_impact_fx_template = action_data.ground_impact_fx_template
+	local ground_impact_fx_template = action_data.ground_impact_fx_template
 
-		if ground_impact_fx_template then
-			GroundImpact.play(unit, physics_world, ground_impact_fx_template)
-		end
+	if ground_impact_fx_template then
+		GroundImpact.play(unit, physics_world, ground_impact_fx_template)
 	end
 
 	return hit
@@ -790,10 +831,16 @@ MinionAttack.melee_oobb_extents = function (unit, action_data)
 	local half_dodge_range = dodge_range * 0.5
 	local half_dodge_height = dodge_height * 0.5
 	local dodge_hit_size = Vector3(half_dodge_width, half_dodge_range, half_dodge_height)
-	local rotation = Unit.local_rotation(unit, 1)
+	local node = action_data.oobb_node and Unit.node(unit, action_data.oobb_node) or 1
+	local self_position = Unit.world_position(unit, node)
+	local rotation = Unit.local_rotation(unit, node)
 	local forward = Quaternion.forward(rotation)
-	local self_position = POSITION_LOOKUP[unit]
 	local position = self_position + forward * half_range
+	local offset_bwd = action_data.offset_bwd
+
+	if offset_bwd then
+		position = position - forward * offset_bwd
+	end
 
 	return position, rotation, hit_size, dodge_hit_size
 end
@@ -816,7 +863,11 @@ MinionAttack.melee_broadphase_extents = function (unit, action_data)
 end
 
 function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_position, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, offtarget_hit_or_nil)
-	local damage_profile = override_damage_profile_or_nil or offtarget_hit_or_nil and action_data.offtarget_damage_profile or action_data.damage_profile
+	local side_system = Managers.state.extension:system("side_system")
+	local is_ally = side_system:is_ally(unit, target_unit)
+	local friendly_fire_damage_profile = action_data.friendly_fire_damage_profile
+	local offtarget_damage_profile = action_data.offtarget_damage_profile
+	local damage_profile = override_damage_profile_or_nil or is_ally and friendly_fire_damage_profile or offtarget_hit_or_nil and offtarget_damage_profile or action_data.damage_profile
 	local attack_type = attack_types.melee
 	local target_weapon_template = nil
 	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
@@ -857,56 +908,12 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 
 	ImpactEffect.play(target_unit, nil, damage, damage_type, nil, result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-	if result == attack_results.blocked and not action_data.ignore_blocked then
+	if result == attack_results.blocked and not action_data.ignore_blocked and not damage_profile.unblockable then
 		local blocked_component = Blackboard.write_component(blackboard, "blocked")
 		blocked_component.is_blocked = true
 	end
 
 	return result
-end
-
-local _sucessfull_dodge_parameters = {}
-
-function _sucessfull_dodge(dodging_unit, attacking_unit, attack_type, dodge_type, attacking_breed)
-	local dodging_unit_fx_extension = ScriptUnit.has_extension(dodging_unit, "fx_system")
-
-	if dodging_unit_fx_extension then
-		local optional_position = nil
-		local optional_except_sender = false
-		local is_elite = attacking_breed and attacking_breed.tags and attacking_breed.tags.elite
-		local is_special = attacking_breed and attacking_breed.tags and attacking_breed.tags.special
-		local is_monster = attacking_breed and attacking_breed.tags and attacking_breed.tags.monster
-
-		table.clear(_sucessfull_dodge_parameters)
-
-		_sucessfull_dodge_parameters.enemy_type = is_monster and "monster" or is_special and "special" or is_elite and "elite" or nil
-
-		dodging_unit_fx_extension:trigger_exclusive_gear_wwise_event("dodge_success_melee", _sucessfull_dodge_parameters, optional_position, optional_except_sender)
-	end
-
-	local dodging_unit_buff_extension = ScriptUnit.has_extension(dodging_unit, "buff_system")
-
-	if dodging_unit_buff_extension then
-		local param_table = dodging_unit_buff_extension:request_proc_event_param_table()
-		param_table.dodging_unit = dodging_unit
-		param_table.attacking_unit = attacking_unit
-		param_table.attack_type = attack_type
-
-		dodging_unit_buff_extension:add_proc_event(proc_events.on_successful_dodge, param_table)
-	end
-
-	if DEDICATED_SERVER then
-		local breed_name = attacking_breed.name
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local dodging_player = player_unit_spawn_manager:owner(dodging_unit)
-		local is_human = dodging_player and dodging_player:is_human_controlled()
-
-		if is_human then
-			dodge_type = dodge_type or dodge_types.dodge
-
-			Managers.stats:record_dodge(dodging_player, breed_name, attack_type, dodge_type)
-		end
-	end
 end
 
 function _get_weapon_reach(action_data, attack_event)
@@ -983,7 +990,7 @@ function _melee_with_weapon_reach(unit, breed, scratchpad, blackboard, target_un
 	end
 
 	if not hit and is_dodging then
-		_sucessfull_dodge(target_unit, unit, attack_types.melee, dodge_type, breed)
+		Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, dodge_type, breed)
 	end
 
 	return hit
@@ -1031,7 +1038,7 @@ function _melee_with_oobb(unit, breed, scratchpad, blackboard, target_unit, acti
 			end
 
 			if not hit and is_dodging then
-				_sucessfull_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
+				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
 			end
 		end
 	end
@@ -1077,7 +1084,7 @@ function _melee_with_broadphase(unit, breed, scratchpad, action_data, blackboard
 			end
 
 			if not hit and is_dodging then
-				_sucessfull_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
+				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
 			end
 		end
 	end

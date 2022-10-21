@@ -13,9 +13,6 @@ PropUnitDataExtension.setup_from_component = function (self, armor_data_name)
 	self._breed = breed
 	local hit_zones = breed.hit_zones
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, hit_zones)
-
-	fassert(self._hit_zone_actors_lookup.center_mass, "PropData %q does not have center_mass hit zone", breed.name)
-
 	local bind_pose = Unit.local_pose(unit, 1)
 	self._bind_pose = Matrix4x4Box(bind_pose)
 	self._node_to_bind_pose = {}
@@ -56,11 +53,15 @@ PropUnitDataExtension.breed_name = function (self)
 end
 
 PropUnitDataExtension.archetype = function (self)
-	ferror("PropUnitDataExtension does not support archetype.")
+	ferror("[PropUnitDataExtension:archetype()] Props don't have archetypes.")
 end
 
 PropUnitDataExtension.archetype_name = function (self)
-	ferror("PropUnitDataExtension does not support archetype.")
+	ferror("[PropUnitDataExtension:archetype_name()] Props don't have archetypes.")
+end
+
+PropUnitDataExtension.specialization = function (self)
+	ferror("[PropUnitDataExtension:specialization()] Props don't have specializations.")
 end
 
 PropUnitDataExtension.bind_pose = function (self)

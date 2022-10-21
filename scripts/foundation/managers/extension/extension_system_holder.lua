@@ -4,9 +4,6 @@ local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gamepl
 local ExtensionSystemHolder = class("ExtensionSystemHolder")
 
 ExtensionSystemHolder.init = function (self, extension_system_creation_context, system_configuration, system_init_data, fixed_frame_time, use_time_slice)
-	fassert(extension_system_creation_context.extension_manager)
-	fassert(extension_system_creation_context.world)
-
 	self._extension_manager = extension_system_creation_context.extension_manager
 	self._world = extension_system_creation_context.world
 	self._is_server = extension_system_creation_context.is_server
@@ -132,37 +129,26 @@ ExtensionSystemHolder.pre_update = function (self, dt, t)
 	self._dt = dt
 	self._t = t
 
-	Profiler.start("ExtensionSystemHolder:pre_update")
 	self:_system_update("pre_update", self._system_update_context, dt, t)
-	Profiler.stop("ExtensionSystemHolder:pre_update")
 end
 
 ExtensionSystemHolder.fixed_update = function (self, dt, t, frame)
-	Profiler.start("ExtensionSystemHolder:fixed_update")
-
 	local context = self._system_update_context
 	context.fixed_frame = frame
 
 	self:_system_update("fixed_update", context, dt, t)
-	Profiler.stop("ExtensionSystemHolder:fixed_update")
 end
 
 ExtensionSystemHolder.update = function (self)
-	Profiler.start("ExtensionSystemHolder:update")
 	self:_system_update("update", self._system_update_context, self._dt, self._t)
-	Profiler.stop("ExtensionSystemHolder:update")
 end
 
 ExtensionSystemHolder.post_update = function (self)
-	Profiler.start("ExtensionSystemHolder:post_update")
 	self:_system_update("post_update", self._system_update_context, self._dt, self._t)
-	Profiler.stop("ExtensionSystemHolder:post_update")
 end
 
 ExtensionSystemHolder.physics_async_update = function (self)
-	Profiler.start("ExtensionSystemHolder:physics_async_update")
 	self:_system_update("physics_async_update", self._system_update_context, self._dt, self._t)
-	Profiler.stop("ExtensionSystemHolder:physics_async_update")
 end
 
 ExtensionSystemHolder._system_update = function (self, update_func, system_update_context, dt, t)
@@ -175,9 +161,7 @@ ExtensionSystemHolder._system_update = function (self, update_func, system_updat
 	for i = 1, #update_list do
 		local system = update_list[i]
 
-		Profiler.start(system.NAME)
 		system[update_func](system, system_update_context, dt, t)
-		Profiler.stop(system.NAME)
 	end
 end
 
@@ -198,8 +182,6 @@ end
 local TEMP_SYSTEM_LIST = {}
 
 ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_frame, simulated_components, system_map, server_correction_system_map)
-	Profiler.start("ExtensionSystemHolder:fixed_update_resimulate_unit")
-
 	local context = self._system_update_context
 	local to_frame = context.fixed_frame
 	local systems = self._systems
@@ -227,6 +209,8 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 	end
 
 	local dt = self._fixed_frame_time
+	context.resimulate_from_frame = from_frame
+	context.resimulate_to_frame = to_frame
 
 	for frame = from_frame, to_frame do
 		context.fixed_frame = frame
@@ -243,35 +227,22 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 	end
 
 	table.clear(TEMP_SYSTEM_LIST)
-	Profiler.stop("ExtensionSystemHolder:fixed_update_resimulate_unit")
 end
 
 ExtensionSystemHolder.hot_join_sync = function (self, sender, channel)
-	Profiler.start("ExtensionSystemHolder:hot_join_sync")
-
 	for i, system in ipairs(self._systems) do
 		if system.hot_join_sync then
-			Profiler.start(system.NAME)
 			system:hot_join_sync(sender, channel)
-			Profiler.stop(system.NAME)
 		end
 	end
-
-	Profiler.stop("ExtensionSystemHolder:hot_join_sync")
 end
 
 ExtensionSystemHolder.on_gameplay_post_init = function (self, level, themes)
-	Profiler.start("ExtensionSystemHolder:on_gameplay_post_init")
-
 	for i, system in ipairs(self._systems) do
 		if system.on_gameplay_post_init then
-			Profiler.start(system.NAME)
 			system:on_gameplay_post_init(level, themes)
-			Profiler.stop(system.NAME)
 		end
 	end
-
-	Profiler.stop("ExtensionSystemHolder:on_gameplay_post_init")
 end
 
 ExtensionSystemHolder.is_init_ready = function (self)
@@ -286,9 +257,6 @@ end
 
 ExtensionSystemHolder.update_time_slice_init_systems = function (self)
 	local init_data = self._init_data
-
-	fassert(init_data, "[ExtensionSystemHolder] Instantiate class with 'use_time_slice'")
-
 	local last_index = init_data.last_index
 	local extension_system_creation_context = init_data.parameters.extension_system_creation_context
 	local system_configuration = init_data.parameters.system_configuration
@@ -330,9 +298,6 @@ end
 
 ExtensionSystemHolder.init_time_slice_on_gameplay_post_init = function (self, level, themes)
 	local post_init_data = self._post_init_data
-
-	fassert(post_init_data, "[ExtensionSystemHolder] Instantiate class with 'use_time_slice'")
-
 	post_init_data.last_index = 0
 	post_init_data.ready = false
 	post_init_data.parameters.level = level
@@ -341,16 +306,11 @@ end
 
 ExtensionSystemHolder.update_time_slice_post_init_systems = function (self)
 	local post_init_data = self._post_init_data
-
-	fassert(post_init_data, "[ExtensionSystemHolder] Instantiate class with 'use_time_slice'")
-
 	local last_index = post_init_data.last_index
 	local level = post_init_data.parameters.level
 	local themes = post_init_data.parameters.themes
 	local num_systems = #self._systems
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
-
-	Profiler.start("ExtensionSystemHolder:update_time_slice_post_init_systems")
 
 	for index = last_index + 1, num_systems do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
@@ -362,9 +322,7 @@ ExtensionSystemHolder.update_time_slice_post_init_systems = function (self)
 		local system = self._systems[index]
 
 		if system.on_gameplay_post_init then
-			Profiler.start(system.NAME)
 			system:on_gameplay_post_init(level, themes)
-			Profiler.stop(system.NAME)
 		end
 
 		post_init_data.last_index = index
@@ -375,19 +333,13 @@ ExtensionSystemHolder.update_time_slice_post_init_systems = function (self)
 		GameplayInitTimeSlice.set_finished(post_init_data)
 	end
 
-	Profiler.stop("ExtensionSystemHolder:update_time_slice_post_init_systems")
-
 	return self:is_post_init_ready()
 end
 
 ExtensionSystemHolder.destroy = function (self)
-	Profiler.start("ExtensionSystemHolder:destroy")
-
 	for _, system in ipairs(self._systems) do
 		system:destroy()
 	end
-
-	Profiler.stop("ExtensionSystemHolder:destroy")
 end
 
 return ExtensionSystemHolder

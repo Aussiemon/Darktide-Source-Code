@@ -6,6 +6,7 @@ PickupAnimationExtension.init = function (self, extension_init_context, unit)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._owner_system = extension_init_context.owner_system
+	self._pickup_animation_started = false
 end
 
 PickupAnimationExtension.setup_from_component = function (self)
@@ -39,11 +40,16 @@ PickupAnimationExtension.start_place_animation = function (self, destination_uni
 
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 
+	self._pickup_animation_started = true
 	local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
 
 	if interactee_ext then
 		interactee_ext:set_active(false)
 	end
+end
+
+PickupAnimationExtension.pickup_animation_started = function (self)
+	return self._pickup_animation_started
 end
 
 PickupAnimationExtension.update = function (self, unit, dt, t)

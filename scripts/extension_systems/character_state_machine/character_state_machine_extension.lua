@@ -36,6 +36,7 @@ CharacterStateMachineExtension._init_components = function (self, unit_data, ext
 	move_state.is_crouching_transition_start_t = 0
 	move_state.can_jump = true
 	move_state.method = "idle"
+	move_state.can_exit_crouch = true
 	local ladder_character_state_component = unit_data:write_component("ladder_character_state")
 	ladder_character_state_component.ladder_cooldown = 0
 	ladder_character_state_component.ladder_unit_id = NetworkConstants.invalid_level_unit_id
@@ -89,9 +90,6 @@ CharacterStateMachineExtension._create_state_machine = function (self, unit, is_
 
 	for name, class in pairs(state_class_list) do
 		local state_instance = class:new(state_init_context, name)
-
-		assert(name and states[name] == nil)
-
 		states[name] = state_instance
 	end
 
@@ -138,7 +136,8 @@ CharacterStateMachineExtension._create_init_context = function (self, unit, worl
 		action_sweep_component = unit_data:read_component("action_sweep"),
 		player_character_constants = extension_init_data.player_character_constants,
 		breed = extension_init_data.breed,
-		archetype = unit_data:archetype()
+		archetype = unit_data:archetype(),
+		specialization = unit_data:specialization()
 	}
 
 	return state_init_context

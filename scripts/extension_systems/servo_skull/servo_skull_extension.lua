@@ -128,7 +128,7 @@ ServoSkullExtension.at_start_of_spline = function (self)
 	self._pulse_timer = 0
 
 	self:set_servo_skull_state(STATES.traveling)
-	self._mission_objective_system:music_event(MissionSoundEvents.scanning_travel_start)
+	self._mission_objective_system:sound_event(MissionSoundEvents.scanning_travel_start)
 end
 
 ServoSkullExtension.at_end_of_spline = function (self, last_spline)
@@ -218,9 +218,6 @@ ServoSkullExtension._play_vo = function (self, scanning_vo_line)
 	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 	local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
 	local voice_profile = mission_objective:mission_giver_voice_profile()
-
-	fassert(voice_profile, "[MissionObjectiveZoneScanExtension] No mission_giver_voice_profile is specified in mission objective \"%s\"", current_objective_name)
-
 	local concept = MissionObjectiveScanning.vo_settings.concept
 
 	Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)

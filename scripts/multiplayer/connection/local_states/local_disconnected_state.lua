@@ -1,13 +1,8 @@
 local LocalDisconnectedState = class("LocalDisconnectedState")
 
 LocalDisconnectedState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.host_peer_id) == "string", "Peer id required")
-	assert(shared_state.engine_lobby, "Engine lobby required")
-	assert(type(shared_state.event_list) == "table", "Event list required")
-
 	self._shared_state = shared_state
-	local has_eac = GameParameters.enable_EAC_feature
+	local has_eac = false
 
 	if has_eac and Managers.eac_client:in_session() then
 		Managers.eac_client:end_session()

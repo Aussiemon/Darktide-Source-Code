@@ -9,35 +9,36 @@ local TestifySnippets = {
 		if not is_any_character_created then
 			Testify:make_request("create_random_character")
 		end
-	end,
-	skip_title_and_main_menu_and_create_character_if_none = function ()
-		if not DEDICATED_SERVER then
-			Testify:make_request("skip_splash_screen")
-			Testify:make_request("skip_title_screen")
-
-			local is_any_character_created = Testify:make_request("is_any_character_created")
-
-			if not is_any_character_created then
-				Testify:make_request("create_random_character")
-			else
-				Testify:make_request("wait_for_main_menu_play_button_enabled")
-				Testify:make_request("press_play_main_menu")
-			end
-		end
-	end,
-	load_mission = function (mission_key)
-		Testify:make_request("wait_for_state_gameplay_reached")
-		Testify:make_request("load_mission", mission_key)
 	end
 }
 
-TestifySnippets.load_first_mission_from_mission_board_on_peer = function (peer_id)
-	local first_mission_board_entry = TestifySnippets.debug_function_first_option("Mission Board", peer_id)
+TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function ()
+	if not DEDICATED_SERVER then
+		Testify:make_request("skip_splash_screen")
+		TestifySnippets.skip_title_screen()
 
-	TestifySnippets.activate_debug_function("Mission Board", first_mission_board_entry, peer_id)
+		local is_any_character_created = Testify:make_request("is_any_character_created")
+
+		if not is_any_character_created then
+			Testify:make_request("create_random_character")
+		else
+			Testify:make_request("wait_for_main_menu_play_button_enabled")
+			Testify:make_request("press_play_main_menu")
+		end
+	end
 end
 
-TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, resistance, circumstance_name, side_mission)
+TestifySnippets.skip_title_screen = function ()
+	Testify:make_request("skip_title_screen")
+	Testify:make_request("skip_privacy_policy_popup_if_displayed")
+end
+
+TestifySnippets.load_mission = function (mission_key)
+	Testify:make_request("wait_for_state_gameplay_reached")
+	Testify:make_request("load_mission", mission_key)
+end
+
+TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, resistance, circumstance_name, side_mission, peer_id)
 	challenge = challenge or 1
 	resistance = resistance or 1
 	circumstance_name = circumstance_name or "default"
@@ -50,7 +51,11 @@ TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, 
 		side_mission = side_mission
 	}
 
-	Testify:make_request("load_mission_in_mission_board", params)
+	if peer_id == nil then
+		Testify:make_request("load_mission_in_mission_board", params)
+	else
+		Testify:make_request_on_client(peer_id, "load_mission_in_mission_board", true, params)
+	end
 end
 
 TestifySnippets.reload_current_mission = function ()
@@ -93,7 +98,7 @@ end
 
 TestifySnippets.wait_for_cinematic_to_be_over = function ()
 	if DEDICATED_SERVER then
-		TestifySnippets.send_request_to_all_peers("wait_for_cinematic_to_be_over", nil, nil, true)
+		TestifySnippets.send_request_to_all_peers("wait_for_cinematic_to_be_over", true)
 	else
 		Testify:make_request("wait_for_cinematic_to_be_over")
 	end
@@ -103,27 +108,6 @@ TestifySnippets.spawn_bot = function ()
 	Testify:make_request("wait_for_master_items_data")
 	Testify:make_request("spawn_bot")
 	Testify:make_request("wait_for_bot_synchronizer_ready")
-end
-
-TestifySnippets.activate_debug_function = function (debug_function, params, peer_id)
-	local debug = {
-		debug_function = debug_function,
-		params = params
-	}
-
-	if peer_id then
-		Testify:make_request_on_client(peer_id, "activate_debug_function", true, debug)
-	else
-		Testify:make_request("activate_debug_function", debug)
-	end
-end
-
-TestifySnippets.debug_function_first_option = function (debug_function, peer_id)
-	if peer_id then
-		return Testify:make_request_on_client(peer_id, "debug_function_first_option", true, debug_function)
-	else
-		return Testify:make_request("debug_function_first_option", debug_function)
-	end
 end
 
 TestifySnippets.set_difficulty = function (difficulty)
@@ -172,8 +156,6 @@ TestifySnippets.send_request_to_all_peers = function (request_name, wait_for_res
 				num_retries = num_retries - 1
 			end
 		end
-
-		fassert(request_sent, "[Testify] Peer %s not found after %s retries.", peer_id, num_retries)
 	end
 end
 
@@ -452,6 +434,20 @@ TestifySnippets.is_debug_stripped = function ()
 	local is_debug_stripped = true
 
 	return is_debug_stripped
+end
+
+TestifySnippets.first_peer = function ()
+	local peers = Testify:peers()
+
+	return peers[1]
+end
+
+TestifySnippets.peers_except_first = function ()
+	local peers = Testify:peers()
+
+	table.remove(peers, 1)
+
+	return peers
 end
 
 return TestifySnippets

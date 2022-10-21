@@ -58,7 +58,7 @@ local unarmored = {
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_shield",
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
@@ -270,7 +270,7 @@ local armored = {
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_shield",
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
@@ -524,11 +524,13 @@ local super_armor = {
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
 				append_husk_to_event_name = true
-			},
+			}
+		},
+		blocked = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_armor",
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
@@ -701,6 +703,18 @@ local disgustingly_resilient = {
 			}
 		},
 		damage_negated = {},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
+				append_husk_to_event_name = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",
+				append_husk_to_event_name = true
+			}
+		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",

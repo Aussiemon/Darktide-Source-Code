@@ -7,10 +7,11 @@ local renegade_shocktrooper_default = {
 	shoot_sound_event = "wwise/events/weapon/play_weapon_shotgun_chaos",
 	scope_reflection_vfx_name = "content/fx/particles/enemies/assault_scope_flash",
 	collision_filter = "filter_minion_shooting",
+	shotgun_blast = true,
 	scope_reflection_timing = 1,
 	scope_reflection_distance = 3,
 	hit_scan_template = HitScanTemplates.shocktrooper_shotgun_bullet,
-	spread = math.degrees_to_radians(2),
+	spread = math.degrees_to_radians(1),
 	damage_type = damage_types.minion_pellet,
 	line_effect = LineEffects.renegade_pellet
 }

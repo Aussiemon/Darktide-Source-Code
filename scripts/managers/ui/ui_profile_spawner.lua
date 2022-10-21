@@ -62,7 +62,7 @@ UIProfileSpawner._node = function (self, node_name)
 	end
 end
 
-UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, state_machine, animation_event)
+UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, state_machine, animation_event, force_highest_mip)
 	if self._loading_profile_data then
 		self._loading_profile_data.loader:destroy()
 
@@ -89,7 +89,8 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, st
 		rotation = rotation and QuaternionBox(rotation),
 		loading_items = loading_items,
 		state_machine = state_machine,
-		animation_event = animation_event
+		animation_event = animation_event,
+		force_highest_mip = force_highest_mip
 	}
 end
 
@@ -253,9 +254,10 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 			local rotation = loading_profile_data.rotation and QuaternionBox.unbox(loading_profile_data.rotation)
 			local state_machine = loading_profile_data.state_machine
 			local animation_event = loading_profile_data.animation_event
+			local force_highest_mip = loading_profile_data.force_highest_mip
 			local profile = loading_profile_data.profile
 
-			self:_spawn_character_profile(profile, loader, position, rotation, state_machine, animation_event)
+			self:_spawn_character_profile(profile, loader, position, rotation, state_machine, animation_event, force_highest_mip)
 
 			self._loading_profile_data = nil
 		end
@@ -263,7 +265,13 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 end
 
 UIProfileSpawner.spawned = function (self)
-	return self._character_spawn_data ~= nil
+	local character_spawn_data = self._character_spawn_data
+
+	if character_spawn_data then
+		return character_spawn_data.streaming_complete
+	end
+
+	return false
 end
 
 UIProfileSpawner.loading = function (self)
@@ -433,20 +441,18 @@ UIProfileSpawner.ignore_slot = function (self, slot_id)
 	self._ignored_slots[slot_id] = true
 end
 
-UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, state_machine, animation_event)
+UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, state_machine, animation_event, force_highest_mip)
 	local loadout = profile.loadout
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
 	local breed_name = archetype and archetype.breed or profile.breed
+	local optional_base_unit = profile.optional_base_unit
 	local breed_settings = Breeds[breed_name]
-	local base_unit = breed_settings.base_unit
+	local base_unit = optional_base_unit or breed_settings.base_unit
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 	local unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, position, rotation)
 	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, true)
-
-	Unit.set_texture_streamer_force_highest_mip(unit_3p, true, true)
-
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local gear_slots = {}
 	local ignored_slots = self._ignored_slots
@@ -488,7 +494,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 			for _, parent_slot_name in pairs(parent_slot_names) do
 				local parent_slot_unit_3p = slots[parent_slot_name].unit_3p
 				local parent_item = slots[parent_slot_name].item
-				local parent_item_deform_overrides = parent_item.deform_overrides or {}
+				local parent_item_deform_overrides = parent_item and parent_item.deform_overrides or {}
 
 				for _, parent_item_deform_override in pairs(parent_item_deform_overrides) do
 					deform_overrides[#deform_overrides + 1] = parent_item_deform_override
@@ -525,6 +531,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	end
 
 	local spawn_data = {
+		streaming_complete = true,
 		slots = slots,
 		archetype_name = archetype_name,
 		breed_name = breed_name,
@@ -540,6 +547,18 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local wield_slot_id = self._request_wield_slot_id or "slot_unarmed"
 
 	self:wield_slot(wield_slot_id)
+
+	if force_highest_mip then
+		-- Nothing
+	end
+end
+
+UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p)
+	local character_spawn_data = self._character_spawn_data
+
+	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then
+		character_spawn_data.streaming_complete = true
+	end
 end
 
 UIProfileSpawner.wield_slot = function (self, slot_id)

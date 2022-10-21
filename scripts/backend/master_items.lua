@@ -1,7 +1,7 @@
 local MasterItems = {}
 
 local function assert_backend()
-	fassert(Managers and Managers.backend, "Backend manager not available")
+	return
 end
 
 MasterItems.default_inventory = function (archetype_name, game_mode_settings_or_nil)
@@ -78,12 +78,9 @@ local function _fallback_item(gear)
 
 	local fallback_name = gear.slots and FALLBACK_ITEMS_BY_SLOT[gear.slots[1]]
 
-	assert(fallback_name, string.format("No fallback item found for %s", gear.masterDataInstance.id))
 	Log.warning("MasterItemCache", string.format("Using fallback with name %s", fallback_name))
 
 	local fallback = rawget(MasterItems.get_cached(), fallback_name)
-
-	assert(fallback, string.format("No fallback item found with name %s", fallback_name))
 
 	return fallback
 end
@@ -132,7 +129,7 @@ local function _update_master_data(item_instance)
 	end)
 end
 
-local function _item_plus_overrides(gear, gear_id)
+local function _item_plus_overrides(gear, gear_id, is_preview_item)
 	local item_instance = {
 		__gear = gear,
 		__gear_id = gear_id
@@ -150,6 +147,10 @@ local function _item_plus_overrides(gear, gear_id)
 				return rawget(item_instance, "__gear_id")
 			end
 
+			if field_name == "gear" then
+				return rawget(item_instance, "__gear")
+			end
+
 			local master_item = rawget(item_instance, "__master_item")
 
 			if not master_item then
@@ -161,7 +162,11 @@ local function _item_plus_overrides(gear, gear_id)
 			return master_item[field_name]
 		end,
 		__newindex = function (t, field_name, value)
-			ferror("Not allowed to modify inventory items - %s[%s]", rawget(item_instance, "__gear_id"), field_name)
+			if is_preview_item then
+				rawset(t, field_name, value)
+			else
+				ferror("Not allowed to modify inventory items - %s[%s]", rawget(item_instance, "__gear_id"), field_name)
+			end
 		end,
 		__tostring = function (t)
 			local master_item = rawget(item_instance, "__master_item")
@@ -199,6 +204,10 @@ local function _store_item_plus_overrides(data)
 				return rawget(item_instance, "__gear_id")
 			end
 
+			if field_name == "gear" then
+				return rawget(item_instance, "__gear")
+			end
+
 			local master_item = rawget(item_instance, "__master_item")
 
 			if not master_item then
@@ -230,6 +239,21 @@ MasterItems.get_item_instance = function (gear, gear_id)
 		return nil
 	else
 		return _item_plus_overrides(gear, gear_id)
+	end
+end
+
+MasterItems.create_preview_item_instance = function (item)
+	local gear = item.__gear
+	local gear_id = item.__gear_id
+
+	if not gear then
+		Log.warning("MasterItemCache", string.format("Gear list missing gear with id %s", gear_id))
+
+		return nil
+	else
+		local allow_modifications = true
+
+		return _item_plus_overrides(gear, gear_id, allow_modifications)
 	end
 end
 

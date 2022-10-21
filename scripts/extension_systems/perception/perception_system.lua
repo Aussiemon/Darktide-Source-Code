@@ -86,8 +86,6 @@ PerceptionSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 PerceptionSystem.register_prioritized_unit_update = function (self, unit)
-	fassert(self._update_units[unit], "[PerceptionSystem] Tried to register non-normal update unit %q as prioritized update.", unit)
-
 	local perception_extension = self._unit_to_extension_map[unit]
 	self._prioritized_update_units[unit] = perception_extension
 end
@@ -95,17 +93,11 @@ end
 local UPDATE_ALL_UNITS_TIME = 1
 
 PerceptionSystem.pre_update = function (self, context, dt, t)
-	Profiler.start("BotPerceptionExtension")
 	self:pre_update_extension("BotPerceptionExtension", dt, t, context)
-	Profiler.stop("BotPerceptionExtension")
 end
 
 PerceptionSystem.update = function (self, context, dt, t)
-	Profiler.start("PerceptionSystem:update()")
-	Profiler.start("BotPerceptionExtension")
 	self:update_extension("BotPerceptionExtension", dt, t, context)
-	Profiler.stop("BotPerceptionExtension")
-	Profiler.start("prioritized_perception")
 
 	local num_prioritized_update_units = 0
 	local prioritized_update_units = self._prioritized_update_units
@@ -115,9 +107,6 @@ PerceptionSystem.update = function (self, context, dt, t)
 
 		num_prioritized_update_units = num_prioritized_update_units + 1
 	end
-
-	Profiler.stop("prioritized_perception")
-	Profiler.start("perception")
 
 	local update_units = self._update_units
 	local current_update_unit = self._current_update_unit
@@ -136,13 +125,10 @@ PerceptionSystem.update = function (self, context, dt, t)
 		current_update_unit, current_update_extension = next(update_units, current_update_unit)
 	end
 
-	Profiler.stop("perception")
 	table.clear(prioritized_update_units)
 
 	self._current_update_unit = current_update_unit
 	self._current_update_extension = current_update_extension
-
-	Profiler.stop("PerceptionSystem:update()")
 end
 
 PerceptionSystem.on_reload = function (self)

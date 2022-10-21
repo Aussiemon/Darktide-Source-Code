@@ -4,11 +4,6 @@ local RPCS = {
 local RemoteSlotClaimState = class("RemoteSlotClaimState")
 
 RemoteSlotClaimState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.reserve_timeout) == "number", "Numeric reserver timeout required")
-	assert(type(shared_state.slot_reserver) == "table", "Slot reserver is required")
-
 	self._shared_state = shared_state
 	self._claim_done = false
 	self._claim_success = false

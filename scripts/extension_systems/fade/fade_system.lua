@@ -1,7 +1,7 @@
 local FadeSystem = class("FadeSystem", "ExtensionSystemBase")
 local DEFAULT_MIN_DISTANCE = 0.5
 local DEFAULT_MAX_DISTANCE = 0.7
-local DEFUALT_MAX_HEIGHT_DIFFERENCE = 1
+local DEFAULT_MAX_HEIGHT_DIFFERENCE = 1
 FadeSystem.system_extensions = {
 	"FadeExtension"
 }
@@ -43,7 +43,7 @@ FadeSystem.on_add_extension = function (self, world, unit, extension_name)
 
 	min_distance = min_distance or DEFAULT_MIN_DISTANCE
 	max_distance = max_distance or DEFAULT_MAX_DISTANCE
-	max_height_difference = max_height_difference or DEFUALT_MAX_HEIGHT_DIFFERENCE
+	max_height_difference = max_height_difference or DEFAULT_MAX_HEIGHT_DIFFERENCE
 
 	Fade.register_unit(self._fade_system, unit, min_distance, max_distance, max_height_difference)
 

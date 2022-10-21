@@ -9,6 +9,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local TextUtilities = require("scripts/utilities/ui/text")
+local InputDevice = require("scripts/managers/input/input_device")
 local BLUR_TIME = 0.3
 local ConstantElementPopupHandler = class("ConstantElementPopupHandler", "ConstantElementBase")
 ConstantElementPopupHandler.INPUT_DIR_UP = 1
@@ -128,8 +129,9 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 		popup_height = height
 	}
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
+	local enter_popup_sound = data.enter_popup_sound or UISoundEvents.system_popup_enter
 
-	self:_play_sound(UISoundEvents.system_popup_enter)
+	self:_play_sound(enter_popup_sound)
 
 	if #self._button_widgets > 0 and not self._using_cursor_navigation then
 		self:_select_button_index(1)
@@ -138,7 +140,7 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	self._input_frame_delay = 1
 end
 
-ConstantElementPopupHandler._cleanup_presentation = function (self, ui_renderer)
+ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup, ui_renderer)
 	if self._on_enter_anim_id then
 		self:_stop_animation(self._on_enter_anim_id)
 
@@ -150,11 +152,20 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, ui_renderer)
 		popup_height = height
 	}
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
+	local exit_popup_sound = active_popup.data.exit_popup_sound or UISoundEvents.system_popup_exit
 
-	self:_play_sound(UISoundEvents.system_popup_exit)
+	if not active_popup.stop_exit_sound then
+		self:_play_sound(exit_popup_sound)
+	end
 end
 
 ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
+	local active_popup = self._active_popup
+
+	if active_popup.closing then
+		return
+	end
+
 	local content = widget.content
 	local callback = content.callback
 
@@ -162,13 +173,17 @@ ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 		callback()
 	end
 
-	local active_popup = self._active_popup
-
 	if active_popup and content.close_on_pressed then
 		local popup_id = active_popup.id
+		active_popup.closing = true
+		active_popup.stop_exit_sound = content.stop_exit_sound
 
 		Managers.event:trigger("event_remove_ui_popup", popup_id)
 	end
+end
+
+ConstantElementPopupHandler.trigger_widget_callback = function (self, widget)
+	self:_cb_on_button_pressed(widget)
 end
 
 ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_renderer)
@@ -189,11 +204,12 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 	local current_column = 0
 	local widgets_on_row = 0
 	local total_height_spacing = ConstantElementPopupHandlerSettings.total_height_spacing
+	local options_missing_hotkeys = false
 	local num_options = #options
 
 	for i = 1, num_options do
 		local option = options[i]
-		local template_type = option.template_type or "default_button"
+		local template_type = option.template_type or "terminal_button_small"
 		local widget_name = "button_" .. i
 		local pass_template = ButtonPassTemplates[template_type]
 		local button_size = pass_template.size_function and pass_template.size_function(self, option, ui_renderer) or pass_template.size
@@ -204,11 +220,20 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 		local hotkey = option.hotkey
 		local text = nil
 		text = hotkey and TextUtilities.localize_with_button_hint(hotkey, option.text, option.text_params) or Localize(option.text, option.text_params ~= nil, option.text_params)
+		options_missing_hotkeys = not hotkey or options_missing_hotkeys
 		content.text = text
 		content.hotkey = option.hotkey
 		content.callback = option.callback
 		content.close_on_pressed = option.close_on_pressed
-		content.hotspot.pressed_callback = callback(self, "_cb_on_button_pressed", widget)
+		content.stop_exit_sound = option.stop_exit_sound
+		local hotspot = content.hotspot
+		hotspot.pressed_callback = callback(self, "_cb_on_button_pressed", widget)
+		local on_pressed_sound = option.on_pressed_sound
+
+		if on_pressed_sound then
+			hotspot.on_pressed_sound = on_pressed_sound
+		end
+
 		local text_style = widget.style.text
 		local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
 		local text_length = min_button_width
@@ -269,6 +294,7 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 		end
 	end
 
+	self._gamepad_hotkey_input = not options_missing_hotkeys
 	self._total_buttons_height = total_buttons_height
 end
 
@@ -454,6 +480,12 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 end
 
 ConstantElementPopupHandler._select_button_index = function (self, index)
+	local gamepad_active = InputDevice.gamepad_active
+
+	if gamepad_active and self._gamepad_hotkey_input then
+		return
+	end
+
 	local button_widgets = self._button_widgets
 
 	for i = 1, #button_widgets do
@@ -468,6 +500,7 @@ ConstantElementPopupHandler._update_button_input = function (self, input_service
 	local input_handled = false
 	local button_widgets = self._button_widgets
 	local current_selected_button_index = self._selected_button_index
+	local gamepad_active = InputDevice.gamepad_active
 
 	if current_selected_button_index then
 		local input_direction = nil
@@ -556,9 +589,9 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 
 	if next_active_popup ~= self._active_popup then
 		if self._active_popup and not self._on_exit_anim_id then
-			self._active_popup = nil
+			self:_cleanup_presentation(self._active_popup, ui_renderer)
 
-			self:_cleanup_presentation(ui_renderer)
+			self._active_popup = nil
 		end
 
 		if next_active_popup and not self._on_exit_anim_id then

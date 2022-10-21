@@ -1,13 +1,13 @@
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local WarpCharge = require("scripts/utilities/warp_charge")
 local PlayerUnitAction = require("scripts/extension_systems/visual_loadout/utilities/player_unit_action")
-local CheckProcFunctionTemplates = require("scripts/settings/buff/check_proc_function_templates")
-local ConditionalFunctionTemplates = require("scripts/settings/buff/conditional_function_templates")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
+local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
@@ -22,7 +22,7 @@ local templates = {
 			[buff_stat_buffs.ranged_weakspot_damage] = 1
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -77,7 +77,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.reload_speed] = 0.5
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_kill_weakspot
+		check_proc_func = CheckProcFunctions.on_weakspot_kill
 	},
 	weapon_trait_ranged_movement_speed_on_kill = {
 		predicted = true,
@@ -89,7 +89,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 1.25
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_kill
+		check_proc_func = CheckProcFunctions.on_kill
 	},
 	weapon_trait_melee_attack_speed_on_sticky_kill = {
 		predicted = true,
@@ -102,7 +102,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.attack_speed] = 0.25
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_sticky_kill
+		check_proc_func = CheckProcFunctions.on_sticky_kill
 	},
 	weapon_trait_melee_attack_speed_on_special_smite_kill = {
 		predicted = true,
@@ -115,7 +115,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.attack_speed] = 0.2
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_special_smite_kill
+		check_proc_func = CheckProcFunctions.on_special_smite_kill
 	},
 	weapon_trait_melee_activate_weapon_special_on_wield = {
 		predicted = true,
@@ -157,7 +157,7 @@ local templates = {
 			local remove_percentage_to_remove = 0.05
 			local warp_charge_component = template_data.unit_data_extension:write_component("warp_charge")
 
-			WarpCharge.decrease_immediate(remove_percentage_to_remove, warp_charge_component)
+			WarpCharge.decrease_immediate(remove_percentage_to_remove, warp_charge_component, template_context.unit)
 		end
 	},
 	weapon_trait_nonlethal_bops_increase_damage_of_next = {
@@ -179,7 +179,7 @@ local templates = {
 				return
 			end
 
-			local kill = params.result == attack_results.died
+			local kill = params.attack_result == attack_results.died
 
 			if kill then
 				template_data.active = false
@@ -195,7 +195,7 @@ local templates = {
 		max_stacks = 1,
 		class_name = "proc_buff",
 		proc_events = {
-			[buff_proc_events.on_push] = 1
+			[buff_proc_events.on_push_hit] = 1
 		},
 		proc_func = function (params, template_data, template_context)
 			local is_server = template_context.is_server
@@ -306,12 +306,12 @@ local templates = {
 		end,
 		proc_func = function (params, template_data, template_context)
 			local weapon_special = params.weapon_special
-			local result = params.result
-			local died = result == "died"
+			local attack_result = params.attack_result
+			local died = attack_result == "died"
 
 			if weapon_special and not died then
 				template_data.active = true
-			elseif result then
+			elseif attack_result then
 				template_data.active = false
 			end
 		end,
@@ -334,8 +334,6 @@ local templates = {
 			template_data.active = false
 		end,
 		proc_func = function (params, template_data, template_context)
-			local weapon_special = params.weapon_special
-			local result = params.result
 			local unit = template_context.unit
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -360,7 +358,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.damage_taken_multiplier] = -0.2
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_crit
+		check_proc_func = CheckProcFunctions.on_crit
 	},
 	weapon_trait_attack_speed_on_critical_strike = {
 		predicted = true,
@@ -373,7 +371,7 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.attack_speed] = 0.2
 		},
-		check_proc_func = CheckProcFunctionTemplates.on_crit
+		check_proc_func = CheckProcFunctions.on_crit
 	},
 	weapon_trait_melee_weapon_special_max_activations = {
 		predicted = true,
@@ -417,7 +415,7 @@ templates.weapon_trait_reload_speed_on_quad_sweep = {
 	predicted = true,
 	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_sweep] = 1,
+		[buff_proc_events.on_sweep_finish] = 1,
 		[buff_proc_events.on_reload] = 1
 	},
 	conditional_stat_buffs = {
@@ -453,7 +451,7 @@ templates.weapon_trait_uninterruptable_on_big_sweep = {
 	class_name = "proc_buff",
 	active_duration = 4,
 	proc_events = {
-		[buff_proc_events.on_sweep] = 1
+		[buff_proc_events.on_sweep_finish] = 1
 	},
 	proc_keywords = {
 		buff_keywords.uninterruptible

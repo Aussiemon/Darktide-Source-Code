@@ -25,13 +25,10 @@ function _template_settings_test(weapon_template)
 	local anim_state_machine_3p = weapon_template.anim_state_machine_3p
 	local breed_anim_state_machine_3p = weapon_template.breed_anim_state_machine_3p
 
-	fassert(anim_state_machine_3p or breed_anim_state_machine_3p, "Weapon template %q is missing anim_state_machine_3p or breed_anim_state_machine_3p entry.", weapon_template_name)
-	fassert(anim_state_machine_3p == nil or breed_anim_state_machine_3p == nil, "Weapon template %q has both anim_state_machine_3p and breed_anim_state_machine_3p defined, please remove one of them.", weapon_template_name)
-
 	if breed_anim_state_machine_3p then
 		for breed_name, breed in pairs(Breeds) do
 			if Breed.is_player(breed) then
-				fassert(breed_anim_state_machine_3p[breed_name] ~= nil, "Weapon template %q breed_anim_state_machine_3p is missing entry for %q breed.", weapon_template_name, breed_name)
+				-- Nothing
 			end
 		end
 	end
@@ -39,35 +36,23 @@ function _template_settings_test(weapon_template)
 	local anim_state_machine_1p = weapon_template.anim_state_machine_1p
 	local breed_anim_state_machine_1p = weapon_template.breed_anim_state_machine_1p
 
-	fassert(anim_state_machine_1p or breed_anim_state_machine_1p, "Weapon template %q is missing anim_state_machine_1p or breed_anim_state_machine_1p entry.", weapon_template_name)
-	fassert(anim_state_machine_1p == nil or breed_anim_state_machine_1p == nil, "Weapon template %q has both anim_state_machine_1p and breed_anim_state_machine_1p defined, please remove one of them.", weapon_template_name)
-
 	if breed_anim_state_machine_1p then
 		for breed_name, breed in pairs(Breeds) do
 			if Breed.is_player(breed) then
-				fassert(breed_anim_state_machine_1p[breed_name] ~= nil, "Weapon template %q breed_anim_state_machine_1p is missing entry for %q breed.", weapon_template_name, breed_name)
+				-- Nothing
 			end
 		end
 	end
 
 	local keywords = weapon_template.keywords
-
-	fassert(keywords, "Weapon template %q is missing keywords table.", weapon_template_name)
-
 	local overheat_configuration = weapon_template.overheat_configuration
 
 	if overheat_configuration then
 		local auto_vent_delay = overheat_configuration.auto_vent_delay
-
-		fassert(auto_vent_delay, "weapon template %q overheat_configuration requries auto_vent_delay.", weapon_template_name)
-
 		local network_type = weapon_component_data.overheat_last_charge_at_t.network_type
 		local network_type_info = Network.type_info(network_type)
 		local min = network_type_info.min
 		local time_network_type_can_represent_backwards_in_time = math.abs(min * GameParameters.fixed_time_step)
-
-		fassert(auto_vent_delay <= time_network_type_can_represent_backwards_in_time, "weapon template %q overheat_configuration. auto_vent_delay is larger than what the current network_type (%q) can represent backwards in time (%.5f). Change what network_type \"overheat_last_charge_at_t\" to something that can represent it.", weapon_template_name, network_type, time_network_type_can_represent_backwards_in_time)
-
 		local vent_interval = overheat_configuration.vent_interval
 
 		if not vent_interval then
@@ -102,7 +87,7 @@ function _action_settings_test(weapon_template)
 	local action_kind_tests = require("scripts/settings/equipment/tests/action_kind_tests")
 
 	for action_name, _ in pairs(MANDATORY_ACTIONS) do
-		fassert(weapon_template.actions[action_name], "weapon_template %q is missing mandatory_action %q", weapon_template.name, action_name)
+		-- Nothing
 	end
 
 	local action_inputs = weapon_template.action_inputs
@@ -117,15 +102,8 @@ function _action_settings_test(weapon_template)
 			local previus_exist = not not start_inputs[start_input]
 			local start_input_does_not_have_priority = start_inputs_no_priority[start_input]
 
-			if not priority then
-				fassert(not previus_exist, "Multiple actions in weapon_template %q are listening to the same start_input. Will cause inconsistent behavior, Actions: %q, %q", weapon_template.name, start_inputs[start_input], action_name)
-			else
-				fassert(not start_input_does_not_have_priority, "Multiple actions in weapon_template %q are listening to the same start_input. One of them have priority while the other does not, Actions: %q, %q", weapon_template.name, start_inputs[start_input], action_name)
-
+			if priority then
 				local priority_key = start_input .. "_" .. priority
-
-				fassert(not start_inputs_priority[priority_key], "Multiple actions in weapon_template %q with the same start_input have same priority %f, Actions: %q, %q", weapon_template.name, priority, start_inputs_priority[priority_key], action_name)
-
 				start_inputs_priority[priority_key] = action_name
 			end
 
@@ -133,40 +111,18 @@ function _action_settings_test(weapon_template)
 			start_inputs_no_priority[start_input] = start_input_does_not_have_priority or not priority
 		end
 
-		fassert(action_settings.total_time, "No total_time specified in weapon_template %q action %q", weapon_template.name, action_name)
-
 		local s, m = _validate_hit_zone_priority(weapon_template, action_settings)
-
-		fassert(s, "Weapon template %q action %q failed hit_zone_priority validation with the following error:\n\n%s", weapon_template.name, action_name, m)
-
 		s, m = _validate_chain_actions(weapon_template, action_settings)
-
-		fassert(s, "Weapon template %q action %q failed chain_action validation with the following error:\n\n%s", weapon_template.name, action_name, m)
-
 		s, m = _validate_conditional_state_to_action_input(weapon_template, action_settings)
-
-		fassert(s, "Weapon template %q action %q failed conditional_state_to_action_input validation with the following error:\n\n%s", weapon_template.name, action_name, m)
-
 		s, m = _validate_running_action_state_to_action_input(weapon_template, action_settings)
-
-		fassert(s, "Weapon template %q action %q failed running_action_state_to_action_input validation with the following error:\n\n%s", weapon_template.name, action_name, m)
-
 		s, m = _validate_reachable_actions(weapon_template, action_settings)
-
-		fassert(s, "Weapon template %q action %q failed reachable actions validation with the following error:\n\n%s", weapon_template.name, action_name, m)
-
 		local stop_input = action_settings.stop_input
 		local minimum_hold_time = action_settings.minimum_hold_time or 0
 
 		if stop_input then
 			local stop_input_config = action_inputs[stop_input]
-
-			fassert(stop_input_config, "Weapon template %q action %q failed stop_input verification. Action input %q does not exist in action_input configuration.", weapon_template.name, action_name, stop_input)
-
 			local safe_stop_input_buffer_time = minimum_hold_time + GameParameters.fixed_time_step
 			local action_input_sequence_total_time = _action_input_sequence_total_time(stop_input_config)
-
-			fassert(minimum_hold_time < action_input_sequence_total_time, "Weapon template %q action %q - stop_input %q has a smaller buffer_time than minimum_hold_time. This can lead to stop_input being removed by buffering before we have a chance to act on it, leading to us being stuck in this action. buffer_time needs to be atleast %f", weapon_template.name, action_name, stop_input, safe_stop_input_buffer_time)
 		end
 	end
 end
@@ -189,12 +145,7 @@ function _conditional_state_test(weapon_template)
 	for i = 1, #conditional_state_to_action do
 		local conditional_state_config = conditional_state_to_action[i]
 		local conditional_state = conditional_state_config.conditional_state
-
-		fassert(conditional_state_functions[conditional_state], "Can't find a conditional_state_function for conditional_state %q in weapon template %q", conditional_state, weapon_template.name)
-
 		local input_name = conditional_state_config.input_name
-
-		fassert(action_inputs[input_name], "conditional_state %q pointing towards non-existant action input %q in weapon template %q", conditional_state, input_name, weapon_template.name)
 	end
 end
 
@@ -531,8 +482,6 @@ function _state_machine_settings_test(weapon_template)
 			end
 		end
 	end
-
-	fassert(success, "WeaponTemplate %q failed state_machine_settings_test!\n%s", weapon_template.name, error_msg)
 end
 
 function _check_state_machine_settings(state_machine)
@@ -661,8 +610,6 @@ function _validate_tweak_template_existence(weapon_template)
 		success = false
 	end
 
-	fassert(success, "WeaponTemplate %q failed tweak template existence tests!%s\n", weapon_template.name, error_msg)
-
 	return true
 end
 
@@ -783,7 +730,11 @@ function _stat_verification(stat, weapon_template)
 				local lookup_entry = lookup[target_name]
 
 				if not lookup_entry then
-					error_msgs[#error_msgs + 1] = string.format("could not find valid target %q. valid_targets =%s", target_name, valid_targets)
+					if #valid_targets == 0 then
+						error_msgs[#error_msgs + 1] = string.format("template_type %q could not find valid target %q. there are no valid targets for the given template_type!", template_type, target_name)
+					else
+						error_msgs[#error_msgs + 1] = string.format("template_type %q could not find valid target %q. either the target is misspelled or there's no template setup at the target. valid_targets =%s.", template_type, target_name, valid_targets)
+					end
 				end
 			end
 		end

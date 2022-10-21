@@ -4,8 +4,6 @@ local function _extract_scanner_display_view_definitions(path)
 	local definitions = require(path)
 
 	for name, definition_data in pairs(definitions) do
-		fassert(scanner_display_view_definitions[name] == nil, "Found display view definitions with the same name %q", name)
-
 		scanner_display_view_definitions[name] = definition_data
 	end
 end

@@ -366,8 +366,6 @@ ScanningDeviceExtension.finished_event = function (self)
 end
 
 ScanningDeviceExtension._init_movement_spline = function (self, world, unit, spline_points, spline_name)
-	fassert(#spline_points > 0, "Could not find spline called %s for Payload unit in level, wrong name? or payload unit is used as a prop unintentionally", spline_name)
-
 	local spline_curve = SplineCurve:new(spline_points, "Bezier", "SplineMovementHermiteInterpolatedMetered", spline_name, 10)
 
 	return spline_curve

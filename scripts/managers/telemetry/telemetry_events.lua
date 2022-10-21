@@ -1,32 +1,32 @@
 local TelemetryEvent = require("scripts/managers/telemetry/telemetry_event")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
+local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local TelemetryEvents = class("TelemetryEvents")
 local RPCS = {
 	"rpc_sync_server_session_id"
 }
 local SOURCE = table.remove_empty_values(TelemetrySettings.source)
 
-TelemetryEvents.init = function (self, telemetry_manager, event_delegate)
+TelemetryEvents.init = function (self, telemetry_manager, connection_manager)
 	self._manager = telemetry_manager
-	self._event_delegate = event_delegate
+	self._connection_manager = connection_manager
+	self._subject = {}
 
 	if GameParameters.testify then
 		self._subject = {
 			machine_id = Application.machine_id(),
 			machine_name = string.value_or_nil(GameParameters.machine_name)
 		}
-	else
-		self._subject = {}
 	end
 
-	if DEDICATED_SERVER then
-		self._session = {}
-	else
-		self._session = {
-			game = Application.guid()
-		}
+	self._session = {
+		game = Application.guid()
+	}
 
-		self._event_delegate:register_connection_events(self, unpack(RPCS))
+	if not DEDICATED_SERVER then
+		self._connection_manager:network_event_delegate():register_connection_events(self, unpack(RPCS))
 	end
 
 	if Wwise.set_starvation_callback then
@@ -35,14 +35,14 @@ TelemetryEvents.init = function (self, telemetry_manager, event_delegate)
 		end)
 	end
 
-	self.context = {}
+	self._context = {}
 
 	self:game_startup()
 end
 
 TelemetryEvents.destroy = function (self)
 	if not DEDICATED_SERVER then
-		self._event_delegate:unregister_events(unpack(RPCS))
+		self._connection_manager:network_event_delegate():unregister_events(unpack(RPCS))
 	end
 
 	self:game_shutdown()
@@ -60,7 +60,9 @@ TelemetryEvents.on_wwise_starvation = function (self, event_name, object_name, e
 end
 
 TelemetryEvents.rpc_sync_server_session_id = function (self, channel_id, session_id)
-	self._session.gameplay = session_id
+	if self._connection_manager:host_type() == HOST_TYPES.mission_server then
+		self._session.gameplay = session_id
+	end
 
 	for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
 		self:client_connected(player)
@@ -77,6 +79,22 @@ TelemetryEvents.client_connected = function (self, player)
 		auth_platform = Managers.presence:presence_entry_myself():platform()
 	})
 	self._manager:register_event(event)
+
+	if self._connection_manager:host_type() == HOST_TYPES.mission_server then
+		self:player_inventory(player)
+	end
+end
+
+TelemetryEvents.player_inventory = function (self, player)
+	local profile = player:profile()
+	local item_data = profile and profile.loadout_item_data or {}
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_inventory", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(item_data)
+	self._manager:register_event(event)
 end
 
 TelemetryEvents.client_disconnected = function (self, player, info)
@@ -89,9 +107,6 @@ TelemetryEvents.client_disconnected = function (self, player, info)
 		info = info
 	})
 	self._manager:register_event(event)
-
-	self._session.gameplay = nil
-	self.context.map = nil
 end
 
 TelemetryEvents.game_startup = function (self)
@@ -112,19 +127,10 @@ end
 
 TelemetryEvents.mission_session_started = function (self, session_id, map)
 	self._session.gameplay = session_id
-	self.context.map = map
+	self._context.map = map
 	local event = self:_create_event("mission_session_started")
 
 	self._manager:register_event(event)
-end
-
-TelemetryEvents.mission_session_completed = function (self)
-	local event = self:_create_event("mission_session_completed")
-
-	self._manager:register_event(event)
-
-	self._session.gameplay = nil
-	self.context.map = nil
 end
 
 TelemetryEvents.hub_session_started = function (self, session_id)
@@ -134,12 +140,57 @@ TelemetryEvents.hub_session_started = function (self, session_id)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.hub_session_completed = function (self)
-	local event = self:_create_event("hub_session_completed")
+TelemetryEvents.gameplay_started = function (self, params)
+	self._context.host_type = params.host_type
+	self._context.map = params.mission_name
+
+	if params.host_type == HOST_TYPES.singleplay or params.host_type == HOST_TYPES.hub_server then
+		self._session.gameplay = Application.guid()
+	end
+
+	local event = self:_create_event("gameplay_started")
+
+	event:set_data({
+		map = self._context.map,
+		host_type = self._context.host_type
+	})
+	self._manager:register_event(event)
+	Managers.telemetry_reporters:start_reporter("com_wheel")
+	Managers.telemetry_reporters:start_reporter("combat_ability")
+	Managers.telemetry_reporters:start_reporter("enemy_spawns")
+	Managers.telemetry_reporters:start_reporter("frame_time", params)
+	Managers.telemetry_reporters:start_reporter("grenade_ability")
+	Managers.telemetry_reporters:start_reporter("pacing")
+	Managers.telemetry_reporters:start_reporter("picked_items")
+	Managers.telemetry_reporters:start_reporter("ping", params)
+	Managers.telemetry_reporters:start_reporter("placed_items")
+	Managers.telemetry_reporters:start_reporter("player_dealt_damage")
+	Managers.telemetry_reporters:start_reporter("player_taken_damage")
+	Managers.telemetry_reporters:start_reporter("shared_items")
+	Managers.telemetry_reporters:start_reporter("smart_tag")
+end
+
+TelemetryEvents.gameplay_stopped = function (self)
+	Managers.telemetry_reporters:stop_reporter("smart_tag")
+	Managers.telemetry_reporters:stop_reporter("shared_items")
+	Managers.telemetry_reporters:stop_reporter("player_taken_damage")
+	Managers.telemetry_reporters:stop_reporter("player_dealt_damage")
+	Managers.telemetry_reporters:stop_reporter("placed_items")
+	Managers.telemetry_reporters:stop_reporter("ping")
+	Managers.telemetry_reporters:stop_reporter("picked_items")
+	Managers.telemetry_reporters:stop_reporter("pacing")
+	Managers.telemetry_reporters:stop_reporter("grenade_ability")
+	Managers.telemetry_reporters:stop_reporter("frame_time")
+	Managers.telemetry_reporters:stop_reporter("enemy_spawns")
+	Managers.telemetry_reporters:stop_reporter("combat_ability")
+	Managers.telemetry_reporters:stop_reporter("com_wheel")
+
+	local event = self:_create_event("gameplay_stopped")
 
 	self._manager:register_event(event)
 
 	self._session.gameplay = nil
+	self._context.map = nil
 end
 
 TelemetryEvents.player_authenticated = function (self, account)
@@ -162,12 +213,10 @@ TelemetryEvents.system_settings = function (self)
 	}
 
 	if master_render_settings then
-		table.merge(video_settings, master_render_settings)
-		table.merge(video_settings, Application.user_setting("render_settings") or {})
-		table.merge(video_settings, Application.user_setting("performance_settings") or {})
-
+		video_settings.master_render_settings = master_render_settings
+		video_settings.render_settings = Application.user_setting("render_settings") or {}
+		video_settings.performance_settings = Application.user_setting("performance_settings") or {}
 		video_settings.render_api = Renderer.render_device_string()
-		video_settings.graphics_quality = video_settings.graphics_quality or Application.user_setting("graphics_quality")
 		video_settings.vsync = Application.user_setting("vsync")
 	end
 
@@ -184,7 +233,7 @@ TelemetryEvents.system_settings = function (self)
 		input_settings = account_data.input_settings,
 		language = language
 	})
-	event:set_revision(1)
+	event:set_revision(2)
 	self._manager:register_event(event)
 end
 
@@ -194,11 +243,29 @@ TelemetryEvents.heartbeat = function (self)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.player_dealt_damage_summary = function (self, summaries)
-	for player, summary in pairs(summaries) do
-		local entries = summary.entries
-		local player_data = summary.player_data
-		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_dealt_damage_summary", {
+TelemetryEvents.start_terror_event = function (self, event_name)
+	local event = self:_create_event("start_terror_event")
+
+	event:set_data({
+		name = event_name
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.stop_terror_event = function (self, event_name)
+	local event = self:_create_event("stop_terror_event")
+
+	event:set_data({
+		name = event_name
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_dealt_damage_report = function (self, reports)
+	for _, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_dealt_damage_report", {
 			game = player_data.telemetry_game_session,
 			gameplay = self._session.gameplay
 		})
@@ -208,11 +275,11 @@ TelemetryEvents.player_dealt_damage_summary = function (self, summaries)
 	end
 end
 
-TelemetryEvents.player_taken_damage_summary = function (self, summaries)
-	for player, summary in pairs(summaries) do
-		local entries = summary.entries
-		local player_data = summary.player_data
-		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_taken_damage_summary", {
+TelemetryEvents.player_taken_damage_report = function (self, reports)
+	for _, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_taken_damage_report", {
 			game = player_data.telemetry_game_session,
 			gameplay = self._session.gameplay
 		})
@@ -233,6 +300,13 @@ TelemetryEvents.player_killed_enemy = function (self, player, data)
 end
 
 TelemetryEvents.player_knocked_down = function (self, player, data)
+	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
+	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
+
+	if data.reason ~= "damage" then
+		data.victim_position = TelemetryHelper.unit_position(player.player_unit)
+	end
+
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_knocked_down", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
@@ -243,6 +317,13 @@ TelemetryEvents.player_knocked_down = function (self, player, data)
 end
 
 TelemetryEvents.player_died = function (self, player, data)
+	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
+	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
+
+	if data.reason ~= "damage" then
+		data.victim_position = TelemetryHelper.unit_position(player.player_unit)
+	end
+
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_died", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
@@ -252,17 +333,61 @@ TelemetryEvents.player_died = function (self, player, data)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.player_revived_ally = function (self, player, reviver_position, revivee_position)
-	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_revived_ally", {
+TelemetryEvents.player_revived_ally = function (self, reviver_player, revivee_player, reviver_position, revivee_position, state_name)
+	local event = TelemetryEvent:new(SOURCE, reviver_player:telemetry_subject(), "player_revived_ally", {
+		game = reviver_player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data({
+		revivee = revivee_player:telemetry_subject(),
+		reviver_position = reviver_position,
+		revivee_position = revivee_position,
+		type = state_name
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_exits_captivity = function (self, player, rescued_by_player, state_name, time_in_captivity)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_exits_captivity", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
 	})
 
 	event:set_data({
-		reviver_position = reviver_position,
-		revivee_position = revivee_position
+		rescued_by_player = rescued_by_player,
+		time_in_captivity = time_in_captivity,
+		type = state_name
 	})
 	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_combat_ability_report = function (self, reports)
+	for _, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_combat_ability_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
+end
+
+TelemetryEvents.player_grenade_ability_report = function (self, reports)
+	for _, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_grenade_ability_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
 end
 
 TelemetryEvents.player_hacked_terminal = function (self, player, mistakes)
@@ -289,6 +414,18 @@ TelemetryEvents.player_scanned_objects = function (self, player, objects)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.player_started_objective = function (self, player, objective)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_started_objective", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data({
+		objective = objective
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.player_completed_objective = function (self, player, objective)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_completed_objective", {
 		game = player:telemetry_game_session(),
@@ -301,40 +438,46 @@ TelemetryEvents.player_completed_objective = function (self, player, objective)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.player_picked_item = function (self, player, item)
-	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_picked_item", {
-		game = player:telemetry_game_session(),
-		gameplay = self._session.gameplay
-	})
+TelemetryEvents.picked_items_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "picked_items_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
 
-	event:set_data({
-		item = item
-	})
-	self._manager:register_event(event)
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
 end
 
-TelemetryEvents.player_placed_item = function (self, player, item)
-	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_placed_item", {
-		game = player:telemetry_game_session(),
-		gameplay = self._session.gameplay
-	})
+TelemetryEvents.placed_items_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "placed_items_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
 
-	event:set_data({
-		item = item
-	})
-	self._manager:register_event(event)
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
 end
 
-TelemetryEvents.player_shared_item = function (self, player, item)
-	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_shared_item", {
-		game = player:telemetry_game_session(),
-		gameplay = self._session.gameplay
-	})
+TelemetryEvents.shared_items_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "shared_items_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
 
-	event:set_data({
-		item = item
-	})
-	self._manager:register_event(event)
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
 end
 
 TelemetryEvents.vo_event_triggered = function (self, global_context, player_context, event_name, vo_rule, vo_profile_name, vo_category_name, resistance, challenge)
@@ -376,7 +519,7 @@ TelemetryEvents.vo_bank_reshuffled = function (self, character_name, bank_name)
 
 	event:set_data({
 		mission = {
-			name = self.context.map
+			name = self._context.map
 		},
 		character_name = character_name,
 		bank_name = bank_name
@@ -395,6 +538,46 @@ TelemetryEvents.camera_performance_measurements = function (self, map, camera, m
 		ms_per_frame = measurements.ms_per_frame,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
+	})
+	self._manager:register_event(event)
+end
+
+local BLACKLISTED_VIEWS = TelemetrySettings.blacklisted_views
+
+TelemetryEvents.open_view = function (self, view_name)
+	if table.array_contains(BLACKLISTED_VIEWS, view_name) then
+		return
+	end
+
+	local event = self:_create_event("open_view")
+
+	event:set_data({
+		name = view_name
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.close_view = function (self, view_name)
+	if table.array_contains(BLACKLISTED_VIEWS, view_name) then
+		return
+	end
+
+	local event = self:_create_event("close_view")
+
+	event:set_data({
+		name = view_name
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.end_cutscene = function (self, cinematics_name, cinematic_scene_name, percent_viewed, character_level)
+	local event = self:_create_event("cutscene_ended")
+
+	event:set_data({
+		cinematics_name = cinematics_name,
+		cinematic_scene_name = cinematic_scene_name,
+		percent_viewed = percent_viewed,
+		character_level = character_level
 	})
 	self._manager:register_event(event)
 end
@@ -474,6 +657,7 @@ TelemetryEvents.performance_ping = function (self, avg, std_dev, p99, p95, p90, 
 end
 
 TelemetryEvents.character_creation_time = function (self, character_id, time)
+	self._subject.character_id = character_id
 	local event = TelemetryEvent:new(SOURCE, {
 		account_id = self._subject.account_id,
 		character_id = character_id
@@ -491,6 +675,69 @@ TelemetryEvents.record_slow_response_time = function (self, path, response_time)
 	event:set_data({
 		response_time = response_time,
 		path = path
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.pacing = function (self, tension)
+	local event = self:_create_event("pacing")
+
+	event:set_data({
+		tension = tension
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.enemies_spawned_report = function (self, report)
+	local event = self:_create_event("enemies_spawned_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.com_wheel_report = function (self, report)
+	local event = self:_create_event("com_wheel_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.smart_tag_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "smart_tag_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
+end
+
+TelemetryEvents.vote_completed = function (self, name, result, votes)
+	local event = self:_create_event("vote_completed")
+
+	event:set_data({
+		name = name,
+		result = result,
+		votes = votes
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.training_grounds_completed = function (self, start_type, finish_type, user_quit, is_onboarding, duration, finish_scenario, num_scenarios_started)
+	local event = self:_create_event("training_grounds_completed")
+
+	event:set_data({
+		start_type = start_type,
+		finish_type = finish_type,
+		finish_scenario = finish_scenario,
+		num_scenarios_started = num_scenarios_started,
+		user_quit = user_quit,
+		is_onboarding = is_onboarding,
+		duration = duration
 	})
 	self._manager:register_event(event)
 end

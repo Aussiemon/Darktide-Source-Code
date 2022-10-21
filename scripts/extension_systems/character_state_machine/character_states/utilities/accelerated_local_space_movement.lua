@@ -11,9 +11,17 @@ AcceleratedLocalSpaceMovement.speed_function = function (speed, wanted_speed, wa
 			speed = math.min(speed + v * dt, 0)
 		end
 	elseif speed > 1 then
-		speed = math.max(speed - deceleration * dt, 1)
+		if wanted_speed > 0 then
+			speed = math.max(speed - deceleration * 0.1 * dt, 1)
+		else
+			speed = math.max(speed - deceleration * dt, 1)
+		end
 	elseif speed < -1 then
-		speed = math.min(speed + deceleration * dt, -1)
+		if wanted_speed < 0 then
+			speed = math.min(speed + deceleration * 0.1 * dt, -1)
+		else
+			speed = math.min(speed + deceleration * dt, -1)
+		end
 	elseif wanted_speed > 0 then
 		speed = math.min(speed + acceleration * dt, wanted_speed)
 	else
@@ -37,7 +45,10 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 	local new_x = _speed_function(x, wanted_x, wanted_y, acc, dec, dt)
 	local new_y = _speed_function(y, wanted_y, wanted_x, acc, dec, dt)
 	local stopped = new_x == 0 and new_y == 0
-	local speed_scale = stopped and 0 or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
+	local new_x_abs = math.abs(new_x)
+	local new_y_abs = math.abs(new_y)
+	local biggest_speed = math.max(new_x_abs, new_y_abs)
+	local speed_scale = stopped and 0 or math.sqrt(math.min(biggest_speed, new_x_abs * new_x_abs + new_y_abs * new_y_abs))
 	local moving_backwards = new_y < 0
 
 	if moving_backwards then
@@ -47,17 +58,14 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 		speed_scale = speed_scale * bw_speed_multiplier
 	end
 
-	local should_walk = input_source:get("walk")
 	local current_max_move_speed = nil
 	local run_speed = player_character_constants.move_speed
 	local look_rotation = first_person_component.rotation
 	local flat_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(look_rotation)))
-	local wants_slide = is_crouching and Vector3.dot(velocity_current, flat_look_direction) > 1.1 * run_speed
+	local wants_slide = is_crouching and player_character_constants.slide_move_speed_threshold < Vector3.dot(velocity_current, flat_look_direction)
 
 	if is_crouching and not wants_slide then
 		current_max_move_speed = player_character_constants.crouch_move_speed
-	elseif should_walk then
-		current_max_move_speed = player_character_constants.walk_move_speed
 	else
 		current_max_move_speed = run_speed
 	end
@@ -68,6 +76,13 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 	local move_direction = Quaternion.rotate(flat_look_rotation, local_move_direction)
 
 	return move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards, wants_slide
+end
+
+AcceleratedLocalSpaceMovement.wants_move = function (input_source)
+	local move_input = input_source:get("move")
+	local wants_move = Vector3.length_squared(move_input) > 0
+
+	return wants_move
 end
 
 AcceleratedLocalSpaceMovement.set_wanted_movement = function (locomotion_steering_component, move_direction, move_speed, new_x, new_y)
@@ -81,7 +96,7 @@ AcceleratedLocalSpaceMovement.refresh_local_move_variables = function (max_move_
 	local flat_velocity = Vector3.flat(current_velocity)
 	local move_direction = Vector3.normalize(flat_velocity)
 	local current_speed = Vector3.length(flat_velocity)
-	local local_speed = math.min(current_speed / max_move_speed, 1.5)
+	local local_speed = math.min(current_speed / max_move_speed, 1.2)
 	local aim_rot = first_person_component.rotation
 	local flat_forward = Vector3.normalize(Vector3.flat(Quaternion.forward(aim_rot)))
 	local local_move_direction = Vector3(Vector3_dot(Quaternion.right(aim_rot), move_direction), Vector3_dot(flat_forward, move_direction), 0)

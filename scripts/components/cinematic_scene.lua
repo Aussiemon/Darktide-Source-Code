@@ -9,9 +9,6 @@ CinematicScene.init = function (self, unit)
 	self._unit_type = self:get_data(unit, "unit_type")
 	self._cinematic_name = self:get_data(unit, "cinematic_name")
 	self._cinematic_category = cinematic_category
-
-	fassert(self._unit_type == "origin" and self._origin_level_name == "" or self._unit_type == "destination", "Only Destination cinematic scenes can reference an Origin Level.")
-
 	local origin_level_name = nil
 
 	if self._unit_type == "destination" and self._origin_level_name ~= "" then
@@ -118,12 +115,7 @@ CinematicScene.component_data = {
 			"Path of Trust 06",
 			"Path of Trust 07",
 			"Path of Trust 08",
-			"Path of Trust 09",
-			"Path of Trust 10",
-			"Path of Trust 11",
-			"Path of Trust 12",
-			"Path of Trust 13",
-			"Traitor Captain Intro"
+			"Path of Trust 09"
 		},
 		options_values = {
 			"none",
@@ -149,12 +141,7 @@ CinematicScene.component_data = {
 			"path_of_trust_06",
 			"path_of_trust_07",
 			"path_of_trust_08",
-			"path_of_trust_09",
-			"path_of_trust_10",
-			"path_of_trust_11",
-			"path_of_trust_12",
-			"path_of_trust_13",
-			"traitor_captain_intro"
+			"path_of_trust_09"
 		}
 	},
 	cinematic_category = {
@@ -203,12 +190,7 @@ CinematicScene.component_data = {
 			"Path of Trust 08 Part 01",
 			"Path of Trust 08 Corridor 01",
 			"Path of Trust 08 Part 02",
-			"Path of Trust 09 Office",
-			"Path of Trust 10 Hangar",
-			"Path of Trust 11 Office",
-			"Path of Trust 12 Office",
-			"Path of Trust 13 Office",
-			"Traitor Captain Intro"
+			"Path of Trust 09 Office"
 		},
 		options_values = {
 			"none",
@@ -252,12 +234,7 @@ CinematicScene.component_data = {
 			"path_of_trust_08_part_01",
 			"path_of_trust_08_corridor_01",
 			"path_of_trust_08_part_02",
-			"path_of_trust_09_office",
-			"path_of_trust_10_hangar",
-			"path_of_trust_11_office",
-			"path_of_trust_12_office",
-			"path_of_trust_13_office",
-			"traitor_captain_intro"
+			"path_of_trust_09_office"
 		}
 	},
 	origin_level_name = {

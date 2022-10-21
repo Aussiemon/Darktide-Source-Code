@@ -2,23 +2,25 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Overheat = require("scripts/utilities/overheat")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_types = AttackSettings.attack_types
-local ActionOveruseExplosion = class("ActionOveruseExplosion", "ActionWeaponBase")
+local attack_results = AttackSettings.attack_results
+local ActionOverloadExplosion = class("ActionOverloadExplosion", "ActionWeaponBase")
 local DEFAULT_POWER_LEVEL = 2000
 
-ActionOveruseExplosion.init = function (self, action_context, action_params, ...)
-	ActionOveruseExplosion.super.init(self, action_context, action_params, ...)
+ActionOverloadExplosion.init = function (self, action_context, action_params, ...)
+	ActionOverloadExplosion.super.init(self, action_context, action_params, ...)
 
 	local weapon = action_params.weapon
 	self._on_start_source_name = weapon.fx_sources._overheat
 	self._exploding_character_state_component = action_context.unit_data_extension:write_component("exploding_character_state")
 end
 
-ActionOveruseExplosion.start = function (self, action_settings, ...)
-	ActionOveruseExplosion.super.start(self, action_settings, ...)
+ActionOverloadExplosion.start = function (self, action_settings, ...)
+	ActionOverloadExplosion.super.start(self, action_settings, ...)
 
 	local sfx = action_settings.sfx
 	local on_start_sfx = sfx and sfx.on_start
@@ -31,8 +33,8 @@ ActionOveruseExplosion.start = function (self, action_settings, ...)
 	end
 end
 
-ActionOveruseExplosion.fixed_update = function (self, dt, t, time_in_action)
-	ActionOveruseExplosion.super.fixed_update(self, dt, t, time_in_action)
+ActionOverloadExplosion.fixed_update = function (self, dt, t, time_in_action)
+	ActionOverloadExplosion.super.fixed_update(self, dt, t, time_in_action)
 
 	if self._is_server then
 		local action_settings = self._action_settings
@@ -56,8 +58,8 @@ ActionOveruseExplosion.fixed_update = function (self, dt, t, time_in_action)
 	end
 end
 
-ActionOveruseExplosion.finish = function (self, reason, data, t, time_in_action)
-	ActionOveruseExplosion.super.finish(self, reason, data, t, time_in_action)
+ActionOverloadExplosion.finish = function (self, reason, data, t, time_in_action)
+	ActionOverloadExplosion.super.finish(self, reason, data, t, time_in_action)
 
 	if reason == "aborted" then
 		return
@@ -80,7 +82,9 @@ ActionOveruseExplosion.finish = function (self, reason, data, t, time_in_action)
 	end
 end
 
-ActionOveruseExplosion._explode = function (self, action_settings)
+local explosion_results = {}
+
+ActionOverloadExplosion._explode = function (self, action_settings)
 	if self._is_server then
 		local explosion_template = action_settings.explosion_template
 		local position = self._locomotion_component.position
@@ -88,7 +92,16 @@ ActionOveruseExplosion._explode = function (self, action_settings)
 		local power_level = DEFAULT_POWER_LEVEL
 		local charge_level = 1
 
-		Explosion.create_explosion(self._world, self._physics_world, position, impact_normal, self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, nil, nil)
+		table.clear(explosion_results)
+
+		local is_critical_strike = false
+		local ignore_cover = false
+		local weapon = self._weapon
+		local item = weapon and weapon.item
+		local wielded_slot = weapon and self._inventory_component.wielded_slot
+
+		Explosion.create_explosion(self._world, self._physics_world, position, impact_normal, self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, is_critical_strike, ignore_cover, item, wielded_slot, explosion_results)
+		self:_handle_exposion_stats(explosion_results)
 	end
 
 	if action_settings.death_on_explosion then
@@ -96,4 +109,29 @@ ActionOveruseExplosion._explode = function (self, action_settings)
 	end
 end
 
-return ActionOveruseExplosion
+ActionOverloadExplosion._handle_exposion_stats = function (self, explosion_attack_result_table)
+	if Managers.stats.can_record_stats() then
+		local player = self._player
+		local difficulty = Managers.state.difficulty:get_difficulty()
+
+		if difficulty >= 3 then
+			local count = 0
+
+			for hit_unit, attack_result in pairs(explosion_attack_result_table) do
+				if attack_result == attack_results.died then
+					local breed = Breed.unit_breed_or_nil(hit_unit)
+
+					if breed and breed.tags and breed.tags.elite then
+						count = count + 1
+					end
+				end
+			end
+
+			if count >= 3 then
+				Managers.achievements:trigger_event(player:account_id(), player:character_id(), "psyker_2_perils_of_the_warp_elite_kills_event")
+			end
+		end
+	end
+end
+
+return ActionOverloadExplosion

@@ -4,6 +4,7 @@ local elements = {
 		class_name = "HudElementCharacterNewsFeed",
 		filename = "scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed",
 		visibility_groups = {
+			"in_hub_view",
 			"alive",
 			"communication_wheel"
 		}
@@ -71,15 +72,28 @@ local elements = {
 		}
 	},
 	{
-		package = "packages/ui/hud/prologue_tutorial_popup/prologue_tutorial_popup",
+		package = "packages/ui/hud/onboarding_popup/onboarding_popup",
 		offscreen_target = "monitor_effect",
 		use_hud_scale = true,
-		class_name = "HudElementPrologueTutorialPopup",
-		filename = "scripts/ui/hud/elements/prologue_tutorial_popup/hud_element_prologue_tutorial_popup",
+		class_name = "HudElementOnboardingPopup",
+		filename = "scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup",
+		visibility_groups = {
+			"alive",
+			"dead",
+			"communication_wheel"
+		}
+	},
+	{
+		package = "packages/ui/hud/prologue_tutorial_info_box/prologue_tutorial_info_box",
+		offscreen_target = "monitor_effect",
+		use_hud_scale = true,
+		class_name = "HudElementPrologueTutorialInfoBox",
+		filename = "scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box",
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel"
+			"communication_wheel",
+			"training_grounds"
 		}
 	},
 	{

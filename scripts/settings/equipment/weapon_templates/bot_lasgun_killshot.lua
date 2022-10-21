@@ -155,11 +155,11 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		sprint_ready_up_time = 0.5,
-		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "immediate_single_shot",
 		kind = "shoot_hit_scan",
 		ammunition_usage = 1,
+		start_input = "shoot_pressed",
 		total_time = 0.5,
 		action_movement_curve = {
 			{
@@ -227,18 +227,18 @@ weapon_template.actions = {
 				chain_time = 0.15
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		sprint_ready_up_time = 0.5,
-		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
 		crosshair_type = "none",
+		start_input = "zoom_shoot",
 		total_time = 0.3,
 		action_movement_curve = {
 			{
@@ -301,7 +301,7 @@ weapon_template.actions = {
 				chain_time = 0.2
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -355,10 +355,10 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		crosshair_type = "none",
-		weapon_handling_template = "increased_reload_speed",
+		crosshair_type = "dot",
 		start_input = "reload",
 		kind = "reload_state",
+		weapon_handling_template = "increased_reload_speed",
 		stop_alternate_fire = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -414,7 +414,7 @@ weapon_template.actions = {
 				action_name = "action_unzoom"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},

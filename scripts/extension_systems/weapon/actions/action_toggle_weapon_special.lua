@@ -9,6 +9,19 @@ end
 
 ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
 	ActionToggleWeaponSpecial.super.start(self, action_settings, t, ...)
+
+	if not action_settings.anim_event then
+		local inventory_slot_component = self._inventory_slot_component
+		local special_active = inventory_slot_component.special_active
+		local activate_anim_event = action_settings.activate_anim_event
+		local deactivate_anim_event = action_settings.deactivate_anim_event
+
+		if special_active and deactivate_anim_event then
+			self:trigger_anim_event(deactivate_anim_event)
+		elseif not special_active and activate_anim_event then
+			self:trigger_anim_event(activate_anim_event)
+		end
+	end
 end
 
 ActionToggleWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)

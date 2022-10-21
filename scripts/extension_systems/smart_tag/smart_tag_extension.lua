@@ -122,6 +122,8 @@ SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
 			return "luggable_container_over_here"
 		elseif pickup_name == "container_02_luggable" then
 			return "luggable_container_over_here"
+		elseif pickup_name == "container_03_luggable" then
+			return "luggable_container_over_here"
 		elseif pickup_name == "control_rod_01_luggable" then
 			return "luggable_control_rod_over_here"
 		elseif pickup_name == "medical_crate_pocketable" then

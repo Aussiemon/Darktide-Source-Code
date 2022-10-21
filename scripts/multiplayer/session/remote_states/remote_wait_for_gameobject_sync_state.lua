@@ -4,12 +4,6 @@ local RPCS = {
 local RemoteWaitForGameObjectSyncState = class("RemoteWaitForGameObjectSyncState")
 
 RemoteWaitForGameObjectSyncState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.channel_id) == "number", "Channel ID required")
-	assert(type(shared_state.peer_id) == "string", "Peer ID required")
-	assert(type(shared_state.network_delegate) == "table", "Network delegate required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 	self._got_sync_rpc = false

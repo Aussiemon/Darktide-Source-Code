@@ -1,9 +1,6 @@
 local RemoteCreateSessionState = class("RemoteCreateSessionState")
 
 RemoteCreateSessionState.init = function (self, state_machine, shared_state)
-	fassert(type(shared_state.client_channel_id) == "number", "Client channel required")
-	fassert(type(shared_state.client_peer_id) == "string", "Client peer required")
-
 	self._shared_state = shared_state
 end
 

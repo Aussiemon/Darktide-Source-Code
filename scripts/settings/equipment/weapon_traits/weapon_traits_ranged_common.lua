@@ -1,8 +1,5 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local weapon_traits_ranged_common = {}
-local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_attack = {
@@ -26,16 +23,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_attack = 
 			stat_buffs = {
 				[buff_stat_buffs.damage] = 0.4
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage] = 0.6
-			}
 		}
 	}
 }
@@ -48,27 +35,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_unarmored
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.unarmored_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.unarmored_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.6
+				[buff_stat_buffs.unarmored_damage] = 0.25
 			}
 		}
 	}
@@ -82,27 +59,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_armored_d
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.armored_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.armored_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.6
+				[buff_stat_buffs.armored_damage] = 0.25
 			}
 		}
 	}
@@ -116,27 +83,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_resistant
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.resistant_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.resistant_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.6
+				[buff_stat_buffs.resistant_damage] = 0.25
 			}
 		}
 	}
@@ -150,27 +107,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_berserker
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.berserker_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.berserker_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.6
+				[buff_stat_buffs.berserker_damage] = 0.25
 			}
 		}
 	}
@@ -184,27 +131,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_super_arm
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.super_armor_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.super_armor_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.6
+				[buff_stat_buffs.super_armor_damage] = 0.25
 			}
 		}
 	}
@@ -218,27 +155,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_disgustin
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.disgustingly_resilient_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.6
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.25
 			}
 		}
 	}
@@ -264,16 +191,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_corruption
 			stat_buffs = {
 				[buff_stat_buffs.corruption_taken_multiplier] = 0.82
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.corruption_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.corruption_taken_multiplier] = 0.75
-			}
 		}
 	}
 }
@@ -297,16 +214,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_corruption
 		{
 			stat_buffs = {
 				[buff_stat_buffs.corruption_taken_multiplier] = 0.82
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.corruption_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.corruption_taken_multiplier] = 0.75
 			}
 		}
 	}
@@ -332,16 +239,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_toughness_
 			stat_buffs = {
 				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.82
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.75
-			}
 		}
 	}
 }
@@ -365,16 +262,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_toughness_
 		{
 			stat_buffs = {
 				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.82
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.75
 			}
 		}
 	}
@@ -400,16 +287,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_damage_tak
 			stat_buffs = {
 				[buff_stat_buffs.damage_taken_multiplier] = 0.82
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.75
-			}
 		}
 	}
 }
@@ -433,16 +310,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_damage_tak
 		{
 			stat_buffs = {
 				[buff_stat_buffs.damage_taken_multiplier] = 0.82
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.75
 			}
 		}
 	}
@@ -558,27 +425,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_ranged_dam
 		},
 		{
 			stat_buffs = {
+				[buff_stat_buffs.ranged_damage] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
 				[buff_stat_buffs.ranged_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.ranged_damage] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.ranged_damage] = 0.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.ranged_damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.ranged_damage] = 0.6
+				[buff_stat_buffs.ranged_damage] = 0.25
 			}
 		}
 	}
@@ -604,16 +461,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_impact = {
 			stat_buffs = {
 				[buff_stat_buffs.ranged_impact_modifier] = 0.4
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.ranged_impact_modifier] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.ranged_impact_modifier] = 0.6
-			}
 		}
 	}
 }
@@ -637,16 +484,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_stamina_re
 		{
 			stat_buffs = {
 				[buff_stat_buffs.stamina_regeneration_multiplier] = 1.4
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.stamina_regeneration_multiplier] = 1.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.stamina_regeneration_multiplier] = 1.6
 			}
 		}
 	}
@@ -672,16 +509,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_power_modifier_bonu
 			stat_buffs = {
 				[buff_stat_buffs.power_level_modifier] = 0.4
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.6
-			}
 		}
 	}
 }
@@ -706,16 +533,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_finesse_modifier_bo
 			stat_buffs = {
 				[buff_stat_buffs.finesse_modifier_bonus] = 0.4
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.finesse_modifier_bonus] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.finesse_modifier_bonus] = 0.6
-			}
 		}
 	}
 }
@@ -739,16 +556,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_power_modifier_bonu
 		{
 			stat_buffs = {
 				[buff_stat_buffs.power_level_modifier] = 0.45
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.55
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.65
 			}
 		}
 	}
@@ -819,16 +626,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_low_health_grant_po
 			stat_buffs = {
 				[buff_stat_buffs.damage] = 0.4
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage] = 0.5
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage] = 0.6
-			}
 		}
 	}
 }
@@ -853,16 +650,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_last_wound_grant_da
 			stat_buffs = {
 				[buff_stat_buffs.damage_taken_multiplier] = 0.82
 			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.75
-			}
 		}
 	}
 }
@@ -875,7 +662,7 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness
 				[buff_proc_events.on_player_toughness_broken] = 1
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.25
+				[buff_stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
@@ -895,7 +682,7 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness
 				[buff_proc_events.on_player_toughness_broken] = 1
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.75
+				[buff_stat_buffs.power_level_modifier] = 0.15
 			}
 		},
 		{
@@ -915,7 +702,7 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness
 				[buff_proc_events.on_player_toughness_broken] = 1
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 1.25
+				[buff_stat_buffs.power_level_modifier] = 0.2
 			}
 		},
 		{
@@ -925,7 +712,7 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness
 				[buff_proc_events.on_player_toughness_broken] = 1
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 1.5
+				[buff_stat_buffs.power_level_modifier] = 0.25
 			}
 		}
 	}
@@ -990,16 +777,6 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_reduce_damage_while
 		{
 			stat_buffs = {
 				[buff_stat_buffs.damage_taken_multiplier] = 0.75
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.7
-			}
-		},
-		{
-			stat_buffs = {
-				[buff_stat_buffs.damage_taken_multiplier] = 0.65
 			}
 		}
 	}

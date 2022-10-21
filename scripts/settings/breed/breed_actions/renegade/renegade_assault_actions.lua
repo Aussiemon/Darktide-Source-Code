@@ -380,15 +380,18 @@ local action_data = {
 		}
 	},
 	follow = {
+		max_distance_to_target = 22,
 		min_distance_to_target = 14,
 		utility_weight = 1,
-		max_distance_to_target = 22,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.ranged_follow,
 		idle_anim_events = {
 			"idle",
@@ -426,18 +429,46 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	ranged_follow_no_los = {
+		max_distance_to_target = 18,
 		min_distance_to_target = 10,
 		utility_weight = 1,
-		max_distance_to_target = 18,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.ranged_follow_no_los,
 		idle_anim_events = {
 			"idle",
@@ -475,19 +506,47 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	move_to_combat_vector = {
-		range = "close",
-		utility_weight = 1,
+		max_distance_to_target = 18,
 		min_distance_to_target = 10,
+		utility_weight = 1,
+		degree_per_direction = 10,
+		controlled_stagger = true,
+		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
+		range = "close",
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
-		degree_per_direction = 10,
-		move_anim_events = "move_fwd",
-		max_distance_to_target = 18,
-		move_to_cooldown = 0.25,
 		speed = 4.2,
+		move_to_cooldown = 0.25,
 		considerations = UtilityConsiderations.move_to_combat_vector,
 		idle_anim_events = {
 			"idle",
@@ -525,6 +584,31 @@ local action_data = {
 			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
 			move_start_left = 0.8
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	run_stop_and_shoot = {
@@ -596,20 +680,48 @@ local action_data = {
 	},
 	assault = {
 		max_distance_to_target = 12,
-		speed = 6.2,
 		utility_weight = 10,
 		vo_event = "ranged_idle",
+		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		degree_per_direction = 10,
+		is_assaulting = true,
+		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 60,
 		move_anim_event = "assault_fwd",
-		degree_per_direction = 10,
+		speed = 6.2,
 		move_to_cooldown = 0.25,
 		min_distance_to_target = 8,
-		is_assaulting = true,
 		considerations = UtilityConsiderations.assault_far,
 		idle_anim_events = {
 			"idle",
 			"idle_2"
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	shoot = {
@@ -906,7 +1018,6 @@ local action_data = {
 	switch_weapon = {
 		vo_event = "ranged_idle",
 		slot_melee_weapon = {
-			anim_state = "to_melee",
 			switch_anim_events = {
 				"equip_sword"
 			},

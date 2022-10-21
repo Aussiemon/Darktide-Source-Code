@@ -2,9 +2,9 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local title_text_style = table.clone(UIFontSettings.header_2)
 title_text_style.text_vertical_alignment = "top"
 title_text_style.text_horizontal_alignment = "left"
-title_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
-title_text_style.text_color = Color.white(255, true)
+title_text_style.text_color = Color.terminal_text_header(255, true)
 local sub_title_text_style = table.clone(UIFontSettings.body)
+sub_title_text_style.text_color = Color.terminal_text_body(255, true)
 sub_title_text_style.text_vertical_alignment = "bottom"
 sub_title_text_style.text_horizontal_alignment = "left"
 local character_name_style = table.clone(UIFontSettings.body)
@@ -15,9 +15,10 @@ character_name_style.offset = {
 	115,
 	0
 }
-character_name_style.default_color = Color.ui_grey_light(255, true)
-character_name_style.text_color = Color.ui_grey_light(255, true)
+character_name_style.default_color = Color.terminal_text_header(255, true)
+character_name_style.text_color = Color.terminal_text_header(255, true)
 character_name_style.hover_color = Color.ui_brown_super_light(255, true)
+character_name_style.font_size = 22
 local character_name_hover_style = table.clone(UIFontSettings.body)
 character_name_style.text_horizontal_alignment = "center"
 character_name_style.text_vertical_alignment = "top"
@@ -27,6 +28,7 @@ character_name_style.offset = {
 	1
 }
 character_name_style.text_color = Color.ui_brown_super_light(255, true)
+character_name_style.font_size = 22
 local character_title_style = table.clone(UIFontSettings.body_small)
 character_title_style.text_horizontal_alignment = "center"
 character_title_style.text_vertical_alignment = "top"
@@ -35,9 +37,10 @@ character_title_style.offset = {
 	140,
 	0
 }
-character_title_style.default_color = Color.ui_grey_medium(255, true)
-character_title_style.text_color = Color.ui_grey_medium(255, true)
+character_title_style.default_color = Color.terminal_text_body(255, true)
+character_title_style.text_color = Color.terminal_text_body(255, true)
 character_title_style.hover_color = Color.ui_brown_super_light(255, true)
+character_name_style.font_size = 20
 local guild_name_style = table.clone(UIFontSettings.body_small)
 guild_name_style.text_horizontal_alignment = "center"
 guild_name_style.text_vertical_alignment = "top"

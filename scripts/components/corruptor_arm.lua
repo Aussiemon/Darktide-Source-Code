@@ -226,7 +226,6 @@ CorruptorArm._destroy_children = function (self, unit)
 	local unit_alive = Unit.alive
 
 	for i, mesh in ipairs(attached_meshes) do
-		fassert(unit_alive(mesh), "Created mesh should be alive.")
 		World.destroy_unit(self._world, mesh)
 	end
 

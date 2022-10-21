@@ -1,4 +1,21 @@
 local asset_vo_ogryn_c = {
+	asset_acid_clouds = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__zone_watertown_acid_clouds_01",
+			[2.0] = "loc_ogryn_c__zone_watertown_acid_clouds_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.061781,
+			[2.0] = 5.505531
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
+		},
+		randomize_indexes = {}
+	},
 	asset_foul_smoke = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

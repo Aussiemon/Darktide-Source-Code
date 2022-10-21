@@ -1,6 +1,7 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PlayerMovement = require("scripts/utilities/player_movement")
 local MoveablePlatformExtension = class("MoveablePlatformExtension")
 local MOVEABLE_PLATFORM_DIRECTION = table.enum("none", "forward", "backward")
 
@@ -20,6 +21,7 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._overlap_result = {}
 	self._interactables = {}
 	self._require_all_players_onboard = false
+	self._units_locked = false
 	local initial_position = Unit.local_position(unit, 1)
 	self._previous_update_position = Vector3Box(initial_position)
 	self._current_velocity = Vector3Box()
@@ -118,8 +120,6 @@ MoveablePlatformExtension.setup_from_component = function (self, story_name, pla
 
 		if interactable_hud_descriptions[i] then
 			interactable_info.hud_description = interactable_hud_descriptions[i]
-		else
-			interactable_info.hud_description = "loc_default"
 		end
 	end
 end
@@ -133,7 +133,7 @@ MoveablePlatformExtension.can_move = function (self)
 	local can_activate_wall_collision_enabled = not self._wall_collision_enabled or self._wall_collision_enabled and not self:_passengers_inside_walls()
 
 	if not all_on_board or not can_activate_wall_collision_enabled then
-		self:_set_block_text("loc_platform_blocked_missing_players")
+		self:_set_block_text("loc_action_interaction_inactive_platform_missing_players")
 
 		return false
 	end
@@ -141,7 +141,7 @@ MoveablePlatformExtension.can_move = function (self)
 	local hostiles_onboard = self:_check_hostile_onboard()
 
 	if hostiles_onboard then
-		self:_set_block_text("loc_platform_blocked_hostiles_onboard")
+		self:_set_block_text("loc_action_interaction_inactive_platform_hostiles_onboard")
 
 		return false
 	end
@@ -158,8 +158,6 @@ MoveablePlatformExtension._set_block_text = function (self, text)
 end
 
 MoveablePlatformExtension._set_direction = function (self, direction)
-	fassert(self._is_server, "Server only method.")
-
 	local story_state = self._network_story_manager:get_story_state(self._story_name, self._level)
 	local story_states = self._network_story_manager.NETWORK_STORY_STATES
 	local can_move = self:can_move()
@@ -395,8 +393,6 @@ MoveablePlatformExtension.post_update = function (self, unit, dt, t)
 end
 
 MoveablePlatformExtension._update_passengers = function (self)
-	Profiler.start("_update_passengers")
-
 	local passenger_units = self._passenger_units
 	local passenger_actors = self._overlap_result[self._box.actor_id]
 
@@ -416,8 +412,6 @@ MoveablePlatformExtension._update_passengers = function (self)
 			end
 		end
 	end
-
-	Profiler.stop("_update_passengers")
 end
 
 MoveablePlatformExtension._add_bots_to_passengers = function (self, bot_player_units_to_teleport)
@@ -431,14 +425,11 @@ MoveablePlatformExtension._add_bots_to_passengers = function (self, bot_player_u
 end
 
 MoveablePlatformExtension._update_overlap = function (self)
-	Profiler.start("_update_overlap")
-
 	for _, wall in pairs(self._walls) do
 		self:_send_player_overlap_request(wall.actor_id)
 	end
 
 	self:_send_player_overlap_request(self._box.actor_id)
-	Profiler.stop("_update_overlap")
 end
 
 MoveablePlatformExtension._update_velocity = function (self, unit, dt)
@@ -472,8 +463,6 @@ MoveablePlatformExtension._send_player_overlap_request = function (self, actor_i
 end
 
 MoveablePlatformExtension._receive_overlap_result_players = function (self, actor_id, _, hit_actors)
-	Profiler.start("_receive_overlap_result_players")
-
 	local overlaps_for_actor = self._overlap_result[actor_id]
 
 	table.clear(overlaps_for_actor)
@@ -487,8 +476,6 @@ MoveablePlatformExtension._receive_overlap_result_players = function (self, acto
 
 		i = i + 1
 	end
-
-	Profiler.stop("_receive_overlap_result_players")
 end
 
 MoveablePlatformExtension._lock_units_on_platform = function (self)
@@ -496,7 +483,15 @@ MoveablePlatformExtension._lock_units_on_platform = function (self)
 		self:_enable_wall_collision(wall.actor_id, true)
 	end
 
-	self:_set_platform_as_parent_for_all_passengers()
+	local has_passengers = self:_set_platform_as_parent_for_all_passengers()
+
+	if has_passengers then
+		self._units_locked = true
+	end
+end
+
+MoveablePlatformExtension.units_locked = function (self)
+	return self._units_locked
 end
 
 MoveablePlatformExtension._passengers_inside_walls = function (self)
@@ -557,7 +552,27 @@ MoveablePlatformExtension._unlock_units_on_platform = function (self)
 		self:_enable_wall_collision(wall.actor_id, false)
 	end
 
+	self._units_locked = false
+
 	self:_unparent_all_passengers()
+end
+
+MoveablePlatformExtension.add_passenger = function (self, unit, place_on_platform)
+	self._passenger_units[unit] = true
+
+	if self._units_locked then
+		self:_set_platform_as_parent(unit)
+
+		if place_on_platform then
+			local moveable_platform_unit = self._unit
+			local node_name = bot_teleport_location_node_names[1]
+			local node = Unit.node(moveable_platform_unit, node_name)
+			local node_position = Unit.world_position(moveable_platform_unit, node)
+			local player = Managers.player:player_by_unit(unit)
+
+			PlayerMovement.teleport(player, node_position)
+		end
+	end
 end
 
 MoveablePlatformExtension._set_platform_as_parent = function (self, passenger_unit)
@@ -575,23 +590,15 @@ MoveablePlatformExtension._set_platform_as_parent = function (self, passenger_un
 end
 
 MoveablePlatformExtension._set_platform_as_parent_for_all_passengers = function (self)
+	local has_passengers = false
+
 	for passenger_unit, _ in pairs(self._passenger_units) do
-		if ALIVE[passenger_unit] then
-			local game_object = self._unit_spawner:game_object_id(passenger_unit)
+		self:_set_platform_as_parent(passenger_unit)
 
-			if game_object then
-				local is_husk_unit = self._unit_spawner:is_husk(passenger_unit)
-
-				if not is_husk_unit then
-					local locomotion_extension = ScriptUnit.has_extension(passenger_unit, "locomotion_system")
-
-					if locomotion_extension then
-						locomotion_extension:set_parent_unit(self._unit)
-					end
-				end
-			end
-		end
+		has_passengers = true
 	end
+
+	return has_passengers
 end
 
 MoveablePlatformExtension._unparent_passenger = function (self, passenger_unit)
@@ -633,12 +640,10 @@ MoveablePlatformExtension._unparent_all_passengers = function (self)
 end
 
 MoveablePlatformExtension.move_forward = function (self)
-	fassert(self._is_server, "Server only method.")
 	self:_set_direction(MOVEABLE_PLATFORM_DIRECTION.forward)
 end
 
 MoveablePlatformExtension.move_backward = function (self)
-	fassert(self._is_server, "Server only method.")
 	self:_set_direction(MOVEABLE_PLATFORM_DIRECTION.backward)
 end
 
@@ -738,8 +743,6 @@ MoveablePlatformExtension.player_side = function (self)
 end
 
 MoveablePlatformExtension._get_volume_alt_min_max = function (self, volume_points, volume_height)
-	fassert(#volume_points > 0, "[NavBlockExtension][_get_volume_alt_min_max][Unit: %s] No volume points.", Unit.id_string(self._unit))
-
 	local alt_min, alt_max = nil
 
 	for i = 1, #volume_points do
@@ -782,8 +785,6 @@ MoveablePlatformExtension._setup_nav_gates = function (self, unit)
 end
 
 MoveablePlatformExtension._set_nav_layer_allowed = function (self, layer_name, is_allowed)
-	fassert(self._is_server, "[MoveablePlatformExtension][_set_nav_layer_allowed] Method should only be called on the server")
-
 	if not self._nav_handling_enabled then
 		return
 	end

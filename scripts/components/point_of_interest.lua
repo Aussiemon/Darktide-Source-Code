@@ -7,10 +7,13 @@ PointOfInterest.init = function (self, unit, is_server)
 		local view_distance = self:get_data(unit, "view_distance")
 		local is_dynamic = self:get_data(unit, "is_dynamic")
 		local tag = self:get_data(unit, "tag")
-		local faction_breed_name = self:get_data(unit, "faction_breed_name")
 		local faction_event = self:get_data(unit, "faction_event")
+		local dialogue_target_filter = self:get_data(unit, "dialogue_target_filter")
+		local faction_breed_name = self:get_data(unit, "faction_breed_name")
+		local mission_giver_selected_voice = self:get_data(unit, "mission_giver_selected_voice")
+		local disabled = self:get_data(unit, "disabled")
 
-		point_of_interest_extension:setup_from_component(view_distance, is_dynamic, tag, faction_event, faction_breed_name)
+		point_of_interest_extension:setup_from_component(view_distance, is_dynamic, tag, faction_event, dialogue_target_filter, faction_breed_name, mission_giver_selected_voice, disabled)
 	end
 end
 
@@ -23,7 +26,9 @@ PointOfInterest.enable = function (self, unit)
 end
 
 PointOfInterest.disable = function (self, unit)
-	return
+	local point_of_interest_extension = ScriptUnit.fetch_component_extension(unit, "point_of_interest_system")
+
+	point_of_interest_extension:set_disabled()
 end
 
 PointOfInterest.destroy = function (self, unit)
@@ -49,11 +54,43 @@ PointOfInterest.component_data = {
 		value = "",
 		ui_name = "Tag"
 	},
+	dialogue_event = {
+		value = "",
+		ui_type = "combo_box",
+		category = "Dialogue",
+		ui_name = "Dialogue Event Name",
+		options_keys = {
+			"",
+			"look_at"
+		},
+		options_values = {
+			"",
+			"look_at"
+		}
+	},
+	dialogue_target_filter = {
+		value = "none",
+		ui_type = "combo_box",
+		category = "Dialogue",
+		ui_name = "Dialogue Target Filter",
+		options_keys = {
+			"none",
+			"faction",
+			"mission_giver_mission_default",
+			"mission_giver_selected_voice"
+		},
+		options_values = {
+			"none",
+			"faction",
+			"mission_giver_mission_default",
+			"mission_giver_selected_voice"
+		}
+	},
 	faction_breed_name = {
 		value = "",
 		ui_type = "combo_box",
-		category = "Faction",
-		ui_name = "Breed Name",
+		category = "Dialogue",
+		ui_name = "Faction Name",
 		options_keys = {
 			"",
 			"npc"
@@ -63,19 +100,32 @@ PointOfInterest.component_data = {
 			"npc"
 		}
 	},
-	faction_event = {
+	mission_giver_selected_voice = {
 		value = "",
 		ui_type = "combo_box",
-		category = "Faction",
-		ui_name = "Event Name",
+		category = "Dialogue",
+		ui_name = "Mission Giver Selected Voice",
 		options_keys = {
 			"",
-			"look_at"
+			"sergeant_a",
+			"pilot_a",
+			"explicator_a",
+			"tech_priest_a",
+			"training_ground_psyker_a"
 		},
 		options_values = {
 			"",
-			"look_at"
+			"sergeant_a",
+			"pilot_a",
+			"explicator_a",
+			"tech_priest_a",
+			"training_ground_psyker_a"
 		}
+	},
+	disabled = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Disabled"
 	},
 	extensions = {
 		"PointOfInterestTargetExtension"

@@ -67,8 +67,6 @@ CorruptorArmExtension.destroy = function (self)
 end
 
 CorruptorArmExtension.activate = function (self)
-	fassert(not self._is_activated, "[CorruptorArmExtension] Trying to activate twice!")
-
 	if self._activation_delay > 0 then
 		self._activation_delay_timer = self._activation_delay
 	else
@@ -79,8 +77,6 @@ CorruptorArmExtension.activate = function (self)
 end
 
 CorruptorArmExtension.deactivate = function (self)
-	fassert(self._is_activated, "[CorruptorArmExtension] Trying to deactivate twice!")
-
 	if not self._has_lost_pustules then
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local target_units = self._target_units

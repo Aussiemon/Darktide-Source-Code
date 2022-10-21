@@ -3,7 +3,15 @@ require("scripts/extension_systems/buff/buff_extension_base")
 local Ailment = require("scripts/utilities/ailment")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
+local BuffExtensionBase = require("scripts/extension_systems/buff/buff_extension_base")
 local MinionBuffExtension = class("MinionBuffExtension", "BuffExtensionBase")
+MinionBuffExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
+MinionBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+	self._owner_system = extension_init_context.owner_system
+
+	MinionBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+end
 
 MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 	if self._buff_context.is_local_unit then
@@ -37,6 +45,32 @@ MinionBuffExtension.update = function (self, unit, dt, t)
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
 	self:_update_stat_buffs_and_keywords(t)
+end
+
+local base_request_proc_event_param_table = BuffExtensionBase.request_proc_event_param_table
+
+MinionBuffExtension.request_proc_event_param_table = function (self)
+	if not self._update_enabled then
+		return nil
+	end
+
+	return base_request_proc_event_param_table(self)
+end
+
+MinionBuffExtension._on_add_buff = function (self, buff_instance)
+	if not self._update_enabled and #self._buffs == 0 then
+		self._update_enabled = true
+
+		self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+	end
+end
+
+MinionBuffExtension._on_remove_buff = function (self, buff_instance)
+	if self._update_enabled and #self._buffs == 1 then
+		self._update_enabled = false
+
+		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+	end
 end
 
 MinionBuffExtension.add_proc_event = function (self, event, params)
@@ -113,8 +147,6 @@ MinionBuffExtension.remove_externally_controlled_buff = function (self, local_in
 
 	local buff_instance = self._buffs_by_index[local_index]
 
-	fassert(buff_instance, "No buff found at index %s when trying to remove it", local_index)
-
 	if is_local_unit then
 		self:_remove_buff(local_index)
 	elseif self._is_server then
@@ -124,8 +156,6 @@ end
 
 MinionBuffExtension._remove_internally_controlled_buff = function (self, local_index)
 	local buff_instance = self._buffs_by_index[local_index]
-
-	fassert(buff_instance, "No buff found at index %s when trying to remove it", local_index)
 
 	if self._buff_context.is_local_unit then
 		self:_remove_buff(local_index)

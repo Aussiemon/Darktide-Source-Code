@@ -83,7 +83,7 @@ OptionsView.cb_reset_category_to_default = function (self)
 				local on_activated = setting.on_activated
 
 				if on_activated then
-					on_activated(default_value)
+					on_activated(default_value, setting)
 				end
 			end
 		end
@@ -142,9 +142,6 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			local widget_type = entry.widget_type
 			local widget = nil
 			local template = ContentBlueprints[widget_type]
-
-			fassert(template, "[OptionsView] - Could not find content blueprint for type: %s", widget_type)
-
 			local size = template.size
 			local pass_template = template.pass_template
 
@@ -640,9 +637,6 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 
 	local widget = nil
 	local template = ContentBlueprints[widget_type]
-
-	fassert(template, "[OptionsView] - Could not find content blueprint for type: %s", widget_type)
-
 	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
@@ -680,9 +674,17 @@ OptionsView._handle_keybind_rebind = function (self, dt, t, input_service)
 			local service_type = entry.service_type
 			local alias_name = entry.alias_name
 			local value = entry.value
+			local can_close = entry.on_activated(results, value)
 
-			entry.on_activated(results, value)
-			self:close_keybind_popup()
+			if can_close then
+				self:close_keybind_popup()
+			else
+				Managers.input:stop_key_watch()
+
+				local devices = entry.devices
+
+				Managers.input:start_key_watch(devices)
+			end
 		end
 	end
 end

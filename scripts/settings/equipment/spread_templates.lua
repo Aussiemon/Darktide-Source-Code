@@ -22,6 +22,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_rifles/settings_templates/stub_rifle_spread_templates", spread_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_spread_templates", spread_templates, loaded_template_files)
 
 spread_templates.no_spread = {
 	[still] = {
@@ -3236,18 +3237,9 @@ end
 for name, template in pairs(spread_templates) do
 	for _, movement_state in pairs(weapon_movement_states) do
 		local move_state_settings = template[movement_state]
-
-		fassert(move_state_settings, "Missing movement state [\"%s\"] for spread template [\"%s\"] and movement state [\"%s\"]!", movement_state, name, movement_state)
-
 		local inheritance_settings = move_state_settings.inherits
 
 		if inheritance_settings then
-			fassert(inheritance_settings[1], "Inheritance wanted for spread template [\"%s\"], but no parent template to inherit from defined!", name)
-			fassert(spread_templates[inheritance_settings[1]], "Trying to inherit non-existent template [\"%s\"] in spread template [\"%s\"]!", inheritance_settings[1], name)
-			fassert(inheritance_settings[2], "Inheritance wanted for spread template [\"%s\"], but no movement state to inherit from defined!", name)
-			fassert(template[inheritance_settings[2]], "Trying to inherit non-existent movement state [\"%s\"] in spread template [\"%s\"]!", inheritance_settings[2], name)
-			fassert(name ~= inheritance_settings[1] or movement_state ~= inheritance_settings[2], "Trying to inherit from same template name and movement state")
-
 			local new_move_state_settings = _inherit(move_state_settings, inheritance_settings)
 			spread_templates[name][movement_state] = new_move_state_settings
 		end

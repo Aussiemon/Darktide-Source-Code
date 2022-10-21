@@ -11,7 +11,7 @@ Luggable.init = function (self, context, slot, weapon_template, fx_sources)
 	self._item_unit_3p = item_unit_3p
 	self._luggable_locomotion_extension = ScriptUnit.extension(item_unit_3p, "locomotion_system")
 	self._owner_unit = context.owner_unit
-	self._is_husk = context.is_husk
+	self._is_local_unit = context.is_local_unit
 	self._visual_loadout_extension = context.visual_loadout_extension
 	local unit_data_extension = context.unit_data_extension
 	self._action_throw_component = unit_data_extension:read_component("action_throw")
@@ -58,9 +58,8 @@ Luggable.update_first_person_mode = function (self, first_person_mode)
 end
 
 Luggable.wield = function (self)
-	Vo.generic_mission_vo_event(self._owner_unit, "luggable_weild")
-	stingray.Unit.flow_event(self._item_unit_3p, "luggable_wield")
-	self:_show_objective_sockets(true)
+	Unit.flow_event(self._item_unit_3p, "luggable_wield")
+	self:_handle_objective_markers(true)
 end
 
 Luggable.unwield = function (self)
@@ -68,27 +67,30 @@ Luggable.unwield = function (self)
 	local hide_3p = false
 
 	self._visual_loadout_extension:set_force_hide_wieldable_slot(self._slot.name, hide_1p, hide_3p)
-	self:_show_objective_sockets(false)
+	self:_handle_objective_markers(false)
+	Unit.flow_event(self._item_unit_3p, "luggable_unwield")
 end
 
-Luggable._show_objective_sockets = function (self, show)
-	if self._is_husk then
+Luggable._handle_objective_markers = function (self, wielding)
+	if not self._is_local_unit then
 		return
 	end
 
 	local item_unit_3p = self._item_unit_3p
 
-	if ALIVE[item_unit_3p] then
-		local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
-		local objective_name = mission_objective_target_extension:objective_name()
-		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-		local objective = mission_objective_system:get_active_objective(objective_name)
-
-		if objective then
-			objective:display_socket_markers(show)
-		end
-	else
+	if not ALIVE[item_unit_3p] then
 		self._item_unit_3p = nil
+
+		return
+	end
+
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+	local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
+	local objective_name = mission_objective_target_extension:objective_name()
+	local objective = mission_objective_system:get_active_objective(objective_name)
+
+	if objective then
+		objective:display_socket_markers(wielding)
 	end
 end
 

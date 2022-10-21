@@ -15,7 +15,8 @@ local effect_template = {
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local shield_unit = visual_loadout_extension:slot_unit(SHIELD_INVENTORY_SLOT_NAME)
 		template_data.shield_unit = shield_unit
-		local position = Unit.world_position(unit, 1)
+		local j_hips_node = Unit.node(unit, "j_hips")
+		local position = Unit.world_position(unit, j_hips_node)
 		local wwise_world = template_context.wwise_world
 		local source_id = WwiseWorld.make_manual_source(wwise_world, position, Quaternion.identity())
 

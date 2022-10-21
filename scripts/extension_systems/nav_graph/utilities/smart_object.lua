@@ -6,8 +6,6 @@ SmartObject.increment_smart_object_id = function ()
 	local new_value = SmartObject.LAST_SMART_OBJECT_ID + 1
 	SmartObject.LAST_SMART_OBJECT_ID = new_value
 
-	fassert(new_value <= SmartObject.MAX_SMART_OBJECT_ID, "[SmartObject] Smart object id is larger than maximum allowed value (%d, max:%d).", new_value, SmartObject.MAX_SMART_OBJECT_ID)
-
 	return new_value
 end
 

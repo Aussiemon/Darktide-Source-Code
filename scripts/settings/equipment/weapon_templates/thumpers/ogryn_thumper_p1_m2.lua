@@ -2,6 +2,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -161,12 +162,16 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_shoot_hip = {
-		kind = "shoot_projectile",
-		start_input = "shoot_pressed",
 		weapon_handling_template = "immediate_single_shot",
-		projectile_locomotion_template = "ogryn_thumper_grenade",
-		ammunition_usage = 1,
+		sprint_requires_press_to_interrupt = true,
+		start_input = "shoot_pressed",
 		throw_type = "shoot",
+		kind = "shoot_projectile",
+		sprint_ready_up_time = 0.4,
+		projectile_locomotion_template = "ogryn_thumper_grenade",
+		allowed_during_sprint = true,
+		ammunition_usage = 1,
+		abort_sprint = true,
 		uninterruptible = true,
 		total_time = 0.75,
 		action_movement_curve = {
@@ -220,11 +225,12 @@ weapon_template.actions = {
 				chain_time = 0.4
 			},
 			bash = {
-				action_name = "action_bash",
-				chain_time = 0.1
+				chain_time = 0.1,
+				reset_combo = true,
+				action_name = "action_bash"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		},
@@ -235,7 +241,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "projectile_drop",
+		crosshair_type = "none",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -322,8 +328,9 @@ weapon_template.actions = {
 				chain_time = 0.2
 			},
 			bash = {
-				action_name = "action_bash",
-				chain_time = 0.1
+				chain_time = 0.1,
+				reset_combo = true,
+				action_name = "action_bash"
 			}
 		},
 		fire_configuration = {
@@ -352,10 +359,12 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		uninterruptible = true,
-		start_input = "reload",
+		hold_combo = true,
 		weapon_handling_template = "time_scale_0_75",
 		stop_alternate_fire = true,
+		start_input = "reload",
+		crosshair_type = "dot",
+		uninterruptible = true,
 		total_time = 2.333,
 		reload_settings = {
 			refill_amount = 1
@@ -404,10 +413,11 @@ weapon_template.actions = {
 				chain_time = 2.25
 			},
 			bash = {
-				action_name = "action_bash"
+				action_name = "action_bash",
+				reset_combo = true
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -422,7 +432,6 @@ weapon_template.actions = {
 		damage_window_end = 0.7,
 		unaim = true,
 		uninterruptible = true,
-		power_level = 500,
 		total_time = 1.75,
 		action_movement_curve = {
 			{
@@ -460,19 +469,22 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload"
+				action_name = "action_reload",
+				reset_combo = true
 			},
 			shoot_pressed = {
-				action_name = "action_shoot_hip",
-				chain_time = 1.1
+				chain_time = 1.1,
+				reset_combo = true,
+				action_name = "action_shoot_hip"
 			},
 			bash = {
 				action_name = "action_bash_right",
 				chain_time = 0.8
 			},
 			zoom = {
-				action_name = "action_zoom",
-				chain_time = 0.8
+				chain_time = 0.8,
+				reset_combo = true,
+				action_name = "action_zoom"
 			}
 		},
 		weapon_box = {
@@ -493,14 +505,13 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_bash_right = {
-		damage_window_start = 0.6333333333333333,
-		range_mod = 1.15,
+		damage_window_end = 0.7333333333333333,
 		kind = "sweep",
 		attack_direction_override = "right",
-		damage_window_end = 0.7333333333333333,
+		range_mod = 1.15,
+		damage_window_start = 0.6333333333333333,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
-		power_level = 500,
 		total_time = 1.75,
 		action_movement_curve = {
 			{
@@ -538,19 +549,22 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload"
+				action_name = "action_reload",
+				reset_combo = true
 			},
 			shoot_pressed = {
-				action_name = "action_shoot_hip",
-				chain_time = 1.1
+				chain_time = 1.1,
+				reset_combo = true,
+				action_name = "action_shoot_hip"
 			},
 			bash = {
 				action_name = "action_bash",
 				chain_time = 1
 			},
 			zoom = {
-				action_name = "action_zoom",
-				chain_time = 0.8
+				chain_time = 0.8,
+				reset_combo = true,
+				action_name = "action_zoom"
 			}
 		},
 		weapon_box = {
@@ -670,11 +684,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "thumper_p1_m2"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.7,
-	walking = 0.54,
-	sprinting = 0.5
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_p1_m2
 weapon_template.overclocks = {}
 weapon_template.base_stats = {
 	ogryn_thumper_p1_m2_ammo_stat = {
@@ -823,6 +833,30 @@ weapon_template.perks = {
 				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_perk
 			}
 		}
+	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_explosive"
+	},
+	{
+		display_name = "loc_weapon_keyword_delayed_detonation"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "projectile",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "projectile",
+		display_name = "loc_ranged_attack_secondary_braced",
+		type = "brace"
+	},
+	special = {
+		display_name = "loc_weapon_special_weapon_bash",
+		type = "melee"
 	}
 }
 

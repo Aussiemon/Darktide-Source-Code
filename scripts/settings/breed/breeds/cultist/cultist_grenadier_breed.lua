@@ -21,21 +21,22 @@ local breed_name = "cultist_grenadier"
 local breed_data = {
 	display_name = "loc_breed_display_name_cultist_grenadier",
 	run_speed = 4.8,
-	challenge_rating = 2,
 	use_bone_lod = true,
+	challenge_rating = 2,
 	game_object_type = "minion_ranged",
+	volley_fire_target = true,
 	unit_template_name = "minion",
 	faction_name = "chaos",
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_grenadier",
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 1,
 	walk_speed = 2.3,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_grenadier",
 	navigation_propagation_box_extent = 200,
 	base_height = 2,
-	player_locomotion_constrain_radius = 0.5,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	player_locomotion_constrain_radius = 0.5,
 	stagger_reduction = 0,
 	use_wounds = true,
 	stagger_reduction_ranged = 20,
@@ -292,9 +293,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

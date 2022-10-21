@@ -1,5 +1,6 @@
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNavWorld = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_world")
+local OutOfBoundsManager = require("scripts/managers/out_of_bounds/out_of_bounds_manager")
 local GameplayInitStepOutOfBounds = class("GameplayInitStepOutOfBounds")
 
 GameplayInitStepOutOfBounds.on_enter = function (self, parent, params)
@@ -30,6 +31,7 @@ GameplayInitStepOutOfBounds._init_out_of_bounds_checker = function (self, world,
 
 	out_shared_state.hard_cap_out_of_bounds_units = Script.new_map(16)
 	out_shared_state.soft_cap_out_of_bounds_units = Script.new_map(16)
+	Managers.state.out_of_bounds = OutOfBoundsManager:new(world)
 end
 
 implements(GameplayInitStepOutOfBounds, GameplayInitStepInterface)

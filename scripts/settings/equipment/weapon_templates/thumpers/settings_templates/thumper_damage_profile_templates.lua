@@ -158,8 +158,14 @@ damage_templates.default_ogryn_shotgun_assault = {
 		impact = 1.5
 	},
 	ranges = {
-		max = 40,
-		min = 10
+		min = {
+			5,
+			11
+		},
+		max = {
+			15,
+			32
+		}
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -223,7 +229,7 @@ damage_templates.default_ogryn_shotgun_assault = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.ballistic,
 	wounds_template = WoundsTemplates.shotgun,
 	on_kill_area_suppression = {

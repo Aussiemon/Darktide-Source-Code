@@ -56,10 +56,6 @@ end
 
 PickupAnimationSystem.rpc_start_pickup_animation = function (self, channel_id, pickup_id, pickup_is_level_unit, end_id, end_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(pickup_id, pickup_is_level_unit), "[PickupAnimationSystem] Incorrect pickup id")
-	fassert(unit_spawner_manager:valid_unit_id(end_id, end_is_level_unit), "[PickupAnimationSystem] Incorrect target id")
-
 	local pickup_unit = unit_spawner_manager:unit(pickup_id, pickup_is_level_unit)
 	local end_unit = unit_spawner_manager:unit(end_id, end_is_level_unit)
 	local pickup_animation_extension = self._unit_to_extension_map[pickup_unit]
@@ -71,10 +67,6 @@ end
 
 PickupAnimationSystem.rpc_start_place_animation = function (self, channel_id, pickup_id, pickup_is_level_unit, end_id, end_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(pickup_id, pickup_is_level_unit), "[PickupAnimationSystem] Incorrect pickup id")
-	fassert(unit_spawner_manager:valid_unit_id(end_id, end_is_level_unit), "[PickupAnimationSystem] Incorrect target id")
-
 	local pickup_unit = unit_spawner_manager:unit(pickup_id, pickup_is_level_unit)
 	local end_unit = unit_spawner_manager:unit(end_id, end_is_level_unit)
 	local pickup_animation_extension = self._unit_to_extension_map[pickup_unit]

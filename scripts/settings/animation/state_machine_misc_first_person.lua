@@ -21,6 +21,9 @@ local state_machine_settings = {
 	["content/characters/player/ogryn/first_person/animations/grenade"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/ogryn/first_person/animations/grenade_box"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/human/first_person/animations/grenade"] = {
 		blend_time = 0
 	},
@@ -66,10 +69,19 @@ local state_machine_settings = {
 	["content/characters/player/human/first_person/animations/chain_lightning"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/human/first_person/animations/psyker_shield"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/ogryn/first_person/animations/unarmed"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/first_person/animations/preacher_relic"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/ogryn/first_person/animations/syringe"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/first_person/animations/syringe"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	}
 }

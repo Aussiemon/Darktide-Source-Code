@@ -106,6 +106,30 @@ local function generate_base_template()
 			unwield_to_previous = {
 				dont_queue = true,
 				buffer_time = 0
+			},
+			inspect_start = {
+				buffer_time = 0,
+				input_sequence = {
+					{
+						value = true,
+						input = "weapon_inspect_hold"
+					},
+					{
+						value = true,
+						duration = 0.2,
+						input = "weapon_inspect_hold"
+					}
+				}
+			},
+			inspect_stop = {
+				buffer_time = 0.02,
+				input_sequence = {
+					{
+						value = false,
+						input = "weapon_inspect_hold",
+						time_window = math.huge
+					}
+				}
 			}
 		},
 		action_input_hierarchy = {
@@ -131,6 +155,9 @@ local function generate_base_template()
 					wield = "base",
 					unwield_to_previous = "base"
 				}
+			},
+			inspect_start = {
+				inspect_stop = "base"
 			}
 		},
 		actions = {
@@ -187,8 +214,8 @@ local function generate_base_template()
 					speed = 20,
 					gravity = 9.82,
 					distance = 20,
-					collision_filter = "filter_dynamic",
-					angle = math.degrees_to_radians(20)
+					angle = 0.35,
+					collision_filter = "filter_dynamic"
 				},
 				allowed_chain_actions = {
 					aim_released = {
@@ -259,8 +286,8 @@ local function generate_base_template()
 					speed = 20,
 					gravity = 9.82,
 					distance = 20,
-					collision_filter = "filter_dynamic",
-					angle = math.degrees_to_radians(20)
+					angle = 0.35,
+					collision_filter = "filter_dynamic"
 				},
 				allowed_chain_actions = {
 					short_hand_throw = {
@@ -311,6 +338,17 @@ local function generate_base_template()
 				anim_end_event_condition_func = function (unit, data, end_reason)
 					return false
 				end
+			},
+			action_inspect = {
+				skip_3p_anims = true,
+				lock_view = true,
+				start_input = "inspect_start",
+				anim_end_event = "inspect_end",
+				kind = "inspect",
+				crosshair_type = "none",
+				anim_event = "inspect_start",
+				stop_input = "inspect_stop",
+				total_time = math.huge
 			}
 		},
 		keywords = {

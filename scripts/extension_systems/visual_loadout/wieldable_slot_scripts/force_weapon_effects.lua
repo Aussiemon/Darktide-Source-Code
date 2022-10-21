@@ -16,6 +16,7 @@ ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	local owner_unit = context.owner_unit
 	self._is_husk = is_husk
 	self._slot_name = slot.name
+	self._world = context.world
 	self._wwise_world = context.wwise_world
 	self._special_active_fx_source_name = fx_sources[FX_SOURCE_NAME]
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
@@ -76,7 +77,7 @@ ForceWeaponEffects.fixed_update = function (self, unit, dt, t, frame)
 		return
 	end
 
-	self:_update_active(t)
+	self:_update_active()
 end
 
 ForceWeaponEffects.update = function (self, unit, dt, t)
@@ -87,10 +88,11 @@ ForceWeaponEffects.update_first_person_mode = function (self, first_person_mode)
 	return
 end
 
-ForceWeaponEffects._update_active = function (self, t)
+ForceWeaponEffects._update_active = function (self)
 	local is_playing = self._looping_sound_component.is_playing
 	local special_active = self._inventory_slot_component.special_active
 	local fx_extension = self._fx_extension
+	local t = World.time(self._world)
 
 	if not is_playing and special_active then
 		fx_extension:trigger_looping_wwise_event(SPECIAL_ACTIVE_LOOP_SOUND_ALIAS, self._special_active_fx_source_name)

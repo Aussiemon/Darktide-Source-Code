@@ -362,16 +362,17 @@ local action_data = {
 			"gun_jam_start"
 		},
 		attack_intensities = {
-			ranged = 15,
-			elite_ranged = 15
+			ranged = 12,
+			elite_ranged = 12
 		},
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		shoot_template = BreedShootTemplates.chaos_ogryn_gunner,
 		stagger_type_reduction = {
-			ranged = 20,
-			killshot = 20
+			ranged = 50,
+			melee = 10,
+			killshot = 50
 		},
 		strafe_anim_events = {
 			bwd = "move_bwd_walk_aim",

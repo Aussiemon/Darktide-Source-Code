@@ -332,15 +332,12 @@ local action_data = {
 	follow = {
 		idle_anim_events = "idle",
 		utility_weight = 1,
-		running_stagger_anim_right = "run_stagger_02",
 		controlled_stagger = true,
 		leave_walk_distance = 6,
 		controlled_stagger_ignored_combat_range = "melee",
 		controlled_stagger_min_speed = 2,
 		vo_event = "melee_idle",
 		walk_anim_event = "move_fwd_walk_4",
-		running_stagger_duration = 1.1666666666666667,
-		running_stagger_anim_left = "run_stagger_01",
 		move_speed = 4.5,
 		use_animation_running_stagger_speed = true,
 		run_anim_event = "move_fwd",
@@ -403,12 +400,24 @@ local action_data = {
 		},
 		start_move_event_anim_speed_durations = {
 			move_start_fwd = 1.0666666666666667
+		},
+		running_stagger_anim_left = {
+			"run_stagger_01",
+			"run_stagger_03"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_02",
+			"run_stagger_03"
+		},
+		running_stagger_duration = {
+			run_stagger_03 = 1.3333333333333333,
+			run_stagger_02 = 1.5,
+			run_stagger_01 = 1.3666666666666667
 		}
 	},
 	assault_follow = {
 		idle_anim_events = "idle",
 		utility_weight = 1,
-		running_stagger_anim_right = "run_stagger_02",
 		controlled_stagger = true,
 		controlled_stagger_min_speed = 2,
 		leave_walk_distance = 4,
@@ -417,8 +426,6 @@ local action_data = {
 		vo_event = "assault",
 		walk_anim_event = "move_fwd_walk",
 		is_assaulting = true,
-		running_stagger_duration = 1.1666666666666667,
-		running_stagger_anim_left = "run_stagger_01",
 		move_speed = 5.6,
 		use_animation_running_stagger_speed = true,
 		run_anim_event = "assault_fwd",
@@ -474,6 +481,19 @@ local action_data = {
 		},
 		start_move_event_anim_speed_durations = {
 			move_start_assault_fwd = 1.0666666666666667
+		},
+		running_stagger_anim_left = {
+			"run_stagger_01",
+			"run_stagger_03"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_02",
+			"run_stagger_03"
+		},
+		running_stagger_duration = {
+			run_stagger_03 = 1.3333333333333333,
+			run_stagger_02 = 1.5,
+			run_stagger_01 = 1.3666666666666667
 		}
 	},
 	melee_attack = {

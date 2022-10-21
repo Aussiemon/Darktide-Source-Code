@@ -4,6 +4,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -57,7 +58,26 @@ local weapon_template = {
 			anim_event = "equip",
 			sprint_ready_up_time = 0,
 			total_time = 0.1,
-			allowed_chain_actions = {}
+			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					action_name = "grenade_ability"
+				},
+				wield = {
+					action_name = "action_unwield"
+				},
+				start_attack = {
+					action_name = "action_melee_start_left"
+				},
+				block = {
+					action_name = "action_block"
+				},
+				special_action = {
+					action_name = "action_activate_special"
+				}
+			}
 		},
 		action_melee_start_left = {
 			weapon_handling_template = "time_scale_1",
@@ -136,7 +156,6 @@ local weapon_template = {
 			kind = "sweep",
 			range_mod = 1.25,
 			allowed_during_sprint = true,
-			power_level = 500,
 			damage_window_end = 0.4,
 			anim_event = "attack_swing_left_diagonal",
 			hit_stop_anim = "hit_stop",
@@ -218,7 +237,7 @@ local weapon_template = {
 			damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
 			damage_type = damage_types.metal_slashing_medium,
 			damage_type_special_active = damage_types.power_sword,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			},
@@ -233,7 +252,6 @@ local weapon_template = {
 			kind = "sweep",
 			range_mod = 1.25,
 			allowed_during_sprint = true,
-			power_level = 500,
 			damage_window_end = 0.3,
 			anim_event = "attack_swing_heavy_left",
 			hit_stop_anim = "hit_stop",
@@ -301,7 +319,7 @@ local weapon_template = {
 			damage_type = damage_types.metal_slashing_medium,
 			damage_type_special_active = damage_types.power_sword,
 			damage_profile_special_active = DamageProfileTemplates.heavy_powersword_active,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			},
@@ -382,7 +400,6 @@ local weapon_template = {
 			range_mod = 1.25,
 			kind = "sweep",
 			weapon_handling_template = "time_scale_1",
-			power_level = 500,
 			damage_window_end = 0.5,
 			anim_event = "attack_swing_right_diagonal",
 			hit_stop_anim = "hit_stop",
@@ -466,7 +483,7 @@ local weapon_template = {
 			damage_type = damage_types.metal_slashing_medium,
 			damage_type_special_active = damage_types.power_sword,
 			damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			},
@@ -480,7 +497,6 @@ local weapon_template = {
 			range_mod = 1.25,
 			kind = "sweep",
 			weapon_handling_template = "time_scale_0_75",
-			power_level = 500,
 			damage_window_end = 0.3,
 			anim_event = "attack_swing_heavy_right",
 			hit_stop_anim = "hit_stop",
@@ -549,7 +565,7 @@ local weapon_template = {
 			damage_type = damage_types.metal_slashing_medium,
 			damage_type_special_active = damage_types.power_sword,
 			damage_profile_special_active = DamageProfileTemplates.heavy_powersword_active,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			},
@@ -611,7 +627,6 @@ local weapon_template = {
 			weapon_handling_template = "time_scale_1_2",
 			kind = "sweep",
 			range_mod = 1.25,
-			power_level = 500,
 			damage_window_end = 0.45,
 			anim_event_3p = "attack_swing_down",
 			anim_event = "attack_swing_down_right",
@@ -683,7 +698,7 @@ local weapon_template = {
 			damage_type = damage_types.metal_slashing_medium,
 			damage_type_special_active = damage_types.power_sword,
 			damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter,
-			stat_buff_keywords = {
+			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
 			}
@@ -694,7 +709,6 @@ local weapon_template = {
 			weapon_handling_template = "time_scale_1",
 			kind = "push",
 			anim_event = "attack_push",
-			power_level = 500,
 			total_time = 1,
 			action_movement_curve = {
 				{
@@ -738,11 +752,11 @@ local weapon_template = {
 					chain_time = 0.4
 				}
 			},
-			inner_push_rad = math.pi * 0.6,
+			inner_push_rad = math.pi * 0.25,
 			outer_push_rad = math.pi * 1,
-			inner_damage_profile = DamageProfileTemplates.push_test,
+			inner_damage_profile = DamageProfileTemplates.default_push,
 			inner_damage_type = damage_types.physical,
-			outer_damage_profile = DamageProfileTemplates.push_test,
+			outer_damage_profile = DamageProfileTemplates.light_push,
 			outer_damage_type = damage_types.physical
 		},
 		action_activate_special = {
@@ -841,11 +855,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {
 	cleave_damage_up_dps_down = {
 		powersword_p1_m1_cleave_damage_stat = 0.1,
@@ -1102,6 +1112,36 @@ weapon_template.perks = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
 			}
 		}
+	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_high_cleave"
+	},
+	{
+		display_name = "loc_weapon_keyword_power_weapon"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
+		attack_chain = {
+			"linesman",
+			"linesman"
+		}
+	},
+	secondary = {
+		display_name = "loc_gestalt_tank",
+		type = "tank",
+		attack_chain = {
+			"tank",
+			"tank"
+		}
+	},
+	special = {
+		display_name = "loc_weapon_special_activate",
+		type = "activate"
 	}
 }
 

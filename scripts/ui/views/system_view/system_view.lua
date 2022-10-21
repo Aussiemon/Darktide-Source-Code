@@ -96,9 +96,6 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 			local type = entry.type
 			local widget = nil
 			local template = ContentBlueprints[type]
-
-			fassert(template, "[SystemView] - Could not find content blueprint for type: %s", type)
-
 			local size = template.size
 			local pass_template = template.pass_template
 

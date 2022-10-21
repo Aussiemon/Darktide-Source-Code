@@ -1,9 +1,13 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
+local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingPower = GibbingSettings.gibbing_power
 local GibbingTypes = GibbingSettings.gibbing_types
+local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_templates = {}
 local overrides = {}
 
@@ -11,10 +15,10 @@ table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 damage_templates.default_grenade = {
+	gibbing_power = 0,
 	stagger_category = "explosion",
 	suppression_value = 10,
-	damage_type = "grenade",
-	ragdoll_push_force = 1000,
+	ragdoll_push_force = 600,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
 		attack = 0.15,
@@ -24,25 +28,25 @@ damage_templates.default_grenade = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = 1,
-				[armor_types.armored] = 0.5,
+				[armor_types.armored] = 0.25,
 				[armor_types.resistant] = 0.75,
 				[armor_types.player] = 1,
 				[armor_types.berserker] = 0.5,
-				[armor_types.super_armor] = 0.2,
-				[armor_types.disgustingly_resilient] = 0.75,
+				[armor_types.super_armor] = 0.1,
+				[armor_types.disgustingly_resilient] = 1,
 				[armor_types.void_shield] = 0.75,
 				[armor_types.prop_armor] = 1
 			},
 			impact = {
-				[armor_types.unarmored] = 2,
-				[armor_types.armored] = 2,
-				[armor_types.resistant] = 5,
-				[armor_types.player] = 2,
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 3,
+				[armor_types.player] = 1,
 				[armor_types.berserker] = 2,
-				[armor_types.super_armor] = 5,
-				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 2
+				[armor_types.super_armor] = 2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
 			}
 		},
 		far = {
@@ -72,13 +76,58 @@ damage_templates.default_grenade = {
 	},
 	power_distribution_ranged = {
 		attack = {
-			far = 10,
-			near = 100
+			far = 100,
+			near = 200
 		},
 		impact = {
 			far = 2,
-			near = 30
+			near = 25
 		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gibbing_type = GibbingTypes.explosion
+}
+damage_templates.close_grenade = {
+	suppression_value = 10,
+	damage_type = "grenade",
+	ragdoll_push_force = 850,
+	ignore_stagger_reduction = true,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 0.5,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0.75,
+			[armor_types.void_shield] = 0.75,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 2,
+			[armor_types.armored] = 2,
+			[armor_types.resistant] = 10,
+			[armor_types.player] = 2,
+			[armor_types.berserker] = 2,
+			[armor_types.super_armor] = 5,
+			[armor_types.disgustingly_resilient] = 2,
+			[armor_types.void_shield] = 2,
+			[armor_types.prop_armor] = 2
+		}
+	},
+	power_distribution = {
+		attack = 500,
+		impact = 100
 	},
 	targets = {
 		default_target = {
@@ -88,9 +137,87 @@ damage_templates.default_grenade = {
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy
 }
-damage_templates.close_grenade = {
+damage_templates.frag_grenade = {
+	gibbing_power = 0,
+	stagger_category = "explosion",
 	suppression_value = 10,
-	damage_type = "grenade",
+	damage_type = "frag",
+	ragdoll_push_force = 600,
+	ignore_stagger_reduction = true,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.75,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 0.75,
+				[armor_types.prop_armor] = 1
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 3,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 2,
+				[armor_types.super_armor] = 2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			}
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+				[armor_types.prop_armor] = 0
+			},
+			impact = {
+				[armor_types.unarmored] = 0.2,
+				[armor_types.armored] = 0.2,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.2,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 0.2,
+				[armor_types.void_shield] = 0.2,
+				[armor_types.prop_armor] = 0.2
+			}
+		}
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 100,
+			near = 200
+		},
+		impact = {
+			far = 2,
+			near = 15
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gibbing_type = GibbingTypes.explosion
+}
+damage_templates.close_frag_grenade = {
+	suppression_value = 10,
+	damage_type = "frag",
 	ragdoll_push_force = 850,
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
@@ -309,9 +436,10 @@ damage_templates.plasma_demolition = {
 	}
 }
 damage_templates.shock_grenade = {
+	shield_override_stagger_strength = 0,
 	suppression_value = 10,
 	damage_type = "grenade",
-	ragdoll_push_force = 1250,
+	ragdoll_push_force = 250,
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
 	cleave_distribution = {
@@ -320,15 +448,15 @@ damage_templates.shock_grenade = {
 	},
 	armor_damage_modifier = {
 		attack = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1.5,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0.2,
-			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-			[armor_types.prop_armor] = 1
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -343,7 +471,7 @@ damage_templates.shock_grenade = {
 		}
 	},
 	power_distribution = {
-		attack = 500,
+		attack = 0,
 		impact = 0
 	},
 	targets = {
@@ -353,6 +481,48 @@ damage_templates.shock_grenade = {
 	},
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy
+}
+damage_templates.shock_grenade_stun_interval = {
+	stagger_category = "sticky",
+	shield_override_stagger_strength = 0,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.prop_armor] = damage_lerp_values.no_damage
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_2,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		}
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 20
+	},
+	power_distribution = {
+		attack = 8,
+		impact = 100
+	},
+	damage_type = damage_types.electrocution,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.force_staff_demolition_close = table.clone(damage_templates.close_grenade)
 damage_templates.force_staff_demolition_close.power_distribution.attack = 0.1

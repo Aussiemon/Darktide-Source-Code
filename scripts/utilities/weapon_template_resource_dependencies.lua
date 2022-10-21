@@ -16,7 +16,6 @@ WeaponTemplateResourceDependencies.generate = function (weapon_template_name)
 	_cached_templates[weapon_template_name] = resource_packages
 	local weapon_template = WeaponTemplates[weapon_template_name]
 
-	fassert(weapon_template, "weapon template %q does not exist.", weapon_template_name)
 	_resolve_data_recursive(weapon_template, TEMP_RESOURCE_PACKAGES)
 
 	local impact_fx_resource_packages = ImpactFxResourceDependencies.generate(weapon_template)

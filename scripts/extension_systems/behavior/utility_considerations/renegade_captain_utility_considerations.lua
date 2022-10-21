@@ -24,7 +24,7 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 10,
+			max_value = 15,
 			spline = {
 				0,
 				0,
@@ -508,7 +508,7 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0
+				0.1
 			}
 		},
 		has_line_of_sight = {
@@ -535,7 +535,7 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0
+				0.1
 			}
 		},
 		has_line_of_sight = {
@@ -675,7 +675,7 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 6,
+			max_value = 7,
 			spline = {
 				0,
 				1,
@@ -691,6 +691,38 @@ local considerations = {
 			component_field = "has_line_of_sight",
 			blackboard_component = "perception",
 			is_condition = true
+		},
+		nearby_units = {
+			component_field = "num_units",
+			blackboard_component = "nearby_units_broadphase",
+			max_value = 4,
+			spline = {
+				0,
+				0,
+				0.25,
+				0.25,
+				0.5,
+				0.5,
+				0.75,
+				0.75,
+				1,
+				1
+			}
+		},
+		last_time = {
+			time_diff = true,
+			max_value = 20,
+			component_field = "last_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
 		}
 	},
 	renegade_captain_powermaul_ground_slam_attack = {
@@ -761,7 +793,7 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0
+				0.1
 			}
 		},
 		has_line_of_sight = {

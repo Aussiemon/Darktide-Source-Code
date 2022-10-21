@@ -9,10 +9,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__cmd_mission_cooling_hacking_event_end_04"
 		},
 		sound_events_duration = {
-			4.906981,
-			6.195625,
-			5.760063,
-			5.801625
+			4.916063,
+			6.204708,
+			5.769146,
+			5.810708
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__cmd_mission_cooling_hacking_event_start_04"
 		},
 		sound_events_duration = {
-			6.701917,
-			7.146292,
-			7.199396,
-			6.860126
+			6.711,
+			7.155375,
+			7.208479,
+			6.869208
 		},
 		randomize_indexes = {}
 	},
@@ -43,36 +43,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__cmd_mission_cooling_luggable_event_start_04"
 		},
 		sound_events_duration = {
-			3.540667,
-			3.34698,
-			3.672584,
-			3.080959
-		},
-		randomize_indexes = {}
-	},
-	info_bypass_mission_cooling = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_sergeant_a__info_bypass_01",
-			"loc_sergeant_a__info_bypass_02",
-			"loc_sergeant_a__info_bypass_03",
-			"loc_sergeant_a__info_bypass_04",
-			"loc_sergeant_a__info_bypass_05"
-		},
-		sound_events_duration = {
-			5.253084,
-			5.277855,
-			4.646896,
-			4.595105,
-			4.51823
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			3.54975,
+			3.356063,
+			3.681667,
+			3.090042
 		},
 		randomize_indexes = {}
 	},
@@ -86,10 +60,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_mission_cooling_coolant_control_04"
 		},
 		sound_events_duration = {
-			5.111938,
-			4.20148,
-			5.273625,
-			4.697021
+			5.121021,
+			4.210563,
+			5.282708,
+			4.706104
 		},
 		randomize_indexes = {}
 	},
@@ -103,10 +77,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_mission_cooling_demolish_04"
 		},
 		sound_events_duration = {
-			5.0075,
-			3.785271,
-			4.204125,
-			5.186439
+			5.016583,
+			3.794354,
+			4.213208,
+			5.195521
 		},
 		randomize_indexes = {}
 	},
@@ -120,10 +94,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_mission_cooling_follow_conveyor_04"
 		},
 		sound_events_duration = {
-			5.385396,
-			4.112855,
-			4.943042,
-			3.143834
+			5.394479,
+			4.121938,
+			4.952125,
+			3.152917
 		},
 		randomize_indexes = {}
 	},
@@ -137,10 +111,10 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_mission_cooling_maintenance_04"
 		},
 		sound_events_duration = {
-			4.39725,
-			4.001521,
-			4.327959,
-			4.02123
+			4.406333,
+			4.010604,
+			4.337042,
+			4.030313
 		},
 		randomize_indexes = {}
 	},
@@ -154,10 +128,27 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_mission_cooling_vents_04"
 		},
 		sound_events_duration = {
-			3.405855,
-			3.789584,
-			4.448646,
-			4.696625
+			3.414938,
+			3.798667,
+			4.457729,
+			4.705708
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_first_objective = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_cooling_first_objective_01",
+			"loc_sergeant_a__mission_cooling_first_objective_02",
+			"loc_sergeant_a__mission_cooling_first_objective_03",
+			"loc_sergeant_a__mission_cooling_first_objective_04"
+		},
+		sound_events_duration = {
+			5.421479,
+			4.658708,
+			5.491708,
+			4.972917
 		},
 		randomize_indexes = {}
 	},
@@ -171,10 +162,36 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__mission_cooling_heat_response_04"
 		},
 		sound_events_duration = {
-			2.931292,
-			3.382792,
-			3.832063,
-			3.806792
+			2.940375,
+			3.391875,
+			3.841146,
+			3.815875
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat_response_three = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_sergeant_a__door_release_01",
+			"loc_sergeant_a__door_release_02",
+			"loc_sergeant_a__door_release_03",
+			"loc_sergeant_a__door_release_04",
+			"loc_sergeant_a__door_release_05"
+		},
+		sound_events_duration = {
+			2.669083,
+			3.353646,
+			2.557104,
+			2.99675,
+			2.529146
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -189,11 +206,11 @@ local mission_vo_lm_cooling_sergeant_a = {
 			"loc_sergeant_a__info_event_almost_done_05"
 		},
 		sound_events_duration = {
-			2.060271,
-			1.71073,
-			1.901563,
-			1.934334,
-			1.825709
+			2.069354,
+			1.719813,
+			1.910646,
+			1.943417,
+			1.834792
 		},
 		sound_event_weights = {
 			0.2,

@@ -1,7 +1,7 @@
 local HubMovementLocomotion = {}
 local _physics_move = nil
 
-HubMovementLocomotion.update_movement = function (unit, dt, velocity_current, velocity_wanted, current_position, calculate_fall_velocity, player_character_constants, movement_settings, movement_settings_override, hub_active_stopping)
+HubMovementLocomotion.update_movement = function (mover, dt, velocity_current, velocity_wanted, current_position, calculate_fall_velocity, player_character_constants, movement_settings, movement_settings_override, hub_active_stopping)
 	local shared_movement_settings = movement_settings.shared
 	local move_state_movement_settings = movement_settings.current_move_state
 	local current_z = velocity_current.z
@@ -42,7 +42,7 @@ HubMovementLocomotion.update_movement = function (unit, dt, velocity_current, ve
 	end
 
 	new_velocity.z = current_z - player_character_constants.hub_gravity * dt
-	local final_position, final_velocity = _physics_move(unit, current_position, new_velocity, dt)
+	local final_position, final_velocity = _physics_move(mover, current_position, new_velocity, dt)
 	local projected_velocity = Vector3.lerp(new_velocity, final_velocity, dt * shared_movement_settings.velocity_wall_slide_lerp_speed)
 	projected_velocity.z = final_velocity.z
 
@@ -68,9 +68,8 @@ HubMovementLocomotion.fetch_movement_settings = function (unit, player_character
 	return MOVEMENT_SETTINGS
 end
 
-function _physics_move(unit, input_position, input_velocity, dt)
+function _physics_move(mover, input_position, input_velocity, dt)
 	local delta = input_velocity * dt
-	local mover = Unit.mover(unit)
 
 	Mover.move(mover, delta, dt)
 

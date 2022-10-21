@@ -127,7 +127,7 @@ ViewElementMenuPanel.add_entry = function (self, text, onclick_callback, update_
 	end
 
 	self._content[#self._content + 1] = {
-		text = string.upper(text),
+		text = Utf8.upper(text),
 		callback = onclick_callback,
 		update = update_function
 	}
@@ -143,8 +143,6 @@ end
 
 ViewElementMenuPanel._convert_update_argument_to_function = function (self, text_arg)
 	local result = loadstring("return function(content, style, dt) " .. text_arg .. " end")
-
-	fassert(result, "ViewElementMenuPanel - Failed constructing update function from: [[" .. text_arg .. "]]")
 
 	return result()
 end

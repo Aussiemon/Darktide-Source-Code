@@ -1,6 +1,6 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "coruption_taken", "coruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
+local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "coruption_taken", "coruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
 local status = table.enum("active", "inactive", "removing")
 mood_settings.mood_types = types
 mood_settings.status = status
@@ -14,6 +14,7 @@ mood_settings.priority = {
 	types.suppression_high,
 	types.damage_taken,
 	types.toughness_absorbed,
+	types.toughness_absorbed_melee,
 	types.coruption_taken,
 	types.coruption,
 	types.sprinting,
@@ -138,6 +139,14 @@ mood_settings.moods = {
 			"content/fx/particles/screenspace/toughness"
 		}
 	},
+	[types.toughness_absorbed_melee] = {
+		active_time = 0.1,
+		blend_in_time = 0.1,
+		blend_out_time = 0.1,
+		particle_effects_on_enter = {
+			"content/fx/particles/screenspace/toughness"
+		}
+	},
 	[types.coruption_taken] = {
 		active_time = 0.05,
 		blend_in_time = 0.01,
@@ -242,12 +251,12 @@ mood_settings.moods = {
 					local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
 
 					if unit_data_extension then
-						local archetype_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
+						local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 						local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
 						local dt = Managers.time:delta_time("gameplay")
 						local warp_charge_component = unit_data_extension:read_component("warp_charge")
 						local current_percent = warp_charge_component.current_percentage
-						local base_low_threshold = archetype_warp_charge_template.low_threshold
+						local base_low_threshold = specialization_warp_charge_template.low_threshold
 						local low_threshold_modifier = weapon_warp_charge_template.low_threshold_modifier or 1
 						local low_threshold = base_low_threshold * low_threshold_modifier
 						local wanted_value = math.normalize_01(current_percent, low_threshold, 1)

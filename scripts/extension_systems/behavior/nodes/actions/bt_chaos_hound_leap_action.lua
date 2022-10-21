@@ -26,6 +26,11 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.navigation_extension = navigation_extension
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
+
+	scratchpad.target_dodged_during_attack = false
+	scratchpad.target_dodged_type = nil
+	scratchpad.dodged_attack = false
+
 	locomotion_extension:set_movement_type("constrained_by_mover")
 	locomotion_extension:set_affected_by_gravity(true)
 
@@ -53,6 +58,10 @@ BtChaosHoundLeapAction.leave = function (self, unit, breed, blackboard, scratchp
 		locomotion_extension:set_gravity(nil)
 		locomotion_extension:set_check_falling(true)
 		locomotion_extension:set_anim_driven(false)
+
+		if reason ~= "done" then
+			self:_set_pounce_cooldown(blackboard, t)
+		end
 	end
 
 	MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
@@ -107,7 +116,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			end
 		end
 
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
 	elseif state == "telegraph_leap" then
 		local telegraph_timing = scratchpad.telegraph_timing
@@ -118,17 +127,56 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			scratchpad.telegraph_timing = nil
 		end
 
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
 	elseif state == "leaping" then
-		local hit_player_unit = self:_check_colliding_players(unit, scratchpad, action_data)
+		local is_dodging, dodge_type = Dodge.is_dodging(target_unit)
+
+		if is_dodging and not scratchpad.target_dodged_during_attack then
+			scratchpad.target_dodged_during_attack = true
+			scratchpad.target_dodged_type = dodge_type
+		end
+
+		local hit_player_unit = not scratchpad.current_colliding_target and self:_check_colliding_players(unit, scratchpad, action_data)
 
 		if hit_player_unit then
-			local pounce_component = Blackboard.write_component(blackboard, "pounce")
-			pounce_component.pounce_target = hit_player_unit
-			scratchpad.hit_target = true
+			local extra_timing = 0
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(hit_player_unit)
 
-			return "done"
+			if player and player.remote then
+				extra_timing = player:lag_compensation_rewind_s()
+				scratchpad.lag_compensation_rewind_s = extra_timing
+			end
+
+			scratchpad.current_colliding_target = hit_player_unit
+			scratchpad.current_colliding_target_check_time = t + extra_timing
+		elseif scratchpad.current_colliding_target then
+			if scratchpad.current_colliding_target_check_time <= t then
+				local pounce_component = Blackboard.write_component(blackboard, "pounce")
+				pounce_component.pounce_target = scratchpad.current_colliding_target
+				scratchpad.hit_target = true
+				scratchpad.current_colliding_target = nil
+				scratchpad.current_colliding_target_check_time = nil
+
+				return "done"
+			end
+		elseif target_unit and ALIVE[target_unit] then
+			local current_velocity = locomotion_extension:current_velocity()
+			local current_direction = Vector3.normalize(current_velocity)
+			local position = POSITION_LOOKUP[unit]
+			local target_unit_position = POSITION_LOOKUP[target_unit]
+			local to_target = target_unit_position - position
+			local direction_to_target = Vector3.normalize(to_target)
+			local dot_to_target = Vector3.dot(current_direction, direction_to_target)
+
+			if dot_to_target < 0 and scratchpad.target_dodged_during_attack and not scratchpad.dodged_attack then
+				dodge_type = scratchpad.target_dodged_type
+
+				Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+
+				scratchpad.dodged_attack = true
+			end
 		end
 
 		local current_velocity = locomotion_extension:current_velocity()
@@ -147,7 +195,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			locomotion_extension:set_wanted_velocity(wanted_velocity)
 		end
 
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
 	elseif state == "wall_jump" then
 		local wall_land_duration = scratchpad.wall_land_duration

@@ -1,21 +1,4 @@
 local enemy_vo_enemy_traitor_trenchfighter_a = {
-	aleterted_outnumbered = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_enemy_traitor_trenchfighter_a__aleterted_outnumbered_01",
-			"loc_enemy_traitor_trenchfighter_a__aleterted_outnumbered_02",
-			"loc_enemy_traitor_trenchfighter_a__aleterted_outnumbered_03",
-			"loc_enemy_traitor_trenchfighter_a__aleterted_outnumbered_04"
-		},
-		sound_events_duration = {
-			0.999979,
-			1.499979,
-			3.499979,
-			1.999979
-		},
-		randomize_indexes = {}
-	},
 	traitor_trenchfighter_alerted_idle = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,

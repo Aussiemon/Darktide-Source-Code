@@ -14,9 +14,6 @@ MinionUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	local hit_zones = breed.hit_zones
 	local breed_name = breed.name
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, hit_zones)
-
-	fassert(self._hit_zone_actors_lookup.center_mass, "[MinionUnitDataExtension] Breed %q does not have center_mass hit zone", breed_name)
-
 	self._pending_destroyed_hit_zones = {}
 	self._destroyed_hit_zones = {}
 	local bind_pose = Unit.world_pose(unit, 1)
@@ -135,10 +132,6 @@ end
 
 MinionUnitDataExtension.destroy_hit_zone = function (self, hit_zone_name)
 	local destroyed_hit_zones = self._destroyed_hit_zones
-
-	fassert(self._is_server, "[MinionUnitDataExtension] Only server should call \"destroy_hit_zone\" directly!")
-	fassert(not destroyed_hit_zones[hit_zone_name], "[MinionUnitDataExtension] Hit zone %q was already destroyed.", hit_zone_name)
-
 	destroyed_hit_zones[hit_zone_name] = true
 	local pending_destroyed_hit_zones = self._pending_destroyed_hit_zones
 	pending_destroyed_hit_zones[#pending_destroyed_hit_zones + 1] = hit_zone_name

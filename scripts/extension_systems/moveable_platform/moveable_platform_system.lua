@@ -68,4 +68,16 @@ MoveablePlatformSystem.update_level_props_broadphase = function (self)
 	end
 end
 
+MoveablePlatformSystem.units_are_locked = function (self)
+	local unit_to_extension_map = self._unit_to_extension_map
+
+	for _, extension in pairs(unit_to_extension_map) do
+		if extension:units_locked() then
+			return true
+		end
+	end
+
+	return false
+end
+
 return MoveablePlatformSystem

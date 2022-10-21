@@ -4,6 +4,7 @@ local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/s
 local full_flush_interval = 300
 local target_frame_time = GameParameters.fixed_time_step + 0.0005
 local update_interval = 1
+local _log = nil
 
 ServerMetricsManager.init = function (self)
 	self._metrics = {}
@@ -24,22 +25,16 @@ ServerMetricsManager.destroy = function (self)
 end
 
 ServerMetricsManager.add_annotation = function (self, type_name, metadata)
-	assert(type(type_name) == "string", "type_name has to be string")
-	assert(type(metadata) == "table" or type(metadata) == "nil", "metadata has to be table")
-
 	local json_object = {
 		ts = os.time(),
 		type = type_name,
 		metadata = metadata
 	}
 
-	Log.info("ServerMetricsManager", string.format("annotation:%s", cjson.encode(json_object)))
+	_log("annotation:%s", cjson.encode(json_object))
 end
 
 ServerMetricsManager.set_gauge = function (self, metric_name, value)
-	assert(type(metric_name) == "string", "metric_name has to be string")
-	assert(type(value) == "number", "value has to be a number")
-
 	local metric = self._metrics[metric_name]
 
 	if not metric then
@@ -62,9 +57,6 @@ ServerMetricsManager.set_gauge = function (self, metric_name, value)
 end
 
 ServerMetricsManager.add_to_counter = function (self, metric_name, value)
-	assert(type(metric_name) == "string", "metric_name has to be string")
-	assert(type(value) == "number", "value has to be a number")
-
 	local metric = self._metrics[metric_name]
 
 	if not metric then
@@ -87,7 +79,7 @@ end
 
 ServerMetricsManager._flush_metric = function (self, metric, dt)
 	if metric.dirty and metric.flush_dt > 5 or full_flush_interval < metric.flush_dt then
-		Log.info("ServerMetricsManager", string.format("metric: %s %s %f", metric.name, metric.type, metric.value))
+		_log("metric: %s %s %f", metric.name, metric.type, metric.value)
 
 		metric.flush_dt = 0
 		metric.dirty = false
@@ -121,6 +113,14 @@ ServerMetricsManager.update = function (self, dt)
 
 		self._last_update = 0
 	end
+end
+
+function _log(format, ...)
+	if DevParameters.disable_server_metrics_prints then
+		return
+	end
+
+	Log.info("ServerMetricsManager", string.format(format, ...))
 end
 
 implements(ServerMetricsManager, ServerMetricsManagerInterface)

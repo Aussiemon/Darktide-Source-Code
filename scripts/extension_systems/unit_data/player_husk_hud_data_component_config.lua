@@ -45,8 +45,6 @@ local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 for slot_name, slot_config in pairs(slot_configuration) do
 	if slot_config.wieldable and slot_config.slot_type == "weapon" then
-		fassert(husk_hud_data_component_config[slot_name] == nil, "already tracking slot_name %q in husk_hud_data_component_config.", slot_name)
-
 		husk_hud_data_component_config[slot_name] = {
 			"powered_weapon_intensity"
 		}
@@ -60,9 +58,6 @@ local looping_sound_aliases = {
 for i = 1, #looping_sound_aliases do
 	local looping_sound_alias = looping_sound_aliases[i]
 	local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
-
-	fassert(husk_hud_data_component_config[component_name] == nil, "Already contains a component named %q", component_name)
-
 	husk_hud_data_component_config[component_name] = {
 		"is_playing"
 	}

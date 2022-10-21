@@ -1,16 +1,13 @@
 local Definitions = require("scripts/ui/hud/elements/wield_info/hud_element_wield_info_definitions")
 local WieldInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/wield_info_passives_templates")
+local TrainingGroundsInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/training_grounds_wield_info_passives_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtils = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Action = require("scripts/utilities/weapon/action")
-local _input_devices = {
-	"xbox_controller",
-	"keyboard",
-	"mouse"
-}
+local InputDevice = require("scripts/managers/input/input_device")
 local HudElementWieldInfo = class("HudElementWieldInfo", "HudElementBase")
 
 HudElementWieldInfo.init = function (self, parent, draw_layer, start_scale)
@@ -19,6 +16,8 @@ HudElementWieldInfo.init = function (self, parent, draw_layer, start_scale)
 	self._input_info_definition = Definitions.input_info_definition
 
 	HudElementWieldInfo.super.init(self, parent, draw_layer, start_scale, Definitions)
+	self:_register_event("event_on_active_input_changed", "event_on_input_changed")
+	self:_register_event("event_on_input_settings_changed", "event_on_input_changed")
 end
 
 HudElementWieldInfo._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -50,8 +49,14 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 	local icon = input.icon and input.icon ~= "" and input.icon or nil
 	local icon_width = input.icon_width or 0
 	local icon_height = input.icon_height or 0
+
+	if type(input_action) == "table" then
+		input_action = InputDevice.gamepad_active and input_action[2] or input_action[1]
+	end
+
 	local service_type = "Ingame"
-	local text = TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"))
+	local include_input_type = true
+	local text = TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget_name = "input_widget_" .. self._widget_counter
 	self._widget_counter = self._widget_counter + 1
 	local widget = self:_create_widget(widget_name, self._input_info_definition)
@@ -136,9 +141,24 @@ HudElementWieldInfo.update = function (self, dt, t)
 	local input_descriptions = item and item.input_descriptions
 	local update_weapon_action = input_descriptions and current_action_name ~= self._previous_action_name
 
-	if not input_descriptions then
-		for i = 1, #WieldInfoPassivesTemplates do
-			local data = WieldInfoPassivesTemplates[i]
+	for i = 1, #WieldInfoPassivesTemplates do
+		local data = WieldInfoPassivesTemplates[i]
+		local name = data.name
+		local validation_function = data.validation_function
+
+		if validation_function(wielded_slot_id, item, current_action, current_action_name, player) then
+			current_passive_wield_info_name = name
+			input_descriptions = data.input_descriptions
+
+			break
+		end
+	end
+
+	local training_grounds_scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+
+	if training_grounds_scenario_system:enabled() then
+		for i = 1, #TrainingGroundsInfoPassivesTemplates do
+			local data = TrainingGroundsInfoPassivesTemplates[i]
 			local name = data.name
 			local validation_function = data.validation_function
 
@@ -151,7 +171,7 @@ HudElementWieldInfo.update = function (self, dt, t)
 		end
 	end
 
-	local reset_all = wielded_slot_id ~= self._wielded_slot_id or current_passive_wield_info_name ~= self._current_passive_wield_info_name
+	local reset_all = wielded_slot_id ~= self._wielded_slot_id or wielded_slot_id == self._wielded_slot_id and weapon_template ~= self._weapon_template or current_passive_wield_info_name ~= self._current_passive_wield_info_name
 	local update = reset_all or update_weapon_action
 	local entries_removed = false
 
@@ -177,16 +197,17 @@ HudElementWieldInfo.update = function (self, dt, t)
 	self._wielded_slot_id = wielded_slot_id
 	self._previous_action_name = current_action_name
 	self._current_passive_wield_info_name = current_passive_wield_info_name
+	self._weapon_template = weapon_template
 	local entries_added = false
 
 	if input_descriptions and input_descriptions and #input_descriptions > 0 then
 		local previous_input_icon_size = 0
 
-		for i = #input_descriptions, 1, -1 do
+		for i = 1, #input_descriptions do
 			local input = input_descriptions[i]
-			local id = input.id
+			local valid_description = self:_validate_input_description(input)
 
-			if not self:_input_by_id(id) then
+			if valid_description then
 				local weapon_template_validation_function = input.weapon_template_validation_function
 				local validation_function = weapon_template and weapon_template_validation_function and weapon_template_validation_function ~= "" and weapon_template[weapon_template_validation_function]
 
@@ -204,6 +225,26 @@ HudElementWieldInfo.update = function (self, dt, t)
 	end
 
 	self._draw_info = #active_wield_inputs > 0
+end
+
+HudElementWieldInfo._validate_input_description = function (self, input_description)
+	local id = input_description.id
+	local already_active = self:_input_by_id(id)
+
+	if already_active then
+		return false
+	end
+
+	if input_description.training_grounds_specific then
+		local training_grounds_scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+		local tg_enabled = training_grounds_scenario_system:enabled()
+
+		if not tg_enabled then
+			return false
+		end
+	end
+
+	return true
 end
 
 HudElementWieldInfo._realign_input_entries = function (self)
@@ -230,12 +271,21 @@ end
 
 HudElementWieldInfo._get_input_text = function (self, alias_name)
 	local service_type = "Ingame"
-	local alias_array_index = 1
-	local alias = Managers.input:alias_object(service_type)
-	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
+	local color_tint_text = true
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 
 	return input_key
+end
+
+HudElementWieldInfo._reset_current_info = function (self)
+	self._wielded_slot_id = nil
+	self._previous_action_name = nil
+	self._current_passive_wield_info_name = nil
+	self._weapon_template = nil
+end
+
+HudElementWieldInfo.event_on_input_changed = function (self)
+	self:_reset_current_info()
 end
 
 return HudElementWieldInfo

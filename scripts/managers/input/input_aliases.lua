@@ -58,7 +58,7 @@ InputAliases.load = function (self, service_name)
 		for alias, alias_table in pairs(service_overrides) do
 			local current_alias_table = self._aliases[alias]
 
-			if current_alias_table then
+			if current_alias_table and self:bindable(alias) then
 				for index, value in pairs(alias_table) do
 					current_alias_table[index] = value
 				end
@@ -161,6 +161,20 @@ InputAliases.group = function (self, name)
 	if alias_row then
 		return alias_row.group
 	end
+end
+
+InputAliases.bindable = function (self, name)
+	local alias_row = self._aliases[name]
+
+	if alias_row then
+		if alias_row.bindable ~= nil then
+			return alias_row.bindable
+		end
+
+		return true
+	end
+
+	return false
 end
 
 InputAliases.alias_table = function (self)

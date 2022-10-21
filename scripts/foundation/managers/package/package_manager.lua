@@ -78,15 +78,11 @@ end
 PackageManager._bring_in = function (self, package_name)
 	local resource_handle = self._asynch_packages[package_name]
 
-	assert(resource_handle, "Package %q is not being loaded", package_name)
-	assert(not self._packages[package_name], "Package %q is already loaded", package_name)
 	ResourcePackage.flush(resource_handle)
 
 	self._packages[package_name] = resource_handle
 	self._asynch_packages[package_name] = nil
 	local items = self._package_to_load_call_item[package_name]
-
-	assert(items, "No items loading package %q", package_name)
 
 	for i = 1, #items do
 		local item = items[i]
@@ -148,8 +144,6 @@ PackageManager.release = function (self, id)
 
 		if self._asynch_packages[package_name] then
 			resource_handle = self._asynch_packages[package_name]
-
-			assert(resource_handle, "Package '" .. tostring(package_name) .. "' is not loaded")
 		end
 
 		if resource_handle then

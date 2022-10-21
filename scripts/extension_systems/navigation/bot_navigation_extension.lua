@@ -91,9 +91,6 @@ BotNavigationExtension._update_astar = function (self, t)
 	if result then
 		if GwNavAStar.path_found(astar) then
 			local num_nodes = GwNavAStar.node_count(astar)
-
-			fassert(num_nodes > 0, "[BotNavigationExtension] Number of nodes in returned path is not greater than 0.")
-
 			local nav_world = self._nav_world
 			local traverse_logic = self._traverse_logic
 			local path_last_node_position = GwNavAStar.node_at_index(astar, num_nodes)
@@ -334,8 +331,6 @@ local PROPAGATION_BOX_EXTENT = 40
 local SAME_DIRECTION_THRESHOLD = math.cos(math.pi / 8)
 
 BotNavigationExtension.move_to = function (self, target_position, callback)
-	fassert(not callback or type(callback) == "function", "Tried to pass invalid callback value to BotNavigationExtension:move_to()")
-
 	if self._astar_cancelled then
 		Log.error("BotNavigationExtension", "Can't path, AStar was cancelled, need to wait for command queue to be flushed.")
 
@@ -517,8 +512,6 @@ local MAX_JUMP_WAYPOINT_DISTANCE_SQ = 1
 
 BotNavigationExtension.transition_requires_jump = function (self, position)
 	local transition = self._current_transition
-
-	fassert(transition, "[BotNavigationExtension] Trying to check if transition requires jump with no active transition.")
 
 	if transition.type ~= "bot_leap_of_faith" or transition.is_following_waypoint then
 		return false

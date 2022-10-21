@@ -19,8 +19,6 @@ end
 local _friend_request_options = {}
 
 Social.send_friend_request = function (self, account_id, method)
-	assert(account_id, "account_id must be specified")
-
 	local options = _friend_request_options
 	options.method = method or "POST"
 
@@ -30,8 +28,6 @@ Social.send_friend_request = function (self, account_id, method)
 end
 
 Social.unfriend_player = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	local options = _friend_request_options
 	options.method = "DELETE"
 
@@ -59,8 +55,6 @@ local _add_blocked_account_options = {
 }
 
 Social.add_blocked_account = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return BackendUtilities.make_account_title_request("block", BackendUtilities.url_builder(account_id), _add_blocked_account_options, nil, "social"):next(function (data)
 		return data.body
 	end)
@@ -71,8 +65,6 @@ local _remove_blocked_account_options = {
 }
 
 Social.remove_blocked_account = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return BackendUtilities.make_account_title_request("block", BackendUtilities.url_builder(account_id), _remove_blocked_account_options, nil, "social"):next(function (data)
 		return data.body
 	end)

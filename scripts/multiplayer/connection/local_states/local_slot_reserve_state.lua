@@ -4,12 +4,6 @@ local RPCS = {
 local LocalSlotReserveState = class("LocalSlotReserveState")
 
 LocalSlotReserveState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.slots_to_reserve) == "table", "Table with slots to reserve is required")
-	assert(type(shared_state.has_reserved) == "boolean", "Boolean has reserved flag is required")
-
 	self._shared_state = shared_state
 	self._time = 0
 	self._reserve_done = false

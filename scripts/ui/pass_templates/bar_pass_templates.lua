@@ -273,37 +273,26 @@ BarPassTemplates.weapon_stats_bar = {
 local character_menu_experience_bar_background_margin = 2
 BarPassTemplates.character_menu_experience_bar = {
 	{
-		style_id = "background",
-		pass_type = "rect",
-		style = {
-			color = {
-				255,
-				30,
-				30,
-				30
-			}
-		}
-	},
-	{
 		pass_type = "texture",
 		style_id = "bar",
-		value = "content/ui/materials/bars/simple/fill",
+		value = "content/ui/materials/bars/exp_fill",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "left",
 			size = {
 				0
 			},
-			size_addition = {
-				0,
-				-character_menu_experience_bar_background_margin * 2
-			},
 			offset = {
-				-character_menu_experience_bar_background_margin,
+				0,
 				0,
 				1
 			},
-			color = Color.ui_terminal(255, true)
+			color = {
+				255,
+				75,
+				169,
+				208
+			}
 		},
 		change_function = function (content, style)
 			local progress = content.progress or 0
@@ -319,8 +308,11 @@ BarPassTemplates.character_menu_experience_bar = {
 			vertical_alignment = "center",
 			horizontal_alignment = "left",
 			size = {
-				12,
-				16
+				12
+			},
+			size_addition = {
+				0,
+				24
 			},
 			offset = {
 				0,
@@ -336,8 +328,8 @@ BarPassTemplates.character_menu_experience_bar = {
 		},
 		change_function = function (content, style)
 			local progress = content.progress or 0
-			local bar_length = (content.bar_length or 0) - character_menu_experience_bar_background_margin * 2
-			style.offset[1] = bar_length * progress - character_menu_experience_bar_background_margin - 6
+			local bar_length = content.bar_length or 0
+			style.offset[1] = bar_length * progress - 10
 			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
 			style.color[1] = 255 * alpha_multiplier
 		end

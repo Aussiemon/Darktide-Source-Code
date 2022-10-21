@@ -64,7 +64,6 @@ local function _common_highlight_change_function(content, style)
 	local offset = style.offset
 	offset[1] = default_offset[1] - style_size_addition[1] / 2
 	offset[2] = default_offset[2] - style_size_addition[2] / 2
-	style.hdr = progress == 1
 end
 
 local function _get_achievement_common_pass_templates(achievement)
@@ -161,7 +160,6 @@ local function _achievement_common_pass_template_init(widget_content, widget_sty
 		local rarity = reward_item.rarity
 
 		if rarity then
-			material_values.frame = UISettings.item_rarity_texture_types.achievement_reward[rarity]
 			reward_style.color = ItemUtils.rarity_color(reward_item)
 		end
 	end
@@ -323,13 +321,14 @@ for i = #_slot_item_pass_templates, 1, -1 do
 	pass_template.visibility_function = _foldout_visibility_function
 end
 
-local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns)
+local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local icon_style = widget.style.item_icon
 	local material_values = icon_style.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 local function _remove_live_item_icon_cb_func(widget)
@@ -400,8 +399,6 @@ local function _reward_detail_pass_template_init(widget_content, widget_style, a
 	if item_type == "slot_item" then
 		widget_content.item_display_name = ItemUtils.display_name(reward_item)
 		widget_content.item_sub_display_name = ItemUtils.sub_display_name(reward_item)
-		local _, rarity_side_texture = ItemUtils.rarity_textures(reward_item)
-		widget_content.item_rarity_side_texture = rarity_side_texture
 		local item_icon_style = widget_style.item_icon
 		item_icon_style.use_placeholder_texture = 1
 		item_icon_style.offset[2] = offset_y

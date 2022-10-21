@@ -4,12 +4,6 @@ local Ladder = component("Ladder")
 
 Ladder.init = function (self, unit, is_server)
 	self._is_server = is_server
-
-	fassert(Unit.has_node(unit, "node_top"), "[Ladder][init] missing unit node 'node_top'")
-	fassert(Unit.has_node(unit, "node_bottom"), "[Ladder][init] missing unit node 'node_bottom'")
-	fassert(Unit.has_node(unit, "node_leave"), "[Ladder][init] missing unit node 'node_leave'")
-	fassert(Unit.has_node(unit, "node_enter_end"), "[Ladder][init] missing unit node 'node_enter_end'")
-
 	local run_update = false
 
 	return run_update

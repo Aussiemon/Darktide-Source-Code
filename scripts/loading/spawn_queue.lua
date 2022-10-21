@@ -55,16 +55,10 @@ SpawnQueue.ready_group = function (self)
 end
 
 SpawnQueue.loaded_level = function (self, spawn_group, peer_id)
-	fassert(spawn_group == self._spawning_group_id, "Unexpected spawn group")
-
 	self._peer_level_loaded[peer_id] = true
 end
 
 SpawnQueue.trigger_group = function (self, group_id)
-	fassert(group_id == self._waiting_group_id, "Wrong group ID")
-	fassert(table.is_empty(self._spawning.peers), "Already spawning players")
-	fassert(self._spawning_group_id == nil, "Already spawning players")
-
 	local peers = {}
 
 	for peer, _ in pairs(self._waiting.peers) do

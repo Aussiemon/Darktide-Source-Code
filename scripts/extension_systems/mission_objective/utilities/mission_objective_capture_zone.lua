@@ -51,8 +51,6 @@ end
 MissionObjectiveCaptureZone.get_current_capture_zone = function (self)
 	local synchronizer_extension = self:synchronizer_extension()
 
-	fassert(synchronizer_extension, "[MissionObjectiveCaptureZone][get_current_capture_zone] No synchronizer.")
-
 	return synchronizer_extension:get_current_capture_zone()
 end
 

@@ -5,11 +5,6 @@ local RPCS = {
 local RemoteMasterItemsCheckState = class("RemoteMasterItemsCheckState")
 
 RemoteMasterItemsCheckState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.peer_id) == "string", "Peer id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 	self._got_request = false
@@ -49,20 +44,24 @@ RemoteMasterItemsCheckState.update = function (self, dt)
 		local items_metadata = MasterItems.get_cached_metadata()
 		local version = items_metadata.version
 
-		if version then
-			local url = nil
-
-			if version == 0 then
-				url = "no_url"
-			else
-				url = items_metadata.url
-			end
-
-			Log.info("RemoteMasterItemsCheckState", "Replying peer %s with master items version %s, %s", shared_state.peer_id, version, url)
-			RPC.rpc_master_items_version_reply(shared_state.channel_id, tostring(version), url)
-
-			return "version replied"
+		if not version then
+			return "missing version", {
+				game_reason = "missing_master_items_version"
+			}
 		end
+
+		local url = nil
+
+		if version == 0 then
+			url = "no_url"
+		else
+			url = items_metadata.url
+		end
+
+		Log.info("RemoteMasterItemsCheckState", "Replying peer %s with master items version %s, %s", shared_state.peer_id, version, url)
+		RPC.rpc_master_items_version_reply(shared_state.channel_id, tostring(version), url)
+
+		return "version replied"
 	end
 end
 

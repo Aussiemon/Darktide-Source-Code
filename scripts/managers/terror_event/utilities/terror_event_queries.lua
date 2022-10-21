@@ -52,33 +52,13 @@ TerrorEventQueries.num_alive_minions = function ()
 end
 
 TerrorEventQueries.num_alive_minions_in_level = function ()
-	local side_system = Managers.state.extension:system("side_system")
-	local side_name = side_system:get_default_player_side_name()
-	local side = side_system:get_side_from_name(side_name)
-	local alive_minions = side:alive_units_by_tag("enemy", "minion")
-	local num_alive = alive_minions.size
+	local num_alive = Managers.state.minion_spawn:num_spawned_minions()
 
 	return num_alive
 end
 
 TerrorEventQueries.num_aggroed_minions_in_level = function ()
-	local side_system = Managers.state.extension:system("side_system")
-	local side_name = side_system:get_default_player_side_name()
-	local side = side_system:get_side_from_name(side_name)
-	local alive_minions = side:alive_units_by_tag("enemy", "minion")
-	local blackboards = BLACKBOARDS
-	local num_aggroed = 0
-
-	for i = 1, alive_minions.size do
-		local minion_unit = alive_minions[i]
-		local blackboard = blackboards[minion_unit]
-		local perception_component = blackboard.perception
-		local aggro_state = perception_component.aggro_state
-
-		if aggro_state == "aggroed" then
-			num_aggroed = num_aggroed + 1
-		end
-	end
+	local num_aggroed = Managers.state.pacing:num_aggroed_minions()
 
 	return num_aggroed
 end

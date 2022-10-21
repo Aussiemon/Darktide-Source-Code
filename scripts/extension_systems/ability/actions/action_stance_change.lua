@@ -21,6 +21,7 @@ end
 
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
 	local stop_reload = action_settings.stop_reload
+	local stop_current_action = action_settings.stop_current_action
 	local anim = action_settings.anim
 	local anim_3p = action_settings.anim_3p or anim
 	local block_weapon_actions = action_settings.block_weapon_actions
@@ -47,6 +48,14 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		if current_action_name == "action_start_reload" or current_action_name == "action_reload" then
 			Interrupt.action(t, player_unit, "veteran_ability")
 		end
+	end
+
+	if stop_current_action then
+		local weapon_action_component = self._unit_data_extension:read_component("weapon_action")
+		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		local current_action_name, _ = Action.current_action(weapon_action_component, weapon_template)
+
+		Interrupt.action(t, player_unit, "combat_ability", nil, true)
 	end
 
 	if slot_to_wield then
@@ -89,9 +98,12 @@ ActionStanceChange.finish = function (self, reason, ...)
 		local player_unit = self._player_unit
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
-		param_table.unit = player_unit
 
-		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		if param_table then
+			param_table.unit = player_unit
+
+			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		end
 	end
 
 	if self._weapon_actions_blocked then

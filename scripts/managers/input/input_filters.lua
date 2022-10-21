@@ -164,8 +164,6 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 		local multiplier_y = filter_data.multiplier_y
 
 		if val.y ~= 0 and filter_data.multiplier_return_y and filter_data.angle_to_slow_down_inside then
-			Profiler.start("InputFilters.scale_vector3_xy_accelerated_x")
-
 			local player = Managers.player:local_player()
 			local viewport_name = player.viewport_name
 			local camera_rotation = Managers.state.camera:camera_rotation(viewport_name)
@@ -183,8 +181,6 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 				local lerp_value = math_clamp(acos / slow_down_angle, 0, 1)
 				multiplier_y = math_lerp(filter_data.multiplier_y, filter_data.multiplier_return_y, lerp_value)
 			end
-
-			Profiler.stop("InputFilters.scale_vector3_xy_accelerated_x")
 		end
 
 		x = x * multiplier * mean_dt
@@ -352,11 +348,11 @@ InputFilters.navigate_filter_continuous = {
 			end
 		end
 
-		local gamepad_settings = UISettings.gamepad
+		local menu_navigation_settings = UISettings.menu_navigation
 
 		if disabled and (input_mapping_found or axis_mapping_found) then
-			local min_multiplier = gamepad_settings.view_min_speed_multiplier
-			local view_speed_multiplier_decrease = gamepad_settings.view_speed_multiplier_decrease
+			local min_multiplier = menu_navigation_settings.view_min_speed_multiplier
+			local view_speed_multiplier_decrease = menu_navigation_settings.view_speed_multiplier_decrease
 			filter_data.cooldown_speed_multiplier = math.max(filter_data.cooldown_speed_multiplier - view_speed_multiplier_decrease * dt, min_multiplier)
 		end
 
@@ -366,7 +362,9 @@ InputFilters.navigate_filter_continuous = {
 		end
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
-			filter_data.cooldown = gamepad_settings.view_cooldown * filter_data.cooldown_speed_multiplier
+			local using_gamepad = Managers.input:device_in_use("gamepad")
+			local cooldown = using_gamepad and menu_navigation_settings.gamepad_view_cooldown or menu_navigation_settings.view_cooldown
+			filter_data.cooldown = cooldown * filter_data.cooldown_speed_multiplier
 
 			return true
 		end
@@ -412,11 +410,11 @@ InputFilters.navigate_filter_continuous_fast = {
 			end
 		end
 
-		local gamepad_settings = UISettings.gamepad
+		local menu_navigation_settings = UISettings.menu_navigation
 
 		if disabled and (input_mapping_found or axis_mapping_found) then
-			local min_multiplier = gamepad_settings.view_min_fast_speed_multiplier
-			local view_speed_multiplier_decrease = gamepad_settings.view_speed_multiplier_decrease
+			local min_multiplier = menu_navigation_settings.view_min_fast_speed_multiplier
+			local view_speed_multiplier_decrease = menu_navigation_settings.view_speed_multiplier_decrease
 			filter_data.cooldown_speed_multiplier = math.max(filter_data.cooldown_speed_multiplier - view_speed_multiplier_decrease * dt, min_multiplier)
 		end
 
@@ -426,7 +424,9 @@ InputFilters.navigate_filter_continuous_fast = {
 		end
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
-			filter_data.cooldown = gamepad_settings.view_fast_cooldown * filter_data.cooldown_speed_multiplier
+			local using_gamepad = Managers.input:device_in_use("gamepad")
+			local cooldown = using_gamepad and menu_navigation_settings.gamepad_view_fast_cooldown or menu_navigation_settings.view_fast_cooldown
+			filter_data.cooldown = cooldown * filter_data.cooldown_speed_multiplier
 
 			return true
 		end
@@ -439,7 +439,7 @@ InputFilters.navigate_axis_filter_continuous = {
 		local new_filter_data = table.clone(filter_data)
 		new_filter_data.cooldown = 0
 		new_filter_data.cooldown_speed_multiplier = 1
-		new_filter_data.initial_cooldown = filter_data.initial_cooldown or UISettings.gamepad.view_cooldown
+		new_filter_data.initial_cooldown = filter_data.initial_cooldown or UISettings.menu_navigation.view_cooldown
 		new_filter_data.threshold_length = filter_data.threshold_length or 0.05
 
 		return new_filter_data
@@ -461,14 +461,14 @@ InputFilters.navigate_axis_filter_continuous = {
 			end
 		end
 
-		local gamepad_settings = UISettings.gamepad
+		local menu_navigation_settings = UISettings.menu_navigation
 
 		if input_vector_length == 0 then
 			filter_data.cooldown_speed_multiplier = 1
 			filter_data.cooldown = 0
 		elseif disabled and input_vector_length > 0 then
-			local min_multiplier = gamepad_settings.view_min_speed_multiplier
-			local view_speed_multiplier_decrease = gamepad_settings.view_speed_multiplier_decrease
+			local min_multiplier = menu_navigation_settings.view_min_speed_multiplier
+			local view_speed_multiplier_decrease = menu_navigation_settings.view_speed_multiplier_decrease
 			filter_data.cooldown_speed_multiplier = math.max(filter_data.cooldown_speed_multiplier - view_speed_multiplier_decrease * dt, min_multiplier)
 			input_vector = Vector3(0, 0, 0)
 		elseif not disabled and input_vector_length > 0 then

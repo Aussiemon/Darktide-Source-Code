@@ -1,6 +1,10 @@
 local push_settings = {
 	default_max_push_speed = 4,
 	push_templates = {
+		block_broken = {
+			speed = 3.5,
+			max_speed_override = 3
+		},
 		toughness = {
 			speed = 1.5
 		},
@@ -8,7 +12,7 @@ local push_settings = {
 			speed = 1.2
 		},
 		light = {
-			speed = 1,
+			speed = 2.5,
 			max_speed_override = 2
 		},
 		medium = {
@@ -20,6 +24,10 @@ local push_settings = {
 			max_speed_override = 3
 		},
 		shocktrooper_shotgun = {
+			speed = 7,
+			max_speed_override = 4
+		},
+		renegade_captain_shotgun = {
 			speed = 7,
 			max_speed_override = 4
 		},
@@ -96,6 +104,11 @@ local push_settings = {
 			speed = 7,
 			max_speed_override = 4,
 			push_through_block = true
+		},
+		ranged_light = {
+			speed = 1,
+			max_speed_override = 2,
+			dont_trigger_on_toughness = true
 		}
 	}
 }

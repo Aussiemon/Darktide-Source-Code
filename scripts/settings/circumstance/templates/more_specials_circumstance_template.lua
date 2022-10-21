@@ -4,6 +4,11 @@ local circumstance_templates = {
 		theme_tag = "default",
 		mutators = {
 			"mutator_more_specials"
+		},
+		ui = {
+			description = "loc_circumstance_more_specials_description",
+			icon = "content/ui/materials/icons/circumstances/placeholder",
+			display_name = "loc_circumstance_more_specials_title"
 		}
 	}
 }

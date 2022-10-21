@@ -21,35 +21,37 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_executor"
 local breed_data = {
+	detection_radius = 15,
+	walk_speed = 2,
+	aggro_inventory_slot = "slot_melee_weapon",
+	use_bone_lod = true,
+	sub_faction_name = "renegade",
+	can_patrol = true,
+	spawn_inventory_slot = "slot_melee_weapon",
+	unit_template_name = "minion",
+	spawn_anim_state = "to_melee_elite",
+	volley_fire_target = true,
+	broadphase_radius = 1,
+	stagger_resistance = 1,
+	game_object_type = "minion_melee",
+	challenge_rating = 4,
+	bone_lod_radius = 1.2,
+	use_wounds = true,
+	power_level_type = "renegade_executor_melee",
 	display_name = "loc_breed_display_name_renegade_executor",
 	run_speed = 5.25,
-	spawn_inventory_slot = "slot_melee_weapon",
-	use_bone_lod = true,
-	spawn_anim_state = "to_melee_elite",
-	unit_template_name = "minion",
 	faction_name = "chaos",
-	power_level_type = "renegade_executor_melee",
-	detection_radius = 15,
-	sub_faction_name = "renegade",
-	broadphase_radius = 1,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_executor",
-	walk_speed = 2,
-	stagger_resistance = 1,
-	aggro_inventory_slot = "slot_melee_weapon",
-	challenge_rating = 4,
 	base_height = 1.9,
-	player_locomotion_constrain_radius = 0.5,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_executor",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 10,
-	use_wounds = true,
+	player_locomotion_constrain_radius = 0.5,
 	stagger_reduction_ranged = 20,
-	can_patrol = true,
-	smart_tag_target_type = "breed",
-	game_object_type = "minion_melee",
 	activate_slot_system_on_spawn = true,
+	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	hit_mass = 20,
-	bone_lod_radius = 1.2,
+	reduced_hit_mass = 4,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -64,19 +66,20 @@ local breed_data = {
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
 		[stagger_types.medium] = 1.25,
-		[stagger_types.heavy] = 2.8,
+		[stagger_types.heavy] = 3.5,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.explosion] = 5.454545454545454,
+		[stagger_types.explosion] = 3,
 		[stagger_types.killshot] = 0.5,
-		[stagger_types.sticky] = 0.75
+		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.5,
 		[stagger_types.medium] = 0.75,
-		[stagger_types.heavy] = 1.75,
+		[stagger_types.heavy] = 3,
 		[stagger_types.light_ranged] = 5,
 		[stagger_types.killshot] = 2,
-		[stagger_types.sticky] = 0.25
+		[stagger_types.sticky] = 0.25,
+		[stagger_types.explosion] = 3
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
@@ -84,7 +87,7 @@ local breed_data = {
 		[stagger_types.heavy] = 30,
 		[stagger_types.light_ranged] = 10,
 		[stagger_types.killshot] = 10,
-		[stagger_types.sticky] = 5
+		[stagger_types.sticky] = 3
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_executor,
 	sounds = require("scripts/settings/breed/breeds/renegade/renegade_executor_sounds"),
@@ -111,8 +114,8 @@ local breed_data = {
 	},
 	attack_intensity_cooldowns = {
 		melee = {
-			0.25,
-			0.5
+			0,
+			0
 		},
 		moving_melee = {
 			0.1,
@@ -288,9 +291,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -380,25 +380,9 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
 		always_show_killing_blow = true,
-		thresholds = {
-			[damage_types.blunt] = 0.5,
-			[damage_types.blunt_heavy] = 0.4,
-			[damage_types.blunt_thunder] = 0.4,
-			[damage_types.plasma] = 0.4,
-			[damage_types.rippergun_pellet] = 0.35,
-			[damage_types.auto_bullet] = 0.35,
-			[damage_types.pellet] = 0.35,
-			[damage_types.laser] = 0.85,
-			[damage_types.boltshell] = 0.45,
-			[damage_types.power_sword] = 0.5,
-			[damage_types.sawing_stuck] = 0.01,
-			[damage_types.sawing] = 0.05,
-			[damage_types.slashing_force_stuck] = 0.5,
-			[damage_types.combat_blade] = 0.1,
-			[damage_types.warp] = 0
-		}
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot

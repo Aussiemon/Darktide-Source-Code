@@ -36,8 +36,6 @@ GadgetSystem.destroy = function (self)
 end
 
 GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp_value)
-	assert(self._is_server)
-
 	local buff_instance_id = self._buff_instance_id + 1
 	self._buff_instance_id = buff_instance_id
 
@@ -54,8 +52,6 @@ GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp
 end
 
 GadgetSystem.rpc_add_meta_buff = function (self, channel_id, peer_id, local_player_id, buff_template_id, buff_instance_id, optional_lerp_value)
-	assert(self._is_client)
-
 	local player = Managers.player:player(peer_id, local_player_id)
 	local buff_name = NetworkLookup.buff_templates[buff_template_id]
 	local start_time = FixedFrame.get_latest_fixed_time()
@@ -78,7 +74,6 @@ GadgetSystem.meta_buffs = function (self)
 end
 
 GadgetSystem.remove_meta_buff = function (self, player, buff_instance_id)
-	assert(self._is_server)
 	self:_remove_meta_buff(buff_instance_id)
 	self:_update_meta_stat_buffs(player)
 
@@ -89,8 +84,6 @@ GadgetSystem.remove_meta_buff = function (self, player, buff_instance_id)
 end
 
 GadgetSystem.rpc_remove_meta_buff = function (self, channel_id, peer_id, local_player_id, buff_instance_id)
-	assert(self._is_client)
-
 	local player = Managers.player:player(peer_id, local_player_id)
 
 	self:_remove_meta_buff(buff_instance_id)
@@ -101,7 +94,9 @@ GadgetSystem._remove_meta_buff = function (self, buff_instance_id)
 	local buffs = self._buffs
 
 	for i = 1, #buffs do
-		if instance_id == buff:instance_id() then
+		local buff = buffs[i]
+
+		if buff_instance_id == buff:instance_id() then
 			table.remove(buffs, i)
 
 			break
@@ -126,18 +121,33 @@ GadgetSystem._update_meta_stat_buffs = function (self, player)
 end
 
 GadgetSystem._reset_stat_buffs = function (self, player)
+	local current_stat_buffs = self._stat_buffs[player]
+
+	if not current_stat_buffs then
+		self:_init_stat_buffs(player)
+
+		return
+	end
+
+	local stat_buff_base_values = BuffSettings.meta_stat_buff_type_base_values
+	local stats_to_reset = current_stat_buffs._modified_stats
+
+	for key in pairs(stats_to_reset) do
+		current_stat_buffs[key] = stat_buff_base_values[key]
+	end
+
+	table.clear(stats_to_reset)
+end
+
+GadgetSystem._init_stat_buffs = function (self, player)
+	local current_stat_buffs = {
+		_modified_stats = {}
+	}
 	local stat_buff_types = BuffSettings.meta_stat_buff_types
-	local stat_buffs = BuffSettings.meta_stat_buffs
-	local stat_buff_base_values = BuffSettings.stat_buff_base_values
-	local current_stat_buffs = self._stat_buffs[player] or {}
+	local stat_buff_base_values = BuffSettings.meta_stat_buff_type_base_values
 
-	for _, value in pairs(stat_buffs) do
-		local stat_buff_type = stat_buff_types[value]
-
-		fassert(stat_buff_type, "stat_buff with name %s missing a type definition in stat_buff_settings", value)
-
-		local base_value = stat_buff_base_values[stat_buff_type]
-		current_stat_buffs[value] = base_value
+	for stat_buff_name in pairs(stat_buff_types) do
+		current_stat_buffs[stat_buff_name] = stat_buff_base_values[stat_buff_name]
 	end
 
 	self._stat_buffs[player] = current_stat_buffs
@@ -150,7 +160,7 @@ GadgetSystem.stat_buffs = function (self, player)
 end
 
 GadgetSystem._default_stat_buffs = function (self, player)
-	self:_reset_stat_buffs(player)
+	self:_init_stat_buffs(player)
 
 	local stat_buffs = self._stat_buffs[player]
 

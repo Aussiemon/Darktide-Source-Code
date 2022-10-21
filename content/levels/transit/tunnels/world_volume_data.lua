@@ -2,7 +2,55 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_019",
+		name = "volume_blocker_tunnels_033",
+		alt_max_vector = {
+			8.238691329956055,
+			87.13967895507812,
+			-39.89970779418945
+		},
+		alt_min_vector = {
+			9.52760124206543,
+			87.88383483886719,
+			-45.4542121887207
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			-0.6444546580314636,
+			-0.37207961082458496,
+			2.777252197265625
+		},
+		bottom_points = {
+			{
+				11.688509941101074,
+				86.07289123535156,
+				-45.195396423339844
+			},
+			{
+				9.039725303649902,
+				90.66070556640625,
+				-45.19539260864258
+			},
+			{
+				7.366692543029785,
+				89.69477844238281,
+				-45.71302795410156
+			},
+			{
+				10.015477180480957,
+				85.10696411132812,
+				-45.71303176879883
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_021",
 		alt_max_vector = {
 			34.06013870239258,
 			175.5164337158203,
@@ -20,8 +68,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -50,7 +98,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_021",
+		name = "volume_blocker_tunnels_023",
 		alt_max_vector = {
 			-17.906105041503906,
 			146.02511596679688,
@@ -68,8 +116,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -98,7 +146,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_027",
+		name = "volume_blocker_tunnels_029",
 		alt_max_vector = {
 			32.362815856933594,
 			202.80068969726562,
@@ -116,8 +164,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -146,7 +194,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_025",
+		name = "volume_blocker_tunnels_027",
 		alt_max_vector = {
 			-20.098630905151367,
 			172.5206298828125,
@@ -164,8 +212,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -194,7 +242,55 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_004",
+		name = "volume_blocker_tunnels_002",
+		alt_max_vector = {
+			15.157145500183105,
+			247.40606689453125,
+			-45.70833969116211
+		},
+		alt_min_vector = {
+			15.224202156066895,
+			247.4154510498047,
+			-48.59077453613281
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			-0.03352835029363632,
+			-0.0046911644749343395,
+			1.4412174224853516
+		},
+		bottom_points = {
+			{
+				15.613076210021973,
+				246.00624084472656,
+				-48.5863151550293
+			},
+			{
+				15.317821502685547,
+				248.8743133544922,
+				-48.58384704589844
+			},
+			{
+				14.835328102111816,
+				248.8246612548828,
+				-48.59523391723633
+			},
+			{
+				15.130582809448242,
+				245.9565887451172,
+				-48.59770202636719
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_006",
 		alt_max_vector = {
 			34.028621673583984,
 			126.73023223876953,
@@ -212,8 +308,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -242,7 +338,55 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_017",
+		name = "volume_blocker_tunnels",
+		alt_max_vector = {
+			-21.19732666015625,
+			190.3140869140625,
+			-46.42965316772461
+		},
+		alt_min_vector = {
+			-21.19732666015625,
+			190.3140869140625,
+			-52.22998809814453
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			-0,
+			[2.0] = 0,
+			[3.0] = 2.900167942047119
+		},
+		bottom_points = {
+			{
+				-22.218870162963867,
+				188.95924377441406,
+				-52.22998809814453
+			},
+			{
+				-19.774002075195312,
+				189.3903350830078,
+				-52.22998809814453
+			},
+			{
+				-20.175783157348633,
+				191.66893005371094,
+				-52.22998809814453
+			},
+			{
+				-22.620651245117188,
+				191.2378387451172,
+				-52.22998809814453
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_019",
 		alt_max_vector = {
 			19.926708221435547,
 			175.99623107910156,
@@ -260,8 +404,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -290,7 +434,55 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_022",
+		name = "volume_blocker_tunnels_034",
+		alt_max_vector = {
+			39.6352653503418,
+			108.97721099853516,
+			-40.34967041015625
+		},
+		alt_min_vector = {
+			39.63527297973633,
+			108.97721099853516,
+			-43.41128921508789
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			-4.182249085715739e-06,
+			-1.1206356020920794e-06,
+			1.530809998512268
+		},
+		bottom_points = {
+			{
+				41.258888244628906,
+				108.16503143310547,
+				-43.411285400390625
+			},
+			{
+				39.74370574951172,
+				110.78939056396484,
+				-43.41128921508789
+			},
+			{
+				38.01165771484375,
+				109.78939056396484,
+				-43.411293029785156
+			},
+			{
+				39.52684020996094,
+				107.16503143310547,
+				-43.41128921508789
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_024",
 		alt_max_vector = {
 			-21.43036651611328,
 			152.1293182373047,
@@ -308,8 +500,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -336,18 +528,18 @@ local volume_data = {
 		}
 	},
 	{
-		height = 2,
+		height = 1,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_016",
+		name = "volume_blocker_tunnels_031",
 		alt_max_vector = {
-			31.97804069519043,
-			155.28675842285156,
-			-40.90167236328125
+			52.555702209472656,
+			94.70458984375,
+			-33.3654670715332
 		},
 		alt_min_vector = {
-			31.978031158447266,
-			155.28675842285156,
-			-45.75004196166992
+			52.55569839477539,
+			94.70458984375,
+			-35.159854888916016
 		},
 		color = {
 			255,
@@ -356,85 +548,37 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
-			2.424185037612915
+			4.026494480058318e-06,
+			3.089646725129569e-06,
+			1.7943860292434692
 		},
 		bottom_points = {
 			{
-				36.03126907348633,
-				158.5913848876953,
-				-45.75005340576172
+				52.85537338256836,
+				93.70623016357422,
+				-35.159854888916016
 			},
 			{
-				27.089527130126953,
-				153.42886352539062,
-				-45.750030517578125
+				53.31439971923828,
+				95.41936492919922,
+				-35.15985870361328
 			},
 			{
-				27.924795150756836,
-				151.9821319580078,
-				-45.750030517578125
+				52.25602340698242,
+				95.70294952392578,
+				-35.159854888916016
 			},
 			{
-				36.86653518676758,
-				157.1446533203125,
-				-45.75005340576172
-			}
-		}
-	},
-	{
-		height = 2,
-		type = "content/volume_types/player_instakill",
-		name = "deathzone_tunnels",
-		alt_max_vector = {
-			-21.937480926513672,
-			215.26419067382812,
-			-64.9000244140625
-		},
-		alt_min_vector = {
-			-21.937484741210938,
-			215.26419067382812,
-			-66.9000244140625
-		},
-		color = {
-			255,
-			255,
-			64,
-			0
-		},
-		up_vector = {
-			2.153625473511056e-06,
-			-1.8335492768528638e-06,
-			1
-		},
-		bottom_points = {
-			{
-				8.06596565246582,
-				228.89370727539062,
-				-66.90006256103516
-			},
-			{
-				-54.7066764831543,
-				218.75001525878906,
-				-66.89994812011719
-			},
-			{
-				-51.94093322753906,
-				201.63467407226562,
-				-66.89998626708984
-			},
-			{
-				10.831707000732422,
-				211.7783660888672,
-				-66.90010070800781
+				51.7969970703125,
+				93.98981475830078,
+				-35.15985107421875
 			}
 		}
 	},
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_028",
+		name = "volume_blocker_tunnels_030",
 		alt_max_vector = {
 			44.883949279785156,
 			181.1134490966797,
@@ -452,8 +596,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -482,7 +626,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_026",
+		name = "volume_blocker_tunnels_028",
 		alt_max_vector = {
 			0.7289933562278748,
 			184.59207153320312,
@@ -500,8 +644,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -530,7 +674,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_024",
+		name = "volume_blocker_tunnels_026",
 		alt_max_vector = {
 			-16.59725570678711,
 			166.45606994628906,
@@ -548,8 +692,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -578,7 +722,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_023",
+		name = "volume_blocker_tunnels_025",
 		alt_max_vector = {
 			-11.892770767211914,
 			158.3076629638672,
@@ -596,8 +740,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -626,7 +770,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_020",
+		name = "volume_blocker_tunnels_022",
 		alt_max_vector = {
 			-7.504660606384277,
 			151.50857543945312,
@@ -644,8 +788,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -674,7 +818,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_018",
+		name = "volume_blocker_tunnels_020",
 		alt_max_vector = {
 			30.0358943939209,
 			182.48663330078125,
@@ -692,8 +836,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -722,7 +866,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_015",
+		name = "volume_blocker_tunnels_017",
 		alt_max_vector = {
 			17.5816707611084,
 			155.0579376220703,
@@ -740,8 +884,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -770,7 +914,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_014",
+		name = "volume_blocker_tunnels_016",
 		alt_max_vector = {
 			11.23243236541748,
 			142.1726837158203,
@@ -788,8 +932,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -818,7 +962,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_012",
+		name = "volume_blocker_tunnels_014",
 		alt_max_vector = {
 			-13.129509925842285,
 			137.41046142578125,
@@ -836,8 +980,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -866,7 +1010,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_011",
+		name = "volume_blocker_tunnels_013",
 		alt_max_vector = {
 			-9.558247566223145,
 			131.224853515625,
@@ -884,8 +1028,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -914,7 +1058,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_006",
+		name = "volume_blocker_tunnels_008",
 		alt_max_vector = {
 			50.88848114013672,
 			146.5281524658203,
@@ -932,8 +1076,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -962,7 +1106,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_005",
+		name = "volume_blocker_tunnels_007",
 		alt_max_vector = {
 			29.67083740234375,
 			134.27813720703125,
@@ -980,8 +1124,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -1010,7 +1154,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_001",
+		name = "volume_blocker_tunnels_003",
 		alt_max_vector = {
 			22.976428985595703,
 			111.05841827392578,
@@ -1028,8 +1172,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -1052,6 +1196,102 @@ local volume_data = {
 				33.0157356262207,
 				115.89013671875,
 				-45.75002670288086
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_001",
+		alt_max_vector = {
+			-52.898040771484375,
+			233.75894165039062,
+			-41.68768310546875
+		},
+		alt_min_vector = {
+			-53.20286560058594,
+			233.70797729492188,
+			-44.55430221557617
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0.1524118185043335,
+			0.025484219193458557,
+			1.4333090782165527
+		},
+		bottom_points = {
+			{
+				-53.77064895629883,
+				235.05459594726562,
+				-44.51786804199219
+			},
+			{
+				-53.10432815551758,
+				232.24949645996094,
+				-44.538848876953125
+			},
+			{
+				-52.63508224487305,
+				232.36135864257812,
+				-44.590736389160156
+			},
+			{
+				-53.3014030456543,
+				235.1664581298828,
+				-44.56975555419922
+			}
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/player_instakill",
+		name = "deathzone_tunnels",
+		alt_max_vector = {
+			-21.937475204467773,
+			215.26419067382812,
+			-62.56559753417969
+		},
+		alt_min_vector = {
+			-21.93747901916504,
+			215.26419067382812,
+			-64.56559753417969
+		},
+		color = {
+			255,
+			255,
+			64,
+			0
+		},
+		up_vector = {
+			2.153625473511056e-06,
+			-1.8335492768528638e-06,
+			1
+		},
+		bottom_points = {
+			{
+				8.065971374511719,
+				228.89370727539062,
+				-64.56563568115234
+			},
+			{
+				-54.70667266845703,
+				218.75001525878906,
+				-64.56552124023438
+			},
+			{
+				-51.9409294128418,
+				201.63467407226562,
+				-64.56555938720703
+			},
+			{
+				10.83171272277832,
+				211.7783660888672,
+				-64.565673828125
 			}
 		}
 	},
@@ -1104,57 +1344,57 @@ local volume_data = {
 		}
 	},
 	{
-		height = 5.5,
-		type = "content/volume_types/player_instakill",
-		name = "dz_tunnels_pit",
+		height = 2,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_blocker_tunnels_018",
 		alt_max_vector = {
-			-25.5,
-			215.25,
-			-62.25
+			31.97804069519043,
+			155.28675842285156,
+			-40.90167236328125
 		},
 		alt_min_vector = {
-			-25.5,
-			215.25,
-			-67.75
+			31.978031158447266,
+			155.28675842285156,
+			-45.75004196166992
 		},
 		color = {
 			255,
 			255,
-			64,
+			125,
 			0
 		},
 		up_vector = {
-			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
+			2.424185037612915
 		},
 		bottom_points = {
 			{
-				-34.3359260559082,
-				202.0145721435547,
-				-67.75
+				36.03126907348633,
+				158.5913848876953,
+				-45.75005340576172
 			},
 			{
-				-9.71573257446289,
-				206.3557891845703,
-				-67.75
+				27.089527130126953,
+				153.42886352539062,
+				-45.750030517578125
 			},
 			{
-				-13.796476364135742,
-				229.498779296875,
-				-67.75
+				27.924795150756836,
+				151.9821319580078,
+				-45.750030517578125
 			},
 			{
-				-38.41666793823242,
-				225.15756225585938,
-				-67.75
+				36.86653518676758,
+				157.1446533203125,
+				-45.75005340576172
 			}
 		}
 	},
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_013",
+		name = "volume_blocker_tunnels_015",
 		alt_max_vector = {
 			-3.1702077388763428,
 			143.16046142578125,
@@ -1172,8 +1412,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -1202,7 +1442,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_002",
+		name = "volume_blocker_tunnels_004",
 		alt_max_vector = {
 			53.720367431640625,
 			128.8084259033203,
@@ -1220,8 +1460,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -1250,7 +1490,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_007",
+		name = "volume_blocker_tunnels_009",
 		alt_max_vector = {
 			47.404048919677734,
 			152.56336975097656,
@@ -1268,8 +1508,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -1298,7 +1538,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_008",
+		name = "volume_blocker_tunnels_010",
 		alt_max_vector = {
 			36.57872009277344,
 			146.31336975097656,
@@ -1316,8 +1556,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -1345,8 +1585,56 @@ local volume_data = {
 	},
 	{
 		height = 2,
+		type = "core/gwnav/volumes/gwnavexclusivetagvolume",
+		name = "volume_navexclude",
+		alt_max_vector = {
+			27.960887908935547,
+			127.71162414550781,
+			-47.39954376220703
+		},
+		alt_min_vector = {
+			27.960887908935547,
+			127.71162414550781,
+			-49.39954376220703
+		},
+		color = {
+			255,
+			255,
+			0,
+			0
+		},
+		up_vector = {
+			[1.0] = 0,
+			[3.0] = 1,
+			[2] = -0
+		},
+		bottom_points = {
+			{
+				26.753782272338867,
+				128.01760864257812,
+				-49.39954376220703
+			},
+			{
+				27.622323989868164,
+				126.51325225830078,
+				-49.39954376220703
+			},
+			{
+				29.167993545532227,
+				127.4056396484375,
+				-49.39954376220703
+			},
+			{
+				28.29945182800293,
+				128.91000366210938,
+				-49.39954376220703
+			}
+		}
+	},
+	{
+		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_009",
+		name = "volume_blocker_tunnels_011",
 		alt_max_vector = {
 			-4.557527542114258,
 			122.5633544921875,
@@ -1364,8 +1652,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {
@@ -1394,7 +1682,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_003",
+		name = "volume_blocker_tunnels_005",
 		alt_max_vector = {
 			54.7882194519043,
 			138.66258239746094,
@@ -1412,8 +1700,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -1442,7 +1730,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume",
+		name = "volume_blocker_tunnels_032",
 		alt_max_vector = {
 			3.4369311332702637,
 			107.90177917480469,
@@ -1460,8 +1748,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.047951733809896e-06,
-			1.0846448503798456e-06,
+			4.047950369567843e-06,
+			1.0846462146218983e-06,
 			2.09537410736084
 		},
 		bottom_points = {
@@ -1490,7 +1778,7 @@ local volume_data = {
 	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_010",
+		name = "volume_blocker_tunnels_012",
 		alt_max_vector = {
 			-1.0575225353240967,
 			116.50116729736328,
@@ -1508,8 +1796,8 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			4.683165570895653e-06,
-			1.254849848919548e-06,
+			4.6831642066536006e-06,
+			1.2548514405352762e-06,
 			2.424185037612915
 		},
 		bottom_points = {

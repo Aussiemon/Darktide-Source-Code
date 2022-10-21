@@ -1,7 +1,7 @@
 local Armor = require("scripts/utilities/attack/armor")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
+local AttackPositioning = require("scripts/utilities/attack/attack_positioning")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Backstab = require("scripts/utilities/attack/backstab")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -16,6 +16,7 @@ local MinionPerception = require("scripts/utilities/minion_perception")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
+local Stamina = require("scripts/utilities/attack/stamina")
 local Threat = require("scripts/utilities/threat")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
@@ -28,7 +29,7 @@ local damage_efficiencies = AttackSettings.damage_efficiencies
 local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
 local toughness_replenish_types = ToughnessSettings.replenish_types
-local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, ARGS, NUM_ARGS = nil
+local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_flank_interfacing, _trigger_elite_special_kill_interfacing, ARGS, NUM_ARGS = nil
 local Attack = {}
 local attack_args_temp = {}
 
@@ -39,9 +40,6 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 
 	for i = 1, num_args, 2 do
 		local arg, val = select(i, ...)
-
-		fassert(ARGS[arg], "Argument %q is not a defined Attack argument.", arg)
-
 		attack_args_temp[ARGS[arg]] = val
 	end
 
@@ -100,10 +98,6 @@ ARGS = {
 		name = "dropoff_scalar"
 	},
 	{
-		default = false,
-		name = "has_power_boost"
-	},
-	{
 		default = "Vector3",
 		name = "attack_direction"
 	},
@@ -150,30 +144,50 @@ for i = 1, NUM_ARGS do
 	ARGS[arg_name] = i
 end
 
-function _execute(attacked_unit, damage_profile, target_index, power_level, charge_level, is_critical_strike, dropoff_scalar, has_power_boost, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape)
+local on_damage_event_data = {}
+local on_killed_event_data = {}
+
+function _execute(attacked_unit, damage_profile, target_index, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape)
 	local was_alive_at_attack_start = HEALTH_ALIVE[attacked_unit]
 	attacking_unit = ALIVE[attacking_unit] and attacking_unit
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, attacking_unit, target_index)
 	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
-	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
-	local is_player_character = Breed.is_player(breed_or_nil)
+	local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
+	local is_player_character = Breed.is_player(target_breed_or_nil)
 	local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
-	local attacking_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
+	local attacker_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local target_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-	local is_backstab = Backstab.is_attack_backstab(attacked_unit, attacking_unit, attack_type, attack_direction)
+	local is_backstab = AttackPositioning.is_backstabbing(attacked_unit, attacking_unit, attack_type)
 
 	if is_backstab then
 		_trigger_backstab_interfacing(attacking_unit_owner_unit, attack_type)
 	end
 
+	local is_flanking = AttackPositioning.is_flanking(attacked_unit, attacking_unit, attack_type, attack_direction)
+
+	if is_flanking then
+		_trigger_flank_interfacing(attacking_unit_owner_unit, attack_type)
+	end
+
+	local attacked_action = nil
+
+	if Managers.stats.can_record_stats() then
+		local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
+		attacked_action = behaviour_extension and behaviour_extension:running_action()
+	end
+
 	local hit_weakspot = false
 	local hit_shield = false
 
-	if breed_or_nil then
-		hit_weakspot, hit_shield = Weakspot.hit_weakspot(breed_or_nil, hit_zone_name, attacker_buff_extension, attack_type)
+	if target_breed_or_nil then
+		hit_weakspot, hit_shield = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name, attacker_buff_extension, attack_type)
+
+		if damage_profile.breed_instakill_overrides then
+			instakill = instakill or damage_profile.breed_instakill_overrides[target_breed_or_nil.name]
+		end
 	end
 
 	local is_server = Managers.state.game_session:is_server()
@@ -185,12 +199,12 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 		calculated_damage = health_extension:damaged_max_health()
 	else
 		local target_blackboard = BLACKBOARDS[attacked_unit]
-		local stagger_count = 0
+		local target_stagger_count = 0
 		local num_triggered_staggers = 0
 
 		if not is_player_character and target_blackboard then
 			local stagger_component = target_blackboard.stagger
-			stagger_count = stagger_component.count
+			target_stagger_count = stagger_component.count
 			num_triggered_staggers = stagger_component.num_triggered_staggers
 		end
 
@@ -207,13 +221,19 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 			local target_stat_buffs = target_buff_extension and target_buff_extension:stat_buffs()
 			local armor_penetrating = _has_armor_penetrating_buff(attacker_buff_extension, attack_type, hit_weakspot)
 			local target_toughness_extension = ScriptUnit.has_extension(attacked_unit, "toughness_system")
-			local armor_type = Armor.armor_type(attacked_unit, breed_or_nil, hit_zone_name, attack_type)
+			local armor_type = Armor.armor_type(attacked_unit, target_breed_or_nil, hit_zone_name, attack_type)
 			local is_attacked_unit_suppressed = Suppression.is_suppressed(attacked_unit)
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacking_breed_or_nil, is_critical_strike, is_backstab, dropoff_scalar, has_power_boost, attack_type, attacker_stat_buffs, target_stat_buffs, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, attacking_unit, auto_completed_action)
+			local power_level_damage_multiplier = 1
+
+			if damage_type == "frag" and target_breed_or_nil and target_breed_or_nil.explosion_power_multiplier then
+				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
+			end
+
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, attacking_unit, auto_completed_action)
 		end
 	end
 
-	local damage_dealt, attack_result, damage_absorbed, stagger_result = nil
+	local damage_dealt, attack_result, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt, stagger_result = nil
 	local target_is_assisted = false
 	local target_is_hogtied = false
 
@@ -231,41 +251,77 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 		target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	end
 
-	attack_result, damage_dealt, damage_absorbed = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
+	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
 
 	if is_server then
-		stagger_result = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, breed_or_nil, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_type, herding_template, hit_shield)
+		stagger_result = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
 	end
 
-	if was_alive_at_attack_start and breed_or_nil then
-		_handle_buffs(damage_profile, attacker_buff_extension, attacked_unit, damage_dealt, attack_result, is_critical_strike, is_backstab, hit_weakspot, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, breed_or_nil)
+	if was_alive_at_attack_start and target_breed_or_nil then
+		_handle_buffs(is_server, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, attack_result, stagger_result, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
 
 		if is_server then
-			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, breed_or_nil, damage_dealt, damage_absorbed, damage_profile)
+			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
 			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type)
 
-			if DEDICATED_SERVER then
-				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, item)
-				_record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type)
+			if Managers.stats.can_record_stats() then
+				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
+			end
+
+			_record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil)
+		end
+
+		on_damage_event_data.attacking_unit = attacking_unit
+		on_damage_event_data.attacked_unit = attacked_unit
+		on_damage_event_data.attack_type = attack_type
+		on_damage_event_data.damage_dealt = damage_dealt
+		on_damage_event_data.damage_profile = damage_profile
+		on_damage_event_data.damage_type = damage_type
+		on_damage_event_data.hit_weakspot = hit_weakspot
+		on_damage_event_data.breed_or_nil = target_breed_or_nil
+		on_damage_event_data.is_critical_strike = is_critical_strike
+		on_damage_event_data.wounds_shape = wounds_shape
+
+		Managers.event:trigger("on_damaged", on_damage_event_data)
+	end
+
+	if was_alive_at_attack_start and attack_result == attack_results.died then
+		_trigger_elite_special_kill_interfacing(attacking_unit_owner_unit, attacker_breed_or_nil, target_breed_or_nil)
+
+		on_killed_event_data.attacked_unit = attacked_unit
+		on_killed_event_data.attacking_unit_owner_unit = attacking_unit_owner_unit
+		on_killed_event_data.attack_type = attack_type
+		on_killed_event_data.damage_profile = damage_profile
+		on_killed_event_data.damage_type = damage_type
+
+		Managers.event:trigger("on_killed", on_killed_event_data)
+	end
+
+	if damage_dealt <= 0 and not is_player_character then
+		if damage_efficiency == damage_efficiencies.negated then
+			Vo.armor_hit_event(attacking_unit)
+		end
+
+		if target_breed_or_nil then
+			local breed_name = target_breed_or_nil.name
+			local dialogue_breed_settings = DialogueBreedSettings[breed_name]
+			local no_damage_vo_event = dialogue_breed_settings and dialogue_breed_settings.no_damage_vo_event
+
+			if no_damage_vo_event then
+				Vo.enemy_generic_vo_event(attacked_unit, no_damage_vo_event, breed_name)
 			end
 		end
 	end
 
-	if was_alive_at_attack_start and attack_result == attack_results.died then
-		_trigger_elite_special_kill_interfacing(attacking_unit_owner_unit, breed_or_nil)
-	end
+	if hit_weakspot then
+		local weakspot_extension = ScriptUnit.has_extension(attacked_unit, "weakspot_system")
 
-	if damage_dealt <= 0 and not is_player_character and breed_or_nil then
-		local breed_name = breed_or_nil.name
-		local dialogue_breed_settings = DialogueBreedSettings[breed_name]
-		local no_damage_vo_event = dialogue_breed_settings and dialogue_breed_settings.no_damage_vo_event
-
-		if no_damage_vo_event then
-			Vo.enemy_generic_vo_event(attacked_unit, no_damage_vo_event, breed_name)
+		if weakspot_extension then
+			weakspot_extension:weakspot_attacked(attacking_unit, attack_result, damage_dealt, damage_efficiency, hit_zone_name, hit_world_position, attack_direction)
 		end
 	end
 
-	return damage_dealt, attack_result, damage_efficiency, stagger_result
+	return damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot
 end
 
 function _has_armor_penetrating_buff(attacker_buff_extension, attack_type, is_weakspot)
@@ -284,85 +340,165 @@ function _has_armor_penetrating_buff(attacker_buff_extension, attack_type, is_we
 	return false
 end
 
-function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template_or_nil, is_critical_strike, hit_world_position_or_nil, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
-	local damage_dealt, result, damage_absorbed = nil
+function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template_or_nil, is_critical_strike, hit_world_position_or_nil, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
+	local damage_dealt, actual_damage_dealt, result, damage_absorbed, damage, permanent_damage, one_hit_kill = nil
+	local past_blocking = true
+	local damage_through_block = nil
 
-	if not instakill and Block.is_blocking(attacked_unit, attack_type, target_weapon_template, is_server) and Block.attack_is_blockable(damage_profile) then
+	if not instakill and Block.is_blocking(attacked_unit, attack_type, target_weapon_template, is_server) then
 		local side_system = Managers.state.extension:system("side_system")
 		local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
 		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit)
-		damage_dealt = 0
-		damage_absorbed = calculated_damage
-		result = damage_allowed and attack_results.blocked or attack_results.friendly_fire
+		local target_is_player = Breed.is_player(target_breed_or_nil)
+
+		if Block.attack_is_blockable(damage_profile) then
+			damage_dealt = 0
+			damage = 0
+			permanent_damage = 0
+			damage_absorbed = calculated_damage
+			result = damage_allowed and attack_results.blocked or attack_results.friendly_fire
+			past_blocking = false
+		elseif target_is_player and is_server then
+			local t = Managers.time:time("gameplay")
+			local stamina_read_component = unit_data_extension:read_component("stamina")
+			local specialization = unit_data_extension:specialization()
+			local specialization_stamina_template = specialization.stamina
+			local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, specialization_stamina_template)
+
+			Stamina.drain(attacked_unit, max_stamina, t)
+
+			damage_through_block = true
+		end
 
 		if is_server and unit_data_extension and damage_allowed then
 			local block_component = unit_data_extension:write_component("block")
 			block_component.has_blocked = true
 		end
-	elseif not instakill and target_is_assisted then
-		damage_dealt = 0
-		damage_absorbed = calculated_damage
-		result = attack_results.dodged
-	elseif not instakill and target_is_hogtied then
-		damage_dealt = 0
-		damage_absorbed = 0
-		result = attack_results.dodged
-	else
-		local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords = DamageTakenCalculation.get_calculation_parameters(attacked_unit, breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
-		local damage, permanent_damage, tougness_damage = nil
-		result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords)
-		damage_dealt = damage + permanent_damage
+	end
 
-		if is_damage_allowed and is_server then
-			Damage.deal_damage(attacked_unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape)
+	if past_blocking then
+		if not instakill and target_is_assisted then
+			damage_dealt = 0
+			damage = 0
+			permanent_damage = 0
+			damage_absorbed = calculated_damage
+			result = attack_results.dodged
+		elseif not instakill and target_is_hogtied then
+			damage_dealt = 0
+			damage = 0
+			permanent_damage = 0
+			damage_absorbed = 0
+			result = attack_results.dodged
+		else
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords = DamageTakenCalculation.get_calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
+			local tougness_damage = nil
+			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit)
+			damage_dealt = damage + permanent_damage
+			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= 0
+
+			if is_damage_allowed and is_server then
+				local target_is_player = Breed.is_player(target_breed_or_nil)
+
+				if target_is_player then
+					local stamina_read_component = unit_data_extension:read_component("stamina")
+					local specialization = unit_data_extension:specialization()
+					local specialization_stamina_template = specialization.stamina
+					local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, specialization_stamina_template)
+
+					if current_stamina <= 0.5 * max_stamina then
+						Stamina.add_stamina(attacked_unit, 1)
+					end
+				end
+
+				actual_damage_dealt = Damage.deal_damage(attacked_unit, target_breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape)
+			end
 		end
 	end
 
-	return result, damage_dealt, damage_absorbed
+	if damage_through_block then
+		result = attack_results.blocked
+	end
+
+	return result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt
 end
 
-function _handle_buffs(damage_profile, attacker_buff_extension, attacked_unit, damage, result, is_critical_strike, is_backstab, hit_weakspot, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, breed)
-	if not attacker_buff_extension then
+function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, attack_result, stagger_result, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
+	if not attacker_buff_extension_or_nil and not target_buff_extension_or_nil then
 		return
 	end
 
-	if damage_profile.skip_on_hit_proc then
-		return
-	end
-
-	local unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
-	local attacking_breed_or_nil = unit_data_extension and unit_data_extension:breed()
-	local attacker_is_player = Breed.is_player(attacking_breed_or_nil)
+	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
 	local alternative_fire = false
 
 	if attacker_is_player then
-		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		local alternate_fire_component = attacker_unit_data_extension:read_component("alternate_fire")
 		alternative_fire = alternate_fire_component.is_active
 	end
 
-	local param_table = attacker_buff_extension:request_proc_event_param_table()
-	param_table.attacked_unit = attacked_unit
-	param_table.attacking_unit = attacking_owner_unit
-	param_table.attack_instigator_unit = attacking_unit
-	param_table.damage = damage
-	param_table.result = result
-	param_table.is_critical_strike = is_critical_strike
-	param_table.is_backstab = is_backstab
-	param_table.hit_weakspot = hit_weakspot
-	param_table.attack_type = attack_type
-	param_table.alternative_fire = alternative_fire
-	param_table.melee_attack_strength = damage_profile.melee_attack_strength
-	param_table.damage_type = damage_profile.damage_type
-	param_table.tags = breed and breed.tags
-	param_table.sticky_attack = damage_profile.sticky_attack
-	param_table.weapon_special = damage_profile.weapon_special
-	param_table.attack_direction = Vector3Box(attack_direction)
-	param_table.damage_efficiency = damage_efficiency
+	if attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc then
+		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
 
-	attacker_buff_extension:add_proc_event(proc_events.on_hit, param_table)
+		if attacker_param_table then
+			attacker_param_table.alternative_fire = alternative_fire
+			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_instigator_unit = attacking_unit
+			attacker_param_table.attack_type = attack_type
+			attacker_param_table.attacked_unit = attacked_unit
+			attacker_param_table.attacking_unit = attacking_owner_unit
+			attacker_param_table.damage = damage
+			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
+			attacker_param_table.hit_weakspot = hit_weakspot
+			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.is_backstab = is_backstab
+			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
+			attacker_param_table.one_hit_kill = one_hit_kill
+			attacker_param_table.attack_result = attack_result
+			attacker_param_table.stagger_result = stagger_result
+			attacker_param_table.sticky_attack = damage_profile.sticky_attack
+			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
+			attacker_param_table.target_index = target_index
+			attacker_param_table.weapon_special = damage_profile.weapon_special
+			attacker_param_table.charge_level = charge_level
+
+			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
+		end
+	end
+
+	if is_server then
+		local target_is_player = Breed.is_player(target_breed_or_nil)
+
+		if target_buff_extension_or_nil and target_is_player then
+			local target_param_table = target_buff_extension_or_nil:request_proc_event_param_table()
+
+			if target_param_table then
+				target_param_table.alternative_fire = alternative_fire
+				target_param_table.attack_direction = Vector3Box(attack_direction)
+				target_param_table.attack_instigator_unit = attacking_unit
+				target_param_table.attack_type = attack_type
+				target_param_table.attacked_unit = attacked_unit
+				target_param_table.attacking_unit = attacking_owner_unit
+				target_param_table.damage = damage
+				target_param_table.damage_efficiency = damage_efficiency
+				target_param_table.damage_type = damage_profile.damage_type
+				target_param_table.hit_weakspot = hit_weakspot
+				target_param_table.is_backstab = is_backstab
+				target_param_table.is_critical_strike = is_critical_strike
+				target_param_table.melee_attack_strength = damage_profile.melee_attack_strength
+				target_param_table.attack_result = attack_result
+				target_param_table.sticky_attack = damage_profile.sticky_attack
+				target_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
+				target_param_table.weapon_special = damage_profile.weapon_special
+
+				target_buff_extension_or_nil:add_proc_event(proc_events.on_player_hit_recieved, target_param_table)
+			end
+		end
+	end
 end
 
-function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, attacking_item)
+function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
 	local did_damage = damage_dealt > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacked_player = player_unit_spawn_manager:owner(attacked_unit)
@@ -370,13 +506,10 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 	local attacked_is_human = attacked_player and attacked_player:is_human_controlled()
 	local attacking_is_human = attacking_player and attacking_player:is_human_controlled()
 	local attacked_unit_id = Managers.state.unit_spawner:game_object_id(attacked_unit)
-	local attacked_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
-	local attacked_breed = attacked_data_extension:breed()
-	local attacked_breed_name_or_nil = attacked_breed.name
+	local damage_profile_name = damage_profile and damage_profile.name
+	local target_breed_name_or_nil = target_breed_or_nil and target_breed_or_nil.name
 
 	if attacking_player then
-		local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
-		local attacked_action = behaviour_extension and behaviour_extension:running_action()
 		local weapon_template_or_nil = attacking_item and WeaponTemplate.weapon_template_from_item(attacking_item)
 		local weapon_template_name = weapon_template_or_nil and weapon_template_or_nil.name or "none"
 		local attacked_position_or_nil = POSITION_LOOKUP[attacked_unit]
@@ -385,23 +518,35 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		local distance_between_units = either_unit_lacks_position and 0 or Vector3.length(attacked_position_or_nil - attacking_position_or_nil)
 		local attacking_health_extension_or_nil = ScriptUnit.has_extension(attacking_unit, "health_system")
 		local attacking_health_percent = attacking_health_extension_or_nil and attacking_health_extension_or_nil:current_health_percent() or 0
+		local target_buff_keywords = target_buff_extension and target_buff_extension:keywords()
+		local attacked_health_extension_or_nil = ScriptUnit.has_extension(attacked_unit, "health_system")
+		local solo_kill = false
 
-		if did_damage and attacking_is_human then
-			Managers.stats:record_damage(attacking_player, attacked_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt)
+		if attacked_health_extension_or_nil then
+			local damaging_players = attacked_health_extension_or_nil.damaging_players and attacked_health_extension_or_nil:damaging_players()
+
+			if damaging_players and #damaging_players == 1 and attacking_player and damaging_players[1] == attacking_player then
+				solo_kill = true
+			end
+		end
+
+		if attacking_is_human then
+			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt, damage_type)
 		end
 
 		if attack_result == attack_results.died then
 			Managers.stats:record_team_kill()
 
 			if attacking_is_human then
-				Managers.stats:record_kill(attacking_player, attacked_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, distance_between_units, attacking_health_percent, attacked_action)
+				Managers.stats:record_kill(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, target_buff_keywords, damage_type, solo_kill)
 			end
 		end
 	end
 
 	if attacked_player then
 		if attack_result == attack_results.blocked and attacked_is_human then
-			local weapon_action_component = attacked_data_extension:read_component("weapon_action")
+			local attacker_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
+			local weapon_action_component = attacker_data_extension:read_component("weapon_action")
 			local target_weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
 			local weapon_template_name = target_weapon_template and target_weapon_template.name
 
@@ -414,7 +559,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 			Managers.stats:record_team_damage_taken(damage_dealt)
 
 			if attacked_is_human then
-				Managers.stats:record_player_damage_taken(attacked_player, damage_dealt)
+				Managers.stats:record_player_damage_taken(attacked_player, damage_dealt, attack_type)
 			end
 		end
 	end
@@ -431,29 +576,32 @@ local function _format_weapon_name(name)
 	return name
 end
 
-function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type)
+local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
+
+function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil)
 	local attacking_player = attacking_unit and Managers.state.player_unit_spawn:owner(attacking_unit)
-	local attacking_unit_data_ext = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
-	local attacking_breed_or_nil = attacking_unit_data_ext and attacking_unit_data_ext:breed()
 	local visual_loadout_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "visual_loadout_system")
 	local attack_weapon = visual_loadout_extension and visual_loadout_extension:wielded_weapon()
 	local attack_weapon_name = attack_weapon and _format_weapon_name(attack_weapon.name)
 	local attacked_player = attacked_unit and Managers.state.player_unit_spawn:owner(attacked_unit)
-	local attacked_unit_data_ext = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
-	local attacked_breed_or_nil = attacked_unit_data_ext and attacked_unit_data_ext:breed()
+	local attacker_position = TelemetryHelper.unit_position(attacking_unit)
+	local victim_position = TelemetryHelper.unit_position(attacked_unit)
 	local data = {
-		attacker_position = POSITION_LOOKUP[attacking_unit],
-		victim_position = POSITION_LOOKUP[attacked_unit],
+		reason = "damage",
+		attacker_position = attacker_position,
+		victim_position = victim_position,
 		attack_type = attack_type,
 		weapon = attack_weapon_name,
 		damage_profile = damage_profile.name,
-		damage = damage_dealt,
-		damage_type = damage_type
+		damage_type = damage_type,
+		damage = damage,
+		permanent_damage = permanent_damage,
+		damage_absorbed = damage_absorbed
 	}
 
-	if attacking_player and attacking_player:is_human_controlled() then
-		data.victim = attacked_breed_or_nil and attacked_breed_or_nil.name
-		data.is_boss = attacked_breed_or_nil and attacked_breed_or_nil.is_boss
+	if attacking_player then
+		data.victim = target_breed_or_nil and target_breed_or_nil.name
+		data.is_boss = target_breed_or_nil and target_breed_or_nil.is_boss
 
 		if damage_dealt > 0 then
 			Managers.telemetry_reporters:reporter("player_dealt_damage"):register_event(attacking_player, data)
@@ -464,23 +612,29 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 		end
 	end
 
-	if attacked_player and attacked_player:is_human_controlled() then
-		data.attacker = attacking_breed_or_nil and attacking_breed_or_nil.name
-		data.is_boss = attacking_breed_or_nil and attacking_breed_or_nil.is_boss
+	if attacked_player then
+		data.attacker = attacker_breed_or_nil and attacker_breed_or_nil.name
+		data.is_boss = attacker_breed_or_nil and attacker_breed_or_nil.is_boss
 
-		if damage_dealt > 0 then
+		if damage_dealt > 0 or damage_absorbed > 0 then
 			Managers.telemetry_reporters:reporter("player_taken_damage"):register_event(attacked_player, data)
 		end
 
-		if attack_result == attack_results.knock_down then
-			Managers.telemetry_events:player_knocked_down(attacked_player, data)
-		elseif attack_result == attack_results.died then
-			Managers.telemetry_events:player_died(attacked_player, data)
+		local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
+		local dead_state_input = unit_data_extension:read_component("dead_state_input")
+		local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
+
+		if attack_result ~= attack_results.damaged then
+			if dead_state_input.die then
+				Managers.telemetry_events:player_died(attacked_player, data)
+			elseif knocked_down_state_input.knock_down and attack_result == attack_results.knock_down then
+				Managers.telemetry_events:player_knocked_down(attacked_player, data)
+			end
 		end
 	end
 end
 
-function _handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, breed_or_nil, damage_dealt, damage_absorbed, damage_profile)
+function _handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
 	if not attacking_unit_owner_unit then
 		return
 	end
@@ -489,15 +643,13 @@ function _handle_result(attacking_unit_owner_unit, attacked_unit, attack_result,
 	local side_system = extension_manager:system("side_system")
 	local target_is_ally = side_system:is_ally(attacking_unit_owner_unit, attacked_unit)
 	local target_is_enemy = side_system:is_enemy(attacking_unit_owner_unit, attacked_unit)
-	local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "unit_data_system")
-	local attacking_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
-	local attacker_is_player = Breed.is_player(attacking_breed_or_nil)
-	local target_is_player = Breed.is_player(breed_or_nil)
+	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
+	local target_is_player = Breed.is_player(target_breed_or_nil)
 	local is_ranged_friendly_fire = attack_type == attack_types.ranged and target_is_ally and attacker_is_player and target_is_player
 
 	if target_is_enemy then
-		local target_is_minion = Breed.is_minion(breed_or_nil)
-		local target_is_character = Breed.is_character(breed_or_nil)
+		local target_is_minion = Breed.is_minion(target_breed_or_nil)
+		local target_is_character = Breed.is_character(target_breed_or_nil)
 
 		if target_is_character and attack_result ~= attack_results.died then
 			local perception_extension = ScriptUnit.extension(attacked_unit, "perception_system")
@@ -540,35 +692,39 @@ function _trigger_backstab_interfacing(attacking_unit, attack_type)
 	end
 end
 
+local _flank_gear_wwise_event_options = {}
+
+function _trigger_flank_interfacing(attacking_unit, attack_type)
+	local attacking_unit_fx_extension = ScriptUnit.has_extension(attacking_unit, "fx_system")
+
+	if attacking_unit_fx_extension then
+		local except_sender = true
+
+		table.clear(_flank_gear_wwise_event_options)
+
+		_flank_gear_wwise_event_options.attack_type = attack_type
+		local optional_position = nil
+
+		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("play_trigger_flank", _flank_gear_wwise_event_options, optional_position, except_sender)
+	end
+end
+
 local _elite_special_killed_gear_wwise_event_options = {}
 
-function _trigger_elite_special_kill_interfacing(attacking_unit, attacked_unit_breed_or_nil)
-	local unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
-	local attacking_breed_or_nil = unit_data_extension and unit_data_extension:breed()
-	local attacker_is_player = Breed.is_player(attacking_breed_or_nil)
+function _trigger_elite_special_kill_interfacing(attacking_unit, attacker_breed_or_nil, target_breed_or_nil)
+	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
 
 	if not attacker_is_player then
 		return
 	end
 
 	local attacking_unit_fx_extension = ScriptUnit.has_extension(attacking_unit, "fx_system")
-	local minion_tag = nil
-	local attack_breed_tags = attacked_unit_breed_or_nil and attacked_unit_breed_or_nil.tags
+	local enemy_type = Breed.enemy_type(target_breed_or_nil)
 
-	if attack_breed_tags and attack_breed_tags.elite then
-		minion_tag = "elite"
-	elseif attack_breed_tags and attack_breed_tags.special then
-		minion_tag = "special"
-	elseif attack_breed_tags and attack_breed_tags.monster then
-		minion_tag = "monster"
-	elseif attack_breed_tags and attack_breed_tags.captain then
-		minion_tag = "captain"
-	end
-
-	if attacking_unit_fx_extension and minion_tag then
+	if attacking_unit_fx_extension and enemy_type then
 		table.clear(_elite_special_killed_gear_wwise_event_options)
 
-		_elite_special_killed_gear_wwise_event_options.minion_tag = minion_tag
+		_elite_special_killed_gear_wwise_event_options.enemy_type = enemy_type
 		local except_sender = true
 		local optional_position = nil
 

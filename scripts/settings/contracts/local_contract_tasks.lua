@@ -23,9 +23,6 @@ local function _create_task(task_name, stat, specifiers)
 
 	for backend_name, stat_name in pairs(specifiers) do
 		local index = table.index_of(stat:get_parameters(), stat_name)
-
-		fassert(index > 0, "Stat '%s' has no parameter '%s'.", stat:get_id(), stat_name)
-
 		indices[index] = backend_name
 		end_at = math.max(end_at, index)
 	end

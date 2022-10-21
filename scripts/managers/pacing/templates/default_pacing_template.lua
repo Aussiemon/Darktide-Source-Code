@@ -471,25 +471,12 @@ local pacing_template = {
 	},
 	combat_state_settings = {
 		{
-			medium_threshold = 10,
-			base_decay_rate = 1,
-			high_threshold = 30,
-			max_value = 40,
+			medium_threshold = 25,
+			base_decay_rate = 0.8,
+			high_threshold = 50,
+			max_value = 60,
 			low_threshold = 0,
-			tension_modifier = 1.75,
-			combat_states = {
-				high = "high",
-				medium = "medium",
-				low = "low"
-			}
-		},
-		{
-			medium_threshold = 20,
-			base_decay_rate = 1,
-			high_threshold = 40,
-			max_value = 50,
-			low_threshold = 0,
-			tension_modifier = 1.5,
+			tension_modifier = 12,
 			combat_states = {
 				high = "high",
 				medium = "medium",
@@ -498,11 +485,11 @@ local pacing_template = {
 		},
 		{
 			medium_threshold = 25,
-			base_decay_rate = 1,
+			base_decay_rate = 0.8,
 			high_threshold = 50,
 			max_value = 60,
 			low_threshold = 0,
-			tension_modifier = 1.25,
+			tension_modifier = 12,
 			combat_states = {
 				high = "high",
 				medium = "medium",
@@ -510,12 +497,12 @@ local pacing_template = {
 			}
 		},
 		{
-			medium_threshold = 30,
-			base_decay_rate = 1,
-			high_threshold = 60,
-			max_value = 70,
+			medium_threshold = 25,
+			base_decay_rate = 0.8,
+			high_threshold = 50,
+			max_value = 60,
 			low_threshold = 0,
-			tension_modifier = 1,
+			tension_modifier = 12,
 			combat_states = {
 				high = "high",
 				medium = "medium",
@@ -523,12 +510,25 @@ local pacing_template = {
 			}
 		},
 		{
-			medium_threshold = 30,
-			base_decay_rate = 1,
-			high_threshold = 60,
-			max_value = 70,
+			medium_threshold = 25,
+			base_decay_rate = 0.8,
+			high_threshold = 50,
+			max_value = 60,
 			low_threshold = 0,
-			tension_modifier = 0.5,
+			tension_modifier = 12,
+			combat_states = {
+				high = "high",
+				medium = "medium",
+				low = "low"
+			}
+		},
+		{
+			medium_threshold = 25,
+			base_decay_rate = 0.8,
+			high_threshold = 50,
+			max_value = 60,
+			low_threshold = 0,
+			tension_modifier = 12,
 			combat_states = {
 				high = "high",
 				medium = "medium",

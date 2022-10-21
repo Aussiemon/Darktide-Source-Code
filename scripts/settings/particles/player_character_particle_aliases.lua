@@ -14,7 +14,8 @@ local particles = {
 				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
-				[armor_types.super_armor] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
 			},
@@ -24,9 +25,13 @@ local particles = {
 				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
-				[armor_types.super_armor] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			powermaul_p1_m1 = {
+				default = "content/fx/particles/enemies/buff_chainlightning"
 			}
 		}
 	},
@@ -48,15 +53,22 @@ local particles = {
 		},
 		particles = {
 			psyker_chain_lightning = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
-			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging",
+			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
 			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_gun_charge",
-			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging"
+			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging"
 		}
 	},
 	psyker_biomancer_soul = {
 		switch = {},
 		particles = {
 			default = "content/fx/particles/abilities/biomancer_soul"
+		}
+	},
+	preacher_shield = {
+		switch = {},
+		particles = {
+			default = "content/fx/particles/abilities/preacher/preacher_bubble_shield_3p"
 		}
 	},
 	plasma_venting = {
@@ -110,9 +122,28 @@ local particles = {
 		particles = {
 			chainsword_2h_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
 			chainsword_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
-			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
+			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated",
 			chainaxe_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
 			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger"
+		}
+	},
+	weapon_overload_loop = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"stage"
+		},
+		particles = {
+			plasmagun_p1_m1 = {
+				high = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
+				critical = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
+				low = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01"
+			},
+			plasmagun_p2_m1 = {
+				high = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
+				critical = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
+				low = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01"
+			}
 		}
 	},
 	sweep_trail_extra = {
@@ -136,7 +167,9 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
+			servo_skull = "content/fx/particles/interacts/servoskull_visibility_hover",
 			grimoire_pocketable = "content/fx/particles/interacts/grimoire_idle",
+			syringe_corruption_pocketable = "content/fx/particles/pocketables/syringe_bubbles",
 			flamer_p1_m1 = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_pilot_light"
 		}
 	},

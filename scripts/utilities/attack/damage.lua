@@ -1,4 +1,5 @@
 local AttackIntensity = require("scripts/utilities/attack_intensity")
+local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -27,12 +28,14 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local is_minion = Breed.is_minion(breed_or_nil)
 	local is_player = Breed.is_player(breed_or_nil)
+	local is_prop = Breed.is_prop(breed_or_nil) or Breed.is_living_prop(breed_or_nil)
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacking_unit, unit)
+	local actual_damage_dealt = nil
 	local boss_extension_or_nil = ScriptUnit.has_extension(unit, "boss_system")
 
 	if not is_ally and boss_extension_or_nil then
-		boss_extension_or_nil:start_timer()
+		boss_extension_or_nil:damaged()
 	end
 
 	if toughness_extension then
@@ -42,14 +45,23 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	if attack_result == attack_results.toughness_broken then
 		if is_player and buff_extension then
 			local param_table = buff_extension:request_proc_event_param_table()
-			param_table.unit = unit
-			param_table.melee_attack = attack_type == "melee"
 
-			buff_extension:add_proc_event(proc_events.on_player_toughness_broken, param_table)
+			if param_table then
+				param_table.unit = unit
+				param_table.melee_attack = attack_type == "melee"
+
+				buff_extension:add_proc_event(proc_events.on_player_toughness_broken, param_table)
+			end
 		end
 
 		if is_player then
-			AttackIntensity.add_intensity(unit, TOUGHNESS_BROKEN_ATTACK_INTENSITIES)
+			local time_since_toughness_broken = toughness_extension:time_since_toughness_broken()
+			local toughness_broken_grace_cooldown = Managers.state.difficulty:get_table_entry_by_challenge(AttackIntensitySettings.toughness_broken_grace_cooldown)
+
+			if toughness_broken_grace_cooldown < time_since_toughness_broken then
+				AttackIntensity.add_intensity(unit, TOUGHNESS_BROKEN_ATTACK_INTENSITIES)
+				toughness_extension:set_toughness_broken_time()
+			end
 		end
 	end
 
@@ -74,16 +86,39 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 			end
 		end
 
-		health_extension:add_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
+		actual_damage_dealt = health_extension:add_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
 
-		if is_player and buff_extension then
-			local param_table = buff_extension:request_proc_event_param_table()
-			param_table.attacking_unit = attacking_unit
-			param_table.damage_amount = damage
-			param_table.attack_type = attack_type
+		if is_player then
+			local side = ScriptUnit.extension(unit, "side_system").side
+			local player_units = side.valid_player_units
 
-			buff_extension:add_proc_event(proc_events.on_damage_taken, param_table)
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+				local player_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+				if player_buff_extension then
+					local param_table = player_buff_extension:request_proc_event_param_table()
+
+					if param_table then
+						param_table.attacking_unit = attacking_unit
+						param_table.attacking_unit_owner_unit = attacking_unit_owner_unit
+						param_table.attacked_unit = unit
+						param_table.damage_amount = damage
+						param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
+						param_table.permanent_damage = permanent_damage
+						param_table.attack_type = attack_type
+
+						player_buff_extension:add_proc_event(proc_events.on_damage_taken, param_table)
+					end
+				end
+			end
 		end
+	elseif health_extension.tried_adding_damage then
+		health_extension:tried_adding_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
+	end
+
+	if (is_minion or is_prop) and attacking_unit_owner_unit and health_extension.set_last_damaging_unit then
+		health_extension:set_last_damaging_unit(attacking_unit_owner_unit)
 	end
 
 	local absorbed_attack = damage == 0 and permanent_damage == 0
@@ -95,7 +130,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 
 			if is_critical then
 				Vo.health_critical_event(unit)
-			else
+			elseif permanent_damage < damage then
 				_trigger_player_hurt_vo(unit, damage)
 			end
 
@@ -162,6 +197,8 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 			wounds_extension:add_wounds(wounds_template, hit_world_position_or_nil, hit_actor_node_index, attack_result, percent_damage_dealt, damage_type, hit_zone_name, wounds_shape_or_nil)
 		end
 	end
+
+	return actual_damage_dealt
 end
 
 function _trigger_player_hurt_vo(unit, damage)

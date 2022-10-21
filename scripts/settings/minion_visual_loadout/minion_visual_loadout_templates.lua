@@ -4,9 +4,13 @@ local function _extract_templates(path)
 	local templates = require(path)
 
 	for name, template in pairs(templates) do
-		fassert(minion_visual_loadout_templates[name] == nil, "[MinionVisualLoadoutTemplates] Duplicate template with name %q.", name)
-
 		minion_visual_loadout_templates[name] = template
+
+		for zone_id_or_default, template_variations in pairs(template) do
+			for _, t in ipairs(template_variations) do
+				-- Nothing
+			end
+		end
 	end
 end
 

@@ -4,8 +4,6 @@ local function _extract_state_machine_settings(path)
 	local collection = require(path)
 
 	for state_machine_name, settings in pairs(collection) do
-		fassert(state_machine_settings[state_machine_name] == nil, "Found duplicate entry for state_machine %q when running through path %q", state_machine_name, path)
-
 		state_machine_settings[state_machine_name] = settings
 	end
 end

@@ -8,7 +8,7 @@ local asset_vo_psyker_female_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 5.856917,
-			[2.0] = 5.536875
+			[2.0] = 5.536854
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -120,7 +120,7 @@ local asset_vo_psyker_female_b = {
 			"loc_psyker_female_b__asset_unnatural_dark_b_04"
 		},
 		sound_events_duration = {
-			2.703438,
+			2.703458,
 			3.100938,
 			4.28625,
 			4.429063

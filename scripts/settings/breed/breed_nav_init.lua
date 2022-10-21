@@ -17,7 +17,7 @@ local function _init_breed_nav_settings(Breeds)
 
 		if nav_cost_map_multipliers then
 			for cost_map_name, _ in pairs(nav_cost_map_multipliers) do
-				fassert(default_nav_cost_maps[cost_map_name], "Unknown cost map %q in breed %q, either add it to default layers or remove it from breed.", cost_map_name, breed_name)
+				-- Nothing
 			end
 
 			table.add_missing(nav_cost_map_multipliers, default_nav_cost_maps)
@@ -37,7 +37,7 @@ local function _init_breed_nav_settings(Breeds)
 
 		if nav_tag_allowed_layers then
 			for layer_name, _ in pairs(nav_tag_allowed_layers) do
-				fassert(default_nav_tag_layers[layer_name], "Unknown nav tag layer %q in breed %q, either add it to default layers or remove it from breed.", layer_name, breed_name)
+				-- Nothing
 			end
 
 			table.add_missing(nav_tag_allowed_layers, default_nav_tag_layers)

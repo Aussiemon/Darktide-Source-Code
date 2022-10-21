@@ -76,7 +76,7 @@ damage_templates.heavy_axe = {
 	ragdoll_push_force = 500,
 	finesse_ability_damage_multiplier = 1.75,
 	ragdoll_only = true,
-	stagger_category = "melee",
+	stagger_category = "uppercut",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.axe_light,
 	gibbing_power = GibbingPower.medium,
@@ -91,10 +91,10 @@ damage_templates.heavy_axe = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
 					[armor_types.armored] = damage_lerp_values.lerp_1,
-					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_2,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -105,7 +105,7 @@ damage_templates.heavy_axe = {
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -117,8 +117,8 @@ damage_templates.heavy_axe = {
 					300
 				},
 				impact = {
-					6,
-					12
+					10,
+					20
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -166,7 +166,7 @@ damage_templates.heavy_axe_spike = {
 	stagger_category = "melee",
 	cleave_distribution = no_cleave,
 	damage_type = damage_types.axe_light,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_axe,
@@ -298,25 +298,25 @@ damage_templates.default_light_axe = {
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
 				}
 			},
 			power_distribution = {
 				attack = {
-					60,
-					120
+					100,
+					250
 				},
 				impact = {
-					5,
-					9
+					8,
+					16
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -354,6 +354,15 @@ damage_templates.default_light_axe = {
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+overrides.light_axe_smiter = {
+	parent_template_name = "default_light_axe",
+	overrides = {
+		{
+			"cleave_distribution",
+			no_cleave
 		}
 	}
 }
@@ -598,7 +607,7 @@ damage_templates.light_axe_linesman = {
 	ragdoll_push_force = 250,
 	stagger_category = "melee",
 	damage_type = damage_types.axe_light,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.combat_axe,
@@ -786,7 +795,7 @@ damage_templates.axe_stab = {
 	stagger_category = "uppercut",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.axe_light,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.blunt,
@@ -884,8 +893,8 @@ damage_templates.heavy_shovel_tank = {
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.shovel_medium,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_axe,
 	armor_damage_modifier = cutting_am,
@@ -999,9 +1008,9 @@ damage_templates.default_light_shovel = {
 	ragdoll_only = true,
 	finesse_ability_damage_multiplier = 2,
 	ragdoll_push_force = 250,
-	gibbing_power = 0,
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
+	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.combat_axe,

@@ -96,6 +96,20 @@ local line_effects = {
 			}
 		}
 	},
+	renegade_captain_pellet = {
+		sfx = "wwise/events/weapon/play_shared_combat_weapon_bullet_flyby_small_husk",
+		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_tracer_trail",
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
 	renegade_captain_boltshell = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby",
 		vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam",

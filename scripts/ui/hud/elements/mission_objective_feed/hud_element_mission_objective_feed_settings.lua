@@ -1,15 +1,4 @@
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-
-local function _get_hud_color(key, alpha)
-	local color = table.clone(UIHudSettings[key])
-
-	if alpha then
-		color[1] = alpha
-	end
-
-	return color
-end
-
 local hud_element_mission_objective_feed_settings = {
 	description_text_height_offset = 5,
 	entry_spacing = 0,
@@ -18,7 +7,10 @@ local hud_element_mission_objective_feed_settings = {
 		460,
 		40
 	},
-	events = {},
+	events = {
+		event_add_mission_objective = "_add_objective",
+		event_remove_mission_objective = "_remove_objective"
+	},
 	colors_by_mission_type = {
 		default = {
 			bar = UIHudSettings.color_tint_main_1,

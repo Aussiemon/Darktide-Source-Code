@@ -9,10 +9,10 @@ local event_vo_survive_veteran_female_c = {
 			"loc_veteran_female_c__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.931833,
+			2.011417,
+			2.53349,
+			2.271198
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_survive_veteran_female_c = {
 			"loc_veteran_female_c__event_survive_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.218604,
+			2.158708,
+			1.976854,
+			2.731125
 		},
 		randomize_indexes = {}
 	}

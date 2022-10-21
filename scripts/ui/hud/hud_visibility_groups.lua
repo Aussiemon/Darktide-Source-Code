@@ -1,3 +1,17 @@
+local function _is_in_hub()
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_in_hub = game_mode_name == "hub"
+
+	return is_in_hub
+end
+
+local function _is_in_prologue_hub()
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_in_hub = game_mode_name == "prologue_hub"
+
+	return is_in_hub
+end
+
 local visibility_groups = {
 	{
 		name = "disabled",
@@ -32,39 +46,49 @@ local visibility_groups = {
 		end
 	},
 	{
+		name = "in_hub_view",
+		validation_function = function (hud)
+			if _is_in_hub() or _is_in_prologue_hub() then
+				return not Managers.ui:allow_hud()
+			end
+
+			return false
+		end
+	},
+	{
 		name = "in_view",
 		validation_function = function (hud)
 			return not Managers.ui:allow_hud()
 		end
+	},
+	{
+		name = "communication_wheel",
+		validation_function = function (hud)
+			return hud:communication_wheel_active()
+		end
+	},
+	{
+		name = "tactical_overlay",
+		validation_function = function (hud)
+			return hud:tactical_overlay_active()
+		end
+	},
+	{
+		name = "testify",
+		validation_function = function (hud)
+			return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
+		end
+	},
+	{
+		name = "dead",
+		validation_function = function (hud)
+			local player = hud:player()
+
+			return not player:unit_is_alive()
+		end
 	}
 }
-visibility_groups[6] = {
-	name = "communication_wheel",
-	validation_function = function (hud)
-		return hud:communication_wheel_active()
-	end
-}
-visibility_groups[7] = {
-	name = "tactical_overlay",
-	validation_function = function (hud)
-		return hud:tactical_overlay_active()
-	end
-}
-visibility_groups[8] = {
-	name = "testify",
-	validation_function = function (hud)
-		return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
-	end
-}
-visibility_groups[9] = {
-	name = "dead",
-	validation_function = function (hud)
-		local player = hud:player()
-
-		return not player:unit_is_alive()
-	end
-}
-visibility_groups[10] = {
+visibility_groups[11] = {
 	name = "alive",
 	validation_function = function (hud)
 		local player_extensions = hud:player_extensions()
@@ -76,6 +100,14 @@ visibility_groups[10] = {
 		end
 
 		return false
+	end
+}
+visibility_groups[12] = {
+	name = "training_grounds",
+	validation_function = function (hud)
+		local mechaninsm_manager = Managers.mechanism
+
+		return mechaninsm_manager:mechanism_name() == "training_grounds"
 	end
 }
 

@@ -3,6 +3,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -103,7 +104,26 @@ weapon_template.actions = {
 			},
 			start_modifier = 1.5
 		},
-		allowed_chain_actions = {}
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left"
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_activate_special"
+			}
+		}
 	},
 	action_melee_start_left = {
 		sprint_enabled_time = 0.5,
@@ -215,17 +235,16 @@ weapon_template.actions = {
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
+		range_mod = 1.25,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.3,
 		damage_window_end = 0.5,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_down",
 		anim_event = "attack_left_diagonal_down",
-		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
 		total_time = 1.3,
 		action_movement_curve = {
 			{
@@ -361,7 +380,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -369,21 +388,20 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.vertical_slash
 	},
 	action_left_heavy = {
-		first_person_hit_stop_anim = "hit_stop",
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		allowed_during_sprint = true,
-		num_frames_before_process = 0,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.2,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_2",
+		max_num_saved_entries = 20,
+		kind = "sweep",
+		num_frames_before_process = 0,
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "hit_stop",
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_heavy_left",
 		anim_event = "heavy_attack_left_diagonal_down",
-		weapon_handling_template = "time_scale_1_2",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -478,7 +496,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -572,21 +590,20 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
+		range_mod = 1.25,
 		first_person_hit_stop_anim = "hit_stop",
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		hit_armor_anim = "attack_hit_shield",
 		num_frames_before_process = 0,
+		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.35,
 		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
-		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -700,7 +717,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -721,7 +738,6 @@ weapon_template.actions = {
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_heavy_right",
 		anim_event = "heavy_attack_right_diagonal_down",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -819,7 +835,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -909,20 +925,19 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
+		damage_window_start = 0.3,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
+		anim_event_3p = "attack_stab_01",
 		num_frames_before_process = 0,
-		damage_window_start = 0.3,
+		weapon_handling_template = "time_scale_1_65",
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_stab_01",
-		anim_event = "attack_right_down",
-		weapon_handling_template = "time_scale_1_65",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
-		power_level = 500,
+		anim_event = "attack_right_down",
 		total_time = 1.25,
 		action_movement_curve = {
 			{
@@ -1036,7 +1051,7 @@ weapon_template.actions = {
 		damage_type = damage_types.metal_slashing_light,
 		damage_type_special_active = damage_types.slashing_force,
 		damage_type_on_abort = damage_types.metal_slashing_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -1154,9 +1169,8 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		push_radius = 4,
 		kind = "push",
-		anim_event = "attack_push",
-		power_level = 500,
 		weapon_handling_template = "time_scale_1",
+		anim_event = "attack_push",
 		total_time = 0.4,
 		action_movement_curve = {
 			{
@@ -1200,12 +1214,12 @@ weapon_template.actions = {
 				chain_time = 0.4
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
-		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
-		outer_damage_type = damage_types.physical,
+		inner_damage_profile = DamageProfileTemplates.default_push,
+		inner_damage_type = damage_types.warp,
+		outer_damage_profile = DamageProfileTemplates.light_push,
+		outer_damage_type = damage_types.warp,
 		fx = {
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry",
 			fx_source = "head",
@@ -1279,7 +1293,6 @@ weapon_template.actions = {
 		kind = "damage_target",
 		charge_template = "forcesword_p1_m1_use_single_target",
 		anim_event = "parry_push_finish",
-		power_level = 500,
 		prevent_sprint = true,
 		total_time = 0.4,
 		action_movement_curve = {
@@ -1438,11 +1451,7 @@ weapon_template.stamina_template = "forcesword_p1_m1"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcesword_p1_m1"
 weapon_template.movement_curve_modifier_template = "forcesword_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {
 	warp_charge_cost_up_dps_down = {
 		forcesword_p1_m1_dps_stat = -0.1,

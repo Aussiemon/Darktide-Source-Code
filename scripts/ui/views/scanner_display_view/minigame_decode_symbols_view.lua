@@ -5,9 +5,6 @@ local MinigameDecodeSymbolsView = class("MinigameDecodeSymbolsView")
 
 MinigameDecodeSymbolsView.init = function (self, context)
 	self._minigame_extension = context.minigame_extension
-
-	fassert(self._minigame_extension, "[MinigameDecodeSymbolsView] MinigameExtension not found.")
-
 	self._grid_widgets = {}
 end
 

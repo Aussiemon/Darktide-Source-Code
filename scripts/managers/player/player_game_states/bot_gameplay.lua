@@ -19,25 +19,21 @@ BotGameplay.on_reload = function (self, refreshed_resources)
 end
 
 BotGameplay.update = function (self, main_dt, main_t)
-	Profiler.start("BotGameplay:update()")
-
 	local player = self._player
 	local package_synchronizer_host = Managers.package_synchronization:synchronizer_host()
 	local local_player_id = player:local_player_id()
 
 	if self._is_server and not self._has_spawned and package_synchronizer_host:bot_synced_by_all(local_player_id) then
 		local player_spawner_system = Managers.state.extension:system("player_spawner_system")
-		local position, rotation, side = player_spawner_system:next_free_spawn_point("bots")
+		local position, rotation, parent, side = player_spawner_system:next_free_spawn_point("bots")
 		local force_spawn = true
 		local is_respawn = false
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
-		player_unit_spawn_manager:spawn_player(player, position, rotation, force_spawn, side, nil, "walking", is_respawn)
+		player_unit_spawn_manager:spawn_player(player, position, rotation, parent, force_spawn, side, nil, "walking", is_respawn)
 
 		self._has_spawned = true
 	end
-
-	Profiler.stop("BotGameplay:update()")
 end
 
 return BotGameplay

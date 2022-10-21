@@ -25,7 +25,7 @@ local asset_vo_zealot_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 5.237688,
-			[2.0] = 4.665104
+			[2.0] = 4.665083
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -104,8 +104,8 @@ local asset_vo_zealot_male_b = {
 		},
 		sound_events_duration = {
 			2.567188,
-			2.468979,
-			2.76075,
+			2.468958,
+			2.760729,
 			3.45625
 		},
 		randomize_indexes = {}

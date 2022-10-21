@@ -87,7 +87,7 @@ PlayerSuppressionExtension.fixed_update = function (self, unit, dt, t)
 		self._suppression_delay = self._suppression_delay - dt
 	end
 
-	if self._is_local_unit then
+	if self._is_local_unit and not self._player:is_human_controlled() then
 		self:_update_effects(dt, t)
 	end
 end
@@ -211,6 +211,21 @@ PlayerSuppressionExtension.wwise_suppression_state = function (self)
 	else
 		return "none"
 	end
+end
+
+PlayerSuppressionExtension.clear_suppression = function (self)
+	if self._is_server or self._is_local_unit then
+		local suppression_component = self._suppression_component
+		suppression_component.sway_pitch = 0
+		suppression_component.sway_yaw = 0
+		suppression_component.spread_pitch = 0
+		suppression_component.spread_yaw = 0
+		suppression_component.time = 0
+		suppression_component.decay_time = 0
+	end
+
+	self._num_suppression_hits = 0
+	self._next_suppression_hit_clear_time = 0
 end
 
 return PlayerSuppressionExtension

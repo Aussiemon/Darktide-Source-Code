@@ -299,6 +299,27 @@ HudElementPlayerBuffs.destroy = function (self)
 	HudElementPlayerBuffs.super.destroy(self)
 end
 
+HudElementPlayerBuffs.set_visible = function (self, visible, ui_renderer, use_retained_mode)
+	if use_retained_mode then
+		if visible then
+			self:set_dirty()
+		else
+			self:_destroy_widgets(ui_renderer)
+		end
+	end
+end
+
+HudElementPlayerBuffs._destroy_widgets = function (self, ui_renderer)
+	local widgets = self._widgets
+	local num_widgets = #widgets
+
+	for i = 1, num_widgets do
+		local widget = widgets[i]
+
+		UIWidget.destroy(ui_renderer, widget)
+	end
+end
+
 HudElementPlayerBuffs.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementPlayerBuffs.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 

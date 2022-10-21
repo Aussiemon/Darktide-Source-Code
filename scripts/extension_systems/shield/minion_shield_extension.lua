@@ -139,7 +139,7 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	end
 
 	local open_up_threshold = template.open_up_threshold
-	local quarter_open_up_threshold = open_up_threshold / 4
+	local quarter_open_up_threshold = open_up_threshold / 20
 	local hit_strength = self._hit_strength
 	hit_strength = math.min(hit_strength + stagger_strength, open_up_threshold)
 	self._hit_strength = hit_strength

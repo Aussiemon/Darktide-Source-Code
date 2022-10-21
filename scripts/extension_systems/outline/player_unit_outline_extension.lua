@@ -49,6 +49,11 @@ PlayerUnitOutlineExtension.destroy = function (self)
 	return
 end
 
+local IGNORED_DISABLED_OUTLINE_STATES = {
+	catapulted = true,
+	consumed = true
+}
+
 PlayerUnitOutlineExtension.update = function (self, unit, dt, t)
 	self._timer = self._timer + dt
 
@@ -86,10 +91,11 @@ PlayerUnitOutlineExtension.update = function (self, unit, dt, t)
 
 	if player_outline_mode ~= "off" and player_outline_mode ~= "skeleton" then
 		local character_state_component = self._character_state_component
+		local state_name = character_state_component.state_name
 		local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
 		local was_disabled = self._is_disabled
 
-		if is_disabled and not was_disabled then
+		if is_disabled and not was_disabled and not IGNORED_DISABLED_OUTLINE_STATES[state_name] then
 			self._outline_system:add_outline(unit, "knocked_down")
 
 			self._is_disabled = is_disabled

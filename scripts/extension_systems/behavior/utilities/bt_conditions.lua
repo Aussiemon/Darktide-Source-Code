@@ -4,8 +4,6 @@ local function _add_conditions(path)
 	local conditions = require(path)
 
 	for condition_name, condition_func in pairs(conditions) do
-		fassert(BtConditions[condition_name] == nil, "[BtConditions] Duplicate condition %q found, each condition needs a unique name!", condition_name)
-
 		BtConditions[condition_name] = condition_func
 	end
 end

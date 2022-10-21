@@ -186,7 +186,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			total_width = total_width + size[1] + button_spacing
 		end
 
-		local left_size_offset = 0
+		local left_size_offset = button_spacing * 0.5
 		local horizontal_alignment = menu_settings.horizontal_alignment
 
 		if horizontal_alignment then

@@ -32,6 +32,7 @@ local PackageSynchronizationManager = require("scripts/managers/loading/package_
 local PartyImmateriumManager = require("scripts/managers/party_immaterium/party_immaterium_manager")
 local PartyManagerDummy = require("scripts/managers/party/party_manager_dummy")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
+local PingManager = require("scripts/managers/ping/ping_manager")
 local PresenceManager = require("scripts/managers/presence/presence_manager")
 local PresenceManagerDummy = require("scripts/managers/presence/presence_manager_dummy")
 local ProfileSynchronizationManager = require("scripts/managers/loading/profile_synchronization_manager")
@@ -50,11 +51,13 @@ local TelemetryReporters = require("scripts/managers/telemetry/telemetry_reporte
 local TimeManager = require("scripts/foundation/managers/time/time_manager")
 local TokenManager = require("scripts/foundation/managers/token/token_manager")
 local TransitionManager = require("scripts/managers/transition/transition_manager")
+local UIFontManager = require("scripts/managers/ui/ui_font_manager")
 local UIManager = require("scripts/managers/ui/ui_manager")
 local UrlLoaderManager = require("scripts/managers/url_loader/url_loader_manager")
 local VivoxManager = require("scripts/managers/vivox/vivox_manager")
 local VOSourcesCache = require("scripts/extension_systems/dialogue/vo_sources_cache")
 local VotingManager = require("scripts/managers/voting/voting_manager")
+local WorldLevelDespawnManager = require("scripts/managers/world_level_despawn/world_level_despawn_manager")
 local WorldManager = require("scripts/foundation/managers/world/world_manager")
 local WwiseGameSyncManager = require("scripts/managers/wwise_game_sync/wwise_game_sync_manager")
 local XAsyncManager = require("scripts/managers/xasync/xasync_manager")
@@ -79,6 +82,10 @@ StateGame.on_enter = function (self, parent, params)
 	}
 
 	self:_init_managers(params.package_manager, params.localization_manager, event_delegate, approve_channel_delegate)
+
+	if GameParameters.testify and not DEDICATED_SERVER then
+		Managers.telemetry_events:system_settings()
+	end
 
 	if not IS_XBS then
 		Managers.save:load()
@@ -163,9 +170,11 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end)
 	Managers.steam = SteamManager:new()
 	Managers.grpc = GRPCManager:new()
+	Managers.ping = PingManager:new()
 	local disable_ui = DEDICATED_SERVER
 
 	if not disable_ui then
+		Managers.font = UIFontManager:new()
 		Managers.ui = UIManager:new()
 	end
 
@@ -186,6 +195,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	})
 	Managers.connection = ConnectionManager:new(_connection_options(is_dedicated_hub_server, is_dedicated_mission_server), event_delegate, approve_channel_delegate)
 	Managers.multiplayer_session = MultiplayerSessionManager:new()
+	Managers.world_level_despawn = WorldLevelDespawnManager:new()
 	Managers.loading = LoadingManager:new()
 	Managers.profile_synchronization = ProfileSynchronizationManager:new()
 	Managers.package_synchronization = PackageSynchronizationManager:new()
@@ -201,30 +211,19 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 			Managers.presence = PresenceManager:new()
 			Managers.data_service = DataServiceManager:new()
 			Managers.party_immaterium = PartyImmateriumManager:new()
-		else
-			assert(false, "Production like backend must be enabled.")
 		end
 	else
 		Managers.presence = PresenceManagerDummy:new()
 		Managers.data_service = DataServiceManager:new()
 	end
 
-	Managers.stats = StatsManager:new(DEDICATED_SERVER)
-	Managers.achievements = AchievementsManager:new(DEDICATED_SERVER, event_delegate)
+	Managers.stats = StatsManager:new()
+	Managers.achievements = AchievementsManager:new(DEDICATED_SERVER, event_delegate, is_dedicated_hub_server)
 	Managers.contracts = ContractsManager:new(DEDICATED_SERVER, event_delegate)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()
-
-	if GameParameters.enable_EAC_feature then
-		if DEDICATED_SERVER then
-			Managers.eac_server = EACServerManager:new()
-		elseif IS_WINDOWS then
-			Managers.eac_client = EACClientManager:new()
-		end
-	end
-
 	Managers.telemetry = TelemetryManager:new()
-	Managers.telemetry_events = TelemetryEvents:new(Managers.telemetry, Managers.connection:network_event_delegate())
+	Managers.telemetry_events = TelemetryEvents:new(Managers.telemetry, Managers.connection)
 	Managers.telemetry_reporters = TelemetryReporters:new()
 	Managers.account = AccountManager:new()
 
@@ -267,215 +266,128 @@ StateGame.on_reload = function (self, refreshed_resources)
 end
 
 StateGame.update = function (self, dt)
-	Profiler.start("StateGame:update()")
-
 	local network_is_active = Network.is_active()
 
-	Profiler.start("update_resolution_lookup_update")
 	UPDATE_RESOLUTION_LOOKUP()
-	Profiler.stop("update_resolution_lookup_update")
-	Profiler.start("time_manager_update")
 	Managers.time:update(dt)
-	Profiler.stop("time_manager_update")
 
 	local t = Managers.time:time("main")
 
-	Profiler.start("promise_manager_update")
 	Promise.update(dt, t)
-	Profiler.stop("promise_manager_update")
-	Profiler.start("account_manager_update")
 	Managers.account:update(dt, t)
-	Profiler.stop("account_manager_update")
-	Profiler.start("package_manager_update")
 	Managers.package:update(dt, t)
-	Profiler.stop("package_manager_update")
-	Profiler.start("token_manager_update")
 	Managers.token:update(dt, t)
-	Profiler.stop("token_manager_update")
-	Profiler.start("input_manager_update")
 	Managers.input:update(dt, t)
-	Profiler.stop("input_manager_update")
-	Profiler.start("state_machine_update")
 	self._sm:update(dt, t)
-	Profiler.stop("state_machine_update")
 
 	local ui_manager = Managers.ui
 
 	if ui_manager then
-		Profiler.start("ui_manager_update")
 		ui_manager:update(dt, t)
-		Profiler.stop("ui_manager_update")
 	end
 
 	if not DEDICATED_SERVER then
-		Profiler.start("dlc_manager_update")
 		Managers.dlc:update(dt, t)
-		Profiler.stop("dlc_manager_update")
-		Profiler.start("wwise_game_sync_update")
 		Managers.wwise_game_sync:update(dt, t)
-		Profiler.stop("wwise_game_sync_update")
 	end
 
-	Profiler.start("loading_manager_update")
 	Managers.loading:update(dt)
-	Profiler.stop("loading_manager_update")
-	Profiler.start("profile_synchronization_manager_update")
 	Managers.profile_synchronization:update(dt)
-	Profiler.stop("profile_synchronization_manager_update")
-	Profiler.start("package_synchronization_manager_update")
 	Managers.package_synchronization:update(dt)
-	Profiler.stop("package_synchronization_manager_update")
-	Profiler.start("bot_manager_update")
 	Managers.bot:update(dt)
-	Profiler.stop("bot_manager_update")
-	Profiler.start("world_manager_update")
 	Managers.world:update(dt, t)
-	Profiler.stop("world_manager_update")
-	Profiler.start("steam_manager_update")
 	Managers.steam:update()
-	Profiler.stop("steam_manager_update")
-	Profiler.start("backend_manager_update")
 	Managers.backend:update(dt, t)
-	Profiler.stop("backend_manager_update")
 
 	if Managers.chat then
-		Profiler.start("chat_manager_update")
 		Managers.chat:update(dt, t)
-		Profiler.stop("chat_manager_update")
 	end
 
 	if Managers.data_service.social then
-		Profiler.start("social_manager_update")
 		Managers.data_service.social:update(dt, t)
-		Profiler.stop("social_manager_update")
 	end
 
-	Profiler.start("grpc_update")
 	Managers.grpc:update(dt, t)
-	Profiler.stop("grpc_update")
-	Profiler.start("presence_update")
+	Managers.ping:update(dt, t)
 	Managers.presence:update(dt, t)
-	Profiler.stop("presence_update")
 
 	if Managers.party_immaterium then
-		Profiler.start("party_immaterium_manager_update")
 		Managers.party_immaterium:update(dt, t)
-		Profiler.stop("party_immaterium_manager_update")
 	end
 
 	if Managers.hub_server then
-		Profiler.start("hub_server_manager_update")
 		Managers.hub_server:update(dt, t)
-		Profiler.stop("hub_server_manager_update")
 	end
 
 	if Managers.mission_server then
-		Profiler.start("mission_server_manager_update")
 		Managers.mission_server:update(dt, t)
-		Profiler.stop("mission_server_manager_update")
 	end
 
 	if Managers.boons then
-		Profiler.start("boons_manager_update")
 		Managers.boons:update(dt, t)
-		Profiler.stop("boons_manager_update")
 	end
 
-	Profiler.start("progression_manager_update")
 	Managers.progression:update(dt, t)
-	Profiler.stop("progression_manager_update")
-	Profiler.start("stats_manager_update")
+	Managers.world_level_despawn:update(dt, t)
 	Managers.stats:update(dt, t)
-	Profiler.stop("stats_manager_update")
 
 	if Managers.eac_server then
-		Profiler.start("eac_server_manager_update")
 		Managers.eac_server:update(dt, t)
-		Profiler.stop("eac_server_manager_update")
 	end
 
 	if Managers.eac_client then
-		Profiler.start("eac_client_manager_update")
 		Managers.eac_client:update(dt, t)
-		Profiler.stop("eac_client_manager_update")
 	end
 
-	Profiler.start("voting_manager_update")
 	Managers.voting:update(dt, t)
-	Profiler.stop("voting_manager_update")
 
 	if Managers.xasync then
-		Profiler.start("xasync_update")
 		Managers.xasync:update(dt)
-		Profiler.stop("xasync_update")
 	end
 
 	if GameParameters.testify then
-		Profiler.start("testify_update")
 		Testify:update(dt, t)
-		Profiler.stop("testify_update")
 		Testify:poll_requests_through_handler(StateGameTestify, self)
 	end
 
-	Profiler.start("telemetry_update")
 	Managers.telemetry:update(dt, t)
 	Managers.telemetry_reporters:update(dt, t)
-	Profiler.stop("telemetry_update")
-	Profiler.start("server_metrics_update")
 	Managers.server_metrics:update(dt, t)
-	Profiler.stop("server_metrics_update")
-	Profiler.start("state_machine_post_update")
 	self._sm:post_update(dt, t)
-	Profiler.stop("state_machine_post_update")
-	Profiler.start("bot_manager_post_update")
 	Managers.bot:post_update(dt, t)
-	Profiler.stop("bot_manager_post_update")
-	Profiler.start("multiplayer_session_manager_post_update")
 	Managers.multiplayer_session:post_update()
-	Profiler.stop("multiplayer_session_manager_post_update")
 
 	if ui_manager then
-		Profiler.start("ui_manager_post_update")
 		ui_manager:post_update(dt, t)
-		Profiler.stop("ui_manager_post_update")
 	end
 
 	FlowCallbacks.clear_return_value()
-	Profiler.stop("StateGame:update()")
 end
 
 local time_name = "main"
 
 StateGame.render = function (self)
-	Profiler.start("StateGame:render()")
-	Profiler.start("state_machine_render")
 	self._sm:render()
-	Profiler.stop("state_machine_render")
 
 	local t = Managers.time:time(time_name)
 	local dt = Managers.time:delta_time(time_name)
 	local ui_manager = Managers.ui
 
 	if ui_manager then
-		Profiler.start("ui_manager_draw")
 		ui_manager:render(dt, t)
-		Profiler.stop("ui_manager_draw")
 	end
 
-	Profiler.start("world_render")
 	Managers.world:render()
-	Profiler.stop("world_render")
-	Profiler.start("state_machine_post_render")
 	self._sm:post_render()
-	Profiler.stop("state_machine_post_render")
-	Profiler.start("frame_table_swap_buffers")
 	Managers.frame_table:swap_buffers()
-	Profiler.stop("frame_table_swap_buffers")
-	Profiler.stop("StateGame:render()")
 end
 
 StateGame.current_state_name = function (self)
 	return self._sm:current_state_name()
+end
+
+StateGame.state_machine = function (self)
+	return self._sm
 end
 
 return StateGame

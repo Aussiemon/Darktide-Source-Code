@@ -28,9 +28,6 @@ end
 
 GameplayInitStepNavigation._init_navigation = function (self, world, nav_world, is_server, level_name, level_seed, network_event_delegate)
 	local game_mode_manager = Managers.state.game_mode
-
-	fassert(game_mode_manager, "[GameplayInitStepNavigation] Game Mode Manager not initialized.")
-
 	local side_compositions = game_mode_manager:side_compositions()
 	local num_sides = #side_compositions
 	Managers.state.nav_mesh = NavMeshManager:new(world, nav_world, is_server, network_event_delegate, level_name)

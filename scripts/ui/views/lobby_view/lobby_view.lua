@@ -14,13 +14,13 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Zones = require("scripts/settings/zones/zones")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local MissionBoardSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local TextUtils = require("scripts/utilities/ui/text")
 local Breeds = require("scripts/settings/breed/breeds")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local LobbyView = class("LobbyView", "BaseView")
 
@@ -49,6 +49,8 @@ LobbyView.on_enter = function (self)
 	self:_setup_mission_descriptions()
 
 	self._item_definitions = MasterItems.get_cached()
+
+	Managers.frame_rate:request_full_frame_rate("lobby_view")
 end
 
 LobbyView._initialize_background_world = function (self)
@@ -132,10 +134,14 @@ LobbyView._setup_mission_descriptions = function (self)
 		local zone_name = mission_settings.zone_id
 		local zone_info = Zones[zone_name]
 		local zone_display_name = zone_info and zone_info.name
-		local main_objective = MissionObjectiveTemplates[mission_settings.objectives].main_objective_type
-		local main_objective_loc_id = MissionBoardSettings.main_objective_type_name[main_objective]
-		local circumstance_name = Circumstances[mission_data.circumstance_name].ui and self:_localize(Circumstances[mission_data.circumstance_name].ui.display_name) or mission_data.circumstance_name
-		local sub_title = self:_localize(main_objective_loc_id)
+		local main_objective_loc_id = mission_settings.mission_type_name
+		local circumstance_name = nil
+
+		if mission_data.circumstance_name ~= "default" then
+			circumstance_name = Circumstances[mission_data.circumstance_name].ui and self:_localize(Circumstances[mission_data.circumstance_name].ui.display_name) or mission_data.circumstance_name
+		end
+
+		local sub_title = main_objective_loc_id and self:_localize(main_objective_loc_id) or ""
 
 		if zone_display_name then
 			sub_title = sub_title .. " · " .. self:_localize(zone_display_name) or sub_title
@@ -177,6 +183,12 @@ LobbyView._setup_menu_list = function (self)
 		end,
 		pressed_function = function (parent, widget, entry)
 			local current_ready_status = parent:_own_player_ready_status()
+
+			if current_ready_status == false then
+				self:_play_sound(UISoundEvents.mission_lobby_ready_up)
+			else
+				self:_play_sound(UISoundEvents.mission_lobby_unready)
+			end
 
 			parent:_set_own_player_ready_status(not current_ready_status)
 		end
@@ -257,9 +269,6 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 		local widget_type = entry.widget_type
 		local widget = nil
 		local template = ContentBlueprints[widget_type]
-
-		fassert(template, "[LobbyView] - Could not find content blueprint for type: %s", widget_type)
-
 		local size = template.size
 		local pass_template = template.pass_template
 
@@ -345,7 +354,6 @@ LobbyView._setup_spawn_slots = function (self)
 			loadout_widgets = {}
 		}
 		spawn_slots[i] = spawn_slot
-		spawn_slot.panel_widget.content.hotspot.pressed_callback = callback(self, "cb_on_slot_inspect_pressed", spawn_slot)
 	end
 
 	self._spawn_slots = spawn_slots
@@ -373,7 +381,6 @@ LobbyView.can_exit = function (self)
 end
 
 LobbyView.on_exit = function (self)
-	LobbyView.super.on_exit(self)
 	self:_destroy_spawn_slots()
 
 	if self._world_spawner then
@@ -381,6 +388,9 @@ LobbyView.on_exit = function (self)
 
 		self._world_spawner = nil
 	end
+
+	Managers.frame_rate:relinquish_request("lobby_view")
+	LobbyView.super.on_exit(self)
 end
 
 LobbyView.update = function (self, dt, t, input_service)
@@ -540,41 +550,9 @@ LobbyView._handle_input = function (self, input_service, dt, t)
 
 	if self._world_initialized then
 		if is_mouse then
-			local focused_index = self._focused_slot_index
-
-			if focused_index and self._spawn_slots[focused_index].panel_widget and not self._spawn_slots[focused_index].panel_widget.content.hotspot.is_hover then
-				self:_set_slot_focused_by_index()
-			end
-
-			for i = 1, #self._spawn_slots do
-				local spawn_slot = self._spawn_slots[i]
-
-				if spawn_slot.panel_widget and is_mouse and spawn_slot.panel_widget.content.hotspot.is_hover then
-					self:_set_slot_focused_by_index(i)
-				end
-			end
+			-- Nothing
 		elseif not self._menu_list_grid:selected_grid_index() and not self:_is_slot_focused() then
 			self._menu_list_grid:select_last_index(true)
-		elseif input_service:get("navigate_left_continuous") then
-			if self._menu_list_grid:selected_grid_index() then
-				self._menu_list_grid:select_grid_index(nil, nil, nil, true)
-			end
-
-			local new_index = self:_get_previous_occupied_slot_index(self._focused_slot_index)
-
-			if new_index then
-				self:_set_slot_focused_by_index(new_index)
-			end
-		elseif input_service:get("navigate_right_continuous") then
-			if self._menu_list_grid:selected_grid_index() then
-				self._menu_list_grid:select_grid_index(nil, nil, nil, true)
-			end
-
-			local new_index = self:_get_next_occupied_slot_index(self._focused_slot_index)
-
-			if new_index then
-				self:_set_slot_focused_by_index(new_index)
-			end
 		elseif (input_service:get("navigate_up_continuous") or input_service:get("navigate_down_continuous")) and self:_is_slot_focused() then
 			self:_set_slot_focused_by_index()
 		end
@@ -672,16 +650,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	}
 	local randomize_default_slot = math.random(1, #weapon_slots)
 	slot.default_slot = weapon_slots[randomize_default_slot]
-	local player_slot = player.slot and player:slot()
-
-	if player_slot then
-		local player_slot_color = UISettings.player_slot_colors[player_slot]
-		local color_to_string = TextUtilities.apply_color_to_text(character_name, player_slot_color)
-		panel_content.character_name = string.format("%s %s", character_level, color_to_string)
-	else
-		panel_content.character_name = string.format("%s %s", character_level, character_name)
-	end
-
+	panel_content.character_name = string.format("%s %s", character_level, character_name)
 	local loadout = profile.loadout
 	local frame_item = loadout and loadout.slot_portrait_frame
 
@@ -738,6 +707,10 @@ LobbyView._unload_all_portrait_icon = function (self)
 end
 
 LobbyView._unload_portrait_icon = function (self, slot)
+	local ui_renderer = self._ui_renderer
+
+	UIWidget.set_visible(slot.panel_widget, ui_renderer, false)
+
 	local icon_load_id = slot.icon_load_id
 	local frame_load_id = slot.frame_load_id
 	local insignia_load_id = slot.insignia_load_id
@@ -762,14 +735,14 @@ LobbyView._sync_players = function (self)
 	self:_update_synced_slots()
 end
 
-LobbyView._cb_set_player_icon = function (self, slot, grid_index, rows, columns)
-	local panel_widget = slot.panel_widget
-	local panel_style = panel_widget.style
-	local material_values = panel_style.character_portrait.material_values
+LobbyView._cb_set_player_icon = function (self, slot, grid_index, rows, columns, render_target)
+	local widget = slot.panel_widget
+	local material_values = widget.style.character_portrait.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 LobbyView._sync_local_player = function (self)
@@ -791,6 +764,12 @@ LobbyView._sync_player = function (self, unique_id, player)
 		slot = spawn_slots[slot_id]
 
 		if slot then
+			if self._first_player_added then
+				self:_play_sound(UISoundEvents.mission_lobby_matchmade_players_join)
+			else
+				self._first_player_added = true
+			end
+
 			self:_assign_player_to_slot(player, slot)
 
 			self._slot_changes = true
@@ -845,7 +824,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 			for f = 1, #slot.loadout_widgets do
 				local loadout_widgets = slot.loadout_widgets[f]
-				loadout_widgets.weapon_widget.offset[1] = widget_offset_x + 40
+				loadout_widgets.weapon_widget.offset[1] = widget_offset_x + 7
 				loadout_widgets.text_widget.offset[1] = widget_offset_x
 			end
 
@@ -1000,9 +979,6 @@ LobbyView._sync_votes = function (self)
 	end
 
 	local votes = Managers.voting:votes(self._voting_id)
-
-	assert(votes, "[LobbyView] - No vote data when trying to sync lobby votes.")
-
 	local spawn_slots = self._spawn_slots
 
 	for i = 1, #spawn_slots do
@@ -1033,6 +1009,12 @@ LobbyView._set_slot_ready_status = function (self, slot, is_ready)
 	material_values.intensity = is_ready and 0.25 or 1
 
 	if is_ready then
+		local player = Managers.player:local_player(1)
+
+		if slot.player ~= player then
+			self:_play_sound(UISoundEvents.mission_lobby_player_ready)
+		end
+
 		self:_start_animation_ready(slot)
 	else
 		self:_start_animation_unready(slot)
@@ -1130,7 +1112,7 @@ LobbyView._setup_loadout_widgets = function (self, spawn_slot)
 		local config = {
 			item = loadout
 		}
-		local size = template.size_function and template.size_function(self, config) or template.size
+		local size = UISettings.weapon_icon_size
 		local pass_template_function = template.pass_template_function
 		local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 		local optional_style = template.style or {}
@@ -1147,6 +1129,16 @@ LobbyView._setup_loadout_widgets = function (self, spawn_slot)
 				init(self, weapon_widget, config, nil, nil, ui_renderer)
 			end
 
+			weapon_widget.style.icon.uvs = {
+				{
+					0,
+					0
+				},
+				{
+					1,
+					1
+				}
+			}
 			local offset_height = initial_offset + loadout_margin * (i - 1)
 			weapon_widget.offset = {
 				0,
@@ -1257,6 +1249,8 @@ LobbyView.trigger_on_exit_animation = function (self)
 			self._menu_list_widgets = nil
 			self._menu_list_grid = nil
 		end
+
+		self:_play_sound(UISoundEvents.mission_lobby_all_players_ready)
 	end
 end
 

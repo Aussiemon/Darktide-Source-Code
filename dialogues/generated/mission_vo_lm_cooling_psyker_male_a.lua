@@ -3,14 +3,14 @@ local mission_vo_lm_cooling_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
 		sound_events = {
-			"loc_psyker_male_a__region_mechanicus_01",
-			"loc_psyker_male_a__region_mechanicus_02",
-			"loc_psyker_male_a__region_mechanicus_03"
+			"loc_psyker_male_a__zone_tank_foundry_01",
+			"loc_psyker_male_a__zone_tank_foundry_02",
+			"loc_psyker_male_a__zone_tank_foundry_03"
 		},
 		sound_events_duration = {
-			5.343021,
-			5.895729,
-			7.462833
+			8.454542,
+			6.557229,
+			7.493438
 		},
 		sound_event_weights = {
 			0.3333333,
@@ -97,20 +97,7 @@ local mission_vo_lm_cooling_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_heat = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_cooling_heat_01",
-			[2.0] = "loc_psyker_male_a__mission_cooling_heat_02"
-		},
-		sound_events_duration = {
-			[1.0] = 6.498417,
-			[2.0] = 8.109083
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_heat_response_two = {
+	mission_cooling_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
@@ -126,16 +113,16 @@ local mission_vo_lm_cooling_psyker_male_a = {
 			"loc_psyker_male_a__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			4.460938,
+			6.092438,
+			2.789938,
+			4.628729,
+			6.292563,
+			3.399583,
+			5.082125,
+			5.392583,
+			3.9875,
+			4.166396
 		},
 		sound_event_weights = {
 			0.1,
@@ -148,6 +135,37 @@ local mission_vo_lm_cooling_psyker_male_a = {
 			0.1,
 			0.1,
 			0.1
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__mission_cooling_heat_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.498417
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat_response_two = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_psyker_male_a__region_mechanicus_01",
+			"loc_psyker_male_a__region_mechanicus_02",
+			"loc_psyker_male_a__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			5.343021,
+			5.895708,
+			7.462833
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -172,8 +190,8 @@ local mission_vo_lm_cooling_psyker_male_a = {
 			[2.0] = "loc_psyker_male_a__mission_cooling_long_way_down_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.535833,
-			[2.0] = 3.694333
+			[1.0] = 4.535813,
+			[2.0] = 3.694313
 		},
 		randomize_indexes = {}
 	},
@@ -190,19 +208,6 @@ local mission_vo_lm_cooling_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_production_line = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_cooling_production_line_01",
-			[2.0] = "loc_psyker_male_a__mission_cooling_production_line_02"
-		},
-		sound_events_duration = {
-			[1.0] = 4.696458,
-			[2.0] = 4.365438
-		},
-		randomize_indexes = {}
-	},
 	mission_cooling_worker_habitation = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -211,7 +216,7 @@ local mission_vo_lm_cooling_psyker_male_a = {
 			[2.0] = "loc_psyker_male_a__mission_cooling_worker_habitation_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.625458,
+			[1.0] = 5.625438,
 			[2.0] = 3.108646
 		},
 		randomize_indexes = {}

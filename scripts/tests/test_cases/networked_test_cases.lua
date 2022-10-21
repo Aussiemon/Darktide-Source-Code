@@ -1,5 +1,10 @@
 local TestifySnippets = require("scripts/tests/testify_snippets")
 NetworkedTestCases = {
+	complete_mission = function ()
+		Testify:run_case(function (dt, t)
+			Testify:make_request("complete_game_mode")
+		end)
+	end,
 	join_mission_server = function (case_settings)
 		Testify:run_case(function (dt, t)
 			local settings = cjson.decode(case_settings or "{}")
@@ -11,13 +16,11 @@ NetworkedTestCases = {
 				return output, true
 			end
 
-			if TestifySnippets.is_debug_stripped() then
-				Testify:make_request("skip_title_screen")
+			if GameParameters.prod_like_backend then
+				Testify:make_request("leave_party_immaterium")
 			end
 
-			TestifySnippets.create_character_if_none()
-			Testify:make_request("wait_for_main_menu_play_button_enabled")
-			Testify:make_request("press_play_main_menu")
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			Testify:make_request("wait_for_state_gameplay_reached")
 			Testify:make_request("fail_on_not_authenticated")
 			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default")
@@ -28,56 +31,46 @@ NetworkedTestCases = {
 	end,
 	join_hub_on_hub_server = function ()
 		Testify:run_case(function (dt, t)
-			TestifySnippets.create_character_if_none()
-			Testify:make_request("wait_for_main_menu_play_button_enabled")
-			Testify:make_request("press_play_main_menu")
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			Testify:make_request("wait_for_state_gameplay_reached")
 			Testify:make_request("fail_on_not_authenticated")
 		end)
 	end,
-	load_mission_in_mission_board = function (mission_key)
+	create_party_and_join_mission_on_all_clients = function (mission_key)
 		Testify:run_case(function (dt, t)
-			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default")
+			local party_id = Testify:make_request_on_client(TestifySnippets.first_peer(), "immaterium_party_id", true)
+			local peers_except_first = TestifySnippets.peers_except_first()
+
+			for _, peer in pairs(peers_except_first) do
+				local joiner_account_id = Testify:make_request_on_client(peer, "immaterium_join_party", true, party_id)
+
+				Testify:make_request_on_client(TestifySnippets.first_peer(), "accept_join_party", true, joiner_account_id)
+				TestifySnippets.wait(1)
+			end
+
+			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default", TestifySnippets.first_peer())
+
+			for _, peer in pairs(peers_except_first) do
+				Testify:make_request_on_client(peer, "accept_mission_board_vote", true)
+			end
+
+			TestifySnippets.send_request_to_all_peers("wait_for_ongoing_vote", true)
+			TestifySnippets.send_request_to_all_peers("accept_vote", true)
 		end)
 	end,
-	accept_mission_board_vote = function ()
+	reach_mission_on_all_clients = function (num_peers)
 		Testify:run_case(function (dt, t)
-			Testify:make_request("accept_mission_board_vote")
+			TestifySnippets.wait_for_peers(num_peers)
+			TestifySnippets.send_request_to_all_peers("wait_for_view", true, nil, "lobby_view")
+			TestifySnippets.send_request_to_all_peers("lobby_set_ready_status", true, nil, true)
+			TestifySnippets.wait_for_all_peers_reach_gameplay_state()
+			TestifySnippets.wait(5)
 		end)
 	end,
 	get_ready_in_lobby = function ()
 		Testify:run_case(function (dt, t)
 			Testify:make_request("wait_for_view", "lobby_view")
 			Testify:make_request("lobby_set_ready_status", true)
-		end)
-	end,
-	load_mission_from_mission_board = function (num_peers)
-		Testify:run_case(function (dt, t)
-			num_peers = num_peers or 0
-
-			TestifySnippets.wait_for_peers(num_peers)
-
-			local peers = Testify:peers()
-
-			TestifySnippets.load_first_mission_from_mission_board_on_peer(peers[1])
-			Testify:make_request_on_client(peers[2], "accept_mission_board_vote")
-		end)
-	end,
-	pass_main_menu = function ()
-		Testify:run_case(function (dt, t)
-			Testify:make_request("press_play_main_menu")
-			Testify:make_request("wait_for_state_gameplay_reached")
-		end)
-	end,
-	start_mission_and_complete_it = function (num_peers)
-		Testify:run_case(function (dt, t)
-			num_peers = num_peers or 0
-
-			TestifySnippets.wait_for_peers(num_peers)
-			TestifySnippets.lobby_set_all_peers_ready_status(true)
-			TestifySnippets.wait_for_all_peers_reach_gameplay_state()
-			Testify:make_request("wait_for_players_spawned", 2)
-			Testify:make_request("complete_game_mode")
 		end)
 	end,
 	wait_for_peers_connected = function (num_peers)

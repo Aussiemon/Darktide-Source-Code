@@ -27,11 +27,17 @@ ActionShootProjectile._shoot = function (self)
 	local projectile_template = fire_config.projectile
 	local locomotion_template = projectile_template.locomotion_template
 	local buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
+	local action_component = self._action_component
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = self._player_unit
-	param_table.projectile_template_name = projectile_template.name
 
-	buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
+	if param_table then
+		param_table.attacking_unit = self._player_unit
+		param_table.projectile_template_name = projectile_template.name
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+
+		buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
+	end
 
 	local owner_unit = self._player_unit
 	local material = nil
@@ -43,7 +49,7 @@ ActionShootProjectile._shoot = function (self)
 		local action_component = self._action_component
 		local shoot_position = action_component.shooting_position
 		local shoot_rotation = action_component.shooting_rotation
-		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_ainm(action_settings, shoot_position, shoot_rotation, locomotion_template)
+		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, shoot_position, shoot_rotation, locomotion_template)
 	else
 		local action_aim_projectile = self._action_aim_projectile_component
 		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(action_aim_projectile)

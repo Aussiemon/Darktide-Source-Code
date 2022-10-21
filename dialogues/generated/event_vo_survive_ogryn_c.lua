@@ -9,10 +9,10 @@ local event_vo_survive_ogryn_c = {
 			"loc_ogryn_c__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			1.588354,
-			2.627313,
-			2.523688,
-			1.358396
+			1.588365,
+			2.627323,
+			2.523708,
+			1.358417
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_survive_ogryn_c = {
 			"loc_ogryn_c__event_survive_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			1.462688,
-			1.850958,
+			1.462698,
+			1.850979,
 			2.412104,
-			2.221896
+			2.221906
 		},
 		randomize_indexes = {}
 	}

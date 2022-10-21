@@ -1,5 +1,6 @@
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
+local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
@@ -14,6 +15,7 @@ MechanismHub.init = function (self, ...)
 	self._hub_circumstance_name = "default"
 	self._hub_config_request = false
 	self._fetching_client_data = false
+	self._refresh_vo_story_stage = not DEDICATED_SERVER
 	self._last_auto_joined_game_session_id = nil
 end
 
@@ -30,7 +32,7 @@ MechanismHub.all_players_ready = function (self)
 end
 
 local function _fetch_client_data()
-	return Promise.all(Managers.data_service.path_of_trust:refresh())
+	return Promise.resolved()
 end
 
 MechanismHub.wanted_transition = function (self)
@@ -129,18 +131,42 @@ MechanismHub.wanted_transition = function (self)
 			}
 		}
 	elseif state == "in_hub" then
-		if Managers.party_immaterium and Managers.party_immaterium:game_session_in_progress() then
-			local game_session_id = Managers.party_immaterium:current_game_session_id()
+		if Managers.party_immaterium then
+			if Managers.party_immaterium:game_session_in_progress() then
+				local game_session_id = Managers.party_immaterium:current_game_session_id()
 
-			if self._last_auto_joined_game_session_id ~= game_session_id then
-				self._last_auto_joined_game_session_id = game_session_id
+				if self._last_auto_joined_game_session_id ~= game_session_id then
+					self._last_auto_joined_game_session_id = game_session_id
 
-				self:_retry_join()
-			elseif not self._retry_popup_id then
-				self:_show_retry_popup()
+					self:_retry_join()
+				elseif not self._retry_popup_id then
+					self:_show_retry_popup()
+				end
+
+				return false
 			end
 
-			return false
+			local in_matchmaking = Managers.data_service.social:is_in_matchmaking()
+			local presence_is_in_matchmaking = Managers.presence:presence() == "matchmaking"
+
+			if in_matchmaking ~= presence_is_in_matchmaking then
+				if in_matchmaking then
+					Managers.presence:set_presence("matchmaking")
+				else
+					Managers.presence:set_presence("hub")
+				end
+			end
+		end
+
+		if self._refresh_vo_story_stage then
+			local local_player_id = 1
+			local player = Managers.player:local_player(local_player_id)
+
+			if player and player:unit_is_alive() then
+				PlayerVOStoryStage.refresh_hub_story_stage()
+
+				self._refresh_vo_story_stage = false
+			end
 		end
 
 		return false

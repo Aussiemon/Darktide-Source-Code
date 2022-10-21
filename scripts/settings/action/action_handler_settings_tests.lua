@@ -9,8 +9,6 @@ local function action_handler_settings_tests(action_handler_settings)
 	for i = 1, #disallowed_action_kinds_during_lunge do
 		local kind = disallowed_action_kinds_during_lunge[i]
 		local action_class = weapon_actions[kind] or ability_actions[kind]
-
-		fassert(action_class ~= nil, "disallowed_action_kinds_during_lunge contains non-existant action kind %q", kind)
 	end
 
 	local allowed_action_kinds_during_sprint = action_handler_settings.allowed_action_kinds_during_sprint
@@ -18,8 +16,6 @@ local function action_handler_settings_tests(action_handler_settings)
 	for i = 1, #allowed_action_kinds_during_sprint do
 		local kind = allowed_action_kinds_during_sprint[i]
 		local action_class = weapon_actions[kind] or ability_actions[kind]
-
-		fassert(action_class ~= nil, "allowed_action_kinds_during_sprint contains non-existant action kind %q", kind)
 	end
 
 	local allowed_action_kinds_during_sprint = action_handler_settings.allowed_action_kinds_during_sprint
@@ -27,8 +23,6 @@ local function action_handler_settings_tests(action_handler_settings)
 	for i = 1, #allowed_action_kinds_during_sprint do
 		local kind = allowed_action_kinds_during_sprint[i]
 		local action_class = weapon_actions[kind] or ability_actions[kind]
-
-		fassert(action_class ~= nil, "allowed_action_kinds_during_sprint contains non-existant action kind %q", kind)
 	end
 
 	local abort_sprint = action_handler_settings.abort_sprint
@@ -36,8 +30,6 @@ local function action_handler_settings_tests(action_handler_settings)
 	for i = 1, #abort_sprint do
 		local kind = abort_sprint[i]
 		local action_class = weapon_actions[kind] or ability_actions[kind]
-
-		fassert(action_class ~= nil, "abort_sprint contains non-existant action kind %q", kind)
 	end
 
 	local prevent_sprint = action_handler_settings.prevent_sprint
@@ -45,8 +37,6 @@ local function action_handler_settings_tests(action_handler_settings)
 	for i = 1, #prevent_sprint do
 		local kind = prevent_sprint[i]
 		local action_class = weapon_actions[kind] or ability_actions[kind]
-
-		fassert(action_class ~= nil, "prevent_sprint contains non-existant action kind %q", kind)
 	end
 end
 

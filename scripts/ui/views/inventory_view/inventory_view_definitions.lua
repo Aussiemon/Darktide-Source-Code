@@ -27,13 +27,13 @@ local scenegraph_definition = {
 		}
 	},
 	grid_background = {
-		vertical_alignment = "top",
+		vertical_alignment = "center",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = grid_size,
 		position = {
 			grid_start_offset_x,
-			216,
+			0,
 			1
 		}
 	},
@@ -46,7 +46,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			0,
+			10,
 			0,
 			1
 		}
@@ -60,7 +60,7 @@ local scenegraph_definition = {
 			grid_size[2]
 		},
 		position = {
-			0,
+			-10,
 			38,
 			1
 		}
@@ -95,7 +95,7 @@ local scenegraph_definition = {
 		parent = "grid_background",
 		horizontal_alignment = "center",
 		size = {
-			670,
+			grid_size[1] + 2,
 			36
 		},
 		position = {
@@ -109,7 +109,7 @@ local scenegraph_definition = {
 		parent = "grid_background",
 		horizontal_alignment = "center",
 		size = {
-			670,
+			grid_size[1] + 2,
 			36
 		},
 		position = {
@@ -160,17 +160,17 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	wallet_text = {
+	wallet_entry = {
 		vertical_alignment = "center",
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
-			200,
-			200
+			400,
+			40
 		},
 		position = {
 			-130,
-			0,
+			75,
 			5
 		}
 	},
@@ -180,9 +180,9 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			-400,
-			-150,
-			5
+			-420,
+			-230,
+			9
 		}
 	},
 	slot_gear_upperbody = {
@@ -191,9 +191,9 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			400,
-			-150,
-			5
+			-420,
+			30,
+			9
 		}
 	},
 	slot_gear_lowerbody = {
@@ -202,9 +202,9 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			400,
-			150,
-			5
+			-420,
+			290,
+			9
 		}
 	},
 	slot_gear_extra_cosmetic = {
@@ -213,9 +213,31 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			-400,
-			150,
-			5
+			420,
+			-230,
+			9
+		}
+	},
+	slot_portrait_frame = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = gear_icon_size,
+		position = {
+			420,
+			30,
+			9
+		}
+	},
+	slot_insignia = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = gear_icon_size,
+		position = {
+			420,
+			290,
+			9
 		}
 	},
 	button_skin_sets = {
@@ -229,7 +251,7 @@ local scenegraph_definition = {
 		position = {
 			-620,
 			-230,
-			5
+			0
 		}
 	},
 	button_expressions = {
@@ -243,7 +265,7 @@ local scenegraph_definition = {
 		position = {
 			-620,
 			-140,
-			5
+			0
 		}
 	}
 }
@@ -258,21 +280,13 @@ tab_menu_title_text_font_style.text_vertical_alignment = "center"
 tab_menu_title_text_font_style.hover_text_color = Color.ui_brown_super_light(255, true)
 local wallet_text_font_style = table.clone(UIFontSettings.body)
 wallet_text_font_style.offset = {
-	0,
+	-60,
 	0,
 	3
 }
 wallet_text_font_style.text_horizontal_alignment = "right"
-wallet_text_font_style.text_vertical_alignment = "top"
+wallet_text_font_style.text_vertical_alignment = "center"
 local widget_definitions = {
-	wallet_text = UIWidget.create_definition({
-		{
-			value = "",
-			value_id = "text",
-			pass_type = "text",
-			style = wallet_text_font_style
-		}
-	}, "wallet_text"),
 	tab_menu_title_text = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -283,22 +297,21 @@ local widget_definitions = {
 	tab_menu_back_button = UIWidget.create_definition(ButtonPassTemplates.title_back_button, "tab_menu_back_button"),
 	grid_background = UIWidget.create_definition({
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
+				scale_to_material = true,
 				horizontal_alignment = "center",
-				size = {
-					670
-				},
 				size_addition = {
-					-4,
-					-4
+					22,
+					70
 				},
 				color = {
-					100,
-					0,
-					0,
-					0
+					255,
+					255,
+					255,
+					255
 				}
 			}
 		},
@@ -316,7 +329,7 @@ local widget_definitions = {
 				scenegraph_id = "grid_divider_bottom"
 			}
 		}
-	}, "grid_mask"),
+	}, "grid_background"),
 	grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "grid_scrollbar"),
 	grid_mask = UIWidget.create_definition({
 		{
@@ -344,8 +357,190 @@ local widget_definitions = {
 		}
 	}, "grid_interaction")
 }
+local wallet_entry_definition = UIWidget.create_definition({
+	{
+		value = "",
+		value_id = "text",
+		pass_type = "text",
+		style = wallet_text_font_style
+	},
+	{
+		value_id = "icon",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			color = {
+				255,
+				255,
+				255,
+				255
+			},
+			size = {
+				56,
+				40
+			},
+			offset = {
+				0,
+				0,
+				0
+			}
+		}
+	}
+}, "wallet_entry")
+local animations = {
+	wallet_on_enter = {
+		{
+			name = "reset",
+			end_time = 0.1,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				parent.loadout_alpha_multiplier = 0
+
+				for i = 1, #widgets do
+					local widget = widgets[i]
+					widget.alpha_multiplier = 0
+					local offset = widget.offset
+					widget.default_offset = table.clone(offset)
+				end
+			end
+		},
+		{
+			name = "fade_in",
+			end_time = 1,
+			start_time = 0.2,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeCubic(progress)
+
+				for i = #widgets, 1, -1 do
+					local widget = widgets[i]
+					widget.alpha_multiplier = math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1)
+				end
+			end
+		},
+		{
+			name = "move",
+			end_time = 1,
+			start_time = 0.2,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeOutCubic(progress)
+				local x_anim_distance_max = 0
+				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
+				local extra_amount = math.clamp(20 - 20 * anim_progress * 1.2, 0, 20)
+
+				for i = #widgets, 1, -1 do
+					local widget = widgets[i]
+					local default_offset = widget.default_offset
+					local offset = widget.offset
+					offset[1] = default_offset[1] + x_anim_distance + extra_amount * (i + 1)
+				end
+			end
+		}
+	},
+	cosmetics_on_enter = {
+		{
+			name = "fade_in",
+			end_time = 0.6,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				parent.loadout_alpha_multiplier = 0
+
+				for i = 1, #widgets do
+					local widget = widgets[i]
+					widget.alpha_multiplier = 0
+				end
+
+				local loadout_widgets = parent._loadout_widgets
+
+				if loadout_widgets then
+					for i = 1, #loadout_widgets do
+						local widget = loadout_widgets[i]
+						widget.alpha_multiplier = 0
+					end
+				end
+			end
+		},
+		{
+			name = "move",
+			end_time = 0.8,
+			start_time = 0.35,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeOutCubic(progress)
+				local loadout_widgets = parent._loadout_widgets
+
+				for i = 1, #loadout_widgets do
+					local widget = loadout_widgets[i]
+					widget.alpha_multiplier = anim_progress
+				end
+
+				for i = 1, #widgets do
+					local widget = widgets[i]
+					widget.alpha_multiplier = anim_progress
+				end
+
+				local x_anim_distance_max = 50
+				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
+				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
+
+				parent:_set_scenegraph_position("slot_gear_head", scenegraph_definition.slot_gear_head.position[1] - x_anim_distance)
+				parent:_set_scenegraph_position("slot_gear_upperbody", scenegraph_definition.slot_gear_upperbody.position[1] - x_anim_distance - extra_amount)
+				parent:_set_scenegraph_position("slot_gear_lowerbody", scenegraph_definition.slot_gear_lowerbody.position[1] - x_anim_distance - extra_amount - extra_amount - extra_amount)
+				parent:_set_scenegraph_position("slot_gear_extra_cosmetic", scenegraph_definition.slot_gear_extra_cosmetic.position[1] + x_anim_distance)
+				parent:_set_scenegraph_position("slot_portrait_frame", scenegraph_definition.slot_portrait_frame.position[1] + x_anim_distance + extra_amount)
+				parent:_set_scenegraph_position("slot_insignia", scenegraph_definition.slot_insignia.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("button_skin_sets", scenegraph_definition.button_skin_sets.position[1] + x_anim_distance + extra_amount * 2)
+				parent:_set_scenegraph_position("button_expressions", scenegraph_definition.button_expressions.position[1] + x_anim_distance + extra_amount * 4)
+			end
+		}
+	},
+	loadout_on_enter = {
+		{
+			name = "fade_in",
+			end_time = 0.6,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				for i = 1, #widgets do
+					local widget = widgets[i]
+					widget.alpha_multiplier = 0
+				end
+			end
+		},
+		{
+			name = "move",
+			end_time = 0.8,
+			start_time = 0.35,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeOutCubic(progress)
+
+				for i = 1, #widgets do
+					local widget = widgets[i]
+					widget.alpha_multiplier = anim_progress
+				end
+
+				local x_anim_distance_max = 50
+				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
+
+				parent:_set_scenegraph_position("grid_background", scenegraph_definition.grid_background.position[1] - x_anim_distance)
+			end
+		}
+	}
+}
 
 return {
+	animations = animations,
+	wallet_entry_definition = wallet_entry_definition,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition
 }

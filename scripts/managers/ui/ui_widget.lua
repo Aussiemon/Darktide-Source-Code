@@ -5,19 +5,15 @@ local DefaultPassStyles = require("scripts/ui/default_pass_styles")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local InputDevice = require("scripts/managers/input/input_device")
 local UIWidget = {}
+local GuiMaterialFlag = GuiMaterialFlag
+local bit_or = bit.bor
 
 local function initialize_pass_definitions(pass_definitions, content, style, widget_name)
 	local passes = {}
 
 	for i, pass in ipairs(pass_definitions) do
 		local pass_type = pass.pass_type
-
-		assert(pass_type, "No pass-type in pass definition.")
-
 		local ui_pass = UIPasses[pass_type]
-
-		fassert(ui_pass, "No such pass-type: %s", pass_type)
-
 		local data = ui_pass.init(pass, content, style) or {}
 		local pass_instance = table.clone(pass)
 		pass_instance.data = data
@@ -57,12 +53,7 @@ UIWidget.destroy = function (ui_renderer, widget)
 
 	for i, pass in ipairs(passes) do
 		local pass_type = pass.pass_type
-
-		assert(pass_type, "No pass-type in pass definition.")
-
 		local ui_pass = UIPasses[pass_type]
-
-		fassert(ui_pass, "No such pass-type: %s", pass_type)
 
 		if ui_pass.destroy then
 			ui_pass.destroy(pass, ui_renderer)
@@ -130,21 +121,16 @@ end
 local function _convert_visibility_argument_to_function(text_arg)
 	local result = loadstring("return function(content, style) return " .. text_arg .. " end")
 
-	fassert(result, "UIWidget - Failed constructing visibility function")
-
 	return result()
 end
 
 local function _convert_change_argument_to_function(text_arg)
 	local result = loadstring("return function(content, style, animations, dt) " .. text_arg .. " end")
 
-	fassert(result, "UIWidget - Failed constructing content change function")
-
 	return result()
 end
 
 UIWidget.add_definition_pass = function (destination, pass_info)
-	destination = destination or {}
 	local passes = destination.passes
 
 	if not passes then
@@ -168,9 +154,6 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 	end
 
 	local pass_type = pass_info.pass_type
-
-	fassert(UIPasses[pass_type], "No such pass-type: %s", pass_type)
-
 	local pass_content = pass_info.content
 	local content_id = pass_info.content_id
 
@@ -250,15 +233,11 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 		retained_mode = pass_info.retained_mode
 	}
 	passes[pass_index] = new_pass_info
-
-	return destination
 end
 
 local temp_render_settings = {}
 
 local function _draw_widget_passes(widget, position, ui_renderer, visible)
-	Profiler.start("_draw_widget_passes")
-
 	local ui_scenegraph = ui_renderer.ui_scenegraph
 	local scale = ui_renderer.scale
 	local widget_optional_scale = widget.scale and scale * widget.scale
@@ -267,58 +246,69 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local animations = widget.animations
 	local content = widget.content
 	local size = content.size
+	local widget_offset = widget.offset
 
 	if not size then
 		local scenegraph_id = widget.scenegraph_id
 		size = content.size_table
-		size[1], size[2] = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
+		local w, h = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
 
 		if widget_optional_scale then
-			size[1] = size[1] * widget_optional_scale
-			size[2] = size[2] * widget_optional_scale
+			w = w * widget_optional_scale
+			h = h * widget_optional_scale
 		end
+
+		size[2] = h
+		size[1] = w
 	end
 
 	local dt = ui_renderer.dt
 	local render_settings = ui_renderer.render_settings or temp_render_settings
-	local alpha_multiplier = render_settings.alpha_multiplier or 1
-
-	if ui_renderer.alpha_multiplier then
-		alpha_multiplier = alpha_multiplier * ui_renderer.alpha_multiplier
-	end
-
-	local render_setting_hdr = render_settings.hdr
-	local render_settings_mask = render_settings.mask
-	local render_settings_mask_alpha = render_settings.mask_alpha
-	local render_settings_mask_red = render_settings.mask_red
-	local render_settings_mask_blue = render_settings.mask_blue
-	local render_settings_mask_green = render_settings.mask_green
+	local alpha_multiplier = (render_settings.alpha_multiplier or 1) * (ui_renderer.alpha_multiplier or 1)
+	render_settings.alpha_multiplier = alpha_multiplier
+	local render_settings_material_flags = render_settings.material_flags or 0
+	local material_flags = render_settings_material_flags
 
 	if content.mask then
-		render_settings.mask = true
+		material_flags = bit_or(material_flags, GuiMaterialFlag.GUI_MASK_LAYER)
 	end
 
 	if content.mask_alpha then
-		render_settings.mask_alpha = true
+		material_flags = bit_or(material_flags, GuiMaterialFlag.WRITE_ALPHA)
 	end
 
 	if content.mask_red then
-		render_settings.mask_red = true
+		material_flags = bit_or(material_flags, GuiMaterialFlag.WRITE_RED)
 	end
 
 	if content.mask_blue then
-		render_settings.mask_blue = true
+		material_flags = bit_or(material_flags, GuiMaterialFlag.WRITE_BLUE)
 	end
 
 	if content.mask_green then
-		render_settings.mask_green = true
+		material_flags = bit_or(material_flags, GuiMaterialFlag.WRITE_GREEN)
 	end
 
+	render_settings.material_flags = material_flags
+	local material_flags_w_hdr = bit_or(material_flags, GuiMaterialFlag.GUI_HDR_LAYER)
 	local render_settings_world_target_position = render_settings.world_target_position
 
 	if style.world_target_position then
 		render_settings.world_target_position = style.world_target_position
 	end
+
+	local pos_x, pos_y, pos_z = nil
+
+	if type(position) == "table" then
+		pos_z = position[3]
+		pos_y = position[2]
+		pos_x = position[1]
+	else
+		pos_x, pos_y, pos_z = Vector3.to_elements(position)
+	end
+
+	local size_x = size[1]
+	local size_y = size[2]
 
 	for i = 1, #passes do
 		repeat
@@ -326,23 +316,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			local pass_info = passes[i]
 			local pass_type = pass_info.pass_type
 			local ui_pass = UIPasses[pass_type]
-
-			assert(ui_pass, "No such UI Pass: %s", pass_type)
-
 			local content_id = pass_info.content_id
 			local pass_content = content_id and content[content_id] or content
-
-			assert(not content_id or content_id and pass_content, "No content data for pass [%s] with content-id %s", pass_type, content_id)
-
-			if content then
-				if content.visible == false then
-					pass_visibility = false
-				end
-
-				if pass_visibility and content_id and pass_content and pass_content.visible == false then
-					pass_visibility = false
-				end
-			end
 
 			if content_id and not pass_content.parent then
 				pass_content.parent = content
@@ -351,28 +326,36 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			local style_id = pass_info.style_id
 			local style_data = style_id and style[style_id] or style
 
-			assert(not style_id or style_id and style_data, "No style data for pass [%s] with style-id %s", pass_type, style_id)
-
 			if style_id and not style_data.parent then
 				style_data.parent = style
 			end
 
-			render_settings.hdr = style_data.hdr or render_setting_hdr
+			if pass_visibility and content then
+				if content.visible == false then
+					pass_visibility = false
+				elseif content_id and pass_content and pass_content.visible == false then
+					pass_visibility = false
+				end
+			end
 
 			if pass_visibility and style_data.visible == false then
 				pass_visibility = false
 			end
 
-			local visibility_function = pass_info.visibility_function
+			if pass_visibility then
+				local visibility_function = pass_info.visibility_function
 
-			if pass_visibility and visibility_function then
-				pass_visibility = visibility_function(pass_content, style_data)
+				if visibility_function then
+					pass_visibility = visibility_function(pass_content, style_data)
+				end
 			end
 
-			local change_function = pass_info.change_function
+			if pass_visibility then
+				local change_function = pass_info.change_function
 
-			if pass_visibility and change_function then
-				change_function(pass_content, style_data, animations, dt)
+				if change_function then
+					change_function(pass_content, style_data, animations, dt)
+				end
 			end
 
 			local update = ui_pass.update
@@ -404,115 +387,102 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 				break
 			end
 
-			local pass_size, pass_position = nil
-			local pass_scenegraph_id = style_data.scenegraph_id or pass_info.scenegraph_id
+			if ui_pass.draw then
+				local pass_pos_x = pos_x
+				local pass_pos_y = pos_y
+				local pass_pos_z = pos_z
+				local pass_size_x = size_x
+				local pass_size_y = size_y
+				local pass_scenegraph_id = style_data.scenegraph_id or pass_info.scenegraph_id
 
-			if pass_scenegraph_id then
-				local width, height = UIScenegraph.get_size(ui_scenegraph, pass_scenegraph_id, scale)
-				pass_size = {
-					width,
-					height
-				}
+				if pass_scenegraph_id then
+					pass_size_x, pass_size_y = UIScenegraph.get_size(ui_scenegraph, pass_scenegraph_id, scale)
+
+					if widget_optional_scale then
+						pass_size_x = pass_size_x * widget_optional_scale
+						pass_size_y = pass_size_y * widget_optional_scale
+					end
+
+					local world_pos = UIScenegraph.world_position(ui_scenegraph, pass_scenegraph_id)
+
+					if type(world_pos) == "table" then
+						pass_pos_z = world_pos[3]
+						pass_pos_y = world_pos[2]
+						pass_pos_x = world_pos[1]
+					else
+						pass_pos_x, pass_pos_y, pass_pos_z = Vector3.to_elements(world_pos)
+					end
+
+					pass_pos_x = pass_pos_x + widget_offset[1]
+					pass_pos_y = pass_pos_y + widget_offset[2]
+					pass_pos_z = pass_pos_z + widget_offset[3]
+				end
+
+				local style_data_size_addition = style_data.size_addition
+				local style_data_size = style_data.size
+
+				if style_data_size or style_data_size_addition then
+					local width = style_data_size and style_data_size[1] or pass_size_x
+					local height = style_data_size and style_data_size[2] or pass_size_y
+
+					if style_data_size_addition then
+						if style_data_size_addition[1] then
+							width = width + style_data_size_addition[1] or width
+						end
+
+						if style_data_size_addition[2] then
+							height = height + style_data_size_addition[2] or height
+						end
+					end
+
+					local horizontal_alignment = style_data.horizontal_alignment
+
+					if horizontal_alignment == "right" then
+						pass_pos_x = pass_pos_x + pass_size_x - width
+					elseif horizontal_alignment == "center" then
+						pass_pos_x = pass_pos_x + (pass_size_x - width) / 2
+					end
+
+					local vertical_alignment = style_data.vertical_alignment
+
+					if vertical_alignment == "center" then
+						pass_pos_y = pass_pos_y + (pass_size_y - height) / 2
+					elseif vertical_alignment == "bottom" then
+						pass_pos_y = pass_pos_y + pass_size_y - height
+					end
+
+					pass_size_x = width
+					pass_size_y = height
+				end
+
+				local style_offset = style_data.offset
+
+				if style_offset then
+					pass_pos_x = pass_pos_x + style_offset[1]
+					pass_pos_y = pass_pos_y + style_offset[2]
+					pass_pos_z = pass_pos_z + (style_offset[3] or 0)
+				end
 
 				if widget_optional_scale then
-					pass_size[1] = pass_size[1] * widget_optional_scale
-					pass_size[2] = pass_size[2] * widget_optional_scale
+					pass_size_x = pass_size_x * widget_optional_scale
+					pass_size_y = pass_size_y * widget_optional_scale
+					pass_pos_x = pass_pos_x * widget_optional_scale
+					pass_pos_y = pass_pos_y * widget_optional_scale
 				end
 
-				local world_pos = UIScenegraph.world_position(ui_scenegraph, pass_scenegraph_id)
-				pass_position = Vector3(world_pos[1], world_pos[2], world_pos[3])
-			else
-				pass_size = size
-				pass_position = position
-			end
+				render_settings.alpha_multiplier = alpha_multiplier * (widget.alpha_multiplier or 1)
 
-			local style_data_size_addition = style_data.size_addition
-			local style_data_size = style_data.size
-
-			if style_data_size or style_data_size_addition then
-				local width = style_data_size and style_data_size[1] or pass_size[1]
-				local height = style_data_size and style_data_size[2] or pass_size[2]
-
-				if style_data_size_addition then
-					if style_data_size_addition[1] then
-						width = width + style_data_size_addition[1] or width
-					end
-
-					if style_data_size_addition[2] then
-						height = height + style_data_size_addition[2] or height
-					end
-				end
-
-				local x = pass_position[1]
-				local y = pass_position[2]
-				local z = pass_position[3]
-				local horizontal_alignment = style_data.horizontal_alignment
-				local vertical_alignment = style_data.vertical_alignment
-
-				if horizontal_alignment then
-					if horizontal_alignment == "right" then
-						x = x + pass_size[1] - width
-					elseif horizontal_alignment == "center" then
-						x = x + (pass_size[1] - width) / 2
-					end
-				end
-
-				if vertical_alignment then
-					if vertical_alignment == "center" then
-						y = y + (pass_size[2] - height) / 2
-					elseif vertical_alignment == "bottom" then
-						y = y + pass_size[2] - height
-					end
-				end
-
-				pass_size = Vector2(width, height)
-				pass_position = Vector3(x, y, z)
-			end
-
-			local style_offset = style_data.offset
-
-			if style_offset then
-				pass_position = pass_position + Vector3(style_offset[1], style_offset[2], style_offset[3] or 0) or pass_position
-			end
-
-			if widget_optional_scale then
-				pass_size[1] = pass_size[1] * widget_optional_scale
-				pass_size[2] = pass_size[2] * widget_optional_scale
-				pass_position[1] = pass_position[1] * widget_optional_scale
-				pass_position[2] = pass_position[2] * widget_optional_scale
-			end
-
-			local widget_alpha_multiplier = widget.alpha_multiplier
-
-			if widget_alpha_multiplier then
-				render_settings.alpha_multiplier = alpha_multiplier * widget_alpha_multiplier
-			else
-				render_settings.alpha_multiplier = alpha_multiplier
-			end
-
-			if ui_pass.draw then
-				Profiler.start("pass: " .. pass_type)
-				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, pass_position, pass_size)
-				Profiler.stop("pass: " .. pass_type)
+				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y))
 			end
 		until true
 	end
 
-	render_settings.hdr = render_setting_hdr or false
-	render_settings.alpha_multiplier = alpha_multiplier or false
-	render_settings.mask = render_settings_mask or false
-	render_settings.mask_alpha = render_settings_mask_alpha or false
-	render_settings.mask_red = render_settings_mask_red or false
-	render_settings.mask_blue = render_settings_mask_blue or false
-	render_settings.mask_green = render_settings_mask_green or false
+	render_settings.alpha_multiplier = alpha_multiplier
+	render_settings.material_flags = render_settings_material_flags
 	render_settings.world_target_position = render_settings_world_target_position or false
-
-	Profiler.stop("_draw_widget_passes")
 end
 
 UIWidget.draw = function (widget, ui_renderer)
-	Profiler.start("[UIWidget] - draw")
-
 	local name = widget.name
 	local visible = widget.visible
 	local style = widget.style
@@ -522,8 +492,6 @@ UIWidget.draw = function (widget, ui_renderer)
 	local scenegraph_id = widget.scenegraph_id
 
 	if animations then
-		Profiler.start("animation_update")
-
 		for ui_animation, _ in pairs(animations) do
 			UIAnimation.update(ui_animation, ui_renderer.dt)
 
@@ -531,8 +499,6 @@ UIWidget.draw = function (widget, ui_renderer)
 				animations[ui_animation] = nil
 			end
 		end
-
-		Profiler.stop("animation_update")
 	end
 
 	local ui_scenegraph = ui_renderer.ui_scenegraph
@@ -552,34 +518,31 @@ UIWidget.draw = function (widget, ui_renderer)
 	_draw_widget_passes(widget, position, ui_renderer, visible)
 
 	widget.dirty = nil
-
-	Profiler.stop("[UIWidget] - draw")
 end
 
 UIWidget.set_visible = function (widget, ui_renderer, visible)
-	for i, pass_info in ipairs(widget.passes) do
-		repeat
-			local pass_data = pass_info.data
+	local passes = widget.passes
 
-			if pass_info.retained_mode or pass_data.material then
-				local visible_previous = pass_data.visible
-				pass_data.visible = visible
+	for i = 1, #passes do
+		local pass_info = passes[i]
+		local pass_data = pass_info.data
 
-				if visible_previous and not visible or pass_data.material then
-					local pass_type = pass_info.pass_type
-					local ui_pass = UIPasses[pass_type]
-					local destroy_function = ui_pass.destroy
+		if pass_info.retained_mode or pass_data.material then
+			local visible_previous = pass_data.visible
+			pass_data.visible = visible
 
-					if destroy_function then
-						destroy_function(pass_info, ui_renderer)
-					end
+			if visible_previous and not visible or pass_data.material then
+				local pass_type = pass_info.pass_type
+				local ui_pass = UIPasses[pass_type]
+				local destroy_function = ui_pass.destroy
 
-					break
-				elseif not visible_previous and visible then
-					pass_data.dirty = true
+				if destroy_function then
+					destroy_function(pass_info, ui_renderer)
 				end
+			elseif not visible_previous and visible then
+				pass_data.dirty = true
 			end
-		until true
+		end
 	end
 end
 

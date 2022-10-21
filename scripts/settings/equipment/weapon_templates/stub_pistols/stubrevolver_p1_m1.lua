@@ -1,5 +1,6 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -8,11 +9,13 @@ local ProjectileTemplates = require("scripts/settings/projectile/projectile_temp
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local WeaponTraitsBespokeStubrevolverP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local damage_types = DamageSettings.damage_types
+local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -93,6 +96,15 @@ local weapon_template = {
 					input = "weapon_extra_pressed"
 				}
 			}
+		},
+		special_action_pistol_whip = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					value = true,
+					input = "weapon_extra_pressed"
+				}
+			}
 		}
 	}
 }
@@ -100,25 +112,18 @@ local weapon_template = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	special_action_quick_throw = "stay",
 	wield = "stay",
 	reload = "stay",
 	shoot_pressed = "stay",
+	special_action_pistol_whip = "stay",
 	zoom = {
-		special_action_quick_throw = "stay",
-		wield = "base",
 		zoom_shoot = "stay",
+		wield = "base",
 		zoom_release = "previous",
 		grenade_ability = "base",
 		reload = "base",
-		combat_ability = "base"
-	},
-	inspect = {
-		reload = "stay",
-		wield = "base",
-		inspect_start = {
-			inspect_stop = "base"
-		}
+		combat_ability = "base",
+		special_action_pistol_whip = "stay"
 	}
 }
 
@@ -168,14 +173,12 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		kind = "shoot_hit_scan",
-		start_input = "shoot_pressed",
-		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.2,
+		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "stubrevolver_single_shot",
-		abort_sprint = true,
+		kind = "shoot_hit_scan",
 		ammunition_usage = 1,
-		allowed_during_sprint = true,
+		start_input = "shoot_pressed",
 		total_time = 0.56,
 		action_movement_curve = {
 			{
@@ -238,9 +241,12 @@ weapon_template.actions = {
 				chain_time = 0.1
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
+		},
+		buff_keywords = {
+			buff_keywords.allow_hipfire_during_sprint
 		}
 	},
 	action_shoot_zoomed = {
@@ -310,7 +316,7 @@ weapon_template.actions = {
 				chain_time = 0.225
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -388,14 +394,18 @@ weapon_template.actions = {
 		crosshair_type = "none",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		stop_alternate_fire = true,
 		kind = "reload_shotgun",
 		allowed_during_sprint = true,
+		anim_end_event = "reload_cancel",
 		abort_sprint = true,
-		uninterruptible = true,
+		uninterruptible = false,
 		anim_event = "reload_start",
 		total_time = 1.45,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		anim_variables_func = function (action_settings, condition_func_params)
 			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
 
@@ -456,20 +466,24 @@ weapon_template.actions = {
 				chain_time = 1.4
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_reload_loop = {
-		uninterruptible = false,
 		kind = "reload_shotgun",
+		anim_end_event = "reload_cancel",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1",
-		abort_sprint = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
+		abort_sprint = true,
+		uninterruptible = false,
 		anim_event = "reload_middle",
-		total_time = 0.77,
+		total_time = 0.52,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		anim_variables_func = function (action_settings, condition_func_params)
 			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
 
@@ -528,18 +542,18 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			reload = {
 				action_name = "action_reload_loop",
-				chain_time = 0.75
+				chain_time = 0.5
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -598,20 +612,19 @@ weapon_template.actions = {
 		end
 	},
 	action_psyker_push = {
+		priority = 0,
 		push_radius = 10,
 		start_input = "special_action_quick_throw",
 		block_duration = 0.5,
 		kind = "push",
-		priority = 0,
+		overload_module_class_name = "warp_charge",
 		ability_keyword = "psyker",
 		crosshair_type = "dot",
-		overload_module_class_name = "warp_charge",
 		ability_type = "grenade_ability",
 		charge_template = "handgun_push_charge",
 		damage_time = 0.4,
 		uninterruptible = true,
 		anim_event = "weapon_special_psyker",
-		power_level = 500,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -665,7 +678,185 @@ weapon_template.actions = {
 		inner_damage_profile = DamageProfileTemplates.push_psyker,
 		inner_damage_type = damage_types.physical,
 		outer_damage_profile = DamageProfileTemplates.push_psyker_outer,
-		outer_damage_type = damage_types.physical
+		outer_damage_type = damage_types.physical,
+		fx = {
+			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push",
+			fx_source = "head",
+			fx_position_offset = Vector3Box(0, 2, 0)
+		}
+	},
+	action_pistol_whip = {
+		damage_window_start = 0.25,
+		first_person_hit_stop_anim = "attack_hit",
+		start_input = "special_action_pistol_whip",
+		range_mod = 1,
+		kind = "sweep",
+		first_person_hit_anim = "attack_hit",
+		allow_conditional_chain = true,
+		allowed_during_sprint = true,
+		damage_window_end = 0.31666666666666665,
+		uninterruptible = true,
+		anim_event = "attack_stab_01",
+		power_level = 300,
+		total_time = 1.2,
+		action_movement_curve = {
+			{
+				modifier = 0.3,
+				t = 0.1
+			},
+			{
+				modifier = 0.5,
+				t = 0.25
+			},
+			{
+				modifier = 0.5,
+				t = 0.3
+			},
+			{
+				modifier = 1.5,
+				t = 0.35
+			},
+			{
+				modifier = 1.5,
+				t = 0.4
+			},
+			{
+				modifier = 1.05,
+				t = 0.6
+			},
+			{
+				modifier = 0.75,
+				t = 1
+			},
+			start_modifier = 0.8
+		},
+		allowed_chain_actions = {
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 0.6
+			},
+			reload = {
+				action_name = "action_start_reload",
+				chain_time = 0.6
+			},
+			special_action_pistol_whip = {
+				action_name = "action_pistol_whip_followup",
+				chain_time = 0.55
+			},
+			shoot_pressed = {
+				action_name = "action_shoot_hip",
+				chain_time = 0.8
+			},
+			zoom = {
+				action_name = "action_zoom",
+				chain_time = 0.75
+			}
+		},
+		weapon_box = {
+			0.1,
+			1.1,
+			0.2
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip",
+			anchor_point_offset = {
+				0.2,
+				0.8,
+				0
+			}
+		},
+		damage_type = damage_types.punch,
+		damage_profile = DamageProfileTemplates.weapon_special_push
+	},
+	action_pistol_whip_followup = {
+		damage_window_start = 0.25,
+		first_person_hit_stop_anim = "attack_hit",
+		allow_conditional_chain = true,
+		range_mod = 1,
+		kind = "sweep",
+		first_person_hit_anim = "attack_hit",
+		allowed_during_sprint = true,
+		damage_window_end = 0.31666666666666665,
+		uninterruptible = true,
+		anim_event = "attack_stab_02",
+		power_level = 300,
+		total_time = 1.2,
+		action_movement_curve = {
+			{
+				modifier = 0.3,
+				t = 0.1
+			},
+			{
+				modifier = 0.5,
+				t = 0.25
+			},
+			{
+				modifier = 0.5,
+				t = 0.3
+			},
+			{
+				modifier = 1.5,
+				t = 0.35
+			},
+			{
+				modifier = 1.5,
+				t = 0.4
+			},
+			{
+				modifier = 1.05,
+				t = 0.6
+			},
+			{
+				modifier = 0.75,
+				t = 1
+			},
+			start_modifier = 0.8
+		},
+		allowed_chain_actions = {
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 0.6
+			},
+			reload = {
+				action_name = "action_start_reload",
+				chain_time = 0.6
+			},
+			special_action_pistol_whip = {
+				action_name = "action_pistol_whip",
+				chain_time = 0.85
+			},
+			shoot_pressed = {
+				action_name = "action_shoot_hip",
+				chain_time = 0.8
+			},
+			zoom_shoot = {
+				action_name = "action_shoot_zoomed",
+				chain_time = 0.75
+			},
+			zoom_release = {
+				action_name = "action_unzoom",
+				chain_time = 0.4
+			},
+			zoom = {
+				action_name = "action_zoom",
+				chain_time = 0.55
+			}
+		},
+		weapon_box = {
+			0.1,
+			1.1,
+			0.2
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip_02",
+			anchor_point_offset = {
+				0.2,
+				0.8,
+				0
+			}
+		},
+		damage_type = damage_types.punch,
+		damage_profile = DamageProfileTemplates.weapon_special_push
 	},
 	action_inspect = {
 		skip_3p_anims = false,
@@ -848,11 +1039,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
 weapon_template.can_use_while_vaulting = true
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 
@@ -861,5 +1048,38 @@ table.append(weapon_template.traits, ranged_common_traits)
 local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
+
+local bespoke_stubrevolver_p1_traits = table.keys(WeaponTraitsBespokeStubrevolverP1)
+
+table.append(weapon_template.traits, bespoke_stubrevolver_p1_traits)
+
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_high_damage"
+	},
+	{
+		display_name = "loc_weapon_keyword_accurate"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
+	},
+	special = {
+		display_name = "loc_weapon_special_weapon_bash",
+		type = "melee_hand"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
+}
 
 return weapon_template

@@ -21,26 +21,17 @@ local DummySessionReport = {
 				}
 			},
 			team = {
-				sessionStatistics = {
-					{
-						typePath = "stat/minion_kills",
-						sessionValue = 26
-					},
-					{
-						typePath = "stat/player_deaths",
-						sessionValue = 4
-					}
-				},
+				sessionStatistics = {},
 				participants = {
 					{
 						characterId = "3fae375d-1345-4145-a5a9-e06da58a94c3",
 						progression = {
 							{
-								currentXp = 5158,
-								currentXpInLevel = 5158,
+								currentXp = 5890,
+								currentXpInLevel = 5890,
 								id = "3fae375d-1345-4145-a5a9-e06da58a94c3",
 								type = "character",
-								currentLevel = 4,
+								currentLevel = 7,
 								neededXpForNextLevel = 0,
 								startXp = 4553,
 								eligibleForLevel = true
@@ -76,6 +67,20 @@ local DummySessionReport = {
 								eligibleForLevel = true
 							}
 						},
+						sessionStatistics = {
+							{
+								typePath = "team_deaths",
+								sessionValue = {
+									none = 3
+								}
+							},
+							{
+								typePath = "team_kills",
+								sessionValue = {
+									none = 33
+								}
+							}
+						},
 						accountId = account_id,
 						rewardCards = {
 							{
@@ -103,7 +108,10 @@ local DummySessionReport = {
 									{
 										gearId = "ef2ae1dc-09ca-49e4-9722-1899c15ab326",
 										masterId = "content/items/characters/player/human/gear_head/astra_upperbody_a_01_helmet",
-										rewardType = "item"
+										rewardType = "item",
+										overrides = {
+											rarity = 2
+										}
 									},
 									{
 										gearId = "ef2ae1dd-09ca-49e4-9722-1899c15ab326",
@@ -149,11 +157,11 @@ local DummySessionReport = {
 										rewardType = "currency",
 										currency = "credits",
 										source = "salary",
-										amount = 5513,
+										amount = 3780,
 										details = {
 											fromTotalBonus = 0,
 											fromSideMissionBonus = 0,
-											total = 5513,
+											total = 3780,
 											fromCircumstance = 1103,
 											fromSideMission = 0
 										}
@@ -186,7 +194,23 @@ local DummySessionReport = {
 										rewardType = "gear",
 										gearId = "80157266-b9c3-4668-8460-5e679adacb30",
 										source = "weaponDrop",
-										overrides = {}
+										overrides = {
+											rarity = 3
+										}
+									}
+								}
+							},
+							{
+								kind = "weaponDrop",
+								rewards = {
+									{
+										masterId = "content/items/weapons/player/melee/powermaul_2h_p1_m3",
+										rewardType = "gear",
+										gearId = "80157266-b9c3-4668-8460-5e679adacb30",
+										source = "weaponDrop",
+										overrides = {
+											rarity = 5
+										}
 									}
 								}
 							}

@@ -109,9 +109,6 @@ BtJumpAcrossAction.leave = function (self, unit, breed, blackboard, scratchpad, 
 			local anim_event = scratchpad.ending_anim_event
 			local ending_move_states = action_data.ending_move_states
 			local ending_move_state = ending_move_states[anim_event]
-
-			fassert(ending_move_state, "[BtJumpAcrossAction] Missing ending move state for anim event %s.", anim_event)
-
 			local behavior_component = scratchpad.behavior_component
 			behavior_component.move_state = ending_move_state
 		end

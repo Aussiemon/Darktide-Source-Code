@@ -6,7 +6,6 @@ local input_handler_settings = {
 		"move_left",
 		"move_backward",
 		"move_right",
-		"walk",
 		"crouching",
 		"sprinting",
 		"action_one_hold",
@@ -29,8 +28,8 @@ local input_handler_settings = {
 		"sprint",
 		"dodge",
 		"quick_wield",
-		"wield_prev",
-		"wield_next",
+		"wield_scroll_down",
+		"wield_scroll_up",
 		"wield_1",
 		"wield_2",
 		"wield_3",
@@ -54,7 +53,9 @@ local input_handler_settings = {
 	},
 	input_settings = {
 		"hold_to_sprint",
-		"hold_to_crouch"
+		"hold_to_crouch",
+		"stationary_dodge",
+		"diagonal_forward_dodge"
 	},
 	action_network_type = {
 		move_left = "float_input",

@@ -1,13 +1,15 @@
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
-local NetworkLookup = require("scripts/network_lookup/network_lookup")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local VoiceOverSpawnManager = class("VoiceOverSpawnManager")
+local _default_vo_profile = "sergeant_a"
 
-VoiceOverSpawnManager.init = function (self, is_server)
+VoiceOverSpawnManager.init = function (self, is_server, mission_giver_vo_override)
 	self._is_server = is_server
 	self._level = nil
 	self._unit_spawner_manager = Managers.state.unit_spawner
 	self._voice_over_units = {}
+	self.mission_giver_vo_override = mission_giver_vo_override
 end
 
 VoiceOverSpawnManager.destroy = function (self)
@@ -15,10 +17,8 @@ VoiceOverSpawnManager.destroy = function (self)
 end
 
 VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
-	fassert(self._is_server, "[VoiceOverSpawnManager] server only method.")
-
 	self._level = level
-	local vo_classes_2d = NetworkLookup.voice_classes_2d
+	local vo_classes_2d = DialogueBreedSettings.voice_classes_2d
 
 	for i = 1, #vo_classes_2d do
 		local vo_class = vo_classes_2d[i]
@@ -39,8 +39,6 @@ VoiceOverSpawnManager.delete_units = function (self)
 end
 
 VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
-	fassert(dialogue_breed_settings.prop_name, "[VoiceOverSpawnManager] Dialogue breed settings should contain prop_name.")
-
 	local unit_spawner_manager = self._unit_spawner_manager
 	local props_settings = LevelProps[dialogue_breed_settings.prop_name]
 	local unit_name = props_settings.unit_name
@@ -52,7 +50,7 @@ VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
 		local vo_unit = unit_spawner_manager:spawn_network_unit(unit_name, unit_template_name, nil, nil, nil, voice_over_settings)
 		local dialogue_extension = ScriptUnit.has_extension(vo_unit, "dialogue_system")
 
-		dialogue_extension:set_voice_profile_data(dialogue_breed_settings.vo_class_name, voice_profile)
+		dialogue_extension:set_voice_profile_data(dialogue_breed_settings.vo_class_name, dialogue_breed_settings.wwise_voice_switch_group, voice_profile)
 		dialogue_extension:init_faction_memory(dialogue_breed_settings.dialogue_memory_faction_name)
 
 		dialogue_extension._is_network_synced = dialogue_breed_settings.is_network_synced
@@ -62,6 +60,18 @@ end
 
 VoiceOverSpawnManager.voice_over_unit = function (self, voice_profile)
 	return self._voice_over_units[voice_profile]
+end
+
+VoiceOverSpawnManager.current_voice_profile = function (self)
+	if self.mission_giver_vo_override and self.mission_giver_vo_override ~= "none" then
+		return self.mission_giver_vo_override
+	end
+
+	local mission_info = Managers.state.mission:mission()
+	local mission_brief_vo = mission_info and mission_info.mission_brief_vo
+	local vo_profile = mission_brief_vo and mission_brief_vo.vo_profile
+
+	return vo_profile or _default_vo_profile
 end
 
 return VoiceOverSpawnManager

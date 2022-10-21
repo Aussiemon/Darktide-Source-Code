@@ -1,11 +1,14 @@
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breed = require("scripts/utilities/breed")
 local DebugSingleton = require("scripts/foundation/utilities/debug/debug_singleton")
+local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Promise = require("scripts/foundation/utilities/promise")
+local ScriptedScenarios = require("scripts/extension_systems/training_grounds/scripted_scenarios")
+local level_trigger_event = Level.trigger_event
 local ui_manager = nil
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
 local SHIPPABLE_DESCRIPTION = " (SHIPPABLE: READY FOR RELEASE)"
@@ -17,7 +20,9 @@ local categories = {
 	"Ailments",
 	"Bot Character",
 	"Buffs",
+	"Cinematics",
 	"Coherency Buffs",
+	"Dev Combat",
 	"Dev Parameters",
 	"Error",
 	"Free Flight Camera",
@@ -44,11 +49,13 @@ local categories = {
 	"Stagger",
 	"Sweep Spline",
 	"Time",
+	"Training Grounds",
 	"UI",
 	"Unit",
 	"VO",
 	"WeaponTraits"
 }
+local EMPTY_TABLE = {}
 local functions = {}
 
 local function _apply_ailment(unit, ailment_effect)
@@ -288,6 +295,94 @@ functions.apply_buff_group_to_selected_unit = {
 	category = "Buffs",
 	options_function = buff_group_options,
 	on_activated = apply_buff_group_to_selected_unit
+}
+
+local function _mission_name()
+	local mission_name = Managers.state.mission:mission().name
+
+	return mission_name
+end
+
+local _cutscenes_table = {}
+local _temp_keys = {}
+
+local function _cutscenes(mission_name)
+	table.clear(_cutscenes_table)
+	table.clear(_temp_keys)
+
+	local Missions = require("scripts/settings/mission/mission_templates")
+	local cutscenes = Missions[mission_name].cinematics
+
+	if not cutscenes then
+		return _cutscenes_table
+	end
+
+	local i = 1
+
+	for cutscene_name, _ in table.sorted(cutscenes, _temp_keys) do
+		_cutscenes_table[i] = cutscene_name
+		i = i + 1
+	end
+
+	return _cutscenes_table
+end
+
+local function _play_cutscene(cutscene_name)
+	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+	cinematic_scene_system:play_cutscene(cutscene_name)
+end
+
+local function _trigger_level_event(event_name)
+	level_trigger_event(Managers.state.mission:mission_level(), event_name)
+end
+
+local CINEMATICS_TO_SKIP = {
+	path_of_trust_12 = true,
+	path_of_trust_11 = true,
+	path_of_trust_13 = true,
+	path_of_trust_10 = true
+}
+local USE_EVENTS = {
+	om_hub_01 = true,
+	prologue = true
+}
+functions.play_cutscene = {
+	name = "Play Cutscene",
+	category = "Cinematics",
+	dynamic_contents = true,
+	options_function = function ()
+		if not Managers.state or not Managers.state.mission then
+			return EMPTY_TABLE
+		end
+
+		local mission_name = _mission_name()
+		local cutscenes = _cutscenes(mission_name)
+
+		return cutscenes
+	end,
+	on_activated = function (cutscene_name)
+		local skip_cutscene = CINEMATICS_TO_SKIP[cutscene_name]
+
+		if skip_cutscene then
+			Log.info("DebugFunctions", "%s is not available. See debug_functions for more info.", cutscene_name)
+
+			return
+		end
+
+		Log.info("DebugFunctions", "Playing cutscene %s", cutscene_name)
+
+		local mission_name = _mission_name()
+		local use_events = USE_EVENTS[mission_name]
+
+		if use_events then
+			local event_name = "event_cutscene_" .. cutscene_name
+
+			_trigger_level_event(event_name)
+		else
+			_play_cutscene(cutscene_name)
+		end
+	end
 }
 functions.apply_coherency_buff_to_self = {
 	name = "Apply Coherency Buff To Self",
@@ -571,11 +666,11 @@ functions.teleport_to_coordinates = {
 }
 local mission_board_error_text = "Failed fetching missions"
 local mission_board_options = {}
-local mission_board_ids = {}
+local mission_board_data = {}
 
 local function _fetch_mission_board()
 	table.clear(mission_board_options)
-	table.clear(mission_board_ids)
+	table.clear(mission_board_data)
 
 	if not Managers.backend:authenticated() then
 		mission_board_options[1] = mission_board_error_text
@@ -594,7 +689,7 @@ local function _fetch_mission_board()
 			local mission = missions[i]
 			local text = string.format("%s. %s (chl %s res %s)", i, mission.map, mission.challenge, mission.resistance)
 			mission_board_options[#mission_board_options + 1] = text
-			mission_board_ids[text] = mission.id
+			mission_board_data[text] = mission
 		end
 	end):catch(function (error)
 		mission_board_options[1] = mission_board_error_text
@@ -636,7 +731,8 @@ functions.mission_board_start_mission = {
 	end,
 	on_activated = function (selected_option)
 		if selected_option ~= mission_board_error_text then
-			local backend_mission_id = mission_board_ids[selected_option]
+			local mission_data = mission_board_data[selected_option]
+			local backend_mission_id = mission_data.id
 
 			Managers.party_immaterium:wanted_mission_selected(backend_mission_id)
 		end
@@ -691,6 +787,73 @@ functions.remove_bot_character = {
 	name = "Remove a bot character.",
 	category = "Bot Character",
 	on_activated = remove_bot_character
+}
+
+local function _init_scripted_scenarios(scenario_templates)
+	local function options_function()
+		local scenario_types = table.keys(scenario_templates)
+
+		table.sort(scenario_types)
+
+		local all_scenarios = {}
+
+		for i = 1, #scenario_types do
+			local scenario_type = scenario_types[i]
+			local scenarios = scenario_templates[scenario_type]
+			local sorted_scenarios = table.keys(scenarios)
+
+			table.sort(sorted_scenarios)
+
+			for j = 1, #sorted_scenarios do
+				local scenario_name = sorted_scenarios[j]
+				all_scenarios[#all_scenarios + 1] = string.format("%s.%s", scenario_type, scenario_name)
+			end
+		end
+
+		return all_scenarios
+	end
+
+	local function start_scenario(new_value, old_value)
+		local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+		local t = Managers.time:time("gameplay")
+		local separator_idx = string.find(new_value, "%.")
+		local alias = string.sub(new_value, 1, separator_idx - 1)
+		local name = string.sub(new_value, separator_idx + 1, #new_value)
+
+		scenario_system:start_scenario(alias, name, t)
+	end
+
+	functions.start_training_grounds_scenario = {
+		name = "Start training grounds scenario",
+		category = "Training Grounds",
+		options_function = options_function,
+		on_activated = start_scenario
+	}
+end
+
+local function stop_current_training_grounds_scenario()
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local t = FixedFrame.get_latest_fixed_time()
+
+	scenario_system:stop_scenario(t, nil, true)
+end
+
+functions.stop_training_grounds_scenario = {
+	name = "Stop current training grounds scenario",
+	category = "Training Grounds",
+	on_activated = stop_current_training_grounds_scenario
+}
+
+local function complete_current_step()
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+
+	scenario_system:complete_current_step()
+end
+
+functions.complete_current_training_grounds_step = {
+	name = "Complete current training grounds step",
+	category = "Training Grounds",
+	on_activated = complete_current_step
 }
 
 local function init_nav_visual_server()
@@ -3017,6 +3180,19 @@ functions.copy_parameters = {
 	on_activated = _copy_parameters
 }
 
+local function _print_dev_combat_stats()
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-4, warpins: 1 ---
+	DevCombatStats.print_stats()
+
+	return
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
 local function _next_level()
 
 	-- Decompilation error in this vicinity:
@@ -3248,6 +3424,168 @@ functions.set_xp = {
 	button_text = "Set XP",
 	number_button = true,
 	on_activated = _set_xp
+}
+local Stories = require("scripts/settings/narrative/narrative_stories").stories
+
+local function _get_chapter_names(chapters)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-5, warpins: 1 ---
+	local names = {
+		"reset"
+	}
+
+	--- END OF BLOCK #0 ---
+
+	FLOW; TARGET BLOCK #1
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #1 6-10, warpins: 0 ---
+	for i = 1, #chapters do
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #0 6-10, warpins: 2 ---
+		names[i + 1] = chapters[i].name
+		--- END OF BLOCK #0 ---
+
+
+
+	end
+
+	--- END OF BLOCK #1 ---
+
+	FLOW; TARGET BLOCK #2
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #2 11-11, warpins: 1 ---
+	return names
+	--- END OF BLOCK #2 ---
+
+
+
+end
+
+for story_name, chapters in pairs(Stories) do
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 424-446, warpins: 1 ---
+	local function _set_story(chapter_name)
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #0 1-2, warpins: 1 ---
+		--- END OF BLOCK #0 ---
+
+		if chapter_name ~= "reset" then
+		JUMP TO BLOCK #1
+		else
+		JUMP TO BLOCK #2
+		end
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #1 3-10, warpins: 1 ---
+		Managers.narrative:force_story_chapter(story_name, chapter_name)
+		--- END OF BLOCK #1 ---
+
+		UNCONDITIONAL JUMP; TARGET BLOCK #3
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #2 11-16, warpins: 1 ---
+		Managers.narrative:force_story_chapter(story_name)
+
+		--- END OF BLOCK #2 ---
+
+		FLOW; TARGET BLOCK #3
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #3 17-17, warpins: 2 ---
+		return
+		--- END OF BLOCK #3 ---
+
+
+
+	end
+
+	functions[string.format("force_story_%s", story_name)] = {
+		category = "Progression",
+		name = string.format("Force %s to specific chapter", story_name),
+		on_activated = _set_story,
+		options_function = _get_chapter_names(chapters)
+	}
+	--- END OF BLOCK #0 ---
+
+	FLOW; TARGET BLOCK #1
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #1 447-448, warpins: 2 ---
+	--- END OF BLOCK #1 ---
+
+
+
+end
+
+local function _list_narrative_event_names()
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-7, warpins: 1 ---
+	local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
+
+	return table.keys(NarrativeStories.events)
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+local function _complete_narrative_event(event_name)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-7, warpins: 1 ---
+	Managers.narrative:force_event_complete(event_name)
+
+	return
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+functions.complete_narrative_event = {
+	name = "Set a narrative event to complete",
+	category = "Progression",
+	on_activated = _complete_narrative_event,
+	options_function = _list_narrative_event_names
+}
+
+local function _uncomplete_narrative_event(event_name)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-7, warpins: 1 ---
+	Managers.narrative:force_event_not_complete(event_name)
+
+	return
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+functions.reset_narrative_event = {
+	name = "Set a narrative event to not completed",
+	category = "Progression",
+	on_activated = _uncomplete_narrative_event,
+	options_function = _list_narrative_event_names
 }
 
 local function _reset_achievements()
@@ -3928,8 +4266,6 @@ local function _select_voice(voice)
 
 end
 
-local EMPTY_TABLE = {}
-
 local function _sound_event_types()
 
 	-- Decompilation error in this vicinity:
@@ -3969,10 +4305,55 @@ local function _sound_event_types()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #3 10-19, warpins: 2 ---
+	--- BLOCK #3 10-25, warpins: 1 ---
 	local vo_sources = dialogue_extension._vo_sources_cache._vo_sources
 	local sound_event_types = vo_sources[selected_voice]
 	local sound_event_type_names = table.keys(sound_event_types)
+
+	table.sort(sound_event_type_names, function (a, b)
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #0 1-8, warpins: 1 ---
+		--- END OF BLOCK #0 ---
+
+		if a:upper()
+		 >= b:upper()
+
+		 then
+		JUMP TO BLOCK #1
+		else
+		JUMP TO BLOCK #2
+		end
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #1 9-10, warpins: 1 ---
+		slot2 = false
+		--- END OF BLOCK #1 ---
+
+		UNCONDITIONAL JUMP; TARGET BLOCK #3
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #2 11-11, warpins: 1 ---
+		slot2 = true
+
+		--- END OF BLOCK #2 ---
+
+		FLOW; TARGET BLOCK #3
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #3 12-12, warpins: 2 ---
+		return slot2
+		--- END OF BLOCK #3 ---
+
+
+
+	end)
 
 	return sound_event_type_names
 	--- END OF BLOCK #3 ---
@@ -3982,7 +4363,7 @@ local function _sound_event_types()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #4 20-21, warpins: 1 ---
+	--- BLOCK #4 26-28, warpins: 1 ---
 	return EMPTY_TABLE
 	--- END OF BLOCK #4 ---
 
@@ -3991,9 +4372,17 @@ local function _sound_event_types()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #5 22-22, warpins: 2 ---
+	--- BLOCK #5 29-29, warpins: 2 ---
 	return
 	--- END OF BLOCK #5 ---
+
+	FLOW; TARGET BLOCK #6
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #6 30-30, warpins: 2 ---
+	--- END OF BLOCK #6 ---
 
 
 
@@ -4097,7 +4486,7 @@ local function _play_selected_sound_event()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #2 8-27, warpins: 1 ---
+	--- BLOCK #2 8-48, warpins: 1 ---
 	local wwise_route = dialogue_extension._dialogue_system._wwise_route_default
 	local event_type = "vorbis_external"
 	local sound_event = {}
@@ -4106,6 +4495,12 @@ local function _play_selected_sound_event()
 	sound_event.sound_event = selected_sound_event
 
 	dialogue_extension:play_event(sound_event)
+
+	local subtitle_localized = Managers.localization:localize(sound_event.sound_event, true)
+	local constant_elements = Managers.ui:ui_constant_elements()
+	local constant_element_subtitles = constant_elements:element("ConstantElementSubtitles")
+
+	constant_element_subtitles:_display_text_line(subtitle_localized, 10)
 	Log.info("DebugFunctions", "Played sound event: " .. selected_sound_event)
 	--- END OF BLOCK #2 ---
 
@@ -4114,7 +4509,7 @@ local function _play_selected_sound_event()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #3 28-32, warpins: 2 ---
+	--- BLOCK #3 49-53, warpins: 2 ---
 	Log.info("DebugFunctions", "You need to select a sound event to be able to play one!")
 
 	--- END OF BLOCK #3 ---
@@ -4124,7 +4519,7 @@ local function _play_selected_sound_event()
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #4 33-33, warpins: 2 ---
+	--- BLOCK #4 54-54, warpins: 2 ---
 	return
 	--- END OF BLOCK #4 ---
 
@@ -4180,92 +4575,21 @@ functions.select_voice = {
 
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #1 6-28, warpins: 0 ---
-		for _, breed in pairs(DialogueBreedSettings) do
+		--- BLOCK #1 6-10, warpins: 0 ---
+		for key, speaker in pairs(DialogueSpeakerVoiceSettings) do
 
 			-- Decompilation error in this vicinity:
-			--- BLOCK #0 6-10, warpins: 1 ---
+			--- BLOCK #0 6-8, warpins: 1 ---
+			voices[#voices + 1] = key
 			--- END OF BLOCK #0 ---
 
-			if type(breed)
-
-			 == "table" then
-			JUMP TO BLOCK #1
-			else
-			JUMP TO BLOCK #2
-			end
+			FLOW; TARGET BLOCK #1
 
 
 
 			-- Decompilation error in this vicinity:
-			--- BLOCK #1 11-12, warpins: 1 ---
-			slot6 = breed.wwise_voices
+			--- BLOCK #1 9-10, warpins: 2 ---
 			--- END OF BLOCK #1 ---
-
-			UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #2 13-14, warpins: 1 ---
-			slot6 = false
-			--- END OF BLOCK #2 ---
-
-			UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #3 15-15, warpins: 0 ---
-			local wwise_voices = true
-
-			--- END OF BLOCK #3 ---
-
-			FLOW; TARGET BLOCK #4
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #4 16-17, warpins: 3 ---
-			--- END OF BLOCK #4 ---
-
-			slot6 = if wwise_voices then
-			JUMP TO BLOCK #5
-			else
-			JUMP TO BLOCK #7
-			end
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #5 18-21, warpins: 1 ---
-			--- END OF BLOCK #5 ---
-
-			FLOW; TARGET BLOCK #6
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #6 22-26, warpins: 0 ---
-			for i = 1, #wwise_voices do
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 22-26, warpins: 2 ---
-				voices[#voices + 1] = wwise_voices[i]
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-			--- END OF BLOCK #6 ---
-
-			FLOW; TARGET BLOCK #7
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #7 27-28, warpins: 3 ---
-			--- END OF BLOCK #7 ---
 
 
 
@@ -4278,8 +4602,53 @@ functions.select_voice = {
 
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #2 29-34, warpins: 1 ---
+		--- BLOCK #2 11-22, warpins: 1 ---
 		voices = table.unique_array_values(voices)
+
+		table.sort(voices, function (a, b)
+
+			-- Decompilation error in this vicinity:
+			--- BLOCK #0 1-8, warpins: 1 ---
+			--- END OF BLOCK #0 ---
+
+			if a:upper()
+			 >= b:upper()
+
+			 then
+			JUMP TO BLOCK #1
+			else
+			JUMP TO BLOCK #2
+			end
+
+
+
+			-- Decompilation error in this vicinity:
+			--- BLOCK #1 9-10, warpins: 1 ---
+			slot2 = false
+			--- END OF BLOCK #1 ---
+
+			UNCONDITIONAL JUMP; TARGET BLOCK #3
+
+
+
+			-- Decompilation error in this vicinity:
+			--- BLOCK #2 11-11, warpins: 1 ---
+			slot2 = true
+
+			--- END OF BLOCK #2 ---
+
+			FLOW; TARGET BLOCK #3
+
+
+
+			-- Decompilation error in this vicinity:
+			--- BLOCK #3 12-12, warpins: 2 ---
+			return slot2
+			--- END OF BLOCK #3 ---
+
+
+
+		end)
 
 		return voices
 		--- END OF BLOCK #2 ---
@@ -4859,12 +5228,11 @@ functions.force_character_state = {
 for key, config in pairs(functions) do
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #0 489-492, warpins: 1 ---
+	--- BLOCK #0 576-579, warpins: 1 ---
 	local category = config.category
-
 	--- END OF BLOCK #0 ---
 
-	slot114 = if category then
+	slot132 = if category then
 	JUMP TO BLOCK #1
 	else
 	JUMP TO BLOCK #2
@@ -4873,8 +5241,7 @@ for key, config in pairs(functions) do
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #1 493-503, warpins: 1 ---
-	fassert(table.contains(categories, category), "Debug Function %q has undefined category %q!", key, category)
+	--- BLOCK #1 580-580, warpins: 1 ---
 	--- END OF BLOCK #1 ---
 
 	FLOW; TARGET BLOCK #2
@@ -4882,7 +5249,7 @@ for key, config in pairs(functions) do
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #2 504-505, warpins: 3 ---
+	--- BLOCK #2 580-581, warpins: 3 ---
 	--- END OF BLOCK #2 ---
 
 
@@ -4894,13 +5261,14 @@ local debug_functions_initialized = false
 local function initialize()
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-22, warpins: 1 ---
+	--- BLOCK #0 1-25, warpins: 1 ---
 	local item_definitions = MasterItems.get_cached()
 
 	_init_weapons(item_definitions)
 	_init_equipment(item_definitions)
 	_init_spawn_bot_character(item_definitions)
 	_fetch_mission_board()
+	_init_scripted_scenarios(ScriptedScenarios)
 
 	debug_functions_initialized = true
 	player_manager = Managers.player

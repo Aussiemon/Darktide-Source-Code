@@ -12,15 +12,10 @@ DecodingInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		local inventory_component = unit_data_extension:read_component("inventory")
 		local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
 		local target_unit = unit_data_component.target_unit
-
-		fassert(target_unit, "Missing target_unit form interactor component.")
-
 		local minigame_character_state = unit_data_extension:write_component("minigame_character_state")
 		minigame_character_state.interface_unit_id = Managers.state.unit_spawner:level_index(target_unit)
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 		local item = interactee_extension:interactor_item_to_equip()
-
-		fassert(item, "Missing scan item for target_unit(%s)", target_unit)
 
 		if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
 			PlayerUnitVisualLoadout.unequip_item_from_slot(interactor_unit, "slot_device", t)
@@ -32,9 +27,7 @@ DecodingInteraction.stop = function (self, world, interactor_unit, unit_data_com
 end
 
 DecodingInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
-	local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
-	local character_state_component = unit_data_extension:read_component("character_state")
-	local can_interact = PlayerUnitStatus.can_interact_with_objective(character_state_component)
+	local can_interact = PlayerUnitStatus.can_interact_with_objective(interactor_unit)
 
 	return can_interact
 end

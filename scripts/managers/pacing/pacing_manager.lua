@@ -124,20 +124,10 @@ PacingManager.update = function (self, dt, t)
 	end
 
 	if not self._disabled then
-		Profiler.start("pacing_update")
-		Profiler.start("roamer_pacing_update")
 		self._roamer_pacing:update(dt, t, side_id, target_side_id)
-		Profiler.stop("roamer_pacing_update")
-		Profiler.start("horde_pacing_update")
 		self._horde_pacing:update(dt, t, side_id, target_side_id)
-		Profiler.stop("horde_pacing_update")
-		Profiler.start("specials_pacing_update")
 		self._specials_pacing:update(dt, t, side_id, target_side_id)
-		Profiler.stop("specials_pacing_update")
-		Profiler.start("monster_pacing_update")
 		self._monster_pacing:update(dt, t, side_id, target_side_id)
-		Profiler.stop("monster_pacing_update")
-		Profiler.stop("pacing_update")
 	end
 
 	local switch_state_conditions = self._switch_state_conditions
@@ -326,6 +316,15 @@ PacingManager.add_tension_type = function (self, tension_type, attacked_unit)
 	self:add_tension(value, attacked_unit, tension_type)
 end
 
+PacingManager.player_tension = function (self, unit)
+	local settings = self._combat_state_settings
+	local max_value = settings.max_value
+	local tension = self._player_tension[unit] or 0
+	local value = tension / max_value
+
+	return value
+end
+
 PacingManager._update_player_combat_state = function (self, dt, side_id)
 	local settings = self._combat_state_settings
 	local combat_states = settings.combat_states
@@ -461,10 +460,22 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._horde_pacing:set_timer_modifier(horde_timer_modifier)
 	end
 
+	local required_horde_travel_distance = modify_settings.required_horde_travel_distance
+
+	if required_horde_travel_distance then
+		self._horde_pacing:set_override_required_travel_distance(required_horde_travel_distance)
+	end
+
 	local specials_timer_modifier = modify_settings.specials_timer_modifier
 
 	if specials_timer_modifier then
 		self._specials_pacing:set_timer_modifier(specials_timer_modifier)
+	end
+
+	local max_alive_specials_multiplier = modify_settings.max_alive_specials_multiplier
+
+	if max_alive_specials_multiplier then
+		self._specials_pacing:set_max_alive_specials_multiplier(max_alive_specials_multiplier)
 	end
 
 	local monsters_per_travel_distance = modify_settings.monsters_per_travel_distance
@@ -473,6 +484,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if monsters_per_travel_distance and monster_breed_name then
 		self._monster_pacing:fill_spawns_by_travel_distance(monster_breed_name, monster_spawn_type, monsters_per_travel_distance)
+	end
+
+	local override_faction = modify_settings.override_faction
+
+	if override_faction then
+		self._roamer_pacing:override_faction(override_faction)
 	end
 end
 
@@ -510,6 +527,10 @@ end
 
 PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._specials_pacing:freeze(enabled)
+end
+
+PacingManager.roamer_traverse_logic = function (self)
+	return self._roamer_pacing:traverse_logic()
 end
 
 return PacingManager

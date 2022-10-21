@@ -108,12 +108,16 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_z",
 			type = "pressed"
 		},
+		toggle_pacing = {
+			raw = "keyboard_left shift+keyboard_x",
+			type = "pressed"
+		},
 		aggro_nearby_roamers = {
 			raw = "keyboard_left shift+keyboard_k",
 			type = "pressed"
 		},
 		minion_auto_stagger_start = {
-			raw = "keyboard_left shift+keyboard_x",
+			raw = "keyboard_left shift+keyboard_l",
 			type = "pressed"
 		},
 		regenerate_monsters = {

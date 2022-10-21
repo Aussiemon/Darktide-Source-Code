@@ -1,8 +1,10 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
+local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
+local Toughness = require("scripts/utilities/toughness/toughness")
+local Vo = require("scripts/utilities/vo")
 local special_rules = SpecialRulesSetting.special_rules
 local ActionBuffTarget = class("ActionBuffTarget", "ActionAbilityBase")
 
@@ -21,6 +23,18 @@ ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_
 	local anim_event = self_cast and action_settings.self_cast_anim_event or action_settings.ally_anim_event
 
 	self:trigger_anim_event(anim_event)
+
+	local vo_tag = action_settings.vo_tag
+
+	if vo_tag then
+		Vo.play_combat_ability_event(self._player_unit, vo_tag)
+	end
+
+	local gear_sound_alias = action_settings.gear_sound_alias
+
+	if gear_sound_alias then
+		self._fx_extension:trigger_gear_wwise_event(gear_sound_alias)
+	end
 
 	self._spell_cast = false
 end
@@ -46,8 +60,9 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 		action_module_targeting_component.target_unit_3 = nil
 
 		if self._is_server then
-			local has_override_buff_rule = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override)
-			local buff_name = has_override_buff_rule and action_settings.override_buff_name or action_settings.buff_name
+			local has_override_buff_rule = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
+			local has_override_buff_rule_two = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
+			local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 			if buff_extension then
@@ -70,6 +85,18 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 				local coherency_buff_name = action_settings.coherency_buff_name
 
 				CoherencyUtils.add_buff_to_all_in_coherency(target_unit, coherency_buff_name, t)
+			end
+
+			local restore_toughness = self._specialization_extension:has_special_rule(special_rules.buff_restore_coherency_toughness)
+
+			if restore_toughness then
+				local coherency_toughness = action_settings.coherency_toughness
+				local coherency_extension = ScriptUnit.extension(self._player_unit, "coherency_system")
+				local units_in_coherence = coherency_extension:in_coherence_units()
+
+				for coherency_unit, _ in pairs(units_in_coherence) do
+					Toughness.replenish_percentage(coherency_unit, coherency_toughness, false, "buff_restore_coherency_toughness")
+				end
 			end
 
 			local has_revive_rule = self._specialization_extension:has_special_rule(special_rules.buff_revives_allies)

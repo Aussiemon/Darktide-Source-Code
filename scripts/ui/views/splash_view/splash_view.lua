@@ -19,6 +19,7 @@ SplashView.init = function (self, settings, context)
 	self._total_duration = SplashPageDefinitions.duration
 	self._page_definitions = table.clone(SplashPageDefinitions.pages)
 	self._pass_draw = false
+	self._pass_input = false
 	self._done = false
 end
 
@@ -148,7 +149,7 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 						UIRenderer.draw_text(ui_renderer, text, font_size, style.font_type, temp_position, size, color, text_options)
 					elseif entry_type == "rect" then
-						UIRenderer.draw_rect(ui_renderer, temp_position, size, color)
+						UIRenderer.draw_rect(ui_renderer, Vector3(temp_position[1], temp_position[2], temp_position[3]), Vector2(size[1], size[2]), color)
 					elseif entry_type == "texture" then
 						UIRenderer.draw_texture(ui_renderer, value, temp_position, size, color)
 					elseif entry_type == "video" and not self._splash_video_view_opened and not Managers.ui:is_view_closing("splash_video_view") then

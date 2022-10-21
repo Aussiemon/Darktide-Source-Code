@@ -3,6 +3,7 @@ local BackendInterface = require("scripts/backend/backend_interface")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendManagerTestify = GameParameters.testify and require("scripts/foundation/managers/backend/backend_manager_testify")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local Interface = {
 	"authenticated",
 	"authentication_failed",
@@ -19,6 +20,9 @@ local TITLE_REQUEST_RETRY_COUNT = 5
 local TIME_SYNC_STATES = table.enum("not_started", "running", "failed", "synced")
 local TIME_SYNC_PAUSE_BETWEEN_RETRY_SECONDS = 10
 local TIME_SYNC_ACCEPTABLE_LATENCY_SECONDS = 5
+local DEFAULT_AUTHENTICATION_SERIVCE_URL = "https://bsp-auth-dev.fatsharkgames.se"
+local DEFAULT_TITLE_SERIVCE_URL = "https://bsp-td-dev.fatsharkgames.se"
+local DEFAULT_TELEMERTY_SERVICE_URL = "https://telemetry-utvxrq72na-ez.a.run.app/events"
 
 local function retry_delay(attempt)
 	local temp = math.min(10000, 500 * math.pow(2, attempt))
@@ -43,21 +47,10 @@ BackendManager.init = function (self, default_headers_ctr)
 	end
 	self._promises = {}
 	self._initialized = false
+	self._initialize_promise = nil
 	self.interfaces = BackendInterface.new()
 	self._inflight_title_requests = {}
 	self._title_request_retry_queue = {}
-
-	if rawget(_G, "Backend") ~= nil and Backend.initialize ~= nil then
-		local auth_url, title_url = nil
-		local telemetry_url = DevParameters.backend_telemetry_service_url
-		local debug_log = DevParameters.backend_debug_log
-		local ok = Backend.initialize(auth_url, title_url, telemetry_url, debug_log)
-
-		if ok then
-			self._initialized = true
-		end
-	end
-
 	self.time_sync_state = TIME_SYNC_STATES.not_started
 end
 
@@ -78,8 +71,6 @@ local function _check_response_time(path, value)
 end
 
 BackendManager.update = function (self, dt, t)
-	Profiler.start("BackendManager:update()")
-
 	if self._initialized then
 		if Backend.did_update_auth_config() then
 			self._auth_cache = nil
@@ -179,8 +170,6 @@ BackendManager.update = function (self, dt, t)
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(BackendManagerTestify, self)
 	end
-
-	Profiler.stop("BackendManager:update()")
 end
 
 BackendManager.on_reload = function (self, refreshed_resources)
@@ -196,41 +185,80 @@ BackendManager.logout = function (self)
 end
 
 BackendManager.authenticate = function (self)
-	if not self._initialized then
-		return self:_not_initialized()
+	local debug_log = false
+
+	if not self._initialize_promise then
+		self._initialize_promise = Promise:new()
+
+		if Backend.get_auth_method() == BackendManager.AUTH_METHOD_XBOXLIVE then
+			local default_result = {
+				authentication_service_url = DEFAULT_AUTHENTICATION_SERIVCE_URL,
+				title_service_url = DEFAULT_TITLE_SERIVCE_URL,
+				telemetry_service_url = DEFAULT_TELEMERTY_SERVICE_URL
+			}
+
+			XboxLiveUtils.title_storage_download("backend_config.json", "binary", "global_storage", 10000):next(function (file_content)
+				Log.info("BackendManager", "Got backend_config.json from title storage: %s", file_content)
+
+				local parsed_file_content = cjson.decode(file_content)
+
+				for key, value in pairs(parsed_file_content) do
+					default_result[key] = value
+				end
+
+				return default_result
+			end):catch(function (error)
+				if error[1] == -2145844844 then
+					Log.info("BackendManager", "Got no backend_config.json from title storage")
+
+					return Promise.resolved(default_result)
+				end
+			end):next(function (result)
+				local success, error = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
+				self._initialized = true
+
+				self._initialize_promise:resolve()
+			end)
+		else
+			local success, error = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
+			self._initialized = true
+
+			self._initialize_promise:resolve()
+		end
 	end
 
-	if self._auth_cache and not self._auth_cache:is_rejected() then
-		return self._auth_cache
-	end
-
-	local promise = Promise:new()
-	local user_id = Managers.account:user_id()
-	local operation_identifier, error = Backend.authenticate(user_id)
-
-	if operation_identifier then
-		self._promises[operation_identifier] = promise
-		self._auth_cache = promise
-	else
-		error = error or "Missing backend operation identifier"
-
-		promise:reject(BackendUtilities.create_error(BackendError.NoIdentifier, error))
-	end
-
-	promise:next(function (account)
-		Managers.telemetry_events:player_authenticated(account)
-
-		if Managers.event then
-			Managers.event:trigger("event_player_authenticated")
+	return self._initialize_promise:next(function ()
+		if self._auth_cache and not self._auth_cache:is_rejected() then
+			return self._auth_cache
 		end
 
-		if not DEDICATED_SERVER then
-			Managers.telemetry_events:system_settings()
-			self.interfaces.region_latency:refresh_region_latencies()
+		local auth_promise = Promise:new()
+		local user_id = Managers.account:user_id()
+		local operation_identifier, error = Backend.authenticate(user_id)
+
+		if operation_identifier then
+			self._promises[operation_identifier] = auth_promise
+			self._auth_cache = auth_promise
+		else
+			error = error or "Missing backend operation identifier"
+
+			auth_promise:reject(BackendUtilities.create_error(BackendError.NoIdentifier, error))
 		end
+
+		auth_promise:next(function (account)
+			Managers.telemetry_events:player_authenticated(account)
+
+			if Managers.event then
+				Managers.event:trigger("event_player_authenticated")
+			end
+
+			if not DEDICATED_SERVER then
+				Managers.telemetry_events:system_settings()
+			end
+		end)
+
+		return auth_promise
 	end)
-
-	return promise
 end
 
 BackendManager.AUTH_METHOD_XBOXLIVE = Backend.AUTH_METHOD_XBOXLIVE
@@ -250,7 +278,6 @@ end
 
 BackendManager.title_request = function (self, path, options)
 	Log.info("BackendManager", "title_request: %s %s", options and options.method or "GET", path)
-	assert(type(path) == "string", "Invalid path")
 
 	if not self._initialized then
 		return self:_not_initialized()
@@ -332,7 +359,6 @@ BackendManager.send_telemetry_events = function (self, data, headers, compress_b
 end
 
 BackendManager.url_request = function (self, url, options)
-	assert(type(url) == "string", "Invalid url")
 	Log.info("BackendManager", "url_request: %s %s", options and options.method or "GET", url)
 
 	if not self._initialized then

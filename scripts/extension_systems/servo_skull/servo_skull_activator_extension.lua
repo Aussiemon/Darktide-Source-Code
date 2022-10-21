@@ -9,16 +9,12 @@ ServoSkullActivatorExtension.init = function (self, extension_init_context, unit
 	self._mission_objective_target_extension = nil
 	self._objective_name = nil
 
-	fassert(Unit.has_visibility_group(unit, "main"), "[LuggableSocketExtension][init] Missing visibility group 'main' for Unit(%s)", tostring(unit))
 	Unit.set_visibility(unit, "main", false)
 end
 
 ServoSkullActivatorExtension.extensions_ready = function (self, world, unit)
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 	local interaction_type = interactee_extension:interaction_type()
-
-	fassert(interaction_type == "servo_skull_activator", "[ServoSkullActivatorExtension] Set correct interaction type to 'servo_skull_activator'.")
-
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 	self._objective_name = mission_objective_target_extension:objective_name()
 	self._interactee_extension = interactee_extension
@@ -34,7 +30,6 @@ ServoSkullActivatorExtension.on_gameplay_post_init = function (self, unit, level
 	else
 		local synchronizer_unit_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
-		fassert(synchronizer_unit_extension, "[ServoSkullActivatorExtension] could not find synchronizer unit with objective_name(%s)", self._objective_name)
 		synchronizer_unit_extension:register_servor_skull_activator_extension(self)
 		self._interactee_extension:set_active(false)
 	end
@@ -45,14 +40,21 @@ ServoSkullActivatorExtension.setup_from_component = function (self, hide_timer)
 end
 
 ServoSkullActivatorExtension.on_start_event = function (self)
-	fassert(self._is_server, "[ServoSkullActivatorExtension] Server only method.")
 	self:set_visibility(true)
 	self._interactee_extension:set_active(true)
+
+	if self._is_server then
+		self._mission_objective_target_extension:add_unit_marker()
+	end
 end
 
 ServoSkullActivatorExtension.deactivate = function (self)
 	self:set_visibility(false)
 	self._interactee_extension:set_active(false)
+
+	if self._is_server then
+		self._mission_objective_target_extension:remove_unit_marker()
+	end
 end
 
 ServoSkullActivatorExtension.hidden = function (self)

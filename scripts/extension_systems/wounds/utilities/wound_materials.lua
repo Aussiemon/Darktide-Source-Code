@@ -86,64 +86,70 @@ local WoundMaterials = {
 		wounds_data.num_wounds = 0
 
 		return wounds_data, NUM_MAX_WOUNDS
-	end,
-	calculate = function (unit, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, start_time)
-		local wound_data = wounds_data[wound_index]
-		local unit_world_pose = Unit.world_pose(unit, hit_actor_node_index)
-		local hit_local_position = Matrix4x4.transform(Matrix4x4.inverse(unit_world_pose), hit_world_position)
-		local hit_shader_vector = Matrix4x4.transform(hit_actor_bind_pose, hit_local_position)
-
-		wound_data.hit_shader_vector:store(hit_shader_vector)
-
-		local unit_position = Unit.world_position(unit, 1)
-		local direction = Vector3.normalize(hit_world_position - unit_position)
-		local rotation = Unit.world_rotation(unit, 1)
-		local forward = Quaternion.forward(rotation)
-		local dot = Vector3.dot(forward, direction)
-		local is_behind = dot < 0
-
-		if is_behind and SHAPE_INVERSIONS[wound_shape] then
-			wound_shape = SHAPE_INVERSIONS[wound_shape]
-		end
-
-		local wound_radius = wound_settings.radius
-
-		if type(wound_radius) == "table" then
-			wound_radius = math.random_range(wound_radius[1], wound_radius[2])
-		end
-
-		local radii = wound_data.radii
-		local radius_index = wound_data.radius_index
-		radii[radius_index] = wound_radius
-		local mask = SHAPE_MASKS[wound_shape]
-		local shape_mask_uv_offset = Vector2(mask[1], mask[2])
-
-		wound_data.shape_mask_uv_offset:store(shape_mask_uv_offset)
-
-		local shape_scaling = wound_settings.shape_scaling
-
-		if shape_scaling then
-			local shape_scales = wound_data.shape_scales
-			local shape_scale_index = wound_data.shape_scale_index
-			shape_scales[shape_scale_index] = 1
-		end
-
-		local color_brightness_values = wound_settings.color_brightness
-		local color_brightness_value = Vector2(color_brightness_values[1], color_brightness_values[2])
-
-		wound_data.color_brightness_value:store(color_brightness_value)
-
-		local duration = wound_settings.duration
-
-		if type(duration) == "table" then
-			duration = math.random_range(duration[1], duration[2])
-		end
-
-		local color_time_duration = Vector2(start_time, duration)
-
-		wound_data.color_time_duration:store(color_time_duration)
 	end
 }
+
+WoundMaterials.calculate = function (unit, wounds_config_or_nil, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, start_time)
+	local wound_data = wounds_data[wound_index]
+	local unit_world_pose = Unit.world_pose(unit, hit_actor_node_index)
+	local hit_local_position = Matrix4x4.transform(Matrix4x4.inverse(unit_world_pose), hit_world_position)
+	local hit_shader_vector = Matrix4x4.transform(hit_actor_bind_pose, hit_local_position)
+
+	wound_data.hit_shader_vector:store(hit_shader_vector)
+
+	local unit_position = Unit.world_position(unit, 1)
+	local direction = Vector3.normalize(hit_world_position - unit_position)
+	local rotation = Unit.world_rotation(unit, 1)
+	local forward = Quaternion.forward(rotation)
+	local dot = Vector3.dot(forward, direction)
+	local is_behind = dot < 0
+
+	if is_behind and SHAPE_INVERSIONS[wound_shape] then
+		wound_shape = SHAPE_INVERSIONS[wound_shape]
+	end
+
+	local wound_radius = wound_settings.radius
+
+	if type(wound_radius) == "table" then
+		wound_radius = math.random_range(wound_radius[1], wound_radius[2])
+	end
+
+	if wounds_config_or_nil and wounds_config_or_nil.radius_multiplier then
+		wound_radius = wound_radius * wounds_config_or_nil.radius_multiplier
+	end
+
+	local radii = wound_data.radii
+	local radius_index = wound_data.radius_index
+	radii[radius_index] = wound_radius
+	local mask = SHAPE_MASKS[wound_shape]
+	local shape_mask_uv_offset = Vector2(mask[1], mask[2])
+
+	wound_data.shape_mask_uv_offset:store(shape_mask_uv_offset)
+
+	local shape_scaling = wound_settings.shape_scaling
+
+	if shape_scaling then
+		local shape_scales = wound_data.shape_scales
+		local shape_scale_index = wound_data.shape_scale_index
+		shape_scales[shape_scale_index] = 1
+	end
+
+	local color_brightness_values = wound_settings.color_brightness
+	local color_brightness_value = Vector2(color_brightness_values[1], color_brightness_values[2])
+
+	wound_data.color_brightness_value:store(color_brightness_value)
+
+	local duration = wound_settings.duration
+
+	if type(duration) == "table" then
+		duration = math.random_range(duration[1], duration[2])
+	end
+
+	local color_time_duration = Vector2(start_time, duration)
+
+	wound_data.color_time_duration:store(color_time_duration)
+end
+
 local EMPTY_TABLE = {}
 local INCLUDE_CHILDREN = true
 local DO_NOT_INCLUDE_CHILDREN = false

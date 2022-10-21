@@ -152,9 +152,6 @@ PlayerUnitGadgetExtension._remove_gadget_buffs = function (self, item, slot_name
 	local id = slot_name .. ":" .. gear_id
 	local buff_extension = self._buff_extension
 	local gadget_buffs = self._gadget_buff_indexes[id]
-
-	assert(gadget_buffs, "Trying to remove a gadget which havent been equipped")
-
 	local gadget_system = Managers.state.extension:system("gadget_system")
 	local player = Managers.state.player_unit_spawn:owner(self._unit)
 

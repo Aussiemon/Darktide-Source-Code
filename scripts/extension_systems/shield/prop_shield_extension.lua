@@ -26,6 +26,10 @@ PropShieldExtension.is_blocking = function (self)
 	ferror("PropShieldExtension does not support is_blocking.")
 end
 
+PropShieldExtension.can_block_from_position = function (self, attacking_unit_position)
+	return true
+end
+
 PropShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
 	if self._shield_actors[hit_actor] then
 		return true

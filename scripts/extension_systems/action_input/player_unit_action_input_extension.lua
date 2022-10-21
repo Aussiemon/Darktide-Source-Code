@@ -5,6 +5,7 @@ local PlayerUnitActionInputExtension = class("PlayerUnitActionInputExtension")
 
 PlayerUnitActionInputExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._action_input_parsers = {}
+	self._disabled = extension_init_data.is_social_hub
 end
 
 PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
@@ -36,42 +37,45 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 	self._network_data_cache_configs = network_data_cache_configs
 	local authoritative_network_data = {}
 	self._authoritative_network_data = authoritative_network_data
-	local debug_index = 1
 
-	for action_component_name, data in pairs(config) do
-		local action_component = unit_data:read_component(action_component_name)
-		self._action_input_parsers[action_component_name] = ActionInputParser:new(unit, action_component_name, action_component, data, debug_index)
-		local cache_config = {
-			input_sequences_is_running = string.format("%s_input_sequences_is_running", action_component_name),
-			input_sequences_current_element_index = string.format("%s_input_sequences_current_element_index", action_component_name),
-			input_sequences_element_start_t = string.format("%s_input_sequences_element_start_t", action_component_name),
-			input_queue_action_input = string.format("%s_input_queue_action_input", action_component_name),
-			input_queue_raw_input = string.format("%s_input_queue_raw_input", action_component_name),
-			input_queue_produced_by_hierarchy = string.format("%s_input_queue_produced_by_hierarchy", action_component_name),
-			input_queue_hierarchy_position = string.format("%s_input_queue_hierarchy_position", action_component_name),
-			input_queue_first_entry_became_first_entry_t = string.format("%s_input_queue_first_entry_became_first_entry_t", action_component_name),
-			hierarchy_position = string.format("%s_hierarchy_position", action_component_name)
-		}
-		network_data_cache_configs[action_component_name] = cache_config
+	if not self._disabled then
+		local debug_index = 1
 
-		for collection_name, game_object_field_name in pairs(cache_config) do
-			if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
-				authoritative_network_data[game_object_field_name] = {}
-			else
-				authoritative_network_data[game_object_field_name] = 0
+		for action_component_name, data in pairs(config) do
+			local action_component = unit_data:read_component(action_component_name)
+			self._action_input_parsers[action_component_name] = ActionInputParser:new(unit, action_component_name, action_component, data, debug_index)
+			local cache_config = {
+				input_sequences_is_running = string.format("%s_input_sequences_is_running", action_component_name),
+				input_sequences_current_element_index = string.format("%s_input_sequences_current_element_index", action_component_name),
+				input_sequences_element_start_t = string.format("%s_input_sequences_element_start_t", action_component_name),
+				input_queue_action_input = string.format("%s_input_queue_action_input", action_component_name),
+				input_queue_raw_input = string.format("%s_input_queue_raw_input", action_component_name),
+				input_queue_produced_by_hierarchy = string.format("%s_input_queue_produced_by_hierarchy", action_component_name),
+				input_queue_hierarchy_position = string.format("%s_input_queue_hierarchy_position", action_component_name),
+				input_queue_first_entry_became_first_entry_t = string.format("%s_input_queue_first_entry_became_first_entry_t", action_component_name),
+				hierarchy_position = string.format("%s_hierarchy_position", action_component_name)
+			}
+			network_data_cache_configs[action_component_name] = cache_config
+
+			for collection_name, game_object_field_name in pairs(cache_config) do
+				if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
+					authoritative_network_data[game_object_field_name] = {}
+				else
+					authoritative_network_data[game_object_field_name] = 0
+				end
 			end
-		end
 
-		for collection_name, game_object_field_name in pairs(cache_config) do
-			if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
-				network_data_cache[game_object_field_name] = {}
-			else
-				network_data_cache[game_object_field_name] = 0
+			for collection_name, game_object_field_name in pairs(cache_config) do
+				if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
+					network_data_cache[game_object_field_name] = {}
+				else
+					network_data_cache[game_object_field_name] = 0
+				end
 			end
-		end
 
-		if data.debug_draw then
-			debug_index = debug_index + 1
+			if data.debug_draw then
+				debug_index = debug_index + 1
+			end
 		end
 	end
 end
@@ -79,25 +83,33 @@ end
 PlayerUnitActionInputExtension.peek_next_input = function (self, id)
 	local parser = self._action_input_parsers[id]
 
-	return parser:peek_next_input()
+	if parser then
+		return parser:peek_next_input()
+	end
 end
 
 PlayerUnitActionInputExtension.last_action_auto_completed = function (self, id)
 	local parser = self._action_input_parsers[id]
 
-	return parser:last_action_auto_completed()
+	if parser then
+		return parser:last_action_auto_completed()
+	end
 end
 
 PlayerUnitActionInputExtension.consume_next_input = function (self, id, t)
 	local parser = self._action_input_parsers[id]
 
-	parser:consume_next_input(t)
+	if parser then
+		parser:consume_next_input(t)
+	end
 end
 
 PlayerUnitActionInputExtension.clear_input_queue_and_sequences = function (self, id)
 	local parser = self._action_input_parsers[id]
 
-	parser:clear_input_queue_and_sequences()
+	if parser then
+		parser:clear_input_queue_and_sequences()
+	end
 end
 
 PlayerUnitActionInputExtension.action_transitioned_with_automatic_input = function (self, id, action_input, t)
@@ -155,15 +167,11 @@ end
 PlayerUnitActionInputExtension.bot_queue_action_input = function (self, id, action_input, raw_input)
 	local parser = self._action_input_parsers[id]
 
-	fassert(parser, "No parser with id %q exists.", id)
-
 	return parser:bot_queue_action_input(action_input, raw_input)
 end
 
 PlayerUnitActionInputExtension.bot_queue_request_is_consumed = function (self, id, global_bot_request_id)
 	local parser = self._action_input_parsers[id]
-
-	fassert(parser, "No parser with id %q exists,", id)
 
 	return parser:bot_queue_request_is_consumed(global_bot_request_id)
 end
@@ -171,7 +179,6 @@ end
 PlayerUnitActionInputExtension.bot_queue_clear_requests = function (self, id)
 	local parser = self._action_input_parsers[id]
 
-	fassert(parser, "No parser with id %q exists,", id)
 	parser:bot_queue_clear_requests()
 end
 

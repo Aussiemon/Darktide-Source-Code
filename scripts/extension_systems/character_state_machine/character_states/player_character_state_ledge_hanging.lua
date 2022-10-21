@@ -16,19 +16,25 @@ local PlayerCharacterStateLedgeHanging = class("PlayerCharacterStateLedgeHanging
 local assist_anims = CharacterStateAssistSettings.anim_settings.ledge_hanging
 local LEDGE_HANGING_STATES = table.enum("none", "ledge_start", "ledge_loop")
 local HAND_IK_CONFIG = {
-	human_hand_length = 0.05,
+	right_transform_name = "j_right_hand_ik_transform",
 	left_handle_name = "j_left_hand_ik_handle",
 	ray_edge_offset = 0.05,
-	left_transform_name = "j_left_hand_ik_transform",
-	hips_handle_name = "j_hips_handle",
-	ogryn_hand_separation = 0.896,
-	ogryn_hand_thickness = 0.1,
 	right_handle_name = "j_right_hand_ik_handle",
 	ray_distance = 1,
-	right_transform_name = "j_right_hand_ik_transform",
-	ogryn_hand_length = 0.1,
-	human_hand_separation = 0.428,
-	human_hand_thickness = 0.05
+	left_transform_name = "j_left_hand_ik_transform",
+	hips_handle_name = "j_hips_handle",
+	hand_length = {
+		human = 0.05,
+		ogryn = 0.1
+	},
+	hand_separation = {
+		human = 0.428,
+		ogryn = 0.896
+	},
+	hand_thickness = {
+		human = 0.05,
+		ogryn = 0.1
+	}
 }
 local ENTER_ANIMATION_DURATION = 1
 local SFX_SOURCE = "head"
@@ -60,13 +66,13 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 	self._current_state = LEDGE_HANGING_STATES.none
 	self._canceled_assist = false
 	self._inventory_component = unit_data_extension:write_component("inventory")
+	self._entered_state_t = nil
 	local unit = self._unit
 	local left_handle = Unit.has_node(unit, HAND_IK_CONFIG.left_handle_name) and Unit.node(unit, HAND_IK_CONFIG.left_handle_name)
 	local left_transform = Unit.has_node(unit, HAND_IK_CONFIG.left_transform_name) and Unit.node(unit, HAND_IK_CONFIG.left_transform_name)
 	local right_handle = Unit.has_node(unit, HAND_IK_CONFIG.right_handle_name) and Unit.node(unit, HAND_IK_CONFIG.right_handle_name)
 	local right_transform = Unit.has_node(unit, HAND_IK_CONFIG.right_transform_name) and Unit.node(unit, HAND_IK_CONFIG.right_transform_name)
 	local hips_handle = Unit.has_node(unit, HAND_IK_CONFIG.hips_handle_name) and Unit.node(unit, HAND_IK_CONFIG.hips_handle_name)
-	local has_required_nodes = left_handle and left_transform and right_handle and right_transform and hips_handle
 	self._hands_ik_data = {
 		right_ray_distance = 0,
 		right_ray_hit = false,
@@ -96,9 +102,6 @@ end
 
 PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previous_state, params)
 	local hang_ledge_unit = params.hang_ledge_unit
-
-	fassert(hang_ledge_unit, "Need to pass a hang ledge unit to this state")
-
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
 
@@ -116,10 +119,17 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 	self._ledge_hanging_character_state_component.is_interactible = false
 	self._current_state = LEDGE_HANGING_STATES.ledge_start
 	self._cancelled_assist = false
+	self._entered_state_t = t
 	local is_server = self._is_server
 
 	if is_server then
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
+
+		local data = {
+			reason = "ledge_hanging"
+		}
+
+		Managers.telemetry_events:player_knocked_down(self._player, data)
 	end
 
 	Vo.player_ledge_hanging_event(unit)
@@ -134,6 +144,22 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 
 		FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
 		ForceRotation.stop(self._locomotion_force_rotation_component)
+
+		if self._is_server then
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(unit)
+			local is_player_alive = player:unit_is_alive()
+
+			if is_player_alive then
+				local rescued_by_player = true
+				local state_name = "ledge_hanging"
+				local time_in_captivity = t - self._entered_state_t
+
+				Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+			end
+
+			self._entered_state_t = nil
+		end
 	end
 
 	self._assist:stop()
@@ -228,21 +254,18 @@ PlayerCharacterStateLedgeHanging._initialize_rotation_transition = function (sel
 end
 
 PlayerCharacterStateLedgeHanging._initialize_force_rotation = function (self, unit, t)
+	local ledge_hanging_character_state_component = self._ledge_hanging_character_state_component
 	local locomotion_force_rotation = self._locomotion_force_rotation_component
 	local locomotion_steering = self._locomotion_steering_component
-	local start_rotation = self._ledge_hanging_character_state_component.rotation_pre_hanging
-	local end_rotation = self._ledge_hanging_character_state_component.rotation_hanging
+	local start_rotation = ledge_hanging_character_state_component.rotation_pre_hanging
+	local end_rotation = ledge_hanging_character_state_component.rotation_hanging
 	local start_time = t
-	local duration = self._ledge_hanging_character_state_component.end_time_position_transition - t
+	local duration = ledge_hanging_character_state_component.end_time_position_transition - t
 
 	ForceRotation.start(locomotion_force_rotation, locomotion_steering, end_rotation, start_rotation, start_time, duration)
 end
 
-PlayerCharacterStateLedgeHanging._initialize_fall_down_state = function (self, t)
-	self._ledge_hanging_character_state_component.time_to_fall_down = t + self._time_until_fall_down
-end
-
-local function _get_hand_ik_goal_pose(physics_world, centered_raycast_origin, rotation_hanging_forward, rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
+local function _hand_ik_goal_pose(physics_world, centered_raycast_origin, rotation_hanging_forward, rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
 	local hand_ik_raycast_origin = centered_raycast_origin + rotation_hanging_right * hand_separation * 0.5
 	local hit, hit_pos, distance, normal = PhysicsWorld.raycast(physics_world, hand_ik_raycast_origin, Vector3.down(), ray_distance, "closest", "collision_filter", "filter_player_mover")
 	local goal_pose = nil
@@ -257,28 +280,21 @@ local function _get_hand_ik_goal_pose(physics_world, centered_raycast_origin, ro
 end
 
 PlayerCharacterStateLedgeHanging._initialize_hands_ik = function (self, unit)
-	local position_hanging = self._ledge_hanging_character_state_component.position_hanging
-	local rotation_hanging = self._ledge_hanging_character_state_component.rotation_hanging
+	local ledge_hanging_character_state_component = self._ledge_hanging_character_state_component
+	local position_hanging = ledge_hanging_character_state_component.position_hanging
+	local rotation_hanging = ledge_hanging_character_state_component.rotation_hanging
 	local rotation_hanging_forward = Quaternion.forward(rotation_hanging)
 	local rotation_hanging_right = Quaternion.right(rotation_hanging)
 	local ray_distance = HAND_IK_CONFIG.ray_distance
 	local half_ray_distance = ray_distance * 0.5
 	local ray_edge_offset = HAND_IK_CONFIG.ray_edge_offset
 	local centered_raycast_origin = position_hanging + rotation_hanging_forward * ray_edge_offset + Vector3.up() * half_ray_distance
-	local hand_separation, hand_length, hand_thickness = nil
-
-	if self._breed.name == "ogryn" then
-		hand_separation = HAND_IK_CONFIG.ogryn_hand_separation
-		hand_length = HAND_IK_CONFIG.ogryn_hand_length
-		hand_thickness = HAND_IK_CONFIG.ogryn_hand_thickness
-	else
-		hand_separation = HAND_IK_CONFIG.human_hand_separation
-		hand_length = HAND_IK_CONFIG.human_hand_length
-		hand_thickness = HAND_IK_CONFIG.human_hand_thickness
-	end
-
+	local breed_name = self._breed.name
+	local hand_separation = HAND_IK_CONFIG.hand_separation[breed_name]
+	local hand_length = HAND_IK_CONFIG.hand_length[breed_name]
+	local hand_thickness = HAND_IK_CONFIG.hand_thickness[breed_name]
 	local offset_from_ray_pos = rotation_hanging_forward * (ray_edge_offset + hand_thickness) + Vector3.up() * hand_length
-	local left_ray_hit, left_distance, left_goal_pose = _get_hand_ik_goal_pose(self._physics_world, centered_raycast_origin, rotation_hanging_forward, -rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
+	local left_ray_hit, left_distance, left_goal_pose = _hand_ik_goal_pose(self._physics_world, centered_raycast_origin, rotation_hanging_forward, -rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
 
 	if not left_ray_hit then
 		Unit.set_local_pose(unit, self._hands_ik_data.left_handle, Matrix4x4.identity())
@@ -286,7 +302,7 @@ PlayerCharacterStateLedgeHanging._initialize_hands_ik = function (self, unit)
 
 	self._hands_ik_data.left_ray_hit = left_ray_hit
 	self._hands_ik_data.left_goal_pose = left_goal_pose
-	local right_ray_hit, right_distance, right_goal_pose = _get_hand_ik_goal_pose(self._physics_world, centered_raycast_origin, rotation_hanging_forward, rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
+	local right_ray_hit, right_distance, right_goal_pose = _hand_ik_goal_pose(self._physics_world, centered_raycast_origin, rotation_hanging_forward, rotation_hanging_right, hand_separation, ray_distance, offset_from_ray_pos)
 
 	if not right_ray_hit then
 		Unit.set_local_pose(unit, self._hands_ik_data.right_handle, Matrix4x4.identity())
@@ -296,18 +312,18 @@ PlayerCharacterStateLedgeHanging._initialize_hands_ik = function (self, unit)
 	self._hands_ik_data.right_goal_pose = right_goal_pose
 
 	if left_distance or right_distance then
-		local bigger_distance = nil
+		local largest_distance = nil
 
 		if not left_distance then
-			bigger_distance = right_distance
+			largest_distance = right_distance
 		elseif not right_distance then
-			bigger_distance = left_distance
+			largest_distance = left_distance
 		else
-			bigger_distance = math.min(left_distance, right_distance)
+			largest_distance = math.min(left_distance, right_distance)
 		end
 
-		if bigger_distance < half_ray_distance then
-			local hips_pos = Vector3(0, 0, half_ray_distance - bigger_distance)
+		if largest_distance < half_ray_distance then
+			local hips_pos = Vector3(0, 0, half_ray_distance - largest_distance)
 			self._hands_ik_data.hips_goal_pose = Matrix4x4Box(Matrix4x4.from_translation(hips_pos))
 		end
 	else

@@ -7,8 +7,8 @@ local event_vo_delivery_zealot_male_b = {
 			[2.0] = "loc_zealot_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.684083,
-			[2.0] = 1.949021
+			[1.0] = 3.684104,
+			[2.0] = 1.949
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -24,8 +24,8 @@ local event_vo_delivery_zealot_male_b = {
 			[2.0] = "loc_zealot_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.684083,
-			[2.0] = 1.949021
+			[1.0] = 3.684104,
+			[2.0] = 1.949
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -41,8 +41,8 @@ local event_vo_delivery_zealot_male_b = {
 			[2.0] = "loc_zealot_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.684083,
-			[2.0] = 1.949021
+			[1.0] = 3.684104,
+			[2.0] = 1.949
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -58,8 +58,8 @@ local event_vo_delivery_zealot_male_b = {
 			[2.0] = "loc_zealot_male_b__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.684083,
-			[2.0] = 1.949021
+			[1.0] = 3.684104,
+			[2.0] = 1.949
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

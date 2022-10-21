@@ -19,9 +19,6 @@ Trigger.init = function (self, unit)
 		local volume_type = self:get_data(unit, "volume_type")
 		local target_extension_name = self:get_data(unit, "target_extension_name")
 		local component_guid = self.guid
-
-		fassert(component_guid, "[Trigger] Missing component guid.")
-
 		local action_parameters = {
 			action_target = NetworkLookup.trigger_action_targets[action_target],
 			action_location_name_full = action_location_name_full,

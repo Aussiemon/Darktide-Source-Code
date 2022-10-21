@@ -52,7 +52,7 @@ template.scale_settings = {
 	distance_min = 10
 }
 
-function _show_warning_state(unit_data_extension)
+local function _show_warning_state(unit_data_extension)
 	if unit_data_extension then
 		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
 		local is_pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)

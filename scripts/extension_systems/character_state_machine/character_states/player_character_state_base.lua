@@ -1,8 +1,5 @@
-local Footstep = require("scripts/utilities/footstep")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerCharacterStateBase = class("PlayerCharacterStateBase")
 
 PlayerCharacterStateBase.init = function (self, character_state_init_context, name)
@@ -42,12 +39,10 @@ PlayerCharacterStateBase.init = function (self, character_state_init_context, na
 	self._unit_data_extension = character_state_init_context.unit_data
 	self._constants = character_state_init_context.player_character_constants
 	self._breed = character_state_init_context.breed
-	self._archetype = character_state_init_context.archetype
-	self._archetype_dodge_template = self._archetype.dodge
+	self._specialization = character_state_init_context.specialization
+	self._specialization_dodge_template = self._specialization.dodge
 	self._game_session = character_state_init_context.game_session
 	self._game_object_id = character_state_init_context.game_object_id
-	self._footstep_time = 0
-	self._feet_source_id = WwiseWorld.make_manual_source(self._wwise_world, self._unit, 1)
 end
 
 PlayerCharacterStateBase.extensions_ready = function (self, world, unit)
@@ -67,8 +62,6 @@ PlayerCharacterStateBase.extensions_ready = function (self, world, unit)
 	self._locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._first_person_extension = first_person_extension
-	local first_person_unit = first_person_extension:first_person_unit()
-	self._foley_source_id = WwiseWorld.make_manual_source(self._wwise_world, first_person_unit, 1)
 end
 
 PlayerCharacterStateBase.game_object_initialized = function (self, game_session, game_object_id)
@@ -114,7 +107,7 @@ end
 PlayerCharacterStateBase._is_colliding_with_gameplay_collision_box = function (self, unit, collision_filter, capsule_radius, vertical_offset, use_world_up)
 	local physics_world = self._physics_world
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local position = locomotion_position
 	local unit_rotation = Unit.world_rotation(unit, 1)
 	local rotation = Quaternion.look(Vector3.up(unit_rotation))
@@ -174,7 +167,7 @@ PlayerCharacterStateBase._should_climb_ladder = function (self, unit, t)
 	local bottom_node = Unit.node(ladder_unit, LADDER_BOTTOM_NODE)
 	local ladder_bottom_pos = Unit.world_position(ladder_unit, bottom_node)
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local position = locomotion_position
 	local rotation = self._first_person_component.rotation
 	local player_forward_direction = Quaternion.forward(rotation)
@@ -288,65 +281,6 @@ PlayerCharacterStateBase._update_move_method = function (self, movement_state_co
 		movement_state_component.method = move_method
 
 		anim_extension:anim_event_1p(move_method)
-	end
-end
-
-PlayerCharacterStateBase._update_footsteps_and_foley = function (self, t, footstep_sound_alias, ...)
-	local velocity_current = self._locomotion_component.velocity_current
-
-	if Vector3.length_squared(velocity_current) < 0.01 then
-		return
-	end
-
-	if self._footstep_time < t then
-		local weapon_template = WeaponTemplate.current_weapon_template(self._weapon_action_component)
-
-		if not weapon_template then
-			return
-		end
-
-		local breed_footstep_intervals = weapon_template.breed_footstep_intervals
-		local footstep_intervals = breed_footstep_intervals and breed_footstep_intervals[self._breed.name] or weapon_template.footstep_intervals
-
-		if footstep_intervals then
-			local character_state_name = self._character_state_component.state_name
-			local is_crouching = self._movement_state_component.is_crouching
-			local interval = is_crouching and footstep_intervals.crouch_walking or footstep_intervals[character_state_name]
-
-			if interval then
-				self:_trigger_footstep_and_foley(footstep_sound_alias, ...)
-
-				self._footstep_time = t + interval
-			end
-		end
-	end
-end
-
-PlayerCharacterStateBase._trigger_footstep_and_foley = function (self, footstep_sound_alias, ...)
-	local is_camera_follow_target = self._first_person_extension:is_camera_follow_target()
-
-	if is_camera_follow_target then
-		local wwise_world = self._wwise_world
-		local unit = self._unit
-		local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
-		local query_to = query_from + Vector3(0, 0, -1)
-
-		Footstep.trigger_material_footstep(footstep_sound_alias, wwise_world, self._physics_world, self._feet_source_id, unit, 1, query_from, query_to, true, true)
-
-		local foley_source_id = self._foley_source_id
-
-		if foley_source_id then
-			local num_args = select("#", ...)
-
-			for i = 1, num_args do
-				local sound_alias = select(i, ...)
-				local move_speed = self._locomotion_extension:move_speed()
-
-				WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "foley_speed", move_speed)
-				WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "first_person_mode", 1)
-				self._fx_extension:trigger_gear_wwise_event(sound_alias, nil, foley_source_id)
-			end
-		end
 	end
 end
 

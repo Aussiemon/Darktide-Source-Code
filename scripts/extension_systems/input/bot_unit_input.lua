@@ -55,8 +55,6 @@ BotUnitInput.update = function (self, unit, dt, t)
 end
 
 BotUnitInput._update_actions = function (self, input)
-	Profiler.start("update_actions")
-
 	if self._interact then
 		self._interact = false
 
@@ -74,8 +72,6 @@ BotUnitInput._update_actions = function (self, input)
 		self._dodge = false
 		input.dodge = true
 	end
-
-	Profiler.stop("update_actions")
 end
 
 BotUnitInput._store_ephemeral_input = function (self, input)
@@ -146,8 +142,6 @@ local JUMP_DOT_USE_WANTED_DIR_EPS_SQ = 1e-06
 local MIN_JUMP_DIRECTION_DOT = math.cos(math.pi / 16)
 
 BotUnitInput._update_movement = function (self, unit, input, dt, t)
-	Profiler.start("update_movement")
-
 	local navigation_extension = self._navigation_extension
 	local current_goal = navigation_extension:current_goal()
 	local is_on_nav_mesh = navigation_extension.is_on_nav_mesh
@@ -291,8 +285,6 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 
 		self._avoiding_aoe_threat = false
 	end
-
-	Profiler.stop("update_movement")
 end
 
 local EPSILON = 0.001

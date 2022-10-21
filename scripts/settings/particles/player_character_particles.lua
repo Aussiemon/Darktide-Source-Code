@@ -89,9 +89,6 @@ player_character_particles.find_relevant_particles = function (profile_propertie
 
 				if switch_property then
 					local default_particles = particles.default
-
-					fassert(not no_default and default_particles or no_default)
-
 					particles = particles[switch_property] or default_particles or particles
 				else
 					_valid_particles_recursive(particles, temp_relevant_particles)

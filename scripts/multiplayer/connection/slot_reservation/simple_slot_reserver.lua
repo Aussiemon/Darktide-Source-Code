@@ -54,8 +54,6 @@ SimpleSlotReserver.reserve_slot = function (self, reserver_peer_id, peer_id)
 end
 
 SimpleSlotReserver.claim_slot = function (self, peer_id, channel_id)
-	assert(channel_id, "must provide channel")
-
 	if self._reserved_slots[peer_id] then
 		if not self._claimed_slots[peer_id] then
 			self._claimed_slots[peer_id] = channel_id

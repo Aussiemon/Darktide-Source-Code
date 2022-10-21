@@ -10,8 +10,8 @@ local event_vo_demolition_psyker_female_a = {
 		},
 		sound_events_duration = {
 			3.090625,
-			4.793583,
-			2.254063,
+			4.793563,
+			2.254083,
 			2.303625
 		},
 		randomize_indexes = {}
