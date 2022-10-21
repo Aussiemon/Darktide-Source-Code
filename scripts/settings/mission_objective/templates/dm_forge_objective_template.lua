@@ -74,13 +74,19 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				mission_objective_type = "goal"
 			},
+			objective_dm_forge_reactivate_smelter = {
+				description = "loc_objective_dm_forge_reactivate_smelter_desc",
+				event_type = "end_event",
+				mission_objective_type = "goal",
+				header = "loc_objective_dm_forge_reactivate_smelter_header"
+			},
 			objective_dm_forge_hold_position = {
 				use_music_event = "demolition_event",
 				description = "loc_objective_dm_forge_hold_position_desc",
 				progress_bar = false,
 				header = "loc_objective_dm_forge_hold_position_header",
 				event_type = "end_event",
-				duration = 45,
+				duration = 20,
 				mission_objective_type = "timed"
 			},
 			objective_dm_forge_clear = {

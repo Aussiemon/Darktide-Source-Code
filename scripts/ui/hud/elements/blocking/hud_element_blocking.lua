@@ -40,9 +40,9 @@ HudElementBlocking._update_shield_amount = function (self)
 		local unit_data_extension = player_extensions.unit_data
 
 		if unit_data_extension then
-			local archetype = unit_data_extension:archetype()
+			local specialization = unit_data_extension:specialization()
 			local stamina_component = unit_data_extension:read_component("stamina")
-			local stamina_template = archetype.stamina
+			local stamina_template = specialization.stamina
 
 			if stamina_component and stamina_template then
 				local player_unit = player_extensions.unit
@@ -160,7 +160,7 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 	end
 
 	local gauge_widget = self._widgets_by_name.gauge
-	gauge_widget.content.value_text = string.format("%.0f%%", stamina_fraction * 100)
+	gauge_widget.content.value_text = string.format("%.0f%%", math.clamp(stamina_fraction, 0, 1) * 100)
 	local step_fraction = 1 / num_shields
 	local spacing = HudElementBlockingSettings.spacing
 	local x_offset = (shield_width + spacing) * (num_shields - 1) * 0.5

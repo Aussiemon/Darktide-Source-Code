@@ -20,11 +20,14 @@ GameplayInitStepStateLast._finalize_network_init = function (self, is_server)
 		Network.set_max_transmit_rate(fixed_frame_transmit_rate)
 		Managers.loading:end_load()
 	else
+		local lost_connection = not Managers.connection:host_channel()
+
+		if lost_connection then
+			return
+		end
+
 		local connection_manager = Managers.connection
 		local game_session_manager = Managers.state.game_session
-
-		fassert(game_session_manager, "[GameplayInitStepStateLast] Game Session Manager not initialized.")
-
 		local network_delegate = connection_manager:network_event_delegate()
 		local engine_lobby = connection_manager:engine_lobby()
 		local engine_game_session = game_session_manager:game_session()

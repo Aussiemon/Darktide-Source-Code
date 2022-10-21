@@ -22,6 +22,7 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local no_cleave = DamageProfileSettings.no_cleave
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
+local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local chainsword_sawing = {
 	attack = {
@@ -30,7 +31,7 @@ local chainsword_sawing = {
 		[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 		[armor_types.player] = damage_lerp_values.lerp_1,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -75,31 +76,31 @@ local just_one = {
 	0.75,
 	1.25
 }
-local chain_sword_light_mod = {
+local chain_axe_light_mod = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_0_75,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_25,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_25,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	}
 }
-local chain_sword_heavy_mod = {
+local chain_axe_heavy_mod = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_0_6,
@@ -133,10 +134,10 @@ damage_templates.default_light_chainaxe = {
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.sawing,
 	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.default,
+	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.chainsword,
-	armor_damage_modifier = chain_sword_light_mod,
+	armor_damage_modifier = chain_axe_light_mod,
 	targets = {
 		{
 			armor_damage_modifier = {
@@ -153,12 +154,12 @@ damage_templates.default_light_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					60,
-					90
+					50,
+					100
 				},
 				impact = {
-					6,
-					10
+					4,
+					8
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -186,8 +187,8 @@ damage_templates.default_light_chainaxe = {
 			power_distribution = {
 				attack = damage_lerp_values.no_damage,
 				impact = {
-					3,
-					5
+					1,
+					3
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -199,23 +200,15 @@ overrides.light_chainaxe_active = {
 	overrides = {
 		{
 			"stagger_category",
-			"sticky"
+			"melee"
 		},
 		{
 			"stagger_override",
-			"sticky"
+			"light"
 		},
 		{
 			"shield_stagger_category",
 			"melee"
-		},
-		{
-			"ignore_hit_reacts",
-			true
-		},
-		{
-			"ignore_shield",
-			true
 		},
 		{
 			"damage_type",
@@ -226,6 +219,14 @@ overrides.light_chainaxe_active = {
 			true
 		},
 		{
+			"ignore_stagger_reduction",
+			true
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
 			"targets",
 			1,
 			"power_distribution",
@@ -233,12 +234,14 @@ overrides.light_chainaxe_active = {
 			50
 		},
 		{
-			"cleave_distribution",
-			no_cleave
+			"targets",
+			1,
+			"armor_damage_modifier",
+			chainsword_sawing
 		},
 		{
-			"ignore_stagger_reduction",
-			true
+			"cleave_distribution",
+			no_cleave
 		},
 		{
 			"weapon_special",
@@ -254,7 +257,7 @@ overrides.light_chainaxe_active = {
 		}
 	}
 }
-overrides.light_chainaxe_sticky = {
+overrides.light_chainaxe_active_sticky = {
 	parent_template_name = "default_light_chainaxe",
 	overrides = {
 		{
@@ -267,7 +270,7 @@ overrides.light_chainaxe_sticky = {
 		},
 		{
 			"shield_stagger_category",
-			"melee"
+			"sticky"
 		},
 		{
 			"damage_type",
@@ -279,10 +282,6 @@ overrides.light_chainaxe_sticky = {
 		},
 		{
 			"ignore_stagger_reduction",
-			true
-		},
-		{
-			"ignore_shield",
 			true
 		},
 		{
@@ -332,16 +331,12 @@ overrides.light_chainaxe_sticky = {
 			chainsword_sawing
 		},
 		{
-			"weapon_special",
-			true
-		},
-		{
 			"skip_on_hit_proc",
 			true
 		}
 	}
 }
-overrides.light_chainaxe_sticky_last = {
+overrides.light_chainaxe_active_sticky_last = {
 	parent_template_name = "default_light_chainaxe",
 	overrides = {
 		{
@@ -350,14 +345,14 @@ overrides.light_chainaxe_sticky_last = {
 		},
 		{
 			"shield_stagger_category",
-			"melee"
+			"sticky"
 		},
 		{
 			"damage_type",
 			damage_types.sawing_stuck
 		},
 		{
-			"ignore_shield",
+			"ignore_stagger_reduction",
 			true
 		},
 		{
@@ -390,8 +385,18 @@ overrides.light_chainaxe_sticky_last = {
 			"power_distribution",
 			"attack",
 			{
-				300,
-				600
+				200,
+				400
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				0,
+				0
 			}
 		},
 		{
@@ -402,6 +407,71 @@ overrides.light_chainaxe_sticky_last = {
 		},
 		{
 			"weapon_special",
+			true
+		}
+	}
+}
+overrides.light_chainaxe_sticky = {
+	parent_template_name = "default_light_chainaxe",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky"
+		},
+		{
+			"shield_stagger_category",
+			"melee"
+		},
+		{
+			"damage_type",
+			damage_types.sawing_stuck
+		},
+		{
+			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"gibbing_power",
+			GibbingPower.medium
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.sawing
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.chainsword_sawing
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				10,
+				20
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				10,
+				10
+			}
+		},
+		{
+			"skip_on_hit_proc",
 			true
 		}
 	}
@@ -420,10 +490,6 @@ overrides.light_chainaxe_sticky_last_quick = {
 		{
 			"damage_type",
 			damage_types.sawing_stuck
-		},
-		{
-			"ignore_shield",
-			true
 		},
 		{
 			"ragdoll_only",
@@ -458,16 +524,6 @@ overrides.light_chainaxe_sticky_last_quick = {
 				50,
 				100
 			}
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			chainsword_sawing
-		},
-		{
-			"weapon_special",
-			true
 		}
 	}
 }
@@ -478,23 +534,23 @@ damage_templates.heavy_chainaxe = {
 	ragdoll_only = true,
 	stagger_category = "melee",
 	crit_mod = chain_sword_crit_mod,
-	cleave_distribution = double_cleave,
+	cleave_distribution = medium_cleave,
 	damage_type = damage_types.sawing,
 	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.default,
+	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.chainsword,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
 	},
-	armor_damage_modifier = chain_sword_heavy_mod,
+	armor_damage_modifier = chain_axe_heavy_mod,
 	targets = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.armored] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_6
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3
 				},
 				impact = {
 					[armor_types.super_armor] = damage_lerp_values.lerp_1
@@ -503,11 +559,11 @@ damage_templates.heavy_chainaxe = {
 			power_distribution = {
 				attack = {
 					85,
-					115
+					170
 				},
 				impact = {
-					12,
-					20
+					7,
+					14
 				}
 			},
 			boost_curve_multiplier_finesse = damage_lerp_values.lerp_0_5,
@@ -531,21 +587,41 @@ damage_templates.heavy_chainaxe = {
 					35
 				},
 				impact = {
-					6,
+					5,
 					9
 				}
 			}
 		},
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.armored] = damage_lerp_values.lerp_1
+				},
+				impact = {
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_65
+				}
+			},
+			power_distribution = {
+				attack = {
+					10,
+					30
+				},
+				impact = {
+					3,
+					7
+				}
+			}
+		},
 		default_target = {
-			armor_damage_modifier = chain_sword_heavy_mod,
+			armor_damage_modifier = chain_axe_heavy_mod,
 			power_distribution = {
 				attack = {
 					0,
 					0
 				},
 				impact = {
-					4,
-					8
+					3,
+					6
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -557,11 +633,11 @@ overrides.heavy_chainaxe_active = {
 	overrides = {
 		{
 			"stagger_category",
-			"sticky"
+			"melee"
 		},
 		{
 			"stagger_override",
-			"sticky"
+			"medium"
 		},
 		{
 			"shield_stagger_category",
@@ -569,10 +645,6 @@ overrides.heavy_chainaxe_active = {
 		},
 		{
 			"ignore_stagger_reduction",
-			true
-		},
-		{
-			"ignore_shield",
 			true
 		},
 		{
@@ -592,7 +664,7 @@ overrides.heavy_chainaxe_active = {
 			1,
 			"power_distribution",
 			"attack",
-			0
+			10
 		},
 		{
 			"cleave_distribution",
@@ -622,6 +694,155 @@ overrides.heavy_chainaxe_active = {
 		},
 		{
 			"skip_on_hit_proc",
+			true
+		}
+	}
+}
+overrides.heavy_chainaxe_active_sticky = {
+	parent_template_name = "heavy_chainaxe",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky"
+		},
+		{
+			"stagger_override",
+			"sticky"
+		},
+		{
+			"shield_stagger_category",
+			"sticky"
+		},
+		{
+			"ignore_stagger_reduction",
+			true
+		},
+		{
+			"damage_type",
+			damage_types.sawing_stuck
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
+			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"gibbing_power",
+			GibbingPower.heavy
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.sawing
+		},
+		{
+			"wounds_template"
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				20,
+				60
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				10,
+				20
+			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			chainsword_sawing
+		},
+		{
+			"weapon_special",
+			true
+		},
+		{
+			"skip_on_hit_proc",
+			true
+		}
+	}
+}
+overrides.heavy_chainaxe_active_sticky_last = {
+	parent_template_name = "heavy_chainaxe",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky"
+		},
+		{
+			"shield_stagger_category",
+			"sticky"
+		},
+		{
+			"ignore_stagger_reduction",
+			true
+		},
+		{
+			"damage_type",
+			damage_types.sawing_stuck
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
+			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"gibbing_power",
+			GibbingPower.heavy
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.sawing
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.chainsword_sawing
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				300,
+				600
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				0,
+				0
+			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			chainsword_sawing
+		},
+		{
+			"weapon_special",
 			true
 		}
 	}
@@ -708,7 +929,7 @@ overrides.heavy_chainaxe_sticky = {
 		}
 	}
 }
-overrides.heavy_chainaxe_sticky_last = {
+overrides.heavy_chainaxe_sticky_last_quick = {
 	parent_template_name = "heavy_chainaxe",
 	overrides = {
 		{
@@ -757,8 +978,8 @@ overrides.heavy_chainaxe_sticky_last = {
 			"power_distribution",
 			"attack",
 			{
-				300,
-				600
+				30,
+				70
 			}
 		},
 		{
@@ -770,6 +991,96 @@ overrides.heavy_chainaxe_sticky_last = {
 		{
 			"weapon_special",
 			true
+		}
+	}
+}
+damage_templates.chainaxe_tank = {
+	ragdoll_push_force = 250,
+	ragdoll_only = true,
+	stagger_category = "melee",
+	cleave_distribution = medium_cleave,
+	damage_type = damage_types.blunt_light,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.sawing,
+	melee_attack_strength = melee_attack_strengths.light,
+	armor_damage_modifier = chain_axe_light_mod,
+	targets = {
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				}
+			},
+			power_distribution = {
+				attack = {
+					80,
+					160
+				},
+				impact = {
+					6,
+					12
+				}
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					10,
+					40
+				},
+				impact = {
+					5,
+					10
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					5,
+					30
+				},
+				impact = {
+					4,
+					8
+				}
+			}
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					0,
+					0
+				},
+				impact = {
+					4,
+					8
+				}
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	}
 }

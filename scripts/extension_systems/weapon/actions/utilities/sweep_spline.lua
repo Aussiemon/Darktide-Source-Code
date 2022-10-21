@@ -22,9 +22,6 @@ SweepSpline.init = function (self, spline_settings, first_person_component)
 
 	if not spline_settings.points then
 		local template = SweepSplineTemplates[spline_settings.template]
-
-		fassert(template, "SweepSplineTemplates.%s does not exist", tostring(spline_settings.template))
-
 		spline_settings.points = table.clone(template.points)
 	end
 

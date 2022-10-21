@@ -41,8 +41,6 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 					error_string = error_string .. "\n" .. REQUIRED_EVENTS[i]
 				end
 			end
-
-			fassert(not has_error, "Missing the following events %s\nin %q", error_string, state_machine_1p)
 		end
 	end
 end

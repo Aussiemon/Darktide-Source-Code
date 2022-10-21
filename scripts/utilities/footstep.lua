@@ -1,7 +1,9 @@
 local MaterialQuery = require("scripts/utilities/material_query")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local _trigger_1p_footstep_and_foley = nil
 local Footstep = {
 	trigger_material_footstep = function (sound_alias, wwise_world, physics_world, source_id, unit, node, query_from, query_to, optional_set_speed_parameter, optional_set_first_person_parameter)
-		local hit, material, position, normal, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, query_from, query_to, sound_alias)
+		local hit, material, _, _, _, _ = MaterialQuery.query_material(physics_world, query_from, query_to, sound_alias)
 
 		if hit and material then
 			Unit.set_data(unit, "cache_material", material)
@@ -56,5 +58,100 @@ local Footstep = {
 		return wwise_playing_id
 	end
 }
+local WEAPON_FOLEY = "sfx_weapon_locomotion"
+local EXTRA_FOLEY = "sfx_player_extra_slot"
+local SPEED_EPSILON = 0.010000000000000002
+
+Footstep.update_1p_footsteps = function (t, footstep_time, previous_frame_character_state_name, is_camera_follow_target, context, ...)
+	if not is_camera_follow_target then
+		return footstep_time
+	end
+
+	local character_state_name = context.character_state_component.state_name
+	local move_speed_squared = context.locomotion_extension:move_speed_squared()
+	local footstep_sound_alias, foley_sound_alias, can_play_footstep = nil
+
+	if (character_state_name == "walking" or character_state_name == "sprinting") and (previous_frame_character_state_name == "walking" or previous_frame_character_state_name == "sprinting") then
+		footstep_sound_alias = "footstep"
+		foley_sound_alias = "sfx_foley_upper_body"
+		can_play_footstep = footstep_time < t and SPEED_EPSILON < move_speed_squared
+	end
+
+	if not footstep_sound_alias and previous_frame_character_state_name ~= "jumping" and character_state_name == "jumping" then
+		footstep_sound_alias = "footstep_jump"
+		foley_sound_alias = "sfx_foley_upper_body"
+		can_play_footstep = true
+	end
+
+	if not footstep_sound_alias and previous_frame_character_state_name == "falling" and character_state_name ~= "falling" then
+		footstep_sound_alias = "footstep_land"
+		foley_sound_alias = "sfx_foley_land"
+		can_play_footstep = true
+	end
+
+	if not footstep_sound_alias and previous_frame_character_state_name ~= "dodging" and character_state_name == "dodging" then
+		footstep_sound_alias = "sfx_footstep_dodge"
+		foley_sound_alias = "sfx_foley_upper_body"
+		can_play_footstep = true
+	end
+
+	if not footstep_sound_alias then
+		return footstep_time
+	end
+
+	if not can_play_footstep then
+		return footstep_time
+	end
+
+	local weapon_template = WeaponTemplate.current_weapon_template(context.weapon_action_component)
+
+	if not weapon_template then
+		return footstep_time
+	end
+
+	local breed_footstep_intervals = weapon_template.breed_footstep_intervals
+	local footstep_intervals = breed_footstep_intervals and breed_footstep_intervals[context.breed.name] or weapon_template.footstep_intervals
+
+	if footstep_intervals then
+		_trigger_1p_footstep_and_foley(context, footstep_sound_alias, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
+
+		local is_crouching = context.movement_state_component.is_crouching
+		local sprint_character_state_component = context.sprint_character_state_component
+		local is_spritning_overtime = sprint_character_state_component.is_sprinting and sprint_character_state_component.sprint_overtime > 0
+		local interval = is_crouching and footstep_intervals.crouch_walking or is_spritning_overtime and footstep_intervals.sprinting_overtime or footstep_intervals[character_state_name]
+
+		if interval then
+			return t + interval
+		else
+			return footstep_time
+		end
+	end
+
+	return footstep_time
+end
+
+function _trigger_1p_footstep_and_foley(context, footstep_sound_alias, ...)
+	local wwise_world = context.wwise_world
+	local unit = context.unit
+	local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
+	local query_to = query_from + Vector3(0, 0, -1)
+
+	Footstep.trigger_material_footstep(footstep_sound_alias, wwise_world, context.physics_world, context.feet_source_id, unit, 1, query_from, query_to, true, true)
+
+	local foley_source_id = context.foley_source_id
+
+	if foley_source_id then
+		local num_args = select("#", ...)
+
+		for i = 1, num_args do
+			local sound_alias = select(i, ...)
+			local move_speed = context.locomotion_extension:move_speed()
+
+			WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "foley_speed", move_speed)
+			WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "first_person_mode", 1)
+			context.fx_extension:trigger_gear_wwise_event(sound_alias, nil, foley_source_id)
+		end
+	end
+end
 
 return Footstep

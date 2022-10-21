@@ -17,6 +17,7 @@ BtMoveToCombatVectorAction.enter = function (self, unit, breed, blackboard, scra
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
+	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local combat_vector_component = blackboard.combat_vector
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.combat_vector_component = combat_vector_component
@@ -36,6 +37,10 @@ BtMoveToCombatVectorAction.leave = function (self, unit, breed, blackboard, scra
 		MinionMovement.set_anim_driven(scratchpad, false)
 	end
 
+	if scratchpad.stagger_duration then
+		MinionMovement.stop_running_stagger(scratchpad)
+	end
+
 	scratchpad.navigation_extension:set_enabled(false)
 end
 
@@ -53,7 +58,11 @@ BtMoveToCombatVectorAction.run = function (self, unit, breed, blackboard, scratc
 		self:_move_to_combat_vector(scratchpad, combat_vector_component, navigation_extension)
 	end
 
-	local should_evaluate = scratchpad.time_to_next_evaluate <= t
+	if action_data.running_stagger_duration then
+		MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
+	end
+
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 

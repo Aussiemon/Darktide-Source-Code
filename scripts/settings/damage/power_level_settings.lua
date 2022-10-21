@@ -2,7 +2,7 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local power_level_settings = {
 	min_power_level = 0,
-	max_power_level = 2000,
+	max_power_level = 10000,
 	default_power_level = 500,
 	min_power_level_cap = 200,
 	power_level_diff_ratio = {
@@ -17,82 +17,82 @@ local power_level_settings = {
 	},
 	damage_output = {
 		[armor_types.unarmored] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.armored] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.resistant] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.player] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.berserker] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.super_armor] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.disgustingly_resilient] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.void_shield] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.prop_armor] = {
-			max = 4,
+			max = 20,
 			min = 0
 		}
 	},
 	stagger_strength_output = {
 		[armor_types.unarmored] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.armored] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.resistant] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.player] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.berserker] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.super_armor] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.disgustingly_resilient] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.void_shield] = {
-			max = 4,
+			max = 20,
 			min = 0
 		},
 		[armor_types.prop_armor] = {
-			max = 4,
+			max = 20,
 			min = 0
 		}
 	},
 	cleave_output = {
-		max = 4,
+		max = 20,
 		min = 0
 	},
 	default_armor_damage_modifier = {
@@ -120,8 +120,8 @@ local power_level_settings = {
 		}
 	},
 	default_power_distribution = {
-		attack = 0.5,
-		impact = 0.5
+		attack = 100,
+		impact = 5
 	},
 	default_cleave_distribution = {
 		attack = 0.15,
@@ -136,7 +136,7 @@ local power_level_settings = {
 			1
 		}
 	},
-	power_boost_amount = {
+	rending_boost_amount = {
 		[armor_types.unarmored] = 0.75,
 		[armor_types.armored] = 0.6,
 		[armor_types.resistant] = 0.5,
@@ -182,7 +182,7 @@ local power_level_settings = {
 	},
 	default_crit_boost_amount = 0.5,
 	default_boost_curve_multiplier = 0.25,
-	power_boost_armor = {
+	rending_armor_conversion = {
 		[armor_types.unarmored] = armor_types.unarmored,
 		[armor_types.armored] = armor_types.unarmored,
 		[armor_types.resistant] = armor_types.resistant,
@@ -196,4 +196,4 @@ local power_level_settings = {
 	finesse_min_damage_multiplier = 0.5
 }
 
-return settings("power_level_settings", power_level_settings)
+return settings("PowerLevelSettings", power_level_settings)

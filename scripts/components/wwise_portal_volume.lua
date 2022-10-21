@@ -3,6 +3,7 @@ local WwisePortalVolume = component("WwisePortalVolume")
 WwisePortalVolume.init = function (self, unit)
 	self._unit = unit
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
+	self._open = false
 	local register_portal = self:get_data(unit, "register_portal")
 
 	if not register_portal then
@@ -49,6 +50,8 @@ end
 
 WwisePortalVolume.enable = function (self, unit)
 	if Managers then
+		self._open = true
+
 		Managers.state.rooms_and_portals:toggle_portal(self, true)
 	end
 end
@@ -59,6 +62,8 @@ end
 
 WwisePortalVolume.disable = function (self, unit)
 	if Managers then
+		self._open = false
+
 		Managers.state.rooms_and_portals:toggle_portal(self, false)
 	end
 end
@@ -172,6 +177,18 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 		normalize_anim_time = math.clamp(normalize_anim_time, 0, 1)
 		local obstruction = normalize_anim_time
 		local occlusion = normalize_anim_time
+
+		if self._open then
+			if obstruction >= 1 and occlusion >= 1 then
+				Managers.state.rooms_and_portals:toggle_portal(self, false)
+
+				self._open = false
+			end
+		elseif obstruction < 1 or occlusion < 1 then
+			Managers.state.rooms_and_portals:toggle_portal(self, true)
+
+			self._open = true
+		end
 
 		Managers.state.rooms_and_portals:set_portal_obstruction_and_occlusion(self, obstruction, occlusion)
 	end

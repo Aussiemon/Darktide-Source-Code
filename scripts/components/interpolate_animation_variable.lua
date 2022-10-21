@@ -11,9 +11,6 @@ InterpolateAnimationVariable.init = function (self, unit)
 	self._val1 = val_from
 	self._val2 = val_to
 	self._anim_variable = Unit.animation_find_variable(unit, self._variable_name)
-
-	fassert(self._anim_variable, "Could not find animation: %s for transition animation variable component", self._anim_variable)
-
 	self._val_from = 0
 	self._val_to = 0
 	self._animation_time = 1

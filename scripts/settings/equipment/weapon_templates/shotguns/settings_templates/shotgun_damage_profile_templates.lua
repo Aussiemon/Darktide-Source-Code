@@ -87,7 +87,7 @@ damage_templates.shotgun_cleaving_special = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
+		gibbing_power = GibbingPower.heavy,
 		gibbing_type = gibbing_types.ballistic
 	},
 	power_distribution = {
@@ -101,7 +101,7 @@ damage_templates.shotgun_cleaving_special = {
 		}
 	},
 	damage_type = damage_types.pellet,
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = GibbingPower.heavy,
 	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
 		0.25,
@@ -227,7 +227,7 @@ damage_templates.default_shotgun_killshot = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
+		gibbing_power = GibbingPower.heavy,
 		gibbing_type = gibbing_types.ballistic
 	},
 	power_distribution = {
@@ -345,7 +345,7 @@ damage_templates.default_shotgun_assault = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
+		gibbing_power = GibbingPower.heavy,
 		gibbing_type = gibbing_types.ballistic
 	},
 	power_distribution = {

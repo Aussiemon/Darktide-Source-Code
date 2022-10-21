@@ -24,6 +24,7 @@ local flat_one_armor_mod = DamageProfileSettings.flat_one_armor_mod
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 damage_templates.force_staff_ball = {
+	force_weapon_damage = true,
 	stagger_override = "medium",
 	suppression_attack_delay = 0.6,
 	ragdoll_push_force = 0,
@@ -90,8 +91,9 @@ damage_templates.force_staff_ball = {
 	}
 }
 damage_templates.default_force_staff_bfg = {
-	ragdoll_push_force = 350,
+	force_weapon_damage = true,
 	ignore_shield = true,
+	ragdoll_push_force = 350,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
@@ -155,6 +157,7 @@ damage_templates.default_force_staff_bfg = {
 	}
 }
 damage_templates.default_force_staff_demolition = {
+	force_weapon_damage = true,
 	suppression_value = 10,
 	ragdoll_push_force = 200,
 	ignore_stagger_reduction = true,
@@ -205,6 +208,7 @@ damage_templates.default_force_staff_demolition = {
 	damage_type = damage_types.warp
 }
 damage_templates.close_force_staff_demolition = {
+	force_weapon_damage = true,
 	suppression_value = 10,
 	ragdoll_push_force = 600,
 	ignore_stagger_reduction = true,
@@ -255,6 +259,7 @@ damage_templates.close_force_staff_demolition = {
 	damage_type = damage_types.warp
 }
 damage_templates.force_staff_bash = {
+	force_weapon_damage = true,
 	ragdoll_push_force = 200,
 	ragdoll_only = true,
 	stagger_category = "melee",
@@ -380,6 +385,197 @@ damage_templates.force_staff_bash = {
 				[armor_types.void_shield] = 0.5,
 				[armor_types.prop_armor] = 0.5
 			}
+		}
+	}
+}
+local assault_warpfire_armor_mod = {
+	near = {
+		attack = {
+			[armor_types.unarmored] = 2,
+			[armor_types.armored] = 1.75,
+			[armor_types.resistant] = 2,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 2.5,
+			[armor_types.super_armor] = 0.25,
+			[armor_types.disgustingly_resilient] = 1.5,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 0.75,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1.5,
+			[armor_types.super_armor] = 0.2,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		}
+	},
+	far = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 0.75,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0.7,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 0.75
+		},
+		impact = {
+			[armor_types.unarmored] = 0.75,
+			[armor_types.armored] = 0.25,
+			[armor_types.resistant] = 0.3,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 1.25,
+			[armor_types.super_armor] = 0.1,
+			[armor_types.disgustingly_resilient] = 0.75,
+			[armor_types.void_shield] = 0.5,
+			[armor_types.prop_armor] = 0.75
+		}
+	}
+}
+damage_templates.default_warpfire_assault = {
+	duration_scale_bonus = 0.5,
+	accumulative_stagger_strength_multiplier = 0.5,
+	force_weapon_damage = true,
+	suppression_value = 10,
+	ragdoll_push_force = 10,
+	gibbing_power = 0,
+	stagger_category = "flamer",
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.1
+	},
+	ranges = {
+		max = 15,
+		min = 5
+	},
+	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
+	damage_type = damage_types.burning,
+	gibbing_type = GibbingTypes.plasma,
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					8,
+					12
+				},
+				impact = {
+					5,
+					9
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					10,
+					16
+				},
+				impact = {
+					5,
+					10
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					12,
+					20
+				},
+				impact = {
+					7,
+					12
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					15,
+					30
+				},
+				impact = {
+					8,
+					15
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					17.5,
+					35
+				},
+				impact = {
+					10,
+					15
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					20,
+					40
+				},
+				impact = {
+					10,
+					15
+				}
+			}
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					40,
+					60
+				},
+				impact = {
+					10,
+					15
+				}
+			}
+		}
+	}
+}
+damage_templates.default_warpfire_assault_burst = {
+	duration_scale_bonus = 0.1,
+	suppression_value = 5,
+	force_weapon_damage = true,
+	gibbing_power = 0,
+	ragdoll_push_force = 12,
+	ignore_stagger_reduction = true,
+	stagger_category = "flamer",
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.1
+	},
+	ranges = {
+		max = 15,
+		min = 5
+	},
+	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
+	damage_type = damage_types.burning,
+	gibbing_type = GibbingTypes.plasma,
+	power_distribution = {
+		attack = {
+			5,
+			25
+		},
+		impact = {
+			5,
+			10
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	}
 }

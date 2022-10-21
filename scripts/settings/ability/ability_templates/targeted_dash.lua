@@ -42,7 +42,7 @@ local ability_template = {
 			start_input = "aim_pressed",
 			kind = "targeted_dash_aim",
 			sprint_ready_up_time = 0,
-			aim_ready_up_time = 0,
+			aim_ready_up_time = 0.25,
 			uninterruptible = true,
 			decal_unit_name = "content/fx/units/decal_dash",
 			allowed_during_lunge = true,
@@ -59,7 +59,7 @@ local ability_template = {
 			}
 		},
 		action_state_change = {
-			allowed_during_sprint = false,
+			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			use_ability_charge = true,
 			uninterruptible = true,

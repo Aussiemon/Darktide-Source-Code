@@ -86,29 +86,6 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 	end
 
 	Managers.time:set_local_scale("gameplay", self._time_scale)
-
-	if DevParameters.debug_adaptive_clock then
-		local main_t = Managers.time:time("main")
-		local gameplay_t = Managers.time:time("gameplay")
-		local gameplay_timer_offset = gameplay_t - main_t
-
-		Debug:text("initial gp offset: %.1fms current gp offset: %.1fms ; initial server offset = %.1fms", self._gameplay_timer_offset * 1000, gameplay_timer_offset * 1000, self._initial_server_offset * 1000)
-
-		if self._server_gameplay_t_offset then
-			local server = Managers.connection:host()
-			local offset = self._server_gameplay_t_offset
-			local rtt = Network.ping(server)
-
-			Debug:text("gameplay offset: %ims server_gameplay: %.3f, server_gameplay_ping_corrected: %.1f, gameplay: %.1f", offset * 1000, self._server_gameplay_t, self._server_gameplay_t + rtt * 0.5, gameplay_t)
-
-			local predicted_packet_early = offset - rtt
-
-			Debug:text("predicted arrive time %ims (ping %.1fms)", predicted_packet_early * 1000, rtt * 1000)
-			Debug:text("buffer %.1fms, longest frame %.1fms", self:_frame_discrepancy_buffer() * 1000, self._max_frame_time * 1000)
-		end
-
-		Debug:text("Time scale: %.4f target offset: %.1fms offset: %.1fms max frame time: %.4f offset correction: %3.1fms fps: %3.1f", self._time_scale, target_offset * 1000, self._current_offset * 1000, math.max(self._max_frame_time, 0.006944444444444444), self._offset_correction * 1000, 1 / main_dt)
-	end
 end
 
 AdaptiveClockHandlerClient._update_max_frame_time = function (self, dt)

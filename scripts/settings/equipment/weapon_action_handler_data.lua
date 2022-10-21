@@ -248,16 +248,6 @@ weapon_action_data.action_kind_condition_funcs = {
 
 		return stamina_read_component.current_fraction > 0 and ability_has_keyword and special_cooldown
 	end,
-	place_deployable = function (action_settings, condition_func_params, used_input)
-		local action_place_component = condition_func_params.action_place_component
-
-		return action_place_component.can_place
-	end,
-	place_pickup = function (action_settings, condition_func_params, used_input)
-		local action_place_component = condition_func_params.action_place_component
-
-		return action_place_component.can_place
-	end,
 	charge_ammo = function (action_settings, condition_func_params, used_input)
 		return _has_ammo(condition_func_params)
 	end,
@@ -267,9 +257,6 @@ weapon_action_data.action_kind_condition_funcs = {
 		end
 
 		return _has_ammo(condition_func_params)
-	end,
-	smite_targeting = function (action_settings, condition_func_params, used_input)
-		return true
 	end,
 	vent_overheat = function (action_settings, condition_func_params, used_input)
 		return Overheat.can_vent(condition_func_params.inventory_slot_component)
@@ -284,7 +271,10 @@ weapon_action_data.action_kind_condition_funcs = {
 		return ability_has_keyword and has_ability_charge_or_ammo
 	end,
 	flamer_gas = function (action_settings, condition_func_params, used_input)
-		return _has_ammo(condition_func_params)
+		return _has_ammo(condition_func_params) or action_settings.uses_warp_charge
+	end,
+	flamer_gas_burst = function (action_settings, condition_func_params, used_input)
+		return _has_ammo(condition_func_params) or action_settings.uses_warp_charge
 	end,
 	spawn_projectile = function (action_settings, condition_func_params, used_input)
 		local ability_has_keyword = _ability_has_keyword(action_settings, condition_func_params)
@@ -337,6 +327,27 @@ weapon_action_data.action_kind_condition_funcs = {
 		local is_dodging = movement_state_component.is_dodging
 
 		return not is_dodging
+	end,
+	overload_target_finder = function (action_settings, condition_func_params, used_input)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = action_settings.ability_type
+		local can_use = ability_extension:can_use_ability(ability_type)
+
+		return can_use
+	end,
+	chain_lightning = function (action_settings, condition_func_params, used_input)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = action_settings.ability_type
+		local can_use = ability_extension:can_use_ability(ability_type)
+
+		return can_use
+	end,
+	smite_targeting = function (action_settings, condition_func_params, used_input)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = action_settings.ability_type
+		local can_use = ability_extension:can_use_ability(ability_type)
+
+		return can_use
 	end
 }
 weapon_action_data.action_kind_total_time_funcs = {
@@ -510,11 +521,11 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 }
 
 for name, _ in pairs(weapon_action_data.action_kind_condition_funcs) do
-	fassert(weapon_action_data.actions[name], "Conditions specified for non-existant action kind %q", name)
+	-- Nothing
 end
 
 for name, _ in pairs(weapon_action_data.action_kind_total_time_funcs) do
-	fassert(weapon_action_data.actions[name], "Total Time Function specified for non-existant action kind %q", name)
+	-- Nothing
 end
 
 return weapon_action_data

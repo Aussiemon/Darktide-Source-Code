@@ -16,9 +16,6 @@ CinematicLevelLoader.destroy = function (self)
 end
 
 CinematicLevelLoader.start_loading = function (self, cinematic_name, level_names, callback)
-	fassert(cinematic_name ~= nil and cinematic_name ~= "", "Invalid cinematic %s", tostring(cinematic_name))
-	fassert(self._cinematic_name == nil or self._cinematic_name == cinematic_name, "Cannot load levels for cinematic '%s'. Already processing cinematic '%s'", tostring(cinematic_name), tostring(self._cinematic_name))
-
 	local ready_callbacks = self._level_ready_callbacks
 	ready_callbacks[#ready_callbacks + 1] = callback
 
@@ -28,21 +25,29 @@ CinematicLevelLoader.start_loading = function (self, cinematic_name, level_names
 		end
 
 		table.clear(ready_callbacks)
-	elseif self._cinematic_name == nil then
-		self._cinematic_name = cinematic_name
-		local item_definitions = MasterItems.get_cached()
+	else
+		if self._cinematic_name == nil then
+			self._cinematic_name = cinematic_name
+			local item_definitions = MasterItems.get_cached()
 
-		for _, level_name in ipairs(level_names) do
-			self._levels_to_load[level_name] = PACKAGE_LOAD_STATES.level_load
-		end
-
-		for _, level_name in ipairs(level_names) do
-			local function pkg_callback(_pkg_name)
-				self:_level_load_done_callback(item_definitions, level_name)
+			for _, level_name in ipairs(level_names) do
+				self._levels_to_load[level_name] = PACKAGE_LOAD_STATES.level_load
 			end
 
-			local id = Managers.package:load(level_name, "CinematicLevelLoader", pkg_callback)
-			self._package_ids[id] = level_name
+			for _, level_name in ipairs(level_names) do
+				local function pkg_callback(_pkg_name)
+					self:_level_load_done_callback(item_definitions, level_name)
+				end
+
+				local id = Managers.package:load(level_name, "CinematicLevelLoader", pkg_callback)
+				self._package_ids[id] = level_name
+			end
+
+			return
+		end
+
+		if self._cinematic_name == cinematic_name and self:_is_loading_done() then
+			callback(self._cinematic_name, self._levels_to_load)
 		end
 	end
 end
@@ -86,8 +91,6 @@ CinematicLevelLoader._level_load_done_callback = function (self, item_definition
 end
 
 CinematicLevelLoader._load_done_callback = function (self, package_id, level_name)
-	fassert(Managers.package:has_loaded_id(package_id), "[CinematicLevelLoader][_load_done_callback] Callback called on non loaded package.")
-
 	local package_name = self._package_ids[package_id]
 	local packages_to_load = self._packages_to_load
 	packages_to_load[level_name][package_name] = true
@@ -130,6 +133,10 @@ CinematicLevelLoader._is_loading_done = function (self)
 	return result
 end
 
+CinematicLevelLoader.is_loading = function (self)
+	return not self:_is_loading_done()
+end
+
 CinematicLevelLoader.check_loading = function (self, cinematic_name)
 	local is_correct_cinematic = cinematic_name == self._cinematic_name
 
@@ -158,6 +165,7 @@ CinematicLevelLoader.cleanup = function (self)
 	self._cinematic_name = nil
 
 	table.clear(self._level_ready_callbacks)
+	table.clear(self._packages_to_load)
 end
 
 return CinematicLevelLoader

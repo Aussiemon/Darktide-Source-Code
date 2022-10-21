@@ -31,18 +31,22 @@ RescueInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		assisted_state_input_component.success = true
 		local hogtied_state_input = unit_data_extension:write_component("hogtied_state_input")
 		hogtied_state_input.hogtie = false
+		local interactor_player = Managers.state.player_unit_spawn:owner(interactor_unit)
+		local target_player = Managers.state.player_unit_spawn:owner(target_unit)
 
-		if DEDICATED_SERVER then
-			local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+		if Managers.stats.can_record_stats() and interactor_player and target_player then
+			local is_human_player = interactor_player:is_human_controlled()
 
-			if player then
-				local is_human_player = player:is_human_controlled()
-
-				if is_human_player then
-					Managers.stats:record_respawn_ally(player)
-				end
+			if is_human_player then
+				Managers.stats:record_respawn_ally(interactor_player, target_player)
 			end
 		end
+
+		local reviver_position = POSITION_LOOKUP[interactor_unit]
+		local revivee_position = POSITION_LOOKUP[target_unit]
+		local state_name = "hogtied"
+
+		Managers.telemetry_events:player_revived_ally(interactor_player, target_player, reviver_position, revivee_position, state_name)
 	end
 end
 

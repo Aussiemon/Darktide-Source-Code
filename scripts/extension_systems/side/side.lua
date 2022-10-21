@@ -95,8 +95,6 @@ Side._create_relation_tables = function (self)
 end
 
 Side.set_relation = function (self, relation, sides)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	local relation_sides = self._relation_sides[relation]
 	local relation_side_lookup = self._relation_sides_lookup[relation]
 	local relation_side_names = self._relation_side_names[relation]
@@ -113,8 +111,6 @@ end
 Side.add_unit = function (self, unit, side_extension)
 	local units_lookup = self.units_lookup
 
-	fassert(units_lookup[unit] == nil, "[Side] Unit %q already added to side.", unit)
-
 	if side_extension.is_player_unit then
 		local player_units = self._added_player_units
 		local new_index = #player_units + 1
@@ -129,8 +125,6 @@ end
 
 Side.remove_unit = function (self, unit, side_extension)
 	local units_lookup = self.units_lookup
-
-	fassert(units_lookup[unit] ~= nil, "[Side] %q has not been added or has already been removed from side.", unit)
 
 	if side_extension.is_player_unit then
 		local player_units = self._added_player_units
@@ -151,11 +145,7 @@ Side.remove_unit = function (self, unit, side_extension)
 end
 
 Side.add_relation_unit = function (self, unit, side_extension, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	local units_lookup = self._relation_units_lookup[relation]
-
-	fassert(units_lookup[unit] == nil, "[Side] %q has already been added to %q units.", unit, relation)
 
 	if side_extension.is_player_unit then
 		local player_units = self._relation_player_units[relation]
@@ -170,11 +160,7 @@ Side.add_relation_unit = function (self, unit, side_extension, relation)
 end
 
 Side.remove_relation_unit = function (self, unit, side_extension, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	local units_lookup = self._relation_units_lookup[relation]
-
-	fassert(units_lookup[unit] ~= nil, "[Side] %q has not been added to %q units.", unit, relation)
 
 	if side_extension.is_player_unit then
 		local player_units = self._relation_player_units[relation]
@@ -243,26 +229,18 @@ Side.added_player_units = function (self)
 end
 
 Side.relation_side_names = function (self, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	return self._relation_side_names[relation]
 end
 
 Side.relation_sides = function (self, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	return self._relation_sides[relation]
 end
 
 Side.relation_units = function (self, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	return self._relation_units[relation]
 end
 
 Side.relation_player_units = function (self, relation)
-	fassert(Side.SIDE_RELATION_TYPES[relation], "[Side] Unknown relation %q.", relation)
-
 	return self._relation_player_units[relation]
 end
 

@@ -1,3 +1,4 @@
+local Component = require("scripts/utilities/component")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local FX_SOURCE_NAME = "fx_shaft"
 local VFX = "content/fx/particles/enemies/renegade_captain/renegade_captain_2h_heavy_swing_trail"
@@ -25,6 +26,16 @@ local effect_template = {
 		local position = Unit.world_position(attachment_unit, node_index)
 
 		_start_vfx(attachment_unit, position, node_index, template_data, template_context)
+
+		template_data.attachment_unit = attachment_unit
+		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
+		template_data.unit_components = unit_components
+		local world = template_context.world
+		local t = World.time(world)
+
+		for _, component in pairs(unit_components) do
+			component:set_start_time(t, attachment_unit)
+		end
 	end,
 	update = function (template_data, template_context, dt, t)
 		return
@@ -34,6 +45,13 @@ local effect_template = {
 		local vfx_particle_id = template_data.vfx_particle_id
 
 		World.stop_spawning_particles(world, vfx_particle_id)
+
+		local unit_components = template_data.unit_components
+		local t = World.time(world)
+
+		for _, component in pairs(unit_components) do
+			component:set_stop_time(t, template_data.attachment_unit)
+		end
 	end
 }
 

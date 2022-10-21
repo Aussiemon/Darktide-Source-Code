@@ -22,6 +22,8 @@ PlayerVisibilityExtension.snapshot_stored = function (self)
 end
 
 PlayerVisibilityExtension.hide = function (self)
+	self:_restore_snapshot()
+
 	local units = Unit.get_child_units(self._unit)
 
 	Unit.take_visibility_snapshot(units)

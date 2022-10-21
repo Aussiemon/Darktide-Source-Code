@@ -50,8 +50,6 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 end
 
 local function _can_trigger_vo(breed_configuration)
-	fassert(breed_configuration, "[LegacyV2ProximitySystem] Breed configuration can't be nil. Please add it to DialogueBreedSettings and contact the Audio team.")
-
 	return breed_configuration.can_trigger_vo and (breed_configuration.trigger_heard_vo or breed_configuration.trigger_seen_vo)
 end
 
@@ -223,8 +221,6 @@ LegacyV2ProximitySystem.add_distance_based_vo_query = function (self, source_uni
 		return
 	end
 
-	fassert(concept_name, "distance based VO concept can't be nil")
-
 	local next_element = #self._distance_based_vo_queries + 1
 	self._distance_based_vo_queries[next_element] = {
 		source = source_unit,
@@ -247,8 +243,6 @@ local near_lookup = {
 }
 
 LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
-	Profiler.start("Moving units")
-
 	local Broadphase_move = Broadphase.move
 	local POSITION_LOOKUP = POSITION_LOOKUP
 	local enemy_broadphase = self._enemy_broadphase
@@ -277,7 +271,6 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		Broadphase_move(special_units_broadphase, extension.special_broadphase_id, position)
 	end
 
-	Profiler.stop("Moving units")
 	self:_update_nearby_enemies()
 
 	if not self._is_server then
@@ -293,8 +286,6 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 
 	for unit, extension in pairs(player_unit_extensions_map) do
 		local position = POSITION_LOOKUP[unit]
-
-		Profiler.start("Update Proximity Type Data")
 
 		for proximity_type, proximity_data in pairs(extension.proximity_types) do
 			local broadphase = proximity_data.broadphase
@@ -332,16 +323,15 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 							end
 						end
 					end
-				end
 
-				dialogue_extension:trigger_dialogue_event(proximity_type, event_data)
+					dialogue_extension:trigger_dialogue_event(proximity_type, event_data)
+				elseif proximity_type == "friends_distant" then
+					dialogue_extension:trigger_dialogue_event(proximity_type, event_data)
+				end
 			end
 
 			table.clear_array(broadphase_result, num_nearby_units)
 		end
-
-		Profiler.stop("Update Proximity Type Data")
-		Profiler.start("See and hear enemies")
 
 		local raycast_timer = extension.raycast_timer + dt
 		local hear_timer = extension.hear_timer + dt
@@ -383,7 +373,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 					local direction_unit_nearby_unit = Vector3.normalize(nearby_unit_pos_flat - pos_flat)
 					local result = Vector3.dot(direction_unit_nearby_unit, look_direction)
 
-					if result > 0.7 then
+					if DialogueSettings.seen_enemy_precision < result then
 						cast_ray = true
 						enemy_check_raycasts[ray_write_index] = unit
 						enemy_check_raycasts[ray_write_index + 1] = nearby_unit
@@ -409,8 +399,6 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		self._raycast_write_index = ray_write_index
 		extension.hear_timer = hear_timer
 		extension.raycast_timer = raycast_timer
-
-		Profiler.stop("See and hear enemies")
 	end
 
 	self:_process_distance_based_vo_query()
@@ -445,8 +433,6 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 		return
 	end
 
-	Profiler.start("update nearby enemies")
-
 	local old_nearby = self._old_nearby
 	local new_nearby = self._new_nearby
 
@@ -457,13 +443,7 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 
 	if average_local_human_player_position then
 		local broadphase_result = self._broadphase_result
-
-		Profiler.start("broadphase query")
-
 		local num_units = Broadphase.query(self._enemy_broadphase, average_local_human_player_position, 40, broadphase_result)
-
-		Profiler.stop("broadphase query")
-
 		local list = self._pseudo_sorted_list
 		local list_len = #list
 
@@ -481,8 +461,6 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 		local higher_unit = list[1]
 
 		if higher_unit then
-			Profiler.start("sort")
-
 			local higher_unit_dist = new_nearby[higher_unit]
 
 			while not higher_unit_dist and list_len > 0 do
@@ -547,15 +525,11 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 
 			self._old_enabled_fx = new_enabled_fx
 			self._new_enabled_fx = old_enabled_fx
-
-			Profiler.stop("sort")
 		end
 	end
 
 	self._old_nearby = new_nearby
 	self._new_nearby = old_nearby
-
-	Profiler.stop("update nearby enemies")
 end
 
 local Unit_flow_event = Unit.flow_event
@@ -603,8 +577,6 @@ LegacyV2ProximitySystem._process_distance_based_vo_query = function (self)
 	local concept = to_query.concept_name
 	local query_data = to_query.query_data
 
-	fassert(concept, "process distance based VO concept can't be nil")
-
 	if not ALIVE[source_unit] then
 		return
 	end
@@ -643,6 +615,7 @@ local INDEX_ACTOR = 4
 LegacyV2ProximitySystem._make_async_raycast_to_center = function (self, raycast_object, physics_world, unit, unit_position, nearby_unit)
 	local unit_center_matrix, _ = Unit.box(nearby_unit)
 	local ray_target = Matrix4x4.translation(unit_center_matrix)
+	ray_target = ray_target + Vector3(0, 0, 1)
 	local to_target = ray_target - unit_position
 	local ray_direction = Vector3.normalize(to_target)
 	local ray_length = Vector3.length(to_target)

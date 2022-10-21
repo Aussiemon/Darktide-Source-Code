@@ -3,9 +3,6 @@ local breeds = {}
 local function _create_breed_entry(path)
 	local breed_data = require(path)
 	local breed_name = breed_data.name
-
-	fassert(breed_name, "[Breeds] Missing name field in %q.", path)
-
 	breeds[breed_name] = breed_data
 end
 

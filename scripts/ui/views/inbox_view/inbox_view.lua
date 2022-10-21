@@ -116,11 +116,11 @@ InboxView._fetch_character_progression = function (self, player)
 
 	if Managers.backend:authenticated() then
 		local backend_interface = Managers.backend.interfaces
-		profiles_promise = Promise.all(backend_interface.progression:get_entity_type_progression("character", character_id)):next(function (results)
-			local character_progression = unpack(results)
-			local current_level_experience = character_progression.currentXpInLevel or 0
-			local needed_level_experience = character_progression.neededXpForNextLevel or 0
-			local normalized_progress = current_level_experience / needed_level_experience
+		profiles_promise = backend_interface.progression:get_progression("character", character_id):next(function (results)
+			local progression_data = results
+			local current_level_experience = progression_data and progression_data.currentXpInLevel or 0
+			local needed_level_experience = progression_data and progression_data.neededXpForNextLevel or 0
+			local normalized_progress = needed_level_experience > 0 and current_level_experience / (current_level_experience + needed_level_experience) or 0
 
 			return normalized_progress
 		end):catch(function (error)
@@ -214,8 +214,6 @@ InboxView._create_grid = function (self, entries)
 		if slot then
 			local item = entry.item
 			content.item = item
-			local _, rarity_side_texture = ItemUtils.rarity_textures(item)
-			content.rarity_side_texture = rarity_side_texture
 
 			if item then
 				widget.unload_icon = unload_icon
@@ -468,8 +466,6 @@ InboxView._preview_element = function (self, element)
 	local item_widget = widgets_by_name.item_image
 	local content = item_widget.content
 	content.disabled = true
-	local _, rarity_side_texture = ItemUtils.rarity_textures(item)
-	content.rarity_side_texture = rarity_side_texture
 
 	if content.icon_load_id then
 		local material_values = item_widget.style.icon.material_values

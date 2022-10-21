@@ -93,9 +93,6 @@ end
 BaseView._create_widget = function (self, name, definition)
 	local widgets_by_name = self._widgets_by_name
 	local widget = UIWidget.init(name, definition)
-
-	fassert(not widgets_by_name[name], "[%s] - Widget with name: %s is already created. Name has to be unique!", self.__class_name, name)
-
 	widgets_by_name[name] = widget
 
 	return widget
@@ -103,9 +100,6 @@ end
 
 BaseView._unregister_widget_name = function (self, name)
 	local widgets_by_name = self._widgets_by_name
-
-	fassert(widgets_by_name[name], "[%s] - Widget with name: %s does not exist.", self.__class_name, name)
-
 	widgets_by_name[name] = nil
 end
 
@@ -118,16 +112,12 @@ BaseView.has_widget = function (self, name)
 end
 
 BaseView.trigger_widget_pressed = function (self, name, optional_content_id)
-	fassert(self._widgets_by_name[name], "[%s] - Widget with name: %s does not exist.", self.__class_name, name)
-
 	local widget = self._widgets_by_name[name]
 	local content = widget.content
 	local hotspot_content = nil
 
 	if optional_content_id then
 		hotspot_content = content[optional_content_id]
-
-		fassert(hotspot_content, "[%s] - Widget with name: %s does not have hotspot content with ID: %s.", self.__class_name, name, optional_content_id)
 	end
 
 	local passes = widget.passes
@@ -206,10 +196,16 @@ BaseView.on_enter = function (self)
 			self:_play_sound(sound_event)
 		end
 	end
+
+	Managers.telemetry_events:open_view(self.view_name)
 end
 
 BaseView.on_exit = function (self)
 	self:_unregister_events()
+
+	if Managers.telemetry_events then
+		Managers.telemetry_events:close_view(self.view_name)
+	end
 
 	if self._cursor_pushed then
 		local input_manager = Managers.input
@@ -230,7 +226,7 @@ BaseView.on_exit = function (self)
 	local elements_array = self._elements_array
 
 	for _, element in ipairs(elements_array) do
-		element:destroy()
+		element:destroy(self._ui_renderer)
 	end
 
 	self._elements = nil
@@ -240,15 +236,6 @@ BaseView.on_exit = function (self)
 	Managers.ui:destroy_renderer(self.__class_name .. "_ui_renderer")
 
 	self._destroyed = true
-	local exit_sound_events = self._settings.exit_sound_events
-
-	if exit_sound_events then
-		for i = 1, #exit_sound_events do
-			local sound_event = exit_sound_events[i]
-
-			self:_play_sound(sound_event)
-		end
-	end
 end
 
 BaseView.set_can_exit = function (self, value, apply_next_frame)
@@ -372,6 +359,16 @@ BaseView.update = function (self, dt, t, input_service)
 		end
 	end
 
+	self:_update_animations(dt, t)
+
+	if self._update_scenegraph then
+		self._update_scenegraph = nil
+
+		self:trigger_resolution_update()
+	end
+
+	self:_update_elements(dt, t, input_service)
+
 	if self._entered and input_service and not input_service:is_null_service() then
 		local using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
@@ -383,16 +380,6 @@ BaseView.update = function (self, dt, t, input_service)
 
 		self:_handle_input(input_service, dt, t)
 	end
-
-	self:_update_animations(dt, t)
-
-	if self._update_scenegraph then
-		self._update_scenegraph = nil
-
-		self:trigger_resolution_update()
-	end
-
-	self:_update_elements(dt, t, input_service)
 
 	return self._pass_input, self._pass_draw
 end
@@ -442,6 +429,15 @@ end
 
 BaseView.trigger_on_exit_animation = function (self)
 	self._on_exit_animation_triggered = true
+	local exit_sound_events = self._settings.exit_sound_events
+
+	if exit_sound_events then
+		for i = 1, #exit_sound_events do
+			local sound_event = exit_sound_events[i]
+
+			self:_play_sound(sound_event)
+		end
+	end
 end
 
 BaseView.triggered_on_enter_animation = function (self)
@@ -508,9 +504,6 @@ end
 BaseView._add_element = function (self, class, reference_name, layer, context)
 	local elements = self._elements
 	local elements_array = self._elements_array
-
-	fassert(elements[reference_name] == nil, "[%s] - Trying to add element with an already used reference name: %s", self.__class_name, reference_name)
-
 	local draw_layer = layer or 0
 	local scale = self._ui_renderer.scale or RESOLUTION_LOOKUP.scale
 	local element = class:new(self, draw_layer, scale, context)

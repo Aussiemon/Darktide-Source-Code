@@ -1,4 +1,3 @@
-local BackendInterface = require("scripts/backend/backend_interface")
 local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local HomePlanets = require("scripts/settings/character/home_planets")
@@ -9,10 +8,9 @@ local Crimes = require("scripts/settings/character/crimes")
 local Personalities = require("scripts/settings/character/personalities")
 local PlayerCharacterCreatorPresets = require("scripts/settings/player_character/player_character_creator_presets")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local Promise = require("scripts/foundation/utilities/promise")
 local CharacterCreate = class("CharacterCreate")
 
-CharacterCreate.init = function (self, item_definitions)
+CharacterCreate.init = function (self, item_definitions, owned_gear)
 	self._archetype_random_names = {}
 	self._profile_value_versions = {
 		loadout = {}
@@ -22,8 +20,8 @@ CharacterCreate.init = function (self, item_definitions)
 	self:_setup_default_values()
 
 	self._item_definitions = item_definitions
-	local verified_items = self:_verify_items(item_definitions)
-	local item_categories = self:_setup_item_catagories(verified_items)
+	local verified_items = self:_verify_items(item_definitions, owned_gear)
+	local item_categories = self:_setup_item_categories(verified_items)
 	self._item_categories = item_categories
 	local appearance_presets = self:_setup_appearance_presets(verified_items)
 	self._appearance_presets = appearance_presets
@@ -46,6 +44,10 @@ CharacterCreate.init = function (self, item_definitions)
 	self:_randomize_lore_properties()
 end
 
+CharacterCreate._reset_loadout = function (self)
+	self._profile.loadout = {}
+end
+
 CharacterCreate.reset_backstory = function (self)
 	self._profile.lore.backstory = {}
 
@@ -64,6 +66,24 @@ CharacterCreate._randomize_lore_properties = function (self)
 	local personality_option = self:_randomize_personality()
 
 	self:set_personality(personality_option)
+end
+
+CharacterCreate._randomize_backstory_properties = function (self)
+	local formative_event_option = self:_randomize_formative_event()
+
+	self:set_formative_event(formative_event_option)
+
+	local growing_up_option = self:_randomize_growing_up()
+
+	self:set_growing_up(growing_up_option)
+
+	local childhood_option = self:_randomize_childhood()
+
+	self:set_childhood(childhood_option)
+end
+
+CharacterCreate.randomize_backstory_properties = function (self)
+	self:_randomize_backstory_properties()
 end
 
 CharacterCreate._randomize_archetype_properties = function (self)
@@ -216,9 +236,6 @@ CharacterCreate._setup_appearance_presets = function (self, verified_items)
 
 				for slot_name, slot_item in pairs(preset_slots) do
 					local verified_item = verified_items[slot_item]
-
-					fassert(slot_item, "Apperance presets containing unknown item for [%s %s %s %s]: %q", breed, gender, preset_name, slot_name, slot_item)
-
 					preset.body_parts[slot_name] = verified_item
 				end
 
@@ -242,8 +259,6 @@ CharacterCreate._randomize_archetype = function (self)
 end
 
 CharacterCreate._randomize_gender = function (self)
-	fassert(self._profile.archetype, "[CharacterCreate] - Need to assign: %s before randomizing. %s", "archetype", "gender")
-
 	local genders = self:gender_options()
 	local gender = genders[math.random(1, #genders)]
 
@@ -259,9 +274,16 @@ CharacterCreate._presets_options = function (self)
 	return presets
 end
 
-CharacterCreate._verify_items = function (self, source_items)
+CharacterCreate._verify_items = function (self, source_items, owned_gear)
 	local verified_items = {}
 	local inventory_slots_array = self._inventory_slots_array
+	local owned_gear_by_master_id = {}
+
+	if owned_gear then
+		for id, item in pairs(owned_gear) do
+			owned_gear_by_master_id[item.masterDataInstance.id] = item
+		end
+	end
 
 	for item_name, item in pairs(source_items) do
 		local slots = item.slots
@@ -270,7 +292,7 @@ CharacterCreate._verify_items = function (self, source_items)
 			for i = 1, #slots do
 				local slot_name = slots[i]
 
-				if table.contains(inventory_slots_array, slot_name) then
+				if table.contains(inventory_slots_array, slot_name) and (item.always_owned or owned_gear_by_master_id[item_name]) then
 					verified_items[item_name] = item
 
 					break
@@ -282,7 +304,7 @@ CharacterCreate._verify_items = function (self, source_items)
 	return verified_items
 end
 
-CharacterCreate._setup_item_catagories = function (self, source_items)
+CharacterCreate._setup_item_categories = function (self, source_items)
 	local destination_table = {}
 
 	local function next_category(item, lookup_index, destination)
@@ -508,6 +530,12 @@ CharacterCreate.childhood_options = function (self)
 	return self._childhood_array
 end
 
+CharacterCreate._randomize_childhood = function (self)
+	local childhood_options = self:childhood_options()
+
+	return childhood_options[math.random(1, #childhood_options)]
+end
+
 CharacterCreate.growing_up = function (self)
 	return self._profile.lore.backstory.growing_up
 end
@@ -522,6 +550,12 @@ CharacterCreate.growing_up_options = function (self)
 	return self._growing_up_array
 end
 
+CharacterCreate._randomize_growing_up = function (self)
+	local growing_up_options = self:growing_up_options()
+
+	return growing_up_options[math.random(1, #growing_up_options)]
+end
+
 CharacterCreate.formative_event = function (self)
 	return self._profile.lore.backstory.formative_event
 end
@@ -534,6 +568,12 @@ end
 
 CharacterCreate.formative_event_options = function (self)
 	return self._formative_event_array
+end
+
+CharacterCreate._randomize_formative_event = function (self)
+	local formative_events = self:formative_event_options()
+
+	return formative_events[math.random(1, #formative_events)]
 end
 
 CharacterCreate._randomize_planet = function (self)

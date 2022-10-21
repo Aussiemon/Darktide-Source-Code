@@ -11,8 +11,6 @@ NavGraphSystem.init = function (self, ...)
 end
 
 NavGraphSystem.on_remove_extension = function (self, unit, extension_name)
-	Profiler.start("NavGraphSystem_on_remove_extension")
-
 	local extension = self._unit_to_extension_map[unit]
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
 
@@ -23,7 +21,6 @@ NavGraphSystem.on_remove_extension = function (self, unit, extension_name)
 	end
 
 	NavGraphSystem.super.on_remove_extension(self, unit, extension_name)
-	Profiler.stop("NavGraphSystem_on_remove_extension")
 end
 
 NavGraphSystem.destroy = function (self)
@@ -33,9 +30,6 @@ end
 
 NavGraphSystem.register_smart_object_id_to_extension = function (self, smart_object_id, extension)
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
-
-	fassert(smart_object_id_to_extension[smart_object_id] == nil, "[NavGraphSystem] Tried to register smart object id (%d) that was already registered.", smart_object_id)
-
 	smart_object_id_to_extension[smart_object_id] = extension
 end
 
@@ -44,24 +38,16 @@ NavGraphSystem.register_smart_object_ids_to_extension = function (self, smart_ob
 
 	for i = 1, #smart_object_ids do
 		local smart_object_id = smart_object_ids[i]
-
-		fassert(smart_object_id_to_extension[smart_object_id] == nil, "[NavGraphSystem] Tried to register smart object id (%d) that was already registered.", smart_object_id)
-
 		smart_object_id_to_extension[smart_object_id] = extension
 	end
 end
 
 NavGraphSystem.unregister_smart_object_id_from_extension = function (self, smart_object_id, extension)
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
-
-	fassert(smart_object_id_to_extension[smart_object_id] == extension, "[NavGraphSystem] Tried to unregister smart object id (%d) from non-owning extension.", smart_object_id)
-
 	smart_object_id_to_extension[smart_object_id] = nil
 end
 
 NavGraphSystem.smart_object_layer_type = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphSystem] Smart objects are only supported on server.")
-
 	local extension = self._smart_object_id_to_extension[smart_object_id]
 
 	if extension then
@@ -75,8 +61,6 @@ NavGraphSystem.smart_object_layer_type = function (self, smart_object_id)
 end
 
 NavGraphSystem.smart_object_data = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphSystem] Smart objects are only supported on server.")
-
 	local extension = self._smart_object_id_to_extension[smart_object_id]
 
 	if extension then
@@ -89,8 +73,6 @@ NavGraphSystem.smart_object_data = function (self, smart_object_id)
 end
 
 NavGraphSystem.unit_from_smart_object_id = function (self, smart_object_id)
-	fassert(self._is_server, "[NavGraphSystem] Smart objects are only supported on server.")
-
 	local extension = self._smart_object_id_to_extension[smart_object_id]
 
 	if extension then

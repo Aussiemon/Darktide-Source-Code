@@ -21,20 +21,20 @@ local breed_name = "renegade_sniper"
 local breed_data = {
 	display_name = "loc_breed_display_name_renegade_sniper",
 	good_last_los_distance = 8,
+	spawn_inventory_slot = "slot_ranged_weapon",
 	use_bone_lod = true,
-	challenge_rating = 2,
 	unit_template_name = "minion",
 	faction_name = "chaos",
+	volley_fire_target = true,
 	target_stickiness_distance = 30,
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_sniper",
 	spawn_aggro_state = "aggroed",
-	spawn_inventory_slot = "slot_ranged_weapon",
 	stagger_resistance = 1,
 	walk_speed = 2.3,
-	run_speed = 4.8,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	run_speed = 4.8,
 	navigation_propagation_box_extent = 200,
 	base_height = 2,
 	player_locomotion_constrain_radius = 0.4,
@@ -42,6 +42,7 @@ local breed_data = {
 	game_object_type = "minion_sniper",
 	use_wounds = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
+	challenge_rating = 2,
 	hit_mass = 2,
 	bone_lod_radius = 1.2,
 	has_direct_ragdoll_flow_event = true,
@@ -92,8 +93,8 @@ local breed_data = {
 	combat_range_data = BreedCombatRanges.renegade_sniper,
 	cover_config = {
 		min_distance_from_target = 20,
-		max_distance_from_target = 60,
-		max_distance_from_target_z_below = -1,
+		max_distance_from_target = 70,
+		max_distance_from_target_z_below = -10,
 		search_radius = 40,
 		max_distance_from_combat_vector = 120,
 		leave_cover_after_losing_los_duration = 15,
@@ -323,9 +324,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

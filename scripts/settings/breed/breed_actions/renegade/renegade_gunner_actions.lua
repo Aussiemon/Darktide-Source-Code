@@ -433,6 +433,7 @@ local action_data = {
 		inventory_slot = "slot_ranged_weapon",
 		utility_weight = 6,
 		vo_event = "start_shooting",
+		suppressive_fire_spread_multiplier = 4,
 		out_of_aim_anim_event = "out_of_aim",
 		suppressive_fire = true,
 		attack_intensity_type = "elite_ranged",
@@ -487,12 +488,12 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 5,
-			elite_ranged = 5
+			ranged = 2,
+			elite_ranged = 10
 		},
 		shoot_template = BreedShootTemplates.renegade_gunner_shoot_spray_n_pray,
 		stagger_type_reduction = {
-			ranged = 10
+			ranged = 20
 		}
 	},
 	in_cover = {
@@ -527,12 +528,12 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 3,
-			elite_ranged = 3
+			ranged = 2,
+			elite_ranged = 10
 		},
 		shoot_template = BreedShootTemplates.renegade_gunner_aimed,
 		stagger_type_reduction = {
-			ranged = 10
+			ranged = 20
 		},
 		clear_shot_offset_from_peeking = {
 			high = {

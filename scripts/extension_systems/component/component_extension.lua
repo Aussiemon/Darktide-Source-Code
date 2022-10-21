@@ -143,16 +143,11 @@ end
 ComponentExtension.flow_call_component = function (self, guid, function_name, ...)
 	local component = self._components[guid]
 
-	fassert(component, "Unit %q does not have component with guid %q", self._unit, guid)
-
 	if not component.is_enabled then
 		return self._num_updates
 	end
 
 	local func = component[function_name]
-
-	fassert(func, "Component %q does not have function with name %q", component:name(), function_name)
-
 	local run_update = func(component, ...)
 
 	if component.update and not self._update_list[component] and run_update then
@@ -172,9 +167,6 @@ ComponentExtension._parse_components = function (self, unit)
 	while component_guid do
 		local component_name = Unit.get_data(unit, "components", component_guid, "name")
 		local component_class = Components[component_name]
-
-		Profiler.start(component_name)
-
 		local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
 		local is_enabled = component:get_data(unit, "starts_enabled")
 		component.is_enabled = is_enabled == nil and true or is_enabled or false
@@ -200,14 +192,10 @@ ComponentExtension._parse_components = function (self, unit)
 
 		i = i + 1
 		component_guid = Unit.get_data(unit, "component_guids", i)
-
-		Profiler.stop(component_name)
 	end
 end
 
 ComponentExtension.add_component = function (self, component_name, unit, starts_enabled)
-	Profiler.start("ComponentExtension_add_component")
-
 	local cbs = self._event_callbacks
 	local is_server = self._is_server
 	local nav_world = self._nav_world
@@ -247,8 +235,6 @@ ComponentExtension.add_component = function (self, component_name, unit, starts_
 		cb_list[#cb_list + 1] = component
 	end
 
-	Profiler.stop("ComponentExtension_add_component")
-
 	return component
 end
 
@@ -265,21 +251,13 @@ ComponentExtension.num_updates = function (self)
 end
 
 ComponentExtension.update = function (self, unit, dt, t)
-	Profiler.start("ComponentExtension Unit:" .. self._unit_name)
-
 	for component, update_function in pairs(self._update_list) do
-		Profiler.start("Component Update: " .. component:name())
-
 		local keep_update = update_function(component, unit, dt, t)
 
 		if not keep_update then
 			self:_disable_update(component)
 		end
-
-		Profiler.stop("Component Update: " .. component:name())
 	end
-
-	Profiler.stop("ComponentExtension Unit:" .. self._unit_name)
 
 	return self._num_updates
 end

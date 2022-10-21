@@ -8,15 +8,11 @@ WorldManager.init = function (self)
 	self._anim_update_callbacks = {}
 	self._scene_update_callbacks = {}
 	self._queued_worlds_to_release = {}
-	self._wwise_worlds = {}
 	self._dlss_reset_by_world = {}
 	self._scale = 1
 end
 
 WorldManager.create_world = function (self, name, parameters, ...)
-	Profiler.start("create_world")
-	fassert(self._worlds[name] == nil, "World %q already exists", name)
-
 	local has_physics_world = true
 	local n_varargs = select("#", ...)
 
@@ -32,6 +28,12 @@ WorldManager.create_world = function (self, name, parameters, ...)
 	World.set_data(world, "layer", parameters.layer or 1)
 	World.set_data(world, "active", true)
 	World.set_data(world, "has_physics_world", has_physics_world)
+
+	if has_physics_world then
+		World.set_data(world, "physics_world", World.physics_world(world))
+	end
+
+	World.set_data(world, "wwise_world", Wwise.wwise_world(world))
 	World.set_data(world, "timer_name", parameters.timer_name)
 	World.set_data(world, "levels", {})
 	World.set_data(world, "spawned_level_count", 0)
@@ -40,10 +42,9 @@ WorldManager.create_world = function (self, name, parameters, ...)
 	World.set_data(world, "render_queue", {})
 
 	self._worlds[name] = world
-	self._wwise_worlds[world] = Wwise.wwise_world(world)
 
 	self:_sort_update_queue()
-	Profiler.stop("create_world")
+	World.set_flow_callback_object(world, FlowCallbacks)
 
 	return world
 end
@@ -56,7 +57,7 @@ WorldManager.set_world_layer = function (self, world_name, layer)
 end
 
 WorldManager.wwise_world = function (self, world)
-	return self._wwise_worlds[world]
+	return World.get_data(world, "wwise_world")
 end
 
 WorldManager.destroy_world = function (self, world_or_name)
@@ -80,8 +81,6 @@ WorldManager.destroy_world = function (self, world_or_name)
 		world = self._disabled_worlds[name]
 	end
 
-	assert(world, "World %q doesn't exist", name)
-
 	local free_overlaps = PhysicsWorld.free_overlaps
 
 	if free_overlaps and World.get_data(world, "has_physics_world") then
@@ -96,7 +95,6 @@ WorldManager.destroy_world = function (self, world_or_name)
 	self._disabled_worlds[name] = nil
 	self._anim_update_callbacks[world] = nil
 	self._scene_update_callbacks[world] = nil
-	self._wwise_worlds[world] = nil
 
 	self:_sort_update_queue()
 end
@@ -104,8 +102,6 @@ end
 WorldManager.world_name = function (self, world)
 	local world_name = table.find(self._worlds, world)
 	world_name = world_name or table.find(self._disabled_worlds, world)
-
-	fassert(world_name, "World %s hasn't been registered", tostring(world))
 
 	return world_name
 end
@@ -117,8 +113,6 @@ end
 WorldManager.world = function (self, name)
 	local world = self._worlds[name] or self._disabled_worlds[name]
 
-	fassert(world, "World %q doesn't exist", name)
-
 	return world
 end
 
@@ -128,8 +122,6 @@ WorldManager.is_world_enabled = function (self, name)
 	elseif self._disabled_worlds[name] then
 		return false
 	end
-
-	fassert(false, "World %q doesn't exist", name)
 end
 
 WorldManager.update = function (self, dt, t)
@@ -169,8 +161,9 @@ WorldManager.update = function (self, dt, t)
 end
 
 WorldManager.set_world_update_time_scale = function (self, scale)
-	fassert(not Managers.state.game_session:is_server(), "Client only function")
-	fassert(scale == 1 or Managers.state.cinematic:is_playing(), "Only allowed change while cinematic playing")
+	if Managers.state.game_session:is_server() then
+		return
+	end
 
 	self._scale = scale
 end
@@ -201,16 +194,10 @@ end
 WorldManager.enable_world = function (self, name, enabled)
 	if enabled then
 		local world = self._disabled_worlds[name]
-
-		assert(world, "Tried to enable world %q that wasn't disabled", name)
-
 		self._worlds[name] = world
 		self._disabled_worlds[name] = nil
 	else
 		local world = self._worlds[name]
-
-		assert(world, "Tried to disable world %q that wasn't enabled", name)
-
 		self._disabled_worlds[name] = world
 		self._worlds[name] = nil
 	end

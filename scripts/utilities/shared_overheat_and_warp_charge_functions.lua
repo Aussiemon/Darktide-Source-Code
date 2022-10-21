@@ -1,7 +1,5 @@
 local SharedOverheatAndWarpChargeFunctions = {
 	add_immediate = function (charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
-		fassert(not use_charge or use_charge and charge_level, "[SharedOverheatAndWarpChargeFunctions][add_immediate] use_charge parameter specified without a charge_level!")
-
 		local added_percentage = use_charge and add_percentage * charge_level or add_percentage
 		local new_percentage = current_percentage + added_percentage
 		local clamped_percentage = math.clamp(new_percentage, 0, 1)

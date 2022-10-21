@@ -509,6 +509,141 @@ local material_overrides = {
 			}
 		}
 	},
+	body_tattoo_labour_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_01_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_01_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_02_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_02_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_03_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_labour_03_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
 	face_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -948,6 +1083,141 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_10/face_tattoo_10_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_01_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_01_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_02_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_02_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_03_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_labour_03_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03_tier_02"
 			}
 		},
 		property_overrides = {
@@ -3014,6 +3284,141 @@ local material_overrides = {
 			}
 		}
 	},
+	body_tattoo_ogryn_labour_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_01_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_01_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_01/body_tattoo_labour_01_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_02_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_02_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_02/body_tattoo_labour_02_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_03_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_labour_03_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo__labour_03_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
 	face_tattoo_ogryn_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -3678,6 +4083,141 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_15/face_tattoo_15_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_01_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_01_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_01/face_tattoo_labour_01_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_02_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_02_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_02/face_tattoo_labour_02_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_03_tier_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03_tier_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_labour_03_tier_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03_tier_02"
 			}
 		},
 		property_overrides = {

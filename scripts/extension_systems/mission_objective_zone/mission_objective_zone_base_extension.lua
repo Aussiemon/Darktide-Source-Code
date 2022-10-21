@@ -10,19 +10,12 @@ MissionObjectiveZoneBaseExtension.init = function (self, extension_init_context,
 	self._mission_objective_target_extension = nil
 	self._zone_type = ""
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
-
-	if self._is_server then
-		self._seed = mission_objective_zone_system:seed()
-	end
-
 	self._mission_objective_zone_system = mission_objective_zone_system
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
-
-	fassert(Unit.has_volume(unit, "g_mission_objective_zone_volume"), "[MissionObjectiveZoneBaseExtension][init]Unit: [%s] [%s] Missing volume 'g_mission_objective_zone_volume'.", unit, Unit.id_string(unit))
 end
 
 MissionObjectiveZoneBaseExtension.setup_from_component = function (self)
-	fassert(false, "[MissionObjectiveZoneBaseExtension] You need to manually change the extension \"MissionObjectiveZoneBaseExtension\" to right \"MissionObjectiveZone...Extension\" in the Script Data on unit [%s] ", self._unit)
+	return
 end
 
 MissionObjectiveZoneBaseExtension.extensions_ready = function (self, world, unit)
@@ -71,6 +64,10 @@ MissionObjectiveZoneBaseExtension.zone_type = function (self)
 	return self._zone_type
 end
 
+MissionObjectiveZoneBaseExtension.set_seed = function (self, seed)
+	self._seed = seed
+end
+
 MissionObjectiveZoneBaseExtension._set_unit_marker_state = function (self, marker_state)
 	if self._is_server then
 		if marker_state == UNIT_MARKER_STATES.add then
@@ -82,7 +79,7 @@ MissionObjectiveZoneBaseExtension._set_unit_marker_state = function (self, marke
 end
 
 MissionObjectiveZoneBaseExtension.current_progression = function (self)
-	fassert(true, "[MissionObjectiveZoneBaseExtension] If mission objective has a second progression then a current_progression function is needed in the extension")
+	return
 end
 
 MissionObjectiveZoneBaseExtension._enable_update = function (self)

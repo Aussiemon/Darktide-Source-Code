@@ -8,7 +8,7 @@ local event_vo_delivery_veteran_male_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.098833,
-			[2.0] = 4.145333
+			[2.0] = 4.145354
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -25,7 +25,7 @@ local event_vo_delivery_veteran_male_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.098833,
-			[2.0] = 4.145333
+			[2.0] = 4.145354
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -42,7 +42,7 @@ local event_vo_delivery_veteran_male_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.098833,
-			[2.0] = 4.145333
+			[2.0] = 4.145354
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -59,7 +59,7 @@ local event_vo_delivery_veteran_male_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.098833,
-			[2.0] = 4.145333
+			[2.0] = 4.145354
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

@@ -12,6 +12,7 @@ local _snapshot_id_diff, _snapshot_id_add = nil
 local ProjectileHuskLocomotionExtension = class("ProjectileHuskLocomotionExtension")
 
 ProjectileHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
+	self._projectile_unit = unit
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
 	self._game_session = game_session
@@ -53,6 +54,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	end
 
 	self:_switch_locomotion_state(snapshot.locomotion_state, unit)
+	self:_hide_pin()
 end
 
 ProjectileHuskLocomotionExtension.current_state = function (self)
@@ -386,6 +388,15 @@ end
 
 function _snapshot_id_add(snapshot_id, number_to_add)
 	return (snapshot_id + number_to_add - 1) % MAX_SNAPSHOT_ID + 1
+end
+
+ProjectileHuskLocomotionExtension._hide_pin = function (self)
+	local projectile_unit = self._projectile_unit
+	local has_visibility_group = Unit.has_visibility_group(projectile_unit, "pin")
+
+	if has_visibility_group then
+		Unit.set_visibility(projectile_unit, "pin", false)
+	end
 end
 
 return ProjectileHuskLocomotionExtension

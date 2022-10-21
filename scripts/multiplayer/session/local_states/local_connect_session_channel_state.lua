@@ -1,10 +1,6 @@
 local LocalConnectSessionChannelState = class("LocalConnectSessionChannelState")
 
 LocalConnectSessionChannelState.init = function (self, state_machine, shared_state)
-	assert(shared_state.engine_lobby, "Engine lobby is required")
-	assert(shared_state.engine_gamesession, "Engine game session is required")
-	assert(type(shared_state.peer_id) == "string", "Host peer ID is required")
-
 	self._shared_state = shared_state
 	self._time_to_next_connect_attempt = 0
 	self._attempts_left = 3

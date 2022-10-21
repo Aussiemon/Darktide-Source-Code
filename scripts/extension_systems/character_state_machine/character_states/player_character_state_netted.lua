@@ -3,14 +3,17 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 local Assist = require("scripts/extension_systems/character_state_machine/character_states/utilities/assist")
 local CharacterStateAssistSettings = require("scripts/settings/character_state/character_state_assist_settings")
 local CharacterStateNettedSettings = require("scripts/settings/character_state/character_state_netted_settings")
+local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local FirstPersonView = require("scripts/utilities/first_person_view")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
 local Netted = require("scripts/extension_systems/character_state_machine/character_states/utilities/netted")
+local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Vo = require("scripts/utilities/vo")
 local PlayerCharacterStateNetted = class("PlayerCharacterStateNetted", "PlayerCharacterStateBase")
 local netted_anims = CharacterStateNettedSettings.anim_settings
 local breed_specific_settings = CharacterStateNettedSettings.breed_specific_settings
@@ -23,6 +26,7 @@ local LOOPING_SOUND_ALIAS = "netted"
 local STINGER_PROPERTIES = {
 	stinger_type = "netted"
 }
+local VCE_ALIAS = "scream_long_vce"
 
 PlayerCharacterStateNetted.init = function (self, character_state_init_context, ...)
 	PlayerCharacterStateNetted.super.init(self, character_state_init_context, ...)
@@ -38,6 +42,7 @@ PlayerCharacterStateNetted.init = function (self, character_state_init_context, 
 	disabled_character_state_component.has_reached_drag_position = false
 	self._disabled_character_state_component = disabled_character_state_component
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
+	self._entered_state_t = nil
 end
 
 PlayerCharacterStateNetted.extensions_ready = function (self, world, unit)
@@ -57,9 +62,8 @@ end
 PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_state, params)
 	local disabling_unit = self._disabled_state_input.disabling_unit
 	local disabling_unit_data_extension = ScriptUnit.extension(disabling_unit, "unit_data_system")
-	local disabling_breed = disabling_unit_data_extension:breed()
+	self._disabling_breed = disabling_unit_data_extension:breed()
 	local locomotion_component = self._locomotion_component
-	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 	local locomotion_steering_component = self._locomotion_steering_component
 	local movement_state_component = self._movement_state_component
@@ -70,13 +74,22 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 	local visual_loadout_extension = self._visual_loadout_extension
 
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
+
+	local disabling_breed = self._disabling_breed
+
 	Netted.enter(unit, animation_extension, fx_extension, self._breed, disabling_breed, locomotion_steering_component, movement_state_component, t)
 
-	local drag_position = Netted.calculate_drag_position(locomotion_component, navigation_extension, disabling_unit, self._nav_world)
+	local is_server = self._is_server
+
+	if is_server then
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+		local drag_position = Netted.calculate_drag_position(locomotion_component, navigation_extension, disabling_unit, self._nav_world)
+		disabled_character_state_component.target_drag_position = drag_position
+	end
+
 	disabled_character_state_component.is_disabled = true
 	disabled_character_state_component.disabling_type = "netted"
 	disabled_character_state_component.disabling_unit = disabling_unit
-	disabled_character_state_component.target_drag_position = drag_position
 	locomotion_steering_component.disable_minion_collision = true
 	local disabling_unit_rotation = Unit.world_rotation(disabling_unit, 1)
 	local force_rotation = Quaternion.look(-Quaternion.forward(disabling_unit_rotation))
@@ -85,17 +98,19 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 
 	ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, force_rotation, start_rotation, t, duration)
 
-	local is_server = self._is_server
-
 	if is_server then
 		self:_add_buffs(t)
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
+		self._dialogue_system:stop_currently_playing_vo()
+		self:_init_player_vo(t)
 		Managers.state.pacing:add_tension_type(TENSION_TYPE, unit)
 	end
 
 	if not self._looping_sound_component.is_playing then
 		fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS, SFX_SOURCE)
 	end
+
+	self._entered_state_t = t
 
 	self._assist:reset()
 end
@@ -119,14 +134,26 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 	if self._is_server then
 		Netted.try_exit(unit, self._inventory_component, self._visual_loadout_extension, self._unit_data_extension, t)
 		self:_remove_buffs()
+
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+			local state_name = "netted"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
 	end
 
 	local inventory_component = self._inventory_component
 
 	if inventory_component.wielded_slot == "slot_unarmed" then
-		local previously_wielded_slot_name = inventory_component.previously_wielded_slot
-
-		PlayerUnitVisualLoadout.wield_slot(previously_wielded_slot_name, unit, t)
+		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end
 
 	local locomotion_steering_component = self._locomotion_steering_component
@@ -149,6 +176,11 @@ PlayerCharacterStateNetted.fixed_update = function (self, unit, dt, t, next_stat
 	self:_update_netted(unit, dt, t)
 
 	local assist_done = self._assist:update(dt, t)
+	local is_server = self._is_server
+
+	if is_server and not assist_done then
+		self:_update_vo(t)
+	end
 
 	return self:_check_transition(unit, t, next_state_params, assist_done)
 end
@@ -190,6 +222,11 @@ PlayerCharacterStateNetted._check_transition = function (self, unit, t, next_sta
 	end
 
 	return nil
+end
+
+PlayerCharacterStateNetted._init_player_vo = function (self, t)
+	self._next_vo_trigger_time_t = t + DialogueSettings.netted_vo_start_delay_t
+	self._vo_sequence = 1
 end
 
 PlayerCharacterStateNetted._update_drag = function (self, unit, dt, t, target_drag_position)
@@ -288,6 +325,25 @@ PlayerCharacterStateNetted._remove_buffs = function (self)
 
 		self._damage_tick_buff_indexes = nil
 	end
+end
+
+PlayerCharacterStateNetted._update_vo = function (self, t)
+	if t <= self._next_vo_trigger_time_t then
+		return
+	end
+
+	local vo_sequence = self._vo_sequence
+
+	if vo_sequence == 1 then
+		PlayerVoiceGrunts.trigger_voice(VCE_ALIAS, self._visual_loadout_extension, self._fx_extension, true)
+	else
+		local disabling_breed = self._disabling_breed
+
+		Vo.player_pounced_by_special_event(self._unit, disabling_breed.name)
+	end
+
+	self._next_vo_trigger_time_t = t + DialogueSettings.netted_vo_interval_t
+	self._vo_sequence = vo_sequence + 1
 end
 
 return PlayerCharacterStateNetted

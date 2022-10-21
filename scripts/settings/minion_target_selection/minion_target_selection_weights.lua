@@ -1,10 +1,12 @@
 local minion_target_selection_weights = {
 	chaos_beast_of_nurgle = {
 		occupied_slots = -1,
-		stickiness_duration = 10,
-		max_distance = 20,
-		stickiness_bonus = 100,
-		threat_multiplier = 1.5,
+		stickiness_duration = 20,
+		disabled = -200,
+		max_distance = 50,
+		stickiness_bonus = 50,
+		inverted_permanent_damage_taken = 20,
+		threat_multiplier = 1.25,
 		distance_to_target = 50
 	},
 	chaos_daemonhost = {
@@ -19,9 +21,10 @@ local minion_target_selection_weights = {
 	chaos_hound = {
 		occupied_slots = -1,
 		disabled = -5,
+		inverse_coherency_weight = 5,
 		max_distance = 50,
 		threat_multiplier = 1.5,
-		distance_to_target = 2
+		distance_to_target = 3
 	},
 	chaos_newly_infected = {
 		occupied_slots = -2,

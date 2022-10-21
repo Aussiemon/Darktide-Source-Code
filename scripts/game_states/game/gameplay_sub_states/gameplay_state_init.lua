@@ -64,9 +64,7 @@ end
 GameplayStateInit._setup_scene_update_callback = function (self, world, is_server)
 	if is_server then
 		Managers.world:set_scene_update_callback(world, function ()
-			Profiler.start("scene_update_callback")
 			Managers.state.extension:physics_async_update()
-			Profiler.stop("scene_update_callback")
 		end)
 	end
 end

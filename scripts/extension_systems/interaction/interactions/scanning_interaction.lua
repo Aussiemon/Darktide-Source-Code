@@ -14,8 +14,6 @@ ScanningInteraction.start = function (self, world, interactor_unit, unit_data_co
 	local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 	local item = interactee_extension:interactor_item_to_equip()
 
-	fassert(item, "Missing scan item for unit(%s)", target_unit)
-
 	if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
 		PlayerUnitVisualLoadout.unequip_item_from_slot(interactor_unit, "slot_device", t)
 	end

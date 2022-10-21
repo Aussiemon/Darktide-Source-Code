@@ -21,7 +21,7 @@ ActionReloadShotgun.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadShotgun.super.start(self, action_settings, t, time_scale, ...)
 
 	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template)
+		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
 	end
 
 	local action_reload_component = self._action_reload_component
@@ -30,6 +30,16 @@ ActionReloadShotgun.start = function (self, action_settings, t, time_scale, ...)
 	local event_data = self._dialogue_input:get_event_data_payload()
 
 	self._dialogue_input:trigger_dialogue_event("reloading", event_data)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.weapon_template = self._weapon_template
+		param_table.shotgun = true
+
+		buff_extension:add_proc_event(buff_proc_events.on_reload_start, param_table)
+	end
 end
 
 ActionReloadShotgun.fixed_update = function (self, dt, t, time_in_action)
@@ -54,10 +64,14 @@ ActionReloadShotgun._reload = function (self, time_in_action)
 	if time_in_action > refill_at_time / time_scale and not has_refilled_ammunition then
 		local buff_extension = self._buff_extension
 		local param_table = buff_extension:request_proc_event_param_table()
-		param_table.weapon_template = self._weapon_template
-		param_table.shotgun = true
 
-		buff_extension:add_proc_event(buff_proc_events.on_reload, param_table)
+		if param_table then
+			param_table.weapon_template = self._weapon_template
+			param_table.shotgun = true
+
+			buff_extension:add_proc_event(buff_proc_events.on_reload, param_table)
+		end
+
 		Ammo.transfer_from_reserve_to_clip(inventory_slot_component, refill_amount)
 
 		action_reload_component.has_refilled_ammunition = true

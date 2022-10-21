@@ -4,8 +4,6 @@ local Sway = require("scripts/utilities/sway")
 local proc_events = BuffSettings.proc_events
 local AlternateFire = {
 	start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
-		fassert(alternate_fire_component.is_active == false, "Already in alternate fire.")
-
 		local alternate_fire_settings = weapon_template.alternate_fire_settings
 		alternate_fire_component.is_active = true
 		alternate_fire_component.start_t = t
@@ -35,13 +33,20 @@ local AlternateFire = {
 
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
-		param_table.unit = player_unit
 
-		buff_extension:add_proc_event(proc_events.on_alternative_fire_start, param_table)
+		if param_table then
+			param_table.unit = player_unit
+
+			buff_extension:add_proc_event(proc_events.on_alternative_fire_start, param_table)
+		end
+
+		if Managers.stats.can_record_stats() then
+			local player = Managers.state.player_unit_spawn:owner(player_unit)
+
+			Managers.stats:record_alternate_fire_start(player)
+		end
 	end,
-	stop = function (alternate_fire_component, weapon_tweak_templates_component, animation_extension, weapon_template, skipp_stop_anim)
-		fassert(alternate_fire_component.is_active == true, "Not in alternate fire.")
-
+	stop = function (alternate_fire_component, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit)
 		alternate_fire_component.is_active = false
 		local spread_template_name = weapon_template.spread_template or "none"
 		local recoil_template_name = weapon_template.recoil_template or "none"
@@ -57,9 +62,15 @@ local AlternateFire = {
 		local stop_anim_event = alternate_fire_settings.stop_anim_event
 		local stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
 
-		if stop_anim_event and stop_anim_event_3p and not skipp_stop_anim then
+		if stop_anim_event and stop_anim_event_3p and not skip_stop_anim then
 			animation_extension:anim_event_1p(stop_anim_event)
 			animation_extension:anim_event(stop_anim_event_3p)
+		end
+
+		if Managers.stats.can_record_stats() then
+			local player = Managers.state.player_unit_spawn:owner(player_unit)
+
+			Managers.stats:record_alternate_fire_stop(player)
 		end
 	end,
 	check_exit = function (alternate_fire_component, weapon_template, input_extension, stunned_character_state_component, t)
@@ -124,8 +135,6 @@ AlternateFire.movement_speed_modifier = function (alternate_fire_component, weap
 	local delta = 1 - mod
 	delta = delta * alternate_fire_movement_speed_reduction_modifier
 	mod = 1 - delta
-
-	fassert(mod == mod, "Mod is nan")
 
 	return mod
 end

@@ -39,6 +39,7 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 	local is_netted = disabling_type == "netted"
 	local is_warp_grabbed = disabling_type == "warp_grabbed"
 	local is_mutant_charged = disabling_type == "mutant_charged"
+	local is_consumed = disabling_type == "consumed"
 	local tree, node = nil
 
 	if wants_first_person_camera then
@@ -77,7 +78,7 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 
 		if is_ledge_hanging then
 			node = "ledge_hanging"
-		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged then
+		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged or is_consumed then
 			node = "pounced"
 		elseif is_disabled and requires_help then
 			node = "disabled"

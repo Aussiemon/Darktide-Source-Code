@@ -181,22 +181,12 @@ BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 		return
 	end
 
-	Profiler.start("BotBehaviorExtension")
-
 	if HEALTH_ALIVE[unit] then
-		Profiler.start("_update_pickups_and_deployables")
 		self:_update_ammo(unit)
 		self:_update_health_deployables(unit)
-		Profiler.stop("_update_pickups_and_deployables")
-		Profiler.start("_update_health_stations")
 		self:_update_health_stations(unit)
-		Profiler.stop("_update_health_stations")
-		Profiler.start("_verify_target_ally_aid_destination")
 		self:_verify_target_ally_aid_destination(unit)
-		Profiler.stop("_verify_target_ally_aid_destination")
-		Profiler.start("update brain")
 		self._brain:update(unit, dt, t)
-		Profiler.stop("update brain")
 
 		local locomotion_component = self._locomotion_component
 		local in_air_state_component = self._inair_state_component
@@ -208,12 +198,8 @@ BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 
 			self._navigation_extension:teleport(self_position)
 		elseif in_air_state_component.on_ground then
-			Profiler.start("_handle_doors")
 			self:_handle_doors(unit)
-			Profiler.stop("_handle_doors")
-			Profiler.start("_update_movement_target")
 			self:_update_movement_target(unit, dt, t)
-			Profiler.stop("_update_movement_target")
 		end
 
 		local hit_by_projectile = self._hit_by_projectile
@@ -224,8 +210,6 @@ BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 			end
 		end
 	end
-
-	Profiler.stop("BotBehaviorExtension")
 end
 
 local NEEDS_AMMO_PERCENTAGE = 0.75
@@ -273,8 +257,10 @@ end
 BotBehaviorExtension._update_health_deployables = function (self, unit)
 	local pickup_component = self._pickup_component
 	local damage_taken = Health.damage_taken(unit)
+	local permanent_damage_taken = Health.permanent_damage_taken(unit)
+	local healable_damage_taken = damage_taken - permanent_damage_taken
 
-	if damage_taken > 0 then
+	if healable_damage_taken > 0 then
 		pickup_component.needs_non_permanent_health = true
 	elseif pickup_component.needs_non_permanent_health then
 		pickup_component.needs_non_permanent_health = false

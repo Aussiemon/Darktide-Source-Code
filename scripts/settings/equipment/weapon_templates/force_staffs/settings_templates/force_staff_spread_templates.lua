@@ -30,7 +30,7 @@ spread_templates.default_force_staff_killshot = {
 			min_pitch = 0.01
 		},
 		immediate_spread = {
-			num_shots_clear_time = 0.15,
+			num_shots_clear_time = 0.8,
 			suppression_hit = {
 				{
 					yaw = 0.5,

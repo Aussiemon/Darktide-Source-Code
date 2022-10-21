@@ -29,7 +29,7 @@ local BASE_TEMPLATES = {
 	[template_types.burninating] = WeaponBurninatingTemplates,
 	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates
 }
-local _verify_trait_templates, _verify_trait_template, _verify_trait_template_entry, _verify_damage_trait_template_entries, _verify_damage_trait_template_entry, _check_lerp_value = nil
+local _verify_trait_templates, _verify_trait_template, _verify_trait_template_entry, _verify_damage_trait_template_entries, _verify_damage_trait_template_entry, _verify_trait_template_entries, _check_lerp_value = nil
 
 local function _trait_template_verification()
 	for template_type, _ in pairs(template_types) do

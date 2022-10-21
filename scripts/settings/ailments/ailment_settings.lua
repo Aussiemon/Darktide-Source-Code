@@ -17,7 +17,7 @@ ailment_settings.effect_templates = {
 		}
 	},
 	[effects.burning] = {
-		duration = 2.5,
+		duration = 2,
 		offset_time = 1.2,
 		material_textures = {
 			{
@@ -185,11 +185,11 @@ ailment_settings.effect_templates = {
 		}
 	},
 	[effects.electrocution] = {
-		duration = 4,
-		offset_time = 0.4,
+		duration = 0.95,
+		offset_time = 0.45,
 		material_textures = {
 			{
-				resource = "content/textures/ailment_masks/gas_mask_01",
+				resource = "content/textures/ailment_masks/burn_mask_01",
 				slot = "effect_mask"
 			},
 			{

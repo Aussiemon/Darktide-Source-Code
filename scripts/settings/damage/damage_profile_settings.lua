@@ -235,12 +235,12 @@ damage_profile_settings.no_cleave = {
 }
 damage_profile_settings.single_cleave = {
 	attack = {
-		0.075,
-		0.075
+		0.75,
+		1
 	},
 	impact = {
-		0.075,
-		0.075
+		0.75,
+		1
 	}
 }
 damage_profile_settings.double_cleave = {

@@ -8,7 +8,7 @@ local ActionUtility = {
 		if ammunition_usage then
 			if ammunition_usage <= inventory_slot_component.current_ammunition_clip then
 				return true
-			elseif inventory_slot_component.current_ammunition_clip > 0 and action_settings.ammunition_shoot_anyways then
+			elseif inventory_slot_component.current_ammunition_clip > 0 and action_settings.allow_shots_with_less_than_required_ammo then
 				return true
 			else
 				return false

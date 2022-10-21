@@ -11,6 +11,7 @@ ProtoUI.behaviour_button = function (data, pos, size, disabled)
 
 	local is_clicked = false
 	local state = data.state
+	data.last_state = state
 
 	if state == "default" then
 		if ProtoUI.cursor_is_inside(pos, size) then
@@ -81,8 +82,9 @@ ProtoUI.behaviour_text_input = function (data, text, font, font_size, pos, size,
 		state = "default",
 		last_stroke = -math.huge
 	}
-	local state = data.state
 	local did_blur = false
+	local state = data.state
+	data.last_state = state
 
 	if state == "default" then
 		if ProtoUI.cursor_is_inside(pos, size) then
@@ -208,6 +210,7 @@ ProtoUI.behaviour_draggable = function (data, sub_pos, sub_size, pos, size)
 	}
 	local drag_ended = false
 	local state = data.state
+	data.last_state = state
 
 	if state == "default" then
 		if ProtoUI.cursor_is_inside(sub_pos, sub_size) then
@@ -218,8 +221,8 @@ ProtoUI.behaviour_draggable = function (data, sub_pos, sub_size, pos, size)
 			data.state = "default"
 		elseif ProtoUI.input_get("left_pressed") then
 			data.state = "hot"
-			data.drag_offset_x = ProtoUI.mouse_cursor[1] - sub_pos[1]
-			data.drag_offset_y = ProtoUI.mouse_cursor[2] - sub_pos[2]
+			data.drag_offset_x = ProtoUI.canvas_cursor[1] - sub_pos[1]
+			data.drag_offset_y = ProtoUI.canvas_cursor[2] - sub_pos[2]
 		end
 	elseif state == "hot" then
 		if ProtoUI.input_get("left_released") then
@@ -227,8 +230,8 @@ ProtoUI.behaviour_draggable = function (data, sub_pos, sub_size, pos, size)
 			data.state = "hover"
 		end
 
-		sub_pos[1] = math.clamp(ProtoUI.mouse_cursor[1] - data.drag_offset_x, pos[1], pos[1] + size[1] - sub_size[1])
-		sub_pos[2] = math.clamp(ProtoUI.mouse_cursor[2] - data.drag_offset_y, pos[2], pos[2] + size[2] - sub_size[2])
+		sub_pos[1] = math.clamp(ProtoUI.canvas_cursor[1] - data.drag_offset_x, pos[1], pos[1] + size[1] - sub_size[1])
+		sub_pos[2] = math.clamp(ProtoUI.canvas_cursor[2] - data.drag_offset_y, pos[2], pos[2] + size[2] - sub_size[2])
 	end
 
 	return data, sub_pos, drag_ended

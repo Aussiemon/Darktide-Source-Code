@@ -1,63 +1,7 @@
 local weapon_charge_templates = {
-	psyker_smite_charge = {
-		charge_duration = 3,
-		psyker_smite = true,
-		warp_charge_percent = 0.3,
-		extra_warp_charge_percent = 0.09,
-		charge_on_action_start = true
-	},
-	psyker_smite_lock_target = {
-		charge_duration = 3,
-		extra_warp_charge_percent = 0.09,
-		psyker_smite = true,
-		warp_charge_percent = 0.3
-	},
-	psyker_smite_use_power = {
-		charge_duration = 0.5,
-		extra_warp_charge_percent = 0.08,
-		psyker_smite = true,
-		warp_charge_percent = 0.08
-	},
-	forcestaff_p1_m1_charge_aoe = {
-		charge_on_action_start = true,
-		charge_duration = {
-			lerp_perfect = 1.5,
-			lerp_basic = 2
-		},
-		warp_charge_percent = {
-			lerp_perfect = 0.15,
-			lerp_basic = 0.25
-		},
-		extra_warp_charge_percent = {
-			lerp_perfect = 0.03,
-			lerp_basic = 0.05
-		}
-	},
-	forcestaff_p1_m1_use_aoe = {
-		use_charge = true,
-		warp_charge_percent = 0.25
-	},
-	forcestaff_p1_m1_projectile = {
-		warp_charge_percent = {
-			lerp_perfect = 0.025,
-			lerp_basic = 0.075
-		}
-	},
-	forcesword_p1_m1_charge_single_target = {
-		charge_duration = 1,
-		charge_on_action_start = true,
-		extra_warp_charge_percent = 0.025,
-		warp_charge_percent = 0.025
-	},
-	forcesword_p1_m1_use_single_target = {
-		use_charge = true,
-		warp_charge_percent = 0.1
-	},
 	lasgun_p2_m1_charge_up = {
 		charge_duration = 3.2,
-		extra_overheat_percent = 0.005,
 		limit_max_charge_to_ammo_clip = true,
-		overheat_percent = 0.1,
 		max_ammo_charge = 5,
 		charge_on_action_start = true,
 		min_charge = 0.05
@@ -70,7 +14,7 @@ local weapon_charge_templates = {
 		charge_duration = 1,
 		charge_on_action_start = true,
 		limit_max_charge_to_ammo_clip = true,
-		max_ammo_charge = 5
+		max_ammo_charge = 7
 	},
 	plasmagun_p1_m1_charge_direct = {
 		fully_charged_charge_level = 0.5,
@@ -130,12 +74,6 @@ local weapon_charge_templates = {
 		overheat_percent = 0.2,
 		charge_on_action_start = true
 	},
-	forcesword_p1_m1_weapon_special_hit = {
-		warp_charge_percent = {
-			lerp_perfect = 0,
-			lerp_basic = 0.5
-		}
-	},
 	psyker_throwing_knives = {
 		warp_charge_percent = 0.1
 	},
@@ -143,6 +81,66 @@ local weapon_charge_templates = {
 		warp_charge_percent = -0.05
 	},
 	handgun_push_charge = {
+		warp_charge_percent = 0.1
+	},
+	psyker_smite_charge = {
+		charge_duration = 3,
+		psyker_smite = true,
+		warp_charge_percent = 0.3,
+		extra_warp_charge_percent = 0.09,
+		charge_on_action_start = true
+	},
+	psyker_smite_lock_target = {
+		charge_duration = 3,
+		extra_warp_charge_percent = 0.09,
+		psyker_smite = true,
+		warp_charge_percent = 0.3
+	},
+	psyker_smite_use_power = {
+		charge_duration = 0.5,
+		extra_warp_charge_percent = 0.08,
+		psyker_smite = true,
+		warp_charge_percent = 0.08
+	},
+	forcestaff_p1_m1_charge_aoe = {
+		charge_on_action_start = true,
+		charge_duration = {
+			lerp_perfect = 1.5,
+			lerp_basic = 2
+		},
+		warp_charge_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.25
+		},
+		extra_warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.05
+		}
+	},
+	forcestaff_p1_m1_use_aoe = {
+		use_charge = true,
+		warp_charge_percent = 0.25
+	},
+	forcestaff_p1_m1_projectile = {
+		warp_charge_percent = {
+			lerp_perfect = 0.025,
+			lerp_basic = 0.075
+		}
+	},
+	forcesword_p1_m1_weapon_special_hit = {
+		warp_charge_percent = {
+			lerp_perfect = 0,
+			lerp_basic = 0.5
+		}
+	},
+	forcesword_p1_m1_charge_single_target = {
+		charge_duration = 1,
+		charge_on_action_start = true,
+		extra_warp_charge_percent = 0.025,
+		warp_charge_percent = 0.025
+	},
+	forcesword_p1_m1_use_single_target = {
+		use_charge = true,
 		warp_charge_percent = 0.1
 	},
 	chain_lightning_charge_fast = {
@@ -159,14 +157,16 @@ local weapon_charge_templates = {
 	},
 	chain_lightning_attack_fast = {
 		charge_duration = 0.5,
-		extra_warp_charge_percent = 0.01,
+		start_warp_charge_percent = 0.1,
 		chain_lightning = true,
 		warp_charge_percent = 0.05,
 		fully_charged_charge_level = 0.5,
-		charge_on_action_start = true
+		charge_on_action_start = true,
+		extra_warp_charge_percent = 0.01
 	},
 	chain_lightning_attack = {
 		extra_warp_charge_percent = 0.05,
+		start_warp_charge_percent = 0.15,
 		chain_lightning = true,
 		warp_charge_percent = 0.075,
 		charge_duration = 1.5,

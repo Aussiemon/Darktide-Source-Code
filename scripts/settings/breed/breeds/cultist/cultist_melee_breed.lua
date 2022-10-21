@@ -33,7 +33,7 @@ local breed_data = {
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_cultist",
 	use_avoidance = true,
-	stagger_resistance = 1.25,
+	stagger_resistance = 1,
 	base_height = 1.9,
 	walk_speed = 2.3,
 	player_locomotion_constrain_radius = 0.4,
@@ -44,7 +44,7 @@ local breed_data = {
 	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 2,
+	hit_mass = 1.5,
 	bone_lod_radius = 1.1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -274,19 +274,16 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.05,
-			j_leftshoulder = 0.05,
+			j_rightshoulder = 0.15,
+			j_leftshoulder = 0.15,
 			j_spine = 0.3,
-			j_spine1 = 0.2,
-			j_head = 0.35,
-			j_neck = 0.15
+			j_spine1 = 0.1,
+			j_head = 0.5,
+			j_neck = 0.5
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,

@@ -3,14 +3,14 @@ local mission_vo_lm_cooling_zealot_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
 		sound_events = {
-			"loc_zealot_female_b__region_mechanicus_01",
-			"loc_zealot_female_b__region_mechanicus_02",
-			"loc_zealot_female_b__region_mechanicus_03"
+			"loc_zealot_female_b__zone_tank_foundry_01",
+			"loc_zealot_female_b__zone_tank_foundry_02",
+			"loc_zealot_female_b__zone_tank_foundry_03"
 		},
 		sound_events_duration = {
-			3.905125,
-			4.898521,
-			4.142396
+			5.672042,
+			5.016313,
+			5.329146
 		},
 		sound_event_weights = {
 			0.3333333,
@@ -97,20 +97,7 @@ local mission_vo_lm_cooling_zealot_female_b = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_heat = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_female_b__mission_cooling_heat_01",
-			[2.0] = "loc_zealot_female_b__mission_cooling_heat_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.435354,
-			[2.0] = 6.112563
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_heat_response_two = {
+	mission_cooling_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
@@ -126,10 +113,10 @@ local mission_vo_lm_cooling_zealot_female_b = {
 			"loc_zealot_female_b__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			1.610563,
+			1.610542,
 			1.635375,
 			3.170229,
-			2.595146,
+			2.595125,
 			3.769438,
 			4.984063,
 			2.656167,
@@ -148,6 +135,39 @@ local mission_vo_lm_cooling_zealot_female_b = {
 			0.1,
 			0.1,
 			0.1
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_b__mission_cooling_heat_01",
+			[2.0] = "loc_zealot_female_b__mission_cooling_heat_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.435354,
+			[2.0] = 6.112563
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat_response_two = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_female_b__region_mechanicus_01",
+			"loc_zealot_female_b__region_mechanicus_02",
+			"loc_zealot_female_b__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			3.905125,
+			4.898521,
+			4.142417
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -187,19 +207,6 @@ local mission_vo_lm_cooling_zealot_female_b = {
 		sound_events_duration = {
 			[1.0] = 1.909063,
 			[2.0] = 2.648938
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_production_line = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_female_b__mission_cooling_production_line_01",
-			[2.0] = "loc_zealot_female_b__mission_cooling_production_line_02"
-		},
-		sound_events_duration = {
-			[1.0] = 2.923125,
-			[2.0] = 3.657833
 		},
 		randomize_indexes = {}
 	},

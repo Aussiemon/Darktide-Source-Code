@@ -4,6 +4,10 @@ local POST_INTERVAL = TelemetrySettings.batch.post_interval
 local FULL_POST_INTERVAL = TelemetrySettings.batch.full_post_interval
 local MAX_BATCH_SIZE = TelemetrySettings.batch.max_size
 local BATCH_SIZE = TelemetrySettings.batch.size
+local ENABLED = TelemetrySettings.enabled
+
+Log.debug("TelemetryManager", "Enabled: %s", ENABLED)
+
 local TelemetryManager = class("TelemetryManager")
 
 TelemetryManager.init = function (self)
@@ -25,7 +29,7 @@ TelemetryManager.update = function (self, dt, t)
 end
 
 TelemetryManager.register_event = function (self, event)
-	if TelemetrySettings.enabled == false then
+	if not ENABLED then
 		return
 	end
 
@@ -74,13 +78,7 @@ TelemetryManager._ready_to_post_batch = function (self, t)
 end
 
 TelemetryManager.post_batch = function (self)
-	if TelemetrySettings.enabled == false then
-		return
-	end
-
-	if #self._events == 0 then
-		Log.debug("TelemetryManager", "No events to post")
-
+	if not ENABLED or table.is_empty(self._events) then
 		return
 	end
 

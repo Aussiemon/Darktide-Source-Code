@@ -117,9 +117,6 @@ end
 
 ExtensionSystemBase.on_remove_extension = function (self, unit, extension_name)
 	local extension = ScriptUnit.has_extension(unit, self._name)
-
-	fassert(extension, "Trying to remove non-existing extension %q from unit %s", extension_name, unit)
-
 	self._extensions[extension_name] = self._extensions[extension_name] - 1
 	local extension_update_list = self._update_list[extension_name]
 
@@ -188,28 +185,18 @@ ExtensionSystemBase.on_reload = function (self, refreshed_resources)
 end
 
 ExtensionSystemBase.pre_update = function (self, context, dt, t, ...)
-	Profiler.start("ExtensionSystemBase:pre_update()")
-
 	local update_list = self._update_list
 
 	for extension_name, _ in pairs(self._extensions) do
 		local profiler_name = self._profiler_names[extension_name]
 
-		Profiler.start(profiler_name)
-
 		for unit, extension in pairs(update_list[extension_name].pre_update) do
 			extension:pre_update(unit, dt, t, context, ...)
 		end
-
-		Profiler.stop(profiler_name)
 	end
-
-	Profiler.stop("ExtensionSystemBase:pre_update()")
 end
 
 ExtensionSystemBase.fixed_update = function (self, context, dt, t, ...)
-	Profiler.start("ExtensionSystemBase:fixed_update()")
-
 	local update_list = self._update_list
 	local fixed_frame = context.fixed_frame
 	self._extension_init_context.fixed_frame = fixed_frame
@@ -218,56 +205,34 @@ ExtensionSystemBase.fixed_update = function (self, context, dt, t, ...)
 	for extension_name, _ in pairs(self._extensions) do
 		local profiler_name = self._profiler_names[extension_name]
 
-		Profiler.start(profiler_name)
-
 		for unit, extension in pairs(update_list[extension_name].fixed_update) do
 			extension:fixed_update(unit, dt, t, fixed_frame, context, ...)
 		end
-
-		Profiler.stop(profiler_name)
 	end
-
-	Profiler.stop("ExtensionSystemBase:fixed_update()")
 end
 
 ExtensionSystemBase.update = function (self, context, dt, t, ...)
-	Profiler.start("ExtensionSystemBase:update()")
-
 	local update_list = self._update_list
 
 	for extension_name, _ in pairs(self._extensions) do
 		local profiler_name = self._profiler_names[extension_name]
-
-		Profiler.start(profiler_name)
 
 		for unit, extension in pairs(update_list[extension_name].update) do
 			extension:update(unit, dt, t, context, ...)
 		end
-
-		Profiler.stop(profiler_name)
 	end
-
-	Profiler.stop("ExtensionSystemBase:update()")
 end
 
 ExtensionSystemBase.post_update = function (self, context, dt, t, ...)
-	Profiler.start("ExtensionSystemBase:post_update()")
-
 	local update_list = self._update_list
 
 	for extension_name, _ in pairs(self._extensions) do
 		local profiler_name = self._profiler_names[extension_name]
 
-		Profiler.start(profiler_name)
-
 		for unit, extension in pairs(update_list[extension_name].post_update) do
 			extension:post_update(unit, dt, t, context, ...)
 		end
-
-		Profiler.stop(profiler_name)
 	end
-
-	Profiler.stop("ExtensionSystemBase:post_update()")
 end
 
 ExtensionSystemBase.pre_update_extension = function (self, extension_name, dt, t, context, ...)

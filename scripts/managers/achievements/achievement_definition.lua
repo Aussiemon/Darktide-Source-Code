@@ -1,19 +1,22 @@
 local AchievementTypes = require("scripts/settings/achievements/achievement_types")
 local AchievementUITypes = require("scripts/settings/achievements/achievement_ui_types")
+local AchievementLocKeys = require("scripts/settings/achievements/achievement_loc_keys")
 local AchievementDefinition = class("AchievementDefinition")
 
-AchievementDefinition.init = function (self, id, ui_type, category, is_platform, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids)
+AchievementDefinition.init = function (self, id, ui_type, category, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids)
 	self._id = id
 	self._category = category
-	self._is_platform = is_platform
 	self._trigger_component = trigger_component
 	self._visibility_component = visibility_component
 	self._ui_type = ui_type
 	self._description_id = optional_description_id or id
-	self._description_table = optional_description_table
+	self._description_table = optional_description_table or {}
 	self._previous_ids = optional_previous_ids
+	self._description_table.target = self:get_target()
+	self._description_table.x = self:get_target()
 	self._score = 0
 	self._rewards = nil
+	self._allow_solo = false
 end
 
 AchievementDefinition.destroy = function (self)
@@ -27,10 +30,6 @@ end
 
 AchievementDefinition.category = function (self)
 	return self._category
-end
-
-AchievementDefinition.is_platform = function (self)
-	return self._is_platform
 end
 
 AchievementDefinition.ui_type = function (self)
@@ -61,13 +60,13 @@ AchievementDefinition.add_reward = function (self, reward)
 end
 
 AchievementDefinition.label = function (self, unlocalized)
-	local label = string.format("loc_achievement_%s_name", self._id)
+	local label = AchievementLocKeys.labels[self._id]
 
 	return unlocalized and label or Localize(label)
 end
 
 AchievementDefinition.description = function (self, unlocalized)
-	local description = string.format("loc_achievement_%s_description", self._description_id)
+	local description = AchievementLocKeys.descriptions[self._description_id]
 
 	return unlocalized and description or Localize(description, true, self._description_table)
 end

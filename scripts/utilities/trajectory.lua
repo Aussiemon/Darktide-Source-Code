@@ -13,8 +13,6 @@ local function _wanted_projectile_angle(distance_vector, projectile_gravity, pro
 	local v2 = v * v
 	local to_sqrt = v2 * v2 - g * (g * x * x + 2 * y * v2)
 
-	fassert(g ~= 0, "Trajectory: Asking for projectile angle with gravity 0, this will cause division by 0.")
-
 	if to_sqrt < 0 then
 		return
 	end
@@ -31,9 +29,6 @@ local function _wanted_projectile_speed(distance_vector, projectile_gravity, wan
 	local y = distance_vector.z
 	local g = math.abs(projectile_gravity)
 	local denominator = 2 * (x * math.tan(wanted_angle) - y)
-
-	fassert(denominator ~= 0, "Trajectory: Denominator is 0.")
-
 	local aux = math.abs(g / denominator)
 
 	if aux >= 0 then
@@ -44,10 +39,6 @@ end
 Trajectory.angle_to_hit_moving_target = function (from_position, target_position, projectile_speed, target_velocity, gravity, acceptable_accuracy, use_greatest_angle)
 	local angle = nil
 	local EPSILON = 0.01
-
-	assert(gravity ~= nil, "Trajectory: gravity needs to be defined")
-	assert(gravity > 0, "Trajectory: Can't solve for <=0 gravity")
-
 	local estimated_target_position = target_position
 	local flat_distance = Vector3.length(Vector3.flat(estimated_target_position - from_position))
 	local old_flat_distance = flat_distance
@@ -98,8 +89,6 @@ Trajectory.get_trajectory_velocity = function (from_position, target_position, g
 		local a1, a2 = _wanted_projectile_angle(to_target, -gravity, projectile_speed)
 		angle = a1 or a2
 	end
-
-	fassert(angle and projectile_speed, "Trajectory: Can't calculate wanted velocity for trajectory without angle and projectile speed")
 
 	local to_target_flat = Vector3.normalize(Vector3.flat(to_target))
 	local to_target_right = Vector3.cross(to_target_flat, Vector3.up())

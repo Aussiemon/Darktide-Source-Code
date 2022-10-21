@@ -19,8 +19,8 @@ ActionAimProjectile.start = function (self, action_settings, t, time_scale, acti
 	local throw_config = locomotion_template.throw_parameters[throw_type]
 	local momentum = nil
 
-	if throw_config.randomized_momentum then
-		local max = throw_config.randomized_momentum
+	if throw_config.randomized_angular_velocity then
+		local max = throw_config.randomized_angular_velocity
 		momentum = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
 	elseif throw_config.momentum then
 		momentum = throw_config.momentum:unbox()
@@ -32,8 +32,6 @@ ActionAimProjectile.start = function (self, action_settings, t, time_scale, acti
 end
 
 ActionAimProjectile.fixed_update = function (self, dt, t, time_in_action)
-	Profiler.start("ActionAimProjectile_fixed_update")
-
 	local action_settings = self._action_settings
 	local projectile_locomotion_template = self:_locomotion_template()
 	local first_person_component = self._first_person_component
@@ -49,8 +47,6 @@ ActionAimProjectile.fixed_update = function (self, dt, t, time_in_action)
 	action_aim_projectile_component.rotation = aim_parameters.rotation
 	action_aim_projectile_component.direction = aim_parameters.direction
 	action_aim_projectile_component.speed = aim_parameters.speed
-
-	Profiler.stop("ActionAimProjectile_fixed_update")
 end
 
 ActionAimProjectile.check_throw_posisition = function (self, throw_position, look_position, projectile_locomotion_template)

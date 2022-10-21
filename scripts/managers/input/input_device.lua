@@ -43,19 +43,21 @@ InputDevice.update = function (self, dt, t)
 end
 
 local VALID_AXES = {
-	left = true,
-	right = true
+	"left",
+	"right",
+	"mouse",
+	"wheel"
 }
 
 InputDevice._any_analog_input = function (self)
 	local input_device = self._raw_device
-	local num_axes = input_device.num_axes()
 
-	for key = 0, num_axes - 1 do
-		local button_name = input_device.axis_name(key)
+	for i = 1, #VALID_AXES do
+		local axis_name = VALID_AXES[i]
+		local axis_index = input_device.axis_index(axis_name)
 
-		if VALID_AXES[button_name] then
-			local value = input_device.axis(key)
+		if axis_index then
+			local value = input_device.axis(axis_index)
 
 			if Vector3.length_squared(value) > 0 then
 				return true

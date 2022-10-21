@@ -45,6 +45,7 @@ BtSwitchWeaponAction.enter = function (self, unit, breed, blackboard, scratchpad
 		visual_loadout_extension:unwield_slot(wielded_slot_name)
 	end
 
+	scratchpad.slot_that_got_unwielded = wielded_slot_name
 	local vo_event = switch_data.vo_event
 
 	if vo_event then
@@ -67,6 +68,13 @@ BtSwitchWeaponAction.leave = function (self, unit, breed, blackboard, scratchpad
 		local wanted_combat_range = weapon_switch_component.wanted_combat_range
 		local behavior_component = scratchpad.behavior_component
 		behavior_component.combat_range = wanted_combat_range
+	else
+		local slot_that_got_unwielded = scratchpad.slot_that_got_unwielded
+		local can_wield_slot = scratchpad.visual_loadout_extension:can_wield_slot(slot_that_got_unwielded)
+
+		if can_wield_slot then
+			scratchpad.visual_loadout_extension:wield_slot(slot_that_got_unwielded)
+		end
 	end
 end
 

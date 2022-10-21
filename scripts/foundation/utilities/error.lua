@@ -39,8 +39,6 @@ end
 function fassert(condition, message, ...)
 	if not condition then
 		local message = format_error_message(message, ...)
-
-		assert(false, message)
 	end
 end
 

@@ -1,4 +1,101 @@
 local conversations_hub_tech_priest_a = {
+	crafting_complete = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_tech_priest_a__crafting_complete_01",
+			"loc_tech_priest_a__crafting_complete_02",
+			"loc_tech_priest_a__crafting_complete_03",
+			"loc_tech_priest_a__crafting_complete_04",
+			"loc_tech_priest_a__crafting_complete_05",
+			"loc_tech_priest_a__crafting_complete_06",
+			"loc_tech_priest_a__crafting_complete_07",
+			"loc_tech_priest_a__crafting_complete_08",
+			"loc_tech_priest_a__crafting_complete_09",
+			"loc_tech_priest_a__crafting_complete_10"
+		},
+		sound_events_duration = {
+			1.952188,
+			1.226958,
+			2.140479,
+			2.619354,
+			1.966917,
+			0.912833,
+			1.817521,
+			2.05775,
+			2.291438,
+			1.288417
+		},
+		randomize_indexes = {}
+	},
+	crafting_interact = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_tech_priest_a__crafting_interact_01",
+			"loc_tech_priest_a__crafting_interact_02",
+			"loc_tech_priest_a__crafting_interact_03",
+			"loc_tech_priest_a__crafting_interact_04",
+			"loc_tech_priest_a__crafting_interact_05",
+			"loc_tech_priest_a__crafting_interact_06",
+			"loc_tech_priest_a__crafting_interact_07",
+			"loc_tech_priest_a__crafting_interact_08",
+			"loc_tech_priest_a__crafting_interact_09",
+			"loc_tech_priest_a__crafting_interact_10"
+		},
+		sound_events_duration = {
+			1.849167,
+			3.646125,
+			3.468938,
+			4.618271,
+			1.654667,
+			4.222896,
+			2.410979,
+			3.820438,
+			3.546042,
+			2.771792
+		},
+		randomize_indexes = {}
+	},
+	hub_idle = {
+		randomize_indexes_n = 0,
+		sound_events_n = 15,
+		sound_events = {
+			"loc_tech_priest_a__hub_idle_01",
+			"loc_tech_priest_a__hub_idle_02",
+			"loc_tech_priest_a__hub_idle_03",
+			"loc_tech_priest_a__hub_idle_04",
+			"loc_tech_priest_a__hub_idle_05",
+			"loc_tech_priest_a__hub_idle_06",
+			"loc_tech_priest_a__hub_idle_07",
+			"loc_tech_priest_a__hub_idle_08",
+			"loc_tech_priest_a__hub_idle_09",
+			"loc_tech_priest_a__hub_idle_10",
+			"loc_tech_priest_a__hub_idle_11",
+			"loc_tech_priest_a__hub_idle_12",
+			"loc_tech_priest_a__hub_idle_13",
+			"loc_tech_priest_a__hub_idle_14",
+			"loc_tech_priest_a__hub_idle_15"
+		},
+		sound_events_duration = {
+			3.663458,
+			2.858854,
+			2.160813,
+			2.480646,
+			2.863792,
+			3.964354,
+			5.240042,
+			2.772458,
+			5.338854,
+			5.417229,
+			3.353188,
+			5.008813,
+			5.888646,
+			7.160229,
+			4.209042
+		},
+		randomize_indexes = {}
+	},
 	hub_idle_conversation_eight_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -6,7 +103,7 @@ local conversations_hub_tech_priest_a = {
 			[1.0] = "loc_tech_priest_a__hub_idle_conversation_eight_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.758459
+			[1.0] = 8.480521
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -20,7 +117,7 @@ local conversations_hub_tech_priest_a = {
 			[1.0] = "loc_tech_priest_a__hub_idle_conversation_seven_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.1595
+			[1.0] = 7.881562
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -34,10 +131,39 @@ local conversations_hub_tech_priest_a = {
 			[1.0] = "loc_tech_priest_a__hub_idle_conversation_six_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.440855
+			[1.0] = 6.162917
 		},
 		sound_event_weights = {
 			[1.0] = 1
+		},
+		randomize_indexes = {}
+	},
+	hub_idle_crafting = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_tech_priest_a__hub_idle_crafting_01",
+			"loc_tech_priest_a__hub_idle_crafting_02",
+			"loc_tech_priest_a__hub_idle_crafting_03",
+			"loc_tech_priest_a__hub_idle_crafting_04",
+			"loc_tech_priest_a__hub_idle_crafting_05",
+			"loc_tech_priest_a__hub_idle_crafting_06",
+			"loc_tech_priest_a__hub_idle_crafting_07",
+			"loc_tech_priest_a__hub_idle_crafting_08",
+			"loc_tech_priest_a__hub_idle_crafting_09",
+			"loc_tech_priest_a__hub_idle_crafting_10"
+		},
+		sound_events_duration = {
+			4.267958,
+			2.354792,
+			3.580938,
+			4.649979,
+			3.772667,
+			6.194375,
+			4.676438,
+			4.917229,
+			5.915063,
+			3.134458
 		},
 		randomize_indexes = {}
 	},

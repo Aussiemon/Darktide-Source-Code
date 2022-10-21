@@ -7,9 +7,6 @@ LocalThemeState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._level_spawner = nil
 	local world = shared_state.world
-
-	fassert(world, "[LocalThemeState] World is not created.")
-
 	self._world = world
 	local themes = shared_state.themes
 	local circumstance_name = shared_state.circumstance_name

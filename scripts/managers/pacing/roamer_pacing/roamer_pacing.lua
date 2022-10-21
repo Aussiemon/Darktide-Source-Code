@@ -104,7 +104,6 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 
 		if num_roamers == 0 then
 			Log.warning("RoamerPacing", "No roamers got generated with %d zones, maybe increase the main path length?.", num_zones)
-			fassert(num_zones < 10, "Level %s has a main path but no roamers got generated(probably no navmesh at roaming zones, or the main path is too short). Talk to a level designer!", level)
 		end
 
 		local patrol_traverse_logic, patrol_nav_tag_cost_table = Navigation.create_traverse_logic(nav_world, PATROL_NAV_TAG_LAYER_COSTS, nil, false)
@@ -173,7 +172,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
 	local faction_zone_length = self:_random(RoamerSettings.faction_zone_length[1], RoamerSettings.faction_zone_length[2])
 	local faction_index = self:_random(1, #RoamerSettings.faction_types)
-	local current_faction = RoamerSettings.faction_types[faction_index]
+	local current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
 	self._current_faction = current_faction
 	self._current_density_type = density_type
 	local empty_zone_count = 0
@@ -223,7 +222,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 
 				if faction_zone_length == 0 then
 					faction_index = faction_index % #RoamerSettings.faction_types + 1
-					current_faction = RoamerSettings.faction_types[faction_index]
+					current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
 					faction_zone_length = self:_random(RoamerSettings.faction_zone_length[1], RoamerSettings.faction_zone_length[2])
 				end
 
@@ -501,7 +500,8 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 								shared_aggro_trigger = shared_aggro_trigger,
 								zone_id = i,
 								sub_zone_id = sub_zone_index,
-								travel_distance = travel_distance
+								travel_distance = travel_distance,
+								density_type = density_type
 							}
 							roamers[roamer_id] = roamer
 
@@ -575,7 +575,7 @@ local function _roamer_is_aggroed(roamer_unit)
 	return false
 end
 
-local NUM_ROAMERS_UPDATE_PER_FRAME = 10
+local NUM_ROAMERS_UPDATE_PER_FRAME = 1
 
 RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	if self._disabled or not self._zones then
@@ -631,7 +631,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 					local perception_component = blackboard.perception
 					local target_unit = perception_component.target_unit
 
-					self:_alert_roamer_group(spawned_unit, target_unit, roamer)
+					self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
 				end
 			end
 		end
@@ -641,12 +641,9 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 		end
 	end
 
-	Profiler.start("roamer_patrols")
-
 	local patrol_data = self._patrol_data
 
 	MinionPatrols.update_roamer_patrols(patrol_data, roamers, self._nav_world, self._zones)
-	Profiler.stop("roamer_patrols")
 end
 
 RoamerPacing._alert_roamer_unit = function (self, roamer_unit, target_unit, alert_delay)
@@ -656,7 +653,7 @@ RoamerPacing._alert_roamer_unit = function (self, roamer_unit, target_unit, aler
 	perception_extension:delayed_alert(target_unit, alert_delay, ignore_alerted_los)
 end
 
-RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, aggroing_roamer)
+RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, aggroing_roamer, side_id, target_side_id)
 	local group_extension = ScriptUnit.has_extension(aggroing_unit, "group_system")
 	local group = group_extension:group()
 	local members = group.members
@@ -708,6 +705,16 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 
 			Managers.state.pacing:pause_spawn_type(spawn_type, true, "roamers_aggroed", pause_duration)
 		end
+	end
+
+	local trigger_horde_when_aggroed = RoamerSettings.trigger_horde_when_aggroed[aggroing_roamer.density_type]
+
+	if trigger_horde_when_aggroed then
+		local horde_template_name = trigger_horde_when_aggroed.horde_template_name
+		local composition = trigger_horde_when_aggroed.composition
+		local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(composition)
+
+		Managers.state.horde:horde(horde_template_name, horde_template_name, side_id, target_side_id, resistance_scaled_composition)
 	end
 end
 
@@ -827,7 +834,8 @@ RoamerPacing._update_faction_switch = function (self, ahead_travel_distance)
 	local travel_distance = next_faction_distances.travel_distance
 
 	if travel_distance <= ahead_travel_distance then
-		self._current_faction = next_faction_distances.faction
+		local new_faction = self._override_faction or next_faction_distances.faction
+		self._current_faction = new_faction
 		self._current_density_type = next_faction_distances.density_type
 
 		table.remove(faction_travel_distances, 1)
@@ -947,6 +955,14 @@ end
 
 RoamerPacing.is_traverse_logic_initialized = function (self)
 	return self._traverse_logic ~= nil
+end
+
+RoamerPacing.traverse_logic = function (self)
+	return self._traverse_logic
+end
+
+RoamerPacing.override_faction = function (self, faction)
+	self._override_faction = faction
 end
 
 RoamerPacing.current_faction = function (self)

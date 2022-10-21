@@ -5,19 +5,25 @@ local Threat = {
 		local absorbed_damage_threat_multiplier = optional_damage_profile and optional_damage_profile.absorbed_damage_threat_multiplier or 1
 		local absorbed_threat = damage_absorbed_threat * absorbed_damage_threat_multiplier
 		local threat = damage_threat + absorbed_threat
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
+		local perception_extension = ScriptUnit.has_extension(unit, "perception_system")
 
-		perception_extension:add_threat(threat_unit, threat)
+		if perception_extension then
+			perception_extension:add_threat(threat_unit, threat)
+		end
 	end,
 	add_flat_threat = function (unit, threat_unit, threat)
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
+		local perception_extension = ScriptUnit.has_extension(unit, "perception_system")
 
-		perception_extension:add_threat(threat_unit, threat)
+		if perception_extension then
+			perception_extension:add_threat(threat_unit, threat)
+		end
 	end,
 	set_threat_decay_enabled = function (unit, enabled)
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
+		local perception_extension = ScriptUnit.has_extension(unit, "perception_system")
 
-		perception_extension:set_threat_decay_enabled(enabled)
+		if perception_extension then
+			perception_extension:set_threat_decay_enabled(enabled)
+		end
 	end
 }
 

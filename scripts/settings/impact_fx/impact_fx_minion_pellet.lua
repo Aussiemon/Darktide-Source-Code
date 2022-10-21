@@ -14,60 +14,44 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_husk",
+				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_husk",
+				only_3p = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		}
 	},
@@ -156,60 +140,44 @@ local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_husk",
+				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_husk",
+				only_3p = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_husk",
+				only_3p = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_husk",
+				only_3p = true
 			}
 		}
 	},
@@ -296,60 +264,44 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_husk",
+				only_3p = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_large_gen",
-				append_husk_to_event_name = true
+				event = "wwise/events/weapon/play_bullet_hits_large_gen_husk",
+				only_3p = true
 			}
 		}
 	},
@@ -429,7 +381,7 @@ local player = {
 	sfx = {
 		damage = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_gen",
+				event = "wwise/events/player/play_player_get_hit_pellets",
 				hit_direction_interface = true
 			},
 			{
@@ -439,7 +391,7 @@ local player = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_gen",
+				event = "wwise/events/player/play_player_get_hit_pellets",
 				hit_direction_interface = true
 			},
 			{
@@ -449,7 +401,7 @@ local player = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_gen",
+				event = "wwise/events/player/play_player_get_hit_pellets",
 				hit_direction_interface = true
 			},
 			{

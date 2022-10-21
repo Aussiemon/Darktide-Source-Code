@@ -9,10 +9,6 @@ local Interacting = require("scripts/extension_systems/character_state_machine/c
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local FOOTSTEP_SOUND_ALIAS = "footstep"
-local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
-local WEAPON_FOLEY = "sfx_weapon_locomotion"
-local EXTRA_FOLEY = "sfx_player_extra_slot"
 local PlayerCharacterStateWalking = class("PlayerCharacterStateWalking", "PlayerCharacterStateBase")
 
 PlayerCharacterStateWalking.init = function (self, character_state_init_context, ...)
@@ -34,6 +30,18 @@ PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_sta
 	local first_person = self._first_person_component
 
 	AcceleratedLocalSpaceMovement.refresh_local_move_variables(self._constants.move_speed, locomotion_steering, locomotion, first_person)
+
+	if previous_state == "sliding" then
+		local wants_move = AcceleratedLocalSpaceMovement.wants_move(self._input_extension)
+
+		if not wants_move then
+			local move_method = "idle"
+
+			self._animation_extension:anim_event(move_method)
+
+			self._movement_state_component.method = move_method
+		end
+	end
 end
 
 PlayerCharacterStateWalking.on_exit = function (self, unit, t, next_state)
@@ -80,10 +88,6 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	local next_state = self:_check_transition(unit, t, next_state_params, input_extension, wants_slide)
 
 	return next_state
-end
-
-PlayerCharacterStateWalking.update = function (self, unit, dt, t)
-	self:_update_footsteps_and_foley(t, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 end
 
 PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_state_params, input_source, wants_slide)
@@ -135,12 +139,14 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 	end
 
 	if wants_slide then
+		next_state_params.friction_function = "sprint"
+
 		return "sliding"
 	end
 
 	local jump_input = movement_state_component.can_jump and input_source:get("jump")
-	local archetype_dodge_template = self._archetype_dodge_template
-	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, archetype_dodge_template, input_source)
+	local specialization_dodge_template = self._specialization_dodge_template
+	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, specialization_dodge_template, input_source)
 
 	if should_dodge then
 		next_state_params.dodge_direction = local_dodge_direction

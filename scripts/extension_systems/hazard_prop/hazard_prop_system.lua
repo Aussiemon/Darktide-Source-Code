@@ -85,19 +85,12 @@ end
 
 HazardPropSystem.on_gameplay_post_init = function (self, level)
 	if self._is_server then
-		Profiler.start("populate_hazard_props")
 		self:_populate_hazard_props()
-		Profiler.stop("populate_hazard_props")
 	end
 end
 
 HazardPropSystem._shuffle = function (self, source)
 	local seed = self._seed
-
-	fassert(self._is_server, "[HazardPropSystem] Only the server should be using random")
-	fassert(seed, "[HazardPropSystem] Undefined seed input!")
-	fassert(type(seed) == "number", "[HazardPropSystem] Bad seed input! type: %s", type(seed))
-
 	self._seed = table.shuffle(source, seed)
 end
 
@@ -119,8 +112,6 @@ HazardPropSystem._populate_hazard_props = function (self)
 			hazard_weight[HazardPropSettings.hazard_content.none] = 1
 			total_weight = 1
 		end
-
-		fassert(total_weight > 0, "[HazardPropSystem] Can not create a pool with no total_weight, make sure there are types added")
 
 		local hazard_pool = {}
 		local remainders = {}

@@ -1,8 +1,5 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local weapon_traits_ranged_low_fire_rate = {}
-local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_flanking_shot_grant_power_level = {
@@ -182,7 +179,7 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 				[buff_proc_events.on_hit] = 0.05
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.25
+				[buff_stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
@@ -202,7 +199,7 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 				[buff_proc_events.on_hit] = 0.1
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.75
+				[buff_stat_buffs.power_level_modifier] = 0.15
 			}
 		},
 		{
@@ -222,7 +219,7 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 				[buff_proc_events.on_hit] = 0.15
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 1.25
+				[buff_stat_buffs.power_level_modifier] = 0.2
 			}
 		},
 		{
@@ -232,7 +229,7 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 				[buff_proc_events.on_hit] = 0.175
 			},
 			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 1.5
+				[buff_stat_buffs.power_level_modifier] = 0.25
 			}
 		}
 	}
@@ -278,26 +275,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			stat_buffs = {
 				[buff_stat_buffs.ranged_impact_modifier] = 0.4
 			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.ranged_impact_modifier] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.ranged_impact_modifier] = 0.6
-			}
 		}
 	}
 }
@@ -341,26 +318,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			},
 			stat_buffs = {
 				[buff_stat_buffs.unarmored_damage] = 0.4
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.6
 			}
 		}
 	}
@@ -406,26 +363,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			stat_buffs = {
 				[buff_stat_buffs.armored_damage] = 0.4
 			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.armored_damage] = 0.6
-			}
 		}
 	}
 }
@@ -469,26 +406,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			},
 			stat_buffs = {
 				[buff_stat_buffs.resistant_damage] = 0.4
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.resistant_damage] = 0.6
 			}
 		}
 	}
@@ -534,26 +451,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			stat_buffs = {
 				[buff_stat_buffs.berserker_damage] = 0.4
 			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.berserker_damage] = 0.6
-			}
 		}
 	}
 }
@@ -597,26 +494,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			},
 			stat_buffs = {
 				[buff_stat_buffs.super_armor_damage] = 0.4
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.super_armor_damage] = 0.6
 			}
 		}
 	}
@@ -662,26 +539,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			stat_buffs = {
 				[buff_stat_buffs.disgustingly_resilient_damage] = 0.4
 			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 3,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.05
-			},
-			stat_buffs = {
-				[buff_stat_buffs.disgustingly_resilient_damage] = 0.6
-			}
 		}
 	}
 }
@@ -705,16 +562,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 		{
 			proc_events = {
 				[buff_proc_events.on_hit] = 0.125
-			}
-		},
-		{
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.15
-			}
-		},
-		{
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.175
 			}
 		}
 	}
@@ -759,26 +606,6 @@ weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_hi
 			},
 			stat_buffs = {
 				[buff_stat_buffs.power_level_modifier] = 0.4
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 5,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.1
-			},
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.5
-			}
-		},
-		{
-			cooldown_duration = 5,
-			active_duration = 5,
-			proc_events = {
-				[buff_proc_events.on_hit] = 0.1
-			},
-			stat_buffs = {
-				[buff_stat_buffs.power_level_modifier] = 0.6
 			}
 		}
 	}

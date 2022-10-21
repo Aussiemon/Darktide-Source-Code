@@ -231,6 +231,26 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 		end
 	end
 
+	for removed_mood, _ in pairs(removed_moods) do
+		local looping_particles = self._looping_particles[removed_mood]
+
+		for i = #looping_particles, 1, -1 do
+			local particle_id = looping_particles[i]
+
+			World.destroy_particles(world, particle_id)
+
+			looping_particles[i] = nil
+			local mood = moods[removed_mood]
+			local particles_material_scalars = mood.particles_material_scalars
+
+			if particles_material_scalars then
+				for j = 1, #particles_material_scalars do
+					table.clear(self._particle_material_scalar_values[removed_mood][j])
+				end
+			end
+		end
+	end
+
 	for mood_type, mood_data in pairs(moods_data) do
 		if mood_data.status == mood_status.active then
 			local mood = moods[mood_type]
@@ -250,7 +270,9 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 					local on_screen_variable_name = particles_material_scalar.on_screen_variable_name
 					local on_screen_effect_id = self._looping_particles[mood_type][i]
 
-					World.set_particles_material_scalar(world, on_screen_effect_id, on_screen_cloud_name, on_screen_variable_name, value)
+					if on_screen_effect_id then
+						World.set_particles_material_scalar(world, on_screen_effect_id, on_screen_cloud_name, on_screen_variable_name, value)
+					end
 				end
 			end
 		end

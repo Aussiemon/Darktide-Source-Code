@@ -25,9 +25,6 @@ LuggableSocketInteraction.stop = function (self, world, interactor_unit, unit_da
 		local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
 		local inventory_component = unit_data_extension:read_component("inventory")
 		local wielded_slot = inventory_component.wielded_slot
-
-		fassert(wielded_slot == "slot_luggable", "[LuggableSocketInteraction] Wrong wielded slot(%s)", tostring(wielded_slot))
-
 		local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
 		local luggable_to_socket = inventory_slot_component.existing_unit_3p
 

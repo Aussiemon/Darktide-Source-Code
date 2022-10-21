@@ -155,7 +155,6 @@ ChunkLodManager._update_level_lods = function (self, level, show_all)
 	local neighbours = self:_get_neighbours(level, "neighbour_states")
 	local level_set_lod_level_type = Level.set_lod_level_type
 
-	fassert(level_set_lod_level_type, "[ChunkLodManager][_update_level_lods] Missing method 'Level.set_lod_level_type()'")
 	level_set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
 
 	if #neighbours > 0 then

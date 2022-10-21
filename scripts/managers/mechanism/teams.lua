@@ -52,30 +52,23 @@ Teams.add_peers_to_any_team = function (self, peer_ids)
 				break
 			end
 		end
-
-		fassert(assigned_team, "Could not find team for peer %q", peer_id)
 	end
 end
 
 Teams.remove_peer_from_team = function (self, peer_id)
 	local team = self._peer_to_team_lookup[peer_id]
 
-	fassert(team, "Peer %q is not assigned to any team.", peer_id)
 	self:_remove_peer_from_team(peer_id, team)
 end
 
 Teams.team_name_from_peer_id = function (self, peer_id)
 	local team = self._peer_to_team_lookup[peer_id]
 
-	fassert(team, "peer %q does not have a team.", peer_id)
-
 	return team:name()
 end
 
 Teams.team_name_from_team_id = function (self, team_id)
 	local team = self._teams[team_id]
-
-	fassert(team, "No team on team_id %i", team_id)
 
 	return team:name()
 end

@@ -83,13 +83,10 @@ LoadTimesReporter.start_timer = function (self, timer_name)
 end
 
 LoadTimesReporter.stop_timer = function (self, timer_name)
-	fassert(Managers.time:has_timer(timer_name), "[LoadTimesReporter] timer doesnt exist %s", timer_name)
 	Managers.time:set_active(timer_name, false)
 end
 
 LoadTimesReporter.time = function (self, timer_name)
-	fassert(Managers.time:has_timer(timer_name), "[LoadTimesReporter] timer doesnt exist %s", timer_name)
-
 	return Managers.time:time(timer_name, 0)
 end
 

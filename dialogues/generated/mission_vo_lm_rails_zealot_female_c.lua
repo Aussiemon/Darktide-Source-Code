@@ -7,8 +7,12 @@ local mission_vo_lm_rails_zealot_female_c = {
 			[2.0] = "loc_zealot_female_c__mission_rails_disable_skyfire_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.071833,
-			[2.0] = 4.008167
+			[1.0] = 6.071844,
+			[2.0] = 4.008177
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -73,7 +77,7 @@ local mission_vo_lm_rails_zealot_female_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.941313,
-			[2.0] = 2.368813
+			[2.0] = 2.368823
 		},
 		randomize_indexes = {}
 	},
@@ -85,8 +89,8 @@ local mission_vo_lm_rails_zealot_female_c = {
 			[2.0] = "loc_zealot_female_c__mission_rails_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.714125,
-			[2.0] = 4.608781
+			[1.0] = 2.714135,
+			[2.0] = 4.608792
 		},
 		randomize_indexes = {}
 	},
@@ -119,12 +123,12 @@ local mission_vo_lm_rails_zealot_female_c = {
 			"loc_zealot_female_c__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			2.013063,
+			2.013073,
 			2.763698,
-			2.47226,
+			2.47225,
 			3.058135,
 			2.737188,
-			3.309656,
+			3.309667,
 			2.604698,
 			4.724615,
 			5.153125,
@@ -157,6 +161,26 @@ local mission_vo_lm_rails_zealot_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	mission_rails_refectory_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_female_c__zone_transit_01",
+			"loc_zealot_female_c__zone_transit_02",
+			"loc_zealot_female_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			4.259958,
+			3.895198,
+			5.567094
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
+		},
+		randomize_indexes = {}
+	},
 	mission_rails_start_banter_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -167,6 +191,35 @@ local mission_vo_lm_rails_zealot_female_c = {
 		sound_events_duration = {
 			[1.0] = 2.989771,
 			[2.0] = 4.392229
+		},
+		randomize_indexes = {}
+	},
+	mission_rails_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_zealot_female_c__region_habculum_01",
+			"loc_zealot_female_c__region_habculum_02",
+			"loc_zealot_female_c__region_habculum_03",
+			"loc_zealot_female_c__zone_transit_01",
+			"loc_zealot_female_c__zone_transit_02",
+			"loc_zealot_female_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			5.056771,
+			2.704771,
+			6.109292,
+			4.259958,
+			3.895198,
+			5.567094
+		},
+		sound_event_weights = {
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

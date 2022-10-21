@@ -25,24 +25,25 @@ local breed_data = {
 	spawn_anim_state = "to_ranged",
 	unit_template_name = "minion",
 	faction_name = "chaos",
-	ignore_attack_delay = true,
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_flamer",
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 1,
+	ignore_attack_delay = true,
 	walk_speed = 2.3,
 	spawn_inventory_slot = "slot_ranged_weapon",
 	base_height = 1.9,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	volley_fire_target = true,
 	player_locomotion_constrain_radius = 0.4,
 	stagger_reduction = 0,
-	challenge_rating = 1,
 	stagger_reduction_ranged = 5,
-	use_wounds = true,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_cultist_flamer",
+	use_wounds = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
+	challenge_rating = 1,
 	hit_mass = 2,
 	bone_lod_radius = 1.2,
 	name = breed_name,
@@ -314,9 +315,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

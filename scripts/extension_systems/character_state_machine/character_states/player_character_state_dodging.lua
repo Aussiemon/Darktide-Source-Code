@@ -1,19 +1,18 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Stamina = require("scripts/utilities/attack/stamina")
 local proc_events = BuffSettings.proc_events
-local FOOTSTEP_DODGE_SOUND_ALIAS = "sfx_footstep_dodge"
-local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
-local WEAPON_FOLEY = "sfx_weapon_locomotion"
-local EXTRA_FOLEY = "sfx_player_extra_slot"
 local PlayerCharacterStateDodging = class("PlayerCharacterStateDodging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateDodging.init = function (self, character_state_init_context, ...)
 	PlayerCharacterStateDodging.super.init(self, character_state_init_context, ...)
 
-	local dodge_character_state_component = character_state_init_context.unit_data:write_component("dodge_character_state")
+	local unit_data_extension = character_state_init_context.unit_data
+	local dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
 	dodge_character_state_component.cooldown = 0
 	dodge_character_state_component.consecutive_dodges = 0
 	dodge_character_state_component.consecutive_dodges_cooldown = 0
@@ -21,8 +20,10 @@ PlayerCharacterStateDodging.init = function (self, character_state_init_context,
 	dodge_character_state_component.dodge_direction = Vector3.zero()
 	dodge_character_state_component.jump_override_time = 0
 	dodge_character_state_component.dodge_time = 0
+	dodge_character_state_component.started_from_crouch = false
 	self._dodge_character_state_component = dodge_character_state_component
-	self._archetype_dodge_template = self._archetype.dodge
+	self._sway_control_component = unit_data_extension:write_component("sway_control")
+	self._spread_control_component = unit_data_extension:write_component("spread_control")
 end
 
 PlayerCharacterStateDodging._on_enter_animation = function (self, unit, dodge_direction, estimated_dodge_time, animation_extension)
@@ -97,7 +98,7 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 	return speed
 end
 
-local function _calculate_dodge_total_time(archetype_dodge_template, diminishing_return_factor, weapon_dodge_template, buff_extension)
+local function _calculate_dodge_total_time(specialization_dodge_template, diminishing_return_factor, weapon_dodge_template, buff_extension)
 	local time_step = GameParameters.fixed_time_step
 	local hit_end = false
 	local time_in_dodge = 0
@@ -107,22 +108,19 @@ local function _calculate_dodge_total_time(archetype_dodge_template, diminishing
 	local buff_speed_modifier = stat_buffs.dodge_speed_multiplier
 	local speed_modifier = weapon_speed_modifier * buff_speed_modifier
 	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
-	local dodge_distance = archetype_dodge_template.base_distance * distance_scale
+	local dodge_distance = specialization_dodge_template.base_distance * distance_scale
 
 	if dodge_distance <= 0 then
 		return 0
 	end
 
-	local dodge_speed_at_times = archetype_dodge_template.dodge_speed_at_times
+	local dodge_speed_at_times = specialization_dodge_template.dodge_speed_at_times
 
 	while not hit_end do
 		time_in_dodge = time_in_dodge + time_step
 		local start_point = 1
 		local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, dodge_speed_at_times, distance_scale)
 		local speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
-
-		fassert(speed > 0, "Dodge speed is 0, will never hit end.")
-
 		distance_travelled = distance_travelled + speed * time_step
 
 		if dodge_distance < distance_travelled then
@@ -133,14 +131,13 @@ local function _calculate_dodge_total_time(archetype_dodge_template, diminishing
 	return time_in_dodge * 10
 end
 
+local on_dodge_data = {}
+
 PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_state, params)
-	local archetype_dodge_template = self._archetype_dodge_template
+	local specialization_dodge_template = self._specialization_dodge_template
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local dodge_direction = params.dodge_direction
-
-	fassert(dodge_direction, "You need to set dodge_direction in params")
-
 	dodge_character_state_component.dodge_direction = dodge_direction
 	params.dodge_direction = nil
 
@@ -150,29 +147,41 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + 1, NetworkConstants.max_consecutive_dodges)
 	end
 
+	local movement_state = self._movement_state_component
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
-	dodge_character_state_component.distance_left = archetype_dodge_template.base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
-	dodge_character_state_component.jump_override_time = t + archetype_dodge_template.dodge_jump_override_timer
-	local estimated_dodge_time = _calculate_dodge_total_time(archetype_dodge_template, diminishing_return_factor, weapon_dodge_template, self._buff_extension)
+	dodge_character_state_component.distance_left = specialization_dodge_template.base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	dodge_character_state_component.jump_override_time = t + specialization_dodge_template.dodge_jump_override_timer
+	dodge_character_state_component.started_from_crouch = movement_state.is_crouching
+	local estimated_dodge_time = _calculate_dodge_total_time(specialization_dodge_template, diminishing_return_factor, weapon_dodge_template, self._buff_extension)
 
 	self:_on_enter_animation(unit, dodge_direction, estimated_dodge_time, self._animation_extension)
-	self:_trigger_footstep_and_foley(FOOTSTEP_DODGE_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 
 	self._locomotion_steering_component.disable_velocity_rotation = true
-	local movement_state = self._movement_state_component
 	movement_state.method = "dodging"
 	movement_state.is_dodging = true
+	on_dodge_data.unit = unit
+	on_dodge_data.direction = dodge_direction
+
+	Managers.event:trigger("on_dodge", on_dodge_data)
+	Stamina.drain(unit, 0, t)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_dodge_start, param_table)
+	end
 end
 
 PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 	local dodge_character_state_component = self._dodge_character_state_component
-	local archetype_dodge_template = self._archetype_dodge_template
+	local weapon_dodge_template = self._weapon_extension:dodge_template()
+	local specialization_dodge_template = self._specialization_dodge_template
 	local buff_extension = self._buff_extension
-	local stat_buffs = buff_extension:stat_buffs()
 	local time_in_dodge = t - self._character_state_component.entered_t
-	local cd = math.max(archetype_dodge_template.dodge_cooldown, archetype_dodge_template.dodge_jump_override_timer - time_in_dodge)
+	local cd = math.max(specialization_dodge_template.dodge_cooldown, specialization_dodge_template.dodge_jump_override_timer - time_in_dodge)
 	dodge_character_state_component.cooldown = t + cd
-	dodge_character_state_component.consecutive_dodges_cooldown = t + archetype_dodge_template.consecutive_dodges_reset
+	dodge_character_state_component.consecutive_dodges_cooldown = t + specialization_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
 	dodge_character_state_component.dodge_time = t
 	self._movement_state_component.is_dodging = false
 	self._locomotion_steering_component.disable_velocity_rotation = false
@@ -184,22 +193,28 @@ PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 
 	local param_table = buff_extension:request_proc_event_param_table()
 
-	buff_extension:add_proc_event(proc_events.on_dodge_end, param_table)
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_dodge_end, param_table)
+	end
 end
 
 PlayerCharacterStateDodging.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local time_in_dodge = t - self._character_state_component.entered_t
+	local weapon_extension = self._weapon_extension
 
-	self._weapon_extension:update_weapon_actions(fixed_frame)
+	weapon_extension:update_weapon_actions(fixed_frame)
 	self._ability_extension:update_ability_actions(fixed_frame)
 
 	local input_ext = self._input_extension
-	local still_dodging = self:_update_dodge(unit, dt, time_in_dodge)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_ext, t)
+	local started_from_crouch = self._dodge_character_state_component.started_from_crouch
+	local has_slide_input = not started_from_crouch and time_in_dodge > 0.2 and is_crouching
+	local still_dodging, wants_slide = self:_update_dodge(unit, dt, time_in_dodge, has_slide_input)
 
-	return self:_check_transition(unit, t, input_ext, next_state_params, still_dodging)
+	return self:_check_transition(unit, t, input_ext, next_state_params, still_dodging, wants_slide)
 end
 
-PlayerCharacterStateDodging._check_transition = function (self, unit, t, input_extension, next_state_params, still_dodging)
+PlayerCharacterStateDodging._check_transition = function (self, unit, t, input_extension, next_state_params, still_dodging, wants_slide)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -239,13 +254,21 @@ PlayerCharacterStateDodging._check_transition = function (self, unit, t, input_e
 	local is_sticky = self._action_sweep_component.is_sticky
 	local should_cancel = is_sticky
 
-	if not still_dodging or should_cancel then
+	if should_cancel then
+		return "walking"
+	end
+
+	if wants_slide then
+		return "sliding"
+	end
+
+	if not still_dodging then
 		return "walking"
 	end
 end
 
-PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_dodge)
-	local archetype_dodge_template = self._archetype_dodge_template
+PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_dodge, has_slide_input)
+	local specialization_dodge_template = self._specialization_dodge_template
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local locomotion_steering_component = self._locomotion_steering_component
@@ -257,7 +280,7 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 	local current_length_sq = Vector3.length_squared(velocity_current_flat)
 	local amount_progressed_from_wanted = current_length_sq / prev_length_sq
 
-	if amount_progressed_from_wanted < archetype_dodge_template.stop_threshold then
+	if amount_progressed_from_wanted < specialization_dodge_template.stop_threshold then
 		return false
 	end
 
@@ -265,7 +288,7 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 		return false
 	end
 
-	local speed_at_times = archetype_dodge_template.dodge_speed_at_times
+	local speed_at_times = specialization_dodge_template.dodge_speed_at_times
 	local start_point = 1
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
 	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
@@ -281,8 +304,10 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 	self._locomotion_steering_component.velocity_wanted = move_direction * speed
 	local move_delta = speed * dt
 	dodge_character_state_component.distance_left = math.max(dodge_character_state_component.distance_left - move_delta, 0)
+	local slide_threshold_sq = self._constants.slide_move_speed_threshold_sq
+	local wants_slide = has_slide_input and slide_threshold_sq < current_length_sq
 
-	return true
+	return true, wants_slide
 end
 
 return PlayerCharacterStateDodging

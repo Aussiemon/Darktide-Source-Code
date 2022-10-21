@@ -194,20 +194,6 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			0.06666667
 		},
 		randomize_indexes = {}
-	},
-	traitor_guard_rifleman_alerted_idle = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_enemy_traitor_enforcer_executor_a__alerted_idle_10"
-		},
-		sound_events_duration = {
-			[1.0] = 1.043917
-		},
-		sound_event_weights = {
-			[1.0] = 1
-		},
-		randomize_indexes = {}
 	}
 }
 

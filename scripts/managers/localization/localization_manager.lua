@@ -2,7 +2,11 @@ local LocalizationMacros = require("scripts/managers/localization/localization_m
 local LocalizationManager = class("LocalizationManager")
 local STRING_RESOURCE_NAMES = {
 	"content/localization/ui",
-	"content/localization/subtitles"
+	"content/localization/subtitles",
+	"content/localization/items",
+	"content/localization/loc_network_scale_test/subtitles",
+	"content/localization/loc_network_scale_test/ui",
+	"content/localization/loc_network_scale_test/items"
 }
 local ASSERT_ON_MISSING_LOC_PREFIX = false
 local STRING_CACHE_EXPECTED_SIZE = 2048
@@ -74,8 +78,6 @@ local function _select_language()
 		language = "en"
 	end
 
-	assert(language, "language missing for platform " .. PLATFORM)
-
 	return language
 end
 
@@ -131,8 +133,6 @@ end
 LocalizationManager._lookup = function (self, key)
 	local localizers = self._localizers
 
-	fassert(localizers, "[LocalizationManager] Localizers not setup")
-
 	for ii = 1, #localizers do
 		local localizer = localizers[ii]
 		local loc_str = nil
@@ -160,7 +160,6 @@ LocalizationManager.append_backend_localizations = function (self, localizations
 end
 
 local function _handle_error(key, err)
-	local log_message = string.format("Failed localizing %q: %s", key, err)
 	local display_message = string.format("<unlocalized %q: %s>", key, err)
 
 	return display_message

@@ -9,8 +9,6 @@ UISequenceAnimator.init = function (self, ui_scenegraph, scenegraph_definition, 
 end
 
 UISequenceAnimator.start_animation = function (self, parent, animation_sequence_name, widgets, params, speed, callback)
-	fassert(not speed or speed > 0, "[UISequenceAnimator] - speed must be a value higher than zero. currently (%s)", tostring(speed))
-
 	local animation_sequence = self._animation_definitions[animation_sequence_name]
 	local animation_id = self._animation_id + 1
 	self._animation_id = animation_id

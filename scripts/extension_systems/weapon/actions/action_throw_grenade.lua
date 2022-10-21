@@ -7,7 +7,7 @@ local MasterItems = require("scripts/backend/master_items")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local Vo = require("scripts/utilities/vo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ActionThrowGrenade = class("ActionThrowGrenade", "ActionAbilityBase")
+local ActionThrowGrenade = class("ActionThrowGrenade", "ActionWeaponBase")
 local locomotion_states = ProjectileLocomotionSettings.states
 
 ActionThrowGrenade.init = function (self, action_context, action_params, action_settings)
@@ -22,7 +22,7 @@ ActionThrowGrenade.init = function (self, action_context, action_params, action_
 end
 
 ActionThrowGrenade.start = function (self, action_settings, t, ...)
-	ActionThrowGrenade.super.start(self, action_settings, t, ...)
+	self:_check_for_critical_strike()
 
 	local projectile_template = ActionUtility.get_projectile_template(action_settings, self._weapon_template, self._ability_extension)
 
@@ -45,7 +45,7 @@ ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
 		local use_ability_charge = action_settings.use_ability_charge
 
 		if use_ability_charge then
-			self:_use_charge()
+			self:_use_ability_charge()
 		end
 	end
 end
@@ -68,7 +68,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		if skip_aiming then
 			local look_rotation = first_person_component.rotation
 			local look_position = first_person_component.position
-			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_ainm(action_settings, look_position, look_rotation, locomotion_template)
+			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
 		else
 			local action_aim_projectile = self._action_aim_projectile_component
 			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(action_aim_projectile)
@@ -85,7 +85,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 
 		local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.throw
 		local starting_state = throw_parameters and throw_parameters.locomotion_state or locomotion_states.manual_physics
-		local is_critical_strike = false
+		local is_critical_strike = self._critical_strike_component.is_active
 
 		if self._is_server then
 			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot)
@@ -94,7 +94,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 end
 
 ActionThrowGrenade.finish = function (self, reason, data, t, time_in_action)
-	return
+	ActionThrowGrenade.super.finish(self, reason, data, t, time_in_action)
 end
 
 return ActionThrowGrenade

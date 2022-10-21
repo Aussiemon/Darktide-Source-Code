@@ -1,11 +1,12 @@
 return function ()
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "access_elevator",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "access_elevator",
 		response = "access_elevator",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -37,7 +38,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
@@ -58,56 +61,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "cmd_clear_enemies",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_clear_enemies",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_clear_enemies"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_clear_enemies",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_clear_enemies",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "cmd_deploy_skull",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
 		response = "cmd_deploy_skull",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -152,10 +111,10 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "cmd_find_fortification_event_area",
+		name = "cmd_mission_completed_response",
 		pre_wwise_event = "play_radio_static_start",
 		wwise_route = 1,
-		response = "cmd_find_fortification_event_area",
+		response = "cmd_mission_completed_response",
 		database = "mission_giver_vo",
 		category = "vox_prio_0",
 		criterias = {
@@ -169,515 +128,19 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_find_fortification_event_area"
+				"cmd_mission_completed_response"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_find_fortification_event_area",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_find_fortification_event_area",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_find_target_intel",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_find_target_intel",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_find_target_intel"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_find_target_intel",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_find_target_intel",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_get_to_extraction_point",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_get_to_extraction_point",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_get_to_extraction_point"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_get_to_extraction_point",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_get_to_extraction_point",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_go_for_target",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_go_for_target",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_go_for_target"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_go_for_target",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_go_for_target",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_interact_button",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_interact_button",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_interact_button"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_interact_button",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_interact_button",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_interact_lever",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_interact_lever",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_interact_lever"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_interact_lever",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_interact_lever",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_load_coolant",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_load_coolant",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"luggable_mission_pick_up_lm_cooling"
-				}
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			}
-		},
-		on_done = {},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.3
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_load_pneumatic",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_load_pneumatic",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"luggable_mission_pick_up_lm_scavenge"
-				}
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_luggable_item_located",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_luggable_item_located",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_luggable_item_located"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_luggable_item_located",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_luggable_item_located",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_mission_scavenge_hacking_event_end",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_mission_scavenge_hacking_event_end",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_mission_scavenge_hacking_event_end"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_mission_scavenge_hacking_event_end",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_mission_scavenge_hacking_event_end",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_mission_scavenge_hacking_event_start",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_mission_scavenge_hacking_event_start",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"mission_scavenge_servitors"
-				}
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_mission_scavenge_luggable_event_start",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_mission_scavenge_luggable_event_start",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_mission_scavenge_luggable_event_start"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
+					"pilot"
 				}
 			},
 			{
 				"faction_memory",
-				"cmd_mission_scavenge_luggable_event_start",
+				"cmd_mission_completed_response",
 				OP.EQ,
 				0
 			}
@@ -685,308 +148,20 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"cmd_mission_scavenge_luggable_event_start",
+				"cmd_mission_completed_response",
 				OP.ADD,
 				1
-			}
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
 			}
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "cmd_pick_an_item",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_pick_an_item",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_pick_an_item"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_pick_an_item",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_pick_an_item",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_stabilise",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_stabilise",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_stabilise"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant",
-					"explicator",
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_stabilise",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_stabilise",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_start_event_demolition",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_start_event_demolition",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_start_event_demolition"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_start_event_demolition",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_start_event_demolition",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_start_event_distribute",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_start_event_distribute",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_start_event_distribute"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_start_event_distribute",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_start_event_distribute",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_start_event_take",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_start_event_take",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_start_event_take"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_start_event_take",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_start_event_take",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "cmd_start_machine",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "cmd_start_machine",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_start_machine"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"cmd_start_machine",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"cmd_start_machine",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "cmd_undeploy_skull",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
 		response = "cmd_undeploy_skull",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1030,11 +205,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_a_demolition_target_located",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_a_demolition_target_located",
+		name = "door_release",
+		response = "door_release",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1047,228 +223,45 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_a_demolition_target_located"
+				"door_release"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
-				"user_memory",
-				"info_a_demolition_target_located",
-				OP.EQ,
-				0
+				"faction_memory",
+				"door_release",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
 			}
 		},
 		on_done = {
 			{
-				"user_memory",
-				"info_a_demolition_target_located",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_accomplished_all",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_accomplished_all",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_accomplished_all"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_accomplished_all",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_accomplished_all",
-				OP.ADD,
-				1
+				"faction_memory",
+				"door_release",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_accomplished_first_target",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_accomplished_first_target",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_accomplished_first_target"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_accomplished_first_target",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_accomplished_first_target",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_accomplished_half_target",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_accomplished_half_target",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_accomplished_half_target"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_accomplished_half_target",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_accomplished_half_target",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_additional_demolition_target_located",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_additional_demolition_target_located",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_additional_demolition_target_located"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_additional_demolition_target_located",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_additional_demolition_target_located",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_all_players_required",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "info_all_players_required",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1288,14 +281,24 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
 				"user_memory",
 				"info_all_players_required",
 				OP.LT,
-				2
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_info_all_players_required",
+				OP.TIMEDIFF,
+				OP.GT,
+				15
 			}
 		},
 		on_done = {
@@ -1303,20 +306,26 @@ return function ()
 				"user_memory",
 				"info_all_players_required",
 				OP.ADD,
-				1
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_info_all_players_required",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_bypass",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_bypass",
 		response = "info_bypass",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1336,7 +345,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
@@ -1360,11 +371,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_bypass_pressure",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "info_bypass_pressure",
 		response = "info_bypass_pressure",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1408,11 +420,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_call_abyss",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_call_abyss",
 		response = "info_call_abyss",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1468,11 +481,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_call_extraction",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_call_extraction",
 		response = "info_call_extraction",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1505,107 +519,55 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_closer_to_target",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_closer_to_target",
+		name = "info_call_extraction_response",
+		response = "info_call_extraction_response",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"heard_speak"
 			},
 			{
 				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_closer_to_target"
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot"
 				}
-			},
-			{
-				"user_memory",
-				"",
-				OP.EQ,
-				0
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"",
-				OP.ADD,
-				1
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_demolition_target_located",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_demolition_target_located",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_demolition_target_located"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_demolition_target_located",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_demolition_target_located",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_event_almost_done_mg",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "info_event_almost_done_mg",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1649,203 +611,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_event_anticipation",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_anticipation",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_anticipation"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_anticipation",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_anticipation",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_done",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_done",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_done"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_done",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_done",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_half_done",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_half_done",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_half_done"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_half_done",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_half_done",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_half_done_stresful",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 3,
-		response = "info_event_half_done_stresful",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_half_done_stresful"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_half_done_stresful",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_half_done_stresful",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_event_one_down",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "info_event_one_down",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -1865,6 +636,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"pilot",
 					"sergeant",
 					"explicator",
 					"tech_priest"
@@ -1891,200 +663,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_event_repeat",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_repeat",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_repeat"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_repeat",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_repeat",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_start",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_start",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_start"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_start",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_start",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_start_second_time",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_start_second_time",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_start_second_time"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_start_second_time",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_start_second_time",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_event_starting_soon",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_event_starting_soon",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_event_starting_soon"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_event_starting_soon",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_event_starting_soon",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_extraction",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "info_extraction",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2128,11 +712,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_first_bypass",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_first_bypass",
 		response = "info_first_bypass",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2179,107 +764,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_fortificatio_backup_arrived",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_fortificatio_backup_arrived",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_fortificatio_backup_arrived"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_fortificatio_backup_arrived",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_fortificatio_backup_arrived",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_fortification_event_start",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_fortification_event_start",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_fortification_event_start"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_fortification_event_start",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_fortification_event_start",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_get_out",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "info_get_out",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2326,11 +816,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_get_out_nearby",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_get_out_nearby",
 		response = "info_get_out_nearby",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2350,6 +841,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"pilot",
 					"sergeant",
 					"explicator",
 					"tech_priest"
@@ -2376,11 +868,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_get_out_no_reply",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_get_out_no_reply",
 		response = "info_get_out_no_reply",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2422,16 +915,17 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_incoming_enemies",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_incoming_enemies",
+		name = "info_get_out_simple",
+		response = "info_get_out_simple",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2444,19 +938,22 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_incoming_enemies"
+				"info_get_out_simple"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"sergeant",
+					"explicator",
+					"tech_priest",
+					"pilot"
 				}
 			},
 			{
 				"user_memory",
-				"info_incoming_enemies",
+				"info_get_out_simple",
 				OP.EQ,
 				0
 			}
@@ -2464,7 +961,7 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"info_incoming_enemies",
+				"info_get_out_simple",
 				OP.ADD,
 				1
 			}
@@ -2475,152 +972,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_incoming_enemies_directional",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_incoming_enemies_directional",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_incoming_enemies_directional"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_incoming_enemies_directional",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_incoming_enemies_directional",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_mission_scavenge_ship_elevator_vista",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_mission_scavenge_ship_elevator_vista",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_mission_scavenge_ship_elevator_vista"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"faction_memory",
-				"info_mission_scavenge_ship_elevator_vista",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"info_mission_scavenge_ship_elevator_vista",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_respawn_beacons_activated",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_respawn_beacons_activated",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_respawn_beacons_activated"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_respawn_beacons_activated",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_respawn_beacons_activated",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_scan_batch_done",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
 		response = "info_scan_batch_done",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2664,11 +1021,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_scan_completed",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "info_scan_completed",
 		response = "info_scan_completed",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2712,11 +1070,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_scan_target_located",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "info_scan_target_located",
 		response = "info_scan_target_located",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2760,215 +1119,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_scanning_aborted",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
-		response = "info_scanning_aborted",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_scanning_aborted"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"info_scanning_aborted",
-				OP.GTEQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_scanning_aborted",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_scanning_inprogress",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
-		response = "info_scanning_inprogress",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_scanning_inprogress"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"info_scanning_inprogress",
-				OP.GTEQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_scanning_inprogress",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_seeing_a_target",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_seeing_a_target",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"info_seeing_a_target"
-			}
-		},
-		on_done = {}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_seeing_kill_target",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_seeing_kill_target",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_seeing_kill_target"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_seeing_kill_target",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_seeing_kill_target",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_seeing_kill_targets",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_seeing_kill_targets",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_seeing_kill_target"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_seeing_kill_target",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_seeing_kill_target",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "info_servo_skull_deployed",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
 		response = "info_servo_skull_deployed",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3017,10 +1173,10 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_spotted_it",
-		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "info_servo_skull_deployed_tech_priest_follow_up",
 		wwise_route = 1,
-		response = "info_spotted_it",
+		response = "info_servo_skull_deployed_tech_priest_follow_up",
 		database = "mission_giver_vo",
 		category = "vox_prio_0",
 		criterias = {
@@ -3028,111 +1184,96 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"heard_speak"
 			},
 			{
 				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_spotted_it"
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"info_servo_skull_deployed_tech_priest_intro"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"tech_priest"
 				}
-			},
-			{
-				"user_memory",
-				"info_spotted_it",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_spotted_it",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_target_intel_aquired",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_target_intel_aquired",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_target_intel_aquired"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"info_target_intel_aquired",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_target_intel_aquired",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_team_mix",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "info_team_mix",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"info_team_mix"
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.24
+			}
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "info_servo_skull_deployed_tech_priest_intro",
+		wwise_route = 1,
+		response = "info_servo_skull_deployed_tech_priest_intro",
+		database = "mission_giver_vo",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"info_servo_skull_deployed_tech_priest_intro"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tech_priest"
+				}
+			},
+			{
+				"user_memory",
+				"info_servo_skull_deployed",
+				OP.GTEQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"info_servo_skull_deployed",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "self"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_valkyrie_approach",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_valkyrie_approach",
 		response = "info_valkyrie_approach",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3170,11 +1311,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_brief_control_mission_one",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_brief_control_mission_one",
 		response = "mission_brief_control_mission_one",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3218,11 +1360,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_brief_control_mission_three",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_brief_control_mission_three",
 		response = "mission_brief_control_mission_three",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3260,11 +1403,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_brief_control_mission_two",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_brief_control_mission_two",
 		response = "mission_brief_control_mission_two",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3302,11 +1446,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cargo_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cargo_briefing_a",
 		response = "mission_cargo_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3326,7 +1471,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3337,11 +1484,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cargo_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cargo_briefing_b",
 		response = "mission_cargo_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3363,7 +1511,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3379,11 +1529,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cargo_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cargo_briefing_c",
 		response = "mission_cargo_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3405,7 +1556,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3421,11 +1574,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cartel_brief_one",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cartel_brief_one",
 		response = "mission_cartel_brief_one",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3445,7 +1599,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3456,11 +1612,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cartel_brief_three",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cartel_brief_three",
 		response = "mission_cartel_brief_three",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3482,19 +1639,27 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
-		on_done = {}
+		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cartel_brief_two",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cartel_brief_two",
 		response = "mission_cartel_brief_two",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3516,22 +1681,30 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
 			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cooling_briefing_one",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cooling_briefing_one",
 		response = "mission_cooling_briefing_one",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3551,7 +1724,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3562,11 +1737,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cooling_briefing_three",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cooling_briefing_three",
 		response = "mission_cooling_briefing_three",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3588,7 +1764,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3604,11 +1782,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_cooling_briefing_two",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_cooling_briefing_two",
 		response = "mission_cooling_briefing_two",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3630,7 +1809,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3645,9 +1826,100 @@ return function ()
 		}
 	})
 	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
+		name = "mission_cooling_cmd_load_coolant",
+		response = "mission_cooling_cmd_load_coolant",
+		database = "mission_giver_vo",
 		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"luggable_mission_pick_up_lm_cooling"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_cooling_cmd_stabilise",
+		response = "mission_cooling_cmd_stabilise",
+		database = "mission_giver_vo",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"cmd_stabilise"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+					"explicator",
+					"tech_priest"
+				}
+			},
+			{
+				"user_memory",
+				"cmd_stabilise",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"cmd_stabilise",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
 		name = "mission_enforcer_briefing_a",
+		wwise_route = 41,
 		response = "mission_enforcer_briefing_a",
 		database = "mission_giver_vo",
 		category = "vox_prio_0",
@@ -3681,8 +1953,9 @@ return function ()
 		}
 	})
 	define_rule({
+		concurrent_wwise_event = "play_vox_static_loop",
+		wwise_route = 41,
 		name = "mission_enforcer_briefing_b",
-		wwise_route = 1,
 		response = "mission_enforcer_briefing_b",
 		database = "mission_giver_vo",
 		category = "vox_prio_0",
@@ -3724,8 +1997,9 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		wwise_route = 1,
+		concurrent_wwise_event = "play_vox_static_loop",
 		name = "mission_enforcer_briefing_c",
+		wwise_route = 41,
 		response = "mission_enforcer_briefing_c",
 		database = "mission_giver_vo",
 		category = "vox_prio_0",
@@ -3767,11 +2041,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_enforcer_end_event_conversation_one_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_enforcer_end_event_conversation_one_b",
 		response = "mission_enforcer_end_event_conversation_one_b",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3799,7 +2074,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -3809,11 +2084,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_first_scan",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_first_scan",
 		response = "mission_first_scan",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3857,11 +2133,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_forge_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_forge_briefing_a",
 		response = "mission_forge_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3881,7 +2158,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3892,11 +2171,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_forge_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_forge_briefing_b",
 		response = "mission_forge_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3918,7 +2198,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3934,11 +2216,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_forge_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_forge_briefing_c",
 		response = "mission_forge_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -3960,7 +2243,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -3976,11 +2261,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_propaganda_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_propaganda_briefing_a",
 		response = "mission_propaganda_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4000,8 +2286,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
 					"pilot",
+					"sergeant",
 					"tech_priest"
 				}
 			}
@@ -4013,11 +2299,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_propaganda_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_propaganda_briefing_b",
 		response = "mission_propaganda_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4039,8 +2326,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
 					"pilot",
+					"sergeant",
 					"tech_priest"
 				}
 			}
@@ -4057,11 +2344,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_propaganda_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_propaganda_briefing_c",
 		response = "mission_propaganda_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4083,8 +2371,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
 					"pilot",
+					"sergeant",
 					"tech_priest"
 				}
 			}
@@ -4101,11 +2389,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_rails_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_rails_briefing_a",
 		response = "mission_rails_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4125,7 +2414,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4136,11 +2427,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_rails_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_rails_briefing_b",
 		response = "mission_rails_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4162,7 +2454,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4178,11 +2472,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_rails_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_rails_briefing_c",
 		response = "mission_rails_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4204,6 +2499,91 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_resurgence_brief_a",
+		response = "mission_resurgence_brief_a",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_brief"
+			},
+			{
+				"query_context",
+				"starter_line",
+				OP.EQ,
+				"mission_resurgence_brief_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "all"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_resurgence_brief_b",
+		response = "mission_resurgence_brief_b",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_brief_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
 					"sergeant"
 				}
 			}
@@ -4220,11 +2600,57 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scan_aborted",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_resurgence_brief_c",
+		response = "mission_resurgence_brief_c",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_brief_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_scan_aborted",
 		response = "mission_scan_aborted",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4268,11 +2694,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scan_complete",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "mission_scan_complete",
 		response = "mission_scan_complete",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4316,11 +2743,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scan_final",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "mission_scan_final",
 		response = "mission_scan_final",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4358,11 +2786,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scan_new_target",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "mission_scan_new_target",
 		response = "mission_scan_new_target",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4411,11 +2840,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scan_started",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 21,
+		name = "mission_scan_started",
 		response = "mission_scan_started",
 		database = "mission_giver_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4459,11 +2889,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scavenge_briefing_one",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_scavenge_briefing_one",
 		response = "mission_scavenge_briefing_one",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4483,7 +2914,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4491,11 +2924,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scavenge_briefing_three",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_scavenge_briefing_three",
 		response = "mission_scavenge_briefing_three",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4517,7 +2951,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4530,11 +2966,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_scavenge_briefing_two",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_scavenge_briefing_two",
 		response = "mission_scavenge_briefing_two",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4556,7 +2993,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4569,11 +3008,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_station_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_station_briefing_a",
 		response = "mission_station_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4593,6 +3033,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"pilot",
 					"sergeant"
 				}
 			},
@@ -4617,11 +3059,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_station_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_station_briefing_b",
 		response = "mission_station_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4643,6 +3086,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"pilot",
 					"sergeant"
 				}
 			}
@@ -4659,11 +3104,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_station_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_station_briefing_c",
 		response = "mission_station_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4685,6 +3131,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"pilot",
 					"sergeant"
 				}
 			}
@@ -4701,11 +3149,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_stockpile_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_stockpile_briefing_a",
 		response = "mission_stockpile_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4725,8 +3174,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
 					"sergeant",
-					"pilot",
 					"tech_priest"
 				}
 			}
@@ -4735,11 +3184,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_stockpile_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_stockpile_briefing_b",
 		response = "mission_stockpile_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4761,7 +3211,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4774,11 +3226,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_stockpile_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_stockpile_briefing_c",
 		response = "mission_stockpile_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4800,7 +3253,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4813,11 +3268,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_strain_briefing_a",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_strain_briefing_a",
 		response = "mission_strain_briefing_a",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4837,7 +3293,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4848,11 +3306,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_strain_briefing_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_strain_briefing_b",
 		response = "mission_strain_briefing_b",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4874,7 +3333,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4890,11 +3351,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_strain_briefing_c",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_strain_briefing_c",
 		response = "mission_strain_briefing_c",
 		database = "mission_giver_vo",
+		wwise_route = 41,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -4916,7 +3378,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			}
 		},
@@ -4928,382 +3392,6 @@ return function ()
 			delay_vo = {
 				duration = 0.2
 			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_control",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_control",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_control"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_control",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_control",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_delivery_generic",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_delivery_generic",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_delivery_generic"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_delivery_generic",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_delivery_generic",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_delivery_place",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_delivery_place",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_delivery_place"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_delivery_place",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_delivery_place",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_delivery_take",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_delivery_take",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_delivery_take"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_delivery_take",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_delivery_take",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_demolition",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_demolition",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_demolition"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_demolition",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_demolition",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_fortification",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_fortification",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_fortification"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_fortification",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_fortification",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_hacking",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_hacking",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_hacking"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant",
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_hacking",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_hacking",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "obj_mission_kill",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "obj_mission_kill",
-		database = "mission_giver_vo",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"obj_mission_kill"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"user_memory",
-				"obj_mission_kill ",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"obj_mission_kill ",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
 		}
 	})
 end

@@ -55,18 +55,14 @@ PlayerUnitSmartTargetingExtension.fixed_update = function (self, unit, dt, t, fr
 	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
 	local ray_origin, forward, right, up = self:_targeting_parameters()
 
-	Profiler.start("smart_targeting")
 	self:_update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data)
-	Profiler.stop("smart_targeting")
 	self:_update_proximity(unit, smart_targeting_template, ray_origin, forward, right, up)
 
 	if not DEDICATED_SERVER and self._is_local_unit then
 		local update_tag_targets = self._smart_tag_targeting_time <= t
 
 		if update_tag_targets then
-			Profiler.start("smart_tag_targeting")
 			self:_update_precision_target(unit, SmartTargetingTemplates.smart_tag_target, ray_origin, forward, right, up, self._smart_tag_targeting_data)
-			Profiler.stop("smart_tag_targeting")
 
 			self._smart_tag_targeting_time = t + SMART_TAG_TARGETING_DELAY
 		end
@@ -94,6 +90,8 @@ PlayerUnitSmartTargetingExtension._targeting_parameters = function (self)
 end
 
 PlayerUnitSmartTargetingExtension._update_precision_target = function (self, unit, smart_targeting_template, ray_origin, forward, right, up, targeting_data)
+	local static_hit_position_box = targeting_data.static_hit_position or Vector3Box()
+
 	table.clear(targeting_data)
 
 	local precision_target_settings = smart_targeting_template and smart_targeting_template.precision_target
@@ -112,14 +110,8 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local breed_weights = precision_target_settings.breed_weights or EMPTY_TABLE
 	local smart_tagging = precision_target_settings.smart_tagging
 	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
-
-	Profiler.start("raycast")
-
+	local hit_dot_check = precision_target_settings.hit_dot_check or 0.7
 	local hits, num_hits = PhysicsWorld.raycast(physics_world, ray_origin, forward, max_range, "all", "collision_filter", collision_filter, "rewind_ms", rewind_ms)
-
-	Profiler.stop("raycast")
-	Profiler.start("raycast_hits_loop")
-
 	local best_score = -math.huge
 	local math_abs = math.abs
 	local math_max = math.max
@@ -127,6 +119,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local math_log = math.log
 	local Vector3_dot = Vector3.dot
 	local Vector3_length = Vector3.length
+	local Unit_get_data = Unit.get_data
 
 	for i = 1, num_hits do
 		local hit = hits[i]
@@ -135,8 +128,6 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 		local distance = nil
 
 		if hit_actor then
-			Profiler.start("validate_target")
-
 			local hit_unit = Actor.unit(hit_actor)
 			local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 			local is_valid = false
@@ -154,7 +145,8 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 						end
 					end
 				elseif not unit_data_extension then
-					is_static = true
+					local ignore_raycast = Unit_get_data(hit_unit, "ignored_by_interaction_raycast")
+					is_static = not ignore_raycast
 				end
 			elseif unit_data_extension and HEALTH_ALIVE[hit_unit] then
 				is_valid = true
@@ -163,10 +155,8 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 			end
 
 			local breed = unit_data_extension and unit_data_extension:breed()
-			local is_prop = Breed.is_prop(breed)
+			local is_prop = Breed.is_prop(breed) or Breed.is_living_prop(breed)
 			local include_even_if_prop = not is_prop or smart_tagging
-
-			Profiler.stop("validate_target")
 
 			if include_even_if_prop and is_valid and best_score ~= math.huge then
 				if is_prop then
@@ -177,16 +167,18 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 				local hit_unit_center_pos, _ = Actor.world_bounds(hit_actor)
 				local object_right = Matrix4x4.right(hit_unit_pose)
 				local object_forward = Matrix4x4.forward(hit_unit_pose)
-				local world_extents_right = object_right * half_extents.x
-				local world_extents_forward = object_forward * half_extents.y
 				local half_width, half_height, target_weight = nil
 
 				if breed then
-					half_width = 0.25 * math_max(math_abs(Vector3_dot(right, world_extents_right + world_extents_forward)), math_abs(Vector3_dot(right, world_extents_right - world_extents_forward)))
+					local world_extents_right = object_right * 0.3
+					local world_extents_forward = object_forward * 0.3
+					half_width = math_max(math_abs(Vector3_dot(right, world_extents_right + world_extents_forward)), math_abs(Vector3_dot(right, world_extents_right - world_extents_forward)))
 					half_height = Breed.height(hit_unit, breed) * 0.5
 					local breed_name = breed.name
 					target_weight = breed_weights[breed_name] or 1
 				else
+					local world_extents_right = object_right * half_extents.x
+					local world_extents_forward = object_forward * half_extents.y
 					half_width = 0.5 * math_max(math_abs(Vector3_dot(right, world_extents_right + world_extents_forward)), math_abs(Vector3_dot(right, world_extents_right - world_extents_forward)))
 					half_height = half_extents.z
 					target_weight = 1
@@ -206,7 +198,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 					if breed then
 						visible_target, aim_position = self:_target_visibility_and_aim_position(breed, hit_unit, ray_origin, target_node_name)
 					else
-						visible_target, aim_position = self:_target_visibility_and_aim_position_non_breed(hit_unit, ray_origin, hit_actor)
+						visible_target, aim_position = self:_target_visibility_and_aim_position_non_breed(hit_unit, ray_origin, hit_actor, hits, i)
 					end
 
 					if not visible_target then
@@ -230,10 +222,15 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 						local utility = 1 / (x_offset * y_offset) * target_weight
 
 						if best_score < utility then
-							best_unit = hit_unit
-							best_unit_distance = distance
-							best_unit_aim_position = aim_position
-							best_score = utility
+							local hit_direction = Vector3.normalize(hit_unit_center_pos - ray_origin)
+							local hit_dot = Vector3_dot(forward, hit_direction)
+
+							if hit_dot_check < hit_dot then
+								best_unit = hit_unit
+								best_unit_distance = distance
+								best_unit_aim_position = aim_position
+								best_score = utility
+							end
 						end
 					end
 				end
@@ -244,8 +241,6 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 			end
 		end
 	end
-
-	Profiler.stop("raycast_hits_loop")
 
 	targeting_data.unit = best_unit
 	targeting_data.aim_score = best_score
@@ -267,7 +262,9 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	end
 
 	if static_hit_position then
-		targeting_data.static_hit_position = Vector3Box(static_hit_position)
+		Vector3Box.store(static_hit_position_box, static_hit_position)
+
+		targeting_data.static_hit_position = static_hit_position_box
 	end
 end
 
@@ -276,7 +273,6 @@ local nearby_target_positions = {}
 local nearby_target_distances = {}
 
 PlayerUnitSmartTargetingExtension._update_proximity = function (self, unit, smart_targeting_template, ray_origin, forward, right, up)
-	Profiler.start("smart_targeting_proximity")
 	table.clear(nearby_target_units)
 	table.clear(nearby_target_positions)
 	table.clear(nearby_target_distances)
@@ -284,8 +280,6 @@ PlayerUnitSmartTargetingExtension._update_proximity = function (self, unit, smar
 	local proximity_settings = smart_targeting_template and smart_targeting_template.proximity
 
 	if not proximity_settings then
-		Profiler.stop("smart_targeting_proximity")
-
 		return
 	end
 
@@ -303,8 +297,6 @@ PlayerUnitSmartTargetingExtension._update_proximity = function (self, unit, smar
 	local num_nearby_target_units = EngineOptimized.smart_targeting_query(broadphase, "enemy_aim_target_02", ray_origin, forward, min_range, max_range, max_angle, distance_weight, angle_weight, max_results, nearby_target_units, nearby_target_positions, nearby_target_distances, enemy_side_names)
 	local targeting_data = self._targeting_data
 	targeting_data.targets_within_range = num_nearby_target_units > 0
-
-	Profiler.stop("smart_targeting_proximity")
 end
 
 PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, smart_targeting_template, weapon_template, raw_aim_rotation)
@@ -326,9 +318,16 @@ PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, 
 	local multiplier = trajectory_assist_settings.assist_multiplier * falloff_multiplier * recoil_multiplier
 	local wanted_rotation = Quaternion.look(targeting_data.target_position:unbox() - own_position)
 	local error_angle = Quaternion.angle(raw_aim_rotation, wanted_rotation)
-	local min = trajectory_assist_settings.min_angle * multiplier
-	local max = trajectory_assist_settings.max_angle * multiplier
-	local t_value = math.clamp((error_angle - min) / max - min, 0, 1)
+	local t_value = nil
+
+	if multiplier == 0 then
+		t_value = 0
+	else
+		local min = trajectory_assist_settings.min_angle * multiplier
+		local max = trajectory_assist_settings.max_angle * multiplier
+		t_value = math.clamp((error_angle - min) / max - min, 0, 1)
+	end
+
 	local assisted_aim_rotation = Quaternion.lerp(wanted_rotation, raw_aim_rotation, t_value)
 
 	return assisted_aim_rotation
@@ -337,13 +336,11 @@ end
 local FALLBACK_NODE_NAME = "enemy_aim_target_02"
 
 PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function (self, target_breed, target_unit, own_position, target_node_name)
-	Profiler.start("target_visibility")
-
 	local wanted_node_name = target_node_name or FALLBACK_NODE_NAME
 	local wanted_pos = Unit.world_position(target_unit, Unit.node(target_unit, wanted_node_name))
 	local weakspot_direction = Vector3.normalize(wanted_pos - own_position)
 	local weakspot_distance = Vector3.length(wanted_pos - own_position)
-	local physics_world = World.physics_world(self._world)
+	local physics_world = self._physics_world
 	local hit = PhysicsWorld.raycast(physics_world, own_position, weakspot_direction, weakspot_distance, "closest", "collision_filter", "filter_ray_aim_assist_line_of_sight")
 	local visible_target, target_position = nil
 
@@ -359,29 +356,25 @@ PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function
 		target_position = visible_target and center_mass_pos or nil
 	end
 
-	Profiler.stop("target_visibility")
-
 	return visible_target, target_position
 end
 
-PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position_non_breed = function (self, target_unit, own_position, hit_actor)
-	Profiler.start("target_visibility_non_breed")
+PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position_non_breed = function (self, target_unit, own_position, target_actor, hits, current_index)
+	local owner_unit = self._unit
+	local Unit_get_data = Unit.get_data
 
-	local actor_pos, _ = Actor.world_bounds(hit_actor)
-	local actor_direction = Vector3.normalize(actor_pos - own_position)
-	local actor_distance = Vector3.length(actor_pos - own_position)
-	local physics_world = World.physics_world(self._world)
-	local hit, _, _, _, blocking_actor = PhysicsWorld.raycast(physics_world, own_position, actor_direction, actor_distance, "closest", "collision_filter", "filter_ray_aim_assist_line_of_sight")
-	local visible_target, target_position = nil
+	for ii = current_index - 1, 1, -1 do
+		local hit = hits[ii]
+		local hit_actor = hit[INDEX_ACTOR]
+		local hit_unit = Actor.unit(hit_actor)
+		local ignore_raycast = Unit_get_data(hit_unit, "ignored_by_interaction_raycast")
 
-	if not hit or hit and Actor.unit(blocking_actor) == target_unit then
-		visible_target = true
-		target_position = actor_pos
+		if not ignore_raycast and hit_unit ~= owner_unit then
+			return false, nil
+		end
 	end
 
-	Profiler.stop("target_visibility_non_breed")
-
-	return visible_target, target_position
+	return true, Actor.world_bounds(target_actor)
 end
 
 PlayerUnitSmartTargetingExtension.targeting_data = function (self)

@@ -20,9 +20,6 @@ CameraTransitionRotationLerp.update = function (self, dt, rotation, update_time)
 	local node_1_rot = self._freeze_node_1 and self._node_1_rot_table:unbox() or rotation
 	local node_2_rot = self._node_2:rotation()
 	local duration = self._duration
-
-	assert(duration > 0, "CameraTransitionRotationLerp has a zero duration")
-
 	local t = self._time / duration
 	t = math.min(t, 1)
 	local done = t == 1

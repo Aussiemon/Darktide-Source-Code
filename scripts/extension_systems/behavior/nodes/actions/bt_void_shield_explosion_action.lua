@@ -3,6 +3,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local Vo = require("scripts/utilities/vo")
 local BtVoidShieldExplosionAction = class("BtVoidShieldExplosionAction", "BtNode")
 
 BtVoidShieldExplosionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -12,6 +13,7 @@ BtVoidShieldExplosionAction.enter = function (self, unit, breed, blackboard, scr
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 
 	self:_start_attack(t, unit, scratchpad, action_data)
+	Vo.enemy_generic_vo_event(unit, "taunt_combat", breed.name)
 end
 
 BtVoidShieldExplosionAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)

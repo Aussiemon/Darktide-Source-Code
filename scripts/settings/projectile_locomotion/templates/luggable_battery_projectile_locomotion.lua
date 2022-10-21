@@ -3,19 +3,21 @@ local projectile_locomotion_templates = {
 		throw_parameters = {
 			throw = {
 				offset_right = 0.3,
-				aim_max_iterations = 150,
+				aim_max_iterations = 40,
 				speed_inital = 4,
+				aim_time_step_multiplier = 3,
+				aim_max_number_of_bounces = 1,
 				place_distance = 2,
-				offset_forward = 1,
-				locomotion_state = "manual_physics",
 				inherit_owner_velocity_percentage = 1,
 				speed_charge_duration = 1.5,
+				offset_forward = 1,
+				locomotion_state = "manual_physics",
 				offset_up = 0.1,
 				rotation_charge_duration = 1,
 				speed_maximal = 6,
-				rotation_offset_initial = Vector3Box(math.degrees_to_radians(0), math.degrees_to_radians(30), math.degrees_to_radians(0)),
-				rotation_offset_maximal = Vector3Box(math.degrees_to_radians(0), math.degrees_to_radians(30), math.degrees_to_radians(0)),
-				momentum = Vector3Box(30, 30, 0)
+				rotation_offset_initial = Vector3Box(0, 0.53, 0),
+				rotation_offset_maximal = Vector3Box(0, 0.53, 0),
+				initial_angular_velocity = Vector3Box(1.22, 1.22, 0)
 			},
 			drop = {
 				speed = 1,
@@ -37,10 +39,8 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				particle_distance = 0.3,
-				position_prefix = "pos_",
-				max_position_indices = 30,
-				effect_name = "content/fx/particles/abilities/trajectory_indicator"
+				material_name = "content/fx/materials/master/trajectory",
+				radius = 0.025
 			}
 		}
 	}

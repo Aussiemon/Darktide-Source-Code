@@ -256,7 +256,10 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
 end
 
 CharacterAppearanceView._on_continue_pressed = function (self)
-	if self._await_validation then
+	local num_pages = #self._pages
+	local active_page_number = self._active_page_number
+
+	if active_page_number == num_pages and self._await_validation then
 		self._block_continue[self._active_page_number] = {
 			true
 		}
@@ -285,7 +288,7 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 				false
 			}
 
-			return self:_create_errors_name_input(error)
+			self:_show_loading_awaiting_validation(false)
 		end)
 	else
 		local world = Managers.ui:world()
@@ -294,9 +297,6 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 		if self._current_sound_id and WwiseWorld.is_playing(wwise_world, self._current_sound_id) then
 			WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 		end
-
-		local active_page_number = self._active_page_number
-		local num_pages = #self._pages
 
 		if active_page_number == num_pages then
 			if not self._popup_finish_open then
@@ -307,14 +307,16 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 					options = {
 						{
 							text = "loc_popup_button_confirm",
+							stop_exit_sound = true,
 							close_on_pressed = true,
+							on_pressed_sound = UISoundEvents.finalize_creation_confirm,
 							callback = callback(function ()
 								Managers.event:trigger("event_create_new_character_continue")
 							end)
 						},
 						{
 							text = "loc_popup_button_cancel",
-							template_type = "default_button_small",
+							template_type = "terminal_button_small",
 							close_on_pressed = true,
 							hotkey = "back",
 							callback = callback(function ()
@@ -431,12 +433,16 @@ end
 CharacterAppearanceView._randomize_character_name = function (self)
 	local name = self._character_create:randomize_name()
 	self._character_name_status.custom = false
+	self._await_validation = false
 
 	if self._page_widgets then
 		local input_widget = self._page_widgets[1]
 		local content = input_widget.content
 		content.input_text = name
 		content.selected_text = nil
+		content._selection_start = nil
+		content._selection_end = nil
+		content.is_writing = false
 
 		self:_update_character_name()
 		self:_update_final_page_text()
@@ -445,11 +451,16 @@ CharacterAppearanceView._randomize_character_name = function (self)
 	end
 end
 
-CharacterAppearanceView._update_character_name = function (self)
+CharacterAppearanceView._update_character_custom_name = function (self)
 	self._character_name_status.custom = true
 	self._await_validation = true
+
+	self:_update_character_name()
+end
+
+CharacterAppearanceView._update_character_name = function (self)
 	local widget = self._page_widgets[1]
-	local name = widget.content.input_text or ""
+	local name = type(widget.content.input_text) == "string" and widget.content.input_text ~= "" and widget.content.input_text or widget.content.selected_text or ""
 	local input_error = true
 	local invalid_characters_used = string.match(name, "[^%\\'%\\-%\\`%\\´%a]")
 	local string_empty = name == ""
@@ -556,14 +567,21 @@ CharacterAppearanceView._open_page = function (self, index)
 	}
 
 	if page.top_frame then
-		self._widgets_by_name.list_background.content.top_frame = "content/ui/materials/base/ui_default_base"
+		self._widgets_by_name.list_background.content.top_frame = page.top_frame.header
 		self._widgets_by_name.list_background.style.top_frame.size = page.top_frame.size
 		self._widgets_by_name.list_background.style.top_frame.offset = page.top_frame.offset
-		self._widgets_by_name.list_background.style.top_frame.material_values = {
-			texture_map = page.top_frame.texture_map
-		}
 		self._widgets_by_name.list_header.style.divider.color[1] = 0
 		self._widgets_by_name.list_header.style.text_title.offset = page.top_frame.title_offset
+		self._widgets_by_name.list_header.content.icon = page.top_frame.icon
+		self._widgets_by_name.list_header.style.icon.offset = page.top_frame.icon_offset or {
+			0,
+			0,
+			0
+		}
+		self._widgets_by_name.list_header.style.icon.size = page.top_frame.icon_size or {
+			0,
+			0
+		}
 	else
 		self._widgets_by_name.list_background.content.top_frame = "content/ui/materials/dividers/horizontal_frame_big_upper"
 		self._widgets_by_name.list_background.style.top_frame.size = {
@@ -575,7 +593,7 @@ CharacterAppearanceView._open_page = function (self, index)
 			-18,
 			1
 		}
-		self._widgets_by_name.list_background.style.top_frame.material_values = nil
+		self._widgets_by_name.list_header.content.icon = nil
 		self._widgets_by_name.list_header.style.divider.color[1] = 255
 		self._widgets_by_name.list_header.style.text_title.offset = {
 			0,
@@ -643,9 +661,6 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 	local template = ContentBlueprints.blueprints[template_type]
 	local grid_template = entry.grid_template
 	local grid_start_name = "grid_" .. index .. "_"
-
-	fassert(template, "[CharacterAppearanceView] - Could not find content blueprint for type: %s", template_type)
-
 	local size = template.size
 	local pass_template = template.pass_template
 	local init = template.init
@@ -1493,7 +1508,11 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 		WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 	end
 
-	self:_play_sound(UISoundEvents.character_appearence_option_pressed)
+	if self._active_page_number == 1 then
+		self:_play_sound(UISoundEvents.character_create_planet_select)
+	else
+		self:_play_sound(UISoundEvents.character_appearence_option_pressed)
+	end
 
 	for i = 1, #self._page_grids[grid_index].widgets do
 		local widget = self._page_grids[grid_index].widgets[i]
@@ -1677,12 +1696,13 @@ CharacterAppearanceView._unload_all_appearance_icons = function (self)
 	end
 end
 
-CharacterAppearanceView._set_player_icon = function (self, widget, grid_index, rows, columns)
+CharacterAppearanceView._set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.texture.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 CharacterAppearanceView._create_page_indicators = function (self)
@@ -1717,7 +1737,11 @@ CharacterAppearanceView._create_page_indicators = function (self)
 end
 
 CharacterAppearanceView._on_close_pressed = function (self)
-	self:_play_sound(UISoundEvents.character_create_step_back_in_order)
+	local world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(world)
+
+	WwiseWorld.stop_event(wwise_world, self._current_sound_id)
+	self:_play_sound(UISoundEvents.character_create_abort)
 
 	if self._backstory_selection_page then
 		self._backstory_selection_page.leave(true)
@@ -1929,7 +1953,20 @@ CharacterAppearanceView._populate_backstory_info = function (self, settings)
 	}
 
 	self:_set_scenegraph_size("backstory_selection_pivot_background", background_size[1], background_size[2])
-	self:_set_scenegraph_position("backstory_selection_pivot", nil, -background_size[2])
+
+	local list_width, list_height = self:_scenegraph_size("list_background")
+
+	if list_height < background_size[2] then
+		local active_page_number = self._active_page_number
+		local page = self._pages[active_page_number]
+		self._ui_scenegraph.backstory_selection_pivot.vertical_alignment = "top"
+
+		self:_set_scenegraph_position("backstory_selection_pivot", nil, page.top_frame.offset[2] * 0.5)
+	else
+		self._ui_scenegraph.backstory_selection_pivot.vertical_alignment = "bottom"
+
+		self:_set_scenegraph_position("backstory_selection_pivot", nil, -background_size[2])
+	end
 
 	self._page_grids[2].support_widgets = support_widgets
 
@@ -3133,6 +3170,7 @@ CharacterAppearanceView._get_personality_content = function (self)
 
 			self._current_progress = 0
 
+			self:_play_sound(UISoundEvents.character_appearence_stop_voice_preview)
 			ContentBlueprints.pulse_animations.init(widget)
 
 			self._current_sound_id = self:_play_sound(sample_sound_event)
@@ -3261,20 +3299,30 @@ CharacterAppearanceView._get_pages = function (self)
 			end,
 			title = Localize("loc_character_create_title_home_planet"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_empty",
+				icon = "content/ui/materials/icons/character_creator/home_planet",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			description = Localize("loc_character_creator_home_planet_introduction"),
@@ -3321,20 +3369,30 @@ CharacterAppearanceView._get_pages = function (self)
 				}
 			},
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_childhood",
+				icon = "content/ui/materials/icons/character_creator/childhood",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			content = self:_get_childhood_content()
@@ -3356,20 +3414,30 @@ CharacterAppearanceView._get_pages = function (self)
 			title = Localize("loc_character_growing_up_title_name"),
 			description = Localize("loc_character_creator_growing_up_introduction"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_growingup",
+				icon = "content/ui/materials/icons/character_creator/growth",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			background = {
@@ -3398,20 +3466,30 @@ CharacterAppearanceView._get_pages = function (self)
 			title = Localize("loc_character_event_title_name"),
 			description = Localize("loc_character_creator_formative_event_introduction"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_formative",
+				icon = "content/ui/materials/icons/character_creator/accomplishment",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			background = {
@@ -3434,20 +3512,30 @@ CharacterAppearanceView._get_pages = function (self)
 			end,
 			title = Localize("loc_character_create_title_appearance"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_empty",
+				icon = "content/ui/materials/icons/character_creator/appearence",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			content = {},
@@ -3473,22 +3561,35 @@ CharacterAppearanceView._get_pages = function (self)
 					self:_populate_backstory_info(persoanlity_settings)
 				end
 			end,
+			leave = function ()
+				self:_play_sound(UISoundEvents.character_appearence_stop_voice_preview)
+			end,
 			title = Localize("loc_character_create_title_personality"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_empty",
+				icon = "content/ui/materials/icons/character_creator/personality",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			description = Localize("loc_character_creator_personality_introduction")
@@ -3505,11 +3606,7 @@ CharacterAppearanceView._get_pages = function (self)
 					self._character_name_status.archetype = selected_archetype
 					self._character_name_status.gender = selected_gender
 
-					self._character_create:_fetch_suggested_names_by_profile():next(function ()
-						if self._character_name_status.custom == false then
-							self:_randomize_character_name()
-						end
-					end)
+					self._character_create:_fetch_suggested_names_by_profile()
 				end
 
 				self:_populate_page_grid(1, page.content)
@@ -3525,20 +3622,30 @@ CharacterAppearanceView._get_pages = function (self)
 			end,
 			title = Localize("loc_character_create_title_crime"),
 			top_frame = {
-				texture_map = "content/ui/textures/frames/char_creator_placeholder_empty",
+				icon = "content/ui/materials/icons/character_creator/sentence",
+				header = "content/ui/materials/frames/character_creator_top",
 				size = {
-					480,
-					176
+					485,
+					230
 				},
 				offset = {
 					0,
-					-160,
+					-205,
 					1
 				},
 				title_offset = {
 					0,
-					10,
+					-4,
 					2
+				},
+				icon_size = {
+					100,
+					100
+				},
+				icon_offset = {
+					0,
+					-130,
+					3
 				}
 			},
 			description = Localize("loc_character_creator_sentence_introduction"),
@@ -3554,14 +3661,12 @@ CharacterAppearanceView._get_pages = function (self)
 					self._page_widgets[1].content.hotspot.is_focused = true
 				end
 
+				self:_update_character_name()
 				self:_move_camera()
 				self:_handle_continue_button_text()
 			end,
 			leave = function ()
 				self:_move_camera(true)
-
-				self._await_validation = false
-
 				self:_create_errors_name_input()
 				self:_destroy_support_page_widgets()
 			end

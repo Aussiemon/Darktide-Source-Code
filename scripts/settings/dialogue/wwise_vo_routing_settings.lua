@@ -237,6 +237,36 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_ability_vo_rev_2d",
 		display_name = "Player Ability VO rev 2d",
 		wwise_sound_source = "es_ability_vo_rev_2d"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_captain_vo_important",
+		display_name = "Named Captain Important",
+		wwise_sound_source = "es_traitor_captain_vo_important"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_menu_vo",
+		display_name = "VO for UI or menu",
+		wwise_sound_source = "es_menu_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_mission_briefing_vo",
+		display_name = "Mission Briefing VO",
+		wwise_sound_source = "es_mission_briefing_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_training_ground_psyker_vo",
+		display_name = "Training Ground Psyker VO",
+		wwise_sound_source = "es_training_ground_psyker_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_enemy_chaos_newly_infected_assault_vo",
+		display_name = "Chaos Newly Infected Assault VO",
+		wwise_sound_source = "es_enemy_chaos_newly_infected_assault_vo"
 	}
 }
 

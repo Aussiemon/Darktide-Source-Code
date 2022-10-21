@@ -86,7 +86,7 @@ local templates = {
 			0.5,
 			1.5
 		},
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.burning,
 			node_effects = {
@@ -129,7 +129,7 @@ local templates = {
 			0.5,
 			1.5
 		},
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.burning,
 			node_effects = {
@@ -169,7 +169,7 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.liquid_area_fire_burning,
 		damage_type = damage_types.burning,
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.burning,
 			node_effects = {
@@ -204,7 +204,7 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
 		damage_type = damage_types.corruption,
-		interval_function = _scaled_damage_interval_function
+		interval_func = _scaled_damage_interval_function
 	},
 	prop_in_liquid_fire_burning_movement_slow = {
 		interval = 1,
@@ -236,7 +236,7 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.liquid_area_fire_burning_barrel,
 		damage_type = damage_types.burning,
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.burning,
 			node_effects = {
@@ -258,10 +258,10 @@ local templates = {
 	},
 	renegade_grenadier_in_fire_liquid = {
 		class_name = "interval_buff",
-		interval = 0.25,
+		interval = 0.2,
 		max_stacks = 1,
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 0.85
+			[buff_stat_buffs.movement_speed] = 0.8
 		},
 		keywords = {
 			buff_keywords.burning
@@ -281,7 +281,7 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
 		damage_type = damage_types.burning,
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.burning,
 			node_effects = {
@@ -323,7 +323,7 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
 		damage_type = damage_types.burning,
-		interval_function = _scaled_damage_interval_function,
+		interval_func = _scaled_damage_interval_function,
 		minion_effects = {
 			ailment_effect = ailment_effects.chem_burning,
 			node_effects = {
@@ -341,6 +341,90 @@ local templates = {
 					}
 				}
 			}
+		}
+	}
+}
+local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 2
+local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.15
+
+local function _beast_of_nurgle_in_slime_interval_function(template_data, template_context, template)
+	local unit = template_context.unit
+
+	if not HEALTH_ALIVE[unit] then
+		return
+	end
+
+	local breed = template_context.breed
+	local breed_type = breed.breed_type
+	local power_level_by_breed_type = template.power_level
+	local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+
+	if template_context.is_player then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local is_sliding_or_dodging = character_state_component.state_name == "sliding" or character_state_component.state_name == "dodging"
+
+		if is_sliding_or_dodging then
+			power_level = power_level * PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER
+			template_context.interval_override = PLAYER_SLIDING_INTERVAL_OVERRIDE
+		elseif template_context.interval_override then
+			template_context.interval_override = nil
+		end
+
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+		if is_knocked_down then
+			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+		end
+	end
+
+	if template.power_level_random then
+		power_level = power_level * 0.5 + math.random() * power_level
+	end
+
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local optional_source_item = template_context.is_server and template_context.source_item or nil
+	local damage_template = template.damage_template
+	local damage_type = template.damage_type
+
+	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+end
+
+templates.beast_of_nurgle_in_slime = {
+	predicted = false,
+	interval = 0.5,
+	max_stacks = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.zero_slide_friction
+	},
+	forbidden_keywords = {
+		buff_keywords.beast_of_nurgle_liquid_immunity
+	},
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.5,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.6
+	},
+	power_level = {
+		default = {
+			6,
+			12,
+			30,
+			20,
+			35
+		}
+	},
+	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
+	damage_type = damage_types.minion_vomit,
+	interval_func = _beast_of_nurgle_in_slime_interval_function,
+	player_effects = {
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
 		}
 	}
 }

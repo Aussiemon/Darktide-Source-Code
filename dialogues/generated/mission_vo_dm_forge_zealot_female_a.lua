@@ -59,7 +59,7 @@ local mission_vo_dm_forge_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.322771,
+			[1.0] = 3.322792,
 			[2.0] = 3.467646
 		},
 		randomize_indexes = {}
@@ -98,7 +98,7 @@ local mission_vo_dm_forge_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.434,
+			[1.0] = 3.433979,
 			[2.0] = 3.175708
 		},
 		randomize_indexes = {}
@@ -122,13 +122,13 @@ local mission_vo_dm_forge_zealot_female_a = {
 			1.147604,
 			2.041,
 			1.56625,
-			1.863604,
+			1.863583,
 			2.258104,
 			2.178771,
-			1.645563,
+			1.645542,
 			3.153792,
 			3.300042,
-			2.505646
+			2.505625
 		},
 		sound_event_weights = {
 			0.1,
@@ -152,8 +152,8 @@ local mission_vo_dm_forge_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.303021,
-			[2.0] = 2.018396
+			[1.0] = 4.303,
+			[2.0] = 2.018375
 		},
 		randomize_indexes = {}
 	},
@@ -165,7 +165,7 @@ local mission_vo_dm_forge_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__mission_forge_lifeless_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.528146,
+			[1.0] = 5.528125,
 			[2.0] = 3.94225
 		},
 		randomize_indexes = {}
@@ -185,18 +185,21 @@ local mission_vo_dm_forge_zealot_female_a = {
 	},
 	mission_forge_main_entrance_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__region_mechanicus_01",
-			[2.0] = "loc_zealot_female_a__region_mechanicus_02"
+			"loc_zealot_female_a__region_mechanicus_01",
+			"loc_zealot_female_a__region_mechanicus_02",
+			"loc_zealot_female_a__region_mechanicus_03"
 		},
 		sound_events_duration = {
-			[1.0] = 4.788104,
-			[2.0] = 5.026396
+			4.788125,
+			5.026375,
+			6.010813
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -234,8 +237,28 @@ local mission_vo_dm_forge_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.26825,
+			[1.0] = 5.268229,
 			[2.0] = 3.640021
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_female_a__zone_tank_foundry_01",
+			"loc_zealot_female_a__zone_tank_foundry_02",
+			"loc_zealot_female_a__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			5.251292,
+			4.453771,
+			5.833292
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -264,9 +287,9 @@ local mission_vo_dm_forge_zealot_female_a = {
 		},
 		sound_events_duration = {
 			2.828729,
-			3.103833,
+			3.103813,
 			2.8565,
-			3.365583,
+			3.365563,
 			4.786646
 		},
 		sound_event_weights = {

@@ -1,4 +1,3 @@
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
 local DEFAULT_SWAY_LERP_SPEED = 10
@@ -46,6 +45,13 @@ function _update_move(dt, t, first_person_unit, unit_data_extension, lerp_values
 	if move_z_variable then
 		Unit.animation_set_variable(first_person_unit, move_z_variable, move_z)
 	end
+
+	local move_speed = Vector3.length(velocity_current)
+	local move_speed_variable = Unit.animation_find_variable(first_person_unit, "move_speed")
+
+	if move_speed_variable then
+		Unit.animation_set_variable(first_person_unit, move_speed_variable, move_speed)
+	end
 end
 
 function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
@@ -69,15 +75,15 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 	local sway_settings = Sway.movement_state_settings(sway_template, movement_state_component)
 	local visual_sway_settings = sway_settings and sway_settings.visual_sway_settings
 	local sway_lerp_speed = visual_sway_settings and visual_sway_settings.lerp_speed or DEFAULT_SWAY_LERP_SPEED
-	local sway_lerp_scalar = math.min(sway_lerp_speed * dt, 1)
+	local sway_lerp_scalar = math.min(sway_lerp_speed * dt * 2, 1)
 	local sway_offset_x = sway_component.offset_x
 	local sway_offset_y = sway_component.offset_y
 	sway_offset_x = math.lerp(lerp_values.sway_offset_x or 0, sway_offset_x, sway_lerp_scalar)
 	sway_offset_y = math.lerp(lerp_values.sway_offset_y or 0, sway_offset_y, sway_lerp_scalar)
 	lerp_values.sway_offset_x = sway_offset_x
 	lerp_values.sway_offset_y = sway_offset_y
-	local aim_offset_x = sway_offset_x
-	local aim_offset_y = sway_offset_y
+	local aim_offset_x = sway_offset_x * (sway_settings and sway_settings.visual_yaw_impact_mod or 1)
+	local aim_offset_y = sway_offset_y * (sway_settings and sway_settings.visual_pitch_impact_mod or 1)
 	local recoil_template = weapon_extension:recoil_template()
 	local recoil_component = unit_data_extension:read_component("recoil")
 	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component)
@@ -85,8 +91,8 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 
 	if visual_recoil_settings then
 		local recoil_intensity = visual_recoil_settings.intensity
+		local lerp_scalar = visual_recoil_settings.lerp_scalar
 		local yaw_intensity = visual_recoil_settings.yaw_intensity or recoil_intensity * 0.5
-		local lerp_scalar = math.min(sway_lerp_speed * dt, 1)
 		local recoil_pitch_offset, recoil_yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
 		recoil_pitch_offset = math.lerp(lerp_values.recoil_pitch_offset or 0, recoil_pitch_offset * recoil_intensity, lerp_scalar)
 		recoil_yaw_offset = math.lerp(lerp_values.recoil_yaw_offset or 0, recoil_yaw_offset * yaw_intensity, lerp_scalar)

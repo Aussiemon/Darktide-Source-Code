@@ -77,6 +77,14 @@ hitscan_templates.snp_heavy_lasgun_beam = {
 		}
 	}
 }
+hitscan_templates.lasgun_p2_m1_beam = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.lasgun_p2_m1_killshot
+		}
+	}
+}
 
 return {
 	base_templates = hitscan_templates,

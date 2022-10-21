@@ -11,7 +11,7 @@ local event_vo_demolition_veteran_male_b = {
 		sound_events_duration = {
 			2.496229,
 			2.530708,
-			1.886063,
+			1.886042,
 			2.716208
 		},
 		randomize_indexes = {}

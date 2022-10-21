@@ -1,663 +1,704 @@
 local MissionSettings = require("scripts/settings/mission/mission_settings")
-local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local gib_overrides_template = GibbingSettings.gib_overrides
 local zone_ids = MissionSettings.mission_zone_ids
-local basic_renegade_melee_template = {
-	slot_upperbody = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a"
-		}
-	},
-	slot_lowerbody = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a"
-		}
-	},
-	slot_face = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_tattoo_01",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_tattoo_02"
-		}
-	},
-	slot_hair = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b_var_01",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b_var_02",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b_var_03",
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/generic_items/empty_minion_item"
-		}
-	},
-	slot_melee_weapon = {
-		drop_on_death = true,
-		is_weapon = true,
-		items = {
-			"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_02",
-			"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_04",
-			"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
-		}
-	},
-	slot_decal = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_a",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_d",
-			"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_e"
-		}
-	},
-	slot_variation_gear = {
-		items = {
-			"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a"
-		}
-	},
-	slot_flesh = {
-		starts_invisible = true,
-		items = {
-			"content/items/characters/minions/gib_items/traitor_guard_flesh"
-		}
-	},
-	envrionmental_override = {
-		is_material_override_slot = true,
-		items = {
-			"content/items/characters/minions/generic_items/empty_minion_item"
-		}
-	},
-	skin_color_override = {
-		is_material_override_slot = true,
-		items = {
-			"content/items/characters/minions/generic_items/empty_minion_item",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_01",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_02",
-			"content/items/characters/minions/skin_color_overrides/chaos_skin_color_03"
-		}
-	}
-}
 local templates = {
-	renegade_melee = {
-		has_gib_overrides = true,
-		default = {},
-		[zone_ids.tank_foundry] = {}
+	renegade_melee = {}
+}
+local basic_renegade_melee_template = {
+	slots = {
+		slot_upperbody = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_color_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_color_var_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_color_var_03",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_var_01_color_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_var_01_color_var_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_var_01_color_var_03"
+			}
+		},
+		slot_lowerbody = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_color_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_color_var_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_color_var_03",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_var_01_color_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_var_01_color_var_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_var_01_color_var_03"
+			}
+		},
+		slot_face = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_tattoo_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_tattoo_02"
+			}
+		},
+		slot_hair = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b_var_02",
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/generic_items/empty_minion_item"
+			}
+		},
+		slot_melee_weapon = {
+			drop_on_death = true,
+			is_weapon = true,
+			items = {
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_02",
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_04",
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
+			}
+		},
+		slot_decal = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_a",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_d",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_decal_01_e"
+			}
+		},
+		slot_variation_gear = {
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a"
+			}
+		},
+		slot_flesh = {
+			starts_invisible = true,
+			items = {
+				"content/items/characters/minions/gib_items/traitor_guard_flesh"
+			}
+		},
+		envrionmental_override = {
+			is_material_override_slot = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item"
+			}
+		},
+		skin_color_override = {
+			is_material_override_slot = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_01",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_02",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_03"
+			}
+		}
 	}
 }
-templates.renegade_melee.default[1] = table.clone(basic_renegade_melee_template)
+local default_1 = table.clone(basic_renegade_melee_template)
 local default_2 = table.clone(basic_renegade_melee_template)
-default_2.slot_variation_gear = {
+default_2.gib_variations = {
+	"var_01"
+}
+default_2.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-local default_2_gibs = table.clone(gib_overrides_template)
-default_2_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_2_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_2_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_2_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_2_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_2_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_2.gib_overrides = default_2_gibs
-templates.renegade_melee.default[2] = default_2
 local default_3 = table.clone(basic_renegade_melee_template)
-default_3.slot_variation_gear = {
+default_3.gib_variations = {
+	"var_01"
+}
+default_3.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-local default_3_gibs = table.clone(gib_overrides_template)
-default_3_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_3_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_3_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_3_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_3_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_3_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_3.gib_overrides = default_3_gibs
-templates.renegade_melee.default[3] = default_3
 local default_4 = table.clone(basic_renegade_melee_template)
-default_4.slot_variation_gear = {
+default_4.gib_variations = {
+	"var_03"
+}
+default_4.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-local default_4_gibs = table.clone(gib_overrides_template)
-default_4_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_4_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_4_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_4_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_4_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_4_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_4.gib_overrides = default_4_gibs
-templates.renegade_melee.default[4] = default_4
 local default_5 = table.clone(basic_renegade_melee_template)
-default_5.slot_face = {
+default_5.gib_variations = {
+	"face_01_b"
+}
+default_5.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02"
 	}
 }
-local default_5_gibs = table.clone(gib_overrides_template)
-default_5_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_01_b/head_gib"
-default_5.gib_overrides = default_5_gibs
-templates.renegade_melee.default[5] = default_5
 local default_6 = table.clone(basic_renegade_melee_template)
-default_6.slot_variation_gear = {
+default_6.gib_variations = {
+	"face_01_b",
+	"var_01"
+}
+default_6.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-default_6.slot_face = {
+default_6.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02"
 	}
 }
-local default_6_gibs = table.clone(gib_overrides_template)
-default_6_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_6_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_6_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_6_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_6_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_6_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_6_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_01_b/head_gib"
-default_6.gib_overrides = default_6_gibs
-templates.renegade_melee.default[6] = default_6
 local default_7 = table.clone(basic_renegade_melee_template)
-default_7.slot_variation_gear = {
+default_7.gib_variations = {
+	"face_01_b",
+	"var_02"
+}
+default_7.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-default_7.slot_face = {
+default_7.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02"
 	}
 }
-local default_7_gibs = table.clone(gib_overrides_template)
-default_7_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_7_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_7_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_7_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_7_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_7_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_7_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_01_b/head_gib"
-default_7.gib_overrides = default_7_gibs
-templates.renegade_melee.default[7] = default_7
 local default_8 = table.clone(basic_renegade_melee_template)
-default_8.slot_variation_gear = {
+default_8.gib_variations = {
+	"face_01_b",
+	"var_03"
+}
+default_8.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-default_8.slot_face = {
+default_8.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02"
 	}
 }
-local default_8_gibs = table.clone(gib_overrides_template)
-default_8_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_8_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_8_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_8_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_8_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_8_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_8_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_01_b/head_gib"
-default_8.gib_overrides = default_8_gibs
-templates.renegade_melee.default[8] = default_8
 local default_9 = table.clone(basic_renegade_melee_template)
-default_9.slot_face = {
+default_9.gib_variations = {
+	"face_02"
+}
+default_9.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_02"
 	}
 }
-local default_9_gibs = table.clone(gib_overrides_template)
-default_9_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02/head_gib"
-default_9.gib_overrides = default_9_gibs
-templates.renegade_melee.default[9] = default_9
 local default_10 = table.clone(basic_renegade_melee_template)
-default_10.slot_variation_gear = {
+default_10.gib_variations = {
+	"face_02",
+	"var_01"
+}
+default_10.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-default_10.slot_face = {
+default_10.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_02"
 	}
 }
-local default_10_gibs = table.clone(gib_overrides_template)
-default_10_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_10_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_10_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_10_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_10_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_10_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_10_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02/head_gib"
-default_10.gib_overrides = default_10_gibs
-templates.renegade_melee.default[10] = default_10
 local default_11 = table.clone(basic_renegade_melee_template)
-default_11.slot_variation_gear = {
+default_11.gib_variations = {
+	"face_02",
+	"var_02"
+}
+default_11.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-default_11.slot_face = {
+default_11.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_02"
 	}
 }
-local default_11_gibs = table.clone(gib_overrides_template)
-default_11_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_11_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_11_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_11_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_11_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_11_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_11_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02/head_gib"
-default_11.gib_overrides = default_11_gibs
-templates.renegade_melee.default[11] = default_11
 local default_12 = table.clone(basic_renegade_melee_template)
-default_12.slot_variation_gear = {
+default_12.gib_variations = {
+	"face_02",
+	"var_03"
+}
+default_12.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-default_12.slot_face = {
+default_12.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_02"
 	}
 }
-local default_12_gibs = table.clone(gib_overrides_template)
-default_12_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_12_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_12_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_12_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_12_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_12_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_12_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02/head_gib"
-default_12.gib_overrides = default_12_gibs
-templates.renegade_melee.default[12] = default_12
 local default_13 = table.clone(basic_renegade_melee_template)
-default_13.slot_face = {
+default_13.gib_variations = {
+	"face_02_b"
+}
+default_13.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_02"
 	}
 }
-local default_13_gibs = table.clone(gib_overrides_template)
-default_13_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02_b/head_gib"
-default_13.gib_overrides = default_13_gibs
-templates.renegade_melee.default[13] = default_13
 local default_14 = table.clone(basic_renegade_melee_template)
-default_14.slot_variation_gear = {
+default_14.gib_variations = {
+	"face_02_b",
+	"var_01"
+}
+default_14.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-default_14.slot_face = {
+default_14.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_02"
 	}
 }
-local default_14_gibs = table.clone(gib_overrides_template)
-default_14_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_14_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_14_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_14_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_14_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_14_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_14_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02_b/head_gib"
-default_14.gib_overrides = default_14_gibs
-templates.renegade_melee.default[14] = default_14
 local default_15 = table.clone(basic_renegade_melee_template)
-default_15.slot_variation_gear = {
+default_15.gib_variations = {
+	"face_02_b",
+	"var_02"
+}
+default_15.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-default_15.slot_face = {
+default_15.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_02"
 	}
 }
-local default_15_gibs = table.clone(gib_overrides_template)
-default_15_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_15_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_15_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_15_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_15_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_15_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_15_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02_b/head_gib"
-default_15.gib_overrides = default_15_gibs
-templates.renegade_melee.default[15] = default_15
 local default_16 = table.clone(basic_renegade_melee_template)
-default_16.slot_variation_gear = {
+default_16.gib_variations = {
+	"face_02_b",
+	"var_03"
+}
+default_16.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-default_16.slot_face = {
+default_16.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_02"
 	}
 }
-local default_16_gibs = table.clone(gib_overrides_template)
-default_16_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_16_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_16_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_16_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_16_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_16_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_16_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_02_b/head_gib"
-default_16.gib_overrides = default_16_gibs
-templates.renegade_melee.default[16] = default_16
 local default_17 = table.clone(basic_renegade_melee_template)
-default_17.slot_face = {
+default_17.gib_variations = {
+	"face_03"
+}
+default_17.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_02"
 	}
 }
-local default_17_gibs = table.clone(gib_overrides_template)
-default_17_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03/head_gib"
-default_17.gib_overrides = default_17_gibs
-templates.renegade_melee.default[17] = default_17
 local default_18 = table.clone(basic_renegade_melee_template)
-default_18.slot_variation_gear = {
+default_18.gib_variations = {
+	"face_03",
+	"var_01"
+}
+default_18.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-default_18.slot_face = {
+default_18.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_02"
 	}
 }
-local default_18_gibs = table.clone(gib_overrides_template)
-default_18_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_18_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_18_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_18_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_18_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_18_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_18_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03/head_gib"
-default_18.gib_overrides = default_18_gibs
-templates.renegade_melee.default[18] = default_18
 local default_19 = table.clone(basic_renegade_melee_template)
-default_19.slot_variation_gear = {
+default_19.gib_variations = {
+	"face_03",
+	"var_02"
+}
+default_19.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-default_19.slot_face = {
+default_19.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_02"
 	}
 }
-local default_19_gibs = table.clone(gib_overrides_template)
-default_19_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_19_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_19_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_19_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_19_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_19_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_19_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03/head_gib"
-default_19.gib_overrides = default_19_gibs
-templates.renegade_melee.default[19] = default_19
 local default_20 = table.clone(basic_renegade_melee_template)
-default_20.slot_variation_gear = {
+default_20.gib_variations = {
+	"face_03",
+	"var_03"
+}
+default_20.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-default_20.slot_face = {
+default_20.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_02"
 	}
 }
-local default_20_gibs = table.clone(gib_overrides_template)
-default_20_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_20_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_20_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_20_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_20_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_20_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_20_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03/head_gib"
-default_20.gib_overrides = default_20_gibs
-templates.renegade_melee.default[20] = default_20
 local default_21 = table.clone(basic_renegade_melee_template)
-default_21.slot_face = {
+default_21.gib_variations = {
+	"face_03_b"
+}
+default_21.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_02"
 	}
 }
-local default_21_gibs = table.clone(gib_overrides_template)
-default_21_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03_b/head_gib"
-default_21.gib_overrides = default_21_gibs
-templates.renegade_melee.default[21] = default_21
 local default_22 = table.clone(basic_renegade_melee_template)
-default_22.slot_variation_gear = {
+default_22.gib_variations = {
+	"face_03_b",
+	"var_01"
+}
+default_22.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_01"
 	}
 }
-default_22.slot_face = {
+default_22.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_02"
 	}
 }
-local default_22_gibs = table.clone(gib_overrides_template)
-default_22_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_22_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_22_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_22_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib"
-default_22_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_22_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_01/upper_torso_gib_full"
-default_22_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03_b/head_gib"
-default_22.gib_overrides = default_22_gibs
-templates.renegade_melee.default[22] = default_22
 local default_23 = table.clone(basic_renegade_melee_template)
-default_23.slot_variation_gear = {
+default_23.gib_variations = {
+	"face_03_b",
+	"var_02"
+}
+default_23.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_02"
 	}
 }
-default_23.slot_face = {
+default_23.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_02"
 	}
 }
-local default_23_gibs = table.clone(gib_overrides_template)
-default_23_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_23_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_23_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_23_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib"
-default_23_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_23_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_02/upper_torso_gib_full"
-default_23_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03_b/head_gib"
-default_23.gib_overrides = default_23_gibs
-templates.renegade_melee.default[23] = default_23
 local default_24 = table.clone(basic_renegade_melee_template)
-default_24.slot_variation_gear = {
+default_24.gib_variations = {
+	"face_03_b",
+	"var_03"
+}
+default_24.slots.slot_variation_gear = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_a_var_03"
 	}
 }
-default_24.slot_face = {
+default_24.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_01",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_02"
 	}
 }
-local default_24_gibs = table.clone(gib_overrides_template)
-default_24_gibs.torso.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_24_gibs.torso.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_24_gibs.torso.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_24_gibs.center_mass.explosion.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib"
-default_24_gibs.center_mass.plasma.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_24_gibs.center_mass.sawing.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/var_03/upper_torso_gib_full"
-default_24_gibs.head.default.override_gib_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/face_03_b/head_gib"
-default_24.gib_overrides = default_24_gibs
-templates.renegade_melee.default[24] = default_24
+templates.renegade_melee.default = {
+	default_1,
+	default_2,
+	default_3,
+	default_4,
+	default_5,
+	default_6,
+	default_7,
+	default_8,
+	default_9,
+	default_10,
+	default_11,
+	default_12,
+	default_13,
+	default_14,
+	default_15,
+	default_16,
+	default_17,
+	default_18,
+	default_19,
+	default_20,
+	default_21,
+	default_22,
+	default_23,
+	default_24
+}
 local foundry_1 = table.clone(basic_renegade_melee_template)
-foundry_1.envrionmental_override.items = {
+foundry_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[1] = foundry_1
 local foundry_2 = table.clone(default_2)
-foundry_2.envrionmental_override.items = {
+foundry_2.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[2] = foundry_2
 local foundry_3 = table.clone(default_3)
-foundry_3.envrionmental_override.items = {
+foundry_3.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[3] = foundry_3
 local foundry_4 = table.clone(default_4)
-foundry_4.envrionmental_override.items = {
+foundry_4.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[4] = foundry_4
 local foundry_5 = table.clone(default_5)
-foundry_5.envrionmental_override.items = {
+foundry_5.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[5] = foundry_5
 local foundry_6 = table.clone(default_6)
-foundry_6.envrionmental_override.items = {
+foundry_6.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[6] = foundry_6
 local foundry_7 = table.clone(default_7)
-foundry_7.envrionmental_override.items = {
+foundry_7.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[7] = foundry_7
-local foundry_7 = table.clone(default_7)
-foundry_7.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02"
-}
-templates.renegade_melee.tank_foundry[7] = foundry_7
 local foundry_8 = table.clone(default_8)
-foundry_8.envrionmental_override.items = {
+foundry_8.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[8] = foundry_8
 local foundry_9 = table.clone(default_9)
-foundry_9.envrionmental_override.items = {
+foundry_9.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[9] = foundry_9
 local foundry_10 = table.clone(default_10)
-foundry_10.envrionmental_override.items = {
+foundry_10.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[10] = foundry_10
 local foundry_11 = table.clone(default_11)
-foundry_11.envrionmental_override.items = {
+foundry_11.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[11] = foundry_11
 local foundry_12 = table.clone(default_12)
-foundry_12.envrionmental_override.items = {
+foundry_12.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[12] = foundry_12
 local foundry_13 = table.clone(default_13)
-foundry_13.envrionmental_override.items = {
+foundry_13.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[13] = foundry_13
 local foundry_14 = table.clone(default_14)
-foundry_14.envrionmental_override.items = {
+foundry_14.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[14] = foundry_14
 local foundry_15 = table.clone(default_15)
-foundry_15.envrionmental_override.items = {
+foundry_15.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[15] = foundry_15
 local foundry_16 = table.clone(default_16)
-foundry_16.envrionmental_override.items = {
+foundry_16.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[16] = foundry_16
 local foundry_17 = table.clone(default_17)
-foundry_17.envrionmental_override.items = {
+foundry_17.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[17] = foundry_17
 local foundry_18 = table.clone(default_18)
-foundry_18.envrionmental_override.items = {
+foundry_18.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[18] = foundry_18
 local foundry_19 = table.clone(default_19)
-foundry_19.envrionmental_override.items = {
+foundry_19.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[19] = foundry_19
 local foundry_20 = table.clone(default_20)
-foundry_20.envrionmental_override.items = {
+foundry_20.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[20] = foundry_20
 local foundry_21 = table.clone(default_21)
-foundry_21.envrionmental_override.items = {
+foundry_21.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[21] = foundry_21
 local foundry_22 = table.clone(default_22)
-foundry_22.envrionmental_override.items = {
+foundry_22.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[22] = foundry_22
 local foundry_23 = table.clone(default_23)
-foundry_23.envrionmental_override.items = {
+foundry_23.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[23] = foundry_23
 local foundry_24 = table.clone(default_24)
-foundry_24.envrionmental_override.items = {
+foundry_24.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
-templates.renegade_melee.tank_foundry[24] = foundry_24
+templates.renegade_melee[zone_ids.tank_foundry] = {
+	foundry_1,
+	foundry_2,
+	foundry_3,
+	foundry_4,
+	foundry_5,
+	foundry_6,
+	foundry_7,
+	foundry_8,
+	foundry_9,
+	foundry_10,
+	foundry_11,
+	foundry_12,
+	foundry_13,
+	foundry_14,
+	foundry_15,
+	foundry_16,
+	foundry_17,
+	foundry_18,
+	foundry_19,
+	foundry_20,
+	foundry_21,
+	foundry_22,
+	foundry_23,
+	foundry_24
+}
+local watertown_1 = table.clone(basic_renegade_melee_template)
+watertown_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_2 = table.clone(default_2)
+watertown_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_3 = table.clone(default_3)
+watertown_3.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_4 = table.clone(default_4)
+watertown_4.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_5 = table.clone(default_5)
+watertown_5.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_6 = table.clone(default_6)
+watertown_6.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_7 = table.clone(default_7)
+watertown_7.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_8 = table.clone(default_8)
+watertown_8.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_9 = table.clone(default_9)
+watertown_9.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_10 = table.clone(default_10)
+watertown_10.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_11 = table.clone(default_11)
+watertown_11.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_12 = table.clone(default_12)
+watertown_12.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_13 = table.clone(default_13)
+watertown_13.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_14 = table.clone(default_14)
+watertown_14.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_15 = table.clone(default_15)
+watertown_15.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_16 = table.clone(default_16)
+watertown_16.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_17 = table.clone(default_17)
+watertown_17.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_18 = table.clone(default_18)
+watertown_18.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_19 = table.clone(default_19)
+watertown_19.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_20 = table.clone(default_20)
+watertown_20.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_21 = table.clone(default_21)
+watertown_21.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_22 = table.clone(default_22)
+watertown_22.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_23 = table.clone(default_23)
+watertown_23.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+local watertown_24 = table.clone(default_24)
+watertown_24.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_02"
+}
+templates.renegade_melee[zone_ids.watertown] = {
+	watertown_1,
+	watertown_2,
+	watertown_3,
+	watertown_4,
+	watertown_5,
+	watertown_6,
+	watertown_7,
+	watertown_8,
+	watertown_9,
+	watertown_10,
+	watertown_11,
+	watertown_12,
+	watertown_13,
+	watertown_14,
+	watertown_15,
+	watertown_16,
+	watertown_17,
+	watertown_18,
+	watertown_19,
+	watertown_20,
+	watertown_21,
+	watertown_22,
+	watertown_23,
+	watertown_24
+}
 
 return templates

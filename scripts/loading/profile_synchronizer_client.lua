@@ -22,17 +22,11 @@ end
 
 ProfileSynchronizerClient.peer_profile_chunks_array = function (self, peer_id, local_player_id_array)
 	local profile_chunks = self._peer_profile_chunks[peer_id]
-
-	fassert(profile_chunks, "Peer with peer_id %s has either disconnected or not had their profile synced")
-
 	local profile_chunks_array = {}
 
 	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local chunks = profile_chunks[local_player_id]
-
-		fassert(chunks, "Profile not synced, peer_id:%s local_player_id:%s", peer_id, local_player_id)
-
 		profile_chunks_array[i] = chunks
 	end
 
@@ -42,9 +36,6 @@ end
 ProfileSynchronizerClient.player_profile_json = function (self, peer_id, local_player_id)
 	local peer_profiles_json = self._peer_profiles_json
 	local profile_json = peer_profiles_json[peer_id][local_player_id]
-
-	fassert(peer_profiles_json, "Peer with peer_id %s has either disconnected or not had their profile synced")
-	fassert(profile_json, "Profile not synced, peer_id:%s local_player_id:%s", peer_id, local_player_id)
 
 	return profile_json
 end

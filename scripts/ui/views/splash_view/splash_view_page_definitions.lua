@@ -119,7 +119,7 @@ local splash_definitions = {
 			exit_sound_name = "wwise/events/cinematics/stop_e3_trailer",
 			type = "video"
 		},
-		duration = 155
+		duration = 115
 	},
 	{
 		duration = 1

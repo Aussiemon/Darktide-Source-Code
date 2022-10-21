@@ -3,16 +3,107 @@ local armor_types = ArmorSettings.types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }
-local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker, prop_armor = nil
+local unarmored = {
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		}
+	},
+	vfx = {},
+	blood_ball = {
+		died = blood_ball,
+		damage = blood_ball
+	}
+}
+local armored, super_armor = nil
+local disgustingly_resilient = {
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		}
+	},
+	vfx = {},
+	blood_ball = {
+		died = blood_ball,
+		damage = blood_ball
+	}
+}
+local resistant, berserker, prop_armor = nil
 local player = {
 	sfx = {
 		damage = {
 			{
-				event = "wwise/events/player/play_player_get_hit_sharp",
+				event = "wwise/events/player/play_player_get_hit_sword_captain",
 				hit_direction_interface = true
 			},
 			{
-				event = "wwise/events/player/play_player_get_hit_sharp_husk",
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
 				only_3p = true
 			}
 		}

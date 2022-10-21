@@ -3,7 +3,7 @@ local InputWidgets = require("scripts/managers/imgui/widgets/imgui_input_widgets
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 local WidgetUtilities = require("scripts/managers/imgui/widgets/imgui_widget_utilities")
 local ImguiDevParametersGui = class("ImguiDevParametersGui")
-local FILTER_FUNCTION = WidgetUtilities.filter_functions.match_substring
+local FILTER_FUNCTION = WidgetUtilities.filter_functions.match_substring_replace_underscore
 local FILTER_INPUT_FIELD_WIDTH = 200
 
 ImguiDevParametersGui.init = function (self, config)
@@ -77,7 +77,7 @@ ImguiDevParametersGui._create_widget_from_config = function (self, param_key, co
 		if config.readonly then
 			return InputWidgets.readonly.new(display_name, get_value_func)
 		elseif config.options or config.options_function then
-			return InputWidgets.dropdown.new(display_name, get_value_func, config.options_function or config.options, on_value_changed, config.num_decimals, config.dynamic_contents)
+			return InputWidgets.dropdown.new(display_name, get_value_func, config.options_function or config.options, config.options_texts, on_value_changed, config.num_decimals, config.dynamic_contents)
 		elseif param_type == "boolean" then
 			return InputWidgets.checkbox.new(display_name, get_value_func, on_value_changed)
 		elseif param_type == "number" then
@@ -89,7 +89,7 @@ ImguiDevParametersGui._create_widget_from_config = function (self, param_key, co
 		return InputWidgets.readonly.new(display_name, config.get_function)
 	elseif config.on_activated then
 		if config.options or config.options_function then
-			return InputWidgets.dropdown.new(display_name, config.get_function, config.options_function or config.options, config.on_activated, config.num_decimals, config.dynamic_contents)
+			return InputWidgets.dropdown.new(display_name, config.get_function, config.options_function or config.options, config.options_texts, config.on_activated, config.num_decimals, config.dynamic_contents)
 		elseif config.vector3_input then
 			return InputWidgets.vector3.new(display_name, config.button_text, config.on_activated, config.num_decimals, config.width)
 		elseif config.number_button then

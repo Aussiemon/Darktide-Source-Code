@@ -1,4 +1,21 @@
 local asset_vo_psyker_female_c = {
+	asset_acid_clouds = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__zone_watertown_acid_clouds_01",
+			[2.0] = "loc_psyker_female_c__zone_watertown_acid_clouds_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.032479,
+			[2.0] = 6.493083
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
+		},
+		randomize_indexes = {}
+	},
 	asset_foul_smoke = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -52,7 +69,7 @@ local asset_vo_psyker_female_c = {
 			"loc_psyker_female_c__asset_unnatural_dark_a_04"
 		},
 		sound_events_duration = {
-			1.271917,
+			1.271906,
 			0.983469,
 			2.440781,
 			2.471406

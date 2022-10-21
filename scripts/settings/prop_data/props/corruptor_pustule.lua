@@ -8,7 +8,7 @@ local prop_data = {
 	name = "corruptor_pustule",
 	hit_mass = 0.5,
 	debug_color_name = "antique_white",
-	breed_type = breed_types.prop,
+	breed_type = breed_types.living_prop,
 	armor_type = armor_types.disgustingly_resilient,
 	hit_zones = {
 		{

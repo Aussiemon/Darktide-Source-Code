@@ -12,10 +12,10 @@ local Interface = {
 	"send_channel_message",
 	"connected_chat_channels",
 	"connected_voip_channels",
-	"connected_to_chat_channel",
-	"connected_to_voip_channel",
 	"channel_text_mute_participant",
-	"channel_voip_mute_participant"
+	"channel_voip_mute_participant",
+	"player_mute_status_changed",
+	"mic_volume_changed"
 }
 
 return Interface

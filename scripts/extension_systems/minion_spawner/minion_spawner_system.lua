@@ -84,6 +84,52 @@ MinionSpawnerSystem.spawners_in_group = function (self, group)
 	end
 end
 
+local function _sort_spawners_by_distance(s1, s2)
+	local distance_1 = s1.distance
+	local distance_2 = s2.distance
+
+	return distance_1 < distance_2
+end
+
+MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, position)
+	local spawners = self._spawner_group_extensions[group]
+
+	if spawners then
+		local spawners_table = table.shallow_copy(spawners)
+
+		for i = #spawners_table, 1, -1 do
+			local spawner = spawners[i]
+			local distance = Vector3.distance(position, spawner:position())
+			spawner.distance = distance
+		end
+
+		table.sort(spawners_table, _sort_spawners_by_distance)
+
+		return spawners_table
+	end
+end
+
+MinionSpawnerSystem.average_position_of_spawners = function (self, group)
+	local spawners = self._spawner_group_extensions[group]
+
+	if not spawners then
+		return
+	end
+
+	local average_position = Vector3(0, 0, 0)
+	local num_spawners = #spawners
+
+	for i = 1, num_spawners do
+		local extension = spawners[i]
+		local position = extension:position()
+		average_position = average_position + position
+	end
+
+	average_position = average_position / num_spawners
+
+	return average_position
+end
+
 local broadphase_results = {}
 
 MinionSpawnerSystem.spawners_in_range = function (self, position, radius)
@@ -91,10 +137,16 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius)
 	local extension_broadphase_lookup = self._extension_broadphase_lookup
 	local num_results = broadphase:query(position, radius, broadphase_results, BROADPHASE_CATEGORIES)
 	local hit_extensions = {}
+	local num_extensions = 0
 
 	for i = 1, num_results do
 		local hit_id = broadphase_results[i]
-		hit_extensions[i] = extension_broadphase_lookup[hit_id]
+		local extension = extension_broadphase_lookup[hit_id]
+
+		if not extension:is_excluded_from_pacing() then
+			num_extensions = num_extensions + 1
+			hit_extensions[num_extensions] = extension_broadphase_lookup[hit_id]
+		end
 	end
 
 	return hit_extensions

@@ -136,7 +136,14 @@ InputUtils.localized_button_name = function (index, device)
 end
 
 InputUtils.localized_axis_name = function (index, device)
-	return "AXIS_" .. string.upper(device.axis_name(index))
+	local device_category = device.category()
+	local keystring = device.axis_locale_name(index) or string.format("AXIS_%s", string.upper(device.axis_name(index)))
+
+	if device_category == "keyboard" then
+		keystring = string.format("[%s]", keystring)
+	end
+
+	return keystring
 end
 
 InputUtils.key_axis_locale = function (global_name)
@@ -160,7 +167,7 @@ InputUtils.key_axis_locale = function (global_name)
 	end
 end
 
-InputUtils.localized_string_from_key_info = function (key_info)
+InputUtils.localized_string_from_key_info = function (key_info, color_tint_text)
 	local keystring = InputUtils.key_axis_locale(key_info.main)
 
 	if key_info.enablers then
@@ -175,7 +182,16 @@ InputUtils.localized_string_from_key_info = function (key_info)
 		end
 	end
 
+	if color_tint_text then
+		local ui_input_color = Color.ui_input_color(255, true)
+		keystring = InputUtils.apply_color_to_input_text(keystring, ui_input_color)
+	end
+
 	return keystring
+end
+
+InputUtils.apply_color_to_input_text = function (text, color)
+	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
 end
 
 local _keyboard_devices = {
@@ -191,23 +207,24 @@ local _gamepad_devices = {
 	}
 }
 
-InputUtils.input_text_for_current_input_device = function (service_type, alias_key)
+InputUtils.input_text_for_current_input_device = function (service_type, alias_key, color_tint_text)
+	local input_manager = Managers.input
 	local alias_array_index = 1
 	local device_types = _keyboard_devices
 
-	if Managers.input:device_in_use("gamepad") then
+	if input_manager:device_in_use("gamepad") then
 		if IS_XBS then
 			device_types = _gamepad_devices.xbox_controller
 		else
-			local device = Managers.input:last_pressed_device()
+			local device = input_manager:last_pressed_device()
 			local type = device:type()
-			device_types = _gamepad_devices[type]
+			device_types = _gamepad_devices[type] or _keyboard_devices
 		end
 	end
 
-	local alias = Managers.input:alias_object(service_type)
+	local alias = input_manager:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_key, alias_array_index, device_types)
-	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or ""
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info, color_tint_text) or ""
 
 	return input_key
 end

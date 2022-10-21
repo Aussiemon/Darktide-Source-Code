@@ -3,12 +3,7 @@ local _hierarchy_test, _action_input_tests = nil
 local function action_input_tests(action_templates)
 	for name, template in pairs(action_templates) do
 		local success, error_msg = _hierarchy_test(template)
-
-		fassert(success, "ActionTemplate %q failed hirerarchy_test. \n%s", name, error_msg)
-
 		success, error_msg = _action_input_tests(template)
-
-		fassert(success, "ActionTemplate %q failed action_input_tests. \n%s", name, error_msg)
 	end
 end
 

@@ -7,17 +7,16 @@ table.make_unique(overrides)
 local function default_lasgun_sway_pattern(dt, t, sway_settings, yaw, pitch)
 	local horizontal_speed = sway_settings.horizontal_speed
 	local rotation_speed = sway_settings.rotation_speed
-	local intensity = sway_settings.intensity
-	local max_sway = sway_settings.max_sway
-	local pitch_scalar = pitch * pitch / max_sway.pitch
-	local yaw_scalar = yaw * yaw / max_sway.yaw
 	local sin_angle = t * math.pi * horizontal_speed
 	local sin_wave = math.sin(sin_angle)
 	local new_angle = t * math.pi * rotation_speed
 	local yaw_angle = math.cos(new_angle)
 	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
-	local aim_offset_y = pitch_angle * pitch_scalar * intensity
-	local aim_offset_x = yaw_angle * yaw_scalar * intensity
+	local yaw = math.degrees_to_radians(yaw)
+	local pitch = math.degrees_to_radians(pitch)
+	local intensity = sway_settings.intensity or 1
+	local aim_offset_y = pitch_angle * yaw * intensity
+	local aim_offset_x = yaw_angle * pitch * intensity
 
 	return aim_offset_x, aim_offset_y
 end
@@ -25,27 +24,61 @@ end
 local function default_lasgun_crouch_sway_pattern(dt, t, sway_settings, yaw, pitch)
 	local horizontal_speed = sway_settings.horizontal_speed
 	local rotation_speed = sway_settings.rotation_speed
-	local intensity = sway_settings.intensity
-	local max_sway = sway_settings.max_sway
-	local pitch_scalar = pitch * pitch / max_sway.pitch
-	local yaw_scalar = yaw * yaw / max_sway.yaw
 	local sin_angle = t * math.pi * horizontal_speed
 	local sin_wave = math.sin(sin_angle)
 	local new_angle = t * math.pi * rotation_speed
 	local yaw_angle = math.cos(new_angle)
 	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-	local aim_offset_y = pitch_angle * pitch_scalar * intensity
-	local aim_offset_x = yaw_angle * yaw_scalar * intensity
+	local yaw = math.degrees_to_radians(yaw)
+	local pitch = math.degrees_to_radians(pitch)
+	local intensity = sway_settings.intensity or 1
+	local aim_offset_y = pitch_angle * pitch * intensity
+	local aim_offset_x = yaw_angle * yaw * intensity
+
+	return aim_offset_x, aim_offset_y
+end
+
+local function lasgun_p1_m3_sway_pattern(dt, t, sway_settings, yaw, pitch)
+	local horizontal_speed = sway_settings.horizontal_speed
+	local rotation_speed = sway_settings.rotation_speed
+	local sin_angle = t * math.pi * horizontal_speed
+	local sin_wave = math.sin(sin_angle)
+	local new_angle = t * math.pi * rotation_speed
+	local yaw_angle = math.cos(new_angle)
+	local pitch_angle = 0.5 * sin_wave + math.sin(3 * new_angle) * (0.25 + 0.75 * (1 - math.abs(yaw_angle * yaw_angle)))
+	local yaw = math.degrees_to_radians(yaw)
+	local pitch = math.degrees_to_radians(pitch)
+	local intensity = sway_settings.intensity or 1
+	local aim_offset_y = pitch_angle * yaw * intensity
+	local aim_offset_x = yaw_angle * pitch * intensity
+
+	return aim_offset_x, aim_offset_y
+end
+
+local function lasgun_p1_m3_crouch_sway_pattern(dt, t, sway_settings, yaw, pitch)
+	local horizontal_speed = sway_settings.horizontal_speed
+	local rotation_speed = sway_settings.rotation_speed
+	local sin_angle = t * math.pi * horizontal_speed
+	local sin_wave = math.sin(sin_angle)
+	local new_angle = t * math.pi * rotation_speed
+	local yaw_angle = math.cos(new_angle)
+	local pitch_angle = 0.5 * sin_wave + math.sin(3 * new_angle) * (0.25 + 0.75 * math.abs(yaw_angle * yaw_angle))
+	local yaw = math.degrees_to_radians(yaw)
+	local pitch = math.degrees_to_radians(pitch)
+	local intensity = sway_settings.intensity or 1
+	local aim_offset_y = pitch_angle * pitch * intensity
+	local aim_offset_x = yaw_angle * yaw * intensity
 
 	return aim_offset_x, aim_offset_y
 end
 
 sway_templates.default_lasgun_killshot = {
 	still = {
-		intensity = 0.4,
-		sway_impact = 6,
-		horizontal_speed = 0.6,
-		rotation_speed = 0.42,
+		intensity = 0.6,
+		horizontal_speed = 0.7,
+		visual_pitch_impact_mod = 6,
+		rotation_speed = 0.5,
+		visual_yaw_impact_mod = 4,
 		max_sway = {
 			pitch = {
 				lerp_perfect = 1.5,
@@ -451,10 +484,10 @@ sway_templates.default_lasgun_killshot = {
 sway_templates.lasgun_p1_m1_killshot = {
 	still = {
 		intensity = 0.6,
-		yaw_impact_mod = 0.85,
-		sway_impact = 4,
 		horizontal_speed = 0.7,
+		visual_pitch_impact_mod = 6,
 		rotation_speed = 0.5,
+		visual_yaw_impact_mod = 4,
 		max_sway = {
 			yaw = 4,
 			pitch = 4
@@ -854,10 +887,10 @@ sway_templates.lasgun_p1_m1_killshot = {
 sway_templates.lasgun_p1_m2_killshot = {
 	still = {
 		intensity = 0.6,
-		yaw_impact_mod = 0.75,
-		sway_impact = 4,
 		horizontal_speed = 0.7,
+		visual_pitch_impact_mod = 6,
 		rotation_speed = 0.5,
+		visual_yaw_impact_mod = 4,
 		max_sway = {
 			pitch = {
 				lerp_perfect = 4,
@@ -1262,11 +1295,11 @@ sway_templates.lasgun_p1_m2_killshot = {
 }
 sway_templates.lasgun_p1_m3_killshot = {
 	still = {
-		intensity = 0.6,
-		yaw_impact_mod = 0.8,
-		sway_impact = 4,
-		horizontal_speed = 1.1,
-		rotation_speed = 0.77,
+		intensity = 0.7,
+		horizontal_speed = 0.6,
+		visual_pitch_impact_mod = 6,
+		rotation_speed = 0.4,
+		visual_yaw_impact_mod = 4,
 		max_sway = {
 			yaw = 4,
 			pitch = 4
@@ -1315,12 +1348,12 @@ sway_templates.lasgun_p1_m3_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.65
+				lerp_perfect = 0.1,
+				lerp_basic = 0.9
 			},
 			yaw = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.65
+				lerp_perfect = 0.1,
+				lerp_basic = 0.9
 			}
 		},
 		immediate_sway = {
@@ -1458,23 +1491,7 @@ sway_templates.lasgun_p1_m3_killshot = {
 				}
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch * pitch / max_sway.pitch
-			local yaw_scalar = yaw * yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = lasgun_p1_m3_sway_pattern
 	},
 	moving = {
 		rotation_speed = 0.4,
@@ -1484,12 +1501,12 @@ sway_templates.lasgun_p1_m3_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.2,
-				lerp_basic = 0.8
+				lerp_perfect = 0.1,
+				lerp_basic = 1
 			},
 			yaw = {
-				lerp_perfect = 0.2,
-				lerp_basic = 0.8
+				lerp_perfect = 0.1,
+				lerp_basic = 1
 			}
 		},
 		decay = {
@@ -1543,12 +1560,12 @@ sway_templates.lasgun_p1_m3_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.1,
-				lerp_basic = 0.4
+				lerp_perfect = 0.075,
+				lerp_basic = 0.6
 			},
 			yaw = {
-				lerp_perfect = 0.1,
-				lerp_basic = 0.4
+				lerp_perfect = 0.075,
+				lerp_basic = 0.6
 			}
 		},
 		decay = {
@@ -1599,12 +1616,12 @@ sway_templates.lasgun_p1_m3_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.125,
-				lerp_basic = 0.7
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
 			},
 			yaw = {
-				lerp_perfect = 0.125,
-				lerp_basic = 0.7
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
 			}
 		},
 		decay = {
@@ -1646,103 +1663,84 @@ sway_templates.lasgun_p1_m3_killshot = {
 				lerp_basic = 1
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch / max_sway.pitch
-			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = lasgun_p1_m3_crouch_sway_pattern
 	}
 }
-sway_templates.ironsight_lasgun_killshot = {
+sway_templates.lasgun_p3_m1_sway = {
 	still = {
-		intensity = 0.25,
-		sway_impact = 7,
-		horizontal_speed = 0.5,
-		rotation_speed = 0.35,
+		intensity = 0.2,
+		horizontal_speed = 0.7,
+		visual_pitch_impact_mod = 6,
+		rotation_speed = 0.5,
+		visual_yaw_impact_mod = 4,
 		max_sway = {
-			pitch = {
-				lerp_perfect = 0.5,
-				lerp_basic = 1.5
-			},
-			yaw = {
-				lerp_perfect = 0.5,
-				lerp_basic = 1.5
-			}
+			yaw = 2,
+			pitch = 2
 		},
 		decay = {
+			suppression = 0.2,
 			crouch_transition_grace_time = 0.5,
 			shooting = {
 				pitch = {
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.3,
 					lerp_basic = 0.1
 				},
 				yaw = {
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.3,
 					lerp_basic = 0.1
 				}
 			},
 			idle = {
 				pitch = {
-					lerp_perfect = 1,
-					lerp_basic = 0.5
+					lerp_perfect = 2,
+					lerp_basic = 0.75
 				},
 				yaw = {
-					lerp_perfect = 1,
-					lerp_basic = 0.5
+					lerp_perfect = 2,
+					lerp_basic = 0.75
 				}
 			},
 			player_event = {
 				pitch = {
-					lerp_perfect = 10,
-					lerp_basic = 0.5
+					lerp_perfect = 0.75,
+					lerp_basic = 0.25
 				},
 				yaw = {
-					lerp_perfect = 10,
-					lerp_basic = 0.5
+					lerp_perfect = 0.75,
+					lerp_basic = 0.25
 				}
 			},
 			enter_alternate_fire_grace_time = {
-				lerp_perfect = 1,
-				lerp_basic = 0.5
+				lerp_perfect = 0,
+				lerp_basic = 0.45
 			},
 			from_shooting_grace_time = {
-				lerp_perfect = 0.75,
-				lerp_basic = 0.75
+				lerp_perfect = 0,
+				lerp_basic = 1
 			}
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.05
+				lerp_perfect = 0.005,
+				lerp_basic = 0.03
 			},
 			yaw = {
 				lerp_perfect = 0.05,
-				lerp_basic = 0.05
+				lerp_basic = 0.03
 			}
 		},
 		immediate_sway = {
-			num_shots_clear_time = 0.6,
+			num_shots_clear_time = 1,
 			crouch_transition = {
 				{
+					cap = true,
 					pitch = {
-						lerp_perfect = 0.25,
-						lerp_basic = 0.5
+						lerp_perfect = 0.5,
+						lerp_basic = 1
 					},
 					yaw = {
-						lerp_perfect = 0.25,
-						lerp_basic = 0.5
+						lerp_perfect = 0.5,
+						lerp_basic = 1
 					}
 				}
 			},
@@ -1750,279 +1748,287 @@ sway_templates.ironsight_lasgun_killshot = {
 				{
 					cap = true,
 					pitch = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.5
+						lerp_perfect = 0.5,
+						lerp_basic = 1.5
 					},
 					yaw = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.5
+						lerp_perfect = 0.5,
+						lerp_basic = 1.5
 					}
 				}
 			},
 			suppression_hit = {
 				{
 					pitch = {
-						lerp_perfect = 0.1,
-						lerp_basic = 0.2
+						lerp_perfect = 0.15,
+						lerp_basic = 1.05
 					},
 					yaw = {
 						lerp_perfect = 0.1,
-						lerp_basic = 0.2
+						lerp_basic = 1.1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.1,
+						lerp_basic = 0.7
+					},
+					yaw = {
+						lerp_perfect = 0.2,
+						lerp_basic = 0.7
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.8
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.7
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.3,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0.3,
+						lerp_basic = 0.85
 					}
 				}
 			},
 			damage_hit = {
 				{
 					pitch = {
-						lerp_perfect = 0.1,
-						lerp_basic = 0.25
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
 					},
 					yaw = {
-						lerp_perfect = 0.1,
-						lerp_basic = 0.25
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
 					}
 				}
 			},
 			shooting = {
 				{
-					pitch = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.05
-					},
-					yaw = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.05
-					}
+					yaw = 0.0001,
+					pitch = 0.0001
 				},
 				{
-					pitch = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.05
-					},
-					yaw = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.05
-					}
+					yaw = 0.0001,
+					pitch = 0.0001
 				},
 				{
-					pitch = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
-					},
-					yaw = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
-					}
+					yaw = 0.0001,
+					pitch = 0.0001
 				},
 				{
-					pitch = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
-					},
-					yaw = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
-					}
+					yaw = 0.0001,
+					pitch = 0.0001
 				},
 				{
-					pitch = {
-						lerp_perfect = 0.02,
-						lerp_basic = 0.035
-					},
-					yaw = {
-						lerp_perfect = 0.02,
-						lerp_basic = 0.035
-					}
+					yaw = 0.0001,
+					pitch = 0.0001
+				},
+				{
+					yaw = 0.0001,
+					pitch = 0.0001
+				},
+				{
+					yaw = 0.001,
+					pitch = 0.001
+				},
+				{
+					yaw = 0.001,
+					pitch = 0.001
 				}
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch / max_sway.pitch
-			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = default_lasgun_sway_pattern
 	},
 	moving = {
-		rotation_speed = 0.75,
+		rotation_speed = 0.4,
 		inherits = {
-			"ironsight_lasgun_killshot",
+			"lasgun_p1_m1_killshot",
 			"still"
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.25,
-				lerp_basic = 0
+				lerp_perfect = 0.1,
+				lerp_basic = 0.8
 			},
 			yaw = {
-				lerp_perfect = 0.25,
-				lerp_basic = 0
+				lerp_perfect = 0.1,
+				lerp_basic = 0.8
 			}
 		},
 		decay = {
+			suppression = 0.2,
 			crouch_transition_grace_time = 0.5,
-			enter_alternate_fire_grace_time = 0.5,
 			shooting = {
 				pitch = {
-					lerp_perfect = 0.3,
-					lerp_basic = 0.15
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
 				},
 				yaw = {
-					lerp_perfect = 0.3,
-					lerp_basic = 0.15
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
 				}
 			},
 			idle = {
 				pitch = {
-					lerp_perfect = 1,
-					lerp_basic = 0.5
+					lerp_perfect = 2,
+					lerp_basic = 0.75
 				},
 				yaw = {
-					lerp_perfect = 1,
+					lerp_perfect = 2,
 					lerp_basic = 0.75
 				}
 			},
 			player_event = {
 				pitch = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
 				},
 				yaw = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
 				}
+			},
+			enter_alternate_fire_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 0.45
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
 			}
 		}
 	},
 	crouch_still = {
 		rotation_speed = 0.5,
 		inherits = {
-			"ironsight_lasgun_killshot",
+			"lasgun_p1_m1_killshot",
 			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_perfect = 0.05,
-				lerp_basic = 0.15
+				lerp_basic = 0.5
 			},
 			yaw = {
 				lerp_perfect = 0.05,
-				lerp_basic = 0.3
+				lerp_basic = 0.5
 			}
 		},
 		decay = {
+			suppression = 0.2,
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
 				pitch = {
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
+					lerp_basic = 0.1
 				},
 				yaw = {
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
+					lerp_basic = 0.01
 				}
 			},
 			idle = {
 				pitch = {
-					lerp_perfect = 1,
-					lerp_basic = 0.5
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
 				},
 				yaw = {
-					lerp_perfect = 1,
-					lerp_basic = 0.75
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
 				}
 			},
 			player_event = {
 				pitch = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				},
 				yaw = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
 			}
 		}
 	},
 	crouch_moving = {
 		rotation_speed = 0.85,
 		inherits = {
-			"ironsight_lasgun_killshot",
+			"lasgun_p1_m1_killshot",
 			"still"
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.5,
-				lerp_basic = 0.5
+				lerp_perfect = 0.15,
+				lerp_basic = 0.9
 			},
 			yaw = {
-				lerp_perfect = 0.5,
-				lerp_basic = 0.5
+				lerp_perfect = 0.15,
+				lerp_basic = 0.9
 			}
 		},
 		decay = {
+			suppression = 0.2,
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
 				pitch = {
-					lerp_perfect = 0.5,
-					lerp_basic = 0.2
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				},
 				yaw = {
-					lerp_perfect = 0.5,
-					lerp_basic = 0.2
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				}
 			},
 			idle = {
 				pitch = {
-					lerp_perfect = 1,
-					lerp_basic = 0.5
+					lerp_perfect = 3,
+					lerp_basic = 1.25
 				},
 				yaw = {
-					lerp_perfect = 1,
-					lerp_basic = 0.75
+					lerp_perfect = 3,
+					lerp_basic = 1.25
 				}
 			},
 			player_event = {
 				pitch = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				},
 				yaw = {
-					lerp_perfect = 4,
-					lerp_basic = 3
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
 				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch / max_sway.pitch
-			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = default_lasgun_crouch_sway_pattern
 	}
 }
 

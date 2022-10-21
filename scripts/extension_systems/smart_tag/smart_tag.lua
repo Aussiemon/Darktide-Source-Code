@@ -5,9 +5,6 @@ local REMOVE_TAG_REASONS = table.enum("canceled_by_owner", "expired", "group_lim
 SmartTag.REMOVE_TAG_REASONS = REMOVE_TAG_REASONS
 
 SmartTag.init = function (self, tag_id, template, tagger_unit, target_unit, target_location, replies)
-	fassert(target_unit or target_location, "Must supply either target_unit or target_location")
-	fassert(not target_unit or not target_location, "Can't supply both target_unit and target_location")
-
 	self._id = tag_id
 	self._template = template
 	self._tagger_unit = tagger_unit

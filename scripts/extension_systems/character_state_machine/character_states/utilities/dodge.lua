@@ -6,8 +6,9 @@ local Sprint = require("scripts/extension_systems/character_state_machine/charac
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local dodge_types = DodgeSettings.dodge_types
+local proc_events = BuffSettings.proc_events
 local Dodge = {
-	check = function (t, unit_data_extension, archetype_dodge_template, input_source)
+	check = function (t, unit_data_extension, specialization_dodge_template, input_source)
 		local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 
 		if Sprint.is_sprinting(sprint_character_state_component) then
@@ -27,11 +28,18 @@ local Dodge = {
 			return false
 		end
 
-		local allow_stationary_dodge = false
 		local move = input_source:get("move")
+		local allow_stationary_dodge = input_source:get("stationary_dodge")
+		local allow_diagonal_forward_dodge = input_source:get("diagonal_forward_dodge")
 		local move_length = Vector3.length(move)
 
-		if not allow_stationary_dodge and move_length < archetype_dodge_template.minimum_dodge_input then
+		if not allow_stationary_dodge and move_length < specialization_dodge_template.minimum_dodge_input then
+			return false
+		end
+
+		local moving_forward = move.y > 0
+
+		if not allow_diagonal_forward_dodge and moving_forward then
 			return false
 		end
 
@@ -88,7 +96,7 @@ local Dodge = {
 
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-		if buff_extension and buff_extension:has_keyword(buff_keywords.override_dodging) then
+		if buff_extension and (buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_all) or is_melee and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_melee) or is_ranged and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_ranged)) then
 			return true, dodge_types.buff
 		end
 
@@ -104,14 +112,14 @@ local Dodge = {
 		local t = Managers.time:time("gameplay")
 		local dodge_character_state_component = unit_data_extension:read_component("dodge_character_state")
 		local dodge_time = dodge_character_state_component.dodge_time
-		local archetype = unit_data_extension:archetype()
-		local archetype_dodge_template = archetype.dodge
+		local specialization = unit_data_extension:specialization()
+		local specialization_dodge_template = specialization.dodge
 		local stat_buffs = buff_extension and buff_extension:stat_buffs()
 		local dodge_linger_time_modifier_base = stat_buffs and stat_buffs.dodge_linger_time_modifier or 1
 		local dodge_linger_time_melee_modifier = is_melee and stat_buffs and stat_buffs.dodge_linger_time_melee_modifier or 1
 		local dodge_linger_time_ranged_modifier = is_ranged and stat_buffs and stat_buffs.dodge_linger_time_ranged_modifier or 1
 		local dodge_linger_time_modifier = dodge_linger_time_modifier_base + dodge_linger_time_melee_modifier + dodge_linger_time_ranged_modifier - 2
-		local dodge_linger_time_base = archetype_dodge_template.dodge_linger_time
+		local dodge_linger_time_base = specialization_dodge_template.dodge_linger_time
 		local dodge_linger_time = dodge_linger_time_base * dodge_linger_time_modifier
 		local dodge_linger_end_time = dodge_time + dodge_linger_time
 
@@ -122,5 +130,52 @@ local Dodge = {
 		return false
 	end
 }
+local _sucessful_dodge_parameters = {}
+
+Dodge.sucessful_dodge = function (dodging_unit, attacking_unit, attack_type, dodge_type, attacking_breed)
+	local dodging_unit_fx_extension = ScriptUnit.has_extension(dodging_unit, "fx_system")
+
+	if dodging_unit_fx_extension then
+		local optional_position = nil
+		local optional_except_sender = false
+
+		table.clear(_sucessful_dodge_parameters)
+
+		_sucessful_dodge_parameters.enemy_type = Breed.enemy_type(attacking_breed)
+
+		dodging_unit_fx_extension:trigger_exclusive_gear_wwise_event("dodge_success_melee", _sucessful_dodge_parameters, optional_position, optional_except_sender)
+	end
+
+	if not attack_type then
+		return
+	end
+
+	local dodging_unit_buff_extension = ScriptUnit.has_extension(dodging_unit, "buff_system")
+
+	if dodging_unit_buff_extension then
+		local param_table = dodging_unit_buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.dodging_unit = dodging_unit
+			param_table.attacking_unit = attacking_unit
+			param_table.attack_type = attack_type
+
+			dodging_unit_buff_extension:add_proc_event(proc_events.on_successful_dodge, param_table)
+		end
+	end
+
+	if Managers.stats.can_record_stats() then
+		local breed_name = attacking_breed.name
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local dodging_player = player_unit_spawn_manager:owner(dodging_unit)
+		local is_human = dodging_player and dodging_player:is_human_controlled()
+
+		if is_human then
+			dodge_type = dodge_type or dodge_types.dodge
+
+			Managers.stats:record_dodge(dodging_player, breed_name, attack_type, dodge_type)
+		end
+	end
+end
 
 return Dodge

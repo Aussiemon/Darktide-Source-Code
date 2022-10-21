@@ -1,6 +1,5 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
-local PlayerMovement = require("scripts/utilities/player_movement")
 local Vo = require("scripts/utilities/vo")
 local BROADPHASE_RESULTS = {}
 local ActionProximityTag = class("ActionProximityTag", "ActionAbilityBase")
@@ -22,7 +21,7 @@ ActionProximityTag.start = function (self, action_settings, t, time_scale, actio
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local player_unit = self._player_unit
 	local buff_to_add = ability_template_tweak_data.buff_to_add
-	local player_position = PlayerMovement.locomotion_position(locomotion_component)
+	local player_position = locomotion_component.position
 
 	if self._is_local_unit then
 		self._fx_extension:trigger_wwise_event("wwise/events/player/play_player_ability_shout", false, player_position)

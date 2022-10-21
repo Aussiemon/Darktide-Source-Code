@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
@@ -95,13 +96,6 @@ weapon_template.action_input_hierarchy = {
 		grenade_ability = "base",
 		reload = "base",
 		combat_ability = "base"
-	},
-	inspect = {
-		reload = "stay",
-		wield = "base",
-		inspect_start = {
-			inspect_stop = "base"
-		}
 	}
 }
 
@@ -156,13 +150,13 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		kind = "shoot_pellets",
-		ammunition_usage = 1,
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.3,
 		spread_template = "shotgun_hip_assault",
 		weapon_handling_template = "immediate_single_shot",
 		uninterruptible = true,
+		ammunition_usage = 1,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -231,15 +225,15 @@ weapon_template.actions = {
 				chain_time = 0.75
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_hip_from_reload = {
 		ammunition_usage = 1,
-		weapon_handling_template = "shotgun_from_reload",
 		kind = "shoot_pellets",
+		weapon_handling_template = "shotgun_from_reload",
 		spread_template = "shotgun_hip_assault",
 		uninterruptible = true,
 		total_time = 1.5,
@@ -314,18 +308,18 @@ weapon_template.actions = {
 
 			return current_clip_amount > 0
 		end,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		start_input = "zoom_shoot",
-		crosshair_type = "none",
 		kind = "shoot_pellets",
 		weapon_handling_template = "immediate_single_shot",
 		spread_template = "default_shotgun_killshot",
 		ammunition_usage = 1,
+		crosshair_type = "none",
 		uninterruptible = true,
 		total_time = 1,
 		action_movement_curve = {
@@ -390,7 +384,7 @@ weapon_template.actions = {
 				chain_time = 0.4
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -460,14 +454,14 @@ weapon_template.actions = {
 	},
 	action_start_reload = {
 		kind = "reload_shotgun",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		anim_end_event = "reload_end",
 		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "reload_start",
+		stop_alternate_fire = true,
 		total_time = 0.95,
 		anim_variables_func = function (action_settings, condition_func_params)
 			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
@@ -538,14 +532,14 @@ weapon_template.actions = {
 				chain_time = 0.9
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_reload_loop = {
-		crosshair_type = "none",
 		anim_end_event = "reload_end",
 		kind = "reload_shotgun",
+		crosshair_type = "dot",
 		anim_event = "reload_middle",
 		total_time = 0.65,
 		anim_variables_func = function (action_settings, condition_func_params)
@@ -617,7 +611,7 @@ weapon_template.actions = {
 				chain_time = 0.6
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -714,11 +708,7 @@ weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 
 return weapon_template

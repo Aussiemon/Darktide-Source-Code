@@ -4,9 +4,6 @@ ParticleEffect.init = function (self, unit)
 	self._unit = unit
 	self._world = Unit.world(unit)
 	local particle_name = self:get_data(unit, "particle")
-
-	fassert(particle_name ~= "", "[ParticleEffect][init] incorrect particle name '%s'", particle_name)
-
 	self._particle_name = particle_name
 	self._particle_id = nil
 	self._particle_node = 1

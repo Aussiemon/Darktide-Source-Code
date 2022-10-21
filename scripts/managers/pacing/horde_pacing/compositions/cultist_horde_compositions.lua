@@ -16,8 +16,30 @@ local horde_compositions = {
 				{
 					name = "cultist_assault",
 					amount = {
+						5,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
 						6,
-						8
+						7
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						8,
+						9
 					}
 				}
 			}
@@ -28,29 +50,7 @@ local horde_compositions = {
 					name = "cultist_assault",
 					amount = {
 						10,
-						12
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "cultist_assault",
-					amount = {
-						12,
-						15
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "cultist_assault",
-					amount = {
-						15,
-						18
+						11
 					}
 				}
 			}
@@ -62,8 +62,30 @@ local horde_compositions = {
 				{
 					name = "cultist_assault",
 					amount = {
-						12,
-						14
+						7,
+						8
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						9,
+						10
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						11,
+						13
 					}
 				}
 			}
@@ -84,30 +106,8 @@ local horde_compositions = {
 				{
 					name = "cultist_assault",
 					amount = {
-						17,
-						19
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "cultist_assault",
-					amount = {
-						22,
-						24
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "cultist_assault",
-					amount = {
-						24,
-						26
+						18,
+						20
 					}
 				}
 			}

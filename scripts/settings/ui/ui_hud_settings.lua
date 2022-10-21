@@ -1,4 +1,16 @@
 local ui_hud_settings = {
+	bloom_settings = {
+		offset_falloffs = {
+			0,
+			0.9,
+			0.3
+		},
+		ui_bloom_tints = {
+			0.617,
+			0.491,
+			0.238
+		}
+	},
 	color_tint_main_1 = Color.ui_hud_green_super_light(255, true),
 	color_tint_main_2 = Color.ui_hud_green_light(255, true),
 	color_tint_main_3 = Color.ui_hud_green_medium(255, true),
@@ -31,6 +43,7 @@ local ui_hud_settings = {
 	color_tint_8 = Color.ui_corruption_default(255, true),
 	color_tint_9 = Color.ui_corruption_medium(255, true),
 	player_status_icons = {
+		netted = "content/ui/materials/icons/player_states/incapacitated",
 		ledge_hanging = "content/ui/materials/hud/interactions/icons/help",
 		luggable = "content/ui/materials/icons/player_states/lugged",
 		hogtied = "content/ui/materials/icons/player_states/dead",
@@ -42,10 +55,23 @@ local ui_hud_settings = {
 		dead = Color.ui_hud_green_super_light(255, true),
 		hogtied = Color.ui_hud_green_super_light(255, true),
 		pounced = Color.ui_orange_light(255, true),
+		netted = Color.ui_orange_light(255, true),
 		knocked_down = Color.ui_hud_red_light(255, true),
 		ledge_hanging = Color.ui_hud_green_super_light(255, true),
 		luggable = Color.ui_hud_green_super_light(255, true)
 	}
 }
+
+local function get_hud_color(key, alpha)
+	local color = table.clone(ui_hud_settings[key])
+
+	if alpha then
+		color[1] = alpha
+	end
+
+	return color
+end
+
+ui_hud_settings.get_hud_color = get_hud_color
 
 return settings("UIHudSettings", ui_hud_settings)

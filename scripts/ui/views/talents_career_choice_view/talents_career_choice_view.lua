@@ -163,7 +163,7 @@ TalentsCareerChoiceView.cb_confirm_choice_button_pressed = function (self)
 			},
 			{
 				text = "loc_talents_choose_specialization_confirm_choice_popup_no",
-				template_type = "default_button_small",
+				template_type = "terminal_button_small",
 				close_on_pressed = true,
 				hotkey = "back"
 			}

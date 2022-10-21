@@ -1,15 +1,5 @@
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-
-local function _get_hud_color(key, alpha)
-	local color = table.clone(UIHudSettings[key])
-
-	if alpha then
-		color[1] = alpha
-	end
-
-	return color
-end
-
+local get_hud_color = UIHudSettings.get_hud_color
 local hud_element_player_weapon_settings = {
 	overview_segment_length_difference = 2,
 	ammo_clip_round_spacing = -2,
@@ -22,11 +12,11 @@ local hud_element_player_weapon_settings = {
 	bar_edge_width = 5,
 	overheat_segment_spacing = -2,
 	ammo_urgent_threshold = 0.2,
-	urgent_color = _get_hud_color("color_tint_alert_2", 255),
-	urgent_color_wielded = _get_hud_color("color_tint_alert_2", 255),
-	bar_segment_urgent_color = _get_hud_color("color_tint_alert_2", 255),
-	bar_segment_passive_color = _get_hud_color("color_tint_main_3", 255),
-	bar_segment_background_color = _get_hud_color("color_tint_main_4", 255),
+	urgent_color = get_hud_color("color_tint_alert_2", 255),
+	urgent_color_wielded = get_hud_color("color_tint_alert_2", 255),
+	bar_segment_urgent_color = get_hud_color("color_tint_alert_2", 255),
+	bar_segment_passive_color = get_hud_color("color_tint_main_3", 255),
+	bar_segment_background_color = get_hud_color("color_tint_main_4", 255),
 	ammo_round_size = {
 		19,
 		10
@@ -41,8 +31,12 @@ local hud_element_player_weapon_settings = {
 	},
 	events = {
 		{
+			"event_on_active_input_changed",
+			"event_on_input_changed"
+		},
+		{
 			"event_on_input_settings_changed",
-			"event_on_input_settings_changed"
+			"event_on_input_changed"
 		}
 	}
 }

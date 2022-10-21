@@ -3,9 +3,9 @@ local archetype_dodge_templates = {
 		consecutive_dodges_reset = 0.5,
 		stop_threshold = 0.25,
 		base_distance = 2.5,
-		dodge_cooldown = 0.25,
+		dodge_cooldown = 0.15,
 		minimum_dodge_input = 0.25,
-		dodge_jump_override_timer = 0.25,
+		dodge_jump_override_timer = 0.5,
 		dodge_linger_time = 0.15,
 		dodge_speed_at_times = {
 			{
@@ -46,9 +46,9 @@ local archetype_dodge_templates = {
 		consecutive_dodges_reset = 0.5,
 		stop_threshold = 0.25,
 		base_distance = 2,
-		dodge_cooldown = 0,
+		dodge_cooldown = 0.15,
 		minimum_dodge_input = 0.25,
-		dodge_jump_override_timer = 0.2,
+		dodge_jump_override_timer = 0.3,
 		dodge_linger_time = 0.3,
 		dodge_speed_at_times = {
 			{
@@ -65,11 +65,11 @@ local archetype_dodge_templates = {
 			},
 			{
 				time_in_dodge = 0.25,
-				speed = 12
+				speed = 10
 			},
 			{
 				time_in_dodge = 0.4,
-				speed = 10
+				speed = 8
 			},
 			{
 				time_in_dodge = 0.5,

@@ -40,9 +40,6 @@ CinematicLinkCamera.update = function (self, dt, data)
 
 	if ALIVE[root_unit] then
 		local cinematic_manager = Managers.state.cinematic
-
-		fassert(cinematic_manager, "CinematicManager not available with CinematicLinkCamera.")
-
 		local alignment_inverse_pose_boxed = cinematic_manager:alignment_inverse_pose()
 		local alignment_inverse_pose = nil
 

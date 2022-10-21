@@ -93,6 +93,11 @@ PlayerUnitWeaponRecoilExtension._update_unsteadiness = function (self, dt, t, re
 		local decay_percent = (shooting or shooting_grace_decay) and recoil_settings.decay.shooting or recoil_settings.decay.idle
 		local unsteadiness_decay = decay_percent * dt
 		unsteadiness = unsteadiness - unsteadiness_decay * 1 / recoil_modifier
+
+		if self._recoil_control_component.num_shots > 1 and unsteadiness < 0.75 then
+			local override_shot_count = math.min(self._recoil_control_component.num_shots, math.floor(math.max(unsteadiness, 0) * 5))
+			self._recoil_control_component.num_shots = override_shot_count
+		end
 	end
 
 	unsteadiness = math.min(unsteadiness, 1)

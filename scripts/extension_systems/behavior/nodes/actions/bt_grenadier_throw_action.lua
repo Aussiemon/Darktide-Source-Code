@@ -114,15 +114,15 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 		speed = Vector3.length(throw_velocity)
 	end
 
-	local momentum = nil
+	local angular_velocity = nil
 
-	if throw_parameters.randomized_momentum then
-		local max = throw_parameters.randomized_momentum
-		momentum = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
-	elseif throw_parameters.momentum then
-		momentum = throw_parameters.momentum:unbox()
+	if throw_parameters.randomized_angular_velocity then
+		local max = throw_parameters.randomized_angular_velocity
+		angular_velocity = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
+	elseif throw_parameters.initial_angular_velocity then
+		angular_velocity = throw_parameters.initial_angular_velocity:unbox()
 	else
-		momentum = Vector3.zero()
+		angular_velocity = Vector3.zero()
 	end
 
 	local item_name = throw_config.item
@@ -131,7 +131,7 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local grenade_unit_name = item.base_unit
 	local locomotion_state = throw_parameters.locomotion_state
 
-	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, momentum, unit)
+	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, angular_velocity, unit)
 
 	local throw_grenade_component = scratchpad.throw_grenade_component
 	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.grenadier_throw)

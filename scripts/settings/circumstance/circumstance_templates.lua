@@ -4,19 +4,19 @@ local function _extract_circumstance_templates(path)
 	local circumstances = require(path)
 
 	for name, circumstance_data in pairs(circumstances) do
-		fassert(circumstance_templates[name] == nil, "Found circumstance with the same name %q", name)
-
 		circumstance_templates[name] = circumstance_data
 	end
 end
 
 _extract_circumstance_templates("scripts/settings/circumstance/templates/default_circumstance_template")
-_extract_circumstance_templates("scripts/settings/circumstance/templates/nurgle_manifestation_circumstance_template")
-_extract_circumstance_templates("scripts/settings/circumstance/templates/darkness_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/dummy_resistance_changes_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/assault_circumstance_template")
-_extract_circumstance_templates("scripts/settings/circumstance/templates/gas_circumstance_template")
-_extract_circumstance_templates("scripts/settings/circumstance/templates/ventilation_purge_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/darkness_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/hunting_grounds_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/nurgle_manifestation_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/relic_hunt_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/ventilation_purge_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/gas_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/extra_trickle_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_specials_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_hordes_circumstance_template")

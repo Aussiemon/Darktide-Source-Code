@@ -10,13 +10,18 @@ local ui_terminal = Color.ui_terminal(255, true)
 local ui_difficulty_dimmed = Color.white(40, true)
 local black = Color.black(255, true)
 local title_font_style = table.clone(UIFontSettings.header_2)
+title_font_style.offset = {
+	0,
+	0,
+	12
+}
 title_font_style.text_horizontal_alignment = "center"
 title_font_style.text_vertical_alignment = "center"
 local mission_title_font_style = table.clone(UIFontSettings.header_3)
 mission_title_font_style.offset = {
 	0,
 	-4,
-	1
+	12
 }
 mission_title_font_style.text_horizontal_alignment = "center"
 local mission_type_font_style = table.clone(UIFontSettings.header_3)
@@ -24,7 +29,51 @@ mission_type_font_style.text_color = ui_grey_medium
 mission_type_font_style.offset = {
 	24,
 	12,
+	12
+}
+local mission_type_font_style = table.clone(UIFontSettings.mission_voting_details)
+mission_type_font_style.offset = {
+	0,
+	0,
 	1
+}
+mission_type_font_style.text_horizontal_alignment = "center"
+local mission_reward_text_style = {
+	font_size = 24,
+	scenegraph_id = "side_objective_pivot",
+	text_vertical_alignment = "center",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	vertical_alignment = "bottom",
+	font_type = "proxima_nova_bold",
+	text_color = Color.ui_brown_super_light(65, true),
+	size = {
+		80,
+		30
+	},
+	offset = {
+		0,
+		0,
+		0
+	}
+}
+local rewards_text_style = {
+	font_size = 24,
+	text_vertical_alignment = "center",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	vertical_alignment = "center",
+	font_type = "proxima_nova_bold",
+	text_color = Color.ui_brown_super_light(255, true),
+	size = {
+		200,
+		40
+	},
+	offset = {
+		0,
+		0,
+		0
+	}
 }
 local stat_circumstances_bonuses_icon_style = {
 	vertical_alignment = "bottom",
@@ -46,6 +95,8 @@ local styles = {
 	title_font_style = title_font_style,
 	mission_title_font_style = mission_title_font_style,
 	mission_type_font_style = mission_type_font_style,
+	mission_reward_text_style = mission_reward_text_style,
+	rewards_text_style = rewards_text_style,
 	inner_panel_border_style = {
 		color = ui_brown_medium,
 		offset = {
@@ -181,17 +232,17 @@ local difficulty = styles.difficulty
 difficulty.difficulty_font = table.clone(UIFontSettings.mission_detail_sub_header)
 difficulty.difficulty_font.text_horizontal_alignment = "center"
 difficulty.difficulty_icon = {
-	vertical_alignment = "bottom",
-	spacing = -6,
+	vertical_alignment = "center",
+	spacing = 8,
 	direction = 1,
 	amount = 0,
 	offset = {
-		-5,
-		0,
+		40,
+		10,
 		0
 	},
 	size = {
-		40,
+		18,
 		40
 	}
 }
@@ -244,41 +295,50 @@ accept_confirmation.subheader.text_horizontal_alignment = "center"
 accept_confirmation.subheader.text_vertical_alignment = "bottom"
 styles.blueprints = {}
 local blueprints = styles.blueprints
-blueprints.mission_header = {}
-local mission_header = blueprints.mission_header
-mission_header.mission_name = table.clone(UIFontSettings.header_3)
-mission_header.mission_name.text_horizontal_alignment = "center"
-mission_header.type_and_zone = table.clone(UIFontSettings.mission_detail_sub_header)
-mission_header.type_and_zone.text_horizontal_alignment = "center"
-mission_header.type_and_zone.text_vertical_alignment = "bottom"
-blueprints.base_reward = {}
-local base_reward = blueprints.base_reward
-base_reward.header = table.clone(UIFontSettings.mission_detail_sub_header)
-base_reward.experience_icon = {
+blueprints.main_objective = {}
+local main_objective = blueprints.main_objective
+main_objective.objective_header = table.clone(UIFontSettings.header_3)
+main_objective.objective_header.text_horizontal_alignment = "left"
+main_objective.main_objective_icon = {
 	size = {
-		40,
-		40
-	},
-	offset = {
-		-6,
-		25,
-		1
+		42,
+		42
 	}
 }
-base_reward.experience_text = table.clone(UIFontSettings.mission_voting_body)
-base_reward.experience_text.offset = {
-	35,
-	18,
-	1
+main_objective.body_text = table.clone(UIFontSettings.mission_detail_sub_header)
+main_objective.body_text.text_horizontal_alignment = "left"
+main_objective.body_text.size = {
+	475,
+	60
 }
-base_reward.credits_icon = table.clone(base_reward.experience_icon)
-base_reward.credits_icon.base_margin_left = 20
-base_reward.credits_icon.base_margin_right = 5
-base_reward.credits_text = table.clone(base_reward.experience_text)
+main_objective.rewards_text = table.clone(UIFontSettings.mission_detail_sub_header)
+main_objective.rewards_text.text_horizontal_alignment = "left"
+main_objective.rewards_text.text_color = Color.white(255, true)
+blueprints.side_mission = {}
+local side_mission = blueprints.side_mission
+side_mission.objective_header = table.clone(UIFontSettings.header_3)
+side_mission.objective_header.text_horizontal_alignment = "left"
+side_mission.objective_icon = {
+	size = {
+		42,
+		42
+	}
+}
+side_mission.body_text = table.clone(UIFontSettings.mission_detail_sub_header)
+side_mission.body_text.text_horizontal_alignment = "left"
+side_mission.reward_icon = {
+	size = {
+		32,
+		32
+	}
+}
+side_mission.rewards_text = table.clone(UIFontSettings.mission_detail_sub_header)
+side_mission.rewards_text.text_horizontal_alignment = "left"
+side_mission.rewards_text.text_color = Color.white(255, true)
 blueprints.circumstance = {}
 local circumstance = blueprints.circumstance
 circumstance.header = table.clone(UIFontSettings.mission_detail_sub_header)
-circumstance.icon = {
+circumstance.circumstance_icon = {
 	vertical_alignment = "top",
 	horizontal_alignment = "left",
 	size = {
@@ -291,16 +351,16 @@ circumstance.icon = {
 		1
 	}
 }
-circumstance.title = table.clone(UIFontSettings.mission_voting_body)
-local circumstance_title = circumstance.title
+circumstance.circumstance_title = table.clone(UIFontSettings.mission_voting_body)
+local circumstance_title = circumstance.circumstance_title
 circumstance_title.text_vertical_alignment = "top"
 circumstance_title.offset = {
 	60,
 	30,
 	4
 }
-circumstance.description = table.clone(UIFontSettings.mission_detail_sub_header)
-local circumstance_description = circumstance.description
+circumstance.body_text = table.clone(UIFontSettings.mission_detail_sub_header)
+local circumstance_description = circumstance.body_text
 circumstance_description.text_vertical_alignment = "top"
 circumstance_description.offset = {
 	60,
@@ -308,6 +368,15 @@ circumstance_description.offset = {
 	4
 }
 circumstance_description.text_color = Color.white(255, true)
+circumstance.reward_text = table.clone(UIFontSettings.mission_detail_sub_header)
+circumstance.reward_text.text_horizontal_alignment = "left"
+circumstance.reward_text.text_color = Color.white(255, true)
+circumstance.reward_icon = {
+	size = {
+		32,
+		32
+	}
+}
 blueprints.category_name = {
 	text = {}
 }

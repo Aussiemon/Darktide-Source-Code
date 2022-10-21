@@ -11,8 +11,8 @@ local event_vo_survive_veteran_male_c = {
 		sound_events_duration = {
 			1.950583,
 			1.974625,
-			2.323208,
-			2.542271
+			2.323219,
+			2.54226
 		},
 		randomize_indexes = {}
 	},

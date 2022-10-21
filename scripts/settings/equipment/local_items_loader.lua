@@ -2,7 +2,7 @@ local ItemPackage = require("scripts/foundation/managers/package/utilities/item_
 local Promise = require("scripts/foundation/utilities/promise")
 local LocalLoader = class("LocalLoader")
 
-function _should_include_item(item)
+local function _should_include_item(item)
 	return item.workflow_state == "BLOCKOUT" or item.workflow_state == "PROTOTYPE" or item.workflow_state == "FUNCTIONAL" or item.workflow_state == "SHIPPABLE" or item.workflow_state == "RELEASABLE"
 end
 

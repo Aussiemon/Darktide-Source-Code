@@ -16,8 +16,8 @@ local raw_inputs = {
 	"grenade_ability_release",
 	"weapon_reload",
 	"weapon_reload_hold",
-	"wield_next",
-	"wield_prev",
+	"wield_scroll_down",
+	"wield_scroll_up",
 	"quick_wield",
 	"weapon_inspect_hold",
 	"weapon_extra_pressed",
@@ -44,17 +44,8 @@ local ActionInputParser = class("ActionInputParser")
 
 ActionInputParser.init = function (self, unit, action_component_name, action_component, config_data, debug_index)
 	local action_input_type = config_data.action_input_type
-
-	fassert(action_input_type, "No action_input_type in config_data.")
-
 	local templates = config_data.templates
-
-	fassert(templates, "No templates in config_data.")
-
 	local action_extension = config_data.action_extension
-
-	fassert(action_extension, "No action_extension in config_data.")
-
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
 	self._action_component_name = action_component_name
 	self._action_component = action_component
@@ -257,9 +248,6 @@ ActionInputParser.action_transitioned_with_automatic_input = function (self, act
 	local hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, self._MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 	local transition = hierarchy[action_input]
 	local hierarchy_s = nil
-
-	fassert(transition, "Tried transition with automatic action_input %q, which does not exist in current hierarchy: %s", action_input, hierarchy_s)
-
 	local children_to_prepare = self:_handle_hierarchy_transition(transition, hierarchy_position, action_input, base_hierarchy, hierarchy)
 
 	if children_to_prepare then
@@ -308,10 +296,6 @@ ActionInputParser.bot_queue_request_is_consumed = function (self, global_bot_req
 end
 
 ActionInputParser.bot_queue_clear_requests = function (self, id)
-	if DevParameters.debug_bot_action_input then
-		Log.info("ActionInputParser", "Clearing bot queue requests. num_requests_cleared(%i) buffer_index(%i) global_bot_request_id(%i)", self._num_bot_action_input_requests, self._bot_action_input_current_buffer_index, self._global_bot_request_id)
-	end
-
 	self._num_bot_action_input_requests = 0
 	self._bot_action_input_current_buffer_index = self._global_bot_request_id % BOT_REQUEST_RING_BUFFER_MAX
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
@@ -590,6 +574,7 @@ ActionInputParser._update_bot_action_input_requests = function (self, request_qu
 	local NO_RAW_INPUT = self._NO_RAW_INPUT
 	local template_name = self._action_component.template_name
 	local sequence_configs = self._ACTION_INPUT_SEQUENCE_CONFIGS[template_name]
+	local base_hierarchy = self._ACTION_INPUT_HIERARCHY[template_name]
 	local current_buffer_index = self._bot_action_input_current_buffer_index
 
 	for i = 1, num_requests do
@@ -606,7 +591,7 @@ ActionInputParser._update_bot_action_input_requests = function (self, request_qu
 		end
 
 		if sequence_config then
-			self:_queue_action_input(this_frames_input_queue, sequence_config, t, raw_input, this_frames_hierarchy_position)
+			self:_queue_action_input(this_frames_input_queue, sequence_config, t, raw_input, this_frames_hierarchy_position, base_hierarchy)
 		end
 
 		_reset_bot_request_entry(request, NO_ACTION_INPUT, NO_RAW_INPUT)
@@ -619,8 +604,10 @@ ActionInputParser._update_sequences = function (self, dt, t, template_name, hier
 	local this_frames_inputs = self:_this_frames_inputs(self._input_extension)
 	local sequence_configs = self._ACTION_INPUT_SEQUENCE_CONFIGS[template_name]
 	local network_lookup = self._ACTION_INPUT_NETWORK_LOOKUP[template_name]
+	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
+	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
 	local base_hierarchy = self._ACTION_INPUT_HIERARCHY[template_name]
-	local hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, self._MAX_HIERARCHY_DEPTH, self._NO_ACTION_INPUT)
+	local hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 	local action_input_sequence_completed, action_input_sequence_config, action_input_raw_input = nil
 
 	for action_input, children in pairs(hierarchy) do
@@ -653,7 +640,7 @@ ActionInputParser._update_sequences = function (self, dt, t, template_name, hier
 		local dont_queue = action_input_sequence_config.dont_queue
 
 		if not dont_queue then
-			local queued_action_input = self:_queue_action_input(input_queue, action_input_sequence_config, t, action_input_raw_input, hierarchy_position)
+			local queued_action_input = self:_queue_action_input(input_queue, action_input_sequence_config, t, action_input_raw_input, hierarchy_position, base_hierarchy)
 
 			if not queued_action_input then
 				local first_entry = input_queue[1]
@@ -664,6 +651,8 @@ ActionInputParser._update_sequences = function (self, dt, t, template_name, hier
 
 				return
 			end
+
+			hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 		end
 
 		local hierarchy_transition = hierarchy[action_input_sequence_completed]
@@ -845,8 +834,6 @@ ActionInputParser._evaluate_element = function (self, element_config_or_nil, thi
 		fail_reason = "No input"
 	end
 
-	fassert(not element_failed or not element_completed, "Can't fail and complete element at the same time.")
-
 	return element_failed, element_completed, raw_input, fail_reason, auto_completed
 end
 
@@ -915,12 +902,12 @@ ActionInputParser._stop_running_sequence = function (self, sequence)
 	sequence[CURRENT_ELEMENT_INDEX] = 1
 end
 
-ActionInputParser._queue_action_input = function (self, action_input_queue, sequence_config, t, raw_input, hierarchy_position)
+ActionInputParser._queue_action_input = function (self, action_input_queue, sequence_config, t, raw_input, hierarchy_position, base_hierarchy)
 	local action_input_name = sequence_config.action_input_name
 	local max_queue = sequence_config.max_queue
 
 	if sequence_config.clear_input_queue then
-		self:_clear_action_input_queue_from_matching_hierarchy_position(action_input_queue, hierarchy_position)
+		self:_clear_action_input_queue_from_matching_hierarchy_position(action_input_queue, action_input_name, hierarchy_position, base_hierarchy)
 	elseif max_queue then
 		self:_manipulate_queue_by_max_queue(action_input_queue, action_input_name, max_queue)
 	end
@@ -1090,8 +1077,10 @@ ActionInputParser._clear_action_input_queue = function (self, input_queue, start
 	end
 end
 
-ActionInputParser._clear_action_input_queue_from_matching_hierarchy_position = function (self, input_queue, hierarchy_position)
+ActionInputParser._clear_action_input_queue_from_matching_hierarchy_position = function (self, input_queue, action_input, hierarchy_position, base_hierarchy)
+	local clear_from_index = nil
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
+	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
 
 	for i = 1, self._MAX_ACTION_INPUT_QUEUE do
 		local entry = input_queue[i]
@@ -1103,10 +1092,26 @@ ActionInputParser._clear_action_input_queue_from_matching_hierarchy_position = f
 		local entry_hierarchy_position = entry[HIERARCHY_POSITION]
 
 		if self:_same_hierarchy_position(entry_hierarchy_position, hierarchy_position) then
-			self:_clear_action_input_queue(input_queue, i)
+			clear_from_index = i
 
-			return
+			break
 		end
+
+		local entry_hierarchy = _get_current_hierarchy(entry_hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
+
+		if entry_hierarchy[action_input] ~= nil then
+			clear_from_index = i
+
+			for ii = 1, MAX_HIERARCHY_DEPTH do
+				hierarchy_position[ii] = entry_hierarchy_position[ii]
+			end
+
+			break
+		end
+	end
+
+	if clear_from_index then
+		self:_clear_action_input_queue(input_queue, clear_from_index)
 	end
 end
 

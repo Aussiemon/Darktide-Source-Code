@@ -1,5 +1,6 @@
+local Crashify = require("scripts/settings/crashify/crashify")
 local settings = {
-	enabled = true,
+	enabled = GameParameters.testify or Crashify.branch ~= "default",
 	source = {
 		id = "bishop",
 		platform = PLATFORM,
@@ -13,6 +14,9 @@ local settings = {
 			testify = string.value_or_nil(GameParameters.testify),
 			steam_branch = string.value_or_nil(GameParameters.steam_branch),
 			svn_branch = string.value_or_nil(GameParameters.svn_branch)
+		},
+		crashify = {
+			project_branch = string.value_or_nil(Crashify.branch)
 		}
 	},
 	batch = {
@@ -23,6 +27,26 @@ local settings = {
 	},
 	heartbeat = {
 		interval = 300
+	},
+	blacklisted_views = {
+		"contracts_background_view",
+		"splash_video_view",
+		"title_view",
+		"video_view",
+		"loading_view",
+		"system_view",
+		"main_menu_view",
+		"custom_settings_view",
+		"scanner_display_view",
+		"credits_vendor_background_view",
+		"blank_view",
+		"debug_vendor_view",
+		"end_player_view",
+		"inventory_background_view",
+		"debug_view",
+		"splash_view",
+		"cutscene_view",
+		"main_menu_background_view"
 	}
 }
 

@@ -116,9 +116,6 @@ TerrorEventManager.start_event = function (self, event_name, optional_seed)
 		return
 	end
 
-	fassert(self._event_templates[event_name], "[TerrorEventManager] Terror event %q does not exist", tostring(event_name))
-	fassert(self:_event_has_minion_spawners(event_name), "[TerrorEventManager] start terror event is trying to trigger event \"%s\", there are spawner groups in that event that dont have any where to spawn", event_name)
-
 	local start_events = self._start_events
 	start_events[#start_events + 1] = {
 		name = event_name,
@@ -136,16 +133,12 @@ TerrorEventManager.start_random_event = function (self, event_chunk_name)
 	end
 
 	local event_chunk = self._random_event_templates[event_chunk_name]
-
-	fassert(event_chunk, "[TerrorEventManager] Random terror event %q does not exist", tostring(event_chunk_name))
-
 	local probability_table = self._random_event_probabilities[event_chunk_name]
 	local index = LoadedDice.roll(probability_table[1], probability_table[2])
 	index = index * 2 - 1
 	local event_name = event_chunk[index]
 	local has_minion_spawners = self:_event_has_minion_spawners(event_name)
 
-	fassert(has_minion_spawners, "[TerrorEventManager] Random terror event \"%s\" is trying to trigger event \"%s\", there are no available spawners with that spawner group name ", tostring(event_chunk_name), event_name)
 	self:start_event(event_name)
 end
 
@@ -203,6 +196,9 @@ TerrorEventManager.update = function (self, dt, t)
 		local event_completed = event.stopped or self:_update_event(event, t, dt)
 
 		if event_completed then
+			local event_name = event.name
+
+			Managers.telemetry_events:stop_terror_event(event_name)
 			table.swap_delete(active_events, i)
 		end
 	end
@@ -224,31 +220,14 @@ end
 
 local TEMP_SPAWN_SIDE_NAME = "villains"
 local TEMP_TARGET_SIDE_NAME = "heroes"
+local DEFAULT_WAVE_TIMER = 0
 
-TerrorEventManager.start_terror_trickle = function (self, template_name, spawner_group, delay, use_occluded_positions)
+TerrorEventManager.start_terror_trickle = function (self, template_name, spawner_group, delay, use_occluded_positions, limit_spawners, proximity_spawners)
 	local data = self._terror_trickle_data
 	local trickle_template = TerrorTrickleTemplates[template_name]
 	local difficulty_template = Managers.state.difficulty:get_table_entry_by_resistance(trickle_template)
 	data.template = difficulty_template
 	data.use_occluded_positions = use_occluded_positions
-	local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
-
-	if spawner_group then
-		local spawners = minion_spawn_system:spawners_in_group(spawner_group)
-
-		fassert(#spawners ~= 0, "[TerrorEventManager:start_terror_trickle] there are no available spawners with spawner group name \"%s\", the spawner group has probably changed name!", spawner_group)
-		table.shuffle(spawners)
-
-		data.spawners = spawners
-	else
-		fassert(use_occluded_positions, "[TerrorEventManager:start_terror_trickle] spawner_group is not set and use_occluded_positions is not set. Terror trickle wont be able to spawn.")
-	end
-
-	data.wave_timer = delay
-	local num_waves = difficulty_template.num_waves
-	data.num_waves = math.random(num_waves[1], num_waves[2])
-	data.wave_counter = 0
-	data.active = true
 	local side_system = Managers.state.extension:system("side_system")
 	local spawn_side = side_system:get_side_from_name(TEMP_SPAWN_SIDE_NAME)
 	local spawn_side_id = spawn_side.side_id
@@ -256,6 +235,18 @@ TerrorEventManager.start_terror_trickle = function (self, template_name, spawner
 	local target_side_id = target_side.side_id
 	data.spawn_side_id = spawn_side_id
 	data.target_side_id = target_side_id
+	data.limit_spawners = limit_spawners
+
+	if spawner_group then
+		data.spawner_group = spawner_group
+		data.proximity_spawners = proximity_spawners
+	end
+
+	data.wave_timer = delay or DEFAULT_WAVE_TIMER
+	local num_waves = difficulty_template.num_waves
+	data.num_waves = math.random(num_waves[1], num_waves[2])
+	data.wave_counter = 0
+	data.active = true
 end
 
 TerrorEventManager.stop_terror_trickle = function (self)
@@ -319,7 +310,44 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 		local composition = template.compositions[math.random(1, #template.compositions)]
 		local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(composition)
 		local use_occluded_positions = data.use_occluded_positions
-		local spawn_from_minion_spawners = not use_occluded_positions or data.spawners and math.random() > 0.5
+		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+		local spawner_group = data.spawner_group
+		local spawners = nil
+
+		if spawner_group then
+			local side_system = Managers.state.extension:system("side_system")
+			local proximity_spawners = data.proximity_spawners
+
+			if proximity_spawners then
+				local average_position = Vector3(0, 0, 0)
+				local side = side_system:get_side(data.target_side_id)
+				local valid_player_units = side.valid_player_units
+				local num_valid_player_units = #valid_player_units
+
+				for i = 1, num_valid_player_units do
+					local target_unit = valid_player_units[i]
+					local position = POSITION_LOOKUP[target_unit]
+					average_position = average_position + position
+				end
+
+				average_position = average_position / num_valid_player_units
+				spawners = proximity_spawners and minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position)
+			else
+				spawners = minion_spawn_system:spawners_in_group(spawner_group)
+			end
+
+			local limit_spawners = data.limit_spawners
+
+			if limit_spawners then
+				for i = limit_spawners + 1, #spawners do
+					spawners[i] = nil
+				end
+			end
+
+			table.shuffle(spawners)
+		end
+
+		local spawn_from_minion_spawners = not use_occluded_positions or spawners and math.random() > 0.5
 
 		if spawn_from_minion_spawners then
 			local breeds = resistance_scaled_composition.breeds
@@ -330,7 +358,7 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 				local amount_range = breed_data.amount
 				local amount = math.random(amount_range[1], amount_range[2])
 
-				BreedQueries.add_spawns_single_breed(data.spawners, breed_name, amount, data.spawn_side_id, data.target_side_id, data.spawned_minion_data)
+				BreedQueries.add_spawns_single_breed(spawners, breed_name, amount, data.spawn_side_id, data.target_side_id, data.spawned_minion_data)
 			end
 		else
 			local horde_manager = Managers.state.horde
@@ -382,6 +410,7 @@ TerrorEventManager._start_event = function (self, event_name, data)
 
 	if not node.disabled then
 		TerrorEventNodes[node_type].init(node, new_event, t)
+		Managers.telemetry_events:start_terror_event(event_name)
 	end
 end
 
@@ -420,7 +449,6 @@ TerrorEventManager._update_event = function (self, event, t, dt)
 end
 
 TerrorEventManager.trigger_network_synced_level_flow = function (self, flow_event_name)
-	fassert(self._is_server, "[TerrorEventManager] trigger_network_synced_level_flow should only be called on the server")
 	Level.trigger_event(self._level, flow_event_name)
 
 	local flow_event_id = self._flow_events_network_lookup[flow_event_name]

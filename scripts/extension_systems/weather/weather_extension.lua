@@ -1,8 +1,6 @@
 local WeatherExtension = class("WeatherExtension")
 
 WeatherExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	fassert(not self._is_server, "[WeatherExtension] should only run locally on the client")
-
 	self._unit = unit
 
 	if DevParameters.debug_weather_vfx then

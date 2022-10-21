@@ -2,6 +2,7 @@ local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
+local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local views = {
 	system_view = {
 		game_world_blur = 1.1,
@@ -91,9 +92,6 @@ local views = {
 		},
 		testify_flags = {
 			ui_views = false
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
 	},
 	inventory_background_view = {
@@ -119,7 +117,10 @@ local views = {
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		}
+		},
+		validation_function = function ()
+			return true
+		end
 	},
 	inventory_view = {
 		parent_transition_view = "inventory_background_view",
@@ -138,9 +139,9 @@ local views = {
 		}
 	},
 	inventory_cosmetics_view = {
-		display_name = "loc_inventory_cosmetics_view_display_name",
 		state_bound = true,
 		use_transition_ui = true,
+		display_name = "loc_inventory_cosmetics_view_display_name",
 		path = "scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view",
 		package = "packages/ui/views/inventory_cosmetics_view/inventory_cosmetics_view",
 		class = "InventoryCosmeticsView",
@@ -154,12 +155,18 @@ local views = {
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
 		}
 	},
 	inventory_weapons_view = {
-		display_name = "loc_inventory_weapons_view_display_name",
 		state_bound = true,
 		use_transition_ui = true,
+		display_name = "loc_inventory_weapons_view_display_name",
 		path = "scripts/ui/views/inventory_weapons_view/inventory_weapons_view",
 		package = "packages/ui/views/inventory_weapons_view/inventory_weapons_view",
 		class = "InventoryWeaponsView",
@@ -173,11 +180,17 @@ local views = {
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
 		}
 	},
 	inventory_weapon_details_view = {
-		display_name = "loc_inventory_weapon_details_view_display_name",
 		state_bound = true,
+		display_name = "loc_inventory_weapon_details_view_display_name",
 		use_transition_ui = true,
 		path = "scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view",
 		package = "packages/ui/views/inventory_weapon_details_view/inventory_weapon_details_view",
@@ -186,17 +199,64 @@ local views = {
 		load_in_hub = true,
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
 		}
 	},
 	inventory_weapon_cosmetics_view = {
-		display_name = "loc_inventory_weapon_cosmetics_view_display_name",
 		state_bound = true,
+		display_name = "loc_inventory_weapon_cosmetics_view_display_name",
 		use_transition_ui = true,
 		path = "scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view",
 		package = "packages/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view",
 		class = "InventoryWeaponCosmeticsView",
 		disable_game_world = true,
 		load_in_hub = true,
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
+		}
+	},
+	talents_career_choice_view = {
+		state_bound = true,
+		display_name = "loc_talents_view_display_name",
+		path = "scripts/ui/views/talents_career_choice_view/talents_career_choice_view",
+		package = "packages/ui/views/talents_career_choice_view/talents_career_choice_view",
+		class = "TalentsCareerChoiceView",
+		disable_game_world = true,
+		load_in_hub = true,
+		game_world_blur = 4.1,
+		testify_flags = {
+			ui_views = false
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
+	},
+	talents_view = {
+		display_name = "loc_talents_view_display_name",
+		state_bound = true,
+		use_transition_ui = false,
+		path = "scripts/ui/views/talents_view/talents_view",
+		package = "packages/ui/views/talents_view/talents_view",
+		class = "TalentsView",
+		load_in_hub = true,
+		game_world_blur = 4.1,
+		dummy_data = {
+			player_level = 20,
+			player_specialization = "shock_trooper",
+			debug = true,
+			player_archetype = Archetypes.veteran
+		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
@@ -216,11 +276,11 @@ local views = {
 			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn"
 		},
-		exit_sound_events = {
-			UISoundEvents.character_create_exit
-		},
 		testify_flags = {
 			ui_views = false
+		},
+		exit_sound_events = {
+			UISoundEvents.character_create_exit
 		}
 	},
 	debug_view = {
@@ -242,7 +302,18 @@ local views = {
 		display_name = "loc_splash_view_display_name",
 		class = "SplashView",
 		state_bound = true,
-		path = "scripts/ui/views/splash_view/splash_view"
+		path = "scripts/ui/views/splash_view/splash_view",
+		testify_flags = {
+			ui_views = false
+		}
+	},
+	video_view = {
+		package = "packages/ui/views/video_view/video_view",
+		display_name = "loc_video_view_display_name",
+		class = "VideoView",
+		use_transition_ui = true,
+		load_in_hub = true,
+		path = "scripts/ui/views/video_view/video_view"
 	},
 	title_view = {
 		display_name = "loc_title_view_display_name",
@@ -264,7 +335,7 @@ local views = {
 	end_view = {
 		load_in_hub = true,
 		display_name = "loc_end_view_display_name",
-		state_bound = false,
+		state_bound = true,
 		use_transition_ui = true,
 		path = "scripts/ui/views/end_view/end_view",
 		package = "packages/ui/views/end_view/end_view",
@@ -329,7 +400,10 @@ local views = {
 		class = "BlankView",
 		disable_game_world = false,
 		use_transition_ui = true,
-		path = "scripts/ui/views/blank_view/blank_view"
+		path = "scripts/ui/views/blank_view/blank_view",
+		testify_flags = {
+			ui_views = false
+		}
 	},
 	cutscene_view = {
 		package = "packages/ui/views/cutscene_view/cutscene_view",
@@ -344,12 +418,14 @@ local views = {
 		}
 	},
 	splash_video_view = {
+		disable_game_world = true,
+		display_name = "loc_splash_video_view_display_name",
+		use_transition_ui = true,
+		path = "scripts/ui/views/splash_video_view/splash_video_view",
 		package = "packages/ui/views/splash_video_view/splash_video_view",
 		load_always = true,
 		class = "SplashVideoView",
-		disable_game_world = false,
-		display_name = "loc_splash_video_view_display_name",
-		path = "scripts/ui/views/splash_video_view/splash_video_view",
+		close_on_hotkey_pressed = true,
 		dummy_data = {
 			video_name = "content/videos/fatshark_splash",
 			sound_name = "content/videos/fatshark_splash"
@@ -362,16 +438,23 @@ local views = {
 		state_bound = true,
 		display_name = "loc_mission_board_view_display_name",
 		use_transition_ui = true,
-		path = "scripts/ui/views/mission_board_view_v2/mission_board_view",
-		package = "packages/ui/views/mission_board_view/mission_board_view_v2",
+		path = "scripts/ui/views/mission_board_view/prototype/mission_board_view",
+		package = "packages/ui/views/mission_board_view/mission_board_view",
 		class = "MissionBoardView",
 		disable_game_world = true,
 		load_in_hub = true,
 		levels = {
-			"content/levels/ui/mission_board_v2/mission_board_v2"
+			"content/levels/ui/mission_board/mission_board"
+		},
+		enter_sound_events = {
+			UISoundEvents.mission_board_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.mission_board_exit
 		},
 		wwise_states = {
-			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_board
+			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_board,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
 	},
 	lobby_view = {
@@ -409,21 +492,6 @@ local views = {
 			ui_views = false
 		}
 	},
-	body_shop_view = {
-		display_name = "loc_body_shop_view_display_name",
-		state_bound = true,
-		use_transition_ui = true,
-		path = "scripts/ui/views/body_shop_view/body_shop_view",
-		package = "packages/ui/views/body_shop_view/body_shop_view",
-		class = "BodyShopView",
-		disable_game_world = true,
-		levels = {
-			"content/levels/ui/crafting_view/crafting_view"
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		}
-	},
 	contracts_background_view = {
 		display_name = "loc_contracts_background_view_display_name",
 		state_bound = true,
@@ -440,10 +508,10 @@ local views = {
 			"content/levels/ui/contracts_view/contracts_view"
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter
+			UISoundEvents.credits_vendor_on_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit
+			UISoundEvents.credits_vendor_on_exit
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
@@ -470,6 +538,21 @@ local views = {
 		killswitch_unavailable_description = "loc_popup_unavailable_view_marks_store_description",
 		path = "scripts/ui/views/marks_vendor_view/marks_vendor_view",
 		package = "packages/ui/views/marks_vendor_view/marks_vendor_view",
+		class = "MarksVendorView",
+		disable_game_world = true,
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
+	},
+	marks_goods_vendor_view = {
+		use_transition_ui = false,
+		display_name = "loc_marks_vendor_view_display_name",
+		state_bound = true,
+		killswitch = "show_marks_store",
+		killswitch_unavailable_header = "loc_popup_unavailable_view_marks_store_header",
+		killswitch_unavailable_description = "loc_popup_unavailable_view_marks_store_description",
+		path = "scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view",
+		package = "packages/ui/views/marks_goods_vendor_view/marks_goods_vendor_view",
 		class = "MarksVendorView",
 		disable_game_world = true,
 		wwise_states = {
@@ -507,46 +590,13 @@ local views = {
 			"content/levels/ui/credits_vendor/credits_vendor"
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter
+			UISoundEvents.credits_vendor_on_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit
+			UISoundEvents.credits_vendor_on_exit
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		}
-	},
-	premium_vendor_view = {
-		display_name = "loc_premium_vendor_view_display_name",
-		killswitch = "show_premium_store",
-		state_bound = true,
-		use_transition_ui = true,
-		killswitch_unavailable_header = "loc_popup_unavailable_view_premium_store_header",
-		killswitch_unavailable_description = "loc_popup_unavailable_view_premium_store_description",
-		path = "scripts/ui/views/premium_vendor_view/premium_vendor_view",
-		package = "packages/ui/views/vendor_view/vendor_view",
-		class = "PremiumVendorView",
-		disable_game_world = true,
-		levels = {
-			"content/levels/ui/vendor_view/vendor_view"
-		},
-		testify_flags = {
-			ui_views = false
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		}
-	},
-	training_ground_view = {
-		package = "packages/ui/views/training_ground_view/training_ground_view",
-		display_name = "loc_training_ground_view_display_name",
-		class = "TrainingGroundView",
-		disable_game_world = true,
-		use_transition_ui = true,
-		state_bound = true,
-		path = "scripts/ui/views/training_ground_view/training_ground_view",
-		levels = {
-			"content/levels/ui/training_ground_view/training_ground_view"
 		}
 	},
 	main_menu_background_view = {
@@ -635,12 +685,43 @@ local views = {
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
+	},
+	training_grounds_view = {
+		display_name = "loc_training_grounds_view_display_name",
+		state_bound = true,
+		load_in_hub = true,
+		use_transition_ui = true,
+		path = "scripts/ui/views/training_grounds_view/training_grounds_view",
+		package = "packages/ui/views/training_grounds_view/training_grounds_view",
+		class = "TrainingGroundsView",
+		disable_game_world = true,
+		levels = {
+			"content/levels/ui/training_grounds/training_grounds"
+		},
+		enter_sound_events = {
+			TrainingGroundsSoundEvents.hub_pod_interact_enter
+		},
+		exit_sound_events = {
+			TrainingGroundsSoundEvents.hub_pod_interact_exit
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
+	},
+	training_grounds_options_view = {
+		package = "packages/ui/views/training_grounds_options_view/training_grounds_options_view",
+		display_name = "loc_training_grounds_options_view_display_name",
+		class = "TrainingGroundsOptionsView",
+		disable_game_world = true,
+		state_bound = true,
+		path = "scripts/ui/views/training_grounds_options_view/training_grounds_options_view",
+		levels = {
+			"content/levels/ui/training_grounds/training_grounds"
+		}
 	}
 }
 
 local function _declare_view(name, settings)
-	assert(not views[name], "Trying to declare view settings with a name that is already taken")
-
 	views[name] = settings
 end
 

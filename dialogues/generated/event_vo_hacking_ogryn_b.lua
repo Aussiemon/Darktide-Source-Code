@@ -7,7 +7,7 @@ local event_vo_hacking_ogryn_b = {
 			[2.0] = "loc_ogryn_b__response_to_hacking_fix_decode_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.702323,
+			[1.0] = 1.702333,
 			[2.0] = 2.07276
 		},
 		randomize_indexes = {}

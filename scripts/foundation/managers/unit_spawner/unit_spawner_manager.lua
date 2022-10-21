@@ -123,8 +123,6 @@ UnitSpawnerManager._add_pending_extensions = function (self)
 end
 
 UnitSpawnerManager.mark_for_deletion = function (self, unit)
-	fassert(Unit_alive(unit), "Tried to destroy a unit (%s) that was already destroyed.", tostring(unit))
-
 	local deletion_state = self._deletion_state
 
 	if deletion_state == DELETION_STATES.during_extension_update then
@@ -156,15 +154,11 @@ UnitSpawnerManager._remove_units_marked_for_deletion = function (self)
 	local unit = self._deletion_queue:pop_first()
 
 	while unit do
-		Profiler.start("pre_delete_cleanup")
 		Unit.flow_event(unit, "cleanup_before_destroy")
 		extension_manager:unregister_unit(unit)
 
 		self._num_deleted_units = self._num_deleted_units + 1
 		temp_deleted_units_list[self._num_deleted_units] = unit
-
-		Profiler.stop("pre_delete_cleanup")
-
 		unit = self._deletion_queue:pop_first()
 	end
 
@@ -178,9 +172,6 @@ UnitSpawnerManager._remove_units_marked_for_deletion = function (self)
 end
 
 UnitSpawnerManager.set_deletion_state = function (self, state)
-	fassert(self._deletion_state ~= state, "[UnitSpawnerManager] Tried to set deletion state to same state (%s).", state)
-	fassert(self._deletion_state == DELETION_STATES.default or state == DELETION_STATES.default, "[UnitSpawnerManager] Tried to set deletion state whilst in another non-default deletion state (current=%s | new=%s).", self._deletion_state, state)
-
 	self._deletion_state = state
 end
 
@@ -202,8 +193,6 @@ end
 
 UnitSpawnerManager.is_husk = function (self, unit)
 	local is_husk = self._husk_units[unit]
-
-	fassert(is_husk ~= nil, "Unit %q is not network unit.", Unit.get_data(unit, "unit_name") or "<unknown>")
 
 	return is_husk
 end
@@ -301,11 +290,7 @@ UnitSpawnerManager.spawn_network_unit = function (self, unit_name, unit_template
 end
 
 UnitSpawnerManager._spawn_unit_with_extensions = function (self, unit_name, unit_template_name, position, rotation, material, game_object_data, ...)
-	fassert(unit_template_name, "No unit template supplied for %q", unit_name)
-
 	local template = self._unit_templates[unit_template_name]
-
-	fassert(template, "Couldn't find unit template %s", unit_template_name)
 
 	if position == nil then
 		position = Vector3(0, 0, 0)
@@ -328,32 +313,20 @@ UnitSpawnerManager._world_delete_units = function (self, units_list, num_units)
 	local game_session = self._game_session
 	local unit_template_by_unit = self._unit_template_by_unit
 
-	Profiler.start("delete_units")
-
 	for i = 1, num_units do
-		Profiler.start("unit")
-
 		local unit = units_list[i]
 		local unit_is_alive = Unit_alive(unit)
-
-		assert(unit_is_alive, "Trying to remove unit already destroyed")
-
 		local game_object_id_to_remove = self:game_object_id(unit)
 
 		if game_object_id_to_remove then
-			Profiler.start("game_object")
-
 			if game_session then
 				GameSession.destroy_game_object(game_session, game_object_id_to_remove)
 			end
 
 			self:_remove_network_unit(unit)
-			Profiler.stop("game_object")
 		end
 
-		Profiler.start("flow")
 		Unit.flow_event(unit, "unit_despawned")
-		Profiler.stop("flow")
 
 		local unit_template = unit_template_by_unit[unit]
 		local pre_unit_destroyed_func = unit_template and unit_template.pre_unit_destroyed
@@ -362,19 +335,12 @@ UnitSpawnerManager._world_delete_units = function (self, units_list, num_units)
 			pre_unit_destroyed_func(unit)
 		end
 
-		Profiler.start("destroy_unit")
-
 		local unit_world = Unit.world(unit)
 
 		World.destroy_unit(unit_world, unit)
-		Profiler.stop("destroy_unit")
 
 		unit_template_by_unit[unit] = nil
-
-		Profiler.stop("unit")
 	end
-
-	Profiler.stop("delete_units")
 end
 
 local TEMP_UNIT_TABLE = {}
@@ -398,9 +364,6 @@ end
 
 UnitSpawnerManager.register_runtime_loaded_level = function (self, level)
 	local level_name_hash = Level._name_hash_32(level)
-
-	fassert(self._runtime_loaded_levels[level_name_hash] == nil, "[UnitSpawnerManager] Level already registered")
-
 	self._runtime_loaded_levels[level_name_hash] = self._runtime_loaded_levels[level_name_hash] or {}
 	local units_in_runtime_loaded_level = self._runtime_loaded_levels[level_name_hash]
 	local level_units = Level.units(level, true)
@@ -413,16 +376,12 @@ end
 
 UnitSpawnerManager.unregister_runtime_loaded_level = function (self, level)
 	local level_name_hash = Level._name_hash_32(level)
-
-	fassert(self._runtime_loaded_levels[level_name_hash] ~= nil, "[UnitSpawnerManager] Level not registered")
-
 	self._runtime_loaded_levels[level_name_hash] = nil
 end
 
 UnitSpawnerManager.destroy_game_object_unit = function (self, game_object_id, owner_id)
 	local unit = self._network_units[game_object_id]
 
-	fassert(unit, "Couldn't find unit with game_object_id %d", game_object_id)
 	self:_remove_network_unit(unit)
 
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")

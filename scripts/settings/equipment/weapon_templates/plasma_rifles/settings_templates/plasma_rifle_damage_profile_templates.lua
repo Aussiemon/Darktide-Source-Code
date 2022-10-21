@@ -95,7 +95,7 @@ damage_templates.default_plasma_killshot = {
 			600
 		}
 	},
-	wounds_template = WoundsTemplates.plasma_rifle,
+	wounds_template = WoundsTemplates.plasma_rifle_small,
 	damage_type = damage_types.plasma,
 	gibbing_type = GibbingTypes.plasma,
 	on_kill_area_suppression = {
@@ -113,7 +113,6 @@ damage_templates.default_plasma_killshot = {
 	}
 }
 damage_templates.default_plasma_bfg = {
-	gibbing_power = 0,
 	suppression_value = 8,
 	ignore_shield = true,
 	ragdoll_push_force = 1000,
@@ -121,8 +120,8 @@ damage_templates.default_plasma_bfg = {
 	ignore_stagger_reduction = true,
 	stagger_category = "ranged",
 	cleave_distribution = {
-		attack = 0.15,
-		impact = 0.15
+		attack = 4.15,
+		impact = 4.15
 	},
 	ranges = {
 		max = 20,
@@ -185,8 +184,9 @@ damage_templates.default_plasma_bfg = {
 			1000
 		}
 	},
-	wounds_template = WoundsTemplates.plasma_rifle,
+	wounds_template = WoundsTemplates.plasma_rifle_small,
 	damage_type = damage_types.plasma,
+	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
@@ -203,9 +203,8 @@ damage_templates.default_plasma_bfg = {
 	}
 }
 damage_templates.default_plasma_demolition = {
-	gibbing_power = 0,
 	suppression_value = 0.5,
-	ragdoll_push_force = 1250,
+	ragdoll_push_force = 800,
 	ignore_stagger_reduction = true,
 	stagger_category = "ranged",
 	cleave_distribution = {
@@ -249,7 +248,8 @@ damage_templates.default_plasma_demolition = {
 	},
 	wounds_template = WoundsTemplates.plasma_rifle,
 	damage_type = damage_types.laser,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.explosion,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.2,
@@ -262,8 +262,7 @@ damage_templates.default_plasma_demolition = {
 }
 damage_templates.light_plasma_demolition = {
 	suppression_value = 0.5,
-	ragdoll_push_force = 1250,
-	gibbing_power = 0,
+	ragdoll_push_force = 800,
 	stagger_category = "ranged",
 	cleave_distribution = {
 		attack = 0.1,
@@ -309,7 +308,8 @@ damage_templates.light_plasma_demolition = {
 	},
 	wounds_template = WoundsTemplates.plasma_rifle,
 	damage_type = damage_types.laser,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.explosion,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.2,

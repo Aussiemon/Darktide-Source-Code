@@ -2,8 +2,8 @@ local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffUtils = require("scripts/settings/buff/buff_utils")
-local ConditionalFunctionTemplates = require("scripts/settings/buff/conditional_function_templates")
-local CheckProcFunctionTemplates = require("scripts/settings/buff/check_proc_function_templates")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
@@ -24,7 +24,7 @@ local replenish_types = ToughnessSettings.replenish_types
 local templates = {}
 
 local function is_hiting_3_or_more_check(params, template_data, template_context)
-	local is_slot_ok = CheckProcFunctionTemplates.check_item_slot(params, template_data, template_context)
+	local is_slot_ok = CheckProcFunctions.check_item_slot(params, template_data, template_context)
 
 	if not is_slot_ok then
 		return false
@@ -36,7 +36,7 @@ local function is_hiting_3_or_more_check(params, template_data, template_context
 	return is_enugh_hits
 end
 
-templates.weapon_traits_ranged_explosive_wield_explosion_resore_toughness_buff = {
+templates.weapon_traits_ranged_explosive_wield_explosion_restore_toughness_buff = {
 	cooldown_duration = 10,
 	predicted = false,
 	class_name = "proc_buff",
@@ -81,7 +81,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increase_damage_buff = 
 	proc_stat_buffs = {
 		[buff_stat_buffs.damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increase_impact_buff = {
@@ -94,7 +94,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increase_impact_buff = 
 	proc_stat_buffs = {
 		[buff_stat_buffs.explosion_impact_modifier] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_crit_chance_buff = {
@@ -107,7 +107,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_crit_chance_b
 	proc_stat_buffs = {
 		[buff_stat_buffs.critical_strike_chance] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_unarmored_damage_buff = {
@@ -120,7 +120,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_unarmored_dam
 	proc_stat_buffs = {
 		[buff_stat_buffs.unarmored_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_armored_damage_buff = {
@@ -133,7 +133,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_armored_damag
 	proc_stat_buffs = {
 		[buff_stat_buffs.armored_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_resistant_damage_buff = {
@@ -146,7 +146,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_resistant_dam
 	proc_stat_buffs = {
 		[buff_stat_buffs.resistant_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_berserker_damage_buff = {
@@ -159,7 +159,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_berserker_dam
 	proc_stat_buffs = {
 		[buff_stat_buffs.berserker_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_super_armor_damage_buff = {
@@ -172,7 +172,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_super_armor_d
 	proc_stat_buffs = {
 		[buff_stat_buffs.super_armor_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_disgustingly_resilient_damage_buff = {
@@ -185,7 +185,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_increased_disgustingly_
 	proc_stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = 0.1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = is_hiting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_bleed_on_hit_buff = {
@@ -194,15 +194,15 @@ templates.weapon_traits_ranged_explosive_wield_bleed_on_hit_buff = {
 	proc_events = {
 		[buff_proc_events.on_hit] = 1
 	},
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctionTemplates.on_explosion_and_check_item_slot,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_explosion_and_check_item_slot,
 	proc_func = function (params, template_data, template_context)
 		local attacked_unit = params.attacked_unit
 		local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 		if attacked_unit_buff_extension then
 			local bleeding_dot_buff_name = "bleed"
-			local t = Managers.time:time("gameplay")
+			local t = FixedFrame.get_latest_fixed_time()
 
 			attacked_unit_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", template_context.unit)
 		end

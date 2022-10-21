@@ -7,7 +7,7 @@ local event_vo_hacking_zealot_female_c = {
 			[2.0] = "loc_zealot_female_c__response_to_hacking_fix_decode_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.823177,
+			[1.0] = 1.823188,
 			[2.0] = 2.160313
 		},
 		randomize_indexes = {}

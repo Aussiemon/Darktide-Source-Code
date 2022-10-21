@@ -17,18 +17,19 @@ local Stagger = require("scripts/utilities/attack/stagger")
 local Stun = require("scripts/utilities/attack/stun")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
+local stagger_results = AttackSettings.stagger_results
 local disorientation_templates = DisorientationSettings.disorientation_templates
 local buff_keywords = BuffSettings.keywords
 local _minion_hit_reaction, _player_hit_reaction, _toughness_broken_disorient, _toughness_absorbed_disorient, _interrupt_alternate_fire, _interrupt_interaction, _push_or_catapult, _push, _catapult, _force_look, _drop_luggable = nil
 local HitReaction = {
-	apply = function (damage_profile, damage_profile_lerp_values, target_weapon_template, attacked_breed_or_nil, attack_result, attacked_unit, attacking_unit, attack_direction, hit_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_type, herding_template_or_nil, hit_shield)
+	apply = function (damage_profile, damage_profile_lerp_values, target_weapon_template, attacked_breed_or_nil, attack_result, attacked_unit, attacking_unit, attack_direction, hit_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template_or_nil, hit_shield)
 		if Breed.is_minion(attacked_breed_or_nil) then
-			return _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_direction, attack_type, herding_template_or_nil, hit_shield)
+			return _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield)
 		elseif Breed.is_player(attacked_breed_or_nil) then
 			return _player_hit_reaction(attack_result, damage_profile, target_weapon_template, attacked_unit, attacking_unit, attack_direction, hit_position, attack_type)
 		end
 	end,
-	disorient_player = function (attacked_unit, unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, weapon_template)
+	disorient_player = function (attacked_unit, unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, weapon_template, is_predicted)
 		local breed = unit_data_extension:breed()
 		local breed_hit_reaction_stun_types = breed and breed.hit_reaction_stun_types
 		local unit_inventory_component = unit_data_extension:read_component("inventory")
@@ -53,7 +54,7 @@ local HitReaction = {
 		local trigger_stun = stun_settings and stun_settings.stun_duration and stun_settings.stun_duration > 0
 
 		if stun_allowed and trigger_stun and wanted_disorientation_type then
-			Stun.apply(attacked_unit, wanted_disorientation_type, attack_direction, weapon_template, ignore_stun_immunity)
+			Stun.apply(attacked_unit, wanted_disorientation_type, attack_direction, weapon_template, ignore_stun_immunity, is_predicted)
 		end
 
 		local buff_extension = ScriptUnit.extension(attacked_unit, "buff_system")
@@ -62,7 +63,7 @@ local HitReaction = {
 		local movement_speed_buff = disorientation_template.movement_speed_buff
 
 		if not slowdown_immune and movement_speed_buff then
-			local t = Managers.time:time("gameplay")
+			local t = FixedFrame.get_latest_fixed_time()
 
 			buff_extension:add_internally_controlled_buff(movement_speed_buff, t)
 		end
@@ -99,11 +100,11 @@ local HitReaction = {
 	end
 }
 
-function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_direction, attack_type, herding_template_or_nil, hit_shield)
+function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield)
 	if Stagger.can_stagger(attacked_unit) then
-		local applied_stagger = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
+		local applied_stagger = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
 
-		return applied_stagger and "stagger" or "no_stagger"
+		return applied_stagger and stagger_results.stagger or stagger_results.no_stagger
 	end
 end
 
@@ -120,7 +121,7 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacking_unit, attacked_unit)
 	local stun_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit, attacked_unit)
-	local stagger_result = breed.default_stagger_result or "stagger"
+	local stagger_result = breed.default_stagger_result or stagger_results.stagger
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 
 	if attack_result == attack_results.blocked then
@@ -131,8 +132,13 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 			_push(target_unit_data_extension, attacked_unit, push_template, attack_direction, attack_type)
 		end
 
-		if not block_broken then
-			stagger_result = "no_stagger"
+		if block_broken then
+			_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type)
+			HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, false, true, attack_direction, attack_type, target_weapon_template, false)
+			_interrupt_interaction(attacked_unit, damage_profile)
+			_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
+		else
+			stagger_result = stagger_results.no_stagger
 		end
 	elseif attack_result == attack_results.toughness_broken then
 		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
@@ -144,10 +150,21 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 	elseif attack_result == attack_results.toughness_absorbed then
 		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type)
 		_toughness_absorbed_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
+	elseif attack_result == attack_results.toughness_absorbed_melee then
+		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
+		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type)
+
+		local breed = target_unit_data_extension:breed()
+		local hit_reaction_stun_types = breed.hit_reaction_stun_types
+		local melee_toughness_hitreact = hit_reaction_stun_types.toughness_absorbed_melee
+
+		HitReaction.disorient_player(attacked_unit, target_unit_data_extension, melee_toughness_hitreact, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
+		_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
+		_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
 	elseif attack_result == attack_results.damaged then
 		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type)
-		HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template)
+		HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
 		_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
 		_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
 	end
@@ -160,7 +177,7 @@ function _toughness_broken_disorient(unit_data_extension, target_weapon_template
 	local hit_reaction_stun_types = breed.hit_reaction_stun_types
 	local fumbled = hit_reaction_stun_types.fumbled
 
-	HitReaction.disorient_player(attacked_unit, unit_data_extension, fumbled, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template)
+	HitReaction.disorient_player(attacked_unit, unit_data_extension, fumbled, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
 
 	if stun_allowed then
 		if attack_type == AttackSettings.attack_types.ranged then
@@ -170,16 +187,16 @@ function _toughness_broken_disorient(unit_data_extension, target_weapon_template
 			if is_sprinting then
 				local ranged_sprinting = hit_reaction_stun_types.toughness_broken_ranged_sprinting
 
-				Stun.apply(attacked_unit, ranged_sprinting, attack_direction, target_weapon_template)
+				Stun.apply(attacked_unit, ranged_sprinting, attack_direction, target_weapon_template, false, false)
 			else
 				local ranged = hit_reaction_stun_types.toughness_broken_ranged_sprinting
 
-				Stun.apply(attacked_unit, ranged, attack_direction, target_weapon_template)
+				Stun.apply(attacked_unit, ranged, attack_direction, target_weapon_template, false, false)
 			end
 		else
 			local default = hit_reaction_stun_types.toughness_broken_default
 
-			Stun.apply(attacked_unit, default, attack_direction, target_weapon_template)
+			Stun.apply(attacked_unit, default, attack_direction, target_weapon_template, false, false)
 		end
 	end
 end
@@ -191,13 +208,13 @@ function _toughness_absorbed_disorient(unit_data_extension, target_weapon_templa
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 
 	if attack_type == AttackSettings.attack_types.ranged and is_sprinting then
-		local ranged_sprinting = hit_reaction_stun_types.thougness_absorbed_ranged_sprinting
+		local ranged_sprinting = hit_reaction_stun_types.toughness_absorbed_ranged_sprinting
 
-		HitReaction.disorient_player(attacked_unit, unit_data_extension, ranged_sprinting, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template)
+		HitReaction.disorient_player(attacked_unit, unit_data_extension, ranged_sprinting, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
 	else
-		local default = hit_reaction_stun_types.thougness_absorbed_default
+		local default = hit_reaction_stun_types.toughness_absorbed_default
 
-		HitReaction.disorient_player(attacked_unit, unit_data_extension, default, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template)
+		HitReaction.disorient_player(attacked_unit, unit_data_extension, default, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
 	end
 end
 
@@ -211,7 +228,7 @@ function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, 
 		local animation_extension = ScriptUnit.has_extension(attacked_unit, "animation_system")
 
 		if not alternate_fire_settings or not alternate_fire_settings.uninterruptible then
-			AlternateFire.stop(alternate_fire, weapon_tweak_templates_component, animation_extension, target_weapon_template)
+			AlternateFire.stop(alternate_fire, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit)
 		end
 	end
 end

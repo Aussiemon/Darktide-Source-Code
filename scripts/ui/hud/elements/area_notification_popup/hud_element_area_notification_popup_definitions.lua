@@ -2,17 +2,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-
-local function _get_hud_color(key, alpha)
-	local color = table.clone(UIHudSettings[key])
-
-	if alpha then
-		color[1] = alpha
-	end
-
-	return color
-end
-
+local get_hud_color = UIHudSettings.get_hud_color
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	area_popup = {
@@ -97,7 +87,7 @@ local widget_definitions = {
 					0,
 					0
 				},
-				color = _get_hud_color("color_tint_main_1", 255),
+				color = get_hud_color("color_tint_main_1", 255),
 				material_values = {
 					distortion = 1
 				}

@@ -48,32 +48,29 @@ local hammer_smiter_light_am = {
 }
 local hammer_smiter_light_active_am = {
 	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = {
 			2,
 			3
 		},
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	},
 	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
-		[armor_types.resistant] = {
-			15,
-			25
-		},
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	}
 }
 local hammer_smiter_light_default_am = {
@@ -126,32 +123,29 @@ local hammer_tank_heavy_first_am = {
 }
 local hammer_tank_heavy_first_active_am = {
 	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = {
 			3,
 			5
 		},
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	},
 	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
-		[armor_types.resistant] = {
-			15,
-			25
-		},
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	}
 }
 local hammer_tank_heavy_am = {
@@ -183,12 +177,9 @@ damage_templates.thunderhammer_light = {
 	ragdoll_push_force = 500,
 	ragdoll_only = true,
 	stagger_category = "melee",
-	cleave_distribution = {
-		attack = 0.01,
-		impact = 0.01
-	},
+	cleave_distribution = single_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer,
@@ -225,12 +216,12 @@ damage_templates.thunderhammer_light = {
 			},
 			power_distribution = {
 				attack = {
-					80,
-					160
+					100,
+					250
 				},
 				impact = {
-					15,
-					45
+					8,
+					22
 				}
 			},
 			finesse_boost = {
@@ -297,15 +288,16 @@ damage_templates.thunderhammer_light_active = {
 	weapon_special = true,
 	finesse_ability_damage_multiplier = 1.5,
 	shield_override_stagger_strength = 500,
+	ignore_stagger_reduction = true,
 	ragdoll_push_force = 1000,
 	ragdoll_only = true,
+	gibbing_power = 0,
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.01,
 		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
@@ -316,8 +308,8 @@ damage_templates.thunderhammer_light_active = {
 			armor_damage_modifier = hammer_smiter_light_active_am,
 			power_distribution = {
 				attack = {
-					200,
-					300
+					300,
+					600
 				},
 				impact = {
 					25,
@@ -422,30 +414,34 @@ damage_templates.thunderhammer_heavy = {
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = {
-			20,
-			30
+			5,
+			10
 		},
 		impact = {
-			20,
-			30
+			5,
+			10
 		}
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer,
+	stagger_duration_modifier = {
+		0.3,
+		0.6
+	},
 	targets = {
 		{
 			armor_damage_modifier = hammer_tank_heavy_first_am,
 			power_distribution = {
 				attack = {
-					100,
-					200
+					150,
+					300
 				},
 				impact = {
-					45,
-					55
+					25,
+					35
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -465,8 +461,8 @@ damage_templates.thunderhammer_heavy = {
 					65
 				},
 				impact = {
-					25,
-					35
+					20,
+					30
 				}
 			}
 		},
@@ -478,8 +474,8 @@ damage_templates.thunderhammer_heavy = {
 					40
 				},
 				impact = {
-					15,
-					25
+					14,
+					24
 				}
 			}
 		},
@@ -492,7 +488,7 @@ damage_templates.thunderhammer_heavy = {
 				},
 				impact = {
 					10,
-					20
+					24
 				}
 			}
 		},
@@ -504,8 +500,8 @@ damage_templates.thunderhammer_heavy = {
 					0
 				},
 				impact = {
-					10,
-					20
+					8,
+					16
 				}
 			}
 		},
@@ -517,8 +513,8 @@ damage_templates.thunderhammer_heavy = {
 					0
 				},
 				impact = {
-					5,
-					15
+					8,
+					16
 				}
 			},
 			armor_damage_modifier = hammer_tank_heavy_am,
@@ -530,8 +526,10 @@ damage_templates.thunderhammer_heavy_active = {
 	shield_override_stagger_strength = 500,
 	finesse_ability_damage_multiplier = 1.5,
 	weapon_special = true,
+	ignore_stagger_reduction = true,
 	ragdoll_push_force = 1000,
 	ragdoll_only = true,
+	gibbing_power = 0,
 	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
@@ -539,7 +537,6 @@ damage_templates.thunderhammer_heavy_active = {
 		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.explosion,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
@@ -549,8 +546,8 @@ damage_templates.thunderhammer_heavy_active = {
 			armor_damage_modifier = hammer_tank_heavy_first_active_am,
 			power_distribution = {
 				attack = {
-					300,
-					500
+					500,
+					1000
 				},
 				impact = {
 					45,

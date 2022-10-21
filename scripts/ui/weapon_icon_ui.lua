@@ -1,24 +1,26 @@
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
-local DEBUG = false
+local UISettings = require("scripts/settings/ui/ui_settings")
 local PREVIEWER_FRAME_DELAY = 1
 local WeaponIconUI = class("WeaponIconUI")
 
 WeaponIconUI.init = function (self, render_settings)
+	self._unique_id = "WeaponIconUI" .. "_" .. string.gsub(tostring(self), "table: ", "")
 	self._render_settings = render_settings or {
 		viewport_layer = 900,
 		level_name = "content/levels/ui/weapon_icon/weapon_icon",
 		viewport_name = "weapon_viewport",
 		timer_name = "ui",
+		viewport_type = "default_with_alpha",
 		shading_environment = "content/shading_environments/ui/weapon_icons",
 		world_layer = 800,
-		world_name = "weapon_icon_world",
-		viewport_type = DEBUG and "default" or "item_weapon_offscreen"
+		world_name = "weapon_icon_world_" .. self._unique_id
 	}
-	self._portrait_width = render_settings and render_settings.portrait_width or 768
-	self._portrait_height = render_settings and render_settings.portrait_height or 512
-	self._target_resolution_width = render_settings and render_settings.target_resolution_width or 3840
-	self._target_resolution_height = render_settings and render_settings.target_resolution_height or 2160
+	local weapon_icon_size = UISettings.weapon_icon_size
+	self._weapon_width = render_settings and render_settings.weapon_width or weapon_icon_size[1]
+	self._weapon_height = render_settings and render_settings.weapon_height or weapon_icon_size[2]
+	self._target_resolution_width = render_settings and render_settings.target_resolution_width or self._weapon_width * 10
+	self._target_resolution_height = render_settings and render_settings.target_resolution_height or self._weapon_width * 10
 	self._icon_requests_queue_order = {}
 	self._icon_requests = {}
 	self._default_camera_settings_key = "human"
@@ -90,16 +92,15 @@ WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, render_c
 	end
 
 	local data = self._icon_requests[gear_id]
-
-	fassert(not data.references_lookup[id], "[WeaponIconUI] - Reference Name: (%s) is already being in use for character: (%s)", id, tostring(gear_id))
-
 	data.references_lookup[id] = true
 	data.references_array[#data.references_array + 1] = id
 
 	if data.spawned then
 		local grid_index = self:_grid_index_by_gear_id(gear_id)
 
-		on_load_callback(grid_index, self._num_rows, self._num_columns)
+		if on_load_callback then
+			on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+		end
 	else
 		data.callbacks[id] = on_load_callback
 	end
@@ -119,7 +120,7 @@ WeaponIconUI._icon_request_by_id = function (self, id, ignore_assert)
 	end
 
 	if not ignore_assert then
-		assert("[WeaponIconUI] - No icon portrait request exist for id: (%s)", tostring(id))
+		-- Nothing
 	end
 end
 
@@ -131,9 +132,6 @@ end
 
 WeaponIconUI.unload_weapon_icon = function (self, id)
 	local data = self:_icon_request_by_id(id)
-
-	fassert(data, "[WeaponIconUI] - No icon request exist for id (%s)", tostring(id))
-
 	local gear_id = data.gear_id
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
@@ -185,11 +183,20 @@ WeaponIconUI._handle_request_queue = function (self)
 					end
 
 					local active_request = self._active_request
+					local grid_index = active_request.grid_index
+					local uvs = self:_grid_index_uvs(grid_index)
+					local size_scale_x = uvs[2][1] - uvs[1][1]
+					local size_scale_y = uvs[2][2] - uvs[1][2]
+					local position_scale_x = uvs[1][1]
+					local position_scale_y = uvs[1][2]
+
+					Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
+
 					local callbacks = active_request.callbacks
 					local grid_index = active_request.grid_index
 
 					for id, on_load_callback in pairs(callbacks) do
-						on_load_callback(grid_index, self._num_rows, self._num_columns)
+						on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
 					end
 
 					table.clear(callbacks)
@@ -204,6 +211,8 @@ WeaponIconUI._handle_request_queue = function (self)
 	elseif #self._icon_requests_queue_order > 0 then
 		self:_handle_next_request_in_queue()
 	elseif self._ui_weapon_spawner then
+		self._active_request = nil
+
 		self._ui_weapon_spawner:destroy()
 
 		self._ui_weapon_spawner = nil
@@ -214,11 +223,16 @@ WeaponIconUI._handle_next_request_in_queue = function (self)
 	if not self._world_spawner then
 		self:_initialize_world()
 
+		self._icon_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._target_resolution_width, self._target_resolution_height, self._unique_id)
+		self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._weapon_width * 8, self._weapon_height * 8, self._unique_id .. "_2")
+		local render_targets = {
+			back_buffer = self._capture_render_target
+		}
 		local default_camera_settings_key = self._default_camera_settings_key
 		local camera_settings = self._breed_camera_settings[default_camera_settings_key]
-		local camera_unit = camera_settings.camera_unit
+		local camera_unit = camera_settings and camera_settings.camera_unit
 
-		self:_setup_viewport(camera_unit)
+		self:_setup_viewport(camera_unit, render_targets)
 	end
 
 	self._active_request = nil
@@ -244,14 +258,8 @@ WeaponIconUI._handle_next_request_in_queue = function (self)
 		local uvs = self:_grid_index_uvs(grid_index)
 		local size_scale_x = uvs[2][1] - uvs[1][1]
 		local size_scale_y = uvs[2][2] - uvs[1][2]
-
-		self._world_spawner:set_viewport_size(size_scale_x, size_scale_y)
-
 		local position_scale_x = uvs[1][1]
 		local position_scale_y = uvs[1][2]
-
-		self._world_spawner:set_viewport_position(position_scale_x, position_scale_y)
-
 		local item = request.item
 		local render_context = request.render_context
 
@@ -278,22 +286,26 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 		alignment_key = render_context.alignment_key
 	end
 
-	local item_base_unit_nane = item.base_unit
-	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, item_base_unit_nane)
+	local item_base_unit_name = item.base_unit
+	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, item_base_unit_name)
 	local spawn_point_unit = item_level_link_unit or self._spawn_point_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
 	local spawn_scale = Unit.world_scale(spawn_point_unit, 1)
+	local force_highest_mip = true
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, nil, force_highest_mip)
 
 	local breed = "human"
 	local camera_settings = self._breed_camera_settings[breed]
-	local camera_position = Vector3.from_array(camera_settings.boxed_camera_start_position)
-	local camera_rotation = camera_settings.boxed_camera_start_rotation:unbox()
 
-	world_spawner:set_camera_position(camera_position)
-	world_spawner:set_camera_rotation(camera_rotation)
+	if camera_settings then
+		local camera_position = Vector3.from_array(camera_settings.boxed_camera_start_position)
+		local camera_rotation = camera_settings.boxed_camera_start_rotation:unbox()
+
+		world_spawner:set_camera_position(camera_position)
+		world_spawner:set_camera_rotation(camera_rotation)
+	end
 end
 
 WeaponIconUI._initialize_world = function (self)
@@ -342,13 +354,13 @@ WeaponIconUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 	}
 end
 
-WeaponIconUI._setup_viewport = function (self, camera_unit)
+WeaponIconUI._setup_viewport = function (self, camera_unit, render_targets)
 	local viewport_name = self._render_settings.viewport_name
 	local viewport_type = self._render_settings.viewport_type
 	local viewport_layer = self._render_settings.viewport_layer
 	local shading_environment = self._render_settings.shading_environment
 
-	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, nil, render_targets)
 end
 
 WeaponIconUI._resume_rendering = function (self)
@@ -364,6 +376,18 @@ WeaponIconUI._pause_rendering = function (self)
 end
 
 WeaponIconUI.destroy = function (self)
+	if self._icon_render_target then
+		Renderer.destroy_resource(self._icon_render_target)
+
+		self._icon_render_target = nil
+	end
+
+	if self._capture_render_target then
+		Renderer.destroy_resource(self._capture_render_target)
+
+		self._capture_render_target = nil
+	end
+
 	if self._ui_weapon_spawner then
 		self._ui_weapon_spawner:destroy()
 
@@ -421,8 +445,8 @@ end
 WeaponIconUI._create_uv_grid = function (self)
 	self._uv_grid_index_by_gear_id = {}
 	self._uv_grid_index_occupation_list = {}
-	local num_columns = math.floor(self._target_resolution_width / self._portrait_width)
-	local num_rows = math.floor(self._target_resolution_height / self._portrait_height)
+	local num_columns = math.floor(self._target_resolution_width / self._weapon_width)
+	local num_rows = math.floor(self._target_resolution_height / self._weapon_height)
 	local uv_grid = {}
 
 	for i = 1, num_rows do

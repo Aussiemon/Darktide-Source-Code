@@ -14,10 +14,6 @@ end
 
 TimeManager.register_timer = function (self, name, parent_name, start_time)
 	local timers = self._timers
-
-	fassert(timers[name] == nil, "[TimeManager] Tried to add already registered timer %q", name)
-	fassert(timers[parent_name], "[TimeManager] Not allowed to add timer with unregistered parent %q", parent_name)
-
 	local parent_timer = timers[parent_name]
 	local new_timer = Timer:new(name, parent_timer, start_time, self._dt)
 
@@ -28,10 +24,6 @@ end
 
 TimeManager.unregister_timer = function (self, name)
 	local timer = self._timers[name]
-
-	fassert(timer, "[TimeManager] Tried to remove unregistered timer %q", name)
-	fassert(table.size(timer:children()) == 0, "[TimeManager] Not allowed to remove timer %q with children", name)
-
 	local parent = timer:parent()
 
 	if parent then
@@ -98,7 +90,6 @@ TimeManager.set_active = function (self, name, active)
 end
 
 TimeManager.set_local_scale = function (self, name, scale)
-	fassert(name ~= "main", "[TimeManager] Not allowed to set scale in main timer")
 	self._timers[name]:set_local_scale(scale)
 end
 

@@ -13,14 +13,15 @@ local intro_texts = {
 }
 local button_options_definitions = {
 	{
+		blur_background = false,
 		display_name = "loc_contract_view_option_contracts",
 		callback = function (self)
 			local tab_bar_params = {
+				hide_tabs = true,
 				layer = 10,
 				tabs_params = {
 					{
-						view = "contracts_view",
-						level_story_event = "servitor_contracts_anim"
+						view = "contracts_view"
 					}
 				}
 			}
@@ -29,6 +30,7 @@ local button_options_definitions = {
 		end
 	},
 	{
+		blur_background = false,
 		display_name = "loc_contract_view_option_mark_store",
 		callback = function (self)
 			local tab_bar_params = {
@@ -36,15 +38,32 @@ local button_options_definitions = {
 				tabs_params = {
 					{
 						view = "marks_vendor_view",
-						view_function = "show_temporary_items",
+						view_function = "show_items",
 						display_name = "loc_mark_vendor_view_title_temporary",
-						level_story_event = "servitor_goods_anim"
+						input_legend_buttons = {
+							{
+								input_action = "hotkey_item_inspect",
+								display_name = "loc_weapon_inventory_inspect_button",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_inspect_pressed",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+
+										return view_instance and view_instance._previewed_item ~= nil
+									end
+
+									return false
+								end
+							}
+						}
 					},
 					{
-						view = "marks_vendor_view",
-						view_function = "show_standard_items",
-						display_name = "loc_mark_vendor_view_title_standard",
-						level_story_event = "servitor_goods_anim"
+						view = "marks_goods_vendor_view",
+						view_function = "show_items",
+						display_name = "loc_mark_vendor_view_title_standard"
 					}
 				}
 			}

@@ -1,6 +1,5 @@
 local Breeds = require("scripts/settings/breed/breeds")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local PlayerUnitSpawnManagerTestify = GameParameters.testify and require("scripts/managers/player/player_unit_spawn_manager_testify")
 local PlayerUnitSpawnManager = class("PlayerUnitSpawnManager")
 local CLIENT_RPCS = {
 	"rpc_register_player_unit_ragdoll"
@@ -53,8 +52,8 @@ PlayerUnitSpawnManager.fixed_update = function (self, dt, t)
 end
 
 PlayerUnitSpawnManager.update = function (self, dt, t)
-	if self._is_server and GameParameters.testify then
-		Testify:poll_requests_through_handler(PlayerUnitSpawnManagerTestify, self)
+	if self._is_server then
+		-- Nothing
 	end
 
 	self:_update_ragdolls(self._frozen_ragdolls, self._soft_cap_out_of_bounds_units)
@@ -124,9 +123,7 @@ PlayerUnitSpawnManager.alive_players = function (self)
 	return alive_players
 end
 
-PlayerUnitSpawnManager.spawn_player = function (self, player, position, rotation, force_spawn, optional_side_name, breed_name_optional, character_state_optional, is_respawn, optional_damage, optional_permanent_damage)
-	fassert(self._is_server, "[PlayerUnitSpawnManager][spawn] server only method")
-
+PlayerUnitSpawnManager.spawn_player = function (self, player, position, rotation, parent, force_spawn, optional_side_name, breed_name_optional, character_state_optional, is_respawn, optional_damage, optional_permanent_damage)
 	local game_mode_manager = Managers.state.game_mode
 
 	if not is_respawn and game_mode_manager:should_spawn_dead(player) then
@@ -139,12 +136,12 @@ PlayerUnitSpawnManager.spawn_player = function (self, player, position, rotation
 	local can_spawn = game_mode_manager:can_spawn_player(player)
 
 	if can_spawn or force_spawn then
-		self:_spawn(player, position, rotation, optional_side_name, breed_name_optional, character_state_optional, optional_damage, optional_permanent_damage)
+		self:_spawn(player, position, rotation, parent, optional_side_name, breed_name_optional, character_state_optional, optional_damage, optional_permanent_damage)
 		game_mode_manager:on_player_unit_spawn(player, is_respawn)
 	end
 end
 
-PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, optional_side_name, breed_name_optional, character_state_optional, optional_damage, optional_permanent_damage)
+PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, parent, optional_side_name, breed_name_optional, character_state_optional, optional_damage, optional_permanent_damage)
 	local side_system = Managers.state.extension:system("side_system")
 	local side_name = optional_side_name or side_system:get_default_player_side_name()
 	local spawn_side = side_system:get_side_from_name(side_name)
@@ -161,14 +158,25 @@ PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, opti
 		player:set_orientation(yaw, pitch, 0)
 	end
 
+	if parent then
+		local platform_extension = ScriptUnit.has_extension(parent, "moveable_platform_system")
+
+		if platform_extension then
+			platform_extension:add_passenger(player_unit, true)
+		else
+			local locomotion_extension = ScriptUnit.extension(player_unit, "locomotion_system")
+
+			locomotion_extension:set_parent_unit(player_unit)
+		end
+	end
+
+	Managers.state.out_of_bounds:register_soft_oob_unit(player_unit, self, "_on_player_soft_oob")
 	Managers.event:trigger("player_unit_spawned", player)
 
 	return player_unit
 end
 
 PlayerUnitSpawnManager.despawn = function (self, player)
-	fassert(self._is_server, "[PlayerUnitSpawnManager][despawn] server only method")
-
 	local game_mode_manager = Managers.state.game_mode
 
 	game_mode_manager:on_player_unit_despawn(player)
@@ -180,10 +188,7 @@ PlayerUnitSpawnManager._despawn = function (self, player)
 		local player_unit = player.player_unit
 		local unit_spawner_manager = Managers.state.unit_spawner
 
-		if ALIVE[player_unit] and player.remote then
-			Log.info("PlayerUnitSpawnManager", "[account: %s; character: %s] Removed unit at [%s]", tostring(player:account_id()), tostring(player:character_id()), Unit.world_position(player_unit, 1))
-		end
-
+		Managers.state.out_of_bounds:unregister_soft_oob_unit(player_unit, self)
 		unit_spawner_manager:mark_for_deletion(player_unit)
 		Managers.event:trigger("player_unit_despawned", player)
 	end
@@ -204,8 +209,6 @@ PlayerUnitSpawnManager.assign_unit_ownership = function (self, unit, player, is_
 end
 
 PlayerUnitSpawnManager.relinquish_unit_ownership = function (self, unit)
-	fassert(self._unit_owners[unit], "[PlayerUnitSpawnManager:relinquish_unit_ownership] Unit %s ownership cannot be relinquished, not owned.", unit)
-
 	local player = self._unit_owners[unit]
 
 	if unit == player.player_unit then
@@ -240,8 +243,6 @@ PlayerUnitSpawnManager.is_player_unit = function (self, unit)
 end
 
 PlayerUnitSpawnManager.clear_player_unit = function (self, unique_id)
-	fassert(self._players_with_unit[unique_id] == nil, "[PlayerUnitSpawnManager] Missed relinquishing unit ownership before destroying player %s!", unique_id)
-
 	self._players_without_unit[unique_id] = nil
 end
 
@@ -275,6 +276,19 @@ PlayerUnitSpawnManager.rpc_register_player_unit_ragdoll = function (self, sender
 	local player_unit = Managers.state.unit_spawner:unit(game_object_id)
 
 	self:register_player_unit_ragdoll(player_unit)
+end
+
+PlayerUnitSpawnManager._on_player_soft_oob = function (self, unit)
+	Log.info("PlayerUnitSpawnManager", "Despawning player that was out of bounds [%q].", unit)
+
+	local unit_owner = self._unit_owners[unit]
+
+	if not unit_owner then
+		Managers.state.out_of_bounds:unregister_soft_oob_unit(unit, self)
+		Managers.state.unit_spawner:mark_for_deletion(unit)
+	else
+		self:despawn(unit_owner)
+	end
 end
 
 return PlayerUnitSpawnManager

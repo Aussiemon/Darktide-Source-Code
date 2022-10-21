@@ -22,8 +22,7 @@ local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 damage_templates.light_grenadier_gauntlet_tank = {
-	gibbing_power = 0,
-	ragdoll_push_force = 800,
+	ragdoll_push_force = 400,
 	ragdoll_only = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
@@ -32,6 +31,8 @@ damage_templates.light_grenadier_gauntlet_tank = {
 		impact = 15
 	},
 	damage_type = damage_types.blunt_thunder,
+	gibbing_type = GibbingTypes.default,
+	gibbing_power = GibbingPower.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -124,7 +125,6 @@ damage_templates.light_grenadier_gauntlet_tank = {
 	}
 }
 damage_templates.special_grenadier_gauntlet_tank = {
-	gibbing_power = 0,
 	stagger_override = "killshot",
 	ragdoll_push_force = 800,
 	ragdoll_only = true,
@@ -135,6 +135,8 @@ damage_templates.special_grenadier_gauntlet_tank = {
 		impact = 0.01
 	},
 	damage_type = damage_types.blunt,
+	gibbing_type = GibbingTypes.default,
+	gibbing_power = GibbingPower.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -226,8 +228,7 @@ damage_templates.special_grenadier_gauntlet_tank = {
 	}
 }
 damage_templates.heavy_grenadier_gauntlet_tank = {
-	gibbing_power = 0,
-	ragdoll_push_force = 800,
+	ragdoll_push_force = 400,
 	ragdoll_only = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
@@ -236,6 +237,8 @@ damage_templates.heavy_grenadier_gauntlet_tank = {
 		impact = 5
 	},
 	damage_type = damage_types.blunt_thunder,
+	gibbing_type = GibbingTypes.default,
+	gibbing_power = GibbingPower.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -328,7 +331,6 @@ damage_templates.heavy_grenadier_gauntlet_tank = {
 	}
 }
 damage_templates.default_gauntlet_bfg = {
-	gibbing_power = 0,
 	suppression_value = 4,
 	ignore_shield = true,
 	ragdoll_push_force = 750,
@@ -401,6 +403,7 @@ damage_templates.default_gauntlet_bfg = {
 	},
 	damage_type = damage_types.blunt,
 	gibbing_type = GibbingTypes.default,
+	gibbing_power = GibbingPower.always,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10
@@ -416,7 +419,6 @@ damage_templates.default_gauntlet_bfg = {
 	}
 }
 damage_templates.default_gauntlet_demolitions = {
-	gibbing_power = 0,
 	suppression_value = 20,
 	opt_in_stagger_duration_multiplier = true,
 	ragdoll_push_force = 600,
@@ -473,7 +475,8 @@ damage_templates.default_gauntlet_demolitions = {
 		}
 	},
 	damage_type = damage_types.frag,
-	gibbing_type = GibbingTypes.explosion
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.close_gauntlet_demolitions = {
 	suppression_value = 20,

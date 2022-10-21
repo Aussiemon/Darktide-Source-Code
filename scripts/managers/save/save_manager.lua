@@ -34,9 +34,13 @@ SaveManager.account_data = function (self)
 	return self._save_data:account_data(account_id)
 end
 
-SaveManager.abort = function (self)
-	fassert(self._token, "Attempting to abort without existing token")
+SaveManager.character_data = function (self, character_id)
+	local account_id = Managers.backend:account_id() or PlayerManager.NO_ACCOUNT_ID
 
+	return self._save_data:character_data(account_id, character_id)
+end
+
+SaveManager.abort = function (self)
 	self._callback = nil
 	self._state = "idle"
 
@@ -54,8 +58,6 @@ SaveManager.queue_save = function (self)
 end
 
 SaveManager.save = function (self, optional_callback)
-	fassert(not self._token, "Attempting save with existing token.")
-
 	self._token = Save.auto_save(self._save_file_name, self._save_data, self._save_done_cb, self._use_cloud)
 	self._callback = optional_callback
 	self._state = "saving"
@@ -66,8 +68,6 @@ SaveManager.info = function (self)
 end
 
 SaveManager.load = function (self, optional_callback)
-	fassert(not self._token, "Attempting load with existing token.")
-
 	self._token = Save.auto_load(self._save_file_name, self._load_done_cb, self._use_cloud)
 	self._callback = optional_callback
 	self._state = "loading"

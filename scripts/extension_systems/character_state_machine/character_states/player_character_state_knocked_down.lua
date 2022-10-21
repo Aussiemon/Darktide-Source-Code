@@ -25,7 +25,8 @@ local LOOPING_SOUND_ALIAS = "knocked_down"
 local SFX_SOURCE = "head"
 local MOVE_METHOD = "script_driven"
 local TENSION_TYPE = "knocked_down"
-local STINGER_ALIAS = "disabled_enter"
+local STINGER_ENTER_ALIAS = "disabled_enter"
+local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
 	stinger_type = "teammate_knocked_down"
 }
@@ -40,6 +41,7 @@ PlayerCharacterStateKnockedDown.init = function (self, character_state_init_cont
 	self._knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
 	self._next_vo_trigger_time = 0
 	self._vo_sequence = 0
+	self._entered_state_t = nil
 end
 
 PlayerCharacterStateKnockedDown.extensions_ready = function (self, world, unit)
@@ -68,6 +70,9 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 	self:_init_vo(t)
 	self:_stop_movement(t)
 	self:_enter_third_person_mode(t)
+
+	self._entered_state_t = t
+
 	Interrupt.ability_and_action(t, unit, INTERRUPT_REASON, nil)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
 	PlayerUnitVisualLoadout.wield_slot(INVENTORY_SLOT_TO_WIELD, unit, t)
@@ -94,12 +99,15 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 			local player_unit = player_units[i]
 			local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 			local param_table = buff_extension:request_proc_event_param_table()
-			param_table.downed_unit = unit
 
-			buff_extension:add_proc_event(proc_events.on_ally_knocked_down, param_table)
+			if param_table then
+				param_table.downed_unit = unit
+
+				buff_extension:add_proc_event(proc_events.on_ally_knocked_down, param_table)
+			end
 		end
 
-		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
+		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
 	end
 
 	self._assist:reset()
@@ -128,6 +136,26 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 	if is_server and (next_state == "walking" or next_state == "warp_grabbed") then
 		self:_remove_buffs()
 		health_extension:exited_knocked_down()
+	end
+
+	if is_server and next_state == "walking" then
+		self._fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
+	end
+
+	if is_server then
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+			local state_name = "knocked_down"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
 	end
 
 	self._assist:stop()
@@ -199,7 +227,9 @@ PlayerCharacterStateKnockedDown._stop_movement = function (self, t)
 	locomotion_steering.move_method = MOVE_METHOD
 	local forced_rotation = Quaternion.look(Vector3.flat(Quaternion.forward(first_person.rotation)))
 
-	ForceRotation.start(locomotion_force_rotation, locomotion_steering, forced_rotation, forced_rotation, t, 0)
+	if not locomotion_force_rotation.use_force_rotation then
+		ForceRotation.start(locomotion_force_rotation, locomotion_steering, forced_rotation, forced_rotation, t, 0)
+	end
 end
 
 PlayerCharacterStateKnockedDown._enter_third_person_mode = function (self, t)

@@ -1,15 +1,9 @@
-require("scripts/extension_systems/weapon/actions/action_place")
+require("scripts/extension_systems/weapon/actions/action_place_base")
 
-local Pickups = require("scripts/settings/pickup/pickups")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local ActionPlaceDeployable = class("ActionPlaceDeployable", "ActionPlace")
+local ActionPlaceDeployable = class("ActionPlaceDeployable", "ActionPlaceBase")
 
-ActionPlaceDeployable._place_unit = function (self, action_settings)
+ActionPlaceDeployable._place_unit = function (self, action_settings, position, rotation, placed_on_unit)
 	local player_unit = self._player_unit
-	local action_component = self._action_component
-	local position = action_component.position
-	local rotation = action_component.rotation
-	local placed_on_unit = action_component.placed_on_unit
 	local player_or_nil = Managers.state.player_unit_spawn:owner(player_unit)
 	local deployable_settings = action_settings.deployable_settings
 	local unit_template = deployable_settings.unit_template
@@ -19,6 +13,7 @@ ActionPlaceDeployable._place_unit = function (self, action_settings)
 	local unit_name, material = nil
 	local placed_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, side_id, deployable_settings, placed_on_unit)
 
+	Managers.event:trigger("on_pickup_placed", placed_unit)
 	self:_register_stats_and_telemetry(unit_template, player_or_nil)
 end
 

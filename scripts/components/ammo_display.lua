@@ -31,6 +31,14 @@ AmmoDisplay.destroy = function (self, unit)
 end
 
 AmmoDisplay.set_ammo = function (self, unit, ammo, max_ammo, critical_threshold)
+	if ammo == 0 then
+		ammo = 1
+	end
+
+	if max_ammo == 0 then
+		max_ammo = 1
+	end
+
 	if max_ammo ~= self._max_ammo then
 		self._max_ammo = max_ammo
 	end
@@ -44,8 +52,9 @@ AmmoDisplay.set_ammo = function (self, unit, ammo, max_ammo, critical_threshold)
 end
 
 AmmoDisplay._update_charge = function (self, unit)
-	local charge_value = self._ammo / self._max_ammo
-	local critical_value = self._critical_threshold / self._max_ammo
+	local max_ammo = self._max_ammo
+	local charge_value = self._ammo / max_ammo
+	local critical_value = self._critical_threshold / max_ammo
 
 	Unit.set_scalar_for_material(unit, "display_01", "charge", charge_value)
 

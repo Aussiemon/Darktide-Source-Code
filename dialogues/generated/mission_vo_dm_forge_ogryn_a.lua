@@ -59,7 +59,7 @@ local mission_vo_dm_forge_ogryn_a = {
 			[2.0] = "loc_ogryn_a__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.528677,
+			[1.0] = 2.528688,
 			[2.0] = 3.101938
 		},
 		randomize_indexes = {}
@@ -119,8 +119,8 @@ local mission_vo_dm_forge_ogryn_a = {
 			"loc_ogryn_a__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			1.048854,
-			1.904635,
+			1.048844,
+			1.904646,
 			2.28326,
 			1.733802,
 			2.825177,
@@ -152,8 +152,8 @@ local mission_vo_dm_forge_ogryn_a = {
 			[2.0] = "loc_ogryn_a__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.5645,
-			[2.0] = 4.059156
+			[1.0] = 2.56449,
+			[2.0] = 4.059167
 		},
 		randomize_indexes = {}
 	},
@@ -185,18 +185,21 @@ local mission_vo_dm_forge_ogryn_a = {
 	},
 	mission_forge_main_entrance_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__region_mechanicus_01",
-			[2.0] = "loc_ogryn_a__region_mechanicus_02"
+			"loc_ogryn_a__region_mechanicus_01",
+			"loc_ogryn_a__region_mechanicus_02",
+			"loc_ogryn_a__region_mechanicus_03"
 		},
 		sound_events_duration = {
-			[1.0] = 4.190052,
-			[2.0] = 5.023281
+			4.190052,
+			5.023281,
+			4.656365
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -209,7 +212,7 @@ local mission_vo_dm_forge_ogryn_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.671333,
-			[2.0] = 3.386458
+			[2.0] = 3.386469
 		},
 		randomize_indexes = {}
 	},
@@ -236,6 +239,26 @@ local mission_vo_dm_forge_ogryn_a = {
 		sound_events_duration = {
 			[1.0] = 2.592198,
 			[2.0] = 4.607594
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_a__zone_tank_foundry_01",
+			"loc_ogryn_a__zone_tank_foundry_02",
+			"loc_ogryn_a__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			4.307927,
+			4.205177,
+			3.404625
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},

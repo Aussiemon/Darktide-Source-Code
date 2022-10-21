@@ -10,7 +10,7 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	local current_percentage = inventory_slot_component.overheat_current_percentage
 	local current_state = inventory_slot_component.overheat_state
 	local use_charge = charge_template.use_charge
-	local base_add_percentage = charge_template.overheat_percent
+	local base_add_percentage = charge_template.overheat_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
 	local new_heat, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage)
 	inventory_slot_component.overheat_last_charge_at_t = t
@@ -18,12 +18,12 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	inventory_slot_component.overheat_state = new_state or current_state
 end
 
-Overheat.decrease_immediate = function (remove_percentage, warp_charge_component)
-	local current_percentage = warp_charge_component.current_percentage
-	local current_state = warp_charge_component.state
+Overheat.decrease_immediate = function (remove_percentage, inventory_slot_component)
+	local current_percentage = inventory_slot_component.overheat_current_percentage
+	local current_state = inventory_slot_component.overheat_state
 	local new_percentage, new_state = SharedFunctions.remove_immediate(remove_percentage, current_percentage)
-	warp_charge_component.current_percentage = new_percentage
-	warp_charge_component.state = new_state or current_state
+	inventory_slot_component.overheat_current_percentage = new_percentage
+	inventory_slot_component.overheat_state = new_state or current_state
 end
 
 Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_component, charge_template, unit)
@@ -48,6 +48,18 @@ Overheat.update = function (dt, t, inventory_slot_component, overheat_configurat
 	local current_state = inventory_slot_component.overheat_state
 	local last_charge_at_t = inventory_slot_component.overheat_last_charge_at_t
 	local auto_vent_delay = overheat_configuration.auto_vent_delay
+	local reload_state = inventory_slot_component.reload_state
+	local reload_state_overrides = overheat_configuration.reload_state_overrides
+	local reload_state_override = reload_state_overrides[reload_state]
+
+	if reload_state_override then
+		local remove_percentage = dt * reload_state_override
+
+		Overheat.decrease_immediate(remove_percentage, inventory_slot_component)
+
+		return
+	end
+
 	local idle = current_state == "idle"
 	local start_decay_at_t = last_charge_at_t + auto_vent_delay
 	local waiting_for_decay = t < start_decay_at_t
@@ -67,9 +79,9 @@ Overheat.update = function (dt, t, inventory_slot_component, overheat_configurat
 		return
 	end
 
-	local low_threshold = overheat_configuration.low_threshold
-	local high_threshold = overheat_configuration.high_threshold
-	local critical_threshold = overheat_configuration.critical_threshold
+	local low_threshold = overheat_configuration.thresholds.low
+	local high_threshold = overheat_configuration.thresholds.high
+	local critical_threshold = overheat_configuration.thresholds.critical
 	local low_threshold_decay_rate_modifier = overheat_configuration.low_threshold_decay_rate_modifier
 	local high_threshold_decay_rate_modifier = overheat_configuration.high_threshold_decay_rate_modifier
 	local critical_threshold_decay_rate_modifier = overheat_configuration.critical_threshold_decay_rate_modifier

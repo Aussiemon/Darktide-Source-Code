@@ -2,9 +2,10 @@ local Action = require("scripts/utilities/weapon/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
+local Ammo = require("scripts/utilities/ammo")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local Stamina = require("scripts/utilities/attack/stamina")
 local SwayWeaponModule = require("scripts/extension_systems/weapon/sway_weapon_module")
@@ -14,14 +15,13 @@ local WeaponActionMovement = require("scripts/extension_systems/weapon/weapon_ac
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
+local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
+local buff_targets = WeaponTweakTemplateSettings.buff_targets
+local inventory_component_data = PlayerCharacterConstants.inventory_component_data
 local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
-local inventory_component_data = PlayerCharacterConstants.inventory_component_data
 local template_types = WeaponTweakTemplateSettings.template_types
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
 
 PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -29,6 +29,8 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._player = extension_init_data.player
 	local world = extension_init_context.world
 	self._world = world
+	local wwise_world = extension_init_context.wwise_world
+	self._wwise_world = wwise_world
 	local physics_world = extension_init_context.physics_world
 	self._physics_world = physics_world
 	local fp_ext = ScriptUnit.extension(unit, "first_person_system")
@@ -125,6 +127,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._weapon_action_movement = WeaponActionMovement:new(self, unit_data, buff_extension)
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
 	self._last_fixed_t = extension_init_context.fixed_frame_t
+	self._wwise_ammo_parameter_value = 0
 end
 
 PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_extension)
@@ -261,8 +264,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	self._action_handler:set_action_context(action_context)
 	self._sway_weapon_module:extensions_ready(world, unit)
 
-	local archetype = unit_data_ext:archetype()
-	self._archetype_stamina_template = archetype.stamina
+	local specialization = unit_data_ext:specialization()
+	self._specialization_stamina_template = specialization.stamina
 end
 
 PlayerUnitWeaponExtension.on_player_unit_respawn = function (self, respawn_ammo_percentage)
@@ -334,7 +337,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	local alternate_fire_component = self._alternate_fire_write_component
 
 	if AlternateFire.check_exit(alternate_fire_component, weapon_template, self._input_extension, self._stunned_character_state_component, t) then
-		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, weapon_template)
+		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
 
 	if wielded_slot ~= "none" then
@@ -440,8 +443,8 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	local buffs = weapon.buffs
 
 	if not from_server_correction_occurred then
-		self:_apply_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component, t)
-		self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t)
+		self:_apply_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component, t, item)
+		self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t, item)
 		self:_apply_stat_buffs(inventory_slot_component, config.slot_type)
 	end
 end
@@ -471,11 +474,12 @@ end
 
 PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t)
 	local weapon = self._weapons[slot_name]
+	local weapon_item = weapon.item
 	local inventory_slot_component = weapon.inventory_slot_component
 	local buffs = weapon.buffs
 
 	self:_remove_buffs(buffs, buff_targets.on_unwield, inventory_slot_component)
-	self:_apply_buffs(buffs, buff_targets.on_wield, slot_name, inventory_slot_component, t)
+	self:_apply_buffs(buffs, buff_targets.on_wield, slot_name, inventory_slot_component, t, weapon_item)
 
 	local weapon_template = weapon.weapon_template
 	local action_handler = self._action_handler
@@ -504,6 +508,7 @@ end
 
 PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local weapon = self._weapons[slot_name]
+	local weapon_item = weapon.item
 	local weapon_template = weapon.weapon_template
 
 	self:stop_action("unwield", nil, t)
@@ -511,7 +516,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local alternate_fire = self._alternate_fire_write_component
 
 	if alternate_fire.is_active then
-		AlternateFire.stop(alternate_fire, self._weapon_tweak_templates_component, self._animation_extension, weapon_template)
+		AlternateFire.stop(alternate_fire, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
@@ -537,7 +542,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local buffs = weapon.buffs
 
 	self:_remove_buffs(buffs, buff_targets.on_wield, inventory_slot_component)
-	self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t)
+	self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t, weapon_item)
 end
 
 PlayerUnitWeaponExtension.can_wield = function (self, slot_name)
@@ -642,10 +647,13 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.block_broken = block_broken
-	param_table.attacking_unit = attacking_unit
 
-	buff_extension:add_proc_event(proc_events.on_block, param_table)
+	if param_table then
+		param_table.block_broken = block_broken
+		param_table.attacking_unit = attacking_unit
+
+		buff_extension:add_proc_event(proc_events.on_block, param_table)
+	end
 
 	local first_person = self._first_person_component
 	local fp_position = first_person.position
@@ -655,9 +663,10 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 	local block_source = fx_sources._block
 	local fx_extension = self._fx_extension
 	local external_properties = nil
-	local append_husk_to_event_name = false
+	local sync_to_clients = true
+	local include_client = false
 
-	fx_extension:trigger_gear_wwise_event("melee_blocked_attack", external_properties, append_husk_to_event_name, sound_position)
+	fx_extension:trigger_gear_wwise_event_with_position("melee_blocked_attack", external_properties, sound_position, sync_to_clients, include_client)
 
 	if block_source then
 		fx_extension:spawn_gear_particle_effect_with_source("melee_blocked_attack", external_properties, block_source, true, "stop")
@@ -725,7 +734,8 @@ PlayerUnitWeaponExtension._update_weapon_special = function (self, weapon, dt, t
 	special_implementation:update(dt, t)
 end
 
-PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component, t)
+PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component, t, weapon_item)
+	local player_unit = self._unit
 	local buff_list = buffs[buff_target]
 	local num_buffs = #buff_list
 
@@ -737,22 +747,25 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 	local buff_extension = self._buff_extension
 
 	for i = 1, num_buffs do
-		local buff_template = buff_list[i]
-		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template, t, "item_slot_name", slot_name)
-		local component_name = lookup[i]
+		local buff_template_name = buff_list[i]
 
-		if not client_tried_adding_rpc_buff then
-			if component_index then
-				inventory_slot_component[component_name] = component_index
-			else
-				local server_buff_indexes = self._server_buff_indexes[buff_target]
+		if buff_template_name ~= "description_values" then
+			local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, t, "item_slot_name", slot_name, "owner_unit", player_unit, "source_item", weapon_item)
+			local component_name = lookup[i]
 
-				if not server_buff_indexes then
-					server_buff_indexes = {}
-					self._server_buff_indexes[buff_target] = server_buff_indexes
+			if not client_tried_adding_rpc_buff then
+				if component_index then
+					inventory_slot_component[component_name] = component_index
+				else
+					local server_buff_indexes = self._server_buff_indexes[buff_target]
+
+					if not server_buff_indexes then
+						server_buff_indexes = {}
+						self._server_buff_indexes[buff_target] = server_buff_indexes
+					end
+
+					server_buff_indexes[#server_buff_indexes + 1] = local_index
 				end
-
-				server_buff_indexes[#server_buff_indexes + 1] = local_index
 			end
 		end
 	end
@@ -814,7 +827,7 @@ PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
 end
 
 PlayerUnitWeaponExtension._update_stamina = function (self, dt, t, fixed_frame)
-	Stamina.update(t, dt, self._stamina_component, self._archetype_stamina_template, self._unit, fixed_frame)
+	Stamina.update(t, dt, self._stamina_component, self._specialization_stamina_template, self._unit, fixed_frame)
 end
 
 PlayerUnitWeaponExtension._update_ammo = function (self)
@@ -864,12 +877,20 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 				if clip_size ~= clamped_new_clip_size then
 					local current_clip = inventory_slot_component.current_ammunition_clip
 					local current_clip_percent = current_clip / clip_size
-					local new_current_clip = math.floor(clip_size * clip_size_capacity_modifier * current_clip_percent)
+					local new_current_clip = math.floor(current_clip_percent * clamped_new_clip_size)
 					inventory_slot_component.current_ammunition_clip = new_current_clip
 					inventory_slot_component.max_ammunition_clip = clamped_new_clip_size
 				end
 			end
 		end
+	end
+
+	local wielded_slot = self._inventory_component.wielded_slot
+
+	if wielded_slot == "slot_secondary" then
+		local wielded_weapon = weapons[wielded_slot]
+		local inventory_slot_component = wielded_weapon.inventory_slot_component
+		self._wwise_ammo_parameter_value = Ammo.set_weapon_ammo_count_wwise_parameter(self._wwise_ammo_parameter_value, self._wwise_world, inventory_slot_component)
 	end
 end
 
@@ -932,9 +953,20 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	end
 
 	local weapon_action_speed_mod = self._weapon_action_movement:move_speed_modifier(t)
-	local static_speed_mod = weapon_template and weapon_template.static_speed_mod or 1
+	local modifier = alternate_fire_speed_mod * weapon_action_speed_mod
+	local static_speed_reduction_mod = weapon_template and weapon_template.static_speed_reduction_mod
 
-	return alternate_fire_speed_mod * weapon_action_speed_mod * static_speed_mod
+	if static_speed_reduction_mod then
+		local mod_dif = 1 - static_speed_reduction_mod
+		local buff_extension = self._buff_extension
+		local stat_buffs = buff_extension:stat_buffs()
+		local multiplier = stat_buffs.static_movement_reduction_multiplier
+		mod_dif = mod_dif * multiplier
+		local new_static_modifier = 1 - mod_dif
+		modifier = modifier * new_static_modifier
+	end
+
+	return modifier
 end
 
 PlayerUnitWeaponExtension.has_running_action = function (self)

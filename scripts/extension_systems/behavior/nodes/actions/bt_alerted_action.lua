@@ -12,6 +12,8 @@ local ALERTED_MODES = {
 	instant_aggro = 1,
 	moving_alerted = 2
 }
+local LINE_OF_SIGHT_CHECK_SHORT_DISTANCE = 15
+local LINE_OF_SIGHT_CHECK_DELAY_SHORT = 0.15
 local LINE_OF_SIGHT_CHECK_DELAY = 0.75
 
 BtAlertedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -21,12 +23,14 @@ BtAlertedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
-	scratchpad.perception_component = blackboard.perception
+	local perception_component = blackboard.perception
+	scratchpad.perception_component = perception_component
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_system = Managers.state.extension:system("perception_system")
 	local alerted_mode = self:_select_alerted_mode(action_data)
 	scratchpad.alerted_mode = alerted_mode
-	scratchpad.check_line_of_sight_timing = t + LINE_OF_SIGHT_CHECK_DELAY
+	local delay = perception_component.target_distance < LINE_OF_SIGHT_CHECK_SHORT_DISTANCE and LINE_OF_SIGHT_CHECK_DELAY_SHORT or LINE_OF_SIGHT_CHECK_DELAY
+	scratchpad.check_line_of_sight_timing = t + delay
 
 	if alerted_mode == ALERTED_MODES.alerted then
 		local alerted_anim_events = action_data.alerted_anim_events
@@ -42,6 +46,13 @@ BtAlertedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 		animation_extension:anim_event(alerted_event)
 	elseif alerted_mode == ALERTED_MODES.moving_alerted then
 		navigation_extension:set_enabled(true, breed.run_speed)
+		animation_extension:anim_event("idle")
+
+		if breed.slot_template then
+			local slot_system = Managers.state.extension:system("slot_system")
+
+			slot_system:register_prioritized_user_unit_update(unit)
+		end
 	elseif alerted_mode == ALERTED_MODES.hesitate then
 		local hesitate_anim_events = action_data.hesitate_anim_events
 		local hesitate_event = Animation.random_event(hesitate_anim_events)

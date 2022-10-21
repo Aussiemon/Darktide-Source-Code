@@ -144,6 +144,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 1,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume",
+		alt_max_vector = {
+			225.92166137695312,
+			-433.8091125488281,
+			-0.05599188804626465
+		},
+		alt_min_vector = {
+			225.92166137695312,
+			-433.8091125488281,
+			-3
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			2.9440081119537354
+		},
+		bottom_points = {
+			{
+				225.42166137695312,
+				-436.2717590332031,
+				-3
+			},
+			{
+				226.42166137695312,
+				-436.2717590332031,
+				-3
+			},
+			{
+				226.42166137695312,
+				-431.3464660644531,
+				-3
+			},
+			{
+				225.42166137695312,
+				-431.3464660644531,
+				-3
+			}
+		}
+	},
+	{
 		height = 7,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_player_blocker_start_004",

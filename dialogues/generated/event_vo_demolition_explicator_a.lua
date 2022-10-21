@@ -9,10 +9,10 @@ local event_vo_demolition_explicator_a = {
 			"loc_explicator_a__event_demolition_first_corruptor_destroyed_b_04"
 		},
 		sound_events_duration = {
-			2.621605,
-			3.946667,
-			3.442271,
-			4.573105
+			2.630688,
+			3.95575,
+			3.451354,
+			4.582188
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_demolition_explicator_a = {
 			"loc_explicator_a__event_demolition_last_corruptor_04"
 		},
 		sound_events_duration = {
-			3.441292,
-			2.905396,
-			4.59725,
-			3.96073
+			3.450375,
+			2.914479,
+			4.606333,
+			3.969813
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local event_vo_demolition_explicator_a = {
 			"loc_explicator_a__event_demolition_more_corruptors_04"
 		},
 		sound_events_duration = {
-			2.831584,
-			3.766563,
-			1.977813,
-			3.807105
+			2.840667,
+			3.775646,
+			1.986896,
+			3.816188
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local event_vo_demolition_explicator_a = {
 			"loc_explicator_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
-			4.409313,
-			3.402209,
-			2.296084,
-			4.047396
+			4.418396,
+			3.411292,
+			2.305167,
+			4.056479
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local event_vo_demolition_explicator_a = {
 			"loc_explicator_a__mission_stockpile_bazaar_04"
 		},
 		sound_events_duration = {
-			3.56825,
-			3.585188,
-			4.664271,
-			4.997438
+			3.577333,
+			3.594271,
+			4.673354,
+			5.006521
 		},
 		randomize_indexes = {}
 	}

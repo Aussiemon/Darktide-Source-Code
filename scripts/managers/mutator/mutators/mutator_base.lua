@@ -1,3 +1,5 @@
+local Breed = require("scripts/utilities/breed")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local MutatorBase = class("MutatorBase")
 
 MutatorBase.init = function (self, is_server, network_event_delegate, mutator_template)
@@ -57,15 +59,20 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit)
 	local buffs = self._buffs
 	buffs[unit] = buffs[unit] or {}
 	local buff_ids = buffs[unit]
-	local current_time = Managers.time:time("gameplay")
+	local current_time = FixedFrame.get_latest_fixed_time()
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-	for _, buff_template_name in ipairs(buff_template_names) do
-		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, current_time)
-		buff_ids[#buff_ids + 1] = {
-			local_index = local_index,
-			component_index = component_index
-		}
+	for i = 1, #buff_template_names do
+		local buff_template_name = buff_template_names[i]
+		local is_valid_target = buff_extension:is_valid_target(buff_template_name)
+
+		if is_valid_target then
+			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, current_time)
+			buff_ids[#buff_ids + 1] = {
+				local_index = local_index,
+				component_index = component_index
+			}
+		end
 	end
 end
 
@@ -98,8 +105,6 @@ MutatorBase._remove_buffs = function (self)
 end
 
 MutatorBase._on_player_unit_spawned = function (self, player)
-	fassert(player:unit_is_alive(), "[MutatorBase][_on_assign_player_unit_ownership] Player is expected to have a unit alive here.")
-
 	local template = self._template
 	local is_server = self._is_server
 	local buff_template_names = template.buff_templates
@@ -116,14 +121,26 @@ MutatorBase._on_player_unit_despawned = function (self, player)
 end
 
 MutatorBase._on_minion_unit_spawned = function (self, unit)
-	fassert(ALIVE[unit], "[MutatorBase][_on_minion_unit_spawned] Minion Unit is expected to be alive.")
-
 	local template = self._template
 	local is_server = self._is_server
 	local buff_template_names = template.buff_templates
 
 	if is_server and buff_template_names then
 		self:_add_buffs_on_unit(buff_template_names, unit)
+	end
+
+	local random_spawn_buff_templates = template.random_spawn_buff_templates
+
+	if is_server and random_spawn_buff_templates then
+		local buffs = random_spawn_buff_templates.buffs
+		local breed = Breed.unit_breed_or_nil(unit)
+		local breed_name = breed.name
+		local breed_chances = random_spawn_buff_templates.breed_chances
+		local breed_chance = breed_chances[breed_name]
+
+		if breed_chance and math.random() < breed_chance then
+			self:_add_buffs_on_unit(buffs, unit)
+		end
 	end
 end
 

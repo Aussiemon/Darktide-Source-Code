@@ -27,6 +27,7 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	self._item_definitions = MasterItems.get_cached()
 	self._action_component = unit_data_extension:write_component("action_shoot")
 	self._charge_component = unit_data_extension:write_component("action_module_charge")
+	self._shooting_status_component = unit_data_extension:write_component("shooting_status")
 	local weapon = action_params.weapon
 	self._muzzle_fx_source_name = weapon.fx_sources._muzzle
 
@@ -40,6 +41,7 @@ end
 
 ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	ActionSpawnProjectile.super.start(self, action_settings, t, ...)
+	self:_check_for_critical_strike()
 
 	if self._targeting_module then
 		self._targeting_module:start(t)
@@ -69,11 +71,24 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	end
 
 	if self._is_server then
+		local is_critical_strike = self._critical_strike_component.is_active or self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
 		self._projectile_fired = false
+		self._projectile_fired_2 = false
 		self._projectile_payed_for = false
-		local projectile_unit = self:_spawn_projectile_unit()
+		local projectile_unit = self:_spawn_projectile_unit(is_critical_strike)
 		self._projectile_unit = projectile_unit
 		self._projectile_locomotion_extension = ScriptUnit.extension(projectile_unit, "locomotion_system")
+		local buff_extension = self._buff_extension
+		local spawn_second_projectile = is_critical_strike and buff_extension:has_keyword("critical_hit_second_projectile")
+
+		if spawn_second_projectile then
+			local projectile_unit_2 = self:_spawn_projectile_unit(false)
+			self._projectile_unit_2 = projectile_unit_2
+			self._projectile_locomotion_extension_2 = ScriptUnit.extension(projectile_unit_2, "locomotion_system")
+		else
+			self._projectile_unit_2 = nil
+			self._projectile_locomotion_extension_2 = nil
+		end
 	end
 end
 
@@ -87,7 +102,7 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 	local fire_time = action_settings.fire_time
 	local fire_time_scaled = fire_time / time_scale
 
-	if self._is_server and not self._projectile_fired then
+	if self._is_server then
 		local spawn_projectile_time = fire_time
 		local player = self._player
 
@@ -96,15 +111,31 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 			spawn_projectile_time = math.max(spawn_projectile_time - rewind_s, 0)
 		end
 
-		local spawn_projectile_time_scaled = spawn_projectile_time / time_scale
-		local should_fire_projectile = time_in_action >= spawn_projectile_time_scaled
+		if not self._projectile_fired then
+			local spawn_projectile_time_scaled = spawn_projectile_time / time_scale
+			local should_fire_projectile = time_in_action >= spawn_projectile_time_scaled
 
-		if should_fire_projectile then
-			local time_diff_from_payment = fire_time_scaled - spawn_projectile_time_scaled
+			if should_fire_projectile then
+				local time_diff_from_payment = fire_time_scaled - spawn_projectile_time_scaled
 
-			self:_fire_projectile(t, time_diff_from_payment)
+				self:_fire_projectile(t, time_diff_from_payment, self._projectile_locomotion_extension)
 
-			self._projectile_fired = true
+				self._projectile_fired = true
+			end
+		end
+
+		if not self._projectile_fired_2 and self._projectile_locomotion_extension_2 then
+			local spawn_projectile_time_scaled = (spawn_projectile_time + 0.1) / time_scale
+			local should_fire_projectile_2 = time_in_action >= spawn_projectile_time_scaled
+
+			if should_fire_projectile_2 then
+				local time_diff_from_payment = fire_time_scaled - spawn_projectile_time_scaled
+				local offset = nil
+
+				self:_fire_projectile(t, time_diff_from_payment, self._projectile_locomotion_extension_2, offset)
+
+				self._projectile_fired_2 = true
+			end
 		end
 	end
 
@@ -112,6 +143,11 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 
 	if should_pay then
 		self:_pay_for_projectile(t)
+
+		local shooting_status_component = self._shooting_status_component
+		local num_shots = shooting_status_component.num_shots + 1
+		shooting_status_component.num_shots = num_shots
+		shooting_status_component.shooting_end_time = t
 
 		if self._is_server then
 			self._projectile_payed_for = true
@@ -222,7 +258,7 @@ ActionSpawnProjectile._get_target = function (self)
 	return target_unit, target_position
 end
 
-ActionSpawnProjectile._spawn_projectile_unit = function (self)
+ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strike)
 	local projectile_template = self:_get_projectile_template()
 	local first_person_component = self._first_person_component
 	local position = first_person_component.position
@@ -232,11 +268,12 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self)
 	local inventory_item_name = action_settings.projectile_item
 	local item = self._item_definitions[inventory_item_name]
 	local starting_state = projectile_locomotion_states.sleep
+	local buff_extension = self._buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
 	local direction, speed, momentum = nil
 	local owner_unit = self._player_unit
-	local is_critical_strike = self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
 	local origin_item_slot = self._inventory_component.wielded_slot
-	local charge_level = action_settings.use_charge and self._charge_component.charge_level or 1
+	local charge_level = (action_settings.use_charge and self._charge_component.charge_level or 1) * stat_buffs.charge_level_modifier
 	local target_unit, target_position = nil
 	local weapon_item = self._weapon.item
 
@@ -271,15 +308,22 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 	local projectile_template = self:_get_projectile_template()
 	local buff_extension = self._buff_extension
 	local unit = self._player_unit
+	local action_component = self._action_component
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = unit
-	param_table.projectile_template_name = projectile_template.name
 
-	buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
+	if param_table then
+		param_table.attacking_unit = unit
+		param_table.projectile_template_name = projectile_template.name
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+
+		buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
+	end
+
 	self._weapon_spread_extension:randomized_spread(Quaternion.identity())
 end
 
-ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from_paying)
+ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from_paying, projectile_locomotion_extension, offset)
 	local action_settings = self._action_settings
 	local unit = self._player_unit
 	local target_unit, target_position = self:_get_target()
@@ -358,12 +402,16 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 	local speed = shoot_parameters.initial_speed or 1
 	local momentum = Vector3(0, 0, 1)
 
+	if offset then
+		position = position + Quaternion.rotate(rotation, offset)
+	end
+
 	if starting_state == projectile_locomotion_states.manual_physics then
-		self._projectile_locomotion_extension:switch_to_manual(position, rotation, direction, speed, momentum)
+		projectile_locomotion_extension:switch_to_manual(position, rotation, direction, speed, momentum)
 	elseif starting_state == projectile_locomotion_states.engine_physics then
-		self._projectile_locomotion_extension:switch_to_engine(position, rotation, direction * speed, momentum)
+		projectile_locomotion_extension:switch_to_engine(position, rotation, direction * speed, momentum)
 	elseif starting_state == projectile_locomotion_states.true_flight then
-		self._projectile_locomotion_extension:switch_to_true_flight(position, rotation, direction, speed, momentum, target_unit, target_position)
+		projectile_locomotion_extension:switch_to_true_flight(position, rotation, direction, speed, momentum, target_unit, target_position)
 	else
 		ferror("unknown starting state %q", starting_state)
 	end

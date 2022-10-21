@@ -21,6 +21,7 @@ CharacterStateMachine.init = function (self, unit, is_server, states, start_stat
 		end
 	}
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	self._unit_data_extension = unit_data_extension
 	local character_state_component = unit_data_extension:write_component("character_state")
 	self._character_state_component = character_state_component
 	character_state_component.previous_state_name = "dummy"
@@ -76,12 +77,7 @@ end
 CharacterStateMachine.fixed_update = function (self, unit, dt, t, frame, ...)
 	local params = self._params
 	local next_state = nil
-
-	Profiler.start(self._state_current.name)
-
 	next_state = self._state_current:fixed_update(unit, dt, t, params, frame, ...)
-
-	Profiler.stop(self._state_current.name)
 
 	if next_state ~= nil then
 		self:_change_state(unit, dt, t, next_state, self._params)

@@ -36,7 +36,9 @@ local function _notify_error(error_object)
 	local loc_description, loc_description_params = error_object:loc_description()
 	local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
 
-	Managers.event:trigger("event_add_notification_message", "alert", string.format("{#color(255,0,0)}%s: %s", title, description))
+	Managers.event:trigger("event_add_notification_message", "alert", {
+		text = string.format("%s: %s", title, description)
+	})
 end
 
 local function _enqueue_error(error_object, queue)
@@ -101,7 +103,6 @@ ErrorManager.report_error = function (self, error_object)
 
 	local level = error_object:level()
 
-	fassert(level > 0 and level <= MAX_ERROR_LEVEL, "Error %s has invalid error level %s", error_object.__class_name, level)
 	_log_error(error_object)
 
 	if DEDICATED_SERVER then
@@ -113,6 +114,8 @@ ErrorManager.report_error = function (self, error_object)
 	elseif level == ERROR_LEVEL.error or level == ERROR_LEVEL.fatal then
 		_enqueue_error(error_object, self._error_queue)
 	end
+
+	return level
 end
 
 ErrorManager.show_errors = function (self)

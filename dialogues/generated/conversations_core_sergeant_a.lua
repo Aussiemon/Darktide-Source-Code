@@ -8,9 +8,9 @@ local conversations_core_sergeant_a = {
 			"loc_sergeant_a__conversation_40k_lore_one_02_03"
 		},
 		sound_events_duration = {
-			6.936481,
-			5.467105,
-			8.709521
+			6.945563,
+			5.476188,
+			8.718603
 		},
 		randomize_indexes = {}
 	},
@@ -23,9 +23,9 @@ local conversations_core_sergeant_a = {
 			"loc_sergeant_a__conversation_40k_lore_two_02_03"
 		},
 		sound_events_duration = {
-			5.497584,
-			9.629438,
-			8.110625
+			5.506667,
+			9.63852,
+			8.119708
 		},
 		randomize_indexes = {}
 	},
@@ -36,7 +36,7 @@ local conversations_core_sergeant_a = {
 			[1.0] = "loc_sergeant_a__conversation_atoma_lore_experienced_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.163313
+			[1.0] = 6.172396
 		},
 		randomize_indexes = {}
 	},
@@ -47,7 +47,7 @@ local conversations_core_sergeant_a = {
 			[1.0] = "loc_sergeant_a__conversation_atoma_lore_rookie_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.156313
+			[1.0] = 8.165396
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -61,7 +61,7 @@ local conversations_core_sergeant_a = {
 			[1.0] = "loc_sergeant_a__conversation_atoma_lore_veteran_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.486438
+			[1.0] = 4.495521
 		},
 		randomize_indexes = {}
 	},
@@ -102,11 +102,11 @@ local conversations_core_sergeant_a = {
 			"loc_sergeant_a__eavesdropping_sergeant_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.739625,
+			2.516271,
+			2.877417,
+			2.729813,
+			2.780771
 		},
 		randomize_indexes = {}
 	},
@@ -139,10 +139,10 @@ local conversations_core_sergeant_a = {
 			"loc_sergeant_a__info_to_extraction_through_pipes_04"
 		},
 		sound_events_duration = {
-			3.7735,
-			2.8215,
-			4.387959,
-			3.504417
+			3.782583,
+			2.830583,
+			4.397042,
+			3.5135
 		},
 		randomize_indexes = {}
 	}

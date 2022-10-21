@@ -15,18 +15,6 @@ local StateGameTestify = {
 
 		return action_rule
 	end,
-	activate_debug_function = function (debug_data, _)
-		local debug_function = debug_data.debug_function
-		local params = debug_data.params
-
-		for _, entry in pairs(DebugFunctions.parameters) do
-			if entry.name == debug_function then
-				entry.on_activated(params)
-
-				break
-			end
-		end
-	end,
 	all_breeds = function (_, _)
 		local breeds = {}
 
@@ -109,6 +97,13 @@ local StateGameTestify = {
 
 		return weapons
 	end,
+	all_items = function (_, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		return MasterItems.get_cached()
+	end,
 	current_state_name = function (_, state_game)
 		local current_state_name = state_game:current_state_name()
 
@@ -123,8 +118,13 @@ local StateGameTestify = {
 
 		return item_definitions[name]
 	end,
-	assert = function (assert_data, _)
-		ErrorTestify[assert_data.assert](assert_data.condition, assert_data.message)
+	["as" .. "sert"] = function (assert_data, _)
+		local context = {
+			assert_data = assert_data
+		}
+
+		setfenv(func, context)
+		func(assert_data)
 	end,
 	log_size_assert = function (assert_data)
 		ErrorTestify.log_size_assert(assert_data.condition, assert_data.message)
@@ -150,16 +150,6 @@ local StateGameTestify = {
 		world_set_particles_life_time(world, particle_id, particle_life_time)
 
 		return particle_id
-	end,
-	debug_function_first_option = function (debug_function, _)
-		for _, entry in pairs(DebugFunctions.parameters) do
-			if entry.name == debug_function then
-				local options = entry.options_function()
-				local _, first_option = next(options)
-
-				return first_option
-			end
-		end
 	end,
 	display_and_graphics_presets_settings = function ()
 		local settings = RenderSettings.settings
@@ -191,6 +181,11 @@ local StateGameTestify = {
 
 		return results
 	end,
+	mission_cutscenes = function (mission_name)
+		local cutscenes = Missions[mission_name].cinematics
+
+		return cutscenes
+	end,
 	player_profile = function (player)
 		local profile = player:profile()
 
@@ -216,11 +211,9 @@ local StateGameTestify = {
 
 			if view and view_active then
 				view:on_skip_pressed()
-
-				return Testify.RETRY
-			else
-				return Testify.RETRY
 			end
+
+			return Testify.RETRY
 		end
 	end,
 	skip_title_screen = function (_, state_game)
@@ -230,6 +223,35 @@ local StateGameTestify = {
 			return Testify.RETRY
 		elseif current_state_name == "StateTitle" then
 			Managers.event:trigger("event_state_title_continue")
+		end
+	end,
+	skip_privacy_policy_popup_if_displayed = function (_, state_game)
+		local current_state_name = state_game:current_state_name()
+
+		if current_state_name == "StateSplash" then
+			return Testify.RETRY
+		elseif current_state_name == "StateTitle" then
+			local state_machine = state_game:state_machine()
+			local state_title = state_machine:current_state()
+			local state_title_state = state_title:state()
+
+			if state_title_state == "legal_verification" then
+				local constant_elements = Managers.ui:ui_constant_elements()
+				local constant_element_popup_handler = constant_elements:element("ConstantElementPopupHandler")
+				local accept_button = constant_element_popup_handler._widgets_by_name.button_2
+
+				if accept_button then
+					constant_element_popup_handler:trigger_widget_callback(accept_button)
+
+					return
+				end
+			end
+
+			if state_title_state == "done" then
+				return
+			else
+				return Testify.RETRY
+			end
 		end
 	end,
 	weapon_template = function (weapon)

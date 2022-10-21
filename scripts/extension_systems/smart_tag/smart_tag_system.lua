@@ -131,19 +131,10 @@ end
 
 SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit, target_location)
 	local template = SmartTagSettings.templates[template_name]
-
-	fassert(template, "Tag template %q does not exist", template_name)
-	fassert(self._is_server or tagger_unit, "Only server can set tag without tagger_unit")
-	fassert(target_unit or target_location, "Must supply either target_unit or target_location")
-	fassert(not target_unit or not target_location, "Can't supply both target_unit and target_location")
-
 	local tagger_game_object_id = nil
 
 	if tagger_unit then
 		local tagger_extension = self._unit_extension_data[tagger_unit]
-
-		fassert(tagger_extension, "Tagger unit %q has no smart tag extension", tagger_unit)
-
 		tagger_game_object_id = Managers.state.unit_spawner:game_object_id(tagger_unit)
 	end
 
@@ -151,10 +142,6 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 
 	if target_unit then
 		local target_extension = self._unit_extension_data[target_unit]
-
-		fassert(target_extension, "Target unit %q has no smart tag extension", target_unit)
-		fassert(not target_extension:tag_id(), "Unit already tagged, should have checked before tagging")
-
 		local is_level_unit, target_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(target_unit)
 
 		if is_level_unit then
@@ -165,6 +152,12 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 	end
 
 	local template_name_id = NetworkLookup.smart_tag_templates[template_name]
+	local on_tag_event_data = {
+		target_unit = target_unit,
+		target_location = target_location
+	}
+
+	Managers.event:trigger("on_tag", on_tag_event_data)
 
 	if self._is_server then
 		local tag_id = self:_generate_tag_id()
@@ -182,9 +175,6 @@ end
 
 SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit)
 	local target_extension = self._unit_extension_data[target_unit]
-
-	fassert(target_extension, "Target unit %q has no smart tag extension", target_unit)
-
 	local template_name = target_extension:contextual_tag_template(tagger_unit)
 
 	if template_name then
@@ -194,10 +184,6 @@ end
 
 SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit)
 	local tag = self._all_tags[tag_id]
-
-	fassert(tag, "Tried to cancel non-existing tag")
-	fassert(tag:tagger_unit() == remover_unit, "Tried to cancel someone else's tag")
-	fassert(tag:is_cancelable(), "Tried to cancel a non-cancelable tag")
 
 	if self._is_server then
 		local reason = REMOVE_TAG_REASONS.canceled_by_owner
@@ -218,8 +204,6 @@ SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit
 	local all_tags = self._all_tags
 	local tag = all_tags[tag_id]
 
-	fassert(tag, "Tried to interact with non-existing tag")
-
 	if tag:tagger_unit() == interactor_unit then
 		if tag:is_cancelable() then
 			self:cancel_tag(tag_id, interactor_unit)
@@ -235,14 +219,7 @@ end
 
 SmartTagSystem.reply_tag = function (self, tag_id, replier_unit, reply_name)
 	local tag = self._all_tags[tag_id]
-
-	fassert(tag, "Tried to reply to non-existing tag")
-	fassert(tag:tagger_unit() ~= replier_unit, "Tried to reply to own tag")
-
 	local replier_extension = self._unit_extension_data[replier_unit]
-
-	fassert(replier_extension, "Replier unit %q has no smart tag extension", replier_extension)
-
 	local replier_game_object_id = Managers.state.unit_spawner:game_object_id(replier_unit)
 	local reply_name_id = NetworkLookup.smart_tag_replies[reply_name]
 
@@ -360,9 +337,13 @@ SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagg
 
 			if buff_extension then
 				local param_table = buff_extension:request_proc_event_param_table()
-				param_table.unit = target_unit
 
-				buff_extension:add_proc_event(buff_proc_events.on_tag_unit, param_table)
+				if param_table then
+					param_table.unit = target_unit
+					param_table.tagger_unit = tagger_unit
+
+					buff_extension:add_proc_event(buff_proc_events.on_tag_unit, param_table)
+				end
 			end
 		end
 	end
@@ -410,9 +391,13 @@ SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 
 			if buff_extension then
 				local param_table = buff_extension:request_proc_event_param_table()
-				param_table.unit = target_unit
 
-				buff_extension:add_proc_event(buff_proc_events.on_untag_unit, param_table)
+				if param_table then
+					param_table.unit = target_unit
+					param_table.tagger_unit = tagger_unit
+
+					buff_extension:add_proc_event(buff_proc_events.on_untag_unit, param_table)
+				end
 			end
 		end
 	end
@@ -548,6 +533,10 @@ SmartTagSystem.rpc_request_set_smart_tag = function (self, channel_id, template_
 	local tag = self:_create_tag_locally(tag_id, template_name, tagger_unit, target_unit, target_location)
 
 	self:_server_check_tag_group_limit(tagger_unit, tag:group())
+
+	local player = Managers.state.player_unit_spawn:owner(tagger_unit)
+
+	Managers.telemetry_reporters:reporter("smart_tag"):register_event(player, template_name)
 	Managers.state.game_session:send_rpc_clients("rpc_set_smart_tag", tag_id, template_name_id, tagger_game_object_id, target_game_object_id, target_level_index, target_location)
 end
 

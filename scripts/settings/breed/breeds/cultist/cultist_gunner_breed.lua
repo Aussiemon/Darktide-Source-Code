@@ -29,10 +29,11 @@ local breed_data = {
 	unit_template_name = "minion",
 	spawn_anim_state = "to_ranged",
 	spawn_inventory_slot = "slot_ranged_weapon",
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
+	volley_fire_target = true,
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
 	stagger_resistance = 2,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
 	game_object_type = "minion_elite_ranged",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
@@ -50,6 +51,7 @@ local breed_data = {
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	hit_mass = 8,
+	reduced_hit_mass = 4,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -72,7 +74,7 @@ local breed_data = {
 		[stagger_types.light_ranged] = 0.5,
 		[stagger_types.explosion] = 6.363636363636363,
 		[stagger_types.killshot] = 1,
-		[stagger_types.sticky] = 1.75
+		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.3,
@@ -90,7 +92,7 @@ local breed_data = {
 		[stagger_types.explosion] = 50,
 		[stagger_types.killshot] = 1,
 		[stagger_types.light_ranged] = 10,
-		[stagger_types.sticky] = 5
+		[stagger_types.sticky] = 2
 	},
 	inventory = MinionVisualLoadoutTemplates.cultist_gunner,
 	sounds = require("scripts/settings/breed/breeds/cultist/cultist_gunner_sounds"),
@@ -103,13 +105,14 @@ local breed_data = {
 	combat_range_data = BreedCombatRanges.renegade_gunner,
 	cover_config = {
 		max_distance_modifier_duration = 40,
-		suppressed_max_distance_from_combat_vector = 60,
-		max_distance_from_target = 80,
-		max_distance_from_target_z_below = -1,
-		search_radius = 30,
-		max_distance_from_combat_vector = 40,
-		suppressed_max_distance_from_target = 100,
 		max_distance_modifier_percentage = 0.8,
+		suppressed_max_distance_from_combat_vector = 60,
+		max_distance_from_target = 50,
+		max_distance_from_target_z_below = -10,
+		search_radius = 30,
+		max_distance_from_combat_vector = 60,
+		suppressed_max_distance_from_target = 100,
+		max_distance_from_target_z = 10,
 		suppressed_search_radius = 50,
 		cover_combat_ranges = {
 			far = true,
@@ -343,19 +346,16 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.05,
-			j_leftshoulder = 0.05,
+			j_rightshoulder = 0.15,
+			j_leftshoulder = 0.15,
 			j_spine = 0.3,
-			j_spine1 = 0.2,
-			j_head = 0.35,
-			j_neck = 0.15
+			j_spine1 = 0.1,
+			j_head = 0.5,
+			j_neck = 0.5
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,

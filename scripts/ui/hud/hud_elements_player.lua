@@ -173,15 +173,41 @@ local elements = {
 		}
 	},
 	{
-		package = "packages/ui/hud/prologue_tutorial_popup/prologue_tutorial_popup",
+		package = "packages/ui/hud/prologue_tutorial_step_tracker/prologue_tutorial_step_tracker",
 		offscreen_target = "monitor_effect",
 		use_hud_scale = true,
-		class_name = "HudElementPrologueTutorialPopup",
-		filename = "scripts/ui/hud/elements/prologue_tutorial_popup/hud_element_prologue_tutorial_popup",
+		class_name = "HudElementPrologueStepTracker",
+		filename = "scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker",
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel"
+			"communication_wheel",
+			"training_grounds"
+		}
+	},
+	{
+		offscreen_target = "monitor_effect",
+		use_hud_scale = true,
+		class_name = "HudElementPrologueTutorialSequenceTransitionEnd",
+		filename = "scripts/ui/hud/elements/prologue_tutorial_sequence_transition_end/hud_element_prologue_tutorial_sequence_transition_end",
+		visibility_groups = {
+			"dead",
+			"alive",
+			"communication_wheel",
+			"training_grounds"
+		}
+	},
+	{
+		package = "packages/ui/hud/prologue_tutorial_info_box/prologue_tutorial_info_box",
+		offscreen_target = "monitor_effect",
+		use_hud_scale = true,
+		class_name = "HudElementPrologueTutorialInfoBox",
+		filename = "scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box",
+		visibility_groups = {
+			"dead",
+			"alive",
+			"communication_wheel",
+			"training_grounds"
 		}
 	},
 	{

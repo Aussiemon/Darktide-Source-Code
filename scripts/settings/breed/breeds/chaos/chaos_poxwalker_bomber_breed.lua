@@ -20,21 +20,22 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_poxwalker_bomber"
 local breed_data = {
 	display_name = "loc_breed_display_name_chaos_poxwalker_bomber",
-	game_object_type = "minion_special_melee",
 	run_speed = 5,
 	use_bone_lod = true,
 	challenge_rating = 2,
-	power_level_type = "chaos_poxwalker_bomber_explosion",
+	game_object_type = "minion_special_melee",
 	unit_template_name = "minion",
+	power_level_type = "chaos_poxwalker_bomber_explosion",
 	faction_name = "chaos",
+	volley_fire_target = true,
 	uses_wwise_special_targeting_parameter = true,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
+	walk_speed = 2,
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 2,
 	navigation_propagation_box_extent = 200,
 	base_height = 1.7,
-	walk_speed = 2,
 	player_locomotion_constrain_radius = 0.35,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 15,
@@ -255,11 +256,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_hips",
-			"j_spine",
-			"j_spine1"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

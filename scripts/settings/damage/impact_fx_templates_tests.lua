@@ -112,18 +112,27 @@ local function test(impact_fx_templates)
 
 		if decal then
 			error_msg = _validate(error_msg, type(decal) == "table", "%q: decal needs to be a table.", name)
-			error_msg = _validate(error_msg, decal.extents, "%q: decal needs to have an 'extents' entry defined.", name)
-			error_msg = _validate(error_msg, type(decal.extents) == "table", "%q: extents needs to be a table.", name)
-			error_msg = _validate(error_msg, decal.extents.min, "%q: extents needs to have a 'min' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.max, "%q: extents needs to have a 'max' entry defined.", name)
-			error_msg = _validate(error_msg, type(decal.extents.min) == "table", "%q: min needs to be a table.", name)
-			error_msg = _validate(error_msg, type(decal.extents.max) == "table", "%q: max needs to be a table.", name)
-			error_msg = _validate(error_msg, decal.extents.min.x, "%q: min needs to have a 'x' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.min.y, "%q: min needs to have a 'y' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.min.z, "%q: min needs to have a 'z' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.max.x, "%q: max needs to have a 'x' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.max.y, "%q: max needs to have a 'y' entry defined.", name)
-			error_msg = _validate(error_msg, decal.extents.max.z, "%q: max needs to have a 'z' entry defined.", name)
+			local extents = decal.extents
+			local uniform_extents = decal.uniform_extents
+
+			if extents then
+				error_msg = _validate(error_msg, type(extents) == "table", "%q: extents needs to be a table.", name)
+				error_msg = _validate(error_msg, extents.min, "%q: extents needs to have a 'min' entry defined.", name)
+				error_msg = _validate(error_msg, extents.max, "%q: extents needs to have a 'max' entry defined.", name)
+				error_msg = _validate(error_msg, type(extents.min) == "table", "%q: min needs to be a table.", name)
+				error_msg = _validate(error_msg, type(extents.max) == "table", "%q: max needs to be a table.", name)
+				error_msg = _validate(error_msg, extents.min.x, "%q: min needs to have a 'x' entry defined.", name)
+				error_msg = _validate(error_msg, extents.min.y, "%q: min needs to have a 'y' entry defined.", name)
+				error_msg = _validate(error_msg, extents.max.x, "%q: max needs to have a 'x' entry defined.", name)
+				error_msg = _validate(error_msg, extents.max.y, "%q: max needs to have a 'y' entry defined.", name)
+			elseif uniform_extents then
+				error_msg = _validate(error_msg, type(uniform_extents) == "table", "%q: uniform_extents needs to be a table.", name)
+				error_msg = _validate(error_msg, uniform_extents.min, "%q: uniform_extents needs to have a 'min' entry defined.", name)
+				error_msg = _validate(error_msg, uniform_extents.max, "%q: uniform_extents needs to have a 'max' entry defined.", name)
+			end
+
+			error_msg = _validate(error_msg, extents or uniform_extents, "%q: decal needs to have an 'extents' or 'uniform_extents' entry defined.", name)
+			error_msg = _validate(error_msg, extents and not uniform_extents or not extents and uniform_extents, "%q: decal cannot have both 'extents' and 'uniform_extents' defined.", name)
 			error_msg = _validate(error_msg, decal.units, "%q: decal needs to have an 'units' entry defined.", name)
 			error_msg = _validate(error_msg, type(decal.units) == "table", "%q: units needs to be a table.", name)
 		end

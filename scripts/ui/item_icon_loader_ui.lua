@@ -8,6 +8,7 @@ ItemIconLoaderUI.init = function (self)
 	self._requests = {}
 	self._id_counter = 0
 	self._id_prefix = "ItemIconLoaderUI"
+	self._active_request = nil
 end
 
 ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
@@ -41,15 +42,12 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
 	end
 
 	local data = self._requests[gear_id]
-
-	fassert(not data.references_lookup[id], "[ItemIconLoaderUI] - Reference Name: (%s) is already being in use for character: (%s)", id, tostring(gear_id))
-
 	data.references_lookup[id] = true
 	data.references_array[#data.references_array + 1] = id
 
 	if not data.loaded then
 		data.callbacks[id] = on_load_callback
-	else
+	elseif on_load_callback then
 		on_load_callback(item)
 	end
 
@@ -58,9 +56,6 @@ end
 
 ItemIconLoaderUI.unload_icon = function (self, id)
 	local data = self:_request_by_id(id)
-
-	fassert(data, "[ItemIconLoaderUI] - No icon request exist for id (%s)", tostring(id))
-
 	local gear_id = data.gear_id
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
@@ -78,6 +73,10 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 		end
 
 		self._requests[gear_id] = nil
+
+		if self._active_request and self._active_request.gear_id == gear_id then
+			self._active_request = nil
+		end
 
 		for i = 1, #self._requests_queue_order do
 			if self._requests_queue_order[i] == gear_id then
@@ -111,7 +110,7 @@ ItemIconLoaderUI._request_by_id = function (self, id, ignore_assert)
 	end
 
 	if ignore_assert then
-		assert("[ItemIconLoaderUI] - No icon portrait request exist for id: (%s)", tostring(id))
+		-- Nothing
 	end
 end
 
@@ -185,7 +184,6 @@ ItemIconLoaderUI._handle_request_queue = function (self)
 
 			table.clear(callbacks)
 
-			active_request.loaded = true
 			active_request.loading = false
 			self._active_request = nil
 		end

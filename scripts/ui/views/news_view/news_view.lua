@@ -92,9 +92,6 @@ NewsView.init = function (self, settings, context)
 	self._slide_position = {}
 	local slide_data = context and context.slide_data
 	self._view_triggered_by_user = false
-
-	fassert(slide_data, "[News View] - No slide_data provided in context")
-
 	self._viewed_slides_id = slide_data.viewed_slides_id
 	self._starting_slide_index = slide_data.starting_slide_index
 	self._slides = slide_data.slides

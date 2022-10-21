@@ -8,22 +8,24 @@ local input_locale_name_overrides = {
 		right = ""
 	},
 	xbox_controller = {
-		d_up = "",
+		left = "",
 		a = "",
 		left_thumb = "",
 		left_shoulder = "",
-		right_trigger = "",
-		right_thumb = "",
-		left = "",
-		b = "",
-		d_right = "",
 		d_down = "",
-		d_left = "",
-		y = "",
+		right_thumb = "",
 		right_shoulder = "",
 		left_trigger = "",
+		d_right = "",
+		d_up = "",
+		back = "",
+		d_left = "",
+		b = "",
+		y = "",
+		right_trigger = "",
 		x = "",
-		right = ""
+		right = "",
+		start = Localize("loc_xbs_input_locale_start")
 	}
 }
 

@@ -7,7 +7,7 @@ local asset_vo_psyker_male_b = {
 			[2.0] = "loc_psyker_male_b__zone_watertown_acid_clouds_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.803646,
+			[1.0] = 5.803667,
 			[2.0] = 6.252625
 		},
 		sound_event_weights = {
@@ -75,8 +75,8 @@ local asset_vo_psyker_male_b = {
 			[2.0] = "loc_psyker_male_b__asset_grease_pit_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.861854,
-			[2.0] = 4.153583
+			[1.0] = 2.861833,
+			[2.0] = 4.153563
 		},
 		randomize_indexes = {}
 	},
@@ -88,8 +88,8 @@ local asset_vo_psyker_male_b = {
 			[2.0] = "loc_psyker_male_b__asset_sigil_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.333667,
-			[2.0] = 4.517813
+			[1.0] = 6.333646,
+			[2.0] = 4.517792
 		},
 		randomize_indexes = {}
 	},
@@ -106,7 +106,7 @@ local asset_vo_psyker_male_b = {
 			2.621958,
 			2.043646,
 			3.219167,
-			3.220667
+			3.220646
 		},
 		randomize_indexes = {}
 	},
@@ -135,7 +135,7 @@ local asset_vo_psyker_male_b = {
 			[2.0] = "loc_psyker_male_b__mission_cartel_water_course_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.918083,
+			[1.0] = 1.918063,
 			[2.0] = 5.646729
 		},
 		sound_event_weights = {

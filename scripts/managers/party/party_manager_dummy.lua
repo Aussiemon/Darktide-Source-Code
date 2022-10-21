@@ -178,9 +178,6 @@ PartyManagerDummy.set_presence = function (self, presence_name)
 	end
 
 	local settings = PresenceSettings[presence_name]
-
-	fassert(settings, "Presence %q undefined", presence_name)
-
 	self._presence_name = presence_name
 	self._presence_id = NetworkLookup.presence_names[presence_name]
 	local hud_localization = settings.hud_localization

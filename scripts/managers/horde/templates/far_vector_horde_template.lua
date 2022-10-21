@@ -13,14 +13,14 @@ local horde_template = {
 	}
 }
 
-local function _try_find_spawn_position(nav_world, center_position, index, num_columns, max_attempts)
+local function _try_find_spawn_position(nav_world, traverse_logic, center_position, index, num_columns, max_attempts)
 	local Math_Random = math.random
 	local above = 2
 	local below = 2
 	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
 
 	for i = 1, max_attempts do
-		local spawn_position = NavQueries.position_on_mesh(nav_world, center_position + offset, above, below)
+		local spawn_position = NavQueries.position_on_mesh(nav_world, center_position + offset, above, below, traverse_logic)
 
 		if spawn_position then
 			return spawn_position
@@ -81,7 +81,7 @@ local function _position_has_line_of_sight_to_any_enemy_player(physics_world, fr
 	return false
 end
 
-local function _try_find_position_ahead_or_behind_target_on_main_path(physics_world, check_ahead, travel_distance, euclidean_distance, side, target_side)
+local function _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, check_ahead, travel_distance, euclidean_distance, side, target_side)
 	local main_path_manager = Managers.state.main_path
 	local target_unit, target_travel_distance, target_path_position = nil
 	local target_side_id = target_side.side_id
@@ -114,6 +114,14 @@ local function _try_find_position_ahead_or_behind_target_on_main_path(physics_wo
 		return false
 	end
 
+	local position_on_allowed_navmesh = NavQueries.position_on_mesh(nav_world, wanted_position, 1, 1, traverse_logic)
+
+	if not position_on_allowed_navmesh then
+		Log.info("FarVectorHorde", "\t\tPath position was on disallowed navmesh %s.", wanted_position)
+
+		return false
+	end
+
 	local collision_filter = "filter_minion_line_of_sight_check"
 	local in_line_of_sight = _position_has_line_of_sight_to_any_enemy_player(physics_world, wanted_position, side, collision_filter)
 
@@ -137,26 +145,26 @@ local function _try_find_position_ahead_or_behind_target_on_main_path(physics_wo
 	end
 end
 
-local function _try_find_position_on_main_path(physics_world, chance_spawning_ahead, main_path_distances, euclidean_distance, side, target_side)
+local function _try_find_position_on_main_path(physics_world, nav_world, traverse_logic, chance_spawning_ahead, main_path_distances, euclidean_distance, side, target_side)
 	local random_roll = math.random()
 	local spawn_horde_ahead = random_roll <= chance_spawning_ahead
 	local min_main_path_distance = main_path_distances[1]
 
 	Log.info("FarVectorHorde", "Attempting to spawn %s within %.2f m.", spawn_horde_ahead and "ahead" or "behind", min_main_path_distance)
 
-	local success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
+	local success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
 
 	if not success then
 		Log.info("FarVectorHorde", "\tNo position found, will try to spawn %s.", not spawn_horde_ahead and "ahead" or "behind")
 
-		success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, not spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
+		success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, not spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
 
 		if not success then
 			local max_main_path_distance = main_path_distances[2]
 
 			Log.info("FarVectorHorde", "\tNo position found, will try a final time to spawn %s within %.2f m.", spawn_horde_ahead and "ahead" or "behind", max_main_path_distance)
 
-			success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, spawn_horde_ahead, max_main_path_distance, euclidean_distance, side, target_side)
+			success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, spawn_horde_ahead, max_main_path_distance, euclidean_distance, side, target_side)
 		end
 	end
 
@@ -194,7 +202,8 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 	local main_path_distance_from_targets = horde_template.main_path_distance_from_targets
 	local euclidean_distance_from_targets = horde_template.euclidean_distance_from_targets
-	local horde_position, horde_direction, target_unit = _try_find_position_on_main_path(physics_world, chance_spawning_ahead, main_path_distance_from_targets, euclidean_distance_from_targets, side, target_side)
+	local traverse_logic = Managers.state.pacing:roamer_traverse_logic()
+	local horde_position, horde_direction, target_unit = _try_find_position_on_main_path(physics_world, nav_world, traverse_logic, chance_spawning_ahead, main_path_distance_from_targets, euclidean_distance_from_targets, side, target_side)
 
 	if not horde_position then
 		Log.info("FarVectorHorde", "Couldn't find a spawn position, failing horde.")
@@ -205,9 +214,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
 	local spawn_list, num_to_spawn = _compose_spawn_list(composition)
-	local spawned_minions = Script.new_array(num_to_spawn)
 	local horde = {
-		spawned_minions = spawned_minions,
 		template_name = horde_template.name,
 		side = side,
 		target_side = target_side,
@@ -216,18 +223,21 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local spawn_rotation = Quaternion.look(Vector3(horde_direction.x, horde_direction.y, 0))
 	local side_id = side.side_id
 	local minion_spawn_manager = Managers.state.minion_spawn
+	local num_spawned = 0
 
 	for i = 1, num_to_spawn do
-		local spawn_position = _try_find_spawn_position(nav_world, horde_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
+		local spawn_position = _try_find_spawn_position(nav_world, traverse_logic, horde_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
 
 		if spawn_position then
 			local breed_name = spawn_list[i]
-			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
-			spawned_minions[#spawned_minions + 1] = unit
+
+			minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
+
+			num_spawned = num_spawned + 1
 		end
 	end
 
-	Log.info("FarVectorHorde", "Managed to spawn %d/%d horde enemies.", #spawned_minions, num_to_spawn)
+	Log.info("FarVectorHorde", "Managed to spawn %d/%d horde enemies.", num_spawned, num_to_spawn)
 
 	return horde, horde_position, target_unit
 end

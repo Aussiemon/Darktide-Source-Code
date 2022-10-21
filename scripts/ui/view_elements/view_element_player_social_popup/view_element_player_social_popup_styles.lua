@@ -36,7 +36,7 @@ local view_element_player_popup_style = {
 	},
 	background = {}
 }
-background_style = view_element_player_popup_style.background
+local background_style = view_element_player_popup_style.background
 background_style.color = {
 	color = Color.black(160, true)
 }

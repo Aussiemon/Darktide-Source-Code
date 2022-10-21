@@ -7,8 +7,8 @@ end
 
 local empty_object = {}
 
-PartyImmateriumConnection.init = function (self, requested_party_id, compatibility_string, resolve_optional_ticket_promise_func)
-	self._requested_party_id = requested_party_id
+PartyImmateriumConnection.init = function (self, join_parameter, compatibility_string, resolve_optional_ticket_promise_func)
+	self._requested_join_parameter = join_parameter
 	self._compatibility_string = compatibility_string
 	self._resolve_optional_ticket_promise_func = resolve_optional_ticket_promise_func
 	self._started = false
@@ -24,6 +24,8 @@ PartyImmateriumConnection.init = function (self, requested_party_id, compatibili
 	self._party_vote_version = 0
 	self._game_state = empty_object
 	self._game_state_version = 0
+	self._invite_list = nil
+	self._invite_list_version = 0
 end
 
 PartyImmateriumConnection.destroy = function (self)
@@ -31,13 +33,25 @@ PartyImmateriumConnection.destroy = function (self)
 end
 
 PartyImmateriumConnection._internal_start = function (self, optional_matchmaking_ticket)
-	assert(not self._party_operation, "operation already exists")
-
 	if self._aborted then
 		return
 	end
 
-	local promise, operation_id = Managers.grpc:join_party(self._party.party_id or self._requested_party_id, self._compatibility_string, optional_matchmaking_ticket)
+	local party_id = nil
+	local context_account_id = ""
+	local invite_token = ""
+
+	if self._party.party_id then
+		party_id = self._party.party_id
+		context_account_id = ""
+		invite_token = ""
+	else
+		party_id = self._requested_join_parameter.party_id
+		context_account_id = self._requested_join_parameter.context_account_id or ""
+		invite_token = self._requested_join_parameter.invite_token or ""
+	end
+
+	local promise, operation_id = Managers.grpc:join_party(party_id, context_account_id, invite_token, self._compatibility_string, optional_matchmaking_ticket)
 	self._party_operation = operation_id
 
 	promise:next(function ()
@@ -115,6 +129,10 @@ PartyImmateriumConnection.party_game_state = function (self)
 	return self._game_state
 end
 
+PartyImmateriumConnection.party_invite_list = function (self)
+	return self._invite_list
+end
+
 PartyImmateriumConnection.event_buffer = function (self)
 	return self._event_buffer
 end
@@ -140,8 +158,6 @@ PartyImmateriumConnection.join_promise = function (self)
 end
 
 PartyImmateriumConnection.start = function (self)
-	assert(not self._started, "already started")
-
 	if self._aborted then
 		return Promise.rejected(self._error)
 	end
@@ -167,7 +183,7 @@ PartyImmateriumConnection._requires_mission_hot_join_ticket_error = function (se
 	local prefix = "REQUIRES_MISSION_HOT_JOIN_TICKET:"
 
 	if type(error) == "table" and error.error_details and string.starts_with(error.error_details, prefix) then
-		return string.sub(error.error_details, string.len(prefix) + 1, string.len(error.error_details))
+		return string.sub(error.error_details, #prefix + 1, #error.error_details)
 	end
 
 	return nil
@@ -182,6 +198,8 @@ PartyImmateriumConnection._handle_party_event = function (self, event)
 		self:_handle_party_vote_update_event(event)
 	elseif event.event_type == "party_game_state_update" then
 		self:_handle_party_game_state_update_event(event)
+	elseif event.event_type == "party_invite_list_update" then
+		self:_handle_party_invite_list_update_event(event)
 	else
 		table.insert(self._event_buffer, event)
 	end
@@ -224,6 +242,17 @@ PartyImmateriumConnection._handle_party_game_state_update_event = function (self
 
 	self._game_state = event
 	self._game_state_version = event.version
+
+	table.insert(self._event_buffer, event)
+end
+
+PartyImmateriumConnection._handle_party_invite_list_update_event = function (self, event)
+	if event.version < self._invite_list_version then
+		return
+	end
+
+	self._invite_list = event
+	self._invite_list_version = event.version
 
 	table.insert(self._event_buffer, event)
 end

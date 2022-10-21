@@ -13,12 +13,12 @@ local HitMass = require("scripts/utilities/attack/hit_mass")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MaterialQuery = require("scripts/utilities/material_query")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local buff_keywords = BuffSettings.keywords
-local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
-local DEFUALT_POWER_LEVEL = 300
-local EPSILON = 0.001
 local damage_types = DamageSettings.damage_types
+local proc_events = BuffSettings.proc_events
+local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
+local DEFAULT_POWER_LEVEL = 300
+local SPEED_EPSILON = 0.001
 local slide_knock_down_damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.slide_knockdown,
@@ -31,11 +31,15 @@ PlayerCharacterStateSliding.init = function (self, character_state_init_context,
 	PlayerCharacterStateSliding.super.init(self, character_state_init_context, ...)
 
 	local unit_data = character_state_init_context.unit_data
+	local slide_character_state_component = unit_data:write_component("slide_character_state")
+	slide_character_state_component.friction_function = "default"
+	self._slide_character_state_component = slide_character_state_component
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
-	local character_state_hit_mass_component = character_state_init_context.unit_data:write_component("character_state_hit_mass")
+	local character_state_hit_mass_component = unit_data:write_component("character_state_hit_mass")
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 	self._character_state_hit_mass_component = character_state_hit_mass_component
+	self._dodge_character_state_component = unit_data:write_component("dodge_character_state")
 	local breed = unit_data:breed()
 	self._sliding_loop_alias = breed.sfx.sliding_alias
 	self._hit_enemy_units = {}
@@ -44,11 +48,10 @@ end
 local FX_SOURCE_NAME = "rightfoot"
 
 PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_state, params)
-	fassert(self._movement_state_component.is_crouching, "Sliding component assumes crouching state and won't be robust entered when not crouching.")
-
 	local locomotion_steering = self._locomotion_steering_component
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
+	self._slide_character_state_component.friction_function = params.friction_function or "default"
 	local first_person_extension = self._first_person_extension
 
 	first_person_extension:set_wanted_player_height("slide", 0.3)
@@ -61,10 +64,20 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 
 	self._movement_state_component.method = "sliding"
 	self._movement_state_component.is_dodging = true
+
+	Managers.event:trigger("on_slide")
+
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 
 	table.clear(self._hit_enemy_units)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_slide_start, param_table)
+	end
 end
 
 PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
@@ -74,7 +87,20 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 
 	self._movement_state_component.is_dodging = false
 
+	if self._character_state_component.previous_state_name == "dodging" then
+		local specialization_dodge_template = self._specialization_dodge_template
+		local weapon_dodge_template = self._weapon_extension:dodge_template()
+		self._dodge_character_state_component.consecutive_dodges_cooldown = t + specialization_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
+	end
+
 	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_slide_end, param_table)
+	end
 end
 
 PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
@@ -99,17 +125,27 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 
 	local constants = self._constants
 	local is_crouching = true
-	local time_in_action = t - self._character_state_component.entered_t
+	local character_state_component = self._character_state_component
+	local time_in_action = t - character_state_component.entered_t
 	local commit_period_over = constants.slide_commit_time < time_in_action
+	local flat_move_speed_sq = Vector3.length_squared(Vector3.flat(self._locomotion_component.velocity_current))
 
-	if commit_period_over then
+	if commit_period_over or flat_move_speed_sq < 4 then
 		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t)
 	end
 
 	local speed = Vector3.length(Vector3.flat(velocity_current))
 
-	if EPSILON < speed then
-		local friction_speed = self._constants.slide_friction_function(speed, time_in_action)
+	if SPEED_EPSILON < speed then
+		local friction_function = self._slide_character_state_component.friction_function
+		local friction_speed = nil
+
+		if friction_function == "sprint" then
+			friction_speed = self._constants.sprint_slide_friction_function(speed, time_in_action, buff_extension)
+		else
+			friction_speed = self._constants.slide_friction_function(speed, time_in_action, buff_extension)
+		end
+
 		local friction = math.min(speed, friction_speed * dt) / speed * velocity_current
 		locomotion_steering.velocity_wanted = velocity_current - friction
 	end
@@ -180,12 +216,12 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 	local damage_profile = damage_settings.damage_profile
 	local damage_type = damage_settings.damage_type
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 	local radius = damage_settings.radius
 	local actors, num_actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "sphere", "position", locomotion_position, "size", radius, "collision_filter", DAMAGE_COLLISION_FILTER, "rewind_ms", rewind_ms)
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
-	local max_hit_mass = _max_hit_mass(damage_settings)
+	local max_hit_mass = _max_hit_mass(damage_settings, unit)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
 	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
 	local fp_position = self._first_person_component.position
@@ -221,7 +257,7 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(hit_unit)
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, false)
 		end
 	end
 
@@ -232,11 +268,11 @@ end
 
 local NO_LERP_VALUES = {}
 
-function _max_hit_mass(damage_settings)
+function _max_hit_mass(damage_settings, unit)
 	local charge_level = 1
 	local damage_profile = damage_settings.damage_profile
 	local critical_strike = false
-	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, DEFUALT_POWER_LEVEL, charge_level, NO_LERP_VALUES, critical_strike)
+	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, DEFAULT_POWER_LEVEL, charge_level, NO_LERP_VALUES, critical_strike, unit)
 	local max_hit_mass = math.max(max_hit_mass_attack, max_hit_mass_impact)
 
 	return max_hit_mass

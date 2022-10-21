@@ -83,8 +83,6 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 		MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
 	end
 
-	local running_stagger_min_duration = scratchpad.stagger_min_duration
-	local running_stagger_block_evaluate = running_stagger_min_duration and t < running_stagger_min_duration
 	local vo_event = action_data.vo_event
 	local next_follow_vo_t = scratchpad.next_follow_vo_t
 
@@ -105,7 +103,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 			self:_rotate_towards_target_unit(unit, target_unit, scratchpad)
 		end
 
-		local evaluate = not running_stagger_block_evaluate
+		local evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate < t
 
 		return "running", evaluate
 	end
@@ -158,7 +156,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 	local destination = navigation_extension:destination()
 	local distance_to_destination_sq = Vector3.distance_squared(destination, target_position)
 	local target_is_near_destination = distance_to_destination_sq < MOVE_CHECK_DISTANCE_SQ
-	local should_evaluate = not running_stagger_block_evaluate and (scratchpad.time_to_next_evaluate < t or target_is_near_destination)
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and (scratchpad.time_to_next_evaluate < t or target_is_near_destination)
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL

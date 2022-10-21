@@ -90,8 +90,8 @@ local function _lerp_modifier_func(true_flight_template)
 end
 
 true_flight_defaults.default_update_towards_position = function (target_position, physics_world, integration_data, dt, t)
-	local position = integration_data.position:unbox()
-	local velocity = integration_data.velocity:unbox()
+	local position = integration_data.position
+	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
 	local true_flight_template = integration_data.true_flight_template
 	local speed_multiplier = true_flight_template.speed_multiplier
@@ -114,17 +114,15 @@ true_flight_defaults.default_update_towards_position = function (target_position
 	local dsitance = (speed + new_speed) * dt * 0.5
 	local new_position = position + new_direction * dsitance
 	local new_velocity = new_direction * new_speed
-
-	integration_data.velocity:store(new_velocity)
-
+	integration_data.velocity = new_velocity
 	local new_rotation = Quaternion.look(velocity)
 
 	return new_position, new_rotation
 end
 
 true_flight_defaults.default_update_position_velocity = function (physics_world, integration_data, dt, t)
-	local velocity = integration_data.velocity:unbox()
-	local position = integration_data.position:unbox()
+	local velocity = integration_data.velocity
+	local position = integration_data.position
 	local new_position = position + velocity * dt
 	local new_rotation = Quaternion.look(velocity)
 
@@ -179,10 +177,10 @@ true_flight_defaults.find_closest_highest_value_target = function (integration_d
 	local results, number_of_results = nil
 
 	if integration_data.target_position then
-		local target_position = integration_data.target_position:unbox()
+		local target_position = integration_data.target_position
 		number_of_results, results = true_flight_defaults.broadphase_query(owner_unit, target_position, broadphase_radius)
 	else
-		local veclocity = integration_data.velocity:unbox()
+		local veclocity = integration_data.velocity
 		local current_direction = Vector3.normalize(veclocity)
 		local first_search_pos = position + current_direction * forward_search_distance_to_find_target
 		number_of_results, results = true_flight_defaults.broadphase_query(owner_unit, first_search_pos, broadphase_radius)
@@ -211,7 +209,7 @@ true_flight_defaults.legitimate_never = function (integration_data, target_unit,
 end
 
 true_flight_defaults.legitimate_dot_check = function (integration_data, target_unit, target_position, position)
-	local velocity = integration_data.velocity:unbox()
+	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
 	local direction_to_target = target_position - position
 	local wanted_direction = Vector3.normalize(direction_to_target)
@@ -226,7 +224,7 @@ end
 
 true_flight_defaults.legitimate_angle_check = function (integration_data, target_unit, target_position, position)
 	local true_flight_template = integration_data.true_flight_template
-	local velocity = integration_data.velocity:unbox()
+	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
 	local direction_to_target = target_position - position
 	local wanted_direction = Vector3.normalize(direction_to_target)

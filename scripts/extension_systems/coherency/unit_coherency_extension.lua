@@ -5,6 +5,7 @@ local proc_events = BuffSettings.proc_events
 local UnitCoherencyExtension = class("UnitCoherencyExtension")
 
 UnitCoherencyExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
+	self._player = extension_init_data.player
 	self._unit = unit
 	self._in_coherence_units = {}
 	self._num_units_in_coherence = 0
@@ -154,10 +155,14 @@ UnitCoherencyExtension.on_coherency_enter = function (self, coherency_unit, cohe
 
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.enter_unit = coherency_unit
-	param_table.number_of_unit_in_coherency = self._num_units_in_coherence
 
-	buff_extension:add_proc_event(proc_events.on_coherency_enter, param_table)
+	if param_table then
+		param_table.enter_unit = coherency_unit
+		param_table.number_of_unit_in_coherency = self._num_units_in_coherence
+
+		buff_extension:add_proc_event(proc_events.on_coherency_enter, param_table)
+	end
+
 	self:_send_rpc("rpc_player_unit_enter_coherency", coherency_unit)
 end
 
@@ -173,11 +178,21 @@ UnitCoherencyExtension.on_coherency_exit = function (self, coherency_unit, coher
 
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.exit_unit = coherency_unit
-	param_table.number_of_unit_in_coherency = self._num_units_in_coherence
 
-	buff_extension:add_proc_event(proc_events.on_coherency_exit, param_table)
+	if param_table then
+		param_table.exit_unit = coherency_unit
+		param_table.number_of_unit_in_coherency = self._num_units_in_coherence
+
+		buff_extension:add_proc_event(proc_events.on_coherency_exit, param_table)
+	end
+
 	self:_send_rpc("rpc_player_unit_exit_coherency", coherency_unit)
+
+	if Managers.stats and Managers.stats.can_record_stats() and self._player then
+		local target_is_alive = HEALTH_ALIVE[coherency_unit]
+
+		Managers.stats:record_coherency_exit(self._player, target_is_alive)
+	end
 end
 
 UnitCoherencyExtension.update_buffs_for_unit = function (self, unit, extension)

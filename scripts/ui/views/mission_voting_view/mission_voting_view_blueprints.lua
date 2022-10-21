@@ -1,14 +1,45 @@
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
-local MissionBoardSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
-local MissionSettings = require("scripts/settings/mission/mission_templates")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ZoneSettings = require("scripts/settings/zones/zones")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local Localizer = Managers.localization
 local blueprint_styles = ViewStyles.blueprints
+local icons = {
+	loot = "content/ui/materials/icons/generic/loot",
+	flash = "content/ui/materials/icons/generic/flash"
+}
+local button_strings = {
+	show_details = "loc_mission_voting_view_show_details",
+	hide_details = "loc_mission_voting_view_hide_details",
+	selectable_buttons = {
+		"loc_mission_voting_view_accept_mission",
+		"loc_mission_voting_view_decline_mission"
+	}
+}
+
+local function has_side_mission(mission_data)
+	if not mission_data.sideMission then
+		return false
+	end
+
+	local side_missions = MissionObjectiveTemplates.side_mission.objectives
+	local side_mission = mission_data.sideMission
+	local side_mission_template = side_missions[side_mission]
+
+	if not side_mission_template then
+		Log.warning("MissionVotingUI", "No objective template for side mission \"%s\"", side_mission)
+
+		return false
+	end
+
+	return true
+end
 
 local function calculate_text_size(widget, text_and_style_id, ui_renderer)
 	local text = widget.content[text_and_style_id]
@@ -60,89 +91,154 @@ end
 
 local details_widgets_blueprints = {
 	templates = {
-		mission_header = {
+		main_objective = {
 			size = {
-				515,
-				75
+				475,
+				175
 			},
 			pass_template = {
 				{
-					style_id = "mission_name",
-					value_id = "mission_name",
-					pass_type = "text"
+					value = "",
+					value_id = "objective_header",
+					pass_type = "text",
+					style_id = "objective_header"
 				},
 				{
-					style_id = "type_and_zone",
-					value_id = "type_and_zone",
-					pass_type = "text"
+					style_id = "main_objective_icon",
+					value_id = "main_objective_icon",
+					pass_type = "texture"
+				},
+				{
+					value = "BODY TEXT",
+					value_id = "body_text",
+					pass_type = "text",
+					style_id = "body_text"
+				},
+				{
+					value = "",
+					value_id = "rewards_text",
+					pass_type = "text",
+					style_id = "rewards_text"
 				}
 			},
-			style = blueprint_styles.mission_header,
-			init = function (widget, data)
-				local mission_settings = MissionSettings[data.map]
-				local zone_settings = ZoneSettings[mission_settings.zone_id]
-				local mission_title = mission_settings.mission_name and Localizer:localize(mission_settings.mission_name) or data.map
-				local zone_name = Localizer:localize(zone_settings.name)
-				local main_objective_type = mission_settings.objectives and MissionObjectiveTemplates[mission_settings.objectives].main_objective_type or "default"
-				local main_objective_type_header_key = MissionBoardSettings.main_objective_type_name[main_objective_type]
-				local main_objective_type_header = Managers.localization:localize(main_objective_type_header_key)
+			style = blueprint_styles.main_objective,
+			init = function (widget, data, ui_renderer)
+				local mission_template = MissionTemplates[data.map]
+				local main_objective_type = mission_template.objectives and MissionObjectiveTemplates[mission_template.objectives].main_objective_type or "default"
+				local main_objective_type_header_key = mission_template.mission_type_name
+				local main_objective_type_header = Localize(main_objective_type_header_key)
 				local widget_content = widget.content
-				widget_content.mission_name = mission_title
-				widget_content.type_and_zone = string.format("%s · %s", main_objective_type_header, zone_name)
+				widget_content.objective_header = main_objective_type_header
+				widget_content.main_objective_icon = mission_template.mission_type_icon
+				local experience = math.floor(data.xp)
+				local experience_text = string.format(" %d", tostring(experience))
+				local salary = math.floor(data.credits)
+				local salary_text = string.format(" %d", tostring(salary))
+				widget_content.body_text = Localize(mission_template.mission_description) or "n/a"
+				widget_content.rewards_text = string.format("%s \t %s", salary_text, experience_text)
+				local style = widget.style
+				local text_x_offset = 60
+				local text_padding = 10
+				local header_text_style = style.objective_header
+				header_text_style.offset[1] = text_x_offset
+				local _, header_text_height = calculate_text_size(widget, "objective_header", ui_renderer)
+				local body_text_style = style.body_text
+				local body_text_y_offset = header_text_height + text_padding
+				body_text_style.offset = {
+					text_x_offset,
+					body_text_y_offset,
+					1
+				}
+				local rewards_text_style = style.rewards_text
+				local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
+				local rewards_y_offset = body_text_y_offset + body_text_height + text_padding
+				rewards_text_style.offset = {
+					text_x_offset,
+					rewards_y_offset + 5,
+					10
+				}
 			end
 		},
-		base_reward = {
+		side_mission = {
 			size = {
-				515,
-				60
+				475,
+				150
 			},
 			pass_template = {
 				{
-					style_id = "header",
+					style_id = "objective_header",
+					value_id = "objective_header",
+					pass_type = "text"
+				},
+				{
+					style_id = "objective_icon",
+					value_id = "objective_icon",
+					pass_type = "texture"
+				},
+				{
+					style_id = "body_text",
+					value_id = "body_text",
+					pass_type = "text"
+				},
+				{
+					value = "",
+					value_id = "rewards_text",
 					pass_type = "text",
-					value = Managers.localization:localize("loc_mission_board_details_view_base_reward")
-				},
-				{
-					value = "content/ui/materials/icons/generic/experience_rendered",
-					value_id = "experience_icon",
-					pass_type = "texture",
-					style_id = "experience_icon"
-				},
-				{
-					style_id = "experience_text",
-					value_id = "experience_text",
-					pass_type = "text"
-				},
-				{
-					value = "content/ui/materials/icons/generic/credits_rendered",
-					value_id = "credits_icon",
-					pass_type = "texture",
-					style_id = "credits_icon"
-				},
-				{
-					style_id = "credits_text",
-					value_id = "credits_text",
-					pass_type = "text"
+					style_id = "rewards_text"
 				}
 			},
-			style = blueprint_styles.base_reward,
-			init = function (widget, content, ui_renderer)
+			style = blueprint_styles.side_mission,
+			init = function (widget, data, ui_renderer)
+				local side_missions = MissionObjectiveTemplates.side_mission.objectives
+				local side_mission = data.side_mission
+				local side_mission_template = side_missions[side_mission]
 				local widget_content = widget.content
-				widget_content.experience_text = tostring(content.xp)
-				widget_content.credits_text = tostring(content.credits)
+				widget_content.objective_header = Localize(side_mission_template.header)
+				widget_content.objective_icon = side_mission_template.icon
+				widget_content.body_text = Localize(side_mission_template.description)
+				local rewards = data.extraRewards and data.extraRewards.sideMission
+
+				if rewards then
+					local has_xp_reward = rewards.xp and true or false
+					local has_salary_rewards = rewards.credits and true or false
+					local experience = has_xp_reward and tostring(math.floor(rewards.xp)) or ""
+					local experience_text = has_xp_reward and string.format(" %s", experience) or ""
+					local salary = has_salary_rewards and tostring(math.floor(rewards.credits)) or ""
+					local salary_text = has_salary_rewards and string.format(" %s", salary) or ""
+					widget_content.rewards_text = string.format("%s \t %s", salary_text, experience_text)
+				end
+
 				local style = widget.style
-				local xp_text_width = calculate_text_size(widget, "experience_text", ui_renderer)
-				local xp_text_style = style.experience_text
-				local credits_icon_style = style.credits_icon
-				credits_icon_style.offset[1] = xp_text_style.offset[1] + xp_text_width + credits_icon_style.base_margin_left
-				local credits_text_style = style.credits_text
-				credits_text_style.offset[1] = credits_icon_style.offset[1] + credits_icon_style.size[1] + credits_icon_style.base_margin_right
+				local text_x_offset = 60
+				local text_padding = 10
+				local objective_header_style = style.objective_header
+				local body_text_style = style.body_text
+				local rewards_text_style = style.rewards_text
+				objective_header_style.offset = {
+					text_x_offset,
+					0,
+					1
+				}
+				local _, objective_header_height = calculate_text_size(widget, "objective_header", ui_renderer)
+				local body_text_y_offset = objective_header_height + text_padding
+				body_text_style.offset = {
+					text_x_offset,
+					body_text_y_offset,
+					1
+				}
+				local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
+				local reward_text_y_offset = body_text_y_offset + text_padding + body_text_height
+				rewards_text_style.offset = {
+					text_x_offset,
+					reward_text_y_offset,
+					1
+				}
 			end
 		},
 		circumstance = {
 			size = {
-				515,
-				50
+				475,
+				150
 			},
 			pass_template = {
 				{
@@ -151,23 +247,50 @@ local details_widgets_blueprints = {
 					value = Managers.localization:localize("loc_mission_board_details_view_circumstance")
 				},
 				{
-					style_id = "icon",
-					value_id = "icon",
-					pass_type = "texture"
-				},
-				{
-					style_id = "title",
-					value_id = "title",
+					style_id = "circumstance_title",
+					value_id = "circumstance_title",
 					pass_type = "text"
 				},
 				{
-					style_id = "description",
-					value_id = "description",
+					style_id = "circumstance_icon",
+					value_id = "circumstance_icon",
+					pass_type = "texture"
+				},
+				{
+					style_id = "body_text",
+					value_id = "body_text",
 					pass_type = "text"
 				}
 			},
 			style = blueprint_styles.circumstance,
-			init = circumstance_init_function
+			init = function (widget, data, ui_renderer)
+				local circumstance = data.circumstance
+				local circumstance_template = CircumstanceTemplates[circumstance]
+				local circumstance_ui_settings = circumstance_template.ui
+				local widget_content = widget.content
+				widget_content.circumstance_title = Localize(circumstance_ui_settings.display_name)
+				widget_content.circumstance_icon = circumstance_ui_settings.icon
+				widget_content.body_text = circumstance_ui_settings.description and Localize(circumstance_ui_settings.description) or "n/a"
+				local style = widget.style
+				local text_x_offset = 60
+				local text_y_offset = 30
+				local text_padding = 10
+				local circumstance_title_style = style.circumstance_title
+				local body_text_style = style.body_text
+				circumstance_title_style.offset = {
+					text_x_offset,
+					text_y_offset,
+					1
+				}
+				local _, circumstance_title_height = calculate_text_size(widget, "circumstance_title", ui_renderer)
+				local body_text_y_offset = circumstance_title_height + text_padding + text_y_offset
+				body_text_style.offset = {
+					text_x_offset,
+					body_text_y_offset,
+					1
+				}
+				widget.style.circumstance_icon.offset[2] = text_y_offset
+			end
 		},
 		category_name = {
 			size = {
@@ -222,23 +345,26 @@ local details_widgets_blueprints = {
 
 details_widgets_blueprints.utility_functions.prepare_details_data = function (mission_data, include_mission_header)
 	local details_data = {}
-
-	if include_mission_header then
-		details_data[1] = {
-			template = "mission_header",
-			widget_data = {
-				map = mission_data.map
-			}
-		}
-	end
-
+	local has_side_mission = has_side_mission(mission_data)
 	details_data[#details_data + 1] = {
-		template = "base_reward",
+		template = "main_objective",
 		widget_data = {
+			map = mission_data.map,
 			xp = mission_data.xp,
 			credits = mission_data.credits
 		}
 	}
+
+	if has_side_mission then
+		details_data[#details_data + 1] = {
+			template = "side_mission",
+			widget_data = {
+				side_mission = mission_data.sideMission,
+				extraRewards = mission_data.extraRewards
+			}
+		}
+	end
+
 	local circumstance = mission_data.circumstance
 
 	if circumstance and circumstance ~= "default" then
@@ -252,5 +378,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 
 	return details_data
 end
+
+details_widgets_blueprints.icons = icons
+details_widgets_blueprints.button_strings = button_strings
 
 return details_widgets_blueprints

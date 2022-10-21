@@ -6,7 +6,7 @@ local ConstantElementPopupHandlerTestify = {
 			return Testify.RETRY
 		end
 
-		constant_element_popup_handler:_cb_on_button_pressed(accept_voting_widget)
+		constant_element_popup_handler:trigger_widget_callback(accept_voting_widget)
 	end
 }
 

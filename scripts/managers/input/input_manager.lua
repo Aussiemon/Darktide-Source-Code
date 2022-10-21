@@ -1,6 +1,5 @@
 local InputAliases = require("scripts/managers/input/input_aliases")
 local InputDevice = require("scripts/managers/input/input_device")
-local InputLocaleNameOverrides = require("scripts/settings/input/input_locale_name_overrides")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
 local InputService = require("scripts/managers/input/input_service")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -64,7 +63,7 @@ InputManager.init = function (self)
 		self:add_setting(default_setting.service_type, default_setting.aliases, default_setting.settings, default_setting.filters, default_setting.default_devices)
 	end
 
-	if not DEDICATED_SERVER and PLATFORM == "win32" then
+	if not DEDICATED_SERVER and (IS_WINDOWS or IS_XBS) then
 		self._cursor_stack_data = {
 			stack_depth = 0,
 			stack_references = {}
@@ -74,6 +73,10 @@ InputManager.init = function (self)
 		self:_set_allow_cursor_rendering(allow_cursor_rendering)
 		self:_update_clip_cursor()
 	end
+end
+
+InputManager.software_cursor_active = function (self)
+	return self._software_cursor_active
 end
 
 InputManager.load_settings = function (self)
@@ -171,6 +174,10 @@ InputManager._select_latest = function (self)
 		end
 
 		self:_update_devices_for_services()
+
+		if Managers.event then
+			Managers.event:trigger("event_on_active_input_changed")
+		end
 	end
 end
 
@@ -193,6 +200,8 @@ InputManager._update_devices_for_services = function (self)
 end
 
 InputManager.init_device = function (self, generic_device_type, raw_device, device_slot)
+	local InputLocaleNameOverrides = require("scripts/settings/input/input_locale_name_overrides")
+
 	if generic_device_type ~= "mouse" then
 		self:set_dead_zones(raw_device)
 	end
@@ -244,16 +253,13 @@ InputManager.set_dead_zones = function (self, raw_device)
 	local num_axes = raw_device.num_axes()
 
 	for i = 1, num_axes do
-		raw_device.set_dead_zone(i, raw_device.CIRCULAR, 0.1)
+		raw_device.set_dead_zone(i, raw_device.CIRCULAR, 0.24)
 	end
 end
 
 InputManager.get_input_service = function (self, service_type)
 	if not self._input_services[service_type] then
 		local settings = self._input_settings[service_type]
-
-		fassert(settings, "No defined settings for service type [%s]", service_type)
-
 		local alias_table = nil
 
 		if self._aliases[service_type] then
@@ -274,9 +280,6 @@ end
 
 InputManager.destroy_input_service = function (self, service_type)
 	local service = self._input_services[service_type]
-
-	fassert(service, "There is no InputService of type [%s] to destroy", service_type)
-
 	self._input_services[service_type] = nil
 
 	_log("Destroyed InputService of type [%s]", service_type)
@@ -299,7 +302,6 @@ InputManager.key_watch_result = function (self)
 end
 
 InputManager.add_setting = function (self, service_type, aliases, raw_key_table, filter_table, default_devices)
-	fassert(not self._input_settings[service_type], "There is already a default setting defined for serivce type [%s], service_type")
 	_log("Adding a default setting for input service type [%s]", service_type)
 
 	self._input_settings[service_type] = {
@@ -330,8 +332,6 @@ end
 
 InputManager.apply_alias_changes = function (self, service_type)
 	local service = self:get_input_service(service_type)
-
-	fassert(service, "No input service of the type")
 
 	if self._aliases[service_type] then
 		local alias_table = self._aliases[service_type]:alias_table()
@@ -381,28 +381,18 @@ InputManager.on_reload = function (self, refreshed_resources)
 end
 
 InputManager._update_devices = function (self, dt, t)
-	Profiler.start("Update Devices")
-
 	for _, device in pairs(self._all_input_devices) do
 		device:update(dt, t)
 	end
-
-	Profiler.stop("Update Devices")
 end
 
 InputManager._update_services = function (self, dt, t)
-	Profiler.start("Update Services")
-
 	for _, service in pairs(self._input_services) do
 		service:update(dt, t)
 	end
-
-	Profiler.stop("Update Services")
 end
 
 InputManager._update_key_watch = function (self)
-	Profiler.start("Update Key Watch")
-
 	if self._key_watch then
 		local held = {}
 		local released = {}
@@ -425,8 +415,6 @@ InputManager._update_key_watch = function (self)
 			self._key_watch = false
 		end
 	end
-
-	Profiler.stop("Update Key Watch")
 end
 
 InputManager._cb_device_activated = function (self, device)
@@ -492,7 +480,11 @@ InputManager._set_allow_cursor_rendering = function (self, allow_cursor_renderin
 	cursor_stack_data.allow_cursor_rendering = allow_cursor_rendering
 
 	if cursor_stack_data.stack_depth > 0 then
-		Window.set_show_cursor(allow_cursor_rendering)
+		if IS_WINDOWS then
+			Window.set_show_cursor(allow_cursor_rendering)
+		elseif IS_XBS then
+			self._software_cursor_active = allow_cursor_rendering
+		end
 	end
 end
 
@@ -501,23 +493,24 @@ InputManager.set_cursor_position = function (self, reference, position)
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
 
-		assert(stack_references[reference], "Trying to change cursor position without having pushed the cursor first.")
 		Window.set_cursor_position(position)
 	end
 end
 
 InputManager.push_cursor = function (self, reference)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS or IS_XBS then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
-
-		assert(not stack_references[reference], "Trying to push cursor. Reference name already exist.")
 
 		if cursor_stack_data.stack_depth == 0 and cursor_stack_data.allow_cursor_rendering then
 			local is_fullscreen = RESOLUTION_LOOKUP.fullscreen
 
-			Window.set_show_cursor(true)
-			Window.set_clip_cursor(is_fullscreen or false)
+			if IS_WINDOWS then
+				Window.set_show_cursor(true)
+				Window.set_clip_cursor(is_fullscreen or false)
+			else
+				self._software_cursor_active = true
+			end
 		end
 
 		cursor_stack_data.stack_depth = cursor_stack_data.stack_depth + 1
@@ -526,21 +519,19 @@ InputManager.push_cursor = function (self, reference)
 end
 
 InputManager.pop_cursor = function (self, reference)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS or IS_XBS then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
-
-		assert(stack_references[reference], "Trying to pop cursor with an unregistered reference name.")
-
 		stack_references[reference] = nil
-
-		assert(cursor_stack_data.stack_depth > 0, "Trying to pop a cursor stack that doesn't exist.")
-
 		cursor_stack_data.stack_depth = cursor_stack_data.stack_depth - 1
 
 		if cursor_stack_data.stack_depth == 0 then
-			Window.set_show_cursor(false)
-			Window.set_clip_cursor(true)
+			if IS_WINDOWS then
+				Window.set_show_cursor(false)
+				Window.set_clip_cursor(true)
+			else
+				self._software_cursor_active = false
+			end
 		end
 	end
 end

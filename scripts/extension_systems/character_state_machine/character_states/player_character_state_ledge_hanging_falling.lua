@@ -12,7 +12,9 @@ end
 
 PlayerCharacterStateLedgeHangingFalling.on_enter = function (self, unit, dt, t, previous_state, params)
 	if self._is_server then
-		PlayerDeath.die(unit)
+		local reason = "ledge_hanging"
+
+		PlayerDeath.die(unit, nil, nil, reason)
 	end
 end
 
@@ -31,7 +33,7 @@ PlayerCharacterStateLedgeHangingFalling._check_transition = function (self, unit
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
-	if health_transition then
+	if health_transition == "dead" then
 		return health_transition
 	end
 end

@@ -22,17 +22,17 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_bulwark"
 local breed_data = {
-	can_patrol = true,
 	walk_speed = 1.9,
+	use_navigation_path_splines = true,
 	use_bone_lod = true,
 	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_bulwark",
 	sub_faction_name = "chaos",
 	detection_radius = 13,
 	unit_template_name = "minion",
-	use_navigation_path_splines = true,
 	game_object_type = "minion_shield_melee",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
+	activate_slot_system_on_spawn = true,
 	stagger_resistance = 1,
 	use_avoidance = true,
 	spawn_inventory_slot = "slot_shield",
@@ -43,15 +43,17 @@ local breed_data = {
 	display_name = "loc_breed_display_name_chaos_ogryn_bulwark",
 	run_speed = 5.6,
 	faction_name = "chaos",
+	reverse_stagger_count = true,
 	base_height = 1.7,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	stagger_reduction = 0,
+	stagger_reduction = 5,
 	player_locomotion_constrain_radius = 0.9,
 	stagger_reduction_ranged = 10,
-	activate_slot_system_on_spawn = true,
+	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	hit_mass = 100,
+	reduced_hit_mass = 20,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -67,32 +69,35 @@ local breed_data = {
 	gib_template = MinionGibbingTemplates.chaos_ogryn_bulwark,
 	stagger_durations = {
 		[stagger_types.light] = 1,
-		[stagger_types.medium] = 1,
+		[stagger_types.medium] = 2.5,
 		[stagger_types.heavy] = 3.5,
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 1,
 		[stagger_types.killshot] = 1,
-		[stagger_types.sticky] = 1,
-		[stagger_types.shield_block] = 1.0416666666666667,
+		[stagger_types.sticky] = 0.6,
+		[stagger_types.shield_block] = 0.4166666666666667,
 		[stagger_types.shield_heavy_block] = 3.076923076923077,
 		[stagger_types.shield_broken] = 3.8461538461538463
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.3,
-		[stagger_types.medium] = 1,
+		[stagger_types.light] = 1.5,
+		[stagger_types.medium] = 1.5,
 		[stagger_types.heavy] = 3,
 		[stagger_types.explosion] = 3,
-		[stagger_types.light_ranged] = 1,
-		[stagger_types.shield_block] = 0.5,
+		[stagger_types.light_ranged] = 1.5,
+		[stagger_types.killshot] = 1.5,
+		[stagger_types.shield_block] = 1.5,
 		[stagger_types.shield_heavy_block] = 1,
-		[stagger_types.shield_broken] = 3.5
+		[stagger_types.shield_broken] = 1.5,
+		[stagger_types.sticky] = 0.25
 	},
 	stagger_thresholds = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 5,
+		[stagger_types.light] = 10,
+		[stagger_types.medium] = 20,
 		[stagger_types.heavy] = 80,
-		[stagger_types.light_ranged] = 1,
-		[stagger_types.sticky] = 5
+		[stagger_types.light_ranged] = 5,
+		[stagger_types.killshot] = 5,
+		[stagger_types.sticky] = 1
 	},
 	impact_anim_override = {
 		shield_blocked = {
@@ -127,8 +132,8 @@ local breed_data = {
 	},
 	attack_intensity_cooldowns = {
 		melee = {
-			1.7,
-			2.8
+			0,
+			0
 		},
 		moving_melee = {
 			1.7,
@@ -314,9 +319,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -410,24 +412,10 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
-		health_percent_throttle = 0.3,
-		always_show_killing_blow = false,
-		thresholds = {
-			[damage_types.blunt] = 0.3,
-			[damage_types.blunt_heavy] = 0.4,
-			[damage_types.blunt_thunder] = 0.3,
-			[damage_types.plasma] = 0.15,
-			[damage_types.rippergun_pellet] = 0.15,
-			[damage_types.auto_bullet] = 0.25,
-			[damage_types.pellet] = 0.35,
-			[damage_types.boltshell] = 0.1,
-			[damage_types.laser] = 0.55,
-			[damage_types.power_sword] = 0.3,
-			[damage_types.sawing_stuck] = 0.5,
-			[damage_types.slashing_force_stuck] = 0.3,
-			[damage_types.combat_blade] = 0.1
-		}
+		always_show_killing_blow = true,
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2,
+		radius_multiplier = 1.3
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot,

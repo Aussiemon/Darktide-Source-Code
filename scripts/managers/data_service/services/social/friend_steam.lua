@@ -34,16 +34,8 @@ end
 FriendSteam.online_status = function (self)
 	local status = Friends.status(self._id)
 
-	if status then
-		local game_info = Friends.playing_game(self._id)
-
-		if game_info and game_info.app_id == self._app_id then
-			return SocialConstants.OnlineStatus.online
-		end
-
-		if status == Friends.ONLINE or status == Friends.LOOKING_TO_PLAY then
-			return SocialConstants.OnlineStatus.platform_online
-		end
+	if status and (status == Friends.ONLINE or status == Friends.LOOKING_TO_PLAY) then
+		return SocialConstants.OnlineStatus.platform_online
 	end
 
 	return SocialConstants.OnlineStatus.offline

@@ -16,7 +16,7 @@ local ability_template = {
 	},
 	actions = {
 		action_state_change = {
-			allowed_during_sprint = false,
+			allowed_during_sprint = true,
 			state_name = "lunging",
 			start_input = "charge_pressed",
 			kind = "character_state_change",

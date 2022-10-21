@@ -27,6 +27,7 @@ PlayerCharacterStateMutantCharged.init = function (self, character_state_init_co
 	self._disabled_character_state_component = disabled_character_state_component
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
 	self._dead_state_input = unit_data_extension:read_component("dead_state_input")
+	self._entered_state_t = nil
 end
 
 local DISABLING_UNIT_LINK_NODE = "j_leftweaponattach"
@@ -54,10 +55,14 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
 		disabled_character_state_component.disabling_type = "mutant_charged"
-		local teleport_position = Unit.world_position(disabling_unit, 1)
-		local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
+		local is_server = self._is_server
 
-		PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+		if is_server then
+			local teleport_position = Unit.world_position(disabling_unit, 1)
+			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
+
+			PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+		end
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
@@ -71,23 +76,19 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 
 		ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, force_rotation, force_rotation, t, 1)
 
-		local is_server = self._is_server
-
 		if is_server then
 			self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
 		end
 
 		self._charger_throw_smash = false
 		self._charger_throw_played = false
+		self._entered_state_t = t
 
-		PlayerVoiceGrunts.trigger_sound(VCE, self._visual_loadout_extension, self._fx_extension)
+		PlayerVoiceGrunts.trigger_voice(VCE, self._visual_loadout_extension, self._fx_extension, true)
 	else
 		self._animation_extension:anim_event("revive_abort")
 	end
 end
-
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 0.75
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 0
 
 PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
@@ -98,15 +99,14 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
+	local is_server = self._is_server
 
-	if ALIVE[disabling_unit] then
+	if is_server and ALIVE[disabling_unit] then
 		local breed_name = self._breed.name
 		local is_human = breed_name == "human"
-		local disabling_unit_position = Unit.world_position(disabling_unit, 1)
+		local teleport_position = disabled_character_state_component.target_drag_position
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
-		local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
 		local disabling_unit_forward = Quaternion.forward(unit_rotation)
-		local teleport_position = disabling_unit_position + disabling_unit_forward + up
 		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
@@ -119,14 +119,14 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
 	local inventory_component = self._inventory_component
-	local previously_wielded_slot_name = inventory_component.previously_wielded_slot
 
-	PlayerUnitVisualLoadout.wield_slot(previously_wielded_slot_name, unit, t)
+	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.target_drag_position = Vector3.zero()
 	disabled_character_state_component.disabling_type = "none"
+	self._locomotion_steering_component.disable_minion_collision = false
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 	locomotion_extension:set_parent_unit(nil)
@@ -134,6 +134,36 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 
 	local locomotion_steering_component = self._locomotion_steering_component
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
+
+	if is_server then
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+
+			if HEALTH_ALIVE[disabling_unit] then
+				local target_blackboard = BLACKBOARDS[disabling_unit]
+
+				if target_blackboard then
+					local stagger_component = target_blackboard.stagger
+					local not_staggered = stagger_component.num_triggered_staggers == 0
+
+					if not_staggered then
+						rescued_by_player = false
+					end
+				end
+			end
+
+			local state_name = "mutant_charged"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
+	end
 end
 
 PlayerCharacterStateMutantCharged.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

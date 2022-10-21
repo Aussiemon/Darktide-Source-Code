@@ -8,6 +8,7 @@ PlayerHuskMusicParameterExtension.init = function (self, extension_init_context,
 	self._boss_near = false
 	self._health_percent = 0
 	self._intensity_percent = 0
+	self._tension_percent = 0
 	self._locked_in_melee = false
 end
 
@@ -35,8 +36,18 @@ PlayerHuskMusicParameterExtension.fixed_update = function (self, unit, dt, t)
 	self._boss_near = GameSession.game_object_field(game_session, game_object_id, "boss_near")
 	self._health_percent = self._health_extension:current_health_percent()
 	self._intensity_percent = GameSession.game_object_field(game_session, game_object_id, "intensity_percent")
+	self._tension_percent = GameSession.game_object_field(game_session, game_object_id, "tension_percent")
+	self._num_aggroed_minions_near = GameSession.game_object_field(game_session, game_object_id, "num_aggroed_minions_near")
 	self._locked_in_melee = GameSession.game_object_field(game_session, game_object_id, "locked_in_melee")
 	self._num_aggroed_minions = GameSession.game_object_field(game_session, game_object_id, "num_aggroed_minions")
+end
+
+PlayerHuskMusicParameterExtension.num_aggroed_minions_near = function (self)
+	return self._num_aggroed_minions_near
+end
+
+PlayerHuskMusicParameterExtension.tension_percent = function (self)
+	return self._tension_percent
 end
 
 PlayerHuskMusicParameterExtension.vector_horde_near = function (self)

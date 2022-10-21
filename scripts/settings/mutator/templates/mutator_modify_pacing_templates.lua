@@ -7,7 +7,8 @@ local mutator_templates = {
 			"loc_mutator_minion_nurgle_blessing_description_3"
 		},
 		modify_pacing = {
-			specials_timer_modifier = 0.35
+			max_alive_specials_multiplier = 1.5,
+			specials_timer_modifier = 0.4
 		}
 	},
 	mutator_more_hordes = {
@@ -18,7 +19,8 @@ local mutator_templates = {
 			"loc_mutator_minion_nurgle_blessing_description_3"
 		},
 		modify_pacing = {
-			horde_timer_modifier = 0.35
+			horde_timer_modifier = 0.35,
+			required_horde_travel_distance = 1
 		}
 	},
 	mutator_more_monsters = {
@@ -29,9 +31,11 @@ local mutator_templates = {
 			"loc_mutator_minion_nurgle_blessing_description_3"
 		},
 		modify_pacing = {
-			monsters_per_travel_distance = 70,
+			monsters_per_travel_distance = 120,
 			monster_spawn_type = "monsters",
-			monster_breed_name = "chaos_plague_ogryn"
+			monster_breed_name = {
+				"chaos_plague_ogryn"
+			}
 		}
 	},
 	mutator_more_witches = {

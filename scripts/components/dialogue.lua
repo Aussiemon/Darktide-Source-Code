@@ -82,7 +82,8 @@ Dialogue.component_data = {
 			"Underhive Contact",
 			"Veteran",
 			"Vocator",
-			"Zealot"
+			"Zealot",
+			"Credit Store Servitor"
 		},
 		options_values = {
 			"none",
@@ -106,7 +107,8 @@ Dialogue.component_data = {
 			"underhive_contact",
 			"veteran",
 			"vocator",
-			"zealot"
+			"zealot",
+			"credit_store_servitor"
 		}
 	},
 	dialogue_profile = {
@@ -150,7 +152,8 @@ Dialogue.component_data = {
 			"Zealot, Female, The Crusader",
 			"Zealot, Female, The Fanatic",
 			"Zealot, Male, The Crusader",
-			"Zealot, Male, The Fanatic"
+			"Zealot, Male, The Fanatic",
+			"Credit Store Servitor"
 		},
 		options_values = {
 			"none",
@@ -188,7 +191,8 @@ Dialogue.component_data = {
 			"zealot_female_a",
 			"zealot_female_b",
 			"zealot_male_a",
-			"zealot_male_b"
+			"zealot_male_b",
+			"credit_store_servitor_a"
 		}
 	},
 	faction_memory_name = {

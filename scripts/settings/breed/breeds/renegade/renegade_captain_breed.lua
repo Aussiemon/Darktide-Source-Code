@@ -22,16 +22,17 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_captain"
 local breed_data = {
-	base_height = 2,
-	walk_speed = 2.5,
 	navigation_propagation_box_extent = 200,
+	walk_speed = 2.5,
+	ignore_stagger_accumulation = true,
 	use_bone_lod = true,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_captain",
 	sub_faction_name = "renegade",
 	target_stickiness_distance = 1,
+	spawn_aggro_state = "aggroed",
 	unit_template_name = "minion",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
-	ignore_stagger_accumulation = true,
 	stagger_resistance = 5,
 	game_object_type = "minion_renegade_captain",
 	challenge_rating = 1,
@@ -41,8 +42,7 @@ local breed_data = {
 	is_boss = true,
 	spawn_anim_state = "to_riflemen",
 	faction_name = "chaos",
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_captain",
-	spawn_aggro_state = "aggroed",
+	base_height = 2,
 	ignore_attack_delay = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 500,
@@ -51,6 +51,7 @@ local breed_data = {
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard_captain/third_person/base",
 	hit_mass = 50,
+	reduced_hit_mass = 10,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -196,8 +197,8 @@ local breed_data = {
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
-		1.15,
-		1.15
+		1.2,
+		1.2
 	},
 	fade = {
 		max_distance = 0.7,
@@ -350,9 +351,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -455,7 +453,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_arm] = 0.5,
 			[hit_zone_names.lower_left_leg] = 0.5,
 			[hit_zone_names.lower_right_leg] = 0.5,
-			[hit_zone_names.captain_void_shield] = 0.75
+			[hit_zone_names.captain_void_shield] = 0.5
 		},
 		melee = {
 			[hit_zone_names.head] = 2,

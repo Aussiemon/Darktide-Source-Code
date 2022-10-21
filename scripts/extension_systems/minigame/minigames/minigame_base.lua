@@ -12,7 +12,7 @@ MinigameBase.destroy = function (self)
 end
 
 MinigameBase.hot_join_sync = function (self, sender, channel)
-	fassert(self._is_server, "[MinigameBase][hot_join_sync] server only method")
+	return
 end
 
 MinigameBase.start = function (self, player_or_nil)
@@ -28,11 +28,11 @@ MinigameBase.is_completed = function (self)
 end
 
 MinigameBase.setup_game = function (self)
-	fassert(self._is_server, "[MinigameBase][on_action_pressed] Server only method.")
+	return
 end
 
 MinigameBase.on_action_pressed = function (self, t)
-	fassert(self._is_server, "[MinigameBase][on_action_pressed] Server only method.")
+	return
 end
 
 return MinigameBase

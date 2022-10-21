@@ -1,8 +1,6 @@
 local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
-local Vo = require("scripts/utilities/vo")
 local AMBIENCE_SETTINGS = DaemonhostSettings.ambience
 local DEATH_SETTINGS = DaemonhostSettings.death
-local VO_SETTINGS = DaemonhostSettings.vo
 local STAGES = DaemonhostSettings.stages
 local WWISE_DAEMONHOST_RANGE = "daemonhost_range"
 local WWISE_DAEMONHOST_STAGE = "daemonhost_stage"
@@ -16,7 +14,7 @@ local resources = {
 	sfx_idle_stop = SFX_IDLE_STOP,
 	ambience_settings = AMBIENCE_SETTINGS
 }
-local _update_looping_vo_triggers, _update_ambience, _update_dying, _update_passive, _switch_stage, _screen_distortion_intensity, _sfx_distortion_intensity, _distance_to_local_player_or_nil = nil
+local _update_ambience, _update_dying, _update_passive, _switch_stage, _screen_distortion_intensity, _sfx_distortion_intensity, _distance_to_local_player_or_nil = nil
 local effect_template = {
 	name = "chaos_daemonhost_ambience",
 	resources = resources,
@@ -82,8 +80,6 @@ local effect_template = {
 		else
 			_update_ambience(template_data, template_context, stage, dt)
 		end
-
-		_update_looping_vo_triggers(template_data, template_context, stage, t)
 	end,
 	stop = function (template_data, template_context)
 		local wwise_world = template_context.wwise_world
@@ -134,32 +130,6 @@ function _switch_stage(template_data, template_context, new_stage)
 			local body_slot_unit = template_data.body_slot_unit
 
 			Unit.set_scalar_for_material(body_slot_unit, BODY_EMISSIVE_MATERIAL, BODY_EMISSIVE_MATERIAL_VARIABLE, emissive_material_intensity)
-		end
-	end
-
-	local vo_settings = VO_SETTINGS[new_stage]
-	local is_server = template_context.is_server
-
-	if vo_settings and is_server then
-		local on_enter = vo_settings.on_enter
-
-		if on_enter then
-			local player_vo = on_enter.player
-
-			if player_vo then
-				local vo_event = player_vo.vo_event
-				local non_threatening_player = player_vo.is_non_threatening_player
-
-				Vo.random_player_enemy_alert_event(template_data.unit, template_data.breed, vo_event, non_threatening_player)
-			end
-
-			local daemonhost_vo = on_enter.daemonhost
-
-			if daemonhost_vo then
-				local vo_event = daemonhost_vo.vo_event
-
-				Vo.enemy_generic_vo_event(template_data.unit, vo_event, template_data.breed.name)
-			end
 		end
 	end
 
@@ -335,35 +305,6 @@ function _distance_to_local_player_or_nil(daemonhost_unit)
 	local distance = Vector3.distance(unit_position, local_player_position)
 
 	return distance
-end
-
-function _update_looping_vo_triggers(template_data, template_context, stage, t)
-	local next_vo_trigger_t = template_data.next_vo_trigger_t
-
-	if next_vo_trigger_t < t then
-		local vo_settings = VO_SETTINGS[stage] and VO_SETTINGS[stage].looping
-
-		if vo_settings then
-			local vo_event = vo_settings.vo_event
-
-			if type(vo_event) == "table" then
-				vo_event = math.random_array_entry(vo_event)
-			end
-
-			local unit = template_data.unit
-			local breed = template_data.breed
-
-			Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
-
-			local cooldown_duration = vo_settings.cooldown_duration
-
-			if type(cooldown_duration) == "table" then
-				cooldown_duration = math.random_range(cooldown_duration[1], cooldown_duration[2])
-			end
-
-			template_data.next_vo_trigger_t = t + cooldown_duration
-		end
-	end
 end
 
 return effect_template

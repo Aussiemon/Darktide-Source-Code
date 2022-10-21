@@ -8,9 +8,6 @@ TagQueryDatabase.init = function (self, dialogue_system)
 	self._rules_n = 0
 	self._contexts_by_object = {}
 	self._queries = {}
-
-	fassert(dialogue_system, "dialogue_system can't be nil")
-
 	self._dialogue_system = dialogue_system
 end
 
@@ -88,22 +85,14 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 	local context_indexes = context_indexes
 	rule_definition.n_criterias = num_criterias
 
-	fassert(num_criterias <= (RuleDatabase.RULE_MAX_NUM_CRITERIA or 8), "Too many criteria in dialogue %s", dialogue_name)
-
 	for i = 1, num_criterias do
 		local criteria = criterias[i]
 		local context_name = criteria[1]
-
-		fassert(context_indexes[context_name], "No such context name %q", context_name)
-
 		local operator = criteria[3]
 		local value = nil
 
 		if operator == "TIMEDIFF" then
 			operator = criteria[4]
-
-			fassert(operator, "No operator besides TIMEDIFF in rule %q", rule_definition.name)
-
 			value = criteria[5]
 			criteria[5] = true
 		else
@@ -117,9 +106,6 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 		end
 
 		local operator_index = operator_lookup[operator]
-
-		fassert(operator_index, "No such rule operator named %q in rule %q", tostring(operator), rule_definition.name)
-
 		criteria[3] = operator_index
 		local value_type = type(value)
 
@@ -137,8 +123,6 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 			criteria[4] = value
 		elseif value_type == "table" then
 			criteria[4] = value
-		else
-			fassert(false, "define_rule context value unrecognized")
 		end
 	end
 
@@ -195,8 +179,6 @@ TagQueryDatabase._iterate_query = function (self, t)
 		return query
 	end
 
-	Profiler.start("Table concat")
-
 	local nice_array = {
 		self.global_context or dummy_table,
 		query_context or dummy_table,
@@ -211,12 +193,7 @@ TagQueryDatabase._iterate_query = function (self, t)
 		self._dialogue_system:populate_faction_contexts(nice_array, 6, dialogue_extension:faction_name(), source)
 	end
 
-	Profiler.stop("Table concat")
-	Profiler.start("Engine call")
-
 	local rule_index_found = RuleDatabase.iterate_query(self._database, nice_array, t)
-
-	Profiler.stop("Engine call")
 
 	if rule_index_found then
 		local rule = self._rule_id_mapping[rule_index_found]

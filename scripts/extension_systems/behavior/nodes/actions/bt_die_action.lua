@@ -4,6 +4,7 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MinionDeath = require("scripts/utilities/minion_death")
+local NavQueries = require("scripts/utilities/nav_queries")
 local Vo = require("scripts/utilities/vo")
 local BtDieAction = class("BtDieAction", "BtNode")
 
@@ -18,7 +19,7 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 	local instant_ragdoll = instant_ragdoll_chance and math.random() < instant_ragdoll_chance
 	local force_instant_ragdoll = death_component.force_instant_ragdoll
 
-	if instant_ragdoll or force_instant_ragdoll then
+	if instant_ragdoll or force_instant_ragdoll or self:_check_if_need_to_ragdoll(unit) then
 		scratchpad.ragdoll_timing = t
 		scratchpad.instant_ragdoll = true
 
@@ -56,10 +57,10 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 		local ragdoll_timing = ragdoll_timings[death_animation_event]
 		scratchpad.ragdoll_timing = t + ragdoll_timing
 		scratchpad.do_ragdoll_push = false
-		local death_animations_with_vo = action_data.death_animations_with_vo
+		local death_animation_vo = action_data.death_animation_vo and action_data.death_animation_vo[death_animation_event]
 
-		if death_animations_with_vo and death_animations_with_vo[death_animation_event] then
-			Vo.enemy_generic_vo_event(unit, action_data.vo_event, breed.name)
+		if death_animation_vo then
+			Vo.enemy_generic_vo_event(unit, death_animation_vo, breed.name)
 		end
 	else
 		scratchpad.ragdoll_timing = t
@@ -111,7 +112,7 @@ BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_da
 		local death_component = scratchpad.death_component
 		local hit_during_death = death_component.hit_during_death
 
-		if hit_during_death then
+		if hit_during_death and not action_data.ignore_hit_during_death_ragdoll then
 			scratchpad.do_ragdoll_push = true
 
 			self:_set_dead(unit, scratchpad, breed)
@@ -121,6 +122,50 @@ BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_da
 	end
 
 	return "running"
+end
+
+local NAV_MESH_ABOVE = 0.1
+local NAV_MESH_BELOW = 0.1
+local CHECK_OFFSET = 1
+
+BtDieAction._check_if_need_to_ragdoll = function (self, unit)
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local nav_world = navigation_extension:nav_world()
+	local position = POSITION_LOOKUP[unit]
+	local rotation = Unit.local_rotation(unit, 1)
+	local fwd = Quaternion.forward(rotation)
+	local bwd = -fwd
+	local right = Quaternion.right(rotation)
+	local left = -right
+	local check_position = position + bwd * CHECK_OFFSET
+	local navmesh_position = NavQueries.position_on_mesh(nav_world, check_position, NAV_MESH_ABOVE, NAV_MESH_BELOW)
+
+	if not navmesh_position then
+		return true
+	end
+
+	check_position = position + left * CHECK_OFFSET
+	navmesh_position = NavQueries.position_on_mesh(nav_world, check_position, NAV_MESH_ABOVE, NAV_MESH_BELOW)
+
+	if not navmesh_position then
+		return true
+	end
+
+	check_position = position + right * CHECK_OFFSET
+	navmesh_position = NavQueries.position_on_mesh(nav_world, check_position, NAV_MESH_ABOVE, NAV_MESH_BELOW)
+
+	if not navmesh_position then
+		return true
+	end
+
+	check_position = position + fwd * CHECK_OFFSET
+	navmesh_position = NavQueries.position_on_mesh(nav_world, check_position, NAV_MESH_ABOVE, NAV_MESH_BELOW)
+
+	if not navmesh_position then
+		return true
+	end
+
+	return false
 end
 
 return BtDieAction

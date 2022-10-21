@@ -5,6 +5,15 @@ local UIStartupScreen = require("scripts/ui/ui_startup_screen")
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
 local StateBoot = class("StateBoot")
 
+local function _grab_mouse()
+	if PLATFORM == "win32" then
+		Window.set_focus()
+		Window.set_mouse_focus(true)
+		Window.set_clip_cursor(true)
+		Window.set_cursor("content/ui/textures/cursors/mouse_cursor_idle")
+	end
+end
+
 StateBoot.on_enter = function (self, parent, params)
 	Script.set_index_offset(params.index_offset)
 
@@ -21,12 +30,7 @@ StateBoot.on_enter = function (self, parent, params)
 	self._package_manager = params.package_manager
 	self._localization_manager = params.localization_manager
 
-	if DevParameters.grab_mouse and PLATFORM == "win32" then
-		Window.set_focus()
-		Window.set_mouse_focus(true)
-		Window.set_clip_cursor(true)
-		Window.set_cursor("content/ui/textures/cursors/mouse_cursor_idle")
-	end
+	_grab_mouse()
 end
 
 StateBoot._create_startup_world = function (self)

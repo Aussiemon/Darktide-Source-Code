@@ -1,5 +1,6 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local TalentSettings = require("scripts/settings/buff/talent_settings")
 local damage_types = DamageSettings.damage_types
 local explosion_templates = {
 	fire_grenade = {
@@ -27,16 +28,16 @@ local explosion_templates = {
 	frag_grenade = {
 		damage_falloff = true,
 		radius = 10,
-		min_radius = 5,
+		min_radius = 10,
 		scalable_radius = true,
 		close_radius = 2,
 		collision_filter = "filter_player_character_explosion",
 		static_power_level = 500,
 		min_close_radius = 2,
-		close_damage_profile = DamageProfileTemplates.close_grenade,
-		close_damage_type = damage_types.laser,
-		damage_profile = DamageProfileTemplates.default_grenade,
-		damage_type = damage_types.laser,
+		close_damage_profile = DamageProfileTemplates.close_frag_grenade,
+		close_damage_type = damage_types.frag,
+		damage_profile = DamageProfileTemplates.frag_grenade,
+		damage_type = damage_types.frag,
 		explosion_area_suppression = {
 			suppression_falloff = true,
 			instant_aggro = true,
@@ -86,7 +87,7 @@ local explosion_templates = {
 	},
 	shock_grenade = {
 		damage_falloff = true,
-		radius = 15,
+		radius = 10,
 		min_radius = 5,
 		scalable_radius = true,
 		close_radius = 2,
@@ -95,9 +96,9 @@ local explosion_templates = {
 		static_power_level = 100,
 		min_close_radius = 2,
 		close_damage_profile = DamageProfileTemplates.shock_grenade,
-		close_damage_type = damage_types.laser,
+		close_damage_type = damage_types.electrocution,
 		damage_profile = DamageProfileTemplates.shock_grenade,
-		damage_type = damage_types.laser,
+		damage_type = damage_types.electrocution,
 		explosion_area_suppression = {
 			suppression_falloff = true,
 			instant_aggro = true,
@@ -105,7 +106,7 @@ local explosion_templates = {
 			suppression_value = 20
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/shock_grenade/shock_grenade_explosion"
+			"content/fx/particles/weapons/grenades/stumm_grenade/stumm_grenade"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
@@ -115,12 +116,12 @@ local explosion_templates = {
 	ogryn_grenade = {
 		damage_falloff = true,
 		radius = 12,
-		min_radius = 5,
+		min_radius = 12,
 		scalable_radius = true,
 		close_radius = 4,
 		collision_filter = "filter_player_character_explosion",
 		static_power_level = 500,
-		min_close_radius = 3,
+		min_close_radius = 4,
 		close_damage_profile = DamageProfileTemplates.close_ogryn_grenade,
 		close_damage_type = damage_types.laser,
 		damage_profile = DamageProfileTemplates.ogryn_grenade,
@@ -215,39 +216,6 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
-	zealot_preacher_shield_explosion = {
-		damage_falloff = true,
-		radius = 5,
-		min_radius = 3,
-		scalable_radius = true,
-		close_radius = 2,
-		collision_filter = "filter_player_character_explosion",
-		static_power_level = 500,
-		min_close_radius = 2,
-		close_damage_profile = DamageProfileTemplates.zealot_preacher_ability_close,
-		close_damage_type = damage_types.kinetic,
-		damage_profile = DamageProfileTemplates.zealot_preacher_ability_far,
-		damage_type = damage_types.kinetic,
-		explosion_area_suppression = {
-			suppression_falloff = true,
-			instant_aggro = true,
-			distance = 15,
-			suppression_value = 20
-		},
-		scalable_vfx = {
-			{
-				radius_variable_name = "radius",
-				min_radius = 5,
-				effects = {
-					"content/fx/particles/explosions/frag_grenade_01"
-				}
-			}
-		},
-		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen"
-		}
-	},
 	ogryn_thumper_grenade = {
 		damage_falloff = true,
 		collision_filter = "filter_player_character_explosion",
@@ -258,8 +226,8 @@ local explosion_templates = {
 			12
 		},
 		close_radius = {
-			2,
-			4
+			1.5,
+			3
 		},
 		close_damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_close,
 		close_damage_type = damage_types.laser,
@@ -301,13 +269,13 @@ local explosion_templates = {
 			12
 		},
 		close_radius = {
-			2,
-			4
+			1.5,
+			3
 		},
 		close_damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_close_instant,
-		close_damage_type = damage_types.laser,
+		close_damage_type = damage_types.frag,
 		damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_default_instant,
-		damage_type = damage_types.laser,
+		damage_type = damage_types.frag,
 		explosion_area_suppression = {
 			suppression_falloff = true,
 			instant_aggro = true,
@@ -335,12 +303,12 @@ local explosion_templates = {
 		}
 	},
 	powermaul_activated_impact = {
-		static_power_level = 1000,
-		radius = 2.5,
-		min_radius = 2.5,
-		close_radius = 1.2,
+		static_power_level = 500,
+		radius = 2.6,
+		min_radius = 2,
+		close_radius = 1,
 		collision_filter = "filter_player_character_explosion",
-		min_close_radius = 1.2,
+		min_close_radius = 1,
 		close_damage_profile = DamageProfileTemplates.powermaul_explosion,
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
@@ -356,13 +324,6 @@ local explosion_templates = {
 				20,
 				50
 			}
-		},
-		vfx = {
-			"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_small"
-		},
-		sfx = {
-			"wwise/events/weapon/play_explosion_plasma_overheat",
-			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	}
 }

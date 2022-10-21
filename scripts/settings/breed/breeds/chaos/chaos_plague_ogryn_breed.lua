@@ -20,35 +20,38 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_plague_ogryn"
 local breed_data = {
-	run_speed = 6,
-	is_boss = true,
+	walk_speed = 6,
+	use_navigation_path_splines = true,
+	use_bone_lod = true,
 	look_at_distance = 20,
-	unit_template_name = "minion",
-	power_level_type = "chaos_plague_ogryn_melee",
-	faction_name = "chaos",
+	navigation_propagation_box_extent = 200,
+	spawn_aggro_state = "aggroed",
 	sub_faction_name = "chaos",
+	ignore_stagger_accumulation = true,
+	unit_template_name = "minion",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
-	walk_speed = 6,
-	spawn_aggro_state = "aggroed",
 	stagger_resistance = 1,
-	use_navigation_path_splines = true,
-	navigation_propagation_box_extent = 200,
+	hit_reacts_min_damage = 10,
+	game_object_type = "minion_monster",
+	challenge_rating = 30,
+	bone_lod_radius = 3,
+	trigger_boss_health_bar_on_damaged = true,
+	use_wounds = true,
+	power_level_type = "chaos_plague_ogryn_melee",
+	display_name = "loc_breed_display_name_chaos_plage_ogryn",
+	run_speed = 6,
+	is_boss = true,
+	faction_name = "chaos",
 	base_height = 3.6,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	player_locomotion_constrain_radius = 1.5,
 	stagger_reduction = 50,
-	use_bone_lod = true,
-	bone_lod_radius = 3,
-	use_wounds = true,
-	display_name = "loc_breed_display_name_chaos_plage_ogryn",
+	player_locomotion_constrain_radius = 1.5,
 	activate_slot_system_on_spawn = true,
-	hit_reacts_min_damage = 100,
 	smart_tag_target_type = "breed",
-	game_object_type = "minion_monster",
 	base_unit = "content/characters/enemy/chaos_plague_ogryn/third_person/base",
-	challenge_rating = 30,
 	hit_mass = 20,
+	reduced_hit_mass = 5,
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
@@ -72,7 +75,8 @@ local breed_data = {
 		[stagger_types.light] = 1.5,
 		[stagger_types.medium] = 1.5,
 		[stagger_types.heavy] = 2.25,
-		[stagger_types.light_ranged] = 0.5
+		[stagger_types.light_ranged] = 0.5,
+		[stagger_types.explosion] = 4
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = -1,
@@ -82,6 +86,14 @@ local breed_data = {
 		[stagger_types.light_ranged] = -1,
 		[stagger_types.killshot] = -1,
 		[stagger_types.sticky] = -1
+	},
+	impact_anim_override = {
+		damaged = {
+			fwd = "hit_reaction_fwd",
+			bwd = "hit_reaction_bwd",
+			left = "hit_reaction_left",
+			right = "hit_reaction_right"
+		}
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_plague_ogryn,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_plague_ogryn_sounds"),
@@ -264,34 +276,30 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine",
-			"j_spine1"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
 			j_spine1 = 0.4,
-			j_head = 0.15,
+			j_head = 10.15,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
 		[hit_zone_names.torso] = {
 			j_spine1 = 0.4,
-			j_head = 0.1,
+			j_head = 10.1,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
 		[hit_zone_names.upper_left_arm] = {
 			j_spine1 = 0.4,
-			j_head = 0.1,
+			j_head = 10.1,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
 		[hit_zone_names.upper_right_arm] = {
 			j_spine1 = 0.4,
-			j_head = 0.1,
+			j_head = 10.1,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
@@ -300,26 +308,26 @@ local breed_data = {
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
 			j_leftfoot = 0.2,
-			j_hips = 0.25,
+			j_hips = 10.25,
 			j_spine1 = 0.3
 		},
 		[hit_zone_names.upper_right_leg] = {
 			j_rightfoot = 0.2,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_hips = 0.25,
+			j_hips = 10.25,
 			j_rightleg = 0.4,
 			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_left_arm] = {
 			j_spine1 = 0.4,
-			j_head = 0.1,
+			j_head = 10.1,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
 		[hit_zone_names.lower_right_arm] = {
 			j_spine1 = 0.4,
-			j_head = 0.1,
+			j_head = 10.1,
 			j_spine = 0.4,
 			j_neck = 0.1
 		},
@@ -328,36 +336,65 @@ local breed_data = {
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
 			j_leftfoot = 0.2,
-			j_hips = 0.25,
+			j_hips = 10.25,
 			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_right_leg] = {
 			j_rightfoot = 0.2,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_hips = 0.25,
+			j_hips = 10.25,
 			j_rightleg = 0.4,
 			j_spine1 = 0.3
 		},
 		[hit_zone_names.center_mass] = {
-			j_hips = 0.5,
+			j_hips = 10.5,
 			j_spine = 0.5
 		}
 	},
 	wounds_config = {
 		apply_threshold_filtering = true,
-		health_percent_throttle = 0.3,
 		always_show_killing_blow = false,
+		radius_multiplier = 1.5,
+		health_percent_throttle = 0.3,
 		thresholds = {
 			[damage_types.blunt] = 0.15,
 			[damage_types.blunt_thunder] = 0.1,
-			[damage_types.plasma] = 0.1,
+			[damage_types.plasma] = 0.05,
 			[damage_types.rippergun_pellet] = 0.025,
 			[damage_types.boltshell] = 0.08
 		}
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
+	},
+	hitzone_damage_multiplier = {
+		melee = {
+			[hit_zone_names.head] = 1,
+			[hit_zone_names.torso] = 0.75,
+			[hit_zone_names.lower_left_arm] = 0.75,
+			[hit_zone_names.lower_right_arm] = 0.75,
+			[hit_zone_names.lower_left_leg] = 0.75,
+			[hit_zone_names.lower_right_leg] = 0.75,
+			[hit_zone_names.upper_left_arm] = 0.75,
+			[hit_zone_names.upper_right_arm] = 0.75,
+			[hit_zone_names.upper_left_leg] = 0.75,
+			[hit_zone_names.upper_right_leg] = 0.75,
+			[hit_zone_names.center_mass] = 0.75
+		},
+		ranged = {
+			[hit_zone_names.head] = 1,
+			[hit_zone_names.torso] = 0.75,
+			[hit_zone_names.lower_left_arm] = 0.5,
+			[hit_zone_names.lower_right_arm] = 0.5,
+			[hit_zone_names.lower_left_leg] = 0.5,
+			[hit_zone_names.lower_right_leg] = 0.5,
+			[hit_zone_names.upper_left_arm] = 0.5,
+			[hit_zone_names.upper_right_arm] = 0.5,
+			[hit_zone_names.upper_left_leg] = 0.5,
+			[hit_zone_names.upper_right_leg] = 0.5,
+			[hit_zone_names.center_mass] = 0.5
+		}
 	},
 	blackboard_component_config = BreedBlackboardComponentTemplates.monster
 }

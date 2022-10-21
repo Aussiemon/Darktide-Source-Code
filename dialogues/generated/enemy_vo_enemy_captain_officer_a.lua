@@ -15,16 +15,16 @@ local enemy_vo_enemy_captain_officer_a = {
 			"loc_enemy_captain_officer_a__long_death_10"
 		},
 		sound_events_duration = {
-			4.673229,
-			4.826438,
-			4.508063,
-			4.4015,
-			4.408438,
-			4.714625,
-			6.118875,
-			4.887521,
-			6.074271,
-			5.238729
+			4.673,
+			4.827,
+			4.508,
+			4.401,
+			4.409,
+			4.714,
+			6.119,
+			4.888,
+			6.074,
+			5.429
 		},
 		sound_event_weights = {
 			0.1,
@@ -51,11 +51,11 @@ local enemy_vo_enemy_captain_officer_a = {
 			"loc_enemy_captain_officer_a__reinforcements_05"
 		},
 		sound_events_duration = {
-			2.089188,
-			2.087792,
-			2.223938,
-			2.635667,
-			2.500417
+			1.970708,
+			2.049938,
+			2.148229,
+			2.635,
+			2.501
 		},
 		sound_event_weights = {
 			0.2,
@@ -82,16 +82,16 @@ local enemy_vo_enemy_captain_officer_a = {
 			"loc_enemy_captain_officer_a__taunt_10"
 		},
 		sound_events_duration = {
-			2.52325,
-			3.953229,
-			2.398375,
-			4.32975,
+			2.523,
+			2.12,
+			2.398,
+			4.33,
 			3.207,
-			3.120875,
-			2.138938,
-			3.694271,
-			3.975583,
-			3.162438
+			3.121,
+			2.078771,
+			3.57,
+			3.975,
+			3.163
 		},
 		sound_event_weights = {
 			0.1,
@@ -123,16 +123,16 @@ local enemy_vo_enemy_captain_officer_a = {
 			"loc_enemy_captain_officer_a__taunt_combat_10"
 		},
 		sound_events_duration = {
-			1.894458,
-			3.118646,
-			2.333146,
-			1.870458,
-			2.170229,
-			2.441542,
-			3.630604,
+			1.792,
+			3.118,
+			2.798,
+			1.87,
+			2.17,
+			2.442,
+			3.631,
 			1.754,
-			2.408729,
-			2.569167
+			2.408,
+			1.963
 		},
 		sound_event_weights = {
 			0.1,

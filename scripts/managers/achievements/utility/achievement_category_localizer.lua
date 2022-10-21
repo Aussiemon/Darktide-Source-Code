@@ -1,8 +1,9 @@
+local AchievementLocKeys = require("scripts/settings/achievements/achievement_loc_keys")
 local AchievementCategoryLocalizer = {
 	get_localized = function (category_id)
-		local localization_key = string.format("loc_achievement_category_%s_label", category_id)
+		local category = AchievementLocKeys.categories[category_id]
 
-		return Localize(localization_key)
+		return Localize(category)
 	end
 }
 

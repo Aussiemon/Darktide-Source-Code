@@ -20,15 +20,22 @@ local stay_in_party_voting_template = {
 		"new_party_id"
 	},
 	pack_params = function (params)
-		return params.new_party_id
+		return params.new_party_id, params.new_party_invite_token
 	end,
-	unpack_params = function (new_party_id)
+	unpack_params = function (new_party_id, new_party_invite_token)
 		return {
-			new_party_id = new_party_id
+			new_party_id = new_party_id,
+			new_party_invite_token = new_party_invite_token
 		}
 	end,
 	evaluate = function (votes)
-		return nil
+		for _, option in pairs(votes) do
+			if option == StrictNil or option == OPTIONS.no then
+				return nil
+			end
+		end
+
+		return RESULTS.approved
 	end,
 	complete_vote = function (votes)
 		for _, option in pairs(votes) do
@@ -50,9 +57,10 @@ stay_in_party_voting_template.on_started = function (voting_id, template, params
 	end
 
 	local new_party_id = params.new_party_id
+	local new_party_invite_token = params.new_party_invite_token
 
-	Log.info("STAY_IN_PARTY_VOTING", "voting_started: %s, new_party_id %s", voting_id, new_party_id)
-	Managers.event:trigger("event_stay_in_party_voting_started", voting_id, new_party_id)
+	Log.info("STAY_IN_PARTY_VOTING", "voting_started: %s, new_party_id %s, new_party_invite_token: %s", voting_id, new_party_id, new_party_invite_token or "")
+	Managers.event:trigger("event_stay_in_party_voting_started", voting_id, new_party_id, new_party_invite_token)
 end
 
 stay_in_party_voting_template.on_completed = function (voting_id, template, params, result)

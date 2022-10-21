@@ -23,8 +23,6 @@ JwtTicketUtils.decode_jwt_ticket = function (jwt_ticket)
 end
 
 JwtTicketUtils.verify_jwt_ticket = function (jwt_ticket, public_key)
-	assert(public_key, "public_key is not set")
-
 	local is_valid = false
 
 	if public_key == "none" then
@@ -62,7 +60,8 @@ JwtTicketUtils.create_matchmaking_jwt_ticket = function (backend_mission_data)
 	}
 	payload = cjson.encode(payload)
 	payload = string.encode_base64(payload)
-	local jwt_ticket = string.format("empty-header.%s.empty-signature", payload)
+	local header = string.encode_base64("{}")
+	local jwt_ticket = string.format("%s.%s.", header, payload)
 
 	return jwt_ticket
 end

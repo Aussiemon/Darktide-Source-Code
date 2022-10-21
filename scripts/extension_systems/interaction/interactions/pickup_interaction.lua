@@ -47,17 +47,21 @@ PickupInteraction._trigger_sound = function (self, interactor_unit, pickup_data)
 end
 
 PickupInteraction._update_stats = function (self, target_unit, interactor_session_id)
-	if not DEDICATED_SERVER or not interactor_session_id then
+	if not interactor_session_id then
 		return
 	end
 
 	local pickup_name = Unit.get_data(target_unit, "pickup_type")
 	local player_or_nil = Managers.player:player_from_session_id(interactor_session_id)
-	local is_human_player = player_or_nil and player_or_nil:is_human_controlled()
 
-	if is_human_player then
-		Managers.stats:record_pickup_item(player_or_nil, pickup_name)
-		Managers.telemetry_events:player_picked_item(player_or_nil, pickup_name)
+	if player_or_nil then
+		Managers.telemetry_reporters:reporter("picked_items"):register_event(player_or_nil, pickup_name)
+
+		local is_human_player = player_or_nil:is_human_controlled()
+
+		if Managers.stats.can_record_stats() and is_human_player then
+			Managers.stats:record_pickup_item(player_or_nil, pickup_name)
+		end
 	end
 
 	local pickup_system = Managers.state.extension:system("pickup_system")
@@ -67,9 +71,12 @@ PickupInteraction._update_stats = function (self, target_unit, interactor_sessio
 	local interacted_before = pickup_system:has_interacted(target_unit, interactor_session_id)
 	local interactor_is_owner = interactor_session_id == owner_session_id_or_nil
 
-	if is_human_owner and not interacted_before and not interactor_is_owner then
-		Managers.stats:record_share_item(owning_player_or_nil, pickup_name)
-		Managers.telemetry_events:player_shared_item(owning_player_or_nil, pickup_name)
+	if owning_player_or_nil and not interacted_before and not interactor_is_owner then
+		Managers.telemetry_reporters:reporter("shared_items"):register_event(owning_player_or_nil, pickup_name)
+
+		if Managers.stats.can_record_stats() and is_human_owner then
+			Managers.stats:record_share_item(owning_player_or_nil, pickup_name)
+		end
 	end
 end
 

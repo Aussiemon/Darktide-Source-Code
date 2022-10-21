@@ -3,14 +3,14 @@ local mission_vo_lm_cooling_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
 		sound_events = {
-			"loc_zealot_male_a__region_mechanicus_01",
-			"loc_zealot_male_a__region_mechanicus_02",
-			"loc_zealot_male_a__region_mechanicus_03"
+			"loc_zealot_male_a__zone_tank_foundry_01",
+			"loc_zealot_male_a__zone_tank_foundry_02",
+			"loc_zealot_male_a__zone_tank_foundry_03"
 		},
 		sound_events_duration = {
-			5.34949,
-			4.604219,
-			5.969583
+			5.569083,
+			5.500917,
+			5.924188
 		},
 		sound_event_weights = {
 			0.3333333,
@@ -97,20 +97,7 @@ local mission_vo_lm_cooling_zealot_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_heat = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_male_a__mission_cooling_heat_01",
-			[2.0] = "loc_zealot_male_a__mission_cooling_heat_02"
-		},
-		sound_events_duration = {
-			[1.0] = 6.96975,
-			[2.0] = 5.937958
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_heat_response_two = {
+	mission_cooling_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
@@ -130,12 +117,12 @@ local mission_vo_lm_cooling_zealot_male_a = {
 			1.273313,
 			1.124146,
 			2.188063,
-			2.252396,
+			2.252375,
 			1.989813,
 			2.571313,
-			3.660854,
+			3.660875,
 			2.525271,
-			2.869542
+			2.869521
 		},
 		sound_event_weights = {
 			0.1,
@@ -151,6 +138,39 @@ local mission_vo_lm_cooling_zealot_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_cooling_heat = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__mission_cooling_heat_01",
+			[2.0] = "loc_zealot_male_a__mission_cooling_heat_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.96975,
+			[2.0] = 5.937958
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_heat_response_two = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_a__region_mechanicus_01",
+			"loc_zealot_male_a__region_mechanicus_02",
+			"loc_zealot_male_a__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			5.34949,
+			4.604219,
+			5.969583
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
+		},
+		randomize_indexes = {}
+	},
 	mission_cooling_leaving = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -160,7 +180,7 @@ local mission_vo_lm_cooling_zealot_male_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.8965,
-			[2.0] = 2.326979
+			[2.0] = 2.326958
 		},
 		randomize_indexes = {}
 	},
@@ -187,19 +207,6 @@ local mission_vo_lm_cooling_zealot_male_a = {
 		sound_events_duration = {
 			[1.0] = 4.7185,
 			[2.0] = 5.384875
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_production_line = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_male_a__mission_cooling_production_line_01",
-			[2.0] = "loc_zealot_male_a__mission_cooling_production_line_02"
-		},
-		sound_events_duration = {
-			[1.0] = 5.301167,
-			[2.0] = 4.536583
 		},
 		randomize_indexes = {}
 	},

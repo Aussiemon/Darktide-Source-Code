@@ -1,111 +1,5 @@
 return function ()
 	define_rule({
-		name = "guidance_alley",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_alley",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_correct_path_alley"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "guidance_chasm",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_chasm",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_chasm"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "guidance_correct_doorway",
 		category = "player_prio_2",
 		wwise_route = 0,
@@ -129,8 +23,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -145,6 +38,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -152,6 +51,12 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
+				OP.ADD,
+				0
 			}
 		}
 	})
@@ -179,8 +84,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -195,6 +99,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -202,6 +112,622 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_1",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_1",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_1"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_1",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_1",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_10",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_10",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_10"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_10",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_10",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_2",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_2",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_2"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_2",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_2",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_3",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_3",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_3"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_3",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_3",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_4",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_4",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_4"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_4",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_4",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_5",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_5",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_5"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_5",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_5",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_6",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_6",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_6"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_6",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_6",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_7",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_7",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_7"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_7",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_7",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_8",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_8",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_8"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_8",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_8",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_9",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_9",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_9"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_9",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_9",
+				OP.ADD,
+				1
 			}
 		}
 	})
@@ -243,7 +769,13 @@ return function ()
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -251,6 +783,622 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_1",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_1",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_1"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_1",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_1",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_10",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_10",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_10"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_10",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_10",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_2",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_2",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_2"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_2",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_2",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_3",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_3",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_3"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_3",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_3",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_4",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_4",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_4"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_4",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_4",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_5",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_5",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_5"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_5",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_5",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_6",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_6",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_6"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_6",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_6",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_7",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_7",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_7"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_7",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_7",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_8",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_8",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_8"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_8",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_8",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_correct_path_drop_9",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_correct_path_drop_9",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_correct_path_drop_9"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_9",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_correct_path_drop_9",
+				OP.ADD,
+				1
 			}
 		}
 	})
@@ -304,109 +1452,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "guidance_crossing",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_crossing",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_correct_path_across"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "guidance_elevator",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_elevator",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_elevator"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "guidance_ladder_down",
 		category = "player_prio_2",
 		wwise_route = 0,
@@ -430,8 +1475,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -446,6 +1490,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -453,6 +1503,12 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
+				OP.ADD,
+				0
 			}
 		}
 	})
@@ -530,8 +1586,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -546,6 +1601,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -553,113 +1614,13 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "guidance_no_cover",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_no_cover",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_no_cover"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
 			},
 			{
 				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
+				"",
+				OP.ADD,
+				0
 			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "guidance_side_path",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_side_path",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_side_path"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
 		}
 	})
 	define_rule({
@@ -686,8 +1647,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -702,6 +1662,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -709,6 +1675,12 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
+				OP.ADD,
+				0
 			}
 		}
 	})
@@ -750,15 +1722,636 @@ return function ()
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-				"0"
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted",
+				OP.ADD,
+				0
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_1",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_1",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_1"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_1",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_1",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_10",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_10",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_10"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_10",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_10",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_2",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_2",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_2"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_2",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_2",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_3",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_3",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_3"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_3",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_3",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_4",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_4",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_4"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_4",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_4",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_5",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_5",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_5"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_5",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_5",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_6",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_6",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_6"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_6",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_6",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_7",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_7",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_7"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_7",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_7",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_8",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_8",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_8"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_8",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_8",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "guidance_stairs_sighted_9",
+		category = "player_prio_2",
+		wwise_route = 0,
+		response = "guidance_stairs_sighted_9",
+		database = "guidance_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"guidance_stairs_sighted_9"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_9",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_found_way",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"guidance_stairs_sighted_9",
+				OP.ADD,
+				1
 			}
 		}
 	})
@@ -786,8 +2379,7 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
 			},
 			{
@@ -802,6 +2394,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -809,12 +2407,18 @@ return function ()
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
+				OP.ADD,
+				0
 			}
 		}
 	})
 	define_rule({
 		name = "guidance_starting_area",
-		category = "player_prio_2",
+		category = "player_prio_0",
 		wwise_route = 0,
 		response = "guidance_starting_area",
 		database = "guidance_vo",
@@ -823,99 +2427,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
-				"look_at_tag",
+				"trigger_id",
 				OP.EQ,
 				"guidance_starting_area"
 			},
 			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
 				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
+				"guidance_starting_area",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
+				"guidance_starting_area",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "guidance_street",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_street",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_street"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -943,14 +2479,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium"
+					"medium",
+					"high"
 				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5
+				15
 			},
 			{
 				"faction_memory",
@@ -969,113 +2506,17 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "guidance_verticality",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_verticality",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_verticality"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "guidance_wrong_way",
-		category = "player_prio_2",
-		wwise_route = 0,
-		response = "guidance_wrong_way",
-		database = "guidance_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"guidance_wrong_way"
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium"
-				}
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5
-			},
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_found_way",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "info_asset_cult_breaking_wheel",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "info_asset_cult_breaking_wheel",
+		post_wwise_event = "play_radio_static_end",
 		response = "info_asset_cult_breaking_wheel",
 		database = "guidance_vo",
+		wwise_route = 1,
 		category = "vox_prio_0",
+		speaker_routing = {
+			target = "all"
+		},
 		criterias = {
 			{
 				"query_context",
@@ -1106,7 +2547,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
@@ -1127,10 +2570,11 @@ return function ()
 	})
 	define_rule({
 		name = "info_asset_nurgle_growth",
+		concurrent_wwise_event = "play_vox_static_loop",
 		category = "vox_prio_0",
-		wwise_route = 1,
 		response = "info_asset_nurgle_growth",
 		database = "guidance_vo",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",

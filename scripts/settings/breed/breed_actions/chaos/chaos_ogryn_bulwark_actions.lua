@@ -78,6 +78,7 @@ local action_data = {
 		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	alerted = {
+		override_aggro_distance = 6,
 		vo_event = "assault",
 		moving_alerted_anim_events = {
 			bwd = "alerted_bwd",
@@ -353,14 +354,14 @@ local action_data = {
 			attack_reach_up = 4
 		},
 		disable_shield_block_timing = {
-			attack_01 = 0.7878787878787878,
+			attack_01 = 0.7575757575757576,
 			attack_03 = 1.1111111111111112,
-			attack_02 = 0.5128205128205128
+			attack_02 = 0.6410256410256411
 		},
 		enable_shield_block_timing = {
-			attack_01 = 1.8181818181818181,
-			attack_03 = 2.688888888888889,
-			attack_02 = 2.4615384615384617
+			attack_01 = 1.3636363636363635,
+			attack_03 = 1.6666666666666667,
+			attack_02 = 1.2820512820512822
 		}
 	},
 	shield_push = {
@@ -422,10 +423,10 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.bulwark_melee,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		disable_shield_block_timing = {
-			attack_move_01 = 1.0606060606060606
+			attack_move_01 = 0.9090909090909091
 		},
 		enable_shield_block_timing = {
-			attack_move_01 = 2.3636363636363638
+			attack_move_01 = 1.8181818181818181
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
@@ -461,31 +462,65 @@ local action_data = {
 			blocked = 0
 		},
 		enable_shield_block_timing = {
-			blocked = 1.5
+			blocked = 0.6666666666666666
 		}
 	},
 	stagger = {
 		disable_shield_block_timing = {
-			stagger_shield_damage_04 = 0,
-			stagger_shield_break_01 = 0.3333333333333333,
+			stagger_bwd_heavy = 0,
 			stagger_shield_damage_01 = 0,
+			stagger_right_heavy = 0,
+			stagger_fwd_heavy = 0,
+			stagger_shield_damage_04 = 0,
 			stagger_shield_break_03 = 0.3333333333333333,
+			stagger_bwd_sticky = 0,
+			stagger_bwd_sticky_2 = 0,
+			stagger_left_sticky_3 = 0,
+			stagger_front_sticky_3 = 0,
+			stagger_dwn_heavy = 0,
+			stagger_right_sticky = 0,
+			stagger_right_sticky_2 = 0,
+			stagger_shield_damage_02 = 0,
+			stagger_shield_break_04 = 0.3333333333333333,
+			stagger_front_sticky_2 = 0,
+			stagger_bwd_sticky_3 = 0,
+			stagger_shield_break_01 = 0.3333333333333333,
+			stagger_right_sticky_3 = 0,
+			stagger_left_sticky = 0,
 			stagger_shield_damage_03 = 0,
 			stagger_shield_break_05 = 0.3333333333333333,
+			stagger_left_heavy = 0,
 			stagger_shield_break_02 = 0.3333333333333333,
-			stagger_shield_damage_02 = 0,
-			stagger_shield_break_04 = 0.3333333333333333
+			stagger_front_sticky = 0,
+			stagger_left_sticky_2 = 0
 		},
 		enable_shield_block_timing = {
-			stagger_shield_damage_04 = 3.076923076923077,
-			stagger_shield_break_01 = 2.6923076923076925,
-			stagger_shield_damage_01 = 2.8205128205128207,
-			stagger_shield_break_03 = 2.6923076923076925,
-			stagger_shield_damage_03 = 3.58974358974359,
-			stagger_shield_break_05 = 3.1538461538461537,
-			stagger_shield_break_02 = 2.8974358974358974,
-			stagger_shield_damage_02 = 3.4615384615384617,
-			stagger_shield_break_04 = 2.6923076923076925
+			stagger_bwd_heavy = 104.33333333333333,
+			stagger_shield_damage_01 = 109.48717948717949,
+			stagger_right_heavy = 104.33333333333333,
+			stagger_fwd_heavy = 104.33333333333333,
+			stagger_shield_damage_04 = 119.48717948717949,
+			stagger_shield_break_03 = 104.48717948717949,
+			stagger_bwd_sticky = 2,
+			stagger_bwd_sticky_2 = 2,
+			stagger_left_sticky_3 = 2,
+			stagger_front_sticky_3 = 2,
+			stagger_dwn_heavy = 104.33333333333333,
+			stagger_right_sticky = 2,
+			stagger_right_sticky_2 = 2,
+			stagger_shield_damage_02 = 134.48717948717947,
+			stagger_shield_break_04 = 104.48717948717949,
+			stagger_front_sticky_2 = 2,
+			stagger_bwd_sticky_3 = 2,
+			stagger_shield_break_01 = 104.48717948717949,
+			stagger_right_sticky_3 = 2,
+			stagger_left_sticky = 2,
+			stagger_shield_damage_03 = 139.48717948717947,
+			stagger_shield_break_05 = 122.48717948717949,
+			stagger_left_heavy = 104.33333333333333,
+			stagger_shield_break_02 = 112.48717948717949,
+			stagger_front_sticky = 2,
+			stagger_left_sticky_2 = 2
 		},
 		stagger_duration_mods = {
 			stagger_shield_block_05 = 1.4,
@@ -496,37 +531,61 @@ local action_data = {
 		},
 		stagger_anims = {
 			light = {
-				fwd = {
-					"stagger_fwd_light"
-				},
 				bwd = {
-					"stagger_bwd_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				left = {
-					"stagger_left_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				right = {
-					"stagger_right_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				dwn = {
-					"stun_down"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				fwd = {
+					"stagger_fwd_light"
 				}
 			},
 			medium = {
-				fwd = {
-					"stagger_fwd_light"
-				},
 				bwd = {
-					"stagger_bwd_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				left = {
-					"stagger_left_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				right = {
-					"stagger_right_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				dwn = {
-					"stun_down"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				fwd = {
+					"stagger_fwd_light"
 				}
 			},
 			heavy = {
@@ -547,17 +606,32 @@ local action_data = {
 				}
 			},
 			light_ranged = {
-				fwd = {
-					"stagger_fwd_light"
-				},
 				bwd = {
-					"stagger_bwd_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				left = {
-					"stagger_left_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				right = {
-					"stagger_right_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				dwn = {
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				fwd = {
+					"stagger_fwd_light"
 				}
 			},
 			explosion = {
@@ -575,52 +649,59 @@ local action_data = {
 				}
 			},
 			killshot = {
-				fwd = {
-					"stagger_fwd_light"
-				},
 				bwd = {
-					"stagger_bwd_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				left = {
-					"stagger_left_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				right = {
-					"stagger_right_light"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
 				},
 				dwn = {
-					"stun_down"
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				fwd = {
+					"stagger_fwd_light"
 				}
 			},
 			sticky = {
-				fwd = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
-				},
 				bwd = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
 				},
 				left = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
 				},
 				right = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
 				},
 				dwn = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
 				}
 			},
 			shield_block = {

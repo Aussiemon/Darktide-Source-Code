@@ -13,9 +13,6 @@ AuthoritativePlayerUnitAnimationExtension.init = function (self, extension_init_
 
 	self._animation_state_component = animation_state
 	local is_local_unit = extension_init_data.is_local_unit
-
-	fassert(is_local_unit ~= nil, "Need to set is_local_unit.")
-
 	self._is_local_unit = is_local_unit
 	self._anim_variable_ids_third_person = {}
 	self._anim_variable_ids_first_person = {}

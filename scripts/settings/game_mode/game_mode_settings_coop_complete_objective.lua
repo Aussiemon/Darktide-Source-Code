@@ -1,11 +1,10 @@
 local settings = {
-	mission_end_grace_time_disabled = 10,
-	host_singleplay = false,
 	bot_backfilling_allowed = true,
+	host_singleplay = false,
 	name = "coop_complete_objective",
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
 	mission_end_grace_time_dead = 4,
-	force_third_person_mode = false,
+	mission_end_grace_time_disabled = 10,
 	use_side_color = false,
 	max_bots = 3,
 	vaulting_allowed = true,
@@ -45,7 +44,7 @@ local settings = {
 		ammo_percentage = 0.5
 	},
 	hud_settings = {
-		player_composition = "players"
+		player_composition = "game_session_players"
 	},
 	hotkeys = {
 		hotkey_system = "system_view"

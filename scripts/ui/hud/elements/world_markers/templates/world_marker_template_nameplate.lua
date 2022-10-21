@@ -14,7 +14,7 @@ template.position_offset = {
 	0.4
 }
 template.check_line_of_sight = true
-template.max_distance = 10
+template.max_distance = 15
 template.screen_clamp = false
 template.scale_settings = {
 	scale_to = 1,

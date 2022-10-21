@@ -86,6 +86,10 @@ local default_imgui_input_settings = {
 			raw = "keyboard_right shift+keyboard_l",
 			type = "pressed"
 		},
+		hotkey_minion_gibbing_imgui = {
+			raw = "keyboard_left shift+keyboard_y",
+			type = "pressed"
+		},
 		toggle_input = {
 			raw = "keyboard_f6",
 			type = "pressed"

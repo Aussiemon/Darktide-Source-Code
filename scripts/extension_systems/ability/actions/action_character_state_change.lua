@@ -9,7 +9,11 @@ local ActionCharacterStateChange = class("ActionCharacterStateChange", "ActionAb
 ActionCharacterStateChange.init = function (self, action_context, action_params, action_settings)
 	ActionCharacterStateChange.super.init(self, action_context, action_params, action_settings)
 
-	self._character_sate_component = self._unit_data_extension:read_component("character_state")
+	local unit_data_extension = self._unit_data_extension
+	self._character_sate_component = unit_data_extension:read_component("character_state")
+	self._sway_component = unit_data_extension:read_component("sway")
+	self._sway_control_component = unit_data_extension:write_component("sway_control")
+	self._spread_control_component = unit_data_extension:write_component("spread_control")
 end
 
 ActionCharacterStateChange.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -100,9 +104,12 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 		local player_unit = self._player_unit
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
-		param_table.unit = player_unit
 
-		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		if param_table then
+			param_table.unit = player_unit
+
+			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		end
 
 		if use_ability_charge and should_use_charge and valid then
 			local ability_type = action_settings.ability_type

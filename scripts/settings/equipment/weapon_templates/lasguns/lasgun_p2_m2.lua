@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -152,11 +153,12 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		sprint_ready_up_time = 0.3,
-		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "immediate_single_shot",
 		kind = "shoot_hit_scan",
-		ammunition_usage = 1,
+		allow_shots_with_less_than_required_ammo = true,
+		ammunition_usage = 3,
+		start_input = "shoot_pressed",
 		total_time = 0.5,
 		action_movement_curve = {
 			{
@@ -223,24 +225,24 @@ weapon_template.actions = {
 				chain_time = 0.1
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		charge_template = "lasgun_p2_m2_charge_up",
-		ammunition_usage_max = 5,
+		ammunition_usage_max = 15,
 		start_input = "zoom_shoot",
 		recoil_template = "default_lasgun_bfg",
 		weapon_handling_template = "immediate_single_shot",
 		sprint_ready_up_time = 0,
 		continous_charge = true,
-		ammunition_shoot_anyways = true,
+		allow_shots_with_less_than_required_ammo = true,
 		crosshair_type = "none",
-		ammunition_usage_min = 2,
+		ammunition_usage_min = 6,
 		kind = "shoot_hit_scan",
-		ammunition_usage = 1,
+		ammunition_usage = 3,
 		use_charge = true,
 		spread_template = "default_lasgun_bfg",
 		total_time = math.huge,
@@ -310,7 +312,7 @@ weapon_template.actions = {
 				chain_time = 0.2
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -462,11 +464,11 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -522,7 +524,7 @@ weapon_template.actions = {
 				action_name = "action_unzoom"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -624,11 +626,7 @@ weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 
 return weapon_template

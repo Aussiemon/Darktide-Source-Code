@@ -1,5 +1,7 @@
 local ConnectionSingleplayer = require("scripts/multiplayer/connection/connection_singleplayer")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local SessionBootBase = require("scripts/multiplayer/session_boot_base")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local STATES = table.enum("ready", "failed")
 local SingleplayerSessionBoot = class("SingleplayerSessionBoot", "SessionBootBase")
 
@@ -8,7 +10,7 @@ SingleplayerSessionBoot.init = function (self, event_object)
 
 	local connection_manager = Managers.connection
 	local event_delegate = connection_manager:network_event_delegate()
-	self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate)
+	self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate, HOST_TYPES.singleplay)
 
 	self:_set_state(STATES.ready)
 end
@@ -18,7 +20,6 @@ SingleplayerSessionBoot.update = function (self, dt)
 end
 
 SingleplayerSessionBoot.result = function (self)
-	fassert(self._state == STATES.ready, "Tried to get result when not ready")
 	self:_set_window_title("singleplayer %s", Network.peer_id())
 
 	local connection_singleplayer = self._connection_singleplayer

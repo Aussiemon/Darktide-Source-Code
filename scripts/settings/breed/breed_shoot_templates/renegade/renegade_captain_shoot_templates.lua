@@ -21,9 +21,9 @@ local renegade_captain_bolt_pistol = table.clone(renegade_captain_hellgun_defaul
 renegade_captain_bolt_pistol.hit_scan_template = HitScanTemplates.renegade_captain_bolt_pistol_boltshell
 renegade_captain_bolt_pistol.spread = math.degrees_to_radians(0.2)
 renegade_captain_bolt_pistol.effect_template = nil
-renegade_captain_bolt_pistol.shoot_sound_event = "wwise/events/weapon/play_minion_laspistol"
+renegade_captain_bolt_pistol.shoot_sound_event = "wwise/events/weapon/play_minion_plasmapistol"
 renegade_captain_bolt_pistol.shoot_vfx_name = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle"
-renegade_captain_bolt_pistol.damage_type = damage_types.boltshell
+renegade_captain_bolt_pistol.damage_type = damage_types.minion_plasma
 renegade_captain_bolt_pistol.line_effect = LineEffects.renegade_captain_boltshell
 local renegade_captain_plasma_pistol = table.clone(renegade_captain_hellgun_default)
 renegade_captain_plasma_pistol.hit_scan_template = HitScanTemplates.renegade_captain_plasma_pistol_plasma
@@ -36,11 +36,24 @@ renegade_captain_plasma_pistol.scope_reflection_timing = nil
 renegade_captain_plasma_pistol.scope_reflection_vfx_name = nil
 renegade_captain_plasma_pistol.scope_reflection_distance = nil
 renegade_captain_plasma_pistol.line_effect = LineEffects.renegade_captain_plasma_beam
+local renegade_captain_shotgun = {
+	shoot_vfx_name = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle_captain",
+	shoot_sound_event = "wwise/events/weapon/play_minion_captain_shotgun",
+	scope_reflection_vfx_name = "content/fx/particles/weapons/rifles/shotgun/captain_shotgun_scope_glint",
+	collision_filter = "filter_minion_shooting",
+	scope_reflection_timing = 1,
+	scope_reflection_distance = 3,
+	hit_scan_template = HitScanTemplates.renegade_captain_shotgun_bullet,
+	spread = math.degrees_to_radians(2),
+	damage_type = damage_types.minion_pellet_captain,
+	line_effect = LineEffects.renegade_captain_pellet
+}
 local shoot_templates = {
 	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol,
 	renegade_captain_bolt_pistol = renegade_captain_bolt_pistol,
 	renegade_captain_hellgun_default = renegade_captain_hellgun_default,
-	renegade_captain_hellgun_spray_and_pray = renegade_captain_hellgun_spray_and_pray
+	renegade_captain_hellgun_spray_and_pray = renegade_captain_hellgun_spray_and_pray,
+	renegade_captain_shotgun = renegade_captain_shotgun
 }
 
 return shoot_templates

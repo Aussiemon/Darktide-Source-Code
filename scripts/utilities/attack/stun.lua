@@ -5,7 +5,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local buff_keywords = BuffSettings.keywords
 local _is_stun_immune_from_current_action, _is_stun_immune_from_buff, _is_stun_immune_from_character_state, _apply_stun = nil
 local Stun = {
-	apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity)
+	apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity, is_predicted)
 		if not disorientation_type then
 			return
 		end
@@ -32,7 +32,7 @@ local Stun = {
 			return
 		end
 
-		_apply_stun(unit_data_extension, disorientation_type, hit_direction, unit)
+		_apply_stun(unit_data_extension, disorientation_type, hit_direction, unit, is_predicted)
 	end
 }
 
@@ -82,7 +82,7 @@ function _is_stun_immune_from_character_state(unit_data_extension)
 	return false
 end
 
-function _apply_stun(unit_data_extension, disorientation_type, push_direction, unit)
+function _apply_stun(unit_data_extension, disorientation_type, push_direction, unit, is_predicted)
 	local stun_state_input = unit_data_extension:write_component("stun_state_input")
 	stun_state_input.disorientation_type = disorientation_type
 	stun_state_input.push_direction = push_direction
@@ -90,7 +90,7 @@ function _apply_stun(unit_data_extension, disorientation_type, push_direction, u
 	local player = player_unit_spawn_manager:owner(unit)
 	local frame_offset = 0
 
-	if player and player.remote then
+	if player and player.remote and not is_predicted then
 		frame_offset = math.ceil(player:lag_compensation_rewind_s() * 60)
 	end
 

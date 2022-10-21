@@ -4,6 +4,39 @@ local PlayerHuskDataComponentConfig = require("scripts/extension_systems/unit_da
 local PlayerHuskHudDataComponentConfig = require("scripts/extension_systems/unit_data/player_husk_hud_data_component_config")
 local UnitDataComponentConfigFormatter = require("scripts/extension_systems/unit_data/unit_data_component_config_formatter")
 local FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, FORMATTED_HUSK_CONFIG, FORMATTED_HUSK_HUD_CONFIG = UnitDataComponentConfigFormatter.format(PlayerUnitDataComponentConfig, "server_unit_data_state", PlayerHuskDataComponentConfig, "server_husk_data_state", PlayerHuskHudDataComponentConfig, "server_husk_hud_data_state")
+local script_id_string_32 = Script.id_string_32
+local NETWORK_NAME_LOOKUP = Script.new_map(128)
+local HUSK_GAME_OBJECT_FIELD_DATA = Script.new_array(64)
+local HUSK_HUD_GAME_OBJECT_FIELD_DATA = Script.new_array(32)
+local NETWORK_NAME_ID_TO_FIELD_ID = Script.new_map(128)
+
+local function create_network_field_lookup(formatted_config, network_field_lookup)
+	local data_n = 0
+
+	for component_name, component_config in pairs(formatted_config) do
+		for field_name, field_config in pairs(component_config) do
+			local field_id = FORMATTED_CONFIG[component_name][field_name].lookup_index
+			local field = FIELD_NETWORK_LOOKUP[field_id]
+			local network_name = field[4]
+			local network_name_id = NETWORK_NAME_LOOKUP[network_name]
+
+			if not network_name_id then
+				network_name_id = script_id_string_32(network_name)
+				NETWORK_NAME_LOOKUP[network_name] = network_name_id
+				NETWORK_NAME_LOOKUP[network_name_id] = network_name
+				NETWORK_NAME_ID_TO_FIELD_ID[network_name_id] = field_id
+			end
+
+			network_field_lookup[data_n + 1] = network_name_id
+			network_field_lookup[data_n + 2] = 0
+			data_n = data_n + 2
+		end
+	end
+end
+
+create_network_field_lookup(FORMATTED_HUSK_CONFIG, HUSK_GAME_OBJECT_FIELD_DATA)
+create_network_field_lookup(FORMATTED_HUSK_HUD_CONFIG, HUSK_HUD_GAME_OBJECT_FIELD_DATA)
+
 local PlayerHuskDataExtension = class("PlayerHuskDataExtension")
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset = true,
@@ -15,36 +48,36 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_end_t_7bit = true
 }
 local _game_object_field = GameSession.game_object_field
+local _game_object_fields_array = GameSession.game_object_fields_array
 
-local function _update_component_values(components, game_session, game_object_id, husk_config, config, field_network_lookup, fixed_time_step, frame_index)
-	for component_name, component_variables in pairs(husk_config) do
-		local component_config = config[component_name]
+local function _update_component_values(components, game_session, game_object_id, husk_config, config, field_network_lookup, game_object_field_data, fixed_time_step, frame_index)
+	local num_fields = _game_object_fields_array(game_session, game_object_id, game_object_field_data)
+
+	for i = 1, num_fields, 2 do
+		local network_name_id = game_object_field_data[i]
+		local authoritative_value = game_object_field_data[i + 1]
+		local field = field_network_lookup[NETWORK_NAME_ID_TO_FIELD_ID[network_name_id]]
+		local component_name = field[1]
+		local field_name = field[2]
+		local type = field[3]
+		local network_type = field[5]
+		local lookup = field[6]
 		local component = components[component_name]
 
-		for field_name, _ in pairs(component_variables) do
-			local formatted_component = component_config[field_name]
-			local field = field_network_lookup[formatted_component.lookup_index]
-			local type = field[3]
-			local network_name = field[4]
-			local network_type = field[5]
-			local lookup = field[6]
-			local authoritative_value = _game_object_field(game_session, game_object_id, network_name)
-
-			if type == "Vector3" or type == "Quaternion" then
-				component[field_name]:store(authoritative_value)
-			elseif type == "string" then
-				component[field_name] = lookup[authoritative_value]
-			elseif type == "number" then
-				if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-					component[field_name] = (authoritative_value + frame_index) * fixed_time_step
-				elseif network_type == "fixed_frame_time" then
-					component[field_name] = authoritative_value * fixed_time_step
-				else
-					component[field_name] = authoritative_value
-				end
+		if type == "Vector3" or type == "Quaternion" then
+			component[field_name]:store(authoritative_value)
+		elseif type == "string" then
+			component[field_name] = lookup[authoritative_value]
+		elseif type == "number" then
+			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
+				component[field_name] = (authoritative_value + frame_index) * fixed_time_step
+			elseif network_type == "fixed_frame_time" then
+				component[field_name] = authoritative_value * fixed_time_step
 			else
 				component[field_name] = authoritative_value
 			end
+		else
+			component[field_name] = authoritative_value
 		end
 	end
 end
@@ -54,8 +87,8 @@ local function _read_component_values(server_husk_data_state_game_object_id, ser
 		return false
 	end
 
-	_update_component_values(components, game_session, server_husk_data_state_game_object_id, FORMATTED_HUSK_CONFIG, FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, fixed_time_step, frame_index)
-	_update_component_values(components, game_session, server_husk_hud_data_state_game_object_id, FORMATTED_HUSK_HUD_CONFIG, FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, fixed_time_step, frame_index)
+	_update_component_values(components, game_session, server_husk_data_state_game_object_id, FORMATTED_HUSK_CONFIG, FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, HUSK_GAME_OBJECT_FIELD_DATA, fixed_time_step, frame_index)
+	_update_component_values(components, game_session, server_husk_hud_data_state_game_object_id, FORMATTED_HUSK_HUD_CONFIG, FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, HUSK_HUD_GAME_OBJECT_FIELD_DATA, fixed_time_step, frame_index)
 
 	return true
 end
@@ -85,10 +118,9 @@ PlayerHuskDataExtension.init = function (self, extension_init_context, unit, ext
 
 	self._last_received_frame = 0
 	local archetype = extension_init_data.archetype
-
-	fassert(archetype, "No archetype passed to PlayerHuskDataExtension!")
-
 	self._archetype = archetype
+	local specialization = extension_init_data.specialization
+	self._specialization = specialization
 end
 
 PlayerHuskDataExtension.on_server_husk_data_state_game_object_created = function (self, game_object_id)
@@ -129,6 +161,10 @@ PlayerHuskDataExtension.archetype_name = function (self)
 	return archetype_name
 end
 
+PlayerHuskDataExtension.specialization = function (self)
+	return self._specialization
+end
+
 PlayerHuskDataExtension.hit_zone = function (self, actor)
 	return self._hit_zone_lookup[actor]
 end
@@ -147,8 +183,6 @@ end
 
 PlayerHuskDataExtension.read_component = function (self, component_name)
 	local read_component = self._read_components[component_name]
-
-	fassert(read_component, "Component \"%s\" does not exist on husks. Husk component data setup is in player_husk_data_component_config. Make sure you're certain that it makes sense to add it to husks first though!", component_name)
 
 	return self._read_components[component_name]
 end
@@ -217,9 +251,6 @@ local READ_ONLY_META = {
 
 PlayerHuskDataExtension._create_read_component = function (self, component_name)
 	local config = self._components_config[component_name]
-
-	fassert(config, "PlayerHuskDataExtension component %q does not exist.", component_name)
-
 	local husk_config = self._components_husk_config[component_name]
 	local component = {
 		__data = self._components[component_name],

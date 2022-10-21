@@ -6,7 +6,9 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
 local hit_zone_names = HitZone.hit_zone_names
 local ActionDamageTarget = class("ActionDamageTarget", "ActionWeaponBase")
@@ -27,8 +29,8 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 	local last_action_warp_charge_percent = start_params.starting_warp_charge_percent
 
 	if last_action_warp_charge_percent then
-		local archetype_warp_charge_template = WarpCharge.archetype_warp_charge_template(self._player)
-		local extreme_warp_charge_threshold = archetype_warp_charge_template.extreme_threshold
+		local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
+		local extreme_warp_charge_threshold = specialization_warp_charge_template.extreme_threshold
 
 		if last_action_warp_charge_percent < extreme_warp_charge_threshold then
 			self._prevent_explosion = true
@@ -88,7 +90,7 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 	local targeting_component = self._action_module_targeting_component
 	local damage_profile = action_settings.damage_profile
 	local damage_type = action_settings.damage_type
-	local power_level = action_settings.power_level
+	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	local target_unit = targeting_component.target_unit_1
 
 	if not HEALTH_ALIVE[target_unit] then
@@ -105,7 +107,8 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 
 	if target_breed then
 		local hit_zone_weakspot_types = target_breed.hit_zone_weakspot_types
-		local hit_zone = hit_zone_weakspot_types and next(hit_zone_weakspot_types) or hit_zone_names.center_mass
+		local preferred_hit_zone_name = "head"
+		local hit_zone = hit_zone_weakspot_types and (hit_zone_weakspot_types[preferred_hit_zone_name] and preferred_hit_zone_name or next(hit_zone_weakspot_types)) or hit_zone_names.center_mass
 		local actors = HitZone.get_actor_names(target_unit, hit_zone)
 		local hit_actor_name = actors[1]
 		hit_zone_name = hit_zone
@@ -120,11 +123,14 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 	ImpactEffect.play(target_unit, hit_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiency, damage_profile)
 
 	local param_table = self._buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = self._player_unit
-	param_table.target_unit = target_unit
-	param_table.damage_type = damage_type
 
-	self._buff_extension:add_proc_event(proc_events.on_action_damage_target, param_table)
+	if param_table then
+		param_table.attacking_unit = self._player_unit
+		param_table.target_unit = target_unit
+		param_table.damage_type = damage_type
+
+		self._buff_extension:add_proc_event(proc_events.on_action_damage_target, param_table)
+	end
 
 	return true
 end

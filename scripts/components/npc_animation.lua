@@ -16,13 +16,14 @@ NpcAnimation.init = function (self, unit)
 
 		if not rawget(_G, "LevelEditor") or not not rawget(_G, "UnitEditor") then
 			local use_bone_lod = self:get_data(unit, "use_bone_lod")
+			local has_bone_lod_manager = Managers and Managers.state and Managers.state.bone_lod
+			local unit_world = Unit.world(unit)
+			local is_in_ui_world = World.get_data(unit_world, "__is_ui_world")
 
-			if Managers and Managers.state and Managers.state.bone_lod and use_bone_lod then
+			if has_bone_lod_manager and use_bone_lod and not is_in_ui_world then
 				local bone_lod_radius = self:get_data(unit, "bone_lod_radius")
 				self._bone_lod_id = Managers.state.bone_lod:register_unit(unit, bone_lod_radius, true)
 			end
-		else
-			Log.info("NpcAnimation", "BoneLod system is not initialized in Editors.")
 		end
 	end
 end
@@ -115,7 +116,7 @@ NpcAnimation.component_data = {
 	use_bone_lod = {
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Use Bone LOD",
+		ui_name = "Use Bone LOD (not visible in editor)",
 		category = "Bone LOD"
 	},
 	bone_lod_radius = {

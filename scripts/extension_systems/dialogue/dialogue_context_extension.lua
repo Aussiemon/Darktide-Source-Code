@@ -27,7 +27,6 @@ DialogueContextExtension.extensions_ready = function (self, world, unit)
 end
 
 DialogueContextExtension.update = function (self, t)
-	fassert(self._dialogue_context_system._is_server, "We're expecting dialogue context extension updates only in the server")
 	self:_update_extensions_context()
 	self:_update_player_unit_status()
 	self:_update_player_equipment_context()
@@ -46,68 +45,34 @@ DialogueContextExtension._update_player_equipment_context = function (self)
 end
 
 DialogueContextExtension._update_player_unit_status = function (self)
+	if self._unit then
+		local player_unit_combat_state = Managers.state.pacing:player_unit_combat_state(self._unit)
+		self._target_context.threat_level = player_unit_combat_state
+	end
+
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 
 	if unit_data_extension then
+		local target_context = self._target_context
 		local character_state_component = unit_data_extension:read_component("character_state")
 
 		if character_state_component then
-			if PlayerUnitStatus.is_knocked_down(character_state_component) then
-				self._target_context.is_knocked_down = "true"
-			else
-				self._target_context.is_knocked_down = "false"
-			end
-		else
-			self._target_context.is_knocked_down = nil
+			target_context.is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+			target_context.is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+			target_context.is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+			target_context.is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
+			target_context.is_catapulted = PlayerUnitStatus.is_catapulted(character_state_component)
 		end
 
 		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
 
 		if disabled_character_state_component then
-			local is_pounced, _ = PlayerUnitStatus.is_pounced(disabled_character_state_component)
-
-			if is_pounced then
-				self._target_context.is_pounced_down = "true"
-			else
-				self._target_context.is_pounced_down = "false"
-			end
-		else
-			self._target_context.is_pounced_down = nil
+			target_context.is_pounced_down = PlayerUnitStatus.is_pounced(disabled_character_state_component)
+			target_context.is_netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
+			target_context.is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
+			target_context.is_mutant_charged = PlayerUnitStatus.is_mutant_charged(disabled_character_state_component)
+			target_context.is_consumed = PlayerUnitStatus.is_consumed(disabled_character_state_component)
 		end
-
-		if character_state_component then
-			local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
-
-			if is_ledge_hanging then
-				self._target_context.is_ledge_hanging = "true"
-			else
-				self._target_context.is_ledge_hanging = "false"
-			end
-		else
-			self._target_context.is_ledge_hanging = nil
-		end
-
-		if character_state_component then
-			local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
-
-			if is_hogtied then
-				self._target_context.is_hogtied = "true"
-			else
-				self._target_context.is_hogtied = "false"
-			end
-		else
-			self._target_context.is_hogtied = nil
-		end
-	else
-		self._target_context.is_knocked_down = nil
-		self._target_context.is_pounced_down = nil
-		self._target_context.is_ledge_hanging = nil
-		self._target_context.is_hogtied = nil
-	end
-
-	if self._unit then
-		local player_unit_combat_state = Managers.state.pacing:player_unit_combat_state(self._unit)
-		self._target_context.threat_level = player_unit_combat_state
 	end
 end
 
@@ -147,8 +112,6 @@ DialogueContextExtension._update_timed_timers_context = function (self, t)
 end
 
 DialogueContextExtension.increase_timed_counter = function (self, key, value)
-	fassert(key, "timed counter key can't be nil")
-
 	local timed_counter = self._timed_counters[key]
 
 	if timed_counter == nil then

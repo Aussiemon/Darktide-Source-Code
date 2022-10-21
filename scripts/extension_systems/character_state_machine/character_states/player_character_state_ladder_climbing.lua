@@ -1,18 +1,22 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
+local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Ladder = require("scripts/extension_systems/character_state_machine/character_states/utilities/ladder")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerCharacterStateLadderClimbing = class("PlayerCharacterStateLadderClimbing", "PlayerCharacterStateBase")
 local move_methods = table.enum("ladder_climbing", "ladder_idle")
 local Z_MOVE_EPSILON = 0.01
 local END_REACH_EPSILON = 0.05
+local RUNG_DISTANCE = 0.35
+local DOUBLE_RUNG_DISTANCE = RUNG_DISTANCE * 2
 local INVENTORY_SLOT_TO_WIELD = "slot_unarmed"
 local LADDER_TOP_NODE = "node_top"
 local LADDER_BOTTOM_NODE = "node_bottom"
 local LADDER_LEAVE_NODE = "node_leave"
+local CLIMBING_HAND_SOUND_ALIAS = "ladder_climbing_hands"
+local CLIMBING_FEET_SOUND_ALIAS = "ladder_climbing_feet"
 
 PlayerCharacterStateLadderClimbing._on_enter_animation = function (self, unit, previous_state)
 	local animation_extension = self._animation_extension
@@ -23,11 +27,14 @@ PlayerCharacterStateLadderClimbing._on_enter_animation = function (self, unit, p
 	end
 end
 
+PlayerCharacterStateLadderClimbing.init = function (self, character_state_init_context, ...)
+	PlayerCharacterStateLadderClimbing.super.init(self, character_state_init_context, ...)
+
+	self._earliest_next_footstep = 0
+end
+
 PlayerCharacterStateLadderClimbing.on_enter = function (self, unit, dt, t, previous_state, params)
 	local ladder_unit = params.ladder_unit
-
-	fassert(ladder_unit, "Need to pass a ladder unit to this state")
-
 	local locomotion_steering = self._locomotion_steering_component
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
@@ -58,7 +65,9 @@ PlayerCharacterStateLadderClimbing.on_exit = function (self, unit, t, next_state
 
 		local ladder_character_state_component = self._ladder_character_state_component
 		local game_session = Managers.state.game_session:game_session()
-		local ladder_cooldown = self._constants.ladder_cooldown
+		local is_jumping = next_state == "jumping"
+		local constants = self._constants
+		local ladder_cooldown = t + (is_jumping and constants.ladder_jumping_cooldown or constants.ladder_cooldown)
 
 		Ladder.stopped_climbing(ladder_character_state_component, ladder_cooldown, self._is_server, game_session, self._game_object_id, self._player, unit)
 
@@ -68,6 +77,15 @@ PlayerCharacterStateLadderClimbing.on_exit = function (self, unit, t, next_state
 			PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 		end
 	end
+end
+
+PlayerCharacterStateLadderClimbing.update = function (self, unit, dt, t)
+	local ladder_unit = Managers.state.unit_spawner:unit(self._ladder_character_state_component.ladder_unit_id, true)
+	local velocity_current = self._locomotion_component.velocity_current
+	local first_person_position = self._first_person_component.position
+	local locomotion_position = self._locomotion_component.position
+
+	self:_on_ladder_footsteps(t, unit, velocity_current, first_person_position, locomotion_position, ladder_unit)
 end
 
 PlayerCharacterStateLadderClimbing.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
@@ -96,6 +114,19 @@ PlayerCharacterStateLadderClimbing._check_transition = function (self, unit, lad
 		return health_transition
 	end
 
+	local disruptive_transition = DisruptiveStateTransition.poll(unit, unit_data_extension, next_state_params)
+
+	if disruptive_transition then
+		if disruptive_transition == "catapulted" then
+			return "catapulted"
+		end
+
+		next_state_params.ladder_unit = ladder_unit
+		next_state_params.is_distrupted = true
+
+		return "jumping"
+	end
+
 	local locomotion = self._locomotion_component
 	local velocity_current = locomotion.velocity_current
 	local mover = Unit.mover(unit)
@@ -112,7 +143,7 @@ PlayerCharacterStateLadderClimbing._check_transition = function (self, unit, lad
 		return "jumping"
 	end
 
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion)
+	local locomotion_position = locomotion.position
 	local position = locomotion_position
 	local climb_rotation = Unit.world_rotation(ladder_unit, 1)
 	local reached_top = self:_have_reached_top(position, ladder_unit, velocity_current, climb_rotation)
@@ -254,6 +285,37 @@ PlayerCharacterStateLadderClimbing._on_ladder_animation = function (self, unit, 
 
 		animation_extension:anim_event("climb_move_ladder")
 	end
+end
+
+local FOOTSTEP_MIN_INTERVAL = 0.1
+
+PlayerCharacterStateLadderClimbing._on_ladder_footsteps = function (self, t, unit, velocity, position_1p, position_3p, ladder_unit)
+	if self._earliest_next_footstep <= t then
+		local bottom_pos = Unit.world_position(ladder_unit, Unit.node(ladder_unit, LADDER_BOTTOM_NODE))
+		local distance_from_bottom = position_3p.z - bottom_pos.z
+		local closest_rung_index = math.round(distance_from_bottom / DOUBLE_RUNG_DISTANCE)
+		local closest_rung_height = closest_rung_index * DOUBLE_RUNG_DISTANCE
+		local distance_to_closest_rung = distance_from_bottom - closest_rung_height
+		local is_on_rung = math.abs(distance_to_closest_rung) < RUNG_DISTANCE * 0.05
+
+		if not is_on_rung and self._was_on_rung then
+			self._earliest_next_footstep = t + FOOTSTEP_MIN_INTERVAL
+			local hand_position = bottom_pos + Vector3.up() * (position_1p.z - bottom_pos.z)
+			local foot_position = bottom_pos + Vector3.up() * (position_3p.z - bottom_pos.z + DOUBLE_RUNG_DISTANCE)
+
+			self:_trigger_climb_sound("ladder_climbing_hands", hand_position)
+			self:_trigger_climb_sound("ladder_climbing_feet", foot_position)
+		end
+
+		self._was_on_rung = is_on_rung
+	end
+end
+
+PlayerCharacterStateLadderClimbing._trigger_climb_sound = function (self, sound_alias, position)
+	local _, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias)
+	local is_predicted = true
+
+	self._fx_extension:trigger_wwise_event_synced(event_name, has_husk_events, is_predicted, nil, nil, nil, position, nil, nil, nil, nil, nil)
 end
 
 PlayerCharacterStateLadderClimbing._should_climb_ladder = function (self, unit, t)

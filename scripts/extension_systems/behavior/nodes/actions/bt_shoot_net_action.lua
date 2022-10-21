@@ -23,6 +23,9 @@ BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+	scratchpad.target_dodged_during_attack = false
+	scratchpad.target_dodged_type = nil
+	scratchpad.dodged_attack = false
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
@@ -66,17 +69,6 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 	if behavior_component.is_dragging then
 		behavior_component.is_dragging = false
 		behavior_component.hit_target = true
-		local flee_vo_event = action_data.flee_vo_event
-
-		if flee_vo_event then
-			local hit_player_unit = scratchpad.hit_unit
-
-			if ALIVE[hit_player_unit] then
-				local position = POSITION_LOOKUP[unit]
-
-				Vo.closest_player_except_vo_enemy_attack_event(unit, breed.name, flee_vo_event, position, hit_player_unit)
-			end
-		end
 	end
 
 	self:_stop_effect_template(scratchpad)
@@ -89,7 +81,7 @@ BtShootNetAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 	if internal_state == "aiming" then
 		self:_update_aiming(unit, t, scratchpad, action_data)
 	elseif internal_state == "shooting" then
-		self:_update_shooting(unit, dt, t, scratchpad, action_data)
+		self:_update_shooting(unit, breed, dt, t, scratchpad, action_data)
 	elseif internal_state == "dragging" then
 		self:_update_dragging(unit, t, scratchpad, action_data)
 	elseif internal_state == "shot_finished" then
@@ -174,11 +166,19 @@ BtShootNetAction._start_shooting = function (self, unit, scratchpad, action_data
 	scratchpad.num_shots_fired = scratchpad.num_shots_fired + 1
 end
 
-BtShootNetAction._update_shooting = function (self, unit, dt, t, scratchpad, action_data)
+BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchpad, action_data)
 	local shoot_data = scratchpad.shoot_data
 	local wanted_travel_distance = action_data.net_speed * dt
 	local available_travel_distance = shoot_data.available_travel_distance
 	local travel_distance = math.min(wanted_travel_distance, available_travel_distance)
+	local target_unit = scratchpad.perception_component.target_unit
+	local is_dodging, dodge_type = Dodge.is_dodging(target_unit)
+
+	if is_dodging and not scratchpad.target_dodged_during_attack then
+		scratchpad.target_dodged_during_attack = true
+		scratchpad.target_dodged_type = dodge_type
+	end
+
 	local old_sweep_position = shoot_data.sweep_position:unbox()
 	local direction = shoot_data.direction:unbox()
 	local radius = action_data.net_sweep_radius
@@ -197,6 +197,21 @@ BtShootNetAction._update_shooting = function (self, unit, dt, t, scratchpad, act
 	shoot_data.available_travel_distance = new_available_travel_distance
 
 	shoot_data.sweep_position:store(new_sweep_position)
+
+	if not scratchpad.dodged_attack then
+		local target_unit_position = POSITION_LOOKUP[target_unit]
+		local to_target = target_unit_position - new_sweep_position
+		local direction_to_target = Vector3.normalize(to_target)
+		local dot_to_target = Vector3.dot(direction, direction_to_target)
+
+		if dot_to_target < 0 and scratchpad.target_dodged_during_attack then
+			dodge_type = scratchpad.target_dodged_type
+
+			Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+
+			scratchpad.dodged_attack = true
+		end
+	end
 
 	local spawn_component = scratchpad.spawn_component
 	local game_session = spawn_component.game_session

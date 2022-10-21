@@ -50,6 +50,18 @@ StatFactory.create_smart_reducer = function (id, stat_to_reduce, in_parameters, 
 	}, Tree:new(id, out_parameters, optional_default_value), optional_flags)
 end
 
+StatFactory.create_merger = function (id, stats, activation_function, optional_flags, optional_default_value)
+	optional_default_value = optional_default_value ~= nil and optional_default_value or 0
+	local triggers = {}
+
+	for i = 1, #stats do
+		local stat = stats[i]
+		triggers[stat:get_id()] = StatTrigger:new(activation_function)
+	end
+
+	return StatDefinition:new(triggers, SingleValue:new(id, optional_default_value), optional_flags)
+end
+
 StatFactory.create_flag = function (id, listens_to, optional_condition, optional_flags)
 	local activation_function = optional_condition and Activations.on_condition(optional_condition, Activations.set(1)) or Activations.set(1)
 
@@ -61,14 +73,8 @@ end
 StatFactory.create_flag_checker = function (id, flags, optional_flags, optional_max_amount)
 	optional_max_amount = optional_max_amount or #flags
 	local activation_function = Activations.clamp(Activations.increment, 0, optional_max_amount)
-	local triggers = {}
 
-	for i = 1, #flags do
-		local flag = flags[i]
-		triggers[flag:get_id()] = StatTrigger:new(activation_function)
-	end
-
-	return StatDefinition:new(triggers, SingleValue:new(id), optional_flags)
+	return StatFactory.create_merger(id, flags, activation_function, optional_flags, 0)
 end
 
 StatFactory.create_simple = function (id, stat_to_reduce, activation_function, optional_flags, optional_default_value)
@@ -97,6 +103,15 @@ StatFactory.create_in_a_row = function (id, increase_on_stat, reset_on_stat)
 		[increase_on_stat:get_id()] = StatTrigger:new(Activations.increment),
 		[reset_on_stat:get_id()] = StatTrigger:new(Activations.set(0))
 	}, SingleValue:new(id, 0))
+end
+
+StatFactory.create_flag_switch = function (id, set_on_stat, reset_on_stat, optional_flags, optional_start_active)
+	local start_value = optional_start_active == true and 1 or 0
+
+	return StatDefinition:new({
+		[set_on_stat:get_id()] = StatTrigger:new(Activations.set(1)),
+		[reset_on_stat:get_id()] = StatTrigger:new(Activations.set(0))
+	}, SingleValue:new(id, start_value), optional_flags)
 end
 
 StatFactory.create_sum_over_time = function (id, input_stat, time, optional_condition, optional_flags)

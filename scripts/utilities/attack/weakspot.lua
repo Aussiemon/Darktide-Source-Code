@@ -4,10 +4,10 @@ local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local Weakspot = {}
 local attack_types = AttackSettings.attack_types
 local keywords = BuffSettings.keywords
-local _type = nil
+local _weakspot_type = nil
 
 Weakspot.hit_weakspot = function (breed_or_nil, hit_zone_name, attack_type, optional_attacker_buff_extension)
-	local weakspot_type = _type(breed_or_nil, hit_zone_name)
+	local weakspot_type = _weakspot_type(breed_or_nil, hit_zone_name)
 	local hit_weakspot = weakspot_type ~= nil and weakspot_type ~= "shield"
 	local hit_shield = weakspot_type == "shield"
 
@@ -20,7 +20,7 @@ Weakspot.hit_weakspot = function (breed_or_nil, hit_zone_name, attack_type, opti
 end
 
 Weakspot.finesse_boost_modifer = function (breed_or_nil, hit_zone_name, finesse_boost_amount)
-	local weakspot_type = _type(breed_or_nil, hit_zone_name)
+	local weakspot_type = _weakspot_type(breed_or_nil, hit_zone_name)
 
 	if not weakspot_type then
 		return 1
@@ -31,7 +31,7 @@ Weakspot.finesse_boost_modifer = function (breed_or_nil, hit_zone_name, finesse_
 	return modifier
 end
 
-function _type(breed_or_nil, hit_zone_name)
+function _weakspot_type(breed_or_nil, hit_zone_name)
 	if not breed_or_nil or not breed_or_nil.hit_zone_weakspot_types then
 		return
 	end

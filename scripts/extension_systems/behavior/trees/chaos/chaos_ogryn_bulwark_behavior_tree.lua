@@ -29,6 +29,10 @@ local MELEE_COMBAT = {
 		{
 			"BtMeleeAttackAction",
 			name = "shield_push",
+			condition = "attack_allowed",
+			condition_args = {
+				attack_type = "melee"
+			},
 			action_data = action_data.shield_push
 		},
 		{

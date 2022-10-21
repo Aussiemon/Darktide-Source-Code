@@ -10,7 +10,7 @@ local event_vo_demolition_veteran_male_c = {
 		},
 		sound_events_duration = {
 			0.93275,
-			2.222958,
+			2.222948,
 			2.00649,
 			1.37126
 		},

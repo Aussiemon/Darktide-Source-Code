@@ -15,9 +15,6 @@ GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 	if not is_server then
 		local connection_manager = Managers.connection
 		local spawn_group_id = shared_state.spawn_group_id
-
-		fassert(spawn_group_id, "[GameplayInitStepStateWaitForGroup][on_enter] group id not determined.")
-
 		local host_channel_id = connection_manager:host_channel()
 
 		if host_channel_id then
@@ -45,22 +42,26 @@ end
 
 GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 	if not self._shared_state.is_server then
-		local lost_connection = not Managers.connection:game_session_host_is_set() or not Managers.connection:host_channel()
+		local lost_connection = not Managers.connection:host_channel()
 
 		if lost_connection then
-			-- Nothing
+			local next_step_params = {
+				shared_state = self._shared_state
+			}
+
+			return GameplayInitStepStateLast, next_step_params
 		end
 	end
 
-	if not self._ready_to_spawn then
-		return nil, nil
+	if self._ready_to_spawn then
+		local next_step_params = {
+			shared_state = self._shared_state
+		}
+
+		return GameplayInitStepStateLast, next_step_params
 	end
 
-	local next_step_params = {
-		shared_state = self._shared_state
-	}
-
-	return GameplayInitStepStateLast, next_step_params
+	return nil, nil
 end
 
 GameplayInitStepStateWaitForGroup.rpc_group_loaded = function (self, channel_id, spawn_group)

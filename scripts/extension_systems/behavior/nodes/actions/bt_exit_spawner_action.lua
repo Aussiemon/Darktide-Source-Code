@@ -15,12 +15,15 @@ BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	local run_anim_event = action_data.run_anim_event
 
 	animation_extension:anim_event(run_anim_event)
+	locomotion_extension:set_movement_type("script_driven")
 end
 
 BtExitSpawnerAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
 	spawn_component.is_exiting_spawner = false
 	spawn_component.spawner_unit = nil
+
+	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 end
 
 BtExitSpawnerAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -32,9 +35,10 @@ BtExitSpawnerAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	if WANTED_DISTANCE_TO_EXIT_SQ < distance_to_exit_sq then
 		local exit_direction = Vector3.normalize(exit_vector)
 		local move_speed = breed.run_speed
+		local exit_velocity = exit_direction * move_speed
 		local locomotion_extension = scratchpad.locomotion_extension
 
-		locomotion_extension:set_wanted_velocity(exit_direction * move_speed)
+		locomotion_extension:set_wanted_velocity(exit_velocity)
 
 		return "running"
 	else

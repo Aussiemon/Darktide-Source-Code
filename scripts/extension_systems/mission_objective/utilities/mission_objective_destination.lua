@@ -27,8 +27,6 @@ MissionObjectiveDestination.start_stage = function (self, stage)
 		end
 	end
 
-	fassert(self._target_unit, "[MissionObjectiveDestination][start_stage] No target unit. %s registered units. Mission peer_id: %s", #self._objective_units, self._peer_id)
-
 	self._start_distance = self:_closest_distance()
 end
 

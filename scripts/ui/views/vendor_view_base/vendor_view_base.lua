@@ -5,6 +5,7 @@ local MasterItems = require("scripts/backend/master_items")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local TextUtilities = require("scripts/utilities/ui/text")
 local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local VendorViewBase = class("VendorViewBase", "ItemGridViewBase")
 
@@ -33,6 +34,14 @@ VendorViewBase.on_enter = function (self)
 	self:_register_button_callbacks()
 end
 
+VendorViewBase.character_level = function (self)
+	local player = self:_player()
+	local profile = player:profile()
+	local profile_level = profile.current_level
+
+	return profile_level
+end
+
 VendorViewBase._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.purchase_button.content.hotspot.pressed_callback = callback(self, "_cb_on_purchase_pressed")
@@ -49,17 +58,23 @@ VendorViewBase._cb_on_purchase_pressed = function (self)
 	local can_afford = self:can_afford(price_data.amount, price_data.type)
 
 	if can_afford then
-		self:_purchase_item(offer)
+		local is_active = offer.state == "active"
+
+		if is_active then
+			self:_purchase_item(offer)
+		end
 	end
 end
 
 VendorViewBase.cb_switch_tab = function (self, index, ignore_item_selection)
+	self._next_tab_index = index
+	self._next_tab_index_ignore_item_selection = ignore_item_selection
+end
+
+VendorViewBase._switch_tab = function (self, index, ignore_item_selection)
 	self:_stop_previewing()
 
 	self._previewed_offer = nil
-
-	VendorViewBase.super.cb_switch_tab(self, index)
-
 	local tabs_content = self._tabs_content
 	local tab_content = tabs_content[index]
 	local slot_types = tab_content.slot_types
@@ -151,6 +166,8 @@ VendorViewBase._fetch_store_items = function (self)
 	self._current_rotation_end = nil
 	self._offer_items_layout = nil
 	self._filtered_offer_items_layout = nil
+	self._next_tab_index = nil
+	self._next_tab_index_ignore_item_selection = nil
 
 	if self._store_promise then
 		self._store_promise:cancel()
@@ -163,6 +180,9 @@ VendorViewBase._fetch_store_items = function (self)
 	if not store_promise then
 		return
 	end
+
+	local use_item_categories = false
+	local generic_category_id = "generic"
 
 	store_promise:next(function (data)
 		local offers = data.offers
@@ -183,7 +203,7 @@ VendorViewBase._fetch_store_items = function (self)
 				if slots then
 					local slot_type = slots[1]
 					local slot_settings = ItemSlotSettings[slot_type]
-					local store_category = slot_settings.store_category
+					local store_category = use_item_categories and slot_settings.store_category or generic_category_id
 
 					if not menu_tab_content_by_store_category[store_category] then
 						local store_category_slot_stypes = {}
@@ -197,7 +217,7 @@ VendorViewBase._fetch_store_items = function (self)
 						local tab_content = {
 							display_name = UISettings.display_name_by_store_category[store_category],
 							icon = UISettings.texture_by_store_category[store_category],
-							slot_types = store_category_slot_stypes,
+							slot_types = use_item_categories and store_category_slot_stypes,
 							store_category = store_category
 						}
 						menu_tab_content_by_store_category[store_category] = tab_content
@@ -213,11 +233,11 @@ VendorViewBase._fetch_store_items = function (self)
 			self._tab_menu_element = nil
 		end
 
-		local use_tab_menu = #menu_tab_content_array > 1
+		local use_tab_menu = use_item_categories and #menu_tab_content_array > 1
 
 		self:_update_grid_height(use_tab_menu)
 
-		if #menu_tab_content_array > 1 then
+		if use_tab_menu then
 			local function tab_sort_function(a, b)
 				local store_category_sort_order = UISettings.store_category_sort_order
 
@@ -226,11 +246,11 @@ VendorViewBase._fetch_store_items = function (self)
 
 			table.sort(menu_tab_content_array, tab_sort_function)
 			self:_setup_menu_tabs(menu_tab_content_array)
-			self:cb_switch_tab(1, true)
+			self:_switch_tab(1, true)
 		elseif #menu_tab_content_array > 0 then
 			local content = menu_tab_content_array[1]
 			local slot_types = content.slot_types
-			local display_name = content.display_name
+			local display_name = use_item_categories and content.display_name or nil
 
 			self:_present_layout_by_slot_filter(slot_types, display_name)
 		else
@@ -281,20 +301,21 @@ VendorViewBase._fetch_store_items = function (self)
 end
 
 VendorViewBase._update_grid_height = function (self, use_tab_menu)
-	local grid_height_difference = 40
-	local item_grid_position_y = use_tab_menu and 190 or 190 - grid_height_difference * 0.5
+	local grid_height_difference = 130
+	local item_grid_position_y = use_tab_menu and 120 + grid_height_difference or 120
 
 	self:_set_scenegraph_position("item_grid_pivot", nil, item_grid_position_y)
 
-	local grid_settings = nil
+	local grid_settings = self._definitions.grid_settings
+	local grid_height = grid_settings.grid_size[2]
+	local mask_height = grid_settings.mask_size[2]
 
-	if not use_tab_menu then
-		grid_settings = table.clone(self._definitions.grid_settings)
-		grid_settings.mask_size[2] = grid_settings.mask_size[2] + grid_height_difference
-		grid_settings.grid_size[2] = grid_settings.grid_size[2] + grid_height_difference
+	if use_tab_menu then
+		mask_height = mask_height - grid_height_difference
+		grid_height = grid_height - grid_height_difference
 	end
 
-	self:_setup_item_grid(grid_settings)
+	self._item_grid:update_grid_height(grid_height, mask_height)
 end
 
 VendorViewBase.cb_on_sort_button_pressed = function (self, option)
@@ -330,7 +351,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 		if category == "item_instance" then
 			local item = MasterItems.get_store_item_instance(offer.description)
 			layout[#layout + 1] = {
-				widget_type = "item",
+				widget_type = "store_item",
 				item = item,
 				offer = offer,
 				offer_id = offer_id
@@ -376,7 +397,7 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local type = price_data.type
 	local can_afford = self:can_afford(amount, type)
 	local price_text = nil
-	price_text = amount and tostring(amount) or ""
+	price_text = amount and TextUtilities.format_currency(amount) or ""
 	local widgets_by_name = self._widgets_by_name
 	local price_text_widget = widgets_by_name.price_text
 	local price_text_widget_style = price_text_widget.style
@@ -394,8 +415,9 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local price_icon_scenegraph_id = price_icon_widget.scenegraph_id
 	local price_icon_width, _ = self:_scenegraph_size(price_icon_scenegraph_id)
 	local price_icon_spacing = 10
-	price_text_widget.offset[1] = (price_icon_width + price_icon_spacing) * 0.5
-	price_icon_widget.offset[1] = price_text_widget.offset[1] - ((price_icon_width + text_width) * 0.5 + price_icon_spacing)
+	local total_width = text_width + price_icon_spacing + price_icon_width
+	price_icon_widget.offset[1] = -total_width * 0.5 + price_icon_width * 0.5
+	price_text_widget.offset[1] = price_icon_widget.offset[1] + text_width * 0.5 + price_icon_width * 0.5 + price_icon_spacing
 end
 
 VendorViewBase._purchase_item = function (self, offer)
@@ -403,18 +425,10 @@ VendorViewBase._purchase_item = function (self, offer)
 	local promise = store_service:purchase_item(offer)
 
 	promise:next(function (result)
-		for i, item_data in ipairs(result.items) do
-			local item = MasterItems.get_store_item_instance(item_data)
-			local gear_id = item.gear_id
-
-			ItemUtils.mark_item_id_as_new(gear_id)
-			Managers.event:trigger("event_vendor_view_purchased_item")
-			self:_update_wallets()
-		end
-
-		self:_fetch_store_items()
-
 		self._purchase_promise = nil
+		offer.state = result.offer.state
+
+		self:_on_purchase_complete(result.items)
 	end):catch(function (error)
 		self:_fetch_store_items()
 
@@ -422,6 +436,18 @@ VendorViewBase._purchase_item = function (self, offer)
 	end)
 
 	self._purchase_promise = promise
+end
+
+VendorViewBase._on_purchase_complete = function (self, items)
+	for i, item_data in ipairs(items) do
+		local item = MasterItems.get_store_item_instance(item_data)
+		local gear_id = item.gear_id
+		local item_type = item.item_type
+
+		ItemUtils.mark_item_id_as_new(gear_id, item_type)
+		Managers.event:trigger("event_vendor_view_purchased_item")
+		self:_update_wallets()
+	end
 end
 
 VendorViewBase._update_wallets = function (self)
@@ -455,22 +481,31 @@ VendorViewBase.can_afford = function (self, amount, type)
 end
 
 VendorViewBase._handle_input = function (self, input_service)
-	local is_mouse = self._using_cursor_navigation
+	local next_tab_index = self._next_tab_index
 
-	if not is_mouse then
-		if self._previewed_offer and input_service:get("confirm_pressed") then
-			self:_cb_on_purchase_pressed()
-		elseif self._item_grid then
-			local grid = self._item_grid
-			local selected_index = grid:selected_grid_index()
+	if next_tab_index then
+		self:_switch_tab(next_tab_index, self._next_tab_index_ignore_item_selection)
 
-			if self._current_select_grid_index ~= selected_index then
-				self._current_select_grid_index = selected_index
-				local widgets = self._item_grid:widgets()
-				local widget = widgets[selected_index]
+		self._next_tab_index = nil
+		self._next_tab_index_ignore_item_selection = nil
+	else
+		local is_mouse = self._using_cursor_navigation
 
-				if widget and widget.content.hotspot.pressed_callback then
-					widget.content.hotspot.pressed_callback()
+		if not is_mouse then
+			if self._previewed_offer and input_service:get("confirm_pressed") then
+				self:_cb_on_purchase_pressed()
+			elseif self._item_grid then
+				local grid = self._item_grid
+				local selected_index = grid:selected_grid_index()
+
+				if self._current_select_grid_index ~= selected_index then
+					self._current_select_grid_index = selected_index
+					local widgets = self._item_grid:widgets()
+					local widget = widgets[selected_index]
+
+					if widget and widget.content.hotspot.pressed_callback then
+						widget.content.hotspot.pressed_callback()
+					end
 				end
 			end
 		end

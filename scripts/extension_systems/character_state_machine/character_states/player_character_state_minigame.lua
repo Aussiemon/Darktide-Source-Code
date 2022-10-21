@@ -1,3 +1,4 @@
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
@@ -32,10 +33,22 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 
 	local locomotion_steering_component = self._locomotion_steering_component
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
-	locomotion_steering_component.calculate_fall_velocity = false
+	locomotion_steering_component.calculate_fall_velocity = true
 	locomotion_steering_component.disable_push_velocity = true
+	local movement_state_component = self._movement_state_component
+	local is_crouching = self._movement_state_component.is_crouching
 
-	fassert(self:_is_wielding_minigame_device(), "[PlayerCharacterStateMinigame][on_enter] Player is not wielding a minigame device.")
+	if is_crouching then
+		local first_person_extension = self._first_person_extension
+		local animation_extension = self._animation_extension
+		local weapon_extension = self._weapon_extension
+		local sway_control_component = self._sway_control_component
+		local sway_component = self._sway_component
+		local spread_control_component = self._spread_control_component
+
+		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+	end
+
 	self:_initialize_minigame()
 
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(visual_loadout_extension, inventory_component)
@@ -56,12 +69,8 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 	self._minigame_character_state_component.interface_unit_id = NetworkConstants.invalid_level_unit_id
 	self._locomotion_steering_component.disable_push_velocity = false
 	local inventory_component = self._inventory_component
-	local visual_loadout_extension = self._visual_loadout_extension
 
-	if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
-		PlayerUnitVisualLoadout.unequip_item_from_slot(unit, "slot_device", t)
-		PlayerUnitVisualLoadout.wield_slot("slot_primary", unit, t)
-	end
+	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local interaction_component = unit_data_extension:write_component("interaction")
@@ -71,7 +80,7 @@ end
 PlayerCharacterStateMinigame.on_enter_server_corrected_state = function (self, unit)
 	local locomotion_steering_component = self._locomotion_steering_component
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
-	locomotion_steering_component.calculate_fall_velocity = false
+	locomotion_steering_component.calculate_fall_velocity = true
 
 	if self._minigame_extension == nil then
 		self:_initialize_minigame()
@@ -199,8 +208,8 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 		return "falling"
 	end
 
-	local archetype_dodge_template = self._archetype_dodge_template
-	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, archetype_dodge_template, input_source)
+	local specialization_dodge_template = self._specialization_dodge_template
+	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, specialization_dodge_template, input_source)
 
 	if should_dodge then
 		next_state_params.dodge_direction = local_dodge_direction

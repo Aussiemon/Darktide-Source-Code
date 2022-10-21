@@ -10,7 +10,7 @@ local event_vo_demolition_veteran_female_b = {
 		},
 		sound_events_duration = {
 			2.125125,
-			2.329271,
+			2.32925,
 			1.549188,
 			2.140896
 		},

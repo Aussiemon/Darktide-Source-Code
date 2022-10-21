@@ -94,19 +94,14 @@ WorldInteractionManager._add_simple_water_effect = function (self, unit, positio
 end
 
 WorldInteractionManager.update = function (self, dt, t)
-	Profiler.start("World Interaction")
-
 	if DEDICATED_SERVER then
 		return
 	end
 
 	self:_update_water(dt, t)
-	Profiler.stop("World Interaction")
 end
 
 WorldInteractionManager._update_water = function (self, dt, t)
-	Profiler.start("Update water")
-
 	local available_units = self._units.water
 	local local_player = Managers.player:local_player(1)
 	local player_unit = local_player and local_player.player_unit
@@ -116,14 +111,11 @@ WorldInteractionManager._update_water = function (self, dt, t)
 		self:_update_water_data(dt, t)
 		self:_update_water_ripples(dt, t)
 	end
-
-	Profiler.stop("Update water")
 end
 
 local UNITS_TO_REMOVE = {}
 
 WorldInteractionManager._cleanup_removed_units = function (self)
-	Profiler.start(" -Cleanup Removed Units")
 	table.clear(UNITS_TO_REMOVE)
 
 	for material, units in pairs(self._units) do
@@ -139,8 +131,6 @@ WorldInteractionManager._cleanup_removed_units = function (self)
 			units[unit] = nil
 		end
 	end
-
-	Profiler.stop(" -Cleanup Removed Units")
 end
 
 local COLLECTED_UNITS = {}
@@ -163,8 +153,6 @@ local function collect_characters(available_units, player_pos, window_size)
 end
 
 WorldInteractionManager._update_water_data = function (self, dt, t)
-	Profiler.start(" -Update Water Data")
-
 	local water_settings = WorldInteractionSettings.water
 	local window_size = math.clamp(water_settings.window_size, 1, 100)
 	local speed_limit = water_settings.water_speed_limit
@@ -219,8 +207,6 @@ WorldInteractionManager._update_water_data = function (self, dt, t)
 	end
 
 	self._water_timer = self._water_timer + dt
-
-	Profiler.stop(" -Update Water Data")
 end
 
 local function draw_water_bitmap(gui, offset, angle, relative_texture_size, layer, alpha, water_material, screen_material)
@@ -232,7 +218,6 @@ end
 local DATA_TO_REMOVE = {}
 
 WorldInteractionManager._update_water_ripples = function (self, dt, t)
-	Profiler.start(" -Update Water Ripples")
 	table.clear(DATA_TO_REMOVE)
 
 	local gui = self._gui
@@ -329,8 +314,6 @@ WorldInteractionManager._update_water_ripples = function (self, dt, t)
 
 		table.remove(self._water_ripples, idx)
 	end
-
-	Profiler.stop(" -Update Water Ripples")
 end
 
 WorldInteractionManager.destroy = function (self)

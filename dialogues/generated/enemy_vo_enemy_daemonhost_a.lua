@@ -68,16 +68,14 @@ local enemy_vo_enemy_daemonhost_a = {
 	},
 	chaos_daemonhost_mantra_high = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_enemy_daemonhost_a__mantra_3_01",
 			"loc_enemy_daemonhost_a__mantra_3_02",
 			"loc_enemy_daemonhost_a__mantra_3_03",
 			"loc_enemy_daemonhost_a__mantra_3_04",
 			"loc_enemy_daemonhost_a__mantra_3_05",
-			"loc_enemy_daemonhost_a__mantra_3_06",
-			"loc_enemy_daemonhost_a__mantra_3_07",
-			"loc_enemy_daemonhost_a__mantra_3_08"
+			"loc_enemy_daemonhost_a__mantra_3_06"
 		},
 		sound_events_duration = {
 			5.366667,
@@ -85,31 +83,22 @@ local enemy_vo_enemy_daemonhost_a = {
 			4.766667,
 			5.166667,
 			4.4,
-			5.433333,
-			6.9,
-			7.5
+			5.433333
 		},
 		sound_event_weights = {
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},
 	chaos_daemonhost_mantra_low = {
 		randomize_indexes_n = 0,
-		sound_events_n = 13,
+		sound_events_n = 8,
 		sound_events = {
-			"loc_enemy_daemonhost_a__mantra_1_01",
-			"loc_enemy_daemonhost_a__mantra_1_02",
-			"loc_enemy_daemonhost_a__mantra_1_03",
-			"loc_enemy_daemonhost_a__mantra_1_04",
-			"loc_enemy_daemonhost_a__mantra_1_05",
 			"loc_enemy_daemonhost_a__mantra_1_06",
 			"loc_enemy_daemonhost_a__mantra_1_07",
 			"loc_enemy_daemonhost_a__mantra_1_08",
@@ -120,34 +109,24 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__mantra_1_13"
 		},
 		sound_events_duration = {
-			3.899979,
-			3.199979,
-			2.433313,
-			3.1,
-			2.733313,
 			4.3,
 			4.7,
-			4.033333,
-			3.8,
-			4.666667,
-			3.366646,
-			4.9,
-			4.2
+			4.033313,
+			3.799979,
+			4.666646,
+			3.366625,
+			4.899979,
+			4.199979
 		},
 		sound_event_weights = {
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
 		},
 		randomize_indexes = {}
 	},

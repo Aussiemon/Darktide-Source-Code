@@ -2,12 +2,7 @@ local LightControllerUtilities = require("core/scripts/common/light_controller_u
 local LightControllerExtension = class("LightControllerExtension")
 
 LightControllerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	if Managers.state.unit_spawner then
-		local has_game_object = Managers.state.unit_spawner:game_object_id(unit)
-
-		fassert(has_game_object == nil, "LightControllerSystem only supports level units")
-	end
-
+	local has_game_object = Managers.state.unit_spawner and Managers.state.unit_spawner:game_object_id(unit)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._is_setup = false
@@ -46,7 +41,7 @@ LightControllerExtension.connect_to_destructible_extension = function (self)
 	if ScriptUnit.has_extension(self._unit, "destructible_system") then
 		local destructible_extension = ScriptUnit.extension(self._unit, "destructible_system")
 
-		if not destructible_extension:disable_physics() then
+		if not destructible_extension:physics_disabled() then
 			destructible_extension:light_controller_setup(self._enabled, self._fake_light)
 
 			self._destructible_extension = destructible_extension
@@ -55,14 +50,10 @@ LightControllerExtension.connect_to_destructible_extension = function (self)
 end
 
 LightControllerExtension.light_groups = function (self)
-	fassert(self._is_setup, "[LightControllerExtension] Extension not setup")
-
 	return self._light_groups
 end
 
 LightControllerExtension._share_network_enabled_state = function (self, is_enabled)
-	fassert(self._is_server, "[LightControllerExtension] Server only method.")
-
 	local unit_level_index = Managers.state.unit_spawner:level_index(self._unit)
 	local game_session_manager = Managers.state.game_session
 
@@ -111,8 +102,6 @@ LightControllerExtension.set_flicker_state = function (self, flicker_enabled, co
 end
 
 LightControllerExtension._share_network_flicker_state = function (self, flicker_enabled, configuration)
-	fassert(self._is_server, "[LightControllerExtension] Server only method.")
-
 	local unit_level_index = Managers.state.unit_spawner:level_index(self._unit)
 	local game_session_manager = Managers.state.game_session
 	local configuration_id = NetworkLookup.light_controller_flicker_settings[configuration]

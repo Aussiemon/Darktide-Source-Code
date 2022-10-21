@@ -51,9 +51,10 @@ local combat_ranges = {
 		},
 		melee = {
 			{
-				distance = 20,
-				switch_on_wait_slot = true,
 				sticky_time = 5,
+				switch_on_wait_slot = true,
+				distance = 20,
+				switch_anim_state = "to_riflemen",
 				distance_operator = "greater",
 				switch_combat_range = "far"
 			},
@@ -61,9 +62,10 @@ local combat_ranges = {
 				locked_in_melee_distance = 6,
 				distance_operator = "greater",
 				distance = 7,
-				sticky_time = 2,
+				switch_anim_state = "to_riflemen",
 				z_distance = 1.9,
 				switch_combat_range = "close",
+				sticky_time = 2,
 				target_weapon_type_distance = {
 					ranged = 3,
 					melee = 6

@@ -55,7 +55,7 @@ end
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_coop_complete_objective")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_default")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_hub")
-_add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_prologue")
+_add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_training_grounds")
 
 game_mode_settings.hub_singleplay = table.clone(game_mode_settings.hub)
 game_mode_settings.hub_singleplay.name = "hub_singleplay"

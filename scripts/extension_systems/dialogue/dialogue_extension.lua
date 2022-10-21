@@ -1,5 +1,6 @@
 local Breed = require("scripts/utilities/breed")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
+local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueQueries = require("scripts/extension_systems/dialogue/dialogue_queries")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
@@ -9,8 +10,6 @@ local Vo = require("scripts/utilities/vo")
 local DialogueExtension = class("DialogueExtension")
 
 local function _has_wwise_voice_switch_config(breed_configuration)
-	fassert(breed_configuration, "[DialogueExtension] Breed configuration can't be nil. Please add it to DialogueBreedSettings and contact the Audio team.")
-
 	local wwise_voice_switch_group = breed_configuration.wwise_voice_switch_group
 	local wwise_voices = breed_configuration.wwise_voices
 
@@ -41,6 +40,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._faction_memory = nil
 	self._faction_breed_name = nil
 	self._user_memory = {}
+	self._vo_event_cooldown_times = {}
 	self._local_player = extension_init_data.local_player
 	self._local_player_start_pos = nil
 	self._local_player_has_moved = false
@@ -59,19 +59,29 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._use_local_player_vo_profile = false
 	self._stop_vce_event = nil
 	self._context = {
-		story_stage = "none",
+		is_warp_grabbed = false,
+		is_ledge_hanging = false,
+		is_hogtied = false,
+		is_disabled = false,
+		is_netted = false,
 		player_level = 0,
-		voice_template = "none",
-		is_player = "false",
-		breed_name = "unknown_breed_name",
-		is_local_player = "false",
-		health = 1,
+		is_pounced_down = false,
+		story_stage = "none",
+		is_catapulted = false,
+		is_consumed = false,
+		is_local_player = false,
+		is_knocked_down = false,
 		voice_fx_preset = 0,
-		class_name = "none"
+		class_name = "none",
+		is_mutant_charged = false,
+		voice_template = "none",
+		is_player = false,
+		breed_name = "unknown_breed_name",
+		health = 1
 	}
 
 	if self._local_player then
-		self._context.is_local_player = "true"
+		self._context.is_local_player = true
 	end
 
 	local breed = extension_init_data.breed
@@ -85,17 +95,21 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 				extension_per_breed_wwise_voice_index[breed.name] = 1
 			end
 
-			local next_voice_index = extension_per_breed_wwise_voice_index[breed.name]
-			self._wwise_voice_switch_value = dialogue_breed_settings.wwise_voices[next_voice_index]
+			local selected_voice_index = nil
+
+			if dialogue_breed_settings.randomize_voice then
+				local voice_selection_seed = extension_init_data.seed
+				voice_selection_seed, selected_voice_index = math.next_random(voice_selection_seed, 1, #dialogue_breed_settings.wwise_voices)
+			else
+				selected_voice_index = extension_per_breed_wwise_voice_index[breed.name]
+				extension_per_breed_wwise_voice_index[breed.name] = selected_voice_index % #dialogue_breed_settings.wwise_voices + 1
+			end
+
+			self._wwise_voice_switch_value = dialogue_breed_settings.wwise_voices[selected_voice_index]
 			self._wwise_voice_switch_group = dialogue_breed_settings.wwise_voice_switch_group
-			next_voice_index = next_voice_index % #dialogue_breed_settings.wwise_voices + 1
-			extension_per_breed_wwise_voice_index[breed.name] = next_voice_index
 		end
 
 		self._is_network_synced = dialogue_breed_settings.is_network_synced
-
-		fassert(self._is_network_synced ~= nil, "Missing 'is_network_synced' field in dialogue_breed_settings, please add it and contact the Audio Team")
-
 		self._faction = dialogue_breed_settings.dialogue_memory_faction_name
 
 		if self._faction == nil then
@@ -205,8 +219,7 @@ DialogueExtension.setup_from_component = function (self, vo_class, vo_proile_nam
 		self:_setup_random_talk_settings(dialogue_breed_settings.random_talk_settings, dialogue_breed_settings.vo_class_name)
 	end
 
-	self:set_faction_memory(dialogue_faction_name)
-	self:set_faction_breed_name(dialogue_faction_name)
+	self:init_faction_memory(dialogue_faction_name)
 
 	self._use_local_player_vo_profile = use_local_player_voice_profile
 
@@ -231,8 +244,12 @@ DialogueExtension.cleanup = function (self)
 		PlayerVoiceGrunts.destroy_voice(self._fx_extension)
 	end
 
-	if self._currently_playing_dialogue and self._currently_playing_dialogue.currently_playing_id then
-		self._dialogue_system_wwise:stop_if_playing(self._currently_playing_dialogue.currently_playing_id)
+	if self._currently_playing_dialogue then
+		self._dialogue_system:_remove_stopped_dialogue(self._currently_playing_dialogue)
+
+		if self._currently_playing_dialogue.currently_playing_id then
+			self._dialogue_system_wwise:stop_if_playing(self._currently_playing_dialogue.currently_playing_id)
+		end
 	end
 
 	self._currently_playing_dialogue = nil
@@ -290,6 +307,7 @@ end
 
 DialogueExtension.physics_async_update = function (self, context, dt, t)
 	self:_update_random_talk_lines(t)
+	self:_update_vo_event_cool_down_times(t)
 
 	if self._status_extension then
 		local is_incapacitated = self._status_extension:is_disabled()
@@ -366,9 +384,17 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 	end
 end
 
-DialogueExtension.trigger_faction_dialogue_query = function (self, event_name, event_data, identifier, breed_faction_name, exclude_me)
-	fassert(breed_faction_name, "faction can't be nil")
+DialogueExtension._update_vo_event_cool_down_times = function (self, t)
+	for vo_event_name, cooldown_time in pairs(self._vo_event_cooldown_times) do
+		repeat
+			if cooldown_time <= t then
+				self._vo_event_cooldown_times[vo_event_name] = nil
+			end
+		until true
+	end
+end
 
+DialogueExtension.trigger_faction_dialogue_query = function (self, event_name, event_data, identifier, breed_faction_name, exclude_me)
 	if not self._dialogue_system:is_server() then
 		Log.error("DialogueExtension", "trigger_faction_dialogue_query must be executed in the server")
 
@@ -379,8 +405,6 @@ DialogueExtension.trigger_faction_dialogue_query = function (self, event_name, e
 end
 
 DialogueExtension.trigger_factions_dialogue_query = function (self, event_name, event_data, identifier, breed_factions, exclude_me)
-	fassert(breed_factions, "factions can't be nil")
-
 	if not self._dialogue_system:is_server() then
 		Log.error("DialogueExtension", "trigger_faction_dialogue_query must be executed in the server")
 
@@ -393,6 +417,26 @@ DialogueExtension.trigger_factions_dialogue_query = function (self, event_name, 
 end
 
 DialogueExtension.trigger_dialogue_event = function (self, event_name, event_data, identifier)
+	self:trigger_networked_dialogue_event(event_name, event_data, identifier)
+end
+
+DialogueExtension.trigger_targeted_dialogue_event = function (self, event_name, event_data, target_unit, identifier)
+	local vo_event_name = event_data.vo_event
+	local existing_cooldown_time_t = self._vo_event_cooldown_times[vo_event_name]
+
+	if existing_cooldown_time_t then
+		return
+	end
+
+	local targeted_unit = target_unit
+	event_data.target_unit = targeted_unit
+	local game_time = Managers.time:time("gameplay")
+	local vo_event_cooldown_t = event_data.cooldown_time
+
+	if vo_event_name and vo_event_cooldown_t then
+		self._vo_event_cooldown_times[vo_event_name] = game_time + vo_event_cooldown_t
+	end
+
 	self:trigger_networked_dialogue_event(event_name, event_data, identifier)
 end
 
@@ -433,46 +477,18 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 
 		local _, go_id = Managers.state.unit_spawner:game_object_id_or_level_index(self._unit)
 
-		fassert(go_id, "No game object id for unit %s.", self._unit)
 		Managers.state.game_session:send_rpc_server("rpc_trigger_dialogue_event", go_id, index_concept, array_event_data, array_event_data_is_number)
 	end
 end
 
-DialogueExtension.play_vce = function (self, wwise_event_name, unit)
-	local source = self._dialogue_system_wwise:make_unit_auto_source(unit, nil)
+DialogueExtension.trigger_voice = function (self, wwise_event_name, sound_source)
+	self._dialogue_system_wwise:set_switch(sound_source, self._wwise_voice_switch_group, self._vo_profile_name)
 
-	self._dialogue_system_wwise:set_switch(source, self._wwise_voice_switch_group, self._vo_profile_name)
-
-	return self._dialogue_system_wwise:trigger_resource_event(wwise_event_name, unit)
-end
-
-DialogueExtension.play_voice = function (self, sound_event, use_occlusion)
-	local wwise_source_id = self._dialogue_system_wwise:make_unit_auto_source(self._extension.play_unit, self._extension.voice_node)
-
-	if wwise_source_id ~= self._extension.wwise_source_id then
-		self._extension.wwise_source_id = wwise_source_id
-
-		if self._extension.wwise_voice_switch_group and self._extension.wwise_voice_switch_value then
-			WwiseWorld.set_switch(self._dialogue_system.wwise_world, self._extension.wwise_voice_switch_group, self._extension.wwise_voice_switch_value, wwise_source_id)
-			self:_set_source_parameter("vo_center_percent", self._extension.vo_center_percent, wwise_source_id)
-		end
-
-		if self._extension.faction == "player" then
-			WwiseWorld.set_switch(self._dialogue_system.wwise_world, "husk", Managers.state.unit_spawner:is_husk(self._unit), wwise_source_id)
-		end
-	end
-
-	local playing_id, _ = self._dialogue_system:_check_play_debug_sound(sound_event, self._extension.currently_playing_dialogue and self._extension.currently_playing_dialogue.currently_playing_subtitle or "")
-
-	if not playing_id then
-		self:_set_source_parameter("voice_fx_preset", self._voice_fx_preset, wwise_source_id)
-
-		return self:trigger_resource_external_event(self._dialogue_system.wwise_world, "wwise/events/play_sfx_vo_prio_1", "es_vo_prio_1", "wwise/externals/" .. sound_event, 4, use_occlusion, wwise_source_id)
-	end
+	return self._dialogue_system_wwise:trigger_resource_event(wwise_event_name, self._unit)
 end
 
 DialogueExtension.play_voice_debug = function (self, sound_event)
-	fassert(false, "not really implemented")
+	return
 end
 
 DialogueExtension.trigger_query = function (self, event_data)
@@ -481,10 +497,7 @@ end
 
 DialogueExtension.set_vo_profile = function (self, profile_name)
 	local vo_sources_cache = self._vo_sources_cache
-
-	fassert(profile_name, "DialogueExtension: selected_profile can't be nil")
-	fassert(vo_sources_cache, "DialogueExtension: vo_sources_cache can't be nil")
-
+	self._wwise_voice_switch_group = self._wwise_voice_switch_group or DialogueSettings.default_voice_switch_group
 	self._wwise_voice_switch_value = profile_name
 	self._vo_profile_name = profile_name
 	self._context.voice_template = self._vo_profile_name
@@ -505,8 +518,6 @@ end
 DialogueExtension.init_faction_memory = function (self, faction_memory_name)
 	local faction_memory = self._dialogue_system._faction_memories[faction_memory_name]
 
-	fassert(faction_memory, "No such faction %q", tostring(faction_memory_name))
-
 	if self._dialogue_system._is_rule_db_enabled then
 		self._dialogue_system._tagquery_database:add_object_context(self._unit, "faction_memory", faction_memory)
 	end
@@ -515,7 +526,9 @@ DialogueExtension.init_faction_memory = function (self, faction_memory_name)
 	self._faction_breed_name = faction_memory_name
 end
 
-DialogueExtension.set_voice_profile_data = function (self, vo_class_name, voice_profile)
+DialogueExtension.set_voice_profile_data = function (self, vo_class_name, wwise_switch_group, voice_profile)
+	self._wwise_voice_switch_group = wwise_switch_group
+
 	self:_set_vo_class(vo_class_name)
 	self:set_vo_profile(voice_profile)
 end
@@ -555,10 +568,6 @@ DialogueExtension._set_source_parameter = function (self, parameter, value, wwis
 end
 
 DialogueExtension.get_dialogue_event_index = function (self, query)
-	fassert(self._vo_choice, "VO choice table can't be nil")
-	fassert(self._vo_profile_name, "VO profile name can't be nil")
-	fassert(query, "query can't be nil")
-
 	if self._vo_choice[query.result] then
 		local dialogue_index = DialogueQueries.get_dialogue_event_index(self._vo_choice[query.result])
 
@@ -569,11 +578,6 @@ DialogueExtension.get_dialogue_event_index = function (self, query)
 end
 
 DialogueExtension.get_dialogue_event = function (self, dialogue_name, dialogue_index)
-	fassert(self._vo_choice, "VO choice table can't be nil")
-	fassert(self._vo_profile_name, "VO profile name can't be nil")
-	fassert(dialogue_name, "dialogue_name can't be nil")
-	fassert(dialogue_index, "dialogue_index can't be nil")
-
 	if self._vo_choice[dialogue_name] then
 		return self._vo_choice[dialogue_name].sound_events[dialogue_index], self._vo_choice[dialogue_name].sound_events[dialogue_index], self._vo_choice[dialogue_name].sound_events_duration[dialogue_index]
 	else
@@ -587,6 +591,8 @@ DialogueExtension.play_event = function (self, event)
 	if type == "resource_event" then
 		local sound_event = event.sound_event
 		local wwise_source_id = self._wwise_source_id or self._dialogue_system_wwise:make_unit_auto_source(self._play_unit, self._voice_node)
+
+		WwiseWorld.set_switch(self._wwise_world, self._wwise_voice_switch_group, self._wwise_voice_switch_value, self._wwise_source_id)
 
 		return self._dialogue_system_wwise:trigger_resource_event("wwise/events/vo/" .. sound_event, wwise_source_id)
 	elseif type == "vorbis_external" then
@@ -609,6 +615,7 @@ DialogueExtension.stop_currently_playing_vo = function (self)
 
 	if current_dialogue and current_dialogue.currently_playing_event_id then
 		self._dialogue_system_wwise:stop_if_playing(current_dialogue.currently_playing_event_id)
+		self._dialogue_system:_remove_stopped_dialogue(current_dialogue)
 	end
 end
 
@@ -620,7 +627,11 @@ DialogueExtension.stop_currently_playing_vce_event = function (self)
 	end
 end
 
-DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback)
+DialogueExtension.stop_currently_playing_wwise_event = function (self, event_id)
+	self._dialogue_system_wwise:stop_if_playing(event_id)
+end
+
+DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed)
 	local rule_queue = self._dialogue_system._vo_rule_queue
 
 	for i = 1, #rule_names do
@@ -628,28 +639,30 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 			unit = self._unit,
 			rule_name = rule_names[i],
 			wwise_route_key = wwise_route_key,
-			on_play_callback = on_play_callback
+			on_play_callback = on_play_callback,
+			seed = seed
 		}
 		rule_queue[#rule_queue + 1] = vo_event
 	end
 end
 
-DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback)
+DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed)
 	local dialogue_system = self._dialogue_system
-	local pre_wwise_event, post_wwise_event = nil
-	local query = {
-		result = rule_name,
-		result = rule_name
-	}
-	local dialogue_index = 1
+	local dialogue_index = nil
 
-	fassert(dialogue_index, "Rule %s is not loaded for %s ", rule_name, self._vo_profile_name)
+	if seed then
+		local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
+		dialogue_index = random_n
+	else
+		dialogue_index = math.random(1, self._vo_choice[rule_name].sound_events_n)
+	end
 
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
 	local currently_playing_dialogue = self:get_currently_playing_dialogue()
 	local wwise_playing = currently_playing_dialogue and self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
 
 	if sound_event and not wwise_playing then
+		local pre_wwise_event, post_wwise_event = nil
 		local dialogue = {}
 		local wwise_route = WwiseRouting[wwise_route_key]
 
@@ -657,17 +670,23 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 
 		dialogue_system._dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
 		dialogue.currently_playing_event_id = self:play_event(dialogue_system._dialog_sequence_events[1])
+		local speaker_name = self:get_context().voice_template
 		dialogue_system._playing_units[self._unit] = self
 		dialogue.currently_playing_unit = self._unit
-		dialogue.speaker_name = self:get_context().voice_template
-		dialogue.dialogue_timer = sound_event_duration + DialogueSettings.mission_brief_vo_waiting_time
+		dialogue.speaker_name = speaker_name
+		dialogue.dialogue_timer = sound_event_duration
 		dialogue.currently_playing_subtitle = subtitles_event
+		dialogue.wwise_route = wwise_route_key
+		local dialogue_category = dialogue.category
+		local category_setting = DialogueCategoryConfig[dialogue_category]
+		dialogue_system._playing_dialogues[dialogue] = category_setting
 
 		self:set_currently_playing_dialogue(dialogue)
-
-		dialogue_system._playing_dialogues[dialogue] = dialogue
-
 		table.insert(dialogue_system._playing_dialogues_array, 1, dialogue)
+
+		local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
+
+		dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
 
 		if on_play_callback then
 			local id = dialogue.currently_playing_event_id
@@ -678,9 +697,6 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 end
 
 DialogueExtension.get_selected_wwise_route = function (self, wwise_route, wwise_source_id)
-	fassert(wwise_route, "[DialogueExtension] wwise_routing information can't be nil")
-	fassert(self:has_vo_profile(), "Triying to play dialogues on an extension without a voice profile")
-
 	local selected_wwise_route = wwise_route
 
 	if self._is_a_player and self._local_player and wwise_route.local_player_routing_key then
@@ -702,20 +718,43 @@ DialogueExtension.get_selected_wwise_route = function (self, wwise_route, wwise_
 end
 
 DialogueExtension.store_in_memory = function (self, memory_name, argument_name, value)
-	fassert(memory_name == "user_memory" or memory_name == "faction_memory", "Only memories supported are faction_memory or user_memory")
-	fassert(argument_name, "argument name can't be nil")
-
 	local target_memory = self["_" .. memory_name]
 	target_memory[argument_name] = value
 end
 
 DialogueExtension.read_from_memory = function (self, memory_name, argument_name)
-	fassert(memory_name == "user_memory" or memory_name == "faction_memory", "Only memories supported are faction_memory or user_memory")
-	fassert(argument_name, "argument name can't be nil")
-
 	local target_memory = self["_" .. memory_name]
 
 	return target_memory[argument_name]
+end
+
+DialogueExtension.evaluate_rules = function (self, rules, seed)
+	local results = {}
+
+	for i = 1, #rules do
+		local rule_name = rules[i]
+		local dialogue_index = nil
+
+		if seed then
+			local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
+			dialogue_index = random_n
+		else
+			dialogue_index = math.random(1, self._vo_choice[rule_name].sound_events_n)
+		end
+
+		local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
+		results[i] = {
+			sound_event = sound_event,
+			subtitles_event = subtitles_event,
+			sound_event_duration = sound_event_duration
+		}
+	end
+
+	return results
+end
+
+DialogueExtension.is_dialogue_disabled = function (self)
+	return self._context.is_disabled
 end
 
 DialogueExtension.get_is_incapacitated = function (self)

@@ -334,7 +334,6 @@ local text_input_base = {
 				local deselect = false
 
 				if input_service:get("clipboard_copy") then
-					assert(selected_text)
 					Clipboard.put(selected_text)
 				elseif input_service:get("clipboard_cut") then
 					if Clipboard.put(selected_text) then
@@ -723,7 +722,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 			local fade_step = dt * 1 / placeholder_fade_time * 255
 			local input_text = pass_content.input_text
 
-			if input_text and string.len(input_text) > 0 then
+			if input_text and #input_text > 0 then
 				if alpha > 0 then
 					style_data.text_color[1] = _math_max(alpha - fade_step, 0)
 				end

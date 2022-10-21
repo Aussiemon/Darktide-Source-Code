@@ -142,7 +142,7 @@ recoil_templates.hip_lasgun_assault = {
 }
 recoil_templates.hip_lasgun_killshot = {
 	still = {
-		camera_recoil_percentage = 0.5,
+		camera_recoil_percentage = 0.25,
 		decay_grace = 0.125,
 		rise_duration = 0.075,
 		rise = {
@@ -1796,9 +1796,9 @@ recoil_templates.default_lasgun_spraynpray = {
 recoil_templates.default_lasgun_bfg = {
 	still = {
 		new_influence_percent = 0.75,
-		rise_duration = 0.15,
+		rise_duration = 0.1,
 		rise = {
-			0.75
+			0.3
 		},
 		decay = {
 			shooting = 0.5,
@@ -1807,7 +1807,7 @@ recoil_templates.default_lasgun_bfg = {
 		offset_range = {
 			{
 				pitch = {
-					0.25,
+					0.01,
 					0.3
 				},
 				yaw = {
@@ -1818,7 +1818,7 @@ recoil_templates.default_lasgun_bfg = {
 		},
 		offset_limit = {
 			yaw = 3,
-			pitch = 3
+			pitch = 1
 		}
 	},
 	moving = {
@@ -1840,61 +1840,78 @@ recoil_templates.default_lasgun_bfg = {
 		}
 	}
 }
-recoil_templates.hip_lasgun_p3_m1 = {
+recoil_templates.hip_lasgun_p3_m1_recoil = {
 	still = {
-		new_influence_percent = 0.1,
-		rise_duration = 0.075,
+		new_influence_percent = 0.05,
+		rise_duration = 0.2,
 		rise = {
-			0.08
+			0.01,
+			0.01,
+			0.01,
+			0.03,
+			0.03,
+			0.03,
+			0.03,
+			0.05,
+			0.035,
+			0.0275,
+			0.02
 		},
 		decay = {
-			shooting = 3,
-			idle = 2.75
+			shooting = 0.3,
+			idle = 4.75
 		},
 		offset_range = {
 			{
 				pitch = {
-					0.1,
-					0.125
+					0.01,
+					0.3
 				},
 				yaw = {
-					-0.02,
-					0.02
+					-0.2,
+					0.09
 				}
 			}
 		},
 		offset_limit = {
-			yaw = 0.2,
-			pitch = 1
+			yaw = 0.3,
+			pitch = 0.7
 		},
 		aim_assist = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 5,
+			lerp_scalar = 0.2
 		}
 	},
 	moving = {
-		new_influence_percent = 0.05,
+		new_influence_percent = 0.08,
 		inherits = {
-			"hip_lasgun_p3_m1",
+			"hip_lasgun_p3_m1_recoil",
 			"still"
 		},
 		rise = {
-			0.5,
-			0.35,
-			0.275,
-			0.2
+			0.05,
+			0.035,
+			0.0275,
+			0.02,
+			0.0275,
+			0.0275,
+			0.03
 		}
 	},
 	crouch_still = {
-		new_influence_percent = 0.01,
+		new_influence_percent = 0.03,
 		inherits = {
-			"hip_lasgun_p3_m1",
+			"hip_lasgun_p3_m1_recoil",
 			"still"
 		}
 	},
 	crouch_moving = {
-		new_influence_percent = 0.08,
+		new_influence_percent = 0.09,
 		inherits = {
-			"hip_lasgun_p3_m1",
+			"hip_lasgun_p3_m1_recoil",
 			"still"
 		}
 	}

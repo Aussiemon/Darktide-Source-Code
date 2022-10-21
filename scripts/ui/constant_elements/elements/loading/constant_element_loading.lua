@@ -4,7 +4,8 @@ local VIEW_SETTINGS = {
 	{
 		view_name = "mission_intro_view",
 		valid_states = {
-			"StateLoading"
+			"StateLoading",
+			"GameplayStateInit"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -25,10 +26,53 @@ local VIEW_SETTINGS = {
 		end
 	},
 	{
+		view_name = "blank_view",
+		valid_states = {
+			"StateLoading",
+			"GameplayStateRun"
+		},
+		validation_func = function ()
+			if Managers.ui:view_active("lobby_view") then
+				return false
+			end
+
+			if Managers.mechanism:mechanism_state() == "adventure_selected" then
+				return true
+			end
+
+			if Managers.mechanism:mechanism_state() == "client_wait_for_server" then
+				return true
+			end
+
+			if Managers.mechanism:mechanism_state() == "client_exit_gameplay" then
+				return true
+			end
+
+			if Managers.mechanism:mechanism_state() == false then
+				local host_type = Managers.connection:host_type()
+
+				if host_type == HOST_TYPES.mission_server then
+					return true
+				end
+			end
+
+			if Managers.state and Managers.state.extension then
+				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+				local intro_played = cinematic_scene_system:intro_played()
+				local waiting_for_intro_cinematics = not intro_played
+
+				if waiting_for_intro_cinematics then
+					return true
+				end
+			end
+		end
+	},
+	{
 		view_name = "loading_view",
 		valid_states = {
 			"StateLoading",
 			"StateExitToMainMenu",
+			"StateMissionServerExit",
 			"GameplayStateInit",
 			"StateError"
 		},
@@ -148,7 +192,7 @@ ConstantElementLoading._open_view_if_inactive = function (self, view_name)
 
 	if not ui_manager:view_active(view_name) then
 		Log.info("ConstantElementLoading", "Opening view %q", view_name)
-		ui_manager:open_view(view_name, nil, nil, nil, nil, nil)
+		ui_manager:open_view(view_name)
 	end
 end
 

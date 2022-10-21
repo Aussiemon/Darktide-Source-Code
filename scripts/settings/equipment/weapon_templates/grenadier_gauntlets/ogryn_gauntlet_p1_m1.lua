@@ -2,6 +2,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -188,7 +189,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.9
+				chain_time = 0.55
 			}
 		}
 	},
@@ -205,7 +206,7 @@ weapon_template.actions = {
 		crosshair_type = "projectile_drop",
 		start_input = "zoom",
 		kind = "aim",
-		total_time = 0.25,
+		total_time = 0.3,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -310,9 +311,10 @@ weapon_template.actions = {
 		uninterruptible = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
-		allowed_during_sprint = true,
-		abort_sprint = true,
 		stop_alternate_fire = true,
+		abort_sprint = true,
+		crosshair_type = "dot",
+		allowed_during_sprint = true,
 		total_time = 4.1666,
 		action_movement_curve = {
 			{
@@ -421,7 +423,7 @@ weapon_template.actions = {
 		kind = "windup",
 		first_person_hit_anim = "attack_hit",
 		uninterruptible = true,
-		anim_event = "attack_heavy_charge_right_diagonal_up",
+		anim_event = "charge_loop_right_diagonal_up",
 		hit_stop_anim = "attack_hit",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -542,7 +544,6 @@ weapon_template.actions = {
 		damage_window_end = 0.36666666666666664,
 		uninterruptible = true,
 		anim_event = "attack_swing_right",
-		power_level = 500,
 		total_time = 1.25,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -626,7 +627,6 @@ weapon_template.actions = {
 		kind = "sweep",
 		allowed_during_sprint = true,
 		damage_window_end = 0.3333333333333333,
-		power_level = 500,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_left",
@@ -712,7 +712,6 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "sweep",
 		allowed_during_sprint = true,
-		power_level = 500,
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -803,7 +802,6 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_down",
-		power_level = 500,
 		total_time = 2,
 		action_movement_curve = {
 			{
@@ -883,7 +881,6 @@ weapon_template.actions = {
 		damage_window_end = 0.3333333333333333,
 		uninterruptible = true,
 		anim_event = "attack_heavy_right_diagonal_up",
-		power_level = 500,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -953,7 +950,6 @@ weapon_template.actions = {
 		damage_window_end = 0.6333333333333333,
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_stab",
-		power_level = 500,
 		total_time = 2,
 		action_movement_curve = {
 			{
@@ -1063,11 +1059,10 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "melee_explosive",
 		hit_explosion_anim = "attack_hit_special",
-		power_level = 500,
 		allowed_during_sprint = false,
+		exploding_movement_speed_buff = "heavy_stun_movement_slow",
 		ammunition_usage = 1,
 		damage_window_end = 0.4,
-		exploding_movement_speed_buff = "heavy_stun_movement_slow",
 		explosion_delay = 0.3,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -1216,11 +1211,7 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {}
 weapon_template.base_stats = {
 	ogryn_gauntlet_p1_m1_ammo = {
@@ -1356,6 +1347,33 @@ weapon_template.perks = {
 			}
 		}
 	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_explosive"
+	},
+	{
+		display_name = "loc_weapon_keyword_multi_purpose"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		display_name = "loc_ranged_attack_gauntlet_melee",
+		type = "melee"
+	},
+	secondary = {
+		fire_mode = "projectile",
+		display_name = "loc_ranged_attack_secondary_braced",
+		type = "brace"
+	},
+	special = {
+		display_name = "loc_weapon_special_fist_attack_gauntlet",
+		type = "melee"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
 }
 
 return weapon_template

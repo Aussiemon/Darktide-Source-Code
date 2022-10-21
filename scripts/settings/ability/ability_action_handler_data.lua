@@ -14,6 +14,7 @@ local ability_action_data = {
 		shout = _require_ability_action("action_shout"),
 		psyker_shout = _require_ability_action("action_psyker_shout"),
 		stance_change = _require_ability_action("action_stance_change"),
+		stance_change_gunlugger = _require_ability_action("action_stance_change"),
 		targeted_dash_aim = _require_ability_action("action_targeted_dash_aim")
 	}
 }
@@ -34,6 +35,7 @@ ability_action_data.action_kind_condition_funcs = {
 	shout = _can_use_ability_check,
 	psyker_shout = _can_use_ability_check,
 	stance_change = _can_use_ability_check,
+	stance_change_gunlugger = _can_use_ability_check,
 	targeted_dash_aim = _can_use_ability_check,
 	linear_aim = function (action_settings, condition_func_params, used_input)
 		local can_use_ability = _can_use_ability_check(action_settings, condition_func_params, used_input)
@@ -78,11 +80,11 @@ ability_action_data.action_kind_total_time_funcs = {}
 ability_action_data.conditional_state_functions = {}
 
 for name, _ in pairs(ability_action_data.action_kind_condition_funcs) do
-	fassert(ability_action_data.actions[name], "Conditions specified for non-existant action kind %q", name)
+	-- Nothing
 end
 
 for name, _ in pairs(ability_action_data.action_kind_total_time_funcs) do
-	fassert(ability_action_data.actions[name], "Total Time Function specified for non-existant action kind %q", name)
+	-- Nothing
 end
 
 return ability_action_data

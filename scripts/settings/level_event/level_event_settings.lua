@@ -20,7 +20,7 @@ LevelEventSettings = {
 	}
 }
 LevelEventSettings.spline_follower.servo_skull = {
-	proximity_check_distance = 10,
+	proximity_check_distance_squared = 100,
 	acceleration_to_max_speed = 8,
 	deceleration_to_min_speed = 4,
 	servo_skull_default_speed = 0.5

@@ -75,18 +75,20 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 
 	self:spawn_items(item_table)
 
-	if attach_settings.lod_group and Unit.has_mesh(unit, "b_culling_volume") then
-		local bv_mesh = Unit.mesh(unit, "b_culling_volume")
-		local bv = Mesh.bounding_volume(bv_mesh)
+	if attach_settings.lod_group then
+		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
-		LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		if bv then
+			LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		end
 	end
 
-	if attach_settings.lod_shadow_group and Unit.has_mesh(unit, "b_culling_volume") then
-		local bv_mesh = Unit.mesh(unit, "b_culling_volume")
-		local bv = Mesh.bounding_volume(bv_mesh)
+	if attach_settings.lod_shadow_group then
+		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
 
-		LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		if bv then
+			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		end
 	end
 
 	for i, material_override in pairs(global_material_override_table) do

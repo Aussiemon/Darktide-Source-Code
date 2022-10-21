@@ -1,9 +1,6 @@
 local LocalWaitForSessionHostState = class("LocalWaitForSessionHostState")
 
 LocalWaitForSessionHostState.init = function (self, state_machine, shared_state)
-	assert(shared_state.engine_lobby, "Engine lobby required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 end

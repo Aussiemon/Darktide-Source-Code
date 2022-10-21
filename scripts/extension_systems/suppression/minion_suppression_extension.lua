@@ -4,9 +4,6 @@ local MinionSuppressionExtension = class("MinionSuppressionExtension")
 
 MinionSuppressionExtension._init_blackboard_components = function (self, blackboard, breed)
 	local suppress_config = breed.suppress_config
-
-	fassert(suppress_config, "No suppress_config specified for breed: %s that has a MinionSuppressionExtension", breed.name)
-
 	self._max_suppress_value = suppress_config.max_value
 	self._suppress_threshold = suppress_config.threshold
 	self._flinch_threshold = suppress_config.flinch_threshold or 0
@@ -33,9 +30,6 @@ end
 
 MinionSuppressionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
-
-	assert(is_server, "MinionSuppressionExtension should only exist on the server")
-
 	local blackboard = BLACKBOARDS[unit]
 	self._blackboard = blackboard
 	local breed = extension_init_data.breed
@@ -47,8 +41,13 @@ MinionSuppressionExtension.init = function (self, extension_init_context, unit, 
 	local suppress_config = breed.suppress_config
 	self._suppress_config = suppress_config
 	self._threat_factor = suppress_config.threat_factor
+	self._enabled = true
 	self._unit = unit
 	self._game_object_id = nil_or_game_object_id
+end
+
+MinionSuppressionExtension.set_enabled = function (self, enabled)
+	self._enabled = enabled
 end
 
 MinionSuppressionExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -76,6 +75,10 @@ local FLINCH_FREQUENCY_RANGE = {
 }
 
 MinionSuppressionExtension.add_suppress_value = function (self, value, type, attack_delay, direction, attacking_unit)
+	if not self._enabled then
+		return
+	end
+
 	local t = Managers.time:time("gameplay")
 
 	if t < self._suppressed_immunity_t then

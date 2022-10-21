@@ -25,8 +25,6 @@ ShadingEnvironmentSystem._fetch_theme_shading_environments = function (self, the
 		if slots_info and table.size(slots_info) > 0 then
 			local shading_environments = self._theme_shading_environment_slots
 
-			fassert(table.size(shading_environments) == 0, "[ShadingEnvironmentSystem] Only one theme can containt a set of environment slots at a time.")
-
 			for _, slot_info in ipairs(slots_info) do
 				shading_environments[slot_info.slot_id] = slot_info.shading_environment_name
 			end

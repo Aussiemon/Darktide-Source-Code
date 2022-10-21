@@ -12,9 +12,13 @@ local devices = {
 	"keyboard",
 	"mouse"
 }
+local reserved_keys = {}
+local cancel_keys = {
+	"keyboard_esc"
+}
 local settings = {}
 
-if PLATFORM == "win32" then
+if IS_XBS or IS_WINDOWS then
 	local input_manager = Managers.input
 
 	for _, service_type in ipairs(services) do
@@ -23,32 +27,53 @@ if PLATFORM == "win32" then
 		if alias then
 			local alias_table = alias:alias_table()
 
-			for alias_name, alias_tanle in pairs(alias_table) do
+			for alias_name, _ in pairs(alias_table) do
 				local alias_array_index = 1
-				local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
-				local display_name = alias:description(alias_name)
-				local group_name = alias:group(alias_name)
-				local sort_order = alias:sort_order(alias_name)
-				settings[#settings + 1] = {
-					widget_type = "keybind",
-					alias = alias,
-					alias_name = alias_name,
-					service_type = service_type,
-					display_name = display_name,
-					group_name = group_name,
-					devices = devices,
-					sort_order = sort_order,
-					on_activated = function (new_value, old_value)
-						alias:set_keys_for_alias(alias_name, alias_array_index, devices, new_value)
-						input_manager:apply_alias_changes(service_type)
-						input_manager:save_key_mappings(service_type)
-					end,
-					get_function = function ()
-						local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
 
-						return key_info
-					end
-				}
+				if alias:bindable(alias_name) then
+					local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+					local display_name = alias:description(alias_name)
+					local group_name = alias:group(alias_name)
+					local sort_order = alias:sort_order(alias_name)
+					settings[#settings + 1] = {
+						widget_type = "keybind",
+						alias = alias,
+						alias_name = alias_name,
+						service_type = service_type,
+						display_name = display_name,
+						group_name = group_name,
+						devices = devices,
+						sort_order = sort_order,
+						on_activated = function (new_value, old_value)
+							for i = 1, #cancel_keys do
+								local cancel_key = cancel_keys[i]
+
+								if cancel_key == new_value.main then
+									return true
+								end
+							end
+
+							for i = 1, #reserved_keys do
+								local reserved_key = reserved_keys[i]
+
+								if reserved_key == new_value.main then
+									return false
+								end
+							end
+
+							alias:set_keys_for_alias(alias_name, alias_array_index, devices, new_value)
+							input_manager:apply_alias_changes(service_type)
+							input_manager:save_key_mappings(service_type)
+
+							return true
+						end,
+						get_function = function ()
+							local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+
+							return key_info
+						end
+					}
+				end
 			end
 		end
 	end

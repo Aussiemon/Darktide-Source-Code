@@ -7,9 +7,9 @@ require("scripts/extension_systems/locomotion/player_unit_locomotion_extension")
 require("scripts/extension_systems/locomotion/projectile_husk_locomotion_extension")
 require("scripts/extension_systems/locomotion/projectile_unit_locomotion_extension")
 
+local Attack = require("scripts/utilities/attack/attack")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local MinionDeath = require("scripts/utilities/minion_death")
 local LocomotionSystem = class("LocomotionSystem", "ExtensionSystemBase")
 
 LocomotionSystem.init = function (self, extension_system_creation_context, ...)
@@ -64,7 +64,7 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 	end
 
 	local attack_direction = Vector3.down()
-	local damage_profile = DamageProfileTemplates.minion_instakill
+	local damage_profile = DamageProfileTemplates.kill_volume_and_ofF_navmesh
 
 	for i = 1, #units_to_kill do
 		local unit = units_to_kill[i]
@@ -73,7 +73,11 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 			local position = Unit.local_position(unit, 1)
 
 			Log.info("LocomotionSystem", "Killing %s since outside nav mesh (%s).", unit, position)
-			MinionDeath.die(unit, nil, attack_direction, nil, damage_profile, nil, nil, nil, nil)
+
+			local health_extension = ScriptUnit.has_extension(unit, "health_system")
+			local last_damaging_unit = health_extension and health_extension:last_damaging_unit()
+
+			Attack.execute(unit, damage_profile, "instakill", true, "attack_direction", attack_direction, "attacking_unit", last_damaging_unit)
 		end
 	end
 end

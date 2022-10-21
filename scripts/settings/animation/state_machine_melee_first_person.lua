@@ -3,6 +3,9 @@ local state_machine_settings = {
 	["content/characters/player/human/first_person/animations/axe"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/human/first_person/animations/power_maul"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/human/first_person/animations/chain_sword"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
@@ -43,6 +46,12 @@ local state_machine_settings = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/first_person/animations/thunder_hammer"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/first_person/animations/2h_power_maul"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/first_person/animations/sabre"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	}
 }

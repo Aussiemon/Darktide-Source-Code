@@ -21,6 +21,7 @@ BtMoveToCoverAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.cover_component = cover_component
 	scratchpad.perception_component = blackboard.perception
+	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local run_speed = breed.run_speed
 
 	navigation_extension:set_enabled(true, run_speed)
@@ -39,6 +40,10 @@ BtMoveToCoverAction.leave = function (self, unit, breed, blackboard, scratchpad,
 		MinionMovement.set_anim_driven(scratchpad, false)
 	end
 
+	if scratchpad.stagger_duration then
+		MinionMovement.stop_running_stagger(scratchpad)
+	end
+
 	scratchpad.navigation_extension:set_enabled(false)
 end
 
@@ -55,15 +60,22 @@ BtMoveToCoverAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		return "done"
 	end
 
+	if action_data.running_stagger_duration then
+		MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
+	end
+
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
 
 	if should_start_idle or should_be_idling then
 		if should_start_idle then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
 
-		return "running"
+		local evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate < t
+
+		return "running", evaluate
 	end
 
 	local move_state = behavior_component.move_state
@@ -79,8 +91,6 @@ BtMoveToCoverAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
-
-	local should_evaluate = scratchpad.time_to_next_evaluate < t
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + math.random_range(BtMoveToCoverAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtMoveToCoverAction.CONSECUTIVE_EVALUATE_INTERVAL[2])

@@ -19,7 +19,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._spawned_minions_by_queue_id = {}
 end
 
-MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position)
+MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing)
 	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, spawn_position, exit_position, self._traverse_logic)
 
 	if not exit_position_on_nav_mesh then
@@ -33,16 +33,19 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 	self._spawn_rotation = QuaternionBox(Quaternion.look(Vector3.flat(exit_position_on_nav_mesh - spawn_position), Vector3.up()))
 	self._exit_position = Vector3Box(exit_position_on_nav_mesh)
 	self._is_setup = true
+	self._excluded_from_pacing = exclude_from_pacing
 end
 
 MinionSpawnerExtension.spawner_groups = function (self)
-	fassert(self._is_setup, "[MinionSpawnerExtension] Extension not setup")
-
 	return self._spawner_groups
 end
 
 MinionSpawnerExtension.exit_position_boxed = function (self)
 	return self._exit_position
+end
+
+MinionSpawnerExtension.is_excluded_from_pacing = function (self)
+	return self._excluded_from_pacing
 end
 
 MinionSpawnerExtension.unit = function (self)
@@ -56,10 +59,7 @@ MinionSpawnerExtension.position = function (self)
 	return position
 end
 
-MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_target_side_id, optional_spawn_delay, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name)
-	fassert(self._is_setup, "[MinionSpawnerExtension] Extension not setup")
-	fassert(self._is_server, "[MinionSpawnerExtension] add_spawns() only allowed on the server")
-
+MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_target_side_id, optional_spawn_delay, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
 	local queue = self._spawn_queue
 	local spawn_delay = optional_spawn_delay or DEFAULT_SPAWN_DELAY
 	local spawn_data = {
@@ -68,7 +68,9 @@ MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, o
 		target_side_id = optional_target_side_id,
 		mission_objective_id = optional_mission_objective_id,
 		group_id = optional_group_id,
-		attack_selection_template_name = optional_attack_selection_template_name
+		attack_selection_template_name = optional_attack_selection_template_name,
+		aggro_state = optional_aggro_state,
+		max_health_modifier = optional_max_health_modifier
 	}
 	local queue_id = queue:enqueue(breed_list, spawn_data)
 
@@ -82,12 +84,10 @@ MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, o
 end
 
 MinionSpawnerExtension.remove_spawns_by_id = function (self, queue_id)
-	fassert(self._is_server, "[MinionSpawnerExtension] remove_spawns_by_id() only allowed on the server")
 	self._spawn_queue:remove(queue_id)
 end
 
 MinionSpawnerExtension.clear_all_spawns = function (self)
-	fassert(self._is_server, "[MinionSpawnerExtension] clear_all_spawns() only allowed on the server")
 	self._spawn_queue:clear()
 end
 
@@ -131,13 +131,6 @@ end
 
 MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	local breed = Breeds[breed_name]
-
-	fassert(breed, "[MinionSpawnerExtension] Tried to spawn non-existing breed %q", breed_name)
-
-	local layer_costs = breed.nav_tag_allowed_layers
-
-	Managers.state.nav_mesh:initialize_nav_tag_cost_table(self._nav_tag_cost_table, layer_costs)
-
 	local nav_world = self._nav_world
 	local exit_position = self._exit_position:unbox()
 	local exit_position_valid = MinionSpawnerSpawnPosition.validate_exit_position(nav_world, exit_position, self._traverse_logic)
@@ -153,9 +146,10 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	local mission_objective_id = spawn_data.mission_objective_id
 	local spawn_side_id = spawn_data.spawn_side_id
 	local target_side_id = spawn_data.target_side_id
+	local aggro_state = spawn_data.aggro_state or aggro_states.aggroed
 	local target_unit = nil
 
-	if target_side_id then
+	if target_side_id and aggro_state == aggro_states.aggroed then
 		local main_path_manager = Managers.state.main_path
 
 		if main_path_manager:is_main_path_ready() then
@@ -166,8 +160,17 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	local unit = self._unit
 	local group_id = spawn_data.group_id
 	local attack_selection_template_name = spawn_data.attack_selection_template_name
+	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name)
+	local max_health_modifier = spawn_data.max_health_modifier
 
-	return Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_states.aggroed, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name)
+	if max_health_modifier then
+		local spawned_unit_health_extension = ScriptUnit.extension(spawned_unit, "health_system")
+		local max_health = spawned_unit_health_extension:max_health()
+
+		spawned_unit_health_extension:add_damage(max_health * max_health_modifier)
+	end
+
+	return spawned_unit
 end
 
 MinionSpawnerExtension.destroy = function (self)

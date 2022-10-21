@@ -127,10 +127,8 @@ HudElementInteraction._update_can_interact_target = function (self)
 	if not interactee_unit then
 		local focus_target = interactor_extension:focus_unit()
 
-		if focus_target then
-			local interactee_extension = ScriptUnit.extension(focus_target, "interactee_system")
-
-			if interactee_extension:block_text() then
+		if ALIVE[focus_target] then
+			if interactor_extension:hud_block_text() then
 				interactee_unit = focus_target
 				update_target = true
 			end
@@ -200,7 +198,7 @@ HudElementInteraction._update_can_interact_target = function (self)
 		local marker = active_presentation_data.marker
 		local show_interaction_ui = interactor_extension and interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension and interactor_extension:show_counter_ui()
-		local show_block_ui = interactee_unit and active_presentation_data.interactee_extension:block_text()
+		local show_block_ui = interactor_extension and interactor_extension:hud_block_text()
 		self._show_interaction_hud = marker and (show_interaction_ui or show_counter_ui or show_block_ui)
 		self._show_interaction_counter_hud = self._show_interaction_hud and show_counter_ui
 	elseif self._show_interaction_hud then
@@ -314,7 +312,7 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	local can_interact = interactee_extension:can_interact(player_unit)
 
 	if can_interact and interactor_extension then
-		hold_progress = interactor_extension:get_interaction_progress()
+		hold_progress = interactor_extension:interaction_progress()
 	end
 
 	local background_size = HudElementInteractionSettings.background_size
@@ -392,7 +390,7 @@ HudElementInteraction.is_synchronized_with_interactee = function (self, interact
 		return false
 	end
 
-	if previous_interactee_data.input_block_text ~= interactee_extension:block_text() then
+	if previous_interactee_data.input_block_text ~= interactor_extension:hud_block_text() then
 		return false
 	end
 
@@ -408,9 +406,10 @@ end
 HudElementInteraction._setup_interaction_information = function (self, interactee_unit, interactee_extension, interactor_extension)
 	local hold_required = interactee_extension:hold_required()
 	local input_action_text = interactee_extension:action_text()
-	local input_block_text = interactee_extension:block_text()
+	local input_block_text, hud_block_text_context = interactor_extension:hud_block_text()
 	local input_text_interact = _get_input_text("interact", input_action_text or "n/a", hold_required)
-	local hud_description, type_description = interactor_extension:hud_description()
+	local hud_description = interactor_extension:hud_description()
+	local type_description = nil
 	local description_text = Localize(hud_description)
 	local interactee_player = Managers.player:player_by_unit(interactee_unit)
 
@@ -425,7 +424,11 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	widgets_by_name.interact_text.content.text = input_text_interact
 
 	if input_block_text then
-		widgets_by_name.interact_text.content.text = Localize(input_block_text)
+		if hud_block_text_context then
+			widgets_by_name.interact_text.content.text = Localize(input_block_text, true, hud_block_text_context)
+		else
+			widgets_by_name.interact_text.content.text = Localize(input_block_text)
+		end
 	end
 
 	widgets_by_name.description_text.content.text = description_text

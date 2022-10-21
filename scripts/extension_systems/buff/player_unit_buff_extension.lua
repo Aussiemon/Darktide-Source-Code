@@ -10,6 +10,8 @@ local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
 local PlayerUnitBuffExtension = class("PlayerUnitBuffExtension", "BuffExtensionBase")
 
 PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+	self._pre_allocate_event_param_tables = true
+
 	PlayerUnitBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -88,11 +90,8 @@ PlayerUnitBuffExtension.add_internally_controlled_buff = function (self, templat
 	local template = BuffTemplates[template_name]
 	local is_server = self._is_server
 
-	fassert(template.meta_buff == nil, "Can't add meta_buffs to normal buff extension.")
-
 	if template.predicted then
-		fassert(is_server or self._buff_context.is_local_unit, "Can only add predicted buff if server or local unit")
-		fassert(BuffArgs.is_only_predictable_data(...), "predicted, internally controlled buffs can't have extra arguments added to it")
+		-- Nothing
 	elseif not is_server then
 		return
 	end
@@ -113,11 +112,8 @@ PlayerUnitBuffExtension.add_externally_controlled_buff = function (self, templat
 	local is_server = self._is_server
 	local client_tried_adding_rpc_buff, index, component_index = nil
 
-	fassert(template.meta_buff == nil, "Can't add meta_buffs to normal buff extension.")
-
 	if template.predicted then
-		fassert(is_server or self._buff_context.is_local_unit, "Can only add predicted buff if server or local unit")
-		fassert(BuffArgs.is_only_predictable_data(...), "Can't have extra arguments on predicted buffs since extra arguments won't be synced through component data")
+		-- Nothing
 	elseif not is_server then
 		client_tried_adding_rpc_buff = true
 	end
@@ -129,8 +125,6 @@ PlayerUnitBuffExtension.add_externally_controlled_buff = function (self, templat
 	local should_be_muted = not self:_check_keywords(template)
 
 	if should_be_muted then
-		fassert(not template.predicted, "[PlayerUnitBuffExtension] Muted external buffs hasn't been implemented for predicted buffs.")
-
 		index = self:_next_local_index()
 		self._muted_external_buffs[index] = template
 	elseif template.predicted then
@@ -210,7 +204,11 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 	local buff_instance = self._buffs_by_index[local_index]
 	buff_instance = buff_instance or self._component_buffs[component_index]
 
-	fassert(buff_instance, "No buff found at when trying to remove it, local_index: %s, component_index: %s", local_index, component_index)
+	if not buff_instance then
+		Log.error("PlayerUnitBuffExtension", "No buff found when trying to remove it, local_index: %s, component_index: %s", local_index, component_index)
+
+		return
+	end
 
 	local template = buff_instance:template()
 
@@ -222,20 +220,13 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 end
 
 PlayerUnitBuffExtension.remove_internally_controlled_buff_stack = function (self, template_name)
-	assert(self._is_server, "'remove_internally_controlled_stacking_buff' should only be called on server")
-
 	local buff_instance = self._stacking_buffs[template_name]
-
-	assert(buff_instance, "'remove_internally_controlled_stacking_buff' should only be called on a known stacking buff")
 
 	return buff_instance:remove_stack()
 end
 
 PlayerUnitBuffExtension._remove_internally_controlled_buff = function (self, local_index)
 	local buff_instance = self._buffs_by_index[local_index]
-
-	fassert(buff_instance, "No buff found at when trying to remove it, local_index: %s", local_index)
-
 	local template = buff_instance:template()
 
 	if template.predicted then

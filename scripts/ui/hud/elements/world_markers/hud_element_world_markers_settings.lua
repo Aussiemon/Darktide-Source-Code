@@ -10,6 +10,7 @@ local hud_element_world_markers_settings = {
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_combat",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_party_hud",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_objective",
+		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_objective_hub",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_ping",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_threat",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_attention",

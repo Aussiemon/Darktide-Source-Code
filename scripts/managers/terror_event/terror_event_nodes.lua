@@ -3,6 +3,8 @@ local BreedQueries = require("scripts/utilities/breed_queries")
 local Breeds = require("scripts/settings/breed/breeds")
 local MinionAttackSelection = require("scripts/utilities/minion_attack_selection/minion_attack_selection")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local PerceptionSettings = require("scripts/settings/perception/perception_settings")
+local aggro_states = PerceptionSettings.aggro_states
 local TerrorEventNodes = {
 	debug_print = {
 		init = function (node, event, t)
@@ -121,6 +123,23 @@ local TerrorEventNodes = {
 			return string.format("%q", node.sound_event_name)
 		end
 	},
+	play_3d_sound_from_spawners = {
+		init = function (node, event, t)
+			local sound_event_name = node.sound_event_name
+			local fx_system = Managers.state.extension:system("fx_system")
+			local spawner_group = node.spawner_group
+			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+			local position = minion_spawn_system:average_position_of_spawners(spawner_group)
+
+			fx_system:trigger_wwise_event(sound_event_name, position)
+		end,
+		update = function (node, scratchpad, t, dt)
+			return true
+		end,
+		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+			return string.format("%q from spawners %q", node.sound_event_name, node.spawner_group)
+		end
+	},
 	control_pacing_spawns = {
 		init = function (node, event, t)
 			local pacing_manager = Managers.state.pacing
@@ -182,6 +201,24 @@ local TerrorEventNodes = {
 }
 local TEMP_SPAWN_SIDE_NAME = "villains"
 local TEMP_TARGET_SIDE_NAME = "heroes"
+local GROUP_SOUNDS_BY_BREED_NAME = {
+	cultist_melee = {
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_cultists",
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists"
+	},
+	renegade_melee = {
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_traitor_guards",
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards"
+	},
+	chaos_newly_infected = {
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_newly_infected",
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_newly_infected"
+	},
+	chaos_poxwalker = {
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_poxwalkers",
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers"
+	}
+}
 TerrorEventNodes.spawn_by_points = {
 	init = function (node, event, t)
 		event.scratchpad.spawned_minion_data = event.spawned_minion_data
@@ -196,16 +233,25 @@ TerrorEventNodes.spawn_by_points = {
 		if not scratchpad.started_spawn then
 			scratchpad.started_spawn = true
 			local breed_tags = node.breed_tags
+			local excluded_breed_tags = node.excluded_breed_tags
 			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
 			local points = node.points * difficulty_scale
 			local spawner_group = node.spawner_group
+			local proximity_spawners = node.proximity_spawners
 			local limit_spawners = node.limit_spawners
 			local delay_until_all_spawned = node.delay_until_all_spawned
 			local mission_objective_id = node.mission_objective_id
 			local spawn_side_name = TEMP_SPAWN_SIDE_NAME
 			local target_side_name = TEMP_TARGET_SIDE_NAME
-			local breed_pool = BreedQueries.match_minions_by_tags(breed_tags)
+			local wanted_sub_faction = Managers.state.pacing:current_faction()
+			local breed_pool = BreedQueries.match_minions_by_tags(breed_tags, excluded_breed_tags, wanted_sub_faction)
 			local breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
+
+			if not breed then
+				breed_pool = BreedQueries.match_minions_by_tags(breed_tags)
+				breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
+			end
+
 			local breed_name = breed.name
 
 			if node.max_breed_amount then
@@ -221,17 +267,46 @@ TerrorEventNodes.spawn_by_points = {
 			local spawners = nil
 
 			if spawner_group then
-				spawners = minion_spawn_system:spawners_in_group(spawner_group)
+				if proximity_spawners then
+					local average_position = Vector3(0, 0, 0)
+					local side = side_system:get_side(target_side_id)
+					local valid_player_units = side.valid_player_units
+					local num_valid_player_units = #valid_player_units
 
-				fassert(#spawners ~= 0, "[TerrorEventNodes.spawn_by_points.init] there are no available spawners with spawner group name \"%s\", the spawner group has probably changed name!", spawner_group)
+					for i = 1, num_valid_player_units do
+						local target_unit = valid_player_units[i]
+						local position = POSITION_LOOKUP[target_unit]
+						average_position = average_position + position
+					end
+
+					average_position = average_position / num_valid_player_units
+					spawners = proximity_spawners and minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position)
+				else
+					spawners = minion_spawn_system:spawners_in_group(spawner_group)
+				end
 			end
 
-			table.shuffle(spawners)
+			if not proximity_spawners then
+				table.shuffle(spawners)
+			end
 
 			if limit_spawners then
 				for i = limit_spawners + 1, #spawners do
 					spawners[i] = nil
 				end
+			end
+
+			if proximity_spawners then
+				table.shuffle(spawners)
+			end
+
+			local sound_event_name = node.sound_event_name
+
+			if sound_event_name then
+				local sound_position = spawners[1]:position()
+				local fx_system = Managers.state.extension:system("fx_system")
+
+				fx_system:trigger_wwise_event(sound_event_name, sound_position)
 			end
 
 			local attack_selection_template_tag = node.attack_selection_template_tag
@@ -247,8 +322,21 @@ TerrorEventNodes.spawn_by_points = {
 			end
 
 			local spawned_minion_data = scratchpad.spawned_minion_data
+			local aggro_state = node.passive and aggro_states.passive or aggro_states.aggroed
+			local group_system = Managers.state.extension:system("group_system")
+			local group_id = group_system:generate_group_id()
 
-			BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil)
+			BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, aggro_state, group_id)
+
+			local group = group_system:group_from_id(group_id)
+			local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]
+
+			if horde_group_sound_event_names and not node.passive then
+				local start_event = horde_group_sound_event_names.start
+				local stop_event = horde_group_sound_event_names.stop
+				group.group_start_sound_event = start_event
+				group.group_stop_sound_event = stop_event
+			end
 
 			if delay_until_all_spawned ~= false then
 				scratchpad.wait_for_spawners = spawners
@@ -276,6 +364,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local limit_spawners = node.limit_spawners
 		local delay_until_all_spawned = node.delay_until_all_spawned
 		local mission_objective_id = node.mission_objective_id
+		local max_health_modifier = node.max_health_modifier
 		local spawn_side_name = TEMP_SPAWN_SIDE_NAME
 		local target_side_name = TEMP_TARGET_SIDE_NAME
 		local side_system = Managers.state.extension:system("side_system")
@@ -288,8 +377,6 @@ TerrorEventNodes.spawn_by_breed_name = {
 
 		if spawner_group then
 			spawners = minion_spawn_system:spawners_in_group(spawner_group)
-
-			fassert(#spawners ~= 0, "[TerrorEventNodes.spawn_by_breed_name.init] there are no available spawners with spawner group name \"%s\", the spawner group has probably changed name!", spawner_group)
 		end
 
 		table.shuffle(spawners)
@@ -313,7 +400,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 			attack_selection_template_name_or_nil = MinionAttackSelection.match_template_by_tag(attack_selection_templates, attack_selection_template_tag)
 		end
 
-		BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, event.spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil)
+		BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, event.spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, nil, nil, max_health_modifier)
 
 		if delay_until_all_spawned ~= false then
 			event.scratchpad.wait_for_spawners = spawners
@@ -362,8 +449,10 @@ TerrorEventNodes.start_terror_trickle = {
 		local template_name = node.template_name
 		local use_occluded_positions = node.use_occluded_positions
 		local delay = node.delay
+		local proximity_spawners = node.proximity_spawners
+		local limit_spawners = node.limit_spawners
 
-		Managers.state.terror_event:start_terror_trickle(template_name, spawner_group, delay, use_occluded_positions)
+		Managers.state.terror_event:start_terror_trickle(template_name, spawner_group, delay, use_occluded_positions, limit_spawners, proximity_spawners)
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true

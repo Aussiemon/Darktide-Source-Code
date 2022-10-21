@@ -105,10 +105,7 @@ SteamServerCounter.result = function (self)
 end
 
 SteamServerCounter._validate_options = function (self, options)
-	assert(type(options.network_hash) == "string", "Invalid network_hash")
-	assert(type(options.use_eac) == "boolean", "Invalid use_eac")
-	assert(options.mission_id == nil or type(options.mission_id) == "string", "Invalid mission id")
-	assert(type(options.host_type) == "string", "Invalid host_type")
+	return
 end
 
 SteamServerCounter._process_next = function (self)

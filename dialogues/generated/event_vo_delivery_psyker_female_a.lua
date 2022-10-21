@@ -7,8 +7,8 @@ local event_vo_delivery_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.144604,
-			[2.0] = 1.966438
+			[1.0] = 4.144583,
+			[2.0] = 1.966417
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -24,8 +24,8 @@ local event_vo_delivery_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.144604,
-			[2.0] = 1.966438
+			[1.0] = 4.144583,
+			[2.0] = 1.966417
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -41,8 +41,8 @@ local event_vo_delivery_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.144604,
-			[2.0] = 1.966438
+			[1.0] = 4.144583,
+			[2.0] = 1.966417
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -58,8 +58,8 @@ local event_vo_delivery_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.144604,
-			[2.0] = 1.966438
+			[1.0] = 4.144583,
+			[2.0] = 1.966417
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

@@ -1,13 +1,18 @@
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local DEBUG = false
-local PREVIEWER_FRAME_DELAY = 10
+local PREVIEWER_FRAME_DELAY = 5
 local PortraitUI = class("PortraitUI")
 
 PortraitUI.init = function (self, render_settings)
+	self._unique_id = "PortraitUI" .. "_" .. string.gsub(tostring(self), "table: ", "")
 	self._render_settings = render_settings
 	self._profile_requests_queue_order = {}
 	self._profile_requests = {}
+	self._portrait_width = render_settings and render_settings.portrait_width
+	self._portrait_height = render_settings and render_settings.portrait_height
+	self._target_resolution_width = render_settings and render_settings.target_resolution_width
+	self._target_resolution_height = render_settings and render_settings.target_resolution_height
 	self._default_camera_settings_key = "human"
 	self._breed_camera_settings = {}
 	self._id_counter = 0
@@ -70,7 +75,7 @@ PortraitUI._profile_request_by_id = function (self, id, ignore_assert)
 	end
 
 	if ignore_assert then
-		assert("[PortraitUI] - No icon portrait request exist for id: (%s)", tostring(id))
+		-- Nothing
 	end
 end
 
@@ -106,7 +111,9 @@ PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, op
 	if data.spawned then
 		local grid_index = self:_grid_index_by_character_id(character_id)
 
-		on_load_callback(grid_index, self._num_rows, self._num_columns)
+		if on_load_callback then
+			on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+		end
 	else
 		data.callbacks[id] = on_load_callback
 	end
@@ -117,13 +124,8 @@ end
 PortraitUI.unload_profile_portrait = function (self, id)
 	local data = self:_profile_request_by_id(id)
 	local character_id = data.character_id
-
-	fassert(data, "[PortraitUI] - No profile portrait request exist for character (%s)", tostring(character_id))
-
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
-
-	fassert(references_lookup[id], "[PortraitUI] - No profile portrait request exist for character (%s) with id name: (%s)", tostring(character_id), id)
 
 	if #references_array == 1 then
 		local grid_index = data.grid_index
@@ -174,9 +176,16 @@ PortraitUI._handle_request_queue = function (self)
 					local active_request = self._active_request
 					local callbacks = active_request.callbacks
 					local grid_index = active_request.grid_index
+					local uvs = self:_grid_index_uvs(grid_index)
+					local size_scale_x = uvs[2][1] - uvs[1][1]
+					local size_scale_y = uvs[2][2] - uvs[1][2]
+					local position_scale_x = uvs[1][1]
+					local position_scale_y = uvs[1][2]
+
+					Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
 
 					for id, on_load_callback in pairs(callbacks) do
-						on_load_callback(grid_index, self._num_rows, self._num_columns)
+						on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
 					end
 
 					table.clear(callbacks)
@@ -190,6 +199,8 @@ PortraitUI._handle_request_queue = function (self)
 		end
 	elseif #self._profile_requests_queue_order > 0 then
 		self:_handle_next_request_in_queue()
+	else
+		self._active_request = nil
 	end
 end
 
@@ -197,11 +208,16 @@ PortraitUI._handle_next_request_in_queue = function (self)
 	if not self._world_spawner then
 		self:_initialize_world()
 
+		self._icon_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._target_resolution_width, self._target_resolution_height, self._unique_id)
+		self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._portrait_width * 4, self._portrait_height * 4, self._unique_id .. "_2")
+		local render_targets = {
+			back_buffer = self._capture_render_target
+		}
 		local default_camera_settings_key = self._default_camera_settings_key
 		local camera_settings = self._breed_camera_settings[default_camera_settings_key]
 		local camera_unit = camera_settings.camera_unit
 
-		self:_setup_viewport(camera_unit)
+		self:_setup_viewport(camera_unit, render_targets)
 	end
 
 	self._active_request = nil
@@ -230,14 +246,8 @@ PortraitUI._handle_next_request_in_queue = function (self)
 		local uvs = self:_grid_index_uvs(grid_index)
 		local size_scale_x = uvs[2][1] - uvs[1][1]
 		local size_scale_y = uvs[2][2] - uvs[1][2]
-
-		self._world_spawner:set_viewport_size(size_scale_x, size_scale_y)
-
 		local position_scale_x = uvs[1][1]
 		local position_scale_y = uvs[1][2]
-
-		self._world_spawner:set_viewport_position(position_scale_x, position_scale_y)
-
 		local profile = request.profile
 		local render_context = request.render_context
 
@@ -262,8 +272,9 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
 	local optional_state_machine = render_context and render_context.state_machine
 	local optional_animation_event = render_context and render_context.animation_event
+	local force_highest_mip = true
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, optional_state_machine, optional_animation_event)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, optional_state_machine, optional_animation_event, force_highest_mip)
 
 	local archetype = profile.archetype
 	local breed = archetype.breed
@@ -337,13 +348,13 @@ PortraitUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 	}
 end
 
-PortraitUI._setup_viewport = function (self, camera_unit)
+PortraitUI._setup_viewport = function (self, camera_unit, render_targets)
 	local viewport_name = self._render_settings.viewport_name
 	local viewport_type = DEBUG and "default" or self._render_settings.viewport_type
 	local viewport_layer = self._render_settings.viewport_layer
 	local shading_environment = self._render_settings.shading_environment
 
-	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, nil, render_targets)
 end
 
 PortraitUI._resume_rendering = function (self)
@@ -359,6 +370,18 @@ PortraitUI._pause_rendering = function (self)
 end
 
 PortraitUI.destroy = function (self)
+	if self._icon_render_target then
+		Renderer.destroy_resource(self._icon_render_target)
+
+		self._icon_render_target = nil
+	end
+
+	if self._capture_render_target then
+		Renderer.destroy_resource(self._capture_render_target)
+
+		self._capture_render_target = nil
+	end
+
 	if self._profile_spawner then
 		self._profile_spawner:destroy()
 
@@ -412,12 +435,8 @@ end
 PortraitUI._create_uv_grid = function (self)
 	self._uv_grid_index_by_character_id = {}
 	self._uv_grid_index_occupation_list = {}
-	local portrait_width = self._render_settings.portrait_width
-	local portrait_height = self._render_settings.portrait_height
-	local target_resolution_width = self._render_settings.target_resolution_width
-	local target_resolution_height = self._render_settings.target_resolution_height
-	local num_columns = math.floor(target_resolution_width / portrait_width)
-	local num_rows = math.floor(target_resolution_height / portrait_height)
+	local num_columns = math.floor(self._target_resolution_width / self._portrait_width)
+	local num_rows = math.floor(self._target_resolution_height / self._portrait_height)
 	local uv_grid = {}
 
 	for i = 1, num_rows do
@@ -458,6 +477,8 @@ PortraitUI._get_free_grid_index = function (self)
 			return i
 		end
 	end
+
+	Log.warning("PortraitUI", "Trying to go out of bound and request a grid index.")
 end
 
 PortraitUI._grid_index_by_character_id = function (self, character_id)

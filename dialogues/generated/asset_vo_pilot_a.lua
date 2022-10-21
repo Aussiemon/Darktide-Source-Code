@@ -9,10 +9,10 @@ local asset_vo_pilot_a = {
 			"loc_pilot_a__asset_pneumatic_press_04"
 		},
 		sound_events_duration = {
-			3.279834,
-			4.627292,
-			3.94575,
-			5.418938
+			3.288917,
+			4.636375,
+			3.954833,
+			5.428021
 		},
 		randomize_indexes = {}
 	}

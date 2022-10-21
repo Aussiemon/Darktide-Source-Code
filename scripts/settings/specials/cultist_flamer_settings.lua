@@ -7,8 +7,8 @@ local cultist_flamer_settings = {
 	fx_source_name = "muzzle",
 	states = STATES,
 	vfx = {
-		flamer_particle = "content/fx/particles/debug/flame_thrower_test",
-		ground_impact_particle = "content/fx/particles/debug/flame_thrower_hit",
+		flamer_particle = "content/fx/particles/enemies/cultist_flamer/cultist_flame_thrower",
+		ground_impact_particle = "content/fx/particles/enemies/cultist_flamer/cultist_flame_thrower_hit",
 		num_parabola_control_points = 4
 	},
 	sfx = {

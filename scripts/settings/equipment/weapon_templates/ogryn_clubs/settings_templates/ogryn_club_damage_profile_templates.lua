@@ -148,8 +148,8 @@ damage_templates.ogryn_club_light_tank = {
 	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.ogryn_pipe_club_heavy,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{
@@ -215,8 +215,8 @@ damage_templates.ogryn_club_heavy_tank = {
 	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.ogryn_pipe_club_heavy,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.light,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -277,12 +277,12 @@ damage_templates.ogryn_club_heavy_tank = {
 	}
 }
 damage_templates.ogryn_club_light_smiter = {
-	ragdoll_push_force = 200,
+	ragdoll_push_force = 500,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	armor_damage_modifier = smiter_light_default_am,
 	targets = {
@@ -290,7 +290,7 @@ damage_templates.ogryn_club_light_smiter = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					120,
+					75,
 					150
 				},
 				impact = {
@@ -376,9 +376,9 @@ damage_templates.ogryn_club_light_smiter = {
 }
 damage_templates.ogryn_club_heavy_smiter = {
 	ragdoll_only = true,
-	ragdoll_push_force = 300,
+	ragdoll_push_force = 1000,
 	stagger_category = "melee",
-	cleave_distribution = double_cleave,
+	cleave_distribution = single_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -388,14 +388,14 @@ damage_templates.ogryn_club_heavy_smiter = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_2,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_2
+					[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -411,12 +411,12 @@ damage_templates.ogryn_club_heavy_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					150,
-					180
+					200,
+					400
 				},
 				impact = {
 					15,
-					20
+					30
 				}
 			},
 			finesse_boost = {
@@ -496,12 +496,13 @@ damage_templates.ogryn_club_heavy_smiter = {
 	}
 }
 damage_templates.ogryn_club_special = {
+	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
 	ragdoll_push_force = 250,
-	ignore_stagger_reduction = true,
-	gibbing_power = 0,
 	weapon_special = true,
 	cleave_distribution = medium_cleave,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{
@@ -574,17 +575,17 @@ damage_templates.ogryn_club_special = {
 	}
 }
 overrides.ogryn_club_smiter_pushfollow = {
-	parent_template_name = "ogryn_club_heavy_smiter",
+	parent_template_name = "ogryn_club_light_linesman",
 	overrides = {
 		{
 			"cleave_distribution",
 			"attack",
-			0.2
+			10
 		},
 		{
 			"cleave_distribution",
 			"impact",
-			0.6
+			10
 		}
 	}
 }
@@ -624,18 +625,18 @@ overrides.ogryn_club_smiter_pushfollow_active = {
 	}
 }
 damage_templates.ogryn_club_light_linesman = {
-	ragdoll_push_force = 400,
+	ragdoll_push_force = 600,
 	ragdoll_only = true,
 	stagger_category = "melee",
-	cleave_distribution = double_cleave,
+	cleave_distribution = medium_cleave,
 	damage_type = damage_types.ogryn_pipe_club_heavy,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
 			[armor_types.resistant] = damage_lerp_values.lerp_1,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
@@ -663,10 +664,10 @@ damage_templates.ogryn_club_light_linesman = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
 					[armor_types.armored] = damage_lerp_values.lerp_0_75,
-					[armor_types.resistant] = damage_lerp_values.lerp_2,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
@@ -677,7 +678,7 @@ damage_templates.ogryn_club_light_linesman = {
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -685,11 +686,24 @@ damage_templates.ogryn_club_light_linesman = {
 			},
 			power_distribution = {
 				attack = {
-					120,
-					150
+					60,
+					120
 				},
 				impact = {
 					15,
+					30
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					30,
+					60
+				},
+				impact = {
+					10,
 					20
 				}
 			}
@@ -697,15 +711,14 @@ damage_templates.ogryn_club_light_linesman = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
-				attack = 70,
-				impact = 0.3
-			}
-		},
-		{
-			boost_curve_multiplier_finesse = 0.25,
-			power_distribution = {
-				attack = 10,
-				impact = 7
+				attack = {
+					20,
+					40
+				},
+				impact = {
+					7,
+					14
+				}
 			}
 		},
 		default_target = {
@@ -735,8 +748,14 @@ damage_templates.ogryn_club_light_linesman = {
 				}
 			},
 			power_distribution = {
-				attack = 0,
-				impact = 5
+				attack = {
+					10,
+					30
+				},
+				impact = {
+					4,
+					8
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
@@ -744,12 +763,12 @@ damage_templates.ogryn_club_light_linesman = {
 }
 damage_templates.club_uppercut = {
 	weapon_special = true,
-	ragdoll_push_force = 250,
+	ragdoll_push_force = 500,
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.axe_light,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{

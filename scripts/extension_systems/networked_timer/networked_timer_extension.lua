@@ -39,8 +39,6 @@ NetworkedTimerExtension.update = function (self, unit, dt, t)
 end
 
 NetworkedTimerExtension.hot_join_sync = function (self, unit, sender, channel)
-	fassert(self._is_server, "Server only method.")
-
 	local unit_id = Managers.state.unit_spawner:level_index(self._unit)
 	local active = self._active
 	local counting = self._counting
@@ -61,6 +59,8 @@ NetworkedTimerExtension.start = function (self)
 	self._active = true
 	self._counting = true
 	self._speed_modifier = 1
+
+	Unit.flow_event(self._unit, "lua_timer_started")
 
 	if self._is_server then
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)

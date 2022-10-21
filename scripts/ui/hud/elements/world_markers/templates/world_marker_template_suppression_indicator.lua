@@ -59,9 +59,6 @@ template.on_enter = function (widget, marker, template)
 	local unit = marker.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
-
-	fassert(breed, "No breed found for a suppressable unit: %s", tostring(unit))
-
 	local breed_marker_icon = breed.suppress_config and breed.suppress_config.marker_icon
 
 	if breed_marker_icon then

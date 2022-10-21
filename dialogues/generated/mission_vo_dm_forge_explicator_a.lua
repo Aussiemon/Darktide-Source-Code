@@ -9,10 +9,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_assembly_line_04"
 		},
 		sound_events_duration = {
-			3.705688,
-			2.733271,
-			3.58225,
-			3.463396
+			3.714771,
+			2.742354,
+			3.591333,
+			3.472479
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_call_elevator_04"
 		},
 		sound_events_duration = {
-			3.475271,
-			4.025938,
-			3.385896,
-			5.824438
+			3.484354,
+			4.035021,
+			3.394979,
+			5.833521
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,36 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_first_objective_04"
 		},
 		sound_events_duration = {
-			5.125875,
-			4.291167,
-			6.312146,
-			6.926001
+			5.134958,
+			4.30025,
+			6.321229,
+			6.935083
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_job_done = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_explicator_a__info_get_out_03",
+			"loc_explicator_a__info_get_out_05",
+			"loc_explicator_a__info_get_out_07",
+			"loc_explicator_a__info_get_out_08",
+			"loc_explicator_a__info_get_out_09"
+		},
+		sound_events_duration = {
+			4.609417,
+			3.878438,
+			4.378875,
+			3.642146,
+			2.76175
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +86,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_labour_oversight_04"
 		},
 		sound_events_duration = {
-			4.783188,
-			6.236438,
-			5.223688,
-			4.560584
+			4.792271,
+			6.245521,
+			5.232771,
+			4.569667
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +103,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_purge_infestation_04"
 		},
 		sound_events_duration = {
-			4.228396,
-			4.074521,
-			4.101855,
-			5.310709
+			4.237479,
+			4.083604,
+			4.110938,
+			5.319792
 		},
 		randomize_indexes = {}
 	},
@@ -94,10 +120,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_smelter_04"
 		},
 		sound_events_duration = {
-			3.50925,
-			3.933375,
-			4.441646,
-			5.146709
+			3.518333,
+			3.942458,
+			4.450729,
+			5.155792
 		},
 		randomize_indexes = {}
 	},
@@ -111,10 +137,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_smelter_working_04"
 		},
 		sound_events_duration = {
-			4.222855,
-			3.81648,
-			3.950355,
-			5.08498
+			4.231938,
+			3.825563,
+			3.959438,
+			5.094063
 		},
 		randomize_indexes = {}
 	},
@@ -128,10 +154,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_start_banter_b_04"
 		},
 		sound_events_duration = {
-			5.670751,
-			6.274584,
-			6.123021,
-			6.521396
+			5.679833,
+			6.283667,
+			6.132104,
+			6.530479
 		},
 		randomize_indexes = {}
 	},
@@ -145,10 +171,24 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_superstructure_04"
 		},
 		sound_events_duration = {
-			3.703521,
-			3.895355,
-			3.404938,
-			4.698438
+			3.712604,
+			3.904438,
+			3.414021,
+			4.707521
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_tutorial_corruptor_done = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_explicator_a__event_demolition_first_corruptor_destroyed_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.630688
+		},
+		sound_event_weights = {
+			[1.0] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -162,10 +202,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_purge_infestation_04"
 		},
 		sound_events_duration = {
-			4.228396,
-			4.074521,
-			4.101855,
-			5.310709
+			4.237479,
+			4.083604,
+			4.110938,
+			5.319792
 		},
 		sound_event_weights = {
 			0.25,
@@ -185,10 +225,10 @@ local mission_vo_dm_forge_explicator_a = {
 			"loc_explicator_a__mission_forge_use_elevator_04"
 		},
 		sound_events_duration = {
-			3.63773,
-			3.18123,
-			4.198,
-			5.242688
+			3.646813,
+			3.190313,
+			4.207083,
+			5.251771
 		},
 		randomize_indexes = {}
 	}

@@ -42,7 +42,7 @@ local templates = {
 		lifetime = 60,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_location_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_default_enter_others,
 		sound_exit_tagger = UISoundEvents.smart_tag_location_default_exit,
 		sound_exit_others = UISoundEvents.smart_tag_location_default_exit,
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
@@ -58,7 +58,7 @@ local templates = {
 		lifetime = 30,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 		voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_enemy_over_here,
 		replies = {
@@ -72,7 +72,7 @@ local templates = {
 		lifetime = 30,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_location_attention_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_attention_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_attention_enter_others,
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 		voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_over_here,
 		replies = {
@@ -84,7 +84,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -96,7 +96,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -108,7 +108,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -120,7 +120,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -132,7 +132,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -144,7 +144,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -156,7 +156,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -168,7 +168,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -180,7 +180,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -192,7 +192,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -204,7 +204,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -216,7 +216,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.dibs
 		},
@@ -227,8 +227,6 @@ local templates = {
 		group = "object",
 		lifetime = 10,
 		is_cancelable = true,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
 		replies = {
 			replies.ok
 		},
@@ -239,8 +237,6 @@ local templates = {
 		group = "object",
 		lifetime = 10,
 		is_cancelable = true,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
 		replies = {
 			replies.ok
 		},
@@ -252,7 +248,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -264,7 +260,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -276,7 +272,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -288,7 +284,7 @@ local templates = {
 		lifetime = 10,
 		is_cancelable = true,
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
 			replies.ok
 		},
@@ -323,7 +319,7 @@ local templates = {
 		lifetime = 10,
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_enemy,
 		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
 		replies = {
 			replies.ok
 		}

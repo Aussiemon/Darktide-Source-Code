@@ -5,12 +5,58 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local scrollbar_width = InventoryWeaponCosmeticsViewSettings.scrollbar_width
-local grid_size = InventoryWeaponCosmeticsViewSettings.grid_size
-local grid_content_edge_margin = InventoryWeaponCosmeticsViewSettings.grid_content_edge_margin
-local mask_size = InventoryWeaponCosmeticsViewSettings.mask_size
+local info_box_size = {
+	1250,
+	200
+}
+local equip_button_size = {
+	374,
+	76
+}
+local title_height = 70
+local edge_padding = 44
+local grid_width = 440
+local grid_height = 860
+local grid_size = {
+	grid_width - edge_padding,
+	grid_height
+}
+local grid_spacing = {
+	10,
+	10
+}
+local mask_size = {
+	grid_width + 40,
+	grid_height
+}
+local grid_settings = {
+	scrollbar_width = 7,
+	widget_icon_load_margin = 400,
+	use_select_on_focused = true,
+	use_is_focused_for_navigation = false,
+	use_terminal_background = true,
+	grid_spacing = grid_spacing,
+	grid_size = grid_size,
+	mask_size = mask_size,
+	title_height = title_height,
+	edge_padding = edge_padding
+}
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
+	canvas = {
+		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			1080
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	},
 	corner_top_left = {
 		vertical_alignment = "top",
 		parent = "screen",
@@ -67,112 +113,23 @@ local scenegraph_definition = {
 			62
 		}
 	},
-	canvas = {
-		vertical_alignment = "center",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			1920,
-			1080
-		},
-		position = {
-			0,
-			0,
-			0
-		}
-	},
-	grid_background = {
-		vertical_alignment = "bottom",
+	item_grid_pivot = {
+		vertical_alignment = "top",
 		parent = "canvas",
-		horizontal_alignment = "center",
-		size = grid_size,
-		position = {
-			0,
-			-170,
-			1
-		}
-	},
-	grid_content_pivot = {
-		vertical_alignment = "top",
-		parent = "grid_background",
 		horizontal_alignment = "left",
 		size = {
 			0,
 			0
 		},
 		position = {
-			grid_content_edge_margin,
-			0,
+			100,
+			100,
 			1
-		}
-	},
-	grid_scrollbar = {
-		vertical_alignment = "center",
-		parent = "grid_background",
-		horizontal_alignment = "right",
-		size = {
-			scrollbar_width,
-			grid_size[2] - 20
-		},
-		position = {
-			scrollbar_width - 8,
-			0,
-			1
-		}
-	},
-	grid_mask = {
-		vertical_alignment = "center",
-		parent = "grid_background",
-		horizontal_alignment = "center",
-		size = mask_size,
-		position = {
-			0,
-			0,
-			10
-		}
-	},
-	grid_interaction = {
-		vertical_alignment = "top",
-		parent = "grid_background",
-		horizontal_alignment = "left",
-		size = mask_size,
-		position = {
-			0,
-			0,
-			0
-		}
-	},
-	grid_divider_bottom = {
-		vertical_alignment = "bottom",
-		parent = "grid_background",
-		horizontal_alignment = "center",
-		size = {
-			grid_size[1] + 4,
-			10
-		},
-		position = {
-			0,
-			6,
-			12
-		}
-	},
-	grid_divider_top = {
-		vertical_alignment = "top",
-		parent = "grid_background",
-		horizontal_alignment = "center",
-		size = {
-			grid_size[1] + 4,
-			10
-		},
-		position = {
-			0,
-			-6,
-			12
 		}
 	},
 	grid_tab_panel = {
 		vertical_alignment = "top",
-		parent = "grid_divider_top",
+		parent = "item_grid_pivot",
 		horizontal_alignment = "center",
 		size = {
 			0,
@@ -180,83 +137,27 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-50,
+			-48,
 			1
 		}
 	},
-	equip_button = {
-		vertical_alignment = "bottom",
-		parent = "grid_divider_bottom",
-		horizontal_alignment = "center",
-		size = {
-			374,
-			76
-		},
-		position = {
-			0,
-			90,
-			1
-		}
-	},
-	title_text = {
-		vertical_alignment = "top",
+	weapon_preview = {
+		vertical_alignment = "center",
 		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			1700,
-			50
-		},
-		position = {
-			0,
-			15,
-			3
-		}
-	},
-	sub_title_text = {
-		vertical_alignment = "top",
-		parent = "title_text",
-		horizontal_alignment = "center",
-		size = {
-			1700,
-			50
-		},
-		position = {
-			0,
-			55,
-			3
-		}
-	},
-	title_divider = {
-		vertical_alignment = "bottom",
-		parent = "title_text",
-		horizontal_alignment = "center",
+		horizontal_alignment = "right",
 		size = {
 			800,
-			10
+			800
 		},
 		position = {
 			0,
-			45,
-			1
-		}
-	},
-	title_divider_glow = {
-		vertical_alignment = "bottom",
-		parent = "title_text",
-		horizontal_alignment = "center",
-		size = {
-			800,
-			80
-		},
-		position = {
 			0,
-			40,
 			1
 		}
 	},
 	description_text = {
 		vertical_alignment = "bottom",
-		parent = "title_divider",
+		parent = "display_name_divider",
 		horizontal_alignment = "center",
 		size = {
 			1000,
@@ -264,76 +165,101 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			170,
+			120,
 			3
 		}
 	},
-	back_button = {
-		vertical_alignment = "center",
-		parent = "title_text",
+	info_box = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = info_box_size,
+		position = {
+			-100,
+			-125,
+			3
+		}
+	},
+	display_name_divider = {
+		vertical_alignment = "bottom",
+		parent = "info_box",
 		horizontal_alignment = "left",
 		size = {
-			72,
-			72
-		},
-		position = {
-			-85,
-			0,
-			3
-		}
-	},
-	weapon_viewport = {
-		vertical_alignment = "center",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			1920,
-			1080
+			info_box_size[1] - (equip_button_size[1] + 30),
+			20
 		},
 		position = {
 			0,
-			0,
-			3
-		}
-	},
-	weapon_pivot = {
-		vertical_alignment = "center",
-		parent = "weapon_viewport",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			150,
 			0,
 			1
 		}
 	},
-	appearance_button = {
-		vertical_alignment = "top",
-		parent = "screen",
-		horizontal_alignment = "right",
+	display_name_divider_glow = {
+		vertical_alignment = "bottom",
+		parent = "info_box",
+		horizontal_alignment = "left",
 		size = {
-			400,
+			info_box_size[1] - (equip_button_size[1] + 30),
+			80
+		},
+		position = {
+			0,
+			-6,
+			1
+		}
+	},
+	display_name = {
+		vertical_alignment = "bottom",
+		parent = "info_box",
+		horizontal_alignment = "left",
+		size = {
+			info_box_size[1] - (equip_button_size[1] + 30 + 20),
 			50
 		},
 		position = {
-			-50,
-			100,
-			10
+			10,
+			-40,
+			3
+		}
+	},
+	sub_display_name = {
+		vertical_alignment = "top",
+		parent = "display_name",
+		horizontal_alignment = "center",
+		size = {
+			info_box_size[1] - (equip_button_size[1] + 30 + 20),
+			50
+		},
+		position = {
+			0,
+			45,
+			3
+		}
+	},
+	equip_button = {
+		vertical_alignment = "bottom",
+		parent = "info_box",
+		horizontal_alignment = "right",
+		size = equip_button_size,
+		position = {
+			0,
+			-8,
+			1
 		}
 	}
 }
+local display_name_style = table.clone(UIFontSettings.header_2)
+display_name_style.text_horizontal_alignment = "left"
+display_name_style.text_vertical_alignment = "bottom"
 local title_text_style = table.clone(UIFontSettings.header_2)
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "bottom"
-local sub_title_text_style = table.clone(UIFontSettings.header_3)
-sub_title_text_style.text_horizontal_alignment = "center"
-sub_title_text_style.text_vertical_alignment = "top"
-sub_title_text_style.text_color = Color.ui_grey_light(255, true)
+local sub_display_name_style = table.clone(UIFontSettings.header_3)
+sub_display_name_style.text_horizontal_alignment = "left"
+sub_display_name_style.text_vertical_alignment = "top"
+sub_display_name_style.text_color = Color.ui_grey_light(255, true)
 local description_text_style = table.clone(UIFontSettings.body_small)
-description_text_style.text_horizontal_alignment = "center"
+description_text_style.text_horizontal_alignment = "left"
 description_text_style.text_vertical_alignment = "top"
 local widget_definitions = {
 	corner_top_left = UIWidget.create_definition({
@@ -384,83 +310,69 @@ local widget_definitions = {
 			}
 		}
 	}, "corner_bottom_right"),
-	grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "grid_scrollbar"),
-	grid_mask = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
-			pass_type = "texture",
-			style = {
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "grid_mask"),
-	grid_interaction = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot"
-		}
-	}, "grid_interaction"),
 	description_text = UIWidget.create_definition({
 		{
-			value = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+			value = "",
 			value_id = "text",
 			pass_type = "text",
 			style = description_text_style
 		}
 	}, "description_text"),
-	title_text = UIWidget.create_definition({
-		{
-			value_id = "text",
-			pass_type = "text",
-			value = Managers.localization:localize("loc_weapon_inventory_traits_title_text"),
-			style = title_text_style
-		}
-	}, "title_text"),
-	title_divider = UIWidget.create_definition({
+	display_name_divider = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/dividers/horizontal_dynamic_lower"
 		}
-	}, "title_divider"),
-	title_divider_glow = UIWidget.create_definition({
+	}, "display_name_divider"),
+	display_name_divider_glow = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/effects/wide_upward_glow",
 			style_id = "texture",
 			pass_type = "texture"
 		}
-	}, "title_divider_glow"),
-	sub_title_text = UIWidget.create_definition({
+	}, "display_name_divider_glow"),
+	sub_display_name = UIWidget.create_definition({
 		{
+			value = "",
 			value_id = "text",
 			pass_type = "text",
-			value = Managers.localization:localize("loc_weapon_inventory_traits_sub_title_text"),
-			style = sub_title_text_style
+			style = sub_display_name_style
 		}
-	}, "sub_title_text"),
+	}, "sub_display_name"),
+	display_name = UIWidget.create_definition({
+		{
+			value = "",
+			value_id = "text",
+			pass_type = "text",
+			style = display_name_style
+		}
+	}, "display_name"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
-		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
+		text = Utf8.upper(Localize("loc_confirm")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_customize_enter
+			on_pressed_sound = UISoundEvents.apparel_equip
 		}
 	})
 }
+local background_widget = UIWidget.create_definition({
+	{
+		pass_type = "rect",
+		style = {
+			color = {
+				255,
+				13,
+				26,
+				30
+			}
+		}
+	}
+}, "screen")
 local legend_inputs = {
 	{
 		input_action = "back",
 		on_pressed_callback = "_cb_on_close_pressed",
 		display_name = "loc_settings_menu_close_menu",
 		alignment = "left_alignment"
-	},
-	{
-		on_pressed_callback = "_cb_on_ui_visibility_toggled",
-		input_action = "right_pressed",
-		display_name = "loc_menu_toggle_ui_visibility_off",
-		alignment = "right_alignment"
 	}
 }
 local always_visible_widget_names = {
@@ -471,7 +383,9 @@ local always_visible_widget_names = {
 }
 
 return {
+	grid_settings = grid_settings,
 	legend_inputs = legend_inputs,
+	background_widget = background_widget,
 	always_visible_widget_names = always_visible_widget_names,
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions

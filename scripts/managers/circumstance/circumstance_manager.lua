@@ -3,8 +3,6 @@ local CircumstanceManager = class("CircumstanceManager")
 CircumstanceManager.DEBUG_TAG = "Circumstance"
 
 CircumstanceManager.init = function (self, circumstance_name)
-	fassert(CircumstanceTemplates[circumstance_name], "[CircumstanceManager][init] Missing circumstance template for name(%s).", tostring(circumstance_name))
-
 	self._circumstance_name = circumstance_name
 end
 

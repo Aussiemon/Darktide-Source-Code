@@ -4,13 +4,14 @@ local CameraTrees = require("scripts/settings/camera/camera_trees")
 local MoodHandler = require("scripts/managers/camera/mood_handler/mood_handler")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local CameraModes = require("scripts/managers/player/player_game_states/utilities/camera_modes")
 local DEFAULT_CAMERA_TREE = "world"
 local DEFAULT_CAMERA_NODE = "world"
 local CINEMATIC_CAMERA_TREE = "cinematic"
+local CINEMATIC_GAMEPLAY_CAMERA_TREE = "cinematic_gameplay"
 local CINEMATIC_CAMERA_NODE = "story_slave"
 local TESTIFY_CAMERA_TREE = "testify_camera"
 local TESTIFY_CAMERA_NODE = "testify"
-local CAMERA_MODES = table.enum("first_person", "observer", "mission_board", "cutscene", "testify")
 local CameraHandler = class("CameraHandler")
 
 CameraHandler.init = function (self, player, world)
@@ -23,7 +24,7 @@ CameraHandler.init = function (self, player, world)
 	self._side_id = nil
 	self._first_person_spectating_mode = true
 	self._camera_spawned = false
-	self._mode = CAMERA_MODES.first_person
+	self._mode = CameraModes.first_person
 	self._world = world
 	self._wwise_player_state = "none"
 	self._wwise_suppression_state = "none"
@@ -57,7 +58,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local ALIVE = ALIVE
 	local old_unit = self._camera_follow_unit
 	local new_unit = old_unit
-	local player_is_available = player:unit_is_alive() and not DevParameters.force_spectate and not self._testify_force_spectate
+	local player_is_available = player:unit_is_alive() and not self._testify_force_spectate
 	local is_hogtied = false
 	local is_being_rescued = false
 	local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
@@ -76,42 +77,35 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local cinematic_manager = Managers.state.cinematic
 
 	if cinematic_manager:active() then
-		local testify_camera = nil
-		new_unit, testify_camera = cinematic_manager:active_camera()
-
-		if testify_camera then
-			self._mode = CAMERA_MODES.testify
-		else
-			self._mode = CAMERA_MODES.cutscene
-		end
+		new_unit, self._mode = cinematic_manager:active_camera()
 	elseif is_hogtied and not was_being_rescued and is_being_rescued then
 		new_unit = player.player_unit
-		self._mode = CAMERA_MODES.observer
+		self._mode = CameraModes.observer
 	elseif not was_hogtied and is_hogtied then
 		new_unit = player.player_unit
-		self._mode = CAMERA_MODES.observer
+		self._mode = CameraModes.observer
 	elseif is_hogtied and player_is_available and input:get("spectate_next") then
 		new_unit = self:_next_follow_unit(nil)
-		self._mode = CAMERA_MODES.observer
+		self._mode = CameraModes.observer
 	elseif not is_hogtied and player_is_available and old_unit ~= player.player_unit then
 		new_unit = self:_follow_owner()
-		self._mode = CAMERA_MODES.first_person
+		self._mode = CameraModes.first_person
+	elseif not is_hogtied and player_is_available then
+		self._mode = CameraModes.first_person
 	elseif not old_unit or not ALIVE[old_unit] or not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit) then
 		new_unit = self:_next_follow_unit(player.player_unit)
-		self._mode = CAMERA_MODES.observer
+		self._mode = CameraModes.observer
 	end
 
-	if self._mode == CAMERA_MODES.first_person then
+	if self._mode == CameraModes.first_person then
 		local mission_board_system = self._mission_board_system
 		local mission_board_open = mission_board_system:is_open()
 
 		if mission_board_open then
-			self._mode = CAMERA_MODES.mission_board
+			self._mode = CameraModes.mission_board
 			new_unit = mission_board_system:mission_board_unit()
 		end
 	end
-
-	fassert(not new_unit or ALIVE[new_unit], "Trying to switch to destroyed unit.")
 
 	local weather_system = Managers.state.extension:system("weather_system")
 
@@ -124,7 +118,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local is_player_unit = player_unit_spawn_manager:is_player_unit(new_unit)
-		local new_player_unit = self._mode ~= CAMERA_MODES.mission_board and is_player_unit
+		local new_player_unit = self._mode ~= CameraModes.mission_board and is_player_unit
 
 		if new_player_unit then
 			Managers.wwise_game_sync:set_followed_player_unit(new_unit)
@@ -145,7 +139,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local viewport_name = player.viewport_name
 	local camera_follow_unit = self._camera_follow_unit
 
-	if self._mode == CAMERA_MODES.observer and self._first_person_spectating_mode and ALIVE[camera_follow_unit] then
+	if self._mode == CameraModes.observer and self._first_person_spectating_mode and ALIVE[camera_follow_unit] then
 		local unit_data_component = ScriptUnit.extension(camera_follow_unit, "unit_data_system")
 		local fp_component = unit_data_component:read_component("first_person")
 		local y, p, r = Quaternion.to_yaw_pitch_roll(fp_component.rotation)
@@ -177,7 +171,7 @@ CameraHandler._switch_follow_target = function (self, new_unit)
 		end
 	end
 
-	if self._mode == CAMERA_MODES.mission_board then
+	if self._mode == CameraModes.mission_board then
 		local viewport_name = self._viewport_name
 		local mission_board_extension = self._mission_board_extension
 		local camera_manager = Managers.state.camera
@@ -231,7 +225,7 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 			end
 		end
 
-		if self._mode == CAMERA_MODES.mission_board then
+		if self._mode == CameraModes.mission_board then
 			local mission_board_orientation = player_orientation
 			local mission_board_extension = self._mission_board_extension
 			local mission_board_zooming = mission_board_extension:is_zooming()
@@ -319,10 +313,13 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	local mode = self._mode
 	local wanted_tree, wanted_camera_node = nil
 
-	if mode == CAMERA_MODES.cutscene then
+	if mode == CameraModes.cutscene then
 		wanted_camera_node = CINEMATIC_CAMERA_NODE
 		wanted_tree = CINEMATIC_CAMERA_TREE
-	elseif mode == CAMERA_MODES.testify then
+	elseif mode == CameraModes.cutscene_gameplay then
+		wanted_camera_node = CINEMATIC_CAMERA_NODE
+		wanted_tree = CINEMATIC_GAMEPLAY_CAMERA_TREE
+	elseif mode == CameraModes.testify then
 		wanted_camera_node = TESTIFY_CAMERA_NODE
 		wanted_tree = TESTIFY_CAMERA_TREE
 	else
@@ -403,7 +400,7 @@ CameraHandler._next_follow_unit = function (self, except_unit)
 		for i = 1, #player_units do
 			local player_unit = player_units[i]
 			local player = player_unit_spawn_manager:owner(player_unit)
-			local human_controlled = player:is_human_controlled()
+			local human_controlled = player and player:is_human_controlled()
 
 			if human_controlled then
 				valid_follow_units[#valid_follow_units + 1] = player_unit
@@ -497,7 +494,7 @@ CameraHandler._load_node_trees = function (self, viewport_name)
 end
 
 CameraHandler.is_observing = function (self)
-	return self._mode == CAMERA_MODES.observer and self._first_person_spectating_mode
+	return self._mode == CameraModes.observer and self._first_person_spectating_mode
 end
 
 CameraHandler.camera_follow_unit = function (self)
@@ -523,7 +520,6 @@ CameraHandler.destroy = function (self)
 
 	self._mood_handler = nil
 
-	fassert(not self._camera_spawned, "Camera not destroyed before destroying camera handler.")
 	self:_update_wwise_state(nil)
 	Managers.wwise_game_sync:set_followed_player_unit(nil)
 end

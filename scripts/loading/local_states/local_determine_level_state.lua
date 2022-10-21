@@ -7,12 +7,6 @@ end
 local LocalDetermineLevelState = class("LocalDetermineLevelState")
 
 LocalDetermineLevelState.init = function (self, state_machine, shared_state)
-	fassert(type(shared_state.network_delegate) == "table", "Network delegate required")
-	fassert(type(shared_state.timeout) == "number", "Timeout required")
-	fassert(type(shared_state.host_channel_id) == "number", "Host channel required")
-	fassert(type(shared_state.loaders) == "table", "Loaders are required")
-	fassert(shared_state.mission_name == nil, "Mission name must be cleared")
-
 	self._shared_state = shared_state
 	self._mission_name = nil
 end

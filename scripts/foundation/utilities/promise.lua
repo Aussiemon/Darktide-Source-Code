@@ -75,6 +75,38 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 	return promise
 end
 
+local function extract_locals(level_base)
+	local level = level_base
+	local res = ""
+
+	while debug.getinfo(level) ~= nil do
+		res = string.format("%s\n[%i] ", res, level - level_base + 1)
+		local v = 1
+
+		while true do
+			local name, value = debug.getlocal(level, v)
+
+			if not name then
+				break
+			end
+
+			local var = string.format("%s = %s; ", name, value)
+			res = res .. var
+			v = v + 1
+		end
+
+		level = level + 1
+	end
+
+	return res
+end
+
+local function extract_stored_traceback(obj)
+	local short_traceback = string.format("%s:%d\n%s:%d", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.source or "", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.currentline or -1, obj.debug_traceback_info_2 and obj.debug_traceback_info_2.source or "", obj.debug_traceback_info_2 and obj.debug_traceback_info_2.currentline or -1)
+
+	return short_traceback
+end
+
 function resolve(promise, x)
 	if promise == x then
 		reject(promise, "TypeError: cannot resolve a promise with itself")
@@ -135,7 +167,7 @@ function resolve(promise, x)
 			}
 		end
 
-		err.__traceback = "<<Promise Stack>>" .. debug.traceback("Error in promise resolve", 2) .. "<</Promise Stack>><<Promise Context>>" .. extract_stored_traceback(obj) .. "<</Promise Context>>"
+		err.__traceback = "<<Promise Stack>>" .. debug.traceback("Error in promise resolve", 2) .. "<</Promise Stack>><<Promise Context>>" .. extract_stored_traceback(promise) .. "<</Promise Context>>"
 		err.__locals = extract_locals(4)
 
 		return err
@@ -143,45 +175,13 @@ function resolve(promise, x)
 
 	if not success then
 		if reason.fatal then
-			assert(false, "<<Promise Error>>" .. tostring(reason.message) .. "<</Promise Error>>\n" .. reason.__traceback .. "<<Promise Locals>>" .. reason.__locals .. "<</Promise Locals>>")
+			-- Nothing
 		end
 
 		if not called then
 			reject(promise, reason)
 		end
 	end
-end
-
-local function extract_locals(level_base)
-	local level = level_base
-	local res = ""
-
-	while debug.getinfo(level) ~= nil do
-		res = string.format("%s\n[%i] ", res, level - level_base + 1)
-		local v = 1
-
-		while true do
-			local name, value = debug.getlocal(level, v)
-
-			if not name then
-				break
-			end
-
-			local var = string.format("%s = %s; ", name, tostring(value))
-			res = res .. var
-			v = v + 1
-		end
-
-		level = level + 1
-	end
-
-	return res
-end
-
-local function extract_stored_traceback(obj)
-	local short_traceback = string.format("%s:%d\n%s:%d", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.source or "", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.currentline or -1, obj.debug_traceback_info_2 and obj.debug_traceback_info_2.source or "", obj.debug_traceback_info_2 and obj.debug_traceback_info_2.currentline or -1)
-
-	return short_traceback
 end
 
 function run(promise)
@@ -218,7 +218,7 @@ function run(promise)
 
 			if not success then
 				if result.fatal then
-					assert(false, "<<Promise Error>>" .. tostring(result.message) .. "<</Promise Error>>\n" .. result.__traceback .. "<<Promise Locals>>" .. result.__locals .. "<</Promise Locals>>")
+					-- Nothing
 				end
 
 				reject(obj.promise, result)
@@ -415,8 +415,6 @@ Promise.rejected = function (value)
 end
 
 Promise.delay = function (delta)
-	fassert(delta >= 0, "Can't delay for less than 0 seconds")
-
 	local promise = Promise:new()
 
 	table.insert(delayed, {
@@ -428,8 +426,6 @@ Promise.delay = function (delta)
 end
 
 Promise.until_true = function (predicate)
-	fassert(predicate ~= nil, "Predicate cannot be nil")
-
 	return Promise.delay(0):next(function ()
 		if predicate() then
 			return nil
@@ -440,8 +436,6 @@ Promise.until_true = function (predicate)
 end
 
 Promise.until_value_is_true = function (predicate)
-	fassert(predicate ~= nil, "Predicate cannot be nil")
-
 	local promise = Promise:new()
 
 	table.insert(predicates, {

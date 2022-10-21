@@ -160,9 +160,6 @@ BtStepShootAction._start_stepping = function (self, unit, t, scratchpad, action_
 	local step_anim_finished_timing = action_data.step_anim_durations[step_anim_event]
 	scratchpad.step_anim_finished_timing = t + step_anim_finished_timing
 	local step_move_timing = action_data.step_move_timing[step_anim_event]
-
-	fassert(step_move_timing > 0, "[BtStepShootAction] Need step_move_timing to be > 0 in order to ensure we at least have one frame to update navigation (and thus be able to detect if pathfind to new destination failed).")
-
 	scratchpad.step_move_timing = t + step_move_timing
 	local shoot_timing = action_data.shoot_timing[step_anim_event]
 

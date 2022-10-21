@@ -5,6 +5,7 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local TextUtilities = require("scripts/utilities/ui/text")
 local VendorInteractionViewBase = class("VendorInteractionViewBase", "TabbedMenuViewBase")
 
 VendorInteractionViewBase.init = function (self, definitions, settings, context)
@@ -34,9 +35,12 @@ VendorInteractionViewBase.on_enter = function (self)
 
 	self._current_balance = {}
 
-	self:_update_wallets_presentation(nil)
-	self:_update_wallets()
-	self:_register_event("event_vendor_view_purchased_item")
+	if self._wallet_type then
+		self:_update_wallets_presentation(nil)
+		self:_update_wallets()
+		self:_register_event("event_vendor_view_purchased_item")
+	end
+
 	self:_setup_tab_bar({
 		tabs_params = {}
 	})
@@ -92,6 +96,10 @@ VendorInteractionViewBase._update_description_height = function (self)
 	local _, text_height = self:_text_size(text, text_style.font_type, text_style.font_size, text_size, text_options)
 
 	self:_set_scenegraph_size(scenegraph_id, nil, text_height + 30)
+
+	local info_box_scenegraph = self._ui_scenegraph.info_box
+
+	self:_set_scenegraph_position("info_box", nil, info_box_scenegraph.position[2] - text_height * 0.5)
 end
 
 VendorInteractionViewBase._on_navigation_input_changed = function (self)
@@ -103,10 +111,10 @@ VendorInteractionViewBase._on_navigation_input_changed = function (self)
 	if is_mouse then
 		for i = 1, num_buttons do
 			local button = button_widgets[i]
-			button.content.hotspot.is_focused = false
+			button.content.hotspot.is_selected = false
 		end
 	elseif num_buttons > 0 then
-		button_widgets[1].content.hotspot.is_focused = true
+		button_widgets[1].content.hotspot.is_selected = true
 	end
 end
 
@@ -120,7 +128,7 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 		for i = 1, num_buttons do
 			local button = button_widgets[i]
 
-			if button.content.hotspot.is_focused then
+			if button.content.hotspot.is_selected then
 				focused_index = i
 
 				break
@@ -137,8 +145,8 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 			end
 
 			if next_index then
-				button_widgets[next_index].content.hotspot.is_focused = true
-				button_widgets[focused_index].content.hotspot.is_focused = false
+				button_widgets[next_index].content.hotspot.is_selected = true
+				button_widgets[focused_index].content.hotspot.is_selected = false
 			end
 		end
 	end
@@ -202,7 +210,8 @@ VendorInteractionViewBase._setup_option_buttons = function (self, options)
 		local widget = self:_create_widget("option_button_" .. i, button_definition)
 		widget.content.hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
 		local display_name = option.display_name
-		widget.content.text = Localize(display_name)
+		local unlocalized_name = option.unlocalized_name
+		widget.content.text = unlocalized_name and not display_name and unlocalized_name or Localize(display_name)
 		widget.offset[2] = (i - 1) * (button_height + spacing)
 		button_widgets[#button_widgets + 1] = widget
 	end
@@ -245,7 +254,8 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 			end
 		end
 
-		self._on_option_enter_anim_id = self:_start_animation("on_option_enter", widget_list, self)
+		local anim_name = option.blur_background and "on_option_enter_blurred" or "on_option_enter"
+		self._on_option_enter_anim_id = self:_start_animation(anim_name, widget_list, self)
 		self._presenting_options = false
 	end
 end
@@ -374,7 +384,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 			amount = balance and balance.amount or 0
 		end
 
-		local text = tostring(amount)
+		local text = TextUtilities.format_currency(amount)
 		self._current_balance[wallet_type] = amount
 		widget.content.text = text
 		local style = widget.style

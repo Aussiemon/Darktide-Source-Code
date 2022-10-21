@@ -39,6 +39,8 @@ BtChargeAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 
 	self:_start_buildup(unit, scratchpad, action_data, t)
 
+	scratchpad.max_duration_t = action_data.max_duration and t + action_data.max_duration
+
 	if action_data.trigger_move_to_target then
 		local target_unit = perception_component.target_unit
 		local target_position = POSITION_LOOKUP[target_unit]
@@ -86,10 +88,14 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 		self:_update_charge_buildup(unit, scratchpad, action_data, t, dt)
 	elseif state == "charging" then
 		self:_update_charging(unit, scratchpad, action_data, t, dt)
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 	elseif state == "navigating" then
 		self:_update_navigating(unit, scratchpad, action_data, t)
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
+
+		if scratchpad.max_duration_t and scratchpad.max_duration_t < t then
+			return "done"
+		end
 	elseif state == "charged_past" then
 		local done = self:_update_charged_past(unit, scratchpad, action_data, t, dt)
 
@@ -97,7 +103,7 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 			return "done"
 		end
 
-		MinionAttack.push_friendly_minions(unit, scratchpad, action_data)
+		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 	elseif state == "attacking" then
 		self:_update_attacking(unit, scratchpad, action_data, t, dt)
 	elseif state == "done" then
@@ -425,7 +431,15 @@ end
 
 BtChargeAction._hit_target = function (self, unit, hit_unit, scratchpad, action_data, t)
 	scratchpad.hit_target = hit_unit
-	scratchpad.attack_duration_t = t + action_data.attack_anim_duration
+	local attack_anim_duration = action_data.attack_anim_duration
+
+	if type(attack_anim_duration) == "table" then
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+		attack_anim_duration = attack_anim_duration[wielded_slot_name]
+	end
+
+	scratchpad.attack_duration_t = t + attack_anim_duration
 	scratchpad.attack_damage_t = t + action_data.attack_anim_damage_timing
 	local attack_anim = action_data.attack_anim
 

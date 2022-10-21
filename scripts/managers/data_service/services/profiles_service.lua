@@ -42,7 +42,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 			local character = characters[i]
 			local progression = _find_character_progression(character, characters_progression)
 			local profile = ProfileUtils.character_to_profile(character, gear_list, progression)
-			profiles[i] = profile
+			profiles[#profiles + 1] = profile
 
 			if selected_character_id and character.id == selected_character_id then
 				selected_profile = profile
@@ -53,7 +53,8 @@ local function _fetch_all_backend_profiles(backend_interface)
 
 		return Promise.resolved({
 			profiles = profiles,
-			selected_profile = selected_profile
+			selected_profile = selected_profile,
+			gear = gear_list
 		})
 	end)
 end
@@ -104,37 +105,6 @@ ProfilesService.delete_profile = function (self, character_id)
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})
-	end)
-end
-
-ProfilesService.prologue_completed = function (self, character_id)
-	return self._backend_interface.characters:get_prologue_completed(character_id):next(function (value)
-		if value == true or value == "true" then
-			return true
-		else
-			local account_data = Managers.save:account_data()
-			local completed_profile_prologues = account_data.completed_profile_prologues
-
-			if completed_profile_prologues[character_id] then
-				self:set_prologue_completed(character_id)
-
-				return true
-			end
-
-			return false
-		end
-	end):catch(function (error)
-		Managers.error:report_error(BackendError:new(error))
-
-		return Promise.rejected({})
-	end)
-end
-
-ProfilesService.set_prologue_completed = function (self, character_id)
-	return self._backend_interface.characters:set_prologue_completed(character_id, "true"):catch(function (error)
-		Log.warning("ProfilesService", "set_prologue_completed failed: %s", table.tostring(error, 3))
-
-		return Promise.resolved()
 	end)
 end
 

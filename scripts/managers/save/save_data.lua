@@ -2,11 +2,13 @@ local SaveData = class("SaveData")
 local default_hold = PLATFORM == "win32"
 SaveData.default_account_data = {
 	input_settings = {
-		controller_look_dead_zone = 0.1,
+		controller_layout = "default",
 		controller_look_scale = 1,
 		controller_enable_acceleration = true,
+		controller_look_dead_zone = 0.1,
 		controller_invert_look_y = false,
-		controller_layout = "default",
+		stationary_dodge = false,
+		diagonal_forward_dodge = true,
 		hold_to_sprint = default_hold,
 		hold_to_crouch = default_hold
 	},
@@ -19,15 +21,21 @@ SaveData.default_account_data = {
 		subtitle_speaker_enabled = true
 	},
 	completed_profile_prologues = {},
-	new_items = {},
 	viewed_news_slides = {},
-	key_bindings = {}
+	key_bindings = {},
+	character_data = {}
+}
+SaveData.default_character_data = {
+	new_items = {},
+	new_items_by_type = {},
+	new_item_notifications = {},
+	new_completed_contracts = {}
 }
 
 SaveData.init = function (self)
 	self.save_loaded = false
 	self.version = 3
-	self.account_data_version = 1
+	self.account_data_version = 3
 	self.data = {
 		account_data = {}
 	}
@@ -90,6 +98,19 @@ SaveData.account_data = function (self, account_id)
 		self.data.account_data[account_id] = account_data
 
 		return account_data
+	end
+end
+
+SaveData.character_data = function (self, account_id, character_id)
+	local account_data = self:account_data(account_id)
+	local character_data = account_data.character_data
+
+	if character_data[character_id] then
+		return character_data[character_id]
+	else
+		character_data[character_id] = table.clone(SaveData.default_character_data)
+
+		return character_data[character_id]
 	end
 end
 

@@ -134,25 +134,17 @@ BotPerceptionExtension.update = function (self, unit, dt, t)
 end
 
 BotPerceptionExtension._update_target_enemy = function (self, self_unit, self_position, perception_component, behavior_component, enemies_in_proximity, side, bot_group, dt, t)
-	Profiler.start("update_target_enemy")
-	Profiler.start("decay_threat")
-
 	local threat_decay_disabled = self._threat_decay_disabled
 
 	if not threat_decay_disabled then
 		self:_decay_threat(self_unit, dt)
 	end
 
-	Profiler.stop("decay_threat")
-	Profiler.start("bot_perception_extension_target_selection")
-
 	local breed = self._breed
 	local target_units = side.ai_target_units
 	local template = self._target_selection_template
 
 	template(self_unit, self_position, side, perception_component, behavior_component, breed, target_units, t, self._threat_units, bot_group, enemies_in_proximity, self._target_selection_debug_info)
-	Profiler.stop("bot_perception_extension_target_selection")
-	Profiler.stop("update_target_enemy")
 end
 
 BotPerceptionExtension._decay_threat = function (self, unit, dt)
@@ -225,8 +217,6 @@ local PRIORITY_AID_TYPES = {
 }
 
 BotPerceptionExtension._update_target_ally = function (self, self_unit, self_position, perception_component, side, bot_group, t)
-	Profiler.start("update_target_ally")
-
 	local best_ally, ally_distance, in_need_type, look_at_ally = nil
 	local target_enemy = perception_component.target_enemy
 
@@ -262,18 +252,12 @@ BotPerceptionExtension._update_target_ally = function (self, self_unit, self_pos
 	if perception_component.target_ally_needs_aid and is_priority_aid_type then
 		bot_group:register_ally_needs_aid_priority(self_unit, best_ally)
 	end
-
-	Profiler.stop("update_target_ally")
 end
 
 BotPerceptionExtension._update_target_level_unit = function (self, self_unit, self_position, perception_component, t)
-	Profiler.start("update_target_level_unit")
-
 	local next_health_station_unit, next_health_station_unit_distance = self:_select_next_health_station(self_unit, self_position, perception_component, t)
 	perception_component.target_level_unit = next_health_station_unit
 	perception_component.target_level_unit_distance = next_health_station_unit_distance
-
-	Profiler.stop("update_target_level_unit")
 end
 
 local ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_SELF_SQ = 12

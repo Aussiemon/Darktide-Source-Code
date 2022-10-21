@@ -19,8 +19,6 @@ end
 local function mockup_fassert(condition, message, ...)
 	if not condition then
 		message = format_error_message(message, ...)
-
-		assert(false, message)
 	end
 end
 
@@ -34,35 +32,24 @@ local function _test_write_component(blackboard, component_name, field_name, fie
 	local component = Blackboard.write_component(blackboard, component_name)
 	local same_component = Blackboard.write_component(blackboard, component_name)
 
-	fassert(component == same_component, TEST_FAILED_STRING, "not same write component")
-
 	if field_type == "Vector3Box" then
 		component[field_name]:store(field_value)
-		fassert(Vector3.equal(component[field_name]:unbox(), field_value), TEST_FAILED_STRING, "not same field value")
 	elseif field_type == "QuaternionBox" then
 		component[field_name]:store(field_value)
-		fassert(Quaternion.equal(component[field_name]:unbox(), field_value), TEST_FAILED_STRING, "not same field value")
 	else
 		component[field_name] = field_value
-
-		fassert(component[field_name] == field_value, TEST_FAILED_STRING, "not same field value")
 	end
 end
 
 local function _test_read_component(blackboard, component_name, field_name, field_type, field_value, invalid_field_name)
 	local component = blackboard[component_name]
 	local same_component = blackboard[component_name]
-
-	fassert(component == same_component, TEST_FAILED_STRING, "not same read component")
-
 	local _ = component[field_name]
 end
 
 local function _init_and_run_tests(blackboard_object)
-	local original_fassert = fassert
 	local original_ferror = ferror
 	ferror = mockup_ferror
-	fassert = mockup_fassert
 	Blackboard = blackboard_object
 	local component_config = {
 		userdata_component = {
@@ -91,13 +78,7 @@ local function _init_and_run_tests(blackboard_object)
 		quaternion_a = Quaternion(Vector3.normalize(Vector3(2, 1, 3)), math.pi)
 	}
 	local blackboard = Blackboard.create(component_config)
-
-	fassert(not pcall(Blackboard.validate, blackboard), TEST_FAILED_STRING, "validation succeeded with uninitialized blackboard")
-
 	local new_blackboard = Blackboard.create(component_config)
-
-	fassert(blackboard ~= new_blackboard, TEST_FAILED_STRING, "reused blackboard")
-
 	local invalid_field_name = "invalid_field"
 
 	for component_name, fields in pairs(component_config) do
@@ -111,7 +92,6 @@ local function _init_and_run_tests(blackboard_object)
 
 	Blackboard.validate(blackboard)
 
-	fassert = original_fassert
 	ferror = original_ferror
 end
 

@@ -68,24 +68,24 @@ local breed_terror_event_settings = {
 		point_cost = 6
 	},
 	cultist_shocktrooper = {
-		point_cost = math.huge
+		point_cost = 8
 	},
 	cultist_gunner = {
-		point_cost = math.huge
+		point_cost = 6
 	},
 	cultist_grenadier = {
 		point_cost = math.huge
 	},
-	cultist_berzerker = {
-		point_cost = math.huge
-	},
 	cultist_melee = {
-		point_cost = math.huge
+		point_cost = 2
 	},
 	cultist_assault = {
-		point_cost = math.huge
+		point_cost = 2
 	},
-	cultist_executor = {
+	cultist_berzerker = {
+		point_cost = 6
+	},
+	chaos_beast_of_nurgle = {
 		point_cost = math.huge
 	}
 }

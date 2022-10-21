@@ -20,6 +20,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_rifles/settings_templates/stub_rifle_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_hitscan_templates", hit_scan_templates, loaded_template_files)
 
 hit_scan_templates.lasgun_assault = {
 	range = 50,
@@ -29,11 +30,27 @@ hit_scan_templates.lasgun_assault = {
 		}
 	}
 }
-hit_scan_templates.lasgun_spraynpray = {
+hit_scan_templates.lasgun_spraynpray_p3_m1 = {
 	range = 50,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.default_lasgun_snp
+		}
+	}
+}
+hit_scan_templates.lasgun_spraynpray_p3_m2 = {
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.light_lasgun_snp
+		}
+	}
+}
+hit_scan_templates.lasgun_spraynpray_p3_m3 = {
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.heavy_lasgun_snp
 		}
 	}
 }
@@ -217,6 +234,14 @@ hit_scan_templates.shocktrooper_shotgun_bullet = {
 		}
 	}
 }
+hit_scan_templates.renegade_captain_shotgun_bullet = {
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shocktrooper_shotgun
+		}
+	}
+}
 hit_scan_templates.sniper_bullet = {
 	range = 150,
 	damage = {
@@ -337,38 +362,30 @@ hit_scan_templates.cultist_flamer = {
 		}
 	}
 }
+hit_scan_templates.chaos_beast_of_nurgle_vomit = {
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit
+		}
+	}
+}
 
 for name, template in pairs(hit_scan_templates) do
 	template.name = name
 	template.same_side_suppression_enabled = false
 
-	fassert(template.range, "Hit scan template %q is missing 'range' setting", name)
-	fassert(template.damage, "Hit scan template %q is missing 'damage' setting", name)
-	fassert(template.damage.impact, "Hit scan template %q is missing 'impact' setting under 'damage'", name)
-	fassert(template.damage.impact.damage_profile, "Hit scan template %q is missing 'damage_profile' setting under 'damage.impact'", name)
-
 	if template.damage.penetration then
-		fassert(template.damage.penetration.depth, "Hit scan template %q is missing 'depth' setting under 'damage.penetration'", name)
+		-- Nothing
 	end
 
 	if template.collision_tests then
-		fassert(#template.collision_tests, "Hit scan template %q has empty 'collision_tests' setting", name)
-
 		for i = 1, #template.collision_tests do
 			local config = template.collision_tests[i]
 
-			fassert(config.test, "Hit scan template %q is missing 'depth' setting under 'collision_tests' entry %d", name, i)
-			fassert(config.test == "ray" or config.test == "sphere", "Hit scan template %q has invalid value (%q) for 'test' setting under 'collision_tests' entry %d", name, config.test, i)
-
 			if config.test == "sphere" then
-				fassert(config.radius, "Hit scan template %q is missing 'radius' setting under 'collision_tests' entry %d", name, i)
-				fassert(type(config.radius) == "number", "Hit scan template %q 'radius' setting under 'collision_tests' entry %d is not a number", name, i)
-				fassert(config.radius > 0, "Hit scan template %q 'radius' setting under 'collision_tests' entry %d has negative or zero value", name, i)
+				-- Nothing
 			end
-
-			fassert(config.against, "Hit scan template %q is missing 'depth' setting under 'collision_againsts' entry %d", name, i)
-			fassert(config.against == "statics" or config.against == "dynamics", "Hit scan template %q has invalid value (%q) for 'against' setting under 'collision_againsts' entry %d", name, config.against, i)
-			fassert(config.collision_filter, "Hit scan template %q is missing 'collision_filter' setting under 'collision_againsts' entry %d", name, i)
 		end
 	end
 end

@@ -48,9 +48,6 @@ PlayerCharacterStateStunned.on_enter = function (self, unit, dt, t, previous_sta
 	local stun_settings = disorientation_template.stun
 	self._previous_frame_state = previous_state
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
-
-	fassert(params.disorientation_type, "No disorientation_type passed along when entering stunned character state!")
-
 	stunned_character_state_component.start_time = t
 	stunned_character_state_component.disorientation_type = disorientation_type
 	stunned_character_state_component.stunned = true
@@ -101,7 +98,6 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	local locomotion_component = self._locomotion_component
 	local locomotion_steering_component = self._locomotion_steering_component
 	local stunned_character_state_component = self._stunned_character_state_component
-	local actions_interrupted = stunned_character_state_component.actions_interrupted
 	local entered_t = character_state_component.entered_t
 	local velocity_current = locomotion_component.velocity_current
 	local time_in_state = t - entered_t
@@ -109,7 +105,19 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	local disorientation_template = disorientation_templates[disorientation_type]
 	local stun_settings = disorientation_template.stun
 	local action_delay = stun_settings.action_delay
-	local update_actions = not actions_interrupted and action_delay <= time_in_state
+	local stun_settings_interrupt_delay = stun_settings.interrupt_delay
+	local interrupt_delay = nil
+
+	if stun_settings_interrupt_delay ~= nil then
+		interrupt_delay = stun_settings_interrupt_delay or 0
+	end
+
+	local update_actions = true
+
+	if interrupt_delay then
+		update_actions = time_in_state <= interrupt_delay or time_in_state >= interrupt_delay + action_delay
+	end
+
 	local switched_to_melee_while_interrupted = false
 
 	if update_actions then
@@ -130,17 +138,10 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 		end
 	end
 
-	local is_server = self._is_server
-	local interrupt_delay = stun_settings.interrupt_delay
+	if interrupt_delay and interrupt_delay <= time_in_state and not stunned_character_state_component.actions_interrupted then
+		Interrupt.ability_and_action(t, unit, "stunned", nil)
 
-	if is_server and interrupt_delay then
-		local want_interrupt = self._is_local_unit or interrupt_delay <= time_in_state
-
-		if want_interrupt and not actions_interrupted then
-			Interrupt.ability_and_action(t, unit, "stunned", nil)
-
-			stunned_character_state_component.actions_interrupted = true
-		end
+		stunned_character_state_component.actions_interrupted = true
 	end
 
 	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering_component, self._movement_settings_component, self._first_person_component, is_crouching, velocity_current, dt)
@@ -150,6 +151,9 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 		move_direction, move_speed = IntoxicatedMovement.update(intoxicated_movement_component, character_state_random_component, intoxication_level, dt, t, move_direction, move_speed)
 	end
 
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	move_speed = move_speed * stat_buffs.movement_speed
 	locomotion_steering_component.velocity_wanted = move_direction * move_speed
 	locomotion_steering_component.local_move_x = new_x
 	locomotion_steering_component.local_move_y = new_y
@@ -191,7 +195,7 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 	local disorientation_template = disorientation_templates[self._stunned_character_state_component.disorientation_type]
 	local stun_settings = disorientation_template.stun
 
-	if not switched_to_melee_while_interrupted and not stunned_character_state_component.exit_event_played and t > stunned_character_state_component.start_time + math.max(stun_settings.stun_duration) - 0.5 then
+	if not switched_to_melee_while_interrupted and not stunned_character_state_component.exit_event_played and t > stunned_character_state_component.start_time + stun_settings.stun_duration - 0.5 then
 		stunned_character_state_component.exit_event_played = true
 		local end_anim = stun_settings.end_anim
 		local end_anim_3p = stun_settings.end_anim_3p or end_anim

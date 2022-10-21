@@ -5,10 +5,12 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local WeaponTraitsChainswordP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_p1")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -46,12 +48,12 @@ local chain_sword_sweep_box = {
 local melee_sticky_disallowed_hit_zones = {}
 local melee_sticky_heavy_attack_disallowed_armor_types = {}
 local hit_zone_priority = {
-	[hit_zone_names.head] = 1,
+	[hit_zone_names.head] = 2,
 	[hit_zone_names.torso] = 1,
-	[hit_zone_names.upper_left_arm] = 2,
-	[hit_zone_names.upper_right_arm] = 2,
-	[hit_zone_names.upper_left_leg] = 2,
-	[hit_zone_names.upper_right_leg] = 2
+	[hit_zone_names.upper_left_arm] = 3,
+	[hit_zone_names.upper_right_arm] = 3,
+	[hit_zone_names.upper_left_leg] = 3,
+	[hit_zone_names.upper_right_leg] = 3
 }
 
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
@@ -208,22 +210,20 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
-		damage_window_start = 0.3,
-		power_level = 500,
 		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
 		first_person_hit_anim = "hit_left_shake",
+		range_mod = 1.25,
 		num_frames_before_process = 0,
 		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.3,
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_left_down",
 		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
-		uninterruptible = true,
 		hit_stop_anim = "hit_stop",
 		total_time = 1.3,
 		action_movement_curve = {
@@ -302,6 +302,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		hit_stickyness_settings = {
 			stickyness_vfx_loop_alias = "melee_sticky_loop",
@@ -312,7 +313,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
@@ -354,7 +355,7 @@ weapon_template.actions = {
 		},
 		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword,
 		damage_type_on_abort = damage_types.sawing,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
@@ -366,20 +367,19 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck
 	},
 	action_left_heavy = {
-		power_level = 500,
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		allowed_during_sprint = true,
-		num_frames_before_process = 0,
-		first_person_hit_anim = "hit_left_shake",
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.2,
+		hit_armor_anim = "attack_hit_shield",
+		kind = "sweep",
+		weapon_handling_template = "time_scale_0_9",
+		first_person_hit_anim = "hit_left_shake",
+		max_num_saved_entries = 20,
+		num_frames_before_process = 0,
+		allowed_during_sprint = true,
+		range_mod = 1.25,
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down_left",
 		anim_event = "heavy_attack_left_diagonal_down",
-		weapon_handling_template = "time_scale_0_9",
 		hit_stop_anim = "hit_stop",
 		total_time = 1,
 		action_movement_curve = {
@@ -432,6 +432,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		hit_stickyness_settings = {
 			stickyness_vfx_loop_alias = "melee_sticky_loop",
 			start_anim_event = "attack_hit_stick",
@@ -441,7 +442,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
@@ -491,7 +492,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.left_45_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -595,20 +596,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		power_level = 500,
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		first_person_hit_anim = "hit_right_shake",
-		num_frames_before_process = 0,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.43,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_1",
+		first_person_hit_anim = "hit_right_shake",
+		max_num_saved_entries = 20,
+		num_frames_before_process = 0,
+		kind = "sweep",
 		damage_window_end = 0.55,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
-		weapon_handling_template = "time_scale_1_1",
-		uninterruptible = true,
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -685,6 +684,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		hit_stickyness_settings = {
 			stickyness_vfx_loop_alias = "melee_sticky_loop",
 			start_anim_event = "attack_hit_stick",
@@ -694,7 +694,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
@@ -743,7 +743,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.right_45_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -759,7 +759,6 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		damage_window_end = 0.35,
 		anim_end_event = "attack_finished",
-		power_level = 500,
 		anim_event_3p = "attack_swing_heavy_right",
 		anim_event = "heavy_attack_right",
 		hit_stop_anim = "hit_stop",
@@ -805,6 +804,9 @@ weapon_template.actions = {
 				action_name = "action_melee_start_left_2",
 				chain_time = 0.35
 			},
+			block = {
+				action_name = "action_block"
+			},
 			special_action = {
 				action_name = "action_toggle_special",
 				chain_time = 0.35
@@ -819,7 +821,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
@@ -855,6 +857,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/heavy_attack_right",
@@ -872,7 +875,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -978,20 +981,18 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light = {
-		power_level = 500,
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		first_person_hit_anim = "hit_left_shake",
-		num_frames_before_process = 0,
-		range_mod = 1.25,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.32,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_1",
+		first_person_hit_anim = "hit_left_shake",
+		max_num_saved_entries = 20,
+		num_frames_before_process = 0,
+		kind = "sweep",
 		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left",
 		anim_event = "attack_left",
-		weapon_handling_template = "time_scale_1_1",
-		uninterruptible = true,
 		hit_stop_anim = "hit_stop",
 		total_time = 1.3,
 		action_movement_curve = {
@@ -1072,6 +1073,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		hit_stickyness_settings = {
 			stickyness_vfx_loop_alias = "melee_sticky_loop",
 			start_anim_event = "attack_hit_stick",
@@ -1081,7 +1083,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
@@ -1130,7 +1132,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -1234,21 +1236,19 @@ weapon_template.actions = {
 		end
 	},
 	action_right_down_light = {
-		power_level = 500,
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		first_person_hit_anim = "hit_left_shake",
-		num_frames_before_process = 0,
-		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.32,
-		damage_window_end = 0.5,
-		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_right_diagonal",
-		anim_event = "attack_right_down",
+		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_1",
+		first_person_hit_anim = "hit_left_shake",
+		max_num_saved_entries = 20,
+		num_frames_before_process = 0,
+		kind = "sweep",
+		damage_window_end = 0.5,
+		anim_end_event = "attack_finished",
 		attack_direction_override = "push",
-		uninterruptible = true,
+		anim_event_3p = "attack_swing_right_diagonal",
+		anim_event = "attack_right_down",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -1325,6 +1325,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		hit_stickyness_settings = {
 			stickyness_vfx_loop_alias = "melee_sticky_loop",
 			start_anim_event = "attack_hit_stick",
@@ -1334,7 +1335,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
@@ -1383,7 +1384,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.right_45_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -1399,7 +1400,6 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		damage_window_end = 0.35,
 		anim_end_event = "attack_finished",
-		power_level = 500,
 		anim_event_3p = "attack_swing_heavy_down_right",
 		anim_event = "heavy_attack_right_diagonal_down",
 		hit_stop_anim = "hit_stop",
@@ -1463,7 +1463,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
@@ -1499,6 +1499,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/heavy_attack_right_diagonal_down",
@@ -1516,7 +1517,7 @@ weapon_template.actions = {
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.right_45_slash_coarse,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -1582,10 +1583,10 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		hit_stop_anim = "hit_stop",
+		range_mod = 1.35,
 		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
 		max_num_saved_entries = 20,
+		first_person_hit_anim = "hit_left_shake",
 		num_frames_before_process = 0,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.27,
@@ -1593,11 +1594,9 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_stab",
 		anim_event = "attack_stab_01",
-		range_mod = 1.35,
 		weapon_handling_template = "time_scale_1_1",
 		attack_direction_override = "push",
-		uninterruptible = true,
-		power_level = 500,
+		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -1672,7 +1671,7 @@ weapon_template.actions = {
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
-				instances = 3,
+				instances = 2,
 				damage_profile = DamageProfileTemplates.default_light_chainsword_stab_sticky,
 				damage_type = damage_types.sawing_stuck,
 				last_damage_profile = DamageProfileTemplates.default_light_chainsword_stab_sticky_last
@@ -1704,6 +1703,7 @@ weapon_template.actions = {
 			}
 		},
 		hit_zone_priority = hit_zone_priority,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_stab",
@@ -1722,17 +1722,17 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.uppercut,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.default,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
 	},
 	action_push = {
-		push_radius = 2.5,
 		block_duration = 0.5,
-		kind = "push",
+		push_radius = 2.5,
 		anim_event = "attack_push",
-		power_level = 500,
+		kind = "push",
+		activation_cooldown = 0.2,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -1780,23 +1780,24 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
 	},
 	action_toggle_special = {
-		kind = "toogle_special",
-		anim_event = "activate",
+		deactivate_anim_event = "deactivate",
+		activate_anim_event = "activate",
 		start_input = "special_action",
 		allowed_during_sprint = true,
 		activation_time = 0.3,
+		kind = "toogle_special",
 		skip_3p_anims = false,
 		total_time = 0.6
 	},
@@ -1863,11 +1864,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.4,
-	walking = 0.34,
-	sprinting = 0.35
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.chainsword
 weapon_template.overclocks = {
 	armor_pierce_up_dps_down = {
 		chainsword_p1_m1_armor_pierce_stat = 0.1,
@@ -2071,6 +2068,10 @@ local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
 
 table.append(weapon_template.traits, melee_activated_traits)
 
+local bespoke_chainsword_p1_traits = table.keys(WeaponTraitsChainswordP1)
+
+table.append(weapon_template.traits, bespoke_chainsword_p1_traits)
+
 weapon_template.perks = {
 	chainsword_p1_m1_dps_perk = {
 		description = "loc_trait_description_chainsword_p1_m1_dps_perk",
@@ -2240,31 +2241,57 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_chainsword_p1_m1_description_1",
-		icon_type = "crosshair"
+		display_name = "loc_weapon_keyword_versatile_new"
 	},
 	{
-		display_name = "loc_weapon_keyword_chainsword_p1_m1_description_2",
-		icon_type = "shield"
-	},
-	{
-		display_name = "loc_weapon_keyword_chainsword_p1_m1_description_3",
-		icon_type = "shield"
+		display_name = "loc_weapon_keyword_sawing"
 	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_chainsword_p1_m1_attack_primary",
-		type = "ninja_fencer"
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter",
+			"tank",
+			"linesman"
+		}
 	},
 	secondary = {
-		display_name = "loc_chainsword_p1_m1_attack_secondary",
-		type = "ninja_fencer"
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
+		attack_chain = {
+			"linesman",
+			"linesman"
+		}
 	},
 	special = {
-		display_name = "loc_chainsword_p1_m1_attack_special",
-		type = "ninja_fencer"
+		display_name = "loc_weapon_special_activate",
+		type = "activate"
 	}
 }
+
+weapon_template.weapon_special_action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local correct_scenario = scenario_system:get_current_scenario_name() == "weapon_special"
+	local player_unit = player.player_unit
+	local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
+	local inventory_slot_component = unit_data_ext:read_component(wielded_slot_id)
+	local special_active = inventory_slot_component.special_active
+
+	return correct_scenario and not special_active
+end
+
+weapon_template.weapon_special_action_revved_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local correct_scenario = scenario_system:get_current_scenario_name() == "weapon_special"
+	local player_unit = player.player_unit
+	local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
+	local inventory_slot_component = unit_data_ext:read_component(wielded_slot_id)
+	local special_active = inventory_slot_component.special_active
+
+	return correct_scenario and special_active
+end
 
 return weapon_template

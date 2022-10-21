@@ -19,7 +19,6 @@ HudElementBossHealth.init = function (self, parent, draw_layer, start_scale)
 	event_manager:register(self, "boss_encounter_start", "event_boss_encounter_start")
 	event_manager:register(self, "boss_encounter_end", "event_boss_encounter_end")
 	self:_set_active(false)
-	self:_initial_boss_scan()
 end
 
 HudElementBossHealth._setup_widget_groups = function (self)
@@ -45,22 +44,6 @@ HudElementBossHealth._setup_widget_groups = function (self)
 		left_double_target_widgets,
 		right_double_target_widgets
 	}
-end
-
-HudElementBossHealth._initial_boss_scan = function (self)
-	local side_system = Managers.state.extension:system("side_system")
-	local default_player_side_name = side_system:get_default_player_side_name()
-	local player_side = side_system:get_side_from_name(default_player_side_name)
-	local monster_units = player_side:alive_units_by_tag("enemy", "monster")
-
-	for i = 1, monster_units.size do
-		local unit = monster_units[i]
-		local boss_extension = ScriptUnit.has_extension(unit, "boss_system")
-
-		if boss_extension then
-			self:event_boss_encounter_start(unit, boss_extension)
-		end
-	end
 end
 
 HudElementBossHealth.destroy = function (self)

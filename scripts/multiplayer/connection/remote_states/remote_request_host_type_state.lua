@@ -4,12 +4,6 @@ local RPCS = {
 local RemoteRequestHostTypeState = class("RemoteRequestHostTypeState")
 
 RemoteRequestHostTypeState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-	assert(type(shared_state.is_dedicated_server) == "boolean", "Dedicated server state required")
-	assert(type(shared_state.max_members) == "number", "Max members required")
-
 	self._shared_state = shared_state
 	self._got_request = false
 	self._time = 0

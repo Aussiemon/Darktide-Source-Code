@@ -9,10 +9,10 @@ local event_vo_demolition_tech_priest_a = {
 			"loc_tech_priest_a__event_demolition_first_corruptor_destroyed_b_04"
 		},
 		sound_events_duration = {
-			4.00998,
-			3.839709,
-			5.001021,
-			4.02748
+			4.732062,
+			4.561771,
+			5.723104,
+			4.749542
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_demolition_tech_priest_a = {
 			"loc_tech_priest_a__event_demolition_last_corruptor_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			4.891458,
+			3.770687,
+			3.929583,
+			5.208479
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local event_vo_demolition_tech_priest_a = {
 			"loc_tech_priest_a__event_demolition_more_corruptors_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.848312,
+			3.818292,
+			4.608875,
+			5.153333
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local event_vo_demolition_tech_priest_a = {
 			"loc_tech_priest_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
-			5.817375,
-			3.582646,
-			5.208813,
-			4.215105
+			6.539417,
+			4.304729,
+			5.930875,
+			4.937187
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local event_vo_demolition_tech_priest_a = {
 			"loc_tech_priest_a__mission_stockpile_bazaar_04"
 		},
 		sound_events_duration = {
-			6.503146,
-			8.395,
-			6.556376,
-			5.195896
+			7.225229,
+			9.117063,
+			7.278437,
+			5.917979
 		},
 		randomize_indexes = {}
 	}

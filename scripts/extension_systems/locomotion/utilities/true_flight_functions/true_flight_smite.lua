@@ -13,8 +13,8 @@ end
 ture_flight_smite.smite_update_towards_position = function (target_position, physics_world, integration_data, dt, t)
 	local true_flight_template = integration_data.true_flight_template
 	local on_target_time = integration_data.on_target_time
-	local position = integration_data.position:unbox()
-	local velocity = integration_data.velocity:unbox()
+	local position = integration_data.position
+	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
 	local current_rotation = Quaternion.look(current_direction)
 	local speed = Vector3.length(velocity)
@@ -43,10 +43,8 @@ ture_flight_smite.smite_update_towards_position = function (target_position, phy
 	local travel_distance = (speed + new_speed) * dt * 0.5
 	local new_position = position + new_direction * travel_distance
 	local new_velocity = new_direction * new_speed
-
-	integration_data.velocity:store(new_velocity)
-
-	local new_rotation = Quaternion.look(velocity)
+	integration_data.velocity = new_velocity
+	new_rotation = Quaternion.look(velocity)
 
 	return new_position, new_rotation
 end

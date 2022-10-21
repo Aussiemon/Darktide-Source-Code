@@ -10,20 +10,25 @@ MechanismLeftSession.init = function (self, ...)
 
 	local reason = self._context.left_session_reason
 
-	fassert(reason, "left_session_reason missing in mechanism context")
 	Log.info("MechanismLeftSession", "Entered with reason %s", reason)
 
 	self._leave_party_promise = Promise.resolved()
 
-	if reason == "exit_to_main_menu" then
-		self._next_state = StateExitToMainMenu
-	elseif reason == "leave_mission" then
-		self:_leave_party()
-	elseif reason == "lost_connection" then
-		self._next_state = StateExitToMainMenu
+	if DEDICATED_SERVER then
+		return
 	end
 
-	if not DEDICATED_SERVER and self._context.session_was_booting then
+	if reason == "leave_mission" then
+		self:_leave_party()
+	elseif reason == "skip_end_of_round" then
+		-- Nothing
+	elseif reason == "leave_to_hub" then
+		-- Nothing
+	elseif reason == "failed_fetching_session_report" then
+		self:_leave_party()
+	elseif reason == "session_completed" then
+		self:_leave_party()
+	else
 		self._next_state = StateExitToMainMenu
 	end
 end
@@ -36,7 +41,11 @@ MechanismLeftSession.sync_data = function (self)
 	ferror("Somebody joined you while in left session mechanism. This means you are hosting while in the left session mechanism.")
 end
 
-MechanismLeftSession.ready_for_game_score = function (self, peer_id, success)
+MechanismLeftSession.failed_fetching_session_report = function (self, peer_id)
+	return
+end
+
+MechanismLeftSession.game_mode_end = function (self, reason, session_id)
 	return
 end
 

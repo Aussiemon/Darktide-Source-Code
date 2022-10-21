@@ -36,20 +36,13 @@ HudElementPlayerSlotItemAbility.destroy = function (self)
 	HudElementPlayerSlotItemAbility.super.destroy(self)
 end
 
-local _input_devices = {
-	"xbox_controller",
-	"keyboard",
-	"mouse"
-}
-
 HudElementPlayerSlotItemAbility._update_input = function (self)
 	local wield_input = self._wield_input
 	local service_type = "Ingame"
 	local alias_name = wield_input
 	local alias_array_index = 1
-	local alias = Managers.input:alias_object(service_type)
-	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
+	local color_tint_text = true
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 
 	self:set_input_text(tostring(input_key))
 end
@@ -59,6 +52,7 @@ HudElementPlayerSlotItemAbility.set_charges_amount = function (self, amount)
 	local widget = widgets_by_name.ability
 	local content = widget.content
 	content.text = amount and tostring(amount) or nil
+	widget.dirty = true
 end
 
 HudElementPlayerSlotItemAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
@@ -95,7 +89,9 @@ end
 
 HudElementPlayerSlotItemAbility.set_input_text = function (self, text)
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.ability.content.input_text = text
+	local widget = widgets_by_name.ability
+	widget.content.input_text = text
+	widget.dirty = true
 end
 
 HudElementPlayerSlotItemAbility.set_icon = function (self, icon)
@@ -103,6 +99,7 @@ HudElementPlayerSlotItemAbility.set_icon = function (self, icon)
 	local widget = widgets_by_name.ability
 	local content = widget.content
 	content.icon = icon
+	widget.dirty = true
 end
 
 HudElementPlayerSlotItemAbility._set_progress = function (self, progress)
@@ -111,6 +108,7 @@ HudElementPlayerSlotItemAbility._set_progress = function (self, progress)
 	local widget = widgets_by_name.ability
 	local content = widget.content
 	content.duration_progress = progress
+	widget.dirty = true
 end
 
 HudElementPlayerSlotItemAbility._register_events = function (self)
@@ -135,7 +133,7 @@ HudElementPlayerSlotItemAbility._unregister_events = function (self)
 	end
 end
 
-HudElementPlayerSlotItemAbility.event_on_input_settings_changed = function (self)
+HudElementPlayerSlotItemAbility.event_on_input_changed = function (self)
 	self:_update_input()
 end
 

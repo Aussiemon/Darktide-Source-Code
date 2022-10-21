@@ -20,7 +20,7 @@ local mission_vo_dm_forge_ogryn_c = {
 			[2.0] = "loc_ogryn_c__mission_forge_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.010427,
+			[1.0] = 2.010438,
 			[2.0] = 2.339708
 		},
 		randomize_indexes = {}
@@ -98,8 +98,8 @@ local mission_vo_dm_forge_ogryn_c = {
 			[2.0] = "loc_ogryn_c__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.923323,
-			[2.0] = 2.938583
+			[1.0] = 2.923333,
+			[2.0] = 2.938594
 		},
 		randomize_indexes = {}
 	},
@@ -120,13 +120,13 @@ local mission_vo_dm_forge_ogryn_c = {
 		},
 		sound_events_duration = {
 			2.687979,
-			2.87749,
+			2.8775,
 			3.552531,
-			2.388427,
+			2.388438,
 			3.068083,
-			4.55851,
-			3.969969,
-			3.13974,
+			4.558521,
+			3.969979,
+			3.13975,
 			3.403104,
 			3.747969
 		},
@@ -178,8 +178,28 @@ local mission_vo_dm_forge_ogryn_c = {
 			[2.0] = "loc_ogryn_c__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.491771,
+			[1.0] = 1.491781,
 			[2.0] = 3.254917
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_main_entrance_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_c__region_mechanicus_01",
+			"loc_ogryn_c__region_mechanicus_02",
+			"loc_ogryn_c__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			2.711,
+			3.097885,
+			3.112188
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -204,7 +224,7 @@ local mission_vo_dm_forge_ogryn_c = {
 			[2.0] = "loc_ogryn_c__mission_forge_stand_ground_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.925813,
+			[1.0] = 2.925823,
 			[2.0] = 3.536375
 		},
 		randomize_indexes = {}
@@ -219,6 +239,26 @@ local mission_vo_dm_forge_ogryn_c = {
 		sound_events_duration = {
 			[1.0] = 6.616333,
 			[2.0] = 3.894656
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_c__zone_tank_foundry_01",
+			"loc_ogryn_c__zone_tank_foundry_02",
+			"loc_ogryn_c__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			3.948375,
+			6.343948,
+			4.031031
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},

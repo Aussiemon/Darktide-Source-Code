@@ -34,20 +34,20 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 	local ALIVE = ALIVE
 
 	for _, player in pairs(players) do
-		if self._is_mission_hub then
-			local peer_id = player:peer_id()
-			local is_player_party_member = player:is_human_controlled() and PlayerCompositions.party_member_by_peer_id(peer_id) ~= nil
-
-			if is_player_party_member then
-				marker_type = "nameplate_party_hud"
-			else
-				marker_type = "nameplate"
-			end
-		else
-			marker_type = "nameplate_party"
-		end
-
 		if player ~= my_player then
+			if self._is_mission_hub then
+				local peer_id = player:peer_id()
+				local is_player_party_member = player:is_human_controlled() and PlayerCompositions.party_member_by_peer_id(peer_id)
+
+				if is_player_party_member then
+					marker_type = "nameplate_party_hud"
+				else
+					marker_type = "nameplate"
+				end
+			else
+				marker_type = "nameplate_party"
+			end
+
 			local unit = player.player_unit
 			local active = ALIVE[unit]
 

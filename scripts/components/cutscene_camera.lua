@@ -95,12 +95,7 @@ CutsceneCamera.component_data = {
 			"Path of Trust 08 Part 01",
 			"Path of Trust 08 Corridor 01",
 			"Path of Trust 08 Part 02",
-			"Path of Trust 09 Office",
-			"Path of Trust 10 Hangar",
-			"Path of Trust 11 Office",
-			"Path of Trust 12 Office",
-			"Path of Trust 13 Office",
-			"Traitor Captain Intro"
+			"Path of Trust 09 Office"
 		},
 		options_values = {
 			"none",
@@ -144,12 +139,7 @@ CutsceneCamera.component_data = {
 			"path_of_trust_08_part_01",
 			"path_of_trust_08_corridor_01",
 			"path_of_trust_08_part_02",
-			"path_of_trust_09_office",
-			"path_of_trust_10_hangar",
-			"path_of_trust_11_office",
-			"path_of_trust_12_office",
-			"path_of_trust_13_office",
-			"traitor_captain_intro"
+			"path_of_trust_09_office"
 		}
 	}
 }

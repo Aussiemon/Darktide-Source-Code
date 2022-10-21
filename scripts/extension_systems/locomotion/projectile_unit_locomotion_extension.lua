@@ -77,7 +77,8 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 		self._is_level_unit = nil
 	end
 
-	self._integration_data = ProjectileIntegrationData.allocate_integration_data()
+	local store_data = true
+	self._integration_data = ProjectileIntegrationData.allocate_integration_data(store_data)
 	local starting_state = extension_init_data.starting_state or locomotion_states.none
 	local carrier_unit = extension_init_data.carrier_unit
 	local direction = extension_init_data.direction
@@ -109,11 +110,11 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	game_object_data.position = self._position:unbox()
 	game_object_data.rotation = self._rotation:unbox()
 	game_object_data.projectile_locomotion_state_id = NetworkLookup.projectile_locomotion_states[self._current_state]
+
+	self:_hide_pin()
 end
 
 ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
-	fassert(not self._is_level_unit, "[ProjectileUnitLocomotionExtension][game_object_initialized] Game object initialized on a level unit.")
-
 	self._game_object_id = game_object_id
 	self._is_level_unit = false
 	self._game_session = game_session
@@ -215,24 +216,23 @@ ProjectileUnitLocomotionExtension.update = function (self, unit, dt, t)
 	end
 end
 
-ProjectileUnitLocomotionExtension.switch_to_manual = function (self, position, rotation, direction, speed, momentum)
+ProjectileUnitLocomotionExtension.switch_to_manual = function (self, position, rotation, direction, speed, angular_velocity)
 	self:_set_state(locomotion_states.manual_physics)
-	self:switch_to_manual_state_helper(position, rotation, direction, speed, momentum)
+	self:switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity)
 end
 
-ProjectileUnitLocomotionExtension.switch_to_true_flight = function (self, position, rotation, direction, speed, momentum, target_unit, target_position)
+ProjectileUnitLocomotionExtension.switch_to_true_flight = function (self, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 	self:_set_state(locomotion_states.true_flight)
-	self:switch_to_manual_state_helper(position, rotation, direction, speed, momentum, target_unit, target_position)
+	self:switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 end
 
-ProjectileUnitLocomotionExtension.switch_to_manual_state_helper = function (self, position, rotation, direction, speed, momentum, target_unit, target_position)
+ProjectileUnitLocomotionExtension.switch_to_manual_state_helper = function (self, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 	local projectile_unit = self._projectile_unit
 	local dynamic_actor_id = self._dynamic_actor_id
 
 	if dynamic_actor_id then
 		local dynamic_actor = Unit.actor(projectile_unit, dynamic_actor_id)
 
-		fassert(dynamic_actor, "[ProjectileUnitLocomotionExtension][switch_to_manual_state] %q is missing a dynamic actor.", projectile_unit)
 		ProjectileLocomotionUtility.set_kinematic(projectile_unit, dynamic_actor_id, true)
 	end
 
@@ -240,18 +240,15 @@ ProjectileUnitLocomotionExtension.switch_to_manual_state_helper = function (self
 	local mass, radius = ProjectileIntegrationData.mass_radius(projectile_locomotion_template, self)
 	local integration_data = self._integration_data
 
-	ProjectileIntegrationData.fill_integration_data(integration_data, self._owner_unit, self._projectile_unit, projectile_locomotion_template, radius, mass, position, rotation, direction, speed, momentum, target_unit, target_position)
+	ProjectileIntegrationData.fill_integration_data(integration_data, self._owner_unit, self._projectile_unit, projectile_locomotion_template, radius, mass, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 end
 
 ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit, dt, t)
 	local dynamic_actor_id = self._dynamic_actor_id
 	local dynamic_actor = Unit.actor(unit, dynamic_actor_id)
-
-	fassert(dynamic_actor, "[ProjectileUnitLocomotionExtension][_update_manual_physics] Actor not available.")
-
 	local integration_data = self._integration_data
 
-	fassert(self._integration_data, "[ProjectileUnitLocomotionExtension][_update_manual_physics] integration data not initialized.")
+	ProjectileIntegrationData.unbox(integration_data)
 
 	local old_collision_count = integration_data.hit_count
 	local is_server = true
@@ -259,21 +256,25 @@ ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit,
 	ProjectileLocomotion.integrate(self._physics_world, integration_data, dt, t, is_server)
 
 	local integrate_this_frame = integration_data.integrate
-	local new_position = integration_data.position:unbox()
-	local new_velocity = integration_data.velocity:unbox()
-	local new_rotation = integration_data.rotation:unbox()
-	local momentum = integration_data.angular_momentum:unbox()
+	local new_position = integration_data.position
+	local new_velocity = integration_data.velocity
+	local new_rotation = integration_data.rotation
+	local new_collision_count = integration_data.hit_count
 
-	if integrate_this_frame then
-		local new_collision_count = integration_data.hit_count
+	ProjectileIntegrationData.store(self._integration_data)
 
-		if old_collision_count < new_collision_count then
+	local hit_this_frame = old_collision_count < new_collision_count
+
+	if not integrate_this_frame then
+		local angular_momentum = integration_data.angular_velocity / integration_data.inertia
+
+		self:switch_to_engine(new_position, new_rotation, new_velocity, angular_momentum)
+	else
+		if hit_this_frame then
 			Unit.flow_event(unit, "lua_manual_physics_collision")
 		end
 
 		self:_apply_changes(locomotion_states.manual_physics, new_position, new_rotation, new_velocity, Vector3.zero())
-	else
-		self:switch_to_engine(new_position, new_rotation, new_velocity, momentum)
 	end
 end
 
@@ -282,25 +283,25 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 
 	if dynamic_actor_id then
 		local dynamic_actor = Unit.actor(unit, dynamic_actor_id)
-
-		fassert(dynamic_actor, "[ProjectileUnitLocomotionExtension][_update_manual_physics] Actor not available.")
 	end
 
 	local integration_data = self._integration_data
 
-	fassert(integration_data, "[ProjectileUnitLocomotionExtension][_update_true_flight] integration data not initialized.")
+	ProjectileIntegrationData.unbox(integration_data)
 
 	local old_collision_count = integration_data.hit_count
 	local integrate_this_frame = integration_data.integrate
 
 	TrueFlightProjectileLocomotion.integrate(self._physics_world, integration_data, dt, t, true)
 
-	local new_position = integration_data.position:unbox()
-	local new_velocity = integration_data.velocity:unbox()
-	local new_rotation = integration_data.rotation:unbox()
+	local new_position = integration_data.position
+	local new_velocity = integration_data.velocity
+	local new_rotation = integration_data.rotation
 	local new_target_unit = integration_data.target_unit
 	local new_target_hit_zone = integration_data.target_hit_zone
 	local new_target_position = integration_data.target_position
+
+	ProjectileIntegrationData.store(integration_data)
 
 	if integrate_this_frame then
 		local new_collision_count = integration_data.hit_count
@@ -315,22 +316,21 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 	end
 end
 
-ProjectileUnitLocomotionExtension.switch_to_engine = function (self, position, rotation, velocity, angular_velocity)
+ProjectileUnitLocomotionExtension.switch_to_engine = function (self, position, rotation, velocity, angular_momentum)
 	self:_set_state(locomotion_states.engine_physics)
 
 	local projectile_unit = self._projectile_unit
 	local dynamic_actor_id = self._dynamic_actor_id
 	local dynamic_actor = Unit.actor(projectile_unit, dynamic_actor_id)
 
-	fassert(dynamic_actor, "[ProjectileUnitLocomotionExtension][switch_to_engine] %q is missing a dynamic actor.", projectile_unit)
 	ProjectileLocomotionUtility.set_kinematic(projectile_unit, dynamic_actor_id, false)
 
 	position = position or Unit.world_position(projectile_unit, 1)
 	rotation = rotation or Unit.world_rotation(projectile_unit, 1)
 	velocity = velocity or Vector3.zero()
-	angular_velocity = (angular_velocity or Vector3.zero()) * 0.01
+	angular_momentum = (angular_momentum or Vector3.zero()) * 0.01
 
-	self:_apply_changes(locomotion_states.engine_physics, position, rotation, velocity, angular_velocity)
+	self:_apply_changes(locomotion_states.engine_physics, position, rotation, velocity, angular_momentum)
 
 	self._time_starting_in_engine = Managers.time:time("gameplay")
 
@@ -341,9 +341,6 @@ end
 ProjectileUnitLocomotionExtension._update_engine_physics = function (self, unit)
 	local dynamic_actor_id = self._dynamic_actor_id
 	local dynamic_actor = Unit.actor(unit, dynamic_actor_id)
-
-	fassert(dynamic_actor, "[ProjectileUnitLocomotionExtension][_update_engine_physics] Actor not available.")
-
 	local position = Actor.position(dynamic_actor)
 	local rotation = Actor.rotation(dynamic_actor)
 	local velocity = Actor.velocity(dynamic_actor)
@@ -478,7 +475,7 @@ ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 	end
 end
 
-ProjectileUnitLocomotionExtension._apply_changes = function (self, state, position, rotation, velocity, angular_velocity, target_position, target_unit, target_hit_zone)
+ProjectileUnitLocomotionExtension._apply_changes = function (self, state, position, rotation, velocity, angular_momentum, target_position, target_unit, target_hit_zone)
 	local projectile_unit = self._projectile_unit
 	local dynamic_actor = nil
 
@@ -496,7 +493,7 @@ ProjectileUnitLocomotionExtension._apply_changes = function (self, state, positi
 
 		if state == locomotion_states.engine_physics then
 			Actor.set_velocity(dynamic_actor, velocity)
-			Actor.set_angular_velocity(dynamic_actor, angular_velocity)
+			Actor.set_angular_velocity(dynamic_actor, angular_momentum)
 		end
 	end
 
@@ -508,6 +505,15 @@ ProjectileUnitLocomotionExtension._apply_changes = function (self, state, positi
 	self._target_unit = target_unit
 	self._target_hit_zone = target_hit_zone
 	self._target_position = target_position
+end
+
+ProjectileUnitLocomotionExtension._hide_pin = function (self)
+	local projectile_unit = self._projectile_unit
+	local has_visibility_group = Unit.has_visibility_group(projectile_unit, "pin")
+
+	if has_visibility_group then
+		Unit.set_visibility(projectile_unit, "pin", false)
+	end
 end
 
 ProjectileUnitLocomotionExtension.owner_unit = function (self)
@@ -530,7 +536,7 @@ ProjectileUnitLocomotionExtension.previous_and_current_positions = function (sel
 	if self:is_moving() and self._current_state ~= locomotion_states.engine_physics then
 		local integration_data = self._integration_data
 
-		return integration_data.previous_position:unbox(), integration_data.position:unbox()
+		return integration_data.previous_position_box:unbox(), integration_data.position_box:unbox()
 	end
 
 	local position = self._position:unbox()
@@ -540,9 +546,9 @@ end
 
 ProjectileUnitLocomotionExtension.current_rotation_and_direction = function (self)
 	local integration_data = self._integration_data
-	local velocity = integration_data.velocity:unbox()
+	local velocity = integration_data.velocity_box:unbox()
 	local direction = Vector3.normalize(velocity)
-	local rotation = integration_data.rotation:unbox()
+	local rotation = integration_data.rotation_box:unbox()
 
 	return rotation, direction
 end

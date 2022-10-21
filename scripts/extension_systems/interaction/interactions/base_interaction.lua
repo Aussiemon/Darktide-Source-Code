@@ -31,6 +31,12 @@ BaseInteraction.hud_description = function (self, interactor_unit, interactee_un
 	return interactee_extension:description()
 end
 
+BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+
+	return interactee_extension:block_text()
+end
+
 BaseInteraction.marker_offset = function (self)
 	return nil
 end
@@ -49,10 +55,6 @@ end
 
 BaseInteraction.interaction_icon = function (self)
 	return self._template.interaction_icon
-end
-
-BaseInteraction.type_description = function (self)
-	return self._template.type_description
 end
 
 BaseInteraction.description = function (self)

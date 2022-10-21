@@ -66,7 +66,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		yaw_delta = right_dot * (look_delta_template.yaw_multiplier or 0.2)
 		pitch_delta = up_dot * (look_delta_template.pitch_multiplier or 0.2)
 	else
-		local previous_rotation = nil
+		local previous_rotation, previous_rotation_pitch_only = nil
 		local weapon_lock_view_component = self._weapon_lock_view_component
 
 		if weapon_lock_view_component.is_active then
@@ -75,6 +75,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 			local pitch = weapon_lock_view_component.pitch
 			local roll = 0
 			previous_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
+			previous_rotation_pitch_only = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), pitch, roll)
 		elseif self._character_state_component.state_name == "minigame" then
 			settings = look_delta_template.inspect
 			local is_level_unit = true
@@ -92,7 +93,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		local rot_right = Quaternion.right(rotation)
 		local prev_rot_right = Quaternion.right(previous_rotation)
 		local rot_up = Quaternion.up(rotation)
-		local prev_rot_up = Quaternion.up(previous_rotation)
+		local prev_rot_up = previous_rotation_pitch_only and Quaternion.up(previous_rotation_pitch_only) or Quaternion.up(previous_rotation)
 		local forward = Quaternion.forward(rotation)
 		local up_dot = math.clamp(Vector3.dot(rot_up, prev_rot_up), -1, 1)
 		pitch_delta = math.acos(up_dot)

@@ -1,5 +1,5 @@
 local RecoilTemplate = {}
-local lerp = math.lerp or MathUtils.lerp
+local lerp = math.lerp
 
 RecoilTemplate.generate_offset_range = function (num_shots, offset_pitch, offset_yaw, lerp_distance, scale_values)
 	local offset_range = {}

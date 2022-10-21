@@ -5,9 +5,6 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local PresenceEntryImmaterium = class("PresenceEntryImmaterium")
 
 PresenceEntryImmaterium.init = function (self, my_own_platform, platform, platform_user_id)
-	assert(platform, "platform is not set")
-	assert(platform_user_id, "platform_user_id is not set")
-
 	self._my_own_platform = my_own_platform
 	local immaterium_entry = {
 		account_name = "",
@@ -92,8 +89,6 @@ PresenceEntryImmaterium.first_update_promise = function (self)
 end
 
 PresenceEntryImmaterium.start_stream = function (self)
-	assert(not self._stream_operation_id, "a stream is already active")
-
 	local promise, id = nil
 
 	if self._account_id then
@@ -264,9 +259,9 @@ end
 
 PresenceEntryImmaterium._process_platform_id_convert = function (self, new_entry)
 	if HAS_STEAM and new_entry.platform == "steam" then
-		new_entry.platform_user_id = Steam.id_dec_to_hex(new_entry.platform_user_id)
+		new_entry.platform_user_id = Application.dec64_to_hex(new_entry.platform_user_id)
 	elseif new_entry.platform == "xbox" then
-		new_entry.platform_user_id = XboxLive.xuid_dec_to_hex(new_entry.platform_user_id)
+		new_entry.platform_user_id = Application.dec64_to_hex(new_entry.platform_user_id)
 	end
 
 	return new_entry
@@ -282,10 +277,13 @@ PresenceEntryImmaterium._process_character_profile_convert = function (self, new
 			self._parsed_character_profile = nil
 		elseif not parsed_character_profile or parsed_character_profile.hash ~= character_profile.hash then
 			parsed_character_profile = ProfileUtils.backend_profile_data_to_profile(ProfileUtils.process_backend_body(cjson.decode(character_profile.value)))
-			parsed_character_profile.hash = character_profile.hash
-			self._parsed_character_profile = parsed_character_profile
 
-			Managers.event:trigger("event_player_profile_updated", nil, nil, parsed_character_profile)
+			if parsed_character_profile then
+				parsed_character_profile.hash = character_profile.hash
+				self._parsed_character_profile = parsed_character_profile
+
+				Managers.event:trigger("event_player_profile_updated", nil, nil, parsed_character_profile)
+			end
 		end
 	else
 		self._parsed_character_profile = nil
@@ -306,9 +304,9 @@ end
 
 PresenceEntryImmaterium._convert_platform_user_id_for_immaterium = function (self, platform, platform_user_id)
 	if HAS_STEAM and platform == "steam" and platform_user_id then
-		return Steam.id_hex_to_dec(platform_user_id)
+		return Application.hex64_to_dec(platform_user_id)
 	elseif platform == "xbox" then
-		return XboxLive.xuid_hex_to_dec(platform_user_id)
+		return Application.hex64_to_dec(platform_user_id)
 	end
 
 	return platform_user_id

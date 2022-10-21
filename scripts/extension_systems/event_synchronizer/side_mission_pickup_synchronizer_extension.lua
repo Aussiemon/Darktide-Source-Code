@@ -143,6 +143,11 @@ end
 
 SideMissionPickupSynchronizerExtension._remove_buff = function (self, player)
 	local index_array = self._player_buff_indices[player]
+
+	if not index_array then
+		return
+	end
+
 	local array_length = #index_array
 	local indexes = index_array[array_length]
 	local index = indexes[1]
@@ -150,8 +155,8 @@ SideMissionPickupSynchronizerExtension._remove_buff = function (self, player)
 	local buff_extension = ScriptUnit.extension(player.player_unit, "buff_system")
 
 	buff_extension:remove_externally_controlled_buff(index, component_index)
-	table.remove(index_array, index)
 
+	index_array[array_length] = nil
 	self._player_buff_indices[player] = index_array
 end
 

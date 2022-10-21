@@ -2,13 +2,13 @@ local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplate = require("scripts/utilities/buff_template")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local WarpCharge = require("scripts/utilities/warp_charge")
 local PlayerUnitAction = require("scripts/extension_systems/visual_loadout/utilities/player_unit_action")
-local ConditionalFunctionTemplates = require("scripts/settings/buff/conditional_function_templates")
-local CheckProcFunctionTemplates = require("scripts/settings/buff/check_proc_function_templates")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
+local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
@@ -28,8 +28,8 @@ local example_weapon_trait_ranged_buff_stat = {
 			return -0.03 * i
 		end
 	},
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_keywords_func = ConditionalFunctionTemplates.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_stat, 3)
@@ -53,8 +53,8 @@ local example_weapon_trait_ranged_buff_lerp = {
 		local unit = template_context.unit
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
 	end,
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_lerped_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_lerped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local health_extension = template_data.health_extension
 		local max_wounds = health_extension:max_wounds()
@@ -81,10 +81,10 @@ local example_weapon_trait_ranged_buff_proc = {
 			return 0.1 + 0.1 * i
 		end
 	},
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
-		local is_kill = params.result == attack_results.died
+		local is_kill = params.attack_result == attack_results.died
 		local is_weakspot = params.hit_weakspot
 
 		return is_kill and is_weakspot
@@ -106,9 +106,9 @@ local example_weapon_trait_ranged_buff_proc_chance = {
 	proc_stat_buffs = {
 		[buff_stat_buffs.damage_vs_specials] = 0.25
 	},
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctionTemplates.on_crit
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_crit
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc_chance, 3)
@@ -126,8 +126,8 @@ local example_weapon_trait_ranged_buff_proc_duration = {
 	proc_stat_buffs = {
 		[buff_stat_buffs.damage_vs_specials] = 0.25
 	},
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc_duration, 3)
@@ -138,14 +138,14 @@ templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_buff = {
 	proc_events = {
 		[buff_proc_events.on_hit] = 1
 	},
-	check_proc_func = CheckProcFunctionTemplates.on_ranged_stagger_hit,
-	conditional_proc_func = ConditionalFunctionTemplates.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_ranged_stagger_hit,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context)
 		local buff_extension = template_context.buff_extension
 
 		if buff_extension then
-			local t = Managers.time:time("gameplay")
+			local t = FixedFrame.get_latest_fixed_time()
 
 			buff_extension:add_internally_controlled_buff("example_weapon_trait_ranged_wield_on_hit_increase_impact_result_buff", t, "item_slot_name", template_context.item_slot_name)
 		end
@@ -161,8 +161,8 @@ templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_result_buff =
 	conditional_stat_buffs = {
 		[buff_stat_buffs.ranged_impact_modifier] = 0.5
 	},
-	check_proc_func = CheckProcFunctionTemplates.on_ranged_and_check_item_slot,
-	conditional_stat_buffs_func = ConditionalFunctionTemplates.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_ranged_and_check_item_slot,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context)
 		if template_data.used then
 			return

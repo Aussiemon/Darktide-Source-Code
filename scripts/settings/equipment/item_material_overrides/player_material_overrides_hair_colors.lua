@@ -1,4 +1,55 @@
 local material_overrides = {
+	hair_color_bardin = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_bardin"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.6,
+				0.34,
+				0.02
+			}
+		}
+	},
+	hair_color_sienna = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_sienna"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.6,
+				0.24,
+				0.02
+			}
+		}
+	},
+	hair_color_kerilian = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_kerilian"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.8,
+				0.8,
+				0.75
+			}
+		}
+	},
 	hair_black_01 = {
 		texture_overrides = {
 			hair_color_gradient = {

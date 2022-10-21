@@ -64,6 +64,10 @@ SessionHost.has_client = function (self, peer_id)
 	return self._remote_clients[peer_id] ~= nil
 end
 
+SessionHost.num_clients = function (self)
+	return table.size(self._remote_clients)
+end
+
 SessionHost.next_event = function (self)
 	for _, remote_client in pairs(self._remote_clients) do
 		local event, parameters = remote_client:next_event()

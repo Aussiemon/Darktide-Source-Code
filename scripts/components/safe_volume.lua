@@ -6,7 +6,6 @@ SafeVolume.init = function (self, unit)
 	if trigger_extension then
 		local component_guid = self.guid
 
-		fassert(component_guid, "[Trigger] Missing component guid.")
 		trigger_extension:setup_from_component(self.guid, "all_players_inside", false, "safe_volume", {
 			action_player_side = "heroes",
 			action_target = NetworkLookup.trigger_action_targets.none,

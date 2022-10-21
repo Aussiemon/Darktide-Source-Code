@@ -17,6 +17,10 @@ HudElementMissionObjective.init = function (self, objective)
 	self._distance = 0
 	self._marker_distances = {}
 	self._is_side_mission = objective:is_side_mission()
+	self._locally_added = objective:locally_added()
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
+	self._default_marker_type = is_in_hub and "hub_objective" or "objective"
 
 	self:synchronize_objective(objective)
 	self:_init_markers()
@@ -124,7 +128,7 @@ end
 
 HudElementMissionObjective._add_unit_marker = function (self, unit)
 	local marker_callback = callback(self, "_cb_on_marker_spawned", unit)
-	local marker_type = self._marker_type or "objective"
+	local marker_type = self._marker_type or self._default_marker_type
 	local extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
 	local ui_target_type = extension and extension:ui_target_type() or "default"
 	local data = {
@@ -209,6 +213,10 @@ end
 
 HudElementMissionObjective.is_side_mission = function (self)
 	return self._is_side_mission
+end
+
+HudElementMissionObjective.locally_added = function (self)
+	return self._locally_added
 end
 
 return HudElementMissionObjective

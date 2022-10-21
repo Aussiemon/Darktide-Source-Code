@@ -46,6 +46,10 @@ CorruptorExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	if self._eye_is_active then
 		RPC.rpc_set_corruptor_eye_active(channel_id, self._unit_level_index, self._eye_is_active)
 	end
+
+	if self._eye_is_hidden then
+		RPC.rpc_set_corruptor_eye_hidden(channel_id, self._unit_level_index, self._eye_is_hidden)
+	end
 end
 
 CorruptorExtension.setup_from_component = function (self, use_trigger)
@@ -124,6 +128,8 @@ CorruptorExtension.died = function (self)
 
 		LiquidArea.try_create(position_on_navmesh, forward, self._nav_world, liquid_area_template, unit)
 	end
+
+	self:set_eye_hidden(true)
 end
 
 CorruptorExtension.activate_segment_units = function (self)
@@ -134,9 +140,6 @@ CorruptorExtension.activate_segment_units = function (self)
 
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(self._objective_name)
-
-	fassert(synchronizer_unit, "No synchronizer found")
-
 	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 	synchronizer_extension:activate_units()
@@ -344,6 +347,16 @@ CorruptorExtension.set_eye_activated = function (self, activated)
 	end
 
 	self._eye_is_active = activated
+end
+
+CorruptorExtension.set_eye_hidden = function (self, hidden)
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_set_corruptor_eye_hidden", self._unit_level_index, hidden)
+	end
+
+	self._eye_is_hidden = hidden
+
+	Unit.set_visibility(self._unit, "eye", not hidden)
 end
 
 return CorruptorExtension

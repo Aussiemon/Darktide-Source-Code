@@ -12,18 +12,19 @@ Door.init = function (self, unit, is_server)
 		local start_state = self:get_data(unit, "start_state")
 		local open_time = self:get_data(unit, "open_time")
 		local close_time = self:get_data(unit, "close_time")
-		local blocked_time = self:get_data(unit, "blocked_time")
+		local allow_closing = self:get_data(unit, "allow_closing")
 		local self_closing_time = self:get_data(unit, "self_closing_time")
+		local blocked_time = self:get_data(unit, "blocked_time")
 		local open_type = self:get_data(unit, "open_type")
 		local control_panel_props = self:_get_non_empty_control_panels(unit)
 		local control_panels_active = self:get_data(unit, "control_panels_active")
 		local ignore_broadphase = self:get_data(unit, "ignore_broadphase")
 
-		if open_type == "open_only" or open_type == "close_only" then
-			fassert(not ScriptUnit.has_extension(unit, "nav_graph_system"), "[Door] AI does not support 'open_only' or 'close_only'. Create a new door unit without the extension 'NavGraphExtension' and the component 'NavGraph'.")
+		if open_type ~= "open_only" and open_type == "close_only" then
+			-- Nothing
 		end
 
-		door_extension:setup_from_component(type, start_state, open_time, close_time, blocked_time, self_closing_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+		door_extension:setup_from_component(type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 
 		self._door_extension = door_extension
 	end
@@ -275,14 +276,10 @@ Door.component_data = {
 		ui_name = "Close Animation Time (in sec.)",
 		step = 0.01
 	},
-	blocked_time = {
-		ui_type = "slider",
-		min = 0,
-		decimals = 2,
-		max = 1,
-		value = 0.5,
-		ui_name = "Blocked Time (in %)",
-		step = 0.01
+	allow_closing = {
+		ui_type = "check_box",
+		value = true,
+		ui_name = "Allow closing"
 	},
 	self_closing_time = {
 		ui_type = "number",
@@ -292,7 +289,17 @@ Door.component_data = {
 		ui_name = "Time for door to self close (in sec.)",
 		step = 0.01
 	},
+	blocked_time = {
+		ui_type = "slider",
+		min = 0,
+		decimals = 2,
+		max = 1,
+		value = 0.5,
+		ui_name = "Blocked Time (in %)",
+		step = 0.01
+	},
 	control_panel_props = {
+		category = "Control Panels",
 		ui_type = "combo_box_array",
 		size = 0,
 		ui_name = "Control Panel Props (see 'settings/level_prop')",
@@ -311,7 +318,8 @@ Door.component_data = {
 	control_panels_active = {
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Control Panels Active"
+		ui_name = "Control Panels Active",
+		category = "Control Panels"
 	},
 	ignore_broadphase = {
 		ui_type = "check_box",

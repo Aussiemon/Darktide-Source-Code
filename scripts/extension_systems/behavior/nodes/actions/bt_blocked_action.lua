@@ -76,8 +76,6 @@ BtBlockedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	if locomotion_extension.movement_type ~= "constrained_by_mover" and not scratchpad.stagger_hit_wall then
-		Profiler.start("checking navmesh")
-
 		local position = POSITION_LOOKUP[unit]
 		local velocity = locomotion_extension:current_velocity()
 		local result = NavQueries.movement_check(scratchpad.nav_world, scratchpad.physics_world, position, velocity, scratchpad.traverse_logic)
@@ -98,8 +96,6 @@ BtBlockedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 				scratchpad.stagger_hit_wall = true
 			end
 		end
-
-		Profiler.stop("checking navmesh")
 	end
 
 	MinionShield.update_block_timings(scratchpad, unit, t)

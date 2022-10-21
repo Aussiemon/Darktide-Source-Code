@@ -8,14 +8,35 @@ ItemPreviewer.init = function (self, world)
 	self.previewer_world = world
 	self.attached_units_table = nil
 	self.preview_bounding_box = nil
+	self.preview_type = "3D"
+	self.gui = World.create_screen_gui(self.previewer_world, "immediate")
+	self.preview_2D_texture_material = Gui.clone_material_from_template(self.gui, "texturemat", "core/editor_slave/content_preview/texture_preview")
+	self.preview_2D_texture = nil
 end
 
 ItemPreviewer.destroy = function (self)
-	return
+	World.destroy_gui(self.previewer_world, self.gui)
 end
 
 ItemPreviewer.update = function (self, dt, t)
-	return
+	if self.preview_type == "2D" then
+		local backbuffer_x, backbuffer_y = nil
+
+		if EditorApi.get_viewport_window_resolution then
+			backbuffer_x, backbuffer_y = EditorApi:get_viewport_window_resolution()
+		end
+
+		if backbuffer_x == nil or backbuffer_y == nil then
+			backbuffer_x = 256
+			backbuffer_y = 256
+		end
+
+		local texture_scale_value = math.min(backbuffer_x, backbuffer_y) / 256
+		local scaled_x = self.preview_2D_texture_size_x * texture_scale_value
+		local scaled_y = self.preview_2D_texture_size_y * texture_scale_value
+
+		Gui.bitmap(self.gui, "texturemat", Vector3(backbuffer_x / 2 - scaled_x / 2, backbuffer_y / 2 - scaled_y / 2, 140), Vector3(scaled_x, scaled_y, 0))
+	end
 end
 
 ItemPreviewer.cleanup = function (self)
@@ -38,13 +59,23 @@ ItemPreviewer.cleanup = function (self)
 
 		self.preview_bounding_box = nil
 	end
+
+	if self.preview_2D_texture then
+		Material.set_texture(self.preview_2D_texture_material, "thumbnail_slot", nil)
+		GuiThumbnail.unload(self.preview_2D_texture)
+
+		self.preview_2D_texture = nil
+	end
 end
 
-ItemPreviewer.preview = function (self, resource)
+ItemPreviewer.preview = function (self, resource, return_data)
+	self.preview_type = "3D"
+
 	if ToolsMasterItems then
 		local item_data = ToolsMasterItems:get(resource)
 
 		if item_data then
+			item_data = table.clone(item_data)
 			local root_unit_resource = self:_select_root_unit_resource(item_data)
 			local root_unit = World.spawn_unit_ex(self.previewer_world, root_unit_resource)
 			EditorApi.root_unit = root_unit
@@ -100,25 +131,46 @@ ItemPreviewer.preview = function (self, resource)
 					Unit.animation_event(root_unit, item_data.animation_event)
 				end
 			elseif item_data.item_type == "WEAPON_SKIN" then
-				local skin_data = table.clone(item_data)
+				local skin_data = item_data
 
 				if item_data.preview_item and item_data.preview_item ~= "" then
 					item_data = table.clone(ToolsMasterItems:get(item_data.preview_item))
 				end
 
-				item_data.material_overrides = table.append(item_data.material_overrides, skin_data.material_overrides)
-			elseif item_data.item_type ~= "CHARACTER_INSIGNIA" then
-				if item_data.item_type == "PORTRAIT_FRAME" then
-					-- Nothing
-				elseif item_data.item_type == "SET" then
-					item_data.attachments = item_data.set_items
-					item_data.base_unit = root_unit_resource
-					item_data.attach_node = "root_point"
+				item_data.slot_weapon_skin = skin_data.name
+			elseif item_data.item_type == "CHARACTER_INSIGNIA" or item_data.item_type == "PORTRAIT_FRAME" then
+				if item_data.texture_resource and item_data.texture_resource ~= "" then
+					self.preview_2D_texture = GuiThumbnail.load_texture(item_data.texture_resource)
+					self.preview_2D_texture_size_x, self.preview_2D_texture_size_y = Gui.texture_size(item_data.texture_resource)
+
+					if self.preview_2D_texture_size_x > 0 and self.preview_2D_texture_size_y > 0 then
+						if self.preview_2D_texture_size_y < self.preview_2D_texture_size_x then
+							self.preview_2D_texture_size_y = 256 * self.preview_2D_texture_size_y / self.preview_2D_texture_size_x
+							self.preview_2D_texture_size_x = 256
+						else
+							self.preview_2D_texture_size_x = 256 * self.preview_2D_texture_size_x / self.preview_2D_texture_size_y
+							self.preview_2D_texture_size_y = 256
+						end
+
+						Material.set_texture(self.preview_2D_texture_material, "thumbnail_slot", item_data.texture_resource)
+
+						self.preview_type = "2D"
+					else
+						Log.error("ItemPreviewer", string.format("Couldn't find valid texture_resource field for 2D item %s!", resource))
+					end
 				end
+			elseif item_data.item_type == "SET" then
+				item_data.attachments = item_data.set_items
+				item_data.base_unit = root_unit_resource
+				item_data.attach_node = "root_point"
 			end
 
 			self:_spawn_item(item_data, root_unit)
 			self:_build_bounding_box(item_data)
+
+			if return_data then
+				return item_data
+			end
 		else
 			Log.error("ItemPreviewer", string.format("Could not find resource %s in ToolsMasterItems!", resource))
 		end
@@ -195,7 +247,7 @@ ItemPreviewer._build_bounding_box = function (self, item_data)
 end
 
 ItemPreviewer.spawn_unit = function (self, base_unit, item_material_slot_overrides)
-	return World.spawn_unit_ex(self.previewer_world, base_unit, nil, nil, nil, nil, item_material_slot_overrides)
+	return World.spawn_unit(self.previewer_world, base_unit, item_material_slot_overrides)
 end
 
 ItemPreviewer._select_root_unit_resource = function (self, item_data)
@@ -230,7 +282,7 @@ ItemPreviewer._select_root_unit_resource = function (self, item_data)
 		end
 
 		if table.array_contains(slots, "slot_body_hair_color") then
-			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_long_greaser_a/hair_long_greaser_a"
+			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_medium_mullet_a/hair_medium_mullet_a"
 		end
 
 		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") then

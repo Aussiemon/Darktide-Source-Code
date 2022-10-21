@@ -2,7 +2,6 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Component = require("scripts/utilities/component")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtBeastOfNurgleFollowAction = class("BtBeastOfNurgleFollowAction", "BtNode")
 BtBeastOfNurgleFollowAction.TIME_TO_FIRST_EVALUATE = 0.5
@@ -28,8 +27,6 @@ BtBeastOfNurgleFollowAction.enter = function (self, unit, breed, blackboard, scr
 	end
 
 	scratchpad.time_to_next_evaluate = t + BtBeastOfNurgleFollowAction.TIME_TO_FIRST_EVALUATE
-
-	self:_set_spline_blend(unit, 1)
 end
 
 BtBeastOfNurgleFollowAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -255,13 +252,8 @@ BtBeastOfNurgleFollowAction._update_anim_driven_start_rotation = function (self,
 	end
 end
 
-BtBeastOfNurgleFollowAction._set_spline_blend = function (self, unit, value)
-	Component.event(unit, "set_spline_blend", value)
-end
-
 BtBeastOfNurgleFollowAction._set_anim_driven = function (self, unit, scratchpad, set_anim_driven)
 	MinionMovement.set_anim_driven(scratchpad, set_anim_driven)
-	self:_set_spline_blend(unit, set_anim_driven and 0 or 1)
 end
 
 return BtBeastOfNurgleFollowAction

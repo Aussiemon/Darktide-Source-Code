@@ -5,12 +5,7 @@ VolumetricFog.init = function (self, unit)
 end
 
 VolumetricFog.enable = function (self, unit)
-	fassert(Unit.has_mesh(unit, "g_fog"), "[VolumetricFog][enable] Could not find mesh 'g_fog'")
-
 	local mesh = Unit.mesh(unit, "g_fog")
-
-	fassert(Mesh.has_material(mesh, "mtr_fog"), "[VolumetricFog][enable] Could not find mesh 'g_fog'")
-
 	local material = Mesh.material(mesh, "mtr_fog")
 	local extinction = self:get_data(unit, "extinction")
 

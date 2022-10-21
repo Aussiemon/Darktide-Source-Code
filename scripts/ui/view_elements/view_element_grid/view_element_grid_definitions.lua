@@ -5,6 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 
 local function create_definitions(settings)
+	local use_horizontal_scrollbar = settings.use_horizontal_scrollbar
 	local scrollbar_pass_templates = settings.scrollbar_pass_templates or ScrollbarPassTemplates.default_scrollbar
 	local scrollbar_width = settings.scrollbar_width
 	local scrollbar_vertical_margin = settings.scrollbar_vertical_margin or 0
@@ -16,7 +17,37 @@ local function create_definitions(settings)
 		grid_size[1] + edge_padding,
 		grid_size[2]
 	}
-	local scrollbar_height = background_size[2] - scrollbar_vertical_margin - 20
+	local scrollbar_height = use_horizontal_scrollbar and scrollbar_width or background_size[2] - scrollbar_vertical_margin - 20
+
+	if use_horizontal_scrollbar then
+		scrollbar_width = background_size[1] - scrollbar_vertical_margin - 20
+	end
+
+	local scrollbar_size = {
+		scrollbar_width,
+		scrollbar_height
+	}
+	local scrollbar_position = {
+		settings.scrollbar_position and settings.scrollbar_position[1] or 0,
+		settings.scrollbar_position and settings.scrollbar_position[2] or 0,
+		13
+	}
+	local background_icon_width = math.min(grid_size[1], 480)
+	local background_icon_height = math.min(grid_size[2], 480)
+	local background_icon_aspect_ratio = background_icon_width / background_icon_height
+
+	if background_icon_height < background_icon_width then
+		background_icon_width = background_icon_width * background_icon_aspect_ratio
+	elseif background_icon_width < background_icon_height then
+		background_icon_height = background_icon_height * background_icon_aspect_ratio
+	end
+
+	local background_icon_size = {
+		background_icon_width,
+		background_icon_height
+	}
+	local use_terminal_background = settings.use_terminal_background
+	local terminal_background_icon = settings.terminal_background_icon
 	local scenegraph_definition = {
 		screen = UIWorkspaceSettings.screen,
 		pivot = {
@@ -115,18 +146,11 @@ local function create_definitions(settings)
 			}
 		},
 		grid_scrollbar = {
-			vertical_alignment = "center",
 			parent = "grid_background",
-			horizontal_alignment = "right",
-			size = {
-				scrollbar_width,
-				scrollbar_height
-			},
-			position = {
-				0,
-				0,
-				13
-			}
+			size = scrollbar_size,
+			position = scrollbar_position,
+			horizontal_alignment = settings.scrollbar_horizontal_alignment or "right",
+			vertical_alignment = settings.scrollbar_vertical_alignment or "center"
 		},
 		grid_mask = {
 			vertical_alignment = "center",
@@ -161,7 +185,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				2
+				12
 			}
 		},
 		sort_button = {
@@ -210,28 +234,50 @@ local function create_definitions(settings)
 	local widget_definitions = {
 		title_text = UIWidget.create_definition({
 			{
-				value = "",
 				value_id = "text",
+				style_id = "text",
 				pass_type = "text",
+				value = "",
 				style = title_text_font_style
 			}
 		}, "title_text"),
 		grid_divider_top = UIWidget.create_definition({
 			{
+				value_id = "texture",
+				style_id = "texture",
 				pass_type = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_upper"
+				value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+				style = {
+					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "center"
+				}
 			}
 		}, "grid_divider_top"),
 		grid_divider_bottom = UIWidget.create_definition({
 			{
+				value_id = "texture",
+				style_id = "texture",
 				pass_type = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_lower"
+				value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+				style = {
+					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center"
+				}
 			}
 		}, "grid_divider_bottom"),
 		grid_divider_title = UIWidget.create_definition({
 			{
+				value_id = "texture",
+				style_id = "texture",
 				pass_type = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_middle"
+				value = "content/ui/materials/dividers/horizontal_frame_big_middle",
+				style = {
+					vertical_alignment = "bottom",
+					scale_to_material = true,
+					horizontal_alignment = "center"
+				}
 			}
 		}, "grid_divider_title"),
 		grid_title_background = UIWidget.create_definition({
@@ -271,7 +317,31 @@ local function create_definitions(settings)
 				}
 			}
 		}, "grid_title_background"),
-		grid_background = UIWidget.create_definition({
+		grid_background = use_terminal_background and UIWidget.create_definition({
+			{
+				value = "content/ui/materials/backgrounds/terminal_basic",
+				pass_type = "texture",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					scale_to_material = true,
+					size_addition = {
+						18,
+						24
+					}
+				}
+			},
+			terminal_background_icon and {
+				pass_type = "texture",
+				value = terminal_background_icon,
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					color = Color.terminal_grid_background_icon(nil, true),
+					size = background_icon_size
+				}
+			}
+		}, "grid_background") or UIWidget.create_definition({
 			{
 				pass_type = "rect",
 				style = {
@@ -282,7 +352,7 @@ local function create_definitions(settings)
 						0
 					},
 					color = {
-						100,
+						150,
 						0,
 						0,
 						0
@@ -290,7 +360,9 @@ local function create_definitions(settings)
 				}
 			}
 		}, "grid_background"),
-		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar"),
+		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar", {
+			axis = use_horizontal_scrollbar and 1 or 2
+		}),
 		grid_interaction = UIWidget.create_definition({
 			{
 				pass_type = "hotspot",
@@ -326,9 +398,10 @@ local function create_definitions(settings)
 		}, "sort_button"),
 		timer_text = UIWidget.create_definition({
 			{
-				value = "text",
 				value_id = "text",
+				style_id = "text",
 				pass_type = "text",
+				value = "text",
 				style = timer_text_style
 			}
 		}, "timer_text")

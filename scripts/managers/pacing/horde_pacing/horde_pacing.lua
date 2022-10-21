@@ -17,8 +17,6 @@ HordePacing.on_gameplay_post_init = function (self, level, template)
 	local template_first_spawn_timer_modifer = math.random_range(template.first_spawn_timer_modifer[1], template.first_spawn_timer_modifer[2])
 	local first_spawn_timer_modifer = template_first_spawn_timer_modifer and self._timer_modifier * template_first_spawn_timer_modifer
 	self._horde_timer = 0
-	local travel_distance_required_for_horde = template.travel_distance_required_for_horde
-	self._required_travel_distance = math.random_range(travel_distance_required_for_horde[1], travel_distance_required_for_horde[2])
 
 	self:_setup_next_horde(template, first_spawn_timer_modifer)
 
@@ -37,6 +35,8 @@ HordePacing.update = function (self, dt, t, side_id, target_side_id)
 end
 
 local HORDE_FAILED_WAIT_TIME = 3
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN = 5
+local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX = 25
 
 HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_id)
 	local horde_manager = Managers.state.horde
@@ -52,69 +52,78 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	local max_active_hordes = template.max_active_hordes
 	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
 	local minion_spawn_limit_reached = template.max_active_minions <= total_minions_spawned
-	local hordes_allowed = not minion_spawn_limit_reached and (self._current_wave > 0 or Managers.state.pacing:spawn_type_enabled("hordes"))
 	local main_path_manager = Managers.state.main_path
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
-	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
-	self._old_furthest_travel_distance = furthest_travel_distance
 	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
+	local hordes_enabled = Managers.state.pacing:spawn_type_enabled("hordes") and allowed_hordes_per_travel_distance > 0 and num_active_hordes < max_active_hordes
+	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local travel_distance_allowed = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX < time_since_forward_travel_changed
+	local triggered_pre_stinger = self._triggered_pre_stinger
+	local current_wave = self._current_wave
+	local horde_started = triggered_pre_stinger or current_wave > 0
+	local hordes_allowed = horde_started or not minion_spawn_limit_reached and hordes_enabled and travel_distance_allowed
+	self._old_furthest_travel_distance = furthest_travel_distance
 
-	if hordes_allowed and num_active_hordes < max_active_hordes and allowed_hordes_per_travel_distance > 0 then
-		local current_wave = self._current_wave
-		self._horde_timer = self._horde_timer + dt + traveled_this_frame
+	if not hordes_allowed then
+		return
+	end
 
-		if self._next_horde_pre_stinger_at and self._next_horde_pre_stinger_at <= self._horde_timer then
-			self:_trigger_pre_stinger(template)
+	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
+	self._horde_timer = self._horde_timer + dt + traveled_this_frame
 
-			self._next_horde_pre_stinger_at = nil
-		end
+	if self._next_horde_pre_stinger_at and self._next_horde_pre_stinger_at <= self._horde_timer then
+		self:_trigger_pre_stinger(template, target_side_id)
 
-		if self._next_horde_at <= self._horde_timer then
-			local success, horde_position, target_unit, group_id = self:_start_horde_wave(template, side_id, target_side_id)
+		self._next_horde_pre_stinger_at = nil
+		self._triggered_pre_stinger = true
+	end
 
-			if success then
-				self._current_wave = current_wave + 1
+	if self._next_horde_at <= self._horde_timer then
+		local success, horde_position, target_unit, group_id = self:_start_horde_wave(template, side_id, target_side_id)
 
-				if self._current_wave == 1 then
-					self:_trigger_stinger(template, horde_position)
+		if success then
+			self._current_wave = current_wave + 1
 
-					local aggro_nearby_roamers_zone_range = template.aggro_nearby_roamers_zone_range
+			if self._current_wave == 1 then
+				self:_trigger_stinger(template, horde_position)
 
-					if aggro_nearby_roamers_zone_range then
-						Managers.state.pacing:aggro_roamer_zone_range(target_unit, aggro_nearby_roamers_zone_range)
-					end
+				local aggro_nearby_roamers_zone_range = template.aggro_nearby_roamers_zone_range
 
-					local trigger_heard_dialogue = template.trigger_heard_dialogue
-
-					if trigger_heard_dialogue and success then
-						Vo.heard_horde(target_unit)
-					end
+				if aggro_nearby_roamers_zone_range then
+					Managers.state.pacing:aggro_roamer_zone_range(target_unit, aggro_nearby_roamers_zone_range)
 				end
 
-				local group_system = Managers.state.extension:system("group_system")
-				local horde_group_sound_event_names = template.horde_group_sound_events[self._current_compositions.name]
-				local start_event = horde_group_sound_event_names.start
-				local stop_event = horde_group_sound_event_names.stop
+				local trigger_heard_dialogue = template.trigger_heard_dialogue
 
-				group_system:start_group_sfx(group_id, start_event, stop_event)
-
-				local num_waves = template.num_waves[self._current_horde_type]
-
-				if self._current_wave < num_waves then
-					self._next_horde_at = template.time_between_waves
-				else
-					self._current_wave = 0
-
-					self:_setup_next_horde(template)
-
-					self._triggered_hordes = self._triggered_hordes + 1
+				if trigger_heard_dialogue and success then
+					Vo.heard_horde(target_unit, self._current_horde_type)
 				end
-			else
-				self._next_horde_at = HORDE_FAILED_WAIT_TIME
 			end
 
-			self._horde_timer = 0
+			local group_system = Managers.state.extension:system("group_system")
+			local group = group_system:group_from_id(group_id)
+			local horde_group_sound_event_names = template.horde_group_sound_events[self._current_compositions.name]
+			local start_event = horde_group_sound_event_names.start
+			local stop_event = horde_group_sound_event_names.stop
+			group.group_start_sound_event = start_event
+			group.group_stop_sound_event = stop_event
+			local num_waves = template.num_waves[self._current_horde_type]
+
+			if self._current_wave < num_waves then
+				self._next_horde_at = template.time_between_waves
+			else
+				self._current_wave = 0
+
+				self:_setup_next_horde(template)
+
+				self._triggered_pre_stinger = nil
+				self._triggered_hordes = self._triggered_hordes + 1
+			end
+		else
+			self._next_horde_at = HORDE_FAILED_WAIT_TIME
 		end
+
+		self._horde_timer = 0
 	end
 end
 
@@ -160,6 +169,8 @@ HordePacing._setup_next_horde = function (self, template, optional_timer_modifie
 	self._next_horde_at = next_horde_at * (optional_timer_modifier or self._timer_modifier)
 	local pre_stinger_delay = template.pre_stinger_delays[horde_type]
 	self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
+	local travel_distance_required_for_horde = template.travel_distance_required_for_horde
+	self._required_travel_distance = self._override_required_travel_distance or math.random_range(travel_distance_required_for_horde[1], travel_distance_required_for_horde[2])
 end
 
 HordePacing.add_trickle_horde = function (self, template)
@@ -181,14 +192,20 @@ HordePacing.set_timer_modifier = function (self, modifier)
 	self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
 end
 
-HordePacing._trigger_pre_stinger = function (self, template)
+HordePacing.set_override_required_travel_distance = function (self, required_travel_distance)
+	self._override_required_travel_distance = required_travel_distance
+end
+
+HordePacing._trigger_pre_stinger = function (self, template, side_id)
 	local stinger_sound_event = template.pre_stinger_sound_events[self._current_compositions.name]
 
 	if not stinger_sound_event then
 		return
 	end
 
-	self._fx_system:trigger_wwise_event(stinger_sound_event)
+	local _, _, path_position = Managers.state.main_path:ahead_unit(side_id)
+
+	self._fx_system:trigger_wwise_event(stinger_sound_event, path_position)
 end
 
 HordePacing._trigger_stinger = function (self, template, position)

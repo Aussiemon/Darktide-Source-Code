@@ -17,6 +17,9 @@ MinionTargetSelection.targeted_by_monster_weight = function (target_selection_we
 end
 
 local DEFAULT_TARGET_DISABLED_WEIGHT = -2
+local DEFAULT_DISABLING_TYPE_WEIGHTS = {
+	consumed = -8000
+}
 
 MinionTargetSelection.disabled_weight = function (target_selection_weights, target_unit, target_breed)
 	if not Breed.is_player(target_breed) then
@@ -33,7 +36,8 @@ MinionTargetSelection.disabled_weight = function (target_selection_weights, targ
 
 	local disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	local disabling_type = disabled_character_state_component.disabling_type
-	local disabling_type_weight = target_selection_weights.disabling_type and target_selection_weights.disabling_type[disabling_type] or 0
+	local selection_disabling_type = target_selection_weights.disabling_type
+	local disabling_type_weight = selection_disabling_type and selection_disabling_type[disabling_type] or DEFAULT_DISABLING_TYPE_WEIGHTS[disabling_type] or 0
 	local disabled_weight = (target_selection_weights.disabled or DEFAULT_TARGET_DISABLED_WEIGHT) + disabling_type_weight
 
 	return disabled_weight
@@ -83,6 +87,20 @@ MinionTargetSelection.distance_weight = function (target_selection_weights, dist
 	end
 
 	return distance_weight, inverse_radius
+end
+
+MinionTargetSelection.coherency_weight = function (target_selection_weights, target_unit)
+	local coherency_extension = ScriptUnit.has_extension(target_unit, "coherency_system")
+
+	if not coherency_extension then
+		return 0
+	end
+
+	local inverse_coherency_weight = target_selection_weights.inverse_coherency_weight
+	local num_units_in_coherency = 4 - coherency_extension:num_units_in_coherency()
+	local weight = inverse_coherency_weight * num_units_in_coherency
+
+	return weight
 end
 
 local DEFAULT_THREAT_WEIGHT_MULTIPLIER = 1

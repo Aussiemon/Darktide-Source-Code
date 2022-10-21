@@ -331,4 +331,8 @@ CoverUserExtension.release_cover_slot = function (self)
 	self._current_cover_slot = nil
 end
 
+CoverUserExtension.has_claimed_cover_slot = function (self)
+	return not not self._current_cover_slot
+end
+
 return CoverUserExtension

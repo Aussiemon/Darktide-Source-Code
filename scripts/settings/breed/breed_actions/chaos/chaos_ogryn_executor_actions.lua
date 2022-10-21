@@ -246,7 +246,6 @@ local action_data = {
 	melee_attack = {
 		utility_weight = 5,
 		max_z_diff = 3,
-		stagger_reduction = 40,
 		ignore_blocked = true,
 		considerations = UtilityConsiderations.chaos_ogryn_executor_melee_attack,
 		attack_anim_events = {
@@ -288,13 +287,16 @@ local action_data = {
 		weapon_reach = {
 			default = 3.75,
 			attack_reach_up = 4
+		},
+		stagger_type_reduction = {
+			ranged = 50,
+			melee = 50
 		}
 	},
 	melee_attack_cleave = {
 		height = 3,
 		utility_weight = 5,
 		vo_event = "assault",
-		stagger_reduction = 40,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee",
 		dodge_range = 2.75,
@@ -326,7 +328,11 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.chaos_ogryn_executor_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
-		ground_impact_fx_template = GroundImpactFxTemplates.chaos_ogryn_executor_cleave
+		ground_impact_fx_template = GroundImpactFxTemplates.chaos_ogryn_executor_cleave,
+		stagger_type_reduction = {
+			ranged = 50,
+			melee = 50
+		}
 	},
 	melee_attack_pommel = {
 		weapon_reach = 3.5,
@@ -367,6 +373,10 @@ local action_data = {
 			ranged = 1,
 			melee = 2
 		},
+		stagger_type_reduction = {
+			ranged = 50,
+			melee = 50
+		},
 		damage_profile = DamageProfileTemplates.chaos_ogryn_executor_kick,
 		damage_type = damage_types.minion_ogryn_kick
 	},
@@ -402,6 +412,10 @@ local action_data = {
 		attack_intensities = {
 			ranged = 1,
 			melee = 2
+		},
+		stagger_type_reduction = {
+			ranged = 50,
+			melee = 50
 		},
 		damage_profile = DamageProfileTemplates.chaos_ogryn_executor_punch,
 		damage_type = damage_types.minion_ogryn_punch
@@ -441,8 +455,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.chaos_ogryn_executor_default,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 50,
-			melee = 50
+			ranged = 60,
+			melee = 60
 		},
 		animation_move_speed_configs = {
 			attack_move_02 = {
@@ -528,8 +542,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.chaos_ogryn_executor_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 50,
-			melee = 50
+			ranged = 60,
+			melee = 60
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {

@@ -63,7 +63,7 @@ ActionBase.trigger_anim_event = function (self, anim_event, anim_event_3p, actio
 
 	anim_ext:anim_event_with_variable_floats_1p(anim_event, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)
 
-	if anim_event_3p and not DevParameters.disable_third_person_weapon_anim_events then
+	if anim_event_3p then
 		anim_ext:anim_event_with_variable_floats(anim_event_3p, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)
 	end
 end

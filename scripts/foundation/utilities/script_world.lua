@@ -27,12 +27,9 @@ local ScriptWorld = {
 	end
 }
 
-ScriptWorld.create_viewport = function (world, name, template, layer, camera_unit, position, rotation, add_shadow_cull_camera, shading_environment_name, shading_callback, mood_setting)
+ScriptWorld.create_viewport = function (world, name, template, layer, camera_unit, position, rotation, add_shadow_cull_camera, shading_environment_name, shading_callback, mood_setting, render_targets)
 	local viewports = World.get_data(world, "viewports")
-
-	fassert(viewports[name] == nil, "Viewport %q already exists", name)
-
-	local viewport = Application.create_viewport(world, template)
+	local viewport = Application.create_viewport(world, template, render_targets)
 
 	Viewport.set_data(viewport, "layer", layer or 1)
 	Viewport.set_data(viewport, "active", true)
@@ -40,7 +37,6 @@ ScriptWorld.create_viewport = function (world, name, template, layer, camera_uni
 
 	viewports[name] = viewport
 
-	fassert(shading_environment_name, "Missing shading environment name for viewport %s!", name)
 	ScriptWorld.create_shading_environment(world, viewport, shading_environment_name, shading_callback, mood_setting or "default")
 
 	if camera_unit then
@@ -96,16 +92,11 @@ ScriptWorld.viewport = function (world, name, return_free_flight_viewport)
 		viewport = World.get_data(world, "viewports")[name]
 	end
 
-	fassert(viewport, "Viewport %q doesn't exist", name)
-
 	return viewport
 end
 
 ScriptWorld.destroy_viewport = function (world, name)
 	local viewports = World.get_data(world, "viewports")
-
-	fassert(viewports[name], "Viewport %q doesn't exist", name)
-
 	local viewport = viewports[name]
 	viewports[name] = nil
 
@@ -120,8 +111,6 @@ ScriptWorld.destroy_viewport = function (world, name)
 end
 
 ScriptWorld.create_global_free_flight_viewport = function (world, template)
-	fassert(not World.has_data(world, "global_free_flight_viewport"), "Trying to spawn global freeflight viewport when one already exists.")
-
 	local viewports = World.get_data(world, "viewports")
 
 	if table.is_empty(viewports) then
@@ -161,9 +150,6 @@ end
 
 ScriptWorld.destroy_global_free_flight_viewport = function (world)
 	local viewport = World.get_data(world, "global_free_flight_viewport")
-
-	fassert(viewport, "Trying to destroy global free flight viewport when none exists.")
-
 	local camera = Viewport.get_data(viewport, "camera")
 	local camera_unit = Camera.get_data(camera, "unit")
 
@@ -179,12 +165,8 @@ ScriptWorld.create_free_flight_viewport = function (world, overridden_viewport_n
 	Viewport.set_data(free_flight_viewport, "layer", Viewport.get_data(overridden_viewport, "layer"))
 
 	local free_flight_viewports = World.get_data(world, "free_flight_viewports")
-
-	fassert(free_flight_viewports[overridden_viewport_name] == nil, "Free flight viewport %q already exists", overridden_viewport_name)
-
 	free_flight_viewports[overridden_viewport_name] = free_flight_viewport
 
-	fassert(shading_environment_name, "Missing shading environment name for global free flight viewport!")
 	ScriptWorld.create_shading_environment(world, free_flight_viewport, shading_environment_name, shading_callback, mood_setting or "default")
 
 	local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
@@ -206,16 +188,11 @@ end
 ScriptWorld.free_flight_viewport = function (world, name)
 	local viewports = World.get_data(world, "free_flight_viewports")
 
-	fassert(viewports[name], "Free flight viewport %q doesn't exists", name)
-
 	return viewports[name]
 end
 
 ScriptWorld.destroy_free_flight_viewport = function (world, name)
 	local viewports = World.get_data(world, "free_flight_viewports")
-
-	fassert(viewports[name], "Viewport %q doesn't exist", name)
-
 	local viewport = viewports[name]
 	viewports[name] = nil
 
@@ -245,8 +222,6 @@ ScriptWorld.update = function (world, dt, anim_callback, scene_callback)
 			dt = 0
 		end
 
-		Profiler.start(ScriptWorld.name(world))
-
 		if anim_callback then
 			World.update_animations_with_callback(world, dt, anim_callback)
 		else
@@ -258,8 +233,6 @@ ScriptWorld.update = function (world, dt, anim_callback, scene_callback)
 		else
 			World.update_scene(world, dt)
 		end
-
-		Profiler.stop(ScriptWorld.name(world))
 	else
 		World.update_timer(world, dt)
 	end
@@ -392,7 +365,6 @@ ScriptWorld.destroy_shading_environment = function (world, viewport)
 	local shading_environment = Viewport.get_data(viewport, "shading_environment")
 	local shading_environment_resource = Viewport.get_data(viewport, "default_resource")
 
-	fassert(shading_environment, "Missing shading environment for viewport %s", Viewport.get_data(viewport, "name"))
 	Viewport.set_data(viewport, "default_shading_environment_name", nil)
 	Viewport.set_data(viewport, "shading_environment", nil)
 	Viewport.set_data(viewport, "shading_callback", nil)
@@ -404,9 +376,6 @@ end
 
 ScriptWorld.spawn_level = function (world, name, object_sets, position, rotation, spawn_units, ignore_background)
 	local levels = World.get_data(world, "levels")
-
-	fassert(levels[name] == nil, "Level %q already spawned", name)
-
 	local spawned_level_count = World.get_data(world, "spawned_level_count")
 	local level = nil
 
@@ -443,7 +412,6 @@ ScriptWorld._register_nested_levels = function (levels, parent, last_count)
 	for i = 1, num_sub_levels do
 		sub_level_names[i] = Level.name(sub_levels[i])
 
-		fassert(levels[sub_level_names[i]] == nil, "Level %q already spawned", sub_level_names[i])
 		Log.info("ScriptWorld", "Registering sub level named: %q with id: %d", sub_level_names[i], last_count + i)
 
 		levels[sub_level_names[i]] = {
@@ -475,8 +443,6 @@ ScriptWorld.level_id = function (world, level)
 			return data.id
 		end
 	end
-
-	fassert(false, "Level not found in world")
 end
 
 ScriptWorld.level_from_id = function (world, level_id)
@@ -487,8 +453,6 @@ ScriptWorld.level_from_id = function (world, level_id)
 			return data.level
 		end
 	end
-
-	fassert(false, "Level with id = %d does not exist", level_id)
 end
 
 ScriptWorld.level_id_from_name = function (world, name)
@@ -499,8 +463,6 @@ end
 
 ScriptWorld.level = function (world, name)
 	local levels = World.get_data(world, "levels")
-
-	fassert(levels[name], "Level %q doesn't exist", name)
 
 	return levels[name].level
 end
@@ -528,7 +490,6 @@ end
 ScriptWorld.destroy_level = function (world, name)
 	local levels = World.get_data(world, "levels")
 
-	fassert(levels[name], "Level %q doesn't exist", name)
 	ScriptWorld._unregister_nested_levels(levels, levels[name].level)
 	World.destroy_level(world, levels[name].level)
 

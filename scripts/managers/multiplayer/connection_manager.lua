@@ -18,7 +18,7 @@ local EVENT_NAMES = {
 }
 local default_game_udp_key, default_game_udp_cert = nil
 
-function _source_reason(game_reason, engine_reason)
+local function _source_reason(game_reason, engine_reason)
 	if game_reason then
 		return "game", game_reason
 	elseif engine_reason then
@@ -29,9 +29,6 @@ function _source_reason(game_reason, engine_reason)
 end
 
 ConnectionManager.init = function (self, options, event_delegate, approve_channel_delegate)
-	fassert(type(options.project_hash) == "string", "project_hash string expected")
-	fassert(type(options.argument_hash) == "string", "argument_hash string expected")
-
 	self.config_file_name = "application_settings/global"
 	self.oodle_net_file_name = "application_settings/oodle_trained_network_data"
 	self.platform = options.network_platform
@@ -42,16 +39,10 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	self._is_dedicated_mission_server = options.is_dedicated_mission_server
 
 	if options.network_platform == "lan" then
-		fassert(options.lan_port, "LAN network port not set")
-
 		self.lan_port = options.lan_port
 		self._client = Network.init_lan_client(self.config_file_name, self.lan_port)
 		self._client_destructor = Network.shutdown_lan_client
-
-		fassert(self._client, "Failed to initialize the network. The port is most likely in use, which means that another game instance is running at the same time.")
 	elseif options.network_platform == "wan_server" then
-		fassert(options.wan_port, "WAN network port not set")
-
 		local game_udp_key = os.getenv("GAME_UDP_KEY")
 
 		if game_udp_key then
@@ -68,9 +59,6 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 			game_udp_cert = default_game_udp_cert
 		end
 
-		assert(game_udp_key, "environment variable GAME_UDP_KEY is not set")
-		assert(game_udp_cert, "environment variable GAME_UDP_CERT is not set")
-
 		self.wan_port = options.wan_port
 		self._client = Network.init_wan_server(self.config_file_name, self.wan_port, self.oodle_net_file_name, game_udp_cert, game_udp_key)
 		self._client_destructor = Network.shutdown_lan_client
@@ -79,13 +67,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	elseif options.network_platform == "steam" then
 		self._client = Network.init_steam_client(self.config_file_name)
 		self._client_destructor = Network.shutdown_steam_client
-
-		fassert(self._client, "Failed to initialize the network. Is the Steam client running? Does it need to be restarted?")
 	elseif options.network_platform == "steam_server" then
-		fassert(options.server_port, "Server port required")
-		fassert(options.steam_port, "Steam port required")
-		fassert(options.query_port, "Query port required")
-
 		self.server_port = options.server_port
 		self.steam_port = options.steam_port
 		self.query_port = options.query_port
@@ -136,8 +118,6 @@ ConnectionManager.default_game_udp_cert = function (self)
 end
 
 ConnectionManager.initialize_wan_client = function (self, peer_id)
-	fassert(self.platform == "wan_client", "Invalid network platform %s, must be wan_client", self.platform)
-
 	if peer_id then
 		self._client = Network.init_wan_client(self.config_file_name, peer_id, self.oodle_net_file_name)
 
@@ -156,8 +136,6 @@ ConnectionManager.is_initialized = function (self)
 end
 
 ConnectionManager.client = function (self)
-	fassert(self:is_initialized(), "Network client not initialized")
-
 	return self._client
 end
 
@@ -187,8 +165,6 @@ ConnectionManager.channel_to_peer = function (self, channel_id)
 end
 
 ConnectionManager.allocation_state = function (self)
-	assert(self:is_host(), "Must be host to query slot allocation state")
-
 	return self._connection_host:allocation_state()
 end
 
@@ -302,6 +278,14 @@ ConnectionManager.engine_lobby_id = function (self)
 	end
 end
 
+ConnectionManager.session_id = function (self)
+	if self:is_host() then
+		return self._connection_host:session_id()
+	elseif self:is_client() then
+		return self._connection_client:session_id()
+	end
+end
+
 ConnectionManager.session_seed = function (self)
 	if self:is_host() then
 		return self._connection_host:session_seed()
@@ -313,7 +297,6 @@ end
 ConnectionManager.set_lobby_data_key = function (self, key, value)
 	local engine_lobby = self:engine_lobby()
 
-	fassert(engine_lobby, "Setting lobby data when there's no lobby")
 	engine_lobby:set_data(key, value)
 end
 
@@ -328,20 +311,6 @@ ConnectionManager.host = function (self)
 		return self._connection_host:host()
 	elseif self:is_client() then
 		return self._connection_client:host()
-	end
-end
-
-ConnectionManager.game_session_host_is_set = function (self)
-	if self._connection_host then
-		local engine_lobby = self._connection_host:engine_lobby()
-
-		return engine_lobby:game_session_host() ~= nil
-	elseif self._connection_client then
-		local engine_lobby = self._connection_client:engine_lobby()
-
-		return engine_lobby:game_session_host() ~= nil
-	else
-		return false
 	end
 end
 
@@ -395,13 +364,25 @@ end
 
 ConnectionManager.kick = function (self, peer_id, reason, option_details)
 	local connection_host = self._connection_host
-
-	fassert(connection_host, "Only connection host can kick other peers")
-
 	local channel = self:peer_to_channel(peer_id)
 
 	if channel then
 		connection_host:kick(channel, reason, option_details)
+	end
+end
+
+ConnectionManager.kick_all = function (self, reason, option_details)
+	local connection_host = self._connection_host
+	local connecting_peers = self:connecting_peers()
+
+	for i = 1, #connecting_peers do
+		local peer_id = connecting_peers[i]
+
+		self:kick(peer_id, reason, option_details)
+	end
+
+	for peer_id, _ in pairs(self._members) do
+		self:kick(peer_id, reason, option_details)
 	end
 end
 
@@ -455,8 +436,6 @@ ConnectionManager._shutdown_connection_client = function (self, is_error, game_r
 end
 
 ConnectionManager.shutdown_connections = function (self, reason)
-	fassert(not self._connection_host or not self._connection_client, "We have both a host and client, since both modify the self._members table, that's is not supported.")
-
 	if GameParameters.testify then
 		ConnectionManagerTestify.unregister_testify_connection_events(self)
 	end
@@ -471,10 +450,6 @@ ConnectionManager.shutdown_connections = function (self, reason)
 	end
 
 	local is_empty = table.is_empty
-
-	fassert(is_empty(self._peer_to_channel), "All peers not removed after shutting down connections.")
-	fassert(is_empty(self._channel_to_peer), "All channels not removed after shutting down connections.")
-	fassert(is_empty(self._members), "All members not removed after shutting down connections.")
 end
 
 ConnectionManager.network_event_delegate = function (self)
@@ -486,8 +461,6 @@ ConnectionManager.approve_channel_delegate = function (self)
 end
 
 ConnectionManager.send_rpc_clients = function (self, rpc_name, ...)
-	assert(self:is_host(), "Trying to send rpc to clients when not being host.")
-
 	local rpc = RPC[rpc_name]
 
 	for peer, _ in pairs(self._members) do
@@ -498,8 +471,6 @@ ConnectionManager.send_rpc_clients = function (self, rpc_name, ...)
 end
 
 ConnectionManager.send_rpc_clients_except = function (self, rpc_name, except_channel_id, ...)
-	assert(self:is_host(), "Trying to send rpc to clients when not being host.")
-
 	local rpc = RPC[rpc_name]
 	local except_peer = self:channel_to_peer(except_channel_id)
 
@@ -513,12 +484,7 @@ ConnectionManager.send_rpc_clients_except = function (self, rpc_name, except_cha
 end
 
 ConnectionManager.send_rpc_client = function (self, rpc_name, peer, ...)
-	assert(self:is_host(), "Trying to send rpc to client when not being host.")
-
 	local members = self._members
-
-	fassert(members[peer], "[ConnectionManager][send_rpc_client] Tried to send RPC to a non-joined peer!")
-
 	local rpc = RPC[rpc_name]
 	local channel = self:peer_to_channel(peer)
 
@@ -526,8 +492,6 @@ ConnectionManager.send_rpc_client = function (self, rpc_name, peer, ...)
 end
 
 ConnectionManager.send_rpc_server = function (self, rpc_name, ...)
-	assert(self:is_client(), "Trying to send server rpc when not being a client.")
-
 	local host_channel = self:host_channel()
 
 	RPC[rpc_name](host_channel, ...)
@@ -750,17 +714,11 @@ end
 
 ConnectionManager.register_event_listener = function (self, object, event_name, func)
 	local listeners = self._event_listeners[event_name]
-
-	fassert(listeners, "Event %q not found", event_name)
-
 	listeners[object] = func
 end
 
 ConnectionManager.unregister_event_listener = function (self, object, event_name)
 	local listeners = self._event_listeners[event_name]
-
-	fassert(listeners, "Event %q not found", event_name)
-
 	listeners[object] = nil
 end
 

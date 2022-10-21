@@ -31,8 +31,6 @@ Utility.get_action_utility = function (action, blackboard, t, utility_data)
 			local component = blackboard[component_name]
 			value = component[field_name]
 		else
-			fassert(utility_data[field_name] ~= nil, "[Utility] Non-existing field named %q in utility_data.", field_name)
-
 			value = utility_data[field_name]
 		end
 

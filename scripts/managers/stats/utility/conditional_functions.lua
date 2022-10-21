@@ -1,4 +1,5 @@
 local Breeds = require("scripts/settings/breed/breeds")
+local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local ConditionalFunctions = {
 	always_true = function (_, _, _, ...)
@@ -12,6 +13,21 @@ local ConditionalFunctions = {
 	flag_is_set = function (flag_stat)
 		return function (stat_table, _, _, ...)
 			return flag_stat:get_value(stat_table) == 1
+		end
+	end,
+	stat_is_less_then = function (stat_to_check, stat_value)
+		return function (stat_table, _, _, ...)
+			return stat_to_check:get_value(stat_table) < stat_value
+		end
+	end,
+	stat_is_equal_to = function (stat_to_check, stat_value)
+		return function (stat_table, _, _, ...)
+			return stat_to_check:get_value(stat_table) == stat_value
+		end
+	end,
+	stat_is_equal_or_greater_then = function (stat_to_check, stat_value)
+		return function (stat_table, _, _, ...)
+			return stat_value <= stat_to_check:get_value(stat_table)
 		end
 	end,
 	calculated_value_comparasions = function (left_value_function, right_value_function, comparator)
@@ -40,49 +56,105 @@ local ConditionalFunctions = {
 	param_has_value = function (stat_to_check, param_name, param_value)
 		local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
 
-		fassert(index_of_param ~= -1, "Stat '%s' has no parameter '%s'.", stat_to_check:get_id(), param_name)
-
 		return function (_, _, _, ...)
 			return select(index_of_param, ...) == param_value
 		end
 	end,
-	breed_is_boss = function (stat_to_check)
-		local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
-
-		fassert(index_of_breed_name ~= -1, "Stat '%s' has no parameter breed name.", stat_to_check:get_id())
+	param_is_less_then = function (stat_to_check, param_name, param_value)
+		local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
 
 		return function (_, _, _, ...)
-			local breed_name = select(index_of_breed_name, ...)
-			local breed_data = Breeds[breed_name]
-
-			return breed_data and breed_data.is_boss == true
+			return select(index_of_param, ...) < param_value
 		end
 	end,
-	breed_has_tag = function (stat_to_check, tag)
-		local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
-
-		fassert(index_of_breed_name ~= -1, "Stat '%s' has no parameter breed name.", stat_to_check:get_id())
+	param_is_greater_then = function (stat_to_check, param_name, param_value)
+		local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
 
 		return function (_, _, _, ...)
-			local breed_name = select(index_of_breed_name, ...)
-			local breed_data = Breeds[breed_name]
-
-			return breed_data and breed_data.tags and breed_data.tags[tag] == true
-		end
-	end,
-	breed_is_faction = function (stat_to_check, faction)
-		local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
-
-		fassert(index_of_breed_name ~= -1, "Stat '%s' has no parameter breed name.", stat_to_check:get_id())
-
-		return function (_, _, _, ...)
-			local breed_name = select(index_of_breed_name, ...)
-			local breed_data = Breeds[breed_name]
-
-			return breed_data and breed_data.sub_faction_name == faction
+			return param_value < select(index_of_param, ...)
 		end
 	end
 }
+
+ConditionalFunctions.param_table_has_value = function (stat_to_check, param_name, param_table_index, param_table_value)
+	local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
+
+	return function (_, _, _, ...)
+		local param_table = select(index_of_param, ...)
+
+		return param_table and param_table[param_table_index] == param_table_value
+	end
+end
+
+ConditionalFunctions.breed_is_boss = function (stat_to_check)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+
+		return breed_data and breed_data.is_boss == true
+	end
+end
+
+ConditionalFunctions.breed_has_tag = function (stat_to_check, tag)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+
+		return breed_data and breed_data.tags and breed_data.tags[tag] == true
+	end
+end
+
+ConditionalFunctions.breed_has_flag = function (stat_to_check, flag)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+
+		return breed_data and breed_data[flag] == true
+	end
+end
+
+ConditionalFunctions.breed_is_faction = function (stat_to_check, faction)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+
+		return breed_data and breed_data.sub_faction_name == faction
+	end
+end
+
+ConditionalFunctions.is_breed = function (stat_to_check, wanted_breed_name)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local current_breed_name = select(index_of_breed_name, ...)
+
+		return current_breed_name == wanted_breed_name
+	end
+end
+
+ConditionalFunctions.is_weakspot = function (stat_to_check)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+	local index_of_hit_zone_name = table.index_of(stat_to_check:get_parameters(), "hit_zone_name")
+	local index_of_weapon_attack_type = table.index_of(stat_to_check:get_parameters(), "weapon_attack_type")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+		local hit_zone_name = select(index_of_hit_zone_name, ...)
+		local weapon_attack_type = select(index_of_weapon_attack_type, ...)
+		local hit_weakspot = Weakspot.hit_weakspot(breed_data, hit_zone_name, weapon_attack_type)
+
+		return hit_weakspot
+	end
+end
 
 ConditionalFunctions.weapon_has_keywords = function (stat_to_check, keywords)
 	local _weapon_templates = {}
@@ -109,12 +181,18 @@ ConditionalFunctions.weapon_has_keywords = function (stat_to_check, keywords)
 
 	local index_of_weapon = table.index_of(stat_to_check:get_parameters(), "weapon_template_name")
 
-	fassert(index_of_weapon ~= -1, "Stat '%s' has no parameter weapon template name.")
-
 	return function (_, _, _, ...)
 		local weapon_template_name = select(index_of_weapon, ...)
 
 		return table.array_contains(_weapon_templates, weapon_template_name)
+	end
+end
+
+ConditionalFunctions.difficulty_is_at_least = function (desired_difficulty)
+	return function (_, _, _, ...)
+		local current_difficulty = Managers.state and Managers.state.difficulty and Managers.state.difficulty:get_difficulty() or 0
+
+		return desired_difficulty <= current_difficulty
 	end
 end
 

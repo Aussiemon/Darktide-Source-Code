@@ -11,8 +11,8 @@ local function _lerp_modifier_func(true_flight_template)
 end
 
 true_flight_strike_missile.update_towards_strike_missile_target = function (target_position, integration_data, dt, t)
-	local position = integration_data.position:unbox()
-	local velocity = integration_data.velocity:unbox()
+	local position = integration_data.position
+	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
 	local speed = Vector3.length(velocity)
 	local true_flight_template = integration_data.true_flight_template
@@ -26,9 +26,7 @@ true_flight_strike_missile.update_towards_strike_missile_target = function (targ
 		if integration_data.missile_striking then
 			local speed_mod = true_flight_template.triggered_speed_mult
 			local new_velocity = current_direction * speed * speed_multiplier
-
-			integration_data.velocity:store(new_velocity)
-
+			integration_data.velocity = new_velocity
 			local new_position = position + new_velocity * speed_mod * dt
 
 			return new_position
@@ -58,8 +56,7 @@ true_flight_strike_missile.update_towards_strike_missile_target = function (targ
 	local new_direction = Quaternion.forward(new_rotation)
 	local new_velocity = new_direction * speed
 	local new_position = position + new_velocity * dt
-
-	integration_data.velocity:store(new_velocity)
+	integration_data.velocity = new_velocity
 
 	return new_position
 end

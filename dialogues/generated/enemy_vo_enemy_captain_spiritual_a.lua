@@ -15,16 +15,16 @@ local enemy_vo_enemy_captain_spiritual_a = {
 			"loc_enemy_captain_spiritual_a__long_death_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			6.685,
+			3.901,
+			4.415,
+			5.164,
+			3.109,
+			7.43,
+			3.546,
+			6.012,
+			6.549,
+			5.375
 		},
 		sound_event_weights = {
 			0.1,
@@ -51,11 +51,11 @@ local enemy_vo_enemy_captain_spiritual_a = {
 			"loc_enemy_captain_spiritual_a__reinforcements_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.818,
+			4.282,
+			2.369,
+			2.523,
+			3.136
 		},
 		sound_event_weights = {
 			0.2,
@@ -82,16 +82,16 @@ local enemy_vo_enemy_captain_spiritual_a = {
 			"loc_enemy_captain_spiritual_a__taunt_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.622,
+			3.158,
+			2.833,
+			3.432,
+			4.629,
+			2.534,
+			2.862,
+			2.946,
+			5.023,
+			2.249
 		},
 		sound_event_weights = {
 			0.1,
@@ -123,16 +123,16 @@ local enemy_vo_enemy_captain_spiritual_a = {
 			"loc_enemy_captain_spiritual_a__taunt_combat_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.758,
+			3.626,
+			4.861,
+			5.771,
+			3.712,
+			2.677,
+			4.243,
+			5.61,
+			3.926,
+			4.461
 		},
 		sound_event_weights = {
 			0.1,

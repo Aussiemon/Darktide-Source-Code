@@ -1,19 +1,30 @@
 local EACError = require("scripts/managers/error/errors/eac_error")
 local XboxLive = require("scripts/foundation/utilities/xbox_live")
+
+local function _info(...)
+	Log.info("EACClientManager", ...)
+end
+
 EACClientManager = class("EACClientManager")
 local EAC_STATES = table.enum("none", "retrieving_app_ticket", "authenticating_eos", "ready", "in_session", "error")
 local TIMEOUT = 15
 
 EACClientManager.init = function (self)
+	_info("init")
+
 	self._state = EAC_STATES.none
 	self._authenticated = false
 	self._has_eac = self:has_eac()
 
 	if not self._has_eac then
+		_info("loc_eac_error_not_running_eac")
 		Managers.error:report_error(EACError:new("loc_eac_error_not_running_eac"))
+
+		return
 	end
 
 	EOS.set_server(false)
+	_info("EOS.set_server(false)")
 end
 
 EACClientManager.has_eac = function (self)
@@ -37,6 +48,9 @@ EACClientManager.authenticate = function (self)
 		Steam.retrieve_encrypted_app_ticket()
 
 		self._state = EAC_STATES.retrieving_app_ticket
+
+		_info("retrieving app_ticket")
+
 		self._authenticated = false
 		self._timeout_at = Managers.time:time("main") + TIMEOUT
 	elseif IS_GDK then
@@ -44,6 +58,8 @@ EACClientManager.authenticate = function (self)
 			local auth_job_id = EOS.authenticate_with_xbox(user_id)
 			self._auth_job_id = auth_job_id
 			self._state = EAC_STATES.authenticating_eos
+
+			_info("recieved user id from xbox live,  trying to authenticate with eos")
 		end):catch(function (error)
 			Managers.error:report_error(EACError:new("Error fetching xbox live user_id: %s", {
 				error_code = error
@@ -60,13 +76,12 @@ end
 
 EACClientManager.begin_session = function (self)
 	if not self._authenticated then
+		_info("cant begin_session when not authenticated")
+
 		return
 	end
 
 	local state = self._state
-
-	fassert(state == EAC_STATES.ready, "Trying to begin a EAC session without being authenticated. [In state %s]", state)
-
 	local user_id = self._user_id
 	local mode = "ClientServer"
 	local server_name = Managers.connection:server_name()
@@ -74,22 +89,29 @@ EACClientManager.begin_session = function (self)
 	EOS.begin_session(user_id, mode, server_name)
 
 	self._state = EAC_STATES.in_session
+
+	_info("begin_session")
+
 	local server_peer_id = Managers.connection:host_channel()
 
 	EOS.set_server_peer_id(server_peer_id)
+	_info("set_server_peer_id server_peer_id:%s", server_peer_id)
 end
 
 EACClientManager.end_session = function (self)
 	if not self._authenticated then
+		_info("cant end_session when not authenticated")
+
 		return
 	end
 
 	local state = self._state
 
-	fassert(state == EAC_STATES.in_session, "Trying to end a EAC session without being in a session. [In state %s]", state)
 	EOS.end_session()
 
 	self._state = EAC_STATES.ready
+
+	_info("end_session")
 end
 
 EACClientManager.in_session = function (self)
@@ -106,10 +128,13 @@ EACClientManager.update = function (self, dt, t)
 			local auth_job_id = EOS.authenticate_with_steam(app_ticket, app_ticket_size)
 			self._auth_job_id = auth_job_id
 			self._state = EAC_STATES.authenticating_eos
+
+			_info("recieved app_ticket trying to authenticate with eos")
 		end
 
 		if self._timeout_at < t then
 			Managers.error:report_error(EACError:new("loc_eac_error_timeout_auth_eac"))
+			_info("authentication timed out")
 
 			self._state = EAC_STATES.error
 		end
@@ -125,8 +150,11 @@ EACClientManager.update = function (self, dt, t)
 				self._authenticated = true
 				local user_id = EOS.job_payload_user_id(job_id)
 				self._user_id = user_id
+
+				_info("got user id from EOS")
 			else
 				Managers.error:report_error(EACError:new("loc_eac_error_auth_eac_failed"))
+				_info("authentication failed")
 
 				self._state = EAC_STATES.error
 			end
@@ -138,6 +166,7 @@ EACClientManager.update = function (self, dt, t)
 
 		if self._timeout_at < t then
 			Managers.error:report_error(EACError:new("loc_eac_error_timeout_auth_eac"))
+			_info("authentication timed out")
 
 			self._state = EAC_STATES.error
 		end

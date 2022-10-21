@@ -4,8 +4,6 @@ local function _extract_cinematic_scene_templates(path)
 	local cinematic_scene = require(path)
 
 	for name, cinematic_scene_data in pairs(cinematic_scene) do
-		fassert(cinematic_scene_templates[name] == nil, "Found cinematic scene with the same name %q", name)
-
 		cinematic_scene_data.ignored_slots = table.mirror_table(cinematic_scene_data.ignored_slots)
 		cinematic_scene_templates[name] = cinematic_scene_data
 	end

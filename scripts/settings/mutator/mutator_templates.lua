@@ -4,8 +4,6 @@ local function _extract_mutator_templates(path)
 	local mutators = require(path)
 
 	for name, mutator_data in pairs(mutators) do
-		fassert(mutator_templates[name] == nil, "Found mutator with the same name %q", name)
-
 		mutator_templates[name] = mutator_data
 	end
 end

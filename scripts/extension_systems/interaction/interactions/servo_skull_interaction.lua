@@ -14,8 +14,6 @@ ServoSkullInteraction.start = function (self, world, interactor_unit, unit_data_
 	local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 	local item = interactee_extension:interactor_item_to_equip()
 
-	fassert(item, "Missing scan item for unit(%s)", target_unit)
-
 	if interactor_is_server then
 		local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 		local zone_scan_extension = mission_objective_zone_system:current_active_zone()
@@ -34,10 +32,7 @@ ServoSkullInteraction.stop = function (self, world, interactor_unit, unit_data_c
 end
 
 ServoSkullInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
-	local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
-	local character_state_component = unit_data_extension:read_component("character_state")
-
-	if not PlayerUnitStatus.can_interact_with_objective(character_state_component) then
+	if not PlayerUnitStatus.can_interact_with_objective(interactor_unit) then
 		return false
 	end
 

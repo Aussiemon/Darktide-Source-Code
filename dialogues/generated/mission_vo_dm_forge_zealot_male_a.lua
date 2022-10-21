@@ -7,8 +7,8 @@ local mission_vo_dm_forge_zealot_male_a = {
 			[2.0] = "loc_zealot_male_a__mission_forge_alive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.339354,
-			[2.0] = 2.752708
+			[1.0] = 4.339375,
+			[2.0] = 2.752688
 		},
 		randomize_indexes = {}
 	},
@@ -123,12 +123,12 @@ local mission_vo_dm_forge_zealot_male_a = {
 			1.273313,
 			1.124146,
 			2.188063,
-			2.252396,
+			2.252375,
 			1.989813,
 			2.571313,
-			3.660854,
+			3.660875,
 			2.525271,
-			2.869542
+			2.869521
 		},
 		sound_event_weights = {
 			0.1,
@@ -185,18 +185,21 @@ local mission_vo_dm_forge_zealot_male_a = {
 	},
 	mission_forge_main_entrance_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__region_mechanicus_01",
-			[2.0] = "loc_zealot_male_a__region_mechanicus_02"
+			"loc_zealot_male_a__region_mechanicus_01",
+			"loc_zealot_male_a__region_mechanicus_02",
+			"loc_zealot_male_a__region_mechanicus_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.34949,
-			[2.0] = 4.604219
+			5.34949,
+			4.604219,
+			5.969583
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -236,6 +239,26 @@ local mission_vo_dm_forge_zealot_male_a = {
 		sound_events_duration = {
 			[1.0] = 6.116833,
 			[2.0] = 3.582271
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_a__zone_tank_foundry_01",
+			"loc_zealot_male_a__zone_tank_foundry_02",
+			"loc_zealot_male_a__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			5.569083,
+			5.500917,
+			5.924188
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},

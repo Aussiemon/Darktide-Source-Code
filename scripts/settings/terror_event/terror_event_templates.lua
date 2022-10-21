@@ -11,9 +11,6 @@ for mission_name, mission in pairs(Missions) do
 
 			if not terror_event_templates[template_file] then
 				local file_path = TEMPLATE_DIR .. template_file
-
-				fassert(Application.can_get_resource("lua", file_path), "[TerrorEventTemplates] Non-existing terror event template %q defined in mission %q", file_path, mission_name)
-
 				local file_data = require(file_path)
 				terror_event_templates[template_file] = file_data
 			end

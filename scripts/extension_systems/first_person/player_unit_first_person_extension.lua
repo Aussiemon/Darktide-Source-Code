@@ -1,14 +1,21 @@
 local CameraSettings = require("scripts/settings/camera/camera_settings")
 local FirstPersonAnimationVariables = require("scripts/utilities/first_person_animation_variables")
 local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
+local Footstep = require("scripts/utilities/footstep")
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local Recoil = require("scripts/utilities/recoil")
+local FOOTSTEP_SOUND_ALIAS = "footstep"
+local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
+local WEAPON_FOLEY = "sfx_weapon_locomotion"
+local EXTRA_FOLEY = "sfx_player_extra_slot"
 local PlayerUnitFirstPersonExtension = class("PlayerUnitFirstPersonExtension")
 
 PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local world = extension_init_context.world
+	local wwise_world = extension_init_context.wwise_world
+	local physics_world = extension_init_context.physics_world
+	self._wwise_world = wwise_world
 	self._world = world
 	self._unit = unit
 	self._player = extension_init_data.player
@@ -31,9 +38,14 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._unit_data_extension = unit_data_extension
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+	local movement_state_component = unit_data_extension:read_component("movement_state")
+	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._recoil_component = unit_data_extension:read_component("recoil")
-	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._character_state_component = character_state_component
+	self._movement_state_component = movement_state_component
 	self._move_z = 0
 	self._move_x = 0
 	self._look_delta_y = 0
@@ -45,9 +57,6 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	local yaw, pitch, roll = input_extension:get_orientation()
 	local look_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
 	local pose_scale = extension_init_data.pose_scale
-
-	fassert(pose_scale, "Needs pose_scale.")
-
 	local position_root = Unit.local_position(unit, 1)
 	local offset_height = Vector3(0, 0, character_height)
 	local position = position_root + offset_height
@@ -91,13 +100,31 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	force_look_rotation_component.end_time = 0
 	self._force_look_rotation_component = force_look_rotation_component
 	self._state_machine_lerp_values = {}
+	self._footstep_time = 0
+	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
+	self._footstep_context = {
+		character_state_component = character_state_component,
+		sprint_character_state_component = sprint_character_state_component,
+		weapon_action_component = weapon_action_component,
+		breed = extension_init_data.breed,
+		movement_state_component = movement_state_component,
+		wwise_world = wwise_world,
+		unit = unit,
+		physics_world = physics_world,
+		feet_source_id = feet_source_id
+	}
+	self._previous_frame_character_state_name = character_state_component.state_name
 end
 
 PlayerUnitFirstPersonExtension.extensions_ready = function (self, world, unit)
-	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(self._first_person_unit, unit)
+	local first_person_unit = self._first_person_unit
 	local is_husk = false
-	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(self._first_person_unit, unit, is_husk)
+	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(first_person_unit, unit)
+	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(first_person_unit, unit, is_husk)
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
+	self._footstep_context.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	self._footstep_context.fx_extension = ScriptUnit.extension(unit, "fx_system")
+	self._footstep_context.foley_source_id = WwiseWorld.make_manual_source(self._wwise_world, first_person_unit, 1)
 end
 
 PlayerUnitFirstPersonExtension.game_object_initialized = function (self, session, id)
@@ -109,6 +136,18 @@ PlayerUnitFirstPersonExtension.destroy = function (self)
 	local unit_spawner_manager = Managers.state.unit_spawner
 
 	unit_spawner_manager:mark_for_deletion(self._first_person_unit)
+
+	local wwise_world = self._wwise_world
+	local feet_source_id = self._feet_source_id
+	local foley_source_id = self._footstep_context.foley_source_id
+
+	if feet_source_id then
+		WwiseWorld.destroy_manual_source(wwise_world, feet_source_id)
+	end
+
+	if foley_source_id then
+		WwiseWorld.destroy_manual_source(wwise_world, foley_source_id)
+	end
 end
 
 local function _ease_out_quad(t, b, c, d)
@@ -126,8 +165,6 @@ local function _calculate_player_height(fp_component, t)
 		local old_height = fp_component.old_height
 		local new_height = _ease_out_quad(time_changing_height, old_height, fp_component.wanted_height - old_height, duration)
 
-		assert(new_height < 3.05, "Character height out of bounds")
-
 		return new_height
 	else
 		return fp_component.wanted_height
@@ -144,7 +181,7 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 	local fp_component = self._first_person_component
 	fp_component.height = _calculate_player_height(fp_component, t)
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local offset_height = Vector3(0, 0, fp_component.height)
 	local position = locomotion_position + offset_height
 	fp_component.position = position
@@ -176,6 +213,12 @@ PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	end
 
 	self:_update_rotation(unit, dt, t)
+
+	if not self._unit_data_extension.is_resimulating then
+		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, self._previous_frame_character_state_name, self._is_camera_follow_target, self._footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+	end
+
+	self._previous_frame_character_state_name = self._character_state_component.state_name
 end
 
 PlayerUnitFirstPersonExtension._update_rotation = function (self, unit, dt, t)

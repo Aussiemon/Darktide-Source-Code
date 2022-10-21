@@ -1,14 +1,13 @@
 local Attack = require("scripts/utilities/attack/attack")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local Fall = {}
 
 Fall.set_fall_height = function (locomotion_component, inair_state_component)
-	local player_position = PlayerMovement.locomotion_position(locomotion_component)
+	local player_position = locomotion_component.position
 	inair_state_component.fell_from_height = player_position.z
 end
 
 Fall.fall_distance = function (locomotion_component, inair_state_component)
-	local player_position = PlayerMovement.locomotion_position(locomotion_component)
+	local player_position = locomotion_component.position
 
 	return inair_state_component.fell_from_height - player_position.z
 end
@@ -19,8 +18,7 @@ Fall.can_damage = function (unit, player_character_constants, locomotion_compone
 	local fall_distance = Fall.fall_distance(locomotion_component, in_air_character_state_component)
 
 	if min_damage_height < fall_distance then
-		local mover = Unit.mover(unit)
-		local num_standing_frames = Mover.standing_frames(mover)
+		local num_standing_frames = in_air_character_state_component.standing_frames
 		local on_ground = in_air_character_state_component.on_ground or num_standing_frames > 0
 
 		return on_ground

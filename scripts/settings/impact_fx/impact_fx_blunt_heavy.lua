@@ -1,5 +1,7 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local armor_types = ArmorSettings.types
+local hit_types = SurfaceMaterialSettings.hit_types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }
@@ -592,8 +594,23 @@ local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local prop_armor = table.clone(armored)
 local player = nil
+local default_surface_fx = {
+	sfx = {
+		{
+			group = "surface_material",
+			append_husk_to_event_name = false,
+			event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+			normal_rotation = true
+		}
+	}
+}
 
 return {
+	surface = {
+		[hit_types.stop] = default_surface_fx,
+		[hit_types.penetration_entry] = nil,
+		[hit_types.penetration_exit] = nil
+	},
 	armor = {
 		[armor_types.armored] = armored,
 		[armor_types.berserker] = berserker,

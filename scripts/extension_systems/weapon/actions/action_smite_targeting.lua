@@ -5,6 +5,8 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
@@ -19,30 +21,22 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 	local physics_world = self._physics_world
 	local inventory_slot_component = self._inventory_slot_component
 	local warp_charge_component = unit_data_extension:read_component("warp_charge")
-	local targeting_component = unit_data_extension:write_component("action_module_targeting")
-	local action_module_charge_component = unit_data_extension:write_component("action_module_charge")
-	self._action_module_charge_component = action_module_charge_component
 	self._warp_charge_component = warp_charge_component
+	local targeting_component = unit_data_extension:write_component("action_module_targeting")
 	self._targeting_component = targeting_component
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local overload_module_class_name = action_settings.overload_module_class_name
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
 	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, inventory_slot_component)
+	self._target_anim_event = action_settings.target_anim_event or "nil"
+	self._target_missing_anim_event = action_settings.target_missing_anim_event or "nil"
+	self._next_allowed_stagger_t = 0
 end
 
 ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionSmiteTargeting.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	self._target_anim_event = action_settings.target_anim_event or "nil"
-	self._target_missing_anim_event = action_settings.target_missing_anim_event or "nil"
-	self._action_settings = action_settings
 	self._had_target = nil
-	local particle_name = action_settings.charge_vfx
-
-	if particle_name and not self._particle_id then
-		self._particle_id = self._fx_extension:spawn_unit_particles(particle_name, "slot_grenade_ability_charge", true, "destroy", nil, nil, nil, false)
-	end
-
 	self._attack_target = action_settings.attack_target
 	self._target_locked = action_settings.target_locked
 	self._target_charge = action_settings.target_charge
@@ -64,6 +58,10 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 end
 
 ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
+	local ignore_charge_module_update = true
+
+	ActionSmiteTargeting.super.fixed_update(self, dt, t, time_in_action, ignore_charge_module_update)
+
 	local previously_targeted_unit = self._targeting_component.target_unit_1
 
 	self._targeting_module:fixed_update(dt, t)
@@ -75,16 +73,18 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 			self._charge_module:reset(t, self._charge_duration)
 		end
 
-		if self._is_server and self._attack_target then
+		if self._is_server and self._attack_target and self._next_allowed_stagger_t <= t then
 			local player_unit = self._player_unit
 			local direction = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[player_unit]))
 			local action_settings = self._action_settings
 			local attack_settings = action_settings.attack_settings
 			local damage_profile = attack_settings.damage_profile
 			local hit_zone_name = "head"
-			local power_level = 500
 
-			Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "attacking_unit", player_unit, "item", self._weapon.item)
+			Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "attacking_unit", player_unit, "item", self._weapon.item)
+
+			local attack_cd = action_settings.attack_target_cooldown or 0
+			self._next_allowed_stagger_t = t + attack_cd
 		end
 	end
 
@@ -99,15 +99,18 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 		if not HEALTH_ALIVE[previously_targeted_unit] and charge_level >= 0.5 then
 			self._action_module_charge_component.charge_level = 1
 			local param_table = self._buff_extension:request_proc_event_param_table()
-			param_table.attacked_unit = target_unit
-			param_table.attacking_unit = self._player_unit
-			param_table.attack_instigator_unit = self._player_unit
-			param_table.damage = 0
-			param_table.result = attack_results.died
-			param_table.attack_type = attack_types.ranged
-			param_table.damage_type = damage_types.smite
 
-			self._buff_extension:add_proc_event(proc_events.on_hit, param_table)
+			if param_table then
+				param_table.attacked_unit = target_unit
+				param_table.attacking_unit = self._player_unit
+				param_table.attack_instigator_unit = self._player_unit
+				param_table.damage = 0
+				param_table.attack_result = attack_results.died
+				param_table.attack_type = attack_types.ranged
+				param_table.damage_type = damage_types.smite
+
+				self._buff_extension:add_proc_event(proc_events.on_hit, param_table)
+			end
 		end
 	end
 
@@ -127,17 +130,12 @@ end
 
 ActionSmiteTargeting.finish = function (self, reason, data, t, time_in_action, action_settings, chaining_action_params)
 	self._animation_extension:anim_event_1p(self._target_missing_anim_event)
+
+	self._should_fade_kill = false
+
 	ActionSmiteTargeting.super.finish(self, reason, data, t, time_in_action, chaining_action_params)
 	self._targeting_module:finish(reason, data, t)
 	self._overload_module:finish(reason, data, t)
-
-	local particle_id = self._particle_id
-
-	if particle_id then
-		self._fx_extension:destroy_player_particles(particle_id)
-
-		self._particle_id = nil
-	end
 
 	if chaining_action_params then
 		chaining_action_params.starting_warp_charge_percent = self._starting_warp_charge_percent

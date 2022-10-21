@@ -46,7 +46,7 @@ local unarmored = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -64,7 +64,7 @@ local unarmored = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -253,7 +253,7 @@ local armored = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -271,7 +271,7 @@ local armored = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -462,7 +462,7 @@ local disgustingly_resilient = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -480,7 +480,7 @@ local disgustingly_resilient = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_sword_light_gen",
 				append_husk_to_event_name = true
 			}
 		},

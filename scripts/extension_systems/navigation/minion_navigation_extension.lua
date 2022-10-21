@@ -275,24 +275,25 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 				local failed_move_attempts = self._failed_move_attempts + 1
 				self._failed_move_attempts = failed_move_attempts
 				self._wait_timer = t + math.min(WAIT_TIMER_MAX, failed_move_attempts * WAIT_TIMER_INCREMENT)
+				local breed_name = self._breed.name
 
 				if failed_move_attempts == DEBUG_NUM_FAILED_PATHINGS_FOR_DESPAWN then
 					Managers.server_metrics:add_annotation("minion_got_stuck_navigating")
 
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
-					Log.warning("MinionNavigationExtension", "Minion %s is totally stuck when trying to navigate from %s to %s, despawning it. MUST FIX.", breed_name, debug_position, current_destination)
+					Log.warning("MINION STUCK DESPAWN", "Minion %s is totally stuck when trying to navigate from %s to %s, despawning it. MUST FIX.", breed_name, debug_position, current_destination)
 					Managers.state.minion_spawn:despawn(unit)
 
 					return
 				elseif failed_move_attempts == DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW then
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
-					Log.info("MinionNavigationExtension", "Minion got stuck when trying to navigate from %s to %s", debug_position, current_destination)
+					Log.info("MinionNavigationExtension", "Minion %s got stuck when trying to navigate from %s to %s", breed_name, debug_position, current_destination)
 				elseif DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW < failed_move_attempts then
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
-					Log.info("MinionNavigationExtension", "Minion is still stuck when trying to navigate from %s to %s", debug_position, current_destination)
+					Log.info("MinionNavigationExtension", "Minion %s is still stuck when trying to navigate from %s to %s", breed_name, debug_position, current_destination)
 				end
 			end
 		end
@@ -372,26 +373,14 @@ MinionNavigationExtension._update_next_smart_object = function (self, nav_bot)
 
 		smart_object_component.exit_is_at_the_end_of_path = exit_is_at_the_end_of_path
 		local next_smart_object_id = GwNavSmartObjectInterval.smartobject_id(next_smart_object_interval)
-
-		fassert(next_smart_object_id ~= -1, "[MinionNavigationExtension] Smart object id for smart object was %q.", next_smart_object_id)
-
 		smart_object_component.id = next_smart_object_id
 		local nav_graph_system = Managers.state.extension:system("nav_graph_system")
 		local smart_object_layer_type = nav_graph_system:smart_object_layer_type(next_smart_object_id)
-
-		fassert(smart_object_layer_type, "[MinionNavigationExtension] Smart object layer type was not set for smart object with id %d.", next_smart_object_id)
-
 		local layer_id = self._nav_mesh_manager:nav_tag_layer_id(smart_object_layer_type)
-
-		fassert(layer_id, "[MinionNavigationExtension] Non-existing smart object layer type %s.", smart_object_layer_type)
-
 		smart_object_component.type = smart_object_layer_type
 		local smart_object_data = nav_graph_system:smart_object_data(next_smart_object_id)
 		self._smart_object_data = smart_object_data
 		local smart_object_unit_owner = nav_graph_system:unit_from_smart_object_id(next_smart_object_id)
-
-		fassert(smart_object_unit_owner, "[MinionNavigationExtension] Could not find smart object with id %d.", next_smart_object_id)
-
 		smart_object_component.unit = smart_object_unit_owner
 	else
 		smart_object_component.id = -1
@@ -451,7 +440,6 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 	self._enabled = enabled
 
 	if enabled then
-		fassert(max_speed, "[MinionNavigationExtension] Please supply a max_speed when turning on!")
 		self:set_max_speed(max_speed)
 
 		if not old_status then
@@ -484,8 +472,6 @@ MinionNavigationExtension.set_avoidance_enabled = function (self, enabled)
 end
 
 MinionNavigationExtension.add_movement_modifier = function (self, new_modifier)
-	fassert(new_modifier, "[MinionNavigationExtension] Trying to set invalid movement modifier.")
-
 	local size = self._movement_modifier_table_size
 	local current_amount = self._num_movement_modifiers
 
@@ -515,9 +501,6 @@ end
 
 MinionNavigationExtension.remove_movement_modifier = function (self, id)
 	local modifiers = self._movement_modifiers
-
-	fassert(modifiers[id], "[MinionNavigationExtension] Trying to remove non-existing modifier with id %i.", id)
-
 	modifiers[id] = nil
 	self._num_movement_modifiers = self._num_movement_modifiers - 1
 
@@ -652,9 +635,6 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 
 	if do_use then
 		local smart_object_id = nav_smart_object_component.id
-
-		fassert(smart_object_id ~= -1, "[MinionNavigationExtension] Tried to use smart object with missing smart object id.")
-
 		success = GwNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
 
 		if not success then
@@ -735,11 +715,24 @@ MinionNavigationExtension.is_using_smart_object = function (self)
 end
 
 MinionNavigationExtension.path_distance_to_next_smart_object = function (self, optional_max_distance)
-	fassert(self._has_path, "[MinionNavigationExtension] Trying to fetch smart object distance without any path.")
-
 	local has_upcoming_smart_object, path_distance = GwNavBot.distance_to_next_smartobject(self._nav_bot, optional_max_distance)
 
 	return has_upcoming_smart_object, path_distance
+end
+
+MinionNavigationExtension.allow_nav_tag_layers = function (self, layer_names, layer_allowed)
+	local nav_tag_cost_table = self._nav_tag_cost_table
+
+	for i = 1, #layer_names do
+		local layer_name = layer_names[i]
+		local layer_id = self._nav_mesh_manager:nav_tag_layer_id(layer_name)
+
+		if layer_allowed then
+			GwNavTagLayerCostTable.allow_layer(nav_tag_cost_table, layer_id)
+		else
+			GwNavTagLayerCostTable.forbid_layer(nav_tag_cost_table, layer_id)
+		end
+	end
 end
 
 MinionNavigationExtension.allow_nav_tag_layer = function (self, layer_name, layer_allowed)
@@ -760,8 +753,6 @@ MinionNavigationExtension.set_nav_tag_layer_cost = function (self, layer_name, l
 end
 
 MinionNavigationExtension.current_and_next_node_positions_in_path = function (self)
-	fassert(self._has_path, "[MinionNavigationExtension] Trying to fetch path node positions without any path.")
-
 	local nav_bot = self._nav_bot
 	local node_count = GwNavBot.get_path_nodes_count(nav_bot)
 	local current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
@@ -785,8 +776,6 @@ MinionNavigationExtension.current_and_next_node_positions_in_path = function (se
 end
 
 MinionNavigationExtension.current_and_wanted_node_position_in_path = function (self, wanted_node_offset_index)
-	fassert(self._has_path, "[MinionNavigationExtension] Trying to fetch path node positions without any path.")
-
 	local nav_bot = self._nav_bot
 	local node_count = GwNavBot.get_path_nodes_count(nav_bot)
 	local current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
@@ -803,8 +792,6 @@ MinionNavigationExtension.current_and_wanted_node_position_in_path = function (s
 end
 
 MinionNavigationExtension.remaining_distance_from_progress_to_end_of_path = function (self)
-	fassert(self._is_following_path, "[MinionNavigationExtension] Trying to fetch remaining distance without following a path.")
-
 	local distance = GwNavBot.get_remaining_distance_from_progress_to_end_of_path(self._nav_bot)
 
 	return distance

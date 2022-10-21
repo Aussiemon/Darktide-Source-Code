@@ -90,7 +90,13 @@ PresenceEntryMyself.platform_icon = function (self)
 end
 
 PresenceEntryMyself.platform_user_id = function (self)
-	return
+	local platform = self._platform
+
+	if platform == "xbox" then
+		return Managers.account:xuid()
+	elseif platform == "steam" then
+		return Steam.user_id()
+	end
 end
 
 PresenceEntryMyself.is_myself = function (self)

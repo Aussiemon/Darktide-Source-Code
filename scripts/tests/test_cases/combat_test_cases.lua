@@ -26,8 +26,8 @@ local base_talents = {
 		"ogryn_1_base_4"
 	},
 	ogryn_2 = {
-		"ogryn_2_charge",
-		"ogryn_2_combat",
+		"ogryn_2_combat_ability",
+		"ogryn_2_charge_buff",
 		"ogryn_2_grenade",
 		"ogryn_2_base_1",
 		"ogryn_2_base_2",
@@ -99,7 +99,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 		end
 
 		local assert_data = {
-			assert = "num_peers_assert",
 			condition = num_peers <= 4,
 			message = "The number of peers has been set to " .. num_peers .. ". You can't have more than 4 peers!"
 		}
@@ -138,7 +137,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 		Testify:make_request("make_players_unkillable")
 		Testify:make_request("make_players_invulnerable")
-		TestifySnippets.set_force_spectate(true)
 
 		local main_path_point = 0
 		local total_main_path_distance = Testify:make_request("total_main_path_distance")
@@ -168,7 +166,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bots_stuck_data = bots_stuck_data
 		}
 		assert_data = {
-			assert = "player_died_assert",
 			message = "The player(s) has/have been killed, this shouldn't be possible. Please check the video in the Testify results."
 		}
 
@@ -483,7 +480,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 		local settings = cjson.decode(case_settings or "{}")
 		local gib_timer = settings.gib_timer or 1
 		local wait_timer = settings.wait_timer or 1
-		local specific_breed = string.value_or_nil(settings.specific_breed or nil)
+		local specific_breed = type(settings.specific_breed) == "string" and string.value_or_nil(settings.specific_breed) or settings.specific_breed
 
 		if TestifySnippets.is_debug_stripped() then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -494,6 +491,20 @@ CombatTestCases.gib_all_minions = function (case_settings)
 		TestifySnippets.wait(1)
 		Testify:make_request("make_players_unkillable")
 		Testify:make_request("make_players_invulnerable")
+
+		local function _is_valid_breed(breed_name)
+			if not specific_breed then
+				return true
+			end
+
+			if type(specific_breed) == "string" then
+				return specific_breed == breed_name
+			elseif type(specific_breed) == "table" then
+				return table.contains(specific_breed, breed_name)
+			end
+
+			return false
+		end
 
 		local breeds = Testify:make_request("all_breeds")
 		local breed_side = 2
@@ -547,7 +558,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 			if gib_template then
 				local breed_name = breed.name
 
-				if not specific_breed or specific_breed == breed_name then
+				if _is_valid_breed(breed_name) then
 					Log.info("Testify", "Running gib routine for: " .. breed_name)
 
 					local minion_data = {

@@ -9,7 +9,7 @@ local event_vo_survive_veteran_female_b = {
 			"loc_veteran_female_b__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			1.836333,
+			1.836344,
 			1.29075,
 			1.568052,
 			2.429
@@ -26,7 +26,7 @@ local event_vo_survive_veteran_female_b = {
 			"loc_veteran_female_b__event_survive_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
+			2.688083,
 			1.765083,
 			1.71775,
 			2.638042

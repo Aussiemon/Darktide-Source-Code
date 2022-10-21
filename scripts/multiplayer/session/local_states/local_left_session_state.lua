@@ -1,9 +1,6 @@
 local LocalLeftSessionState = class("LocalLeftSessionState")
 
 LocalLeftSessionState.init = function (self, state_machine, shared_state)
-	assert(shared_state.event_list, "Event list required")
-	assert(shared_state.engine_lobby, "Engine lobby is required")
-
 	self._shared_state = shared_state
 end
 

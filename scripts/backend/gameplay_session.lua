@@ -20,9 +20,20 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 
 	return self:fetch(session_id):next(function (data)
 		if data.session.state.completed then
-			local character_data = data.session.participants[participant]
+			local ok_to_fetch = true
 
-			if character_data and character_data.rewarded then
+			if participant == nil then
+				for id, char in pairs(data.session.participants) do
+					if (not char or not char.rewarded) and (not char or not char.disconnected) then
+						ok_to_fetch = false
+					end
+				end
+			else
+				local character_data = data.session.participants[participant]
+				ok_to_fetch = character_data and character_data.rewarded
+			end
+
+			if ok_to_fetch then
 				return Managers.backend:title_request(BackendUtilities.fetch_link(data, "eor")):next(function (data)
 					return data.body
 				end)
@@ -46,29 +57,22 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 end
 
 GameplaySession.fetch = function (self, session_id)
-	assert(type(session_id) == "string", "Missing or invalid session_id")
-
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id):next(function (data)
 		return data.body
 	end)
 end
 
 GameplaySession.fetch_server_details = function (self, session_id)
-	assert(type(session_id) == "string", "Missing or invalid session_id")
-
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/serverdetails"):next(function (data)
 		return data.body
 	end)
 end
 
 GameplaySession.create = function (self, server_id, ip_address)
-	assert(type(server_id) == "string", "Missing or invalid server_id")
-	assert(type(ip_address) == "string", "Missing or invalid ip_address")
-
 	local data = {
 		info = {
 			serverDetails = {
-				type = "local",
+				type = "dedicated",
 				properties = {
 					serverId = server_id,
 					ipAddress = ip_address
@@ -96,9 +100,6 @@ GameplaySession.create = function (self, server_id, ip_address)
 end
 
 GameplaySession.update = function (self, session_id, participants, kicked_participants_account_ids, backfill_wanted)
-	assert(type(session_id) == "string", "Missing or invalid session_id")
-	assert(type(participants) == "table", "Missing or invalid participants")
-
 	local data = {
 		info = {
 			participants = participants,
@@ -119,8 +120,8 @@ end
 
 local function to_backend_modifier(reward_modifier)
 	return {
-		xp = 0,
-		credits = 0,
+		xp = reward_modifier.mission_reward_xp_modifier,
+		credits = reward_modifier.mission_reward_credit_modifier,
 		rareLoot = reward_modifier.mission_reward_rare_loot_modifier,
 		gearInsteadOfWeapon = reward_modifier.mission_reward_gear_instead_of_weapon_modifier,
 		sideMissionXp = reward_modifier.side_mission_reward_xp_modifier,
@@ -141,9 +142,6 @@ local function to_backend_modifiers(reward_modifiers)
 end
 
 GameplaySession.complete = function (self, session_id, participants, mission_result, reward_modifiers)
-	assert(type(session_id) == "string", "Missing or invalid session_id")
-	assert(type(participants) == "table", "Missing or invalid participants")
-
 	local modifiers = to_backend_modifiers(reward_modifiers)
 
 	if modifiers then
@@ -173,8 +171,6 @@ end
 
 GameplaySession.events = function (self, session_id, events, position)
 	position = position or 1
-
-	assert(type(session_id) == "string", "Missing or invalid session_id")
 
 	if #events and position <= #events then
 		local remaining_size = math.min(#events - position + 1, max_events_per_batch)

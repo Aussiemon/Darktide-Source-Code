@@ -8,7 +8,11 @@ local mission_vo_lm_rails_psyker_female_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 7.2405,
-			[2.0] = 6.530313
+			[2.0] = 6.530333
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,7 +24,7 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_district_gate_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.904792,
+			[1.0] = 4.904813,
 			[2.0] = 4.351354
 		},
 		randomize_indexes = {}
@@ -46,8 +50,8 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.724396,
-			[2.0] = 3.987458
+			[1.0] = 5.724417,
+			[2.0] = 3.987438
 		},
 		randomize_indexes = {}
 	},
@@ -59,7 +63,7 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.311979,
+			[1.0] = 4.312,
 			[2.0] = 3.7685
 		},
 		randomize_indexes = {}
@@ -72,8 +76,8 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.458771,
-			[2.0] = 5.530604
+			[1.0] = 3.45875,
+			[2.0] = 5.530625
 		},
 		randomize_indexes = {}
 	},
@@ -99,48 +103,36 @@ local mission_vo_lm_rails_psyker_female_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 4.986604,
-			[2.0] = 2.583042
+			[2.0] = 2.583063
 		},
 		randomize_indexes = {}
 	},
 	mission_rails_first_objective_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_psyker_female_b__guidance_starting_area_01",
-			"loc_psyker_female_b__guidance_starting_area_02",
-			"loc_psyker_female_b__guidance_starting_area_03",
 			"loc_psyker_female_b__guidance_starting_area_04",
 			"loc_psyker_female_b__guidance_starting_area_05",
 			"loc_psyker_female_b__guidance_starting_area_06",
 			"loc_psyker_female_b__guidance_starting_area_07",
 			"loc_psyker_female_b__guidance_starting_area_08",
-			"loc_psyker_female_b__guidance_starting_area_09",
-			"loc_psyker_female_b__guidance_starting_area_10"
+			"loc_psyker_female_b__guidance_starting_area_09"
 		},
 		sound_events_duration = {
-			1.542875,
-			1.689292,
-			2.206854,
 			1.794875,
-			1.488563,
-			2.450771,
+			1.488542,
+			2.45075,
 			2.846729,
 			2.258458,
-			2.091063,
-			3.238625
+			2.091063
 		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},
@@ -152,25 +144,34 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_hab_block_dreyko_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.664813,
-			[2.0] = 4.095333
+			[1.0] = 5.664833,
+			[2.0] = 4.095354
 		},
 		randomize_indexes = {}
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 5,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__region_habculum_01",
-			[2.0] = "loc_psyker_female_b__region_habculum_02"
+			"loc_psyker_female_b__region_habculum_01",
+			"loc_psyker_female_b__region_habculum_02",
+			"loc_psyker_female_b__zone_transit_01",
+			"loc_psyker_female_b__zone_transit_02",
+			"loc_psyker_female_b__zone_transit_03"
 		},
 		sound_events_duration = {
-			[1.0] = 4.395042,
-			[2.0] = 6.283625
+			4.395063,
+			6.283625,
+			4.612313,
+			5.808125,
+			5.116521
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -187,6 +188,35 @@ local mission_vo_lm_rails_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	mission_rails_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_psyker_female_b__region_habculum_01",
+			"loc_psyker_female_b__region_habculum_02",
+			"loc_psyker_female_b__region_habculum_03",
+			"loc_psyker_female_b__zone_transit_01",
+			"loc_psyker_female_b__zone_transit_02",
+			"loc_psyker_female_b__zone_transit_03"
+		},
+		sound_events_duration = {
+			4.395063,
+			6.283625,
+			4.012771,
+			4.612313,
+			5.808125,
+			5.116521
+		},
+		sound_event_weights = {
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
+		},
+		randomize_indexes = {}
+	},
 	mission_rails_trains = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -195,7 +225,7 @@ local mission_vo_lm_rails_psyker_female_b = {
 			[2.0] = "loc_psyker_female_b__mission_rails_trains_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.2365,
+			[1.0] = 5.236521,
 			[2.0] = 4.812896
 		},
 		randomize_indexes = {}

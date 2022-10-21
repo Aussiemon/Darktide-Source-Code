@@ -10,7 +10,6 @@ ChestExtension.init = function (self, extension_init_context, unit, extension_in
 	self._current_state = STATES.closed
 	self._containing_pickups = {}
 	self._locked_pickups = {}
-	self._chest_size = 0
 	self._state_changed = false
 	self._owner_system = extension_init_context.owner_system
 end
@@ -53,15 +52,7 @@ ChestExtension.update = function (self, unit, dt, t)
 end
 
 ChestExtension.reserve_pickup = function (self, index, pickup_name)
-	fassert(self._is_server, "[ChestExtension] Server only method.")
-	fassert(self._containing_pickups[index] == nil, "[ChestExtension] Chest is already containing a pickup")
-	fassert(self._current_state ~= STATES.opened, "[ChestExtension] Can't place an item in an opened chest")
-
 	self._containing_pickups[index] = pickup_name
-
-	if self._chest_size < index then
-		self._chest_size = index
-	end
 end
 
 ChestExtension.current_state = function (self)
@@ -91,16 +82,12 @@ ChestExtension.is_interactable = function (self)
 end
 
 ChestExtension.open = function (self)
-	fassert(self._is_server, "[ChestExtension] Server only method.")
-	fassert(self._current_state == STATES.closed, "[ChestExtension] invalid state.")
-	self:set_current_state(STATES.opened)
-
 	local pickup_spawner_extension = ScriptUnit.extension(self._unit, "pickup_system")
 	local containing_pickups = self._containing_pickups
-	local chest_size = self._chest_size
+	local chest_size = pickup_spawner_extension:spawner_count()
 
 	for i = 1, chest_size do
-		if containing_pickups[i] ~= nil then
+		if containing_pickups[i] or pickup_spawner_extension:request_rubberband_pickup(i) then
 			local check_reserve = false
 			local unit, _ = pickup_spawner_extension:spawn_specific_item(i, containing_pickups[i], check_reserve)
 
@@ -116,6 +103,7 @@ ChestExtension.open = function (self)
 		end
 	end
 
+	self:set_current_state(STATES.opened)
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 	table.clear(containing_pickups)
 end

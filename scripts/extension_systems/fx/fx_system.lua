@@ -15,6 +15,7 @@ local _create_impact_sfx, _create_impact_vfx, _create_material_switch_sfx, _crea
 local CLIENT_RPCS = {
 	"rpc_play_impact_fx",
 	"rpc_play_surface_impact_fx",
+	"rpc_play_shotshell_surface_impact_fx",
 	"rpc_start_template_effect",
 	"rpc_stop_template_effect",
 	"rpc_trigger_vfx",
@@ -114,15 +115,17 @@ FxSystem.hot_join_sync = function (self, sender, channel)
 end
 
 FxSystem.update = function (self, context, dt, t, ...)
-	local template_context = self._template_context
-	local running_template_effects = self._running_template_effects
+	if not DEDICATED_SERVER then
+		local template_context = self._template_context
+		local running_template_effects = self._running_template_effects
 
-	for i = 1, #running_template_effects do
-		local template_effect = running_template_effects[i]
-		local template = template_effect.template
-		local template_data = template_effect.template_data
+		for i = 1, #running_template_effects do
+			local template_effect = running_template_effects[i]
+			local template = template_effect.template
+			local template_data = template_effect.template_data
 
-		template.update(template_data, template_context, dt, t)
+			template.update(template_data, template_context, dt, t)
+		end
 	end
 
 	FxSystem.super.update(self, context, dt, t, ...)
@@ -145,11 +148,6 @@ end
 
 FxSystem.start_template_effect = function (self, template, optional_unit, optional_node, optional_position)
 	local template_name = template.name
-
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
-	fassert(optional_unit == nil or self._unit_to_extension_map[optional_unit], "[FxSystem] Triggering template effect %s on unit %s without fx extension.", template_name, optional_unit)
-	fassert(optional_unit == nil or not self:_has_running_template_of_name(optional_unit, template_name), "[FxSystem] Tried starting duplicate template %s on unit %s.", template_name, optional_unit)
-
 	local buffer_index, template_effect = nil
 	local max_num_template_effects = self._max_num_template_effects
 	local global_effect_id = self._next_global_effect_id
@@ -185,13 +183,15 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 end
 
 FxSystem._start_template_effect = function (self, template_effect, template, optional_unit, optional_node, optional_position)
-	local template_data = template_effect.template_data
-	local template_context = self._template_context
-	template_data.position = optional_position
-	template_data.node = optional_node
-	template_data.unit = optional_unit
+	if not DEDICATED_SERVER then
+		local template_data = template_effect.template_data
+		local template_context = self._template_context
+		template_data.position = optional_position
+		template_data.node = optional_node
+		template_data.unit = optional_unit
 
-	template.start(template_data, template_context)
+		template.start(template_data, template_context)
+	end
 
 	if optional_position then
 		template_effect.optional_position:store(optional_position)
@@ -206,8 +206,6 @@ FxSystem._start_template_effect = function (self, template_effect, template, opt
 end
 
 FxSystem.stop_template_effect = function (self, global_effect_id)
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
-
 	local template_effects = self._template_effects
 	local buffer_index = global_effect_id % self._max_num_template_effects + 1
 	local template_effect = template_effects[buffer_index]
@@ -229,7 +227,10 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 	local template_data = template_effect.template_data
 	local template_context = self._template_context
 
-	template.stop(template_data, template_context)
+	if not DEDICATED_SERVER then
+		template.stop(template_data, template_context)
+	end
+
 	template_effect.optional_position:store(Vector3.invalid_vector())
 
 	template_effect.optional_unit = nil
@@ -242,19 +243,18 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 	local running_template_effects = self._running_template_effects
 	local index_to_remove = table.index_of(running_template_effects, template_effect)
 
-	fassert(index_to_remove ~= -1, "[FxSystem] Couldn't find template effect to stop among running effects!")
 	table.swap_delete(running_template_effects, index_to_remove)
 end
 
 FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted)
-	_play_impact_fx_template(self._world, self._wwise_world, self._unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal)
+	local world = self._world
+	local t = World.time(world)
+
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal)
 
 	if self._is_server then
 		local impact_fx_name = impact_fx.name
 		local impact_fx_name_id = NetworkLookup.impact_fx_names[impact_fx_name]
-
-		fassert(provoking_unit, "No provoking_unit passed to FxSystem:play_impact_fx()")
-
 		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
 
 		if not provoking_unit_id then
@@ -265,9 +265,6 @@ FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source
 
 		if optional_will_be_predicted then
 			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
-
-			fassert(predicting_player, "provoking_unit has to be owned by a player if will_be_predicted is set to true.")
-
 			local except = predicting_player:channel_id()
 
 			Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal)
@@ -279,8 +276,6 @@ end
 
 FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, source_parameters, provoking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
 	if self._is_server then
-		fassert(provoking_unit, "No provoking_unit passed to FxSystem:play_surface_impact_fx()")
-
 		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
 
 		if not provoking_unit_id then
@@ -292,9 +287,6 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 
 		if optional_will_be_predicted then
 			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
-
-			fassert(predicting_player, "provoking_unit has to be owned by a player if will_be_predicted is set to true.")
-
 			local except = predicting_player:channel_id()
 
 			Managers.state.game_session:send_rpc_clients_except("rpc_play_surface_impact_fx", except, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id)
@@ -314,11 +306,63 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 		return
 	end
 
-	_play_impact_fx_template(self._world, self._wwise_world, self._unit_to_extension_map, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, hit_unit, hit_actor, optional_hit_normal)
+	local world = self._world
+	local t = World.time(world)
+
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, hit_unit, hit_actor, optional_hit_normal)
+end
+
+FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_positions, hit_normals, source_parameters, provoking_unit, damage_type, hit_type, optional_will_be_predicted)
+	if self._is_server then
+		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
+
+		if not provoking_unit_id then
+			return
+		end
+
+		local damage_type_id = NetworkLookup.damage_types[damage_type]
+		local hit_type_id = NetworkLookup.surface_hit_types[hit_type]
+
+		if optional_will_be_predicted then
+			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
+			local except = predicting_player:channel_id()
+
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_shotshell_surface_impact_fx", except, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+		else
+			Managers.state.game_session:send_rpc_clients("rpc_play_shotshell_surface_impact_fx", fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+		end
+	end
+
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local physics_world = self._physics_world
+	local surface_impact_fxs = ImpactEffect.shotshell_surface_impact_fx(physics_world, fire_position, provoking_unit, hit_positions, hit_normals, damage_type, hit_type)
+
+	if not surface_impact_fxs then
+		return
+	end
+
+	local world = self._world
+	local wwise_world = self._wwise_world
+	local unit_to_extension_map = self._unit_to_extension_map
+	local t = World.time(world)
+
+	for ii = 1, #surface_impact_fxs, 7 do
+		local surface_impact_fx = surface_impact_fxs[ii]
+		local hit_position = surface_impact_fxs[ii + 1]
+		local hit_normal = surface_impact_fxs[ii + 2]
+		local hit_direction = surface_impact_fxs[ii + 3]
+		local hit_unit = surface_impact_fxs[ii + 4]
+		local hit_actor = surface_impact_fxs[ii + 5]
+		local only_decal = surface_impact_fxs[ii + 6]
+
+		_play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, hit_unit, hit_actor, hit_normal, only_decal)
+	end
 end
 
 FxSystem.trigger_vfx = function (self, vfx_name, position, optional_rotation)
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
 	World.create_particles(self._world, vfx_name, position, optional_rotation)
 
 	local vfx_id = NetworkLookup.vfx[vfx_name]
@@ -327,8 +371,6 @@ FxSystem.trigger_vfx = function (self, vfx_name, position, optional_rotation)
 end
 
 FxSystem.trigger_wwise_event = function (self, event_name, optional_position, optional_unit, optional_node, optional_parameter_name, optional_parameter_value)
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
-
 	local wwise_world = self._wwise_world
 	local source_id = nil
 
@@ -345,7 +387,6 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 	end
 
 	if source_id and (optional_position or optional_unit) and optional_parameter_name then
-		fassert(optional_parameter_value, "[FxSystem] optional_parameter_name requires optional_parameter_value")
 		WwiseWorld.set_source_parameter(wwise_world, source_id, optional_parameter_name, optional_parameter_value)
 	end
 
@@ -368,9 +409,6 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 end
 
 FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, impact_material_or_nil, impact_position, impact_normal)
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
-	assert(ground_impact_fx_template, "[FxSystem] invalid template supplied.")
-
 	local material_fx_templates = ground_impact_fx_template.materials
 	local impact_effects = material_fx_templates[impact_material_or_nil]
 
@@ -412,7 +450,6 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 end
 
 FxSystem.trigger_flow_event = function (self, unit, event_name)
-	fassert(self._is_server, "[FxSystem] Only server is allowed to call this function.")
 	Unit.flow_event(unit, event_name)
 
 	local event_id = NetworkLookup.flow_events[event_name]
@@ -463,6 +500,15 @@ FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, 
 	self:play_surface_impact_fx(hit_position, hit_direction, SOURCE_PARAMETERS, provoking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
 end
 
+FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+	local damage_type = NetworkLookup.damage_types[damage_type_id]
+	local hit_type = NetworkLookup.surface_hit_types[hit_type_id]
+	local optional_will_be_predicted = false
+
+	self:play_shotshell_surface_impact_fx(fire_position, hit_positions, hit_normals, SOURCE_PARAMETERS, provoking_unit, damage_type, hit_type, optional_will_be_predicted)
+end
+
 FxSystem.rpc_trigger_vfx = function (self, channel_id, vfx_id, position, optional_rotation)
 	local vfx_name = NetworkLookup.vfx[vfx_id]
 
@@ -492,8 +538,6 @@ FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optiona
 	end
 
 	if source_id and optional_parameter_id then
-		fassert(optional_parameter_value, "[FxSystem] optional_parameter_name requires optional_parameter_value")
-
 		local parameter_name = NetworkLookup.sound_parameters[optional_parameter_id]
 
 		WwiseWorld.set_source_parameter(wwise_world, source_id, parameter_name, optional_parameter_value)
@@ -610,14 +654,40 @@ function _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, table_name
 	return husk_fx or fx
 end
 
-function _create_projection_decal(decal_settings, position, rotation, normal, hit_unit, hit_actor)
-	local t = Managers.time:time("gameplay")
-	local min_extents = decal_settings.extents.min
-	local max_extents = decal_settings.extents.max
-	local x = math.random_range(min_extents.x, max_extents.x)
-	local y = math.random_range(min_extents.y, max_extents.y)
-	local z = math.random_range(min_extents.z, max_extents.z)
-	local extents = Vector3(x, y, z)
+local LINKED_DECAL_Z = 0.05
+local DECAL_Z = 0.5
+
+function _create_projection_decal(t, decal_settings, position, rotation, normal, hit_unit, hit_actor)
+	local extents = decal_settings.extents
+	local uniform_extents = decal_settings.uniform_extents
+	local x, y, z = nil
+
+	if extents then
+		local min = extents.min
+		local max = extents.max
+		x = math.random_range(min.x, max.x)
+		y = math.random_range(min.y, max.y)
+
+		if hit_actor then
+			z = LINKED_DECAL_Z
+		else
+			z = DECAL_Z
+		end
+	elseif uniform_extents then
+		local min = uniform_extents.min
+		local max = uniform_extents.max
+		local scale = math.random_range(min, max)
+		x = scale
+		y = scale
+
+		if hit_actor then
+			z = LINKED_DECAL_Z
+		else
+			z = DECAL_Z
+		end
+	end
+
+	local decal_extents = Vector3(x, y, z)
 	local decal_units = decal_settings.units
 	local num_decal_units = #decal_units
 	local decal_unit_name = decal_units[math.random(1, num_decal_units)]
@@ -625,10 +695,10 @@ function _create_projection_decal(decal_settings, position, rotation, normal, hi
 	local random_rot = Quaternion.axis_angle(Vector3.up(), random_rad)
 	rotation = Quaternion.multiply(rotation, random_rot)
 
-	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, extents, hit_actor, hit_unit, t)
+	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, decal_extents, hit_actor, hit_unit, t)
 end
 
-function _play_impact_fx_template(world, wwise_world, unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal)
+function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
 	local impact_fx_name = impact_fx.name
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = optional_target_unit and player_unit_spawn_manager:owner(optional_target_unit)
@@ -636,80 +706,83 @@ function _play_impact_fx_template(world, wwise_world, unit_to_extension_map, imp
 	local provoker_first_person_extension = provoking_unit and ScriptUnit.has_extension(provoking_unit, "first_person_system")
 	local target_player_is_in_1p = target_player and target_first_person_extension and target_first_person_extension:is_in_first_person_mode()
 	local opposite_direction = -direction
-	local sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx", "sfx_husk", target_player_is_in_1p)
 
-	if sfx then
-		_create_impact_sfx(wwise_world, sfx, source_parameters, position, opposite_direction, optional_hit_normal)
-	end
+	if not only_decal then
+		local sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx", "sfx_husk", target_player_is_in_1p)
 
-	if provoker_first_person_extension then
-		local follow_target = provoker_first_person_extension:is_camera_follow_target()
-		local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
+		if sfx then
+			_create_impact_sfx(wwise_world, sfx, source_parameters, position, opposite_direction, optional_hit_normal)
+		end
 
-		if follow_target and in_first_person then
-			local sfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p")
+		if provoker_first_person_extension then
+			local follow_target = provoker_first_person_extension:is_camera_follow_target()
+			local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
 
-			if sfx_1p then
-				_create_impact_sfx(wwise_world, sfx_1p, source_parameters, position, opposite_direction)
+			if follow_target and in_first_person then
+				local sfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p")
+
+				if sfx_1p then
+					_create_impact_sfx(wwise_world, sfx_1p, source_parameters, position, opposite_direction)
+				end
 			end
 		end
-	end
 
-	if target_player_is_in_1p then
-		local sfx_1p_direction_interface = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p_direction_interface")
+		if target_player_is_in_1p then
+			local sfx_1p_direction_interface = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p_direction_interface")
 
-		if sfx_1p_direction_interface then
-			local interface_position = position + opposite_direction * INTERFACE_POSITION_OFFSET_DISTANCE
+			if sfx_1p_direction_interface then
+				local interface_position = position + opposite_direction * INTERFACE_POSITION_OFFSET_DISTANCE
 
-			_create_impact_sfx(wwise_world, sfx_1p_direction_interface, source_parameters, interface_position, direction, nil, IS_DIRECTION_INTERFACE)
+				_create_impact_sfx(wwise_world, sfx_1p_direction_interface, source_parameters, interface_position, direction, nil, IS_DIRECTION_INTERFACE)
+			end
 		end
-	end
 
-	local sfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_3p", nil, target_player_is_in_1p)
+		local sfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_3p", nil, target_player_is_in_1p)
 
-	if sfx_3p and not target_player_is_in_1p then
-		_create_impact_sfx(wwise_world, sfx_3p, source_parameters, position, opposite_direction)
-	end
-
-	local material_switch_sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "material_switch_sfx", "material_switch_sfx_husk")
-
-	if material_switch_sfx and optional_hit_normal then
-		_create_material_switch_sfx(wwise_world, material_switch_sfx, position, opposite_direction, optional_hit_normal)
-	end
-
-	local play_vfx = not target_player_is_in_1p
-	local play_1p_vfx, play_3p_vfx = nil
-
-	if provoker_first_person_extension and not target_player_is_in_1p then
-		local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
-		play_1p_vfx = in_first_person
-		play_3p_vfx = not in_first_person
-	else
-		play_1p_vfx = false
-		play_3p_vfx = not target_player_is_in_1p
-	end
-
-	if play_vfx then
-		local vfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx")
-
-		if vfx then
-			_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal)
+		if sfx_3p and not target_player_is_in_1p then
+			_create_impact_sfx(wwise_world, sfx_3p, source_parameters, position, opposite_direction)
 		end
-	end
 
-	if play_1p_vfx then
-		local vfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_1p")
+		local material_switch_sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "material_switch_sfx", "material_switch_sfx_husk")
 
-		if vfx_1p then
-			_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal)
+		if material_switch_sfx and optional_hit_normal then
+			_create_material_switch_sfx(wwise_world, material_switch_sfx, position, opposite_direction, optional_hit_normal)
 		end
-	end
 
-	if play_3p_vfx then
-		local vfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_3p")
+		local play_vfx = not target_player_is_in_1p
+		local play_1p_vfx, play_3p_vfx = nil
 
-		if vfx_3p then
-			_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal)
+		if provoker_first_person_extension and not target_player_is_in_1p then
+			local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
+			play_1p_vfx = in_first_person
+			play_3p_vfx = not in_first_person
+		else
+			play_1p_vfx = false
+			play_3p_vfx = not target_player_is_in_1p
+		end
+
+		if play_vfx then
+			local vfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx")
+
+			if vfx then
+				_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal)
+			end
+		end
+
+		if play_1p_vfx then
+			local vfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_1p")
+
+			if vfx_1p then
+				_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal)
+			end
+		end
+
+		if play_3p_vfx then
+			local vfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_3p")
+
+			if vfx_3p then
+				_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal)
+			end
 		end
 	end
 
@@ -720,7 +793,7 @@ function _play_impact_fx_template(world, wwise_world, unit_to_extension_map, imp
 		local tangent = Vector3.normalize(direction - dot_value * optional_hit_normal)
 		local decal_rotation = Quaternion.look(tangent, optional_hit_normal)
 
-		_create_projection_decal(decal, position, decal_rotation, optional_hit_normal, nil, nil)
+		_create_projection_decal(t, decal, position, decal_rotation, optional_hit_normal, nil, nil)
 	end
 
 	local linked_decal = impact_fx.linked_decal
@@ -735,7 +808,7 @@ function _play_impact_fx_template(world, wwise_world, unit_to_extension_map, imp
 			local decal_normal = opposite_direction
 			local hit_actor = Unit.actor(optional_target_unit, hit_actors[1])
 
-			_create_projection_decal(linked_decal, position, decal_rotation, decal_normal, optional_target_unit, hit_actor)
+			_create_projection_decal(t, linked_decal, position, decal_rotation, decal_normal, optional_target_unit, hit_actor)
 		end
 	end
 

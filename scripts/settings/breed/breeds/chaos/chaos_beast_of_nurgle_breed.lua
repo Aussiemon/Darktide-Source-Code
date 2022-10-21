@@ -1,6 +1,11 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BossNameTemplates = require("scripts/settings/boss/boss_name_templates")
+local BossTemplates = require("scripts/settings/boss/boss_templates/boss_templates")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
+local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -11,74 +16,103 @@ local TargetSelectionWeights = require("scripts/settings/minion_target_selection
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
+local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_beast_of_nurgle"
 local breed_data = {
-	run_speed = 3.9,
+	walk_speed = 2,
+	use_navigation_path_splines = true,
 	use_bone_lod = false,
 	look_at_distance = 20,
-	challenge_rating = 30,
-	unit_template_name = "minion",
-	display_name = "loc_breed_display_name_chaos_beast_of_nurgle",
-	faction_name = "chaos",
-	sub_faction_name = "chaos",
-	slot_template = "chaos_ogryn",
-	broadphase_radius = 1,
-	walk_speed = 2,
-	spawn_aggro_state = "aggroed",
-	uses_script_components = true,
-	stagger_resistance = 100,
 	navigation_propagation_box_extent = 500,
+	spawn_aggro_state = "aggroed",
+	stagger_pool_decay_time = 2,
+	sub_faction_name = "chaos",
+	unit_template_name = "minion",
+	broadphase_radius = 1,
+	weakspot_stagger_reduction = -100,
+	only_accumulate_stagger_on_weakspot = true,
+	stagger_resistance = 1,
+	boss_display_name = "WIP_NOT_DONE_BEAST_OF_NURGLE",
+	stagger_pool_decay_delay = 0.5,
+	hit_reacts_min_damage = 100,
+	game_object_type = "minion_beast_of_nurgle",
+	challenge_rating = 30,
+	bone_lod_radius = 3,
+	trigger_boss_health_bar_on_damaged = true,
+	display_name = "WIP_NOT_DONE_BEAST_OF_NURGLE",
+	run_speed = 3.9,
+	is_boss = true,
+	faction_name = "chaos",
+	uses_script_components = true,
 	base_height = 3.6,
-	power_level_type = "chaos_plague_ogryn_melee",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	player_locomotion_constrain_radius = 1.5,
-	activate_slot_system_on_spawn = true,
+	stagger_reduction = 100,
+	player_locomotion_constrain_radius = 1,
 	smart_tag_target_type = "breed",
-	use_navigation_path_splines = true,
-	game_object_type = "minion_monster",
 	base_unit = "content/characters/enemy/chaos_beast_of_nurgle/third_person/base",
 	hit_mass = 20,
-	bone_lod_radius = 3,
+	reduced_hit_mass = 5,
 	name = breed_name,
 	breed_type = breed_types.minion,
-	tags = {
-		minion = true
+	power_level_type = {
+		melee = "chaos_beast_of_nurgle_melee",
+		ranged = "chaos_beast_of_nurgle_ranged"
 	},
 	testify_flags = {
 		spawn_all_enemies = false
 	},
-	point_cost = {},
+	tags = {},
+	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,
+	boss_template = BossTemplates.chaos_beast_of_nurgle,
+	combat_range_data = BreedCombatRanges.chaos_beast_of_nurgle,
+	combat_vector_config = {
+		choose_furthest_away = true,
+		default_combat_range = "far",
+		valid_combat_ranges = {
+			far = true
+		}
+	},
 	stagger_durations = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 1,
-		[stagger_types.heavy] = 1.5,
-		[stagger_types.light_ranged] = 1,
-		[stagger_types.explosion] = 1,
-		[stagger_types.killshot] = 1,
-		[stagger_types.sticky] = 1
+		[stagger_types.light] = 2,
+		[stagger_types.medium] = 2,
+		[stagger_types.heavy] = 1.2,
+		[stagger_types.light_ranged] = 2,
+		[stagger_types.explosion] = 2,
+		[stagger_types.killshot] = 2,
+		[stagger_types.sticky] = 1.6666666666666667,
+		[stagger_types.wall_collision] = 2
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.25,
-		[stagger_types.medium] = 0.5,
-		[stagger_types.heavy] = 2.25,
-		[stagger_types.light_ranged] = 0.5
-	},
-	stagger_thresholds = {
 		[stagger_types.light] = 5,
 		[stagger_types.medium] = 5,
-		[stagger_types.heavy] = 7,
-		[stagger_types.light_ranged] = 5,
-		[stagger_types.sticky] = 5
+		[stagger_types.heavy] = 10,
+		[stagger_types.explosion] = 10,
+		[stagger_types.light_ranged] = 5
+	},
+	stagger_thresholds = {
+		[stagger_types.light] = -1,
+		[stagger_types.medium] = -1,
+		[stagger_types.heavy] = 140,
+		[stagger_types.explosion] = 100,
+		[stagger_types.light_ranged] = -1,
+		[stagger_types.killshot] = -1,
+		[stagger_types.sticky] = -1
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_beast_of_nurgle,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_beast_of_nurgle_sounds"),
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
 	look_at_tag = breed_name,
 	behavior_tree_name = breed_name,
+	animation_variables = {
+		"tongue_length"
+	},
+	spawn_buffs = {
+		"beast_of_nurgle_liquid_immunity"
+	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
@@ -101,12 +135,26 @@ local breed_data = {
 			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
 		}
 	},
-	target_selection_template = TargetSelectionTemplates.chaos_plague_ogryn,
+	target_selection_template = TargetSelectionTemplates.chaos_beast_of_nurgle,
 	target_selection_weights = TargetSelectionWeights.chaos_beast_of_nurgle,
 	threat_config = {
 		threat_multiplier = 0.1,
 		max_threat = 50,
 		threat_decay_per_second = 5
+	},
+	aim_config = {
+		aim_on_target = true,
+		target = "aim_target",
+		distance = 5,
+		lerp_speed = 200,
+		node = "j_neck",
+		target_node = "enemy_aim_target_03"
+	},
+	nearby_units_broadphase_config = {
+		interval = 0.133,
+		radius = 4,
+		relation = "allied",
+		angle = math.degrees_to_radians(100)
 	},
 	navigation_path_spline_config = {
 		spline_distance_to_borders = 2,
@@ -122,23 +170,23 @@ local breed_data = {
 	nav_tag_allowed_layers = {
 		teleporters = 0.5,
 		ledges_with_fence = 8000,
+		monster_walls = 1.5,
 		jumps = 8000,
 		ledges = 8000,
 		cover_ledges = 8000
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_beast_of_nurgle,
 	fade = {
-		max_distance = 1.6,
+		max_distance = 0.6,
 		max_height_difference = 2,
-		min_distance = 1.1
+		min_distance = 0.1
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,
 			actors = {
 				"c_neck",
-				"c_head",
-				"c_weakspot"
+				"c_head"
 			}
 		},
 		{
@@ -224,6 +272,12 @@ local breed_data = {
 			actors = {
 				"r_afro"
 			}
+		},
+		{
+			name = hit_zone_names.weakspot,
+			actors = {
+				"c_weakspot"
+			}
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -298,12 +352,61 @@ local breed_data = {
 		[hit_zone_names.center_mass] = {
 			j_hips = 0.5,
 			j_spine = 0.5
+		},
+		[hit_zone_names.weakspot] = {
+			j_hips = 0.5,
+			j_spine = 0.5
+		},
+		[hit_zone_names.tongue] = {
+			j_hips = 0.5,
+			j_spine = 0.5
+		},
+		[hit_zone_names.tail] = {
+			j_hips = 0.5,
+			j_spine = 0.5
+		}
+	},
+	hitzone_damage_multiplier = {
+		melee = {
+			[hit_zone_names.head] = 1,
+			[hit_zone_names.weakspot] = 1.25,
+			[hit_zone_names.torso] = 0.75,
+			[hit_zone_names.lower_left_arm] = 0.75,
+			[hit_zone_names.lower_right_arm] = 0.75,
+			[hit_zone_names.lower_left_leg] = 0.75,
+			[hit_zone_names.lower_right_leg] = 0.75,
+			[hit_zone_names.upper_left_arm] = 0.75,
+			[hit_zone_names.upper_right_arm] = 0.75,
+			[hit_zone_names.upper_left_leg] = 0.75,
+			[hit_zone_names.upper_right_leg] = 0.75,
+			[hit_zone_names.center_mass] = 0.75,
+			[hit_zone_names.tail] = 0.2
+		},
+		ranged = {
+			[hit_zone_names.weakspot] = 0.65,
+			[hit_zone_names.head] = 0.4,
+			[hit_zone_names.torso] = 0.2,
+			[hit_zone_names.lower_left_arm] = 0.2,
+			[hit_zone_names.lower_right_arm] = 0.2,
+			[hit_zone_names.lower_left_leg] = 0.2,
+			[hit_zone_names.lower_right_leg] = 0.2,
+			[hit_zone_names.upper_left_arm] = 0.2,
+			[hit_zone_names.upper_right_arm] = 0.2,
+			[hit_zone_names.upper_left_leg] = 0.2,
+			[hit_zone_names.upper_right_leg] = 0.2,
+			[hit_zone_names.center_mass] = 0.2,
+			[hit_zone_names.tail] = 0.1
 		}
 	},
 	hit_zone_weakspot_types = {
-		[hit_zone_names.head] = weakspot_types.headshot
+		[hit_zone_names.weakspot] = weakspot_types.weakspot
 	},
-	blackboard_component_config = BreedBlackboardComponentTemplates.monster
+	weakspot_config = {
+		impact_fx = {
+			damage_type = damage_types.minion_beast_of_nurgle_weakspot_hit
+		}
+	},
+	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_beast_of_nurgle
 }
 
 return breed_data

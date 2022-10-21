@@ -7,16 +7,12 @@ BlockedAccounts.init = function (self)
 end
 
 BlockedAccounts.add = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return Promise.delay(2):next(function ()
 		self._temp_block_list[account_id] = true
 	end)
 end
 
 BlockedAccounts.remove = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return Promise.delay(2):next(function ()
 		self._temp_block_list[account_id] = nil
 	end)

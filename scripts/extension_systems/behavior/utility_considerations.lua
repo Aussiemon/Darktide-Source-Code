@@ -4,8 +4,6 @@ local function _create_utility_considerations_template_entry(path)
 	local utility_considerations_template = require(path)
 
 	for name, utility_consideration in pairs(utility_considerations_template) do
-		fassert(not utility_considerations[name], "Trying to add duplicate utility consideration %s!", name)
-
 		utility_considerations[name] = utility_consideration
 	end
 end

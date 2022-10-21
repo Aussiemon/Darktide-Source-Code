@@ -18,8 +18,6 @@ local Crouch = {
 }
 
 Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
-	Profiler.start("crouch")
-
 	local is_crouching = movement_state_component.is_crouching
 	local wants_crouch = nil
 
@@ -41,16 +39,14 @@ Crouch.check = function (unit, first_person_extension, animation_extension, weap
 		is_crouching = false
 	end
 
-	Profiler.stop("crouch")
-
 	return is_crouching
 end
 
 Crouch.can_exit = function (unit)
-	local mover = Unit.mover(unit)
-	local position = Mover.position(mover)
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local movement_state_component = unit_data_extension:read_component("movement_state")
 
-	return Unit.mover_fits_at(unit, "default", position)
+	return movement_state_component.can_exit_crouch
 end
 
 Crouch.enter = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)

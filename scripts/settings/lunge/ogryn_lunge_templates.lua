@@ -14,10 +14,11 @@ local ogryn_lunge_templates = {
 		move_back_cancel = true,
 		move_back_cancel_time_threshold = 0.8,
 		allow_steering = true,
+		combat_ability = true,
 		disable_minion_collision = true,
 		block_input_cancel = true,
 		disallow_weapons = true,
-		combat_ability = true,
+		hit_dot_check = 0.7,
 		sensitivity_modifier = 5,
 		directional_lunge = false,
 		lunge_end_camera_shake = "ogryn_charge_end",
@@ -80,6 +81,10 @@ local ogryn_lunge_templates = {
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)
 ogryn_lunge_templates.ogryn_charge_increased_distance.distance = talent_settings.combat_ability_2.distance
+ogryn_lunge_templates.ogryn_charge_increased_distance.stop_tags = {
+	monster = true
+}
+ogryn_lunge_templates.ogryn_charge_increased_distance.stop_armor_types = nil
 ogryn_lunge_templates.ogryn_charge_increased_distance.anim_settings.timing_anims = {
 	[2.3] = "ability_charge_out"
 }
@@ -90,5 +95,7 @@ ogryn_lunge_templates.ogryn_charge_damage.damage_settings = {
 	damage_type = damage_types.ogryn_physical
 }
 ogryn_lunge_templates.ogryn_charge_damage.on_finish_explosion.explosion_template = ExplosionTemplates.ogryn_charge_impact_damage
+ogryn_lunge_templates.ogryn_charge_bleed = table.clone(ogryn_lunge_templates.ogryn_charge)
+ogryn_lunge_templates.ogryn_charge_bleed.add_debuff_on_hit = "bleed"
 
 return ogryn_lunge_templates

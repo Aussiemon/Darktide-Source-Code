@@ -11,7 +11,6 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
@@ -29,6 +28,7 @@ local MaterialQuery = require("scripts/utilities/material_query")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local MinionAttackSelectionTemplates = require("scripts/settings/minion_attack_selection/minion_attack_selection_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
+local MissionGiverVoSettings = require("scripts/settings/dialogue/mission_giver_vo_settings")
 local Missions = require("scripts/settings/mission/mission_templates")
 local MissionsObjectiveTargetUiTypeStrings = require("scripts/settings/mission_objective_target/mission_objective_target_ui_type_strings")
 local MissionsObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
@@ -172,19 +172,16 @@ NetworkLookup.minion_fx_source_names = {
 }
 local minion_inventory_slot_names = {}
 
-for breed_name, templates in pairs(MinionVisualLoadoutTemplates) do
-	for template_key, inventory_slot_names in pairs(templates) do
-		if template_key ~= "has_gib_overrides" then
-			if templates.has_gib_overrides then
-				inventory_slot_names = inventory_slot_names[1]
-			end
+for breed_name, all_templates in pairs(MinionVisualLoadoutTemplates) do
+	for template_key, breed_specific_templates in pairs(all_templates) do
+		for i = 1, #breed_specific_templates do
+			local inventory = breed_specific_templates[i]
+			local inventory_slots = inventory.slots
 
-			if inventory_slot_names then
-				for slot_name, _ in pairs(inventory_slot_names) do
-					if slot_name ~= "gib_overrides" and not table.contains(minion_inventory_slot_names, slot_name) then
-						local i = #minion_inventory_slot_names + 1
-						minion_inventory_slot_names[i] = slot_name
-					end
+			for slot_name, _ in pairs(inventory_slots) do
+				if not table.contains(minion_inventory_slot_names, slot_name) then
+					local j = #minion_inventory_slot_names + 1
+					minion_inventory_slot_names[j] = slot_name
 				end
 			end
 		end
@@ -205,6 +202,7 @@ end
 NetworkLookup.mission_objective_names = _create_lookup({}, mission_objective_names)
 NetworkLookup.mission_objective_ui_strings = MissionsObjectiveUiStrings
 NetworkLookup.mission_objective_target_ui_types = MissionsObjectiveTargetUiTypeStrings
+NetworkLookup.mission_giver_vo_overrides = _create_lookup({}, MissionGiverVoSettings.overrides)
 NetworkLookup.missions = _create_lookup({}, Missions)
 NetworkLookup.mission_sound_events = _create_lookup({}, MissionSoundEvents)
 NetworkLookup.moods_types = _create_lookup({}, MoodSettings.mood_types)
@@ -228,36 +226,38 @@ NetworkLookup.player_character_particle_variable_names = {
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
 local player_character_sounds = {
-	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
-	["wwise/events/player/play_foley_fall_wind_2D"] = true,
-	["wwise/events/player/play_backstab_indicator_traitor_guard"] = true,
 	["wwise/events/player/play_backstab_indicator_ranged"] = true,
-	["wwise/events/weapon/play_indicator_crit"] = true,
-	["wwise/events/ui/play_hud_coherency_on"] = true,
-	["wwise/events/weapon/play_indicator_weakspot"] = true,
-	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
-	["wwise/events/player/play_toughness_hits"] = true,
-	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
 	["wwise/events/player/play_toughness_break"] = true,
-	["wwise/events/player/play_vault"] = true,
-	["wwise/events/player/play_backstab_indicator_newly_infected"] = true,
+	["wwise/events/player/play_backstab_indicator_traitor_guard"] = true,
+	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
+	["wwise/events/ui/play_hud_heal_2d"] = true,
+	["wwise/events/player/play_backstab_indicator_poxwalker"] = true,
+	["wwise/events/weapon/play_indicator_weakspot"] = true,
+	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
+	["wwise/events/player/play_player_vomit_enter"] = true,
+	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
+	["wwise/events/player/play_backstab_indicator_melee"] = true,
 	["wwise/events/player/play_player_get_hit_fire"] = true,
+	["wwise/events/player/play_backstab_indicator_newly_infected"] = true,
+	["wwise/events/player/play_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
 	["wwise/events/player/play_player_get_hit_sharp"] = true,
-	["wwise/events/weapon/play_explosion_force_med"] = true,
-	["wwise/events/player/play_backstab_indicator_melee"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
-	["wwise/events/ui/play_hud_heal_2d"] = true,
+	["wwise/events/player/play_player_get_hit_light_2d"] = true,
+	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true,
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
-	["wwise/events/player/play_player_dodge_ranged_success"] = true,
+	["wwise/events/player/play_vault"] = true,
+	["wwise/events/ui/play_hud_coherency_off"] = true,
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
+	["wwise/events/player/play_pick_up_ammo_01"] = true,
+	["wwise/events/ui/play_hud_coherency_on"] = true,
+	["wwise/events/weapon/play_explosion_force_med"] = true,
 	["wwise/events/player/play_psyker_ability_shout"] = true,
+	["wwise/events/player/play_toughness_hits"] = true,
+	["wwise/events/player/play_player_dodge_ranged_success"] = true,
 	["wwise/events/player/play_player_get_hit_heavy_2d"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
-	["wwise/events/player/play_player_get_hit_light_2d"] = true,
-	["wwise/events/ui/play_hud_coherency_off"] = true,
-	["wwise/events/player/play_backstab_indicator_poxwalker"] = true,
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true,
 	["wwise/events/weapon/play_indicator_damage_full"] = true
 }
 
@@ -308,7 +308,8 @@ NetworkLookup.respawn_beacon_states = {
 	"spawning"
 }
 NetworkLookup.force_field_unit_names = {
-	"content/characters/player/human/attachments_combat/psyker_shield/shield"
+	"content/characters/player/human/attachments_combat/psyker_shield/shield",
+	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere"
 }
 NetworkLookup.smart_tag_replies = _create_lookup({}, SmartTagSettings.replies)
 NetworkLookup.smart_tag_templates = _create_lookup({}, SmartTagSettings.templates)
@@ -340,7 +341,6 @@ NetworkLookup.trigger_action_targets = _create_lookup({}, TriggerSettings.action
 NetworkLookup.trigger_machine_targets = _create_lookup({}, TriggerSettings.machine_targets)
 NetworkLookup.trigger_only_once = _create_lookup({}, TriggerSettings.only_once)
 NetworkLookup.vfx = _create_lookup({}, VfxNames)
-NetworkLookup.voice_classes_2d = table.clone(DialogueBreedSettings.voice_classes_2d)
 local voting_options = {}
 local voting_results = {}
 
@@ -404,8 +404,6 @@ NetworkLookup.wounds_shapes = _create_lookup({}, WoundsSettings.shapes)
 
 local function _init(name, lookup_table)
 	for index, key in ipairs(lookup_table) do
-		fassert(not lookup_table[key], "[NetworkLookup] Duplicate entry %q in %q.", key, name)
-
 		lookup_table[key] = index
 	end
 

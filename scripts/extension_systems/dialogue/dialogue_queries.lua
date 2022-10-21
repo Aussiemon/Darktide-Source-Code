@@ -23,57 +23,8 @@ DialogueQueries = {
 		return dialogue.sound_events[index], dialogue.localization_strings[index], dialogue.face_animations[index], dialogue.dialogue_animations[index]
 	end,
 	build_randomized_indexes = function (dialogue)
-		if dialogue.sound_event_weights then
-			table.clear(temp_weight_table)
-			table.clear(temp_indexes)
-
-			local accumulator = 0
-
-			for i = 1, dialogue.sound_events_n do
-				temp_weight_table[i] = dialogue.sound_event_weights[i] + accumulator
-				temp_indexes[i] = i
-				accumulator = accumulator + dialogue.sound_event_weights[i]
-			end
-
-			local temp_weight_table_n = dialogue.sound_events_n
-
-			for i = 1, dialogue.sound_events_n do
-				if temp_weight_table_n == 1 then
-					dialogue.randomize_indexes[i] = temp_indexes[1]
-
-					break
-				end
-
-				local rand = math.random()
-				local selected_index = 1
-
-				for temp_index = 1, temp_weight_table_n do
-					if rand <= temp_weight_table[temp_index] then
-						selected_index = temp_index
-
-						break
-					end
-				end
-
-				dialogue.randomize_indexes[i] = temp_indexes[selected_index]
-				local length_selected = temp_weight_table[selected_index] - (selected_index == 1 and 0 or temp_weight_table[selected_index - 1])
-
-				table.remove(temp_weight_table, selected_index)
-				table.remove(temp_indexes, selected_index)
-
-				temp_weight_table_n = temp_weight_table_n - 1
-				local weight_adjustement = length_selected / temp_weight_table_n
-
-				for key, value in pairs(temp_weight_table) do
-					temp_weight_table[key] = value + weight_adjustement
-				end
-			end
-
-			dialogue.randomize_indexes_n = dialogue.sound_events_n
-		else
-			dialogue.randomize_indexes = table.get_random_array_indices(dialogue.sound_events_n, dialogue.sound_events_n)
-			dialogue.randomize_indexes_n = dialogue.sound_events_n
-		end
+		dialogue.randomize_indexes = table.get_random_array_indices(dialogue.sound_events_n, dialogue.sound_events_n)
+		dialogue.randomize_indexes_n = dialogue.sound_events_n
 	end,
 	get_dialogue_event_index = function (dialogue)
 		if dialogue.sound_events_n == 1 then

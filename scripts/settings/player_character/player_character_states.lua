@@ -1,4 +1,5 @@
 local PlayerCharacterStateCatapulted = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_catapulted")
+local PlayerCharacterStateConsumed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_consumed")
 local PlayerCharacterStateDead = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_dead")
 local PlayerCharacterStateDodging = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_dodging")
 local PlayerCharacterStateExploding = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_exploding")
@@ -27,6 +28,7 @@ local PlayerCharacterStateWalking = require("scripts/extension_systems/character
 local PlayerCharacterStateWarpGrabbed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_warp_grabbed")
 local class_list = {
 	catapulted = PlayerCharacterStateCatapulted,
+	consumed = PlayerCharacterStateConsumed,
 	dead = PlayerCharacterStateDead,
 	dodging = PlayerCharacterStateDodging,
 	exploding = PlayerCharacterStateExploding,

@@ -14,6 +14,12 @@ text_style.offset = {
 	0,
 	0
 }
+text_style.text_color = {
+	255,
+	140,
+	125,
+	104
+}
 local friends_online_text = table.clone(UIFontSettings.symbol)
 friends_online_text.vertical_alignment = "center"
 friends_online_text.text_horizontal_alignment = "left"
@@ -24,6 +30,12 @@ friends_online_text.offset = {
 	0
 }
 friends_online_text.font_size = 24
+friends_online_text.text_color = {
+	255,
+	140,
+	125,
+	104
+}
 local strike_team_text = table.clone(UIFontSettings.symbol)
 strike_team_text.vertical_alignment = "center"
 strike_team_text.text_horizontal_alignment = "left"
@@ -34,6 +46,12 @@ strike_team_text.offset = {
 	0
 }
 strike_team_text.font_size = 24
+strike_team_text.text_color = {
+	255,
+	140,
+	125,
+	104
+}
 local symbol_style = table.clone(UIFontSettings.symbol)
 symbol_style.text_vertical_alignment = "center"
 symbol_style.offset = {
@@ -42,6 +60,12 @@ symbol_style.offset = {
 	0
 }
 symbol_style.font_size = 24
+symbol_style.text_color = {
+	255,
+	140,
+	125,
+	104
+}
 local character_name = table.clone(UIFontSettings.header_2)
 character_name.text_horizontal_alignment = "center"
 character_name.offset = {
@@ -260,7 +284,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			80,
-			0,
+			-4,
 			1
 		}
 	},
@@ -274,7 +298,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-80,
-			0,
+			-4,
 			1
 		}
 	},
@@ -408,10 +432,6 @@ local widget_definitions = {
 			value = "content/ui/materials/backgrounds/panel_horizontal_half",
 			pass_type = "texture",
 			style = {
-				size = {
-					1920,
-					1080
-				},
 				offset = {
 					0,
 					0,

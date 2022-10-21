@@ -6,12 +6,10 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal = {
 	extents = {
 		min = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		},
 		max = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		}
@@ -23,12 +21,10 @@ local default_armor_decal = {
 local default_shield_block_decal = {
 	extents = {
 		min = {
-			z = 0.25,
 			x = 0.25,
 			y = 0.25
 		},
 		max = {
-			z = 0.25,
 			x = 0.25,
 			y = 0.25
 		}
@@ -851,12 +847,10 @@ local surface_decal = {
 		[hit_types.stop] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -870,12 +864,10 @@ local surface_decal = {
 		[hit_types.penetration_entry] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -889,12 +881,10 @@ local surface_decal = {
 		[hit_types.penetration_exit] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -910,12 +900,10 @@ local surface_decal = {
 		[hit_types.stop] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -929,12 +917,10 @@ local surface_decal = {
 		[hit_types.penetration_entry] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -948,12 +934,10 @@ local surface_decal = {
 		[hit_types.penetration_exit] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -969,12 +953,10 @@ local surface_decal = {
 		[hit_types.stop] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -988,12 +970,10 @@ local surface_decal = {
 		[hit_types.penetration_entry] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}
@@ -1007,12 +987,10 @@ local surface_decal = {
 		[hit_types.penetration_exit] = {
 			extents = {
 				min = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				},
 				max = {
-					z = 0.2,
 					x = 0.2,
 					y = 0.2
 				}

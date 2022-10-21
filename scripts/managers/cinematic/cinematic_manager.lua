@@ -1,10 +1,16 @@
+local CameraModes = require("scripts/managers/player/player_game_states/utilities/camera_modes")
 local CinematicLevelLoader = require("scripts/extension_systems/cinematic_scene/utilities/cinematic_level_loader")
-local CinematicManagerTestify = GameParameters.testify and require("scripts/managers/cinematic/cinematic_manager_testify")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local CinematicManager = class("CinematicManager")
+local CinematicManagerTestify = GameParameters.testify and require("scripts/managers/cinematic/cinematic_manager_testify")
+local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
 	"rpc_cinematic_story_sync",
 	"rpc_cinematic_load_levels"
+}
+local SERVER_RPCS = {
+	"rpc_cinematic_loaded"
 }
 
 CinematicManager.init = function (self, world, is_server, network_event_delegate)
@@ -20,18 +26,21 @@ CinematicManager.init = function (self, world, is_server, network_event_delegate
 	self._cinematic_levels = {}
 	self._on_levels_spawned_callback = {}
 	self._aligned_levels = {}
+	self._waiting_for_peers = {}
 
-	if not is_server then
+	if is_server then
+		network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+	else
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
-
-		self._network_event_delegate = network_event_delegate
 	end
 end
 
 CinematicManager.destroy = function (self)
 	self:_unload_all_levels()
 
-	if not self._is_server then
+	if self._is_server then
+		self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
+	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 end
@@ -108,11 +117,15 @@ CinematicManager.hot_join_sync = function (self, sender, channel)
 	end
 
 	if #origin_level_names > 0 then
-		fassert(level_cinematic_scene_name, "[hot_join_sync] Missing Cinematic Scene Name.")
-
 		local cinematic_name_id = NetworkLookup.cinematic_scene_names[level_cinematic_scene_name]
 
-		RPC.rpc_cinematic_load_levels(channel, cinematic_name_id, origin_level_names)
+		RPC.rpc_cinematic_load_levels(channel, cinematic_name_id, origin_level_names, false)
+	end
+
+	local intro_played = self:_mission_intro_played()
+
+	if intro_played then
+		RPC.rpc_cinematic_intro_played(channel)
 	end
 
 	if self._active_story then
@@ -124,6 +137,23 @@ CinematicManager.hot_join_sync = function (self, sender, channel)
 	for _, story_definition in ipairs(self._queued_stories) do
 		self:_send_hot_join_story(sender, channel, story_definition)
 	end
+end
+
+CinematicManager._mission_intro_played = function (self)
+	local active_story = self._active_story
+
+	if active_story then
+		local cinematic_scene_name = active_story.cinematic_scene_name
+
+		if cinematic_scene_name and cinematic_scene_name == CINEMATIC_NAMES.intro_abc then
+			return false
+		end
+	end
+
+	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+	local intro_played = cinematic_scene_system:intro_played()
+
+	return intro_played
 end
 
 CinematicManager.update = function (self, dt, t)
@@ -140,6 +170,17 @@ CinematicManager.update = function (self, dt, t)
 
 			if story.played_callback then
 				story.played_callback()
+			end
+
+			if not self._is_server then
+				local cinematics_name = story.name
+				local cinematic_scene_name = story.cinematic_scene_name
+				local percent_viewed = length ~= 0 and story_time / length or 1
+				local player = Managers.player:local_player(1)
+				local profile = player and player:profile()
+				local character_level = profile and profile.current_level or 0
+
+				Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
 			end
 
 			local cinematic_scene_name = self._active_story.cinematic_scene_name
@@ -161,8 +202,6 @@ CinematicManager.update = function (self, dt, t)
 end
 
 CinematicManager._check_last_played_on_client = function (self, cinematic_scene_name)
-	fassert(not self._is_server, "Client only method.")
-
 	if table.is_empty(self._queued_stories) and self._active_story == nil then
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
@@ -188,19 +227,24 @@ end
 
 CinematicManager.active_camera = function (self)
 	if self._active_testify_camera then
-		return self._active_testify_camera, true
+		return self._active_testify_camera, CameraModes.testify
 	else
 		local story = self._active_story
 		local camera = nil
+		local camera_mode = CameraModes.cutscene
 
 		if story and story.story_id and story.story_id >= 0 then
 			local story_length = self._storyteller:length(story.story_id)
 			local story_time = self._storyteller:time(story.story_id)
 			story_time = math.clamp(story_time, 0, story_length - 1e-05)
 			camera = self._storyteller:get_active_camera(story.story_id, story_time)
+
+			if story.smooth_transition_to_gameplay then
+				camera_mode = CameraModes.cutscene_gameplay
+			end
 		end
 
-		return camera, false
+		return camera, camera_mode
 	end
 end
 
@@ -210,6 +254,10 @@ end
 
 CinematicManager.is_using_cinematic_levels = function (self)
 	return self._level_loader:has_levels()
+end
+
+CinematicManager.is_loading_cinematic_levels = function (self)
+	return self._level_loader:is_loading()
 end
 
 CinematicManager.alignment_inverse_pose = function (self)
@@ -232,6 +280,7 @@ CinematicManager.register_story = function (self, params)
 		name = params.story_name,
 		weight = params.weight,
 		level = params.flow_level,
+		smooth_transition_to_gameplay = params.smooth_transition_to_gameplay,
 		category = category,
 		scene_unit_origin = nil,
 		scene_unit_destination = nil,
@@ -272,8 +321,6 @@ CinematicManager.queue_story = function (self, cinematic_scene_name, category, o
 
 		story_definition.played_callback = played_callback
 		story_definition.cinematic_scene_name = cinematic_scene_name
-
-		fassert(optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil or optional_scene_unit_origin == nil and optional_scene_unit_destination == nil, "Missing alignment units with component 'CinematicScene'.")
 
 		if optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil then
 			story_definition.category = category
@@ -371,38 +418,44 @@ CinematicManager.stop_all_stories = function (self)
 	table.clear(self._queued_stories)
 end
 
-CinematicManager._on_levels_loaded = function (self, request_id, cinematic_name, levels_loaded)
+CinematicManager._on_levels_loaded = function (self, request_id, load_only, cinematic_name, levels_loaded)
 	if not self._cinematic_levels[cinematic_name] then
 		self._cinematic_levels[cinematic_name] = {}
 	end
 
 	local levels = self._cinematic_levels[cinematic_name]
 
-	fassert(#levels == 0, "Previous levels not cleaned.")
-
-	for level_name, _ in pairs(levels_loaded) do
-		levels[#levels + 1] = self:_spawn_cinematic_level(level_name)
+	if not load_only then
+		for level_name, _ in pairs(levels_loaded) do
+			levels[#levels + 1] = self:_spawn_cinematic_level(level_name)
+		end
 	end
 
 	if self._is_server then
-		fassert(self._on_levels_spawned_callback[request_id] ~= nil, "No Cinematic Scene callback set.")
 		self._on_levels_spawned_callback[request_id](cinematic_name)
 
 		self._on_levels_spawned_callback[request_id] = nil
+		self._waiting_for_peers[Network.peer_id()] = nil
+
+		if table.is_empty(self._waiting_for_peers) then
+			Managers.event:trigger("cutscene_loaded_all_clients")
+		end
 	else
 		self._on_levels_spawned_callback[request_id]()
 
 		self._on_levels_spawned_callback[request_id] = nil
 	end
+
+	Managers.state.game_mode:set_wants_single_threaded_physics(false, "CinematicManager")
 end
 
-CinematicManager.load_levels = function (self, cinematic_name, level_names, on_levels_spawned_callback, client_channel_id, hotjoin_only)
+CinematicManager.load_levels = function (self, cinematic_name, level_names, on_levels_spawned_callback, client_channel_id, hotjoin_only, load_only)
 	local request_id = cinematic_name .. "_" .. tostring(client_channel_id)
-
-	fassert(self._on_levels_spawned_callback[request_id] == nil, "Cinematic Scene currently loading levels for %s.", cinematic_name)
-
 	self._on_levels_spawned_callback[request_id] = on_levels_spawned_callback
-	local on_levels_loaded = callback(self, "_on_levels_loaded", request_id)
+
+	Managers.state.game_mode:set_wants_single_threaded_physics(true, "CinematicManager")
+
+	local on_levels_loaded = callback(self, "_on_levels_loaded", request_id, load_only)
 
 	self._level_loader:start_loading(cinematic_name, level_names, on_levels_loaded)
 
@@ -410,18 +463,33 @@ CinematicManager.load_levels = function (self, cinematic_name, level_names, on_l
 		if not client_channel_id and not hotjoin_only then
 			local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
 
-			Managers.state.game_session:send_rpc_clients("rpc_cinematic_load_levels", cinematic_name_id, level_names)
+			Managers.state.game_session:send_rpc_clients("rpc_cinematic_load_levels", cinematic_name_id, level_names, load_only)
 		elseif client_channel_id then
 			local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
 
-			RPC.rpc_cinematic_load_levels(client_channel_id, cinematic_name_id, level_names)
+			RPC.rpc_cinematic_load_levels(client_channel_id, cinematic_name_id, level_names, load_only)
+		elseif load_only then
+			local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
+			local synchronizer_client = Managers.package_synchronization:synchronizer_client()
+			local peers = Managers.connection:member_peers()
+			self._waiting_for_peers = {}
+
+			for i = 1, #peers do
+				local peer = peers[i]
+
+				if synchronizer_client:peer_enabled(peer) then
+					self._waiting_for_peers[peer] = true
+
+					Managers.connection:send_rpc_client("rpc_cinematic_load_levels", peer, cinematic_name_id, level_names, load_only)
+				end
+			end
+
+			self._waiting_for_peers[Network.peer_id()] = true
 		end
 	end
 end
 
-CinematicManager._on_client_levels_prepared = function (self)
-	fassert(not self._is_server, "[CinematicManager] Client only method.")
-
+CinematicManager._on_client_levels_prepared = function (self, cinematic_name_id, load_only)
 	local stories_onhold = self._stories_onhold
 
 	for _, story_onhold in ipairs(stories_onhold) do
@@ -429,6 +497,10 @@ CinematicManager._on_client_levels_prepared = function (self)
 	end
 
 	table.clear(stories_onhold)
+
+	if load_only then
+		Managers.connection:send_rpc_server("rpc_cinematic_loaded", cinematic_name_id)
+	end
 end
 
 CinematicManager._unload_all_levels = function (self)
@@ -526,8 +598,6 @@ CinematicManager.rpc_cinematic_story_sync = function (self, channel_id, cinemati
 end
 
 CinematicManager._client_cinematic_story_sync = function (self, cinematic_scene_name, category, story_name, scene_unit_origin_level_id, scene_unit_destination_level_id, origin_level_name)
-	fassert(not self._is_server, "[CinematicManager] Client only method.")
-
 	local category_stories = self._stories[category]
 	local world = self._world
 
@@ -549,10 +619,6 @@ CinematicManager._client_cinematic_story_sync = function (self, cinematic_scene_
 				end
 
 				local scene_unit_destination = Managers.state.unit_spawner:unit(scene_unit_destination_level_id, is_level_unit)
-
-				fassert(scene_unit_origin ~= nil, "[CinematicManager] Could not retrieve Origin Cinematic Scene.")
-				fassert(scene_unit_destination ~= nil, "[CinematicManager] Could not retrieve Destination Cinematic Scene.")
-
 				story_definition.scene_unit_origin = scene_unit_origin
 				story_definition.scene_unit_destination = scene_unit_destination
 				local destination_pose = Unit.world_pose(scene_unit_destination, 1)
@@ -566,8 +632,6 @@ CinematicManager._client_cinematic_story_sync = function (self, cinematic_scene_
 				story_definition.destination_level = destination_level
 			elseif scene_unit_origin_level_id == NetworkConstants.invalid_level_unit_id and scene_unit_destination_level_id == NetworkConstants.invalid_level_unit_id then
 				story_definition.use_alignment_units = false
-			else
-				fassert(false, "[CinematicManager] Incomplete message to queue story. scene_unit_origin_level_id(%d), scene_unit_destination_level_id(%d).", scene_unit_origin_level_id, scene_unit_destination_level_id)
 			end
 
 			table.insert(self._queued_stories, story_definition)
@@ -575,11 +639,20 @@ CinematicManager._client_cinematic_story_sync = function (self, cinematic_scene_
 	end
 end
 
-CinematicManager.rpc_cinematic_load_levels = function (self, channel_id, cinematic_name_id, cinematic_level_names)
+CinematicManager.rpc_cinematic_load_levels = function (self, channel_id, cinematic_name_id, cinematic_level_names, load_only)
 	local cinematic_name = NetworkLookup.cinematic_scene_names[cinematic_name_id]
-	local on_client_levels_prepared = callback(self, "_on_client_levels_prepared")
+	local on_client_levels_prepared = callback(self, "_on_client_levels_prepared", cinematic_name_id, load_only)
 
-	self:load_levels(cinematic_name, cinematic_level_names, on_client_levels_prepared)
+	self:load_levels(cinematic_name, cinematic_level_names, on_client_levels_prepared, nil, nil, load_only)
+end
+
+CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
+	local peer = Managers.connection:channel_to_peer(channel_id)
+	self._waiting_for_peers[peer] = nil
+
+	if table.is_empty(self._waiting_for_peers) then
+		Managers.event:trigger("cutscene_loaded_all_clients")
+	end
 end
 
 CinematicManager.deactivate_testify_camera = function (self)

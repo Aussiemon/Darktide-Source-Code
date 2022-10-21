@@ -21,10 +21,7 @@ local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_ren
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
 
 Main.init = function (self)
-	if DEDICATED_SERVER then
-		Script.configure_garbage_collection(Script.FORCE_FULL_COLLECT_GARBAGE_LEVEL, 1, Script.MAXIMUM_GARBAGE, 0.5, Script.MAXIMUM_COLLECT_TIME_MS, 0.1)
-	end
-
+	Script.configure_garbage_collection(Script.ACCEPTABLE_GARBAGE, 0.1, Script.MAXIMUM_GARBAGE, 0.5, Script.FORCE_FULL_COLLECT_GARBAGE_LEVEL, 1, Script.MINIMUM_COLLECT_TIME_MS, 0.1, Script.MAXIMUM_COLLECT_TIME_MS, 0.5)
 	ParameterResolver.resolve_command_line()
 	ParameterResolver.resolve_game_parameters()
 	ParameterResolver.resolve_dev_parameters()
@@ -74,36 +71,24 @@ Main.init = function (self)
 end
 
 Main.update = function (self, dt)
-	Profiler.start("Main:update()")
 	self._sm:update(dt)
-	Profiler.stop("Main:update()")
 end
 
 Main.render = function (self)
-	Profiler.start("Main:render()")
 	self._sm:render()
-	Profiler.stop("Main:render()")
 end
 
 Main.on_reload = function (self, refreshed_resources)
-	Profiler.start("Main:on_reload()")
 	self._sm:on_reload(refreshed_resources)
-	Profiler.stop("Main:on_reload()")
 end
 
 Main.on_close = function (self)
-	Profiler.start("Main:on_close()")
-
 	local should_close = self._sm:on_close()
-
-	Profiler.stop("Main:on_close()")
 
 	return should_close
 end
 
 Main.shutdown = function (self)
-	Profiler.start("Main:shutdown()")
-
 	local owns_package_manager = true
 
 	if rawget(_G, "Managers") and Managers.package then
@@ -113,7 +98,6 @@ Main.shutdown = function (self)
 	end
 
 	self._sm:destroy()
-	Profiler.stop("Main:shutdown()")
 
 	if owns_package_manager then
 		self._package_manager:delete()

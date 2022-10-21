@@ -3,12 +3,13 @@ local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_types = AttackSettings.attack_types
+local rending_stagger_strength_modifier = StaggerSettings.rending_stagger_strength_modifier
+local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local StaggerCalculation = {}
-local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _info = nil
+local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _calculate_stagger_reduction_buffs = nil
 
-StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, has_power_boost, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield)
+StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield)
 	local is_finesse_hit = hit_weakspot
 
 	if target_settings.power_level_multiplier then
@@ -17,8 +18,8 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 		power_level = power_level * power_level_multiplier
 	end
 
-	local stagger_strength = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, breed, has_power_boost, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
-	local stagger_reduction = _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type)
+	local stagger_strength = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
+	local stagger_reduction = _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type, attacker_stat_buffs, hit_weakspot)
 	local armor_damage_modifier = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, lerp_values, armor_type, is_critical_strike, dropoff_scalar)
 
 	if stagger_reduction > stagger_strength + stagger_strength_pool then
@@ -44,10 +45,10 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	return stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength
 end
 
-function _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, breed, has_power_boost, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
-	local stagger_strength_output = PowerLevelSettings.stagger_strength_output[armor_type]
-	local min = stagger_strength_output.min
-	local max = stagger_strength_output.max
+function _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
+	local stagger_table = stagger_strength_output[armor_type]
+	local min = stagger_table.min
+	local max = stagger_table.max
 	local stagger_strength_range = max - min
 	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level)
 	local stagger_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
@@ -55,10 +56,20 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 	stagger_power_level = stagger_power_level * stagger_buff_modifier
 	local percentage = PowerLevel.power_level_percentage(stagger_power_level)
 	local stagger_strength = min + stagger_strength_range * percentage
-	stagger_strength = stagger_strength * math.clamp((1 + stagger_count) / 1.5, 1, 2.5)
 
-	if has_power_boost then
-		stagger_strength = stagger_strength * StaggerSettings.power_boost_stagger_strength_modifier
+	if breed.reverse_stagger_count then
+		stagger_strength = stagger_strength / math.clamp(1 + stagger_count * 0.25, 1, 4)
+	else
+		stagger_strength = stagger_strength * math.clamp((1 + stagger_count) / 1.5, 1, 2.5)
+	end
+
+	local attacker_rending_multiplier = attacker_stat_buffs.rending_multiplier or 1
+	local target_rending_multiplier = target_stat_buffs.rending_multiplier or 1
+	local rending_multiplier = attacker_rending_multiplier + target_rending_multiplier - 2
+	local is_rending = rending_multiplier > 0
+
+	if is_rending then
+		stagger_strength = stagger_strength * rending_stagger_strength_modifier * rending_multiplier
 	end
 
 	if optional_stagger_strength_multiplier then
@@ -69,8 +80,12 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 	return stagger_strength
 end
 
-function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type)
+function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type, attacker_stat_buffs, hit_weakspot)
 	if damage_profile.ignore_stagger_reduction then
+		if breed.weakspot_stagger_reduction and hit_weakspot and breed.weakspot_stagger_reduction < 0 then
+			return breed.weakspot_stagger_reduction
+		end
+
 		return 0
 	end
 
@@ -80,9 +95,16 @@ function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduc
 		return 0
 	end
 
+	if breed.weakspot_stagger_reduction and hit_weakspot then
+		return breed.weakspot_stagger_reduction
+	end
+
 	if damage_profile.is_push or is_finesse_hit then
 		stagger_reduction = stagger_reduction * 0.5
 	end
+
+	local stagger_reduction_buff_modifier = _calculate_stagger_reduction_buffs(attacker_stat_buffs, hit_weakspot)
+	stagger_reduction = stagger_reduction * stagger_reduction_buff_modifier
 
 	return stagger_reduction
 end
@@ -151,20 +173,21 @@ end
 
 function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
 	local impact_modifier = attacker_stat_buffs.impact_modifier or 1
+	local target_impact_modifier = target_stat_buffs.impact_modifier or 1
 	local melee_impact_modifier = attack_type == attack_types.melee and attacker_stat_buffs.melee_impact_modifier or 1
 	local ranged_impact_modifier = attack_type == attack_types.ranged and attacker_stat_buffs.ranged_impact_modifier or 1
 	local explosion_impact_modifier = attack_type == attack_types.explosion and attacker_stat_buffs.explosion_impact_modifier or 1
 	local shout_impact_modifier = attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier or 1
 	local melee_weakspot_modifier = attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier or 1
-	local mod = impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier - 5
+	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier - 6
 
-	return mod
+	return modifier
 end
 
-function _info(...)
-	if DevParameters.stagger_debug_log then
-		Log.info("[StaggerCalculation]", ...)
-	end
+function _calculate_stagger_reduction_buffs(attacker_stat_buffs, hit_weakspot)
+	local modifier = hit_weakspot and attacker_stat_buffs.stagger_weakspot_reduction_modifier or 1
+
+	return modifier
 end
 
 return StaggerCalculation

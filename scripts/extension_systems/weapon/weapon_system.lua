@@ -68,8 +68,6 @@ WeaponSystem.destroy_unit_after_time = function (self, unit, time_to_destroy)
 end
 
 WeaponSystem._update_actor_proximity_shapes = function (self)
-	Profiler.start("update_actor_proximity_shapes")
-
 	local physics_world = self._physics_world
 	local Quaternion_forward = Quaternion.forward
 	local PhysicsWorld_commit_actor_proximity_shape = PhysicsWorld.commit_actor_proximity_shape
@@ -81,12 +79,8 @@ WeaponSystem._update_actor_proximity_shapes = function (self)
 		local direction = Quaternion_forward(first_person_component.rotation)
 		local angle = nil
 
-		Profiler.start("commit_actor_proximity_shape")
 		PhysicsWorld_commit_actor_proximity_shape(physics_world, position, direction, radius_sq, angle, true)
-		Profiler.stop("commit_actor_proximity_shape")
 	end
-
-	Profiler.stop("update_actor_proximity_shapes")
 end
 
 WeaponSystem._update_units_to_destroy = function (self, t)

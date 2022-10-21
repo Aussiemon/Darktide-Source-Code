@@ -4,8 +4,6 @@ local function _extract_projectile_locomotion_templates(path)
 	local locomotion_templates = require(path)
 
 	for name, locomotion_data in pairs(locomotion_templates) do
-		fassert(projectile_locomotion_templates[name] == nil, "Found two or more projectile locomotion templates with the same name: %q", name)
-
 		projectile_locomotion_templates[name] = locomotion_data
 	end
 end

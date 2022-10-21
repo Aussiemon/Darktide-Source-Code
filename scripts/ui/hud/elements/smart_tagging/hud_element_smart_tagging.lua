@@ -6,8 +6,10 @@ local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
+local InputDevice = require("scripts/managers/input/input_device")
 local ChannelTags = ChatManagerConstants.ChannelTag
 local unit_alive = Unit.alive
+local ALLOW_LOCATION_TAG_ON_TAP = false
 local SINGLE_TAP_LOCATION_TAG = "location_ping"
 local DOUBLE_TAP_LOCATION_TAG = "location_threat"
 local DOUBLE_TAP_DELAY = 0.2
@@ -154,7 +156,7 @@ HudElementSmartTagging.update = function (self, dt, t, ui_renderer, render_setti
 		self:_update_wheel_presentation(dt, t, ui_renderer, render_settings, input_service)
 	end
 
-	self:_handle_input(t, ui_renderer, render_settings)
+	self:_handle_input(t, dt, ui_renderer, render_settings)
 end
 
 HudElementSmartTagging.destroy = function (self)
@@ -206,12 +208,14 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 
 	if t - self._input_start_time <= DOUBLE_TAP_DELAY then
 		if self._is_double_tap then
-			local force_update_targets = true
-			local raycast_data = self:_find_raycast_targets(force_update_targets)
-			local hit_position = raycast_data.static_hit_position
+			if ALLOW_LOCATION_TAG_ON_TAP then
+				local force_update_targets = true
+				local raycast_data = self:_find_raycast_targets(force_update_targets)
+				local hit_position = raycast_data.static_hit_position
 
-			if hit_position then
-				self:_trigger_smart_tag(DOUBLE_TAP_LOCATION_TAG, nil, Vector3Box.unbox(hit_position))
+				if hit_position then
+					self:_trigger_smart_tag(DOUBLE_TAP_LOCATION_TAG, nil, Vector3Box.unbox(hit_position))
+				end
 			end
 		else
 			local force_update_targets = true
@@ -221,7 +225,7 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 				self:_handle_selected_marker(target_marker)
 			elseif target_unit then
 				self:_handle_selected_unit(target_unit)
-			elseif target_position then
+			elseif target_position and ALLOW_LOCATION_TAG_ON_TAP then
 				self._single_tap_location_tag = {
 					spawn_time = t + DOUBLE_TAP_DELAY - (t - self._input_start_time),
 					position = Vector3Box(target_position)
@@ -270,6 +274,8 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 						Vo.on_demand_vo_event(player_unit, voice_event_data.voice_tag_concept, voice_event_data.voice_tag_id)
 					end
 				end
+
+				Managers.telemetry_reporters:reporter("com_wheel"):register_event(option.voice_event_data.voice_tag_id)
 			end
 		end
 	end
@@ -307,7 +313,20 @@ HudElementSmartTagging._find_marker_by_unit = function (self, unit)
 	end
 end
 
-HudElementSmartTagging._handle_input = function (self, t, ui_renderer, render_settings)
+HudElementSmartTagging._handle_input = function (self, t, dt, ui_renderer, render_settings)
+	if self._close_delay then
+		self._close_delay = self._close_delay - dt
+
+		if self._close_delay <= 0 then
+			self._close_delay = nil
+
+			self:_pop_cursor()
+			Managers.event:trigger("event_set_communication_wheel_state", false)
+		end
+
+		return
+	end
+
 	local service_type = "Ingame"
 	local input_service = Managers.input:get_input_service(service_type)
 	local input_pressed = input_service:get("smart_tag")
@@ -331,8 +350,12 @@ HudElementSmartTagging._handle_input = function (self, t, ui_renderer, render_se
 	elseif not draw_wheel and self._wheel_active then
 		self._wheel_active = false
 
-		self:_pop_cursor()
-		Managers.event:trigger("event_set_communication_wheel_state", false)
+		if InputDevice.gamepad_active then
+			self._close_delay = 0.5
+		else
+			self:_pop_cursor()
+			Managers.event:trigger("event_set_communication_wheel_state", false)
+		end
 	end
 
 	if not input_pressed then
@@ -473,12 +496,19 @@ HudElementSmartTagging._check_box_overlap = function (self, x1, y1, x2, y2, px, 
 end
 
 HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local screen_width = RESOLUTION_LOOKUP.width
+	local screen_height = RESOLUTION_LOOKUP.height
 	local inverse_scale = 1
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
-	local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
-	local screen_width = RESOLUTION_LOOKUP.width
-	local screen_height = RESOLUTION_LOOKUP.height
+
+	if input_service and InputDevice.gamepad_active then
+		cursor = input_service:get("navigate_controller_right")
+		cursor[1] = screen_width * 0.5 + cursor[1] * screen_width * 0.5
+		cursor[2] = screen_height * 0.5 - cursor[2] * screen_height * 0.5
+	end
+
+	local cursor_position = IS_XBS and UIResolution.scale_vector(cursor, scale) or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 	local cursor_distance_from_center = math.distance_2d(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2])
 	local cursor_angle_from_center = math.angle(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2]) - math.pi * 0.5
 	local cursor_angle_degrees_from_center = math.radians_to_degrees(cursor_angle_from_center) % 360
@@ -597,10 +627,6 @@ HudElementSmartTagging._pop_cursor = function (self)
 
 		self._cursor_pushed = nil
 	end
-end
-
-HudElementSmartTagging.using_input = function (self)
-	return self._cursor_pushed
 end
 
 HudElementSmartTagging._find_best_smart_tag_interaction = function (self, ui_renderer, render_settings, force_update_targets)
@@ -777,13 +803,13 @@ HudElementSmartTagging.event_smart_tag_removed = function (self, tag_instance, r
 		local sound_exit_tagger = tag_template.sound_exit_tagger
 
 		if sound_exit_tagger then
-			self:_play_sound(sound_exit_tagger)
+			self:_play_tag_sound(tag_instance, sound_exit_tagger)
 		end
 	else
 		local sound_exit_others = tag_template.sound_exit_others
 
 		if sound_exit_others then
-			self:_play_sound(sound_exit_others)
+			self:_play_tag_sound(tag_instance, sound_exit_others)
 		end
 	end
 end
@@ -815,6 +841,24 @@ HudElementSmartTagging._clear_all_smart_tag_presentations = function (self)
 	end
 end
 
+HudElementSmartTagging._play_tag_sound = function (self, tag_instance, event_name)
+	local target_location = tag_instance:target_location()
+
+	if target_location then
+		self:_play_3d_sound(event_name, target_location)
+	else
+		local target_unit = tag_instance:target_unit()
+
+		if ALIVE[target_unit] then
+			local unit_position = Unit.world_position(target_unit, 1)
+
+			self:_play_3d_sound(event_name, unit_position)
+		else
+			self:_play_sound(event_name)
+		end
+	end
+end
+
 HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instance, is_hotjoin_synced)
 	local presented_smart_tags_by_tag_id = self._presented_smart_tags_by_tag_id
 	local tag_id = tag_instance:id()
@@ -840,7 +884,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 			local sound_enter_tagger = tag_template.sound_enter_tagger
 
 			if sound_enter_tagger then
-				self:_play_sound(sound_enter_tagger)
+				self:_play_tag_sound(tag_instance, sound_enter_tagger)
 			end
 
 			local voice_tag_concept = tag_template.voice_tag_concept
@@ -874,7 +918,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 			local sound_enter_others = tag_template.sound_enter_others
 
 			if sound_enter_others then
-				self:_play_sound(sound_enter_others)
+				self:_play_tag_sound(tag_instance, sound_enter_others)
 			end
 		end
 	end
@@ -933,10 +977,6 @@ HudElementSmartTagging._draw_active_interaction_line = function (self, dt, t, in
 	local line_target_y = pivot_screen_position[2]
 	line_widget_offset[1] = line_target_x
 	line_widget_offset[2] = line_target_y
-	local angle = math.angle(marker_widget_offset[1], marker_widget_offset[2], line_target_x, line_target_y)
-	line_widget.style.line.angle = -angle + math.pi
-	local distance = math.distance_2d(line_target_x, line_target_y, marker_widget_offset[1], marker_widget_offset[2])
-	line_widget_style.line.size[1] = distance
 
 	UIWidget.draw(line_widget, ui_renderer)
 end
@@ -948,7 +988,8 @@ local input_action_localization_params = {
 
 local function _get_input_text(alias_name, input_text_key, hold_required)
 	local service_type = "Ingame"
-	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_name)
+	local color_tint_text = true
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 	local input_display_text = Localize(input_text_key)
 	input_action_localization_params.input = input_text
 	input_action_localization_params.action = input_display_text

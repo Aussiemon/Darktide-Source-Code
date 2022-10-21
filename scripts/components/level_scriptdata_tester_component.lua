@@ -8,7 +8,7 @@ LevelScriptdataTesterComponent.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
-function get_neighbour_data_as_table(level, ...)
+local function get_neighbour_data_as_table(level, ...)
 	local i = 1
 	local data = {}
 

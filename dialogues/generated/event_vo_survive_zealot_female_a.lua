@@ -9,9 +9,9 @@ local event_vo_survive_zealot_female_a = {
 			"loc_zealot_female_a__event_survive_almost_done_04"
 		},
 		sound_events_duration = {
-			2.856354,
+			2.856333,
 			3.484958,
-			2.530792,
+			2.530771,
 			2.076729
 		},
 		randomize_indexes = {}

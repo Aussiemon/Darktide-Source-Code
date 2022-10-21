@@ -38,10 +38,6 @@ PartyImmateriumMember.is_online = function (self)
 	return self:_get_presence():is_online()
 end
 
-PartyImmateriumMember.is_invited = function (self)
-	return self._immaterium_entry.status == "INVITED"
-end
-
 PartyImmateriumMember.is_connected = function (self)
 	return self._immaterium_entry.status == "CONNECTED"
 end

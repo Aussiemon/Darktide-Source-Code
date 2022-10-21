@@ -2,8 +2,8 @@ local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffUtils = require("scripts/settings/buff/buff_utils")
-local ConditionalFunctionTemplates = require("scripts/settings/buff/conditional_function_templates")
-local CheckProcFunctionTemplates = require("scripts/settings/buff/check_proc_function_templates")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
@@ -29,7 +29,7 @@ local templates = {
 			[buff_stat_buffs.vent_warp_charge_speed] = 0.9
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -43,7 +43,7 @@ local templates = {
 			[buff_stat_buffs.vent_warp_charge_damage_multiplier] = 0.9
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -57,7 +57,7 @@ local templates = {
 			[buff_stat_buffs.warp_charge_immediate_amount] = 0.9
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -71,7 +71,7 @@ local templates = {
 			[buff_stat_buffs.warp_charge_over_time_amount] = 0.9
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -85,7 +85,7 @@ local templates = {
 			[buff_stat_buffs.charge_up_time] = -0.15
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -99,7 +99,7 @@ local templates = {
 			[buff_stat_buffs.fully_charged_damage] = 0.1
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
@@ -113,11 +113,11 @@ local templates = {
 			[buff_stat_buffs.charge_up_time] = -0.2
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
-			if not ConditionalFunctionTemplates.has_high_warp_charge(template_data, template_context) then
+			if not ConditionalFunctions.has_high_warp_charge(template_data, template_context) then
 				return
 			end
 
@@ -131,11 +131,11 @@ local templates = {
 			[buff_stat_buffs.fully_charged_damage] = 0.2
 		},
 		conditional_stat_buffs_func = function (template_data, template_context)
-			if not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context) then
+			if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 				return
 			end
 
-			if not ConditionalFunctionTemplates.has_high_warp_charge(template_data, template_context) then
+			if not ConditionalFunctions.has_high_warp_charge(template_data, template_context) then
 				return
 			end
 

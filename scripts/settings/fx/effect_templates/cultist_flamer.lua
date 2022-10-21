@@ -26,8 +26,8 @@ local effect_template = {
 		local fx_source_name = CultistFlamerSettings.fx_source_name
 		local attachment_unit, source_node_index = _get_attachment_unit_and_node_index(unit, inventory_slot, fx_source_name)
 		template_data.flamer_data = {
-			attachment_unit = attachment_unit,
-			source_node_index = source_node_index,
+			from_unit = attachment_unit,
+			from_node = source_node_index,
 			radius = CultistFlamerSettings.radius,
 			range = CultistFlamerSettings.range
 		}
@@ -90,8 +90,6 @@ function _get_attachment_unit_and_node_index(unit, slot_name, fx_node_name)
 end
 
 function _switch_state(previous_state, new_state, template_data, template_context)
-	fassert(previous_state ~= new_state, "cannot switch to the same state: %s", new_state)
-
 	local wwise_world = template_context.wwise_world
 	local world = template_context.world
 	local unit = template_data.unit

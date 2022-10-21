@@ -21,18 +21,20 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "cultist_mutant"
 local breed_data = {
 	run_speed = 6,
-	look_at_distance = 20,
-	display_name = "loc_breed_display_name_cultist_mutant",
-	unit_template_name = "minion",
-	faction_name = "chaos",
-	target_stickiness_distance = 10,
-	sub_faction_name = "cultist",
-	broadphase_radius = 1,
-	state_machine = "content/characters/enemy/chaos_mutant_charger/third_person/animations/chaos_mutant_charger",
-	spawn_aggro_state = "aggroed",
-	walk_speed = 2.3,
-	stagger_resistance = 2000,
 	uses_wwise_special_targeting_parameter = true,
+	look_at_distance = 20,
+	challenge_rating = 6,
+	unit_template_name = "minion",
+	display_name = "loc_breed_display_name_cultist_mutant",
+	faction_name = "chaos",
+	volley_fire_target = true,
+	target_stickiness_distance = 10,
+	sub_faction_name = "chaos",
+	broadphase_radius = 1,
+	spawn_aggro_state = "aggroed",
+	state_machine = "content/characters/enemy/chaos_mutant_charger/third_person/animations/chaos_mutant_charger",
+	stagger_resistance = 2000,
+	walk_speed = 2.3,
 	base_height = 1.5,
 	player_locomotion_constrain_radius = 0.7,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
@@ -44,7 +46,6 @@ local breed_data = {
 	use_navigation_path_splines = true,
 	game_object_type = "minion_special_melee",
 	base_unit = "content/characters/enemy/chaos_mutant_charger/third_person/base",
-	challenge_rating = 6,
 	hit_mass = 2,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -253,9 +254,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

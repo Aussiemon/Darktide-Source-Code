@@ -13,7 +13,7 @@ local on_demand_vo_ogryn_a = {
 		sound_events_duration = {
 			1.174031,
 			1.237333,
-			1.275958,
+			1.275969,
 			1.130615,
 			0.627885,
 			0.822542
@@ -42,10 +42,10 @@ local on_demand_vo_ogryn_a = {
 		sound_events_duration = {
 			1.22975,
 			1.16501,
-			0.907167,
+			0.907177,
 			0.82074,
 			1.492667,
-			1.284146
+			1.284156
 		},
 		randomize_indexes = {}
 	},
@@ -91,11 +91,11 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			0.851417,
-			0.96499,
+			0.965,
 			0.936385,
-			1.352125,
-			0.846625,
-			0.95926
+			1.352115,
+			0.846615,
+			0.95925
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -122,7 +122,7 @@ local on_demand_vo_ogryn_a = {
 			1.094167,
 			1.275615,
 			1.267813,
-			1.155958,
+			1.155969,
 			1.204427,
 			1.158885
 		},
@@ -178,7 +178,7 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			0.87974,
-			0.912615,
+			0.912625,
 			0.83626,
 			0.746802,
 			1.134865,
@@ -230,8 +230,8 @@ local on_demand_vo_ogryn_a = {
 			1.013906,
 			1.086625,
 			1.08175,
-			1.291542,
-			1.24724,
+			1.291552,
+			1.24725,
 			1.080458
 		},
 		sound_event_weights = {
@@ -286,11 +286,11 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			0.828813,
-			1.025458,
+			1.025469,
 			1.118979,
 			0.95651,
 			0.754698,
-			0.841542
+			0.841552
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -299,6 +299,85 @@ local on_demand_vo_ogryn_a = {
 			0.1666667,
 			0.1666667,
 			0.1666667
+		},
+		randomize_indexes = {}
+	},
+	response_for_seen_enemy_netgunner_flee = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_a__response_for_seen_netgunner_flee_01",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_02",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_03",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_04",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_05",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_06",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_07",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_08",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_09",
+			"loc_ogryn_a__response_for_seen_netgunner_flee_10"
+		},
+		sound_events_duration = {
+			1.442781,
+			0.976958,
+			1.509833,
+			2.370198,
+			1.54974,
+			2.295125,
+			2.624469,
+			2.86075,
+			2.75125,
+			1.964375
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_a__smart_tag_vo_enemy_berserker_01",
+			"loc_ogryn_a__smart_tag_vo_enemy_berserker_02",
+			"loc_ogryn_a__smart_tag_vo_enemy_berserker_03",
+			"loc_ogryn_a__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			0.809125,
+			1.194563,
+			0.956938,
+			1.170052
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_captain = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_01",
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_02",
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_03",
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_04",
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_05",
+			"loc_ogryn_a__smart_tag_vo_enemy_captain_06"
+		},
+		sound_events_duration = {
+			1.45749,
+			1.438531,
+			1.984198,
+			2.124438,
+			1.534021,
+			1.694313
 		},
 		randomize_indexes = {}
 	},
@@ -321,7 +400,7 @@ local on_demand_vo_ogryn_a = {
 			0.653438,
 			0.803958,
 			1.383917,
-			1.102229,
+			1.102208,
 			0.806823,
 			0.951177,
 			0.816052,
@@ -375,7 +454,7 @@ local on_demand_vo_ogryn_a = {
 		sound_events_duration = {
 			1.018292,
 			0.964573,
-			0.911844,
+			0.911854,
 			1.203667
 		},
 		sound_event_weights = {
@@ -445,7 +524,7 @@ local on_demand_vo_ogryn_a = {
 			1.305156,
 			1.599854,
 			1.162396,
-			1.416958
+			1.416969
 		},
 		sound_event_weights = {
 			0.25,
@@ -468,7 +547,7 @@ local on_demand_vo_ogryn_a = {
 			1.226542,
 			1.143313,
 			1.685219,
-			1.535802
+			1.535813
 		},
 		randomize_indexes = {}
 	},
@@ -484,7 +563,7 @@ local on_demand_vo_ogryn_a = {
 		sound_events_duration = {
 			1.633135,
 			1.690865,
-			1.394865,
+			1.394875,
 			1.49749
 		},
 		sound_event_weights = {
@@ -564,6 +643,47 @@ local on_demand_vo_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_daemonhost_witch_not_alerted = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_a__seen_enemy_daemonhost_01",
+			"loc_ogryn_a__seen_enemy_daemonhost_02",
+			"loc_ogryn_a__seen_enemy_daemonhost_03",
+			"loc_ogryn_a__seen_enemy_daemonhost_04",
+			"loc_ogryn_a__seen_enemy_daemonhost_05",
+			"loc_ogryn_a__seen_enemy_daemonhost_06",
+			"loc_ogryn_a__seen_enemy_daemonhost_07",
+			"loc_ogryn_a__seen_enemy_daemonhost_08",
+			"loc_ogryn_a__seen_enemy_daemonhost_09",
+			"loc_ogryn_a__seen_enemy_daemonhost_10"
+		},
+		sound_events_duration = {
+			1.699958,
+			1.689313,
+			2.128583,
+			1.850792,
+			1.821229,
+			0.655771,
+			2.081667,
+			2.015021,
+			0.94625,
+			1.591958
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -598,7 +718,7 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			1.563688,
-			1.942656,
+			1.942667,
 			1.955552,
 			2.513333
 		},
@@ -621,7 +741,7 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			1.407979,
-			1.498729,
+			1.498719,
 			1.170406,
 			1.618167
 		},
@@ -643,7 +763,7 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_enemy_traitor_grenadier_04"
 		},
 		sound_events_duration = {
-			1.456865,
+			1.456875,
 			1.746573,
 			1.664604,
 			1.838958
@@ -692,7 +812,7 @@ local on_demand_vo_ogryn_a = {
 			1.907656,
 			1.924073,
 			2.024323,
-			1.825188
+			1.825198
 		},
 		sound_event_weights = {
 			0.25,
@@ -712,9 +832,9 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_enemy_traitor_sniper_04"
 		},
 		sound_events_duration = {
-			1.15124,
+			1.15125,
 			0.933719,
-			0.957792,
+			0.957802,
 			1.732573
 		},
 		sound_event_weights = {
@@ -827,8 +947,8 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_pickup_deployed_ammo_crate_04"
 		},
 		sound_events_duration = {
-			1.148667,
-			1.60376,
+			1.148677,
+			1.603771,
 			1.174615,
 			1.329344
 		},
@@ -850,7 +970,7 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_pickup_deployed_medical_crate_04"
 		},
 		sound_events_duration = {
-			1.245323,
+			1.245313,
 			1.481583,
 			1.486604,
 			2.117615
@@ -873,8 +993,8 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_pickup_forge_metal_04"
 		},
 		sound_events_duration = {
-			1.169625,
-			1.131646,
+			1.169635,
+			1.131656,
 			1.705875,
 			1.334438
 		},
@@ -897,8 +1017,8 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			1.725479,
-			1.95951,
-			1.904906,
+			1.959521,
+			1.904917,
 			2.110146
 		},
 		sound_event_weights = {
@@ -921,7 +1041,7 @@ local on_demand_vo_ogryn_a = {
 		sound_events_duration = {
 			1.024927,
 			1.722885,
-			1.330833,
+			1.330844,
 			1.973573
 		},
 		randomize_indexes = {}
@@ -954,7 +1074,7 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			1.180438,
-			1.521354,
+			1.521344,
 			1.243167,
 			1.763385
 		},
@@ -987,10 +1107,51 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_pickup_side_mission_tome_04"
 		},
 		sound_events_duration = {
-			1.77026,
+			1.770271,
 			1.788281,
 			1.650271,
 			1.729979
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_seen_netgunner_flee = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_a__seen_netgunner_flee_01",
+			"loc_ogryn_a__seen_netgunner_flee_02",
+			"loc_ogryn_a__seen_netgunner_flee_03",
+			"loc_ogryn_a__seen_netgunner_flee_04",
+			"loc_ogryn_a__seen_netgunner_flee_05",
+			"loc_ogryn_a__seen_netgunner_flee_06",
+			"loc_ogryn_a__seen_netgunner_flee_07",
+			"loc_ogryn_a__seen_netgunner_flee_08",
+			"loc_ogryn_a__seen_netgunner_flee_09",
+			"loc_ogryn_a__seen_netgunner_flee_10"
+		},
+		sound_events_duration = {
+			1.302063,
+			1.308302,
+			1.537271,
+			1.313292,
+			2.306375,
+			1.962083,
+			2.129302,
+			1.85625,
+			2.022,
+			2.402875
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1004,7 +1165,7 @@ local on_demand_vo_ogryn_a = {
 			"loc_ogryn_a__smart_tag_vo_small_grenade_04"
 		},
 		sound_events_duration = {
-			0.865135,
+			0.865146,
 			0.933813,
 			1.563667,
 			1.851344
@@ -1047,10 +1208,10 @@ local on_demand_vo_ogryn_a = {
 		},
 		sound_events_duration = {
 			1.315792,
-			1.614302,
+			1.614292,
 			1.446698,
 			1.672146,
-			1.454302,
+			1.454292,
 			1.290396
 		},
 		sound_event_weights = {

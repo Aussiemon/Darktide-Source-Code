@@ -9,9 +9,6 @@ HealthStationExtension.init = function (self, extension_init_context, unit)
 	self._charge_amount = 0
 	self._health_per_charge = 0
 	self._use_distribution_pool = true
-
-	fassert(Unit.has_node(unit, "g_battery_socket"), "[HealthStationExtension] Unit is missing node 'g_battery_socket'")
-
 	self._socket_prop = ""
 	self._luggable_socket_extension = nil
 	self._pickup_spawner_extension = nil
@@ -21,6 +18,7 @@ HealthStationExtension.init = function (self, extension_init_context, unit)
 	self._battery_spawning_mode = "none"
 	self._first_frame_setup = false
 	self._point_of_interest_extension = nil
+	self._interactee_extension = nil
 end
 
 HealthStationExtension.destroy = function (self)
@@ -29,13 +27,15 @@ HealthStationExtension.destroy = function (self)
 end
 
 HealthStationExtension.setup_from_component = function (self, start_charge_amount, health_per_charge, use_distribution_pool, socket_prop, battery_spawning_mode)
+	local unit = self._unit
 	self._use_distribution_pool = use_distribution_pool
 	self._socket_prop = socket_prop
 	self._battery_spawning_mode = battery_spawning_mode
 	self._health_per_charge = health_per_charge
-	self._animation_extension = ScriptUnit.extension(self._unit, "animation_system")
-	self._pickup_spawner_extension = ScriptUnit.extension(self._unit, "pickup_system")
-	self._point_of_interest_extension = ScriptUnit.extension(self._unit, "point_of_interest_system")
+	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
+	self._pickup_spawner_extension = ScriptUnit.extension(unit, "pickup_system")
+	self._point_of_interest_extension = ScriptUnit.extension(unit, "point_of_interest_system")
+	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
 	if battery_spawning_mode == "plugged" and not use_distribution_pool then
 		self:set_charge_amount(start_charge_amount)
@@ -94,8 +94,6 @@ HealthStationExtension.fixed_update = function (self, unit, dt, t)
 
 			self._first_frame_setup = true
 		elseif not self:battery_in_slot() then
-			fassert(self._luggable_socket_extension, "[HealthStationExtension] socket extension missing.")
-
 			local socket_ext = self._luggable_socket_extension
 			local has_overlap, luggable_unit = socket_ext:is_overlapping_with_luggable()
 
@@ -107,13 +105,10 @@ HealthStationExtension.fixed_update = function (self, unit, dt, t)
 end
 
 HealthStationExtension.start_healing = function (self)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
 	self:play_anim("heal")
 end
 
 HealthStationExtension.stop_healing = function (self, success)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
-
 	if success then
 		self:use_charge()
 	end
@@ -178,20 +173,25 @@ HealthStationExtension.set_charge_amount = function (self, charges)
 	local point_of_interest_ext = self._point_of_interest_extension
 
 	if self._charge_amount <= 0 then
+		self:_set_block_text("loc_health_station_missing_battery")
 		point_of_interest_ext:set_tag("disabled_health_station")
 	else
+		self:_set_block_text(nil)
 		point_of_interest_ext:set_tag("charged_health_station")
 	end
 end
 
+HealthStationExtension._set_block_text = function (self, text)
+	if self._interactee_extension then
+		self._interactee_extension:set_block_text(text)
+	end
+end
+
 HealthStationExtension.play_anim = function (self, anim_event)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
 	self._animation_extension:anim_event(anim_event)
 end
 
 HealthStationExtension.sync_charge_amount = function (self)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
-
 	local station_level_id = Managers.state.unit_spawner:level_index(self._unit)
 	local game_session_manager = Managers.state.game_session
 
@@ -213,8 +213,6 @@ HealthStationExtension._update_indicators = function (self)
 end
 
 HealthStationExtension._spawn_socket = function (self)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
-
 	local unit = self._unit
 	local socket_node = Unit.node(unit, "g_battery_socket")
 	local socket_position = Unit.world_position(unit, socket_node)
@@ -233,7 +231,6 @@ HealthStationExtension._spawn_socket = function (self)
 
 	local socket_unit, socket_unit_go_id = unit_spawner_manager:spawn_network_unit(socket_unit_name, "level_prop", socket_position, socket_rotation, nil, props_settings)
 
-	fassert(socket_unit, "[HealthStationExtension] Could not spawn unit('%s')", socket_unit_name)
 	self:register_socket_unit(socket_unit)
 
 	local station_level_id = Managers.state.unit_spawner:level_index(self._unit)
@@ -271,6 +268,7 @@ HealthStationExtension.socket_luggable = function (self, luggable_unit)
 	local charges = self:charge_amount()
 
 	if charges > 0 then
+		Managers.event:trigger("on_health_station_activated")
 		self:play_anim("open")
 	end
 end
@@ -284,7 +282,6 @@ HealthStationExtension.spawn_battery = function (self)
 		local battery_unit, battery_id = self._pickup_spawner_extension:spawn_item()
 		local battery_is_level_unit = false
 
-		fassert(battery_unit, "[HealthStationExtension] Could not spawn battery")
 		self:register_battery_unit(battery_unit)
 
 		local point_of_interest_ext = self._point_of_interest_extension
@@ -323,31 +320,22 @@ HealthStationExtension._check_battery_alive = function (self)
 end
 
 HealthStationExtension._teleport_battery_to_socket = function (self)
-	fassert(self._is_server, "[HealthStationExtension] Server only method.")
-
 	local unit = self._unit
 	local socket_node = Unit.node(unit, "g_battery_socket")
 	local socket_position = Unit.world_position(unit, socket_node)
 	local socket_rotation = Unit.world_rotation(unit, socket_node)
 	local battery_unit = self._battery_unit
-
-	fassert(battery_unit, "[HealthStationExtension] Could not spawn battery")
-
 	local battery_locomotion_ext = ScriptUnit.extension(battery_unit, "locomotion_system")
 
 	battery_locomotion_ext:switch_to_sleep(socket_position, socket_rotation)
 end
 
 HealthStationExtension.register_socket_unit = function (self, socket_unit)
-	fassert(self._socket_unit == nil, "[HealthStationExtension] Server only method.")
-
 	self._socket_unit = socket_unit
 	self._luggable_socket_extension = ScriptUnit.extension(socket_unit, "luggable_socket_system")
 end
 
 HealthStationExtension.register_battery_unit = function (self, battery_unit)
-	fassert(self._battery_unit == nil, "[HealthStationExtension] Server only method.")
-
 	self._battery_unit = battery_unit
 end
 

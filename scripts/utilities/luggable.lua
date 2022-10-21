@@ -1,11 +1,11 @@
 local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local Luggable = {}
 local SLOT_LUGGABLE = "slot_luggable"
+local Luggable = {}
 
 Luggable.drop_luggable = function (t, unit, inventory_component, visual_loadout_extension, enable_physics)
-	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_luggable") then
+	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_LUGGABLE) then
 		return
 	end
 
@@ -17,11 +17,15 @@ Luggable.drop_luggable = function (t, unit, inventory_component, visual_loadout_
 		existing_unit = inventory_slot_component.existing_unit_3p
 	end
 
+	local wielded_slot = inventory_component.wielded_slot
+
+	if wielded_slot == SLOT_LUGGABLE then
+		local default_wielded_slot_name = Managers.state.game_mode:default_wielded_slot_name()
+
+		PlayerUnitVisualLoadout.wield_slot(default_wielded_slot_name, unit, t)
+	end
+
 	PlayerUnitVisualLoadout.unequip_item_from_slot(unit, SLOT_LUGGABLE, t)
-
-	local default_wielded_slot_name = Managers.state.game_mode:default_wielded_slot_name()
-
-	PlayerUnitVisualLoadout.wield_slot(default_wielded_slot_name, unit, t)
 
 	if existing_unit and Managers.state.game_session:is_server() then
 		local first_person_component = unit_data_extension:read_component("first_person")

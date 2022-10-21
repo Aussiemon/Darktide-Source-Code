@@ -8,6 +8,10 @@ local player = {
 	sfx = {
 		damage = {
 			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain",
+				hit_direction_interface = true
+			},
+			{
 				event = "wwise/events/player/play_player_get_hit_blunt",
 				hit_direction_interface = true
 			},

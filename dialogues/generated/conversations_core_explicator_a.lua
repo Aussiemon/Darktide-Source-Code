@@ -10,11 +10,11 @@ local conversations_core_explicator_a = {
 			"loc_explicator_a__eavesdropping_explicator_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			4.605125,
+			2.086563,
+			2.763833,
+			2.496604,
+			2.213729
 		},
 		randomize_indexes = {}
 	},
@@ -29,11 +29,11 @@ local conversations_core_explicator_a = {
 			"loc_explicator_a__info_graffiti_one_05"
 		},
 		sound_events_duration = {
-			3.11773,
-			3.475063,
-			4.40448,
-			7.321814,
-			6.697542
+			3.126813,
+			3.484146,
+			4.413563,
+			7.330896,
+			6.706625
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +47,10 @@ local conversations_core_explicator_a = {
 			"loc_explicator_a__info_to_extraction_through_pipes_04"
 		},
 		sound_events_duration = {
-			3.029438,
-			3.979542,
-			4.655188,
-			3.200292
+			3.038521,
+			3.988625,
+			4.664271,
+			3.209375
 		},
 		randomize_indexes = {}
 	}

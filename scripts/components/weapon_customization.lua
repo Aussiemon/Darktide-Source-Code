@@ -68,48 +68,54 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 		return
 	end
 
-	local attach_settings = self._attach_settings
-	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 	local item = self:get_data(unit, "item")
 
-	if item ~= "" then
-		local item_data = rawget(attach_settings.item_definitions, item)
-
-		if item_data then
-			self:spawn_item_attachments(unit, item_data)
-
-			for i, material_override in pairs(item_data.material_overrides) do
-				VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
-			end
-		end
-	else
+	if item == "" then
 		Log.error("WeaponCustomization", "Item definition: %s missing for unit: %s", item, unit)
+
+		return
+	end
+
+	local attach_settings = self._attach_settings
+	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
+	local item_data = rawget(attach_settings.item_definitions, item)
+
+	if not item_data then
+		Log.error("WeaponCustomization", "Invalid item definition: %s for unit: %s", item, unit)
+
+		return
 	end
 
 	local weapon_skin_item = self:get_data(unit, "weapon_skin_item")
+	weapon_skin_item = weapon_skin_item or item_data.slot_weapon_skin
+	local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 
-	if weapon_skin_item ~= "" then
-		local weapon_skin_item_data = rawget(item_definitions, weapon_skin_item)
+	self:spawn_item_attachments(unit, item_data, skin_data)
 
-		if weapon_skin_item_data then
-			for i, material_override in pairs(weapon_skin_item_data.material_overrides) do
-				VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
-			end
+	for i, material_override in pairs(item_data.material_overrides) do
+		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+	end
+
+	if skin_data then
+		for i, material_override in pairs(skin_data.material_overrides) do
+			VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 		end
 	end
 
-	if attach_settings.lod_group and Unit.has_mesh(unit, "b_bounding_volume") then
-		local bv_mesh = Unit.mesh(unit, "b_bounding_volume")
-		local bv = Mesh.bounding_volume(bv_mesh)
+	if attach_settings.lod_group then
+		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
-		LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		if bv then
+			LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		end
 	end
 
-	if attach_settings.lod_shadow_group and Unit.has_mesh(unit, "b_bounding_volume") then
-		local bv_mesh = Unit.mesh(unit, "b_bounding_volume")
-		local bv = Mesh.bounding_volume(bv_mesh)
+	if attach_settings.lod_shadow_group then
+		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
 
-		LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		if bv then
+			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		end
 	end
 
 	local unit_material_overrides = self:get_data(unit, "material_override")
@@ -119,14 +125,15 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 	end
 end
 
-WeaponCustomization.spawn_item_attachments = function (self, unit, item_data)
+WeaponCustomization.spawn_item_attachments = function (self, unit, item_data, skin_data)
 	local attach_settings = self._attach_settings
 	local attachments = item_data.attachments
 	local attachment_units = {}
+	local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item_data, skin_data)
 
 	if unit and attachments then
 		for _, attachment_slot_data in pairs(attachments) do
-			attachment_units = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, attach_settings, unit, attachment_units)
+			attachment_units = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, attachment_units)
 
 			if attachment_units then
 				local num_attachments = #attachment_units

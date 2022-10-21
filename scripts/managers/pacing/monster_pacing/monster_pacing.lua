@@ -1,7 +1,9 @@
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MonsterSettings = require("scripts/settings/monster/monster_settings")
-local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
+local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
+local PerceptionSettings = require("scripts/settings/perception/perception_settings")
+local perception_aggro_states = PerceptionSettings.aggro_states
 local MonsterPacing = class("MonsterPacing")
 
 MonsterPacing.init = function (self, nav_world)
@@ -59,10 +61,7 @@ MonsterPacing._generate_spawns = function (self, template)
 			Log.warning("MonsterPacing", "Removed %s monster spawn type since found no spawners.", spawn_type)
 		else
 			for i = 1, current_num_sections do
-				fassert(spawn_point_sections[i], "[MonsterPacing] %s monster spawn type is missing valid spawners for section index %d.", spawn_type, i)
 			end
-
-			fassert(num_sections == current_num_sections, "[MonsterPacing] Different amount of sections for %s (%d|%d). Ensure all monster spawn types have the same amount of sections.", spawn_type, current_num_sections, num_sections)
 		end
 	end
 
@@ -80,32 +79,42 @@ MonsterPacing._generate_spawns = function (self, template)
 
 	local monsters = {}
 	local breed_names = template.breed_names
-	local total_num_spawns = math.min(num_sections, template.num_spawns)
 
-	for i = 1, total_num_spawns do
-		local spawn_type = valid_spawn_types[math.random(num_valid_spawn_types)]
-		local spawn_point_sections = spawn_type_point_sections[spawn_type]
-		local section_index = TEMP_SECTIONS[math.random(#TEMP_SECTIONS)]
-		local section = spawn_point_sections[section_index]
-		local spawn_point = section[math.random(#section)]
-		local travel_distance = spawn_point.spawn_travel_distance
-		local spawn_type_breed_names = breed_names[spawn_type]
-		local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
-		local position = spawn_point.position
-		local monster = {
-			travel_distance = travel_distance,
-			breed_name = breed_name,
-			position = position,
-			section = section_index
-		}
-		monsters[#monsters + 1] = monster
+	for i = 1, num_valid_spawn_types do
+		local spawn_type = valid_spawn_types[i]
+		local num_spawns = template.num_spawns[spawn_type]
+		local num_to_spawn = math.min(num_sections, type(num_spawns) == "table" and num_spawns[math.random(1, #num_spawns)] or num_spawns)
 
-		table.swap_delete(TEMP_SECTIONS, section_index)
+		for j = 1, num_to_spawn do
+			local spawn_point_sections = spawn_type_point_sections[spawn_type]
+			local temp_section_index = math.random(#TEMP_SECTIONS)
+			local section_index = TEMP_SECTIONS[temp_section_index]
+			local section = spawn_point_sections[section_index]
+			local spawn_point = section[math.random(#section)]
+			local travel_distance = spawn_point.spawn_travel_distance
+			local spawn_type_breed_names = breed_names[spawn_type]
+			local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
+			local position = spawn_point.position
+			local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
+			local monster = {
+				travel_distance = travel_distance,
+				breed_name = breed_name,
+				position = position,
+				section = section_index,
+				despawn_distance_when_passive = despawn_distance_when_passive
+			}
+			monsters[#monsters + 1] = monster
+
+			table.swap_delete(TEMP_SECTIONS, temp_section_index)
+
+			num_sections = num_sections - 1
+		end
 	end
 
 	table.clear_array(TEMP_SECTIONS, #TEMP_SECTIONS)
 
 	self._monsters = monsters
+	self._alive_monsters = {}
 
 	return true
 end
@@ -133,9 +142,15 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 				end
 
 				local position = spawn_point.position
+				local monster_breed_name = breed_name
+
+				if type(breed_name) == "table" then
+					monster_breed_name = breed_name[math.random(1, #breed_name)]
+				end
+
 				local monster = {
 					travel_distance = travel_distance,
-					breed_name = breed_name,
+					breed_name = monster_breed_name,
 					position = position,
 					section = i
 				}
@@ -211,6 +226,43 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 			end
 		end
 	end
+
+	local alive_monsters = self._alive_monsters
+	local _, behind_travel_distance = Managers.state.main_path:behind_unit(target_side_id)
+
+	for i = 1, #alive_monsters do
+		local monster = alive_monsters[i]
+		local spawned_unit = monster.spawned_unit
+
+		if not HEALTH_ALIVE[spawned_unit] then
+			table.remove(alive_monsters, i)
+
+			break
+		end
+
+		local despawn_distance_when_passive = monster.despawn_distance_when_passive
+
+		if despawn_distance_when_passive then
+			local blackboard = BLACKBOARDS[spawned_unit]
+			local perception_component = blackboard.perception
+			local aggro_state = perception_component.aggro_state
+			local is_passive = aggro_state == perception_aggro_states.passive
+
+			if is_passive then
+				local spawn_travel_distance = monster.travel_distance + MonsterSettings.spawn_distance
+				local travel_distance_diff = behind_travel_distance - spawn_travel_distance
+
+				if despawn_distance_when_passive <= travel_distance_diff then
+					local minion_spawn_manager = Managers.state.minion_spawn
+
+					minion_spawn_manager:despawn(spawned_unit)
+					table.remove(alive_monsters, i)
+
+					break
+				end
+			end
+		end
+	end
 end
 
 MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_id)
@@ -219,11 +271,12 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local spawn_position = monster.position:unbox()
 	local aggro_states = template.aggro_states
 	local aggro_state = aggro_states[breed_name]
+	local spawned_unit = nil
 
 	if aggro_state then
-		Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit)
+		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit)
 	else
-		Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id)
+		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id)
 	end
 
 	local pause_pacing_on_spawn_settings = template.pause_pacing_on_spawn
@@ -236,6 +289,9 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	end
 
 	Log.info("MonsterPacing", "Spawned monster %s successfully.", breed_name)
+
+	monster.spawned_unit = spawned_unit
+	self._alive_monsters[#self._alive_monsters + 1] = monster
 end
 
 return MonsterPacing

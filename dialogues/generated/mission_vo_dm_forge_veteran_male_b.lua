@@ -8,7 +8,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 1.687813,
-			[2.0] = 2.842958
+			[2.0] = 2.842938
 		},
 		randomize_indexes = {}
 	},
@@ -33,7 +33,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.468083,
+			[1.0] = 3.468063,
 			[2.0] = 5.754604
 		},
 		randomize_indexes = {}
@@ -46,8 +46,8 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.075792,
-			[2.0] = 4.493417
+			[1.0] = 3.075771,
+			[2.0] = 4.493396
 		},
 		randomize_indexes = {}
 	},
@@ -60,7 +60,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 4.550521,
-			[2.0] = 4.245479
+			[2.0] = 4.245458
 		},
 		randomize_indexes = {}
 	},
@@ -72,7 +72,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.601938,
+			[1.0] = 5.601917,
 			[2.0] = 5.119729
 		},
 		randomize_indexes = {}
@@ -86,7 +86,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.684771,
-			[2.0] = 3.999813
+			[2.0] = 3.999792
 		},
 		randomize_indexes = {}
 	},
@@ -120,13 +120,13 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			2.807333,
-			3.393729,
-			4.21625,
+			3.393708,
+			4.216229,
 			1.783667,
-			2.35375,
+			2.353729,
 			1.99775,
-			2.877938,
-			2.221375,
+			2.877917,
+			2.221354,
 			2.726938,
 			3.0765
 		},
@@ -152,7 +152,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.881854,
+			[1.0] = 3.881833,
 			[2.0] = 3.71075
 		},
 		randomize_indexes = {}
@@ -166,7 +166,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.895646,
-			[2.0] = 4.276396
+			[2.0] = 4.276375
 		},
 		randomize_indexes = {}
 	},
@@ -179,24 +179,27 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.597229,
-			[2.0] = 2.928771
+			[2.0] = 2.92875
 		},
 		randomize_indexes = {}
 	},
 	mission_forge_main_entrance_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__region_mechanicus_01",
-			[2.0] = "loc_veteran_male_b__region_mechanicus_02"
+			"loc_veteran_male_b__region_mechanicus_01",
+			"loc_veteran_male_b__region_mechanicus_02",
+			"loc_veteran_male_b__region_mechanicus_03"
 		},
 		sound_events_duration = {
-			[1.0] = 6.010792,
-			[2.0] = 5.020771
+			6.010792,
+			5.02075,
+			3.785833
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -209,7 +212,7 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			[1.0] = 6.005146,
-			[2.0] = 5.615667
+			[2.0] = 5.615646
 		},
 		randomize_indexes = {}
 	},
@@ -234,8 +237,28 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 11.33717,
-			[2.0] = 6.815583
+			[1.0] = 11.33715,
+			[2.0] = 6.815563
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_veteran_male_b__zone_tank_foundry_01",
+			"loc_veteran_male_b__zone_tank_foundry_02",
+			"loc_veteran_male_b__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			4.251,
+			5.923146,
+			4.925
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -247,8 +270,8 @@ local mission_vo_dm_forge_veteran_male_b = {
 			[2.0] = "loc_veteran_male_b__mission_forge_strategic_asset_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.933583,
-			[2.0] = 3.829375
+			[1.0] = 4.933563,
+			[2.0] = 3.829354
 		},
 		randomize_indexes = {}
 	},
@@ -264,8 +287,8 @@ local mission_vo_dm_forge_veteran_male_b = {
 		},
 		sound_events_duration = {
 			1.974688,
-			3.449313,
-			2.672792,
+			3.449292,
+			2.672771,
 			2.380479,
 			3.390021
 		},

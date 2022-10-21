@@ -92,8 +92,6 @@ local temp_team_players = {}
 local temp_new_unique_ids = {}
 
 HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
-	Profiler.start("HudElementTeamPanelHandler:_player_scan")
-
 	local player_composition_name = self._player_composition_name
 	local players = PlayerCompositions.players(player_composition_name, temp_team_players)
 	local player_panel_by_unique_id = self._player_panel_by_unique_id
@@ -167,8 +165,6 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 	if players_added then
 		self:_align_panels()
 	end
-
-	Profiler.stop("HudElementTeamPanelHandler:_player_scan")
 end
 
 HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, fixed_scenegraph_id)
@@ -371,7 +367,6 @@ HudElementTeamPanelHandler.update = function (self, dt, t, ui_renderer, render_s
 end
 
 HudElementTeamPanelHandler.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.start("HudElementTeamPanelHandler:draw")
 	HudElementTeamPanelHandler.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local player_panels_array = self._player_panels_array
@@ -383,13 +378,9 @@ HudElementTeamPanelHandler.draw = function (self, dt, t, ui_renderer, render_set
 
 		panel:draw(dt, t, ui_renderer, render_settings, input_service)
 	end
-
-	Profiler.stop("HudElementTeamPanelHandler:draw")
 end
 
 HudElementTeamPanelHandler.visor_effect_set_visible = function (self, visible, ui_renderer, use_retained_mode)
-	Profiler.start("HudElementTeamPanelHandler:visor_effect_set_visible")
-
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
@@ -399,13 +390,9 @@ HudElementTeamPanelHandler.visor_effect_set_visible = function (self, visible, u
 
 		panel:visor_effect_set_visible(visible, ui_renderer, use_retained_mode)
 	end
-
-	Profiler.stop("HudElementTeamPanelHandler:visor_effect_set_visible")
 end
 
 HudElementTeamPanelHandler.visor_effect_draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	Profiler.start("HudElementTeamPanelHandler:visor_effect_draw")
-
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
@@ -415,13 +402,9 @@ HudElementTeamPanelHandler.visor_effect_draw = function (self, dt, t, ui_rendere
 
 		panel:visor_effect_draw(dt, t, ui_renderer, render_settings, input_service)
 	end
-
-	Profiler.stop("HudElementTeamPanelHandler:visor_effect_draw")
 end
 
 HudElementTeamPanelHandler.visor_effect_destroy = function (self, ui_renderer)
-	Profiler.start("HudElementTeamPanelHandler:visor_effect_destroy")
-
 	local player_panels_array = self._player_panels_array
 	local num_player_panels = #player_panels_array
 
@@ -431,8 +414,6 @@ HudElementTeamPanelHandler.visor_effect_destroy = function (self, ui_renderer)
 
 		panel:visor_effect_destroy(ui_renderer)
 	end
-
-	Profiler.stop("HudElementTeamPanelHandler:visor_effect_destroy")
 end
 
 return HudElementTeamPanelHandler

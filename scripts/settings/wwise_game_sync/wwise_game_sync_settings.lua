@@ -1,23 +1,33 @@
 local wwise_game_sync_settings = {
-	boss_trigger_distance = 80,
-	vector_horde_trigger_distance = 80,
+	combat_state_horde_high_minimum_aggroed_minions = 10,
 	ambush_horde_trigger_distance = 80,
+	combat_state_horde_low_minimum_aggroed_minions = 5,
+	vector_horde_trigger_distance = 80,
+	boss_trigger_distance = 80,
 	default_group_state = "None",
+	minion_aggro_intensity_settings = {
+		num_threshold_high = 15,
+		num_threshold_medium = 8,
+		query_radius = 20,
+		num_threshold_low = 4
+	},
 	state_groups = {
 		music_game_state = {
-			mission_intro = "mission_intro",
+			mission_board = "mission_board",
 			main_menu = "main_menu",
 			character_creation = "character_creation",
-			mission = "mission",
-			defeat = "defeat",
-			title = "title",
+			game_score_win = "game_score_win",
 			loadout = "loadout",
+			title = "title",
+			mission = "mission",
 			mission_briefing = "mission_briefing",
 			game_score = "game_score",
-			mission_board = "mission_board",
-			victory = "victory",
-			mission_ready = "mission_ready",
+			game_score_lose = "game_score_lose",
 			mission_loading = "mission_loading",
+			defeat = "defeat",
+			mission_ready = "mission_ready",
+			mission_intro = "mission_intro",
+			victory = "victory",
 			mission_outro = "mission_outro",
 			mission_start = "mission_start",
 			loading = "loading",
@@ -39,9 +49,10 @@ local wwise_game_sync_settings = {
 			zone_3 = "zone_3"
 		},
 		music_combat = {
-			boss = "boss",
-			horde = "horde",
+			horde_high = "horde_high",
 			normal = "normal",
+			boss = "boss",
+			horde_low = "horde_low",
 			none = "None"
 		},
 		music_objective = {
@@ -69,10 +80,10 @@ local wwise_game_sync_settings = {
 			ingame_menu = "ingame_menu",
 			none = "None"
 		},
-		sfx_combat = {
-			boss = "boss",
-			horde = "horde",
-			normal = "normal",
+		minion_aggro_intensity = {
+			high = "high",
+			medium = "medium",
+			low = "low",
 			none = "None"
 		},
 		event_intensity = {
@@ -82,14 +93,35 @@ local wwise_game_sync_settings = {
 		}
 	},
 	wwise_state_rules = {
+		load_out = {
+			next_states = {
+				loading = true,
+				mission_briefing = true
+			}
+		},
+		load_out_ready = {
+			next_states = {
+				mission_briefing = true
+			}
+		},
 		defeat = {
 			next_states = {
-				game_score = true
+				game_score_lose = true
 			}
 		},
 		victory = {
 			next_states = {
-				game_score = true
+				game_score_win = true
+			}
+		},
+		game_score_win = {
+			next_states = {
+				loading = true
+			}
+		},
+		game_score_lose = {
+			next_states = {
+				loading = true
 			}
 		}
 	}

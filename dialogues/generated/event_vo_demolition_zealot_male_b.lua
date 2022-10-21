@@ -10,9 +10,9 @@ local event_vo_demolition_zealot_male_b = {
 		},
 		sound_events_duration = {
 			3.035542,
-			1.727292,
+			1.727271,
 			2.190563,
-			2.231042
+			2.231021
 		},
 		randomize_indexes = {}
 	}

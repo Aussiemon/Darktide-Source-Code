@@ -9,12 +9,10 @@ LuggableSocketExtension.init = function (self, extension_init_context, unit, ext
 	self._actor_size = Vector3Box(size)
 	self._overlapping_units = {}
 	self._locked_luggable = nil
-	self._is_temp_locked = nil
+	self._is_temp_locked = false
 	self._temp_locked_timer = 0
 	self._lock_offset_node = nil
 	self._socket_objective_target_ext = ScriptUnit.has_extension(unit, "mission_objective_target_system")
-
-	fassert(Unit.has_visibility_group(unit, "main"), "[LuggableSocketExtension][init] Missing visibility group 'main' for Unit(%s)", tostring(unit))
 end
 
 LuggableSocketExtension.setup_from_component = function (self, consume_luggable, is_side_mission_socket, lock_offset_node)
@@ -45,15 +43,9 @@ end
 
 LuggableSocketExtension._fetch_actor_size = function (self, unit, actor_name)
 	local actor_id = Unit.find_actor(unit, actor_name)
-
-	fassert(actor_id ~= nil, "[LuggableSocketExtension][_fetch_actor_size] Could not find slog actor '%s'.", actor_name)
-
 	local actor = Unit.actor(unit, actor_id)
 	local node = Actor.node(actor)
 	local meshes = Unit.get_node_meshes(unit, node, true, false)
-
-	fassert(meshes ~= nil, "[LuggableSocketExtension][_fetch_actor_size] Could not find meshes for actor '%s'.", actor_name)
-
 	local mesh_id = meshes[1]
 	local mesh = Unit.mesh(unit, mesh_id)
 	local _, box_half_extents = Mesh.box(mesh)
@@ -74,7 +66,6 @@ LuggableSocketExtension.update = function (self, unit, dt, t)
 end
 
 LuggableSocketExtension._retrieve_overlapping_with_luggables = function (self)
-	fassert(self._is_server, "[LuggableSynchronizerExtension] Server only method.")
 	table.clear(self._overlapping_units)
 
 	local physics_world = self._physics_world
@@ -98,8 +89,6 @@ LuggableSocketExtension._retrieve_overlapping_with_luggables = function (self)
 end
 
 LuggableSocketExtension.is_overlapping_with_luggable = function (self, luggable_unit)
-	fassert(self._is_server, "[LuggableSynchronizerExtension] Server only method.")
-
 	if luggable_unit then
 		return self._overlapping_units[luggable_unit] == true, luggable_unit
 	else
@@ -139,16 +128,12 @@ end
 LuggableSocketExtension.socket_luggable = function (self, luggable, socket_lock_time)
 	local socket_unit = self._unit
 
-	if not self._consume_luggable then
-		fassert(self._locked_luggable == nil, "[LuggableSocketExtension][set_lock] Luggable already set.")
-		self:_lock_socket(luggable)
-	else
+	if self._consume_luggable then
 		self._temp_locked_timer = socket_lock_time or 0
 		self._is_temp_locked = true
-
-		self:_lock_socket(luggable)
 	end
 
+	self:_lock_socket(luggable)
 	Unit.flow_event(socket_unit, "lua_socketed")
 
 	local luggable_objective_target_ext = ScriptUnit.has_extension(luggable, "mission_objective_target_system")
@@ -158,6 +143,10 @@ LuggableSocketExtension.socket_luggable = function (self, luggable, socket_lock_
 	end
 
 	if self._is_server then
+		local interactee_extension = ScriptUnit.has_extension(luggable, "interactee_system")
+
+		interactee_extension:set_active(false)
+
 		local slot_position, slot_rotation = nil
 		local lock_offset_node = self._lock_offset_node
 

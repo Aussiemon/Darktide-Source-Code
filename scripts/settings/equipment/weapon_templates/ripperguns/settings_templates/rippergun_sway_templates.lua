@@ -4,12 +4,30 @@ local overrides = {}
 table.make_unique(sway_templates)
 table.make_unique(overrides)
 
+local function default_rippergun_sway_pattern(dt, t, sway_settings, yaw, pitch)
+	local horizontal_speed = sway_settings.horizontal_speed
+	local rotation_speed = sway_settings.rotation_speed
+	local sin_angle = t * math.pi * horizontal_speed
+	local sin_wave = math.sin(sin_angle)
+	local new_angle = t * math.pi * rotation_speed
+	local yaw_angle = math.cos(new_angle)
+	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
+	local yaw = math.degrees_to_radians(yaw)
+	local pitch = math.degrees_to_radians(pitch)
+	local intensity = sway_settings.intensity or 1
+	local aim_offset_y = pitch_angle * pitch * intensity
+	local aim_offset_x = yaw_angle * yaw * intensity
+
+	return aim_offset_x, aim_offset_y
+end
+
 sway_templates.default_rippergun_braced = {
 	still = {
 		intensity = 0.5,
-		sway_impact = 2,
 		horizontal_speed = 0.5,
+		visual_pitch_impact_mod = 10,
 		rotation_speed = 0.25,
+		visual_yaw_impact_mod = 10,
 		max_sway = {
 			yaw = 2.5,
 			pitch = 2.5
@@ -95,23 +113,7 @@ sway_templates.default_rippergun_braced = {
 				}
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch / max_sway.pitch
-			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = default_rippergun_sway_pattern
 	},
 	moving = {
 		rotation_speed = 0.4,
@@ -198,9 +200,10 @@ sway_templates.default_rippergun_braced = {
 sway_templates.default_rippergun_assault = {
 	still = {
 		intensity = 0.5,
-		sway_impact = 2,
 		horizontal_speed = 0.5,
+		visual_pitch_impact_mod = 1,
 		rotation_speed = 0.25,
+		visual_yaw_impact_mod = 1,
 		max_sway = {
 			yaw = 2.5,
 			pitch = 2.5
@@ -274,23 +277,7 @@ sway_templates.default_rippergun_assault = {
 				}
 			}
 		},
-		sway_pattern = function (dt, t, sway_settings, yaw, pitch)
-			local horizontal_speed = sway_settings.horizontal_speed
-			local rotation_speed = sway_settings.rotation_speed
-			local intensity = sway_settings.intensity
-			local max_sway = sway_settings.max_sway
-			local pitch_scalar = pitch / max_sway.pitch
-			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
-			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
-			local yaw_angle = math.cos(new_angle)
-			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-			local aim_offset_y = pitch_angle * pitch_scalar * intensity
-			local aim_offset_x = yaw_angle * yaw_scalar * intensity
-
-			return aim_offset_x, aim_offset_y
-		end
+		sway_pattern = default_rippergun_sway_pattern
 	},
 	moving = {
 		rotation_speed = 0.4,

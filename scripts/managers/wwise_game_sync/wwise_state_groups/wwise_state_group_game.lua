@@ -67,9 +67,13 @@ WwiseStateGroupGame.update = function (self, dt, t)
 					if in_character_create_state then
 						wwise_state = STATES.character_creation
 					end
+				elseif game_state_name == "StateVictoryDefeat" then
+					local end_result = Managers.mechanism:end_result()
+					wwise_state = self:_get_victory_defeat_wwise_state(end_result, wwise_state)
+				elseif game_state_name == "StateGameScore" then
+					local end_result = Managers.mechanism:end_result()
+					wwise_state = self:_get_game_score_wwise_state(end_result, wwise_state)
 				end
-
-				wwise_state = self:_end_result(game_state_name, wwise_state)
 
 				self:_set_wwise_state(wwise_state)
 			end
@@ -77,19 +81,25 @@ WwiseStateGroupGame.update = function (self, dt, t)
 	end
 end
 
-WwiseStateGroupGame._end_result = function (self, game_state_name, wwise_state)
-	if game_state_name == "StateVictoryDefeat" then
-		local game_state_machine = self:get_game_state_machine()
-		local state_victory_defeat = game_state_machine:current_state()
-		local end_result = state_victory_defeat:end_result()
+WwiseStateGroupGame._get_victory_defeat_wwise_state = function (self, end_result, wwise_state)
+	if end_result and end_result == "won" then
+		wwise_state = STATES.victory
+	elseif end_result and end_result == "lost" then
+		wwise_state = STATES.defeat
+	else
+		wwise_state = STATES.none
+	end
 
-		if end_result and end_result == "won" then
-			wwise_state = STATES.victory
-		elseif end_result and end_result == "lost" then
-			wwise_state = STATES.defeat
-		else
-			wwise_state = STATES.none
-		end
+	return wwise_state
+end
+
+WwiseStateGroupGame._get_game_score_wwise_state = function (self, end_result, wwise_state)
+	if end_result and end_result == "won" then
+		wwise_state = STATES.game_score_win
+	elseif end_result and end_result == "lost" then
+		wwise_state = STATES.game_score_lose
+	else
+		wwise_state = STATES.none
 	end
 
 	return wwise_state

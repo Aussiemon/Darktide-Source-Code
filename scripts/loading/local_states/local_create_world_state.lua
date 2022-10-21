@@ -7,10 +7,6 @@ LocalCreateWorldState.init = function (self, state_machine, shared_state)
 		layer = 1
 	}
 	local world = AsyncLevelSpawner.setup_world("level_world", world_parameters)
-
-	fassert(shared_state.world == nil, "[HostCreateWorldState] World already created.")
-	fassert(world, "[HostCreateWorldState] World creation failed.")
-
 	shared_state.world = world
 end
 

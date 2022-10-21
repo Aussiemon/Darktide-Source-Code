@@ -98,9 +98,6 @@ end
 
 MissionObjectiveSystem.objective_list = function (self, peer_id)
 	peer_id = peer_id or GLOBAL_LIST_INDEX
-
-	fassert(peer_id == GLOBAL_LIST_INDEX or self._is_server, "[MissionObjectiveSystem] Client requesting peer specific objective list.")
-
 	local objective_lists = self._objective_lists
 
 	if not objective_lists[peer_id] then
@@ -128,8 +125,6 @@ MissionObjectiveSystem.has_active_objective = function (self, objective_name, pe
 end
 
 MissionObjectiveSystem.pre_update = function (self, dt, t)
-	Profiler.start("MissionObjectiveSystem:pre_update()")
-
 	if self._is_server then
 		for peer_id, objective_list in pairs(self._objective_lists) do
 			local active_objectives = objective_list:active_objectives()
@@ -139,13 +134,9 @@ MissionObjectiveSystem.pre_update = function (self, dt, t)
 			end
 		end
 	end
-
-	Profiler.stop("MissionObjectiveSystem:pre_update()")
 end
 
 MissionObjectiveSystem.update = function (self, system_context, dt, t)
-	Profiler.start("MissionObjectiveSystem:update()")
-
 	if self._is_server then
 		for peer_id, objective_list in pairs(self._objective_lists) do
 			local active_objectives = objective_list:active_objectives()
@@ -163,11 +154,10 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 			end
 		end
 	end
-
-	Profiler.stop("MissionObjectiveSystem:update()")
 end
 
 MissionObjectiveSystem.start_mission_objective = function (self, objective_name, progression, second_progression, increment, stage, peer_id)
+	peer_id = peer_id or GLOBAL_LIST_INDEX
 	progression = progression or 0
 	second_progression = second_progression or 0
 	increment = increment or 0
@@ -198,6 +188,16 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 
 	if self._is_server then
 		self._objective_start_times[objective] = Managers.time:time("main")
+		local players = Managers.player:players()
+		local is_global_objective = peer_id == GLOBAL_LIST_INDEX
+
+		for _, player in pairs(players) do
+			local player_started_objective = is_global_objective or player:peer_id() == peer_id
+
+			if player_started_objective then
+				Managers.telemetry_events:player_started_objective(player, objective_name)
+			end
+		end
 	end
 
 	local mission_objective_type = mission_objective_data.mission_objective_type
@@ -208,9 +208,6 @@ MissionObjectiveSystem._setup_mission_objective = function (self, objective_name
 	local mission_objective_type = mission_objective_data.mission_objective_type
 	local objective_list = self:objective_list(peer_id)
 	local objective = objective_list:get_active_objective(objective_name)
-
-	fassert(not objective, "[MissionObjectiveSystem] %s is an already active objective.", objective_name)
-
 	objective = mission_objectives[mission_objective_type]:new()
 
 	objective:set_peer_id(peer_id)
@@ -237,7 +234,6 @@ MissionObjectiveSystem.start_mission_objective_stage = function (self, objective
 
 	local objective = self:active_objective(objective_name, peer_id)
 
-	fassert(objective, "[MissionObjectiveSystem] Trying to set stage on a mission that is not stared.")
 	objective:start_stage(stage)
 end
 
@@ -265,6 +261,7 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, p
 	end
 
 	local objective_type = objective:objective_type()
+	local is_side_mission = objective:is_side_mission()
 
 	if self._is_server then
 		local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
@@ -289,18 +286,21 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, p
 			local player_completed_objective = is_global_objective or player:peer_id() == peer_id
 
 			if player_completed_objective then
-				self:_proc_mission_objective_complete_buffs(player)
+				if is_side_mission then
+					self:_proc_side_mission_objective_complete_buffs(player)
+				end
 
-				if DEDICATED_SERVER and player:is_human_controlled() then
+				Managers.telemetry_events:player_completed_objective(player, objective_name)
+
+				if player:is_human_controlled() and Managers.stats.can_record_stats() then
 					Managers.stats:record_objective_complete(player, mission_name, objective_name, objective_type, objective_time)
-					Managers.telemetry_events:player_completed_objective(player, objective_name)
 				end
 			end
 		end
 	end
 end
 
-MissionObjectiveSystem._proc_mission_objective_complete_buffs = function (self, player)
+MissionObjectiveSystem._proc_side_mission_objective_complete_buffs = function (self, player)
 	local player_unit = player.player_unit
 
 	if not player_unit then
@@ -309,9 +309,12 @@ MissionObjectiveSystem._proc_mission_objective_complete_buffs = function (self, 
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.unit = player_unit
 
-	buff_extension:add_proc_event(proc_events.on_mission_objective_complete, param_table)
+	if param_table then
+		param_table.unit = player_unit
+
+		buff_extension:add_proc_event(proc_events.on_side_mission_objective_complete, param_table)
+	end
 end
 
 MissionObjectiveSystem.external_update_mission_objective = function (self, objective_name, dt, increment, peer_id)
@@ -322,7 +325,6 @@ MissionObjectiveSystem.external_update_mission_objective = function (self, objec
 			return
 		end
 
-		fassert(objective:is_updated_externally(), "[MissionObjectiveSystem] %q is using update() loop and external update.", objective_name)
 		objective:update(dt)
 		objective:update_increment(increment)
 		objective:update_progression()
@@ -336,8 +338,6 @@ MissionObjectiveSystem.external_update_mission_objective = function (self, objec
 end
 
 MissionObjectiveSystem._propagate_objective_progression = function (self, objective, peer_id)
-	fassert(self._is_server, "[MissionObjectiveSystem] server only method")
-
 	local objective_name = objective:name()
 	local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
 	local progression = objective:progression()
@@ -365,8 +365,6 @@ MissionObjectiveSystem._propagate_objective_progression = function (self, object
 end
 
 MissionObjectiveSystem.propagate_objective_increment = function (self, objective, peer_id)
-	fassert(self._is_server, "[MissionObjectiveSystem] server only method")
-
 	local objective_name = objective:name()
 	local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
 	local increment = objective:incremented_progression()
@@ -802,12 +800,10 @@ MissionObjectiveSystem.flow_callback_end_mission_objective = function (self, obj
 end
 
 MissionObjectiveSystem.flow_callback_override_ui_string = function (self, objective_name, new_ui_header, new_ui_description)
-	fassert(self._is_server, "[MissionObjectiveSystem] server only method")
 	self:_override_ui_string(objective_name, new_ui_header, new_ui_description)
 end
 
 MissionObjectiveSystem.flow_callback_set_objective_show_counter = function (self, objective_name, show)
-	fassert(self._is_server, "[MissionObjectiveSystem] server only method")
 	self:set_objective_show_counter(objective_name, show)
 end
 
@@ -848,7 +844,6 @@ MissionObjectiveSystem.rpc_update_mission_objective_progression = function (self
 	local objective_list = self:objective_list(peer_id)
 	local objective = objective_list:get_active_objective(objective_name)
 
-	fassert(objective, "[MissionObjectiveSystem] %q is not active.", objective_name)
 	objective:set_progression(progression)
 	objective:progression_to_flow()
 end
@@ -857,7 +852,6 @@ MissionObjectiveSystem.rpc_update_mission_objective_second_progression = functio
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
 	local objective = self:active_objective(objective_name)
 
-	fassert(objective, "[MissionObjectiveSystem] %q is not active.", objective_name)
 	objective:set_second_progression(progression)
 end
 
@@ -865,10 +859,8 @@ MissionObjectiveSystem.rpc_update_mission_objective_increment = function (self, 
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
 	local objective = self:active_objective(objective_name)
 
-	fassert(objective, "[MissionObjectiveSystem] %q is not active.", objective_name)
 	objective:set_increment(increment)
 	objective:set_max_increment(max_increment)
-	Managers.event:trigger("event_mission_objective_update", objective_name)
 end
 
 MissionObjectiveSystem.rpc_end_mission_objective = function (self, channel_id, objective_name_id)

@@ -21,6 +21,7 @@ PlayerInfo.init = function (self, presence_account_id_change_callback)
 	self._is_text_muted = false
 	self._is_voice_muted = false
 	self._online_status = OnlineStatus.offline
+	self._player_unique_id = nil
 	self._last_time_played_with = nil
 	self._presence_account_id_change_callback = presence_account_id_change_callback
 end
@@ -39,8 +40,6 @@ PlayerInfo.set_account = function (self, account_id, account_name)
 end
 
 PlayerInfo.set_platform_social = function (self, platform_social)
-	assert_interface(platform_social, FriendInterface)
-
 	local old_platform_social = self._platform_social
 
 	if platform_social == old_platform_social then
@@ -70,11 +69,6 @@ PlayerInfo.user_display_name = function (self)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
 	local name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
-	local platform_icon = self:platform_icon()
-
-	if platform_icon then
-		name = string.format("%s %s", platform_icon, name)
-	end
 
 	return name
 end
@@ -91,13 +85,15 @@ PlayerInfo.online_status = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
 
-	if platform_social then
+	if presence and presence:is_online() then
+		online_status = OnlineStatus.online
+	elseif platform_social then
 		online_status = platform_social:online_status()
 	elseif presence then
-		online_status = presence:is_online() and OnlineStatus.online or OnlineStatus.offline
+		online_status = OnlineStatus.offline
 	end
 
-	if online_status == OnlineStatus.offline and self._is_party_member then
+	if (online_status == OnlineStatus.offline or online_status == OnlineStatus.platform_online) and self._is_party_member then
 		online_status = OnlineStatus.reconnecting
 	end
 
@@ -121,8 +117,6 @@ PlayerInfo.friend_status = function (self)
 end
 
 PlayerInfo.set_friend_status = function (self, status)
-	assert(FriendStatus[status])
-
 	self._friend_status = status
 end
 
@@ -134,6 +128,10 @@ end
 
 PlayerInfo.set_is_blocked = function (self, is_blocked)
 	self._is_blocked = is_blocked
+	self._is_text_muted = is_blocked
+	self._is_voice_muted = is_blocked
+
+	Managers.event:trigger("player_mute_status_changed")
 end
 
 PlayerInfo.is_text_muted = function (self)
@@ -142,14 +140,21 @@ end
 
 PlayerInfo.set_is_text_muted = function (self, is_muted)
 	self._is_text_muted = is_muted
+
+	Managers.event:trigger("player_mute_status_changed")
 end
 
 PlayerInfo.is_voice_muted = function (self)
-	return self._is_voice_muted
+	local platform_user_id = self:platform_user_id()
+	local is_platform_muted = Managers.account:is_muted(platform_user_id)
+
+	return is_platform_muted or self._is_voice_muted
 end
 
 PlayerInfo.set_is_voice_muted = function (self, is_muted)
 	self._is_voice_muted = is_muted
+
+	Managers.event:trigger("player_mute_status_changed")
 end
 
 PlayerInfo.last_time_played_with = function (self)
@@ -158,6 +163,12 @@ end
 
 PlayerInfo.set_last_time_played_with = function (self, time)
 	self._last_time_played_with = time
+end
+
+PlayerInfo.is_myself = function (self)
+	local presence = self:_get_presence()
+
+	return presence and presence:is_myself()
 end
 
 PlayerInfo.platform = function (self)
@@ -226,7 +237,7 @@ PlayerInfo.party_status = function (self)
 		local account_id = self:account_id()
 		local party_member = party_manager:member_from_account_id(account_id)
 
-		if party_member and party_member:is_invited() then
+		if party_manager:get_invite_by_account_id(account_id) then
 			return PartyStatus.invite_pending
 		elseif party_member and presence:num_party_members() > 1 then
 			return PartyStatus.mine
@@ -268,6 +279,24 @@ PlayerInfo.peer_id = function (self)
 end
 
 PlayerInfo.profile = function (self)
+	local player_unique_id = self._player_unique_id
+	local player = player_unique_id and Managers.player:human_player(player_unique_id)
+
+	if player then
+		return player:profile()
+	else
+		local account_id = self:account_id()
+		local players = Managers.player:human_players()
+
+		for unique_id, player in pairs(players) do
+			if player:account_id() == account_id then
+				self._player_unique_id = unique_id
+
+				return player:profile()
+			end
+		end
+	end
+
 	local presence = self:_get_presence()
 	local profile = presence and presence:character_profile()
 
@@ -279,7 +308,7 @@ PlayerInfo._update_presence = function (self)
 
 	if self._account_id then
 		self._presence = Managers.presence:get_presence(self._account_id)
-	elseif platform_social and (platform_social:online_status() == OnlineStatus.online or platform_social:platform() == Platforms.xbox) then
+	elseif platform_social and (platform_social:online_status() == OnlineStatus.platform_online or platform_social:platform() == Platforms.xbox) then
 		local promise = nil
 		self._presence, promise = Managers.presence:get_presence_by_platform(self._platform_social:platform(), self._platform_social:id())
 
@@ -309,6 +338,10 @@ PlayerInfo._get_presence = function (self)
 
 		return self._presence
 	end
+end
+
+PlayerInfo.__tostring = function (self)
+	return string.format("account_id: [%s], has platform_social: %s, has presence: %s", self._account_id, self._platform_social and "Yes" or "No", self._presence and "Yes" or "No")
 end
 
 return PlayerInfo

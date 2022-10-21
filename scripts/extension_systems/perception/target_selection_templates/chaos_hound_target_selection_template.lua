@@ -20,6 +20,8 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 	score = score + disabled_weight
 	local threat_weight = MinionTargetSelection.threat_weight(target_selection_weights, target_unit, threat_units)
 	score = score + threat_weight
+	local coherency_weight = MinionTargetSelection.coherency_weight(target_selection_weights, target_unit)
+	score = score * coherency_weight
 	local weight_multiplier = MinionTargetSelection.weight_multiplier(target_unit)
 	score = score * weight_multiplier
 

@@ -9,9 +9,6 @@ EventManager.register = function (self, object, ...)
 	for i = 1, select("#", ...), 2 do
 		local event_name = select(i, ...)
 		local callback_name = select(i + 1, ...)
-
-		fassert(type(object) == "table" and type(object[callback_name]) == "function", "No function found with name %q on supplied object", callback_name)
-
 		self._events[event_name] = self._events[event_name] or setmetatable({}, {
 			__mode = "v"
 		})
@@ -42,8 +39,6 @@ EventManager.unregister = function (self, object, event_name)
 end
 
 EventManager.register_with_parameters = function (self, object, function_name, event_name, ...)
-	fassert(type(object) == "table" and type(object[function_name]) == "function", "No function found with name %q on supplied object", function_name)
-
 	local cb = callback(object, function_name, ...)
 	self._callbacks[event_name] = self._callbacks[event_name] or {}
 	self._callbacks[event_name][object] = cb

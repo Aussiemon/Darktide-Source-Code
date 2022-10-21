@@ -9,10 +9,10 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__cmd_hacking_find_another_04"
 		},
 		sound_events_duration = {
-			3.803792,
-			4.12948,
-			4.314167,
-			4.889626
+			3.812875,
+			4.138563,
+			4.32325,
+			4.898708
 		},
 		randomize_indexes = {}
 	},
@@ -27,11 +27,11 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__cmd_hacking_fix_decode_response_05"
 		},
 		sound_events_duration = {
-			3.08198,
-			3.163063,
-			4.440334,
-			3.155375,
-			2.345855
+			3.091063,
+			3.172146,
+			4.449417,
+			3.164458,
+			2.354938
 		},
 		randomize_indexes = {}
 	},
@@ -45,10 +45,10 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__cmd_hacking_place_device_04"
 		},
 		sound_events_duration = {
-			3.559313,
-			3.138188,
-			3.870771,
-			3.829292
+			3.568396,
+			3.147271,
+			3.879854,
+			3.838375
 		},
 		randomize_indexes = {}
 	},
@@ -62,10 +62,33 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__info_hacking_decoding_in_progress_04"
 		},
 		sound_events_duration = {
-			2.074125,
-			2.057125,
-			3.694584,
-			3.338605
+			2.083208,
+			2.066208,
+			3.703667,
+			3.347688
+		},
+		randomize_indexes = {}
+	},
+	info_hacking_decoding_in_progress_vox_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__info_hacking_decoding_in_progress_01",
+			"loc_explicator_a__info_hacking_decoding_in_progress_02",
+			"loc_explicator_a__info_hacking_decoding_in_progress_03",
+			"loc_explicator_a__info_hacking_decoding_in_progress_04"
+		},
+		sound_events_duration = {
+			1.683208,
+			1.666208,
+			3.303667,
+			2.947688
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -79,10 +102,16 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__info_hacking_mission_almost_done_04"
 		},
 		sound_events_duration = {
-			3.76898,
-			4.914313,
-			2.375542,
-			5.381001
+			3.778063,
+			4.923396,
+			2.384625,
+			5.390083
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -96,10 +125,36 @@ local event_vo_hacking_explicator_a = {
 			"loc_explicator_a__info_hacking_mission_complete_04"
 		},
 		sound_events_duration = {
-			3.400938,
-			3.536563,
-			4.928063,
-			4.81748
+			3.410021,
+			3.545646,
+			4.937146,
+			4.826563
+		},
+		randomize_indexes = {}
+	},
+	vox_introduction_hacking_event = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_explicator_a__vox_introduction_explicator_01",
+			"loc_explicator_a__vox_introduction_explicator_02",
+			"loc_explicator_a__vox_introduction_explicator_03",
+			"loc_explicator_a__vox_introduction_explicator_04",
+			"loc_explicator_a__vox_introduction_explicator_05"
+		},
+		sound_events_duration = {
+			1.470896,
+			1.548146,
+			1.192729,
+			2.175646,
+			1.536729
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	}

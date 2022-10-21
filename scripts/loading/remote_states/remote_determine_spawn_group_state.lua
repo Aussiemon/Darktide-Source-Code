@@ -4,12 +4,6 @@ local RPCS = {
 local RemoteDetermineSpawnGroupState = class("RemoteDetermineSpawnGroupState")
 
 RemoteDetermineSpawnGroupState.init = function (self, state_machine, shared_state)
-	fassert(type(shared_state.network_delegate) == "table", "Network delegate required")
-	fassert(type(shared_state.client_channel_id) == "number", "Client channel required")
-	fassert(type(shared_state.client_peer_id) == "string", "Client peer required")
-	fassert(type(shared_state.timeout) == "number", "Timeout required")
-	fassert(type(shared_state.spawn_queue) == "table", "Spawn queue required")
-
 	self._shared_state = shared_state
 	self._got_request = false
 	self._time = 0

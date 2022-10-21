@@ -1,5 +1,6 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
@@ -208,7 +209,7 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -276,7 +277,7 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -423,14 +424,14 @@ weapon_template.actions = {
 				chain_time = 0.75
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_reload_loop_two = {
-		crosshair_type = "none",
 		anim_end_event = "reload_end",
 		kind = "reload_shotgun",
+		crosshair_type = "none",
 		anim_event = "reload_middle_two",
 		total_time = 1.2,
 		anim_variables_func = function (action_settings, condition_func_params)
@@ -501,14 +502,14 @@ weapon_template.actions = {
 				chain_time = 1.2
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_reload_loop = {
-		crosshair_type = "none",
 		anim_end_event = "reload_end",
 		kind = "reload_shotgun",
+		crosshair_type = "none",
 		anim_event = "reload_middle",
 		total_time = 0.816,
 		anim_variables_func = function (action_settings, condition_func_params)
@@ -579,7 +580,7 @@ weapon_template.actions = {
 				chain_time = 0.815
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -667,11 +668,7 @@ weapon_template.dodge_template = "assault"
 weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 

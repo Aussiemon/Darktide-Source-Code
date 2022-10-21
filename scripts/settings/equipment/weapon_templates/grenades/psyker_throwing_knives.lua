@@ -1,5 +1,6 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -467,9 +468,9 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom_no_anim = {
-		start_input = "zoom_release_no_anim",
 		kind = "unaim",
-		skipp_unaim_anim = true,
+		start_input = "zoom_release_no_anim",
+		skip_unaim_anim = true,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -659,10 +660,6 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 
 return weapon_template

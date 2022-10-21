@@ -42,6 +42,8 @@ local default_view_input_settings = {
 		},
 		hotkey_inventory = {
 			"keyboard_i",
+			"xbox_controller_back",
+			"ps4_controller_touch",
 			description = "loc_alias_view_hotkey_inventory",
 			group = "input_group_hotkeys"
 		},
@@ -53,7 +55,7 @@ local default_view_input_settings = {
 		},
 		hotkey_item_discard = {
 			"keyboard_x",
-			"xbox_controller_d_down",
+			"xbox_controller_right_thumb",
 			"ps4_controller_d_down",
 			description = "loc_alias_view_hotkey_item_discard"
 		},
@@ -68,6 +70,12 @@ local default_view_input_settings = {
 			"xbox_controller_x",
 			"ps4_controller_triangle",
 			description = "loc_alias_view_hotkey_item_inspect"
+		},
+		hotkey_item_sort = {
+			"keyboard_o",
+			"xbox_controller_left_thumb",
+			"ps4_controller_left",
+			description = ""
 		},
 		hotkey_item_customize = {
 			"keyboard_c",
@@ -206,6 +214,12 @@ local default_view_input_settings = {
 			"keyboard_left ctrl",
 			"keyboard_right ctrl",
 			description = ""
+		},
+		title_screen_start = {
+			"keyboard_space",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = ""
 		}
 	},
 	settings = {
@@ -245,6 +259,10 @@ local default_view_input_settings = {
 			key_alias = "hotkey_item_inspect",
 			type = "pressed"
 		},
+		hotkey_item_sort = {
+			key_alias = "hotkey_item_sort",
+			type = "pressed"
+		},
 		hotkey_character_delete = {
 			key_alias = "hotkey_character_delete",
 			type = "pressed"
@@ -259,6 +277,10 @@ local default_view_input_settings = {
 		},
 		hotkey_menu_special_2 = {
 			key_alias = "hotkey_menu_special_2",
+			type = "pressed"
+		},
+		title_screen_start = {
+			key_alias = "title_screen_start",
 			type = "pressed"
 		},
 		confirm_pressed = {

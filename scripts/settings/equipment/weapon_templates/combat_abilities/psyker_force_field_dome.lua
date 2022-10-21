@@ -1,6 +1,7 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local buff_keywords = BuffSettings.keywords
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
@@ -89,14 +90,18 @@ local weapon_template = {
 			}
 		},
 		action_place_force_field = {
-			use_ability_charge = true,
-			self_cast = true,
+			use_aim_data = false,
 			uninterruptible = true,
+			use_ability_charge = true,
 			kind = "place_force_field",
-			allowed_during_sprint = false,
+			vo_tag = "ability_protectorate_start",
 			ability_type = "combat_ability",
-			functional_unit = "content/characters/player/human/attachments_combat/psyker_shield/shield",
-			total_time = 0.4,
+			place_time = 0.2,
+			unwield_slot = true,
+			allowed_during_sprint = false,
+			anim_event = "attack_shoot",
+			functional_unit = "content/characters/player/human/attachments_combat/psyker_shield/shield_sphere",
+			total_time = 0.8,
 			action_movement_curve = {
 				{
 					modifier = 0.4,
@@ -115,14 +120,23 @@ local weapon_template = {
 					t = 0.4
 				},
 				start_modifier = 0.3
+			},
+			conditional_state_to_action_input = {
+				auto_chain = {
+					input_name = "unwield_to_previous"
+				}
+			},
+			allowed_chain_actions = {
+				unwield_to_previous = {
+					action_name = "action_unwield_to_previous"
+				}
 			}
 		},
 		action_cancel = {
 			start_input = "cancel",
-			anim_end_event = "attack_finished",
 			kind = "dummy",
 			uninterruptible = true,
-			anim_event = "attack_shoot",
+			anim_event = "attack_charge_cancel",
 			anim_time_scale = 1,
 			total_time = 0.5,
 			action_movement_curve = {
@@ -170,7 +184,7 @@ local weapon_template = {
 		}
 	},
 	anim_state_machine_3p = "content/characters/player/human/third_person/animations/chain_lightning",
-	anim_state_machine_1p = "content/characters/player/human/first_person/animations/chain_lightning",
+	anim_state_machine_1p = "content/characters/player/human/first_person/animations/psyker_shield",
 	spread_template = "no_spread",
 	ammo_template = "no_ammo",
 	uses_ammunition = false,
@@ -186,11 +200,7 @@ local weapon_template = {
 	sprint_template = "default",
 	stamina_template = "default",
 	toughness_template = "default",
-	footstep_intervals = {
-		crouch_walking = 0.61,
-		walking = 0.4,
-		sprinting = 0.37
-	}
+	footstep_intervals = FootstepIntervalsTemplates.default
 }
 
 return weapon_template

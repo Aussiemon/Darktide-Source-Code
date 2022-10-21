@@ -5,6 +5,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
 local Vo = require("scripts/utilities/vo")
+local buff_proc_events = BuffSettings.proc_events
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
 
 AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
@@ -26,6 +27,20 @@ AmmunitionInteraction.interactor_condition_func = function (self, interactor_uni
 	local missing_ammo = not Ammo.ammo_is_full(interactor_unit)
 
 	return missing_ammo and AmmunitionInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
+end
+
+AmmunitionInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+	local missing_ammo = not Ammo.ammo_is_full(interactor_unit)
+
+	if not missing_ammo then
+		if Ammo.uses_ammo(interactor_unit) then
+			return "loc_action_interaction_inactive_ammo_full"
+		else
+			return "loc_action_interaction_inactive_no_ammo"
+		end
+	end
+
+	return AmmunitionInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, interactable_actor_node_index)
 end
 
 AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
@@ -62,8 +77,19 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 				end
 			end
 
-			local modifier = players_have_improved_keyword and 1.5 or 1
-			pickup_data.modifier = modifier
+			pickup_data.modifier = 1
+
+			if players_have_improved_keyword and pickup_data.ammo_crate then
+				local ability_extension = ScriptUnit.has_extension(interactor_unit, "ability_system")
+
+				if ability_extension then
+					local ability_type = "grenade_ability"
+					local charges_restored = 100
+
+					ability_extension:restore_ability_charge(ability_type, charges_restored)
+				end
+			end
+
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data, seed)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
@@ -72,6 +98,20 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 
 			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share then
 				Vo.ammo_hog_event(interactor_unit, wieldable_component, pickup_data)
+			end
+
+			local buff_extension = ScriptUnit.has_extension(interactor_unit, "buff_system")
+
+			if buff_extension then
+				local param_table = buff_extension:request_proc_event_param_table()
+
+				if param_table then
+					param_table.pickup_amount = pickup_amount
+					param_table.pickup_name = pickup_data.name
+					param_table.new_ammo_amount = new_ammo_amount
+
+					buff_extension:add_proc_event(buff_proc_events.on_ammo_pickup, param_table)
+				end
 			end
 		end
 	end

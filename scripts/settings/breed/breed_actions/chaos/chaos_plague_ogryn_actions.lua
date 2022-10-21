@@ -225,7 +225,7 @@ local action_data = {
 			attack_stomp = 1.0606060606060606
 		},
 		attack_anim_durations = {
-			attack_stomp = 2.272727272727273
+			attack_stomp = 1.9696969696969697
 		},
 		attack_intensities = {
 			melee = 0.25,
@@ -237,35 +237,37 @@ local action_data = {
 		damage_type = damage_types.minion_melee_blunt,
 		ground_impact_fx_template = GroundImpactFxTemplates.chaos_plague_ogryn_plague_stomp,
 		stagger_type_reduction = {
-			ranged = 100
+			ranged = 100,
+			explosion = 100
 		}
 	},
 	charge = {
 		close_rotation_speed = 5,
 		close_distance = 8,
 		max_dot_lean_value = 0.1,
-		right_lean_value = 2,
 		wall_raycast_distance = 4.25,
 		max_slowdown_percentage = 0.25,
 		default_lean_value = 1,
 		left_lean_value = 0,
 		min_time_navigating = 0.5,
-		lean_variable_name = "lean",
-		dodge_rotation_speed = 0.01,
+		charged_past_dot = 0.1,
+		push_minions_radius = 4,
 		charge_max_speed_at = 2,
 		attack_anim = "attack_charge_hit_player",
 		charged_past_duration = 1.5,
 		collision_radius = 2,
-		push_minions_radius = 4,
+		lean_variable_name = "lean",
 		power_level = 150,
 		attack_anim_damage_timing = 0.06666666666666667,
 		min_time_spent_charging = 1,
-		charged_past_dot = 0.1,
+		dodge_rotation_speed = 0.01,
 		target_extrapolation_length_scale = 0.5,
+		right_lean_value = 2,
 		max_slowdown_angle = 40,
 		wall_stun_time = 3,
 		min_slowdown_angle = 20,
 		utility_weight = 1,
+		max_duration = 8,
 		wall_raycast_node_name = "j_spine",
 		push_minions_side_relation = "allied",
 		charge_speed_min = 7,
@@ -336,6 +338,7 @@ local action_data = {
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 4,
 		weapon_reach = 2,
+		sweep_ground_impact_fx_timing = 2.785185185185185,
 		move_speed = 4,
 		sweep_node = "j_righthandmiddle1",
 		dodge_weapon_reach = 1.25,
@@ -374,7 +377,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.chaos_plague_ogryn_scythe,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
-			ranged = 100
+			ranged = 100,
+			explosion = 100
 		},
 		animation_move_speed_configs = {
 			attack_sword_combo = {
@@ -399,11 +403,13 @@ local action_data = {
 					distance = 0.95
 				}
 			}
-		}
+		},
+		sweep_ground_impact_fx_template = GroundImpactFxTemplates.chaos_plague_ogryn_combo_end
 	},
 	catapult_attack = {
 		height = 3,
 		utility_weight = 2.5,
+		ignore_blocked = true,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee",
 		moving_attack = true,
@@ -433,7 +439,8 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.chaos_plague_ogryn_catapult,
 		damage_type = damage_types.minion_melee_blunt,
 		stagger_type_reduction = {
-			ranged = 100
+			ranged = 100,
+			explosion = 100
 		}
 	},
 	stagger = {
@@ -581,7 +588,7 @@ local action_data = {
 		stagger_immune = true
 	},
 	smash_obstacle = {
-		rotation_duration = 0,
+		rotation_duration = 0.1,
 		attack_anim_events = {
 			"attack_slam"
 		},

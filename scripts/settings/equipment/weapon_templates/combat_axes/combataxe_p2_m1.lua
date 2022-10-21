@@ -5,8 +5,11 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeCombataxeP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p2")
+local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
@@ -52,7 +55,26 @@ weapon_template.actions = {
 			},
 			start_modifier = 1.5
 		},
-		allowed_chain_actions = {}
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left"
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_special_uppercut"
+			}
+		}
 	},
 	action_melee_start_left = {
 		anim_event_3p = "attack_swing_charge_down",
@@ -212,7 +234,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -291,7 +313,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -369,8 +391,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_right_diagonal",
 		num_frames_before_process = 0,
-		damage_window_end = 0.55,
 		range_mod = 1.25,
+		damage_window_end = 0.55,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_right_diagonal_down",
@@ -448,7 +470,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -528,7 +550,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -608,8 +630,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_down",
 		num_frames_before_process = 0,
-		damage_window_end = 0.45,
 		range_mod = 1.25,
+		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_left_down",
@@ -687,7 +709,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -755,9 +777,9 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
+		range_mod = 1.35,
 		damage_window_end = 0.5,
 		attack_direction = "up",
-		range_mod = 1.35,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_right",
@@ -828,7 +850,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -878,11 +900,11 @@ weapon_template.actions = {
 				chain_time = 0.4
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.1,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.ninja_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
 	action_special_uppercut = {
@@ -944,7 +966,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
 		damage_type = damage_types.axe_light,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		}
@@ -993,10 +1015,46 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.traits = {}
+local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
+
+table.append(weapon_template.traits, melee_common_traits)
+
+local bespoke_combataxe_p2_traits = table.keys(WeaponTraitsBespokeCombataxeP2)
+
+table.append(weapon_template.traits, bespoke_combataxe_p2_traits)
+
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_fast_attack"
+	},
+	{
+		display_name = "loc_weapon_keyword_ninja_fencer"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		display_name = "loc_gestalt_ninja_fencer",
+		type = "ninja_fencer",
+		attack_chain = {
+			"ninja_fencer",
+			"ninja_fencer",
+			"ninja_fencer"
+		}
+	},
+	secondary = {
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
+		attack_chain = {
+			"smiter",
+			"smiter"
+		}
+	},
+	special = {
+		display_name = "loc_weapon_special_special_attack",
+		type = "special_attack"
+	}
 }
 
 return weapon_template

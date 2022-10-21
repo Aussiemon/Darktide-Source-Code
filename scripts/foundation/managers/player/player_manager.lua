@@ -118,8 +118,6 @@ PlayerManager.player_from_unique_id = function (self, unique_id)
 end
 
 PlayerManager.on_game_state_enter = function (self, game_state_class, mapping, context)
-	assert(not self._game_state, "Trying to enter game state while already in game_state.")
-
 	self._game_state = game_state_class
 	self._game_state_mapping = mapping
 	self._game_state_context = context
@@ -152,17 +150,12 @@ end
 
 PlayerManager.update_time_slice_on_game_state_enter = function (self)
 	local init_data = self._init_on_game_state_enter_data
-
-	fassert(init_data, "[PlayerManager] Missing call to 'PlayerManager:init_time_slice_on_game_state_enter()'")
-
 	local last_index = init_data.last_index
 	local game_state_mapping = init_data.parameters.mapping
 	local game_state_context = init_data.parameters.context
 	local players = init_data.parameters.players
 	local num_players = #players
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
-
-	Profiler.start("PlayerManager:update_time_slice_on_game_state_enter")
 
 	for index = last_index + 1, num_players do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
@@ -183,14 +176,10 @@ PlayerManager.update_time_slice_on_game_state_enter = function (self)
 		GameplayInitTimeSlice.set_finished(init_data)
 	end
 
-	Profiler.stop("PlayerManager:update_time_slice_on_game_state_enter")
-
 	return init_data.ready
 end
 
 PlayerManager.on_game_state_exit = function (self, game_state_class)
-	assert(self._game_state == game_state_class, "Trying to exit game state not already in. Was in %q, is in %q", self._game_state.__class_name, game_state_class.__class_name)
-
 	self._game_state = nil
 	self._game_state_mapping = nil
 	self._game_state_context = nil
@@ -249,9 +238,6 @@ end
 
 PlayerManager.add_player = function (self, player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, ...)
 	local unique_id = self:_generate_unique_id(peer_id, local_player_id)
-
-	fassert(not self._players[unique_id], "Trying to create player with unique id that already exists.")
-
 	local character_id = profile and profile.character_id
 	local session_id = self:_generate_session_id(account_id, character_id)
 	local player = player_class:new(unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, ...)
@@ -276,10 +262,6 @@ PlayerManager.player_exists = function (self, peer_id, local_player_id)
 	local peer_table = self._players_by_peer[peer_id]
 
 	return peer_table and peer_table[local_player_id or 1] or false
-end
-
-PlayerManager.remove_player_safe = function (self, peer_id, local_player_id)
-	local player = self:player(peer_id, local_player_id)
 end
 
 PlayerManager.remove_player = function (self, peer_id, local_player_id)
@@ -341,8 +323,6 @@ PlayerManager._remove_bot_player = function (self, unique_id)
 end
 
 PlayerManager.player = function (self, peer_id, local_player_id)
-	fassert(peer_id and local_player_id, "Required peer id and local player id.")
-
 	local player_table = self._players_by_peer[peer_id]
 
 	if not player_table then
@@ -413,8 +393,30 @@ PlayerManager.num_human_players = function (self)
 	return self._num_human_players
 end
 
+PlayerManager.num_ready_human_players = function (self)
+	local human_players = self._human_players
+	local num_ready_human_players = 0
+	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
+
+	for _, player in pairs(human_players) do
+		if package_synchronizer_client:peer_enabled(player:peer_id()) then
+			num_ready_human_players = num_ready_human_players + 1
+		end
+	end
+
+	return num_ready_human_players
+end
+
 PlayerManager.local_player = function (self, local_player_id)
 	return self:player(Network.peer_id(), local_player_id)
+end
+
+PlayerManager.local_player_safe = function (self, local_player_id)
+	local connection_manager = Managers.connection
+
+	if connection_manager and connection_manager:is_initialized() then
+		return self:player(Network.peer_id(), local_player_id)
+	end
 end
 
 PlayerManager.print_players = function (self)

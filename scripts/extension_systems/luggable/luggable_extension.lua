@@ -3,16 +3,12 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local LuggableExtension = class("LuggableExtension")
 
 LuggableExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	fassert(Unit.find_actor(unit, "interaction"), "[LuggableExtension][init] Missing actor 'interaction' for Unit(%s)", tostring(unit))
-
 	local is_server = extension_init_context.is_server
 	self._is_server = is_server
+	self._unit = unit
 	self._destroyed = false
-
-	if is_server then
-		self._carrier_player_unit = nil
-		self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	end
+	self._carrier_player_unit = nil
+	self._synchronizer = nil
 end
 
 LuggableExtension.extensions_ready = function (self, world, unit)
@@ -33,27 +29,33 @@ end
 
 LuggableExtension.set_carried_by = function (self, player_unit_or_nil)
 	if player_unit_or_nil then
-		fassert(self._carrier_player_unit == nil, "luggable already carried by %s", self._carrier_player_unit)
 		self:_on_carried()
 	else
-		fassert(self._carrier_player_unit, "trying to set carried to nil while not being carried.")
 		self:_on_dropped()
+	end
+
+	local synchronizer = self._synchronizer
+
+	if synchronizer then
+		synchronizer:set_carried_by(self._unit, player_unit_or_nil)
 	end
 
 	self._carrier_player_unit = player_unit_or_nil
 end
 
+LuggableExtension.set_synchronizer = function (self, synchronizer)
+	self._synchronizer = synchronizer
+end
+
 LuggableExtension._on_carried = function (self)
 	if self._is_server then
 		self._interactee_extension:set_active(false)
-		self._mission_objective_target_extension:remove_unit_marker()
 	end
 end
 
 LuggableExtension._on_dropped = function (self)
 	if self._is_server and not self._destroyed then
 		self._interactee_extension:set_active(true)
-		self._mission_objective_target_extension:add_unit_marker()
 	end
 end
 

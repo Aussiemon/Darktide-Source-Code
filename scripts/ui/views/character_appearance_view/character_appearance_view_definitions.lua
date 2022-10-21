@@ -4,6 +4,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
 local CharacterAppearanceViewSettings = require("scripts/ui/views/character_appearance_view/character_appearance_view_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -649,6 +650,27 @@ local widget_definitions = {
 					1
 				}
 			}
+		},
+		{
+			value_id = "icon",
+			pass_type = "texture",
+			style_id = "icon",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			},
+			visibility_function = function (content, style)
+				return content.icon
+			end
 		}
 	}, "list_header"),
 	list_description = UIWidget.create_definition({
@@ -678,7 +700,10 @@ local widget_definitions = {
 		}
 	}, "list_description"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
-		text = Localize("loc_character_creator_continue")
+		text = Localize("loc_character_creator_continue"),
+		hotspot = {
+			on_pressed_sound = UISoundEvents.character_appearence_confirm
+		}
 	}),
 	page_indicator_frame = UIWidget.create_definition({
 		{
@@ -1301,6 +1326,14 @@ local error_text_definitions = UIWidget.create_definition({
 }, "error_input")
 local legend_inputs = {
 	{
+		input_action = "confirm_pressed",
+		display_name = "loc_settings_menu_change_name",
+		alignment = "left_alignment",
+		visibility_function = function (parent)
+			return IS_XBS and parent._active_page_number == 8 and not parent._await_validation
+		end
+	},
+	{
 		input_action = "back",
 		on_pressed_callback = "_on_close_pressed",
 		display_name = "loc_settings_menu_close_menu",
@@ -1368,110 +1401,110 @@ local animations = {
 				end
 			end
 		}
-	}
-}
-animations.on_planet_select = {
-	{
-		name = "move_background",
-		end_time = 2,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeCubic(progress)
-			local progress_uv = {}
+	},
+	on_planet_select = {
+		{
+			name = "move_background",
+			end_time = 2,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeCubic(progress)
+				local progress_uv = {}
 
-			for i = 1, #params.start_uv do
-				local start_uv = params.start_uv[i]
-				local end_uv = params.end_uv[i]
-				progress_uv[#progress_uv + 1] = {
-					math.lerp(start_uv[1], end_uv[1], anim_progress),
-					math.lerp(start_uv[2], end_uv[2], anim_progress)
-				}
-			end
-
-			widgets.background.style.texture.uvs = progress_uv
-		end,
-		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			if parent._reset_background then
-				parent._reset_background = nil
-				local page = parent._pages[parent._active_page_number]
-				widgets.background.style.texture.uvs = page.background_uv or {
-					{
-						0,
-						0
-					},
-					{
-						1,
-						1
+				for i = 1, #params.start_uv do
+					local start_uv = params.start_uv[i]
+					local end_uv = params.end_uv[i]
+					progress_uv[#progress_uv + 1] = {
+						math.lerp(start_uv[1], end_uv[1], anim_progress),
+						math.lerp(start_uv[2], end_uv[2], anim_progress)
 					}
+				end
+
+				widgets.background.style.texture.uvs = progress_uv
+			end,
+			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				if parent._reset_background then
+					parent._reset_background = nil
+					local page = parent._pages[parent._active_page_number]
+					widgets.background.style.texture.uvs = page.background_uv or {
+						{
+							0,
+							0
+						},
+						{
+							1,
+							1
+						}
+					}
+				end
+			end
+		},
+		{
+			name = "move_start_planet",
+			end_time = 0.5,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(progress)
+				local start_position = params.start_planet_widget.content.planet_data.position
+				local end_position = params.end_planet_widget.content.planet_data.position
+				local screen_size = {
+					RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
+					RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
+				}
+				local image_size = params.start_planet_widget.content.planet_data.image.size
+				local screen_max_size = math.max(screen_size[1], screen_size[2])
+				local image_max_size = math.max(image_size[1], image_size[2])
+				local angle = math.angle(end_position[1], end_position[2], start_position[1], start_position[2])
+				local total_distance = screen_max_size + image_max_size
+				local start_offset = CharacterAppearanceViewSettings.planet_offset
+				local end_offset = {}
+				end_offset[1], end_offset[2] = math.polar_to_cartesian(total_distance, angle)
+				local current_offset_x = math.lerp(start_offset[1], end_offset[1] + CharacterAppearanceViewSettings.planet_offset[1], anim_progress)
+				local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
+				local planet_offset_z = params.start_planet_widget.style.planet.offset[3]
+				params.start_planet_widget.style.planet.offset = {
+					current_offset_x,
+					current_offset_y,
+					planet_offset_z
 				}
 			end
-		end
-	},
-	{
-		name = "move_start_planet",
-		end_time = 0.5,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			return
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(progress)
-			local start_position = params.start_planet_widget.content.planet_data.position
-			local end_position = params.end_planet_widget.content.planet_data.position
-			local screen_size = {
-				RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
-				RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-			}
-			local image_size = params.start_planet_widget.content.planet_data.image.size
-			local screen_max_size = math.max(screen_size[1], screen_size[2])
-			local image_max_size = math.max(image_size[1], image_size[2])
-			local angle = math.angle(end_position[1], end_position[2], start_position[1], start_position[2])
-			local total_distance = screen_max_size + image_max_size
-			local start_offset = CharacterAppearanceViewSettings.planet_offset
-			local end_offset = {}
-			end_offset[1], end_offset[2] = math.polar_to_cartesian(total_distance, angle)
-			local current_offset_x = math.lerp(start_offset[1], end_offset[1] + CharacterAppearanceViewSettings.planet_offset[1], anim_progress)
-			local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
-			local planet_offset_z = params.start_planet_widget.style.planet.offset[3]
-			params.start_planet_widget.style.planet.offset = {
-				current_offset_x,
-				current_offset_y,
-				planet_offset_z
-			}
-		end
-	},
-	{
-		name = "move_end_planet",
-		end_time = 2,
-		start_time = 1,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			params.end_planet_widget.content.visible = true
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			local start_position = params.start_planet_widget.content.planet_data.position
-			local end_position = params.end_planet_widget.content.planet_data.position
-			local screen_size = {
-				RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
-				RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-			}
-			local image_size = params.end_planet_widget.content.planet_data.image.size
-			local screen_max_size = math.max(screen_size[1], screen_size[2])
-			local image_max_size = math.max(image_size[1], image_size[2])
-			local angle = math.angle(start_position[1], start_position[2], end_position[1], end_position[2])
-			local total_distance = screen_max_size + image_max_size
-			local start_offset = {}
-			start_offset[1], start_offset[2] = math.polar_to_cartesian(total_distance, angle)
-			local end_offset = CharacterAppearanceViewSettings.planet_offset
-			local current_offset_x = math.lerp(start_offset[1], end_offset[1], anim_progress)
-			local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
-			local planet_offset_z = params.end_planet_widget.style.planet.offset[3]
-			params.end_planet_widget.style.planet.offset = {
-				current_offset_x,
-				current_offset_y,
-				planet_offset_z
-			}
-		end
+		},
+		{
+			name = "move_end_planet",
+			end_time = 2,
+			start_time = 1,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				params.end_planet_widget.content.visible = true
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				local start_position = params.start_planet_widget.content.planet_data.position
+				local end_position = params.end_planet_widget.content.planet_data.position
+				local screen_size = {
+					RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
+					RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
+				}
+				local image_size = params.end_planet_widget.content.planet_data.image.size
+				local screen_max_size = math.max(screen_size[1], screen_size[2])
+				local image_max_size = math.max(image_size[1], image_size[2])
+				local angle = math.angle(start_position[1], start_position[2], end_position[1], end_position[2])
+				local total_distance = screen_max_size + image_max_size
+				local start_offset = {}
+				start_offset[1], start_offset[2] = math.polar_to_cartesian(total_distance, angle)
+				local end_offset = CharacterAppearanceViewSettings.planet_offset
+				local current_offset_x = math.lerp(start_offset[1], end_offset[1], anim_progress)
+				local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
+				local planet_offset_z = params.end_planet_widget.style.planet.offset[3]
+				params.end_planet_widget.style.planet.offset = {
+					current_offset_x,
+					current_offset_y,
+					planet_offset_z
+				}
+			end
+		}
 	}
 }
 

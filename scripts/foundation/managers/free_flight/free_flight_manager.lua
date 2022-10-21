@@ -193,7 +193,7 @@ FreeFlightManager._check_camera = function (self, input, dt, camera_id, camera_d
 
 	if not Managers.world:has_world(camera_data.viewport_world_name) then
 		self:_clear_free_flight_camera(camera_data)
-	elseif frustum_modifier then
+	elseif frustum_modifier and BUILD ~= "release" then
 		local world = Managers.world:world(camera_data.viewport_world_name)
 
 		self:_toggle_frustum_freeze(dt, camera_data, world, ScriptWorld.global_free_flight_viewport(world))

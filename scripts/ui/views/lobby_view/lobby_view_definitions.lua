@@ -292,7 +292,8 @@ local panel_definition = UIWidget.create_definition({
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		content = {
-			use_is_focused = true
+			use_is_focused = true,
+			disabled = true
 		}
 	},
 	{
@@ -586,7 +587,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_loadout_pressed",
 		visibility_function = function (parent)
-			return not parent._show_loadout
+			return false
 		end
 	},
 	{
@@ -595,7 +596,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_loadout_pressed",
 		visibility_function = function (parent)
-			return parent._show_loadout
+			return false
 		end
 	}
 }

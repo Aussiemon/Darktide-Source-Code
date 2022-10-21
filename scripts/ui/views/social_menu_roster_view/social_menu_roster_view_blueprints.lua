@@ -53,7 +53,17 @@ end
 
 local function _account_name_change_function(content, style)
 	local player_info = content.player_info
-	content.account_name = player_info:user_display_name()
+	local platform = player_info:platform()
+
+	if (IS_XBS or IS_GDK) and not player_info:is_myself() and platform == "xbox" then
+		local parent = content.parent
+		local xuid = player_info:platform_user_id()
+		local platform_profile = parent:get_platform_profile(xuid)
+		content.account_name = platform_profile and platform_profile.gamertag or "N/A"
+	else
+		content.account_name = player_info:user_display_name()
+	end
+
 	local no_character_name = player_info:character_name() == ""
 	style.font_size = no_character_name and style.font_size_large or style.font_size_default
 	style.offset[2] = no_character_name and style.vertical_offset_large or style.vertical_offset_default
@@ -151,6 +161,7 @@ social_roster_view_blueprints.player_plaque = {
 		widget_content.online_status = player_info:online_status()
 		widget_content.party_status = player_info:party_status()
 		widget_content.is_blocked = false
+		widget_content.parent = parent
 		local character_name = parent:formatted_character_name(player_info)
 
 		if character_name ~= "" then
@@ -234,10 +245,19 @@ social_roster_view_blueprints.player_plaque_platform_online = {
 
 		local widget_content = widget.content
 		widget_content.player_info = player_info
-		widget_content.account_name = player_info:user_display_name()
+
+		if (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			widget_content.account_name = platform_profile and platform_profile.gamertag or "N/A"
+		else
+			widget_content.account_name = player_info:user_display_name()
+		end
+
 		widget_content.online_status = player_info:online_status()
 		widget_content.status = Localize("loc_social_menu_player_online_status_platform_online", false, text_params)
 		widget_content.is_blocked = false
+		widget_content.parent = parent
 		local hotspot = widget_content.hotspot
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
@@ -294,9 +314,18 @@ social_roster_view_blueprints.player_plaque_blocked = {
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
 		local widget_content = widget.content
 		widget_content.player_info = player_info
-		widget_content.account_name = player_info:user_display_name()
+
+		if (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			widget_content.account_name = platform_profile and platform_profile.gamertag or "N/A"
+		else
+			widget_content.account_name = player_info:user_display_name()
+		end
+
 		widget_content.online_status = player_info:online_status()
 		widget_content.is_blocked = true
+		widget_content.parent = parent
 		local hotspot = widget_content.hotspot
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
@@ -348,9 +377,18 @@ social_roster_view_blueprints.player_plaque_offline = {
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
 		local widget_content = widget.content
 		widget_content.player_info = player_info
-		widget_content.account_name = player_info:user_display_name()
+
+		if (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			widget_content.account_name = platform_profile and platform_profile.gamertag or "N/A"
+		else
+			widget_content.account_name = player_info:user_display_name()
+		end
+
 		widget_content.online_status = player_info:online_status()
 		widget_content.is_blocked = false
+		widget_content.parent = parent
 		local hotspot = widget_content.hotspot
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)

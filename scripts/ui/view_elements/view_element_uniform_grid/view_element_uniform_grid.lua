@@ -17,6 +17,10 @@ ViewElementUniformGrid.init = function (self, parent, draw_layer, start_scale)
 		0,
 		0
 	}
+	self._focused_widget = nil
+	self._last_navigation_direction = nil
+	self._last_focused_widget = 0
+	self._needs_grid_recalculation = false
 
 	ViewElementUniformGrid.super.init(self, parent, draw_layer, start_scale, Definitions)
 end
@@ -154,6 +158,9 @@ ViewElementUniformGrid.add_widget_to_grid = function (self, column, row, widget_
 	local content = widget.content
 	content.column = column
 	content.row = row
+
+	self:_clear_navigation_history()
+
 	local widgets = self._widgets
 
 	self:_insert_widget_widget_in_grid(widget, column, row, 1, #widgets)
@@ -175,6 +182,7 @@ ViewElementUniformGrid.remove_widget = function (self, widget)
 		if widgets[i] == widget then
 			self:_unregister_widget_name(widget.name)
 			table.remove(widgets, i)
+			self:_clear_navigation_history()
 
 			if widget == focused_widget then
 				local content = widget.content
@@ -219,6 +227,9 @@ end
 
 ViewElementUniformGrid.set_focused_grid_cell = function (self, column, row)
 	self._focused_widget = nil
+
+	self:_clear_navigation_history()
+
 	local widgets = self._widgets
 
 	for i = 1, #widgets do
@@ -252,6 +263,9 @@ ViewElementUniformGrid.set_focused_grid_widget = function (self, widget_to_focus
 	end
 
 	self._focused_widget = nil
+
+	self:_clear_navigation_history()
+
 	local widgets = self._widgets
 
 	for i = 1, #widgets do
@@ -303,20 +317,37 @@ ViewElementUniformGrid._handle_input = function (self, input_service)
 	local widget_content = focused_widget.content
 	local start_column = widget_content.column
 	local start_row = widget_content.row
-	local next_widget = nil
+	local nav_direction, opposite_direction = nil
 
 	if input_service:get("navigate_up_continuous") then
-		next_widget = self:_find_next_cell(start_column, start_row, "up")
+		nav_direction = "up"
+		opposite_direction = "down"
 	elseif input_service:get("navigate_down_continuous") then
-		next_widget = self:_find_next_cell(start_column, start_row, "down")
+		nav_direction = "down"
+		opposite_direction = "up"
 	elseif input_service:get("navigate_left_continuous") then
-		next_widget = self:_find_next_cell(start_column, start_row, "left")
+		nav_direction = "left"
+		opposite_direction = "right"
 	elseif input_service:get("navigate_right_continuous") then
-		next_widget = self:_find_next_cell(start_column, start_row, "right")
+		nav_direction = "right"
+		opposite_direction = "left"
 	end
 
-	if next_widget then
-		self:set_focused_grid_widget(next_widget)
+	if nav_direction then
+		local next_widget = nil
+
+		if opposite_direction == self._last_navigation_direction then
+			next_widget = self._last_focused_widget
+		else
+			next_widget = self:_find_next_cell(start_column, start_row, nav_direction)
+		end
+
+		if next_widget then
+			self:set_focused_grid_widget(next_widget)
+
+			self._last_focused_widget = focused_widget
+			self._last_navigation_direction = nav_direction
+		end
 	end
 end
 
@@ -326,6 +357,10 @@ ViewElementUniformGrid._find_next_cell = function (self, start_column, start_row
 	local row_offset = is_hexagonal and math.sqrt(3) / 2 or 1
 	start_column = start_column + start_row % 2 * column_padding
 	start_row = start_row * row_offset
+	local orthogonal_weight_primary = 0.5
+	local orthogonal_weight_secondary = 1
+	local horizontal_primary_orthogonal_direction = "down"
+	local vertical_primary_orthogonal_direction = "right"
 	local widgets = self._widgets
 	local closest_distance = math.huge
 	local closest_widget = nil
@@ -333,17 +368,32 @@ ViewElementUniformGrid._find_next_cell = function (self, start_column, start_row
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
-		local column = content.column
-		local row = content.row
-		local column_offset = row % 2 * column_padding
-		local horizontal_distance = column - start_column + column_offset
-		local vertical_distance = row * row_offset - start_row
-		local distance_squared = horizontal_distance^2 + vertical_distance^2
+		local hotspot = content.hotspot
 
-		if closest_distance > distance_squared then
-			local hotspot = content.hotspot
+		if hotspot and not hotspot.disabled then
+			local column = content.column
+			local row = content.row
+			local column_offset = row % 2 * column_padding
+			local horizontal_distance = column - start_column + column_offset
+			local vertical_distance = row * row_offset - start_row
 
-			if hotspot and not hotspot.disabled and (not direction or direction == "left" and horizontal_distance < 0 or direction == "right" and horizontal_distance > 0 or direction == "up" and vertical_distance < 0 or direction == "down" and vertical_distance > 0) then
+			if direction == "up" or direction == "down" then
+				if horizontal_distance > 0 then
+					horizontal_distance = vertical_primary_orthogonal_direction == "right" and horizontal_distance + orthogonal_weight_primary or horizontal_distance + orthogonal_weight_secondary
+				elseif horizontal_distance < 0 then
+					horizontal_distance = vertical_primary_orthogonal_direction == "left" and horizontal_distance - orthogonal_weight_primary or horizontal_distance - orthogonal_weight_secondary
+				end
+			elseif direction == "left" or direction == "right" then
+				if vertical_distance > 0 then
+					vertical_distance = horizontal_primary_orthogonal_direction == "up" and vertical_distance + orthogonal_weight_primary or vertical_distance + orthogonal_weight_secondary
+				elseif vertical_distance < 0 then
+					vertical_distance = horizontal_primary_orthogonal_direction == "down" and vertical_distance - orthogonal_weight_primary or vertical_distance - orthogonal_weight_secondary
+				end
+			end
+
+			local distance_squared = horizontal_distance^2 + vertical_distance^2
+
+			if closest_distance > distance_squared and (not direction or direction == "left" and horizontal_distance < 0 or direction == "right" and horizontal_distance > 0 or direction == "up" and vertical_distance < 0 or direction == "down" and vertical_distance > 0) then
 				closest_distance = distance_squared
 				closest_widget = widget
 			end
@@ -396,6 +446,11 @@ ViewElementUniformGrid._recalculate_grid = function (self)
 		scenegraph_definition = new_scenegraph_definition
 	}
 	self._ui_scenegraph = self:_create_scenegraph(new_definitions)
+end
+
+ViewElementUniformGrid._clear_navigation_history = function (self)
+	self._last_focused_widget = nil
+	self._last_navigation_direction = nil
 end
 
 ViewElementUniformGrid._insert_widget_widget_in_grid = function (self, widget, column, row, start_index, end_index)

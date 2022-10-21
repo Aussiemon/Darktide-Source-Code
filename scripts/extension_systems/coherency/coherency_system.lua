@@ -2,9 +2,10 @@ require("scripts/extension_systems/coherency/unit_coherency_extension")
 require("scripts/extension_systems/coherency/husk_coherency_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
+local Missions = require("scripts/settings/mission/mission_templates")
 local Proximity = require("scripts/utilities/proximity")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local CoherencySystem = class("CoherencySystem", "ExtensionSystemBase")
@@ -13,6 +14,9 @@ CoherencySystem.init = function (self, extension_system_creation_context, ...)
 	local init_result = CoherencySystem.super.init(self, extension_system_creation_context, ...)
 	local broadphase_system = extension_system_creation_context.extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
+	local mission_name = Managers.state.mission:mission_name()
+	local mission_settings = Missions[mission_name]
+	self._is_hub = mission_settings.is_hub
 
 	return init_result
 end
@@ -108,17 +112,21 @@ local function _should_be_in_coherency_with_all(unit)
 	return false
 end
 
-local daisy_chain_cahse = {}
+local daisy_chain_cache = {}
 
 local function _get_daisy_chain(unit)
-	local chain = daisy_chain_cahse[unit]
+	local chain = daisy_chain_cache[unit]
 
 	if not chain then
 		chain = {}
-		daisy_chain_cahse[unit] = chain
+		daisy_chain_cache[unit] = chain
 	end
 
 	return chain
+end
+
+local function _has_coherency_system_filter_function(filter_unit)
+	return ScriptUnit.has_extension(filter_unit, "coherency_system")
 end
 
 local daisy_chains = {}
@@ -127,6 +135,10 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 	CoherencySystem.super.update(self, context, dt, t, ...)
 
 	if not self._is_server then
+		return
+	end
+
+	if self._is_hub then
 		return
 	end
 
@@ -141,11 +153,7 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 		local relation_side_names = side:relation_side_names("allied")
 		local coherence_radius, stickiness_limit, stickiness_time = coherency_extension:coherency_settings()
 
-		local function filter_function(filter_unit)
-			return ScriptUnit.has_extension(filter_unit, "coherency_system")
-		end
-
-		Proximity.check_sticky_proximity(unit, relation_side_names, coherence_radius, current_units_in_direct_coherency, filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
+		Proximity.check_sticky_proximity(unit, relation_side_names, coherence_radius, current_units_in_direct_coherency, _has_coherency_system_filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
 		table.clear(prev_units_in_direct_coherency)
 
 		coherency_data.units_in_direct_coherence = current_units_in_direct_coherency

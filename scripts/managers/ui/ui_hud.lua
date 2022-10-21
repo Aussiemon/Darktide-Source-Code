@@ -4,6 +4,8 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIHudElementCoordinator = require("scripts/managers/ui/ui_hud_element_coordinator")
 local resolution_modified_key = "modified"
+local WorldRenderUtils = require("scripts/utilities/world_render")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 
 local function sort_elements_by_hud_scale(a, b)
 	return b.use_hud_scale and not a.use_hud_scale
@@ -23,13 +25,21 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._params = params
 	self._currently_visible_elements = {}
 	self._visibility_groups = visibility_groups
+	self._world_name = "level_world"
+	self._player_viewport_name = "player1"
+	local world = Managers.world:world(self._world_name)
+
+	if params.enable_world_bloom then
+		WorldRenderUtils.enable_world_ui_bloom(self._world_name, self._player_viewport_name, UIHudSettings.offset_falloffs, UIHudSettings.ui_bloom_tints)
+	end
+
 	local uniq_id = tostring(self)
 	self._unique_id = self.__class_name .. "_" .. uniq_id:gsub("[%p%c%s]", "") .. "_"
 	self._render_settings = {
 		force_retained_mode = false
 	}
-	self._ui_renderer_name = params.renderer_name or self.__class_name .. "_ui_renderer"
-	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name)
+	self._ui_renderer_name = self._unique_id .. (params.renderer_name or self.__class_name .. "_ui_renderer")
+	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name, world)
 	self._offscreen_targets = {}
 
 	for i = 1, #offscreen_target_definitions do
@@ -65,6 +75,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 
 	Managers.event:register(self, "event_set_tactical_overlay_state", "event_set_tactical_overlay_state")
 	Managers.event:register(self, "event_set_communication_wheel_state", "event_set_communication_wheel_state")
+	Managers.event:register(self, "event_update_hud_scale", "event_update_hud_scale")
 
 	self._refresh_retained = true
 end
@@ -87,14 +98,13 @@ UIHud._setup_plane_unit = function (self)
 end
 
 UIHud._add_offscreen_target = function (self, reference_name, viewport_type, viewport_layer, material_name, hdr)
-	assert(not self._offscreen_targets[reference_name], "[UIHud] - Already having a offscreen gui by this reference (%s)", reference_name)
-
 	local ui_manager = Managers.ui
 	local unique_id = self._unique_id
 	local gui = self._ui_renderer.gui
 	local gui_retained = self._ui_renderer.gui_retained
-	local renderer_name = reference_name .. (self._params.renderer_name or "")
-	local ui_renderer = ui_manager:create_renderer(renderer_name, nil, true, gui, gui_retained, material_name)
+	local renderer_name = self._unique_id .. reference_name .. (self._params.renderer_name or "")
+	local world = Managers.world:world(self._world_name)
+	local ui_renderer = ui_manager:create_renderer(renderer_name, world, true, gui, gui_retained, material_name)
 	self._offscreen_targets[reference_name] = {
 		unique_id = unique_id,
 		ui_renderer = ui_renderer,
@@ -123,25 +133,23 @@ UIHud.get_player_extension = function (self, player, extension_name)
 	end
 end
 
-UIHud.get_player_extensions = function (self, player)
+UIHud.get_all_player_extensions = function (self, player, output)
 	if player:unit_is_alive() then
 		local player_unit = player.player_unit
-		local extensions = {
-			health = ScriptUnit.has_extension(player_unit, "health_system"),
-			toughness = ScriptUnit.has_extension(player_unit, "toughness_system"),
-			interactor = ScriptUnit.has_extension(player_unit, "interactor_system"),
-			unit_data = ScriptUnit.has_extension(player_unit, "unit_data_system"),
-			ability = ScriptUnit.has_extension(player_unit, "ability_system"),
-			visual_loadout = ScriptUnit.has_extension(player_unit, "visual_loadout_system"),
-			buff = ScriptUnit.has_extension(player_unit, "buff_system"),
-			dialogue = ScriptUnit.has_extension(player_unit, "dialogue_system"),
-			weapon = ScriptUnit.has_extension(player_unit, "weapon_system"),
-			coherency = ScriptUnit.has_extension(player_unit, "coherency_system"),
-			first_person = ScriptUnit.has_extension(player_unit, "first_person_system"),
-			unit = player_unit
-		}
+		output.health = ScriptUnit.has_extension(player_unit, "health_system")
+		output.toughness = ScriptUnit.has_extension(player_unit, "toughness_system")
+		output.interactor = ScriptUnit.has_extension(player_unit, "interactor_system")
+		output.unit_data = ScriptUnit.has_extension(player_unit, "unit_data_system")
+		output.ability = ScriptUnit.has_extension(player_unit, "ability_system")
+		output.visual_loadout = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
+		output.buff = ScriptUnit.has_extension(player_unit, "buff_system")
+		output.dialogue = ScriptUnit.has_extension(player_unit, "dialogue_system")
+		output.weapon = ScriptUnit.has_extension(player_unit, "weapon_system")
+		output.coherency = ScriptUnit.has_extension(player_unit, "coherency_system")
+		output.first_person = ScriptUnit.has_extension(player_unit, "first_person_system")
+		output.unit = player_unit
 
-		return extensions
+		return output
 	end
 end
 
@@ -199,12 +207,7 @@ UIHud._verify_elements = function (self, element_definitions)
 
 		for _, group_name in ipairs(visibility_groups) do
 			local visibility_group = visibility_groups_lookup[group_name]
-
-			fassert(visibility_group, "Could not find the visibility group: (%s) for element: (s%)", group_name, class_name)
-
 			local validation_function = visibility_group.validation_function
-
-			fassert(validation_function, "Could not find any validation_function for visibility group: (%s)", group_name)
 
 			if not visibility_group.visible_elements then
 				visibility_group.visible_elements = {}
@@ -245,8 +248,6 @@ UIHud._setup_element = function (self, definition)
 	local customizable_element_scenegraph_ids = self._customizable_element_scenegraph_ids
 	local class_name = definition.class_name
 
-	fassert(elements[class_name] == nil, "Duplicate entries of element (%s)", class_name)
-
 	if definition.use_hud_scale then
 		elements_hud_scale_lookup[class_name] = true
 	end
@@ -280,9 +281,6 @@ end
 
 UIHud._add_element = function (self, definition, elements, elements_array)
 	local class_name = definition.class_name
-
-	fassert(elements[class_name] == nil, "element (%s) is already added", class_name)
-
 	local params = self._params
 	local validation_function = definition.validation_function
 
@@ -381,11 +379,13 @@ UIHud._update_element_visibility = function (self)
 end
 
 UIHud._hud_scale = function (self)
-	local default_value = 1
-	local hud_scale_multiplier = self._hud_scale_multiplier or default_value
+	local default_value = 100
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local hud_scale = interface_settings.hud_scale or default_value
 	local scale = RESOLUTION_LOOKUP.scale
 
-	return scale * hud_scale_multiplier
+	return scale * hud_scale / 100
 end
 
 UIHud._apply_hud_scale = function (self)
@@ -425,13 +425,12 @@ UIHud.update = function (self, dt, t, input_service)
 
 	if player_unit then
 		if not self._extensions then
-			self._extensions = self:get_player_extensions(self._player)
+			self._extensions = self:get_all_player_extensions(self._player, {})
 		end
 	elseif self._extensions then
 		self._extensions = nil
 	end
 
-	Profiler.start("[UIHud]- update")
 	self:_update_element_visibility()
 
 	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
@@ -440,7 +439,8 @@ UIHud.update = function (self, dt, t, input_service)
 	local elements_array = self._elements_array
 	local hud_scale_applied = false
 	local render_settings = self._render_settings
-	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
+	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key] or self._hud_scale_modified
+	self._hud_scale_modified = nil
 	self._refresh_retained = resolution_modified or self._refresh_retained
 	local dragging_element = false
 	self._element_using_input = false
@@ -449,7 +449,7 @@ UIHud.update = function (self, dt, t, input_service)
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
-		if not hud_scale_applied and elements_hud_scale_lookup[element_name] then
+		if elements_hud_scale_lookup[element_name] then
 			hud_scale_applied = true
 
 			self:_apply_hud_scale()
@@ -472,8 +472,6 @@ UIHud.update = function (self, dt, t, input_service)
 		end
 
 		if currently_visible_elements[element_name] and element.update then
-			Profiler.start(element_name)
-
 			if element.begin_update then
 				element:begin_update(dt, t, ui_renderer, render_settings, input_service)
 			end
@@ -483,8 +481,6 @@ UIHud.update = function (self, dt, t, input_service)
 			if element.end_update then
 				element:end_update(dt, t, ui_renderer, render_settings, input_service)
 			end
-
-			Profiler.stop(element_name)
 		end
 
 		if ui_hud_customize_coordinates and not dragging_element then
@@ -506,30 +502,31 @@ UIHud.update = function (self, dt, t, input_service)
 		if element_using_input then
 			self._element_using_input = true
 		end
-	end
 
-	if hud_scale_applied then
-		self:_abort_hud_scale()
+		if hud_scale_applied then
+			self:_abort_hud_scale()
+		end
 	end
-
-	Profiler.stop("[UIHud]- update")
 end
 
 UIHud.draw = function (self, dt, t, input_service)
+	local is_world_enabled = Managers.world:is_world_enabled(self._world_name)
+
+	if not is_world_enabled then
+		return
+	end
+
 	local ui_renderer = self._ui_renderer
 	local default_ui_renderer = ui_renderer
-
-	Profiler.start("[UIHud] - draw")
-
 	local render_settings = self._render_settings
 	local saved_start_layer = render_settings.start_layer
 	local alpha_multiplier = render_settings.alpha_multiplier
 	local currently_visible_elements = self._currently_visible_elements
+	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local elements_array = self._elements_array
 	local offscreen_target_name_by_element_name = self._offscreen_target_name_by_element_name
 	local element_offscreen_target_functions_by_element_name = self._element_offscreen_target_functions_by_element_name
 	local offscreen_targets = self._offscreen_targets
-	local ui_renderer = self._ui_renderer
 	local elements_hud_retained_mode_lookup = self._elements_hud_retained_mode_lookup
 	local pass_number = 0
 
@@ -554,6 +551,7 @@ UIHud.draw = function (self, dt, t, input_service)
 	UIRenderer.add_render_pass(ui_renderer, pass_number, "to_screen", false)
 
 	local num_elements_rendered = 0
+	local hud_scale_applied = false
 
 	for i = 1, #elements_array do
 		local element = elements_array[i]
@@ -569,7 +567,11 @@ UIHud.draw = function (self, dt, t, input_service)
 				ui_renderer = default_ui_renderer
 			end
 
-			Profiler.start(element_name)
+			if elements_hud_scale_lookup[element_name] then
+				hud_scale_applied = true
+
+				self:_apply_hud_scale()
+			end
 
 			if ui_renderer then
 				local use_retained_mode = elements_hud_retained_mode_lookup[element_name]
@@ -600,13 +602,13 @@ UIHud.draw = function (self, dt, t, input_service)
 			render_settings.alpha_multiplier = alpha_multiplier
 			num_elements_rendered = num_elements_rendered + 1
 
-			Profiler.stop(element_name)
+			if hud_scale_applied then
+				self:_abort_hud_scale()
+			end
 		end
 	end
 
 	render_settings.start_layer = saved_start_layer
-
-	Profiler.start("[UIHud] - draw to screen")
 
 	if num_elements_rendered > 0 then
 		local resolution_width = RESOLUTION_LOOKUP.width
@@ -646,14 +648,16 @@ UIHud.draw = function (self, dt, t, input_service)
 
 		self._refresh_retained = false
 	end
-
-	Profiler.stop("[UIHud] - draw to screen")
-	Profiler.stop("[UIHud] - draw")
 end
 
-UIHud.destroy = function (self)
+UIHud.destroy = function (self, disable_world_bloom)
+	if disable_world_bloom then
+		WorldRenderUtils.disable_world_ui_bloom(self._world_name, self._player_viewport_name)
+	end
+
 	Managers.event:unregister(self, "event_set_tactical_overlay_state")
 	Managers.event:unregister(self, "event_set_communication_wheel_state")
+	Managers.event:unregister(self, "event_update_hud_scale")
 
 	local elements_array = self._elements_array
 
@@ -709,6 +713,10 @@ end
 
 UIHud.event_set_communication_wheel_state = function (self, active)
 	self._communication_wheel_active = active
+end
+
+UIHud.event_update_hud_scale = function (self, value)
+	self._hud_scale_modified = true
 end
 
 UIHud.destroy_offscreen_widgets = function (self, element_name, element)

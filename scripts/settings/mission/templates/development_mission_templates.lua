@@ -6,21 +6,7 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/zone_multi_mission/missions/mission_1/mission_1",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 1,
-						small_clip = 1
-					}
-				},
-				secondary = {
-					ammo = {
-						small_clip = 1
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 10
 		}
@@ -43,10 +29,11 @@ local mission_templates = {
 	},
 	empty = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
-		wwise_state = "None",
-		zone_id = "placeholder",
 		mission_name = "loc_mission_name_placeholder",
+		wwise_state = "None",
+		objectives = "debug",
+		zone_id = "placeholder",
+		game_mode_name = "default",
 		is_dev_mission = true,
 		level = "content/levels/debug/empty/world"
 	},
@@ -58,19 +45,7 @@ local mission_templates = {
 		is_dev_mission = true,
 		mechanism_name = "adventure",
 		level = "content/levels/debug/doors/world",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 8,
-						small_clip = 10
-					},
-					ability = {
-						small_grenade = 6
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		terror_event_templates = {
 			"terror_events_debug_doors"
 		}
@@ -113,36 +88,7 @@ local mission_templates = {
 		is_dev_mission = true,
 		mechanism_name = "adventure",
 		level = "content/levels/debug/side_objectives/world",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 5,
-						small_clip = 16
-					},
-					ability = {
-						small_grenade = 8
-					},
-					pocketable = {
-						ammo_cache_pocketable = 1,
-						medical_crate_pocketable = 1
-					}
-				},
-				secondary = {
-					ammo = {
-						large_clip = 4,
-						small_clip = 10
-					},
-					ability = {
-						small_grenade = 6
-					},
-					pocketable = {
-						ammo_cache_pocketable = 4,
-						medical_crate_pocketable = 5
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		terror_event_templates = {
 			"terror_events_side_objectives"
 		}
@@ -301,22 +247,7 @@ local mission_templates = {
 		is_dev_mission = true,
 		face_state_machine_key = "state_machine_missions",
 		level = "content/levels/debug/combat_zone/missions/mission_combat_zone",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 10,
-						small_clip = 12
-					}
-				},
-				secondary = {
-					ammo = {
-						large_clip = 6,
-						small_clip = 8
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 10
 		},
@@ -336,22 +267,7 @@ local mission_templates = {
 		mechanism_name = "adventure",
 		is_dev_mission = true,
 		level = "content/levels/debug/jacopo/missions/Sewers",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 10,
-						small_clip = 12
-					}
-				},
-				secondary = {
-					ammo = {
-						large_clip = 6,
-						small_clip = 8
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 10
 		},
@@ -366,22 +282,7 @@ local mission_templates = {
 		mechanism_name = "adventure",
 		is_dev_mission = true,
 		level = "content/levels/debug/combat_zone_new/missions/mission_combat_zone_new",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 10,
-						small_clip = 24
-					}
-				},
-				secondary = {
-					ammo = {
-						large_clip = 6,
-						small_clip = 15
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 10
 		},
@@ -407,21 +308,7 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/sound/world",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 1,
-						small_clip = 1
-					}
-				},
-				secondary = {
-					ammo = {
-						small_clip = 1
-					}
-				}
-			}
-		}
+		pickup_settings = {}
 	},
 	station_inside_sound = {
 		mechanism_name = "adventure",
@@ -451,10 +338,12 @@ local mission_templates = {
 			explosion = 1
 		},
 		dialogue_settings = {
+			short_story_start_delay = 500,
+			story_start_delay = 600,
 			npc_story_ticker_start_delay = 60,
 			enable_short_conversations = false,
 			enable_conversations = false,
-			npc_story_ticker_enabled = true,
+			npc_story_ticker_enabled = false,
 			on_start_dialogue_modifier = "radioactive"
 		}
 	},
@@ -491,16 +380,7 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/mission_board/world",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 4,
-						small_clip = 4
-					}
-				}
-			}
-		}
+		pickup_settings = {}
 	},
 	network = {
 		mechanism_name = "adventure",
@@ -528,27 +408,7 @@ local mission_templates = {
 		game_mode_name = "default",
 		mechanism_name = "adventure",
 		level = "content/levels/training_grounds/missions/mission_tg_test1",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 1,
-						small_clip = 1
-					},
-					ability = {
-						small_grenade = 1
-					}
-				},
-				secondary = {
-					ammo = {
-						small_clip = 1
-					},
-					ability = {
-						small_grenade = 1
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		terror_event_templates = {
 			"terror_events_training_ground_test"
 		},
@@ -590,146 +450,133 @@ local mission_templates = {
 	},
 	perf_breeds_poxwalker = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_poxwalker/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_newly_infected = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_newly_infected/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_assaulter = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_assaulter/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_melee = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_melee/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_rifleman = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_rifleman/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_cultist_assaulter = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_cultist_assaulter/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_cultist_melee = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_cultist_melee/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_executor = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_executor/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_shocktrooper = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_shocktrooper/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_traitor_guard_gunner = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_traitor_guard_gunner/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_cultist_gunner = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_cultist_gunner/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_cultist_shocktrooper = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_cultist_shocktrooper/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	perf_breeds_cultist_berzerker = {
 		mechanism_name = "adventure",
-		game_mode_name = "default",
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		game_mode_name = "default",
+		objectives = "debug",
 		is_dev_mission = true,
+		zone_id = "placeholder",
 		level = "content/levels/debug/breeds_performance/perf_breeds_cultist_berzerker/world",
-		testify_flags = {
-			performance = true
-		}
+		testify_flags = {}
 	},
 	cooling_arena = {
 		mission_name = "loc_mission_name_placeholder",
@@ -738,22 +585,7 @@ local mission_templates = {
 		mechanism_name = "adventure",
 		is_dev_mission = true,
 		level = "content/levels/debug/cooling_arena/world",
-		pickup_settings = {
-			default = {
-				primary = {
-					ammo = {
-						large_clip = 10,
-						small_clip = 12
-					}
-				},
-				secondary = {
-					ammo = {
-						large_clip = 6,
-						small_clip = 8
-					}
-				}
-			}
-		},
+		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 4
 		},

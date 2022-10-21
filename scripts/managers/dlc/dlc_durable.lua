@@ -20,4 +20,8 @@ DLCDurable.license_status_changed = function (self)
 	return
 end
 
+DLCDurable.id = function (self)
+	return nil
+end
+
 return DLCDurable

@@ -75,9 +75,18 @@ DecoderDeviceExtension.update = function (self, unit, dt, t)
 
 		if minigame_extension then
 			local current_minigame_state = minigame_extension:current_state()
-			local minigame_is_completed = current_minigame_state == minigame_states.completed
 
-			if minigame_is_completed then
+			if current_minigame_state == minigame_states.none then
+				self._interruption_ignored_timer = self._interruption_ignored_timer + dt
+
+				if self._interruption_ignored_timer > 1 then
+					self._interruption_ignored_timer = self._interruption_ignored_timer - 1
+
+					if Managers.stats.can_record_stats() then
+						Managers.stats:record_decoder_ignored()
+					end
+				end
+			elseif current_minigame_state == minigame_states.completed then
 				minigame_extension:stop()
 				self._decoder_synchronizer_extension:unblock_decoding_progression()
 			end
@@ -88,8 +97,6 @@ DecoderDeviceExtension.update = function (self, unit, dt, t)
 end
 
 DecoderDeviceExtension.register_synchronizer = function (self, synchronizer_extension)
-	fassert(not self._decoder_synchronizer_extension, "[DecoderDeviceExtension][register_synchronizer] Synchronizer already registered.")
-
 	self._decoder_synchronizer_extension = synchronizer_extension
 	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
@@ -210,6 +217,7 @@ DecoderDeviceExtension.decode_interrupt = function (self)
 	end
 
 	self._decoding_interrupted = true
+	self._interruption_ignored_timer = 0
 
 	Unit.flow_event(self._unit, "lua_decode_on_hold")
 end
@@ -263,8 +271,6 @@ DecoderDeviceExtension.wait_for_restart = function (self)
 end
 
 DecoderDeviceExtension._play_anim = function (self, anim_event)
-	fassert(self._is_server, "[DecoderDeviceExtension] Server only method.")
-
 	local animation_extension = self._animation_extension
 
 	if animation_extension then

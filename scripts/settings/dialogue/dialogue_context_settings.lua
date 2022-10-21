@@ -123,5 +123,44 @@ dialogue_context_settings.number_of_player_suppressions = {
 	trigger_when_higher = 30,
 	trigger_function = dialogue_context_settings.number_of_player_suppressions_callback
 }
+local armor_hit_query = {}
+
+dialogue_context_settings.number_of_armor_hits_callback = function (dialogue_context_extension, timed_counter, t)
+	if not timed_counter.has_triggered then
+		timed_counter.has_triggered = true
+	elseif timed_counter.time_lived - timed_counter.last_triggered_time < timed_counter.trigger_period then
+		return
+	end
+
+	timed_counter.last_triggered_time = timed_counter.time_lived
+	local current_unit = dialogue_context_extension._unit
+
+	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
+		Log.error("dialogue_context_settings", "trying to issue a faction dialogue query on a unit without a dialogue system extension")
+
+		return
+	end
+
+	local dialogue_extension = ScriptUnit.extension(current_unit, "dialogue_system")
+
+	table.clear(armor_hit_query)
+
+	local armor_hit_query = dialogue_extension:get_event_data_payload()
+	armor_hit_query.player_class = dialogue_extension:vo_class_name()
+
+	dialogue_extension:trigger_faction_dialogue_query("player_tip_armor_hit", armor_hit_query, nil, dialogue_extension._faction_breed_name, true)
+end
+
+dialogue_context_settings.number_of_armor_hits = {
+	count = 0,
+	has_triggered = false,
+	time_lived = 0,
+	delta = 0,
+	last_triggered_time = 0,
+	trigger_period = 2,
+	time_to_live = 5,
+	trigger_when_higher = 3,
+	trigger_function = dialogue_context_settings.number_of_armor_hits_callback
+}
 
 return settings("dialogue_context_settings", dialogue_context_settings)

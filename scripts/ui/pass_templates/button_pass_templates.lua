@@ -12,6 +12,47 @@ local ui_brown_medium = Color.ui_brown_medium(255, true)
 local ui_brown_dark = Color.ui_brown_dark(255, true)
 local color_lerp = ColorUtilities.color_lerp
 local math_max = math.max
+local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
+terminal_button_text_style.offset = {
+	0,
+	0,
+	6
+}
+terminal_button_text_style.text_horizontal_alignment = "center"
+terminal_button_text_style.text_vertical_alignment = "center"
+terminal_button_text_style.character_spacing = 0.1
+terminal_button_text_style.text_color = {
+	255,
+	216,
+	229,
+	207
+}
+terminal_button_text_style.default_color = {
+	255,
+	216,
+	229,
+	207
+}
+local terminal_button_small_text_style = table.clone(terminal_button_text_style)
+terminal_button_small_text_style.font_size = terminal_button_text_style.font_size - 2
+
+local function terminal_button_change_function(content, style)
+	local hotspot = content.hotspot
+	local is_selected = hotspot.is_selected
+	local color = style.color
+	local default_color = style.default_color
+	local selected_color = style.selected_color
+	style.color[1] = is_selected and selected_color[1] or default_color[1]
+	style.color[2] = is_selected and selected_color[2] or default_color[2]
+	style.color[3] = is_selected and selected_color[3] or default_color[3]
+	style.color[4] = is_selected and selected_color[4] or default_color[4]
+end
+
+local function terminal_button_hover_change_function(content, style)
+	local hotspot = content.hotspot
+	style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+end
+
 local default_button_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
@@ -182,16 +223,110 @@ ButtonPassTemplates.default_button = {
 		content = default_button_content
 	},
 	{
+		value = "content/ui/materials/backgrounds/terminal_basic",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-20,
+				8
+			},
+			color = {
+				255,
+				255,
+				255,
+				255
+			},
+			offset = {
+				0,
+				0,
+				0
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-60,
+				-30
+			},
+			color = Color.terminal_background_gradient(nil, true)
+		},
+		offset = {
+			0,
+			0,
+			2
+		},
+		change_function = terminal_button_hover_change_function,
+		visibility_function = function (content, style)
+			return not content.hotspot.disabled
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-60,
+				-30
+			},
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function,
+		visibility_function = function (content, style)
+			return not content.hotspot.disabled
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-60,
+				-30
+			},
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = terminal_button_change_function,
+		visibility_function = function (content, style)
+			return not content.hotspot.disabled
+		end
+	},
+	{
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			size_addition = {
-				-34,
-				-12
+				-24,
+				-14
 			},
 			color = {
-				255,
+				150,
 				0,
 				0,
 				0
@@ -199,48 +334,18 @@ ButtonPassTemplates.default_button = {
 			offset = {
 				0,
 				0,
-				0
-			}
-		}
-	},
-	{
-		value = "content/ui/materials/buttons/background_selected",
-		pass_type = "texture",
-		style = {
-			vertical_alignment = "center",
-			horizontal_alignment = "center",
-			size_addition = {
-				-34,
-				-12
-			},
-			color = Color.ui_terminal(255, true),
-			offset = {
-				0,
-				0,
-				1
+				5
 			}
 		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+		visibility_function = function (content, style)
+			return content.hotspot.disabled
 		end
-	},
-	{
-		value = "content/ui/materials/buttons/primary",
-		pass_type = "texture",
-		style = {
-			offset = {
-				0,
-				0,
-				2
-			}
-		}
 	},
 	{
 		style_id = "text",
 		pass_type = "text",
 		value_id = "text",
-		style = default_button_text_style,
+		style = terminal_button_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_color = hotspot.disabled and style.disabled_color or style.default_color
@@ -250,6 +355,17 @@ ButtonPassTemplates.default_button = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
+	},
+	{
+		value = "content/ui/materials/buttons/primary",
+		pass_type = "texture",
+		style = {
+			offset = {
+				0,
+				0,
+				6
+			}
+		}
 	},
 	size = {
 		347,
@@ -364,7 +480,7 @@ local default_button_small_text_style = table.clone(UIFontSettings.button_primar
 default_button_small_text_style.offset = {
 	0,
 	0,
-	4
+	5
 }
 default_button_small_text_style.text_horizontal_alignment = "center"
 default_button_small_text_style.text_vertical_alignment = "center"
@@ -377,19 +493,20 @@ ButtonPassTemplates.default_button_small = {
 		content = default_button_content
 	},
 	{
-		pass_type = "rect",
+		value = "content/ui/materials/backgrounds/terminal_basic",
+		pass_type = "texture",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			size_addition = {
-				-34,
-				-12
+				2,
+				16
 			},
 			color = {
 				255,
-				0,
-				0,
-				0
+				255,
+				255,
+				255
 			},
 			offset = {
 				0,
@@ -399,37 +516,108 @@ ButtonPassTemplates.default_button_small = {
 		}
 	},
 	{
-		value = "content/ui/materials/buttons/background_selected",
 		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			{
+				0,
+				0,
+				1
+			},
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-30,
+				-20
+			},
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			size_addition = {
-				-34,
-				-12
+				-30,
+				-20
 			},
-			color = Color.ui_terminal(255, true),
-			offset = {
-				0,
-				0,
-				1
-			}
+			color = Color.terminal_background_gradient(nil, true)
 		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
-		end
+		offset = {
+			0,
+			0,
+			2
+		},
+		change_function = terminal_button_hover_change_function
 	},
 	{
-		value = "content/ui/materials/buttons/secondary",
 		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/inner_shadow_medium",
 		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-30,
+				-20
+			},
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
 			offset = {
 				0,
 				0,
-				2
+				3
 			}
-		}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-30,
+				-20
+			},
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size_addition = {
+				-30,
+				-20
+			},
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = terminal_button_change_function
 	},
 	{
 		style_id = "text",
@@ -445,6 +633,17 @@ ButtonPassTemplates.default_button_small = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
+	},
+	{
+		value = "content/ui/materials/buttons/secondary",
+		pass_type = "texture",
+		style = {
+			offset = {
+				0,
+				0,
+				5
+			}
+		}
 	},
 	size = {
 		347,
@@ -561,6 +760,178 @@ ButtonPassTemplates.secondary_button = {
 		end
 	}
 }
+ButtonPassTemplates.terminal_button = {
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = default_button_content
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_background_gradient(nil, true)
+		},
+		offset = {
+			0,
+			0,
+			1
+		},
+		change_function = terminal_button_hover_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		style_id = "text",
+		pass_type = "text",
+		value_id = "text",
+		style = terminal_button_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			color_lerp(default_color, hover_color, progress, text_color)
+		end
+	},
+	size = {
+		340,
+		60
+	}
+}
+ButtonPassTemplates.terminal_button_small = {
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = default_button_content
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_background_gradient(nil, true)
+		},
+		offset = {
+			0,
+			0,
+			1
+		},
+		change_function = terminal_button_hover_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		style_id = "text",
+		pass_type = "text",
+		value_id = "text",
+		style = terminal_button_small_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			color_lerp(default_color, hover_color, progress, text_color)
+		end
+	},
+	size = {
+		280,
+		40
+	}
+}
 ButtonPassTemplates.list_button_default_height = 64
 local list_button_highlight_size_addition = 10
 local list_button_icon_size = {
@@ -611,61 +982,68 @@ ButtonPassTemplates.list_button_with_background = {
 		style_id = "hotspot",
 		pass_type = "hotspot",
 		content_id = "hotspot",
-		content = {
-			use_is_focused = true
-		},
+		content = {},
 		style = list_button_hotspot_default_style
 	},
 	{
+		pass_type = "texture",
 		style_id = "background",
-		pass_type = "rect",
+		value = "content/ui/materials/backgrounds/default_square",
 		style = {
-			color = Color.black(100, true),
-			offset = {
-				0,
-				0,
-				0
-			}
-		}
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
-		style_id = "background_selected",
-		value = "content/ui/materials/buttons/background_selected",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
 		style = {
-			color = Color.ui_terminal(0, true),
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_background_gradient(nil, true)
+		},
+		offset = {
+			0,
+			0,
+			1
+		},
+		change_function = terminal_button_hover_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
 			offset = {
 				0,
 				0,
 				3
 			}
 		},
-		change_function = function (content, style)
-			style.color[1] = 255 * content.hotspot.anim_select_progress
-		end,
-		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
-	},
-	{
-		pass_type = "texture",
-		style_id = "background_glow",
-		value = "content/ui/materials/buttons/background_selected",
-		style = {
-			default_color = Color.ui_terminal(0, true),
-			offset = {
-				0,
-				0,
-				1
-			},
-			disabled_color = UIFontSettings.list_button.disabled_color,
-			hover_color = UIFontSettings.list_button.hover_color
-		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
-			style.color[1] = 120 + progress * 135
-
-			ButtonPassTemplates.list_button_label_change_function(content, style)
-		end
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
@@ -673,22 +1051,21 @@ ButtonPassTemplates.list_button_with_background = {
 		value = "content/ui/materials/buttons/arrow_01",
 		style = {
 			horizontal_alignment = "right",
-			hdr = true,
 			vertical_alignment = "center",
 			size = {
 				12,
 				18
 			},
-			default_color = Color.ui_terminal(255, true),
+			default_color = Color.terminal_icon(255, true),
 			offset = {
 				-30,
 				0,
-				3
+				5
 			},
 			default_offset = {
 				-40,
 				0,
-				3
+				5
 			},
 			size_addition = {
 				0,
@@ -706,31 +1083,9 @@ ButtonPassTemplates.list_button_with_background = {
 			style_size_addition[2] = size_addition * 2
 			local offset = style.offset
 			local default_offset = style.default_offset
-			offset[1] = default_offset[1] + size_addition * 6
-			style.hdr = progress == 1
 
 			ButtonPassTemplates.list_button_label_change_function(content, style)
 		end
-	},
-	{
-		pass_type = "texture",
-		style_id = "highlight",
-		value = "content/ui/materials/frames/hover",
-		style = {
-			hdr = true,
-			color = Color.ui_terminal(255, true),
-			offset = {
-				0,
-				0,
-				4
-			},
-			size_addition = {
-				0,
-				0
-			}
-		},
-		change_function = ButtonPassTemplates.list_button_highlight_change_function,
-		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 	},
 	{
 		pass_type = "text",
@@ -1294,11 +1649,19 @@ ButtonPassTemplates.continue_button = {
 local menu_panel_button_style = table.clone(UIFontSettings.header_3)
 menu_panel_button_style.text_horizontal_alignment = "center"
 menu_panel_button_style.text_vertical_alignment = "center"
+menu_panel_button_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 menu_panel_button_style.offset = {
 	0,
 	0,
 	3
 }
+menu_panel_button_style.default_color = {
+	255,
+	255,
+	255,
+	255
+}
+menu_panel_button_style.hover_color = Color.ui_brown_super_light(255, true)
 local menu_panel_button_hotspot_content = {
 	on_hover_sound = UISoundEvents.tab_button_hovered,
 	on_pressed_sound = UISoundEvents.tab_button_pressed
@@ -1377,6 +1740,7 @@ ButtonPassTemplates.menu_panel_button = {
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_input_progress)
+			style.material = hotspot.is_selected and "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted" or "content/ui/materials/font_gradients/slug_font_gradient_header"
 
 			color_lerp(default_text_color, hover_color, progress, text_color)
 		end
@@ -1384,78 +1748,21 @@ ButtonPassTemplates.menu_panel_button = {
 	{
 		style_id = "alert_dot",
 		pass_type = "texture",
-		value = "content/ui/materials/icons/system/page_indicator_idle",
+		value = "content/ui/materials/symbols/new_item_indicator",
 		style = {
 			vertical_alignment = "center",
-			hdr = true,
 			horizontal_alignment = "right",
 			size = {
-				30,
-				30
+				24,
+				24
 			},
 			offset = {
 				12,
 				-10,
 				0
 			},
-			color = Color.ui_hud_red_light(255, true)
+			color = Color.terminal_corner_selected(255, true)
 		},
-		visibility_function = function (content)
-			return content.show_alert
-		end
-	},
-	{
-		pass_type = "texture",
-		style_id = "alert_ring",
-		value = "content/ui/materials/icons/system/page_indicator_active",
-		style = {
-			anim_time = 1,
-			horizontal_alignment = "right",
-			hdr = true,
-			vertical_alignment = "center",
-			pause_time = 1,
-			size = {
-				30,
-				30
-			},
-			offset = {
-				12,
-				-10,
-				0
-			},
-			color = Color.ui_hud_red_light(255, true),
-			size_addition = {
-				0,
-				0
-			}
-		},
-		change_function = function (content, style, animation, dt)
-			local anim_time = style.anim_time
-			local pause_time = style.pause_time or 0
-			local total_time = anim_time + pause_time
-			local progress_time = content.alert_anim_time or 0
-			progress_time = math.fmod(progress_time + dt, total_time)
-			content.alert_anim_time = progress_time
-			local progress = progress_time <= anim_time and anim_time and progress_time / anim_time or 1
-			local size_addition = math.sirp(-style.size[1], 0, progress)
-			local style_size_additon = style.size_addition
-			style_size_additon[1] = size_addition
-			style_size_additon[2] = size_addition
-			local default_offset = style.default_offset
-
-			if not default_offset then
-				default_offset = {
-					style.offset[1],
-					style.offset[2]
-				}
-				style.default_offset = default_offset
-			end
-
-			local extra_offset = size_addition / 2
-			local style_offset = style.offset
-			style_offset[1] = default_offset[1] + extra_offset
-			style.color[1] = 255 * (1 - progress)
-		end,
 		visibility_function = function (content)
 			return content.show_alert
 		end
@@ -1535,6 +1842,94 @@ ButtonPassTemplates.tab_menu_button = {
 
 			return hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0 or hotspot.anim_select_progress > 0 or hotspot.anim_input_progress > 0
 		end
+	}
+}
+ButtonPassTemplates.tab_menu_with_divider_button = {
+	{
+		style_id = "hotspot",
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = tab_menu_button_hotspot_content
+	},
+	{
+		style_id = "glow",
+		pass_type = "texture",
+		value = "content/ui/materials/effects/wide_upward_glow",
+		value_id = "glow",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			color = Color.ui_terminal(255, true),
+			size = {
+				nil,
+				0
+			},
+			size_addition = {
+				0,
+				0
+			},
+			offset = {
+				0,
+				-3,
+				2
+			}
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local progress = math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress)
+			style.color[1] = 255 * math.easeOutCubic(progress)
+			style.size_addition[2] = 80 * progress
+		end,
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.anim_focus_progress > 0 or hotspot.anim_select_progress > 0
+		end
+	},
+	{
+		style_id = "text",
+		pass_type = "text",
+		value_id = "text",
+		style = table.clone(UIFontSettings.tab_menu_button),
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.anim_hover_progress < 1 and hotspot.anim_focus_progress < 1 and hotspot.anim_select_progress < 1 and hotspot.anim_input_progress < 1
+		end
+	},
+	{
+		style_id = "text_hover",
+		pass_type = "text",
+		value_id = "text",
+		style = table.clone(UIFontSettings.tab_menu_button_hover),
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local text_color = style.text_color
+			local math_max = math_max
+			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+			text_color[1] = 255 * math.easeInCubic(progress)
+		end,
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0 or hotspot.anim_select_progress > 0 or hotspot.anim_input_progress > 0
+		end
+	},
+	{
+		style_id = "divider",
+		pass_type = "rect",
+		style = {
+			horizontal_alignment = "right",
+			color = Color.white(255, true),
+			size = {
+				2
+			},
+			offset = {
+				13,
+				0,
+				1
+			}
+		}
 	}
 }
 ButtonPassTemplates.tab_menu_button_icon = {
@@ -1652,27 +2047,7 @@ ButtonPassTemplates.page_indicator = {
 		end
 	}
 }
-local input_legend_button_style = table.clone(UIFontSettings.button_2)
-input_legend_button_style.text_horizontal_alignment = "center"
-input_legend_button_style.text_vertical_alignment = "center"
-input_legend_button_style.text_color = {
-	255,
-	102,
-	102,
-	102
-}
-input_legend_button_style.default_text_color = {
-	255,
-	102,
-	102,
-	102
-}
-input_legend_button_style.hover_color = {
-	255,
-	255,
-	255,
-	255
-}
+local input_legend_button_style = table.clone(UIFontSettings.input_legend_button)
 ButtonPassTemplates.input_legend_button = {
 	{
 		style_id = "text",

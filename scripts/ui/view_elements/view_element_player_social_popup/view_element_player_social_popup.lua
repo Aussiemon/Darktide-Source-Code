@@ -34,13 +34,13 @@ ViewElementPlayerSocialPopup.set_close_popup_request_callback = function (self, 
 	self._request_close_popup = callback
 end
 
-ViewElementPlayerSocialPopup.set_player_info = function (self, player_info, portrait_data)
+ViewElementPlayerSocialPopup.set_player_info = function (self, parent, player_info, portrait_data)
 	if self._player_info then
-		self:_start_fade_animation("fade_out_widgets", callback(self, "_set_player_info", player_info))
+		self:_start_fade_animation("fade_out_widgets", callback(self, "_set_player_info", parent, player_info))
 	else
 		local menu_items, num_menu_items = ViewElementPlayerSocialPopupContentList.from_player_info(self._parent, player_info)
 
-		self:_set_player_info(player_info, portrait_data, menu_items, num_menu_items)
+		self:_set_player_info(parent, player_info, portrait_data, menu_items, num_menu_items)
 	end
 end
 
@@ -117,7 +117,7 @@ end
 
 local _player_header_params = {}
 
-ViewElementPlayerSocialPopup._set_player_info = function (self, player_info, portrait_data, menu_items, num_menu_items)
+ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_info, portrait_data, menu_items, num_menu_items)
 	self._player_info = player_info
 	local player_header = self._widgets_by_name.player_header
 	local header_content = player_header.content
@@ -131,9 +131,23 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, player_info, por
 		player_header_params.character_name = character_name
 		player_header_params.character_level = character_level
 		player_display_name = Localize("loc_social_menu_character_name_format", true, _player_header_params)
-		user_display_name = player_info:user_display_name()
+
+		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			user_display_name = platform_profile and platform_profile.gamertag or "N/A"
+		else
+			user_display_name = player_info:user_display_name()
+		end
 	else
-		player_display_name = player_info:user_display_name()
+		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			player_display_name = platform_profile and platform_profile.gamertag or "N/A"
+		else
+			player_display_name = player_info:user_display_name()
+		end
+
 		user_display_name = ""
 	end
 

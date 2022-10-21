@@ -259,6 +259,16 @@ table.find = function (t, element)
 	end
 end
 
+table.find_by_key = function (t, search_key, search_value)
+	for key, value in pairs(t) do
+		if value[search_key] == search_value then
+			return key, value
+		end
+	end
+
+	return nil
+end
+
 table.index_of = function (t, element)
 	for i = 1, #t do
 		if t[i] == element then
@@ -503,9 +513,6 @@ local random_indices = {}
 local all = {}
 
 table.get_random_array_indices = function (size, num_picks)
-	assert(num_picks <= size, "Can't pick more elements than the size of the")
-	assert(size < 128, "Don't use this for large arrays, since it will be inefficient. It creates large tables then.")
-
 	for i = 1, size do
 		all[i] = i
 	end
@@ -531,8 +538,6 @@ table.set = function (list, destination)
 end
 
 table.mirror_table = function (source, dest)
-	assert(source ~= dest)
-
 	local result = dest or {}
 
 	for k, v in pairs(source) do
@@ -544,8 +549,6 @@ table.mirror_table = function (source, dest)
 end
 
 table.mirror_array = function (source, dest)
-	assert(source ~= dest)
-
 	local result = dest or {}
 
 	for index, value in ipairs(source) do
@@ -557,8 +560,6 @@ table.mirror_array = function (source, dest)
 end
 
 table.add_mirrored_entry = function (list, a, b)
-	assert(a ~= b)
-
 	list[a] = b
 	list[b] = a
 end
@@ -604,8 +605,6 @@ table.array_to_table = function (array, array_n, out_table)
 end
 
 table.table_to_array = function (t, array_out, values_only)
-	assert(#array_out == 0)
-
 	local array_out_n = 0
 
 	for key, value in pairs(t) do
@@ -623,7 +622,7 @@ table.table_to_array = function (t, array_out, values_only)
 end
 
 table.add_meta_logging = function (real_table, debug_enabled, debug_name)
-	local real_table = real_table or {}
+	real_table = real_table or {}
 
 	if debug_enabled then
 		local front_table = {
@@ -676,7 +675,7 @@ table.set_readonly = function (table)
 	return setmetatable({}, {
 		__metatable = false,
 		__index = table,
-		__newindex = function (table, key, value)
+		__newindex = function (_, key, value)
 			error("Attempt to modify read-only table")
 		end
 	})
@@ -735,9 +734,6 @@ table.index_lookup_table = function (...)
 end
 
 table.make_unique = function (t)
-	fassert(t, "Trying to use table.make_unique on a nil value")
-	fassert(type(t) == "table", "Trying to use table.make_unique on a non-table value value")
-
 	t.__data = {}
 	local metatable = {
 		__index = function (t, k)
@@ -745,9 +741,6 @@ table.make_unique = function (t)
 		end,
 		__newindex = function (t, k, v)
 			local data = rawget(t, "__data")
-
-			fassert(not data[k], "Trying to set already defined key %q", k)
-
 			data[k] = v
 		end
 	}
@@ -780,13 +773,9 @@ table.make_strict_with_interface = function (t, name, interface)
 
 	return setmetatable(t, {
 		__index = function (t, key)
-			fassert(valid_keys[key], "Table %q does not have field_name %q defined.", name, key)
-
 			return nil
 		end,
 		__newindex = function (t, key, val)
-			fassert(valid_keys[key], "Table %q is strict. Not allowed to add new field %q.", name, key)
-
 			return rawset(t, key, val)
 		end
 	})
@@ -825,15 +814,11 @@ table.make_locked = function (original_t, optional_error_message)
 
 	return setmetatable(locked_table, {
 		__index = function (t, key)
-			fassert(not t.__locked, error_msg)
-
 			t.__locked = true
 
 			return rawget(t.__data, key)
 		end,
 		__newindex = function (t, key, val)
-			fassert(not t.__locked, error_msg)
-
 			t.__locked = true
 			local data = rawget(t, "__data")
 			data[key] = val
@@ -891,7 +876,7 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 		local error_msg = optional_error_message_interface or ""
 
 		for field_name, field in pairs(data) do
-			fassert(interface[field_name], "Field %q does not exist in the interface. %s", field_name, error_msg)
+			-- Nothing
 		end
 	end
 
@@ -908,13 +893,9 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 			if __interface then
 				local valid_field = __interface[field_name]
 
-				fassert(valid_field, "Field name %q is not defined in interface for table %q. %s", field_name, name, __index_error_msg)
-
 				return rawget(t.__data, field_name)
 			else
 				local field = rawget(t.__data, field_name)
-
-				fassert(field, "Table %q does not have field %q defined. %s", name, field_name, __index_error_msg)
 
 				return field
 			end
@@ -989,16 +970,18 @@ table.remove_empty_values = function (t)
 	local result = {}
 
 	for k, v in pairs(t) do
-		local value_type = type(v)
+		if k ~= StrictNil then
+			local value_type = type(v)
 
-		if value_type == "table" then
-			if not table.is_empty(v) then
-				result[k] = table.remove_empty_values(v)
+			if value_type == "table" then
+				if not table.is_empty(v) then
+					result[k] = table.remove_empty_values(v)
+				end
+			elseif value_type == "string" and v ~= "" then
+				result[k] = v
+			elseif value_type ~= "nil" then
+				result[k] = v
 			end
-		elseif value_type == "string" and v ~= "" then
-			result[k] = v
-		elseif value_type ~= "nil" then
-			result[k] = v
 		end
 	end
 

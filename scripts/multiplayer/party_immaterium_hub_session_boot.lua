@@ -37,6 +37,12 @@ PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
 	self._server_details_promise = self._backend_interface.hub_session:fetch_server_details(self._matched_hub_session_id)
 
 	self._server_details_promise:next(function (response)
+		_info("Got server details: %s", table.tostring(response, 3))
+
+		if response.vivoxToken then
+			self._event_object:set_vivox_backend_info(response.vivoxToken)
+		end
+
 		if not response.ticket then
 			_info("Got empty ticket, meaning that we are not a part of this session.")
 
@@ -48,7 +54,6 @@ PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
 		else
 			self._server_details = response
 
-			_info("Got server details: %s", table.tostring(self._server_details, 3))
 			self:_start_handshaking()
 		end
 	end):catch(function (error)
@@ -212,7 +217,6 @@ PartyImmateriumHubSessionBoot.update = function (self, dt)
 end
 
 PartyImmateriumHubSessionBoot.result = function (self)
-	fassert(self._state == STATES.ready, "Tried to get result when not ready")
 	self:_set_window_title("client %s", Network.peer_id())
 
 	local connection_client = self._connection_client

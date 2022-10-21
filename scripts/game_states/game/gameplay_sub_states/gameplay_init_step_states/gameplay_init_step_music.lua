@@ -1,5 +1,5 @@
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
-local GameplayInitStepNetworkStory = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_network_story")
+local GameplayInitStepVoiceOver = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_voice_over")
 local GameplayInitStepMusic = class("GameplayInitStepMusic")
 
 GameplayInitStepMusic.on_enter = function (self, parent, params)
@@ -16,7 +16,7 @@ GameplayInitStepMusic.update = function (self, main_dt, main_t)
 		shared_state = self._shared_state
 	}
 
-	return GameplayInitStepNetworkStory, next_step_params
+	return GameplayInitStepVoiceOver, next_step_params
 end
 
 GameplayInitStepMusic._music_post_init = function (self, level, is_dedicated_server)

@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local damage_types = DamageSettings.damage_types
@@ -73,9 +74,9 @@ local weapon_template = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
+	unwield = "stay",
 	wield = "stay",
 	push = "stay",
-	unwield = "stay",
 	scan_start = {
 		wield = "base",
 		unwield = "base",
@@ -87,14 +88,10 @@ weapon_template.action_input_hierarchy = {
 			scan_cancel = "base"
 		}
 	},
-	inspect = {
+	inspect_start = {
 		unwield = "base",
 		wield = "base",
-		inspect_start = {
-			unwield = "base",
-			wield = "base",
-			inspect_stop = "base"
-		}
+		inspect_stop = "base"
 	}
 }
 
@@ -158,7 +155,6 @@ weapon_template.actions = {
 		block_duration = 0.4,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 0.67,
 		action_movement_curve = {
 			{
@@ -179,11 +175,11 @@ weapon_template.actions = {
 			},
 			start_modifier = 1
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical,
 		allowed_chain_actions = {
 			wield = {
@@ -329,11 +325,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 
 weapon_template.action_scan_on_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"
@@ -361,7 +353,7 @@ weapon_template.action_scan_confirm_on_screen_ui_validation = function (wielded_
 	return false
 end
 
-weapon_template.action_push_on_screen_ui_validation = function (wielded_slot_id, current_action_name, player)
+weapon_template.action_push_on_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"
 end
 

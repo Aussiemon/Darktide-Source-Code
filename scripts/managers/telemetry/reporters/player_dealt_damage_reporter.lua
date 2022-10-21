@@ -2,7 +2,7 @@ local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter
 local PlayerDealtDamageReporter = class("PlayerDealtDamageReporter")
 
 PlayerDealtDamageReporter.init = function (self)
-	self._summaries = {}
+	self._reports = {}
 end
 
 PlayerDealtDamageReporter.update = function (self, dt, t)
@@ -10,11 +10,11 @@ PlayerDealtDamageReporter.update = function (self, dt, t)
 end
 
 PlayerDealtDamageReporter.report = function (self)
-	if table.is_empty(self._summaries) then
+	if table.is_empty(self._reports) then
 		return
 	end
 
-	Managers.telemetry_events:player_dealt_damage_summary(self._summaries)
+	Managers.telemetry_events:player_dealt_damage_report(self._reports)
 end
 
 local function compare_entry(e1, e2)
@@ -34,7 +34,9 @@ local function extract_data(entry)
 end
 
 PlayerDealtDamageReporter.register_event = function (self, player, data)
-	local entries = self._summaries[player] and self._summaries[player].entries
+	local subject = player:telemetry_subject()
+	local player_key = string.format("%s:%s", subject.account_id, subject.character_id)
+	local entries = self._reports[player_key] and self._reports[player_key].entries
 
 	if entries then
 		for _, entry in pairs(entries) do
@@ -49,10 +51,10 @@ PlayerDealtDamageReporter.register_event = function (self, player, data)
 		entries[#entries + 1] = extract_data(data)
 	else
 		local player_data = {
-			telemetry_subject = player:telemetry_subject(),
+			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session()
 		}
-		self._summaries[player] = {
+		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
 				extract_data(data)

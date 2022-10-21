@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
@@ -37,7 +38,26 @@ local weapon_template = {
 			anim_event = "equip",
 			sprint_ready_up_time = 0,
 			total_time = 0.1,
-			allowed_chain_actions = {}
+			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					action_name = "grenade_ability"
+				},
+				wield = {
+					action_name = "action_unwield"
+				},
+				start_attack = {
+					action_name = "action_melee_start_left"
+				},
+				block = {
+					action_name = "action_block"
+				},
+				special_action = {
+					action_name = "action_weapon_special"
+				}
+			}
 		},
 		action_melee_start_left = {
 			anim_end_event = "attack_finished",
@@ -102,7 +122,6 @@ local weapon_template = {
 			damage_window_end = 0.6,
 			uninterruptible = true,
 			anim_event = "attack_swing_left_diagonal",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -180,7 +199,6 @@ local weapon_template = {
 			anim_end_event = "attack_finished",
 			uninterruptible = true,
 			anim_event = "attack_swing_heavy_left",
-			power_level = 500,
 			total_time = 3,
 			action_movement_curve = {
 				{
@@ -309,7 +327,6 @@ local weapon_template = {
 			damage_window_end = 0.6,
 			uninterruptible = true,
 			anim_event = "attack_swing_right_diagonal",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -388,7 +405,6 @@ local weapon_template = {
 			damage_window_end = 0.5333333333333333,
 			uninterruptible = true,
 			anim_event = "attack_swing_heavy_right",
-			power_level = 500,
 			total_time = 3,
 			action_movement_curve = {
 				{
@@ -508,7 +524,6 @@ local weapon_template = {
 			damage_window_end = 0.5333333333333333,
 			uninterruptible = true,
 			anim_event = "attack_swing_down",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -589,7 +604,6 @@ local weapon_template = {
 			activate_special = true,
 			uninterruptible = true,
 			anim_event = "attack_swing_slap",
-			power_level = 500,
 			total_time = 1.8,
 			action_movement_curve = {
 				{
@@ -714,7 +728,6 @@ local weapon_template = {
 			first_person_hit_stop_anim = "hit_right_shake",
 			damage_window_end = 0.5333333333333333,
 			anim_event = "push_follow_up",
-			power_level = 500,
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -776,7 +789,6 @@ local weapon_template = {
 			block_duration = 0.5,
 			kind = "push",
 			anim_event = "attack_push",
-			power_level = 500,
 			total_time = 1,
 			action_movement_curve = {
 				{
@@ -810,11 +822,11 @@ local weapon_template = {
 					chain_time = 0.5
 				}
 			},
-			inner_push_rad = math.pi * 0.6,
+			inner_push_rad = math.pi * 0.35,
 			outer_push_rad = math.pi * 1,
-			inner_damage_profile = DamageProfileTemplates.push_test,
+			inner_damage_profile = DamageProfileTemplates.ogryn_push,
 			inner_damage_type = damage_types.physical,
-			outer_damage_profile = DamageProfileTemplates.push_test,
+			outer_damage_profile = DamageProfileTemplates.default_push,
 			outer_damage_type = damage_types.physical
 		},
 		action_inspect = {
@@ -885,7 +897,7 @@ local weapon_template = {
 			}
 		},
 		ogryn_powermaul_control_stat = {
-			display_name = "loc_stats_display_control_stat",
+			display_name = "loc_stats_display_control_stat_melee",
 			is_stat_trait = true,
 			damage = {
 				action_left_light = {
@@ -1033,11 +1045,7 @@ weapon_template.sprint_template = "ogryn"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "ogryn_club_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.6,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_powermaul
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 
 return weapon_template

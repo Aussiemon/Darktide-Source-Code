@@ -22,90 +22,11 @@ local action_data = {
 			"idle_2"
 		},
 		speeds = {
-			move_fwd_1 = 1
+			move_fwd_1 = 1.5
 		}
 	},
 	death = {
-		instant_ragdoll_chance = 1,
-		death_animations = {
-			[hit_zone_names.head] = {
-				"death_shot_head_front",
-				"death_shot_head_fwd",
-				"death_shot_head_left",
-				"death_shot_head_right",
-				"death_shot_head_bwd",
-				"death_decapitate_3"
-			},
-			[hit_zone_names.torso] = {
-				"death_stab_chest_front",
-				"death_stab_chest_back",
-				"death_slash_left",
-				"death_slash_right",
-				"death_strike_chest_front",
-				"death_strike_chest_back",
-				"death_strike_chest_left",
-				"death_strike_chest_right"
-			},
-			[hit_zone_names.upper_left_arm] = {
-				"death_arm_left",
-				"death_arm_left_2"
-			},
-			[hit_zone_names.lower_left_arm] = {
-				"death_arm_left",
-				"death_arm_left_2"
-			},
-			[hit_zone_names.upper_right_arm] = {
-				"death_arm_right",
-				"death_arm_right_2"
-			},
-			[hit_zone_names.lower_right_arm] = {
-				"death_arm_right",
-				"death_arm_right_2"
-			},
-			[hit_zone_names.upper_left_leg] = {
-				"death_leg_left"
-			},
-			[hit_zone_names.lower_left_leg] = {
-				"death_leg_left"
-			},
-			[hit_zone_names.upper_right_leg] = {
-				"death_leg_right"
-			},
-			[hit_zone_names.lower_right_leg] = {
-				"death_leg_right"
-			}
-		},
-		ragdoll_timings = {
-			death_shot_head_right = 4.566666666666666,
-			death_slash_left = 3.2666666666666666,
-			death_decapitate_3 = 1.4,
-			death_strike_chest_right = 1.2666666666666666,
-			death_strike_chest_back = 3.1666666666666665,
-			death_strike_chest_left = 3.2,
-			death_leg_right = 4.5,
-			death_slash_right = 2.6666666666666665,
-			death_arm_left = 3.033333333333333,
-			death_strike_chest_front = 1.6666666666666667,
-			death_arm_left_2 = 4,
-			death_arm_left_3 = 3.9,
-			death_arm_right = 5.1,
-			death_decapitate = 3.566666666666667,
-			death_arm_right_3 = 2.566666666666667,
-			death_stab_chest_front = 3.6333333333333333,
-			death_leg_left = 3.066666666666667,
-			death_stab_chest_back = 2.5,
-			death_burn = 2.566666666666667,
-			death_burn_2 = 2.566666666666667,
-			death_arm_right_2 = 4.233333333333333,
-			death_shot_head_bwd = 3.3333333333333335,
-			death_shot_head_left = 2.1,
-			death_burn_3 = 4.666666666666667,
-			death_shot_head_front = 1.4666666666666666,
-			death_burn_4 = 4.4,
-			death_leg_both = 4.5,
-			death_shot_head_fwd = 2.3666666666666667,
-			death_decapitate_2 = 3.1666666666666665
-		}
+		instant_ragdoll_chance = 1
 	},
 	combat_idle = {
 		utility_weight = 2,
@@ -122,28 +43,23 @@ local action_data = {
 		moving_alerted_anim_events = {
 			fwd = {
 				"alerted_fwd",
-				"alerted_fwd_2",
-				"alerted_fwd_3"
+				"alerted_fwd_2"
 			},
 			bwd = {
 				"alerted_bwd",
-				"alerted_bwd_2",
-				"alerted_bwd_3"
+				"alerted_bwd_2"
 			},
 			left = {
 				"alerted_left",
-				"alerted_left_2",
-				"alerted_left_3"
+				"alerted_left_2"
 			},
 			right = {
 				"alerted_right",
-				"alerted_right_2",
-				"alerted_right_3"
+				"alerted_right_2"
 			}
 		},
 		hesitate_anim_events = {
-			"alerted",
-			"alerted_2"
+			"alerted"
 		},
 		start_move_anim_data = {
 			alerted_fwd = {},
@@ -171,70 +87,35 @@ local action_data = {
 			alerted_right_2 = {
 				sign = -1,
 				rad = math.pi / 2
-			},
-			alerted_fwd_3 = {},
-			alerted_bwd_3 = {
-				sign = 1,
-				rad = math.pi
-			},
-			alerted_left_3 = {
-				sign = 1,
-				rad = math.pi / 2
-			},
-			alerted_right_3 = {
-				sign = -1,
-				rad = math.pi / 2
 			}
 		},
 		start_move_rotation_timings = {
-			alerted_right_3 = 0,
+			alerted_bwd = 0,
 			alerted_bwd_2 = 0,
+			alerted_left_2 = 0,
 			alerted_right_2 = 0,
 			alerted_right = 0,
-			alerted_left = 0,
-			alerted_bwd = 0,
-			alerted_left_2 = 0,
-			alerted_bwd_3 = 0,
-			alerted_left_3 = 0
+			alerted_left = 0
 		},
 		start_rotation_durations = {
-			alerted_right_3 = 0.7666666666666667,
+			alerted_bwd = 2.3666666666666667,
 			alerted_bwd_2 = 3.066666666666667,
+			alerted_left_2 = 1.7,
 			alerted_right_2 = 0.43333333333333335,
 			alerted_right = 0.7666666666666667,
-			alerted_left = 0.4,
-			alerted_bwd = 2.3666666666666667,
-			alerted_left_2 = 1.7,
-			alerted_bwd_3 = 2.3666666666666667,
-			alerted_left_3 = 0.4
+			alerted_left = 0.4
 		},
 		alerted_durations = {
 			alerted_fwd_2 = 3.9,
 			alerted_bwd_2 = 5.1,
-			alerted_bwd_3 = 4.266666666666667,
 			alerted_right_2 = 3.8,
-			alerted_left_3 = 3.3333333333333335,
 			alerted_right = 4.466666666666667,
 			alerted_left = 3.3333333333333335,
-			alerted_bwd = 4.266666666666667,
-			alerted_left_2 = 3.7,
-			alerted_right_3 = 4.466666666666667,
-			alerted_fwd_3 = 4.5,
-			alerted_fwd = 4.5,
-			hesitate_1 = {
-				2.6666666666666665,
-				6.333333333333333
-			},
-			hesitate_2 = {
-				1.3333333333333333,
-				5.333333333333333
-			},
+			alerted_bwd = 4.666666666666667,
+			alerted_left_2 = 4.166666666666667,
+			alerted_fwd = 4.4,
 			alerted = {
 				2,
-				6.666666666666667
-			},
-			alerted_2 = {
-				2.6666666666666665,
 				6.666666666666667
 			}
 		}
@@ -319,13 +200,9 @@ local action_data = {
 		start_move_anim_events = {
 			walking = {
 				bwd = "move_bwd_walk",
+				fwd = "move_fwd_walk",
 				left = "move_left_walk",
-				right = "move_right_walk",
-				fwd = {
-					"move_fwd_walk",
-					"move_fwd_walk_2",
-					"move_fwd_walk_4"
-				}
+				right = "move_right_walk"
 			},
 			running = {
 				bwd = "move_start_bwd",
@@ -397,11 +274,6 @@ local action_data = {
 				"attack_02",
 				"attack_03",
 				"attack_04",
-				"attack_combo_standing_01",
-				"attack_combo_standing_02",
-				"attack_combo_standing_03",
-				"attack_combo_standing_04",
-				"attack_combo_standing_05",
 				"attack_combo_standing_06"
 			},
 			up = {
@@ -412,64 +284,25 @@ local action_data = {
 			}
 		},
 		attack_anim_damage_timings = {
-			attack_01 = 0.4523809523809524,
-			attack_03 = 0.5714285714285714,
-			attack_reach_up = 1.1794871794871795,
-			attack_02 = 0.6190476190476191,
-			attack_04 = 1.2142857142857142,
-			attack_down_01 = 1.3333333333333333,
-			attack_combo_standing_01 = {
-				0.6666666666666666,
-				0.9333333333333333,
-				1.6266666666666667,
-				2.3466666666666667
-			},
-			attack_combo_standing_02 = {
-				0.5866666666666667,
-				1.1733333333333333,
-				1.76,
-				2.56
-			},
-			attack_combo_standing_03 = {
-				0.48,
-				0.9333333333333333,
-				1.6266666666666667,
-				2.32
-			},
-			attack_combo_standing_04 = {
-				1.1466666666666667,
-				1.6,
-				1.7333333333333334,
-				2.4266666666666667
-			},
-			attack_combo_standing_05 = {
-				0.5333333333333333,
-				0.9866666666666667,
-				1.2,
-				1.5733333333333333,
-				1.8666666666666667,
-				2.32,
-				2.6666666666666665,
-				3.3066666666666666
-			},
+			attack_01 = 0.43333333333333335,
+			attack_down_01 = 0.7,
+			attack_04 = 0.5666666666666667,
+			attack_03 = 0.4666666666666667,
+			attack_reach_up = 0.7666666666666667,
+			attack_02 = 0.4666666666666667,
 			attack_combo_standing_06 = {
-				0.64,
-				1.4666666666666666
+				0.4666666666666667,
+				0.9666666666666667
 			}
 		},
 		attack_anim_durations = {
-			attack_01 = 1.1428571428571428,
-			attack_combo_standing_01 = 3.493333333333333,
-			attack_combo_standing_03 = 3.2,
-			attack_combo_standing_04 = 3.52,
-			attack_03 = 1.3333333333333333,
-			attack_reach_up = 2.6923076923076925,
-			attack_02 = 1.380952380952381,
-			attack_combo_standing_06 = 2.3733333333333335,
-			attack_combo_standing_05 = 4.24,
-			attack_04 = 2.2142857142857144,
-			attack_down_01 = 3.3333333333333335,
-			attack_combo_standing_02 = 3.44
+			attack_01 = 1.5666666666666667,
+			attack_down_01 = 2.1,
+			attack_04 = 1.8333333333333333,
+			attack_03 = 1.8333333333333333,
+			attack_reach_up = 1.6666666666666667,
+			attack_02 = 1.6666666666666667,
+			attack_combo_standing_06 = 1.8666666666666667
 		},
 		attack_intensities = {
 			ranged = 1,
@@ -483,85 +316,134 @@ local action_data = {
 		damage_type = damage_types.minion_melee_sharp
 	},
 	combo_attack = {
+		move_speed_variable_lerp_speed = 4,
 		utility_weight = 1,
-		ignore_blocked = true,
+		move_speed_variable_name = "moving_attack_fwd_speed",
 		stagger_reduction = 50,
 		weapon_reach = 3.75,
 		moving_attack = true,
+		ignore_blocked = true,
 		considerations = UtilityConsiderations.cultist_berzerker_combo_attack,
 		attack_anim_events = {
 			"attack_combo_01",
-			"attack_combo_02",
-			"attack_combo_03",
 			"attack_combo_04",
-			"attack_combo_05",
-			"attack_combo_06"
+			"attack_combo_08"
 		},
 		attack_anim_damage_timings = {
 			attack_combo_01 = {
-				0.6666666666666666,
-				1.12,
-				1.6,
-				1.9466666666666668,
-				3.2
-			},
-			attack_combo_02 = {
-				0.6133333333333333,
-				1.36,
-				2.1333333333333333,
-				2.96
-			},
-			attack_combo_03 = {
 				0.7466666666666667,
-				1.5466666666666666,
-				2.4,
-				3.2533333333333334
+				1.52,
+				1.6,
+				2.3733333333333335,
+				2.4266666666666667,
+				3.2266666666666666,
+				3.3066666666666666
 			},
 			attack_combo_04 = {
-				0.72,
-				1.8133333333333332,
-				2.8533333333333335,
-				3.8133333333333335
+				0.5666666666666667,
+				0.9666666666666667,
+				1.5,
+				1.5333333333333334,
+				2.3666666666666667,
+				3.1
 			},
-			attack_combo_05 = {
-				0.6666666666666666,
-				1.5733333333333333,
-				2.4266666666666667,
-				3.2
-			},
-			attack_combo_06 = {
-				0.7733333333333333,
-				1.6,
-				2.1333333333333333,
-				3.013333333333333
+			attack_combo_08 = {
+				0.6,
+				1.4333333333333333,
+				1.5,
+				2.6,
+				3.466666666666667
 			}
 		},
 		move_start_timings = {
-			attack_combo_03 = 0,
-			attack_combo_05 = 0,
-			attack_combo_02 = 0,
-			attack_combo_06 = 0,
 			attack_combo_01 = 0,
+			attack_combo_08 = 0,
 			attack_combo_04 = 0
 		},
 		attack_anim_durations = {
-			attack_combo_03 = 4.053333333333334,
-			attack_combo_05 = 4.133333333333334,
-			attack_combo_02 = 3.68,
-			attack_combo_06 = 4.4,
-			attack_combo_01 = 4.8,
-			attack_combo_04 = 4.266666666666667
+			attack_combo_01 = 3.7333333333333334,
+			attack_combo_08 = 4.5,
+			attack_combo_04 = 3.8333333333333335
 		},
 		attack_intensities = {
 			ranged = 1,
 			melee = 2
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		animation_move_speed_configs = {
+			attack_combo_01 = {
+				{
+					value = 4,
+					distance = 6.6
+				},
+				{
+					value = 3,
+					distance = 5.5
+				},
+				{
+					value = 2,
+					distance = 4.2
+				},
+				{
+					value = 1,
+					distance = 2.5
+				},
+				{
+					value = 0,
+					distance = 0.8
+				}
+			},
+			attack_combo_04 = {
+				{
+					value = 4,
+					distance = 9.5
+				},
+				{
+					value = 3,
+					distance = 7.68
+				},
+				{
+					value = 2,
+					distance = 6.2
+				},
+				{
+					value = 1,
+					distance = 3.5
+				},
+				{
+					value = 0,
+					distance = 0.93
+				}
+			},
+			attack_combo_08 = {
+				{
+					value = 4,
+					distance = 8.3
+				},
+				{
+					value = 3,
+					distance = 6.3
+				},
+				{
+					value = 2,
+					distance = 4.4
+				},
+				{
+					value = 1,
+					distance = 2.2
+				},
+				{
+					value = 0,
+					distance = 0.86
+				}
+			}
+		},
+		damage_profile = DamageProfileTemplates.melee_berzerker_combo,
 		damage_type = damage_types.minion_melee_sharp
 	},
 	moving_melee_attack = {
-		utility_weight = 1,
+		utility_weight = 5,
 		ignore_blocked = true,
+		vo_event = "assault",
 		weapon_reach = 3.75,
 		move_speed_variable_lerp_speed = 4,
 		move_speed_variable_name = "moving_attack_fwd_speed",
@@ -571,13 +453,15 @@ local action_data = {
 			"attack_move_01"
 		},
 		attack_anim_damage_timings = {
-			attack_move_01 = 0.9382716049382716
+			attack_move_01 = {
+				0.9629629629629629
+			}
 		},
 		move_start_timings = {
 			attack_move_01 = 0
 		},
 		attack_anim_durations = {
-			attack_move_01 = 1.728395061728395
+			attack_move_01 = 1.8518518518518519
 		},
 		attack_intensities = {
 			ranged = 1,
@@ -686,23 +570,19 @@ local action_data = {
 			light = {
 				fwd = {
 					"stagger_fwd_light",
-					"stagger_fwd_light_2",
-					"stagger_fwd_light_3"
+					"stagger_fwd_light_2"
 				},
 				bwd = {
 					"stagger_bwd_light",
-					"stagger_bwd_light_2",
-					"stagger_bwd_light_3"
+					"stagger_bwd_light_2"
 				},
 				left = {
 					"stagger_left_light",
-					"stagger_left_light_2",
-					"stagger_left_light_3"
+					"stagger_left_light_2"
 				},
 				right = {
 					"stagger_right_light",
-					"stagger_right_light_2",
-					"stagger_right_light_3"
+					"stagger_right_light_2"
 				},
 				dwn = {
 					"stun_down"
@@ -726,30 +606,25 @@ local action_data = {
 					"stagger_right_2"
 				},
 				dwn = {
-					"stagger_medium_downward",
-					"stagger_medium_downward_2"
+					"stagger_downward",
+					"stagger_downward_2"
 				}
 			},
 			heavy = {
 				fwd = {
-					"stagger_fwd_heavy",
-					"stagger_fwd_heavy_2"
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_up_heavy",
-					"stagger_up_heavy_2"
+					"stagger_bwd_heavy"
 				},
 				left = {
-					"stagger_left_heavy",
-					"stagger_left_heavy_2"
+					"stagger_left_heavy"
 				},
 				right = {
-					"stagger_right_heavy",
-					"stagger_right_heavy_2"
+					"stagger_right_heavy"
 				},
 				dwn = {
-					"stagger_dwn_heavy",
-					"stagger_dwn_heavy_2"
+					"stagger_dwn_heavy"
 				}
 			},
 			light_ranged = {
@@ -775,8 +650,7 @@ local action_data = {
 					"stagger_explosion_front"
 				},
 				bwd = {
-					"stagger_explosion_back",
-					"stagger_explosion_back_2"
+					"stagger_explosion_back"
 				},
 				left = {
 					"stagger_explosion_left"
@@ -803,30 +677,20 @@ local action_data = {
 				}
 			},
 			sticky = {
-				bwd = {
-					"stagger_front_sticky",
-					"stagger_front_sticky_2",
-					"stagger_front_sticky_3"
-				},
 				fwd = {
-					"stagger_bwd_sticky",
-					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
+					"stagger_bwd_sticky"
 				},
-				left = {
-					"stagger_left_sticky",
-					"stagger_left_sticky_2",
-					"stagger_left_sticky_3"
+				bwd = {
+					"stagger_front_sticky"
 				},
 				right = {
-					"stagger_right_sticky",
-					"stagger_right_sticky_2",
-					"stagger_right_sticky_3"
+					"stagger_left_sticky"
+				},
+				left = {
+					"stagger_right_sticky"
 				},
 				dwn = {
-					"stagger_bwd_sticky",
-					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
+					"stagger_bwd_sticky"
 				}
 			}
 		}
@@ -836,25 +700,20 @@ local action_data = {
 		attack_anim_events = {
 			"attack_01",
 			"attack_02",
-			"attack_03"
+			"attack_03",
+			"attack_04"
 		},
 		attack_anim_damage_timings = {
-			attack_01 = 1.264367816091954,
-			attack_05 = 0.6,
-			attack_04 = 0.6,
-			attack_06 = 0.6,
-			attack_03 = 1.1954022988505748,
-			attack_07 = 0.6,
-			attack_02 = 1.264367816091954
+			attack_01 = 0.43333333333333335,
+			attack_03 = 0.4666666666666667,
+			attack_02 = 0.4666666666666667,
+			attack_04 = 0.5666666666666667
 		},
 		attack_anim_durations = {
-			attack_01 = 2.413793103448276,
-			attack_05 = 2.0987654320987654,
-			attack_04 = 1.728395061728395,
-			attack_06 = 1.7241379310344827,
-			attack_03 = 2.9885057471264367,
-			attack_07 = 2.0987654320987654,
-			attack_02 = 2.5977011494252875
+			attack_01 = 1.5666666666666667,
+			attack_03 = 1.8333333333333333,
+			attack_02 = 1.6666666666666667,
+			attack_04 = 1.8333333333333333
 		},
 		damage_profile = DamageProfileTemplates.melee_fighter_default
 	},

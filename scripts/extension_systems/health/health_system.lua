@@ -14,7 +14,6 @@ HealthSystem.init = function (self, ...)
 end
 
 HealthSystem.destroy = function (self)
-	fassert(next(HEALTH_ALIVE) == nil, "global HEALTH_ALIVE table has units that were not cleaned up. Should be empty")
 	table.clear(HEALTH_ALIVE)
 end
 
@@ -57,9 +56,7 @@ HealthSystem._update_is_dead_status_husk = function (self, dt, t)
 		local is_dead = _game_object_field(game_session, game_object_id, IS_DEAD_FIELD_NAME)
 
 		if extension.is_dead ~= is_dead then
-			local side_system = Managers.state.extension:system("side_system")
-
-			side_system:remove_unit_from_tag_units(unit)
+			Managers.event:trigger("unit_died", unit)
 
 			HEALTH_ALIVE[unit] = nil
 			extension.is_dead = is_dead

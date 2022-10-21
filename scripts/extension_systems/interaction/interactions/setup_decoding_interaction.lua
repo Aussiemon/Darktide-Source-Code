@@ -2,6 +2,7 @@ require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SetupDecodingInteraction = class("SetupDecodingInteraction", "BaseInteraction")
 local interaction_results = InteractionSettings.results
 
@@ -13,8 +14,6 @@ SetupDecodingInteraction.start = function (self, world, interactor_unit, unit_da
 		local target_unit = unit_data_component.target_unit
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 		local item = interactee_extension:interactor_item_to_equip()
-
-		fassert(item, "Missing scan item for unit(%s)", target_unit)
 
 		if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
 			PlayerUnitVisualLoadout.unequip_item_from_slot(interactor_unit, "slot_device", t)
@@ -48,6 +47,12 @@ SetupDecodingInteraction.interactee_condition_func = function (self, interactee_
 	Log.error("SetupDecodingInteraction", "[interactee_condition_func][Unit: %s, %s] Check unit setup. Missing 'decoder_device_extension'", Unit.id_string(interactee_unit), tostring(interactee_unit))
 
 	return false
+end
+
+SetupDecodingInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
+	local can_interact = PlayerUnitStatus.can_interact_with_objective(interactor_unit)
+
+	return can_interact
 end
 
 return SetupDecodingInteraction

@@ -26,7 +26,7 @@ local lobby_view_settings = {
 		0
 	},
 	panel_size = {
-		270,
+		350,
 		200
 	},
 	loading_size = {

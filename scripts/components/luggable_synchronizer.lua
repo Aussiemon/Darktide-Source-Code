@@ -15,11 +15,12 @@ LuggableSynchronizer.init = function (self, unit, is_server)
 		local keep_unused_sockets = self:get_data(unit, "keep_unused_sockets")
 		local luggable_should_respawn = self:get_data(unit, "luggable_should_respawn")
 		local luggable_respawn_timer = self:get_data(unit, "luggable_respawn_timer")
-		local luggable_despawn_timer = self:get_data(unit, "luggable_despawn_timer")
+		local luggable_reset_timer = self:get_data(unit, "luggable_reset_timer")
+		local luggable_consume_timer = self:get_data(unit, "luggable_consume_timer")
 		local is_side_mission_synchronizer = self:get_data(unit, "is_side_mission_synchronizer")
 		local automatic_start_on_level_spawned = self:get_data(unit, "automatic_start_on_level_spawned")
 
-		luggable_synchronizer_extension:setup_from_component(objective_name, objective_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_despawn_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
+		luggable_synchronizer_extension:setup_from_component(objective_name, objective_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
 
 		self._luggable_synchronizer_extension = luggable_synchronizer_extension
 	end
@@ -112,12 +113,20 @@ LuggableSynchronizer.component_data = {
 		ui_name = "Luggable Respawn Timer (in sec.)",
 		step = 0.1
 	},
-	luggable_despawn_timer = {
+	luggable_reset_timer = {
+		ui_type = "number",
+		decimals = 1,
+		category = "Spawn settings",
+		value = 90,
+		ui_name = "Luggable Reset Timer (in sec.)",
+		step = 0.1
+	},
+	luggable_consume_timer = {
 		ui_type = "number",
 		decimals = 1,
 		category = "Spawn settings",
 		value = 3,
-		ui_name = "Luggable Despawn Timer (for consumable socket)",
+		ui_name = "Luggable Consume Timer (in sec.)",
 		step = 0.1
 	},
 	is_side_mission_synchronizer = {

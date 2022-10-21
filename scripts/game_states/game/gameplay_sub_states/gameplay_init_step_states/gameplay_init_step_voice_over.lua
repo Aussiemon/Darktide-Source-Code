@@ -1,5 +1,5 @@
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
-local GameplayInitStepTerrorEvent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_terror_event")
+local GameplayInitStepNetworkStory = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_network_story")
 local GameplayInitStepVoiceOver = class("GameplayInitStepVoiceOver")
 
 GameplayInitStepVoiceOver.on_enter = function (self, parent, params)
@@ -18,7 +18,7 @@ GameplayInitStepVoiceOver.update = function (self, main_dt, main_t)
 		shared_state = self._shared_state
 	}
 
-	return GameplayInitStepTerrorEvent, next_step_params
+	return GameplayInitStepNetworkStory, next_step_params
 end
 
 implements(GameplayInitStepVoiceOver, GameplayInitStepInterface)

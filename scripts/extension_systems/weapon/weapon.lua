@@ -69,6 +69,7 @@ Weapon._init_traits = function (self, weapon_template, item, override_trait_lerp
 	local buffs = WeaponTweakTemplates.extract_buffs(weapon_template)
 
 	WeaponTweakTemplates.extract_trait_buffs(weapon_template, buffs, traits, debug_traits)
+	WeaponTweakTemplates.extract_trait_buffs(weapon_template, buffs, perks, debug_perks)
 
 	return weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs
 end

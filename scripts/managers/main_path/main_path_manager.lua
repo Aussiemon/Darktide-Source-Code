@@ -50,6 +50,9 @@ MainPathManager.init = function (self, world, nav_world, level_name, level_seed,
 
 		for i = 1, num_sides do
 			side_progress_on_path[i] = {
+				furthest_worst_travel_distance = 0,
+				forward_travel_changed_t = 0,
+				behind_travel_changed_t = 0,
 				furthest_travel_distance = 0,
 				ahead_path_position = Vector3Box(invalid_vector),
 				behind_path_position = Vector3Box(invalid_vector)
@@ -172,8 +175,6 @@ MainPathManager.is_main_path_available = function (self)
 end
 
 MainPathManager.is_main_path_ready = function (self)
-	fassert(self._is_server, "[MainPathManager] Only server should call is_main_path_ready.")
-
 	return self._main_path_version ~= nil and self._nav_spawn_points ~= nil
 end
 
@@ -182,8 +183,6 @@ MainPathManager.main_path_segments = function (self)
 end
 
 MainPathManager.ahead_unit = function (self, side_id)
-	assert(self._is_server, "Only server should call main path ahead_unit")
-
 	local side_progress_on_path = self._side_progress_on_path
 	local progress_on_path = side_progress_on_path[side_id]
 	local path_position = progress_on_path.ahead_unit and progress_on_path.ahead_path_position:unbox() or nil
@@ -192,8 +191,6 @@ MainPathManager.ahead_unit = function (self, side_id)
 end
 
 MainPathManager.behind_unit = function (self, side_id)
-	assert(self._is_server, "Only server should call main path behind_unit")
-
 	local side_progress_on_path = self._side_progress_on_path
 	local progress_on_path = side_progress_on_path[side_id]
 	local path_position = progress_on_path.behind_unit and progress_on_path.behind_path_position:unbox() or nil
@@ -202,8 +199,6 @@ MainPathManager.behind_unit = function (self, side_id)
 end
 
 MainPathManager.furthest_travel_distance = function (self, side_id)
-	assert(self._is_server, "Only server should call furthest travel distance")
-
 	local side_progress_on_path = self._side_progress_on_path
 	local progress_on_path = side_progress_on_path[side_id]
 
@@ -211,7 +206,9 @@ MainPathManager.furthest_travel_distance = function (self, side_id)
 end
 
 MainPathManager.furthest_travel_percentage = function (self, side_id)
-	assert(self._is_server, "Only server should call furthest travel percentage")
+	if not self:is_main_path_available() then
+		return 1
+	end
 
 	local furthest_travel_distance = self:furthest_travel_distance(side_id)
 	local total_path_distance = MainPathQueries.total_path_distance()
@@ -220,22 +217,52 @@ MainPathManager.furthest_travel_percentage = function (self, side_id)
 	return percentage
 end
 
-MainPathManager.segment_index_by_unit = function (self, unit)
-	assert(self._is_server, "Only server should call segment_index_by_unit")
+MainPathManager.time_since_forward_travel_changed = function (self, side_id)
+	local side_progress_on_path = self._side_progress_on_path
+	local progress_on_path = side_progress_on_path[side_id]
+	local forward_travel_changed_t = progress_on_path.forward_travel_changed_t
+	local t = Managers.time:time("gameplay")
+	local diff = t - forward_travel_changed_t
 
+	return diff
+end
+
+MainPathManager.time_since_behind_travel_changed = function (self, side_id)
+	local side_progress_on_path = self._side_progress_on_path
+	local progress_on_path = side_progress_on_path[side_id]
+	local behind_travel_changed_t = progress_on_path.behind_travel_changed_t
+	local t = Managers.time:time("gameplay")
+	local diff = t - behind_travel_changed_t
+
+	return diff
+end
+
+MainPathManager.segment_index_by_unit = function (self, unit)
 	return self._segment_index_by_unit[unit]
 end
 
 MainPathManager.node_index_by_nav_group_index = function (self, group_index)
-	assert(self._is_server, "Only server should call node_index_by_nav_group_index")
-
 	return self._group_to_main_path_index[group_index]
 end
 
 MainPathManager.spawn_point_cost_table = function (self)
-	assert(self._is_server, "Only server should call segment_index_by_unit")
-
 	return self._spawn_point_cost_table
+end
+
+MainPathManager.allow_nav_tag_layer = function (self, layer_name, layer_allowed)
+	local spawn_point_cost_table = self._spawn_point_cost_table
+
+	if not spawn_point_cost_table then
+		return
+	end
+
+	local layer_id = Managers.state.nav_mesh:nav_tag_layer_id(layer_name)
+
+	if layer_allowed then
+		GwNavTagLayerCostTable.allow_layer(spawn_point_cost_table, layer_id)
+	else
+		GwNavTagLayerCostTable.forbid_layer(spawn_point_cost_table, layer_id)
+	end
 end
 
 MainPathManager.on_gameplay_post_init = function (self)
@@ -287,9 +314,6 @@ end
 
 MainPathManager._init_time_slice_nav_points = function (self, nav_world, nav_triangle_group, min_free_radius, min_distance_to_others, num_spawn_points_per_subgroup, nav_tag_cost_table, start_seed)
 	local spawn_points_time_slice_data = self._spawn_points_time_slice_data
-
-	fassert(spawn_points_time_slice_data, "[MainPathManager] Instantiate class with 'use_time_slice'")
-
 	local nav_spawn_points = GwNavSpawnPoints.create(nav_world, nav_triangle_group)
 	self._nav_spawn_points = nav_spawn_points
 	self._spawn_point_positions = {}
@@ -314,9 +338,6 @@ MainPathManager.update_time_slice_spawn_points = function (self)
 	end
 
 	local time_slice_data = self._spawn_points_time_slice_data
-
-	fassert(time_slice_data, "[MainPathManager] Instantiate class with 'use_time_slice'")
-
 	local done = SpawnPointQueries.update_time_slice_nav_spawn_points(time_slice_data, self._nav_spawn_points, self._spawn_point_positions)
 
 	return done
@@ -328,9 +349,6 @@ MainPathManager.update_time_slice_generate_occluded_points = function (self)
 	end
 
 	local nav_spawn_points = self._nav_spawn_points
-
-	fassert(nav_spawn_points, "[MainPathManager] Missing init step: [on_gameplay_post_init() -> _generate_spawn_points()]")
-
 	local done = GwNavSpawnPoints.generate_occluded_points(nav_spawn_points, self._nav_world, self._world, OCCLUDED_POINTS_COLLISION_FILTER, GameplayInitTimeSlice.MAX_DT_IN_SEC)
 
 	if done then
@@ -346,7 +364,7 @@ MainPathManager.update = function (self, dt, t)
 	end
 
 	if self._nav_spawn_points then
-		self:_update_progress_on_path()
+		self:_update_progress_on_path(t)
 	end
 
 	if GameParameters.testify then
@@ -354,7 +372,7 @@ MainPathManager.update = function (self, dt, t)
 	end
 end
 
-MainPathManager._update_progress_on_path = function (self)
+MainPathManager._update_progress_on_path = function (self, t)
 	local side_system = Managers.state.extension:system("side_system")
 	local sides = side_system:sides()
 	local segment_index_by_unit = self._segment_index_by_unit
@@ -427,12 +445,19 @@ MainPathManager._update_progress_on_path = function (self)
 		progress_on_path.ahead_path_position:store(ahead_path_position)
 
 		progress_on_path.behind_unit = behind_unit
+
+		if progress_on_path.furthest_worst_travel_distance < worst_travel_distance then
+			progress_on_path.behind_travel_changed_t = t
+			progress_on_path.furthest_worst_travel_distance = worst_travel_distance
+		end
+
 		progress_on_path.behind_travel_distance = behind_unit and worst_travel_distance or nil
 
 		progress_on_path.behind_path_position:store(behind_path_position)
 
 		if progress_on_path.furthest_travel_distance < best_travel_distance then
 			progress_on_path.furthest_travel_distance = best_travel_distance
+			progress_on_path.forward_travel_changed_t = t
 		end
 	end
 end

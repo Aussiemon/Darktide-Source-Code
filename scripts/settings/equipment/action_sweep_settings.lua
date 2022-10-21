@@ -9,6 +9,7 @@ local action_sweep_settings = {
 	default_hit_zone_priority = {
 		[hit_zone_names.shield] = 0,
 		[hit_zone_names.head] = 1,
+		[hit_zone_names.weakspot] = 1,
 		[hit_zone_names.torso] = 2,
 		[hit_zone_names.upper_left_arm] = 3,
 		[hit_zone_names.lower_left_arm] = 3,

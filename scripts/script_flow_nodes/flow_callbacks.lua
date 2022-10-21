@@ -11,6 +11,7 @@ local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
+local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
 local ScriptWorld = "scripts/foundation/utilities/script_world"
 local Vo = require("scripts/utilities/vo")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
@@ -53,7 +54,7 @@ FlowCallbacks.play_npc_foley = function (params)
 	local event_resource = params.event_resource
 	local unit_node = Unit.node(unit, params.unit_node)
 	local world = Application.flow_callback_context_world()
-	local wwise_world = Wwise.wwise_world(world)
+	local wwise_world = World.get_data(world, "wwise_world")
 	local source_id = WwiseWorld.make_auto_source(wwise_world, unit, unit_node)
 
 	WwiseWorld.trigger_resource_event(wwise_world, event_resource, source_id)
@@ -63,10 +64,8 @@ FlowCallbacks.play_npc_vce = function (params)
 	local unit = params.unit
 	local event_resource = params.event_resource
 	local world = Application.flow_callback_context_world()
-	local wwise_world = Wwise.wwise_world(world)
+	local wwise_world = World.get_data(world, "wwise_world")
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
-
-	fassert(dialogue_extension, "No dialogue extension found for unit %q ", unit)
 
 	if dialogue_extension then
 		local unit_node = dialogue_extension:get_voice_node()
@@ -420,13 +419,10 @@ FlowCallbacks.minion_material_fx = function (params)
 	local world = wm:world("level_world")
 	local wwise_event = sounds[name]
 	local vfx_table = breed.vfx.material_vfx[name]
-
-	fassert(vfx_table, "Missing entry in 'material_vfx' table for %q in %q", name, breed.name)
-
 	local hit, material, impact_position, normal, hit_unit, hit_actor = nil
 
 	if wwise_event or vfx_table then
-		hit, material, impact_position, normal, hit_unit, hit_actor = MaterialQuery.query_material(World.physics_world(world), query_from, query_to, name)
+		hit, material, impact_position, normal, hit_unit, hit_actor = MaterialQuery.query_material(World.get_data(world, "physics_world"), query_from, query_to, name)
 
 		if hit then
 			Unit.set_data(unit, "cache_material", material)
@@ -523,8 +519,6 @@ FlowCallbacks.minion_material_fx = function (params)
 				elseif position_source == "Unit" then
 					position = Unit.world_position(unit, 1)
 				elseif position_source == "Object" then
-					fassert(node, "Material FX %q in unit %q wants Object position source without setting Particle Source Object", name, unit)
-
 					position = Unit.world_position(unit, node)
 				else
 					position = Vector3.zero()
@@ -537,8 +531,6 @@ FlowCallbacks.minion_material_fx = function (params)
 					local particle_up = Vector3.cross(particle_forward, right)
 					rotation = Quaternion.look(normal, particle_up)
 				elseif rotation_source == "Object" then
-					fassert(node, "Material FX %q in unit %q wants Object rotation source without setting Particle Source Object", name, unit)
-
 					rotation = Unit.world_rotation(unit, node)
 				elseif rotation_source == "Unit" then
 					rotation = Unit.world_rotation(unit, 1)
@@ -620,18 +612,39 @@ local function _player_fx_source_and_extension_unit(params)
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
-
-		fassert(extension_unit, "Could not find owner_unit in first_person_unit (%q) data. Is it a first_person_unit?", first_person_unit)
-
 		source_unit = first_person_unit
 	else
 		extension_unit = params.unit
 		source_unit = extension_unit
 	end
 
-	fassert(extension_unit ~= nil, "'First Person Unit' or 'Unit' is not set in Player FX flow node")
-
 	return source_unit, extension_unit
+end
+
+FlowCallbacks.player_voice = function (params)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local _, extension_unit = _player_fx_source_and_extension_unit(params)
+	local play_in = params.play_in
+	local should_play_fx = _should_play_player_fx(play_in, extension_unit)
+	local wwise_playing_id = nil
+
+	if should_play_fx then
+		local vce_alias = params.vce_alias
+
+		if vce_alias and vce_alias ~= "" then
+			local visual_loadout_extension = ScriptUnit.extension(extension_unit, "visual_loadout_system")
+			local fx_extension = ScriptUnit.extension(extension_unit, "fx_system")
+			local suppress_vo = params.suppress_vo or false
+			wwise_playing_id = PlayerVoiceGrunts.trigger_voice_non_synced(vce_alias, visual_loadout_extension, fx_extension, suppress_vo)
+		end
+	end
+
+	flow_return_table.playing_id = wwise_playing_id
+
+	return flow_return_table
 end
 
 FlowCallbacks.player_fx = function (params)
@@ -697,7 +710,6 @@ FlowCallbacks.player_fx = function (params)
 					particle_id = World.create_particles(world, particle_name, Vector3.zero(), Quaternion.identity())
 					local pose = Matrix4x4.from_quaternion_position(rotation_offset, translation_offset)
 
-					fassert(orphaned_policy, "[FlowCallbacks.player_fx()] Trying to link particles without ParticleOrphanedPolicy being set!")
 					World.link_particles(world, particle_id, source_unit, node_index, pose, orphaned_policy)
 				else
 					local node_pose = Unit.world_pose(source_unit, node_index)
@@ -726,10 +738,9 @@ FlowCallbacks.player_material_fx = function (params)
 	if should_play_fx then
 		local query_position_object = Unit.node(unit, params.query_position_object)
 		local sound_alias = params.sound_gear_alias
-		local wm = Managers.world
-		local world = wm:world("level_world")
-		local wwise_world = wm:wwise_world(world)
-		local physics_world = World.physics_world(world)
+		local world = Managers.world:world("level_world")
+		local wwise_world = World.get_data(world, "wwise_world")
+		local physics_world = World.get_data(world, "physics_world")
 		local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
 		local query_to = query_from + Vector3(0, 0, -1)
 		wwise_playing_id = Footstep.trigger_material_footstep(sound_alias, wwise_world, physics_world, source_id, unit, query_position_object, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter)
@@ -745,9 +756,6 @@ FlowCallbacks.minion_get_inventory_slot_unit = function (params)
 	local slot_name = params.slot_name
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local slot_unit = visual_loadout_extension:slot_unit(slot_name)
-
-	fassert(slot_unit, "invalid slot_unit")
-
 	flow_return_table.slot_unit = slot_unit
 
 	return flow_return_table
@@ -773,8 +781,6 @@ FlowCallbacks.player_inventory_fx = function (params)
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
-
-		fassert(extension_unit, "FlowCallbacks.player_inventory_fx(): Could not find owner_unit in first_person_unit (%q) data. Is it a first_person_unit?", first_person_unit)
 	else
 		extension_unit = params.unit
 	end
@@ -828,8 +834,6 @@ FlowCallbacks.player_inventory_event = function (params)
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
-
-		fassert(extension_unit, "FlowCallbacks.player_inventory_event(): Could not find owner_unit in first_person_unit (%q) data. Is it a first_person_unit?", first_person_unit)
 	else
 		extension_unit = params.unit
 	end
@@ -938,6 +942,36 @@ FlowCallbacks.client_networked_flow_state_set = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.new_onboarding_cinematic = function (params)
+	local chapter = Managers.narrative:current_chapter(Managers.narrative.STORIES.onboarding)
+
+	if chapter then
+		flow_return_table.template_name = chapter.name
+	end
+
+	return flow_return_table
+end
+
+FlowCallbacks.new_onboarding_cinematic_viewed = function (params)
+	Managers.narrative:complete_current_chapter(Managers.narrative.STORIES.onboarding)
+end
+
+FlowCallbacks.trigger_cinematic_video = function (params)
+	local template_name = params.template_name
+
+	if template_name and template_name ~= "" then
+		Managers.ui:open_view("video_view", nil, true, true, nil, {
+			template = template_name
+		})
+
+		flow_return_table.triggered = true
+	else
+		flow_return_table.not_triggered = true
+	end
+
+	return flow_return_table
+end
+
 FlowCallbacks.register_cinematic_story = function (params)
 	params.flow_level = Application.flow_callback_context_level()
 
@@ -973,6 +1007,10 @@ FlowCallbacks.hide_players = function (params)
 end
 
 FlowCallbacks.set_host_gameplay_timescale = function (params)
+	if GameParameters.disable_flow_timescale then
+		return
+	end
+
 	local is_server = Managers.state.game_session:is_server()
 
 	if not is_server then
@@ -1036,7 +1074,14 @@ FlowCallbacks.tutorial_display_popup_message = function (params)
 		return
 	end
 
-	Managers.event:trigger("event_player_display_prologue_tutorial_message", local_player, params.title, params.description)
+	local info_data = {
+		description = params.description,
+		title = params.title,
+		close_action = params.close_action,
+		use_ingame_input = true
+	}
+
+	Managers.event:trigger("event_player_display_prologue_tutorial_info_box", local_player, info_data)
 end
 
 FlowCallbacks.tutorial_hide_popup_message = function (params)
@@ -1047,7 +1092,7 @@ FlowCallbacks.tutorial_hide_popup_message = function (params)
 		return
 	end
 
-	Managers.event:trigger("event_player_hide_prologue_tutorial_message", local_player)
+	Managers.event:trigger("event_player_hide_prologue_tutorial_info_box", local_player)
 end
 
 FlowCallbacks.clear_hostiles = function (params)
@@ -1169,20 +1214,11 @@ end
 
 FlowCallbacks.prologue_local_player_equip_slot = function (params)
 	local slot_name = params.slot_name
-
-	fassert(slot_name, "Needs slot_name.")
-
 	local local_player = Managers.player:local_player(1)
 	local player_unit = local_player.player_unit
-
-	fassert(player_unit, "local player has no player unit.")
-
 	local profile = local_player:profile()
 	local visual_loadout = profile.visual_loadout
 	local item = visual_loadout[slot_name]
-
-	fassert(item, "no item found for slot_name %q in profile.", slot_name)
-
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 
 	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, item, slot_name, nil, fixed_t)
@@ -1220,7 +1256,9 @@ FlowCallbacks.stop_networked_story = function (params)
 end
 
 FlowCallbacks.complete_game_mode = function (params)
-	Managers.state.game_mode:complete_game_mode()
+	local triggered_from_flow = true
+
+	Managers.state.game_mode:complete_game_mode(triggered_from_flow)
 end
 
 FlowCallbacks.fail_game_mode = function (params)
@@ -1229,12 +1267,10 @@ end
 
 FlowCallbacks.set_difficulty = function (params)
 	if params.challenge then
-		fassert(params.challenge >= 1 and params.challenge <= 5, "[set_difficulty] challenge parameter out of bounds")
 		Managers.state.difficulty:set_challenge(params.challenge)
 	end
 
 	if params.resistance then
-		fassert(params.resistance >= 1 and params.resistance <= 5, "[set_difficulty] resistance parameter out of bounds")
 		Managers.state.difficulty:set_resistance(params.resistance)
 	end
 end
@@ -1293,10 +1329,6 @@ FlowCallbacks.load_mission = function (params)
 	local game_mode_settings = GameModeSettings[game_mode_name]
 
 	if game_mode_settings.host_singleplay then
-		if DEDICATED_SERVER then
-			return
-		end
-
 		Managers.multiplayer_session:reset("Hosting singleplay mission from flow")
 		Managers.multiplayer_session:boot_singleplayer_session()
 	end
@@ -1313,8 +1345,6 @@ FlowCallbacks.flow_callback_trigger_dialogue_event = function (params)
 	end
 
 	local unit = params.source
-
-	fassert(unit, "Calling flow_callback_trigger_dialogue_event without passing unit")
 
 	if ScriptUnit.has_extension(unit, "dialogue_system") then
 		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
@@ -1333,8 +1363,6 @@ FlowCallbacks.flow_callback_trigger_dialogue_event = function (params)
 		end
 
 		dialogue_extension:trigger_dialogue_event(params.concept, event_table, params.identifier)
-	else
-		fassert(false, "[flow_callback_trigger_dialogue_event] No extension found belonging to system \"dialogue_system\" for unit %q", tostring(unit))
 	end
 end
 
@@ -1348,8 +1376,6 @@ FlowCallbacks.trigger_player_vo = function (params)
 	local unit = params.source
 	local trigger_id = params.trigger_id
 
-	fassert(ALIVE[unit], "[trigger_player_vo] Calling flow_callback_trigger_player_vo with a deleted unit")
-	fassert(unit, "[trigger_player_vo] Calling flow_callback_trigger_player_vo without passing unit")
 	Vo.generic_mission_vo_event(unit, trigger_id)
 end
 
@@ -1390,17 +1416,8 @@ FlowCallbacks.trigger_mission_giver_vo = function (params)
 
 	if is_server then
 		local voice_over_spawn_manager = Managers.state.voice_over_spawn
-
-		fassert(voice_over_spawn_manager, "[trigger_mission_giver_vo] VoiceOverSpawnManager not available.")
-
 		local voice_profile = params.voice_profile
-
-		fassert(voice_profile, "[trigger_mission_giver_vo] Calling a trigger_mission_giver_vo node without passing 'Voice Profile'.")
-
 		local unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
-
-		fassert(unit, "[trigger_mission_giver_vo] No unit found for voice_profile(%s)", voice_profile)
-
 		local trigger_id = params.concept
 
 		Vo.mission_giver_mission_info(unit, trigger_id)
@@ -1412,20 +1429,23 @@ FlowCallbacks.trigger_mission_info_vo = function (params)
 
 	if is_server then
 		local voice_over_spawn_manager = Managers.state.voice_over_spawn
-
-		fassert(voice_over_spawn_manager, "[trigger_mission_giver_vo] VoiceOverSpawnManager not available.")
-
 		local voice_profile = params.voice_profile
-
-		fassert(voice_profile, "[trigger_mission_giver_vo] Calling a trigger_mission_giver_vo node without passing 'Voice Profile'.")
-
 		local unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
-
-		fassert(unit, "[trigger_mission_giver_vo] No unit found for voice_profile(%s)", voice_profile)
-
 		local trigger_id = params.trigger_id
 
 		Vo.mission_giver_mission_info(unit, trigger_id)
+	end
+end
+
+FlowCallbacks.trigger_mission_giver_mission_info_vo = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local voice_selection = params.voice_selection
+		local selected_voice = params.selected_voice
+		local trigger_id = params.trigger_id
+
+		Vo.mission_giver_mission_info_vo(voice_selection, selected_voice, trigger_id)
 	end
 end
 
@@ -1445,12 +1465,11 @@ FlowCallbacks.trigger_npc_vo_event = function (params)
 	local vo_event = params.vo_event
 	local is_interaction_vo = params.is_interaction_vo or false
 	local interacting_unit = params.interacting_unit
-
-	fassert(unit, "[trigger_npc_vo_event] Source unit is not set.")
-	fassert(interacting_unit, "[trigger_npc_vo_event] Interacting unit is not set.")
+	local cooldown_time = params.cooldown_time
+	local play_in = params.play_in
 
 	if is_interaction_vo then
-		Vo.play_npc_interacting_vo_event(unit, interacting_unit, vo_event)
+		Vo.play_npc_interacting_vo_event(unit, interacting_unit, vo_event, cooldown_time, play_in)
 	else
 		Vo.play_npc_vo_event(unit, vo_event)
 	end
@@ -1461,17 +1480,8 @@ FlowCallbacks.trigger_mission_giver_conversation_vo = function (params)
 
 	if is_server then
 		local voice_over_spawn_manager = Managers.state.voice_over_spawn
-
-		fassert(voice_over_spawn_manager, "[trigger_mission_giver_conversation_vo] VoiceOverSpawnManager not available.")
-
 		local voice_profile = params.voice_profile
-
-		fassert(voice_profile, "[trigger_mission_giver_conversation_vo] Calling a trigger_mission_giver_vo node without passing 'Voice Profile'.")
-
 		local unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
-
-		fassert(unit, "[trigger_mission_giver_conversation_vo] No unit found for voice_profile(%s)", voice_profile)
-
 		local trigger_id = params.trigger_id
 
 		Vo.mission_giver_conversation_starter(unit, trigger_id)
@@ -1492,16 +1502,18 @@ FlowCallbacks.trigger_story_vo = function (params)
 end
 
 FlowCallbacks.trigger_cutscene_vo = function (params)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server then
-		return
-	end
-
 	local unit = params.source
 	local vo_line_id = params.vo_line_id
 
 	Vo.cutscene_vo_event(unit, vo_line_id)
+end
+
+FlowCallbacks.trigger_local_vo_event = function (params)
+	local unit = params.source
+	local rule_name = params.rule_name
+	local wwise_route_key = params.wwise_route_key
+
+	Vo.play_local_vo_event(unit, rule_name, wwise_route_key)
 end
 
 FlowCallbacks.trigger_on_demand_vo = function (params)
@@ -1514,8 +1526,6 @@ FlowCallbacks.trigger_on_demand_vo = function (params)
 	local unit = params.source
 	local trigger_id = params.trigger_id
 
-	fassert(ALIVE[unit], "[trigger_on_demand_vo] Calling flow_callback_trigger_player_vo with a deleted unit")
-	fassert(unit, "[trigger_on_demand_vo] Calling flow_callback_trigger_on_demand_vo without passing unit")
 	Vo.on_demand_vo_event(unit, trigger_id)
 end
 
@@ -1528,8 +1538,6 @@ FlowCallbacks.trigger_start_banter_vo = function (params)
 
 	local unit = params.source
 
-	fassert(ALIVE[unit], "[trigger_start_banter_vo] Calling trigger_start_banter_vo with a deleted unit")
-	fassert(unit, "[trigger_start_banter_vo] Calling trigger_start_banter_vo without passing unit")
 	Vo.start_banter_vo_event(unit)
 end
 
@@ -1544,24 +1552,23 @@ FlowCallbacks.trigger_enemy_generic_vo = function (params)
 	local trigger_id = params.trigger_id
 	local breed_name = params.breed_name
 
-	fassert(breed_name, "[trigger_enemy_generic_vo] breed_name is required.")
-	fassert(trigger_id, "[trigger_enemy_generic_vo] trigger_id is required.")
 	Vo.enemy_generic_vo_event(unit, trigger_id, breed_name)
 end
 
 FlowCallbacks.set_player_vo_story_stage = function (params)
 	local story_stage = params.story_stage
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
 
-	if player and player:unit_is_alive() then
-		local player_unit = player.player_unit
-		local dialogue_extension = ScriptUnit.has_extension(player_unit, "dialogue_system")
+	PlayerVOStoryStage.set_story_stage(story_stage)
+end
 
-		if dialogue_extension then
-			dialogue_extension:set_story_stage(story_stage)
-		end
-	end
+FlowCallbacks.set_story_ticker = function (params)
+	local story_ticker = params.story_ticker
+
+	Vo.set_story_ticker(story_ticker)
+end
+
+FlowCallbacks.mission_giver_check = function (params)
+	Vo.mission_giver_check_event()
 end
 
 FlowCallbacks.start_terror_event = function (params)
@@ -1802,9 +1809,6 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 	end
 
 	local num_destinations = #destination_units
-
-	fassert(num_destinations > 0, "[teleport_team_to_locations] with no destionation units")
-
 	local player_manager = Managers.player
 	local players = player_manager:players()
 	local index = 0
@@ -1831,9 +1835,6 @@ FlowCallbacks.teleport_player_by_local_id = function (params)
 	for par, val in pairs(params) do
 		if string.find(par, "player_id") then
 			local destination_par = "destination_unit" .. string.sub(par, string.find(par, "id") + 2, #par)
-
-			fassert(params[destination_par], "[teleport_player_by_local_id] parameters do not contain destination: %s for id: %s", destination_par, par)
-
 			destination_units[val] = params[destination_par]
 		end
 	end
@@ -1912,9 +1913,6 @@ FlowCallbacks.random_player_alive = function (params)
 	end
 
 	local side_name = params.side_name
-
-	fassert(side_name, "[random_player_alive] Missing 'side_name' for the flow node.")
-
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name(side_name)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -1993,9 +1991,6 @@ end
 FlowCallbacks.light_controller_set_light_flicker_config = function (params)
 	local unit = params.unit
 	local flicker_configuration = params.flicker_configuration
-
-	fassert(ScriptUnit.has_extension(unit, "light_controller_system"), "Couldn't find LightControllerExtension on unit %q, Make sure that it exists and that has spawned (e.g. don't trigger 'Enable/Disable Light Flicker per Unit' from Unit Spawned)", unit)
-
 	local extension = ScriptUnit.extension(unit, "light_controller_system")
 	local flicker_enabled = extension:is_flicker_enabled()
 
@@ -2015,16 +2010,57 @@ FlowCallbacks.remove_respawn_point_priority = function (params)
 	respawn_beacon_system:remove_respawn_beacon_priority()
 end
 
-FlowCallbacks.spawn_unit = function (params)
+FlowCallbacks.spawn_unit = function (self, unit)
 	return
 end
 
-FlowCallbacks.unspawn_unit = function (params)
-	return
+FlowCallbacks.unspawn_unit = function (self, unit)
+	local extension_manager = Managers.state.extension
+	local registered_units = extension_manager and extension_manager:units()
 end
 
 FlowCallbacks.empty = function (params)
 	return
+end
+
+FlowCallbacks.training_grounds_register_teleporter = function (params)
+	local teleporter_name = params.teleporter_name
+	local teleporter_unit = params.teleporter_unit
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+
+	scenario_system:flow_cb_register_teleporter(teleporter_unit, teleporter_name)
+end
+
+FlowCallbacks.training_grounds_teleport_airlock = function (params)
+	local source_name = params.source_name
+	local target_name = params.target_name
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+
+	scenario_system:flow_cb_teleport_player(source_name, target_name)
+end
+
+FlowCallbacks.start_training_grounds_scenario = function (params)
+	local scenario_alias = params.scenario_alias
+	local scenario_name = params.scenario_name
+	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+
+	if not scenario_system then
+		Log.error("FlowCallbacks", "TrainingGroundsScenarioSystem is not initiated.")
+
+		return
+	end
+
+	local t = Managers.time:time("gameplay")
+
+	scenario_system:start_scenario(scenario_alias, scenario_name, t)
+end
+
+FlowCallbacks.training_grounds_on_exit_safe_zone = function ()
+	Managers.event:trigger("tg_on_exit_safe_zone")
+end
+
+FlowCallbacks.training_grounds_servitor_interact = function ()
+	Managers.event:trigger("tg_servitor_interact")
 end
 
 local SPEED_EPSILON = 0.001
@@ -2074,8 +2110,6 @@ FlowCallbacks.is_dedicated_server = function (params)
 end
 
 FlowCallbacks.local_player_level = function (params)
-	fassert(not DEDICATED_SERVER, "Not to be called on a dedicated server. Tip: Check with FlowCallbacks.is_dedicated_server() first.")
-
 	local local_player_id = 1
 	local local_player = Managers.player:local_player(local_player_id)
 	local profile = local_player:profile()
@@ -2085,54 +2119,66 @@ FlowCallbacks.local_player_level = function (params)
 	return flow_return_table
 end
 
-FlowCallbacks.last_viewed_path_of_trust = function (params)
-	if not GameParameters.enable_path_of_trust then
-		flow_return_table.none = true
-
-		return flow_return_table
-	end
-
-	local chapter = Managers.narrative:last_completed_chapter(Managers.narrative.STORIES.path_of_trust)
-	local event_name = "none"
-
-	if chapter then
-		event_name = "pot" .. tostring(chapter.index)
-	end
-
-	flow_return_table[event_name] = true
+FlowCallbacks.local_player_level_larger_than = function (params)
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+	local profile = local_player:profile()
+	local level = profile.current_level
+	local target_level = params.target_level
+	flow_return_table.level_larger_than = target_level <= level
 
 	return flow_return_table
 end
 
 FlowCallbacks.new_path_of_trust = function (params)
-	if not GameParameters.enable_path_of_trust then
-		flow_return_table.none = true
-
-		return flow_return_table
-	end
-
-	local chapter = Managers.narrative:current_chapter(Managers.narrative.STORIES.path_of_trust)
 	local event_name = "none"
-
-	if chapter then
-		event_name = "pot" .. tostring(chapter.index)
-	end
-
 	flow_return_table[event_name] = true
 
 	return flow_return_table
 end
 
 FlowCallbacks.new_path_of_trust_viewed = function (params)
-	if not GameParameters.enable_path_of_trust then
-		return
-	end
-
-	Managers.narrative:current_chapter_completed(Managers.narrative.STORIES.path_of_trust)
+	return
 end
 
 FlowCallbacks.unlock_achievement = function (params)
 	Managers.achievements:unlock_achievement(params.achievement_id)
+end
+
+FlowCallbacks.is_narrative_event_completed = function (params)
+	local event_name = params.event_name
+	flow_return_table.event_completed = Managers.narrative:event_is_complete(event_name)
+
+	return flow_return_table
+end
+
+FlowCallbacks.is_narrative_event_completable = function (params)
+	local event_name = params.event_name
+	flow_return_table.event_completed = Managers.narrative:can_complete_event(event_name)
+
+	return flow_return_table
+end
+
+FlowCallbacks.complete_narrative_event = function (params)
+	local event_name = params.event_name
+
+	Managers.narrative:complete_event(event_name)
+end
+
+FlowCallbacks.is_narrative_chapter_completed = function (params)
+	local story_name = params.story_name
+	local chapter_name = params.chapter_name
+	flow_return_table.chapter_completed = Managers.narrative:is_chapter_complete(story_name, chapter_name)
+
+	return flow_return_table
+end
+
+FlowCallbacks.complete_narrative_chapter = function (params)
+	local story_name = params.story_name
+	local chapter_name = params.chapter_name
+	flow_return_table.success = Managers.narrative:complete_current_chapter(story_name, chapter_name)
+
+	return flow_return_table
 end
 
 return FlowCallbacks

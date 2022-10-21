@@ -70,9 +70,6 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 	end
 
 	offer.reject = function (self)
-		fassert(self.offerId, "offer missing offerId")
-		fassert(is_personal, "offer %s was not a personal offer", self.offerId)
-
 		local builder = BackendUtilities.url_builder():path("/store/storefront/"):path(store_front.data.name):path("/offers/"):path(self.offerId):query("accountId", store_front.account_id):query("characterId", store_front.character_id)
 
 		return Managers.backend:title_request(builder:to_string(), {
@@ -81,11 +78,6 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 	end
 
 	offer.make_purchase = function (self, wallet)
-		fassert(wallet, "wallet missing")
-		fassert(self.offerId, "offer missing offerId")
-		fassert(wallet.balance.type == self.price.amount.type, "offer price and wallet must have the same currency type, was %s/%s", self.price.amount.type, wallet.balance.type)
-		fassert(self.price.amount.amount <= wallet.balance.amount, "cannot purchase offer with price higher than wallet balance")
-
 		local offer_id, price_id = nil
 
 		if is_personal then
@@ -109,7 +101,7 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 			body = purchase_request
 		}):next(function (purchase_result)
 			wallet.balance.amount = wallet.balance.amount - purchase_result.body.amount.amount
-			wallet.lastTransactionId = wallet.lastTransactionId + 1
+			wallet.lastTransactionId = (wallet.lastTransactionId or 0) + 1
 			local result = purchase_result.body
 			local items = result.items
 
@@ -142,14 +134,10 @@ StoreFront.get_config = function (self)
 end
 
 StoreFront.get_seconds_to_rotation_end = function (self, t)
-	fassert(self.data.currentRotationEnd, "Tried to get time to rotation when the store (%s) did not have any temporary goods", self.data.name)
-
 	return (self.data.currentRotationEnd - Managers.backend:get_server_time(t)) / 1000
 end
 
 StoreFront.get_refund_cost = function (self, config, rerolls_this_week)
-	fassert(config.temporaryGoodsConfig, "No temporary goods for store %s", self.data.name)
-
 	local reroll_config = config.temporaryGoodsConfig.rerolls
 
 	if reroll_config.rollLimit <= rerolls_this_week then

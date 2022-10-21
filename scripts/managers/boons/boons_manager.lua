@@ -43,8 +43,6 @@ BoonsManager.destroy = function (self)
 end
 
 BoonsManager._on_player_unit_spawned = function (self, player)
-	assert(self._is_server)
-
 	if self._boons_activated then
 		self:_add_boon_effects_on_all_player()
 
@@ -72,8 +70,6 @@ BoonsManager.request_equip_boon = function (self, player, gear_id)
 end
 
 BoonsManager.rpc_player_equip_boon_request = function (self, channel_id, peer_id, local_player_id, gear_id)
-	assert(self._is_server)
-
 	local player = Managers.player:player(peer_id, local_player_id)
 	local account_id = player:account_id()
 
@@ -127,14 +123,10 @@ BoonsManager._boon_can_be_equipped = function (self, boon_item)
 end
 
 BoonsManager._equip_boon_on_server = function (self, player, item)
-	assert(self._is_server)
-
 	self._equipped_boons[player] = item
 end
 
 BoonsManager.activate_boons = function (self)
-	assert(self._is_server)
-
 	self._boons_activated = true
 
 	for player, boon_item in pairs(self._equipped_boons) do
@@ -151,8 +143,6 @@ BoonsManager.rpc_boons_activated = function (self, channel_id)
 end
 
 BoonsManager._add_boon_effects_on_all_player = function (self)
-	assert(self._is_server)
-
 	local active_boons = self._active_boons
 	local players = Managers.player:human_players()
 
@@ -186,8 +176,6 @@ BoonsManager._add_boon_effects_on_all_player = function (self)
 end
 
 BoonsManager._add_buff = function (self, player, name)
-	assert(self._is_server)
-
 	local t = FixedFrame.get_latest_fixed_time()
 	local buff_template = BuffTemplates[name]
 
@@ -252,8 +240,6 @@ BoonsManager._player_have_buff = function (self, player, buff_template_name)
 end
 
 BoonsManager._sync_equipped_boons = function (self)
-	assert(self._is_server)
-
 	local equipped_boons = self._equipped_boons
 	local peer_ids_list = {}
 	local local_player_ids_list = {}
@@ -274,7 +260,6 @@ BoonsManager._sync_equipped_boons = function (self)
 end
 
 BoonsManager.rpc_sync_equipped_boons = function (self, channel_id, peer_ids_list, local_player_ids_list, boon_items_id_list)
-	assert(self._is_client)
 	table.clear(self._equipped_boons)
 
 	for i, peer_id in ipairs(peer_ids_list) do

@@ -32,6 +32,11 @@ return function ()
 				"time_since_com_wheel_vo_enemy_over_here",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -66,6 +71,11 @@ return function ()
 				"user_memory",
 				"time_since_com_wheel_vo_follow_you",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -102,6 +112,11 @@ return function ()
 				"time_since_com_wheel_vo_for_the_emperor",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -136,6 +151,11 @@ return function ()
 				"user_memory",
 				"time_since_com_wheel_vo_lets_go_this_way",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -172,6 +192,11 @@ return function ()
 				"time_since_com_wheel_vo_need_ammo",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -206,6 +231,11 @@ return function ()
 				"user_memory",
 				"time_since_com_wheel_vo_need_health",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -242,6 +272,11 @@ return function ()
 				"time_since_com_wheel_vo_need_health",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -276,6 +311,11 @@ return function ()
 				"user_memory",
 				"time_since_com_wheel_vo_no",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -312,6 +352,11 @@ return function ()
 				"time_since_com_wheel_vo_over_here",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -347,6 +392,11 @@ return function ()
 				"time_since_com_wheel_vo_over_here",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
 		}
 	})
 	define_rule({
@@ -381,6 +431,154 @@ return function ()
 				"user_memory",
 				"time_since_com_wheel_vo_yes",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "response_for_seen_enemy_netgunner_flee",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "response_for_seen_enemy_netgunner_flee",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"smart_tag_vo_seen_netgunner_flee"
+				}
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				60
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee_response",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_berserker",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_berserker",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"cultist_berzerker"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_berserker",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_captain",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_captain",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_captain"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"renegade_captain",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -425,7 +623,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -470,7 +668,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -515,7 +713,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -544,6 +742,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_ogryn_bulwark",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
 			}
 		},
 		on_done = {
@@ -560,7 +765,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -605,7 +810,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -650,7 +855,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -695,7 +900,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -740,7 +945,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -761,7 +966,7 @@ return function ()
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_holy_stubber_gunner"
+				"cultist_gunner"
 			},
 			{
 				"user_memory",
@@ -785,7 +990,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -814,6 +1019,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
 			}
 		},
 		on_done = {
@@ -830,7 +1042,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -839,6 +1051,51 @@ return function ()
 		category = "player_on_demand_vo",
 		wwise_route = 0,
 		response = "smart_tag_vo_enemy_daemonhost_witch",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"aggroed"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_daemonhost",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_daemonhost_witch_not_alerted",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_daemonhost_witch_not_alerted",
 		database = "on_demand_vo",
 		criterias = {
 			{
@@ -875,7 +1132,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -920,7 +1177,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -965,7 +1222,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1010,7 +1267,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1055,7 +1312,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1100,7 +1357,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1129,6 +1386,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
 			}
 		},
 		on_done = {
@@ -1145,7 +1409,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1190,7 +1454,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
+				duration = 0.15
 			}
 		}
 	})
@@ -1235,7 +1499,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1280,7 +1544,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1325,7 +1589,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1370,7 +1634,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1415,7 +1679,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1460,7 +1724,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1505,7 +1769,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1550,7 +1814,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1595,7 +1859,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1640,7 +1904,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1685,7 +1949,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1730,7 +1994,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1775,7 +2039,64 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_seen_netgunner_flee",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_seen_netgunner_flee",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"seen_netgunner_flee"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"renegade_netgunner",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
 			}
 		}
 	})
@@ -1820,7 +2141,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1849,6 +2170,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"user_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
 			}
 		},
 		on_done = {
@@ -1865,7 +2193,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})
@@ -1910,7 +2238,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1
+				duration = 0.15
 			}
 		}
 	})

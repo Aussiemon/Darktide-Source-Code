@@ -2,8 +2,8 @@ local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local character_experience_bar_size = {
-	280,
-	10
+	188,
+	16
 }
 local scenegraph_definition = {
 	screen = {
@@ -23,8 +23,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			128,
-			282
+			462,
+			272
 		},
 		position = {
 			0,
@@ -37,8 +37,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			128,
-			282
+			130,
+			272
 		},
 		position = {
 			0,
@@ -51,8 +51,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			128,
-			242
+			70,
+			202
 		},
 		position = {
 			0,
@@ -65,8 +65,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			128,
-			242
+			70,
+			202
 		},
 		position = {
 			0,
@@ -83,9 +83,9 @@ local scenegraph_definition = {
 			80
 		},
 		position = {
-			50,
+			52,
 			15,
-			62
+			64
 		}
 	},
 	character_portrait = {
@@ -104,67 +104,90 @@ local scenegraph_definition = {
 	},
 	character_name = {
 		vertical_alignment = "top",
-		parent = "character_portrait",
+		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
 			400,
 			30
 		},
 		position = {
-			80,
-			0,
-			1
+			200,
+			25,
+			63
 		}
 	},
 	character_title = {
 		vertical_alignment = "top",
-		parent = "character_portrait",
+		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
 			280,
 			54
 		},
 		position = {
-			80,
-			0,
-			1
+			200,
+			63,
+			63
 		}
 	},
 	character_level = {
 		vertical_alignment = "top",
-		parent = "character_title",
-		horizontal_alignment = "right",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			40,
 			54
 		},
 		position = {
-			0,
-			0,
-			1
+			113,
+			97,
+			63
+		}
+	},
+	character_level_next = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			40,
+			54
+		},
+		position = {
+			381,
+			97,
+			63
 		}
 	},
 	character_experience = {
-		vertical_alignment = "bottom",
-		parent = "character_portrait",
+		vertical_alignment = "top",
+		parent = "screen",
 		horizontal_alignment = "left",
 		size = character_experience_bar_size,
 		position = {
-			80,
-			-10,
-			1
+			175,
+			116,
+			63
 		}
 	}
 }
-local character_name_style = table.clone(UIFontSettings.header_3)
+local character_name_style = table.clone(UIFontSettings.header_2)
 character_name_style.text_horizontal_alignment = "left"
-character_name_style.text_vertical_alignment = "bottom"
+character_name_style.text_vertical_alignment = "top"
+character_name_style.text_color = Color.ui_brown_super_light(255, true)
+character_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
 local character_title_style = table.clone(UIFontSettings.body_small)
 character_title_style.text_horizontal_alignment = "left"
-character_title_style.text_vertical_alignment = "bottom"
+character_title_style.text_vertical_alignment = "top"
 local character_level_style = table.clone(UIFontSettings.body_small)
-character_level_style.text_horizontal_alignment = "right"
-character_level_style.text_vertical_alignment = "bottom"
+character_level_style.text_horizontal_alignment = "center"
+character_level_style.text_vertical_alignment = "center"
+character_level_style.text_color = Color.ui_brown_super_light(255, true)
+character_level_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
+local character_level_next_style = table.clone(UIFontSettings.body_small)
+character_level_next_style.text_horizontal_alignment = "center"
+character_level_next_style.text_vertical_alignment = "center"
+character_level_next_style.text_color = Color.ui_brown_super_light(255, true)
+character_level_next_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
 local widget_definitions = {
 	character_portrait = UIWidget.create_definition({
 		{
@@ -179,6 +202,18 @@ local widget_definitions = {
 			}
 		}
 	}, "character_portrait"),
+	character_insigna = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/base/ui_default_base",
+			style_id = "texture",
+			pass_type = "texture",
+			style = {
+				material_values = {
+					use_placeholder_texture = 1
+				}
+			}
+		}
+	}, "character_insigna"),
 	character_name = UIWidget.create_definition({
 		{
 			value = "text",
@@ -203,55 +238,39 @@ local widget_definitions = {
 			style = character_level_style
 		}
 	}, "character_level"),
+	character_level_next = UIWidget.create_definition({
+		{
+			value = "text",
+			value_id = "text",
+			pass_type = "text",
+			style = character_level_next_style
+		}
+	}, "character_level_next"),
 	character_experience = UIWidget.create_definition(BarPassTemplates.character_menu_experience_bar, "character_experience", {
 		bar_length = character_experience_bar_size[1]
 	}, character_experience_bar_size),
 	corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/character_01_upper"
+			value_id = "texture"
 		}
 	}, "corner_top_left"),
 	corner_top_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/character_01_upper",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
+			pass_type = "texture",
+			value_id = "texture"
 		}
 	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/character_01_lower"
+			value_id = "texture"
 		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/character_01_lower",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
+			pass_type = "texture",
+			value_id = "texture"
 		}
 	}, "corner_bottom_right")
 }

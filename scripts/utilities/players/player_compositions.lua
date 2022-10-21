@@ -10,6 +10,15 @@ local PlayerCompositions = {
 			for unique_id, player in pairs(players) do
 				result_table[unique_id] = player
 			end
+		elseif composition_name == "game_session_players" then
+			local game_session_peers = Managers.state.game_session:joined_peers()
+			local players = Managers.player:players()
+
+			for unique_id, player in pairs(players) do
+				if game_session_peers[player:peer_id()] then
+					result_table[unique_id] = player
+				end
+			end
 		elseif composition_name == "party" then
 			local local_player_id = 1
 			local local_player = Managers.player:player(Network.peer_id(), local_player_id)
@@ -25,8 +34,6 @@ local PlayerCompositions = {
 					result_table[party_member:unique_id()] = party_member
 				end
 			end
-		else
-			fassert(false, "Unupported composition_name %q", composition_name)
 		end
 
 		return result_table
@@ -39,14 +46,10 @@ PlayerCompositions.trigger_change_event = function (composition_name)
 end
 
 PlayerCompositions.player_from_unique_id = function (composition_name, unique_id)
-	if composition_name == "players" then
+	if composition_name == "players" or composition_name == "game_session_players" then
 		return Managers.player:player_from_unique_id(unique_id)
-	elseif composition_name == "party" then
-		if GameParameters.prod_like_backend then
-			return Managers.player:player_from_unique_id(unique_id) or Managers.party_immaterium:other_member_from_unique_id(unique_id)
-		end
-	else
-		fassert(false, "Unupported composition_name %q", composition_name)
+	elseif composition_name == "party" and GameParameters.prod_like_backend then
+		return Managers.player:player_from_unique_id(unique_id) or Managers.party_immaterium:other_member_from_unique_id(unique_id)
 	end
 end
 

@@ -78,7 +78,6 @@ local temp_peers = {}
 MechanismSlotReserver.reservation_owner_peers = function (self, reserver_peer_id)
 	local reservations = self._reservation_owners[reserver_peer_id]
 
-	fassert(reservations, "reserver_peer_id(%q) is not an owner.", reserver_peer_id)
 	table.clear(temp_peers)
 
 	for peer_id, _ in pairs(reservations) do
@@ -89,8 +88,6 @@ MechanismSlotReserver.reservation_owner_peers = function (self, reserver_peer_id
 end
 
 MechanismSlotReserver.claim_slot = function (self, peer_id, channel_id)
-	assert(channel_id, "must provide channel")
-
 	if self._reserved_slots[peer_id] then
 		if not self._claimed_slots[peer_id] then
 			self._claimed_slots[peer_id] = channel_id

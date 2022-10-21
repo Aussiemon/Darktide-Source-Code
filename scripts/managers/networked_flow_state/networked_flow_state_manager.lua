@@ -59,9 +59,6 @@ NetworkedFlowStateManager.flow_cb_create_story = function (self, node_id)
 		level = level,
 		node_id = node_id
 	}
-
-	fassert(not lookup[node_id] or lookup[node_id].story_data ~= story_data, "[NetworkedFlowStateManager] Hash collision, two flow nodes with same node_id! Need to advance this mapping of storys")
-
 	lookup[node_id] = story_data
 	self._story_lookup[level_index] = story_data
 end
@@ -81,8 +78,6 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 	if stories then
 		story = stories[node_id]
 	end
-
-	fassert(story == nil or story.stopped, "[NetworkedFlowStateManager] Tried to play networked story, but it is already playing.")
 
 	start_time = start_time or start_from_stop_time and story and story.stop_time or 0
 
@@ -192,9 +187,6 @@ NetworkedFlowStateManager.flow_cb_has_played_networked_story = function (self, n
 	local level = Application.flow_callback_context_level()
 	local stories = self._playing_stories[level]
 	local story = stories[node_id]
-
-	fassert(story, "[NetworkedFlowStateManager] Networked story which is not running is reported as running.")
-
 	story.id = story_id
 	story.length = self._storyteller:length(story_id)
 end
@@ -220,7 +212,6 @@ NetworkedFlowStateManager._sync_stories = function (self, peer, channel)
 			else
 				local story_id = story_data.id
 
-				fassert(story_id, "[NetworkedFlowStateManager][_sync_stories] Cannot find a story id. Please check that 'Networked Story' and 'Level Story' flow are setup correctly. level_index: %s, node_id: %s", tostring(level_index), tostring(node_id))
 				RPC.rpc_flow_state_story_played(channel, level_index, math.clamp(storyteller:time(story_id), story_time_constant.min, story_time_constant.max))
 			end
 		end
@@ -229,8 +220,6 @@ end
 
 NetworkedFlowStateManager._sync_states = function (self, peer, channel)
 	for unit, unit_states in pairs(self._object_states) do
-		fassert(unit_alive(unit), "[NetworkedFlowStateManager] Trying to hot join sync state variable for destroyed unit.")
-
 		local is_level_index, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
 		for state_name, state_table in pairs(unit_states.states) do
@@ -248,9 +237,6 @@ NetworkedFlowStateManager._sync_states = function (self, peer, channel)
 end
 
 NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_name, default_value, client_data_changed_event, hot_join_sync_event, is_game_object)
-	fassert(unit_alive(unit), "[NetworkedFlowStateManager] Passing destroyed unit into create flow state for state_name %q", state_name)
-	fassert(self._num_states < self._max_states, "[NetworkedFlowStateManager] Too many object states(%i).", self._max_states)
-
 	local states = self._object_states
 
 	if not states[unit] then
@@ -259,8 +245,6 @@ NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_nam
 			states = {}
 		}
 	end
-
-	fassert(not unit_states[state_name], "[NetworkedFlowStateManager] State %s already exists in unit %s", state_name, Unit.debug_name(unit))
 
 	local state_network_id = #unit_states.lookup + 1
 	unit_states.lookup[state_name] = state_network_id
@@ -283,8 +267,6 @@ NetworkedFlowStateManager.flow_cb_get_state = function (self, unit, state_name)
 	local unit_states = self._object_states[unit]
 	local state = unit_states and unit_states.states[state_name]
 
-	fassert(state ~= nil, "[NetworkedFlowStateManager] State %s doesn't exists in unit %s", state_name, Unit.debug_name(unit))
-
 	return state.value
 end
 
@@ -294,15 +276,8 @@ NetworkedFlowStateManager.flow_cb_change_state = function (self, unit, state_nam
 	end
 
 	local level = Application.flow_callback_context_level()
-
-	fassert(level, "[NetworkedFlowStateManager] Trying to change state %q to %s before level has been created. Feed correct setting on create instead of changing during level spawn.", state_name, tostring(new_state))
-	fassert(unit_alive(unit), "[NetworkedFlowStateManager] Passing destroyed unit into change state for state_name %q", state_name)
-
 	local unit_states = self._object_states[unit]
 	local current_state = unit_states and unit_states.states[state_name]
-
-	fassert(current_state ~= nil, "[NetworkedFlowStateManager] State %q unit %q is being changed but has not yet been created.", state_name, Unit.debug_name(unit))
-
 	current_state.value = new_state
 	local state_network_id = current_state.state_network_id
 	local changed = current_state ~= new_state
@@ -336,9 +311,6 @@ NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, s
 	local unit = Managers.state.unit_spawner:unit(unit_id, not is_game_object)
 	local states = self._object_states
 	local unit_states = states[unit]
-
-	fassert(unit_states, "[NetworkedFlowStateManager] Trying to change state for unit %q on client despite network flow state node not having been created on client.", tostring(unit))
-
 	local state_name = unit_states.lookup[state_network_id]
 	local state = unit_states.states[state_name]
 	state.value = new_state

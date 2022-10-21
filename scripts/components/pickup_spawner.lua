@@ -38,7 +38,6 @@ PickupSpawner.spawn_item = function (self)
 	local pickup_spawner_extension = self._pickup_spawner_extension
 
 	if pickup_spawner_extension and self._is_server then
-		fassert(self._spawn_method == "flow_spawn", "[spawn_item] Spawn Method should be 'flow_spawn'.")
 		pickup_spawner_extension:spawn_item()
 	end
 end
@@ -52,6 +51,8 @@ PickupSpawner.component_data = {
 		options_keys = {
 			"primary_distribution",
 			"secondary_distribution",
+			"mid_event_distribution",
+			"end_event_distribution",
 			"guaranteed_spawn",
 			"manual_spawn",
 			"side_mission",
@@ -60,6 +61,8 @@ PickupSpawner.component_data = {
 		options_values = {
 			"primary_distribution",
 			"secondary_distribution",
+			"mid_event_distribution",
+			"end_event_distribution",
 			"guaranteed_spawn",
 			"manual_spawn",
 			"side_mission",
@@ -79,12 +82,12 @@ PickupSpawner.component_data = {
 			"consumable",
 			"container_01_luggable",
 			"container_02_luggable",
+			"container_03_luggable",
 			"control_rod_01_luggable",
 			"grimoire",
 			"large_clip",
 			"large_metal",
 			"large_platinum",
-			"luggable_reference_01",
 			"medical_crate_pocketable",
 			"small_clip",
 			"small_grenade",
@@ -99,12 +102,12 @@ PickupSpawner.component_data = {
 			"consumable",
 			"container_01_luggable",
 			"container_02_luggable",
+			"container_03_luggable",
 			"control_rod_01_luggable",
 			"grimoire",
 			"large_clip",
 			"large_metal",
 			"large_platinum",
-			"luggable_reference_01",
 			"medical_crate_pocketable",
 			"small_clip",
 			"small_grenade",

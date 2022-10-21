@@ -6,10 +6,12 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local RangedAction = require("scripts/utilities/action/ranged_action")
 local Suppression = require("scripts/utilities/attack/suppression")
 local proc_events = BuffSettings.proc_events
 local damage_types = DamageSettings.damage_types
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ActionFlamerGasBurst = class("ActionFlamerGasBurst", "ActionShoot")
 
 ActionFlamerGasBurst.init = function (self, action_context, action_params, action_settings)
@@ -92,11 +94,17 @@ ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, c
 		end
 	end
 
+	local action_component = self._action_component
 	local attacker_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = attacker_buff_extension:request_proc_event_param_table()
-	param_table.attacking_unit = player_unit
 
-	attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	if param_table then
+		param_table.attacking_unit = player_unit
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+
+		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
+	end
 end
 
 local INDEX_POSITION = 1
@@ -214,11 +222,10 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local damage_type = damage_types.burning
 	local is_critical_strike = false
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
-	local power_level = 500
 	local charge_level = 1
 	local weapon_item = self._weapon.item
 
-	RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+	RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
 end
 
 ActionFlamerGasBurst._burn_target = function (self, t, target_unit)

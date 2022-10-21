@@ -28,7 +28,6 @@ ActionOverloadTargetFinder.start = function (self, action_settings, t, time_scal
 			local sfx_source_name = charge_effects.sfx_source_name
 			local sfx_source = fx_sources[sfx_source_name]
 
-			fassert(sfx_source, "Missing sfx_source!")
 			fx_extension:trigger_looping_wwise_event(looping_sound_alias, sfx_source)
 
 			self._looping_sound_alias = looping_sound_alias
@@ -40,7 +39,6 @@ ActionOverloadTargetFinder.start = function (self, action_settings, t, time_scal
 			local vfx_source_name = charge_effects.vfx_source_name
 			local vfx_source = fx_sources[vfx_source_name]
 
-			fassert(vfx_source, "Missing vfx_source!")
 			fx_extension:spawn_looping_particles(looping_effect_alias, vfx_source)
 
 			self._looping_effect_alias = looping_effect_alias

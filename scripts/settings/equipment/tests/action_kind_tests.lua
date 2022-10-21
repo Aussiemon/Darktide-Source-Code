@@ -5,8 +5,6 @@ local function action_kind_tests(action_settings, weapon_template, action_name)
 
 	if action_kind_func then
 		local success, error_msg = action_kind_func(action_settings, weapon_template, action_name)
-
-		fassert(success, "weapon_template %q failed verification on action %q. %s", weapon_template.name, action_settings.name, error_msg)
 	end
 end
 

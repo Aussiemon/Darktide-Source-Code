@@ -82,8 +82,6 @@ TagQueryLoader.unload_files = function (self)
 					break
 				end
 			end
-
-			fassert(found_file)
 		end
 	end
 

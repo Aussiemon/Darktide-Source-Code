@@ -30,6 +30,9 @@ local ActivationFunctions = {
 			end
 		end
 	end,
+	value = function (_, current_value, trigger_value, ...)
+		return 0, trigger_value
+	end,
 	sum = function (_, current_value, trigger_value, ...)
 		return 0, current_value + trigger_value
 	end,
@@ -71,5 +74,15 @@ local ActivationFunctions = {
 		end
 	end
 }
+
+ActivationFunctions.use_parameter_value = function (stat_to_check, param_name)
+	local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
+
+	return function (_, _, _, ...)
+		local parameter_value = select(index_of_param, ...)
+
+		return 0, parameter_value
+	end
+end
 
 return ActivationFunctions

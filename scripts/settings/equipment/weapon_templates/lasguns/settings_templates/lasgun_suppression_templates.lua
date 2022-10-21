@@ -31,12 +31,32 @@ suppression_templates.default_lasgun_killshot = {
 			},
 			{
 				pitch = {
-					lerp_perfect = 0.5,
-					lerp_basic = 1
+					lerp_perfect = 1.5,
+					lerp_basic = 2
 				},
 				yaw = {
-					lerp_perfect = 0.5,
-					lerp_basic = 1
+					lerp_perfect = 1.5,
+					lerp_basic = 2
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 3
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 3
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 3.5,
+					lerp_basic = 4
+				},
+				yaw = {
+					lerp_perfect = 3.5,
+					lerp_basic = 4
 				}
 			}
 		}

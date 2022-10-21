@@ -27,8 +27,10 @@ local blueprints = {
 			hotspot.use_is_focused = true
 		end,
 		update = function (parent, widget)
-			if parent._character_create:name() ~= widget.content.input_text then
-				parent:_update_character_name()
+			local name = type(widget.content.input_text) == "string" and widget.content.input_text ~= "" and widget.content.input_text or widget.content.selected_text or ""
+
+			if parent._character_create:name() ~= name then
+				parent:_update_character_custom_name()
 			end
 		end
 	}
@@ -285,6 +287,108 @@ blueprints.category_button = {
 			content.icon = option.icon
 			style.text.offset[1] = 70
 		end
+	end
+}
+blueprints.slot_item_button = {
+	size = {
+		460,
+		80
+	},
+	pass_template = {
+		{
+			pass_type = "hotspot",
+			content_id = "hotspot"
+		},
+		{
+			pass_type = "texture",
+			style_id = "highlight",
+			value = "content/ui/materials/frames/hover",
+			style = {
+				vertical_alignment = "center",
+				hdr = true,
+				horizontal_alignment = "center",
+				color = Color.ui_terminal(255, true),
+				offset = {
+					0,
+					0,
+					2
+				},
+				size_addition = {
+					0,
+					0
+				}
+			},
+			change_function = function (content, style, _, dt)
+				local hotspot = content.hotspot
+				local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+				style.color[1] = 255 * math.easeOutCubic(progress)
+				local size_addition = 10 * math.easeInCubic(1 - progress)
+				local style_size_additon = style.size_addition
+				style_size_additon[1] = size_addition * 2
+				style.size_addition[2] = size_addition * 2
+				local offset = style.offset
+				offset[1] = -size_addition
+				offset[2] = -size_addition
+				style.hdr = progress == 1
+			end
+		},
+		{
+			style_id = "background_selected",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/background_selected",
+			style = {
+				color = Color.ui_terminal(255, true),
+				offset = {
+					0,
+					0,
+					0
+				}
+			},
+			visibility_function = function (content, style)
+				return content.element_selected
+			end
+		},
+		{
+			value_id = "text",
+			pass_type = "text",
+			value = "n/a",
+			style = CharacterAppearanceViewFontStyle.slot_button_name_font_style,
+			change_function = function (content, style)
+				local default_text_color = style.default_text_color
+				local hover_text_color = style.hover_text_color
+				local text_color = style.text_color
+				local hotspot = content.hotspot
+				local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
+				for i = 2, 4 do
+					text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
+				end
+			end
+		},
+		{
+			value_id = "description",
+			pass_type = "text",
+			value = "",
+			style = CharacterAppearanceViewFontStyle.slot_button_description_font_style,
+			change_function = function (content, style)
+				local default_text_color = style.default_text_color
+				local hover_text_color = style.hover_text_color
+				local text_color = style.text_color
+				local hotspot = content.hotspot
+				local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
+				for i = 2, 4 do
+					text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
+				end
+			end
+		}
+	},
+	init = function (parent, widget, element, option, grid_index, callback_name)
+		local content = widget.content
+		content.hotspot.use_is_focused = true
+		content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
+		content.text = option.value.display_name and option.value.display_name
+		content.description = option.value.description and option.value.description
 	end
 }
 blueprints.slot_icon = {
@@ -855,16 +959,16 @@ blueprints.vertical_slider = {
 			content_id = "hotspot_handle"
 		},
 		{
-			value = "Tall",
 			pass_type = "text",
 			value_id = "value_text_top",
-			style = CharacterAppearanceViewFontStyle.slider_top_font_style
+			style = CharacterAppearanceViewFontStyle.slider_top_font_style,
+			value = Localize("loc_character_create_height_max")
 		},
 		{
-			value = "Short",
 			pass_type = "text",
 			value_id = "value_text_bottom",
-			style = CharacterAppearanceViewFontStyle.slider_bottom_font_style
+			style = CharacterAppearanceViewFontStyle.slider_bottom_font_style,
+			value = Localize("loc_character_create_height_min")
 		},
 		{
 			value = "content/ui/materials/buttons/background_selected",
@@ -1085,7 +1189,7 @@ blueprints.vertical_slider = {
 				elseif down_axis then
 					slider_value = math.clamp(slider_value + scroll_amount, 0, 1)
 				else
-					local cursor = UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
+					local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
 					local input_coordinate = cursor[2] - (position[2] + 60)
 					input_coordinate = math.clamp(input_coordinate, 0, 300)
 					slider_value = input_coordinate / 300

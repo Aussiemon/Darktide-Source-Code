@@ -28,13 +28,13 @@ local scenegraph_definition = {
 			76
 		},
 		position = {
-			-433,
+			-162,
 			-120,
 			1
 		}
 	},
 	price_text = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "purchase_button",
 		horizontal_alignment = "center",
 		size = {
@@ -43,7 +43,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			50,
+			-50,
 			3
 		}
 	},
@@ -104,7 +104,7 @@ local widget_definitions = {
 	purchase_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "purchase_button", {
 		text = Utf8.upper(Localize("loc_vendor_purchase_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_customize_enter
+			on_pressed_sound = UISoundEvents.credits_vendor_on_purchase
 		}
 	})
 }

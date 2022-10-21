@@ -14,6 +14,7 @@ end
 
 CutsceneCharacterSystem.destroy = function (self, ...)
 	Managers.event:unregister(self, "assign_player_unit_ownership")
+	Managers.event:unregister(self, "player_unit_spawned")
 	CutsceneCharacterSystem.super.destroy(self, ...)
 end
 
@@ -44,6 +45,9 @@ end
 CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, cinematic_name)
 	local player_loadouts = self:_fetch_players_loadout(cinematic_name)
 	local template = CinematicSceneTemplates[cinematic_name]
+
+	Managers.event:register(self, "player_unit_spawned", "_hide_player_unit")
+
 	local extensions = self._cinematic_to_extensions[cinematic_name] or {}
 	local extensions_per_level = {}
 	local unit_level = Unit.level
@@ -138,6 +142,8 @@ end
 CutsceneCharacterSystem.uninitialize_characters_for_cinematic = function (self, cinematic_name)
 	local player_loadouts = self._cinematic_to_player_loadouts[cinematic_name] or {}
 
+	Managers.event:unregister(self, "player_unit_spawned")
+
 	for unique_id, loadout_info in pairs(player_loadouts) do
 		local extension = loadout_info.extension
 
@@ -168,9 +174,6 @@ CutsceneCharacterSystem._fetch_players_loadout = function (self, cinematic_name)
 	local player_manager = Managers.player
 	local player_loadouts = {}
 	local template = CinematicSceneTemplates[cinematic_name]
-
-	fassert(template ~= nil, "Unable to find cinematic scene template for %s", cinematic_name)
-
 	local local_player = player_manager:local_player(1)
 	local local_unique_id = local_player and local_player:unique_id()
 	local local_player_only = template.local_player_only

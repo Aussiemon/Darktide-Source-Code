@@ -85,8 +85,8 @@ SwayWeaponModule.fixed_update = function (self, dt, t)
 	yaw = yaw + sway_control_component.immediate_yaw
 	sway_control_component.immediate_pitch = 0
 	sway_control_component.immediate_yaw = 0
-	pitch = math.min(pitch, max_pitch)
-	yaw = math.min(yaw, max_yaw)
+	pitch = math.clamp(pitch, 0, max_pitch)
+	yaw = math.clamp(yaw, 0, max_yaw)
 	sway_component.pitch = pitch
 	sway_component.yaw = yaw
 

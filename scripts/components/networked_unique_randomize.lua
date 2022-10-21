@@ -12,9 +12,6 @@ NetworkedUniqueRandomize.init = function (self, unit, is_server)
 		self._max_rand = self:get_data(unit, "max_rand")
 		self._queue_loop = self:get_data(unit, "queue_loop")
 		self._pointer = 0
-
-		fassert(self._min_rand < self._max_rand, "[NetworkedUniqueRandomize][init] min(%d) >= max(%d)", self._min_rand, self._max_rand)
-
 		self._rand_table = table.generate_random_table(self._min_rand, self._max_rand)
 
 		self:reset()

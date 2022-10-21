@@ -9,10 +9,10 @@ local asset_vo_sergeant_a = {
 			"loc_sergeant_a__asset_pneumatic_press_04"
 		},
 		sound_events_duration = {
-			4.31048,
-			5.880835,
-			4.91273,
-			6.451396
+			4.319563,
+			5.889917,
+			4.921813,
+			6.460479
 		},
 		randomize_indexes = {}
 	}

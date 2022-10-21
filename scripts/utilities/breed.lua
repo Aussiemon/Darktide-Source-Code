@@ -2,6 +2,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local breed_types = BreedSettings.types
 local type_player = breed_types.player
 local type_minion = breed_types.minion
+local type_living_prop = breed_types.living_prop
 local type_prop = breed_types.prop
 local Breed = {
 	height = function (unit, breed)
@@ -33,7 +34,47 @@ local Breed = {
 	end,
 	is_prop = function (breed_or_nil)
 		return breed_or_nil and breed_or_nil.breed_type == type_prop
+	end,
+	is_living_prop = function (breed_or_nil)
+		return breed_or_nil and breed_or_nil.breed_type == type_living_prop
 	end
 }
+
+Breed.count_as_character = function (breed_or_nil)
+	if Breed.is_character(breed_or_nil) then
+		return true
+	end
+
+	return breed_or_nil and breed_or_nil.breed_type == type_living_prop
+end
+
+Breed.enemy_type = function (breed_or_nil)
+	local enemy_type = nil
+	local attack_breed_tags = breed_or_nil and breed_or_nil.tags
+
+	if attack_breed_tags and attack_breed_tags.elite then
+		enemy_type = "elite"
+	elseif attack_breed_tags and attack_breed_tags.special then
+		enemy_type = "special"
+	elseif attack_breed_tags and attack_breed_tags.monster then
+		enemy_type = "monster"
+	elseif attack_breed_tags and attack_breed_tags.captain then
+		enemy_type = "captain"
+	end
+
+	return enemy_type
+end
+
+Breed.unit_breed_or_nil = function (unit)
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if unit_data_extension then
+		local breed = unit_data_extension:breed()
+
+		return breed
+	end
+
+	return nil
+end
 
 return Breed

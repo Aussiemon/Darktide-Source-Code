@@ -2,13 +2,13 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
 local ActionPsykerShout = class("ActionPsykerShout", "ActionAbilityBase")
+local POWER_MODIFIER_PER_SOUL = 0.25
 local broadphase_results = {}
 
 ActionPsykerShout.init = function (self, action_context, action_params, action_settings)
@@ -30,7 +30,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 
 	local warp_charge_component = self._unit_data_extension:write_component("warp_charge")
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
 	local rotation = self._first_person_component.rotation
@@ -98,14 +98,17 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local shout_drains_warp_charge = specialization_extension:has_special_rule(special_rules.shout_drains_warp_charge)
 
 	if shout_drains_warp_charge then
-		WarpCharge.decrease_immediate(1, warp_charge_component)
+		WarpCharge.decrease_immediate(1, warp_charge_component, player_unit)
 	end
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.unit = player_unit
 
-	buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+	if param_table then
+		param_table.unit = player_unit
+
+		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+	end
 end
 
 ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
@@ -154,7 +157,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local enemy_side_names = side:relation_side_names("enemy")
 	local player_unit = self._player_unit
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
@@ -162,8 +165,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level
 	local current_souls = self._specialization_resource_component.current_resource
-	local power_modifier_per_soul = 0.5
-	local current_power_modifier = 1 + current_souls * power_modifier_per_soul
+	local current_power_modifier = 1 + current_souls * POWER_MODIFIER_PER_SOUL
 	power_level = power_level * current_power_modifier
 	local damage_per_warpcharge = specialization_extension:has_special_rule(special_rules.psyker_biomancer_discharge_damage_per_warp_charge)
 	local initial_damage_profile = damage_per_warpcharge and action_settings.initial_damage_profile

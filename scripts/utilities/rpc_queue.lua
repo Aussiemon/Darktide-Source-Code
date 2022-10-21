@@ -78,9 +78,6 @@ end
 RPCQueue.queue_rpc = function (self, rpc_name, ...)
 	local index = self._queue_index
 	local rpc = self._queue[index]
-
-	fassert(rpc.name == nil, "[RPCQueue]Trying to queue an rpc without an available queue slot")
-
 	rpc.name = rpc_name
 	local num_args = select("#", ...)
 

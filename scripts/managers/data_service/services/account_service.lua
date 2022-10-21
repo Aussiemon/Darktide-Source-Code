@@ -6,6 +6,7 @@ local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local SignInError = require("scripts/managers/error/errors/sign_in_error")
+local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local AccountService = class("AccountService")
 
 AccountService.init = function (self, backend_interface)
@@ -26,6 +27,15 @@ AccountService.signin = function (self)
 		local account_id = auth_data.sub
 
 		_init_network_client(account_id)
+		Managers.backend.interfaces.external_payment:update_account_store_status():next(function ()
+			return Managers.backend.interfaces.external_payment:reconcile_dlc()
+		end):catch(function (error)
+			if XboxLiveUtilities.available() then
+				Log.error("AccountService", "Failure possibly due to different accounts logged in to ms store and the xbox app. This will need a proper error message to the user, see https://docs.microsoft.com/en-us/gaming/gdk/_content/gc/commerce/pc-specific-considerations/xstore-handling-mismatched-store-accounts")
+			end
+
+			Log.error("AccountService", "Failed setting up platform commerce: %s", table.tostring(error, 10))
+		end)
 
 		local status_promise = Managers.backend.interfaces.version_check:status()
 		local settings_promise = Managers.backend.interfaces.game_settings:resolve_backend_game_settings()
@@ -63,7 +73,8 @@ AccountService.signin = function (self)
 			profiles = profile_data.profiles,
 			selected_profile = profile_data.selected_profile,
 			has_created_first_character = has_created_first_character,
-			account_id = auth_data.sub
+			account_id = auth_data.sub,
+			gear = profile_data.gear
 		})
 	end):catch(function (error)
 		if error.description == "VERSION_ERROR" then
@@ -147,8 +158,7 @@ local function _ui_achievement(index, achievement_definition, achievement_data)
 		hidden = not achievement_definition:is_visible(achievement_data),
 		related_commendation_ids = achievement_definition:get_related_achievements(),
 		rewards = achievement_definition:get_rewards(),
-		score = achievement_definition:score(),
-		platform_achievement = achievement_definition:is_platform()
+		score = achievement_definition:score()
 	}
 end
 
@@ -180,12 +190,7 @@ AccountService.get_achievements = function (self)
 end
 
 AccountService.unlock_achievement = function (self, achievement_id)
-	local achievement_definitions = Managers.achievements:get_achievement_definitions()
-	local achievement = achievement_definitions.achievement_from_id(achievement_id)
-
-	fassert(achievement, "There is no achievement with id '%s'.", achievement_id)
-	fassert(achievement:get_triggers() == nil, "Achievement with id '%s' has a proper trigger and can't be unlocked directly.", achievement_id)
-
+	local achievement = Managers.achievements:achievement_definition_from_id(achievement_id)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local account_id = player:account_id()

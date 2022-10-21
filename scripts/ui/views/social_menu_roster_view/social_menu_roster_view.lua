@@ -11,6 +11,7 @@ local RosterViewStyles = require("scripts/ui/views/social_menu_roster_view/socia
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
+local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
 local XboxLive = require("scripts/foundation/utilities/xbox_live")
 local OnlineStatus = SocialConstants.OnlineStatus
 local PartyStatus = SocialConstants.PartyStatus
@@ -271,6 +272,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._party_widgets = {}
 	self._widgets_with_portraits = {}
 	self._num_pending_invites = 0
+	self._platform_id_to_display_name_lut = {}
 	self._widgets_are_fading = nil
 	self._fade_time = 0
 	self._widget_fade_time = SocialMenuSettings.widget_fade_time
@@ -525,12 +527,20 @@ end
 
 SocialMenuRosterView.cb_join_players_party = function (self, player_info)
 	self:_close_popup_menu()
-	social_service:join_party(player_info:party_id()):next(function (party)
-		self:_play_sound(UISoundEvents.social_menu_join_party)
-		self:_refresh_party_list()
-	end):catch(function (error)
-		self:_play_sound(UISoundEvents.social_menu_join_party_failed)
-	end)
+
+	local party_id = player_info:party_id()
+
+	if party_id then
+		social_service:join_party(party_id, player_info:account_id() or ""):next(function (party)
+			if not self._destroyed then
+				self:_refresh_party_list()
+			end
+		end):catch(function (error)
+			self:_play_sound(UISoundEvents.notification_join_party_failed)
+		end)
+	else
+		self:_play_sound(UISoundEvents.notification_join_party_failed)
+	end
 end
 
 SocialMenuRosterView.cb_show_player_profile = function (self, player_info)
@@ -654,8 +664,49 @@ SocialMenuRosterView.cb_update_roster = function (self, results)
 		return
 	end
 
-	self._new_list_data = results
-	self._refresh_list_delay = SocialMenuSettings.list_refresh_time
+	self:_fetch_platform_player_data(results)
+end
+
+local XUIDS = {}
+
+SocialMenuRosterView._fetch_platform_player_data = function (self, results)
+	if IS_XBS or IS_GDK then
+		table.clear(XUIDS)
+
+		for i = 1, #results do
+			local entries = results[i]
+
+			for j = 1, #entries do
+				local entry = entries[j]
+				local platform = entry:platform()
+
+				if platform == "xbox" then
+					local xuid = entry:platform_user_id()
+
+					if not self._platform_id_to_display_name_lut[xuid] then
+						XUIDS[#XUIDS + 1] = xuid
+					end
+				end
+			end
+		end
+
+		if table.size(XUIDS) > 0 then
+			XboxLive.get_user_profiles(XUIDS):next(function (profiles)
+				for _, profile in ipairs(profiles) do
+					self._platform_id_to_display_name_lut[profile.xuid] = profile
+				end
+
+				self._new_list_data = results
+				self._refresh_list_delay = SocialMenuSettings.list_refresh_time
+			end)
+		else
+			self._new_list_data = results
+			self._refresh_list_delay = SocialMenuSettings.list_refresh_time
+		end
+	else
+		self._new_list_data = results
+		self._refresh_list_delay = SocialMenuSettings.list_refresh_time
+	end
 end
 
 SocialMenuRosterView.cb_show_popup_menu_for_player = function (self, player_info)
@@ -685,7 +736,7 @@ SocialMenuRosterView.cb_show_popup_menu_for_player = function (self, player_info
 		end
 	end
 
-	popup_menu:set_player_info(player_info, material_values)
+	popup_menu:set_player_info(self, player_info, material_values)
 	popup_menu:on_navigation_input_changed(self._using_cursor_navigation)
 	popup_menu:set_close_popup_request_callback(callback(self, "cb_close_popup_menu"))
 end
@@ -702,7 +753,7 @@ SocialMenuRosterView.on_back_pressed = function (self)
 	return back_pressed_handled or not self._can_close
 end
 
-SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, rows, columns)
+SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local widget_content = widget.content
 	widget_content.awaiting_portrait_callback = nil
 	local portrait_style = widget.style.portrait
@@ -711,6 +762,7 @@ SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, r
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 end
 
 SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
@@ -769,7 +821,6 @@ SocialMenuRosterView._update_portraits = function (self)
 				content.activity_id = nil
 
 				Managers.event:trigger("event_player_profile_updated", nil, nil, profile)
-				self:_update_portrait_frame(widget, profile)
 
 				content.profile_hash = profile.hash
 			end
@@ -1111,6 +1162,10 @@ SocialMenuRosterView._create_roster_widgets = function (self, widget_data)
 	}
 
 	return widgets, widget_alignments
+end
+
+SocialMenuRosterView.get_platform_profile = function (self, xuid)
+	return self._platform_id_to_display_name_lut[xuid]
 end
 
 SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_name, grid_id, optional_unique_id)
@@ -1556,7 +1611,7 @@ SocialMenuRosterView._show_confirmation_popup = function (self, player_info, com
 				},
 				{
 					text = "loc_social_menu_confirmation_popup_decline_button",
-					template_type = "default_button_small",
+					template_type = "terminal_button_small",
 					close_on_pressed = true,
 					hotkey = "back"
 				}
@@ -1578,10 +1633,13 @@ SocialMenuRosterView._show_confirmation_popup = function (self, player_info, com
 		context.description_text_params.player_name = player_name
 	end
 
+	local command_params = ViewSettings.command_confirmation_params[command_name]
+
 	if account_id or not player_info then
-		context.title_text = string.format("loc_social_menu_confirmation_popup_%s_header", command_name)
-		context.description_text = string.format("loc_social_menu_confirmation_popup_%s_description", command_name)
+		context.title_text = command_params.title
+		context.description_text = command_params.description
 		context.options[1].callback = callback(social_service, command_name, callback_parameter or account_id)
+		context.options[1].on_pressed_sound = command_params.on_confirm_sound
 
 		Managers.event:trigger("event_show_ui_popup", context)
 	end

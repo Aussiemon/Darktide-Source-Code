@@ -1,19 +1,19 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local Health = require("scripts/utilities/health")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local proc_events = BuffSettings.proc_events
+local REPORT_TIME = 1
 local PlayerUnitHealthExtension = class("PlayerUnitHealthExtension")
 
 PlayerUnitHealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
+	self._player = extension_init_data.player
 	local world = extension_init_context.world
 	self._world = world
 	self._wwise_world = Wwise.wwise_world(world)
 	local health = extension_init_data.health or Unit.get_data(unit, "health")
-
-	fassert(health, "health is not defined in either extension_init_data or the unit_data")
-
 	local knocked_down_health = extension_init_data.knocked_down_health
 	self._health = health
 	self._knocked_down_health = knocked_down_health
@@ -47,6 +47,7 @@ PlayerUnitHealthExtension.init = function (self, extension_init_context, unit, e
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._game_session = nil
 	self._game_object_id = nil
+	self.stat_record_timer = 0
 end
 
 PlayerUnitHealthExtension.extensions_ready = function (self, world, unit)
@@ -60,11 +61,30 @@ PlayerUnitHealthExtension.game_object_initialized = function (self, session, obj
 end
 
 PlayerUnitHealthExtension.fixed_update = function (self, unit, dt, t)
-	self._is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_component)
+	local is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_component)
+	self._is_knocked_down = is_knocked_down
+	local max_health = self:max_health()
+	local knocked_down_health = self:max_health(true)
+	local max_wounds = self:max_wounds()
+	local current_health = self:current_health()
 
-	GameSession.set_game_object_field(self._game_session, self._game_object_id, "health", self:max_health())
-	GameSession.set_game_object_field(self._game_session, self._game_object_id, "knocked_down_health", self:max_health(true))
-	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_wounds", self:max_wounds())
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "health", max_health)
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "knocked_down_health", knocked_down_health)
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_wounds", max_wounds)
+
+	if Managers.stats and Managers.stats.can_record_stats() and self._player then
+		local new_time = self.stat_record_timer + dt
+
+		while REPORT_TIME <= new_time do
+			local remaining_health_segments = max_wounds - Health.calculate_num_segments(current_health, max_health, max_wounds)
+
+			Managers.stats:record_health_update(self._player, remaining_health_segments, is_knocked_down)
+
+			new_time = new_time - REPORT_TIME
+		end
+
+		self.stat_record_timer = new_time
+	end
 end
 
 PlayerUnitHealthExtension.is_alive = function (self)
@@ -164,8 +184,10 @@ PlayerUnitHealthExtension.max_health = function (self, force_knocked_down_health
 	end
 
 	local stat_buffs = self._buff_extension:stat_buffs()
-	local max_health_multiplier = stat_buffs.max_health_multiplier * stat_buffs.max_health_modifier
-	health = health * max_health_multiplier
+	local max_health_multiplier = stat_buffs.max_health_multiplier
+	local max_health_modifier = stat_buffs.max_health_modifier
+	health = health * max_health_multiplier * max_health_modifier
+	health = math.ceil(health)
 
 	return health
 end
@@ -194,18 +216,22 @@ PlayerUnitHealthExtension.add_heal = function (self, heal_amount, heal_type)
 		local healing_buff_modifier = buffs.healing_recieved_modifier or 1
 		heal_amount = heal_amount * healing_buff_modifier
 		new_permanent_damage = permanent_damage_taken
-		actual_heal_amount = math.min(damage_taken, heal_amount)
-		new_damage = math.max(damage_taken - actual_heal_amount, permanent_damage_taken)
+		local clamped_heal = math.min(damage_taken, heal_amount)
+		new_damage = math.max(damage_taken - clamped_heal, permanent_damage_taken)
+		actual_heal_amount = damage_taken - new_damage
 	end
 
 	self:_set_permanent_damage(new_permanent_damage)
 	self:_set_damage(new_damage)
 
 	local param_table = self._buff_extension:request_proc_event_param_table()
-	param_table.damage_amount = heal_amount
-	param_table.heal_type = heal_type
 
-	self._buff_extension:add_proc_event(proc_events.on_healing_taken, param_table)
+	if param_table then
+		param_table.damage_amount = heal_amount
+		param_table.heal_type = heal_type
+
+		self._buff_extension:add_proc_event(proc_events.on_healing_taken, param_table)
+	end
 
 	return actual_heal_amount
 end
@@ -215,7 +241,7 @@ PlayerUnitHealthExtension.reduce_permanent_damage = function (self, amount)
 	local max_health = self:max_health()
 	local max_wounds = self:max_wounds()
 	local current_wounds = self:num_wounds()
-	local fixed_permanent_damage = max_health * (1 - current_wounds / max_wounds)
+	local fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds) + 0.5)
 	local new_permanent_damage = math.max(fixed_permanent_damage, permanent_damage_taken - amount)
 
 	self:_set_permanent_damage(new_permanent_damage)
@@ -305,30 +331,19 @@ end
 
 PlayerUnitHealthExtension.kill = function (self)
 	self._is_dead = true
-	local side_system = Managers.state.extension:system("side_system")
 
-	side_system:remove_unit_from_tag_units(self._unit)
+	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil
 end
 
-PlayerUnitHealthExtension._calculate_num_wounds = function (self)
+PlayerUnitHealthExtension.num_wounds = function (self)
+	local permanent_damage = self:permanent_damage_taken()
 	local max_wounds = self:max_wounds()
 	local max_health = self:max_health()
-	local permanent_damage = self:permanent_damage_taken()
-	local health_per_wound = max_wounds > 0 and max_health / max_wounds or 0
+	local num_wounds = Health.calculate_num_segments(permanent_damage, max_health, max_wounds)
 
-	if health_per_wound <= 0 then
-		return 0
-	end
-
-	local wanted_wounds = math.max(max_wounds - math.floor(permanent_damage / health_per_wound), 0)
-
-	return wanted_wounds
-end
-
-PlayerUnitHealthExtension.num_wounds = function (self)
-	return self:_calculate_num_wounds()
+	return num_wounds
 end
 
 PlayerUnitHealthExtension.max_wounds = function (self)

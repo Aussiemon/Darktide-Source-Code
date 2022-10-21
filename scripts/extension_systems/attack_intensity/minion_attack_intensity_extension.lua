@@ -6,9 +6,6 @@ local attack_intensities = AttackIntensitySettings.attack_intensities
 MinionAttackIntensityExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	local breed = extension_init_data.breed
 	local cooldowns = breed.attack_intensity_cooldowns
-
-	fassert(cooldowns, "%s is missing attack intensity cooldown in breed.", breed.name)
-
 	self._cooldowns = cooldowns
 	self._breed = breed
 	local difficulty_settings = {}

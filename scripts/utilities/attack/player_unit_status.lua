@@ -1,3 +1,4 @@
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local critical_health = PlayerCharacterConstants.critical_health
@@ -5,10 +6,11 @@ local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
 local TOUGHNESS_PERCENT_LIMIT = critical_health.toughness_percent_limit
 local PlayerUnitStatus = {}
 local DISABLED_STATES = {
-	knocked_down = true,
-	warp_grabbed = true,
 	ledge_hanging = true,
+	warp_grabbed = true,
+	knocked_down = true,
 	hogtied = true,
+	consumed = true,
 	catapulted = true,
 	dead = true,
 	netted = true,
@@ -18,6 +20,12 @@ local DISABLED_STATES = {
 local REQUIRES_HELP = {
 	netted = true,
 	hogtied = true,
+	knocked_down = true,
+	pounced = true,
+	ledge_hanging = true
+}
+local REQUIRES_IMMEDIATE_HELP = {
+	netted = true,
 	knocked_down = true,
 	pounced = true,
 	ledge_hanging = true
@@ -34,10 +42,11 @@ local OBJECTIVE_INTERACTION_STATES = {
 	walking = true
 }
 local VALID_END_ZONE_STATES = {
-	warp_grabbed = true,
+	consumed = true,
 	walking = true,
 	ledge_vaulting = true,
 	falling = true,
+	warp_grabbed = true,
 	catapulted = true,
 	dead = true,
 	jumping = true,
@@ -64,6 +73,13 @@ PlayerUnitStatus.requires_help = function (character_state_component)
 	local requires_help = REQUIRES_HELP[state_name]
 
 	return requires_help
+end
+
+PlayerUnitStatus.requires_immediate_help = function (character_state_component)
+	local state_name = character_state_component.state_name
+	local requires_immediate_help = REQUIRES_IMMEDIATE_HELP[state_name]
+
+	return requires_immediate_help
 end
 
 PlayerUnitStatus.requires_allied_interaction_help = function (character_state_component)
@@ -133,6 +149,14 @@ PlayerUnitStatus.is_mutant_charged = function (disabled_character_state_componen
 	return is_mutant_charged, mutant_charging_unit
 end
 
+PlayerUnitStatus.is_consumed = function (disabled_character_state_component)
+	local is_disabled = disabled_character_state_component.is_disabled
+	local is_consumed = is_disabled and disabled_character_state_component.disabling_type == "consumed"
+	local mutant_charging_unit = disabled_character_state_component.disabling_unit
+
+	return is_consumed, mutant_charging_unit
+end
+
 PlayerUnitStatus.is_stunned = function (character_state_component)
 	local state_name = character_state_component.state_name
 	local is_stunned = state_name == "stunned"
@@ -197,11 +221,15 @@ PlayerUnitStatus.is_in_lunging_aim_or_combat_ability = function (lunge_character
 	return lunge_template.combat_ability, lunge_template
 end
 
-PlayerUnitStatus.can_interact_with_objective = function (character_state_component)
+PlayerUnitStatus.can_interact_with_objective = function (player_unit)
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+	local character_state_component = unit_data_extension:read_component("character_state")
 	local state_name = character_state_component.state_name
 	local state_allowed = OBJECTIVE_INTERACTION_STATES[state_name]
+	local movement_state_component = unit_data_extension:read_component("movement_state")
+	local crouching_in_bad_location = movement_state_component.is_crouching and not Crouch.can_exit(player_unit)
 
-	return state_allowed and not PlayerUnitStatus.is_disabled(character_state_component)
+	return state_allowed and not PlayerUnitStatus.is_disabled(character_state_component) and not crouching_in_bad_location
 end
 
 PlayerUnitStatus.no_toughness_left = function (toughness_extension)
@@ -210,7 +238,7 @@ PlayerUnitStatus.no_toughness_left = function (toughness_extension)
 	return toughness_percent <= 0
 end
 
-PlayerUnitStatus.have_coruption = function (health_extension)
+PlayerUnitStatus.has_corruption_damage = function (health_extension)
 	local permanent_damage = health_extension:permanent_damage_taken()
 	local have_permanent_damage = permanent_damage > 0.01
 

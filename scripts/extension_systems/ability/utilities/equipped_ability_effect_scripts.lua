@@ -17,9 +17,6 @@ local EquippedAbilityEffectScripts = {
 
 			if script_class then
 				local script = script_class:new(equiped_ability_effect_scripts_context, ability_template)
-
-				fassert(equiped_ability_effect_scripts[i] == nil, "Trying to overwrite already create equiped ability effect script on index %d with %q on %q", i, script_name, ability_template.name)
-
 				equiped_ability_effect_scripts[i] = script
 			end
 		end

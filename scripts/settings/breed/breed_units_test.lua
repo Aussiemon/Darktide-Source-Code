@@ -53,8 +53,6 @@ local function _init_and_run_tests()
 					s = string.format("%s %q", s, node_name)
 				end
 			end
-
-			fassert(not missing_nodes, "%q is missing required nodes:%s", tostring(unit), s)
 		end
 
 		if Breed.is_minion(breed) then
@@ -104,7 +102,6 @@ local function _init_and_run_tests()
 		end
 	end
 
-	fassert(not missing_minion_ranged_nodes, "Following minion weapon units/items are missing required nodes:%s\n", missing_ranged_nodes_text)
 	Application.release_world(world)
 end
 

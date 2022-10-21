@@ -9,9 +9,6 @@ local known_variable_types = {
 local function tests()
 	for name, config in pairs(PlayerCharacterLoopingParticleAliases) do
 		local particle_alias = config.particle_alias
-
-		fassert(PlayerCharacterParticles, "PlayerCharacterLoopingParticleAliases[%q] particle_alias %q does not exist in PlayerCharacterLoopingParticleAliases.", name, particle_alias)
-
 		local variables = config.variables
 
 		if variables then
@@ -20,21 +17,11 @@ local function tests()
 			for i = 1, num_variables do
 				local variable_config = variables[i]
 				local variable_name = variable_config.variable_name
-
-				fassert(variable_name, "PlayerCharacterLoopingParticleAliases[%q] variables[%i] missing variable_name.", name, i)
-
 				local variable_type = variable_config.variable_type
-
-				fassert(known_variable_types[variable_type], "PlayerCharacterLoopingParticleAliases[%q] variables[%i] unknown variable_type %q", name, i, variable_type)
-
 				local func = variable_config.func
-
-				fassert(func, "PlayerCharacterLoopingParticleAliases[%q] variables[%i] missing func.", name, i)
 
 				if variable_type == "material_scalar" then
 					local cloud_name = variable_config.cloud_name
-
-					fassert(cloud_name, "PlayerCharacterLoopingParticleAliases[%q] variables[%i] missing cloud_name.", name, i)
 				end
 			end
 		end

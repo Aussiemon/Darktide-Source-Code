@@ -3,6 +3,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breeds = require("scripts/settings/breed/breeds")
 local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
 local WeaponHandlingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_handling_templates")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
@@ -13,7 +14,7 @@ local Weapon = require("scripts/extension_systems/weapon/weapon")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponStats = class("WeaponStats")
-local DEFAULT_POWER_LEVEL = 500
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 
 WeaponStats.init = function (self, item)
 	self._item = item
@@ -31,12 +32,15 @@ WeaponStats.init = function (self, item)
 	self._stagger = weapon_stats.stagger or 0
 	self._stamina_block_cost = weapon_stats.stamina_block_cost or 0
 	self._stamina_push_cost = weapon_stats.stamina_push_cost or 0
+	self._stamina = weapon_stats.stamina or 0
 	self._rate_of_fire = weapon_stats.rate_of_fire or 0
 	self._bullets_per_second = weapon_stats.bullets_per_second or 0
 	self._reload_time = weapon_stats.reload_time or 0
 	self._attack_speed = weapon_stats.attack_speed or 0
 	self._ammo = weapon_stats.ammo or 0
 	self._ammo_reserve = weapon_stats.ammo_reserve or 0
+	self._uses_ammunition = weapon_stats.uses_ammunition
+	self._uses_overheat = weapon_stats.uses_overheat
 	self._ranged = self:get_all_ranged()
 	self._melee = self:get_all_melee()
 end
@@ -46,12 +50,13 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local armor_type = ArmorSettings.types.unarmored
 	local breed_name = "chaos_poxwalker"
 	local breed = Breeds[breed_name]
-	local has_power_boost = false
 	local attacker_stat_buffs = {}
 	local target_stat_buffs = {}
+	local target_buff_extension = nil
 	local charge_level = 1
 	local distance = 1
 	local is_backstab = false
+	local is_flanking = false
 	local hit_weakspot = false
 	local stagger_count = 0
 	local num_triggered_staggers = 0
@@ -67,8 +72,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local stamina_templates = weapon_tweak_templates[template_types.stamina]
 	local stamina_template_name = weapon_template.stamina_template or "none"
 	local stamina_template = stamina_templates[stamina_template_name]
-	local ammo_clip_size = 0
-	local ammo_reserve_size = 0
+	local ammo_clip_size, ammo_reserve_size = nil
 
 	if uses_ammunition then
 		ammo_clip_size = ammo_template.ammunition_clip
@@ -77,6 +81,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 	local block_cost = stamina_template.block_cost_default
 	local push_cost = stamina_template.push_cost
+	local stamina_modifier = stamina_template.stamina_modifier
 	local num_attack_actions = 0
 	local total_attacks_damage = 0
 	local total_attacks_duration = 0
@@ -229,7 +234,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local auto_completed_action = false
 						local target_unit, attacking_unit, attacker_breed_or_nil = nil
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
-						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, is_backstab, dropoff_scalar, has_power_boost, attack_type, attacker_stat_buffs, target_stat_buffs, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, attacking_unit, auto_completed_action)
+						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, attacking_unit, auto_completed_action)
 						damage = damage * num_damage_itterations
 
 						if damage > 0 then
@@ -239,7 +244,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 						local stagger_strength_pool = 0
 						local stagger_reduction_override_or_nil, optional_stagger_strength_multiplier = nil
-						local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, target_damage_values, power_level, charge_level, breed, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, has_power_boost, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs)
+						local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, target_damage_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs)
 
 						if stagger_strength and stagger_strength > 0 then
 							num_targets_total_stagger_strength = num_targets_total_stagger_strength + stagger_strength
@@ -268,12 +273,15 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local average_action_stagger_strength = num_attack_actions > 0 and total_stagger_strength > 0 and total_stagger_strength / num_attack_actions or 0
 	local dps_raw = average_action_duration > 0 and average_action_damage > 0 and average_action_damage / average_action_duration or average_action_damage
 	local dps = math.round_with_precision(dps_raw, 1)
-	local stats = {}
+	local stats = {
+		name = weapon_template.name,
+		is_ranged_weapon = is_ranged_weapon,
+		type = is_ranged_weapon and "Ranged" or "Melee",
+		uses_ammunition = uses_ammunition,
+		uses_overheat = uses_overheat
+	}
 
 	if dps and num_attack_actions > 0 then
-		stats.name = weapon_template.name
-		stats.is_ranged_weapon = is_ranged_weapon
-		stats.type = is_ranged_weapon and "Ranged" or "Melee"
 		stats.dps = dps
 		stats.damage = average_action_damage
 
@@ -287,6 +295,10 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 		if push_cost and not is_ranged_weapon then
 			stats.stamina_push_cost = push_cost
+		end
+
+		if stamina_modifier then
+			stats.stamina_modifier = stamina_modifier
 		end
 
 		if rate_of_fire then
@@ -335,6 +347,10 @@ end
 
 WeaponStats.is_ranged_weapon = function (self)
 	return self._is_ranged_weapon
+end
+
+WeaponStats.uses_overheat = function (self)
+	return self._uses_overheat
 end
 
 WeaponStats._is_weapon_template_ranged = function (self, weapon_template)
@@ -475,7 +491,8 @@ WeaponStats.get_main_stats = function (self)
 	return {
 		dps = self._dps,
 		stamina_push_cost = self._stamina_push_cost,
-		magazine = {
+		stamina = self._stamina,
+		magazine = self._uses_ammunition and {
 			ammo = self._ammo,
 			reserve = self._ammo_reserve
 		}

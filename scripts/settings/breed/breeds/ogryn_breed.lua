@@ -1,4 +1,5 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BotSettings = require("scripts/settings/bot/bot_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -6,6 +7,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
+local stagger_results = AttackSettings.stagger_results
 local breed_data = {
 	name = "ogryn",
 	display_name = "loc_breed_display_name_undefined",
@@ -24,7 +26,6 @@ local breed_data = {
 	ladder_movement_anim_length = 4,
 	base_unit = "content/characters/player/ogryn/third_person/base",
 	hit_mass = 2,
-	default_stagger_result = "no_stagger",
 	breed_type = breed_types.player,
 	genders = {
 		"male"
@@ -48,9 +49,9 @@ local breed_data = {
 		0.925
 	},
 	fade = {
-		max_distance = 1.1,
+		max_distance = 1.2,
 		max_height_difference = 1.2,
-		min_distance = 0.4
+		min_distance = 0.5
 	},
 	threat_config = {
 		threat_decay_per_second = 1,
@@ -152,10 +153,12 @@ local breed_data = {
 		disorientation_type = "ogryn_disorientation_type"
 	},
 	hit_reaction_stun_types = {
-		thougness_absorbed_default = "ogryn_toughness",
+		toughness_absorbed_default = "ogryn_toughness",
 		toughness_broken_default = "ogryn_medium",
-		fumbled = "fumbled"
+		fumbled = "fumbled",
+		toughness_absorbed_melee = "ogryn_toughness_melee"
 	},
+	default_stagger_result = stagger_results.no_stagger,
 	ledge_finder_tweak_data = {
 		player_width = 0.5,
 		player_height = 1.61
@@ -173,6 +176,11 @@ local breed_data = {
 	},
 	blackboard_component_config = BotSettings.blackboard_component_config,
 	base_unit_sound_sources = {
+		head = "j_head",
+		rightfoot = "j_rightfoot",
+		hips = "j_hips"
+	},
+	base_unit_fx_sources = {
 		head = "j_head",
 		rightfoot = "j_rightfoot",
 		hips = "j_hips"

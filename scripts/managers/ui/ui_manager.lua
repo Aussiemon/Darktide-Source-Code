@@ -1,4 +1,3 @@
-local GuiDebug = require("scripts/managers/ui/gui_debug")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local LoadingIcon = require("scripts/ui/loading_icon")
 local MasterItems = require("scripts/backend/master_items")
@@ -15,6 +14,7 @@ local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
 local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
 local Views = require("scripts/ui/views/views")
 local InputDevice = require("scripts/managers/input/input_device")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIManager = class("UIManager")
 UIManager.DEBUG_TAG = "UI Manager"
 local DEBUG_RELOAD = false
@@ -29,6 +29,8 @@ UIManager.init = function (self)
 	self._current_sub_state_name = ""
 	self._popup_id_counter = 0
 	self._active_popups = {}
+	self._visible_widgets = {}
+	self._prev_visible_widgets = {}
 	local timer_name = "ui"
 	local parent_timer_name = "main"
 
@@ -43,7 +45,8 @@ UIManager.init = function (self)
 	local viewport_name = "ui_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
-	self._viewport = self:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
+	local shading_environment = nil
+	self._viewport = self:create_viewport(self._world, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self._viewport_name = viewport_name
 
 	self:_setup_icon_renderers()
@@ -77,12 +80,14 @@ end
 
 UIManager._setup_icon_renderers = function (self)
 	local back_buffer_render_handlers = {}
+	local item_icon_size = UISettings.item_icon_size
+	local cosmetics_icon_size = UISettings.item_icon_size
 	local portrait_render_settings = {
 		viewport_layer = 1,
 		world_layer = 1,
 		world_name = "portrait_world",
 		target_resolution_height = 1600,
-		viewport_type = "portrait_offscreen",
+		viewport_type = "default_with_alpha",
 		viewport_name = "portrait_viewport",
 		portrait_width = 140,
 		target_resolution_width = 1400,
@@ -95,43 +100,43 @@ UIManager._setup_icon_renderers = function (self)
 		viewport_layer = 900,
 		world_layer = 900,
 		world_name = "cosmetics_portrait_world",
-		target_resolution_height = 6144,
-		viewport_type = "item_gear_offscreen",
+		viewport_type = "default_with_alpha",
 		viewport_name = "cosmetics_portrait_viewport",
-		portrait_width = 512,
-		target_resolution_width = 4096,
 		shading_environment = "content/shading_environments/ui/portrait",
 		level_name = "content/levels/ui/portrait/portrait",
-		portrait_height = 768,
-		timer_name = "ui"
+		timer_name = "ui",
+		portrait_width = cosmetics_icon_size[1],
+		portrait_height = cosmetics_icon_size[2],
+		target_resolution_width = cosmetics_icon_size[1] * 10,
+		target_resolution_height = cosmetics_icon_size[2] * 10
 	}
 	local appearance_render_settings = {
 		viewport_layer = 900,
 		world_layer = 900,
 		world_name = "appearance_portrait_world",
-		target_resolution_height = 6144,
-		viewport_type = "item_gear_offscreen",
+		target_resolution_height = 1920,
+		viewport_type = "default_with_alpha",
 		viewport_name = "appearance_portrait_viewport",
-		portrait_width = 512,
-		target_resolution_width = 4096,
+		portrait_width = 128,
+		target_resolution_width = 1280,
 		shading_environment = "content/shading_environments/ui/portrait",
 		level_name = "content/levels/ui/portrait/portrait",
-		portrait_height = 768,
+		portrait_height = 192,
 		timer_name = "ui"
 	}
 	local hud_weapons_render_settings = {
 		viewport_layer = 900,
 		world_layer = 800,
 		world_name = "weapon_hud_world",
+		weapon_width = 240,
+		viewport_type = "default_with_alpha",
+		weapon_height = 60,
 		target_resolution_height = 256,
-		viewport_type = "hud_weapon_offscreen",
-		viewport_name = "weapon_hud_viewport",
-		portrait_width = 240,
 		target_resolution_width = 512,
-		shading_environment = "content/shading_environments/ui/weapon_icons",
+		viewport_name = "weapon_hud_viewport",
 		level_name = "content/levels/ui/weapon_icon_hud/weapon_icon_hud",
+		shading_environment = "content/shading_environments/ui/weapon_icons",
 		test = true,
-		portrait_height = 60,
 		timer_name = "ui"
 	}
 	back_buffer_render_handlers.portraits = PortraitUI:new(portrait_render_settings)
@@ -146,15 +151,12 @@ end
 UIManager.renderer_by_name = function (self, name)
 	local data = self._renderers[name]
 
-	fassert(data, "[UIManager] - Renderer with name: %s do not exist.", name)
-
 	return data.renderer
 end
 
 UIManager.destroy_renderer = function (self, name)
 	local data = self._renderers[name]
 
-	fassert(data, "[UIManager] - Renderer with name: %s do not exist.", name)
 	UIRenderer.destroy(data.renderer)
 
 	self._renderers[name] = nil
@@ -168,13 +170,11 @@ UIManager.get_time = function (self)
 	return t
 end
 
-UIManager.create_renderer = function (self, name, world, resource_target, gui, gui_retained, material_name)
-	fassert(not self._renderers[name], "[UIManager] - Renderer with name: %s already exists.", name)
-
+UIManager.create_renderer = function (self, name, world, create_resource_target, gui, gui_retained, material_name)
 	world = world or self._world
 	local renderer = nil
 
-	if resource_target then
+	if create_resource_target then
 		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name)
 	else
 		renderer = UIRenderer.create_viewport_renderer(world)
@@ -229,6 +229,15 @@ UIManager._load_ui_element_packages = function (self, element_definitions, refer
 				local on_load_callback = callback(self, "_on_ui_element_package_loaded", reference_key, reference_name)
 				package_references[reference_name].id = package_manager:load(package, reference_name, on_load_callback)
 			end
+		end
+	else
+		ui_element_packages_data.is_loaded = true
+		ui_element_packages_data.is_loading = nil
+
+		if on_loaded_callback then
+			on_loaded_callback()
+
+			ui_element_packages_data.on_loaded_callback = nil
 		end
 	end
 end
@@ -286,29 +295,33 @@ end
 
 UIManager.create_player_hud = function (self, peer_id, local_player_id, elements, visibility_groups)
 	visibility_groups = visibility_groups or require("scripts/ui/hud/hud_visibility_groups")
+	local enable_world_bloom = not self._spectator_hud
 	local params = {
 		peer_id = peer_id,
-		local_player_id = local_player_id or 1
+		local_player_id = local_player_id or 1,
+		enable_world_bloom = enable_world_bloom
 	}
 	self._hud = UIHud:new(elements, visibility_groups, params)
 end
 
 UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, local_player_id, elements, visibility_groups)
-	assert(not self._spectator_hud, "Trying to create new spectator hud without destroying old one.")
-
 	visibility_groups = visibility_groups or require("scripts/ui/hud/hud_visibility_groups")
+	local enable_world_bloom = not self._hud
 	local params = {
 		renderer_name = "spectator_hud_ui_renderer",
 		peer_id = peer_id,
 		local_player_id = local_player_id or 1,
-		world_viewport_name = world_viewport_name
+		world_viewport_name = world_viewport_name,
+		enable_world_bloom = enable_world_bloom
 	}
 	self._spectator_hud = UIHud:new(elements, visibility_groups, params)
 end
 
 UIManager.destroy_spectator_hud = function (self)
 	if self._spectator_hud then
-		self._spectator_hud:destroy()
+		local disable_world_bloom = not self._hud
+
+		self._spectator_hud:destroy(disable_world_bloom)
 
 		self._spectator_hud = nil
 	end
@@ -316,7 +329,9 @@ end
 
 UIManager.destroy_player_hud = function (self)
 	if self._hud then
-		self._hud:destroy()
+		local disable_world_bloom = not self._spectator_hud
+
+		self._hud:destroy(disable_world_bloom)
 
 		self._hud = nil
 	end
@@ -426,16 +441,26 @@ UIManager._update_view_hotkeys = function (self)
 	end
 end
 
-UIManager.open_view = function (self, view_name, transition_time, close_previous, close_all, close_transition_time, context)
+UIManager.open_view = function (self, view_name, transition_time, close_previous, close_all, close_transition_time, context, settings_override)
 	local view_is_available = self:view_is_available(view_name)
 
 	if not view_is_available then
 		self:_show_error_popup(view_name)
 
-		return
+		return false
 	end
 
-	self._view_handler:open_view(view_name, transition_time, close_previous, close_all, close_transition_time, context)
+	local view_settings = Views[view_name]
+	local validation_function = view_settings.validation_function
+	local can_open_view = not validation_function or validation_function()
+
+	if not can_open_view then
+		return false
+	end
+
+	self._view_handler:open_view(view_name, transition_time, close_previous, close_all, close_transition_time, context, settings_override)
+
+	return true
 end
 
 UIManager._show_error_popup = function (self, view_name)
@@ -448,7 +473,7 @@ UIManager._show_error_popup = function (self, view_name)
 	popup_params.options = {
 		{
 			text = "loc_popup_unavailable_view_button_confirm",
-			template_type = "default_button_small",
+			template_type = "terminal_button_small",
 			close_on_pressed = true,
 			hotkey = "back"
 		}
@@ -611,6 +636,12 @@ UIManager.chat_using_input = function (self)
 	return self._ui_constant_elements and self._ui_constant_elements:chat_using_input()
 end
 
+UIManager.communication_wheel_active = function (self)
+	local hud = self._hud
+
+	return hud and hud:communication_wheel_active()
+end
+
 UIManager.wwise_music_state = function (self, wwise_state_group_name)
 	return self._view_handler:wwise_music_state(wwise_state_group_name)
 end
@@ -659,7 +690,6 @@ UIManager.destroy = function (self)
 	self._viewport_name = nil
 	self._world = nil
 
-	assert(table.size(self._ui_extension_managers) == 0, "[UIManager] - Still has Extension managers assigned. Make sure to unregister each world's Extension manager before destroy.")
 	Managers.time:unregister_timer(self._timer_name)
 
 	self._timer_name = nil
@@ -701,11 +731,15 @@ UIManager.set_2d_sound_parameter = function (self, parameter_id, value)
 end
 
 UIManager.update = function (self, dt, t)
+	if self._update_hotkeys then
+		self:_update_view_hotkeys()
+
+		self._update_hotkeys = nil
+	end
+
 	local allow_view_input = self._ui_constant_elements and not self._ui_constant_elements:using_input()
 
-	Profiler.start("[UIManager] - update view handler")
 	self._view_handler:update(dt, t, allow_view_input)
-	Profiler.stop("[UIManager] - update view handler")
 
 	if self._handle_package_unload_delay then
 		self:_update_package_unload_delay()
@@ -741,10 +775,7 @@ UIManager.update = function (self, dt, t)
 end
 
 UIManager.render = function (self, dt, t)
-	Profiler.start("[UIManager] - draw view handler")
 	self._view_handler:draw(dt, t)
-	Profiler.stop("[UIManager] - draw view handler")
-	Profiler.start("[UIManager] - update world layer")
 
 	local world = self._world
 
@@ -758,8 +789,6 @@ UIManager.render = function (self, dt, t)
 			Managers.world:set_world_layer(self._world_name, top_draw_layer)
 		end
 	end
-
-	Profiler.stop("[UIManager] - update world layer")
 
 	local ui_constant_elements = self._ui_constant_elements
 
@@ -797,11 +826,19 @@ UIManager.post_update = function (self, dt, t)
 
 	self._view_handler:post_update(dt, t)
 
-	if self._update_hotkeys then
-		self:_update_view_hotkeys()
+	local visible_widgets = self._visible_widgets
+	local prev_visible_widgets = self._prev_visible_widgets
 
-		self._update_hotkeys = nil
+	for widget, ui_renderer in pairs(prev_visible_widgets) do
+		if not visible_widgets[widget] then
+			UIWidget.destroy_retained(widget, ui_renderer)
+		end
 	end
+
+	self._prev_visible_widgets = visible_widgets
+	self._visible_widgets = prev_visible_widgets
+
+	table.clear(prev_visible_widgets)
 end
 
 UIManager.frame_capture = function (self)
@@ -838,9 +875,9 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		255
 	}
 	local text_options = {
-		"horizontal_align_right",
-		"vertical_align_bottom",
-		"shadow"
+		shadow = true,
+		horizontal_alignment = Gui.HorizontalAlignRight,
+		vertical_alignment = Gui.VerticalAlignBottom
 	}
 	local draw_layer = 999
 	font_size = math.floor(16 * scale)
@@ -950,7 +987,16 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 	end
 
 	local mechanism_name = Managers.mechanism:mechanism_name()
-	mechanism_name = mechanism_name and string.format("Mechanism: %s", mechanism_name)
+
+	if mechanism_name then
+		mechanism_name = string.format("Mechanism: %s", mechanism_name)
+		local mechanism_state = Managers.mechanism:mechanism_state()
+
+		if mechanism_state then
+			mechanism_name = string.format("%s [%s]", mechanism_name, mechanism_state)
+		end
+	end
+
 	local network_info = "Network: " .. connection_manager.platform
 
 	if Managers.multiplayer_session:aws_matchmaking() then
@@ -1114,15 +1160,18 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 	local feature_font_size = 18
 	local feature_font_type = "arial"
 	feature_font_size = math.floor(16 * scale)
+
+	UIFonts.data_by_type(feature_font_type)
+
 	local feature_font_height, feature_font_min_y, feature_font_max_y = UIFonts.font_height(gui, feature_font_type, feature_font_size)
 	local feature_box_size = {
 		1000,
 		math.abs(feature_font_max_y)
 	}
 	local feature_text_options = {
-		"horizontal_align_left",
-		"vertical_align_bottom",
-		"shadow"
+		shadow = true,
+		horizontal_alignment = Gui.HorizontalAlignLeft,
+		vertical_alignment = Gui.VerticalAlignBottom
 	}
 	local features = {
 		{
@@ -1142,8 +1191,20 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 			Application.render_config("render_caps", "dxr", false) and Application.render_config("settings", "dxr", false)
 		},
 		{
+			"reflections",
+			Application.render_config("settings", "rt_reflections_enabled", false)
+		},
+		{
+			"rtxgi",
+			Application.render_config("settings", "rtxgi_enabled", false)
+		},
+		{
 			"dlss",
-			Application.render_config("render_caps", "dlss_supported", false) and Application.render_config("settings", "dlss_enabled", false)
+			Application.render_config("render_caps", "dlss_supported", false) and Application.render_config("settings", "upscaling_enabled", false) and Application.render_config("settings", "upscaling_mode", false) == "dlss"
+		},
+		{
+			"fsr2",
+			Application.render_config("settings", "upscaling_enabled", false) and Application.render_config("settings", "upscaling_mode", false) == "fsr2"
 		},
 		{
 			"d3d_debug",
@@ -1227,8 +1288,6 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 			self._views_loading_data[view_name] = {}
 		end
 
-		fassert(not self._views_loading_data[view_name][reference_name], "[UIManager] - reference name (%s) is already in use for loading the view (%s)", reference_name, view_name)
-
 		local view_loading_data = {
 			packages_load_data = packages_to_load_data,
 			loaded_callback = loaded_callback,
@@ -1301,9 +1360,6 @@ end
 UIManager.unload_view = function (self, view_name, reference_name, frame_delay_count)
 	reference_name = "UIManager_" .. reference_name
 	local view_loading_data = self._views_loading_data[view_name][reference_name]
-
-	fassert(view_loading_data, "[UIManager] - reference name (%s) for view (%s) is not loaded and can therefore not be unloaded", reference_name, view_name)
-
 	local packages_load_data = view_loading_data.packages_load_data
 
 	for i = 1, #packages_load_data do
@@ -1354,8 +1410,6 @@ UIManager._update_package_unload_delay = function (self)
 end
 
 UIManager.world_extension_manager = function (self, world)
-	fassert(World.has_data(world, "__world_name"), "Create a UI World with UIWorldSpawner.")
-
 	local world_name = World.get_data(world, "__world_name")
 	local extension_manager = self._ui_extension_managers[world_name]
 
@@ -1363,17 +1417,19 @@ UIManager.world_extension_manager = function (self, world)
 end
 
 UIManager.unregister_world_extension_manager_lookup = function (self, world)
-	fassert(World.has_data(world, "__world_name"), "Create a UI World with UIWorldSpawner.")
-
 	local world_name = World.get_data(world, "__world_name")
 	self._ui_extension_managers[world_name] = nil
 end
 
 UIManager.register_world_extension_manager_lookup = function (self, world, extension_manager)
-	fassert(World.has_data(world, "__world_name"), "Create a UI World with UIWorldSpawner.")
-
 	local world_name = World.get_data(world, "__world_name")
 	self._ui_extension_managers[world_name] = extension_manager
+end
+
+UIManager.render_black_background = function (self)
+	local gui = self._ui_loading_icon_renderer.gui
+
+	Gui.rect(gui, Vector3.zero(), Vector3(RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height, 0), Color(255, 0, 0, 0))
 end
 
 UIManager.render_loading_icon = function (self)
@@ -1519,10 +1575,18 @@ UIManager.hud_icon_updated = function (self, peer_id, local_player_id, item)
 	instance:weapon_icon_updated(item)
 end
 
-UIManager.load_item_icon = function (self, item, cb, render_context)
+UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile)
+	local item_name = real_item.name
+	local gear_id = real_item.gear_id or item_name
+	local item = nil
+
+	if real_item.gear then
+		item = MasterItems.create_preview_item_instance(real_item)
+	else
+		item = table.clone_instance(real_item)
+	end
+
 	local slots = item.slots or {}
-	local item_name = item.name
-	local gear_id = item.gear_id or item_name
 	local item_type = item.item_type
 
 	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
@@ -1531,13 +1595,79 @@ UIManager.load_item_icon = function (self, item, cb, render_context)
 		return instance:load_weapon_icon(item, cb, render_context)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		local instance = self._back_buffer_render_handlers.cosmetics
-		local player = Managers.player:local_player(1)
-		local profile = player:profile()
-		local dummy_profile = table.clone_instance(profile)
+		local dummy_profile = dummy_profile
+
+		if not dummy_profile then
+			local player = Managers.player:local_player(1)
+			local profile = player:profile()
+			dummy_profile = table.clone_instance(profile)
+		end
+
+		local specialization_name = dummy_profile.specialization
+		local gender_name = dummy_profile.gender
+		local archetype = dummy_profile.archetype
+		local breed_name = archetype.breed
+		local first_slot_name = slots[1]
+		local loadout = dummy_profile.loadout
+		local required_slots_to_keep = UISettings.item_preview_required_slots_per_slot[first_slot_name]
+
+		if required_slots_to_keep then
+			for slot_name, slot_item in pairs(loadout) do
+				if not table.contains(required_slots_to_keep, slot_name) then
+					loadout[slot_name] = nil
+				end
+			end
+		end
 
 		for i = 1, #slots do
 			local slot_name = slots[i]
-			dummy_profile.loadout[slot_name] = item
+			loadout[slot_name] = item
+		end
+
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+		if required_gender_item_names_per_slot then
+			local required_items = required_gender_item_names_per_slot[first_slot_name]
+
+			if required_items then
+				for slot_name, slot_item_name in pairs(required_items) do
+					local item_definition = MasterItems.get_item(slot_item_name)
+
+					if item_definition then
+						local slot_item = table.clone(item_definition)
+						dummy_profile.loadout[slot_name] = slot_item
+					end
+				end
+			end
+		end
+
+		local required_specialization_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_specializations[specialization_name]
+
+		if required_specialization_item_names_per_slot then
+			local required_items = required_specialization_item_names_per_slot[first_slot_name]
+
+			if required_items then
+				for slot_name, slot_item_name in pairs(required_items) do
+					local item_definition = MasterItems.get_item(slot_item_name)
+
+					if item_definition then
+						local slot_item = table.clone(item_definition)
+						dummy_profile.loadout[slot_name] = slot_item
+					end
+				end
+			end
+		end
+
+		local slots_to_hide = UISettings.item_preview_hide_slots_per_slot[first_slot_name]
+
+		if slots_to_hide then
+			local hide_slots = table.clone(item.hide_slots or {})
+			item.hide_slots = hide_slots
+
+			for i = 1, #slots_to_hide do
+				hide_slots[#hide_slots + 1] = slots_to_hide[i]
+			end
 		end
 
 		dummy_profile.character_id = gear_id
@@ -1554,7 +1684,62 @@ UIManager.load_item_icon = function (self, item, cb, render_context)
 	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") then
 		local instance = self._back_buffer_render_handlers.icon
 
-		return instance:load_icon(item, cb, render_context)
+		return instance:load_icon(item, cb, render_context, dummy_profile)
+	elseif item_type == "SET" then
+		local instance = self._back_buffer_render_handlers.cosmetics
+		local dummy_profile = dummy_profile
+
+		if not dummy_profile then
+			local player = Managers.player:local_player(1)
+			local profile = player:profile()
+			dummy_profile = table.clone_instance(profile)
+		end
+
+		local gender_name = dummy_profile.gender
+		local archetype = dummy_profile.archetype
+		local breed_name = archetype.breed
+		local loadout = dummy_profile.loadout
+		local items = {}
+
+		for _, set_item_data in pairs(item.set_items) do
+			items[#items + 1] = MasterItems.get_item(set_item_data.item)
+		end
+
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+		if required_gender_item_names_per_slot then
+			local required_items = required_gender_item_names_per_slot
+
+			if required_items then
+				for slot_name, slot_item_name in pairs(required_items) do
+					local item_definition = MasterItems.get_item(slot_item_name)
+
+					if item_definition then
+						local slot_item = table.clone(item_definition)
+						dummy_profile.loadout[slot_name] = slot_item
+					end
+				end
+			end
+		end
+
+		for i = 1, #items do
+			local item = items[i]
+			local first_slot_name = item.slots[1]
+			loadout[first_slot_name] = item
+			local prop_item_key = item.prop_item
+			local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
+
+			if prop_item then
+				local prop_item_slot = prop_item.slots[1]
+				dummy_profile.loadout[prop_item_slot] = prop_item
+				render_context.wield_slot = prop_item_slot
+			end
+		end
+
+		dummy_profile.character_id = gear_id
+
+		return instance:load_profile_portrait(dummy_profile, cb, render_context)
 	end
 end
 
@@ -1573,9 +1758,9 @@ UIManager.unload_item_icon = function (self, id)
 end
 
 UIManager.item_icon_updated = function (self, peer_id, local_player_id, item)
-	local slots = item.slots
+	local item_type = item.item_type
 
-	if table.find(slots, "slot_primary") or table.find(slots, "slot_secondary") then
+	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
 		local instance = self._back_buffer_render_handlers.weapons
 
 		instance:weapon_icon_updated(item)
@@ -1607,6 +1792,10 @@ UIManager.view_is_available = function (self, view_name)
 	local view_is_available = DefaultGameParameters[killswitch]
 
 	return view_is_available
+end
+
+UIManager.ui_constant_elements = function (self)
+	return self._ui_constant_elements
 end
 
 return UIManager

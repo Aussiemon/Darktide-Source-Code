@@ -22,9 +22,11 @@ PlayerUnitAttackIntensityExtension.init = function (self, extension_init_context
 	self._locked_in_melee_timer = 0
 	self._next_locked_in_melee_update = 0
 	self._attack_allowed_timer = 0
+	self._num_attacks_in_melee = 0
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._inventory_component = unit_data_extension:read_component("inventory")
+	self._character_state_component = unit_data_extension:read_component("character_state")
 end
 
 PlayerUnitAttackIntensityExtension.extensions_ready = function (self, world, unit)
@@ -53,6 +55,10 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 	end
 end
 
+local DISALLOWED_CHARACTER_STATES = {
+	consumed = true
+}
+
 PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context)
 	self:_update_locked_in_melee(dt, t)
 
@@ -60,6 +66,7 @@ PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context
 	local num_occupied_slots = slot_extension.num_occupied_slots
 	local movement_state = self._movement_state_component.method
 	local intensity_data = self._intensity_data
+	local character_state_component = self._character_state_component
 
 	for intensity_type, data in pairs(intensity_data) do
 		repeat
@@ -75,35 +82,42 @@ PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context
 					data.attack_allowed = false
 					data.intensity = data.reset
 				else
-					local intensity = data.intensity
-					local override_grace_mod = 1
-					local decay_grace_timer = data.decay_grace_timer
+					local state_name = character_state_component.state_name
 
-					if intensity < LOW_INTENSITY_THRESHOLD then
-						override_grace_mod = LOW_INTENSITY_GRACE_MOD
-					elseif movement_state == "sprint" then
-						data.decay_grace_timer = 0
-						override_grace_mod = SPRINT_DECAY_MULTIPLIER
-					elseif num_occupied_slots == 0 then
-						override_grace_mod = ZERO_DOGPILE_DECAY_MULTIPLIER
-					end
+					if DISALLOWED_CHARACTER_STATES[state_name] then
+						data.attack_allowed = false
+						data.intensity = data.reset
+					else
+						local intensity = data.intensity
+						local override_grace_mod = 1
+						local decay_grace_timer = data.decay_grace_timer
 
-					if decay_grace_timer > 0 then
-						data.decay_grace_timer = math.max(decay_grace_timer - dt, 0)
-					elseif intensity > 0 then
-						local attack_allowed = data.attack_allowed
-						local decay = data.decay
-						decay = decay * override_grace_mod
-
-						if attack_allowed then
-							decay = decay * data.attack_allowed_decay_multiplier or decay
+						if intensity < LOW_INTENSITY_THRESHOLD then
+							override_grace_mod = LOW_INTENSITY_GRACE_MOD
+						elseif movement_state == "sprint" then
+							data.decay_grace_timer = 0
+							override_grace_mod = SPRINT_DECAY_MULTIPLIER
+						elseif num_occupied_slots == 0 then
+							override_grace_mod = ZERO_DOGPILE_DECAY_MULTIPLIER
 						end
 
-						local new_intensity = math.max(intensity - dt * decay, 0)
-						data.intensity = new_intensity
+						if decay_grace_timer > 0 then
+							data.decay_grace_timer = math.max(decay_grace_timer - dt, 0)
+						elseif intensity > 0 then
+							local attack_allowed = data.attack_allowed
+							local decay = data.decay
+							decay = decay * override_grace_mod
 
-						if new_intensity <= data.reset then
-							data.attack_allowed = true
+							if attack_allowed then
+								decay = decay * data.attack_allowed_decay_multiplier or decay
+							end
+
+							local new_intensity = math.max(intensity - dt * decay, 0)
+							data.intensity = new_intensity
+
+							if new_intensity <= data.reset then
+								data.attack_allowed = true
+							end
 						end
 					end
 				end
@@ -266,6 +280,18 @@ PlayerUnitAttackIntensityExtension.recently_attacked = function (self)
 	local t = Managers.time:time("gameplay")
 
 	return t < self._attack_allowed_timer
+end
+
+PlayerUnitAttackIntensityExtension.set_attacked_melee = function (self)
+	self._num_attacks_in_melee = self._num_attacks_in_melee + 1
+end
+
+PlayerUnitAttackIntensityExtension.remove_attacked_melee = function (self)
+	self._num_attacks_in_melee = self._num_attacks_in_melee - 1
+end
+
+PlayerUnitAttackIntensityExtension.num_melee_attackers = function (self)
+	return self._num_attacks_in_melee
 end
 
 return PlayerUnitAttackIntensityExtension

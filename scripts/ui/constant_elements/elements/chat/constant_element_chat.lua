@@ -19,7 +19,7 @@ local STATE_ACTIVE = "active"
 
 ConstantElementChat.init = function (self, parent, draw_layer, start_scale, definitions)
 	ConstantElementChat.super.init(self, parent, draw_layer, start_scale, Definitions)
-	Managers.event:register(self, "chat_manager_connected", "cb_chat_manager_connected")
+	Managers.event:register(self, "chat_manager_connection_state_change", "cb_chat_manager_connection_state_change")
 	Managers.event:register(self, "chat_manager_login_state_change", "cb_chat_manager_login_state_change")
 	Managers.event:register(self, "chat_manager_added_channel", "cb_chat_manager_added_channel")
 	Managers.event:register(self, "chat_manager_removed_channel", "cb_chat_manager_removed_channel")
@@ -61,7 +61,7 @@ end
 
 ConstantElementChat.destroy = function (self)
 	self:_enable_mouse_cursor(false)
-	Managers.event:unregister(self, "chat_manager_connected")
+	Managers.event:unregister(self, "chat_manager_connection_state_change")
 	Managers.event:unregister(self, "chat_manager_login_state_change")
 	Managers.event:unregister(self, "chat_manager_added_channel")
 	Managers.event:unregister(self, "chat_manager_removed_channel")
@@ -180,7 +180,7 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 end
 
 ConstantElementChat.should_update = function (self)
-	return self._num_connected_channels > 0 and DevParameters.enable_chat_hud
+	return self._num_connected_channels > 0
 end
 
 ConstantElementChat.should_draw = function (self)
@@ -243,7 +243,7 @@ ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_
 		local channel = self._channels[channel_handle]
 		local channel_tag = channel.tag
 
-		if channel_tag and self._connected_channels[channel_tag] then
+		if channel_tag and channel_tag ~= ChatManagerConstants.ChannelTag.HUB and self._connected_channels[channel_tag] then
 			local display_name = participant.displayname
 			local channel_name = self:_channel_name(channel_tag, true)
 			local message = Managers.localization:localize("loc_chat_user_joined_channel", true, {
@@ -265,7 +265,7 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 		local channel = self._channels[channel_handle]
 		local channel_tag = channel.tag
 
-		if channel_tag and self._connected_channels[channel_tag] then
+		if channel_tag and channel_tag ~= ChatManagerConstants.ChannelTag.HUB and self._connected_channels[channel_tag] then
 			local channel_name = self:_channel_name(channel_tag, true)
 			local display_name = participant.displayname
 			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
@@ -278,26 +278,18 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 	end
 end
 
-ConstantElementChat.cb_chat_manager_connected = function (self)
-	Managers.backend:authenticate():next(Promise.delay(1)):next(function (_)
-		if HAS_STEAM then
-			return Steam.user_name()
-		elseif XboxLive.available() then
-			return XboxLive.user_id():next(function (user_id)
-				return XUser.get_gamertag(user_id)
-			end)
-		else
-			return Promise.rejected({
-				message = "Missing platform functions for display name"
-			})
-		end
-	end):next(function (display_name)
-		local peer_id = Network.peer_id()
+ConstantElementChat.cb_chat_manager_connection_state_change = function (self, state)
+	if state == ChatManagerConstants.ConnectionState.CONNECTED then
+		Managers.backend:authenticate():next(Promise.delay(1)):next(function (auth_data)
+			local account_id = auth_data.sub
+			local peer_id = Network.peer_id()
+			local vivox_token = auth_data.vivox_token
 
-		Managers.chat:login(peer_id, display_name)
-	end):catch(function (error)
-		Log.warning("ConstantElementChat", "Could not get display name for chat login: %s", tostring(error))
-	end)
+			Managers.chat:login(peer_id, account_id, vivox_token)
+		end):catch(function (error)
+			Log.warning("ConstantElementChat", "Could not get display name for chat login: %s", tostring(error))
+		end)
+	end
 end
 
 ConstantElementChat._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -395,7 +387,7 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 
 		self:_update_input_field_selected_channel(ui_renderer, input_widget, selected_channel)
 	elseif input_service:get("send_chat_message") then
-		if selected_channel and string.len(input_text) > 0 then
+		if selected_channel and #input_text > 0 then
 			input_text = self:_scrub(input_text)
 			local channel_handle = selected_channel.handle
 

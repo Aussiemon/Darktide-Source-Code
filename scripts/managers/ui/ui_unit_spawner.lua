@@ -25,8 +25,6 @@ UIUnitSpawner.remove_pending_units = function (self)
 end
 
 UIUnitSpawner.mark_for_deletion = function (self, unit)
-	fassert(Unit_alive(unit), "Tried to destroy a unit (%s) that was already destroyed.", tostring(unit))
-
 	local deletion_state = self._deletion_state
 
 	if deletion_state == DELETION_STATES.removing_units then
@@ -70,9 +68,6 @@ UIUnitSpawner._remove_units_marked_for_deletion = function (self)
 end
 
 UIUnitSpawner._set_deletion_state = function (self, state)
-	fassert(self._deletion_state ~= state, "[UIUnitSpawner] Tried to set deletion state to same state (%s).", state)
-	fassert(self._deletion_state == DELETION_STATES.default or state == DELETION_STATES.default, "[UIUnitSpawner] Tried to set deletion state whilst in another non-default deletion state (current=%s | new=%s).", self._deletion_state, state)
-
 	self._deletion_state = state
 end
 
@@ -89,7 +84,6 @@ UIUnitSpawner._world_delete_units = function (self, world, units_list, num_units
 		local unit = units_list[i]
 		local unit_is_alive = Unit_alive(unit)
 
-		assert(unit_is_alive, "Trying to remove unit already destroyed")
 		Unit.flow_event(unit, "unit_despawned")
 		World.destroy_unit(world, unit)
 	end

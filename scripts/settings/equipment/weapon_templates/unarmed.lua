@@ -1,6 +1,7 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local damage_types = DamageSettings.damage_types
 local weapon_template = {
 	action_inputs = {
@@ -87,6 +88,10 @@ local weapon_template = {
 	sprint_template = "default",
 	stamina_template = "default",
 	toughness_template = "default",
+	breed_footstep_intervals = {
+		human = FootstepIntervalsTemplates.unarmed_human,
+		ogryn = FootstepIntervalsTemplates.unarmed_ogryn
+	},
 	archetype_warp_explode_action_override = "action_warp_charge_explode"
 }
 

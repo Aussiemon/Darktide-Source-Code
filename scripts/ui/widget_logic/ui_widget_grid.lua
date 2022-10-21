@@ -8,7 +8,7 @@ local DIRECTION = {
 }
 local UIWidgetGrid = class("UIWidgetGrid")
 
-UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation)
+UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation, use_select_on_focused)
 	self._direction = direction
 	self._scenegraph = scenegraph
 	self._spacing = spacing or {
@@ -22,6 +22,7 @@ UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_sc
 	self._using_negative_direction = negative_direction
 	self._fill_section_spacing = fill_section_spacing
 	self._use_is_focused_for_navigation = use_is_focused_for_navigation
+	self._use_select_on_focused = use_select_on_focused
 	self._axis = axis
 	self._scroll_direction_multiplier = negative_direction and 1 or -1
 	local area_size = self:_get_area_size()
@@ -80,7 +81,6 @@ UIWidgetGrid.set_scrollbar_progress = function (self, progress, animate_scroll)
 		scrollbar_content.scroll_value = nil
 		scrollbar_content.scroll_add = 0
 		scrollbar_content.focused = self._selected_grid_index ~= nil
-		self._scroll_progress = nil
 
 		if animate_scroll then
 			local func = UIAnimation.function_by_time
@@ -100,9 +100,7 @@ end
 
 UIWidgetGrid.scrollbar_progress = function (self)
 	if self._scrollbar_active then
-		local scrollbar_widget = self._scrollbar_widget
-
-		return scrollbar_widget.content.value or 0
+		return self._scroll_progress or 0
 	else
 		return 0
 	end
@@ -182,7 +180,12 @@ UIWidgetGrid._update_grid_position = function (self, dt, t)
 
 	local scenegraph = self._scenegraph
 	local grid_scenegraph = scenegraph[pivot_scenegraph_id]
-	local scroll_progress = self:scrollbar_progress()
+	local scroll_progress = 0
+
+	if self._scrollbar_active then
+		local scrollbar_widget = self._scrollbar_widget
+		scroll_progress = scrollbar_widget.content.value or 0
+	end
 
 	if scroll_progress ~= self._scroll_progress then
 		local axis = self._axis
@@ -403,6 +406,10 @@ UIWidgetGrid.remove_widget = function (self, widget)
 		if widgets[i] == widget then
 			table.remove(widgets, i)
 
+			if self._selected_grid_index == i then
+				self._selected_grid_index = nil
+			end
+
 			break
 		end
 	end
@@ -420,7 +427,7 @@ UIWidgetGrid.remove_widget = function (self, widget)
 	self:_update_scrollbar_sizes()
 end
 
-UIWidgetGrid._align_grid_widgets = function (self, widgets)
+UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 	local axis = self._axis
 	local stale_axis = axis % 2 + 1
 	local direction = self._direction
@@ -444,13 +451,27 @@ UIWidgetGrid._align_grid_widgets = function (self, widgets)
 	local growing_vertically = direction == DIRECTION.UP or direction == DIRECTION.DOWN
 	local negative_direction = direction == DIRECTION.LEFT or direction == DIRECTION.UP
 	local use_limit_new_section_spacing = self._fill_section_spacing
-	local num_widgets = #widgets
+	local num_alignments = #alignment_list
 
-	for i, widget in ipairs(widgets) do
+	for i, alignment in ipairs(alignment_list) do
+		local widget = nil
+
+		if alignment.name then
+			for f = 1, #self._widgets do
+				local widget_name = self._widgets[f].name
+
+				if widget_name == alignment.name then
+					widget = self._widgets[f]
+				end
+			end
+		end
+
+		widget = widget or alignment
 		local first_widget = i == 1
-		local last_widget = i == num_widgets
+		local last_widget = i == num_alignments
+		local alignment_same_as_widget = alignment == widget
 		local content = widget.content
-		local size = widget.size or content.size
+		local size = alignment.size or widget.size or content.size
 
 		if not size then
 			local scenegraph_id = widget.scenegraph_id
@@ -511,26 +532,48 @@ UIWidgetGrid._align_grid_widgets = function (self, widgets)
 			grid_section_entry_positions[#grid_section_entry_positions + 1] = table.clone(position)
 		end
 
+		widget.offset = widget.offset or {}
 		local offset = widget.offset
+		local alignment_offset = not alignment_same_as_widget and alignment.offset or {
+			0,
+			0
+		}
+		local horizontal_alignment = alignment.horizontal_alignment or "left"
+		local vertical_alignment = alignment.vertical_alignment or "top"
+		offset[1] = position[1] + alignment_offset[1]
+		offset[2] = position[2] + alignment_offset[2]
 
-		if offset then
-			offset[1] = position[1]
-			offset[2] = position[2]
+		if negative_direction then
+			offset[axis] = offset[axis] - size[axis]
+		end
 
-			if negative_direction then
-				offset[axis] = offset[axis] - size[axis]
+		if not alignment_same_as_widget then
+			local widget_size = widget.size or content.size
+
+			if horizontal_alignment == "center" then
+				offset[1] = offset[1] + (size[1] - widget_size[1]) * 0.5
+			elseif horizontal_alignment == "right" then
+				offset[1] = offset[1] + size[1] - widget_size[1]
 			end
 
-			local default_offset = widget.default_offset
-
-			if default_offset then
-				default_offset[1] = offset[1]
-				default_offset[2] = offset[2]
-			else
-				default_offset = table.clone(offset)
-				widget.default_offset = default_offset
+			if vertical_alignment == "center" then
+				offset[2] = offset[2] + (size[2] - widget_size[2]) * 0.5
+			elseif vertical_alignment == "bottom" then
+				offset[2] = offset[2] + size[2] - widget_size[2]
 			end
+		end
 
+		local default_offset = widget.default_offset
+
+		if default_offset then
+			default_offset[1] = offset[1]
+			default_offset[2] = offset[2]
+		else
+			default_offset = table.clone(offset)
+			widget.default_offset = default_offset
+		end
+
+		if content then
 			content.row = row
 			content.column = column
 
@@ -656,8 +699,20 @@ UIWidgetGrid.selected_grid_index = function (self)
 	return self._selected_grid_index
 end
 
+UIWidgetGrid.widget_by_index = function (self, index)
+	local widgets = self._widgets
+
+	if widgets then
+		for i, widget in ipairs(widgets) do
+			if i == index then
+				return widget
+			end
+		end
+	end
+end
+
 UIWidgetGrid.focus_grid_index = function (self, index, scrollbar_animation_progress, instant_scroll)
-	self:select_grid_index(index, scrollbar_animation_progress, instant_scroll, true)
+	self:select_grid_index(index, scrollbar_animation_progress, instant_scroll, not self._use_select_on_focused)
 end
 
 UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_progress, instant_scroll, use_is_focused)
@@ -749,7 +804,7 @@ end
 
 UIWidgetGrid.is_widget_visible = function (self, widget, extra_margin)
 	if self._scrollbar_active then
-		local scroll_progress = self:scrollbar_progress()
+		local scroll_progress = self:scrollbar_progress() or 0
 		local scroll_length = self:scroll_length()
 		local scrolled_length = scroll_length * scroll_progress
 		local axis = self._axis

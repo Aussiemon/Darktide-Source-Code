@@ -4,6 +4,7 @@ AiBrain.init = function (self, unit, breed, blackboard, behavior_tree)
 	self._unit = unit
 	self._breed = breed
 	self._blackboard = blackboard
+	self._active = true
 	self._node_data = {}
 	self._scratchpad = {}
 	self._running_child_nodes = {}
@@ -18,6 +19,14 @@ AiBrain.destroy = function (self, t)
 	end
 
 	self:shutdown_behavior_tree(t, true)
+end
+
+AiBrain.set_active = function (self, active)
+	self._active = active
+end
+
+AiBrain.active = function (self)
+	return self._active
 end
 
 AiBrain.set_behavior_tree = function (self, behavior_tree)
@@ -77,8 +86,6 @@ AiBrain.shutdown_behavior_tree = function (self, t, destroy)
 end
 
 AiBrain.update = function (self, unit, dt, t)
-	Profiler.start("evaluate")
-
 	self._old_running_child_nodes = self._running_child_nodes
 	self._running_child_nodes = self._old_running_child_nodes
 	local breed = self._breed
@@ -92,9 +99,6 @@ AiBrain.update = function (self, unit, dt, t)
 	local last_leaf_node_result = self._running_leaf_node_result
 	local last_leaf_node_running = last_leaf_node_result == "running"
 	local leaf_node = root_node:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
-
-	fassert(leaf_node, "[AiBrain] Invalid behavior tree, no leaf node could be resolved!")
-
 	local last_leaf_node = self._running_leaf_node
 	local last_leaf_node_done = not last_leaf_node_running
 
@@ -125,8 +129,6 @@ AiBrain.update = function (self, unit, dt, t)
 	end
 
 	table.clear(old_running_child_nodes)
-	Profiler.stop("evaluate")
-	Profiler.start("run")
 
 	local root_tree_node = root_node.tree_node
 	local root_action_data = root_tree_node.action_data
@@ -143,8 +145,6 @@ AiBrain.update = function (self, unit, dt, t)
 		self._running_leaf_node:leave(unit, breed, blackboard, scratchpad, leaf_action_data, t, result, destroy, node_data, new_running_child_nodes, new_running_child_nodes)
 		table.clear(scratchpad)
 	end
-
-	Profiler.stop("run")
 end
 
 AiBrain.running_action = function (self)

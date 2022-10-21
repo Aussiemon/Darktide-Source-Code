@@ -14,11 +14,11 @@ template.position_offset = {
 	0.4
 }
 template.check_line_of_sight = false
-template.max_distance = 50
+template.max_distance = 100
 template.screen_clamp = false
 template.scale_settings = {
 	scale_to = 1,
-	scale_from = 0.5,
+	scale_from = 0.8,
 	distance_max = 20,
 	distance_min = 10
 }
@@ -71,33 +71,14 @@ template.on_enter = function (widget, marker)
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)
-	local content = widget.content
 	local style = widget.style
-	local is_inside_frustum = content.is_inside_frustum
-	local distance = content.distance
-	local line_of_sight_progress = content.line_of_sight_progress or 0
-
-	if marker.raycast_initialized then
-		local raycast_result = marker.raycast_result
-		local line_of_sight_speed = 3
-
-		if raycast_result then
-			line_of_sight_progress = math.max(line_of_sight_progress - dt * line_of_sight_speed, 0)
-		else
-			line_of_sight_progress = math.min(line_of_sight_progress + dt * line_of_sight_speed, 1)
-		end
-	end
-
 	local draw = marker.draw
 
 	if draw then
 		local scale = marker.scale
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
-		local header_default_font_size = header_style.default_font_size
 		header_style.font_size = header_style.default_font_size * scale
-		content.line_of_sight_progress = line_of_sight_progress
-		widget.alpha_multiplier = line_of_sight_progress
 	end
 end
 

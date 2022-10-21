@@ -7,22 +7,10 @@ local mission_objective_templates = {
 				mission_objective_type = "goal",
 				header = "loc_objective_lm_cooling_leave_start_header"
 			},
-			objective_lm_cooling_hack_door = {
-				description = "loc_objective_lm_cooling_hack_door_desc",
-				mission_objective_type = "goal",
-				header = "loc_objective_lm_cooling_hack_door_header"
-			},
 			objective_lm_cooling_locate = {
 				description = "loc_objective_lm_cooling_locate_desc",
 				mission_objective_type = "goal",
 				header = "loc_objective_lm_cooling_locate_header"
-			},
-			objective_lm_cooling_start_decrypt = {
-				use_music_event = "hacking_event",
-				description = "loc_objective_lm_cooling_start_decrypt_desc",
-				header = "loc_objective_lm_cooling_start_decrypt_header",
-				event_type = "mid_event",
-				mission_objective_type = "goal"
 			},
 			objective_lm_cooling_decrypt = {
 				use_music_event = "hacking_event",
@@ -54,13 +42,6 @@ local mission_objective_templates = {
 				header = "loc_objective_lm_cooling_reactor_header",
 				event_type = "end_event",
 				mission_objective_type = "luggable"
-			},
-			objective_lm_cooling_initiate = {
-				use_music_event = "collect_event",
-				description = "loc_objective_lm_cooling_initiate_desc",
-				header = "loc_objective_lm_cooling_initiate_header",
-				event_type = "end_event",
-				mission_objective_type = "goal"
 			},
 			objective_lm_cooling_machine = {
 				use_music_event = "collect_event",

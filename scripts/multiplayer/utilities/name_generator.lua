@@ -40,7 +40,7 @@ NameGenerator.generate_lobby_name = function ()
 		return t[math.random(1, #t)]
 	end
 
-	return "The " .. r(adj) .. " " .. r(loc) .. " " .. r(act)
+	return string.format("The %s %s %s", r(adj), r(loc), r(act))
 end
 
 return NameGenerator

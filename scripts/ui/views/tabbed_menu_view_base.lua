@@ -182,63 +182,88 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 		tab_view.context = context
 	end
 
-	local layer = tab_bar_params.layer or 10
-	local tab_bar = self:_add_element(ViewElementMenuPanel, "tab_bar", layer)
+	local use_tab_bar = #tab_bar_views > 0 and not tab_bar_params.hide_tabs
 
-	for i = 1, #tab_bar_views do
-		local tab_params = tab_bar_views[i]
-		local show_tab = true
+	if use_tab_bar then
+		local layer = tab_bar_params.layer or 10
+		local tab_bar = self:_add_element(ViewElementMenuPanel, "tab_bar", layer)
 
-		if show_tab then
-			local view = tab_params.view
-			local title_loc_key = tab_params.display_name
+		for i = 1, #tab_bar_views do
+			local tab_params = tab_bar_views[i]
+			local show_tab = true
 
-			if not title_loc_key then
-				local view_settings = Views[view]
-				title_loc_key = view_settings.display_name
+			if show_tab then
+				local view = tab_params.view
+				local title_loc_key = tab_params.display_name
+
+				if not title_loc_key then
+					local view_settings = Views[view]
+					title_loc_key = view_settings.display_name
+				end
+
+				local title = Localize(title_loc_key)
+				local callback = callback(self, "cb_switch_tab", i)
+				local update_function = tab_params.update
+
+				tab_bar:add_entry(title, callback, update_function)
 			end
-
-			local title = Localize(title_loc_key)
-			local callback = callback(self, "cb_switch_tab", i)
-			local update_function = tab_params.update
-
-			tab_bar:add_entry(title, callback, update_function)
 		end
 	end
 
 	self._tab_bar_views = tab_bar_views
 
-	self:set_can_navigate(true)
+	self:set_can_navigate(use_tab_bar)
 
 	self._next_tab_index = #tab_bar_views > 0 and 1 or nil
 end
 
 TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
+	if self:_element("input_legend") then
+		self:_remove_element("input_legend")
+	end
+
 	local layer = input_legend_params.layer or 10
 	local input_legend = self:_add_element(ViewElementInputLegend, "input_legend", layer)
 	local buttons_params = input_legend_params.buttons_params
 
 	for i = 1, #buttons_params do
 		local legend_input = buttons_params[i]
-		local callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
+		local press_callback = nil
+		local on_pressed_callback = legend_input.on_pressed_callback
 
-		input_legend:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, callback, legend_input.alignment)
+		if on_pressed_callback then
+			local callback_parent = self[on_pressed_callback] and self or nil
+
+			if not callback_parent and self._active_view then
+				local view_instance = self._active_view and Managers.ui:view_instance(self._active_view)
+				callback_parent = view_instance
+			end
+
+			press_callback = callback_parent and callback(callback_parent, on_pressed_callback)
+		end
+
+		input_legend:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, press_callback, legend_input.alignment)
 	end
 end
 
 TabbedMenuViewBase._switch_tab = function (self, index)
 	local tab_bar_menu = self._elements.tab_bar
 
-	tab_bar_menu:set_selected_panel_index(index)
+	if tab_bar_menu then
+		tab_bar_menu:set_selected_panel_index(index)
+	end
 
 	local tab_params = self._tab_bar_views[index]
 	local view = tab_params.view
 	local view_function = tab_params.view_function
+	local view_input_legend_buttons = tab_params.input_legend_buttons
 	local current_view = self._active_view
 	local ui_manager = Managers.ui
 
 	if view ~= current_view and self._can_navigate or not current_view then
 		self:_close_active_view()
+
+		self._active_view = view
 
 		if view then
 			local context = {
@@ -251,9 +276,21 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			end
 
 			ui_manager:open_view(view, nil, nil, nil, nil, context)
-		end
 
-		self._active_view = view
+			local input_legend_params = self._definitions.input_legend_params
+
+			if input_legend_params then
+				local merged_input_legend_params = nil
+
+				if view_input_legend_buttons then
+					merged_input_legend_params = table.clone(input_legend_params)
+
+					table.append(merged_input_legend_params.buttons_params, view_input_legend_buttons)
+				end
+
+				self:_setup_input_legend(merged_input_legend_params or input_legend_params)
+			end
+		end
 	end
 
 	self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()

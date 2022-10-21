@@ -2,7 +2,7 @@ local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter
 local PlayerTakenDamageReporter = class("PlayerTakenDamageReporter")
 
 PlayerTakenDamageReporter.init = function (self)
-	self._summaries = {}
+	self._reports = {}
 end
 
 PlayerTakenDamageReporter.update = function (self, dt, t)
@@ -10,11 +10,11 @@ PlayerTakenDamageReporter.update = function (self, dt, t)
 end
 
 PlayerTakenDamageReporter.report = function (self)
-	if table.is_empty(self._summaries) then
+	if table.is_empty(self._reports) then
 		return
 	end
 
-	Managers.telemetry_events:player_taken_damage_summary(self._summaries)
+	Managers.telemetry_events:player_taken_damage_report(self._reports)
 end
 
 local function compare_entry(e1, e2)
@@ -29,18 +29,24 @@ local function extract_data(entry)
 		attack_type = entry.attack_type,
 		weapon = entry.weapon,
 		damage_profile = entry.damage_profile,
+		damage_type = entry.damage_type,
 		damage = entry.damage,
-		damage_type = entry.damage_type
+		permanent_damage = entry.permanent_damage,
+		damage_absorbed = entry.damage_absorbed
 	}
 end
 
 PlayerTakenDamageReporter.register_event = function (self, player, data)
-	local entries = self._summaries[player] and self._summaries[player].entries
+	local subject = player:telemetry_subject()
+	local player_key = string.format("%s:%s", subject.account_id, subject.character_id)
+	local entries = self._reports[player_key] and self._reports[player_key].entries
 
 	if entries then
 		for _, entry in pairs(entries) do
 			if compare_entry(entry, data) then
 				entry.damage = entry.damage + data.damage
+				entry.permanent_damage = entry.permanent_damage + data.permanent_damage
+				entry.damage_absorbed = entry.damage_absorbed + data.damage_absorbed
 				entry.observations = entry.observations + 1
 
 				return
@@ -50,10 +56,10 @@ PlayerTakenDamageReporter.register_event = function (self, player, data)
 		entries[#entries + 1] = extract_data(data)
 	else
 		local player_data = {
-			telemetry_subject = player:telemetry_subject(),
+			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session()
 		}
-		self._summaries[player] = {
+		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
 				extract_data(data)

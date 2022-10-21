@@ -1,4 +1,4 @@
-local UIBlueprints = require("scripts/ui/views/talents_view/talents_view_blueprints")
+local TalentsUISettings = require("scripts/ui/views/talents_view/talents_view_settings")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local archetype_specializations_name = "ArchetypeSpecializations"
 local specializations = {}
@@ -28,22 +28,18 @@ end
 local base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/base_specialization")
 local ogryn_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_no_specialization")
 
-_include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_gun_lugger_specialization", ogryn_base_specialization)
 _include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_bonebreaker_specialization", ogryn_base_specialization)
 
 local psyker_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/psyker_no_specialization", base_specialization)
 
 _include_speciality_definition("scripts/settings/ability/archetype_specializations/psyker_biomancer_specialization", psyker_base_specialization)
-_include_speciality_definition("scripts/settings/ability/archetype_specializations/psyker_protectorate_specialization", psyker_base_specialization)
 
 local veteran_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/veteran_no_specialization", base_specialization)
 
-_include_speciality_definition("scripts/settings/ability/archetype_specializations/veteran_squad_leader_specialization", veteran_base_specialization)
 _include_speciality_definition("scripts/settings/ability/archetype_specializations/veteran_ranger_specialization", veteran_base_specialization)
 
 local zealot_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/zealot_no_specialization", base_specialization)
 
-_include_speciality_definition("scripts/settings/ability/archetype_specializations/zealot_preacher_specialization", zealot_base_specialization)
 _include_speciality_definition("scripts/settings/ability/archetype_specializations/zealot_maniac_specialization", zealot_base_specialization)
 
 return settings(archetype_specializations_name, specializations)

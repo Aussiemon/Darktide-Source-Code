@@ -9,10 +9,10 @@ local event_vo_demolition_zealot_female_b = {
 			"loc_zealot_female_b__event_demolition_first_corruptor_destroyed_a_04"
 		},
 		sound_events_duration = {
-			2.818729,
+			2.81874,
 			1.802188,
-			1.95599,
-			2.133729
+			1.955979,
+			2.133719
 		},
 		randomize_indexes = {}
 	}

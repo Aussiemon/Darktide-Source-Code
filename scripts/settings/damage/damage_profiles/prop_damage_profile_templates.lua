@@ -63,15 +63,16 @@ local barrel_explosion_far_admr = {
 	}
 }
 damage_templates.barrel_explosion_close = {
-	ogryn_disorientation_type = "grenadier",
 	disorientation_type = "grenadier",
+	interrupt_alternate_fire = true,
 	ignore_stun_immunity = true,
-	ignore_stagger_reduction = true,
-	ragdoll_push_force = 1000,
+	override_allow_friendly_fire = true,
+	ogryn_disorientation_type = "grenadier",
 	ignore_toughness = true,
+	ragdoll_push_force = 1000,
 	suppression_value = 20,
 	stagger_category = "explosion",
-	interrupt_alternate_fire = true,
+	ignore_stagger_reduction = true,
 	cleave_distribution = {
 		attack = 0.1,
 		impact = 0.15

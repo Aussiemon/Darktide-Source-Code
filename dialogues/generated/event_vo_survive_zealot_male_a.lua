@@ -27,7 +27,7 @@ local event_vo_survive_zealot_male_a = {
 		},
 		sound_events_duration = {
 			3.323156,
-			3.012146,
+			3.012156,
 			2.82826,
 			3.770229
 		},

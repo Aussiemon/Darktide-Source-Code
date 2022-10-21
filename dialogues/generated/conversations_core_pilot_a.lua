@@ -8,9 +8,9 @@ local conversations_core_pilot_a = {
 			"loc_pilot_a__conversation_40k_lore_one_02_03"
 		},
 		sound_events_duration = {
-			3.608105,
-			3.693146,
-			5.383
+			3.617188,
+			3.702229,
+			5.392083
 		},
 		randomize_indexes = {}
 	},
@@ -64,11 +64,11 @@ local conversations_core_pilot_a = {
 			"loc_pilot_a__eavesdropping_05"
 		},
 		sound_events_duration = {
-			2.764146,
-			3.494646,
-			2.426,
-			3.045605,
-			2.728063
+			2.773229,
+			3.503729,
+			2.435083,
+			3.054688,
+			2.737146
 		},
 		randomize_indexes = {}
 	},
@@ -88,16 +88,16 @@ local conversations_core_pilot_a = {
 			"loc_pilot_a__sergeant_info_call_extraction_response_10"
 		},
 		sound_events_duration = {
-			1.636313,
-			2.062459,
-			2.608417,
-			2.446063,
-			2.154375,
-			1.623542,
-			2.389542,
-			3.571292,
-			2.989896,
-			2.513813
+			1.645396,
+			2.071542,
+			2.6175,
+			2.455146,
+			2.163458,
+			1.632625,
+			2.398625,
+			3.580375,
+			2.998979,
+			2.522896
 		},
 		randomize_indexes = {}
 	},

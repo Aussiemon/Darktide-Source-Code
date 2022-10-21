@@ -25,7 +25,7 @@ CameraTransitionPositionLinear.update = function (self, dt, position, update_tim
 	local pos, done = nil
 
 	if speed and duration then
-		assert(false, "CameraTransitionPositionLinear:update() transition has defined both speed and duration, only one can be allowed at once")
+		-- Nothing
 	elseif speed then
 		local target_vec = node_2_position - node_1_position
 		local max_length = Vector3.length(target_vec)
@@ -39,8 +39,6 @@ CameraTransitionPositionLinear.update = function (self, dt, position, update_tim
 			pos = node_1_position + dir * dist_moved
 		end
 	elseif duration then
-		assert(duration > 0, "CameraTransitionPositionLinear has a zero duration")
-
 		local t = time / duration
 		t = math.min(t, 1)
 
@@ -51,8 +49,6 @@ CameraTransitionPositionLinear.update = function (self, dt, position, update_tim
 		pos = node_1_position * (1 - t) + node_2_position * t
 		done = duration < time
 	end
-
-	assert(Vector3.is_valid(pos), "Interpolated position is not valid.")
 
 	return pos, done
 end

@@ -7,8 +7,8 @@ local asset_vo_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__zone_watertown_acid_clouds_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.055208,
-			[2.0] = 4.000458
+			[1.0] = 4.055188,
+			[2.0] = 4.000438
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -24,8 +24,8 @@ local asset_vo_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__mission_cartel_insignia_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.0855,
-			[2.0] = 8
+			[1.0] = 6.085479,
+			[2.0] = 7.999979
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -58,8 +58,8 @@ local asset_vo_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__level_hab_block_goo_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.465271,
-			[2.0] = 5.382771
+			[1.0] = 3.46525,
+			[2.0] = 5.38275
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -88,8 +88,8 @@ local asset_vo_psyker_female_a = {
 			[2.0] = "loc_psyker_female_a__asset_sigil_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.747625,
-			[2.0] = 5.267688
+			[1.0] = 5.747604,
+			[2.0] = 5.267667
 		},
 		randomize_indexes = {}
 	},
@@ -103,7 +103,7 @@ local asset_vo_psyker_female_a = {
 			"loc_psyker_female_a__asset_unnatural_dark_a_04"
 		},
 		sound_events_duration = {
-			2.613667,
+			2.613688,
 			2.534521,
 			3.613938,
 			2.280583
@@ -136,7 +136,7 @@ local asset_vo_psyker_female_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 5.077146,
-			[2.0] = 6.006333
+			[2.0] = 6.006313
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

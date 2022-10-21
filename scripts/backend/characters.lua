@@ -24,9 +24,25 @@ Characters.equip_item_slot = function (self, character_id, slot_name, gear_id)
 	end)
 end
 
-Characters.create = function (self, new_character)
-	assert(type(new_character) == "table", "Missing or invalid new_character")
+Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by_slots)
+	local body = {}
 
+	for slot_id, gear_id in pairs(item_gear_ids_by_slots) do
+		body[#body + 1] = {
+			instanceId = gear_id,
+			slotId = slot_id
+		}
+	end
+
+	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"), {
+		method = "PUT",
+		body = body
+	}):next(function (data)
+		return data.body
+	end)
+end
+
+Characters.create = function (self, new_character)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(), {
 		method = "POST",
 		body = {
@@ -61,18 +77,12 @@ local function _process_stats(stats)
 end
 
 Characters.get_character_stats = function (self, account_id, character_id, stat_prefix)
-	assert(account_id, "account_id must be specified")
-	assert(character_id, "character_id must be specified")
-
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/statistics/"):path(stat_prefix or "")):next(function (data)
 		return _process_stats(data.body.statistics)
 	end)
 end
 
 Characters.fetch_account_character = function (self, account_id, character_id, include_inventory, include_progression)
-	assert(account_id, "account_id must be specified")
-	assert(character_id, "character_id must be specified")
-
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):query("includeInventoryDetails", include_inventory):query("includeProgressionDetails", include_progression), {}, account_id):next(function (data)
 		return data.body
 	end)
@@ -89,8 +99,6 @@ Characters.fetch = function (self, character_id)
 end
 
 Characters.delete_character = function (self, character_id)
-	assert(type(character_id) == "string", "Missing or invalid character_id")
-
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id), {
 		method = "DELETE"
 	}):next(function (data)
@@ -112,26 +120,6 @@ end
 
 Characters.get_talents = function (self, character_id)
 	return self:get_data(character_id, "career", "talents")
-end
-
-Characters.set_prologue_completed = function (self, character_id, completed)
-	return self:set_data(character_id, "path_trust", {
-		prologue_completed = completed
-	})
-end
-
-Characters.get_prologue_completed = function (self, character_id)
-	return self:get_data(character_id, "path_trust", "prologue_completed")
-end
-
-Characters.set_last_seen_path_of_trust = function (self, character_id, scene_id)
-	return self:set_data(character_id, "path_trust", {
-		last_seen_cutscene = scene_id
-	})
-end
-
-Characters.get_last_seen_path_of_trust = function (self, character_id)
-	return self:get_data(character_id, "path_trust", "last_seen_cutscene")
 end
 
 Characters.set_character_height = function (self, character_id, value)
@@ -156,26 +144,24 @@ local function _process_narrative(data)
 end
 
 Characters.get_narrative = function (self, character_id)
-	fassert(type(character_id) == "string", "Invalid character_id %s", character_id)
-
 	return self:get_data(character_id, "narrative"):next(function (response)
 		return _process_narrative(response.body.data)
 	end)
 end
 
 Characters.set_narrative_story_chapter = function (self, character_id, story_name, chapter_id)
-	fassert(type(character_id) == "string", "Invalid character_id %s", character_id)
-	fassert(type(story_name) == "string", "Invalid story_name %s", story_name)
-	fassert(type(chapter_id) == "number", "Invalid chapter_id %s", chapter_id)
-
 	return self:set_data(character_id, "narrative|stories", {
 		[story_name] = chapter_id
 	})
 end
 
-Characters.set_data = function (self, character_id, section, data)
-	assert(type(character_id) == "string", "Missing or invalid character_id")
+Characters.set_narrative_event_completed = function (self, character_id, event_name, is_completed)
+	return self:set_data(character_id, "narrative|events", {
+		[event_name] = is_completed ~= false and "true" or "false"
+	})
+end
 
+Characters.set_data = function (self, character_id, section, data)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
 		method = "PUT",
 		body = {
@@ -187,8 +173,6 @@ Characters.set_data = function (self, character_id, section, data)
 end
 
 Characters.get_data = function (self, character_id, section, part)
-	assert(type(character_id) == "string", "Missing or invalid character_id")
-
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section)):next(function (data)
 		if part then
 			if #data.body.data > 0 then
@@ -203,8 +187,6 @@ Characters.get_data = function (self, character_id, section, part)
 end
 
 Characters.check_name = function (self, name)
-	assert(type(name) == "string", "Missing or invalid name")
-
 	local path = BackendUtilities.url_builder():path("/data/characters/name/" .. name .. "/check"):to_string()
 
 	return Managers.backend:title_request(path):next(function (data)

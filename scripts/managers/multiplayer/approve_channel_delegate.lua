@@ -20,27 +20,17 @@ ApproveChannelDelegate.destroy = function (self)
 		success = false
 	end
 
-	fassert(success, "All callbacks have not been unregistered.\n%s", error_str)
-
 	self._registered_lobbies = nil
 end
 
 ApproveChannelDelegate.register = function (self, lobby_id, message, object)
-	fassert(object.approve_channel, "No approve_channel callback function specified in passed object")
-
 	local key = self.make_key(lobby_id, message)
 	local registered_object = self._registered_lobbies[key]
-
-	fassert(not registered_object, "Trying to register an already registered approve channel delegate for lobby %q with message %q. Registered by %q.", lobby_id, message, registered_object and registered_object.__class_name)
-
 	self._registered_lobbies[key] = object
 end
 
 ApproveChannelDelegate.unregister = function (self, lobby_id, message)
 	local key = self.make_key(lobby_id, message)
-
-	fassert(self._registered_lobbies[key], "Trying to unregister non-registered approve channel delegate for lobby %q and message %q", lobby_id, message)
-
 	self._registered_lobbies[key] = nil
 end
 

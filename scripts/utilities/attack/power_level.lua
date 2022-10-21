@@ -1,41 +1,37 @@
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local MIN_POWER_LEVEL_CAP = PowerLevelSettings.min_power_level_cap
+local MIN_POWER_LEVEL = PowerLevelSettings.min_power_level
+local MAX_POWER_LEVEL = PowerLevelSettings.max_power_level
+local MIN_MAX_POWER_LEVEL_DIFF = MAX_POWER_LEVEL - MIN_POWER_LEVEL
+local POWER_LEVEL_CURVE_CONSTANTS = PowerLevelSettings.power_level_curve_constants
+local POWER_LEVEL_DIFF_RATIO = PowerLevelSettings.power_level_diff_ratio
 local PowerLevel = {
 	power_level = function ()
-		return PowerLevelSettings.default_power_level
+		return DEFAULT_POWER_LEVEL
 	end,
 	power_level_percentage = function (power_level)
-		local min_power_level = PowerLevelSettings.min_power_level
-		local max_power_level = PowerLevelSettings.max_power_level
-
-		return (power_level - min_power_level) / (max_power_level - min_power_level)
+		return (power_level - MIN_POWER_LEVEL) / MIN_MAX_POWER_LEVEL_DIFF
 	end,
 	scale_power_level_to_power_type_curve = function (power_level, power_type)
-		local min_power_level = PowerLevelSettings.min_power_level
-		local max_power_level = PowerLevelSettings.max_power_level
-
-		fassert(min_power_level <= power_level, "PowerLevel.scale_power_level_to_power_type_curve: Power level %i is less than minimum %i power level", power_level, min_power_level)
-		fassert(power_level <= max_power_level, "PowerLevel.scale_power_level_to_power_type_curve: Power level %i is more than maximum %i power level", power_level, max_power_level)
-
-		local min_power_level_cap = PowerLevelSettings.min_power_level_cap
 		local scaled_power_level = nil
 
-		if min_power_level_cap <= power_level then
-			local curve_constants = PowerLevelSettings.power_level_curve_constants
+		if MIN_POWER_LEVEL_CAP <= power_level then
+			local curve_constants = POWER_LEVEL_CURVE_CONSTANTS
 			local starting_power_level_bonus = curve_constants.starting_bonus
 			local starting_bonus_range = curve_constants.starting_bonus_range
 			local native_diff_ratio = curve_constants.native_diff_ratio
-			local power_level_diff_ratio = PowerLevelSettings.power_level_diff_ratio
-			local power_type_diff_ratio = (power_level_diff_ratio[power_type] - 1) / (native_diff_ratio - 1)
+			local power_type_diff_ratio = (POWER_LEVEL_DIFF_RATIO[power_type] - 1) / (native_diff_ratio - 1)
 			local scaled_power_level_section = nil
 
-			if power_level >= min_power_level_cap + starting_bonus_range then
-				scaled_power_level_section = (power_level - min_power_level_cap) * power_type_diff_ratio
+			if power_level >= MIN_POWER_LEVEL_CAP + starting_bonus_range then
+				scaled_power_level_section = (power_level - MIN_POWER_LEVEL_CAP) * power_type_diff_ratio
 			else
-				local starting_bonus = starting_power_level_bonus * (1 - (power_level - min_power_level_cap) / starting_bonus_range)
-				scaled_power_level_section = (power_level + starting_bonus - min_power_level_cap) * power_type_diff_ratio
+				local starting_bonus = starting_power_level_bonus * (1 - (power_level - MIN_POWER_LEVEL_CAP) / starting_bonus_range)
+				scaled_power_level_section = (power_level + starting_bonus - MIN_POWER_LEVEL_CAP) * power_type_diff_ratio
 			end
 
-			scaled_power_level = min_power_level_cap + scaled_power_level_section
+			scaled_power_level = MIN_POWER_LEVEL_CAP + scaled_power_level_section
 		else
 			scaled_power_level = power_level
 		end

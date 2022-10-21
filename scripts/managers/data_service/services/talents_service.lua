@@ -1,6 +1,6 @@
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerSpecializationUtil = require("scripts/utilities/player_specialization/player_specialization")
+local PACKAGE_BASE_PATH = "packages/ui/views/talents_view/"
 local TalentsService = class("TalentsService")
 
 TalentsService.init = function (self, backend_interface)
@@ -54,6 +54,20 @@ TalentsService.set_specialization = function (self, player, specialization)
 	local characters_promise = backend:set_specialization(character_id, specialization)
 
 	characters_promise:next(callback(_set_backend_response_success, player, specialization), _set_specialization_backend_response_fail)
+end
+
+TalentsService.load_icons_for_profile = function (self, profile, reference_name, callback, prioritize)
+	local specialization = profile.specialization
+	local package_name = PACKAGE_BASE_PATH .. specialization
+	local load_id = Managers.package:load(package_name, reference_name, callback, prioritize)
+
+	return load_id
+end
+
+TalentsService.release_icons = function (self, load_id)
+	if load_id then
+		Managers.package:release(load_id)
+	end
 end
 
 return TalentsService

@@ -1,8 +1,6 @@
 local Schema = class("Schema")
 
 Schema.init = function (self, schema)
-	assert(type(schema) == "table", "Invalid schema")
-
 	self._schema = schema
 end
 

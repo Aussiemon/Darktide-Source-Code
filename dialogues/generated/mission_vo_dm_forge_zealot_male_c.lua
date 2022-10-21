@@ -21,7 +21,7 @@ local mission_vo_dm_forge_zealot_male_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.787135,
-			[2.0] = 3.427979
+			[2.0] = 3.42799
 		},
 		randomize_indexes = {}
 	},
@@ -33,8 +33,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.208677,
-			[2.0] = 2.941104
+			[1.0] = 2.208688,
+			[2.0] = 2.941115
 		},
 		randomize_indexes = {}
 	},
@@ -46,8 +46,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.054438,
-			[2.0] = 3.284375
+			[1.0] = 4.054448,
+			[2.0] = 3.284385
 		},
 		randomize_indexes = {}
 	},
@@ -59,8 +59,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.941635,
-			[2.0] = 4.506667
+			[1.0] = 2.941646,
+			[2.0] = 4.506677
 		},
 		randomize_indexes = {}
 	},
@@ -72,8 +72,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.603667,
-			[2.0] = 3.171417
+			[1.0] = 3.603677,
+			[2.0] = 3.171427
 		},
 		randomize_indexes = {}
 	},
@@ -85,8 +85,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.945167,
-			[2.0] = 2.683115
+			[1.0] = 3.945177,
+			[2.0] = 2.683125
 		},
 		randomize_indexes = {}
 	},
@@ -98,8 +98,8 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.255177,
-			[2.0] = 3.227635
+			[1.0] = 2.255188,
+			[2.0] = 3.227646
 		},
 		randomize_indexes = {}
 	},
@@ -119,16 +119,16 @@ local mission_vo_dm_forge_zealot_male_c = {
 			"loc_zealot_male_c__guidance_starting_area_10"
 		},
 		sound_events_duration = {
-			2.237333,
-			3.021792,
+			2.237354,
+			3.021813,
 			2.52375,
 			3.301417,
 			3.185729,
 			3.474708,
 			2.851688,
 			4.621146,
-			6.211146,
-			3.073625
+			6.211156,
+			3.073646
 		},
 		sound_event_weights = {
 			0.1,
@@ -153,7 +153,7 @@ local mission_vo_dm_forge_zealot_male_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.291156,
-			[2.0] = 3.82674
+			[2.0] = 3.82675
 		},
 		randomize_indexes = {}
 	},
@@ -165,7 +165,7 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_lifeless_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.456271,
+			[1.0] = 5.456281,
 			[2.0] = 2.825583
 		},
 		randomize_indexes = {}
@@ -178,8 +178,28 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.625,
+			[1.0] = 2.62501,
 			[2.0] = 2.654208
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_main_entrance_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_c__region_mechanicus_01",
+			"loc_zealot_male_c__region_mechanicus_02",
+			"loc_zealot_male_c__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			3.117031,
+			2.925021,
+			6.158521
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -191,7 +211,7 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_propaganda_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.214917,
+			[1.0] = 4.214927,
 			[2.0] = 5.995938
 		},
 		randomize_indexes = {}
@@ -217,8 +237,28 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.313427,
-			[2.0] = 4.993198
+			[1.0] = 4.313438,
+			[2.0] = 4.993208
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_c__zone_tank_foundry_01",
+			"loc_zealot_male_c__zone_tank_foundry_02",
+			"loc_zealot_male_c__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			6.306917,
+			3.583375,
+			5.268083
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -230,7 +270,7 @@ local mission_vo_dm_forge_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__mission_forge_strategic_asset_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.878813,
+			[1.0] = 3.878823,
 			[2.0] = 4.708927
 		},
 		randomize_indexes = {}
@@ -246,11 +286,11 @@ local mission_vo_dm_forge_zealot_male_c = {
 			"loc_zealot_male_c__asset_nurgle_growth_05"
 		},
 		sound_events_duration = {
-			1.467906,
-			2.287438,
+			1.467917,
+			2.287448,
 			2.431302,
 			3.512896,
-			4.501479
+			4.50149
 		},
 		sound_event_weights = {
 			0.2,

@@ -1,6 +1,7 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local ActionAvailability = require("scripts/extension_systems/weapon/utilities/action_availability")
+local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local Armor = require("scripts/utilities/attack/armor")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -16,15 +17,16 @@ local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
 local Lunge = require("scripts/utilities/player_state/lunge")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
-local PlayerMovement = require("scripts/utilities/player_movement")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
-local DEFUALT_POWER_LEVEL = 500
-local _max_hit_mass = nil
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete = nil
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateLunging.init = function (self, character_state_init_context, ...)
@@ -43,6 +45,7 @@ PlayerCharacterStateLunging.init = function (self, character_state_init_context,
 	self._character_state_hit_mass_component = character_state_hit_mass_component
 	self._locomotion_push_component = character_state_init_context.unit_data:write_component("locomotion_push")
 	self._hit_enemy_units = {}
+	self._number_of_units_hit = 0
 	self._last_hit_unit = nil
 	self._played_timing_anims = {}
 end
@@ -61,8 +64,6 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	self._locomotion_push_component.new_velocity = Vector3.zero()
 	local lunge_template_name = params.lunge_template_name
 	local lunge_template = LungeTemplates[lunge_template_name]
-
-	fassert(lunge_template, "PlayerCharacterStateLunging requires a lunge_template.")
 
 	if lunge_template.disable_minion_collision then
 		locomotion_steering.disable_minion_collision = true
@@ -115,17 +116,25 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	local on_enter_animation = anim_settings and anim_settings.on_enter
 
 	if on_enter_animation then
-		self:_play_animation(self._animation_extension, on_enter_animation)
+		if type(on_enter_animation) ~= "table" then
+			self:_play_animation(self._animation_extension, on_enter_animation)
+		else
+			for _, anim in pairs(on_enter_animation) do
+				self:_play_animation(self._animation_extension, anim)
+			end
+		end
 	end
 
 	local proc_event_param_table = self._buff_extension:request_proc_event_param_table()
-	local lunge_template_name = self._lunge_character_state_component.lunge_template
-	proc_event_param_table.lunging_unit = unit
-	proc_event_param_table.last_hit_unit = self._last_hit_unit
-	proc_event_param_table.lunge_template_name = lunge_template_name
-	proc_event_param_table.lunge_direction = Vector3Box(flat_direction)
 
-	self._buff_extension:add_proc_event(proc_events.on_start_lunge, proc_event_param_table)
+	if proc_event_param_table then
+		proc_event_param_table.lunging_unit = unit
+		proc_event_param_table.last_hit_unit = self._last_hit_unit
+		proc_event_param_table.lunge_template_name = self._lunge_character_state_component.lunge_template
+		proc_event_param_table.lunge_direction = Vector3Box(flat_direction)
+
+		self._buff_extension:add_proc_event(proc_events.on_lunge_start, proc_event_param_table)
+	end
 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	lunge_character_state_component.is_lunging = true
@@ -140,26 +149,22 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		movement_state_component.is_dodging = true
 	end
 
-	if self._is_server then
-		if lunge_template.restore_toughness then
-			Toughness.recover_max_toughness(unit)
-		end
+	if self._is_server and lunge_template.restore_toughness then
+		Toughness.recover_max_toughness(unit)
+	end
 
-		local buff = lunge_template.add_buff
+	local buff = lunge_template.add_buff
 
-		if buff then
-			local buff_extension = self._buff_extension
+	if buff then
+		local buff_extension = self._buff_extension
 
-			if type(buff) == "table" then
-				for _, buff_name in pairs(buff) do
-					buff_extension:add_internally_controlled_buff(buff_name, t)
-				end
-			else
-				buff_extension:add_internally_controlled_buff(buff, t)
+		if type(buff) == "table" then
+			for _, buff_name in pairs(buff) do
+				buff_extension:add_internally_controlled_buff(buff_name, t)
 			end
+		else
+			buff_extension:add_internally_controlled_buff(buff, t)
 		end
-
-		self._add_delayed_buff = lunge_template.add_delayed_buff
 	end
 
 	local start_sound_event = lunge_template.start_sound_event
@@ -178,6 +183,10 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	table.clear(self._hit_enemy_units)
 
 	self._last_hit_unit = nil
+
+	if Managers.stats.can_record_stats() then
+		Managers.stats:record_lunge_start(self._player)
+	end
 end
 
 PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
@@ -215,12 +224,15 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local direction = lunge_character_state_component.direction
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local proc_event_param_table = buff_extension:request_proc_event_param_table()
-	proc_event_param_table.lunging_unit = unit
-	proc_event_param_table.last_hit_unit = self._last_hit_unit
-	proc_event_param_table.lunge_template_name = lunge_template_name
-	proc_event_param_table.lunge_direction = Vector3Box(direction)
 
-	buff_extension:add_proc_event(proc_events.on_finished_lunge, proc_event_param_table)
+	if proc_event_param_table then
+		proc_event_param_table.lunging_unit = unit
+		proc_event_param_table.last_hit_unit = self._last_hit_unit
+		proc_event_param_table.lunge_template_name = lunge_template_name
+		proc_event_param_table.lunge_direction = Vector3Box(direction)
+
+		buff_extension:add_proc_event(proc_events.on_lunge_end, proc_event_param_table)
+	end
 
 	local on_finish_explosion = lunge_template.on_finish_explosion
 
@@ -233,7 +245,25 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local power_level = 600
 		local charge_level, attack_type = nil
 
-		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, self._hit_enemy_units)
+	end
+
+	local add_delayed_buff = lunge_template.add_delayed_buff
+
+	if add_delayed_buff then
+		local add_buff_delay = lunge_template.add_buff_delay or 0
+		local time_in_lunge = t - self._character_state_component.entered_t
+		local has_exit_before_delay = add_buff_delay > time_in_lunge
+
+		if has_exit_before_delay then
+			if type(add_delayed_buff) == "table" then
+				for _, buff_name in pairs(add_delayed_buff) do
+					buff_extension:add_internally_controlled_buff(buff_name, t)
+				end
+			else
+				buff_extension:add_internally_controlled_buff(add_delayed_buff, t)
+			end
+		end
 	end
 
 	local stop_sound_event = lunge_template.stop_sound_event
@@ -248,6 +278,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		Wwise.set_state(wwise_state.group, wwise_state.off_state)
 	end
 
+	_record_stat_on_lunge_complete(self._player, self._hit_enemy_units, lunge_template)
 	table.clear(self._played_timing_anims)
 	table.clear(self._hit_enemy_units)
 end
@@ -274,12 +305,13 @@ PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_sta
 		still_lunging = self:_update_lunge(unit, dt, time_in_lunge, lunge_template)
 	end
 
-	local add_delayed_buff = self._add_delayed_buff
+	local add_delayed_buff = lunge_template and lunge_template.add_delayed_buff
 
 	if add_delayed_buff then
 		local add_buff_delay = lunge_template.add_buff_delay or 0
+		local is_within_trigger_time = ActionUtility.is_within_trigger_time(time_in_lunge, dt, add_buff_delay)
 
-		if time_in_lunge >= add_buff_delay then
+		if is_within_trigger_time then
 			local buff_extension = self._buff_extension
 
 			if type(add_delayed_buff) == "table" then
@@ -289,12 +321,10 @@ PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_sta
 			else
 				buff_extension:add_internally_controlled_buff(add_delayed_buff, t)
 			end
-
-			self._add_delayed_buff = nil
 		end
 	end
 
-	local anim_settings = lunge_template.anim_settings
+	local anim_settings = lunge_template and lunge_template.anim_settings
 	local timing_anims = anim_settings and anim_settings.timing_anims
 
 	if timing_anims then
@@ -396,6 +426,10 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 	local move_delta = speed * dt
 	lunge_character_state_component.distance_left = math.max(lunge_character_state_component.distance_left - move_delta, 0)
 
+	if Managers.stats.can_record_stats() then
+		Managers.stats:record_lunge_distance(self._player, move_delta)
+	end
+
 	return true
 end
 
@@ -405,7 +439,8 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local damage_profile = damage_settings.damage_profile
 	local damage_type = damage_settings.damage_type
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = PlayerMovement.locomotion_position(locomotion_component)
+	local locomotion_position = locomotion_component.position
+	local t = Managers.time:time("gameplay")
 	local use_armor_type = not not lunge_template.stop_armor_types
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 	local radius = damage_settings.radius
@@ -414,10 +449,10 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 	local actors, num_actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "sphere", "position", locomotion_position, "size", radius, "collision_filter", DAMAGE_COLLISION_FILTER, "rewind_ms", rewind_ms)
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
-	local max_hit_mass = _max_hit_mass(damage_settings, lunge_template)
+	local max_hit_mass = _max_hit_mass(damage_settings, lunge_template, unit)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
 	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
-	local have_hit_stop_armor = false
+	local should_stop = false
 	local fp_position = self._first_person_component.position
 	local lunge_direction = self._lunge_character_state_component.direction
 	local lunge_dir_right = Vector3.cross(lunge_direction, Vector3.up())
@@ -428,12 +463,11 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local right_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward + right))
 	local hit_enemy_units = self._hit_enemy_units
 
-	for i = 1, num_actors do
-		local hit_actor = actors[i]
+	for ii = 1, num_actors do
+		local hit_actor = actors[ii]
 		local hit_unit = Actor.unit(hit_actor)
 
 		if side_system:is_enemy(unit, hit_unit) and not hit_enemy_units[hit_unit] then
-			hit_enemy_units[hit_unit] = true
 			self._last_hit_unit = hit_unit
 			local hit_position = POSITION_LOOKUP[hit_unit]
 			local hit_direction = Vector3.normalize(Vector3.flat(hit_position - fp_position))
@@ -447,11 +481,29 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			end
 
 			local hit_world_position = Actor.position(hit_actor)
+			local behaviour_extension = ScriptUnit.has_extension(hit_unit, "behavior_system")
+			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
 			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", 1000, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(hit_unit)
+			if attack_result ~= "died" then
+				local add_debuff_on_hit = lunge_template.add_debuff_on_hit
+
+				if add_debuff_on_hit then
+					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+
+					if buff_extension then
+						buff_extension:add_internally_controlled_buff(add_debuff_on_hit, t, "owner_unit", unit)
+					end
+				end
+			end
+
+			hit_enemy_units[hit_unit] = attack_result
+
+			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
+
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, false)
 
 			if use_armor_type then
 				local hit_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
@@ -459,11 +511,41 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 				local armor_type = Armor.armor_type(unit, hit_unit_breed)
 				local stop_armor_types = lunge_template.stop_armor_types
 
-				for i = 1, #stop_armor_types do
-					if armor_type == stop_armor_types[i] then
-						have_hit_stop_armor = true
+				for jj = 1, #stop_armor_types do
+					if armor_type == stop_armor_types[jj] then
+						local hit_dot_check = lunge_template.hit_dot_check
+
+						if hit_dot_check then
+							local hit_dot = Vector3.dot(lunge_direction, hit_direction)
+
+							if hit_dot_check < hit_dot then
+								should_stop = true
+							end
+
+							break
+						end
+
+						should_stop = true
 
 						break
+					end
+				end
+			end
+
+			local stop_tags = lunge_template.stop_tags
+
+			if not should_stop and stop_tags then
+				local unit_data = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+				local breed = unit_data and unit_data:breed()
+				local tags = breed and breed.tags
+
+				if tags then
+					for tag, _ in pairs(tags) do
+						if stop_tags[tag] then
+							should_stop = true
+
+							break
+						end
 					end
 				end
 			end
@@ -471,9 +553,8 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	end
 
 	character_state_hit_mass_component.used_hit_mass_percentage = math.clamp(max_hit_mass > 0 and current_mass_hit / max_hit_mass or 0, 0, 1)
-	local max_hit_mass_reached = max_hit_mass <= current_mass_hit
 
-	return have_hit_stop_armor
+	return should_stop
 end
 
 PlayerCharacterStateLunging._update_timing_anims = function (self, timing_anims, time_in_lunge)
@@ -494,15 +575,87 @@ end
 
 local NO_LERP_VALUES = {}
 
-function _max_hit_mass(damage_settings, lunge_template)
+function _max_hit_mass(damage_settings, lunge_template, unit)
 	local charge_level = 1
 	local damage_profile = damage_settings.damage_profile
 	local critical_strike = false
-	local power_level = lunge_template.lunge_power_level or DEFUALT_POWER_LEVEL
-	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, NO_LERP_VALUES, critical_strike)
+	local power_level = lunge_template.lunge_power_level or DEFAULT_POWER_LEVEL
+	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, NO_LERP_VALUES, critical_strike, unit)
 	local max_hit_mass = math.max(max_hit_mass_attack, max_hit_mass_impact)
 
 	return max_hit_mass
+end
+
+local function _was_charging_plauge_ogryn_that_is_now_staggered(unit, optional_action)
+	if not unit then
+		return false
+	end
+
+	local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+	local target_breed = unit_data and unit_data:breed()
+
+	if not target_breed then
+		return false
+	end
+
+	local breed_name = target_breed.name
+
+	if breed_name ~= "chaos_plague_ogryn" then
+		return false
+	end
+
+	if optional_action ~= "charge" then
+		return false
+	end
+
+	if not MinionState.is_staggered(unit) then
+		return false
+	end
+
+	return true
+end
+
+function _record_stat_on_lunge_hit(player, enemy_unit, attack_result, optional_action, lunge_template)
+	if not Managers.stats.can_record_stats() then
+		return
+	end
+
+	local account_id = player:account_id()
+	local character_id = player:character_id()
+	local specialization = player:profile().specialization
+
+	if specialization == "ogryn_2" and _was_charging_plauge_ogryn_that_is_now_staggered(enemy_unit, optional_action) then
+		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_charging_ogryn_event")
+	end
+end
+
+function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
+	if not Managers.stats.can_record_stats() then
+		return
+	end
+
+	local account_id = player:account_id()
+	local character_id = player:character_id()
+	local specialization = player:profile().specialization
+	local difficulty = Managers.state.difficulty:get_difficulty()
+	local number_of_hit_units = 0
+	local number_of_hit_ogryns = 0
+
+	for hit_unit, attack_result in pairs(hit_units) do
+		number_of_hit_units = number_of_hit_units + 1
+		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
+
+		if breed and breed.tags.ogryn then
+			number_of_hit_ogryns = number_of_hit_ogryns + 1
+		end
+	end
+
+	if specialization == "ogryn_2" and number_of_hit_ogryns >= 4 and difficulty >= 4 then
+		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_4_ogryns_event")
+	end
+
+	Managers.stats:record_lunge_stop(player, number_of_hit_units)
 end
 
 return PlayerCharacterStateLunging

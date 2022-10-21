@@ -13,9 +13,6 @@ BtSequenceNode.init_values = function (self, blackboard, action_data, node_data)
 	BtSequenceNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
-
-	fassert(node_data[node_identifier] == nil, "[BtSequenceNode] Node data for %q was already created.", node_identifier)
-
 	node_data[node_identifier] = 1
 	local children = self._children
 

@@ -6,13 +6,6 @@ StateGameplay.NEEDS_MISSION_LEVEL = true
 
 StateGameplay.on_enter = function (self, parent, params, creation_context)
 	local mechanism_data = params.mechanism_data
-
-	fassert(mechanism_data.challenge, "[StateGameplay] 'challenge' missing in game state params")
-	fassert(mechanism_data.resistance, "[StateGameplay] 'resistance' missing in game state params")
-	fassert(mechanism_data.circumstance_name, "[StateGameplay] 'circumstance_name' missing in game state params")
-	fassert(mechanism_data.side_mission, "[StateGameplay] 'side_mission' missing in game state params")
-	fassert(params.mission_name, "[StateGameplay] 'mission_name' missing in game state params")
-
 	local world = params.world
 	local shared_state = {
 		is_server = params.is_host,
@@ -25,6 +18,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		resistance = mechanism_data.resistance,
 		circumstance_name = mechanism_data.circumstance_name,
 		side_mission = mechanism_data.side_mission,
+		mission_giver_vo = mechanism_data.mission_giver_vo_override or "none",
 		physics_world = World.physics_world(world),
 		level_seed = GameParameters.level_seed or Managers.connection:session_seed(),
 		vo_sources_cache = creation_context.vo_sources_cache,
@@ -44,7 +38,6 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		network_transmit_function = creation_context.network_transmit_function
 	}
 
-	fassert(shared_state.is_dedicated_server == true and DEDICATED_SERVER or shared_state.is_dedicated_server == false, "[StateGameplay][on_enter] Please check connection type.")
 	Crashify.print_property("mission", tostring(params.mission_name))
 
 	local start_params = {
@@ -94,7 +87,7 @@ StateGameplay._check_transition = function (self)
 		if error_state then
 			self._next_state = error_state
 			self._next_state_context = error_state_params
-		elseif IS_XBS then
+		elseif IS_XBS or IS_GDK then
 			local error_state, error_state_params = Managers.account:wanted_transition()
 
 			if error_state then

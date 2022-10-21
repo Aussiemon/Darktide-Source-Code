@@ -28,11 +28,19 @@ local templates = {
 		cell_size = 0.8,
 		nav_cost_map_cost = 5,
 		leaving_liquid_buff_template_name = "cultist_flamer_leaving_liquid_fire_spread_increase",
-		life_time = 9,
+		life_time = 11,
 		spawn_brush_size = 1,
 		sfx_name_start = "wwise/events/weapon/play_aoe_liquid_fire_green_loop",
 		in_liquid_buff_template_name = "cultist_flamer_in_fire_liquid",
 		nav_cost_map_name = "fire"
+	},
+	beast_of_nurgle_slime = {
+		in_liquid_buff_template_name = "beast_of_nurgle_in_slime",
+		life_time = 30,
+		vfx_name_filled = "content/fx/particles/liquid_area/beast_of_nurgle_slime",
+		spawn_brush_size = 1,
+		max_liquid = 1,
+		cell_size = 1
 	}
 }
 

@@ -26,8 +26,6 @@ MissionBoardSystem.on_add_extension = function (self, world, unit, extension_nam
 			for extension_unit, _ in pairs(unit_to_extension_map) do
 				mission_board_extension_unit = extension_unit
 			end
-
-			fassert(false, "[MissionBoardSystem] The logic for mission board is setup to work with one mission board per level MissionBoardExtension is now on both Unit: [%s, %s] and Unit: [%s, %s]", Unit.id_string(unit), unit, Unit.id_string(mission_board_extension_unit), mission_board_extension_unit)
 		end
 
 		self._mission_board_extension = extension

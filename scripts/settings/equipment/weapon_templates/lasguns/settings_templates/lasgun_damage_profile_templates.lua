@@ -5,10 +5,12 @@ local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local gibbing_power = GibbingSettings.gibbing_power
 local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_templates = {}
 local overrides = {}
 
@@ -27,7 +29,7 @@ local lasgun_armor_mod_default = {
 	near = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-			[armor_types.armored] = damage_lerp_values.lerp_0_8,
+			[armor_types.armored] = damage_lerp_values.lerp_0_4,
 			[armor_types.resistant] = damage_lerp_values.lerp_0_4,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
@@ -51,7 +53,7 @@ local lasgun_armor_mod_default = {
 	far = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
 			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
@@ -86,7 +88,7 @@ damage_templates.default_lasgun_killshot = {
 	wounds_template = WoundsTemplates.lasgun,
 	armor_damage_modifier_ranged = lasgun_armor_mod_default,
 	critical_strike = {
-		gibbing_power = gibbing_power.light,
+		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
@@ -99,7 +101,7 @@ damage_templates.default_lasgun_killshot = {
 			12
 		}
 	},
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	suppression_value = {
 		0.4,
@@ -244,6 +246,55 @@ overrides.lasgun_p1_m3_killshot = {
 		}
 	}
 }
+overrides.lasgun_p2_m1_killshot = {
+	parent_template_name = "default_lasgun_killshot",
+	overrides = {
+		{
+			"suppression_value",
+			{
+				3.5,
+				6
+			}
+		},
+		{
+			"power_distribution",
+			"attack",
+			{
+				150,
+				550
+			}
+		},
+		{
+			"power_distribution",
+			"impact",
+			{
+				8,
+				16
+			}
+		},
+		{
+			"ragdoll_push_force",
+			{
+				250,
+				400
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_1
+		}
+	}
+}
 damage_templates.default_lasgun_assault = {
 	suppression_value = 0.5,
 	ragdoll_push_force = 5000,
@@ -306,7 +357,7 @@ damage_templates.default_lasgun_assault = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = gibbing_power.medium,
+		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
@@ -314,7 +365,7 @@ damage_templates.default_lasgun_assault = {
 		impact = 10
 	},
 	damage_type = damage_types.laser,
-	gibbing_power = gibbing_power.medium,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	on_kill_area_suppression = {
 		distance = 3,
@@ -349,8 +400,8 @@ damage_templates.default_lasgun_snp = {
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
@@ -373,10 +424,10 @@ damage_templates.default_lasgun_snp = {
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_2,
+				[armor_types.armored] = damage_lerp_values.lerp_0_25,
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_25,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_25,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
@@ -385,18 +436,18 @@ damage_templates.default_lasgun_snp = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = gibbing_power.medium,
+		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
-		impact = 3,
+		impact = 3.5,
 		attack = {
-			10,
-			40
+			20,
+			60
 		}
 	},
 	damage_type = damage_types.laser,
-	gibbing_power = gibbing_power.medium,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	on_kill_area_suppression = {
 		distance = 3,
@@ -423,12 +474,12 @@ overrides.heavy_lasgun_snp = {
 		{
 			"ranges",
 			"max",
-			25
+			20
 		},
 		{
 			"power_distribution",
 			"attack",
-			50
+			60
 		},
 		{
 			"suppression_value",
@@ -442,12 +493,12 @@ overrides.light_lasgun_snp = {
 		{
 			"ranges",
 			"min",
-			8
+			5
 		},
 		{
 			"ranges",
 			"max",
-			25
+			15
 		},
 		{
 			"power_distribution",
@@ -522,7 +573,7 @@ damage_templates.default_lasgun_bfg = {
 		}
 	},
 	critical_strike = {
-		gibbing_power = gibbing_power.heavy,
+		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
@@ -530,7 +581,7 @@ damage_templates.default_lasgun_bfg = {
 		impact = 50
 	},
 	damage_type = damage_types.plasma,
-	gibbing_power = gibbing_power.heavy,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	on_kill_area_suppression = {
 		distance = 8,
@@ -558,6 +609,87 @@ overrides.spray_lasgun_bfg = {
 			"power_distribution",
 			"impact",
 			20
+		}
+	}
+}
+damage_templates.bayonette_weapon_special = {
+	ragdoll_push_force = 50,
+	ragdoll_only = true,
+	stagger_category = "melee",
+	cleave_distribution = double_cleave,
+	damage_type = damage_types.combat_blade,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.combat_blade,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.no_damage,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		}
+	},
+	targets = {
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = 75,
+				impact = 10
+			},
+			finesse_boost = {
+				[armor_types.unarmored] = 0.1,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.1,
+				[armor_types.player] = 0.1,
+				[armor_types.berserker] = 0.1,
+				[armor_types.super_armor] = 0.1,
+				[armor_types.disgustingly_resilient] = 0.25,
+				[armor_types.void_shield] = 0.25,
+				[armor_types.prop_armor] = 0.5
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = 40,
+				impact = 6
+			}
+		},
+		default_target = {
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = 25,
+				impact = 5
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 0.1,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.1,
+				[armor_types.player] = 0.1,
+				[armor_types.berserker] = 0.1,
+				[armor_types.super_armor] = 0.1,
+				[armor_types.disgustingly_resilient] = 0.5,
+				[armor_types.void_shield] = 0.5,
+				[armor_types.prop_armor] = 0.5
+			}
 		}
 	}
 }

@@ -19,6 +19,26 @@ local flamer_gas_templates = {
 				damage_profile = DamageProfileTemplates.default_flamer_assault
 			}
 		}
+	},
+	warp_fire_burst = {
+		suppression_radius = 5,
+		dot_buff_name = "warp_fire_assault",
+		suppression_cone_dot = 0.75,
+		damage = {
+			impact = {
+				damage_profile = DamageProfileTemplates.default_warpfire_assault_burst
+			}
+		}
+	},
+	warp_fire_auto = {
+		suppression_radius = 6,
+		dot_buff_name = "warp_fire_assault",
+		suppression_cone_dot = 0.75,
+		damage = {
+			impact = {
+				damage_profile = DamageProfileTemplates.default_warpfire_assault
+			}
+		}
 	}
 }
 

@@ -28,11 +28,12 @@ local breed_data = {
 	sub_faction_name = "renegade",
 	unit_template_name = "minion",
 	spawn_anim_state = "to_ranged",
-	spawn_inventory_slot = "slot_ranged_weapon",
+	volley_fire_target = true,
+	game_object_type = "minion_ranged",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
-	game_object_type = "minion_ranged",
+	spawn_inventory_slot = "slot_ranged_weapon",
 	challenge_rating = 3,
 	bone_lod_radius = 1.05,
 	use_wounds = true,
@@ -45,7 +46,7 @@ local breed_data = {
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
 	player_locomotion_constrain_radius = 0.7,
-	stagger_reduction_ranged = 5,
+	stagger_reduction_ranged = 15,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
@@ -70,7 +71,7 @@ local breed_data = {
 		[stagger_types.medium] = 1.25,
 		[stagger_types.heavy] = 2.8,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.sticky] = 1.75,
+		[stagger_types.sticky] = 0.6,
 		[stagger_types.explosion] = 6.363636363636363,
 		[stagger_types.killshot] = 1
 	},
@@ -170,9 +171,13 @@ local breed_data = {
 		target = "head_aim_target",
 		distance = 5,
 		lean_variable_name = "lean",
-		lean_variable_modifier = -0.2,
 		node = "j_neck",
-		target_node = "enemy_aim_target_03"
+		target_node = "enemy_aim_target_03",
+		lean_variable_modifier = -0.2,
+		valid_aim_combat_ranges = {
+			far = true,
+			close = true
+		}
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
@@ -324,9 +329,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
@@ -416,24 +418,9 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
 		always_show_killing_blow = true,
-		thresholds = {
-			[damage_types.blunt] = 0.45,
-			[damage_types.blunt_heavy] = 0.35,
-			[damage_types.blunt_thunder] = 0.35,
-			[damage_types.plasma] = 0.25,
-			[damage_types.rippergun_pellet] = 0.25,
-			[damage_types.auto_bullet] = 0.35,
-			[damage_types.pellet] = 0.25,
-			[damage_types.laser] = 0.65,
-			[damage_types.boltshell] = 0.35,
-			[damage_types.power_sword] = 0.4,
-			[damage_types.sawing_stuck] = 0.1,
-			[damage_types.sawing] = 0.05,
-			[damage_types.slashing_force_stuck] = 0.4,
-			[damage_types.combat_blade] = 0.4
-		}
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot

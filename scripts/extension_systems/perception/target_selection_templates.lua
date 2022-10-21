@@ -4,9 +4,6 @@ local function _create_target_selection_template_entry(path)
 	local target_selection_templates = require(path)
 
 	for name, template in pairs(target_selection_templates) do
-		fassert(not TargetSelectionTemplates[name], "Duplicate TargetSelectionTemplate found: %q", name)
-		fassert(type(template) == "function", "TargetSelectionTemplate: %q is not a function", name)
-
 		TargetSelectionTemplates[name] = template
 	end
 end
@@ -19,6 +16,7 @@ _create_target_selection_template_entry("scripts/extension_systems/perception/ta
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/chaos_hound_target_selection_template")
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/chaos_plague_ogryn_target_selection_template")
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/chaos_poxwalker_bomber_target_selection_template")
+_create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/chaos_beast_of_nurgle_target_selection_template")
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/cultist_mutant_target_selection_template")
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/renegade_captain_target_selection_template")
 _create_target_selection_template_entry("scripts/extension_systems/perception/target_selection_templates/renegade_grenadier_target_selection_template")

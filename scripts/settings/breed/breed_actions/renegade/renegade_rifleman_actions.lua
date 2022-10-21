@@ -456,10 +456,13 @@ local action_data = {
 		}
 	},
 	move_to_cover = {
-		sprint_target_distance = 14,
-		anim_driven_min_distance = 3,
 		move_type_switch_stickiness = 2,
 		sprint_anim_event = "assault_fwd",
+		anim_driven_min_distance = 3,
+		sprint_target_distance = 14,
+		controlled_stagger_min_speed = 2,
+		use_animation_running_stagger_speed = true,
+		controlled_stagger = true,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
@@ -501,6 +504,31 @@ local action_data = {
 		speeds = {
 			jogging = 4.2,
 			sprinting = 5.6
+		},
+		running_stagger_anim_left = {
+			"run_stagger_right",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_anim_right = {
+			"run_stagger_left",
+			"shotgun_run_stagger_01",
+			"shotgun_run_stagger_02",
+			"shotgun_run_stagger_03",
+			"shotgun_run_stagger_04"
+		},
+		running_stagger_duration = {
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_04 = 2,
+			run_stagger_left = 1.8333333333333333,
+			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_03 = 1.7333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333
+		},
+		running_stagger_min_duration = {
+			shotgun_run_stagger_04 = 1.6666666666666667
 		}
 	},
 	shoot = {
@@ -573,10 +601,9 @@ local action_data = {
 	},
 	move_to_cover_shoot = {
 		utility_weight = 10,
+		inventory_slot = "slot_ranged_weapon",
 		suppressive_fire = true,
 		attack_intensity_type = "ranged",
-		exit_after_cooldown = true,
-		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
 		considerations = UtilityConsiderations.move_to_cover_shoot,
 		aim_anim_events = {
@@ -585,7 +612,39 @@ local action_data = {
 		},
 		aim_duration = {
 			aim_standing = shooting_difficulty_settings.aim_durations,
-			aim_crouching = shooting_difficulty_settings.aim_durations
+			aim_crouching = shooting_difficulty_settings.aim_durations,
+			turn_shoot_bwd = shooting_difficulty_settings.aim_durations,
+			turn_shoot_left = shooting_difficulty_settings.aim_durations,
+			turn_shoot_right = shooting_difficulty_settings.aim_durations
+		},
+		shoot_turn_anims = {
+			bwd = "turn_shoot_bwd",
+			left = "turn_shoot_left",
+			right = "turn_shoot_right"
+		},
+		start_move_anim_data = {
+			turn_shoot_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			turn_shoot_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			turn_shoot_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			turn_shoot_right = 0,
+			turn_shoot_bwd = 0,
+			turn_shoot_left = 0
+		},
+		start_rotation_durations = {
+			turn_shoot_right = 0.6410256410256411,
+			turn_shoot_bwd = 0.5714285714285714,
+			turn_shoot_left = 0.6410256410256411
 		},
 		aim_stances = {
 			aim_standing = "standing",
@@ -716,9 +775,7 @@ local action_data = {
 		move_speed = 4,
 		utility_weight = 10,
 		weapon_reach = 3,
-		move_speed_variable_name = "moving_attack_fwd_speed",
 		moving_attack = true,
-		move_speed_variable_lerp_speed = 4,
 		considerations = UtilityConsiderations.renegade_rifleman_bayonet_attack,
 		attack_anim_events = {
 			"bayonet_charge_hit",
@@ -994,5 +1051,7 @@ local action_data = {
 		run_anim_event = "move_fwd"
 	}
 }
+action_data.shoot_training_grounds_sprint = table.clone_instance(action_data.shoot)
+action_data.shoot_training_grounds_sprint.time_per_shot = shooting_difficulty_settings.time_per_shot_tg_sprint
 
 return action_data

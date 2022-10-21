@@ -31,6 +31,11 @@ local PlayerCharacterLoopingParticleAliases = {
 			}
 		}
 	},
+	weapon_overload_loop = {
+		exclude_from_unit_data_components = true,
+		particle_alias = "weapon_overload_loop",
+		external_properties = {}
+	},
 	plasma_venting = {
 		particle_alias = "plasma_venting",
 		external_properties = {}
@@ -63,6 +68,10 @@ local PlayerCharacterLoopingParticleAliases = {
 			}
 		}
 	},
+	preacher_shield = {
+		particle_alias = "preacher_shield",
+		external_properties = {}
+	},
 	weapon_special_loop = {
 		particle_alias = "weapon_special_loop",
 		external_properties = {}
@@ -88,6 +97,7 @@ local PlayerCharacterLoopingParticleAliases = {
 		}
 	},
 	equipped_item_passive_loop = {
+		exclude_from_unit_data_components = true,
 		particle_alias = "equipped_item_passive",
 		external_properties = {}
 	}

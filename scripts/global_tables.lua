@@ -5,9 +5,6 @@ RESOLUTION_LOOKUP = RESOLUTION_LOOKUP or {}
 local resolution_lookup = RESOLUTION_LOOKUP
 
 function UPDATE_RESOLUTION_LOOKUP(force_update, optional_scale_multiplier)
-	Profiler.start("UPDATE_RESOLUTION_LOOKUP")
-	assert(DEDICATED_SERVER ~= nil)
-
 	local w, h, is_fullscreen = nil
 
 	if DEDICATED_SERVER then
@@ -42,8 +39,6 @@ function UPDATE_RESOLUTION_LOOKUP(force_update, optional_scale_multiplier)
 	end
 
 	resolution_lookup.modified = resolution_modified or force_update or fullscreen_modified
-
-	Profiler.stop("UPDATE_RESOLUTION_LOOKUP")
 end
 
 UPDATE_RESOLUTION_LOOKUP()

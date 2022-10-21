@@ -263,9 +263,6 @@ blueprints.dropdown = {
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local display_name = entry.display_name or "n/a"
-
-		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
-
 		local options = entry.options_function and entry.options_function() or entry.options
 		local num_visible_options = math.min(#options, max_visible_options)
 
@@ -278,9 +275,6 @@ blueprints.dropdown = {
 		content.entry = entry
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
-
-		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
-
 		local options = entry.options or entry.options_function and entry.options_function()
 		local num_options = #options
 		local num_visible_options = math.min(num_options, max_visible_options)

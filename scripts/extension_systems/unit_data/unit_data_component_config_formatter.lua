@@ -1,67 +1,77 @@
 local UnitDataComponentConfigFormatter = {}
 local _get_network_info = nil
 local LUA_TYPES = {
-	buff_id = "number",
-	level_unit_id = "number",
-	low_precision_long_distance = "number",
-	high_precision_direction = "Vector3",
-	fixed_frame_time = "number",
-	Quaternion = "Quaternion",
-	fixed_frame_offset_small = "number",
-	Vector3 = "Vector3",
-	player_anim_time = "number",
-	rotation_single = "number",
-	buff_stack_count = "number",
-	minigame_state_id = "number",
-	fixed_frame_offset_end_t_4bit = "number",
-	weapon_charge_level = "number",
-	actor_node_index = "number",
-	wounds = "number",
-	fixed_frame_offset_end_t_7bit = "number",
-	fixed_frame_offset_start_t_7bit = "number",
-	weapon_view_lock = "number",
+	recoil_unsteadiness = "number",
+	weapon_sway = "number",
+	prd_state = "prd_state",
+	weapon_spread = "number",
+	powered_weapon_intensity = "number",
 	Unit = "Unit",
-	random_seed = "number",
+	number = "number",
+	specialization_resource = "number",
+	player_anim_time = "number",
+	minigame_state_id = "number",
+	actor_node_index = "number",
+	locomotion_rotation = "Quaternion",
+	weapon_overheat = "number",
+	buff_stack_count = "number",
+	mover_frames = "number",
+	fixed_frame_offset_start_t_7bit = "number",
+	fixed_frame_offset_end_t_7bit = "number",
+	percentage = "number",
+	Vector3 = "Vector3",
+	fixed_frame_offset = "number",
+	fixed_frame_offset_small = "number",
 	extra_long_distance = "number",
 	player_anim_layer = "number",
 	local_move_speed = "number",
-	recoil_unsteadiness = "number",
+	high_precision_direction = "Vector3",
 	stamina_fraction = "number",
 	buff_proc_count = "number",
-	character_height = "number",
-	rotation_step = "number",
-	num_special_activations = "number",
+	low_precision_long_distance = "number",
+	buff_id = "number",
 	action_time_scale = "number",
 	bool = "boolean",
-	hit_zone_actor_index = "hit_zone_actor_index",
 	player_anim = "number",
-	short_time = "number",
 	fixed_frame_offset_start_t_6bit = "number",
-	specialization_resource = "number",
-	high_precision_position_component = "number",
-	warp_charge = "number",
-	fixed_frame_offset = "number",
 	projectile_speed = "number",
-	prd_state = "prd_state",
-	weapon_overheat = "number",
-	weapon_spread = "number",
-	weapon_sway = "number",
-	weapon_sway_offset = "number",
+	warp_charge = "number",
 	player_anim_state = "number",
-	short_distance = "number",
 	fixed_frame_offset_end_t_6bit = "number",
-	percentage = "number",
 	consecutive_dodges = "number",
+	action_combo_count = "number",
+	recoil_angle = "number",
+	random_seed = "number",
+	level_unit_id = "number",
+	fixed_frame_time = "number",
+	rotation_step = "number",
+	rotation_single = "number",
+	fixed_frame_offset_end_t_4bit = "number",
+	weapon_charge_level = "number",
+	wounds = "number",
+	weapon_view_lock = "number",
+	high_precision_position_component = "number",
+	character_height = "number",
+	num_special_activations = "number",
+	hit_zone_actor_index = "hit_zone_actor_index",
+	short_time = "number",
+	locomotion_position = "Vector3",
+	short_distance = "number",
+	weapon_sway_offset = "number",
+	Quaternion = "Quaternion",
 	move_speed = "number",
-	powered_weapon_intensity = "number",
-	number = "number",
+	locomotion_parent = "Unit",
 	movement_settings = "number",
 	ability_charges = "number",
 	warp_charge_ramping_modifier = "number",
 	ammunition = "number",
-	recoil_angle = "number",
 	high_precision_velocity = "Vector3",
 	aim_assist_multiplier = "number"
+}
+local HUSK_NETWORK_TYPE_CONVERSION = {
+	locomotion_position = "position",
+	Quaternion = "quaternion_17bit",
+	Vector3 = "position"
 }
 
 UnitDataComponentConfigFormatter.format = function (config, gameobject_name, husk_config, husk_gameobject_name, husk_hud_config, husk_hud_gameobject_name)
@@ -75,6 +85,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	table.sort(sorted_components)
 
+	local locomotion_parent = {}
+	local locomotion_children = {}
 	local num_components = #sorted_components
 
 	for component_index = 1, num_components do
@@ -118,8 +130,24 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 			else
 				field_network_type = data
 				field_type = LUA_TYPES[field_network_type]
+			end
 
-				fassert(field_type, "Network type %q used in field %q does not have a bound lua type in LUA_TYPES.", field_network_type, field_name)
+			local additional_data = nil
+
+			if field_network_type == "locomotion_parent" then
+				locomotion_parent.component_name = component_name
+				locomotion_parent.field_name = field_name
+				additional_data = {
+					children = locomotion_children
+				}
+			elseif field_network_type == "locomotion_position" or field_network_type == "locomotion_rotation" then
+				locomotion_children[#locomotion_children + 1] = {
+					component_name = component_name,
+					field_name = field_name
+				}
+				additional_data = {
+					parent = locomotion_parent
+				}
 			end
 
 			field_network_lookup[lookup_index] = {
@@ -134,7 +162,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 			component_config[field_name] = {
 				type = field_type,
 				lookup_index = lookup_index,
-				field_network_type = field_network_type
+				field_network_type = field_network_type,
+				additional_data = additional_data
 			}
 		end
 	end
@@ -145,9 +174,6 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	for component_i = 1, #sorted_husk_components do
 		local component_name = sorted_husk_components[component_i]
-
-		fassert(formatted_config[component_name], "[PlayerHuskDataComponentConfig] Component \"%s\" does not exist in PlayerUnitDataComponentConfig.", component_name)
-
 		local formatted_husk_component = {}
 		formatted_husk_config[component_name] = formatted_husk_component
 		local husk_component = husk_config[component_name]
@@ -157,9 +183,6 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		for field_i = 1, #husk_component do
 			local field_name = husk_component[field_i]
-
-			fassert(formatted_component[field_name], "[PlayerHuskDataComponentConfig] \"%s\" does not exist in \"%s\"", field_name, component_name)
-
 			formatted_husk_component[field_name] = true
 			local network_name, network_type = _get_network_info(field_name, formatted_component, field_network_lookup)
 		end
@@ -171,9 +194,6 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	for component_i = 1, #sorted_husk_hud_components do
 		local component_name = sorted_husk_hud_components[component_i]
-
-		fassert(formatted_config[component_name], "[PlayerHuskHudDataComponentConfig] Component \"%s\" does not exist in PlayerUnitDataComponentConfig.", component_name)
-
 		local formatted_husk_hud_component = {}
 		formatted_husk_hud_config[component_name] = formatted_husk_hud_component
 		local husk_hud_component = husk_hud_config[component_name]
@@ -183,13 +203,10 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		for field_i = 1, #husk_hud_component do
 			local field_name = husk_hud_component[field_i]
-
-			fassert(formatted_component[field_name], "[PlayerHuskHudDataComponentConfig] \"%s\" does not exist in \"%s\"", field_name, component_name)
-
 			local husk_component = formatted_husk_config[component_name]
 
 			if husk_component then
-				fassert(husk_component[field_name] == nil, "[PlayerHuskHudDataComponentConfig] Field \"%s\" in component \"%s\" is already tracked in husk_data_component_config.", field_name, component_name)
+				-- Nothing
 			end
 
 			formatted_husk_hud_component[field_name] = true
@@ -206,8 +223,9 @@ function _get_network_info(field_name, formatted_component, field_network_lookup
 	local field = field_network_lookup[field_lookup_index]
 	local network_name = field[4]
 	local network_type = field[5]
+	local converted_type = HUSK_NETWORK_TYPE_CONVERSION[network_type] or network_type
 
-	return network_name, network_type
+	return network_name, converted_type
 end
 
 return UnitDataComponentConfigFormatter

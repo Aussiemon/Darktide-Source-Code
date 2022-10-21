@@ -79,7 +79,7 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 	return parameter_table
 end
 
-AimProjectile.get_spawn_parameters_from_current_ainm = function (action_settings, shoot_position, shoot_rotation, projectile_locomotion_template)
+AimProjectile.get_spawn_parameters_from_current_aim = function (action_settings, shoot_position, shoot_rotation, projectile_locomotion_template)
 	local initial_position = shoot_position
 	local initial_rotation = Quaternion.identity()
 	local time_in_action = 0
@@ -90,18 +90,18 @@ AimProjectile.get_spawn_parameters_from_current_ainm = function (action_settings
 	local direction = aim_parameters.direction
 	local speed = aim_parameters.speed
 	local throw_config = projectile_locomotion_template.throw_parameters[throw_type]
-	local momentum = nil
+	local angular_velocity = nil
 
-	if throw_config.randomized_momentum then
-		local max = throw_config.randomized_momentum
-		momentum = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
-	elseif throw_config.momentum then
-		momentum = throw_config.momentum:unbox()
+	if throw_config.randomized_angular_velocity then
+		local max = throw_config.randomized_angular_velocity
+		angular_velocity = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
+	elseif throw_config.initial_angular_velocity then
+		angular_velocity = throw_config.initial_angular_velocity:unbox()
 	else
-		momentum = Vector3.zero()
+		angular_velocity = Vector3.zero()
 	end
 
-	return position, rotation, direction, speed, momentum
+	return position, rotation, direction, speed, angular_velocity
 end
 
 AimProjectile.get_spawn_parameters_from_aim_component = function (action_aim_projectile)
@@ -109,9 +109,9 @@ AimProjectile.get_spawn_parameters_from_aim_component = function (action_aim_pro
 	local rotation = action_aim_projectile.rotation
 	local direction = action_aim_projectile.direction
 	local speed = action_aim_projectile.speed
-	local momentum = action_aim_projectile.momentum
+	local angular_velocity = action_aim_projectile.momentum
 
-	return position, rotation, direction, speed, momentum
+	return position, rotation, direction, speed, angular_velocity
 end
 
 return AimProjectile

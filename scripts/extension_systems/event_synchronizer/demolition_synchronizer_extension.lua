@@ -35,7 +35,7 @@ DemolitionSynchronizerExtension.hot_join_sync = function (self, sender, channel)
 	if self._override_objective_markers then
 		local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_demolition_target_override", level_unit_id, false)
+		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_demolition_target_override", level_unit_id, true)
 	end
 end
 
@@ -55,8 +55,6 @@ DemolitionSynchronizerExtension._seperate_objective_units = function (self, unit
 end
 
 DemolitionSynchronizerExtension.register_connected_units = function (self, stage_units, registered_units, stage)
-	fassert(self._stage_order and registered_units, "[DemolitionSynchronizerExtension] trying to register stage units without having run setup_stages")
-
 	stage_units = registered_units[self._stage_order[stage]]
 	local target_units = self:_seperate_objective_units(stage_units)
 	self._target_units = target_units
@@ -71,6 +69,7 @@ DemolitionSynchronizerExtension.register_connected_units = function (self, stage
 		end
 
 		self._segment_units = unit_list
+		self._segment_trigger_unit = nil
 
 		for i = 1, #unit_list do
 			local trigger_unit = unit_list[i]
@@ -82,6 +81,10 @@ DemolitionSynchronizerExtension.register_connected_units = function (self, stage
 					self._segment_trigger_unit = trigger_unit
 				end
 			end
+		end
+
+		if self._segment_trigger_unit and self._override_objective_markers then
+			self._override_objective_markers[self._segment_trigger_unit] = true
 		end
 	end
 
@@ -126,8 +129,7 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 	end
 
 	if self._shuffle_segments then
-		local new_seed = table.shuffle(segments, self._seed)
-		self._seed = new_seed
+		table.shuffle(segments, self._setup_seed)
 	end
 
 	if last_segment then
@@ -234,10 +236,10 @@ end
 
 DemolitionSynchronizerExtension.set_override_objective_markers = function (self, override)
 	if override then
+		self._override_objective_markers = {}
+
 		if self._segment_trigger_unit then
-			self._override_objective_markers = {
-				[self._segment_trigger_unit] = true
-			}
+			self._override_objective_markers[self._segment_trigger_unit] = true
 		end
 
 		self._segment_trigger_unit = nil

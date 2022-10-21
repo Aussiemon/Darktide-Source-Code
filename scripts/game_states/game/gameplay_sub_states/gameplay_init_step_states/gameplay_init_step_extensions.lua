@@ -54,14 +54,8 @@ end
 GameplayInitStepExtensions._init_extensions = function (self, world, physics_world, is_server, mission_name, level_name, level_seed, circumstance_name, nav_world, has_navmesh, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, network_event_delegate)
 	local wwise_world = Managers.world:wwise_world(world)
 	local game_session_manager = Managers.state.game_session
-
-	fassert(game_session_manager, "[GameplayStateInit] Game Session Manager not initialized.")
-
 	local game_session = game_session_manager:game_session()
 	local game_mode_manager = Managers.state.game_mode
-
-	fassert(game_mode_manager, "[GameplayStateInit] Game Mode Manager not initialized.")
-
 	local default_player_side_name = game_mode_manager:default_player_side_name()
 	local side_compositions = game_mode_manager:side_compositions()
 	local num_sides = #side_compositions

@@ -3,8 +3,9 @@ local circumstance_templates = {
 		wwise_state = "darkness_01",
 		theme_tag = "darkness",
 		ui = {
-			display_name = "loc_circumstance_darkness_title",
-			icon = "content/ui/materials/icons/circumstances/rain"
+			description = "loc_circumstance_darkness_description",
+			icon = "content/ui/materials/icons/circumstances/darkness_01",
+			display_name = "loc_circumstance_darkness_title"
 		}
 	}
 }

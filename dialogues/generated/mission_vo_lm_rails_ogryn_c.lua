@@ -10,6 +10,10 @@ local mission_vo_lm_rails_ogryn_c = {
 			[1.0] = 2.96399,
 			[2.0] = 2.55575
 		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
+		},
 		randomize_indexes = {}
 	},
 	mission_rails_district_gate = {
@@ -86,7 +90,7 @@ local mission_vo_lm_rails_ogryn_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.765146,
-			[2.0] = 3.653396
+			[2.0] = 3.653406
 		},
 		randomize_indexes = {}
 	},
@@ -120,13 +124,13 @@ local mission_vo_lm_rails_ogryn_c = {
 		},
 		sound_events_duration = {
 			2.687979,
-			2.87749,
+			2.8775,
 			3.552531,
-			2.388427,
+			2.388438,
 			3.068083,
-			4.55851,
-			3.969969,
-			3.13974,
+			4.558521,
+			3.969979,
+			3.13975,
 			3.403104,
 			3.747969
 		},
@@ -157,6 +161,26 @@ local mission_vo_lm_rails_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
+	mission_rails_refectory_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_c__zone_transit_01",
+			"loc_ogryn_c__zone_transit_02",
+			"loc_ogryn_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			4.882969,
+			3.751333,
+			3.65425
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
+		},
+		randomize_indexes = {}
+	},
 	mission_rails_start_banter_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -167,6 +191,35 @@ local mission_vo_lm_rails_ogryn_c = {
 		sound_events_duration = {
 			[1.0] = 4.152708,
 			[2.0] = 5.028438
+		},
+		randomize_indexes = {}
+	},
+	mission_rails_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_c__region_habculum_01",
+			"loc_ogryn_c__region_habculum_02",
+			"loc_ogryn_c__region_habculum_03",
+			"loc_ogryn_c__zone_transit_01",
+			"loc_ogryn_c__zone_transit_02",
+			"loc_ogryn_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			1.880125,
+			4.54024,
+			3.445604,
+			4.882969,
+			3.751333,
+			3.65425
+		},
+		sound_event_weights = {
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

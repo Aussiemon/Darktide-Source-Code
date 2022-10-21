@@ -138,15 +138,6 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_psyker_smite_charge"
 		}
 	},
-	psyker_headpop_hands = {
-		has_husk_events = true,
-		start = {
-			event_alias = "play_psyker_headpop_hands"
-		},
-		stop = {
-			event_alias = "stop_psyker_headpop_hands"
-		}
-	},
 	weapon_special_loop = {
 		has_husk_events = true,
 		start = {
@@ -154,6 +145,16 @@ local PlayerCharacterLoopingSoundAliases = {
 		},
 		stop = {
 			event_alias = "stop_weapon_special_loop"
+		}
+	},
+	weapon_overload_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_weapon_overload_loop"
+		},
+		stop = {
+			event_alias = "stop_weapon_overload_loop"
 		}
 	},
 	block_loop = {

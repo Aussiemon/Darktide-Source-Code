@@ -43,7 +43,7 @@ end
 LedgeHangingPlayerOrientation._switch_to_absolute_orientation = function (self)
 	local parent_unit = self._parent_unit
 	local relative_orientation_quaternion = self._relative_orientation:unbox()
-	local absolute_orientation, _ = PlayerMovement.calculate_absolute_rotation_position(parent_unit, relative_orientation_quaternion)
+	local absolute_orientation = PlayerMovement.calculate_absolute_rotation(parent_unit, relative_orientation_quaternion)
 	self._orientation.yaw = Quaternion.yaw(absolute_orientation)
 	self._orientation.pitch = Quaternion.pitch(absolute_orientation)
 	self._orientation.roll = Quaternion.roll(absolute_orientation)
@@ -53,7 +53,7 @@ end
 LedgeHangingPlayerOrientation._switch_to_relative_orientation = function (self, parent_unit)
 	self._parent_unit = parent_unit
 	local absolute_orientation_quaternion = Quaternion.from_yaw_pitch_roll(self._orientation.yaw, self._orientation.pitch, self._orientation.roll)
-	local relative_rotation, _ = PlayerMovement.calculate_relative_rotation_position(parent_unit, absolute_orientation_quaternion)
+	local relative_rotation = PlayerMovement.calculate_relative_rotation(parent_unit, absolute_orientation_quaternion)
 
 	self._relative_orientation:store(relative_rotation)
 end
@@ -77,14 +77,27 @@ LedgeHangingPlayerOrientation.pre_update = function (self, main_t, main_dt, inpu
 
 	local look_delta = Orientation.look_delta(main_dt, input, sensitivity, mouse_scale, look_delta_context)
 	local relative_orientation_quaternion = self._relative_orientation:unbox()
-	local absolute_orientation, _ = PlayerMovement.calculate_absolute_rotation_position(parent_unit, relative_orientation_quaternion)
+	local absolute_orientation = nil
+
+	if parent_unit then
+		absolute_orientation = PlayerMovement.calculate_absolute_rotation(parent_unit, relative_orientation_quaternion)
+	else
+		absolute_orientation = relative_orientation_quaternion
+	end
+
 	local absolute_yaw = Quaternion.yaw(absolute_orientation)
 	local absolute_pitch = Quaternion.pitch(absolute_orientation)
 	local absolute_roll = Quaternion.roll(absolute_orientation)
 	absolute_yaw = (absolute_yaw - look_delta.x) % PI_2
 	absolute_pitch = math.clamp((absolute_pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
 	local new_absolute_orientation = Quaternion.from_yaw_pitch_roll(absolute_yaw, absolute_pitch, absolute_roll)
-	local new_relative_rotation, _ = PlayerMovement.calculate_relative_rotation_position(parent_unit, new_absolute_orientation)
+	local new_relative_rotation = nil
+
+	if parent_unit then
+		new_relative_rotation = PlayerMovement.calculate_relative_rotation(parent_unit, new_absolute_orientation)
+	else
+		new_relative_rotation = new_absolute_orientation
+	end
 
 	self._relative_orientation:store(new_relative_rotation)
 

@@ -3,16 +3,6 @@ local weapon_ammo_templates = {
 		ammunition_clip = 0,
 		ammunition_reserve = 0
 	},
-	forcestaff_p1_m1 = {
-		ammunition_clip = {
-			lerp_perfect = 200,
-			lerp_basic = 100
-		},
-		ammunition_reserve = {
-			lerp_perfect = 5000,
-			lerp_basic = 3000
-		}
-	},
 	bolter_p1_m1 = {
 		ammunition_clip = {
 			lerp_perfect = 15,
@@ -45,32 +35,32 @@ local weapon_ammo_templates = {
 	},
 	autogun_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 40,
-			lerp_basic = 20
+			lerp_perfect = 35,
+			lerp_basic = 15
 		},
 		ammunition_reserve = {
-			lerp_perfect = 400,
-			lerp_basic = 200
+			lerp_perfect = 210,
+			lerp_basic = 90
 		}
 	},
 	autogun_p1_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 50,
-			lerp_basic = 30
+			lerp_perfect = 45,
+			lerp_basic = 25
 		},
 		ammunition_reserve = {
-			lerp_perfect = 500,
-			lerp_basic = 300
+			lerp_perfect = 270,
+			lerp_basic = 150
 		}
 	},
 	autogun_p1_m3 = {
 		ammunition_clip = {
-			lerp_perfect = 50,
-			lerp_basic = 30
+			lerp_perfect = 40,
+			lerp_basic = 20
 		},
 		ammunition_reserve = {
-			lerp_perfect = 500,
-			lerp_basic = 300
+			lerp_perfect = 240,
+			lerp_basic = 120
 		}
 	},
 	autogun_p2_m1 = {
@@ -155,92 +145,92 @@ local weapon_ammo_templates = {
 	},
 	lasgun_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 40,
-			lerp_basic = 20
+			lerp_perfect = 120,
+			lerp_basic = 60
 		},
 		ammunition_reserve = {
-			lerp_perfect = 200,
-			lerp_basic = 100
+			lerp_perfect = 600,
+			lerp_basic = 300
 		}
 	},
 	lasgun_p1_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 60,
-			lerp_basic = 30
+			lerp_perfect = 180,
+			lerp_basic = 90
 		},
 		ammunition_reserve = {
-			lerp_perfect = 360,
-			lerp_basic = 150
+			lerp_perfect = 1080,
+			lerp_basic = 450
 		}
 	},
 	lasgun_p1_m3 = {
 		ammunition_clip = {
-			lerp_perfect = 30,
-			lerp_basic = 20
+			lerp_perfect = 120,
+			lerp_basic = 60
 		},
 		ammunition_reserve = {
-			lerp_perfect = 180,
-			lerp_basic = 100
+			lerp_perfect = 720,
+			lerp_basic = 300
 		}
 	},
 	lasgun_p2_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 60,
-			lerp_basic = 30
+			lerp_perfect = 180,
+			lerp_basic = 90
 		},
 		ammunition_reserve = {
-			lerp_perfect = 360,
-			lerp_basic = 240
+			lerp_perfect = 1440,
+			lerp_basic = 720
 		}
 	},
 	lasgun_p2_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 60,
-			lerp_basic = 30
+			lerp_perfect = 180,
+			lerp_basic = 90
 		},
 		ammunition_reserve = {
-			lerp_perfect = 360,
-			lerp_basic = 240
+			lerp_perfect = 1440,
+			lerp_basic = 720
 		}
 	},
 	lasgun_p2_m3 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
-			lerp_basic = 50
+			lerp_perfect = 300,
+			lerp_basic = 150
 		},
 		ammunition_reserve = {
-			lerp_perfect = 600,
-			lerp_basic = 250
+			lerp_perfect = 1800,
+			lerp_basic = 750
 		}
 	},
 	lasgun_p3_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
-			lerp_basic = 60
+			lerp_perfect = 300,
+			lerp_basic = 180
 		},
 		ammunition_reserve = {
-			lerp_perfect = 600,
-			lerp_basic = 300
+			lerp_perfect = 1800,
+			lerp_basic = 900
 		}
 	},
 	lasgun_p3_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
-			lerp_basic = 60
+			lerp_perfect = 300,
+			lerp_basic = 180
 		},
 		ammunition_reserve = {
-			lerp_perfect = 600,
-			lerp_basic = 300
+			lerp_perfect = 1800,
+			lerp_basic = 900
 		}
 	},
 	laspistol_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 80,
-			lerp_basic = 40
+			lerp_perfect = 160,
+			lerp_basic = 80
 		},
 		ammunition_reserve = {
-			lerp_perfect = 480,
-			lerp_basic = 200
+			lerp_perfect = 960,
+			lerp_basic = 400
 		}
 	},
 	plasmagun_p1_m1 = {
@@ -261,6 +251,16 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_perfect = 144,
 			lerp_basic = 48
+		}
+	},
+	ogryn_rippergun_p1_m2 = {
+		ammunition_clip = {
+			lerp_perfect = 20,
+			lerp_basic = 10
+		},
+		ammunition_reserve = {
+			lerp_perfect = 120,
+			lerp_basic = 40
 		}
 	},
 	ogryn_thumper_p1_m1 = {
@@ -315,11 +315,11 @@ local weapon_ammo_templates = {
 	},
 	ogryn_heavystubber_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
+			lerp_perfect = 150,
 			lerp_basic = 100
 		},
 		ammunition_reserve = {
-			lerp_perfect = 700,
+			lerp_perfect = 600,
 			lerp_basic = 300
 		}
 	}

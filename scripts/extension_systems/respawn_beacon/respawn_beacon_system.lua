@@ -3,6 +3,9 @@ require("scripts/extension_systems/respawn_beacon/respawn_beacon_extension")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local BEACON_ACTIVATION_DISTANCE = 45
+local PLAYER_BEHIND_DISTANCE = 35
+local BEACON_AHEAD_DISTANCE = 25
 local RespawnBeaconSystem = class("RespawnBeaconSystem", "ExtensionSystemBase")
 
 RespawnBeaconSystem.init = function (self, ...)
@@ -73,8 +76,6 @@ RespawnBeaconSystem.make_respawn_beacon_priority = function (self, unit)
 		return
 	end
 
-	fassert(self._unit_to_extension_map[unit], "Unit used for priority beacon does not have a respawn beacon extension")
-
 	self._priority_respawn_beacon = unit
 end
 
@@ -134,7 +135,7 @@ RespawnBeaconSystem._should_update_respawn_beacons = function (self, side_id)
 	end
 
 	local final_respawn_beacon_data = self._beacon_main_path_data[#self._beacon_main_path_data]
-	local distance = final_respawn_beacon_data.distance + 30
+	local distance = final_respawn_beacon_data.distance + BEACON_ACTIVATION_DISTANCE
 	local should_update = furthest_back_player_distance < distance
 
 	return should_update
@@ -189,14 +190,14 @@ RespawnBeaconSystem._should_move_hogtied_players = function (self, side_id)
 	local num_hogtied_players = #hogtied_players
 
 	if num_hogtied_players then
-		for i = #hogtied_players, 1, -1 do
-			local player = hogtied_players[i]
+		for ii = #hogtied_players, 1, -1 do
+			local player = hogtied_players[ii]
 			local player_unit = player.player_unit
 			local position = POSITION_LOOKUP[player_unit]
 			local _, distance = MainPathQueries_closest_position(position)
 
-			if furthest_back_player_distance - distance < 20 then
-				table.remove(hogtied_players, i)
+			if furthest_back_player_distance - distance < PLAYER_BEHIND_DISTANCE then
+				table.remove(hogtied_players, ii)
 			end
 		end
 	end
@@ -210,7 +211,7 @@ end
 
 RespawnBeaconSystem._move_hogtied_players = function (self, players, best_beacon)
 	local extension = self._unit_to_extension_map[best_beacon]
-	local move_positions = extension:get_best_respawn_positions()
+	local move_positions = extension:best_respawn_positions()
 
 	for i = 1, #players do
 		local player = players[i]
@@ -244,7 +245,7 @@ RespawnBeaconSystem._find_nearest_beacon_with_mainpath = function (self, side_id
 		return first_beacon and first_beacon.unit
 	end
 
-	local min_distance = ahead_player_distance + 10
+	local min_distance = ahead_player_distance + BEACON_AHEAD_DISTANCE
 	local nearest_beacon_unit = nil
 
 	for i = 1, num_beacons do
@@ -273,7 +274,7 @@ RespawnBeaconSystem._find_nearest_beacon_no_mainpath = function (self)
 	for ii = 1, num_alive_players do
 		local player = alive_players[ii]
 		local player_unit = player.player_unit
-		local position = ALIVE[player_unit]
+		local position = POSITION_LOOKUP[player_unit]
 		midpoint_position = position + midpoint_position
 	end
 

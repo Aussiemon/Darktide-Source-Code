@@ -66,10 +66,15 @@ local elements = {
 		}
 	},
 	{
-		class_name = "ConstantElementStayInParty",
-		filename = "scripts/ui/constant_elements/elements/stay_in_party/constant_element_stay_in_party",
+		package = "packages/ui/constant_elements/cursors/cursors",
+		class_name = "ConstantElementSoftwareCursor",
+		filename = "scripts/ui/constant_elements/elements/software_cursor/constant_element_software_cursor",
 		visibility_groups = {
-			"end_of_round"
+			"cutscene",
+			"mission_lobby",
+			"end_of_round",
+			"in_view",
+			"default"
 		}
 	},
 	{
@@ -94,12 +99,29 @@ local elements = {
 				chat_window_offset = {
 					-ChatElementSettings.chat_window_offset[1]
 				}
+			},
+			end_of_round = {
+				horizontal_alignment = "right",
+				chat_window_offset = {
+					-ChatElementSettings.chat_window_offset[1]
+				}
 			}
 		}
 	},
 	{
 		class_name = "ConstantElementLoading",
 		filename = "scripts/ui/constant_elements/elements/loading/constant_element_loading",
+		visibility_groups = {
+			"cutscene",
+			"mission_lobby",
+			"end_of_round",
+			"in_view",
+			"default"
+		}
+	},
+	{
+		class_name = "ConstantElementOnboardingHandler",
+		filename = "scripts/ui/constant_elements/elements/onboarding_handler/constant_element_onboarding_handler",
 		visibility_groups = {
 			"cutscene",
 			"mission_lobby",

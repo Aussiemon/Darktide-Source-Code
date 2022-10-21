@@ -254,9 +254,6 @@ end
 NetworkStoryManager.rpc_network_story_set_position_level = function (self, channel_id, level_id, unit_id, is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local unit = unit_spawner_manager:unit(unit_id, is_level_unit)
-
-	fassert(unit ~= nil, "[NetworkStoryManager][rpc_network_story_set_position_level] Invalid unit.")
-
 	local story_level = ScriptWorld.level_from_id(self._world, level_id)
 
 	self:set_position_level(story_level, unit)

@@ -7,7 +7,7 @@ local mission_vo_dm_forge_veteran_female_c = {
 			[2.0] = "loc_veteran_female_c__mission_forge_alive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.343677,
+			[1.0] = 1.343688,
 			[2.0] = 1.71001
 		},
 		randomize_indexes = {}
@@ -34,7 +34,7 @@ local mission_vo_dm_forge_veteran_female_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.428823,
-			[2.0] = 2.193427
+			[2.0] = 2.193417
 		},
 		randomize_indexes = {}
 	},
@@ -60,7 +60,7 @@ local mission_vo_dm_forge_veteran_female_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 0.808344,
-			[2.0] = 3.047604
+			[2.0] = 3.047594
 		},
 		randomize_indexes = {}
 	},
@@ -126,9 +126,9 @@ local mission_vo_dm_forge_veteran_female_c = {
 			4.008042,
 			2.618948,
 			2.877021,
-			2.45275,
+			2.45276,
 			2.604781,
-			4.225708
+			4.225719
 		},
 		sound_event_weights = {
 			0.1,
@@ -178,8 +178,28 @@ local mission_vo_dm_forge_veteran_female_c = {
 			[2.0] = "loc_veteran_female_c__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.3455,
+			[1.0] = 1.34549,
 			[2.0] = 2.489604
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_main_entrance_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_veteran_female_c__region_mechanicus_01",
+			"loc_veteran_female_c__region_mechanicus_02",
+			"loc_veteran_female_c__region_mechanicus_03"
+		},
+		sound_events_duration = {
+			2.143979,
+			3.043927,
+			4.292271
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -191,7 +211,7 @@ local mission_vo_dm_forge_veteran_female_c = {
 			[2.0] = "loc_veteran_female_c__mission_forge_propaganda_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.159875,
+			[1.0] = 1.159865,
 			[2.0] = 2.23874
 		},
 		randomize_indexes = {}
@@ -204,8 +224,8 @@ local mission_vo_dm_forge_veteran_female_c = {
 			[2.0] = "loc_veteran_female_c__mission_forge_stand_ground_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.338583,
-			[2.0] = 2.580813
+			[1.0] = 2.338594,
+			[2.0] = 2.580823
 		},
 		randomize_indexes = {}
 	},
@@ -219,6 +239,26 @@ local mission_vo_dm_forge_veteran_female_c = {
 		sound_events_duration = {
 			[1.0] = 1.447219,
 			[2.0] = 1.946594
+		},
+		randomize_indexes = {}
+	},
+	mission_forge_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_veteran_female_c__zone_tank_foundry_01",
+			"loc_veteran_female_c__zone_tank_foundry_02",
+			"loc_veteran_female_c__zone_tank_foundry_03"
+		},
+		sound_events_duration = {
+			3.894396,
+			3.468219,
+			4.416
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -250,7 +290,7 @@ local mission_vo_dm_forge_veteran_female_c = {
 			0.929708,
 			2.460771,
 			2.970104,
-			0.923813
+			0.923802
 		},
 		sound_event_weights = {
 			0.2,

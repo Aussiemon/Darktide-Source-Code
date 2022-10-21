@@ -17,6 +17,8 @@ PlayerUnitMusicParameterExtension.init = function (self, extension_init_context,
 	self._boss_near = false
 	self._health_percent = 0
 	self._intensity_percent = 0
+	self._tension_percent = 0
+	self._num_aggroed_minions_near = 0
 	self._locked_in_melee = false
 	self._update_horde_near_time = 0
 	self._horde_update_interval = 1
@@ -88,6 +90,33 @@ PlayerUnitMusicParameterExtension._update_boss_near = function (self, unit)
 
 		self._boss_near = boss_near
 	end
+end
+
+local BROADPHASE_RESULTS = {}
+
+PlayerUnitMusicParameterExtension._update_aggroed_minions_near = function (self, unit)
+	local query_radius = WwiseGameSyncSettings.minion_aggro_intensity_settings.query_radius or 0
+	local num_aggroed_minions_near = 0
+	local side = self._side_system.side_by_unit[unit]
+	local aggroed_minion_target_units = side.aggroed_minion_target_units
+	local enemy_side_names = side:relation_side_names("enemy")
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local unit_position = POSITION_LOOKUP[unit]
+	local num_results = broadphase:query(unit_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
+
+	for i = 1, num_results do
+		local enemy_unit = BROADPHASE_RESULTS[i]
+		local is_aggroed = aggroed_minion_target_units[enemy_unit]
+
+		if is_aggroed then
+			num_aggroed_minions_near = num_aggroed_minions_near + 1
+		end
+	end
+
+	GameSession.set_game_object_field(self._game_session, self._music_parameters_game_object_id, "num_aggroed_minions_near", num_aggroed_minions_near)
+
+	self._num_aggroed_minions_near = num_aggroed_minions_near
 end
 
 PlayerUnitMusicParameterExtension._shortest_horde_distance = function (self, positions)
@@ -172,19 +201,15 @@ PlayerUnitMusicParameterExtension.fixed_update = function (self, unit, dt, t)
 	local game_object_id = self._music_parameters_game_object_id
 	local attack_intensity_extension = self._attack_intensity_extension
 
-	Profiler.start("near_boss")
 	self:_update_boss_near(unit)
-	Profiler.stop("near_boss")
-	Profiler.start("near_horde")
 	self:_update_horde_near(t)
-	Profiler.stop("near_horde")
-	Profiler.start("last_man")
 	self:_update_last_man_standing()
-	Profiler.stop("last_man")
+	self:_update_aggroed_minions_near(unit)
 
 	local health_percent = self._health_extension:current_health_percent()
 	local intensity_percent = attack_intensity_extension:total_intensity_percent()
 	local locked_in_melee = attack_intensity_extension:locked_in_melee()
+	local tension_percent = self._pacing_manager:player_tension(self._unit)
 	self._health_percent = health_percent
 	self._intensity_percent = intensity_percent
 	self._locked_in_melee = locked_in_melee
@@ -196,6 +221,18 @@ PlayerUnitMusicParameterExtension.fixed_update = function (self, unit, dt, t)
 	self._num_aggroed_minions = num_aggroed_minions
 
 	GameSession.set_game_object_field(game_session, game_object_id, "num_aggroed_minions", num_aggroed_minions)
+
+	self._tension_percent = tension_percent
+
+	GameSession.set_game_object_field(game_session, game_object_id, "tension_percent", tension_percent)
+end
+
+PlayerUnitMusicParameterExtension.num_aggroed_minions_near = function (self)
+	return self._num_aggroed_minions_near
+end
+
+PlayerUnitMusicParameterExtension.tension_percent = function (self)
+	return self._tension_percent
 end
 
 PlayerUnitMusicParameterExtension.vector_horde_near = function (self)

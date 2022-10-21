@@ -17,7 +17,7 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 	self._connect_spline_distance = nil
 	self._follow_unit_default_speed = 0
 	self._follow_unit_default_acceleration = 0
-	self._proximity_check_distance = 0
+	self._proximity_check_distance_squared = 0
 
 	if self._is_server then
 		self._game_session = nil
@@ -28,11 +28,11 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 		self._game_object_id = unit_spawner_manager:game_object_id(unit)
 	end
 
-	self._last_synched_spline_values = {
-		last_synch_time = 0,
+	self._last_synced_spline_values = {
+		subdivision_index = 0,
 		error_compensation_speed = 0,
 		spline_index = 0,
-		subdivision_index = 0,
+		last_sync_time = 0,
 		spline_t = 0
 	}
 end
@@ -49,7 +49,7 @@ SplineFollowerExtension._setup_level_event_settings = function (self)
 		self._follow_unit_default_speed = LevelEventSettings.spline_follower.servo_skull.servo_skull_default_speed
 		self._follow_unit_default_acceleration = LevelEventSettings.spline_follower.servo_skull.acceleration_to_max_speed
 		self._follow_unit_default_deceleration = LevelEventSettings.spline_follower.servo_skull.deceleration_to_min_speed
-		self._proximity_check_distance = LevelEventSettings.spline_follower.servo_skull.proximity_check_distance
+		self._proximity_check_distance_squared = LevelEventSettings.spline_follower.servo_skull.proximity_check_distance_squared
 	end
 
 	self._connect_spline_distance = LevelEventSettings.spline_follower.connect_spline_distance
@@ -62,7 +62,7 @@ end
 
 SplineFollowerExtension.update = function (self, unit, dt, t)
 	if self._current_state == STATES.waiting then
-		-- Nothing
+		return
 	elseif self._current_state == STATES.moving then
 		local new_speed = 0
 		local movement = self._spline_curve:movement()
@@ -180,25 +180,25 @@ end
 SplineFollowerExtension._error_speed_calculation = function (self, dt, t, game, id, movement)
 	local spline_index = GameSession.game_object_field(game, id, "spline_index")
 	local splines = self._spline_curve:splines()
-	local subdiv = GameSession.game_object_field(game, id, "subdivision_index")
+	local subdivision_index = GameSession.game_object_field(game, id, "subdivision_index")
 	local spline_t = GameSession.game_object_field(game, id, "spline_t")
-	local old_vals = self._last_synched_spline_values
+	local old_values = self._last_synced_spline_values
 
-	if spline_index <= #splines and (old_vals.spline_index ~= spline_index or old_vals.subdivision_index ~= subdiv or old_vals.spline_t ~= spline_t) then
-		local curr_spline_index = movement:current_spline_index()
-		local curr_subdivision_index = movement:current_subdivision_index()
-		local curr_spline_t = movement:current_t()
-		local error_distance = movement:distance(curr_spline_index, curr_subdivision_index, curr_spline_t, spline_index, subdiv, spline_t)
-		old_vals.spline_index = spline_index
-		old_vals.subdivision_index = subdiv
-		old_vals.spline_t = spline_t
-		old_vals.error_compensation_speed = error_distance / ERROR_RECOUP_TIME
-		old_vals.last_synch_time = t
-	elseif ERROR_RECOUP_TIME <= t - old_vals.last_synch_time then
-		old_vals.error_compensation_speed = 0
+	if spline_index <= #splines and (old_values.spline_index ~= spline_index or old_values.subdivision_index ~= subdivision_index or old_values.spline_t ~= spline_t) then
+		local current_spline_index = movement:current_spline_index()
+		local current_subdivision_index = movement:current_subdivision_index()
+		local current_spline_t = movement:current_t()
+		local error_distance = movement:distance(current_spline_index, current_subdivision_index, current_spline_t, spline_index, subdivision_index, spline_t)
+		old_values.spline_index = spline_index
+		old_values.subdivision_index = subdivision_index
+		old_values.spline_t = spline_t
+		old_values.error_compensation_speed = error_distance / ERROR_RECOUP_TIME
+		old_values.last_sync_time = t
+	elseif ERROR_RECOUP_TIME <= t - old_values.last_sync_time then
+		old_values.error_compensation_speed = 0
 	end
 
-	return old_vals.error_compensation_speed
+	return old_values.error_compensation_speed
 end
 
 SplineFollowerExtension._players_in_proximity = function (self)
@@ -206,19 +206,16 @@ SplineFollowerExtension._players_in_proximity = function (self)
 	local side = side_system:get_side_from_name("heroes")
 	local valid_player_units = side.valid_player_units
 	local follow_unit_position = Unit.world_position(self._unit, 1)
-	local proximity_check_distance = self._proximity_check_distance
-
-	fassert(proximity_check_distance ~= 0, "[SplineFollowerExtension] need to specify the _proximity_check_distance variable")
-
+	local proximity_check_distance_squared = self._proximity_check_distance_squared
 	local closest_player, closest_distance = nil
 
 	for i = 1, #valid_player_units do
 		local unit = valid_player_units[i]
 		local position = POSITION_LOOKUP[unit]
-		local distance = Vector3.distance(position, follow_unit_position)
+		local distance_squared = Vector3.distance_squared(position, follow_unit_position)
 
-		if distance < proximity_check_distance and (not closest_distance or distance < closest_distance) then
-			closest_distance = distance
+		if distance_squared < proximity_check_distance_squared and (not closest_distance or distance_squared < closest_distance) then
+			closest_distance = distance_squared
 			closest_player = unit
 		end
 	end

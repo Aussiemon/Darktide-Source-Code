@@ -14,9 +14,10 @@ local impact_fx_lookup = ImpactEffectSettings.impact_fx_lookup
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local PI = math.pi
 local EMPTY_TABLE = {}
+local MATERIAL_QUERY_DISTANCE = 0.1
 local _can_play, _impact_fx, _impact_effect_anim_from_direction, _surface_impact_fx = nil
 local ImpactEffect = {}
-local DEFAULT_HIT_REACTS_MIN_DAMAGE = 35
+local DEFAULT_HIT_REACTS_MIN_DAMAGE = 0
 
 ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_type, hit_zone_name, attack_result, hit_position, hit_normal, attack_direction, attacking_unit, impact_fx_data_or_nil, attack_was_stopped, attack_type, damage_efficiency, damage_profile)
 	impact_fx_data_or_nil = impact_fx_data_or_nil or EMPTY_TABLE
@@ -45,7 +46,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 		fx_system:play_impact_fx(impact_fx, hit_position, attack_direction, source_parameters, attacking_unit_owner_unit, attacked_unit, node_index, hit_normal, will_be_predicted)
 	end
 
-	local should_play_offset_animation = target_alive and Unit.has_animation_state_machine(attacked_unit) and not breed_or_nil.ignore_hit_reacts and not damage_profile.ignore_hit_reacts
+	local should_play_offset_animation = target_alive and Unit.has_animation_state_machine(attacked_unit) and not breed_or_nil.ignore_hit_reacts and damage_profile and not damage_profile.ignore_hit_reacts
 	should_play_offset_animation = should_play_offset_animation and (breed_or_nil.hit_reacts_min_damage or DEFAULT_HIT_REACTS_MIN_DAMAGE) <= damage
 
 	if should_play_offset_animation then
@@ -88,15 +89,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 	end
 end
 
-ImpactEffect.play_surface_effect = function (physics_world, attacking_unit, hit_position, hit_normal, hit_direction, damage_type, hit_type, impact_fx_data)
-	local will_be_predicted = not not impact_fx_data.will_be_predicted
-	local source_parameters = impact_fx_data.source_parameters or EMPTY_TABLE
-	local fx_system = Managers.state.extension:system("fx_system")
-
-	fx_system:play_surface_impact_fx(hit_position, hit_direction, source_parameters, attacking_unit, hit_normal, damage_type, hit_type, will_be_predicted)
-end
-
-ImpactEffect.save_surface_effect = function (effects_data, unit_index, hit_index, attacked_unit, hit_actor_or_nil, hit_position, hit_normal, hit_direction)
+ImpactEffect.save_surface_effect = function (effects_data, unit_index, hit_index, fire_position, attacked_unit, hit_actor_or_nil, hit_position, hit_normal)
 	local data = effects_data[unit_index]
 	local hit_data = data.hits[hit_index]
 
@@ -105,35 +98,96 @@ ImpactEffect.save_surface_effect = function (effects_data, unit_index, hit_index
 	end
 
 	data.attacked_unit = attacked_unit
+	data.fire_position = fire_position
 	hit_data.hit_actor_or_nil = hit_actor_or_nil
 	hit_data.hit_position = hit_position
 	hit_data.hit_normal = hit_normal
-	hit_data.hit_direction = hit_direction
 end
 
+ImpactEffect.play_surface_effect = function (physics_world, attacking_unit, hit_position, hit_normal, hit_direction, damage_type, hit_type, impact_fx_data)
+	local will_be_predicted = not not impact_fx_data.will_be_predicted
+	local source_parameters = impact_fx_data.source_parameters or EMPTY_TABLE
+	local fx_system = Managers.state.extension:system("fx_system")
+
+	fx_system:play_surface_impact_fx(hit_position, hit_direction, source_parameters, attacking_unit, hit_normal, damage_type, hit_type, will_be_predicted)
+end
+
+local temp_hit_positions = {}
+local temp_hit_normals = {}
+
 ImpactEffect.play_shotshell_surface_effect = function (physics_world, attacking_unit, unit_to_index_lookup, num_hits_per_unit, impact_data, damage_type, hit_type, impact_fx_data)
+	local will_be_predicted = not not impact_fx_data.will_be_predicted
+	local source_parameters = impact_fx_data.source_parameters or EMPTY_TABLE
+	local fx_system = Managers.state.extension:system("fx_system")
+
 	for hit_unit, unit_index in pairs(unit_to_index_lookup) do
+		table.clear(temp_hit_positions)
+		table.clear(temp_hit_normals)
+
 		local num_hits = num_hits_per_unit[hit_unit]
 		local effect_data = impact_data[unit_index]
 		local hit_data = effect_data.hits
+		local fire_position = effect_data.fire_position
 
 		for ii = 1, num_hits do
 			local data = hit_data[ii]
-			local hit_actor_or_nil = data.hit_actor_or_nil
 			local hit_position = data.hit_position
 			local hit_normal = data.hit_normal
-			local hit_direction = data.hit_direction
-
-			ImpactEffect.play_surface_effect(physics_world, attacking_unit, hit_position, hit_normal, hit_direction, damage_type, hit_type, impact_fx_data)
+			temp_hit_positions[ii] = hit_position
+			temp_hit_normals[ii] = hit_normal
 		end
+
+		fx_system:play_shotshell_surface_impact_fx(fire_position, temp_hit_positions, temp_hit_normals, source_parameters, attacking_unit, damage_type, hit_type, will_be_predicted)
 	end
 end
 
 ImpactEffect.surface_impact_fx = function (physics_world, attacking_unit, hit_position, hit_normal, hit_direction, damage_type, hit_type)
-	local hit, material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, hit_position - hit_direction * 0.1, hit_position + hit_direction * 0.1, "projectile_impact")
+	local hit, material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, hit_position - hit_direction * MATERIAL_QUERY_DISTANCE, hit_position + hit_direction * MATERIAL_QUERY_DISTANCE, "projectile_impact")
 	local surface_impact_fx = _surface_impact_fx(damage_type, material, hit_type)
 
 	return surface_impact_fx
+end
+
+local NUM_FX_MULTIPLIER = 0.4
+local MAX_FX_PER_UNIT = 8
+local temp_surface_impact_fxs = {}
+local temp_shotshell_materials = {}
+
+ImpactEffect.shotshell_surface_impact_fx = function (physics_world, fire_position, attacking_unit, hit_positions, hit_normals, damage_type, hit_type)
+	table.clear(temp_surface_impact_fxs)
+	table.clear(temp_shotshell_materials)
+
+	local seed = math.random_seed()
+
+	table.shuffle(hit_positions, seed)
+	table.shuffle(hit_normals, seed)
+
+	local num_hits = #hit_positions
+	local modulo = math.min(math.ceil(num_hits / (math.ceil(num_hits * NUM_FX_MULTIPLIER) + 1)), MAX_FX_PER_UNIT)
+	local hit, hit_material, hit_unit, hit_actor, _, surface_impact_fx = nil
+	local index = 0
+
+	for ii = 1, num_hits do
+		local hit_position = hit_positions[ii]
+		local hit_direction = Vector3.normalize(hit_position - fire_position)
+		local hit_normal = Vector3.normalize(hit_normals[ii])
+		hit, hit_material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, hit_position - hit_direction * MATERIAL_QUERY_DISTANCE, hit_position + hit_direction * MATERIAL_QUERY_DISTANCE, "projectile_impact")
+		surface_impact_fx = _surface_impact_fx(damage_type, hit_material, hit_type)
+
+		if surface_impact_fx then
+			local decal_only = ii % modulo ~= 0
+			temp_surface_impact_fxs[index + 1] = surface_impact_fx
+			temp_surface_impact_fxs[index + 2] = hit_position
+			temp_surface_impact_fxs[index + 3] = hit_normal
+			temp_surface_impact_fxs[index + 4] = hit_direction
+			temp_surface_impact_fxs[index + 5] = hit_unit
+			temp_surface_impact_fxs[index + 6] = hit_actor
+			temp_surface_impact_fxs[index + 7] = decal_only
+			index = index + 7
+		end
+	end
+
+	return temp_surface_impact_fxs
 end
 
 function _can_play(damage_type, breed, hit_position, attack_direction, attacking_unit)

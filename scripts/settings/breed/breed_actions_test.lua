@@ -28,7 +28,6 @@ local bt_node_test_functions = {
 
 		local missing_stagger_types_string = table.concat(TEMP_MISSING_STAGGER_TYPES, "\n\t")
 
-		fassert(num_missing_stagger_types == 0, "[BreedActionsTest] [BtStaggerAction] %q (%q) action_data is missing stagger_anims entries for:\n\t%s", behavior_tree_name, node_name, missing_stagger_types_string)
 		table.clear(TEMP_SEEN_STAGGER_TYPES)
 		table.clear_array(TEMP_MISSING_STAGGER_TYPES, num_missing_stagger_types)
 	end

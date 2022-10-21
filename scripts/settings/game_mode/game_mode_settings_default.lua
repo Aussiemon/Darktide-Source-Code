@@ -2,11 +2,10 @@ local settings = {
 	default_player_side_name = "heroes",
 	name = "default",
 	host_singleplay = false,
-	presence_name = "mission",
 	vaulting_allowed = true,
 	bot_backfilling_allowed = false,
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
-	force_third_person_mode = false,
+	presence_name = "mission",
 	use_side_color = false,
 	states = {
 		"start_state",

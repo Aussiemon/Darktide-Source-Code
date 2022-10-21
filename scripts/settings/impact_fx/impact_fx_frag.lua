@@ -6,12 +6,10 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal = {
 	extents = {
 		min = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		},
 		max = {
-			z = 0.05,
 			x = 0.25,
 			y = 0.25
 		}
@@ -101,7 +99,17 @@ local default_surface_decal = {
 		"content/fx/units/decal_cross_01"
 	}
 }
-local default_surface_fx = nil
+local default_surface_fx = {
+	sfx = {
+		{
+			group = "surface_material",
+			append_husk_to_event_name = true,
+			event = "wwise/events/weapon/play_grenade_surface_impact",
+			normal_rotation = true
+		}
+	},
+	vfx = {}
+}
 local surface_decal = {}
 
 ImpactFxHelper.create_missing_surface_decals(surface_decal)

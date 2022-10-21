@@ -670,4 +670,385 @@ conditions.captain_can_use_special_actions = function (unit, blackboard, scratch
 	return captain_can_use_special_action
 end
 
+conditions.beast_of_nurgle_has_consume_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not has_target_unit then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local cooldown = behavior_component.consume_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < cooldown then
+		return false
+	end
+
+	local scratchpad_consumed_unit = scratchpad.consumed_unit
+
+	if HEALTH_ALIVE[scratchpad_consumed_unit] then
+		return true
+	end
+
+	local consumed_unit = behavior_component.consumed_unit
+
+	if HEALTH_ALIVE[consumed_unit] then
+		return false
+	end
+
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local character_state_component = target_unit_data_extension:read_component("character_state")
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+	if is_disabled then
+		return false
+	end
+
+	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+	local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+	local current_stacks = buff_extension:current_stacks(vomit_buff_name)
+	local wants_to_eat = behavior_component.wants_to_eat
+
+	return current_stacks == 3 or wants_to_eat
+end
+
+conditions.beast_of_nurgle_can_consume_minion = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local t = Managers.time:time("gameplay")
+
+	if t < behavior_component.consume_minion_cooldown then
+		return false
+	end
+
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+	local current_health_percent = health_extension:current_health_percent()
+
+	if action_data.health_percent_threshold < current_health_percent then
+		return false
+	end
+
+	local num_nearby_units_threshold = action_data.num_nearby_units_threshold
+	local broadphase_component = blackboard.nearby_units_broadphase
+	local num_broadphase_units = broadphase_component.num_units
+
+	return num_nearby_units_threshold <= num_broadphase_units
+end
+
+conditions.beast_of_nurgle_should_vomit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local vomit_cooldown = behavior_component.vomit_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < vomit_cooldown then
+		return false
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+
+	if not perception_component.has_line_of_sight then
+		return false
+	end
+
+	local target_distance = perception_component.target_distance
+	local wanted_distance = condition_args.wanted_distance
+
+	if wanted_distance < target_distance then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_has_spit_out_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local consumed_unit = behavior_component.consumed_unit
+
+	if not HEALTH_ALIVE[consumed_unit] then
+		return false
+	end
+
+	if behavior_component.force_spit_out then
+		return true
+	end
+
+	local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
+	local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+
+	if permanent_damage_taken_percent < 0.5 then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_can_melee = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local melee_cooldown = behavior_component.melee_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < melee_cooldown then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_can_aoe_melee = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local melee_aoe_cooldown = behavior_component.melee_aoe_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < melee_aoe_cooldown then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_can_vomit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local vomit_cooldown = behavior_component.vomit_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < vomit_cooldown then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local target_side_id = 1
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(target_side_id)
+	local target_units = side.valid_player_units
+	local num_valid_target_units = #target_units
+	local position = POSITION_LOOKUP[unit]
+	local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
+	local radius = action_data.radius
+	local has_valid_target = false
+	local behavior_component = blackboard.behavior
+	local consumed_unit = behavior_component.consumed_unit
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local perception_component = blackboard.perception
+
+	for i = 1, num_valid_target_units do
+		local player_unit = target_units[i]
+
+		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit and player_unit ~= perception_component.target_unit then
+			local has_line_of_sight_to_target = perception_extension:has_line_of_sight(player_unit)
+
+			if has_line_of_sight_to_target then
+				local target_unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+				local character_state_component = target_unit_data_extension:read_component("character_state")
+				local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+				if not is_disabled then
+					local player_position = POSITION_LOOKUP[player_unit]
+					local distance = Vector3.distance(position, player_position)
+
+					if distance <= radius then
+						local to_player = Vector3.normalize(Vector3.flat(player_position - position))
+						local dot = Vector3.dot(fwd, to_player)
+						local is_to_the_left = Vector3.cross(fwd, to_player).z > 0
+
+						if condition_args.check_fwd_left then
+							if dot >= 0.6 and dot < 0.9 and is_to_the_left then
+								has_valid_target = true
+
+								break
+							end
+						elseif condition_args.check_fwd_right then
+							if dot >= 0.6 and dot < 0.9 and not is_to_the_left then
+								has_valid_target = true
+
+								break
+							end
+						elseif condition_args.check_bwd then
+							if dot < -0.8 then
+								has_valid_target = true
+
+								break
+							end
+						elseif condition_args.check_right then
+							if dot < 0.6 and not is_to_the_left then
+								has_valid_target = true
+
+								break
+							end
+						elseif condition_args.check_left and dot < 0.6 and is_to_the_left then
+							has_valid_target = true
+
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return has_valid_target
+end
+
+conditions.beast_of_nurgle_wants_to_run_away = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local consumed_unit = behavior_component.consumed_unit
+
+	if not HEALTH_ALIVE[consumed_unit] then
+		return false
+	end
+
+	local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
+	local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+
+	if permanent_damage_taken_percent >= 0.5 then
+		return false
+	end
+
+	return true
+end
+
+conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local melee_aoe_cooldown = behavior_component.melee_aoe_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < melee_aoe_cooldown then
+		return false
+	end
+
+	local target_side_id = 1
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(target_side_id)
+	local target_units = side.valid_player_units
+	local num_valid_target_units = #target_units
+	local position = POSITION_LOOKUP[unit]
+	local radius = action_data.radius
+	local consumed_unit = behavior_component.consumed_unit
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local num_close_players = 0
+	local has_very_close_player = false
+	local perception_component = blackboard.perception
+
+	for i = 1, num_valid_target_units do
+		local player_unit = target_units[i]
+
+		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit then
+			local has_line_of_sight_to_target = perception_extension:has_line_of_sight(player_unit)
+
+			if has_line_of_sight_to_target then
+				local target_unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+				local character_state_component = target_unit_data_extension:read_component("character_state")
+				local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+				if not is_disabled then
+					local player_position = POSITION_LOOKUP[player_unit]
+					local distance = Vector3.distance(position, player_position)
+
+					if player_unit ~= perception_component.target_unit and distance < action_data.very_close_distance then
+						has_very_close_player = true
+
+						break
+					end
+
+					if distance <= radius then
+						num_close_players = num_close_players + 1
+					end
+				end
+			end
+		end
+	end
+
+	return has_very_close_player or num_close_players >= 2
+end
+
+conditions.beast_of_nurgle_should_eat = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local cooldown = behavior_component.consume_cooldown
+	local t = Managers.time:time("gameplay")
+
+	if t < cooldown then
+		return false
+	end
+
+	local perception_component = blackboard.perception
+	local target_is_close = perception_component.target_distance < 5.25
+
+	return target_is_close
+end
+
+conditions.beast_of_nurgle_wants_to_play_change_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local target_is_close = perception_component.target_distance < 5.25
+	local behavior_component = blackboard.behavior
+
+	return behavior_component.wants_to_play_change_target and not target_is_close
+end
+
 return conditions

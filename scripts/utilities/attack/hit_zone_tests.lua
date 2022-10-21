@@ -42,10 +42,37 @@ local function _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
 	return success, "Faulty actors above error message."
 end
 
+local function _actors_string(unit, actor_indicies)
+	local actor_s = ""
+	local num_indicies = #actor_indicies
+
+	for i = 1, num_indicies do
+		local index = actor_indicies[i]
+		local actor = Unit.actor(unit, index)
+
+		if i == 1 then
+			actor_s = string.format("%s", tostring(actor))
+		else
+			actor_s = string.format("%s, %s", actor_s, tostring(actor))
+		end
+	end
+
+	return string.format("%s", actor_s)
+end
+
 local function _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
 	local actor_index_maximum = 0
 
 	for actor, hit_zone in pairs(hit_zone_lookup) do
+		local node = Actor.node(actor)
+		local recursive = false
+		local use_global_table = true
+		local actor_indicies = Unit.get_node_actors(unit, node, recursive, use_global_table)
+
+		if #actor_indicies > 1 then
+			return false, string.format("Multiple actors pointing towards same node(node:%i actors:%q)", node, _actors_string(unit, actor_indicies))
+		end
+
 		local actor_index = HitZone.actor_index(unit, actor)
 
 		if actor_index == nil then
@@ -69,17 +96,10 @@ local function _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
 end
 
 local function _hit_zone_tests(unit, breed, world)
-	fassert(breed.hit_zones, "Breed (%s) does not have hit_zones defined.", breed.name)
-
 	local hit_zone_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	local error_msg = "HitZoneTests failed for unit %s using breed %q. %s"
 	local s, m = _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
-
-	fassert(s, error_msg, unit, breed.name, m)
-
 	s, m = _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
-
-	fassert(s, error_msg, unit, breed.name, m)
 end
 
 return _hit_zone_tests

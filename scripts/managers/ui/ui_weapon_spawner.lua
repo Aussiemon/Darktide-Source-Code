@@ -36,7 +36,7 @@ UIWeaponSpawner._node = function (self, node_name)
 	end
 end
 
-UIWeaponSpawner.start_presentation = function (self, item, position, rotation, scale, on_spawn_cb)
+UIWeaponSpawner.start_presentation = function (self, item, position, rotation, scale, on_spawn_cb, force_highest_mip)
 	if self._loading_weapon_data then
 		self._loading_weapon_data.loader:destroy()
 
@@ -55,7 +55,8 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 		position = position and Vector3.to_array(position),
 		rotation = rotation and QuaternionBox(rotation),
 		scale = scale and Vector3.to_array(scale),
-		item = item
+		item = item,
+		force_highest_mip = force_highest_mip
 	}
 
 	single_item_loader:load_slot_item(slot_id, item, on_loaded_callback)
@@ -98,6 +99,12 @@ UIWeaponSpawner.update = function (self, dt, t, input_service)
 
 			Unit.set_local_rotation(link_unit, 1, rotation)
 		end
+
+		if not weapon_spawn_data.visible then
+			weapon_spawn_data.visible = true
+
+			Unit.set_unit_visibility(weapon_spawn_data.item_unit_3p, true, true)
+		end
 	end
 
 	local loading_weapon_data = self._loading_weapon_data
@@ -115,8 +122,9 @@ UIWeaponSpawner.update = function (self, dt, t, input_service)
 			local scale = loading_weapon_data.scale and Vector3.from_array(loading_weapon_data.scale)
 			local item = loading_weapon_data.item
 			local link_unit_name = loading_weapon_data.link_unit_name
+			local force_highest_mip = loading_weapon_data.force_highest_mip
 
-			self:_spawn_weapon(item, link_unit_name, loader, position, rotation, scale)
+			self:_spawn_weapon(item, link_unit_name, loader, position, rotation, scale, force_highest_mip)
 
 			self._loading_weapon_data = nil
 		end
@@ -179,7 +187,7 @@ UIWeaponSpawner.set_position = function (self, position)
 	end
 end
 
-UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, position, rotation, scale)
+UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, position, rotation, scale, force_highest_mip)
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 	scale = scale or Vector3.zero()
@@ -187,7 +195,6 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	local link_unit = World.spawn_unit_ex(world, link_unit_name, nil, position, rotation)
 
 	Unit.set_local_scale(link_unit, 1, scale)
-	Unit.set_texture_streamer_force_highest_mip(link_unit, true, true)
 
 	local extension_manager = self._extension_manager
 	local attach_settings = {
@@ -201,6 +208,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	}
 	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit)
 	local spawn_data = {
+		visible = false,
 		loader = loader,
 		rotation = rotation and QuaternionBox(rotation),
 		item = item,
@@ -208,6 +216,13 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 		item_unit_3p = item_unit_3p,
 		attachment_units_3p = attachment_units_3p
 	}
+
+	Unit.set_unit_visibility(item_unit_3p, false, true)
+
+	if force_highest_mip then
+		-- Nothing
+	end
+
 	self._weapon_spawn_data = spawn_data
 end
 

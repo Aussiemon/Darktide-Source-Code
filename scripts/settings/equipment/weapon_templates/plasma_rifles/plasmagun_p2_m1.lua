@@ -3,6 +3,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -339,7 +340,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return false
 		end,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -482,7 +483,7 @@ weapon_template.actions = {
 				chain_time = 0.6
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -537,7 +538,7 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		start_input = "reload",
 		stop_alternate_fire = true,
 		kind = "reload_state",
@@ -553,7 +554,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -736,18 +737,20 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "cross"
 weapon_template.hit_marker_type = "center"
 weapon_template.overheat_configuration = {
+	vent_duration = 2,
 	explode_at_high_overheat = true,
-	critical_threshold_decay_rate_modifier = 0.1,
-	explode_action = "action_overheat_explode",
-	high_threshold_decay_rate_modifier = 0.5,
-	high_threshold = 0.7,
-	auto_vent_duration = 10,
-	critical_threshold = 0.9,
 	low_threshold_decay_rate_modifier = 1.5,
 	vent_interval = 0.25,
 	auto_vent_delay = 1,
-	low_threshold = 0.3,
-	vent_duration = 2,
+	explode_action = "action_overheat_explode",
+	high_threshold_decay_rate_modifier = 0.5,
+	auto_vent_duration = 10,
+	critical_threshold_decay_rate_modifier = 0.1,
+	thresholds = {
+		high = 0.7,
+		critical = 0.9,
+		low = 0.3
+	},
 	vent_power_level = {
 		50,
 		100
@@ -756,24 +759,14 @@ weapon_template.overheat_configuration = {
 	vent_damage_type = damage_types.overheat,
 	explosion_template = ExplosionTemplates.plasma_rifle_overheat,
 	fx = {
-		looping_sound_critical_start_event = "wwise/events/weapon/play_plasmagun_overheat_intensity_03",
-		critical_threshold_sound_event = "wwise/events/weapon/play_plasmagun_overheat_intensity_02",
-		looping_sound_critical_stop_event = "wwise/events/weapon/stop_plasmagun_overheat_intensity_03",
+		on_screen_effect = "content/fx/particles/screenspace/screen_plasma_rifle_warning",
+		sfx_source_name = "_overheat",
 		on_screen_cloud_name = "plasma",
+		vfx_source_name = "_overheat",
 		looping_sound_parameter_name = "overheat_plasma_gun",
 		on_screen_variable_name = "plasma_radius",
-		material_variable_name = "external_overheat_glow",
-		on_screen_effect = "content/fx/particles/screenspace/screen_plasma_rifle_warning",
-		has_husk_events = true,
-		looping_sound_start_event = "wwise/events/weapon/play_plasmagun_overheat",
-		sfx_source_name = "_overheat",
-		high_threshold_sound_event = "wwise/events/weapon/play_plasmagun_overheat_intensity_01",
-		looping_low_threshold_vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01",
-		looping_high_threshold_vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
-		vfx_source_name = "_overheat",
-		looping_critical_threshold_vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
-		looping_sound_stop_event = "wwise/events/weapon/stop_plasmagun_overheat",
-		material_name = "coil_emissive_01"
+		material_name = "coil_emissive_01",
+		material_variable_name = "external_overheat_glow"
 	}
 }
 weapon_template.keywords = {
@@ -786,11 +779,7 @@ weapon_template.dodge_template = "plasma_rifle"
 weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 
 return weapon_template

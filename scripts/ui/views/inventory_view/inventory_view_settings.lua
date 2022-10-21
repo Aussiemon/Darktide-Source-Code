@@ -1,6 +1,6 @@
 local grid_size = {
-	600,
-	700
+	620,
+	350
 }
 local grid_width = grid_size[1]
 local grid_height = grid_size[2]
@@ -16,7 +16,7 @@ local inventory_view_settings = {
 	scrollbar_width = 7,
 	wallet_sync_delay = 15,
 	grid_spacing = {
-		12,
+		10,
 		10
 	},
 	grid_size = grid_size,

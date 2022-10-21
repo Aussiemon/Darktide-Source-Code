@@ -22,6 +22,7 @@ PlayerCharacterStateHogtied.init = function (self, character_state_init_context,
 	PlayerCharacterStateHogtied.super.init(self, character_state_init_context, ...)
 
 	self._hogtied_state_input = self._unit_data_extension:write_component("hogtied_state_input")
+	self._entered_state_t = nil
 end
 
 PlayerCharacterStateHogtied.extensions_ready = function (self, world, unit)
@@ -53,6 +54,8 @@ PlayerCharacterStateHogtied.on_enter = function (self, unit, dt, t, previous_sta
 	local forced_rotation = Quaternion.look(Vector3.flat(Quaternion.forward(first_person_component.rotation)))
 
 	ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, forced_rotation, forced_rotation, t, 0)
+
+	self._entered_state_t = t
 end
 
 PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
@@ -80,6 +83,20 @@ PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 
 	if is_server then
 		self._fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
+
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+			local state_name = "hogtied"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
 	end
 end
 

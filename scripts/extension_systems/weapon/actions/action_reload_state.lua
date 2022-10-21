@@ -22,7 +22,7 @@ ActionReloadState.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadState.super.start(self, action_settings, t, time_scale, ...)
 
 	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template)
+		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
 	end
 
 	local action_reload = self._action_reload_component
@@ -34,6 +34,15 @@ ActionReloadState.start = function (self, action_settings, t, time_scale, ...)
 	local event_data = self._dialogue_input:get_event_data_payload()
 
 	self._dialogue_input:trigger_dialogue_event("reloading", event_data)
+
+	local param_table = self._buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.weapon_template = self._weapon_template
+		param_table.shotgun = false
+
+		self._buff_extension:add_proc_event(buff_proc_events.on_reload_start, param_table)
+	end
 end
 
 ActionReloadState.fixed_update = function (self, dt, t, time_in_action)
@@ -42,7 +51,7 @@ ActionReloadState.fixed_update = function (self, dt, t, time_in_action)
 	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot)
 	local time_scale = self._weapon_action_component.time_scale
 
-	self:_update_functionality(reload_state, time_in_action, time_scale)
+	self:_update_functionality(reload_state, time_in_action, time_scale, dt)
 end
 
 ActionReloadState._start_reload_state = function (self, reload_template, inventory_slot_component, action_reload_component, t)
@@ -62,12 +71,12 @@ ActionReloadState.finish = function (self, reason, data, t, time_in_action)
 	local time_scale = self._weapon_action_component.time_scale
 	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot)
 
-	self:_update_functionality(reload_state, time_in_action, time_scale)
+	self:_update_functionality(reload_state, time_in_action, time_scale, 0, t)
 	self:_handle_state_transition(reload_template, inventory_slot, time_in_action, time_scale)
 	self._animation_extension:anim_event_1p("reload_finished")
 end
 
-ActionReloadState._update_functionality = function (self, reload_state, time_in_action, time_scale)
+ActionReloadState._update_functionality = function (self, reload_state, time_in_action, time_scale, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
 	local action_reload_component = self._action_reload_component
 	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
@@ -83,23 +92,27 @@ ActionReloadState._update_functionality = function (self, reload_state, time_in_
 			elseif functionality == "refill_ammunition" and not has_refilled_ammunition then
 				local buff_extension = self._buff_extension
 				local param_table = buff_extension:request_proc_event_param_table()
-				param_table.weapon_template = self._weapon_template
-				param_table.shotgun = false
 
-				buff_extension:add_proc_event(buff_proc_events.on_reload, param_table)
+				if param_table then
+					param_table.weapon_template = self._weapon_template
+					param_table.shotgun = false
+
+					buff_extension:add_proc_event(buff_proc_events.on_reload, param_table)
+				end
+
 				ReloadStates.reload(inventory_slot_component)
 
 				action_reload_component.has_refilled_ammunition = true
 			elseif functionality == "clear_overheat" and not has_cleared_overheat then
-				Overheat.clear(inventory_slot_component)
+				local remove_percentage = dt * (reload_state.overheat_clear_speed or 1)
 
-				action_reload_component.has_cleared_overheat = true
+				Overheat.decrease_immediate(remove_percentage, inventory_slot_component)
 			end
 		end
 	end
 end
 
-ActionReloadState._handle_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
+ActionReloadState._calculate_next_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
 	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
 	local state_transitions = reload_state.state_transitions
 	local highest_completed_state_transition = nil
@@ -113,6 +126,12 @@ ActionReloadState._handle_state_transition = function (self, reload_template, in
 			highest_completed_state_transition = state_name
 		end
 	end
+
+	return highest_completed_state_transition
+end
+
+ActionReloadState._handle_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
+	local highest_completed_state_transition = self:_calculate_next_state_transition(reload_template, inventory_slot_component, time_in_action, time_scale)
 
 	if highest_completed_state_transition then
 		inventory_slot_component.reload_state = highest_completed_state_transition

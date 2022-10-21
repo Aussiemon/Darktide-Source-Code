@@ -73,4 +73,17 @@ BtEnterHooks.unwield_slot = function (unit, breed, blackboard, scratchpad, actio
 	visual_loadout_extension:unwield_slot(slot_name)
 end
 
+BtEnterHooks.beast_of_nurgle_stagger_enter = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	local consumed_unit = behavior_component.consumed_unit
+
+	if HEALTH_ALIVE[consumed_unit] then
+		local consumed_unit_data_extension = ScriptUnit.extension(consumed_unit, "unit_data_system")
+		local disabled_state_input = consumed_unit_data_extension:write_component("disabled_state_input")
+		disabled_state_input.trigger_animation = "none"
+		disabled_state_input.disabling_unit = nil
+		behavior_component.wants_to_catapult_consumed_unit = true
+	end
+end
+
 return BtEnterHooks

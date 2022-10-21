@@ -14,6 +14,7 @@ BtRangedFollowTargetAction.enter = function (self, unit, breed, blackboard, scra
 	local perception_component = blackboard.perception
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
+	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -40,6 +41,10 @@ BtRangedFollowTargetAction.leave = function (self, unit, breed, blackboard, scra
 		MinionMovement.set_anim_driven(scratchpad, false)
 	end
 
+	if scratchpad.stagger_duration then
+		MinionMovement.stop_running_stagger(scratchpad)
+	end
+
 	scratchpad.navigation_extension:set_enabled(false)
 end
 
@@ -49,17 +54,24 @@ BtRangedFollowTargetAction.run = function (self, unit, breed, blackboard, scratc
 
 	MinionMovement.update_move_to_ranged_position(unit, t, scratchpad, action_data, target_unit)
 
+	if action_data.running_stagger_duration then
+		MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
+	end
+
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
 
 	if should_start_idle or should_be_idling then
 		if should_start_idle then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
 
-		scratchpad.time_to_next_evaluate = t + math.random_range(BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[2])
+		if should_evaluate then
+			scratchpad.time_to_next_evaluate = t + math.random_range(BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[2])
+		end
 
-		return "running", true
+		return "running", should_evaluate
 	end
 
 	local move_state = behavior_component.move_state
@@ -71,8 +83,6 @@ BtRangedFollowTargetAction.run = function (self, unit, breed, blackboard, scratc
 	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
-
-	local should_evaluate = scratchpad.time_to_next_evaluate <= t
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + math.random_range(BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[2])

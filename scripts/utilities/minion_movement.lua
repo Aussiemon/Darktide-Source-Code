@@ -325,14 +325,21 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 
 			if min_durations then
 				local min_duration = min_durations[stagger_anim]
-				scratchpad.stagger_min_duration = t + min_duration
+
+				if min_duration then
+					scratchpad.stagger_min_duration = t + min_duration
+				end
 			end
 		else
 			scratchpad.stagger_duration = t + durations
 		end
 
+		scratchpad.original_movement_speed = scratchpad.navigation_extension:max_speed()
 		behavior_component.lock_combat_range_switch = true
 	end
+
+	local running_stagger_min_duration = scratchpad.stagger_min_duration
+	scratchpad.running_stagger_block_evaluate = running_stagger_min_duration and t < running_stagger_min_duration
 
 	if scratchpad.stagger_duration and scratchpad.stagger_duration < t then
 		MinionMovement.stop_running_stagger(scratchpad)
@@ -365,6 +372,8 @@ MinionMovement.stop_running_stagger = function (scratchpad)
 	scratchpad.stagger_duration = nil
 	behavior_component.lock_combat_range_switch = false
 	scratchpad.stagger_component.controlled_stagger = false
+
+	scratchpad.navigation_extension:set_max_speed(scratchpad.original_movement_speed)
 end
 
 MinionMovement.init_find_ranged_position = function (scratchpad, action_data)
@@ -490,6 +499,43 @@ MinionMovement.update_move_to_ranged_position = function (unit, t, scratchpad, a
 
 		if wanted_position then
 			navigation_extension:move_to(wanted_position)
+		end
+	end
+end
+
+local GROUND_NORMAL_ABOVE = 1
+local GROUND_NORMAL_BELOW = 3
+
+MinionMovement.update_ground_normal_rotation = function (unit, scratchpad, optional_direction)
+	local nav_world = scratchpad.nav_world
+	local self_position = POSITION_LOOKUP[unit]
+	local self_rotation = Unit.local_rotation(unit, 1)
+	local forward = Vector3.normalize(Quaternion.forward(self_rotation))
+	local from_position_1 = self_position + forward
+	local to_position_1 = from_position_1
+	local navmesh_position_1 = NavQueries.position_on_mesh(nav_world, to_position_1, GROUND_NORMAL_ABOVE, GROUND_NORMAL_BELOW)
+	local from_position_2 = self_position - forward
+	local to_position_2 = from_position_2
+	local navmesh_position_2 = NavQueries.position_on_mesh(nav_world, to_position_2, GROUND_NORMAL_ABOVE, GROUND_NORMAL_BELOW)
+
+	if navmesh_position_1 and navmesh_position_2 then
+		local locomotion_extension = scratchpad.locomotion_extension
+		local fwd_direction = optional_direction
+		local current_velocity = locomotion_extension:current_velocity()
+
+		if Vector3.length(current_velocity) > 0.1 then
+			fwd_direction = Vector3.normalize(current_velocity)
+		end
+
+		local wanted_direction = Vector3.normalize(navmesh_position_1 - navmesh_position_2)
+		wanted_direction[1] = fwd_direction[1]
+		wanted_direction[2] = fwd_direction[2]
+		local fwd_dot = Vector3.dot(wanted_direction, Vector3.up())
+
+		if math.abs(fwd_dot) < 0.5 then
+			local wanted_rotation = Quaternion.look(wanted_direction)
+
+			locomotion_extension:set_wanted_rotation(wanted_rotation)
 		end
 	end
 end

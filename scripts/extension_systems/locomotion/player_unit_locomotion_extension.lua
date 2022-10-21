@@ -7,6 +7,7 @@ local PlayerDeath = require("scripts/utilities/player_death")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitLinker = require("scripts/extension_systems/locomotion/utilities/player_unit_linker")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
 local ThirdPersonHubMovementDirectionAnimationControl = require("scripts/extension_systems/locomotion/third_person_hub_movement_direction_animation_control")
 local PlayerUnitLocomotionExtension = class("PlayerUnitLocomotionExtension")
 local Vector3_flat = Vector3.flat
@@ -14,7 +15,6 @@ local Quaternion_forward = Quaternion.forward
 local Vector3_normalize = Vector3.normalize
 local Vector3_dot = Vector3.dot
 local Quaternion_look = Quaternion.look
-local Quaternion_lerp = Quaternion.lerp
 local PLAYER_RENDER_FRAME_POSITIONS = table.enum("interpolate", "extrapolate")
 
 PlayerUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_component, game_object_component_or_game_session, game_object_id_or_nil)
@@ -22,7 +22,6 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
 	self._is_server = extension_init_context.is_server
-	self._soft_cap_out_of_bounds_units = extension_init_context.soft_cap_out_of_bounds_units
 	local data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local loc_component = data_ext:write_component("locomotion")
 	self._locomotion_component = loc_component
@@ -41,6 +40,7 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._character_state_component = data_ext:read_component("character_state")
 	self._ladder_character_state_component = data_ext:read_component("ladder_character_state")
 	self._hub_jog_character_state_component = data_ext:read_component("hub_jog_character_state")
+	self._movement_state_component = data_ext:write_component("movement_state")
 	self._use_drag = true
 	self._collision_filter = "filter_player_mover"
 	self._last_fixed_t = extension_init_context.fixed_frame_t
@@ -71,6 +71,8 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	inair_state_component.on_ground = false
 	inair_state_component.inair_entered_t = 0
 	inair_state_component.fell_from_height = 0
+	inair_state_component.flying_frames = 0
+	inair_state_component.standing_frames = 0
 	loc_push_component.velocity = Vector3.zero()
 	loc_push_component.new_velocity = Vector3.zero()
 	loc_push_component.time_to_apply = 0
@@ -82,6 +84,7 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 		game_object_component_or_game_session.pitch = p
 		game_object_component_or_game_session.roll = r
 		game_object_component_or_game_session.move_speed = 0
+		game_object_component_or_game_session.parent_unit_id = NetworkConstants.invalid_level_unit_id
 	end
 
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -92,14 +95,15 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 
 	MoverController.set_active_mover(unit, self._mover_state, "default")
 
-	self._script_minion_collision = DevParameters.script_minion_collision
+	self._script_minion_collision = true
 	self._old_position = Vector3Box(pos)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
+	self._network_max_mover_frames = NetworkConstants.max_mover_frames
+
+	Managers.state.out_of_bounds:register_soft_oob_unit(unit, self, "_on_soft_oob")
 end
 
 PlayerUnitLocomotionExtension.game_object_initialized = function (self, session, object_id)
-	assert(session and object_id)
-
 	self._game_session = session
 	self._game_object_id = object_id
 	local init_context = {
@@ -114,25 +118,30 @@ PlayerUnitLocomotionExtension.game_object_initialized = function (self, session,
 end
 
 PlayerUnitLocomotionExtension.destroy = function (self)
-	return
+	Managers.state.out_of_bounds:unregister_soft_oob_unit(self._unit, self)
 end
 
 PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, locomotion_component, steering_component, inair_component)
 	local old_on_ground = inair_component.on_ground
-	local _, position = self:_absolute_rotation_position()
+	local position = locomotion_component.position
+	local mover = Unit.mover(unit)
 	local move_method = steering_component.move_method
 	local calculate_fall_velocity = steering_component.calculate_fall_velocity
 
 	if move_method == "script_driven" then
 		local on_ground = inair_component.on_ground
-		position = self:_update_script_driven_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity, on_ground)
+		position = self:_update_script_driven_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity, on_ground, mover)
 	elseif move_method == "script_driven_hub" then
-		position = self:_update_script_driven_hub_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity)
-	elseif move_method == "anim_driven" then
-		position = self:_update_animation_driven_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity)
+		position = self:_update_script_driven_hub_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity, mover)
 	else
 		ferror("Unknown move_method %s", move_method)
 	end
+
+	local flying_frames = Mover.flying_frames(mover)
+	local standing_frames = Mover.standing_frames(mover)
+	local max_frames = self._network_max_mover_frames
+	inair_component.flying_frames = math.min(flying_frames, max_frames)
+	inair_component.standing_frames = math.min(standing_frames, max_frames)
 
 	if old_on_ground then
 		local radius = 0.3
@@ -141,14 +150,29 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 		local rotation = Quaternion.look(-Vector3.up())
 		local physics_world = self._physics_world
 		local _, num_hits = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", self._collision_filter)
-		local new_on_ground = num_hits > 0 or Mover.flying_frames(Unit.mover(unit)) == 0 and steering_component.velocity_wanted.z <= 0
+		local new_on_ground = nil
+
+		if num_hits > 0 then
+			local time_flying = flying_frames * dt
+
+			if Mover.collides_down(mover) and self._constants.time_before_slope_protection < time_flying then
+				new_on_ground = false
+			else
+				new_on_ground = true
+			end
+		elseif flying_frames ~= 0 or steering_component.velocity_wanted.z > 0 then
+			new_on_ground = false
+		else
+			new_on_ground = true
+		end
+
 		inair_component.on_ground = new_on_ground
 
 		if not new_on_ground then
 			inair_component.inair_entered_t = t
 		end
 	else
-		inair_component.on_ground = Mover.flying_frames(Unit.mover(unit)) == 0 and steering_component.velocity_wanted.z <= 0
+		inair_component.on_ground = flying_frames == 0 and steering_component.velocity_wanted.z <= 0
 	end
 end
 
@@ -162,8 +186,6 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 	local force_stop = false
 
 	if flat_move_speed > 0.001 then
-		Profiler.start("manual mover")
-
 		local flat_move_direction = flat_move_velocity / flat_move_speed
 		local player_radius = 0.7
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -229,8 +251,6 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 							flat_move_direction = flat_move_velocity / flat_move_speed
 							force_stop = true
 							local speed_difference = Vector3.length(dragged_velocity) - check_dragged_velocity
-
-							fassert(speed_difference < 0.0001, "Collision velocity greated than original old:%f calculated:%f, diff:%f", check_dragged_velocity, Vector3.length(dragged_velocity), speed_difference)
 						end
 					else
 						debug_color = Color.yellow(debug_alpha)
@@ -239,25 +259,14 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 					debug_color = Color.red(debug_alpha)
 				end
 
-				if DevParameters.debug_script_minion_collision then
-					local pose = Matrix4x4.from_quaternion_position(Quaternion.look(minion_offset, Vector3.up()), minion_pos)
-					local size = Vector3(minion_radius, minion_radius, 2)
-
-					QuickDrawerFixed:box(pose, size, debug_color)
-				end
-
 				if needs_break then
 					break
 				end
 			end
 		end
-
-		Profiler.stop("manual mover")
 	end
 
 	local speed_difference = Vector3.length(dragged_velocity) - check_dragged_velocity
-
-	fassert(speed_difference < 0.0001, "Collision velocity greated than original old:%f calculated:%f, diff:%f", check_dragged_velocity, Vector3.length(dragged_velocity), speed_difference)
 
 	return dragged_velocity, force_stop
 end
@@ -278,16 +287,15 @@ local function _check_minion_collision_constrained_pos(minion_unit, minion_posit
 	return constrained_target, min_dot, max_dot
 end
 
-PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, unit, dt, t, data, steering_component, current_position, calculate_fall_velocity, on_ground)
-	local velocity_current = data.velocity_current
+PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, unit, dt, t, locomotion_component, steering_component, current_position, calculate_fall_velocity, on_ground, mover)
+	local velocity_current = locomotion_component.velocity_current
 	local velocity_wanted = steering_component.velocity_wanted
-	local mover = Unit.mover(unit)
 
 	if calculate_fall_velocity then
 		velocity_wanted.z = velocity_current.z
 	end
 
-	if data.parent_unit ~= nil then
+	if locomotion_component.parent_unit ~= nil then
 		Mover.set_position(mover, current_position)
 	end
 
@@ -302,12 +310,12 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 		dragged_velocity.z = fall_speed
 	end
 
-	Profiler.start("mover move")
-
 	local force_stop = false
 
 	if self._script_minion_collision and not steering_component.disable_minion_collision then
-		if DevParameters.box_minion_collision then
+		local box_minion_collision = false
+
+		if box_minion_collision then
 			dragged_velocity, force_stop = self:_do_minion_collision(unit, dt, dragged_velocity, current_position)
 		else
 			local dragged_velocity_magnitude = Vector3.length(dragged_velocity)
@@ -315,8 +323,6 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 			local velocity_flat_length = Vector3.length(velocity_flat_normalized)
 
 			if velocity_flat_length > 0.001 then
-				Profiler.start("manual mover")
-
 				velocity_flat_normalized = velocity_flat_normalized / velocity_flat_length
 				local broadphase_system = Managers.state.extension:system("broadphase_system")
 				local broadphase = broadphase_system.broadphase
@@ -374,8 +380,6 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 					dragged_velocity.z = fall_speed
 				end
-
-				Profiler.stop("manual mover")
 			end
 		end
 	end
@@ -383,14 +387,11 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	local delta = dragged_velocity * dt
 
 	Mover.move(mover, delta, dt)
-	Profiler.stop("mover move")
 
 	local final_position = Mover.position(mover)
 	local final_velocity = (final_position - current_position) / dt
 
-	if self:_moving_on_slope(calculate_fall_velocity, mover) then
-		final_velocity.z = dragged_velocity.z
-	end
+	self:_decay_push_velocity(on_ground, dt, final_velocity)
 
 	local mover_z_velocity = final_velocity.z
 	local dragged_z_velocity = dragged_velocity.z
@@ -406,21 +407,26 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 		final_velocity.z = math.max(mover_z_velocity, dragged_z_velocity)
 	end
 
-	self:_set_position_from_absolute_position(final_position)
+	locomotion_component.position = final_position
 
 	if force_stop then
 		final_velocity.x = 0
 		final_velocity.y = 0
 	end
 
-	data.velocity_current = final_velocity
+	locomotion_component.velocity_current = final_velocity
+	local movement_state_component = self._movement_state_component
+
+	if movement_state_component.is_crouching then
+		movement_state_component.can_exit_crouch = Unit.mover_fits_at(unit, "default", final_position) ~= nil
+	end
 
 	return final_position
 end
 
-PlayerUnitLocomotionExtension._update_script_driven_hub_movement = function (self, unit, dt, t, data, steering_component, current_position, calculate_fall_velocity)
+PlayerUnitLocomotionExtension._update_script_driven_hub_movement = function (self, unit, dt, t, locomotion_component, steering_component, current_position, calculate_fall_velocity, mover)
 	local velocity_wanted = steering_component.velocity_wanted
-	local velocity_current = data.velocity_current
+	local velocity_current = locomotion_component.velocity_current
 	local hub_active_stopping = steering_component.hub_active_stopping
 	local constants = self._constants
 	local hub_jog_character_state_component = self._hub_jog_character_state_component
@@ -438,9 +444,9 @@ PlayerUnitLocomotionExtension._update_script_driven_hub_movement = function (sel
 		end
 	end
 
-	local position, velocity = HubMovementLocomotion.update_movement(unit, dt, velocity_current, velocity_wanted, current_position, calculate_fall_velocity, constants, movement_settings, movement_settings_override, hub_active_stopping)
-	data.position = position
-	data.velocity_current = velocity
+	local position, velocity = HubMovementLocomotion.update_movement(mover, dt, velocity_current, velocity_wanted, current_position, calculate_fall_velocity, constants, movement_settings, movement_settings_override, hub_active_stopping)
+	locomotion_component.position = position
+	locomotion_component.velocity_current = velocity
 
 	return position
 end
@@ -449,8 +455,6 @@ PlayerUnitLocomotionExtension._handle_push_velocity = function (self, velocity_w
 	self:_update_new_push_velocity(t)
 
 	velocity_wanted = self:_apply_push_velocity(velocity_wanted, dt)
-
-	self:_decay_push_velocity(on_ground, dt)
 
 	return velocity_wanted
 end
@@ -494,7 +498,7 @@ end
 
 local SQUARED_PUSH_VELOCITY_EPSILON = 0.0001
 
-PlayerUnitLocomotionExtension._decay_push_velocity = function (self, on_ground, dt)
+PlayerUnitLocomotionExtension._decay_push_velocity = function (self, on_ground, dt, final_velocity)
 	local locomotion_push = self._locomotion_push_component
 	local push_velocity = locomotion_push.velocity
 
@@ -513,6 +517,12 @@ PlayerUnitLocomotionExtension._decay_push_velocity = function (self, on_ground, 
 	local friction_speed = self._constants.push_friction_function(push_speed, on_ground)
 	local friction = -push_dir * math.min(friction_speed * dt, push_speed)
 	local new_push_velocity = push_velocity + friction
+
+	if not on_ground then
+		local final_velocity_dir = Vector3.normalize(final_velocity)
+		local push_scale = math.max(Vector3.dot(push_dir, final_velocity_dir), 0)^2
+		new_push_velocity = new_push_velocity * push_scale
+	end
 
 	if Vector3.length_squared(new_push_velocity) < SQUARED_PUSH_VELOCITY_EPSILON then
 		new_push_velocity = Vector3.zero()
@@ -550,9 +560,9 @@ end
 
 PlayerUnitLocomotionExtension.fixed_update = function (self, unit, dt, t, frame)
 	local locomotion_component = self._locomotion_component
-	local position = self:_relative_position()
+	local prev_position = locomotion_component.position
 
-	self._old_position:store(position)
+	self._old_position:store(prev_position)
 
 	local steering_component = self._locomotion_steering_component
 
@@ -571,22 +581,10 @@ end
 
 PlayerUnitLocomotionExtension._update_rotation = function (self, unit, dt, t, locomotion_component, steering_component, force_rotation_component)
 	local look_rotation = self._first_person_component.rotation
-	local current_rotation, _ = self:_absolute_rotation_position()
+	local current_rotation = locomotion_component.rotation
 	local new_rotation, new_target_rotation = self:_calculate_rotation(unit, dt, t, locomotion_component, steering_component, force_rotation_component, look_rotation, steering_component.velocity_wanted, locomotion_component.velocity_current, current_rotation, steering_component.target_rotation)
 	steering_component.target_rotation = new_target_rotation
-
-	self:_set_rotation_from_absolute_rotation(new_rotation)
-
-	local session = self._game_session
-	local id = self._game_object_id
-
-	if self._is_server then
-		local y, p, r = Quaternion.to_yaw_pitch_roll(locomotion_component.rotation)
-
-		GameSession.set_game_object_field(session, id, "yaw", y)
-		GameSession.set_game_object_field(session, id, "pitch", p)
-		GameSession.set_game_object_field(session, id, "roll", r)
-	end
+	locomotion_component.rotation = new_rotation
 end
 
 PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
@@ -622,7 +620,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 	local look_rotation = self._first_person_extension:extrapolated_rotation()
 	local current_velocity = self._locomotion_steering_component.velocity_wanted
 	local target_rotation = self._locomotion_steering_component.target_rotation
-	local current_rotation, _ = self:_absolute_rotation_position()
+	local current_rotation = locomotion_component.rotation
 	local extrapolated_rot = self:_calculate_rotation(unit, remainder_t, t, locomotion_component, self._locomotion_steering_component, self._locomotion_force_rotation_component, look_rotation, current_velocity, locomotion_component.velocity_current, current_rotation, target_rotation)
 
 	Unit.set_local_rotation(unit, 1, extrapolated_rot)
@@ -637,31 +635,33 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 
 		Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
 	end
-
-	self:_check_out_of_bounds(locomotion_component.velocity_current)
 end
 
 PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	local locomotion_component = self._locomotion_component
 	local locomotion_steering_component = self._locomotion_steering_component
 	local force_translation_component = self._locomotion_force_translation_component
-	local position = self:_relative_position()
-	local real_pos = position
+	local position = locomotion_component.position
+	local abs_pos = position
 	local remainder_t = t - self._last_fixed_t
 	local simulated_pos = nil
-	local mode = PLAYER_RENDER_FRAME_POSITIONS.interpolate
 
-	if mode == "extrapolate" then
-		local extrapolation = locomotion_component.velocity_current * remainder_t
-		simulated_pos = real_pos + extrapolation
-	elseif mode == "interpolate" then
-		local old_pos = self._old_position:unbox()
-		local t_value = remainder_t / GameParameters.fixed_time_step
-		t_value = math.min(t_value, 1)
-		simulated_pos = Vector3.lerp(old_pos, real_pos, t_value)
-		simulated_pos = self:_calculate_absolute_position_from_relative_position(unit, dt, t, locomotion_steering_component, force_translation_component, simulated_pos)
+	if force_translation_component.use_force_translation then
+		simulated_pos = ForceTranslation.get_translation(force_translation_component, locomotion_steering_component, t)
 	else
-		ferror("Invalid DevParameters.player_render_frame_position %q.", mode)
+		local mode = PLAYER_RENDER_FRAME_POSITIONS.interpolate
+
+		if mode == "extrapolate" then
+			local extrapolation = locomotion_component.velocity_current * remainder_t
+			simulated_pos = abs_pos + extrapolation
+		elseif mode == "interpolate" then
+			local old_pos = self._old_position:unbox()
+			local t_value = remainder_t / GameParameters.fixed_time_step
+			t_value = math.min(t_value, 1)
+			simulated_pos = Vector3.lerp(old_pos, abs_pos, t_value)
+		else
+			ferror("Invalid DevParameters.player_render_frame_position %q.", mode)
+		end
 	end
 
 	Unit.set_local_position(unit, 1, simulated_pos)
@@ -679,7 +679,25 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 		local movement_speed = Vector3.length(locomotion_component.velocity_current)
 
 		GameSession.set_game_object_field(game_session, game_object_id, "move_speed", math.clamp(movement_speed, 0, 20))
-		GameSession.set_game_object_field(game_session, game_object_id, "position", real_pos)
+
+		local sync_pos, sync_rot = nil
+		local abs_rot = locomotion_component.rotation
+		local parent_unit = locomotion_component.parent_unit
+
+		if parent_unit then
+			sync_rot, sync_pos = PlayerMovement.calculate_relative_rotation_position(parent_unit, abs_rot, abs_pos)
+		else
+			sync_rot = abs_rot
+			sync_pos = abs_pos
+		end
+
+		GameSession.set_game_object_field(game_session, game_object_id, "position", sync_pos)
+
+		local y, p, r = Quaternion.to_yaw_pitch_roll(sync_rot)
+
+		GameSession.set_game_object_field(game_session, game_object_id, "yaw", y)
+		GameSession.set_game_object_field(game_session, game_object_id, "pitch", p)
+		GameSession.set_game_object_field(game_session, game_object_id, "roll", r)
 	end
 end
 
@@ -750,6 +768,10 @@ PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t,
 	return final_rotation, target_rotation
 end
 
+PlayerUnitLocomotionExtension.get_parent_unit = function (self)
+	return self._locomotion_component.parent_unit
+end
+
 PlayerUnitLocomotionExtension.set_parent_unit = function (self, unit)
 	local locomotion_component = self._locomotion_component
 	local unit_id = NetworkConstants.invalid_level_unit_id
@@ -760,14 +782,9 @@ PlayerUnitLocomotionExtension.set_parent_unit = function (self, unit)
 	end
 
 	if unit_id == NetworkConstants.invalid_level_unit_id then
-		locomotion_component.rotation, locomotion_component.position = self:_absolute_rotation_position()
 		locomotion_component.parent_unit = nil
 	else
-		local rotation, position = self:_absolute_rotation_position()
 		locomotion_component.parent_unit = unit
-
-		self:_set_position_from_absolute_position(position)
-		self:_set_rotation_from_absolute_rotation(rotation)
 	end
 
 	self._old_position:store(locomotion_component.position)
@@ -775,65 +792,27 @@ PlayerUnitLocomotionExtension.set_parent_unit = function (self, unit)
 	if self._is_server then
 		local game_object_id = self._game_object_id
 		local game_session = self._game_session
+		local position = locomotion_component.position
+		local rotation = locomotion_component.rotation
 
-		GameSession.set_game_object_field(game_session, game_object_id, "position", locomotion_component.position)
+		if unit then
+			rotation, position = PlayerMovement.calculate_relative_rotation_position(unit, rotation, position)
+		end
 
-		local y, p, r = Quaternion.to_yaw_pitch_roll(locomotion_component.rotation)
+		GameSession.set_game_object_field(game_session, game_object_id, "position", position)
+
+		local y, p, r = Quaternion.to_yaw_pitch_roll(rotation)
 
 		GameSession.set_game_object_field(game_session, game_object_id, "yaw", y)
 		GameSession.set_game_object_field(game_session, game_object_id, "pitch", p)
 		GameSession.set_game_object_field(game_session, game_object_id, "roll", r)
+
+		if is_level_unit then
+			GameSession.set_game_object_field(game_session, game_object_id, "parent_unit_id", unit_id + 65535)
+		else
+			GameSession.set_game_object_field(game_session, game_object_id, "parent_unit_id", unit_id)
+		end
 	end
-end
-
-PlayerUnitLocomotionExtension._absolute_rotation_position = function (self)
-	local locomotion_component = self._locomotion_component
-	local parent_unit = locomotion_component.parent_unit
-	local rotation = locomotion_component.rotation
-	local position = locomotion_component.position
-	local absolute_rotation, absolute_position = PlayerMovement.calculate_absolute_rotation_position(parent_unit, rotation, position)
-
-	return absolute_rotation, absolute_position
-end
-
-PlayerUnitLocomotionExtension._calculate_absolute_position_from_relative_position = function (self, unit, dt, t, steering_component, force_translation_component, relative_position)
-	if force_translation_component.use_force_translation then
-		return ForceTranslation.get_translation(force_translation_component, steering_component, t)
-	else
-		local locomotion_component = self._locomotion_component
-		local parent_unit = locomotion_component.parent_unit
-		local _, absolute_position = PlayerMovement.calculate_absolute_rotation_position(parent_unit, nil, relative_position)
-
-		return absolute_position
-	end
-end
-
-PlayerUnitLocomotionExtension._set_position_from_absolute_position = function (self, absolute_position)
-	local locomotion_component = self._locomotion_component
-	local parent_unit = locomotion_component.parent_unit
-	local _, relative_position = PlayerMovement.calculate_relative_rotation_position(parent_unit, nil, absolute_position)
-	locomotion_component.position = relative_position
-end
-
-PlayerUnitLocomotionExtension._set_rotation_from_absolute_rotation = function (self, absolute_rotation)
-	local locomotion_component = self._locomotion_component
-	local parent_unit = locomotion_component.parent_unit
-	local relative_rotation, _ = PlayerMovement.calculate_relative_rotation_position(parent_unit, absolute_rotation, nil)
-	locomotion_component.rotation = relative_rotation
-end
-
-PlayerUnitLocomotionExtension._relative_position = function (self)
-	local locomotion_component = self._locomotion_component
-	local position = locomotion_component.position
-
-	return position
-end
-
-PlayerUnitLocomotionExtension._relative_rotation = function (self)
-	local locomotion_component = self._locomotion_component
-	local rotation = locomotion_component.rotation
-
-	return rotation
 end
 
 PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
@@ -857,9 +836,12 @@ end
 PlayerUnitLocomotionExtension.server_correction_occurred = function (self, unit, from_frame)
 	self._last_fixed_t = from_frame * GameParameters.fixed_time_step
 	local mover = Unit.mover(unit)
-	local _, position = self:_absolute_rotation_position()
+	local position = self._locomotion_component.position
+	local inair_state_component = self._inair_state_component
+	local flying_frames = inair_state_component.flying_frames
+	local standing_frames = inair_state_component.standing_frames
 
-	Mover.set_position(mover, position)
+	Mover.set_state(mover, position, flying_frames, standing_frames)
 	self._player_unit_linker:mispredict_happened()
 end
 
@@ -889,45 +871,6 @@ PlayerUnitLocomotionExtension.mover_radius = function (self)
 	return Mover.radius(mover)
 end
 
-PlayerUnitLocomotionExtension._update_animation_driven_movement = function (self, unit, dt, t, data, steering_component, position, calculate_fall_velocity)
-	local wanted_pose = Unit.animation_wanted_root_pose(unit)
-	local wanted_position = Matrix4x4.translation(wanted_pose)
-	local delta_anim = wanted_position - position
-	local delta_total = nil
-	local velocity_current = data.velocity_current
-	local velocity_fall = Vector3(0, 0, velocity_current.z)
-
-	if calculate_fall_velocity then
-		velocity_fall.z = velocity_fall.z - 9.82 * dt
-		local delta_velocity = velocity_fall * dt
-		delta_total = delta_velocity + delta_anim
-	else
-		delta_total = delta_anim
-	end
-
-	local mover = Unit.mover(unit)
-
-	Mover.move(mover, delta_total, dt)
-
-	local mover_position = Mover.position(mover)
-
-	Unit.set_local_position(unit, 1, mover_position)
-
-	local final_position = Vector3(wanted_position.x, wanted_position.y, mover_position.z)
-	local velocity_new = (final_position - position) / dt
-
-	if calculate_fall_velocity and self:moving_on_slope(true, unit, mover, mover_position) then
-		velocity_new.z = velocity_fall.z
-	end
-
-	velocity_new.z = math.min(0, velocity_new.z)
-	data.velocity_current = velocity_new
-
-	self:_set_position_from_absolute_position(final_position)
-
-	return final_position
-end
-
 PlayerUnitLocomotionExtension.current_velocity = function (self)
 	local data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 	local loc_component = data_extension:read_component("locomotion")
@@ -935,22 +878,11 @@ PlayerUnitLocomotionExtension.current_velocity = function (self)
 	return loc_component.velocity_current
 end
 
-PlayerUnitLocomotionExtension._check_out_of_bounds = function (self, current_velocity)
-	local unit = self._unit
+PlayerUnitLocomotionExtension._on_soft_oob = function (self, unit)
+	local reason = "oob"
 
-	if self._soft_cap_out_of_bounds_units[unit] then
-		PlayerDeath.die(unit, 0)
-	end
-end
-
-PlayerUnitLocomotionExtension._moving_on_slope = function (self, calculate_fall_velocity, mover)
-	if not calculate_fall_velocity then
-		return false
-	end
-
-	local on_slope = Mover.standing_frames(mover) == 0
-
-	return on_slope
+	PlayerDeath.die(unit, nil, nil, reason)
+	Managers.state.out_of_bounds:unregister_soft_oob_unit(unit, self)
 end
 
 return PlayerUnitLocomotionExtension

@@ -6,6 +6,7 @@ local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
 local function _apply_color_to_text(text, color)
 	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
@@ -28,7 +29,7 @@ local function convert_number_to_display_texts(amount, max_character, zero_numer
 
 	local num_amount_strings = string.format("%1d", amount)
 
-	for i = 1, string.len(num_amount_strings) do
+	for i = 1, #num_amount_strings do
 		local value = string.sub(num_amount_strings, i, i)
 
 		if amount == 0 and color_zero_values then
@@ -175,14 +176,27 @@ HudElementPlayerPanelBase._update_disabled_pulse = function (self, reset)
 	widget.dirty = true
 end
 
+HudElementPlayerPanelBase._player_extensions = function (self, player)
+	local player_unit = player.player_unit
+
+	if player_unit then
+		if not self._extensions then
+			self._extensions = self._parent:get_all_player_extensions(player, {})
+		end
+	elseif self._extensions then
+		self._extensions = nil
+	end
+
+	return self._extensions
+end
+
 HudElementPlayerPanelBase._update_player_features = function (self, dt, t, player, ui_renderer)
 	local supported_features = self._supported_features
 	local parent = self._parent
-	local extensions = parent:get_player_extensions(player)
+	local extensions = self:_player_extensions(player)
 	local unit_data_extension = extensions and extensions.unit_data
 	local visual_loadout_extension = extensions and extensions.visual_loadout
 	local health_extension = extensions and extensions.health
-	local buff_extension = extensions and extensions.buff
 	local toughness_extension = extensions and extensions.toughness
 	local ability_extension = extensions and extensions.ability
 	local coherency_extension = extensions and extensions.coherency
@@ -198,7 +212,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	if profile then
 		if not self._portrait_loaded_info or self._portrait_loaded_info.character_id ~= profile.character_id then
-			self:_request_player_icon()
+			self:_request_player_icon(ui_renderer)
 		end
 
 		local loadout = profile.loadout
@@ -210,7 +224,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			if frame_item_gear_id ~= self._frame_item_gear_id then
 				self._frame_item_gear_id = frame_item_gear_id
 
-				self:_request_player_frame(frame_item)
+				self:_request_player_frame(frame_item, ui_renderer)
 			end
 		end
 	end
@@ -240,9 +254,10 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local hogtied = false
 	local ledge_hanging = false
 	local pounced = false
+	local netted = false
 
 	if not dead then
-		disabled, knocked_down, hogtied, ledge_hanging, pounced = self:_is_player_disabled(unit_data_extension)
+		disabled, knocked_down, hogtied, ledge_hanging, pounced, netted = self:_is_player_disabled(unit_data_extension)
 	end
 
 	if supported_features.voip then
@@ -262,6 +277,12 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local show_as_dead = dead or hogtied or dead and not is_party_player
 	local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")
 	local carrying_luggable = not dead and not disabled and visual_loadout_extension and self:_is_player_carrying_luggable(inventory_component, visual_loadout_extension) or false
+	local carrying_pocketable = false
+	local pocketable_hud_icon = nil
+
+	if not dead and visual_loadout_extension then
+		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension)
+	end
 
 	if disabled and not hogtied then
 		local my_player = parent:player()
@@ -330,13 +351,14 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		local bar_fraction, bar_ghost_fraction, bar_max_fraction = toughness_bar_logic:animated_health_fractions()
 
 		if bar_fraction and bar_ghost_fraction or update_max_toughness then
+			local toughness_percentage_bar = toughness_extension and toughness_extension:current_toughness_percent_visual() or 0
 			bar_fraction = bar_fraction or self._toughness_fraction or 0
 			bar_ghost_fraction = bar_ghost_fraction or self._toughness_ghost_fraction or 0
 
-			self:_apply_toughness_fraction(bar_fraction, bar_ghost_fraction, bar_max_fraction)
+			self:_apply_toughness_fraction(toughness_percentage_bar, bar_ghost_fraction, bar_max_fraction)
 
 			if supported_features.toughness_text and (bar_fraction ~= self._toughness_fraction or update_max_toughness) then
-				self:_apply_widget_number_text("toughness_text", bar_fraction * max_toughness)
+				self:_apply_widget_number_text("toughness_text", toughness_percentage * max_toughness)
 			end
 
 			self._max_toughness = max_toughness
@@ -379,6 +401,13 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		self:_update_coherency(coherency_extension)
 	end
 
+	if supported_features.pocketable and (carrying_pocketable ~= self._carrying_pocketable or pocketable_hud_icon ~= self._pocketable_hud_icon) then
+		self._carrying_pocketable = carrying_pocketable
+		self._pocketable_hud_icon = pocketable_hud_icon
+
+		self:_update_pocketable_presentation(pocketable_hud_icon, ui_renderer)
+	end
+
 	if supported_features.player_color then
 		self:_update_player_color()
 	end
@@ -393,6 +422,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			player_status = "hogtied"
 		elseif pounced then
 			player_status = "pounced"
+		elseif netted then
+			player_status = "netted"
 		elseif knocked_down then
 			player_status = "knocked_down"
 		elseif ledge_hanging then
@@ -503,6 +534,20 @@ HudElementPlayerPanelBase._on_disabled_world_marker_spawned = function (self, id
 	self._disabled_world_marker_id = id
 end
 
+HudElementPlayerPanelBase._has_player_pocketable = function (self, inventory_component, visual_loadout_extension)
+	local slot_id = "slot_pocketable"
+	local pocketable_name = inventory_component[slot_id]
+	local weapon_template = pocketable_name and visual_loadout_extension:weapon_template_from_slot(slot_id)
+	local equipped = weapon_template ~= nil
+	local hud_icon = nil
+
+	if equipped then
+		hud_icon = weapon_template.hud_icon
+	end
+
+	return equipped, hud_icon
+end
+
 HudElementPlayerPanelBase._is_player_carrying_luggable = function (self, inventory_component, visual_loadout_extension)
 	local slot_id = "slot_luggable"
 
@@ -517,9 +562,10 @@ HudElementPlayerPanelBase._is_player_disabled = function (self, unit_data_extens
 		local knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
 		local hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 		local pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
+		local netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
 		local ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
 
-		return requires_help, knocked_down, hogtied, ledge_hanging, pounced
+		return requires_help, knocked_down, hogtied, ledge_hanging, pounced, netted
 	end
 
 	return false
@@ -693,9 +739,22 @@ HudElementPlayerPanelBase._set_player_name = function (self, name)
 	end
 end
 
-HudElementPlayerPanelBase._request_player_frame = function (self, item)
-	self:_unload_portrait_frame()
-	self:_load_portrait_frame(item)
+HudElementPlayerPanelBase._update_pocketable_presentation = function (self, pocketable_hud_icon, ui_renderer)
+	local widget = self._widgets_by_name.pocketable
+	widget.content.texture = pocketable_hud_icon
+	local visible = pocketable_hud_icon and true or false
+
+	self:_set_widget_visible(widget, visible, ui_renderer)
+
+	widget.dirty = true
+end
+
+HudElementPlayerPanelBase._request_player_frame = function (self, item, ui_renderer)
+	self:_unload_portrait_frame(ui_renderer)
+
+	if item then
+		self:_load_portrait_frame(item)
+	end
 end
 
 HudElementPlayerPanelBase._load_portrait_frame = function (self, item)
@@ -706,18 +765,24 @@ HudElementPlayerPanelBase._load_portrait_frame = function (self, item)
 	}
 end
 
-HudElementPlayerPanelBase._unload_portrait_frame = function (self)
+HudElementPlayerPanelBase._unload_portrait_frame = function (self, ui_renderer)
 	local frame_loaded_info = self._frame_loaded_info
 
 	if not frame_loaded_info then
 		return
 	end
 
+	local widget = self._widgets_by_name.player_icon
+
 	if not self.destroyed then
-		local widget = self._widgets_by_name.player_icon
 		local material_values = widget.style.texture.material_values
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 		widget.dirty = true
+	end
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = frame_loaded_info.icon_load_id
@@ -747,17 +812,17 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._request_player_icon = function (self)
+HudElementPlayerPanelBase._request_player_icon = function (self, ui_renderer)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
 	material_values.use_placeholder_texture = 1
 	widget.dirty = true
 
-	self:_load_portrait_icon()
+	self:_load_portrait_icon(ui_renderer)
 end
 
-HudElementPlayerPanelBase._load_portrait_icon = function (self)
-	self:_unload_portrait_icon()
+HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
+	self:_unload_portrait_icon(ui_renderer)
 
 	local player = self._player
 	local profile = player:profile()
@@ -769,11 +834,18 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self)
 	}
 end
 
-HudElementPlayerPanelBase._unload_portrait_icon = function (self)
+HudElementPlayerPanelBase._unload_portrait_icon = function (self, ui_renderer)
 	local portrait_loaded_info = self._portrait_loaded_info
 
 	if not portrait_loaded_info then
 		return
+	end
+
+	if ui_renderer then
+		local widget = self._widgets_by_name.player_icon
+
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = portrait_loaded_info.icon_load_id
@@ -783,13 +855,14 @@ HudElementPlayerPanelBase._unload_portrait_icon = function (self)
 	self._portrait_loaded_info = nil
 end
 
-HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows, columns)
+HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
 	widget.dirty = true
 end
 
@@ -921,7 +994,7 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 		if health_ghost_fraction then
 			local end_value = i * step_fraction
 			local start_value = end_value - step_fraction
-			segment_fraction_health_ghost = 0
+			segment_fraction_health_ghost = math.clamp((health_ghost_fraction - start_value) / step_fraction, 0, 1)
 		end
 
 		local segment_fraction_corruption = nil
@@ -1106,8 +1179,8 @@ end
 HudElementPlayerPanelBase.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	HudElementPlayerPanelBase.super.destroy(self)
-	self:_unload_portrait_icon()
-	self:_unload_portrait_frame()
+	self:_unload_portrait_icon(ui_renderer)
+	self:_unload_portrait_frame(ui_renderer)
 	self:_destroy_widgets(ui_renderer)
 
 	if self._disabled_world_marker_id then

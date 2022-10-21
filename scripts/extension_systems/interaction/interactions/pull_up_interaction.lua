@@ -25,6 +25,13 @@ PullUpInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
 		assisted_state_input_component.success = true
+		local interactor_player = Managers.state.player_unit_spawn:owner(interactor_unit)
+		local target_player = Managers.state.player_unit_spawn:owner(target_unit)
+		local reviver_position = POSITION_LOOKUP[interactor_unit]
+		local revivee_position = POSITION_LOOKUP[target_unit]
+		local state_name = "ledge_hanging"
+
+		Managers.telemetry_events:player_revived_ally(interactor_player, target_player, reviver_position, revivee_position, state_name)
 	end
 end
 

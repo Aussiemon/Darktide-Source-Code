@@ -52,16 +52,12 @@ end
 NetworkEventDelegate.register_session_unit_events = function (self, object, unit_id, ...)
 	local game_session = Managers.state.game_session:game_session()
 
-	fassert(GameSession.game_object_exists(game_session, unit_id), "Trying to register unit event(s) for unit without game object.")
 	self:_register_session_unit_events(object, unit_id, ...)
 end
 
 NetworkEventDelegate.unregister_events = function (self, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
-
-		fassert(self._registered_objects[callback_name], "Trying to unregister non-registered event %q", callback_name)
-
 		self._registered_objects[callback_name] = nil
 		self.event_table[callback_name] = nil
 		self._state_events[callback_name] = nil
@@ -72,9 +68,6 @@ NetworkEventDelegate.unregister_channel_events = function (self, channel_id, ...
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 		local object_table = self._registered_channel_objects[callback_name]
-
-		fassert(object_table[channel_id], "Trying to unregister non-registered event %q with channel id %s.", callback_name, tostring(channel_id))
-
 		local size = object_table.__size - 1
 
 		if size == 0 then
@@ -92,9 +85,6 @@ NetworkEventDelegate.unregister_unit_events = function (self, unit_id, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 		local object_table = self._registered_unit_objects[callback_name]
-
-		fassert(object_table[unit_id], "Trying to unregister non-registered event %q with unit id %i.", callback_name, unit_id)
-
 		local size = object_table.__size - 1
 
 		if size == 0 then
@@ -111,21 +101,9 @@ end
 NetworkEventDelegate._register_events = function (self, is_session_event, object, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
-
-		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)
-
 		local object_table = self._registered_unit_objects[callback_name]
-
-		fassert(not object_table, "Trying to register an already registered unit event %q. Registered by %q.", callback_name, object_table and select(2, next(object_table)).__class_name)
-
 		object_table = self._registered_channel_objects[callback_name]
-
-		fassert(not object_table, "Trying to register an already registered channel event %q. Registered by %q.", callback_name, object_table and select(2, next(object_table)).__class_name)
-
 		local registered_object = self._registered_objects[callback_name]
-
-		fassert(not registered_object, "Trying to register an already registered event %q. Registered by %q.", callback_name, registered_object and registered_object.__class_name)
-
 		self._registered_objects[callback_name] = object
 
 		local function callback(event_table, ...)
@@ -143,24 +121,12 @@ end
 NetworkEventDelegate._register_channel_events = function (self, is_session_event, object, channel_id, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
-
-		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)
-
 		local registered_object = self._registered_objects[callback_name]
-
-		fassert(not registered_object, "Trying to register an already registered event %q. Registered by %q.", callback_name, registered_object and registered_object.__class_name)
-
 		local object_table = self._registered_unit_objects[callback_name]
-
-		fassert(not object_table, "Trying to register an already registered unit event %q. Registered by %q.", callback_name, object_table and select(2, next(object_table)).__class_name)
-
 		object_table = self._registered_channel_objects[callback_name] or {
 			__size = 0
 		}
 		self._registered_channel_objects[callback_name] = object_table
-
-		fassert(not object_table[channel_id], "Trying to register an already registered event %q for channel %i. Registered by %q.", callback_name, channel_id, object_table[channel_id] and object_table[channel_id].__class_name)
-
 		object_table[channel_id] = object
 		object_table.__size = object_table.__size + 1
 
@@ -193,24 +159,12 @@ end
 NetworkEventDelegate._register_session_unit_events = function (self, object, unit_id, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
-
-		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)
-
 		local registered_object = self._registered_objects[callback_name]
-
-		fassert(not registered_object, "Trying to register an already registered event %q. Registered by %q.", callback_name, registered_object and registered_object.__class_name)
-
 		local object_table = self._registered_channel_objects[callback_name]
-
-		fassert(not object_table, "Trying to register an already registered channel event %q. Registered by %q.", callback_name, object_table and select(2, next(object_table)).__class_name)
-
 		object_table = self._registered_unit_objects[callback_name] or {
 			__size = 0
 		}
 		self._registered_unit_objects[callback_name] = object_table
-
-		fassert(not object_table[unit_id], "Trying to register an already registered event %q for unit %i. Registered by %q.", callback_name, unit_id, object_table[unit_id] and object_table[unit_id].__class_name)
-
 		object_table[unit_id] = object
 		object_table.__size = object_table.__size + 1
 
@@ -218,7 +172,6 @@ NetworkEventDelegate._register_session_unit_events = function (self, object, uni
 			local function callback(event_table, sender, unit_id, ...)
 				local object = object_table[unit_id]
 
-				fassert(object, "No callback registered for event %q on unit id %i", callback_name, unit_id)
 				object[callback_name](object, sender, unit_id, ...)
 			end
 
@@ -257,8 +210,6 @@ NetworkEventDelegate._cleanup_all = function (self)
 
 		success = false
 	end
-
-	fassert(success, "All callbacks have not been unregistered.\n%s", error_str)
 
 	self._registered_objects = nil
 	self._registered_unit_objects = nil

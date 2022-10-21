@@ -1,16 +1,30 @@
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
+local Footstep = require("scripts/utilities/footstep")
 local PlayerHuskFirstPersonExtension = class("PlayerHuskFirstPersonExtension")
+local FOOTSTEP_SOUND_ALIAS = "footstep"
+local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
+local WEAPON_FOLEY = "sfx_weapon_locomotion"
+local EXTRA_FOLEY = "sfx_player_extra_slot"
 
 PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
+	local wwise_world = extension_init_context.wwise_world
+	local physics_world = extension_init_context.physics_world
+	self._wwise_world = wwise_world
 	self._world = extension_init_context.world
 	local heights = extension_init_data.heights
 	self._heights = heights
 	self._extrapolated_character_height = heights.default
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local first_person_component = unit_data_extension:read_component("first_person")
-	self._first_person_component = first_person_component
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+	local movement_state_component = unit_data_extension:read_component("movement_state")
+	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._first_person_mode_component = unit_data_extension:read_component("first_person_mode")
+	self._unit_data_extension = unit_data_extension
+	self._first_person_component = first_person_component
+	self._character_state_component = character_state_component
 	local character_height = heights.default
 	local position_root = Unit.local_position(unit, 1)
 	local offset_height = Vector3(0, 0, character_height)
@@ -19,23 +33,54 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local first_person_unit = unit_spawner_manager:spawn_unit(unit_name, position)
 	self._first_person_unit = first_person_unit
+	self._unit = unit
 
 	Unit.set_data(first_person_unit, "owner_unit", unit)
 
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
+	self._footstep_time = 0
+	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
+	self._footstep_context = {
+		character_state_component = character_state_component,
+		sprint_character_state_component = sprint_character_state_component,
+		weapon_action_component = weapon_action_component,
+		breed = extension_init_data.breed,
+		movement_state_component = movement_state_component,
+		wwise_world = wwise_world,
+		unit = unit,
+		physics_world = physics_world,
+		feet_source_id = feet_source_id
+	}
+	self._previous_frame_character_state_name = character_state_component.state_name
 end
 
 PlayerHuskFirstPersonExtension.extensions_ready = function (self, world, unit)
-	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(self._first_person_unit, unit)
+	local first_person_unit = self._first_person_unit
 	local is_husk = true
-	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(self._first_person_unit, unit, is_husk)
+	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(first_person_unit, unit)
+	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(first_person_unit, unit, is_husk)
+	self._footstep_context.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	self._footstep_context.fx_extension = ScriptUnit.extension(unit, "fx_system")
+	self._footstep_context.foley_source_id = WwiseWorld.make_manual_source(self._wwise_world, first_person_unit, 1)
 end
 
 PlayerHuskFirstPersonExtension.destroy = function (self)
 	local unit_spawner_manager = Managers.state.unit_spawner
 
 	unit_spawner_manager:mark_for_deletion(self._first_person_unit)
+
+	local wwise_world = self._wwise_world
+	local feet_source_id = self._feet_source_id
+	local foley_source_id = self._footstep_context.foley_source_id
+
+	if feet_source_id then
+		WwiseWorld.destroy_manual_source(wwise_world, feet_source_id)
+	end
+
+	if foley_source_id then
+		WwiseWorld.destroy_manual_source(wwise_world, foley_source_id)
+	end
 end
 
 PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
@@ -50,6 +95,11 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 		self:update_unit_position_and_rotation(position_root, false)
 	end
 
+	if not self._unit_data_extension.is_resimulating then
+		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, self._previous_frame_character_state_name, self._is_camera_follow_target, self._footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+	end
+
+	self._previous_frame_character_state_name = self._character_state_component.state_name
 	self._extrapolated_character_height = self._first_person_component.height
 end
 

@@ -18,11 +18,9 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_plague_ogryn_sprayer"
 local breed_data = {
-	challenge_rating = 30,
 	run_speed = 6,
 	is_boss = true,
 	look_at_distance = 20,
-	display_name = "loc_breed_display_name_chaos_plague_ogryn_sprayer",
 	power_level_type = "chaos_plague_ogryn_melee",
 	unit_template_name = "minion",
 	faction_name = "chaos",
@@ -30,22 +28,25 @@ local breed_data = {
 	sub_faction_name = "chaos",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
+	walk_speed = 6,
 	spawn_aggro_state = "aggroed",
-	use_navigation_path_splines = true,
 	stagger_resistance = 1,
+	use_navigation_path_splines = true,
 	navigation_propagation_box_extent = 200,
 	base_height = 3.6,
-	walk_speed = 6,
-	player_locomotion_constrain_radius = 1.5,
+	display_name = "loc_breed_display_name_chaos_plague_ogryn_sprayer",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	use_bone_lod = true,
+	player_locomotion_constrain_radius = 1.5,
 	stagger_reduction = 50,
+	use_bone_lod = true,
 	bone_lod_radius = 3,
 	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_monster",
 	base_unit = "content/characters/enemy/chaos_plague_ogryn/third_person/base",
+	challenge_rating = 30,
 	hit_mass = 20,
+	reduced_hit_mass = 5,
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
@@ -259,10 +260,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine",
-			"j_spine1"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

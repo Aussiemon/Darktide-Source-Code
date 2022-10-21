@@ -59,9 +59,6 @@ local function _is_same(current, new)
 end
 
 components.dropdown = function (template)
-	fassert(template.options, "Options are required when constructing a dropdown")
-	fassert(template.on_value_changed, "on_value_changed function expected when when constructing a dropdown")
-
 	if type(template.options) == "function" then
 		template.options = template.options()
 	end

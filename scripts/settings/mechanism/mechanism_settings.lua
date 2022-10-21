@@ -1,4 +1,3 @@
-local StateVictoryDefeat = require("scripts/game_states/game/state_victory_defeat")
 local StateGameScore = require("scripts/game_states/game/state_game_score")
 local StateMissionServerExit = require("scripts/game_states/game/state_mission_server_exit")
 local mechanism_settings = {
@@ -62,11 +61,9 @@ local mechanism_settings = {
 			"client_exit_gameplay",
 			"client_wait_for_server",
 			"adventure",
-			"victory_defeat",
 			"score"
 		},
 		game_states = {
-			victory_defeat = StateVictoryDefeat,
 			score = StateGameScore,
 			mission_server_exit = StateMissionServerExit
 		},

@@ -34,8 +34,6 @@ SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_dista
 end
 
 SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_group, min_free_radius, min_distance_to_others, num_spawn_points_per_subgroup, nav_tag_cost_table, start_seed)
-	Profiler.start("generate_nav_spawn_points")
-
 	local nav_spawn_points = GwNavSpawnPoints.create(nav_world, nav_triangle_group)
 	local num_groups, num_sub_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local GwNavSpawnPoints_get_triangle_count = GwNavSpawnPoints.get_triangle_count
@@ -70,14 +68,10 @@ SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_
 		spawn_point_positions[i] = group_positions
 	end
 
-	Profiler.stop("generate_nav_spawn_points")
-
 	return nav_spawn_points, spawn_point_positions
 end
 
 SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data, nav_spawn_points, spawn_point_positions)
-	fassert(time_slice_data, "[SpawnPointQueries] Instantiate class 'MainPathManager' with 'use_nav_point_time_slice'")
-
 	local last_index = time_slice_data.last_index
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
 	local GwNavSpawnPoints_get_triangle_count = GwNavSpawnPoints.get_triangle_count
@@ -91,8 +85,6 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 	local min_distance_to_others = time_slice_data.parameters.min_distance_to_others
 	local nav_tag_cost_table = time_slice_data.parameters.nav_tag_cost_table
 	local seed = time_slice_data.parameters.seed
-
-	Profiler.start("SpawnPointQueries.update_time_slice_nav_spawn_points")
 
 	for index = last_index + 1, num_groups do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
@@ -132,8 +124,6 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 		time_slice_data.parameters.seed = seed
 	end
 
-	Profiler.stop("SpawnPointQueries.update_time_slice_nav_spawn_points")
-
 	return time_slice_data.ready
 end
 
@@ -152,9 +142,6 @@ end
 
 SpawnPointQueries.occluded_positions_in_group = function (nav_world, nav_spawn_points, group_index, occluded_from_positions)
 	local num_groups, num_sub_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
-
-	fassert(group_index <= num_groups, "[SpawnPointQueries] group_index out of range: %s > %s", group_index, num_groups)
-
 	local occluded_positions = {}
 	local spawn_point_cost_table = Managers.state.main_path:spawn_point_cost_table()
 
@@ -192,8 +179,6 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
 
 	if not group_index then
-		Log.info("SpawnPointQueries", "Failed to find occluded position group index.")
-
 		return
 	end
 
@@ -222,8 +207,6 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 	end
 
 	if #occluded_positions == 0 then
-		Log.info("SpawnPointQueries", "Found no occluded positions in group %d, offsetting group index..", group_index)
-
 		local start_index, end_index = nil
 
 		if optional_only_search_forward then
@@ -245,25 +228,17 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 
 					if #occluded_positions > 0 then
 						break
-					else
-						Log.info("SpawnPointQueries", "All occluded points are too close to targets at group index %d..", group_index)
 					end
 				else
 					break
 				end
 			elseif i == 1 or i == num_groups then
-				Log.info("SpawnPointQueries", "No space to spawn at the edge of the main path at group %d..", group_index)
-
 				break
-			else
-				Log.info("SpawnPointQueries", "Found no occluded positions in group %d, offsetting group index even more..", group_index)
 			end
 		end
 	end
 
 	if not occluded_positions or #occluded_positions == 0 then
-		Log.info("SpawnPointQueries", "Failed to find any occluded points within %d group offsets.", offset_range)
-
 		return
 	end
 

@@ -113,9 +113,6 @@ PackageSynchronizerHost._set_prioritization_template = function (self, template_
 	local sync_states = self._sync_states
 	local template = PackagePrioritizationTemplates[template_name]
 	local template_id = NetworkLookup.package_synchronization_template_names[template_name]
-
-	fassert(template, "[PackageSynchronizerHost] Tried setting prioritization template to %s but a template with that name doesn't exist", template_name)
-
 	local alias_states = {}
 
 	for i = 1, #PlayerPackageAliases do
@@ -171,10 +168,14 @@ end
 PackageSynchronizerHost.event_updated_player_profile_synced = function (self, peer_id, local_player_id, old_profile)
 	local syncs = self._syncs
 
+	_debug_print("LoadingTimes: Player Profile Synced (peer: %s, player_id: %s)", tostring(peer_id), tostring(local_player_id))
+
 	if syncs[peer_id] and syncs[peer_id][local_player_id] then
 		local resyncs = self._resyncs[peer_id]
 
 		if not resyncs or not resyncs[local_player_id] then
+			_debug_print("LoadingTimes: Player Profile Needs Resync (peer: %s, player_id: %s)", tostring(peer_id), tostring(local_player_id))
+
 			self._resyncs[peer_id] = self._resyncs[peer_id] or {}
 			self._resyncs[peer_id][local_player_id] = old_profile
 		end
@@ -211,18 +212,16 @@ PackageSynchronizerHost._player_profile_changed = function (self, peer_id, local
 	local sync_local_player_id = local_player_id
 
 	for peer_id, data in pairs(sync_states) do
-		if data.enabled then
-			local peer_states = data.peer_states
-			local player_states = peer_states[sync_peer_id].player_states
-			local player_data = player_states[sync_local_player_id]
-			local alias_states = player_data.alias_states
+		local peer_states = data.peer_states
+		local player_states = peer_states[sync_peer_id].player_states
+		local player_data = player_states[sync_local_player_id]
+		local alias_states = player_data.alias_states
 
-			for alias, _ in pairs(alias_states) do
-				alias_states[alias] = SYNC_STATES.not_synced
-			end
-
-			self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
+		for alias, _ in pairs(alias_states) do
+			alias_states[alias] = SYNC_STATES.not_synced
 		end
+
+		self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 	end
 end
 
@@ -390,7 +389,7 @@ PackageSynchronizerHost.update = function (self, dt)
 				local sync_states = self._sync_states
 
 				for _, data in pairs(sync_states) do
-					if data.enabled then
+					if data.ready then
 						local channel_id = data.channel_id
 
 						if channel_id then
@@ -687,8 +686,6 @@ PackageSynchronizerHost.enable_peers = function (self, peer_ids)
 end
 
 PackageSynchronizerHost.add_peer = function (self, new_peer_id)
-	fassert(self._sync_states[new_peer_id] == nil, "Trying to add an existing peer")
-
 	local new_peer_states = {}
 	local alias_states = {}
 
@@ -814,8 +811,6 @@ PackageSynchronizerHost.ready_peer = function (self, peer_id)
 end
 
 PackageSynchronizerHost.remove_peer = function (self, peer_id)
-	fassert(self._sync_states[peer_id] ~= nil, "Trying to remove non existing peer")
-
 	local data = self._sync_states[peer_id]
 	self._sync_states[peer_id] = nil
 
@@ -861,9 +856,6 @@ end
 
 PackageSynchronizerHost.rpc_package_synchronizer_ready_peer = function (self, channel_id)
 	local peer_id = Managers.connection:channel_to_peer(channel_id)
-
-	fassert(self._sync_states[peer_id] ~= nil, "Trying to ready non existing peer")
-
 	local template_name = self._prioritization_template.name
 	local template_id = NetworkLookup.package_synchronization_template_names[template_name]
 

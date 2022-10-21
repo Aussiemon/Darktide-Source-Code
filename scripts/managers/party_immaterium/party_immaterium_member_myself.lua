@@ -18,10 +18,6 @@ PartyImmateriumMemberMyself.is_online = function (self)
 	return true
 end
 
-PartyImmateriumMemberMyself.is_invited = function (self)
-	return false
-end
-
 PartyImmateriumMemberMyself.platform = function (self)
 	return self._platform
 end

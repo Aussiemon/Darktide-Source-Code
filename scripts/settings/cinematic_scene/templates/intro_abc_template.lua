@@ -11,7 +11,10 @@ local cinematic_scene_templates = {
 			"slot_luggable",
 			"slot_support_ability",
 			"slot_combat_ability",
-			"slot_grenade_ability"
+			"slot_grenade_ability",
+			"slot_attachment_1",
+			"slot_attachment_2",
+			"slot_attachment_3"
 		}
 	}
 }

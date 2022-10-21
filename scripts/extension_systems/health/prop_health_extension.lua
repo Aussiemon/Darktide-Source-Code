@@ -91,6 +91,14 @@ PropHealthExtension.add_heal = function (self, heal_amount, heal_type)
 	return
 end
 
+PropHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit)
+	self._last_damaging_unit = last_damaging_unit
+end
+
+PropHealthExtension.last_damaging_unit = function (self)
+	return self._last_damaging_unit
+end
+
 PropHealthExtension.max_health = function (self)
 	return self._max_health
 end

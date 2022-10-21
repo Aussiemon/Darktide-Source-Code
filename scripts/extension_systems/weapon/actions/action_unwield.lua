@@ -30,23 +30,24 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	local buff_extension = self._buff_extension
 	local next_weapon_template = self._visual_loadout_extension:weapon_template_from_slot(next_slot)
 	local param_table = buff_extension:request_proc_event_param_table()
-	param_table.weapon_template = next_weapon_template
-	local keywords = next_weapon_template.keywords
-	local is_ranged = table.array_contains(keywords, "ranged")
-	local is_melee = table.array_contains(keywords, "melee")
 
-	if is_ranged then
-		buff_extension:add_proc_event(buff_proc_events.on_wield_ranged, param_table)
-	end
+	if param_table then
+		param_table.weapon_template = next_weapon_template
+		local keywords = next_weapon_template.keywords
 
-	if is_melee then
-		buff_extension:add_proc_event(buff_proc_events.on_wield_melee, param_table)
+		if table.array_contains(keywords, "ranged") then
+			buff_extension:add_proc_event(buff_proc_events.on_wield_ranged, param_table)
+		end
+
+		if table.array_contains(keywords, "melee") then
+			buff_extension:add_proc_event(buff_proc_events.on_wield_melee, param_table)
+		end
 	end
 
 	local alternate_fire_component = self._alternate_fire_component
 
 	if alternate_fire_component.is_active then
-		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template)
+		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
 	end
 
 	AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)

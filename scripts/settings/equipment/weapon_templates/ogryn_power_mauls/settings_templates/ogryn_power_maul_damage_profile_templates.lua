@@ -24,8 +24,8 @@ local big_cleave = DamageProfileSettings.big_cleave
 local smiter_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_75,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 		[armor_types.player] = damage_lerp_values.lerp_1,
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
@@ -49,7 +49,7 @@ local linesman_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_0_75,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 		[armor_types.player] = damage_lerp_values.lerp_1,
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
@@ -95,17 +95,14 @@ local tank_heavy_default_am = {
 }
 local light_active_am = {
 	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
-		[armor_types.armored] = damage_lerp_values.lerp_1_5,
-		[armor_types.resistant] = {
-			1.2,
-			1.8
-		},
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_2
 	},
 	impact = {
@@ -125,17 +122,14 @@ local light_active_am = {
 }
 local tank_heavy_active_am = {
 	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
-		[armor_types.armored] = damage_lerp_values.lerp_1_5,
-		[armor_types.resistant] = {
-			1.5,
-			2
-		},
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_2
 	},
 	impact = {
@@ -155,12 +149,17 @@ local tank_heavy_active_am = {
 }
 damage_templates.ogryn_powermaul_light_smiter = {
 	ragdoll_push_force = 200,
+	ignore_shield = false,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	stagger_duration_modifier = {
+		0.1,
+		0.5
+	},
 	armor_damage_modifier = smiter_light_default_am,
 	targets = {
 		{
@@ -215,10 +214,24 @@ overrides.ogryn_powermaul_light_smiter_active = {
 	parent_template_name = "ogryn_powermaul_light_smiter",
 	overrides = {
 		{
+			"cleave_distribution",
+			"attack",
+			0.01
+		},
+		{
+			"ignore_shield",
+			true
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			0.01
+		},
+		{
 			"stagger_duration_modifier",
 			{
 				0.1,
-				0.5
+				0.2
 			}
 		},
 		{
@@ -231,8 +244,8 @@ overrides.ogryn_powermaul_light_smiter_active = {
 			"power_distribution",
 			"attack",
 			{
-				120,
-				200
+				150,
+				300
 			}
 		},
 		{
@@ -255,22 +268,105 @@ overrides.ogryn_powermaul_light_smiter_active = {
 		}
 	}
 }
+overrides.powermaul_2h_heavy_smiter = {
+	parent_template_name = "ogryn_powermaul_light_smiter",
+	overrides = {
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				120,
+				220
+			}
+		}
+	}
+}
+overrides.powermaul_2h_heavy_smiter_active = {
+	parent_template_name = "ogryn_powermaul_light_smiter",
+	overrides = {
+		overrides = {
+			{
+				"cleave_distribution",
+				"attack",
+				0.01
+			},
+			{
+				"cleave_distribution",
+				"impact",
+				0.01
+			},
+			{
+				"stagger_duration_modifier",
+				{
+					0.2,
+					0.5
+				}
+			},
+			{
+				"armor_damage_modifier",
+				tank_heavy_active_am
+			},
+			{
+				"targets",
+				1,
+				"power_distribution",
+				"attack",
+				{
+					325,
+					600
+				}
+			},
+			{
+				"targets",
+				1,
+				"power_distribution",
+				"impact",
+				{
+					40,
+					80
+				}
+			},
+			{
+				"gibbing_power",
+				GibbingPower.heavy
+			},
+			{
+				"gibbing_type",
+				GibbingTypes.explosion
+			},
+			{
+				"damage_type",
+				damage_types.blunt_powermaul_active
+			}
+		}
+	}
+}
 damage_templates.ogryn_powermaul_light_linesman = {
-	ragdoll_push_force = 400,
+	ragdoll_push_force = 300,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
-	damage_type = damage_types.ogryn_pipe_club_heavy,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	damage_type = damage_types.ogryn_pipe_club,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	stagger_duration_modifier = {
+		0.1,
+		0.5
+	},
 	armor_damage_modifier = linesman_light_default_am,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					105,
+					90,
 					135
 				},
 				impact = {
@@ -282,15 +378,27 @@ damage_templates.ogryn_powermaul_light_linesman = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
-				attack = 70,
-				impact = 0.3
+				attack = {
+					80,
+					90
+				},
+				impact = {
+					6,
+					13
+				}
 			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
-				attack = 10,
-				impact = 7
+				attack = {
+					5,
+					20
+				},
+				impact = {
+					3,
+					8
+				}
 			}
 		},
 		default_target = {
@@ -307,6 +415,23 @@ overrides.ogryn_powermaul_light_linesman_active = {
 	parent_template_name = "ogryn_powermaul_light_linesman",
 	overrides = {
 		{
+			"cleave_distribution",
+			"attack",
+			0.01
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			0.01
+		},
+		{
+			"stagger_duration_modifier",
+			{
+				0.1,
+				0.2
+			}
+		},
+		{
 			"armor_damage_modifier",
 			light_active_am
 		},
@@ -316,8 +441,8 @@ overrides.ogryn_powermaul_light_linesman_active = {
 			"power_distribution",
 			"attack",
 			{
-				120,
-				200
+				150,
+				300
 			}
 		},
 		{
@@ -326,21 +451,33 @@ overrides.ogryn_powermaul_light_linesman_active = {
 			"power_distribution",
 			"impact",
 			{
-				100,
-				200
+				40,
+				80
 			}
+		},
+		{
+			"gibbing_power",
+			GibbingPower.heavy
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.explosion
 		}
 	}
 }
 damage_templates.ogryn_powermaul_heavy_tank = {
-	ragdoll_push_force = 800,
+	ragdoll_push_force = 400,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.ogryn_pipe_club_heavy,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	stagger_duration_modifier = {
+		0.1,
+		0.5
+	},
 	armor_damage_modifier = tank_heavy_default_am,
 	targets = {
 		{
@@ -348,7 +485,7 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 			power_distribution = {
 				attack = {
 					120,
-					150
+					220
 				},
 				impact = {
 					30,
@@ -361,7 +498,7 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 			power_distribution = {
 				attack = {
 					80,
-					100
+					110
 				},
 				impact = {
 					20,
@@ -382,6 +519,19 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 				}
 			}
 		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					10,
+					25
+				},
+				impact = {
+					10,
+					15
+				}
+			}
+		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			armor_damage_modifier = tank_heavy_default_am,
@@ -391,8 +541,8 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 					0
 				},
 				impact = {
-					15,
-					20
+					10,
+					15
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -403,9 +553,19 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 	parent_template_name = "ogryn_powermaul_heavy_tank",
 	overrides = {
 		{
+			"cleave_distribution",
+			"attack",
+			0.01
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			0.01
+		},
+		{
 			"stagger_duration_modifier",
 			{
-				0.1,
+				0.2,
 				0.5
 			}
 		},
@@ -419,8 +579,140 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 			"power_distribution",
 			"attack",
 			{
-				150,
-				220
+				325,
+				600
+			}
+		},
+		{
+			"gibbing_power",
+			GibbingPower.heavy
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.explosion
+		},
+		{
+			"damage_type",
+			damage_types.blunt_powermaul_active
+		}
+	}
+}
+damage_templates.ogryn_powermaul_light_tank = {
+	ragdoll_push_force = 800,
+	ragdoll_only = true,
+	stagger_category = "melee",
+	cleave_distribution = big_cleave,
+	damage_type = damage_types.ogryn_pipe_club,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
+	melee_attack_strength = melee_attack_strengths.light,
+	stagger_duration_modifier = {
+		0.1,
+		0.5
+	},
+	armor_damage_modifier = tank_heavy_default_am,
+	targets = {
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					75,
+					100
+				},
+				impact = {
+					15,
+					25
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					60,
+					90
+				},
+				impact = {
+					11,
+					18
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					20,
+					30
+				},
+				impact = {
+					5,
+					10
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					10,
+					20
+				},
+				impact = {
+					3,
+					10
+				}
+			}
+		},
+		default_target = {
+			boost_curve_multiplier_finesse = 0.25,
+			armor_damage_modifier = tank_heavy_default_am,
+			power_distribution = {
+				attack = {
+					0,
+					0
+				},
+				impact = {
+					3,
+					10
+				}
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+overrides.ogryn_powermaul_light_tank_active = {
+	parent_template_name = "ogryn_powermaul_light_tank",
+	overrides = {
+		{
+			"stagger_duration_modifier",
+			{
+				0.1,
+				0.2
+			}
+		},
+		{
+			"armor_damage_modifier",
+			light_active_am
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				120,
+				250
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				40,
+				80
 			}
 		},
 		{
@@ -436,12 +728,12 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 damage_templates.powermaul_explosion = {
 	ignore_shield = true,
 	suppression_type = "ability",
-	stagger_duration_modifier = 1,
+	stagger_duration_modifier = 1.5,
 	ignore_stagger_reduction = true,
-	stagger_category = "explosion",
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 50
+		impact = 10
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -472,19 +764,70 @@ damage_templates.powermaul_explosion = {
 		default_target = {}
 	}
 }
-overrides.powermaul_explosion_outer = {
-	parent_template_name = "powermaul_explosion",
-	overrides = {
-		{
-			"power_distribution",
-			"attack",
-			15
+damage_templates.powermaul_explosion_outer = {
+	ignore_shield = true,
+	suppression_type = "ability",
+	stagger_duration_modifier = 1.5,
+	ragdoll_push_force = 1000,
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 40,
+		impact = 6.5
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			}
 		},
-		{
-			"power_distribution",
-			"impact",
-			20
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+				[armor_types.prop_armor] = 0
+			},
+			impact = {
+				[armor_types.unarmored] = 0.2,
+				[armor_types.armored] = 0.2,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.2,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 0.2,
+				[armor_types.void_shield] = 0.2,
+				[armor_types.prop_armor] = 0.2
+			}
 		}
+	},
+	damage_type = damage_types.kinetic,
+	targets = {
+		default_target = {}
 	}
 }
 

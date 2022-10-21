@@ -1,10 +1,6 @@
 local LocalRequestJoinSessionState = class("LocalRequestJoinSessionState")
 
 LocalRequestJoinSessionState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.channel_id) == "number", "Channel ID required")
-	assert(shared_state.engine_gamesession, "Game session required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 end

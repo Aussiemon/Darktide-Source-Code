@@ -9,19 +9,20 @@ local mission_objective_templates = {
 				collect_amount = 3,
 				header = "loc_objective_side_mission_test_one_header",
 				side_objective_type = "collect",
-				icon = "content/ui/materials/icons/objectives/bonus",
+				icon = "content/ui/materials/icons/mission_types/mission_type_08",
 				mission_objective_type = "side",
 				description = "loc_objective_side_mission_test_one_desc"
 			},
 			side_mission_consumable = {
-				is_side_mission = true,
+				description = "loc_objective_side_mission_consumable_desc",
 				unit_name = "consumable",
 				collect_amount = 6,
 				header = "loc_objective_side_mission_consumable_header",
-				side_objective_type = "collect",
-				icon = "content/ui/materials/icons/objectives/bonus",
+				evaluate_at_level_end = true,
+				is_side_mission = true,
 				mission_objective_type = "side",
-				description = "loc_objective_side_mission_consumable_desc"
+				side_objective_type = "collect",
+				icon = "content/ui/materials/icons/mission_types/mission_type_08"
 			},
 			side_mission_grimoire = {
 				description = "loc_objective_side_mission_grimoire_desc",
@@ -32,7 +33,7 @@ local mission_objective_templates = {
 				is_side_mission = true,
 				mission_objective_type = "side",
 				side_objective_type = "collect",
-				icon = "content/ui/materials/icons/objectives/bonus",
+				icon = "content/ui/materials/icons/mission_types/mission_type_08",
 				proc_event_at_max_progression = proc_events.on_all_grimoires_picked_up
 			},
 			side_mission_tome = {
@@ -44,7 +45,7 @@ local mission_objective_templates = {
 				is_side_mission = true,
 				mission_objective_type = "side",
 				side_objective_type = "collect",
-				icon = "content/ui/materials/icons/objectives/bonus"
+				icon = "content/ui/materials/icons/mission_types/mission_type_08"
 			},
 			side_mission_luggables = {
 				is_side_mission = true,
@@ -52,7 +53,7 @@ local mission_objective_templates = {
 				side_objective_type = "luggable",
 				header = "loc_objective_side_mission_luggables_header",
 				description = "loc_objective_side_mission_luggables_desc",
-				icon = "content/ui/materials/icons/objectives/bonus",
+				icon = "content/ui/materials/icons/mission_types/mission_type_08",
 				mission_objective_type = "side"
 			}
 		}

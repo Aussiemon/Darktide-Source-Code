@@ -7,8 +7,12 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_disable_skyfire_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.76924,
+			[1.0] = 3.76925,
 			[2.0] = 3.770052
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,8 +24,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_district_gate_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.075479,
-			[2.0] = 3.00299
+			[1.0] = 3.07549,
+			[2.0] = 3.003
 		},
 		randomize_indexes = {}
 	},
@@ -33,8 +37,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.08525,
-			[2.0] = 4.693271
+			[1.0] = 5.08526,
+			[2.0] = 4.693281
 		},
 		randomize_indexes = {}
 	},
@@ -46,8 +50,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.229948,
-			[2.0] = 2.383385
+			[1.0] = 2.229958,
+			[2.0] = 2.383396
 		},
 		randomize_indexes = {}
 	},
@@ -59,8 +63,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.818458,
-			[2.0] = 5.908698
+			[1.0] = 3.818469,
+			[2.0] = 5.908708
 		},
 		randomize_indexes = {}
 	},
@@ -72,7 +76,7 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.109302,
+			[1.0] = 2.109313,
 			[2.0] = 4.384677
 		},
 		randomize_indexes = {}
@@ -85,8 +89,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.817198,
-			[2.0] = 3.571656
+			[1.0] = 3.817208,
+			[2.0] = 3.571667
 		},
 		randomize_indexes = {}
 	},
@@ -98,8 +102,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_end_event_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.133479,
-			[2.0] = 2.913854
+			[1.0] = 2.13349,
+			[2.0] = 2.913865
 		},
 		randomize_indexes = {}
 	},
@@ -123,12 +127,12 @@ local mission_vo_lm_rails_psyker_male_c = {
 			2.607427,
 			2.896125,
 			2.726979,
-			4.333021,
-			3.79126,
+			4.333031,
+			3.791271,
 			3.497927,
-			4.412448,
+			4.412458,
 			4.215552,
-			4.213771
+			4.21376
 		},
 		sound_event_weights = {
 			0.1,
@@ -152,8 +156,28 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_hab_block_dreyko_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.830094,
-			[2.0] = 5.046063
+			[1.0] = 1.830104,
+			[2.0] = 5.046073
+		},
+		randomize_indexes = {}
+	},
+	mission_rails_refectory_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_psyker_male_c__zone_transit_01",
+			"loc_psyker_male_c__zone_transit_02",
+			"loc_psyker_male_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			5.021115,
+			2.897792,
+			4.446938
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},
@@ -165,8 +189,37 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.135969,
-			[2.0] = 3.567125
+			[1.0] = 3.135979,
+			[2.0] = 3.567135
+		},
+		randomize_indexes = {}
+	},
+	mission_rails_start_banter_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_psyker_male_c__region_habculum_01",
+			"loc_psyker_male_c__region_habculum_02",
+			"loc_psyker_male_c__region_habculum_03",
+			"loc_psyker_male_c__zone_transit_01",
+			"loc_psyker_male_c__zone_transit_02",
+			"loc_psyker_male_c__zone_transit_03"
+		},
+		sound_events_duration = {
+			3.36051,
+			3.409594,
+			4.554875,
+			5.021115,
+			2.897792,
+			4.446938
+		},
+		sound_event_weights = {
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},
@@ -178,8 +231,8 @@ local mission_vo_lm_rails_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__mission_rails_trains_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.242094,
-			[2.0] = 2.802052
+			[1.0] = 2.242104,
+			[2.0] = 2.802063
 		},
 		randomize_indexes = {}
 	}

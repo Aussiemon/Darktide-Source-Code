@@ -49,10 +49,11 @@ MissionObjectiveZoneScanExtension.destroy = function (self)
 	end
 end
 
-MissionObjectiveZoneScanExtension.setup_from_component = function (self, num_scannable_objects, max_scannable_objects_per_player, zone_type)
+MissionObjectiveZoneScanExtension.setup_from_component = function (self, num_scannable_objects, max_scannable_objects_per_player, zone_type, item_to_equip)
 	self._num_scannables_in_zone = num_scannable_objects
 	self._max_scannable_objects_per_player = max_scannable_objects_per_player
 	self._zone_type = zone_type
+	self._item_to_equip = item_to_equip
 end
 
 MissionObjectiveZoneScanExtension.hot_join_sync = function (self, unit, sender, channel)
@@ -123,8 +124,6 @@ MissionObjectiveZoneScanExtension._set_skull_to_wait_for_players = function (sel
 end
 
 MissionObjectiveZoneScanExtension._check_if_players_knocked_down_or_killed = function (self)
-	fassert(self._is_server, "[MissionObjectiveZoneScanExtension] Server only method.")
-
 	local players_with_scanned_objects = self._players_with_scanned_objects
 
 	for player, scannable_extensions in pairs(players_with_scanned_objects) do
@@ -148,30 +147,37 @@ MissionObjectiveZoneScanExtension._check_if_players_knocked_down_or_killed = fun
 end
 
 local function _set_objectie_name_on_unit(unit, objective_name)
-	local scanable_mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 
-	if objective_name and scanable_mission_objective_target_extension then
-		scanable_mission_objective_target_extension:set_objective_name(objective_name)
+	if mission_objective_target_extension:objective_name() == "default" then
+		mission_objective_target_extension:set_objective_name(objective_name)
+
+		return true
 	end
+
+	return false
 end
 
 MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (self)
 	local mission_objective_target_extension = self._mission_objective_target_extension
-	local objective_name = mission_objective_target_extension and mission_objective_target_extension:objective_name()
+	local objective_name = mission_objective_target_extension:objective_name()
 	local scannable_units = self._scannable_units
 	local selected_units = {}
 	local num_scannables_in_zone = self._num_scannables_in_zone
-
-	fassert(num_scannables_in_zone <= #scannable_units, "[MissionObjectiveZoneScanExtension] Amount of scannable objects are more then placed scannable units in zone unit [%s] [%s] ", self._unit, Unit.id_string(self._unit))
-
 	local random_table, _ = table.generate_random_table(1, #scannable_units, self._seed)
+	local i = 1
+	local spawned = 0
 
-	for i = 1, num_scannables_in_zone do
+	while num_scannables_in_zone > spawned do
 		local index = random_table[i]
 		local selected_unit = scannable_units[index]
-		selected_units[#selected_units + 1] = selected_unit
 
-		_set_objectie_name_on_unit(selected_unit, objective_name)
+		if _set_objectie_name_on_unit(selected_unit, objective_name) then
+			selected_units[#selected_units + 1] = selected_unit
+			spawned = spawned + 1
+		end
+
+		i = i + 1
 	end
 
 	return selected_units
@@ -214,8 +220,6 @@ MissionObjectiveZoneScanExtension.assign_scanned_object_to_player_and_bank = fun
 end
 
 MissionObjectiveZoneScanExtension.assign_scanned_object_to_player = function (self, scannable_extension, player)
-	fassert(self._is_server, "[MissionObjectiveZoneScanExtension] Server only method.")
-
 	local players_with_scanned_objects = self._players_with_scanned_objects
 	local unit_list = players_with_scanned_objects[player]
 
@@ -243,8 +247,6 @@ MissionObjectiveZoneScanExtension.assign_scanned_object_to_player = function (se
 end
 
 MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function (self, player, player_incapacitated)
-	fassert(self._is_server, "[MissionObjectiveZoneScanExtension] Server only method.")
-
 	local scannable_extensions = self._players_with_scanned_objects[player]
 
 	if scannable_extensions and #scannable_extensions > 0 then
@@ -274,9 +276,10 @@ MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function 
 			local local_player_id = player:local_player_id()
 			local is_human_controlled = player:is_human_controlled()
 
-			if DEDICATED_SERVER and is_human_controlled and not player_incapacitated then
+			Managers.telemetry_events:player_scanned_objects(player, scannable_count)
+
+			if Managers.stats.can_record_stats() and is_human_controlled and not player_incapacitated then
 				Managers.stats:record_scanned_objects(player, scannable_count)
-				Managers.telemetry_events:player_scanned_objects(player, scannable_count)
 			end
 
 			Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_scan_add_player_scanned_object", level_object_id, peer_id, local_player_id, scanned_object_points)
@@ -336,8 +339,6 @@ MissionObjectiveZoneScanExtension.num_scannables_in_zone = function (self)
 end
 
 MissionObjectiveZoneScanExtension.selected_scannable_units = function (self)
-	assert(self._is_server, "[MissionObjectiveZoneScanExtension] Server only method.")
-
 	return self._selected_scannable_units
 end
 
@@ -346,8 +347,6 @@ MissionObjectiveZoneScanExtension.scannable_units = function (self)
 end
 
 MissionObjectiveZoneScanExtension._on_player_unit_despawned = function (self, player)
-	fassert(self._is_server, "[MissionObjectiveZoneScanExtension] Server only method.")
-
 	local disconnect = true
 
 	self:release_scanned_object_from_player(player, disconnect)
@@ -435,9 +434,6 @@ MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo
 		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 		local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
 		local voice_profile = mission_objective:mission_giver_voice_profile()
-
-		fassert(voice_profile, "[MissionObjectiveZoneScanExtension] No mission_giver_voice_profile is specified in mission objective \"%s\"", current_objective_name)
-
 		local concept = MissionObjectiveScanning.vo_settings.concept
 
 		Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
@@ -472,11 +468,11 @@ MissionObjectiveZoneScanExtension.is_waiting_for_player_confirmation = function 
 end
 
 local SLOT_NAME = "slot_device"
-local ITEM_NAME = "content/items/devices/auspex_scanner_equiped"
 
 MissionObjectiveZoneScanExtension._equip_auspex_to_players = function (self)
 	local t = Managers.time:time("gameplay")
-	local item = MasterItems.get_item(ITEM_NAME)
+	local item_to_equip = self._item_to_equip
+	local item = MasterItems.get_item(item_to_equip)
 	local players = Managers.player:players()
 
 	for _, player in pairs(players) do
@@ -486,7 +482,7 @@ MissionObjectiveZoneScanExtension._equip_auspex_to_players = function (self)
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local inventory_component = unit_data_extension:read_component("inventory")
 			local item_name = inventory_component[SLOT_NAME]
-			local is_auspex = item_name == ITEM_NAME
+			local is_auspex = item_name == item_to_equip
 
 			if not is_auspex then
 				local dequip_current_device = item_name ~= "not_equipped"
@@ -517,8 +513,9 @@ MissionObjectiveZoneScanExtension._dequip_auspex_from_players = function (self)
 				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
 			end
 
+			local item_to_dequip = self._item_to_equip
 			local item_name = inventory_component[SLOT_NAME]
-			local dequip_device = item_name == ITEM_NAME
+			local dequip_device = item_name == item_to_dequip
 
 			if dequip_device then
 				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_NAME, t)

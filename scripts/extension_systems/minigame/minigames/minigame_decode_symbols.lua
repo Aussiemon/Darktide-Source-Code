@@ -62,6 +62,9 @@ MinigameDecodeSymbols.start = function (self, player)
 		local player_unit = player.player_unit
 		local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
 		local fx_sources = visual_loadout_extension:source_fx_for_slot("slot_device")
+
+		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
+
 		self._fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 		self._fx_source_name = fx_sources[FX_SOURCE_NAME]
 		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
@@ -82,14 +85,17 @@ end
 MinigameDecodeSymbols.stop = function (self)
 	local is_server = self._is_server
 
-	if is_server and DEDICATED_SERVER then
+	if is_server then
 		local player_or_nil = Managers.player:player_from_session_id(self._player_session_id)
 		local is_human_player = player_or_nil and player_or_nil:is_human_controlled()
 		local is_completed = self:is_completed()
 
 		if is_human_player and is_completed then
-			Managers.stats:record_hacked_terminal(player_or_nil, self._decode_misses)
 			Managers.telemetry_events:player_hacked_terminal(player_or_nil, self._decode_misses)
+
+			if Managers.stats.can_record_stats() then
+				Managers.stats:record_hacked_terminal(player_or_nil, self._decode_misses)
+			end
 		end
 	end
 
@@ -192,8 +198,6 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 end
 
 MinigameDecodeSymbols._calculate_cursor_time = function (self, t)
-	fassert(self._decode_start_time, "[MinigameDecodeSymbols][_calculate_cursor_time] start time is nil.")
-
 	local delta_time = t - self._decode_start_time
 	local sweep_duration = self._decode_symbols_sweep_duration
 	local cursor_time = delta_time % (sweep_duration * 2)
@@ -227,8 +231,6 @@ MinigameDecodeSymbols.current_decode_target = function (self)
 end
 
 MinigameDecodeSymbols.set_current_stage = function (self, stage)
-	fassert(not self._is_server, "[MinigameDecodeSymbols][set_current_stage] Client only method.")
-
 	if self._decode_current_stage then
 		if stage < self._decode_current_stage then
 			Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
@@ -245,20 +247,14 @@ MinigameDecodeSymbols.set_current_stage = function (self, stage)
 end
 
 MinigameDecodeSymbols.set_start_time = function (self, time)
-	fassert(not self._is_server, "[MinigameDecodeSymbols][set_start_time] Client only method.")
-
 	self._decode_start_time = time
 end
 
 MinigameDecodeSymbols.set_symbols = function (self, symbols)
-	fassert(not self._is_server, "[MinigameDecodeSymbols][set_symbols] Client only method.")
-
 	self._symbols = table.shallow_copy(symbols)
 end
 
 MinigameDecodeSymbols.set_target = function (self, stage, target)
-	fassert(not self._is_server, "[MinigameDecodeSymbols][set_target] Client only method.")
-
 	self._decode_targets[stage] = target
 end
 

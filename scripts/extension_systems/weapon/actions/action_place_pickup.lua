@@ -1,15 +1,12 @@
-require("scripts/extension_systems/weapon/actions/action_place")
+require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local Pickups = require("scripts/settings/pickup/pickups")
-local ActionPlacePickup = class("ActionPlacePickup", "ActionPlace")
+local ActionPlacePickup = class("ActionPlacePickup", "ActionPlaceBase")
 
-ActionPlacePickup._place_unit = function (self, action_settings)
+ActionPlacePickup._place_unit = function (self, action_settings, position, rotation, placed_on_unit)
 	local player_unit = self._player_unit
-	local action_component = self._action_component
-	local position = action_component.position
-	local rotation = action_component.rotation
-	local placed_on_unit = action_component.placed_on_unit
-	local pickup_name = action_settings.pickup_name
+	local weapon_template = self._weapon_template
+	local pickup_name = action_settings.pickup_name or weapon_template.pickup_name
 	local player_or_nil = Managers.state.player_unit_spawn:owner(player_unit)
 	local pickup_system = Managers.state.extension:system("pickup_system")
 	local placed_unit = nil
@@ -27,6 +24,7 @@ ActionPlacePickup._place_unit = function (self, action_settings)
 	end
 
 	self:_register_stats_and_telemetry(pickup_name, player_or_nil)
+	Managers.event:trigger("on_pickup_placed", placed_unit)
 end
 
 return ActionPlacePickup

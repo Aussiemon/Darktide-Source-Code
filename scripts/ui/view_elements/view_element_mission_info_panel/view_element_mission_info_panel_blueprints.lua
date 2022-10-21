@@ -54,7 +54,7 @@ blueprint_templates.risk_and_reward = {
 	size = blueprint_styles.risk_and_reward.size,
 	pass_template = {
 		{
-			value = "content/ui/materials/mission_board/difficulty_frame",
+			value = "content/ui/materials/mission_board_legacy/difficulty_frame",
 			style_id = "difficulty_frame",
 			pass_type = "texture"
 		},
@@ -105,7 +105,7 @@ blueprint_templates.risk_and_reward = {
 	},
 	style = blueprint_styles.risk_and_reward,
 	init = function (widget, widget_data)
-		local difficulty_material_format = "content/ui/materials/mission_board/difficulty_%d"
+		local difficulty_material_format = "content/ui/materials/mission_board_legacy/difficulty_%d"
 		local mission_data = widget_data.mission_data
 		local widget_content = widget.content
 		widget_content.resistance = string.format(difficulty_material_format, mission_data.resistance)

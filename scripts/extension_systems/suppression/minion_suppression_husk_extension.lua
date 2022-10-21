@@ -5,9 +5,6 @@ local CLIENT_RPCS = {
 
 MinionSuppressionHuskExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	local is_server = extension_init_context.is_server
-
-	assert(not is_server, "suppression husk extension should not exist on the server")
-
 	self._unit = unit
 	self._breed = extension_init_data.breed
 	local network_event_delegate = extension_init_context.network_event_delegate

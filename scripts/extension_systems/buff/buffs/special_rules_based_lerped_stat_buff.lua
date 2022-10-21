@@ -9,15 +9,14 @@ SpecialRulesBasedLerpedStatBuff.init = function (self, context, template, start_
 	self._stat_buff_return_table = {}
 end
 
-SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat_buffs)
-	SpecialRulesBasedLerpedStatBuff.super.update_stat_buffs(self, current_stat_buffs)
+SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat_buffs, t)
+	SpecialRulesBasedLerpedStatBuff.super.update_stat_buffs(self, current_stat_buffs, t)
 
 	local start_time = self._start_time
 	local template = self._template
 	local template_data = self._template_data
 	local duration = template.duration
 	local specialization_extension = self._specialization_extension
-	local t = Managers.time:time("gameplay")
 	local lerp_t = template.lerp_t_func(t, start_time, duration, template_data, self._template_context)
 
 	table.clear(self._stat_buff_return_table)

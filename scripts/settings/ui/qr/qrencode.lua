@@ -43,8 +43,6 @@ local function get_mode(str)
 		return 4
 	end
 
-	assert(false, "never reached")
-
 	return nil
 end
 
@@ -300,8 +298,6 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 		local_mode = 4
 	end
 
-	assert(local_mode <= 4)
-
 	local bytes, bits, digits, modebits, c = nil
 	local tab = {
 		{
@@ -381,8 +377,6 @@ local function get_length(str, version, mode)
 		i = 4
 	end
 
-	assert(i <= 4)
-
 	local tab = {
 		{
 			10,
@@ -411,8 +405,6 @@ local function get_length(str, version, mode)
 		digits = tab[2][i]
 	elseif version <= 40 then
 		digits = tab[3][i]
-	else
-		assert(false, "get_length, version > 40 not supported")
 	end
 
 	local len = binary(#str, digits)
@@ -424,8 +416,6 @@ local function get_version_eclevel_mode_bistringlength(str, requested_ec_level, 
 	local local_mode = nil
 
 	if mode then
-		assert(false, "not implemented")
-
 		local_mode = mode
 	else
 		local_mode = get_mode(str)
@@ -591,8 +581,6 @@ local function encode_data(str, mode)
 		return encode_string_ascii(str)
 	elseif mode == 4 then
 		return encode_string_binary(str)
-	else
-		assert(false, "not implemented yet")
 	end
 end
 
@@ -609,8 +597,6 @@ local function add_pad_data(version, ec_level, data)
 		missing_digits = 8 - math.fmod(#data, 8)
 		data = data .. string.rep("0", missing_digits)
 	end
-
-	assert(math.fmod(#data, 8) == 0)
 
 	while cpty > #data do
 		data = data .. "11101100"
@@ -1481,8 +1467,6 @@ local function calculate_error_correction(data, num_ec_codewords)
 		mp = convert_bitstring_to_bytes(data)
 	elseif type(data) == "table" then
 		mp = data
-	else
-		assert(false, "Unknown type for data: %s", type(data))
 	end
 
 	local len_message = #mp
@@ -4366,12 +4350,8 @@ local function get_pixel_with_mask(mask, x, y, value)
 		if math.fmod(math.fmod(x * y, 2) + math.fmod(x * y, 3), 2) == 0 then
 			invert = true
 		end
-	elseif mask == 7 then
-		if math.fmod(math.fmod(x * y, 3) + math.fmod(x + y, 2), 2) == 0 then
-			invert = true
-		end
-	else
-		assert(false, "This can't happen (mask must be <= 7)")
+	elseif mask == 7 and math.fmod(math.fmod(x * y, 3) + math.fmod(x + y, 2), 2) == 0 then
+		invert = true
 	end
 
 	if invert then

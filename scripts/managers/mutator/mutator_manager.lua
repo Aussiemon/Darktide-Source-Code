@@ -27,8 +27,6 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 
 	if mutators_to_load then
 		for _, mutator_name in ipairs(mutators_to_load) do
-			fassert(mutators[mutator_name] == nil, "[MutatorManager][load_mutators] Mutator(%s) is already registered in the circumstance.", mutator_name)
-
 			local mutator_template = MutatorTemplates[mutator_name]
 			local mutator_class = require(mutator_template.class)
 			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template)
@@ -75,14 +73,12 @@ end
 MutatorManager.activate_mutator = function (self, mutator_name)
 	local mutator = self._mutators[mutator_name]
 
-	fassert(mutator, "[MutatorManager][activate_mutator] Mutator(%s) is not part of the circumstance.", mutator_name)
 	mutator:activate()
 end
 
 MutatorManager.deactivate_mutator = function (self, mutator_name)
 	local mutator = self._mutators[mutator_name]
 
-	fassert(mutator, "[MutatorManager][deactivate_mutator] Mutator(%s) is not part of the circumstance.", mutator_name)
 	mutator:deactivate()
 end
 

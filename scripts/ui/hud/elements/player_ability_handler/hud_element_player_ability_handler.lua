@@ -36,7 +36,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 	local player = parent:player()
 	local instance_data_tables = self._instance_data_tables
 	local num_slots = 0
-	local extensions = parent:get_player_extensions(player)
+	local extensions = parent:player_extensions()
 	local ability_extension = extensions.ability
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local setup_settings_by_slot = HudElementPlayerAbilityHandlerSettings.setup_settings_by_slot
@@ -200,14 +200,14 @@ HudElementPlayerAbilityHandler.destroy = function (self)
 	self._instance_data_tables = nil
 end
 
-HudElementPlayerAbilityHandler.set_visible = function (self, visible)
-	HudElementPlayerAbilityHandler.super.set_visible(self, visible)
+HudElementPlayerAbilityHandler.set_visible = function (self, visible, ui_renderer, use_retained_mode)
+	HudElementPlayerAbilityHandler.super.set_visible(self, visible, ui_renderer, use_retained_mode)
 
 	for _, data in pairs(self._instance_data_tables) do
 		local instance = data.instance
 
 		if instance.set_visible then
-			instance:set_visible(visible)
+			instance:set_visible(visible, ui_renderer, use_retained_mode)
 		end
 	end
 end

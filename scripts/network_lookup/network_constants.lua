@@ -57,19 +57,10 @@ _check_network_lookup_boundaries("smart_tag_reply_name_id", "smart_tag_replies")
 NetworkConstants.check_network_lookup_boundaries = _check_network_lookup_boundaries
 local max_mechanism_events = Network.type_info("mechanism_event_id").max
 local num_mechanism_events = #MechanismManager.EVENT_LOOKUP
-
-fassert(num_mechanism_events <= max_mechanism_events, "Too many mechanism events(%i>%i), add bit to mechanism_event_id in global.network_config.", num_mechanism_events, max_mechanism_events)
-
 local max_mechanisms = Network.type_info("mechanism_id").max
 local num_mechanisms = #MechanismManager.LOOKUP
-
-fassert(num_mechanisms <= max_mechanisms, "Too many mechanisms(%i>%i), add bit to mechanism_id in global.network_config.", num_mechanisms, max_mechanisms)
-
 local max_buff_stack_count = Network.type_info("buff_stack_count").max
 local max_allowed_buff_stack_count = BuffSettings.max_stack_count
-
-fassert(max_allowed_buff_stack_count <= max_buff_stack_count, "BuffSettings.max_stack_count is out of range for the 'buff_stack_count' network type")
-
 local level_unit_id = Network.type_info("level_unit_id")
 NetworkConstants.invalid_level_unit_id = level_unit_id.min
 NetworkConstants.health_small = Network.type_info("health_small")
@@ -80,7 +71,7 @@ NetworkConstants.toughness = toughness
 
 for name, data in pairs(MinionToughnessTemplates) do
 	for _, max_toughness in ipairs(data.max) do
-		fassert(toughness.min <= max_toughness and max_toughness <= toughness.max, "Toughness for %q with max value of %d is not within current network boundaries (%d-%d)", name, max_toughness, toughness.min, toughness.max)
+		-- Nothing
 	end
 end
 
@@ -142,6 +133,9 @@ NetworkConstants.min_position = position_id.min
 NetworkConstants.max_position = position_id.max
 local movement_settings = Network.type_info("movement_settings")
 NetworkConstants.max_movement_settings = movement_settings.max
+local mover_frames = Network.type_info("mover_frames")
+NetworkConstants.max_mover_frames = mover_frames.max
+NetworkConstants.action_combo_count = Network.type_info("action_combo_count")
 local template_effect_buffer_index = Network.type_info("template_effect_buffer_index")
 NetworkConstants.max_template_effect_buffer_index = template_effect_buffer_index.max
 NetworkConstants.fixed_frame_offset = Network.type_info("fixed_frame_offset")
@@ -156,16 +150,11 @@ local ability_charges = Network.type_info("ability_charges")
 
 for name, ability in pairs(PlayerAbilities) do
 	local max_charges = ability.max_charges
-
-	fassert(max_charges <= ability_charges.max, "PlayerAbilities %q max_charges is larger than network_type \"ability_charges\" max value.", name)
 end
 
 local dialogue_rule_index = Network.type_info("dialogue_rule_index")
 local max_dialogue_rules = dialogue_rule_index.max
 local database_rules_number = TagQueryDatabase.NUM_DATABASE_RULES
-
-fassert(database_rules_number == max_dialogue_rules, "dialogue_rule_index doesn't match TagQueryDatabase.NUM_DATABASE_RULES (found:%d, expected:%d), change dialogue_rule_index in global.network_config to %d.", max_dialogue_rules, database_rules_number, database_rules_number)
-
 NetworkConstants.ammunition = Network.type_info("ammunition")
 
 local function _check_dialogue_breed_settings_voices()
@@ -182,8 +171,6 @@ local function _check_dialogue_breed_settings_voices()
 
 	local network_variable_info = Network.type_info("dialogue_voice_index")
 	local max_network_value = network_variable_info.max
-
-	fassert(max_num_wwise_voices <= max_network_value, "Too many wwise_voices found in DialogueBreedSettings (%d, max:%d), raise global.network_config value for dialogue_voice_index by a factor 2.", max_num_wwise_voices, max_network_value)
 end
 
 _check_dialogue_breed_settings_voices()

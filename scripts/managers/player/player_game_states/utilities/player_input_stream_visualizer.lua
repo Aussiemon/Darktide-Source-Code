@@ -75,8 +75,6 @@ PlayerInputStreamVisualizer.step_frame = function (self, frame)
 		self._end_frame = frame - 1 + BUFFER_SIZE - BUFFER_BACKWARDS - 1
 	end
 
-	fassert(frame == self._start_frame + BUFFER_BACKWARDS + 1, "Trying to step more than one frame. old:%i, new:%i", self._start_frame + BUFFER_BACKWARDS, frame)
-
 	local index = self:_raw_index(self._start_frame)
 	self._cache[index] = false
 	self._start_frame = self._start_frame + 1
@@ -87,29 +85,6 @@ PlayerInputStreamVisualizer._store_frame_time = function (self, dt)
 	local index = self._frame_time_index % FRAMETIME_BUFFER_SIZE + 1
 	self._frame_time_buffer[index] = dt
 	self._frame_time_index = index
-end
-
-PlayerInputStreamVisualizer._draw_frame_time = function (self, gui, x_origo, y_origo, x_step, y_step, layer, size)
-	local start_index = self._frame_time_index
-	local index = start_index
-	local buffer = self._frame_time_buffer
-	local time = 0
-	local color = Color.red()
-
-	repeat
-		local dt = buffer[index]
-		local pos = Vector3(x_origo + time * x_step, y_origo + dt * y_step, layer)
-
-		Gui.rect(gui, pos, size, color)
-
-		time = time + dt
-		index = (index - 2) % FRAMETIME_BUFFER_SIZE + 1
-	until index == start_index or not buffer[index]
-
-	local fps = #buffer / time
-	local str = string.format("fps:%.1f dt:%.3f", fps, time / #buffer)
-
-	ScriptGui.text(gui, str, DevParameters.debug_text_font, 12, Vector3(x_origo + 1, y_origo - 12, layer + 1), color, Color.black())
 end
 
 local TIME_INDICATORS = {
@@ -186,14 +161,6 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 	local str = string.format("Clock offset: %ims", server_clock_offset * 1000)
 
 	ScriptGui.text(gui, str, DevParameters.debug_text_font, 12, Vector3(x_0, y + 60, layer), Color.red(), Color.black())
-
-	if DevParameters.visualize_input_packets_with_ping then
-		local x_step = -width / time_step
-		local y_step = height / time_step
-		local box_size = Vector2(width * 0.5, height * 0.5)
-
-		self:_draw_frame_time(gui, x_0, y_0, x_step, y_step, layer + 1, box_size)
-	end
 
 	local frame_lines_color = Color.black(25)
 

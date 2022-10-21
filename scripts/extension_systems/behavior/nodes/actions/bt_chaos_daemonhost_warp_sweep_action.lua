@@ -2,12 +2,10 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local Suppression = require("scripts/utilities/attack/suppression")
-local attack_results = AttackSettings.attack_results
 local BtChaosDaemonhostWarpSweepAction = class("BtChaosDaemonhostWarpSweepAction", "BtNode")
 
 BtChaosDaemonhostWarpSweepAction.init_values = function (self, blackboard, action_data, node_data)

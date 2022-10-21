@@ -21,8 +21,8 @@ local templates = {
 		proc_stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 2
 		},
-		check_proc_func = function (params)
-			local result = params.result
+		check_proc_func = function (params, template_data, template_context)
+			local result = params.attack_result
 
 			return result == attack_results.died
 		end
@@ -108,8 +108,8 @@ local templates = {
 
 			Ammo.transfer_from_reserve_to_clip(inventory_slot_component, 1)
 		end,
-		check_proc_func = function (params)
-			local result = params.result
+		check_proc_func = function (params, template_data, template_context)
+			local result = params.attack_result
 
 			if result ~= attack_results.died then
 				return false
@@ -140,23 +140,23 @@ local templates = {
 		class_name = "buff",
 		keywords = {},
 		stat_buffs = {
-			[buff_stat_buffs.ranged_weakspot_damage_vs_staggered_] = 0.5
+			[buff_stat_buffs.ranged_weakspot_damage_vs_staggered] = 0.5
 		}
 	},
 	debug_burninating_burning = {
-		duration = 5,
 		interval = 0.75,
 		refresh_duration_on_stack = true,
 		max_stacks = 5,
+		duration = 5,
 		class_name = "interval_buff",
 		keywords = {
 			buff_keywords.burning
 		},
 		target = buff_targets.minion_only,
-		on_reached_max_stack_function = function (template_data, template_context)
+		on_reached_max_stack_func = function (template_data, template_context)
 			template_data.has_reached_max_stacks = true
 		end,
-		interval_function = function (template_data, template_context)
+		interval_func = function (template_data, template_context)
 			local unit = template_context.unit
 
 			if HEALTH_ALIVE[unit] then
@@ -202,7 +202,7 @@ local templates = {
 				local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 				if attacked_unit_buff_extension then
-					local t = Managers.time:time("gameplay")
+					local t = FixedFrame.get_latest_fixed_time()
 					local buff_to_add = "debug_burninating_burning"
 
 					attacked_unit_buff_extension:add_internally_controlled_buff(buff_to_add, t)

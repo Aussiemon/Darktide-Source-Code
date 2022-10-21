@@ -15,16 +15,16 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__long_death_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.19,
+			5.687,
+			5.695,
+			5.905,
+			7.055,
+			5.924,
+			4.777,
+			5.303,
+			5.885,
+			7.256
 		},
 		sound_event_weights = {
 			0.1,
@@ -51,11 +51,11 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__reinforcements_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.708875,
+			1.741,
+			2.359,
+			2.930438,
+			2.706417
 		},
 		sound_event_weights = {
 			0.2,
@@ -82,16 +82,16 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__taunt_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.143417,
+			1.769792,
+			2.880542,
+			2.161,
+			3.746,
+			2.256,
+			3.105083,
+			4.301,
+			3.626,
+			3.134354
 		},
 		sound_event_weights = {
 			0.1,
@@ -123,16 +123,16 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__taunt_combat_10"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.668,
+			2.812,
+			1.931,
+			2.206,
+			4.475,
+			2.573,
+			1.842,
+			3.277,
+			3.062,
+			4.632
 		},
 		sound_event_weights = {
 			0.1,

@@ -1,5 +1,7 @@
 require("scripts/extension_systems/buff/buffs/buff")
 
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local ProcExtendableDurationBuff = class("ProcExtendableDurationBuff", "Buff")
 
 ProcExtendableDurationBuff.init = function (self, context, template, start_time, instance_id, ...)
@@ -10,11 +12,10 @@ ProcExtendableDurationBuff.update_proc_events = function (self, t, proc_events, 
 	local template = self._template
 	local template_proc_events = template.proc_events
 
-	for i = 1, num_proc_events do
-		local proc_event_data = proc_events[i]
-		local proc_event_name = proc_event_data.name
+	for i = 1, num_proc_events, PROC_EVENTS_STRIDE do
+		local proc_event_name = proc_events[i]
+		local params = proc_events[i + 1]
 		local proc_chance = template_proc_events[proc_event_name]
-		local params = proc_event_data.params
 		local is_local_proc_event = params.is_local_proc_event
 
 		if proc_chance then
@@ -31,9 +32,6 @@ ProcExtendableDurationBuff.update_proc_events = function (self, t, proc_events, 
 						local component_keys = self._component_keys
 						local proc_count_key = component_keys.proc_count_key
 						local max_proc_stacks = template.max_proc_stacks
-
-						fassert(max_proc_stacks, "no max_proc_stacks defined when attempting to stack proc for buff: %q", template.name)
-
 						local proc_count = buff_component[proc_count_key] + 1
 						local new_proc_count = math.clamp(proc_count, 0, max_proc_stacks)
 						buff_component[proc_count_key] = new_proc_count

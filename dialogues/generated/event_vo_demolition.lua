@@ -21,8 +21,8 @@ return function ()
 			{
 				"faction_memory",
 				"event_demolition_first_corruptor_destroyed_a",
-				OP.EQ,
-				0
+				OP.LT,
+				2
 			}
 		},
 		on_done = {
@@ -34,16 +34,17 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "event_demolition_first_corruptor_destroyed_b",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "event_demolition_first_corruptor_destroyed_b",
 		response = "event_demolition_first_corruptor_destroyed_b",
 		database = "event_vo_demolition",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -65,11 +66,27 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
+			},
+			{
+				"faction_memory",
+				"event_demolition_first_corruptor_destroyed_b",
+				OP.EQ,
+				0
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"event_demolition_first_corruptor_destroyed_b",
+				OP.ADD,
+				1
+			}
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.3
@@ -78,11 +95,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "event_demolition_last_corruptor",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "event_demolition_last_corruptor",
 		response = "event_demolition_last_corruptor",
 		database = "event_vo_demolition",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -126,11 +144,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "event_demolition_more_corruptors",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "event_demolition_more_corruptors",
 		response = "event_demolition_more_corruptors",
 		database = "event_vo_demolition",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -174,11 +193,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "info_event_demolition_corruptors_almost_done",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "info_event_demolition_corruptors_almost_done",
 		response = "info_event_demolition_corruptors_almost_done",
 		database = "event_vo_demolition",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -222,11 +242,12 @@ return function ()
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
-		name = "mission_stockpile_bazaar",
+		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
+		name = "mission_stockpile_bazaar",
 		response = "mission_stockpile_bazaar",
 		database = "event_vo_demolition",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -246,7 +267,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{

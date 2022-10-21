@@ -8,7 +8,7 @@ local event_vo_hacking_veteran_female_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 1.983188,
-			[2.0] = 2.133979
+			[2.0] = 2.133958
 		},
 		randomize_indexes = {}
 	}

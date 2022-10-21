@@ -14,7 +14,7 @@ _system_require("animation", "animation_system")
 _system_require("attack_intensity", "attack_intensity_system")
 _system_require("behavior", "behavior_system")
 _system_require("blackboard", "blackboard_system")
-_system_require("boss", "boss_extension")
+_system_require("boss", "boss_system")
 _system_require("broadphase", "broadphase_system")
 _system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension")
 _system_require("camera", "camera_system")
@@ -38,7 +38,6 @@ _system_require("door_control_panel", "door_control_panel_system")
 _system_require("event_synchronizer", "event_synchronizer_system")
 _system_require("fade", "fade_system")
 _system_require("first_person", "player_unit_first_person_extension", "player_husk_first_person_extension")
-_system_require("force_field", "force_field_system", "force_field_extension")
 _system_require("fx", "fx_system")
 _system_require("gadget", "gadget_system")
 _system_require("group", "group_system")
@@ -96,13 +95,15 @@ _system_require("specialization", "specialization_system")
 _system_require("spline_group", "spline_group_system")
 _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
+_system_require("training_grounds", "training_grounds_scenario_system")
 _system_require("trigger", "trigger_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
 _system_require("visual_loadout", "visual_loadout_system")
 _system_require("volume_event", "volume_event_system")
-_system_require("weather", "weather_system")
+_system_require("weakspot", "weakspot_extension")
 _system_require("weapon", "weapon_system")
+_system_require("weather", "weather_system")
 _system_require("wounds", "wounds_extension")
 
 local systems = {
@@ -372,6 +373,18 @@ local systems = {
 			"PropHealthExtension",
 			"PlayerUnitHealthExtension",
 			"PlayerHuskHealthExtension"
+		}
+	},
+	{
+		"weakspot_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"WeakspotExtension"
 		}
 	},
 	{
@@ -708,18 +721,6 @@ local systems = {
 		false,
 		{
 			"ScannerDisplayExtension"
-		}
-	},
-	{
-		"force_field_system",
-		"ForceFieldSystem",
-		false,
-		true,
-		false,
-		true,
-		false,
-		{
-			"ForceFieldExtension"
 		}
 	},
 	{
@@ -1217,7 +1218,7 @@ local systems = {
 	},
 	{
 		"boss_system",
-		"ExtensionSystemBase",
+		"BossSystem",
 		false,
 		false,
 		false,
@@ -1286,6 +1287,18 @@ local systems = {
 		false,
 		{
 			"SmartTagExtension"
+		}
+	},
+	{
+		"training_grounds_scenario_system",
+		"TrainingGroundsScenarioSystem",
+		false,
+		true,
+		false,
+		false,
+		false,
+		{
+			"TrainingGroundsDirectionalUnitExtension"
 		}
 	},
 	{

@@ -83,8 +83,9 @@ LoadingHost.update = function (self, dt)
 		end
 
 		local profile_sync_host = Managers.profile_synchronization:synchronizer_host()
-		local profiles_loaded = profile_loading_enabled and profile_sync_host:profiles_synced(self._spawn_peers) and self._package_synchronizer_host:peers_synced(self._spawn_peers)
-		local all_loaded = levels_loaded and profiles_loaded
+		local profiles_loaded = profile_loading_enabled and profile_sync_host:profiles_synced(self._spawn_peers)
+		local packages_loaded = profile_loading_enabled and self._package_synchronizer_host:peers_synced(self._spawn_peers)
+		local all_loaded = levels_loaded and profiles_loaded and packages_loaded
 
 		if all_loaded then
 			if self._state == "initial_spawn" then

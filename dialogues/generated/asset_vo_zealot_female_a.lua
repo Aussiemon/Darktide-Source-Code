@@ -44,7 +44,7 @@ local asset_vo_zealot_female_a = {
 		},
 		sound_events_duration = {
 			4.808146,
-			4.567792,
+			4.567813,
 			4.590417,
 			7.050375
 		},
@@ -58,7 +58,7 @@ local asset_vo_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__level_hab_block_goo_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.661542,
+			[1.0] = 4.661563,
 			[2.0] = 3.052604
 		},
 		sound_event_weights = {
@@ -76,7 +76,7 @@ local asset_vo_zealot_female_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 5.634646,
-			[2.0] = 4.02275
+			[2.0] = 4.022729
 		},
 		randomize_indexes = {}
 	},
@@ -88,8 +88,8 @@ local asset_vo_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__asset_sigil_02"
 		},
 		sound_events_duration = {
-			[1.0] = 7.918875,
-			[2.0] = 4.902438
+			[1.0] = 7.918896,
+			[2.0] = 4.902458
 		},
 		randomize_indexes = {}
 	},
@@ -105,8 +105,8 @@ local asset_vo_zealot_female_a = {
 		sound_events_duration = {
 			2.088271,
 			2.879792,
-			3.303167,
-			2.80475
+			3.303146,
+			2.804729
 		},
 		randomize_indexes = {}
 	},
@@ -121,8 +121,8 @@ local asset_vo_zealot_female_a = {
 		},
 		sound_events_duration = {
 			2.837167,
-			2.881542,
-			3.091958,
+			2.881521,
+			3.091938,
 			2.928854
 		},
 		randomize_indexes = {}

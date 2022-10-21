@@ -12,8 +12,6 @@ RoomsAndPortalsManager.init = function (self, world)
 end
 
 RoomsAndPortalsManager.update = function (self, dt, t)
-	Profiler.start("_RoomsAndPortalsManager_update")
-
 	if not self._is_connected then
 		local any_room_added = false
 
@@ -24,9 +22,6 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 			local aux_send_to_self = 0
 			local reverb_aux_bus = room:get_data(unit, "reverb_aux_bus")
 			local environment_state = room:get_data(unit, "environment_state")
-
-			assert(self._rooms[room] == -1, "Trying to add a room already added")
-
 			local room_id = WwiseWorld.add_room_unit(self._wwise_world, unit, priority, wall_occlusion, aux_send_to_self, reverb_aux_bus, environment_state)
 			self._rooms[room] = room_id
 			local ambient_event = room:get_data(unit, "ambient_event")
@@ -59,8 +54,6 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 
 		table.clear(self._portal_toggle_queue)
 	end
-
-	Profiler.stop("_RoomsAndPortalsManager_update")
 end
 
 RoomsAndPortalsManager.register_room = function (self, room)
@@ -121,8 +114,7 @@ RoomsAndPortalsManager.destroy = function (self)
 end
 
 RoomsAndPortalsManager._cleanup = function (self)
-	assert(#self._rooms == 0, "A Wwise room was not properly removed")
-	assert(#self._portals == 0, "A Wwise portal was not properly removed")
+	return
 end
 
 RoomsAndPortalsManager._check_portal_id = function (self, portal_id)

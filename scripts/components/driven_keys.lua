@@ -63,7 +63,7 @@ DrivenKeys._setDrivenPose = function (self, driven_node, driven_node_data)
 	end
 
 	if not Vector3.equal(original_rotation, driven_rotation) then
-		rx, ry, rz = Vector3.to_elements(driven_rotation)
+		local rx, ry, rz = Vector3.to_elements(driven_rotation)
 		driven_q = Quaternion.from_euler_angles_xyz(rx, ry, rz)
 
 		Unit.set_local_rotation(self._unit, driven_node_index, driven_q)
@@ -123,13 +123,17 @@ DrivenKeys._editDrivenVector = function (self, vector, sum_of_driven_values, axi
 end
 
 DrivenKeys.linearLineEquation = function (self, x, keys)
+	local y = nil
+
 	if x <= keys[1].x then
 		y = keys[1].y
 	elseif keys[#keys].x <= x then
 		y = keys[#keys].y
 	else
+		local x1, y1, x2, y2 = nil
+
 		for i, key in ipairs(keys) do
-			next_key = keys[i + 1]
+			local next_key = keys[i + 1]
 
 			if key.x <= x and x <= next_key.x then
 				y1 = key.y
@@ -141,8 +145,8 @@ DrivenKeys.linearLineEquation = function (self, x, keys)
 			end
 		end
 
-		k = (y1 - y2) / (x1 - x2)
-		m = y1 - k * x1
+		local k = (y1 - y2) / (x1 - x2)
+		local m = y1 - k * x1
 		y = k * x + m
 	end
 

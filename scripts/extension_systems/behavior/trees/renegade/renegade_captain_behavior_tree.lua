@@ -423,7 +423,13 @@ local POWERMAUL = {
 local CHARGE = {
 	"BtChargeAction",
 	name = "charge",
+	condition = "is_aggroed_in_combat_range",
 	action_data = action_data.charge,
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	enter_hook = {
 		hook = "captain_charge_enter"
 	},

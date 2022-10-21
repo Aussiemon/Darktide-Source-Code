@@ -7,23 +7,24 @@ table.make_unique(overrides)
 recoil_templates.default_thumper_assault = {
 	still = {
 		new_influence_percent = 0.75,
-		rise_duration = 0.15,
+		rise_duration = 0.12,
+		decay_grace = 0.35,
 		rise = {
 			0.75
 		},
 		decay = {
-			shooting = 0.5,
-			idle = 1.5
+			shooting = 1.4,
+			idle = 0.5
 		},
 		offset_range = {
 			{
 				pitch = {
-					0.25,
-					0.3
+					0.15,
+					0.2
 				},
 				yaw = {
-					-0.15,
-					-0.1
+					-0.09,
+					-0.03
 				}
 			}
 		},

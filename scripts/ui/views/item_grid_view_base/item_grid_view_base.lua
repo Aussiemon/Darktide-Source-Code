@@ -23,6 +23,7 @@ ItemGridViewBase.init = function (self, definitions, settings, context)
 	end
 
 	self._definitions = merged_definitions
+	self._grow_direction = "down"
 	self._context = context
 
 	ItemGridViewBase.super.init(self, merged_definitions, settings)
@@ -48,16 +49,7 @@ end
 ItemGridViewBase._setup_sort_options = function (self)
 	self._sort_options = {
 		{
-			display_name = "loc_inventory_item_grid_sort_title_rarity",
-			sort_function = function (a, b)
-				local a_item = a.item
-				local b_item = b.item
-
-				return ItemUtils.sort_items_by_rarity_low_first(a_item, b_item)
-			end
-		},
-		{
-			display_name = "loc_inventory_item_grid_sort_title_rarity",
+			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
 			sort_function = function (a, b)
 				local a_item = a.item
 				local b_item = b.item
@@ -66,21 +58,30 @@ ItemGridViewBase._setup_sort_options = function (self)
 			end
 		},
 		{
-			display_name = "loc_inventory_item_grid_sort_title_name",
+			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
 			sort_function = function (a, b)
 				local a_item = a.item
 				local b_item = b.item
 
-				return ItemUtils.sort_items_by_name_low_first(a_item, b_item)
+				return ItemUtils.sort_items_by_rarity_low_first(a_item, b_item)
 			end
 		},
 		{
-			display_name = "loc_inventory_item_grid_sort_title_name",
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
 			sort_function = function (a, b)
 				local a_item = a.item
 				local b_item = b.item
 
 				return ItemUtils.sort_items_by_name_high_first(a_item, b_item)
+			end
+		},
+		{
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
+			sort_function = function (a, b)
+				local a_item = a.item
+				local b_item = b.item
+
+				return ItemUtils.sort_items_by_name_low_first(a_item, b_item)
 			end
 		}
 	}
@@ -91,7 +92,7 @@ end
 
 ItemGridViewBase._setup_default_gui = function (self)
 	local ui_manager = Managers.ui
-	local reference_name = "ItemGridViewBase"
+	local reference_name = self.__class_name
 	local timer_name = "ui"
 	local world_layer = 100
 	local world_name = reference_name .. "_ui_default_world"
@@ -169,16 +170,21 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, o
 			local entry = layout[i]
 			local item = entry.item
 			local add_item = false
-			local slots = item.slots
 
-			if slots then
-				for _, slot_name in ipairs(slots) do
-					if not slot_filter or table.find(slot_filter, slot_name) then
-						add_item = true
+			if item then
+				local slots = item.slots
 
-						break
+				if slots then
+					for _, slot_name in ipairs(slots) do
+						if not slot_filter or table.find(slot_filter, slot_name) then
+							add_item = true
+
+							break
+						end
 					end
 				end
+			else
+				add_item = true
 			end
 
 			if add_item then
@@ -188,8 +194,17 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, o
 
 		self._filtered_offer_items_layout = filtered_layout
 		self._grid_display_name = optional_display_name
+		local sort_options = self._sort_options
 
-		self._item_grid:trigger_sort_index(1)
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			self:_sort_grid_layout(selected_sort_function)
+		else
+			self:_sort_grid_layout()
+		end
 	end
 end
 
@@ -199,6 +214,10 @@ end
 
 ItemGridViewBase.selected_grid_index = function (self)
 	return self._item_grid:selected_grid_index()
+end
+
+ItemGridViewBase.selected_grid_widget = function (self)
+	return self._item_grid:selected_grid_widget()
 end
 
 ItemGridViewBase._update_tab_bar_position = function (self)
@@ -236,9 +255,14 @@ ItemGridViewBase._stop_previewing = function (self)
 end
 
 ItemGridViewBase._preview_element = function (self, element)
+	local item = element.item
+
+	self:_preview_item(item)
+end
+
+ItemGridViewBase._preview_item = function (self, item)
 	self:_stop_previewing()
 
-	local item = element.item
 	local item_display_name = item.display_name
 
 	if string.match(item_display_name, "unarmed") then
@@ -249,12 +273,13 @@ ItemGridViewBase._preview_element = function (self, element)
 	local slots = item.slots or {}
 	local item_name = item.name
 	local gear_id = item.gear_id or item_name
+	local item_type = item.item_type
 
-	if (table.find(slots, "slot_primary") or table.find(slots, "slot_secondary")) and self._weapon_stats then
-		self._weapon_stats:present_item(item)
-	end
-
-	if self._weapon_preview then
+	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
+		if self._weapon_stats then
+			self._weapon_stats:present_item(item)
+		end
+	elseif self._weapon_preview then
 		local disable_auto_spin = true
 
 		self._weapon_preview:present_item(item, disable_auto_spin)
@@ -270,6 +295,10 @@ ItemGridViewBase._preview_element = function (self, element)
 	local visible = true
 
 	self:_set_preview_widgets_visibility(visible)
+end
+
+ItemGridViewBase.is_previewing_weapon = function (self)
+	return self._previewed_item ~= nil
 end
 
 ItemGridViewBase._destroy_weapon_preview = function (self)
@@ -297,8 +326,30 @@ ItemGridViewBase._setup_weapon_stats = function (self)
 	if not self._weapon_stats then
 		local reference_name = "weapon_stats"
 		local layer = 10
+		local title_height = 70
+		local edge_padding = 12
+		local grid_width = 530
+		local grid_height = 840
+		local grid_size = {
+			grid_width - edge_padding,
+			grid_height
+		}
+		local grid_spacing = {
+			0,
+			0
+		}
+		local mask_size = {
+			grid_width + 40,
+			grid_height
+		}
 		local context = {
-			ignore_blur = true
+			scrollbar_width = 7,
+			ignore_blur = true,
+			grid_spacing = grid_spacing,
+			grid_size = grid_size,
+			mask_size = mask_size,
+			title_height = title_height,
+			edge_padding = edge_padding
 		}
 		self._weapon_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
 
@@ -328,6 +379,7 @@ ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
 	local layer = 10
 	self._item_grid = self:_add_element(ViewElementGrid, reference_name, layer, context)
 
+	self:present_grid_layout({})
 	self:_update_item_grid_position()
 	self:_setup_sort_options()
 end
@@ -342,11 +394,33 @@ ItemGridViewBase._update_item_grid_position = function (self)
 	self._item_grid:set_pivot_offset(position[1], position[2])
 end
 
+ItemGridViewBase._grid_widget_by_name = function (self, widget_name)
+	if not self._item_grid then
+		return
+	end
+
+	return self._item_grid:widget_by_name(widget_name)
+end
+
 ItemGridViewBase.on_exit = function (self)
+	if self._inpect_view_opened then
+		self._inpect_view_opened = nil
+
+		if Managers.ui:view_active("inventory_weapon_details_view") then
+			Managers.ui:close_view("inventory_weapon_details_view")
+		end
+	end
+
+	if self._weapon_stats then
+		self:_remove_element("weapon_stats")
+
+		self._weapon_stats = nil
+	end
+
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
 
-		Managers.ui:destroy_renderer("ItemGridViewBase" .. "_ui_default_renderer")
+		Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
 
 		local world = self._gui_world
 		local viewport_name = self._gui_viewport_name
@@ -364,18 +438,69 @@ ItemGridViewBase.on_exit = function (self)
 end
 
 ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
+	local option_sort_index = nil
+	local sort_options = self._sort_options
+
+	for i = 1, #sort_options do
+		if sort_options[i] == option then
+			option_sort_index = i
+
+			break
+		end
+	end
+
+	self._selected_sort_option_index = option_sort_index
+	self._selected_sort_option = option
+	local sort_function = option.sort_function
+
+	self:_sort_grid_layout(sort_function)
+end
+
+ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 	if not self._filtered_offer_items_layout then
 		return
 	end
 
 	local layout = table.clone_instance(self._filtered_offer_items_layout)
 
-	if #layout > 1 then
-		local sort_function = option.sort_function
-
+	if sort_function and #layout > 1 then
 		table.sort(layout, sort_function)
 	end
 
+	local item_grid = self._item_grid
+	local widget_index = item_grid:selected_grid_index()
+	local selected_element = widget_index and item_grid:element_by_index(widget_index)
+	local selected_item = selected_element and selected_element.item
+	local selected_gear_id = selected_item and selected_item.gear_id
+	local on_present_callback = selected_gear_id and callback(function ()
+		local new_selection_index = nil
+		local grid_widgets = item_grid:widgets()
+
+		for i = 1, #grid_widgets do
+			local widget = grid_widgets[i]
+			local content = widget.content
+			local element = content.element
+
+			if element then
+				local item = element.item
+
+				if item and item.gear_id == selected_gear_id then
+					new_selection_index = i
+
+					break
+				end
+			end
+		end
+
+		if new_selection_index then
+			self._item_grid:focus_grid_index(new_selection_index)
+		end
+	end)
+
+	self:present_grid_layout(layout, on_present_callback)
+end
+
+ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callback)
 	local grid_display_name = self._grid_display_name
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
@@ -389,22 +514,38 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 
 	table.insert(layout, 1, spacing_entry)
 	table.insert(layout, #layout + 1, spacing_entry)
-	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name)
+
+	local grow_direction = self._grow_direction or "down"
+
+	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction, on_present_callback)
 end
 
 ItemGridViewBase.cb_on_grid_entry_right_pressed = function (self, widget, element)
-	return
+	local function cb_func()
+		if self._destroyed then
+			return
+		end
+	end
+
+	self._update_callback_on_grid_entry_right_pressed = callback(cb_func)
 end
 
 ItemGridViewBase.cb_on_grid_entry_left_pressed = function (self, widget, element)
-	local item = element.item
+	local function cb_func()
+		if self._destroyed then
+			return
+		end
 
-	if Managers.ui:using_cursor_navigation() and item and item ~= self._previewed_item then
-		local widget_index = element.widget_index or 1
+		local item = element.item
 
-		self._item_grid:focus_grid_index(widget_index)
-		self:_preview_element(element)
+		if Managers.ui:using_cursor_navigation() and item and item ~= self._previewed_item then
+			local widget_index = self._item_grid:widget_index(widget) or 1
+
+			self._item_grid:focus_grid_index(widget_index)
+		end
 	end
+
+	self._update_callback_on_grid_entry_left_pressed = callback(cb_func)
 end
 
 ItemGridViewBase._handle_input = function (self, input_service)
@@ -412,17 +553,51 @@ ItemGridViewBase._handle_input = function (self, input_service)
 end
 
 ItemGridViewBase.update = function (self, dt, t, input_service)
+	if self._update_callback_on_grid_entry_left_pressed then
+		self._update_callback_on_grid_entry_left_pressed()
+
+		self._update_callback_on_grid_entry_left_pressed = nil
+	end
+
+	if self._update_callback_on_grid_entry_right_pressed then
+		self._update_callback_on_grid_entry_right_pressed()
+
+		self._update_callback_on_grid_entry_right_pressed = nil
+	end
+
+	local synced_grid_index = self._synced_grid_index
+	local item_grid = self._item_grid
+	local grid_index = item_grid and item_grid:selected_grid_index() or nil
+	local grid_index_changed = not synced_grid_index or grid_index and synced_grid_index ~= grid_index
+
+	if grid_index_changed then
+		local grid_element = grid_index and item_grid:element_by_index(grid_index)
+		local item = grid_element and grid_element.item
+		local offer = grid_element and grid_element.offer
+
+		if item ~= self._previewed_item or offer ~= self._previewed_offer then
+			self:_preview_element(grid_element)
+		end
+
+		self._synced_grid_index = grid_index
+	end
+
 	if not Managers.ui:using_cursor_navigation() then
 		local item_grid = self._item_grid
 		local selected_grid_widget = item_grid and item_grid:selected_grid_widget()
-		local selected_grid_element = selected_grid_widget and selected_grid_widget.content.element
-		local selected_grid_item = selected_grid_element and selected_grid_element.item
 
-		if selected_grid_item and selected_grid_item ~= self._previewed_item then
-			local widget_index = selected_grid_element.widget_index or 1
+		if not selected_grid_widget then
+			self._item_grid:select_first_index()
 
-			self._item_grid:focus_grid_index(widget_index)
-			self:_preview_element(selected_grid_element)
+			selected_grid_widget = item_grid:selected_grid_widget()
+			local selected_grid_element = selected_grid_widget and selected_grid_widget.content.element
+			local selected_grid_item = selected_grid_element and selected_grid_element.item
+
+			if selected_grid_item and selected_grid_item ~= self._previewed_item then
+				local widget_index = item_grid:widget_index(selected_grid_widget) or 1
+
+				self:_preview_element(selected_grid_element)
+			end
 		end
 	end
 
@@ -463,10 +638,6 @@ ItemGridViewBase.focus_grid_index = function (self, index, scrollbar_animation_p
 	self._item_grid:focus_grid_index(index, scrollbar_animation_progress, instant_scroll)
 end
 
-ItemGridViewBase.selected_grid_index = function (self)
-	return self._item_grid:selected_grid_index()
-end
-
 ItemGridViewBase.scroll_to_grid_index = function (self, index)
 	self._item_grid:scroll_to_grid_index(index)
 end
@@ -486,7 +657,7 @@ ItemGridViewBase.focus_on_offer = function (self, offer)
 		local element_offer = element.offer
 
 		if element_offer and element_offer.offerId == offer.offerId then
-			local widget_index = element.widget_index or 1
+			local widget_index = item_grid:widget_index(widget) or 1
 			local scrollbar_animation_progress = item_grid:get_scrollbar_percentage_by_index(widget_index)
 			local instant_scroll = true
 
@@ -518,7 +689,7 @@ ItemGridViewBase.focus_on_item = function (self, item)
 		local element_item = element.item
 
 		if element_item and element_item.gear_id == item.gear_id then
-			local widget_index = element.widget_index or 1
+			local widget_index = item_grid:widget_index(widget) or 1
 			local scrollbar_animation_progress = item_grid:get_scrollbar_percentage_by_index(widget_index)
 			local instant_scroll = true
 
@@ -550,7 +721,7 @@ ItemGridViewBase.item_grid_index = function (self, item)
 		local element_item = element.item
 
 		if element_item and element_item.gear_id == item.gear_id then
-			local widget_index = element.widget_index or 1
+			local widget_index = item_grid:widget_index(widget) or 1
 
 			return widget_index
 		end
@@ -559,6 +730,30 @@ end
 
 ItemGridViewBase.element_by_index = function (self, index)
 	return self._item_grid:element_by_index(index)
+end
+
+ItemGridViewBase.trigger_sort_index = function (self, index)
+	if self._item_grid then
+		self._item_grid:trigger_sort_index(index)
+	end
+end
+
+ItemGridViewBase.cb_on_inspect_pressed = function (self)
+	if self._previewed_item then
+		self._inpect_view_opened = true
+
+		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
+			preview_item = self._previewed_item
+		})
+	end
+end
+
+ItemGridViewBase.can_inspect_item = function (self)
+	if self._previewed_item then
+		return true
+	end
+
+	return false
 end
 
 return ItemGridViewBase

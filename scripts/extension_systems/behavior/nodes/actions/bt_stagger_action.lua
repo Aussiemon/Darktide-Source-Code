@@ -55,13 +55,7 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	locomotion_extension:set_anim_translation_scale(Vector3(scale, scale, scale))
 
 	if not was_already_in_stagger then
-		local anim_driven = true
-		local script_driven_rotation = false
-		local affected_by_gravity = locomotion_extension.movement_type == "constrained_by_mover"
-		local velocity = locomotion_extension:current_velocity()
-		local override_velocity_z = affected_by_gravity and velocity.z > 0 and 0 or nil
-
-		locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation, override_velocity_z)
+		scratchpad.set_anim_driven = true
 	end
 
 	locomotion_extension:set_rotation_speed(ROTATION_SPEED)
@@ -178,16 +172,31 @@ BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 	local stagger_component = blackboard.stagger
 	local num_triggered_staggers = stagger_component.num_triggered_staggers
 
+	if scratchpad.start_anim_driven then
+		scratchpad.start_anim_driven = nil
+		local locomotion_extension = scratchpad.locomotion_extension
+		local anim_driven = true
+		local script_driven_rotation = false
+		local affected_by_gravity = locomotion_extension.movement_type == "constrained_by_mover"
+		local velocity = locomotion_extension:current_velocity()
+		local override_velocity_z = affected_by_gravity and velocity.z > 0 and 0 or nil
+
+		locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation, override_velocity_z)
+	elseif scratchpad.set_anim_driven then
+		scratchpad.set_anim_driven = nil
+		scratchpad.start_anim_driven = true
+	end
+
 	if num_triggered_staggers ~= scratchpad.current_triggered_stagger then
 		MinionShield.reset_block_timings(scratchpad, unit)
 		self:enter(unit, breed, blackboard, scratchpad, action_data, t)
+
+		scratchpad.start_anim_driven = nil
 	end
 
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	if locomotion_extension.movement_type ~= "constrained_by_mover" and not scratchpad.stagger_hit_wall then
-		Profiler.start("checking navmesh")
-
 		local position = POSITION_LOOKUP[unit]
 		local velocity = locomotion_extension:current_velocity()
 		local result = NavQueries.movement_check(scratchpad.nav_world, scratchpad.physics_world, position, velocity, scratchpad.traverse_logic)
@@ -208,8 +217,6 @@ BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 				scratchpad.stagger_hit_wall = true
 			end
 		end
-
-		Profiler.stop("checking navmesh")
 	end
 
 	MinionShield.update_block_timings(scratchpad, unit, t)

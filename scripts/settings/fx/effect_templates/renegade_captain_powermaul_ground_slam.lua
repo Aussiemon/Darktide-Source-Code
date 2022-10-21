@@ -1,3 +1,4 @@
+local Component = require("scripts/utilities/component")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local SLOT_ITEM_NAME = "slot_powermaul"
 local FX_SOURCE_NAME = "fx_sweep"
@@ -30,6 +31,15 @@ local effect_template = {
 
 		template_context.attachment_unit = attachment_unit
 		template_context.node_index = node_index
+		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
+		template_data.unit_components = unit_components
+		template_data.attachment_unit = attachment_unit
+		local world = template_context.world
+		local t = World.time(world)
+
+		for _, component in pairs(unit_components) do
+			component:set_start_time(t, attachment_unit)
+		end
 	end,
 	update = function (template_data, template_context, dt, t)
 		return
@@ -39,6 +49,13 @@ local effect_template = {
 		local vfx_particle_id = template_data.vfx_particle_id
 
 		World.stop_spawning_particles(world, vfx_particle_id)
+
+		local unit_components = template_data.unit_components
+		local t = World.time(world)
+
+		for _, component in pairs(unit_components) do
+			component:set_stop_time(t, template_data.attachment_unit)
+		end
 	end
 }
 

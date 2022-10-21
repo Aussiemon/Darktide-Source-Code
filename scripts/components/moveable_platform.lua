@@ -62,7 +62,6 @@ MoveablePlatform._spawn_stop_points = function (self)
 	local world = self._world
 	local end_unit = World.spawn_unit_ex(world, unit_name, nil, stop_position:unbox(), stop_rotation)
 
-	fassert(end_unit, "[MoveablePlatform] Could not spawn stop unit.")
 	table.insert(self._stop_units, end_unit)
 end
 

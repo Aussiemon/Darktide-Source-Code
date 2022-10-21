@@ -7,10 +7,12 @@ EventSynchronizerBaseExtension.init = function (self, extension_init_context, un
 	self._auto_start = false
 	self._mission_active = false
 	self._finished = false
-	self._seed = nil
+	self._setup_seed = 0
+	self._seed = 0
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 	if self._is_server then
+		self._setup_seed = math.random_seed()
 		self._seed = math.random_seed()
 	end
 end
@@ -56,11 +58,12 @@ EventSynchronizerBaseExtension.auto_start = function (self)
 	return self._auto_start
 end
 
-EventSynchronizerBaseExtension.seed = function (self)
-	return self._seed
+EventSynchronizerBaseExtension.seeds = function (self)
+	return self._setup_seed, self._seed
 end
 
-EventSynchronizerBaseExtension.set_seed = function (self, seed)
+EventSynchronizerBaseExtension.distribute_seeds = function (self, setup_seed, seed)
+	self._setup_seed = setup_seed
 	self._seed = seed
 end
 

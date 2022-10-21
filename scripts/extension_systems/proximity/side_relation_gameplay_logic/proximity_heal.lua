@@ -1,5 +1,6 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Health = require("scripts/utilities/health")
+local Toughness = require("scripts/utilities/toughness/toughness")
 local ProximityHeal = class("ProximityHeal")
 local _heal_amount_percentage_from_range = nil
 
@@ -33,9 +34,10 @@ ProximityHeal.init = function (self, logic_context, init_data)
 		end
 	end
 
-	local modifier = players_have_improved_keyword and 1.5 or 1
-	self._heal_reserve = self._med_kit_settings.optional_heal_reserve * modifier
-	self._heal_time = self._med_kit_settings.optional_heal_time * modifier
+	self._heal_amount_modifier = players_have_improved_keyword and 2 or 1
+	self._heal_reserve = self._med_kit_settings.optional_heal_reserve
+	self._heal_time = self._med_kit_settings.optional_heal_time
+	self._players_have_improved_keyword = players_have_improved_keyword
 end
 
 ProximityHeal.unit_entered_proximity = function (self, unit)
@@ -67,8 +69,10 @@ ProximityHeal.update = function (self, dt, t)
 
 	local heal_type = self._heal_type
 	local heal_rate_percentage = self._med_kit_settings.heal_rate_percentage
+	local heal_amount_modifier = self._heal_amount_modifier
 	local heal_percentage = dt * heal_rate_percentage
 	local amount_healed_this_tick = 0
+	local players_have_improved_keyword = self._players_have_improved_keyword
 	local optional_buff = self._med_kit_settings.optional_buff
 
 	for unit, _ in pairs(self._units_in_proximity) do
@@ -76,7 +80,7 @@ ProximityHeal.update = function (self, dt, t)
 
 		if health_extension then
 			local damaged_max_health = health_extension:damaged_max_health()
-			local heal_amount = damaged_max_health * heal_percentage
+			local heal_amount = damaged_max_health * heal_percentage * heal_amount_modifier
 			local health_added = Health.add(unit, heal_amount, heal_type)
 			amount_healed_this_tick = amount_healed_this_tick + health_added
 
@@ -90,6 +94,11 @@ ProximityHeal.update = function (self, dt, t)
 					local extra_heal_amount = damaged_max_health * extra_heal_percentage
 					local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
 				end
+			end
+
+			if players_have_improved_keyword then
+				health_extension:reduce_permanent_damage(heal_amount * 0.5)
+				Toughness.replenish_percentage(unit, 0.0016, false, "proximity_heal")
 			end
 
 			if health_added > 0 then
@@ -130,6 +139,14 @@ ProximityHeal.job_completed = function (self)
 	end
 
 	return is_health_depleted or is_life_span_over
+end
+
+ProximityHeal.cancel_job = function (self)
+	self._is_canceled = true
+end
+
+ProximityHeal.is_job_canceled = function (self)
+	return self._is_canceled or false
 end
 
 return ProximityHeal

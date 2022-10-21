@@ -18,7 +18,7 @@ local combat_ranges = {
 				}
 			},
 			{
-				distance = 35,
+				distance = 25,
 				require_line_of_sight = false,
 				enter_combat_range_flag = true,
 				sticky_time = 1,
@@ -44,7 +44,7 @@ local combat_ranges = {
 			{
 				switch_combat_range = "far",
 				distance_operator = "greater",
-				distance = 45,
+				distance = 35,
 				sticky_time = 0
 			}
 		},

@@ -15,7 +15,19 @@ local interface = {
 	"update",
 	"user_detached",
 	"user_id",
-	"wanted_transition"
+	"wanted_transition",
+	"get_friends",
+	"friends_list_has_changes",
+	"xuid",
+	"refresh_communcation_restrictions",
+	"is_muted",
+	"is_blocked",
+	"fetch_crossplay_restrictions",
+	"has_crossplay_restriction",
+	"verify_gdk_store_account",
+	"verify_user_restriction",
+	"user_has_restriction",
+	"user_restriction_verified"
 }
 local NullAccountManager = class("NullAccountManager")
 
@@ -77,6 +89,54 @@ end
 
 NullAccountManager.show_profile_picker = function (self)
 	return
+end
+
+NullAccountManager.get_friends = function (self)
+	return
+end
+
+NullAccountManager.friends_list_has_changes = function (self)
+	return
+end
+
+NullAccountManager.xuid = function (self)
+	return
+end
+
+NullAccountManager.refresh_communcation_restrictions = function (self)
+	return
+end
+
+NullAccountManager.is_muted = function (self)
+	return false
+end
+
+NullAccountManager.is_blocked = function (self)
+	return false
+end
+
+NullAccountManager.fetch_crossplay_restrictions = function (self)
+	return
+end
+
+NullAccountManager.has_crossplay_restriction = function (self)
+	return false
+end
+
+NullAccountManager.verify_gdk_store_account = function (self)
+	return true
+end
+
+NullAccountManager.verify_user_restriction = function (self)
+	return
+end
+
+NullAccountManager.user_has_restriction = function (self)
+	return false
+end
+
+NullAccountManager.user_restriction_verified = function (self)
+	return true
 end
 
 local AccountManager = {

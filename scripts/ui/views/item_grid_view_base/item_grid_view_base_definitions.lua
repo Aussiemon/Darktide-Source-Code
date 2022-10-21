@@ -6,7 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local title_height = 70
 local edge_padding = 44
 local grid_width = 640
-local grid_height = 750
+local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
 	grid_height
@@ -21,6 +21,10 @@ local mask_size = {
 }
 local grid_settings = {
 	scrollbar_width = 7,
+	widget_icon_load_margin = 0,
+	use_select_on_focused = true,
+	use_is_focused_for_navigation = false,
+	use_terminal_background = true,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -47,10 +51,10 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "left",
-		size = mask_size,
+		size = grid_size,
 		position = {
 			100,
-			250,
+			120,
 			1
 		}
 	},
@@ -69,7 +73,7 @@ local scenegraph_definition = {
 		}
 	},
 	weapon_stats_pivot = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
@@ -78,7 +82,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140,
-			-450,
+			120,
 			3
 		}
 	},
@@ -148,15 +152,21 @@ sub_display_name_style.text_vertical_alignment = "center"
 local widget_definitions = {
 	display_name_divider = UIWidget.create_definition({
 		{
+			value = "content/ui/materials/dividers/skull_rendered_left_01",
 			pass_type = "texture",
-			value = "content/ui/materials/dividers/skull_rendered_left_01"
+			visibility_function = function (content)
+				return content.texture ~= nil
+			end
 		}
 	}, "display_name_divider"),
 	display_name_divider_glow = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/effects/wide_upward_glow",
 			style_id = "texture",
-			pass_type = "texture"
+			pass_type = "texture",
+			visibility_function = function (content)
+				return content.texture ~= nil
+			end
 		}
 	}, "display_name_divider_glow"),
 	display_name = UIWidget.create_definition({

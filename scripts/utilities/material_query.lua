@@ -1,8 +1,8 @@
-local MaterialQuery = {
-	query_distance = 0.3,
-	queried_material = {
-		"surface_material"
-	}
+local MaterialQuery = {}
+local QUERY_DISTANCE = 0.6
+local HALF_QUERY_DISTANCE = QUERY_DISTANCE * 0.5
+local QUERIED_MATERIAL = {
+	"surface_material"
 }
 local surface_materials = {
 	"cloth",
@@ -29,8 +29,8 @@ local surface_materials = {
 MaterialQuery.surface_materials = surface_materials
 local lookup = {}
 
-for i = 1, #surface_materials do
-	local material_name = surface_materials[i]
+for ii = 1, #surface_materials do
+	local material_name = surface_materials[ii]
 	lookup[Unit.material_id(material_name)] = material_name
 end
 
@@ -76,8 +76,6 @@ local groups_lookup = {}
 
 for group, materials in pairs(groups) do
 	for _, material in pairs(materials) do
-		fassert(not groups_lookup[material], "material: %q exists in multiple groups", material)
-
 		groups_lookup[material] = group
 	end
 end
@@ -100,12 +98,13 @@ MaterialQuery.query_material = function (physics_world, from, to, debug_name)
 	end
 end
 
-MaterialQuery.query_unit_material = function (hit_unit, impact_position, query_direction)
-	local half_query = MaterialQuery.query_distance * 0.5
-	local query_offset = query_direction * half_query
-	local query_start = impact_position - query_offset
-	local query_end = impact_position + query_offset
-	local material_ids = Unit.query_material(hit_unit, query_start, query_end, MaterialQuery.queried_material)
+local _query_material_buffer = {}
+
+MaterialQuery.query_unit_material = function (hit_unit, query_position, query_direction)
+	local query_offset = query_direction * HALF_QUERY_DISTANCE
+	local query_start = query_position - query_offset
+	local query_end = query_position + query_offset
+	local material_ids = Unit.query_material(hit_unit, query_start, query_end, QUERIED_MATERIAL, _query_material_buffer)
 	local material_id = material_ids[1]
 	local material = MaterialQuery.lookup[material_id]
 

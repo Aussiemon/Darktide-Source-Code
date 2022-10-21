@@ -1,14 +1,3 @@
-assert(DialogueLookup[DialogueLookup_n + 1] == nil)
-assert(DialogueLookup[DialogueLookup_n + 2] == nil)
-assert(DialogueLookup[DialogueLookup_n + 3] == nil)
-assert(DialogueLookup[DialogueLookup_n + 4] == nil)
-assert(DialogueLookup[DialogueLookup_n + 5] == nil)
-assert(DialogueLookup[DialogueLookup_n + 6] == nil)
-assert(DialogueLookup[DialogueLookup_n + 7] == nil)
-assert(DialogueLookup[DialogueLookup_n + 8] == nil)
-assert(DialogueLookup[DialogueLookup_n + 9] == nil)
-assert(DialogueLookup[DialogueLookup_n + 10] == nil)
-
 DialogueLookup[DialogueLookup_n + 1] = "asset_acid_clouds"
 DialogueLookup[DialogueLookup_n + 2] = "asset_cartel_insignia"
 DialogueLookup[DialogueLookup_n + 3] = "asset_foul_smoke"

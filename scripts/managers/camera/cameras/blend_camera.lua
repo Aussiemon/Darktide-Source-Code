@@ -61,13 +61,8 @@ BlendCamera.update = function (self, dt, position, rotation, data)
 		local offset = node:position() - position
 		local weight = blend_setup.weight_function(blend_setup.definition, data)
 		total_weight = total_weight + weight
-
-		assert(weight >= 0, "[BlendCamera:update() individual weight lesser than 0, undefined.")
-
 		total_offset = total_offset + offset * weight
 	end
-
-	assert(total_weight > 0, "[BlendCamera:update() total blend weights are lower than 0")
 
 	local new_position = position + total_offset / total_weight
 

@@ -8,15 +8,17 @@ local Component = require("scripts/utilities/component")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Recoil = require("scripts/utilities/recoil")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
 local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local Vo = require("scripts/utilities/vo")
+local InputDevice = require("scripts/managers/input/input_device")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local proc_events = BuffSettings.proc_events
-local DEFAULT_POWER_LEVEL = 500
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local EMPTY_TABLE = {}
 local ALT_FIRE_WWISE_SWITCH = {
 	[true] = "true",
@@ -61,22 +63,26 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 			self._looping_shoot_sound_component = unit_data_extension:read_component(component_name)
 		end
 	end
+
+	self._shot_result = {}
 end
 
-ActionShoot.start = function (self, action_settings, t, ...)
-	ActionShoot.super.start(self, action_settings, t, ...)
+ActionShoot.start = function (self, action_settings, t, time_scale, params)
+	ActionShoot.super.start(self, action_settings, t, time_scale, params)
 
 	local action_component = self._action_component
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local fx_extension = self._fx_extension
 	local weapon_extension = self._weapon_extension
-	local muzzle_fx_source_name = self._muzzle_fx_source_name
+	local muzzle_fx_source_name = self:_get_muzzle_fx_source()
 	local weapon_template = self._weapon_template
 	local fire_rate_settings = _fire_rate_settings(weapon_extension)
 	local fire_time = fire_rate_settings.fire_time or 0
 	local auto_fire_time = fire_rate_settings.auto_fire_time
 	local max_shots = fire_rate_settings.max_shots
 	self._is_auto_fire_weapon = max_shots == nil and not not auto_fire_time
+	local combo_count = params.combo_count
+	self._combo_count = combo_count
 
 	if not self._is_auto_fire_weapon then
 		self:_check_for_critical_strike()
@@ -160,6 +166,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		local charge_level = self._action_component.shooting_charge_level
 
 		if not self._unit_data_extension.is_resimulating then
+			table.clear(self._shot_result)
 			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t)
 		end
 
@@ -176,7 +183,9 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" then
 			self:_spend_ammunition(dt, t, charge_level)
 			self:_add_heat(dt, t, charge_level)
+			self:_pay_warp_charge_cost(t, charge_level)
 			self:_trigger_new_charge(t)
+			self:_handle_shot_concluded_stats()
 		end
 	end
 end
@@ -235,7 +244,14 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local sway_template = weapon_extension:sway_template()
 	rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, rotation)
 	rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, rotation)
-	rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(smart_targeting_template, weapon_template, rotation)
+	local last_pressed_device = InputDevice.last_pressed_device
+	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
+	local enable_aim_assist = gamepad_active
+
+	if enable_aim_assist and not DevParameters.disable_aim_assist then
+		rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(smart_targeting_template, weapon_template, rotation)
+	end
+
 	rotation = self._weapon_spread_extension:randomized_spread(rotation)
 	action_component.shooting_position = position
 	action_component.shooting_rotation = rotation
@@ -265,17 +281,21 @@ end
 ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local action_settings = self._action_settings
 	local inventory_slot_component = self._inventory_slot_component
+	local action_component = self._action_component
 	local use_charge = action_settings.use_charge
 	local buff_keywords = BuffSettings.keywords
 	local buff_extension = self._buff_extension
-	local param_table = buff_extension:request_proc_event_param_table()
 
 	if buff_extension:has_keyword(buff_keywords.no_ammo_consumption) then
-		param_table.t = t
-		param_table.ammo_usage = 0
-		param_table.charged_ammo = use_charge
+		local param_table = buff_extension:request_proc_event_param_table()
 
-		buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
+		if param_table then
+			param_table.t = t
+			param_table.ammo_usage = 0
+			param_table.charged_ammo = use_charge
+
+			buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
+		end
 
 		return
 	end
@@ -298,11 +318,21 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 		return
 	end
 
-	param_table.t = t
-	param_table.ammo_usage = ammo_usage
-	param_table.charged_ammo = use_charge
+	local has_reduced_ammo_consumption = buff_extension:has_keyword(buff_keywords.reduced_ammo_consumption)
 
-	buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
+	if has_reduced_ammo_consumption then
+		ammo_usage = math.max(math.round(ammo_usage * 1 / 3))
+	end
+
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.t = t
+		param_table.ammo_usage = ammo_usage
+		param_table.charged_ammo = use_charge
+
+		buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
+	end
 
 	local inventory_slot = self._inventory_slot_component
 	local new_ammunition = math.max(inventory_slot.current_ammunition_clip - ammo_usage, 0)
@@ -310,18 +340,17 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local out_of_ammo_sfx_alias = fx_settings.out_of_ammo_sfx_alias
 
 	if new_ammunition == 0 and inventory_slot_component.current_ammunition_clip > 0 and out_of_ammo_sfx_alias then
-		_trigger_gear_sound(self._fx_extension, self._muzzle_fx_source_name, out_of_ammo_sfx_alias, self._action_module_charge_component)
-	end
-
-	if inventory_slot_component.max_ammunition_clip > 0 then
-		local current_ammo_percentage = new_ammunition / inventory_slot_component.max_ammunition_clip
-		local wwise_parameter = "weapon_ammo_count"
-		local wwise_parameter_value = current_ammo_percentage * 100
-
-		WwiseWorld.set_global_parameter(self._wwise_world, wwise_parameter, wwise_parameter_value)
+		_trigger_gear_sound(self._fx_extension, self:_get_muzzle_fx_source(), out_of_ammo_sfx_alias, self._action_module_charge_component)
 	end
 
 	inventory_slot_component.current_ammunition_clip = new_ammunition
+
+	if Managers.stats.can_record_stats() then
+		local wielded_slot = self._inventory_component.wielded_slot
+		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
+
+		Managers.stats:record_ammo_consumed(self._player, wielded_slot, ammo_usage, new_ammunition, current_ammunition_reserve)
+	end
 end
 
 ActionShoot._add_heat = function (self, dt, t, charge_level)
@@ -345,8 +374,8 @@ ActionShoot._trigger_new_charge = function (self, t)
 	end
 end
 
-ActionShoot._shoot = function (self)
-	fassert(false, "ActionShoot:_shoot() should not be called from ActionShoot. Overload it in a subclass!")
+ActionShoot._shoot = function (self, position, rotation, power_level, charge_level)
+	return
 end
 
 ActionShoot._set_fire_state = function (self, t, new_fire_state)
@@ -384,7 +413,9 @@ end
 ActionShoot.finish = function (self, reason, data, t, time_in_action)
 	ActionShoot.super.finish(self, reason, data, t, time_in_action)
 
-	if self._action_component.fire_state ~= "shot" then
+	local action_component = self._action_component
+
+	if action_component.fire_state ~= "shot" then
 		self:_set_fire_state(t, "shot")
 	end
 
@@ -404,13 +435,20 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 
 	if fx_settings then
 		local fx_extension = self._fx_extension
-		local muzzle_fx_source_name = self._muzzle_fx_source_name
+		local muzzle_fx_source_name = self:_get_muzzle_fx_source()
 		local pre_shoot_abort_sfx_alias = fx_settings.pre_shoot_abort_sfx_alias
 
 		if pre_shoot_abort_sfx_alias and not past_fire_time then
 			_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_shoot_abort_sfx_alias, self._action_module_charge_component)
 		end
 	end
+
+	if fire_rate_settings.auto_fire_time and action_component.num_shots_fired > 0 then
+		local semi_fire_factor = weapon_template.semi_auto_chain_factor or 1.5
+		action_component.fire_at_time = action_component.fire_at_time + fire_rate_settings.auto_fire_time * semi_fire_factor
+	end
+
+	action_component.num_shots_fired = 0
 end
 
 ActionShoot._rewind_ms = function (self, is_local_unit, player, position, direction, max_distance)
@@ -441,7 +479,7 @@ end
 
 ActionShoot._play_shoot_sound = function (self)
 	local action_settings = self._action_settings
-	local muzzle_fx_source_name = self._muzzle_fx_source_name
+	local muzzle_fx_source_name = self:_get_muzzle_fx_source()
 	local wwise_world = self._wwise_world
 	local action_component = self._action_component
 	local action_module_charge_component = self._action_module_charge_component
@@ -510,7 +548,7 @@ ActionShoot._update_looping_shoot_sound = function (self)
 	local fx_extension = self._fx_extension
 	local weapon_extension = self._weapon_extension
 	local action_settings = self._action_settings
-	local muzzle_fx_source_name = self._muzzle_fx_source_name
+	local muzzle_fx_source_name = self:_get_muzzle_fx_source()
 	local fx_settings = action_settings.fx or EMPTY_TABLE
 	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 	local post_loop_tail_alias = fx_settings.post_loop_shoot_tail_sfx_alias
@@ -562,7 +600,7 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation)
 	end
 
 	local fx_extension = self._fx_extension
-	local muzzle_spawner_name = self._muzzle_fx_source_name
+	local muzzle_spawner_name = self:_get_muzzle_fx_source()
 	local secondary_muzzle_spawner_name = self._muzzle_fx_source_secondary_name
 	local eject_spawner_name = self._eject_fx_spawner_name
 	local link = true
@@ -581,10 +619,8 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation)
 
 	local particle_id = fx_extension:spawn_unit_particles(effect_to_play, muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
 
-	if secondary_muzzle_spawner_name then
-		effect_to_play = effect_name_secondary
-
-		fx_extension:spawn_unit_particles(effect_to_play, secondary_muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+	if secondary_muzzle_spawner_name and effect_name_secondary then
+		fx_extension:spawn_unit_particles(effect_name_secondary, secondary_muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
 	end
 
 	local muzzle_flash_size_variable_name = fx.muzzle_flash_size_variable_name
@@ -628,7 +664,7 @@ ActionShoot._play_muzzle_smoke = function (self)
 	end
 
 	local fx_extension = self._fx_extension
-	local spawner_name = self._muzzle_fx_source_name
+	local spawner_name = self:_get_muzzle_fx_source()
 	local link = true
 	local orphaned_policy = "stop"
 	local position_offset, rotation_offset = nil
@@ -737,13 +773,45 @@ ActionShoot._play_line_fx = function (self, line_effect, position, end_position)
 	end
 
 	local is_critical_strike = self._critical_strike_component.is_active
-	local source_name = self._muzzle_fx_source_name
+	local source_name = self:_get_muzzle_fx_source()
 	local link = true
 	local orphaned_policy = "stop"
 	local scale = nil
 	local append_husk_to_event_name = true
 
 	self._fx_extension:spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
+end
+
+ActionShoot._get_muzzle_fx_source = function (self)
+	local action_settings = self._action_settings
+	local fx = action_settings.fx
+
+	if not fx or not fx.alternate_muzzle_flashes then
+		return self._muzzle_fx_source_name
+	end
+
+	local action_component = self._action_component
+	local num_shots_fired = action_component.num_shots_fired
+	local use_primary_node = num_shots_fired % 2 == 0
+
+	return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
+end
+
+ActionShoot._handle_shot_concluded_stats = function (self)
+	if Managers.stats.can_record_stats() then
+		local shot_result = self._shot_result
+		local data_valid = shot_result.data_valid
+
+		if data_valid then
+			local hit_minion = shot_result.hit_minion
+			local hit_weakspot = shot_result.hit_weakspot
+			local killing_blow = shot_result.killing_blow
+			local inventory_slot_component = self._inventory_slot_component
+			local last_round_in_mag = inventory_slot_component.current_ammunition_clip == 0
+
+			Managers.stats:record_ranged_attack_concluded(self._player, hit_minion, hit_weakspot, killing_blow, last_round_in_mag)
+		end
+	end
 end
 
 function _fire_rate_settings(weapon_extension)

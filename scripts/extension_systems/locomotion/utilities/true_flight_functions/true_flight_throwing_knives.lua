@@ -3,8 +3,8 @@ local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utiliti
 local hit_zone_names = HitZone.hit_zone_names
 local true_flight_throwing_knives = {
 	throwing_knives_locomotion = function (physics_world, integration_data, dt, t)
-		local velocity = integration_data.velocity:unbox()
-		local position = integration_data.position:unbox()
+		local velocity = integration_data.velocity
+		local position = integration_data.position
 		local new_position = position + velocity * dt
 		local new_rotation = Quaternion.look(velocity)
 		local rotation_speed = 0.002
@@ -14,8 +14,7 @@ local true_flight_throwing_knives = {
 		local test_vector = Vector3(sin_test, rotation_length, cos_test)
 		local test_look = Quaternion.look(test_vector)
 		velocity = Quaternion.rotate(test_look, velocity)
-
-		integration_data.velocity:store(velocity)
+		integration_data.velocity = velocity
 
 		return new_position, new_rotation
 	end
@@ -95,12 +94,12 @@ end
 true_flight_throwing_knives.throwing_knifes_find_highest_value_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
 	local true_flight_template = integration_data.true_flight_template
 	local forward_search_distance_to_find_target = true_flight_template.forward_search_distance_to_find_target
-	local veclocity = integration_data.velocity:unbox()
+	local veclocity = integration_data.velocity
 	local travel_direction = Vector3.normalize(veclocity)
 	local best_unit, best_position, best_hit_zone = nil
 
 	if integration_data.target_position then
-		local target_position = integration_data.target_position:unbox()
+		local target_position = integration_data.target_position
 		best_unit, best_position, best_hit_zone = _throwing_knives_find_best_target(integration_data, target_position, target_position, travel_direction, nil)
 	else
 		local first_search_pos = position + travel_direction * forward_search_distance_to_find_target
@@ -125,7 +124,7 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 	local true_flight_template = integration_data.true_flight_template
 	local hit_normal = hit.normal
 	local hit_position = hit.position
-	local velocity = integration_data.velocity:unbox()
+	local velocity = integration_data.velocity
 	local current_speed = Vector3.length(velocity)
 	local travel_direction = Vector3.normalize(velocity)
 	local target_unit = integration_data.target_unit
@@ -145,9 +144,7 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 					local towards_best = Vector3.normalize(best_position - hit_position)
 					local new_direction = Vector3.normalize(Vector3.lerp(travel_direction, towards_best, 0.5))
 					local new_velocity = new_direction * current_speed
-
-					integration_data.velocity:store(new_velocity)
-
+					integration_data.velocity = new_velocity
 					integration_data.target_unit = best_unit
 					integration_data.target_hit_zone = best_hit_zone
 				end
@@ -177,9 +174,7 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 
 		local new_velocity = current_speed * new_direction
 		new_position = bounce_pos + new_velocity * time_left
-
-		integration_data.velocity:store(new_velocity)
-
+		integration_data.velocity = new_velocity
 		integration_data.target_position = nil
 		local number_of_bounces = integration_data.number_of_bounces or 0
 		number_of_bounces = number_of_bounces + 1

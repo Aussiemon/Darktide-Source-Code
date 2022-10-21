@@ -37,28 +37,28 @@ wounds_templates.lasgun[attack_results.died].default[shapes.lasgun].duration = {
 wounds_templates.autogun = {
 	[attack_results.damaged] = {
 		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
 				shape_scaling = false,
-				duration = 0.5,
+				duration = 0.75,
 				radius = {
-					1,
-					1.5
+					2.5,
+					3.25
 				},
 				color_brightness = {
-					0.03,
-					0.12
+					0.045,
+					0.25
 				}
 			}
 		}
 	}
 }
 wounds_templates.autogun[attack_results.died] = table.clone(wounds_templates.autogun[attack_results.damaged])
-wounds_templates.autogun[attack_results.died].default[shapes.default].radius = {
+wounds_templates.autogun[attack_results.died].default[shapes.lasgun].radius = {
 	1.75,
 	2.25
 }
-wounds_templates.autogun[attack_results.died].default[shapes.default].duration = {
+wounds_templates.autogun[attack_results.died].default[shapes.lasgun].duration = {
 	0.8,
 	0
 }
@@ -79,14 +79,14 @@ wounds_templates.stubgun = {
 				}
 			}
 		}
-	},
-	[attack_results.died] = table.clone(wounds_templates.autogun[attack_results.damaged])
+	}
 }
-wounds_templates.stubgun[attack_results.died].default[shapes.default].radius = {
+wounds_templates.stubgun[attack_results.died] = table.clone(wounds_templates.stubgun[attack_results.damaged])
+wounds_templates.stubgun[attack_results.died].default[shapes.lasgun].radius = {
 	1.9,
 	2.25
 }
-wounds_templates.stubgun[attack_results.died].default[shapes.default].duration = {
+wounds_templates.stubgun[attack_results.died].default[shapes.lasgun].duration = {
 	0.3,
 	0.4
 }
@@ -98,8 +98,8 @@ wounds_templates.plasma_rifle = {
 				shape_scaling = false,
 				duration = 2,
 				radius = {
-					9,
-					9.5
+					5,
+					6.5
 				},
 				color_brightness = {
 					0.6,
@@ -112,11 +112,47 @@ wounds_templates.plasma_rifle = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = true,
+				duration = 2,
+				radius = {
+					5,
+					6.5
+				},
+				color_brightness = {
+					0.6,
+					0.8
+				}
+			}
+		}
+	}
+}
+wounds_templates.plasma_rifle_small = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
 				shape_scaling = false,
 				duration = 2,
 				radius = {
-					9,
-					9.5
+					3,
+					3.75
+				},
+				color_brightness = {
+					0.6,
+					0.8
+				}
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = true,
+				duration = 2,
+				radius = {
+					3,
+					3.75
 				},
 				color_brightness = {
 					0.6,
@@ -575,12 +611,12 @@ wounds_templates.thunder_hammer = {
 					2
 				},
 				color_brightness = {
-					0.02,
-					0.5
+					0.05,
+					1
 				},
 				duration = {
-					0.5,
-					1
+					0.175,
+					0.2
 				}
 			}
 		}
@@ -591,16 +627,16 @@ wounds_templates.thunder_hammer = {
 			[shapes.default] = {
 				shape_scaling = true,
 				radius = {
-					2,
-					2.5
+					2.5,
+					3.25
 				},
 				color_brightness = {
-					0.02,
-					0.5
+					0.05,
+					1
 				},
 				duration = {
-					0.5,
-					1
+					0.175,
+					0.2
 				}
 			}
 		}
@@ -608,12 +644,17 @@ wounds_templates.thunder_hammer = {
 }
 wounds_templates.thunder_hammer_active = table.clone(wounds_templates.thunder_hammer)
 wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].radius = {
-	10,
-	12
+	4,
+	5
+}
+wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].shape_scaling = true
+wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].color_brightness = {
+	0.5,
+	1
 }
 wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].duration = {
-	2,
-	3
+	0.35,
+	0.4
 }
 wounds_templates.thunder_hammer_active[attack_results.died] = table.clone(wounds_templates.thunder_hammer_active[attack_results.damaged])
 wounds_templates.power_sword = {
@@ -1008,6 +1049,86 @@ wounds_templates.combat_sword = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = {
+					0.6,
+					0.01
+				},
+				duration = {
+					0.1,
+					0.2
+				}
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = {
+					0.6,
+					0.01
+				},
+				duration = {
+					0.3,
+					0.5
+				}
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = {
+					0.6,
+					0.01
+				},
+				duration = {
+					0.3,
+					0.5
+				}
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = {
+					0.6,
+					0.01
+				},
+				duration = {
+					0.3,
+					0.5
+				}
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = {
+					0.6,
+					0.01
+				},
+				duration = {
+					0.3,
+					0.5
+				}
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
 				radius = {
 					4.55,
 					5.25
@@ -1080,15 +1201,14 @@ wounds_templates.combat_sword = {
 		}
 	}
 }
-wounds_templates.combat_sword[attack_results.died] = table.clone(wounds_templates.combat_sword[attack_results.damaged])
 wounds_templates.combat_axe = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
 				radius = {
-					2.55,
-					3.25
+					2.75,
+					3.5
 				},
 				color_brightness = {
 					0.6,
@@ -1101,7 +1221,7 @@ wounds_templates.combat_axe = {
 			},
 			[shapes.left_45_slash] = {
 				radius = {
-					2,
+					2.75,
 					3.5
 				},
 				color_brightness = {
@@ -1115,7 +1235,7 @@ wounds_templates.combat_axe = {
 			},
 			[shapes.right_45_slash] = {
 				radius = {
-					2,
+					2.75,
 					3.5
 				},
 				color_brightness = {
@@ -1129,7 +1249,7 @@ wounds_templates.combat_axe = {
 			},
 			[shapes.horizontal_slash] = {
 				radius = {
-					2,
+					2.75,
 					3.5
 				},
 				color_brightness = {
@@ -1143,7 +1263,7 @@ wounds_templates.combat_axe = {
 			},
 			[shapes.vertical_slash] = {
 				radius = {
-					2,
+					2.75,
 					3.5
 				},
 				color_brightness = {

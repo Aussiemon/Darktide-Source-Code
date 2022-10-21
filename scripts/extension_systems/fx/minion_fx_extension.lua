@@ -42,8 +42,6 @@ MinionFxExtension.should_play_husk_effect = function (self)
 end
 
 MinionFxExtension.trigger_inventory_wwise_event = function (self, event_name, inventory_slot_name, fx_source_name, optional_target_unit, optional_is_ranged_attack)
-	fassert(self._is_server, "[MinionFxExtension] Only server is allowed to call this function.")
-
 	local is_ranged_attack = optional_is_ranged_attack ~= nil and optional_is_ranged_attack
 
 	self:_trigger_inventory_wwise_event(event_name, inventory_slot_name, fx_source_name, optional_target_unit, is_ranged_attack)
@@ -72,7 +70,6 @@ MinionFxExtension._trigger_inventory_wwise_event = function (self, event_name, i
 end
 
 MinionFxExtension.trigger_inventory_vfx = function (self, vfx_name, inventory_slot_name, fx_source_name)
-	fassert(self._is_server, "[MinionFxExtension] Only server is allowed to call this function.")
 	self:_trigger_inventory_vfx(vfx_name, inventory_slot_name, fx_source_name)
 
 	local game_object_id = self._game_object_id

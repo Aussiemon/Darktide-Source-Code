@@ -24,26 +24,27 @@ local breed_data = {
 	spawn_inventory_slot = "slot_netgun",
 	run_speed = 5.2,
 	use_bone_lod = true,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_netgunner",
+	volley_fire_target = true,
 	unit_template_name = "minion",
 	faction_name = "chaos",
+	target_stickiness_distance = 14,
 	uses_wwise_special_targeting_parameter = true,
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
-	target_stickiness_distance = 14,
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 1,
 	walk_speed = 2.3,
-	base_height = 2,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_netgunner",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	player_locomotion_constrain_radius = 0.4,
+	base_height = 2,
 	stagger_reduction = 0,
-	challenge_rating = 3,
+	player_locomotion_constrain_radius = 0.4,
 	stagger_reduction_ranged = 10,
-	use_wounds = true,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_netgunner",
+	use_wounds = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
+	challenge_rating = 3,
 	hit_mass = 3,
 	bone_lod_radius = 1.05,
 	has_direct_ragdoll_flow_event = true,
@@ -305,9 +306,6 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {

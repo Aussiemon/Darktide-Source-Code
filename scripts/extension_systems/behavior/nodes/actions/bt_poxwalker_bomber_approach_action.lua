@@ -56,9 +56,21 @@ BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard,
 end
 
 BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	local behavior_component = scratchpad.behavior_component
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
+	local state = scratchpad.state
+
+	if not scratchpad.move_during_lunge_duration or t < scratchpad.move_during_lunge_duration then
+		self:_update_move_to(t, scratchpad, action_data, target_unit)
+	end
+
+	if state == "lunging" then
+		self:_update_lunge(unit, scratchpad, action_data, dt, t, blackboard, breed)
+
+		return "running"
+	end
+
+	local behavior_component = scratchpad.behavior_component
 
 	if action_data.running_stagger_duration then
 		local done_with_running_stagger = MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
@@ -67,18 +79,6 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 			self:_start_move_anim(unit, breed, t, scratchpad, action_data)
 			self:_update_move_to(t, scratchpad, action_data, target_unit)
 		end
-	end
-
-	if not scratchpad.move_during_lunge_duration or t < scratchpad.move_during_lunge_duration then
-		self:_update_move_to(t, scratchpad, action_data, target_unit)
-	end
-
-	local state = scratchpad.state
-
-	if state == "lunging" then
-		self:_update_lunge(unit, scratchpad, action_data, dt, t, blackboard, breed)
-
-		return "running"
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)

@@ -1976,6 +1976,12 @@ local color_definitions = {
 		150,
 		99
 	},
+	ui_input_color = {
+		255,
+		226,
+		199,
+		126
+	},
 	ui_health_default = {
 		255,
 		245,
@@ -2146,39 +2152,39 @@ local color_definitions = {
 	},
 	item_rarity_1 = {
 		255,
-		201,
-		201,
-		201
+		152,
+		152,
+		152
 	},
 	item_rarity_2 = {
 		255,
-		72,
-		207,
-		86
+		74,
+		177,
+		85
 	},
 	item_rarity_3 = {
 		255,
-		1,
-		117,
-		248
+		76,
+		132,
+		196
 	},
 	item_rarity_4 = {
 		255,
-		181,
-		68,
-		239
+		143,
+		94,
+		196
 	},
 	item_rarity_5 = {
 		255,
-		229,
-		142,
-		35
+		208,
+		136,
+		48
 	},
 	item_rarity_6 = {
 		255,
-		216,
-		47,
-		47
+		198,
+		52,
+		53
 	},
 	ui_veteran = {
 		255,
@@ -2251,14 +2257,138 @@ local color_definitions = {
 		233,
 		114,
 		56
+	},
+	text_default = {
+		255,
+		204,
+		204,
+		204
+	},
+	terminal_background = {
+		100,
+		49,
+		56,
+		49
+	},
+	terminal_background_dark = {
+		100,
+		0,
+		0,
+		0
+	},
+	terminal_background_selected = {
+		100,
+		167,
+		129,
+		64
+	},
+	terminal_background_gradient = {
+		100,
+		101,
+		133,
+		96
+	},
+	terminal_background_gradient_selected = {
+		255,
+		167,
+		129,
+		64
+	},
+	terminal_grid_background = {
+		80,
+		43,
+		58,
+		43
+	},
+	terminal_grid_background_gradient = {
+		100,
+		67,
+		75,
+		64
+	},
+	terminal_grid_background_icon = {
+		30,
+		67,
+		75,
+		64
+	},
+	terminal_frame = {
+		255,
+		60,
+		78,
+		57
+	},
+	terminal_frame_hover = {
+		255,
+		113,
+		126,
+		103
+	},
+	terminal_frame_selected = {
+		255,
+		167,
+		129,
+		64
+	},
+	terminal_corner = {
+		255,
+		121,
+		136,
+		109
+	},
+	terminal_corner_hover = {
+		255,
+		169,
+		191,
+		153
+	},
+	terminal_corner_selected = {
+		255,
+		250,
+		189,
+		73
+	},
+	terminal_icon = {
+		255,
+		216,
+		229,
+		207
+	},
+	terminal_icon_selected = {
+		255,
+		255,
+		242,
+		230
+	},
+	terminal_text_header = {
+		255,
+		216,
+		229,
+		207
+	},
+	terminal_text_header_selected = {
+		255,
+		255,
+		242,
+		230
+	},
+	terminal_text_body = {
+		255,
+		169,
+		191,
+		153
+	},
+	terminal_text_body_sub_header = {
+		255,
+		113,
+		126,
+		103
 	}
 }
 local color_list = {}
 local short_color_list = {}
 
 for name, color in pairs(color_definitions) do
-	fassert(COLORS_INITIALIZED or rawget(Color, name) == nil, "[Color] Trying to override already declared function in Color object (%q).", name)
-
 	Color[name] = function (alpha, as_array)
 		alpha = alpha or color[1]
 

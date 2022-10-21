@@ -40,13 +40,11 @@ Blackboard.validate = function (blackboard)
 			local value = component[field_name]
 
 			if field_type == "Vector3Box" then
-				fassert(Vector3.is_valid(value:unbox()), "Value in field %q with type %q not initialized with a valid value.", field_name, field_type)
+				-- Nothing
 			elseif field_type == "QuaternionBox" then
-				fassert(Quaternion.is_valid(value:unbox()), "Value in field %q with type %q not initialized with a valid value.", field_name, field_type)
+				-- Nothing
 			elseif field_type == "Unit" then
-				fassert(value == nil or unit_alive(value), "Value in field %q with type %q not initialized with a valid value.", field_name, field_type)
-			else
-				fassert(value ~= nil, "Value in field %q with type %q not set with a non-nil value.", field_name, field_type)
+				-- Nothing
 			end
 		end
 	end

@@ -9,10 +9,10 @@ local guidance_vo_tech_priest_a = {
 			"loc_tech_priest_a__asset_cult_breaking_wheel_04"
 		},
 		sound_events_duration = {
-			4.774334,
-			6.336896,
-			3.500813,
-			5.97523
+			5.496417,
+			7.058958,
+			4.222875,
+			6.479875
 		},
 		sound_event_weights = {
 			0.25,
@@ -34,7 +34,7 @@ local guidance_vo_tech_priest_a = {
 		sound_events_duration = {
 			4.480875,
 			5.900396,
-			5.9425,
+			5.942521,
 			5.418083
 		},
 		sound_event_weights = {

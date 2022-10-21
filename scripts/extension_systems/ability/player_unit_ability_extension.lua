@@ -2,6 +2,7 @@ local ActionHandler = require("scripts/utilities/action/action_handler")
 local AbilityActionHandlerData = require("scripts/settings/ability/ability_action_handler_data")
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local ItemUtils = require("scripts/utilities/items")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -12,6 +13,8 @@ local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+	local player = extension_init_data.player
+	self._player = player
 	local world = extension_init_context.world
 	self._world = world
 	local physics_world = extension_init_context.physics_world
@@ -79,6 +82,8 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	local unit_data_extension = self._unit_data_extension
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	self._visual_loadout_extension = visual_loadout_extension
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	action_context.first_person_unit = first_person_unit
 	action_context.world = self._world
@@ -98,7 +103,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_context.dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system")
 	action_context.weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	action_context.inventory_component = unit_data_extension:read_component("inventory")
-	action_context.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	action_context.visual_loadout_extension = visual_loadout_extension
 	action_context.first_person_component = unit_data_extension:read_component("first_person")
 	action_context.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	action_context.locomotion_component = unit_data_extension:read_component("locomotion")
@@ -130,7 +135,6 @@ PlayerUnitAbilityExtension.unequip_ability = function (self, ability_type, fixed
 end
 
 PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, ability, fixed_t, from_server_correction)
-	fassert(ability, "Ability of type %q must not be nil!", ability_type)
 	Log.info("PlayerUnitAbilityExtension", "Equipping ability %q of type %q%s", ability.name, ability_type, from_server_correction and " from server correction" or "")
 
 	self._equipped_abilities[ability_type] = ability
@@ -332,16 +336,15 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
 	end
 end
 
-PlayerUnitAbilityExtension.can_wield = function (self, slot_name)
-	local ability_configuration = PlayerCharacterConstants.ability_configuration
-
+PlayerUnitAbilityExtension.can_wield = function (self, slot_name, previous_check)
 	for ability_type, ability_slot_name in pairs(ability_configuration) do
 		if ability_slot_name == slot_name then
 			local equipped_abilities = self._equipped_abilities
 			local ability = equipped_abilities[ability_type]
 			local can_be_wielded_when_depleted = ability.can_be_wielded_when_depleted
+			local can_be_previously_wielded_to = not previous_check or ability.can_be_previously_wielded_to
 
-			return self:remaining_ability_charges(ability_type) > 0 or can_be_wielded_when_depleted
+			return self:remaining_ability_charges(ability_type) > 0 and can_be_previously_wielded_to or can_be_wielded_when_depleted and can_be_previously_wielded_to
 		end
 	end
 
@@ -368,9 +371,25 @@ PlayerUnitAbilityExtension.can_use_ability = function (self, ability_type)
 		return false
 	end
 
-	local can_use = self:remaining_ability_charges(ability_type) > 0
+	if self:remaining_ability_charges(ability_type) <= 0 then
+		return false
+	end
 
-	return can_use
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+	local required_weapon_type = ability.required_weapon_type
+
+	if required_weapon_type and required_weapon_type == "ranged" then
+		local item_in_primary_slot = self._visual_loadout_extension:item_in_slot("slot_primary")
+		local item_in_secondary_slot = self._visual_loadout_extension:item_in_slot("slot_secondary")
+		local has_ranged_weapon = ItemUtils.is_weapon_template_ranged(item_in_primary_slot) or ItemUtils.is_weapon_template_ranged(item_in_secondary_slot)
+
+		if not has_ranged_weapon then
+			return false
+		end
+	end
+
+	return true
 end
 
 PlayerUnitAbilityExtension.has_ability_type = function (self, ability_type)
@@ -488,10 +507,16 @@ end
 PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type)
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
+	local equipped_abilities_component = self._equipped_abilities_component
+	local ability_name = equipped_abilities_component[ability_type]
 
-	if not DevParameters.no_ability_cooldowns then
-		component.num_charges = component.num_charges - 1
+	if ability_type == "combat_ability" then
+		Managers.telemetry_reporters:reporter("combat_ability"):register_event(self._player, ability_name)
+	elseif ability_type == "grenade_ability" then
+		Managers.telemetry_reporters:reporter("grenade_ability"):register_event(self._player, ability_name)
 	end
+
+	component.num_charges = math.max(component.num_charges - 1, 0)
 end
 
 PlayerUnitAbilityExtension.wanted_character_state_transition = function (self)

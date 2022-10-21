@@ -1,6 +1,6 @@
 local Unit_actor = Unit.actor
 local HitZone = {}
-local hit_zone_names = table.enum("head", "torso", "tail", "tongue", "upper_left_arm", "lower_left_arm", "upper_right_arm", "lower_right_arm", "upper_left_leg", "lower_left_leg", "upper_right_leg", "lower_right_leg", "afro", "center_mass", "captain_void_shield", "corruptor_armor", "shield")
+local hit_zone_names = table.enum("head", "torso", "tail", "tongue", "upper_left_arm", "lower_left_arm", "upper_right_arm", "lower_right_arm", "upper_left_leg", "lower_left_leg", "upper_right_leg", "lower_right_leg", "afro", "center_mass", "captain_void_shield", "corruptor_armor", "shield", "weakspot")
 HitZone.hit_zone_names = hit_zone_names
 local _hit_zone_position = nil
 
@@ -49,7 +49,6 @@ HitZone.initialize_lookup = function (unit, hit_zones)
 			local actor_name = actors[jj]
 
 			if create_on_startup then
-				fassert(not Unit_actor(unit, actor_name), "Tried creating an actor that already exists %q for unit %q", actor_name, unit)
 				Unit.create_actor(unit, actor_name)
 			end
 

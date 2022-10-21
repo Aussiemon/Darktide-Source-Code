@@ -7,34 +7,6 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local projectile_templates = {
-	ogryn_grenade = {
-		locomotion_template = ProjectileLocomotionTemplates.grenade,
-		damage = {
-			fuse = {
-				min_lifetime = 0.6,
-				fuse_time = 1.75,
-				explosion_template = ExplosionTemplates.ogryn_grenade
-			},
-			impact = {
-				explosion_template = ExplosionTemplates.ogryn_grenade,
-				damage_profile = DamageProfileTemplates.ogryn_grenade_impact,
-				damage_type = damage_types.frag
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					link = true,
-					particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-					looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-				}
-			}
-		}
-	},
 	ogryn_gauntlet_grenade = {
 		locomotion_template = ProjectileLocomotionTemplates.ogryn_gauntlet_grenade,
 		damage = {
@@ -72,7 +44,7 @@ local projectile_templates = {
 				min_lifetime = 0.5,
 				fuse_time = 1.5,
 				impact_triggered = true,
-				explosion_template = ExplosionTemplates.ogryn_thumper_grenade
+				explosion_template = ExplosionTemplates.ogryn_thumper_grenade_instant
 			},
 			impact = {
 				first_impact_activated = true,
@@ -130,11 +102,39 @@ local projectile_templates = {
 			}
 		}
 	},
+	ogryn_grenade = {
+		locomotion_template = ProjectileLocomotionTemplates.grenade,
+		damage = {
+			fuse = {
+				min_lifetime = 0.6,
+				fuse_time = 1.75,
+				explosion_template = ExplosionTemplates.ogryn_grenade
+			},
+			impact = {
+				explosion_template = ExplosionTemplates.ogryn_grenade,
+				damage_profile = DamageProfileTemplates.ogryn_grenade_impact,
+				damage_type = damage_types.frag
+			}
+		},
+		effects = {
+			spawn = {
+				vfx = {
+					orphaned_policy = "destroy",
+					link = true,
+					particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
+				},
+				sfx = {
+					looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+					looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
+				}
+			}
+		}
+	},
 	frag_grenade = {
 		locomotion_template = ProjectileLocomotionTemplates.grenade,
 		damage = {
 			fuse = {
-				fuse_time = 2.2,
+				fuse_time = 1.7,
 				explosion_template = ExplosionTemplates.frag_grenade
 			},
 			impact = {
@@ -246,7 +246,7 @@ local projectile_templates = {
 		locomotion_template = ProjectileLocomotionTemplates.grenade,
 		damage = {
 			fuse = {
-				fuse_time = 2.2,
+				fuse_time = 1.5,
 				explosion_template = ExplosionTemplates.shock_grenade
 			},
 			impact = {
@@ -268,17 +268,17 @@ local projectile_templates = {
 			}
 		}
 	},
-	psyker_smite_light = {
-		locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light,
-		sticks_to_armor_types = {},
+	ogryn_grenade_box_cluster = {
+		locomotion_template = ProjectileLocomotionTemplates.grenade,
 		damage = {
-			impact = {
-				delete_on_impact = true,
-				damage_profile = DamageProfileTemplates.psyker_smite_light,
-				damage_type = damage_types.force_staff_single_target
-			},
 			fuse = {
-				fuse_time = 5
+				fuse_time = 2,
+				skipp_reset = true,
+				explosion_template = ExplosionTemplates.frag_grenade
+			},
+			impact = {
+				damage_profile = DamageProfileTemplates.frag_grenade_impact,
+				damage_type = damage_types.ogryn_bullet_bounce
 			}
 		},
 		effects = {
@@ -286,206 +286,280 @@ local projectile_templates = {
 				vfx = {
 					orphaned_policy = "destroy",
 					link = true,
-					particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
-					set_group_invisible = "main"
+					particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
 				},
 				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+					looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+					looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
+				}
+			}
+		}
+	}
+}
+projectile_templates.ogryn_grenade_box = {
+	impact_damage_type = "blunt_heavy",
+	locomotion_template = ProjectileLocomotionTemplates.ogryn_grenade_box,
+	damage = {
+		fuse = {
+			fuse_time = 2,
+			impact_triggered = true
+		},
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.ogryn_grenade_box_impact,
+			damage_type = damage_types.ogryn_bullet_bounce
+		},
+		super_armored = {
+			impact = {
+				cluster = {
+					item = "content/items/weapons/player/grenade_frag",
+					start_fuse_time = 0.8,
+					number = 3,
+					fuse_time_steps = {
+						max = 0.4,
+						min = 0.2
+					},
+					start_speed = {
+						max = 6,
+						min = 4
+					},
+					projectile_template = projectile_templates.ogryn_grenade_box_cluster
 				}
 			}
 		}
 	},
-	psyker_smite_light_target = {
-		locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light_target,
-		sticks_to_armor_types = {},
-		damage = {
-			impact = {
-				delete_on_impact = true,
-				damage_profile = DamageProfileTemplates.psyker_smite_light,
-				damage_type = damage_types.force_staff_single_target
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				link = true,
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
 			},
-			fuse = {
-				fuse_time = 5
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_sgtop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
 			}
 		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					set_group_invisible = "main",
-					particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
-					link = true
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
-				}
+		cluster = {}
+	}
+}
+projectile_templates.psyker_smite_light = {
+	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light,
+	sticks_to_armor_types = {},
+	damage = {
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.psyker_smite_light,
+			damage_type = damage_types.force_staff_single_target
+		},
+		fuse = {
+			fuse_time = 5
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				link = true,
+				particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
+				set_group_invisible = "main"
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+			}
+		}
+	}
+}
+projectile_templates.psyker_smite_light_target = {
+	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light_target,
+	sticks_to_armor_types = {},
+	damage = {
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.psyker_smite_light,
+			damage_type = damage_types.force_staff_single_target
+		},
+		fuse = {
+			fuse_time = 5
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				set_group_invisible = "main",
+				particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
+				link = true
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+			}
+		}
+	}
+}
+projectile_templates.psyker_smite_heavy = {
+	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_heavy,
+	sticks_to_armor_types = {},
+	damage = {
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.psyker_smite_heavy,
+			damage_type = damage_types.force_staff_single_target
+		},
+		fuse = {
+			fuse_time = 1.4
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				set_group_invisible = "main",
+				particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
+				link = true
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+			}
+		}
+	}
+}
+projectile_templates.psyker_smite_heavy_target = {
+	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_heavy_target,
+	sticks_to_armor_types = {},
+	damage = {
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.psyker_smite_heavy,
+			damage_type = damage_types.force_staff_single_target
+		},
+		fuse = {
+			fuse_time = 5
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				set_group_invisible = "main",
+				particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
+				link = true
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+			}
+		}
+	}
+}
+projectile_templates.psyker_biomancer_soul = {
+	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light,
+	sticks_to_armor_types = {},
+	damage = {
+		impact = {
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.psyker_biomancer_soul,
+			damage_type = damage_types.biomancer_soul
+		},
+		fuse = {
+			fuse_time = 5
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				set_group_invisible = "main",
+				particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
+				link = true
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
+			}
+		}
+	}
+}
+projectile_templates.psyker_gunslinger_throwing_knives = {
+	locomotion_template = ProjectileLocomotionTemplates.throwing_knife_projectile_true_flight,
+	sticks_to_armor_types = {},
+	damage = {
+		use_suppression = true,
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.psyker_gunslinger_smite,
+			damage_type = damage_types.throwing_knife,
+			suppression_settings = {
+				suppression_falloff = true,
+				instant_aggro = true,
+				distance = 5,
+				suppression_value = 5
+			}
+		},
+		fuse = {
+			fuse_time = 1.5
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				link = true,
+				particle_name = "content/fx/particles/abilities/psyker_throwing_knife_trail"
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_throw_knife_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_throw_knife_loop"
 			}
 		}
 	},
-	psyker_smite_heavy = {
-		locomotion_template = ProjectileLocomotionTemplates.smite_projectile_heavy,
-		sticks_to_armor_types = {},
-		damage = {
-			impact = {
-				delete_on_impact = true,
-				damage_profile = DamageProfileTemplates.psyker_smite_heavy,
-				damage_type = damage_types.force_staff_single_target
-			},
-			fuse = {
-				fuse_time = 1.4
+	unit_rotation_offset = QuaternionBox(0.5, 0, 0, -0.5)
+}
+projectile_templates.force_staff_ball = {
+	always_hidden = true,
+	locomotion_template = ProjectileLocomotionTemplates.force_staff_ball,
+	sticks_to_armor_types = {},
+	damage = {
+		use_suppression = true,
+		impact = {
+			delete_on_impact = true,
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.force_staff_ball,
+			damage_type = damage_types.force_staff_single_target,
+			suppression_settings = {
+				suppression_falloff = true,
+				instant_aggro = true,
+				distance = 5,
+				suppression_value = 5
 			}
 		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					set_group_invisible = "main",
-					particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
-					link = true
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
-				}
-			}
+		fuse = {
+			fuse_time = 5
 		}
 	},
-	psyker_smite_heavy_target = {
-		locomotion_template = ProjectileLocomotionTemplates.smite_projectile_heavy_target,
-		sticks_to_armor_types = {},
-		damage = {
-			impact = {
-				delete_on_impact = true,
-				damage_profile = DamageProfileTemplates.psyker_smite_heavy,
-				damage_type = damage_types.force_staff_single_target
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				set_group_invisible = "main",
+				particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
+				link = true
 			},
-			fuse = {
-				fuse_time = 5
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					set_group_invisible = "main",
-					particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
-					link = true
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
-				}
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
+				looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
 			}
 		}
-	},
-	psyker_biomancer_soul = {
-		locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light,
-		sticks_to_armor_types = {},
-		damage = {
-			impact = {
-				delete_on_impact = true,
-				damage_profile = DamageProfileTemplates.psyker_biomancer_soul,
-				damage_type = damage_types.biomancer_soul
-			},
-			fuse = {
-				fuse_time = 5
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					set_group_invisible = "main",
-					particle_name = "content/fx/particles/abilities/psyker_magic_missile_01",
-					link = true
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
-				}
-			}
-		}
-	},
-	psyker_gunslinger_throwing_knives = {
-		locomotion_template = ProjectileLocomotionTemplates.throwing_knife_projectile_true_flight,
-		sticks_to_armor_types = {},
-		damage = {
-			use_suppresion = true,
-			impact = {
-				delete_on_hit_mass = true,
-				damage_profile = DamageProfileTemplates.psyker_gunslinger_smite,
-				damage_type = damage_types.throwing_knife,
-				suppresion_settings = {
-					suppression_falloff = true,
-					instant_aggro = true,
-					distance = 5,
-					suppression_value = 5
-				}
-			},
-			fuse = {
-				fuse_time = 1.5
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					link = true,
-					particle_name = "content/fx/particles/abilities/psyker_throwing_knife_trail"
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_throw_knife_loop",
-					looping_stop_event_name = "wwise/events/weapon/stop_throw_knife_loop"
-				}
-			}
-		},
-		unit_rotation_offset = QuaternionBox(0.5, 0, 0, -0.5)
-	},
-	force_staff_ball = {
-		always_hidden = true,
-		locomotion_template = ProjectileLocomotionTemplates.force_staff_ball,
-		sticks_to_armor_types = {},
-		damage = {
-			use_suppresion = true,
-			impact = {
-				delete_on_impact = true,
-				delete_on_hit_mass = true,
-				damage_profile = DamageProfileTemplates.force_staff_ball,
-				damage_type = damage_types.force_staff_single_target,
-				suppresion_settings = {
-					suppression_falloff = true,
-					instant_aggro = true,
-					distance = 5,
-					suppression_value = 5
-				}
-			},
-			fuse = {
-				fuse_time = 5
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					set_group_invisible = "main",
-					particle_name = "content/fx/particles/abilities/psyker_smite_projectile_01",
-					link = true
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_psyker_smite_fire_projectile",
-					looping_stop_event_name = "wwise/events/weapon/stop_psyker_smite_fire_projectile"
-				}
-			}
-		}
-	},
-	luggable = {
-		locomotion_template = ProjectileLocomotionTemplates.luggable_battery,
-		damage = {
-			impact = {
-				damage_profile = DamageProfileTemplates.luggable_battery
-			}
+	}
+}
+projectile_templates.luggable = {
+	locomotion_template = ProjectileLocomotionTemplates.luggable_battery,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.luggable_battery
 		}
 	}
 }

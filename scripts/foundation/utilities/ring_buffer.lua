@@ -3,8 +3,6 @@ require("scripts/foundation/utilities/table")
 local RingBuffer = class("RingBuffer")
 
 RingBuffer.init = function (self, max_length)
-	fassert(max_length and type(max_length) == "number" and max_length > 0, "[RingBuffer][init] max_length must be a positive integer divided by 2.")
-
 	self._buffer = {}
 	self._max_length = max_length
 	self._is_full = false

@@ -139,13 +139,7 @@ end
 
 ItemPackage.compile_item_instance_dependencies = function (item, items_dictionary, out_result, optional_mission_template)
 	local result = out_result or {}
-
-	fassert(item ~= nil, "Can't resolve dependencies for nil")
-	fassert(type(item) == "table", "Item %s was not a table (%s)", item, type(item))
-
 	local dependencies = item.resource_dependencies
-
-	fassert(dependencies, "Dependencies was nil for %s", item.name)
 
 	for dependency, _ in pairs(dependencies) do
 		result[dependency] = true

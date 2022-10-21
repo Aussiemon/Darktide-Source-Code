@@ -6,7 +6,8 @@ local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local DEFAULT_RESPAWN_TIME = 30
 local GameModeCoopCompleteObjective = class("GameModeCoopCompleteObjective", "GameModeBase")
 local CLIENT_RPCS = {
-	"rpc_set_player_respawn_time"
+	"rpc_set_player_respawn_time",
+	"rpc_fetch_session_report"
 }
 
 local function _log(...)
@@ -69,6 +70,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 			self:_change_state(next_state)
 			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", all_players_dead and "Y" or "N", all_players_disabled and "Y" or "N", grace_time)
 		elseif completion_conditions_met then
+			self:_gamemode_complete("won")
 			self:_change_state("outro_cinematic")
 			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_win)
 			_log("[evaluate_end_conditions] Triggering cutscene %q", CINEMATIC_NAMES.outro_win)
@@ -92,6 +94,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 		if failure_conditions_met and self._end_t < t then
 			self._failed = true
 
+			self:_gamemode_complete("lost")
 			self:_change_state("outro_cinematic")
 			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_fail)
 			_log("[evaluate_end_conditions] Grace timer reached end")
@@ -103,13 +106,41 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 			_log("[evaluate_end_conditions] Cutscene finished. Switch to done")
 		end
 	elseif current_state == "done" then
-		fassert(failure_conditions_met or completion_conditions_met, "Trying to finish game mode without failing or completing it!")
 		_log("[evaluate_end_conditions] Completing game mode with result %q", failure_conditions_met and "lost" or completion_conditions_met and "won")
 
 		return true, failure_conditions_met and "lost" or completion_conditions_met and "won"
 	end
 
 	return false
+end
+
+GameModeCoopCompleteObjective._gamemode_complete = function (self, mission_result)
+	_log("gamemode_complete, result: %s", mission_result)
+
+	self._mission_result = mission_result
+
+	self:_fetch_session_report()
+	Managers.state.game_session:send_rpc_clients("rpc_fetch_session_report")
+
+	if Managers.mission_server then
+		Managers.mission_server:on_gamemode_completed(mission_result)
+	end
+end
+
+GameModeCoopCompleteObjective.rpc_fetch_session_report = function (self)
+	self:_fetch_session_report()
+end
+
+GameModeCoopCompleteObjective._fetch_session_report = function (self)
+	local session_id = Managers.connection:session_id()
+
+	if DEDICATED_SERVER then
+		Managers.progression:fetch_session_report_server(session_id)
+	else
+		Managers.progression:fetch_session_report(session_id)
+	end
+
+	_log("fetch_session_report, session_id: %s", session_id)
 end
 
 GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_players, alive_players, ignore_bots)

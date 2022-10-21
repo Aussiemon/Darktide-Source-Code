@@ -59,8 +59,6 @@ HudElementSuppressionIndicators._cb_suppression_marker_created = function (self,
 		self:_remove_suppression_marker(unit)
 	end
 
-	fassert(not active_markers[unit], "overwriting existing marker linked to unit: %s", tostring(unit))
-
 	active_markers[unit] = id
 end
 

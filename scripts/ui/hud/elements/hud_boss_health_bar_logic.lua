@@ -30,8 +30,6 @@ end
 HudBossHealthBarLogic._verify_settings = function (self, settings)
 	for i = 1, #settings_list do
 		local setting_name = settings_list[i]
-
-		fassert(settings[setting_name] ~= nil, "[HudBossHealthBarLogic] - Missing setting by name: ", setting_name)
 	end
 end
 

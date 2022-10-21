@@ -1,17 +1,11 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
-local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local FOOTSTEP_JUMP_SOUND_ALIAS = "footstep_jump"
-local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
-local WEAPON_FOLEY = "sfx_weapon_locomotion"
-local EXTRA_FOLEY = "sfx_player_extra_slot"
 local VCE = "jump_vce"
 local PlayerCharacterStateJumping = class("PlayerCharacterStateJumping", "PlayerCharacterStateBase")
 
@@ -33,7 +27,7 @@ PlayerCharacterStateJumping._play_jump_animation = function (self, animation_ext
 
 	animation_extension:anim_event(event_name_3p)
 	animation_extension:anim_event_1p("jump")
-	PlayerVoiceGrunts.trigger_sound(VCE, self._visual_loadout_extension, self._fx_extension)
+	PlayerVoiceGrunts.trigger_voice(VCE, self._visual_loadout_extension, self._fx_extension, false)
 
 	self._step_up_done = false
 end
@@ -46,29 +40,34 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 	local jump_velocity = nil
 
 	if previous_state == "ladder_climbing" then
-		fassert(params.ladder_unit, "Need to pass the ladder unit we jumped from")
-
 		local ladder_unit = params.ladder_unit
 		local direction = -Quaternion.forward(Unit.world_rotation(ladder_unit, 1))
-		jump_velocity = direction * self._constants.ladder_jump_backwards_force
+		local is_distrupted = params.is_distrupted
+		local constants = self._constants
+		local force = is_distrupted and constants.ladder_distrupted_backwards_force or constants.ladder_jump_backwards_force
+		jump_velocity = direction * force
 	else
 		local velocity_current = self._locomotion_component.velocity_current
+		local weapon_extension = self._weapon_extension
+		local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
 		local jump_speed = self._constants.jump_speed
-		local speed = Vector3.length(velocity_current)
-		local speed_mod = speed == 0 and 0 or 5 / math.max(speed, 5)
-		jump_velocity = Vector3(velocity_current.x * speed_mod, velocity_current.y * speed_mod, jump_speed)
+
+		if previous_state == "dodging" then
+			velocity_current = Vector3.normalize(velocity_current)
+			local modified_velocity = jump_speed * action_move_speed_modifier
+			jump_velocity = Vector3(velocity_current.x * modified_velocity, velocity_current.y * modified_velocity, jump_speed)
+		else
+			local speed = Vector3.length(velocity_current)
+			local speed_mod = speed == 0 and 0 or 5 / math.max(speed, 5)
+			jump_velocity = Vector3(velocity_current.x * speed_mod, velocity_current.y * speed_mod, jump_speed)
+		end
 	end
 
 	locomotion_steering.velocity_wanted = jump_velocity
 
 	self:_play_jump_animation(self._animation_extension)
-	self:_trigger_footstep_and_foley(FOOTSTEP_JUMP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 
 	self._movement_state_component.method = "jumping"
-
-	if previous_state == "sprinting" then
-		self._sprint_character_state_component.is_sprint_jumping = true
-	end
 end
 
 PlayerCharacterStateJumping.on_exit = function (self, unit, t, next_state)
@@ -76,10 +75,9 @@ PlayerCharacterStateJumping.on_exit = function (self, unit, t, next_state)
 		return
 	end
 
-	local sprint_character_state_component = self._sprint_character_state_component
-	sprint_character_state_component.is_sprint_jumping = false
-
 	if next_state ~= "falling" then
+		local sprint_character_state_component = self._sprint_character_state_component
+		sprint_character_state_component.is_sprint_jumping = false
 		local anim_ext = self._animation_extension
 
 		anim_ext:anim_event("land_still")
@@ -102,8 +100,10 @@ PlayerCharacterStateJumping.fixed_update = function (self, unit, dt, t, next_sta
 	local move = input_extension:get("move")
 	local wanted_x = move.x
 	local wanted_y = move.y
+	local weapon_extension = self._weapon_extension
+	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
 	local constants = self._constants
-	local move_speed = constants.move_speed
+	local move_speed = constants.move_speed * action_move_speed_modifier
 	local velocity_current = self._locomotion_component.velocity_current
 	local move_settings = self._movement_settings_component
 	local velocity_wanted = self:_air_movement(velocity_current, wanted_x, wanted_y, rotation, move_speed, move_settings.player_speed_scale, dt)
@@ -148,6 +148,10 @@ PlayerCharacterStateJumping._check_transition = function (self, unit, t, next_st
 		if can_vault then
 			next_state_params.ledge = ledge
 
+			if self._sprint_character_state_component.is_sprint_jumping then
+				next_state_params.was_sprinting = true
+			end
+
 			return "ledge_vaulting"
 		end
 	end
@@ -157,8 +161,13 @@ PlayerCharacterStateJumping._check_transition = function (self, unit, t, next_st
 	if inair_state.on_ground then
 		local weapon_action_component = self._weapon_action_component
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		local sprint_character_state_component = self._sprint_character_state_component
 
-		if Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+		if Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+			if sprint_character_state_component.is_sprint_jumping then
+				next_state_params.disable_sprint_start_slowdown = true
+			end
+
 			return "sprinting"
 		else
 			return "walking"

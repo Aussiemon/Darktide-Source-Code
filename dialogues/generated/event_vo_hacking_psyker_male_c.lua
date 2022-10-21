@@ -8,7 +8,7 @@ local event_vo_hacking_psyker_male_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 1.54775,
-			[2.0] = 1.427646
+			[2.0] = 1.427656
 		},
 		randomize_indexes = {}
 	}

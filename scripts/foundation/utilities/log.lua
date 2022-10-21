@@ -59,11 +59,6 @@ end
 
 Log.set_global_log_level = function (level)
 	local error_string = string.format("Global log level must be an integer between 1 and %i.", #Log._types)
-
-	assert(level % 1 == 0, error_string)
-	assert(level > 0, error_string)
-	assert(level <= #Log._types, error_string)
-
 	Log._global_log_level = level
 
 	Log._update_external_functions(level, Log._lowest_category_level)

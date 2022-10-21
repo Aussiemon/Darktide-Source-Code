@@ -1,10 +1,13 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local TalentSettings = require("scripts/settings/buff/talent_settings")
 local buff_keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local wield_inputs = PlayerCharacterConstants.wield_inputs
+local talent_settings = TalentSettings.zealot_3
 local weapon_template = {
 	action_inputs = {
 		aim_pressed = {
@@ -16,35 +19,19 @@ local weapon_template = {
 				}
 			}
 		},
-		light_attack = {
+		quick_target_self = {
 			buffer_time = 0.3,
 			max_queue = 1,
 			input_sequence = {
 				{
 					value = false,
-					time_window = 0.1,
 					input = "combat_ability_hold"
 				}
 			}
 		},
-		heavy_attack = {
+		target_other = {
 			buffer_time = 0.5,
 			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.2,
-					input = "combat_ability_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					input = "combat_ability_hold"
-				}
-			}
-		},
-		buff_target = {
-			buffer_time = 0.6,
 			input_sequence = {
 				{
 					value = true,
@@ -90,9 +77,9 @@ local weapon_template = {
 		wield = "stay",
 		unwield_to_previous = "stay",
 		aim_pressed = {
-			heavy_attack = "base",
+			quick_target_self = "base",
 			block_cancel = "base",
-			light_attack = "base"
+			target_other = "base"
 		}
 	},
 	actions = {
@@ -113,24 +100,26 @@ local weapon_template = {
 			}
 		},
 		action_aim = {
+			aim_ready_up_time = 0,
 			start_input = "aim_pressed",
 			kind = "target_ally",
 			sprint_ready_up_time = 0,
 			uninterruptible = true,
+			abort_sprint = true,
 			decal_unit_name = "content/fx/units/decal_dash",
 			allowed_during_lunge = true,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
-			aim_ready_up_time = 0,
+			prevent_sprint = true,
 			minimum_hold_time = 0.01,
 			total_time = math.huge,
 			smart_targeting_template = SmartTargetingTemplates.target_ally,
 			allowed_chain_actions = {
-				light_attack = {
+				quick_target_self = {
 					action_name = "action_buff_self",
 					chain_time = 0
 				},
-				heavy_attack = {
+				target_other = {
 					action_name = "action_buff_target",
 					chain_time = 0.1
 				},
@@ -140,19 +129,24 @@ local weapon_template = {
 			}
 		},
 		action_buff_target = {
-			self_cast = false,
-			allowed_during_sprint = false,
-			cast_time = 0.5,
-			kind = "buff_target",
-			override_buff_name = "zealot_preacher_shield_long_duration",
-			buff_name = "zealot_preacher_shield",
-			self_cast_anim_event = "cast_self",
 			coherency_buff_name = "zealot_preacher_shield_coherency",
 			use_ability_charge = true,
-			uninterruptible = true,
+			override_buff_name_two = "zealot_preacher_shield_melee_extends",
+			gear_sound_alias = "zealot_preacher_cast_shield",
+			kind = "buff_target",
+			override_buff_name_one = "zealot_preacher_shield_long_duration",
+			cast_time = 0.5,
+			self_cast_anim_event = "cast_self",
 			ability_type = "combat_ability",
 			ally_anim_event = "cast_ally",
+			use_charge_at_start = true,
+			self_cast = false,
+			vo_tag = "ability_banisher",
+			buff_name = "zealot_preacher_shield",
+			uninterruptible = true,
+			prevent_sprint = true,
 			total_time = 0.9,
+			coherency_toughness = talent_settings.coop_1.toughness_percent_regenerated,
 			action_movement_curve = {
 				{
 					modifier = 0.4,
@@ -184,18 +178,23 @@ local weapon_template = {
 			}
 		},
 		action_buff_self = {
-			self_cast = true,
-			allowed_during_sprint = false,
-			cast_time = 0,
-			kind = "buff_target",
-			override_buff_name = "zealot_preacher_shield_long_duration",
-			buff_name = "zealot_preacher_shield",
-			self_cast_anim_event = "cast_self",
 			coherency_buff_name = "zealot_preacher_shield_coherency",
 			use_ability_charge = true,
-			uninterruptible = true,
+			override_buff_name_two = "zealot_preacher_shield_melee_extends",
+			gear_sound_alias = "zealot_preacher_cast_shield",
+			kind = "buff_target",
+			override_buff_name_one = "zealot_preacher_shield_long_duration",
+			cast_time = 0,
+			self_cast_anim_event = "cast_self",
 			ability_type = "combat_ability",
+			use_charge_at_start = true,
+			self_cast = true,
+			vo_tag = "ability_banisher",
+			buff_name = "zealot_preacher_shield",
+			uninterruptible = true,
+			prevent_sprint = true,
 			total_time = 0.9,
+			coherency_toughness = talent_settings.coop_1.toughness_percent_regenerated,
 			action_movement_curve = {
 				{
 					modifier = 0.4,
@@ -231,8 +230,7 @@ local weapon_template = {
 			uninterruptible = true,
 			kind = "unwield_to_previous",
 			unwield_to_weapon = true,
-			total_time = 0,
-			allowed_chain_actions = {}
+			total_time = 0
 		}
 	},
 	keywords = {
@@ -258,11 +256,7 @@ local weapon_template = {
 	sprint_template = "default",
 	stamina_template = "default",
 	toughness_template = "default",
-	footstep_intervals = {
-		crouch_walking = 0.61,
-		walking = 0.4,
-		sprinting = 0.37
-	}
+	footstep_intervals = FootstepIntervalsTemplates.default
 }
 
 return weapon_template

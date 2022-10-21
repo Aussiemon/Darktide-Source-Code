@@ -18,9 +18,6 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 	BtRandomUtilityNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
-
-	fassert(node_data[node_identifier] == nil, "[BtRandomUtilityNode] Node data for %q was already created.", node_identifier)
-
 	local children = self._children
 	local num_children = table.size(children)
 	local utility_node_data = Script.new_map(num_children)

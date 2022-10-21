@@ -12,16 +12,18 @@ local zealot_lunge_templates = {
 		on_screen_effect_delay = 0.13,
 		is_dodging = true,
 		restore_toughness = true,
-		add_buff = "no_toughness_damage_buff",
+		sensitivity_modifier = 0.1,
 		add_buff_delay = 0.13,
 		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash",
+		add_buff = "no_toughness_damage_buff",
+		combat_ability = true,
 		disable_minion_collision = true,
 		block_input_cancel = false,
 		add_delayed_buff = "zealot_maniac_dash_buff",
-		combat_ability = true,
-		sensitivity_modifier = 0.1,
+		hit_dot_check = 0.7,
+		stop_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_exit",
 		directional_lunge = false,
-		start_sound_event = "wwise/events/player/play_special_ability_zealot_dash",
+		start_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_enter",
 		lunge_speed_at_times = {
 			{
 				speed = 8,
@@ -64,7 +66,10 @@ local zealot_lunge_templates = {
 			radius = talent_settings.combat_ability.radius
 		},
 		anim_settings = {
-			on_enter = "sprint"
+			on_enter = {
+				"move_fwd",
+				"sprint"
+			}
 		},
 		wwise_state = {
 			group = "player_ability",

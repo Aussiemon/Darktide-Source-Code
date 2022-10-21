@@ -3,9 +3,6 @@ local archetypes = {}
 local function _create_archetype_entry(path)
 	local archetype_data = require(path)
 	local archetype_name = archetype_data.name
-
-	fassert(archetype_name, "[Archetypes] Missing name field in %q.", path)
-
 	local archetype_entry = archetype_data
 	archetypes[archetype_name] = archetype_entry
 end

@@ -17,7 +17,7 @@ CameraTransitionGeneric.update = function (self, dt, parameter_value, update_tim
 	local value, done = nil
 
 	if speed and duration then
-		assert(false, "CameraTransitionGeneric:update() transition has defined both speed and duration, only one can be allowed at once")
+		-- Nothing
 	elseif speed then
 		local max_length = target - parameter_value
 		local dist_moved = self._time * speed

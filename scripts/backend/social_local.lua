@@ -58,8 +58,6 @@ SocialLocal.unfriend_player = function (self, account_id)
 end
 
 SocialLocal.fetch_recently_played = function (self, character_id)
-	assert(character_id, "character_id must be specified")
-
 	return Promise.delay(2):next(function ()
 		local response_data = {
 			recentParticipants = {}
@@ -70,16 +68,12 @@ SocialLocal.fetch_recently_played = function (self, character_id)
 end
 
 SocialLocal.add_blocked_account = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return Promise.delay(2):next(function ()
 		self._temp_block_list[account_id] = true
 	end)
 end
 
 SocialLocal.remove_blocked_account = function (self, account_id)
-	assert(account_id, "account_id must be specified")
-
 	return Promise.delay(2):next(function ()
 		self._temp_block_list[account_id] = nil
 	end)
@@ -88,6 +82,7 @@ end
 SocialLocal.fetch_blocked_accounts = function (self)
 	return Promise.delay(2):next(function ()
 		local response_data = {
+			maxBlocks = 10,
 			blockList = table.clone(self._temp_block_list)
 		}
 

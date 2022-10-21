@@ -4,12 +4,7 @@ local function interaction_template_tests(templates)
 
 		if duration > 0 then
 			local has_start_anim = template.start_anim_event_func or template.start_anim_event or not template.start_anim_event and template.start_anim_event_3p
-
-			fassert(has_start_anim, "InteractionTemplate %q has a duration but no \"start_anim_event\" and/or \"start_anim_event_3p\" defined.", name)
-
-			local has_stop_anim = template.stop_anim_event_func or template.stop_anim_event or not template.stop_anim_event and template.stop_anim_event_3p
-
-			fassert(has_stop_anim, "InteractionTemplate %q has a duration but no \"stop_anim_event\" and/or \"stop_anim_event_3p\" defined.", name)
+			slot8 = template.stop_anim_event_func or template.stop_anim_event or not template.stop_anim_event and template.stop_anim_event_3p
 		end
 	end
 end

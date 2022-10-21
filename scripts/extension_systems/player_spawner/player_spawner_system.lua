@@ -61,14 +61,14 @@ PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifi
 end
 
 PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_identifier)
-	local found, position, rotation, side = nil
+	local found, position, rotation, parent, side = nil
 
 	if optional_spawn_identifier then
 		found, position, rotation, side = self:_find_spawner_spawn_point(optional_spawn_identifier)
 	end
 
 	if not found and not self._in_safe_volume then
-		found, position, rotation, side = self:_find_nav_mesh_spawn_point()
+		found, position, rotation, parent, side = self:_find_progression_spawn_point()
 	end
 
 	if not found then
@@ -84,7 +84,7 @@ PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_ident
 		side = PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
 	end
 
-	return position, rotation, side
+	return position, rotation, parent, side
 end
 
 PlayerSpawnerSystem._find_spawner_spawn_point = function (self, spawn_identifier)
@@ -103,7 +103,7 @@ PlayerSpawnerSystem._find_spawner_spawn_point = function (self, spawn_identifier
 	return true, spawn_point.position:unbox(), spawn_point.rotation:unbox(), spawn_point.side
 end
 
-PlayerSpawnerSystem._find_nav_mesh_spawn_point = function (self)
+PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	local players = Managers.player:players()
 	local lowest_travel_distance, furthest_back_unit = nil
 
@@ -122,6 +122,8 @@ PlayerSpawnerSystem._find_nav_mesh_spawn_point = function (self)
 	end
 
 	if furthest_back_unit then
+		local locomotion_extension = ScriptUnit.extension(furthest_back_unit, "locomotion_system")
+		local parent = locomotion_extension:get_parent_unit()
 		local navigation_extension = ScriptUnit.extension(furthest_back_unit, "navigation_system")
 		local from_position = navigation_extension:latest_position_on_nav_mesh()
 
@@ -137,7 +139,9 @@ PlayerSpawnerSystem._find_nav_mesh_spawn_point = function (self)
 			local direction = Vector3.normalize(Vector3.flat(furthest_back_unit_position - position))
 			local rotation = Quaternion.look(direction)
 
-			return true, position, rotation, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
+			return true, position, rotation, parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
+		elseif parent then
+			return true, Unit.world_position(furthest_back_unit, 1), Unit.local_rotation(furthest_back_unit, 1), parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
 		end
 	end
 

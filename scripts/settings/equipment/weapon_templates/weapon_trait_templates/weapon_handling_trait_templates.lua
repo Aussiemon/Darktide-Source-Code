@@ -17,7 +17,7 @@ local weapon_handling_trait_templates = {
 		{
 			"time_scale",
 			{
-				max = 0.7,
+				max = 0.6,
 				min = 0.3
 			}
 		}

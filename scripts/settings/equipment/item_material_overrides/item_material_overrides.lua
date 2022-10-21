@@ -6,8 +6,6 @@ local function _include_material_override_definition(file_name)
 	local definition = require(file_name)
 
 	for override_name, entry_data in pairs(definition) do
-		fassert(not item_material_overrides[override_name], "%s failed adding material_override %q from file %q. Key already exists.", item_material_overrides_name, override_name, file_name)
-
 		entry_data.name = override_name
 		entry_data.resource_dependencies = {}
 

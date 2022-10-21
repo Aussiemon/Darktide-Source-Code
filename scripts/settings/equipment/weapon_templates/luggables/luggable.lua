@@ -1,5 +1,6 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -63,8 +64,9 @@ local weapon_template = {
 				}
 			}
 		},
-		drop = {
-			buffer_time = 0.2,
+		wield = {
+			buffer_time = 0,
+			clear_input_queue = true,
 			input_sequence = {
 				{
 					inputs = wield_inputs
@@ -77,27 +79,33 @@ local weapon_template = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	drop = "stay",
+	wield = "stay",
 	push = "stay",
 	aim_luggable = {
-		drop = "base",
+		wield = "base",
 		throw = "stay",
 		aim_cancel_push = {
-			aim_cancel_push_release = "base",
-			drop = "base"
+			aim_cancel_push_release = "base"
 		}
 	},
-	inspect = {
-		inspect_start = {
-			drop = "base",
-			inspect_stop = "base"
-		}
+	inspect_start = {
+		wield = "base",
+		inspect_stop = "base"
 	}
 }
 
 table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
+	action_unwield = {
+		continue_sprinting = true,
+		allowed_during_sprint = true,
+		start_input = "wield",
+		uninterruptible = true,
+		kind = "unwield",
+		total_time = 0,
+		allowed_chain_actions = {}
+	},
 	action_wield = {
 		kind = "wield",
 		allowed_during_sprint = true,
@@ -128,8 +136,8 @@ weapon_template.actions = {
 			start_modifier = 0.25
 		},
 		allowed_chain_actions = {
-			drop = {
-				action_name = "action_drop",
+			wield = {
+				action_name = "action_unwield",
 				chain_time = 0.5
 			},
 			aim_luggable = {
@@ -137,15 +145,6 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		}
-	},
-	action_drop = {
-		sprint_requires_press_to_interrupt = true,
-		allowed_during_sprint = false,
-		start_input = "drop",
-		uninterruptible = true,
-		kind = "throw",
-		throw_type = "drop",
-		total_time = 0
 	},
 	action_throw = {
 		kind = "throw",
@@ -179,7 +178,6 @@ weapon_template.actions = {
 		block_duration = 0.4,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 500,
 		total_time = 0.6,
 		action_movement_curve = {
 			{
@@ -201,16 +199,16 @@ weapon_template.actions = {
 			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			drop = {
-				action_name = "action_drop",
+			wield = {
+				action_name = "action_unwield",
 				chain_time = 0.5
 			}
 		},
-		inner_push_rad = math.pi * 0.6,
+		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
-		inner_damage_profile = DamageProfileTemplates.push_test,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_test,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
 	action_aim_luggable = {
@@ -225,8 +223,8 @@ weapon_template.actions = {
 		skip_3p_anims = false,
 		total_time = math.huge,
 		allowed_chain_actions = {
-			drop = {
-				action_name = "action_drop"
+			wield = {
+				action_name = "action_unwield"
 			},
 			throw = {
 				action_name = "action_throw"
@@ -281,22 +279,14 @@ weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {}
-weapon_template.dodge_template = "support"
+weapon_template.dodge_template = "luggable"
 weapon_template.sprint_template = "luggable"
 weapon_template.stamina_template = "luggable"
 weapon_template.toughness_template = "luggable"
-weapon_template.static_speed_mod = 0.7
+weapon_template.static_speed_reduction_mod = 0.7
 weapon_template.breed_footstep_intervals = {
-	human = {
-		crouch_walking = 0.61,
-		walking = 0.84,
-		sprinting = 0.55
-	},
-	ogryn = {
-		crouch_walking = 0.61,
-		walking = 0.71,
-		sprinting = 0.49
-	}
+	human = FootstepIntervalsTemplates.luggable_human,
+	ogryn = FootstepIntervalsTemplates.luggable_ogryn
 }
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

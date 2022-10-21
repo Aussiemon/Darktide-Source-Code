@@ -4,6 +4,7 @@ local PrivilegesManagerConstants = require("scripts/managers/privileges/privileg
 local Interface = {
 	"fetch_queue_ticket_hub",
 	"fetch_queue_ticket_mission",
+	"fetch_queue_ticket_single_player",
 	"start",
 	"status",
 	"cancel"
@@ -15,23 +16,12 @@ Matchmaker.init = function (self)
 end
 
 Matchmaker._get_xbox_live_sandbox_id = function (self)
-	local async_job, error_code = XboxLive.get_sandbox_id_async()
+	local promise = Promise:new()
+	local sandbox_id = Managers.account:sandbox_id()
 
-	if not async_job then
-		return Promise.rejected("load_sandbox_id returned error_code=" .. tostring(error_code))
-	end
+	promise:resolve(sandbox_id)
 
-	return Promise.until_value_is_true(function ()
-		local sandbox_id, error_code = XboxLive.get_sandbox_id_async_result(async_job)
-
-		if sandbox_id then
-			return sandbox_id
-		end
-
-		if error_code then
-			return nil, "get_sandbox_id_async_result returned error_code=" .. tostring(error_code)
-		end
-	end)
+	return promise
 end
 
 Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, dedicated_alias_parameter)
@@ -83,13 +73,15 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 
 		return Promise.resolved({})
 	end)
+	local latencies_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
 
-	return Promise.all(platform_alias_promise, cross_play_promise, platform_blocklist_promise):catch(function (r)
+	return Promise.all(platform_alias_promise, cross_play_promise, platform_blocklist_promise, latencies_promise):catch(function (r)
 		return Promise.rejected("unknown_error")
 	end):next(function (results)
 		local platform_alias = results[1]
 		local cross_play_disabled = results[2]
 		local avoid_platform_user_ids = results[3]
+		local latency_list = results[4]
 
 		for i = 1, #avoid_platform_user_ids do
 			avoid_platform_user_ids[i] = avoid_list_id_formatter(avoid_platform_user_ids[i])
@@ -109,6 +101,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 
 		table.insert(dedicated_aliases, alias_type .. ":default")
 		Log.info("Matchmaker", "Resolved dedicated aliases: " .. table.tostring(dedicated_aliases, 3))
+		Log.info("Matchmaker", "Resolved latency_list: " .. table.tostring(latency_list, 3))
 
 		return {
 			matchmakerType = type,
@@ -116,7 +109,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 			dedicatedAliases = dedicated_aliases,
 			disableCrossPlay = cross_play_disabled,
 			platformUserIdAvoidList = avoid_platform_user_ids,
-			latencyList = Managers.backend.interfaces.region_latency:get_cached_region_latencies()
+			latencyList = latency_list
 		}
 	end)
 end
@@ -166,9 +159,23 @@ Matchmaker.fetch_queue_ticket_mission_hotjoin = function (self, matched_game_ses
 	end)
 end
 
-Matchmaker.start = function (self, queue_tickets)
-	assert(type(queue_tickets) == "table", "Missing or invalid queue_tickets")
+Matchmaker.fetch_queue_ticket_single_player = function (self, mission_id, character_id)
+	local data_promise = self:_get_common_queue_ticket_data("single-player", "mission", GameParameters.aws_matchmaking_mission_server_alias)
 
+	return data_promise:next(function (data)
+		data.missionId = mission_id
+		data.characterId = character_id
+
+		return Managers.backend:title_request("/matchmaker/queueticket", {
+			method = "POST",
+			body = data
+		}):next(function (data)
+			return data.body
+		end)
+	end)
+end
+
+Matchmaker.start = function (self, queue_tickets)
 	local data = {
 		queueTickets = queue_tickets
 	}
@@ -182,16 +189,12 @@ Matchmaker.start = function (self, queue_tickets)
 end
 
 Matchmaker.status = function (self, session_id)
-	assert(type(session_id) == "string", "Missing or invalid matchmaking_session_id")
-
 	return Managers.backend:title_request("/matchmaker/sessions/" .. session_id):next(function (data)
 		return data.body
 	end)
 end
 
 Matchmaker.cancel = function (self, session_id)
-	assert(type(session_id) == "string", "Missing or invalid session_id")
-
 	return Managers.backend:title_request("/matchmaker/sessions/" .. session_id .. "/cancel"):next(function (data)
 		return data.body
 	end)

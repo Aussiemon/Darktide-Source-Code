@@ -29,14 +29,10 @@ GameStateMachine.init = function (self, parent, start_state, params, optional_cr
 end
 
 GameStateMachine.register_on_state_change_callback = function (self, reference_name, callback)
-	fassert(not self._state_change_callbacks[reference_name], "[GameStateMachine] register_on_state_change_callback - reference name is already in use (%s)", reference_name)
-
 	self._state_change_callbacks[reference_name] = callback
 end
 
 GameStateMachine.unregister_on_state_change_callback = function (self, reference_name)
-	fassert(self._state_change_callbacks[reference_name], "[GameStateMachine] unregister_on_state_change_callback - reference name is not in use (%s)", reference_name)
-
 	self._state_change_callbacks[reference_name] = nil
 end
 

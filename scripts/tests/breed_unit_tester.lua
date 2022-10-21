@@ -45,8 +45,6 @@ BreedUnitTester.destroy = function (self)
 		package_manager:release(self._load_ids[i])
 	end
 
-	fassert(package_manager:all_reference_count(REFERENCE_NAME) == 0, "[BreedUnitTester] still has references in package_manager.")
-
 	self._package_manager = nil
 	self._test_function = nil
 	self._resource_dependencies = nil
@@ -54,9 +52,6 @@ end
 
 BreedUnitTester.update_time_slice_package_load = function (self)
 	local init_data = self._init_data
-
-	fassert(init_data, "[BreedUnitTester] Instantiate class with 'use_time_slice'")
-
 	local last_index = init_data.last_index
 	local resource_list = init_data.parameters.resource_list
 	local num_resources = #resource_list

@@ -8,11 +8,6 @@ SessionBootBase.INTERFACE = {
 }
 
 SessionBootBase.init = function (self, states, event_object)
-	fassert(event_object, "SessionBootBase requires event_object.")
-	fassert(states, "SessionBootBase requires states")
-	fassert(states.ready, "SessionBootBase requires state 'ready'")
-	fassert(states.failed, "SessionBootBase requires state 'failed'")
-
 	self._event_object = event_object
 end
 

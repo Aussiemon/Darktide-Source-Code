@@ -53,8 +53,12 @@ Contracts.localization_strings_from_criteria = function (self, criteria)
 	return localization
 end
 
-Contracts.get_current_contract = function (self, character_id, account_id)
-	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/contracts/current"), {}, account_id):next(function (data)
+Contracts.get_current_contract = function (self, character_id, account_id, create_if_missing)
+	if create_if_missing == nil then
+		create_if_missing = true
+	end
+
+	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/contracts/current"):query("createIfMissing", create_if_missing), {}, account_id):next(function (data)
 		return data.body.contract
 	end)
 end

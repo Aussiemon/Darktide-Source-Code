@@ -28,7 +28,7 @@ local default_melee_action_input_setup = {
 			input_sequence = {
 				{
 					value = false,
-					time_window = 0.25,
+					time_window = 0.2,
 					input = "action_one_hold"
 				}
 			}
@@ -197,6 +197,7 @@ default_melee_action_input_setup.action_input_hierarchy = {
 		special_action = "base",
 		combat_ability = "base",
 		push = {
+			special_action = "base",
 			push_follow_up_early_release = "base",
 			push_follow_up = {
 				special_action = "base",

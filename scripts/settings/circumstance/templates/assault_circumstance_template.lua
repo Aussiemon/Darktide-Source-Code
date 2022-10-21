@@ -10,36 +10,6 @@ local circumstance_templates = {
 			},
 			health_station = {
 				charges_to_distribute = 0
-			},
-			pickup_settings = {
-				default = {
-					primary = {
-						ammo = {
-							large_clip = 16,
-							small_clip = 20
-						},
-						ability = {
-							small_grenade = 16
-						},
-						pocketable = {
-							ammo_cache_pocketable = 3,
-							medical_crate_pocketable = 4
-						}
-					},
-					secondary = {
-						ammo = {
-							large_clip = 8,
-							small_clip = 20
-						},
-						ability = {
-							small_grenade = 12
-						},
-						pocketable = {
-							ammo_cache_pocketable = 3,
-							medical_crate_pocketable = 4
-						}
-					}
-				}
 			}
 		},
 		mutators = {
@@ -47,7 +17,8 @@ local circumstance_templates = {
 			"mutator_more_monsters"
 		},
 		ui = {
-			icon = "content/ui/materials/icons/circumstances/poison",
+			description = "loc_circumstance_assault_description",
+			icon = "content/ui/materials/icons/circumstances/assault_01",
 			display_name = "loc_circumstance_assault_title",
 			favourable_to_players = true
 		}

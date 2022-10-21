@@ -48,8 +48,11 @@ BtBotMeleeAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	scratchpad.action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	scratchpad.slot_extension = ScriptUnit.extension(unit, "slot_system")
-	local archetype = unit_data_extension:archetype()
-	scratchpad.archetype_stamina_template = archetype.stamina
+	scratchpad.random_dodge_check_t = 0
+	local specialization = unit_data_extension:specialization()
+	scratchpad.specialization_stamina_template = specialization.stamina
+	local attack_intensity_extension = ScriptUnit.extension(unit, "attack_intensity_system")
+	scratchpad.attack_intensity_extension = attack_intensity_extension
 end
 
 BtBotMeleeAction.init_values = function (self, blackboard)
@@ -139,7 +142,7 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 	elseif is_defending then
 		local latest_fixed_t = FixedFrame.get_latest_fixed_time()
 
-		self:_update_defend(should_defend, defense_meta_data, scratchpad, is_in_melee_range, target_unit, target_breed, latest_fixed_t)
+		self:_update_defend(unit, should_defend, defense_meta_data, scratchpad, is_in_melee_range, target_unit, target_breed, latest_fixed_t, t)
 
 		scratchpad.start_defend_request_id = nil
 		eval_timer = EVAL_TIMER_MELEE
@@ -182,6 +185,8 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 		self:_update_engage_position(unit, self_position, target_unit, target_position, target_velocity, target_breed, scratchpad, t, melee_range, nav_world, traverse_logic)
 	end
 
+	self:_update_dodge(unit, scratchpad, target_unit, t)
+
 	return false, self:_evaluation_timer(scratchpad, t, eval_timer)
 end
 
@@ -194,17 +199,26 @@ BtBotMeleeAction._can_start_attack = function (self, attack_meta_data, weapon_ex
 end
 
 BtBotMeleeAction._update_attack = function (self, scratchpad, t)
+	local action_input_extension = scratchpad.action_input_extension
+	local attack_action_input_request_id = scratchpad.attack_action_input_request_id
+
+	if attack_action_input_request_id then
+		if not action_input_extension:bot_queue_request_is_consumed("weapon_action", attack_action_input_request_id) then
+			return
+		else
+			scratchpad.attack_action_input_request_id = nil
+		end
+	end
+
 	if scratchpad.next_attack_action_input_t <= t then
 		local attack_meta_data = scratchpad.executing_attack_meta_data
 		local action_input_i = scratchpad.next_action_input_i
 		local action_inputs = attack_meta_data.action_inputs
 		local action_input_config = action_inputs[action_input_i]
-		local action_input_extension = scratchpad.action_input_extension
 		local action_input = action_input_config.action_input
 		local raw_input = nil
-
-		action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
-
+		local request_id = action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
+		scratchpad.attack_action_input_request_id = request_id
 		local next_action_input_i = action_input_i + 1
 		local next_action_input_config = action_inputs[next_action_input_i]
 
@@ -355,23 +369,13 @@ BtBotMeleeAction._time_to_next_attack = function (self, scratchpad, t)
 end
 
 BtBotMeleeAction._should_defend = function (self, unit, target_unit, scratchpad)
-	local slot_extension = scratchpad.slot_extension
-	local all_slots = slot_extension.all_slots
+	local attack_intensity_extension = scratchpad.attack_intensity_extension
 
-	for slot_type, slots in pairs(all_slots) do
-		local num_slots = #slots
-
-		for i = 1, num_slots do
-			local slot = slots[i]
-			local user_unit = slot.user_unit
-
-			if ALIVE[user_unit] then
-				return self:_is_attacking_me(unit, user_unit)
-			end
-		end
+	if attack_intensity_extension:num_melee_attackers() > 0 then
+		return true
+	else
+		return false
 	end
-
-	return self:_is_attacking_me(unit, target_unit)
 end
 
 BtBotMeleeAction._update_start_defend = function (self, scratchpad, defense_meta_data)
@@ -397,16 +401,12 @@ BtBotMeleeAction._update_start_defend = function (self, scratchpad, defense_meta
 end
 
 BtBotMeleeAction._start_defend = function (self, action_input, scratchpad)
-	fassert(not scratchpad.is_defending, "Tried to start defend when already defending.")
-
 	local action_input_extension = scratchpad.action_input_extension
 	local raw_input = nil
 	scratchpad.start_defend_request_id = action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
 end
 
 BtBotMeleeAction._stop_defend = function (self, scratchpad, defense_meta_data)
-	fassert(scratchpad.is_defending, "Tried to stop defend when not defending.")
-
 	local action_input_extension = scratchpad.action_input_extension
 	local stop_action_input = defense_meta_data.stop_action_input
 	local raw_input = nil
@@ -414,7 +414,7 @@ BtBotMeleeAction._stop_defend = function (self, scratchpad, defense_meta_data)
 	action_input_extension:bot_queue_action_input("weapon_action", stop_action_input, raw_input)
 end
 
-BtBotMeleeAction._update_defend = function (self, should_defend, defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
+BtBotMeleeAction._update_defend = function (self, unit, should_defend, defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t, t)
 	local action_input_extension = scratchpad.action_input_extension
 	local push_request_id = scratchpad.push_request_id
 
@@ -428,12 +428,14 @@ BtBotMeleeAction._update_defend = function (self, should_defend, defense_meta_da
 	end
 
 	if should_defend then
-		local should_push, push_action_input = self:_should_push(defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
+		local should_push, push_action_input, cant_push = self:_should_push(defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
 
 		if should_push then
 			local raw_input = nil
 			scratchpad.push_request_id = action_input_extension:bot_queue_action_input("weapon_action", push_action_input, raw_input)
 		end
+
+		scratchpad.cant_push = cant_push
 	else
 		self:_stop_defend(scratchpad, defense_meta_data)
 
@@ -444,10 +446,10 @@ end
 BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
 	local num_enemies = scratchpad.num_enemies_in_proximity
 	local stamina_component = scratchpad.stamina_component
-	local archetype_stamina_template = scratchpad.archetype_stamina_template
-	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, archetype_stamina_template)
+	local specialization_stamina_template = scratchpad.specialization_stamina_template
+	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, specialization_stamina_template)
 	local push_type = defense_meta_data.push
-	local low_stamina = push_type == "light" and current_stamina <= 2 or current_stamina <= 3
+	local low_stamina = current_stamina <= 1
 	local armor_type = Armor.armor_type(target_unit, target_breed)
 	local breed_is_pushable = true
 
@@ -459,16 +461,93 @@ BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, i
 		breed_is_pushable = false
 	end
 
-	local outnumbered = push_type == "light" and num_enemies > 2
+	local outnumbered = num_enemies > 1
 	local push_action_input = defense_meta_data.push_action_input
 	local weapon_extension = scratchpad.weapon_extension
 	local raw_input = nil
 	local push_action_is_available = weapon_extension:action_input_is_currently_valid("weapon_action", push_action_input, raw_input, fixed_t)
+	local cant_push = low_stamina or not push_action_is_available or not breed_is_pushable
 
-	if in_melee_range and push_action_is_available and breed_is_pushable and not outnumbered and not low_stamina then
+	if in_melee_range and push_action_is_available and breed_is_pushable and outnumbered and not low_stamina then
 		return true, push_action_input
 	else
-		return false, nil
+		return false, nil, cant_push
+	end
+end
+
+local DODGE_CHECK_RANDOM_RANGE = {
+	0.5,
+	2
+}
+local CANT_PUSH_DODGE_CHECK_RANDOM_RANGE = {
+	0.1,
+	0.2
+}
+local DODGE_RANGE_TEST_DISTANCE = 2.25
+local DODGE_CHECK_FAIL_COOLDOWN = 0.1
+
+BtBotMeleeAction._update_dodge = function (self, unit, scratchpad, target_unit, t)
+	local cant_push = scratchpad.cant_push
+	local bot_group_data = scratchpad.bot_group_data
+	local threat_data = bot_group_data.aoe_threat
+
+	if t < threat_data.expires then
+		return
+	end
+
+	if t < scratchpad.random_dodge_check_t then
+		return
+	end
+
+	local num_enemies = scratchpad.num_enemies_in_proximity
+
+	if num_enemies == 0 then
+		return
+	end
+
+	local attack_intensity_extension = scratchpad.attack_intensity_extension
+
+	if attack_intensity_extension:num_melee_attackers() == 0 then
+		return
+	end
+
+	local bot_position = POSITION_LOOKUP[unit]
+	local target_position = POSITION_LOOKUP[target_unit]
+	local dodge_away_from_target = math.random() > 0.5
+	local escape_dir = nil
+
+	if dodge_away_from_target then
+		escape_dir = Vector3.normalize(bot_position - target_position)
+	else
+		local rotation = Unit.local_rotation(unit, 1)
+		local right = Quaternion.right(rotation)
+		local dodge_left = math.random() > 0.5
+
+		if dodge_left then
+			escape_dir = -right
+		else
+			escape_dir = right
+		end
+	end
+
+	if escape_dir then
+		local nav_world = scratchpad.nav_world
+		local traverse_logic = scratchpad.traverse_logic
+		local to = bot_position + escape_dir * DODGE_RANGE_TEST_DISTANCE
+		local success = NavQueries.ray_can_go(nav_world, bot_position, to, traverse_logic, 1, 1)
+
+		if success then
+			local random_time = t + math.random() * 0.5
+			threat_data.expires = random_time
+
+			threat_data.escape_direction:store(escape_dir)
+
+			threat_data.dodge_t = math.min(t + math.random() * 0.5, random_time)
+			local dodge_check_range = cant_push and CANT_PUSH_DODGE_CHECK_RANDOM_RANGE or DODGE_CHECK_RANDOM_RANGE
+			scratchpad.random_dodge_check_t = t + math.random_range(dodge_check_range[1], dodge_check_range[2])
+		else
+			scratchpad.random_dodge_check_t = t + DODGE_CHECK_FAIL_COOLDOWN
+		end
 	end
 end
 
@@ -502,8 +581,6 @@ BtBotMeleeAction._clear_pending_attack = function (self, scratchpad)
 end
 
 BtBotMeleeAction._start_attack = function (self, attack_meta_data, scratchpad, t)
-	fassert(not scratchpad.is_attacking, "Bot trying to start a melee attack when already attacking.")
-
 	scratchpad.is_attacking = true
 	scratchpad.executing_attack_meta_data = attack_meta_data
 	scratchpad.next_action_input_i = 1

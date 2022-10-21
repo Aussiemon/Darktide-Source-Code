@@ -227,13 +227,13 @@ local widget_definitions = {
 	}, "panel", nil, nil, ViewStyles.report_background),
 	mission_header = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/mission_board/zones/dust",
+			value = "content/ui/materials/icons/zones/dust",
 			value_id = "zone_image",
 			pass_type = "texture_uv",
 			style_id = "zone_image"
 		},
 		{
-			value = "content/ui/materials/mission_board/frames/headline_background_vertical",
+			value = "content/ui/materials/bars/headline_background_vertical",
 			style_id = "fade",
 			pass_type = "texture_uv"
 		},

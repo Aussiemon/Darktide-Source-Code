@@ -3,6 +3,7 @@ local HudElementPlayerAbilitySettings = require("scripts/ui/hud/elements/player_
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementPlayerAbility = class("HudElementPlayerAbility", "HudElementBase")
 
 HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, data)
@@ -36,20 +37,12 @@ HudElementPlayerAbility.destroy = function (self)
 	HudElementPlayerAbility.super.destroy(self)
 end
 
-local _input_devices = {
-	"xbox_controller",
-	"keyboard",
-	"mouse"
-}
-
 HudElementPlayerAbility._update_input = function (self)
 	local ability_id = self._ability_id
 	local service_type = "Ingame"
 	local alias_name = ability_id
-	local alias_array_index = 1
-	local alias = Managers.input:alias_object(service_type)
-	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
+	local color_tint_text = false
+	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 
 	self:set_input_text(input_key)
 end
@@ -153,7 +146,9 @@ end
 
 HudElementPlayerAbility.set_input_text = function (self, text)
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.ability.content.input_text = text
+	local widget = widgets_by_name.ability
+	widget.content.input_text = text
+	widget.dirty = true
 end
 
 HudElementPlayerAbility.set_icon = function (self, icon)
@@ -164,6 +159,8 @@ HudElementPlayerAbility.set_icon = function (self, icon)
 	if icon then
 		style.icon.material_values.talent_icon = icon
 	end
+
+	widget.dirty = true
 end
 
 HudElementPlayerAbility._set_progress = function (self, progress)
@@ -175,6 +172,27 @@ HudElementPlayerAbility._set_progress = function (self, progress)
 	local content = widget.content
 	widget.dirty = true
 	content.duration_progress = progress
+end
+
+HudElementPlayerAbility.set_visible = function (self, visible, ui_renderer, use_retained_mode)
+	if use_retained_mode then
+		if visible then
+			self:set_dirty()
+		else
+			self:_destroy_widgets(ui_renderer)
+		end
+	end
+end
+
+HudElementPlayerAbility._destroy_widgets = function (self, ui_renderer)
+	local widgets = self._widgets
+	local num_widgets = #widgets
+
+	for i = 1, num_widgets do
+		local widget = widgets[i]
+
+		UIWidget.destroy(ui_renderer, widget)
+	end
 end
 
 HudElementPlayerAbility._register_events = function (self)
@@ -199,7 +217,7 @@ HudElementPlayerAbility._unregister_events = function (self)
 	end
 end
 
-HudElementPlayerAbility.event_on_input_settings_changed = function (self)
+HudElementPlayerAbility.event_on_input_changed = function (self)
 	self:_update_input()
 end
 

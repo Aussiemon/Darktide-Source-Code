@@ -56,8 +56,6 @@ ParameterResolver.resolve_command_line = function ()
 	end
 
 	local function next_is_parameter()
-		assert(has_more_args_after_current())
-
 		return is_parameter(next_arg())
 	end
 
@@ -192,45 +190,47 @@ ParameterResolver.resolve_dev_parameters = function ()
 		dev_parameters[param] = type(value) == "table" and table.clone(value) or value
 	end
 
-	local loaded_parameters = Application.user_setting("development_settings") or {}
+	if BUILD ~= "release" then
+		local loaded_parameters = Application.user_setting("development_settings") or {}
 
-	for param, value in pairs(loaded_parameters) do
-		if dev_parameters[param] ~= nil then
-			local default_config = DefaultDevParameters[param]
+		for param, value in pairs(loaded_parameters) do
+			if dev_parameters[param] ~= nil then
+				local default_config = DefaultDevParameters[param]
 
-			if default_config.user_setting == false then
-				debug("User independent development parameter [%s] read from user settings, parameter skipped!", param)
-			else
-				local options = default_config.options
-
-				if options and not _find_value_in_options(value, options) then
-					debug("Trying to set param [%s] from user settings. Value [%s] not found in parameter options, keeping default value [%s]", param, tostring(value), dev_parameters[param])
+				if default_config.user_setting == false then
+					debug("User independent development parameter [%s] read from user settings, parameter skipped!", param)
 				else
-					debug("Overriding param [%s] from user settings, setting it to [%s]", param, tostring(value))
+					local options = default_config.options
 
-					dev_parameters[param] = value
+					if options and not _find_value_in_options(value, options) then
+						debug("Trying to set param [%s] from user settings. Value [%s] not found in parameter options, keeping default value [%s]", param, tostring(value), dev_parameters[param])
+					else
+						debug("Overriding param [%s] from user settings, setting it to [%s]", param, tostring(value))
+
+						dev_parameters[param] = value
+					end
 				end
+			else
+				debug("Undecleared development parameter [%s] read from user settings, parameter skipped!", param)
 			end
-		else
-			debug("Undecleared development parameter [%s] read from user settings, parameter skipped!", param)
 		end
-	end
 
-	local cmd_line_dev_parameters = ParameterResolver._command_line_parameters.dev
+		local cmd_line_dev_parameters = ParameterResolver._command_line_parameters.dev
 
-	for param, value in pairs(cmd_line_dev_parameters) do
-		if dev_parameters[param] ~= nil then
-			dev_parameters[param] = value
+		for param, value in pairs(cmd_line_dev_parameters) do
+			if dev_parameters[param] ~= nil then
+				dev_parameters[param] = value
 
-			debug("Overriding param [%s] from command line, setting it to [%s]", param, tostring(value))
-		else
-			debug("Trying to set param [%s] from command line. Dev parameter not declared in DefaultDevParameters, ignoring parameter", param)
+				debug("Overriding param [%s] from command line, setting it to [%s]", param, tostring(value))
+			else
+				debug("Trying to set param [%s] from command line. Dev parameter not declared in DefaultDevParameters, ignoring parameter", param)
+			end
 		end
-	end
 
-	if GameParameters.dump_dev_parameters_on_startup then
-		debug("Combined Dev Parameters:")
-		table.dump(dev_parameters, nil, 5)
+		if GameParameters.dump_dev_parameters_on_startup then
+			debug("Combined Dev Parameters:")
+			table.dump(dev_parameters, nil, 5)
+		end
 	end
 
 	DevParameters = table.set_readonly(dev_parameters)
@@ -251,7 +251,10 @@ ParameterResolver.resolve_dev_parameters = function ()
 		if DefaultDevParameters[param] ~= nil and DefaultDevParameters[param].user_setting ~= false then
 			debug("Setting locally saved development setting [%s] to [%s]", param, tostring(value))
 			Application.set_user_setting("development_settings", param, value)
-			Application.save_user_settings()
+
+			if not DEDICATED_SERVER then
+				Application.save_user_settings()
+			end
 		end
 	end
 

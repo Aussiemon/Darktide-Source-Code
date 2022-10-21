@@ -46,8 +46,6 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 	end
 
 	local function next_is_parameter()
-		assert(has_more_args_after_current())
-
 		return is_parameter(next_arg())
 	end
 

@@ -1,6 +1,4 @@
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
-local HudElementsSpectator = require("scripts/ui/hud/hud_elements_spectator")
-local HudVisibilityGroups = require("scripts/ui/hud/hud_visibility_groups")
 local HumanPlayer = class("HumanPlayer")
 
 HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, viewport_name, telemetry_game_session)
@@ -115,7 +113,8 @@ HumanPlayer.set_profile = function (self, profile)
 	elseif self:type() == "BotPlayer" then
 		self._telemetry_subject = {
 			bot = true,
-			account_id = self._debug_name
+			account_id = self._debug_name,
+			character_id = self:local_player_id()
 		}
 	end
 end

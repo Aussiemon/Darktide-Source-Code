@@ -2,8 +2,17 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitHologramExtension = class("PlayerUnitHologramExtension")
 local UPDATE_WAITING_PERIOD = 0.25
 local UNITS = {
-	human = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
-	ogryn = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton"
+	human = {
+		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
+		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon"
+	},
+	ogryn = {
+		default = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton",
+		consumed = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon"
+	}
+}
+local SWITCH_STATES = {
+	consumed = true
 }
 
 PlayerUnitHologramExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -21,7 +30,7 @@ PlayerUnitHologramExtension.init = function (self, extension_init_context, unit,
 	self._character_state_component = nil
 	self._target_health_extension = nil
 	self._hologram_unit = nil
-	self._unit_resource = UNITS[extension_init_data.breed_name]
+	self._unit_resources = UNITS[extension_init_data.breed_name]
 	self._health = 1
 	self._was_disabled = false
 end
@@ -47,6 +56,9 @@ PlayerUnitHologramExtension.destroy = function (self)
 	end
 end
 
+local IGNORED_DISABLED_OUTLINE_STATES = {
+	catapulted = true
+}
 local _spawn = nil
 
 PlayerUnitHologramExtension.update = function (self, unit, dt, t)
@@ -59,6 +71,7 @@ PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 	self._timer = 0
 	local state_name = self._character_state_component.state_name
 	local hologram_unit = self._hologram_unit
+	local should_switch_unit = SWITCH_STATES[state_name] and self._current_spawned_state ~= state_name or SWITCH_STATES[self._current_spawned_state] and not SWITCH_STATES[state_name]
 
 	if state_name == "dead" then
 		if hologram_unit then
@@ -69,13 +82,18 @@ PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 
 		return
 	else
-		if not hologram_unit then
-			hologram_unit = _spawn(self._world, self._unit_resource, self._unit)
+		if not hologram_unit or should_switch_unit then
+			if hologram_unit then
+				_despawn(self._world, hologram_unit)
+			end
+
+			hologram_unit = _spawn(self._world, self._unit_resources, self._unit, state_name)
 			self._hologram_unit = hologram_unit
+			self._current_spawned_state = state_name
 		end
 
 		local health_percent = self._target_health_extension:current_health_percent()
-		local is_disabled = PlayerUnitStatus.is_disabled(self._character_state_component)
+		local is_disabled = PlayerUnitStatus.is_disabled(self._character_state_component) and not IGNORED_DISABLED_OUTLINE_STATES[state_name]
 
 		if health_percent == self._health and is_disabled == self._was_disabled then
 			return
@@ -94,11 +112,12 @@ PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 	end
 end
 
-function _spawn(world, resource, parent_unit)
+function _spawn(world, resources, parent_unit, state_name)
 	if not world then
 		return nil
 	end
 
+	local resource = SWITCH_STATES[state_name] and resources[state_name] or resources.default
 	local hologram_unit = World.spawn_unit_ex(world, resource)
 
 	World.link_unit(world, hologram_unit, 1, parent_unit, 1, true)

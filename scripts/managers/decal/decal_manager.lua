@@ -69,9 +69,6 @@ DecalManager.unregister_decal_unit_ids = function (self, unit_ids)
 	for i = 1, #unit_ids do
 		local unit_id = unit_ids[i]
 		local reference_count = self._decal_unit_id_reference_counts[unit_id]
-
-		fassert(reference_count, "Tring to unregister a decal unit id that has not been registered")
-
 		local new_reference_count = reference_count - 1
 
 		if new_reference_count == 0 then

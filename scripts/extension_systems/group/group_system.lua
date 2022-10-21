@@ -26,6 +26,7 @@ GroupSystem.init = function (self, extension_system_creation_context, ...)
 	GroupSystem.super.init(self, extension_system_creation_context, ...)
 
 	self._groups = {}
+	self._locked_group_ids = {}
 	self._num_groups = 0
 	self._current_group_id = 0
 
@@ -140,9 +141,22 @@ GroupSystem._destroy_bot_group = function (self, side)
 	self._bot_groups[side] = nil
 end
 
+local DEFAULT_MIN_MINIONS = 5
+
 GroupSystem._add_member_to_group = function (self, member_unit, group_id)
 	local group = self:group_from_id(group_id)
 	local member_id = #group.members + 1
+
+	if member_id == DEFAULT_MIN_MINIONS then
+		group.min_members_spawned = true
+
+		if group.group_start_sound_event and not group.group_sound_event_started then
+			self:start_group_sfx(group_id, group.group_start_sound_event, group.group_stop_sound_event)
+
+			group.group_sound_event_started = true
+		end
+	end
+
 	group.members[member_id] = member_unit
 end
 
@@ -157,7 +171,7 @@ GroupSystem._remove_member_from_group = function (self, member_unit, group_id)
 
 	extension:leave_group()
 
-	if #members == 0 then
+	if not self._locked_group_ids[group_id] and #members == 0 then
 		if group.sfx then
 			self:stop_group_sfx(group)
 		end
@@ -170,6 +184,7 @@ GroupSystem._create_group = function (self, id)
 	local index = self._num_groups + 1
 	local groups = self._groups
 	local group = {
+		min_members_spawned = false,
 		id = id,
 		members = {}
 	}
@@ -180,6 +195,11 @@ end
 GroupSystem.generate_group_id = function (self)
 	local group_id = self._current_group_id + 1
 	self._current_group_id = group_id
+	local group = self:group_from_id(group_id)
+
+	if not group then
+		self:_create_group(group_id)
+	end
 
 	return group_id
 end
@@ -215,6 +235,14 @@ GroupSystem.group_from_id = function (self, group_id)
 			return group, i
 		end
 	end
+end
+
+GroupSystem.lock_group_id = function (self, group_id)
+	self._locked_group_ids[group_id] = true
+end
+
+GroupSystem.unlock_group_id = function (self, group_id)
+	self._locked_group_ids[group_id] = nil
 end
 
 GroupSystem.num_groups = function (self)
@@ -254,7 +282,9 @@ local function _get_group_average_position(group)
 		average_position = average_position + position
 	end
 
-	average_position = average_position / num_members
+	if num_members > 0 then
+		average_position = average_position / num_members
+	end
 
 	return average_position
 end
@@ -281,7 +311,7 @@ GroupSystem._update_group_sfx = function (self)
 			local playing_id = group_sfx.playing_id
 			local is_currently_playing = WwiseWorld.is_playing(wwise_world, playing_id)
 
-			if num_members < group_sfx.min_members or not is_currently_playing then
+			if group.min_members_spawned and num_members < group_sfx.min_members or not is_currently_playing then
 				self:stop_group_sfx(group)
 
 				group.average_position = nil
@@ -294,8 +324,6 @@ GroupSystem._update_group_sfx = function (self)
 		end
 	end
 end
-
-local DEFAULT_MIN_MINIONS_TO_PLAY_GROUP_SFX = 5
 
 GroupSystem.start_group_sfx = function (self, group_id, start_event_name, stop_event_name_or_nil, optional_min_members)
 	local group = self:group_from_id(group_id)
@@ -310,10 +338,11 @@ GroupSystem.start_group_sfx = function (self, group_id, start_event_name, stop_e
 	local group_sfx = {}
 	local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, position)
 	local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, false, wwise_source_id)
+	local min_members = optional_min_members or DEFAULT_MIN_MINIONS
 	group_sfx.source_id = wwise_source_id
 	group_sfx.playing_id = playing_id
 	group_sfx.stop_event = stop_event_name_or_nil
-	group_sfx.min_members = optional_min_members or DEFAULT_MIN_MINIONS_TO_PLAY_GROUP_SFX
+	group_sfx.min_members = min_members
 	group.sfx = group_sfx
 
 	if self._is_server then

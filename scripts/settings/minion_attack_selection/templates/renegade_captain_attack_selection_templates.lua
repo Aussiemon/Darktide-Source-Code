@@ -63,6 +63,12 @@ local ALL_CATEGORIES = {
 			attack_names = {
 				"plasma_pistol_shoot"
 			}
+		},
+		{
+			required_weapon_slot_name = "slot_shotgun",
+			attack_names = {
+				"shotgun_shoot"
+			}
 		}
 	}
 }
@@ -86,10 +92,11 @@ local renegade_captain_all = {
 	amount_from_category = ALL_AMOUNT_FROM_CATEGORY
 }
 local renegade_captain_default = {
-	combat_range_multi_config_key = "melee",
+	combat_range_multi_config_key = "default",
 	tag = "default",
 	categories = ALL_CATEGORIES,
 	amount_from_category = {
+		ranged = 1,
 		melee = 1,
 		aoe = 1
 	},

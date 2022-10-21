@@ -30,6 +30,7 @@ PlayerCharacterStatePounced.init = function (self, character_state_init_context,
 	disabled_character_state_component.target_drag_position = Vector3.zero()
 	self._disabled_character_state_component = disabled_character_state_component
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
+	self._entered_state_t = nil
 end
 
 PlayerCharacterStatePounced.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -68,6 +69,7 @@ PlayerCharacterStatePounced.on_enter = function (self, unit, dt, t, previous_sta
 		self:_init_player_vo(t)
 	end
 
+	self._entered_state_t = t
 	local animation_extension = self._animation_extension
 
 	PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
@@ -76,6 +78,7 @@ end
 
 PlayerCharacterStatePounced.on_exit = function (self, unit, t, next_state)
 	local disabled_character_state_component = self._disabled_character_state_component
+	local disabling_unit = disabled_character_state_component.disabling_unit
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
@@ -89,9 +92,8 @@ PlayerCharacterStatePounced.on_exit = function (self, unit, t, next_state)
 	animation_extension:anim_event("leap_attack_interupt")
 
 	local inventory_component = self._inventory_component
-	local previously_wielded_slot_name = inventory_component.previously_wielded_slot
 
-	PlayerUnitVisualLoadout.wield_slot(previously_wielded_slot_name, unit, t)
+	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
@@ -101,6 +103,34 @@ PlayerCharacterStatePounced.on_exit = function (self, unit, t, next_state)
 
 	if self._is_server and next_state == "walking" then
 		self._fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
+
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
+		local is_player_alive = player:unit_is_alive()
+
+		if is_player_alive then
+			local rescued_by_player = true
+
+			if HEALTH_ALIVE[disabling_unit] then
+				local target_blackboard = BLACKBOARDS[disabling_unit]
+
+				if target_blackboard then
+					local stagger_component = target_blackboard.stagger
+					local not_staggered = stagger_component.num_triggered_staggers == 0
+
+					if not_staggered then
+						rescued_by_player = false
+					end
+				end
+			end
+
+			local state_name = "pounced"
+			local time_in_captivity = t - self._entered_state_t
+
+			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+		end
+
+		self._entered_state_t = nil
 	end
 
 	self._stand_up_duration = nil
@@ -155,7 +185,7 @@ PlayerCharacterStatePounced._update_vo = function (self, t)
 	local vo_sequence = self._vo_sequence
 
 	if vo_sequence == 1 then
-		PlayerVoiceGrunts.trigger_sound(VCE_ALIAS, self._visual_loadout_extension, self._fx_extension)
+		PlayerVoiceGrunts.trigger_voice(VCE_ALIAS, self._visual_loadout_extension, self._fx_extension)
 	else
 		local pouncing_unit_breed = self._pouncing_unit_breed
 

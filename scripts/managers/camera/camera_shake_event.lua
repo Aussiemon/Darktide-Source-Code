@@ -3,9 +3,6 @@ local CameraShakeEvent = class("CameraShakeEvent")
 
 CameraShakeEvent.init = function (self, event_name, source_unit_data)
 	local event = CameraEffectSettings.shake[event_name]
-
-	fassert(event, "There is no shake event with the name %s, make sure that the event exists in CameraEffectSettings.shake...", event_name)
-
 	local fade_in = event.fade_in
 	local fade_out = event.fade_out
 	local duration = event.duration

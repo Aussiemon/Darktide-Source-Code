@@ -90,10 +90,10 @@ local breed_data = {
 		max_distance_modifier_duration = 30,
 		max_distance_modifier_percentage = 0.8,
 		max_distance_from_target = 50,
-		max_distance_from_target_z_below = -1,
+		max_distance_from_target_z_below = -10,
 		search_radius = 40,
-		max_distance_from_combat_vector = 40,
-		max_distance_from_target_z = 5,
+		max_distance_from_combat_vector = 60,
+		max_distance_from_target_z = 10,
 		cover_combat_ranges = {
 			far = true
 		},
@@ -168,14 +168,18 @@ local breed_data = {
 		threat_decay_per_second = 5
 	},
 	aim_config = {
-		lerp_speed = 5,
+		lean_variable_name = "lean",
 		target = "head_aim_target",
 		distance = 5,
-		lean_variable_name = "lean",
+		target_node = "enemy_aim_target_03",
+		lerp_speed = 5,
 		lean_variable_modifier = -0.2,
 		node = "j_neck",
-		target_node = "enemy_aim_target_03",
-		require_line_of_sight = true
+		require_line_of_sight = true,
+		valid_aim_combat_ranges = {
+			far = true,
+			close = true
+		}
 	},
 	randomized_nav_tag_costs = {
 		{
@@ -361,19 +365,16 @@ local breed_data = {
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
 			"j_rightfoot"
-		},
-		[hit_zone_names.center_mass] = {
-			"j_spine"
 		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.05,
-			j_leftshoulder = 0.05,
-			j_spine = 0.2,
+			j_rightshoulder = 0.15,
+			j_leftshoulder = 0.15,
+			j_spine = 0.3,
 			j_spine1 = 0.1,
-			j_head = 0.3,
-			j_neck = 0.3
+			j_head = 0.5,
+			j_neck = 0.5
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,

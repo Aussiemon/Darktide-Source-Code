@@ -13,8 +13,21 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local ContentBlueprints = require("scripts/ui/views/class_selection_view/class_selection_view_blueprints")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ClassSelectionViewTestify = GameParameters.testify and require("scripts/ui/views/class_selection_view/class_selection_view_testify")
+local PACKAGE_BASE_PATH = "packages/ui/views/talents_view/"
 local ClassSelectionView = class("ClassSelectionView", "BaseView")
+
+local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
+	local material_values = widget.style.icon.material_values
+	material_values.use_placeholder_texture = 0
+	material_values.use_render_target = 1
+	material_values.rows = rows
+	material_values.columns = columns
+	material_values.grid_index = grid_index - 1
+	material_values.render_target = render_target
+end
 
 ClassSelectionView.init = function (self, settings, context)
 	ClassSelectionView.super.init(self, Definitions, settings)
@@ -36,6 +49,56 @@ ClassSelectionView.on_enter = function (self)
 	self._classes_visible = false
 
 	self:_show_classes_widgets(false, profile.archetype)
+	self:_start_loading_talent_icons()
+
+	self._setup_complete = true
+end
+
+ClassSelectionView._start_loading_talent_icons = function (self)
+	local all_specializations = {}
+
+	for i = 1, #self._domain_options do
+		local domain = self._domain_options[i]
+
+		for class_name, class_data in pairs(domain.specializations) do
+			if class_data.title and not class_data.disabled then
+				all_specializations[#all_specializations + 1] = class_data.name
+			end
+		end
+	end
+
+	self._talents_load_id = {}
+	self._loaded_icons = {
+		count = 0,
+		all_loaded = false
+	}
+
+	for i = 1, #all_specializations do
+		local specialization_name = all_specializations[i]
+		local package_name = PACKAGE_BASE_PATH .. specialization_name
+		self._talents_load_id[#self._talents_load_id + 1] = Managers.package:load(package_name, "ClassSelectionView", callback(self, "_should_load_icons"))
+	end
+end
+
+ClassSelectionView._should_load_icons = function (self)
+	self._loaded_icons.count = self._loaded_icons.count + 1
+	self._loaded_icons.all_loaded = #self._talents_load_id == self._loaded_icons.count
+
+	if self._loaded_icons.all_loaded then
+		local class_abilities_info_widgets = self._class_abilities_info_widgets
+
+		if self._class_abilities_info_widgets and class_abilities_info_widgets then
+			for i = 1, #class_abilities_info_widgets do
+				local widget = class_abilities_info_widgets[i]
+
+				if widget.type == "ability" then
+					local template = ContentBlueprints[widget.type]
+
+					template.load_icon(widget, widget.element)
+				end
+			end
+		end
+	end
 end
 
 ClassSelectionView._create_offscreen_renderer = function (self)
@@ -129,25 +192,16 @@ ClassSelectionView.event_register_character_spawn_point = function (self, spawn_
 	self._spawn_point_unit = spawn_point_unit
 end
 
-ClassSelectionView._show_classes_widgets = function (self, show, force_domain)
-	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.domain_info.content.visible = not show
-	widgets_by_name.domain_info.content.visible = not show
-	local selected_domain = nil
+ClassSelectionView._enable_blur = function (self, enable)
+	local world_spawner = self._world_spawner
 
-	if force_domain ~= nil then
-		selected_domain = force_domain
-	else
-		selected_domain = self._selected_domain
+	if world_spawner then
+		if enable then
+			self._world_spawner:set_camera_blur(0.9, 0.1)
+		else
+			self._world_spawner:set_camera_blur(0, 0.1)
+		end
 	end
-
-	widgets_by_name.main_title.content.text = string.upper(Localize("loc_class_selection_domain"))
-
-	self:_create_domain_option_widgets()
-
-	self._widgets_by_name.transition_fade.alpha_multiplier = 0
-
-	self:_on_domain_pressed(selected_domain)
 end
 
 ClassSelectionView.draw = function (self, dt, t, input_service, layer)
@@ -155,6 +209,8 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 	local ui_scenegraph = self._ui_scenegraph
 	local render_settings = self._render_settings
 	local domain_options_widgets = self._domain_options_widgets
+	local class_details_widgets = self._class_details_widgets
+	local class_options_widgets = self._class_options_widgets
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
@@ -166,7 +222,38 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 		end
 	end
 
+	if class_details_widgets then
+		for i = 1, #class_details_widgets do
+			local background_widget = class_details_widgets[i].background
+			local info_widget = class_details_widgets[i].info
+
+			UIWidget.draw(background_widget, ui_renderer)
+			UIWidget.draw(info_widget, ui_renderer)
+		end
+	end
+
+	if class_options_widgets then
+		for i = 1, #class_options_widgets do
+			local widget = class_options_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
 	UIRenderer.end_pass(ui_renderer)
+	UIRenderer.begin_pass(self._offscreen_renderer, ui_scenegraph, input_service, dt, render_settings)
+
+	local class_abilities_info_widgets = self._class_abilities_info_widgets
+
+	if class_abilities_info_widgets then
+		for i = 1, #class_abilities_info_widgets do
+			local widget = class_abilities_info_widgets[i]
+
+			UIWidget.draw(widget, self._offscreen_renderer)
+		end
+	end
+
+	UIRenderer.end_pass(self._offscreen_renderer)
 	ClassSelectionView.super.draw(self, dt, t, input_service, layer)
 end
 
@@ -183,6 +270,12 @@ ClassSelectionView.update = function (self, dt, t, input_service)
 		world_spawner:update(dt, t)
 	end
 
+	local grid = self._class_abilities_info_grid
+
+	if grid then
+		grid:update(dt, t, input_service)
+	end
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(ClassSelectionViewTestify, self)
 	end
@@ -191,13 +284,37 @@ ClassSelectionView.update = function (self, dt, t, input_service)
 end
 
 ClassSelectionView._on_choose_pressed = function (self)
-	self:_play_sound(UISoundEvents.character_create_confirm)
-	Managers.event:trigger("event_create_new_character_continue")
+	if self._classes_visible then
+		self._character_create:set_specialization(self._selected_class.name)
+		self:_play_sound(UISoundEvents.character_create_confirm)
+		Managers.event:trigger("event_create_new_character_continue")
+	else
+		local selected_class_name = nil
+
+		if self._selected_class and self._selected_domain.archetype_title == self._selected_class.archetype then
+			selected_class_name = self._selected_class.title
+		else
+			for class_name, class in pairs(self._selected_domain.specializations) do
+				if class.title and not class.disabled then
+					selected_class_name = class_name
+
+					break
+				end
+			end
+		end
+
+		self:_on_class_pressed(selected_class_name)
+	end
 end
 
 ClassSelectionView._on_back_pressed = function (self)
+	if self._classes_visible then
+		self:_show_classes_widgets(false)
+	else
+		Managers.event:trigger("event_create_new_character_back")
+	end
+
 	self:_play_sound(UISoundEvents.character_create_abort)
-	Managers.event:trigger("event_create_new_character_back")
 end
 
 ClassSelectionView._on_quit_pressed = function (self)
@@ -238,6 +355,12 @@ ClassSelectionView.on_exit = function (self)
 
 	self:_destroy_offscreen_renderer()
 	ClassSelectionView.super.on_exit(self)
+
+	for i = 1, #self._talents_load_id do
+		local load_id = self._talents_load_id[i]
+
+		Managers.package:release(load_id)
+	end
 end
 
 ClassSelectionView._handle_input = function (self, input_service)
@@ -254,6 +377,7 @@ ClassSelectionView._handle_input = function (self, input_service)
 
 	if not input_handled then
 		local new_selection_index, current_selection_index = nil
+		local class_options = {}
 		current_selection_index = self._selected_domain and table.index_of(domain_options, self._selected_domain) or 1
 		num_options = #domain_options
 
@@ -278,6 +402,8 @@ ClassSelectionView._on_navigation_input_changed = function (self)
 end
 
 ClassSelectionView._create_domain_option_widgets = function (self)
+	self:_destroy_domain_option_widgets()
+
 	local domain_option_definition = Definitions.domain_option_definition
 	local domain_selection_definition = Definitions.domain_selection_definition
 	local size = domain_option_definition.size
@@ -322,22 +448,13 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 
 		self._character_create:set_archetype(selected_domain)
 
-		local selected_class = nil
-
-		for class_name, class in pairs(selected_domain.specializations) do
-			if class.title and not class.disabled then
-				selected_class = self._selected_domain.specializations[class_name]
-
-				break
-			end
-		end
-
-		self._character_create:set_specialization(selected_class.name)
-		self:_play_sound(UISoundEvents.character_create_archetype_pressed)
-
-		local selection_sound_event = selected_domain.selection_sound_event
+		local selection_sound_event = self._selected_domain.selection_sound_event
 
 		self:_play_sound(selection_sound_event)
+
+		if self._setup_complete then
+			self:_play_sound(UISoundEvents.character_create_archetype_pressed)
+		end
 
 		if self._fade_animation_id and self:_is_animation_active(self._fade_animation_id) then
 			self:_stop_animation(self._fade_animation_id)
@@ -355,19 +472,172 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 		content.hotspot.is_focused = selected_domain.archetype_title == content.archetype_title
 	end
 
+	if self._classes_visible then
+		self:_show_class_details(false)
+
+		self._widgets_by_name.class_background.content.visible = false
+
+		self:_enable_blur(false)
+
+		self._classes_visible = false
+	end
+
+	local selected_class_name = nil
+
+	for class_name, class in pairs(self._selected_domain.specializations) do
+		if class.title and not class.disabled then
+			selected_class_name = class_name
+
+			break
+		end
+	end
+
+	self._selected_class = self._selected_domain.specializations[selected_class_name]
+
 	self:_update_domain_info()
 end
 
 ClassSelectionView._update_domain_info = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local selected_domain = self._selected_domain
-	widgets_by_name.domain_info.content.title = Localize(selected_domain.archetype_title)
-	widgets_by_name.domain_info.content.description = Localize(selected_domain.archetype_description)
+	local selected_class = self._selected_class
+	local widget = widgets_by_name.domain_info
+	widget.content.title = string.format("%s %s", Localize(selected_domain.archetype_title), Localize(selected_class.title))
+	widget.content.description = Localize(selected_domain.archetype_description)
 
-	for i = 1, #self._domain_options do
-		local domain_name = self._domain_options[i].name
-		widgets_by_name[domain_name .. "_corners"].content.visible = domain_name == selected_domain.name
+	self:_update_choose_button_text()
+
+	local title_style = widget.style.title
+	local title_font_options = UIFonts.get_font_options_by_style(title_style)
+	local description_style = widget.style.description
+	local description_font_options = UIFonts.get_font_options_by_style(description_style)
+	local scenegraph_width = self:_scenegraph_size("domain_info")
+	local title_width, title_height = UIRenderer.text_size(self._ui_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
+		scenegraph_width,
+		0
+	}, title_font_options)
+	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
+		scenegraph_width,
+		0
+	}, description_font_options)
+
+	self:_set_scenegraph_size("domain_info", nil, title_height + description_height + description_style.offset[2])
+
+	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
+	widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
+	widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_domain.name].left_lower
+	widgets_by_name.corners.content.right_lower = UISettings.inventory_frames_by_archetype[selected_domain.name].right_lower
+end
+
+ClassSelectionView._update_choose_button_text = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local details_button_display_name = string.upper(Localize("loc_character_create_button_details"))
+	local choose_button_display_name = string.upper(Localize("loc_character_backstory_selection"))
+	local title = nil
+
+	if self._classes_visible then
+		title = choose_button_display_name
+	else
+		title = details_button_display_name
 	end
+
+	widgets_by_name.choose_button.content.text = title
+end
+
+ClassSelectionView._show_classes_widgets = function (self, show, force_domain)
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.class_background.content.visible = show
+	local selected_domain = nil
+
+	if force_domain ~= nil then
+		selected_domain = force_domain
+	else
+		selected_domain = self._selected_domain
+	end
+
+	self:_enable_blur(show)
+
+	if show then
+		self:_show_class_details(true)
+
+		if self._fade_animation_id and self:_is_animation_active(self._fade_animation_id) then
+			self:_stop_animation(self._fade_animation_id)
+		end
+
+		self._widgets_by_name.transition_fade.alpha_multiplier = 0.5
+	else
+		widgets_by_name.main_title.content.visible = true
+		widgets_by_name.main_title.content.text = string.upper(Localize("loc_main_menu_create_button"))
+
+		self:_show_class_details(false)
+		self:_create_domain_option_widgets()
+
+		self._widgets_by_name.transition_fade.alpha_multiplier = 0
+
+		self:_on_domain_pressed(selected_domain)
+	end
+
+	self._classes_visible = show
+end
+
+ClassSelectionView._destroy_class_option_widgets = function (self)
+	if self._class_options_widgets then
+		for i = 1, #self._class_options_widgets do
+			local widget = self._class_options_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._class_options_widgets = nil
+	end
+end
+
+ClassSelectionView._create_class_option_widgets = function (self)
+	self:_destroy_class_option_widgets()
+
+	local definitions = self._definitions
+	local class_option_definition = definitions.class_option_definition
+	local option = self._selected_domain
+	local widgets = {}
+	local size = ClassSelectionViewSettings.class_option_icon_size
+	local spacing = ClassSelectionViewSettings.class_select_spacing
+	local start_offset_x = 0
+	local count = 0
+
+	for class_name, class in pairs(option.specializations) do
+		if class.title and not class.disabled then
+			count = count + 1
+			local name = "option_" .. count
+			local widget = self:_create_widget(name, class_option_definition)
+			local content = widget.content
+			content.hotspot.pressed_callback = callback(self, "_on_class_pressed", class_name)
+			widgets[#widgets + 1] = widget
+			widget.offset[1] = start_offset_x
+			start_offset_x = start_offset_x + size[1] + spacing
+			content.hotspot.is_focused = class.title == self._selected_class.title
+			content.class_name = class_name
+			content.title = string.upper(Localize(class.title))
+			widget.style.icon.material_values.main_texture = class.specialization_banner
+		end
+	end
+
+	self._class_options_widgets = widgets
+end
+
+ClassSelectionView._on_class_pressed = function (self, class_name)
+	if not self._classes_visible or not self._selected_class or class_name ~= self._selected_class.name then
+		local widgets_by_name = self._widgets_by_name
+		self._selected_class = self._selected_domain.specializations[class_name]
+		widgets_by_name.class_background.content.class_background_abilities = self._selected_domain.archetype_selection_background
+		widgets_by_name.class_background.content.class_background_details = self._selected_domain.archetype_selection_background
+		widgets_by_name.class_background.style.class_background_abilities.color = Color["ui_" .. self._selected_domain.name](51, true)
+		widgets_by_name.class_background.style.class_background_details.color = Color["ui_" .. self._selected_domain.name](51, true)
+
+		self:_show_classes_widgets(true)
+		self:_update_choose_button_text()
+	end
+
+	self:_play_sound(UISoundEvents.character_create_class_select)
 end
 
 ClassSelectionView._destroy_domain_option_widgets = function (self)
@@ -391,6 +661,370 @@ ClassSelectionView._destroy_domain_option_widgets = function (self)
 	self._domain_options_select_widget = nil
 end
 
+ClassSelectionView._destroy_class_abilities_info = function (self)
+	if self._class_abilities_info_widgets then
+		for i = 1, #self._class_abilities_info_widgets do
+			local widget = self._class_abilities_info_widgets[i]
+			local template = ContentBlueprints[widget.element.type]
+
+			if template and template.destroy then
+				template.destroy(self, widget)
+			end
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._class_abilities_info_widgets = nil
+
+		self._class_abilities_info_grid:destroy()
+
+		self._class_abilities_info_grid = nil
+		local scrollbar_widget = self._widgets_by_name.class_details_scrollbar
+		scrollbar_widget.content.visible = false
+	end
+end
+
+ClassSelectionView._show_class_details = function (self, show)
+	local widgets_by_name = self._widgets_by_name
+
+	if show then
+		self:_create_class_abilities_info()
+	else
+		self:_destroy_class_abilities_info()
+	end
+
+	widgets_by_name.class_background.style.class_background_details.color[1] = 0
+	widgets_by_name.class_background.style.class_background_abilities.color[1] = 51
+end
+
+ClassSelectionView._create_class_abilities_info = function (self)
+	local scenegraph_id = "class_details"
+	local scenegraph_pivot = "class_details_content_pivot"
+
+	self:_destroy_class_abilities_info()
+
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.class_background.style.class_background_details.color[1] = 0
+	widgets_by_name.class_background.style.class_background_abilities.color[1] = 51
+	local info_data = {}
+	local selected_class = self._selected_class
+	local class_name = selected_class.name
+	local selected_domain = self._selected_domain
+	local domain_name = selected_domain.name
+	local class_info = selected_domain.specializations[class_name]
+	local talent_definitions = ArchetypeTalents[domain_name][class_name]
+	local coherencies = {}
+	local class_abilities = {}
+	local grenades = {}
+	local combat_abilities = {}
+	local unique_weapons = {}
+	local talent_lookup = {}
+
+	for i = 1, #class_info.talent_groups do
+		local talent = class_info.talent_groups[i]
+
+		if talent.required_level == 1 then
+			for f = 1, #talent.talents do
+				talent_lookup[#talent_lookup + 1] = {
+					name = talent.talents[f],
+					group = talent.group_name
+				}
+			end
+		end
+	end
+
+	for i = 1, #talent_lookup do
+		local talent_info = talent_lookup[i]
+		local name = talent_info.name
+		local talent = talent_definitions[name]
+
+		if talent_info.group == "combat" then
+			combat_abilities[#combat_abilities + 1] = talent
+		elseif talent_info.group == "tactical" then
+			grenades[#grenades + 1] = talent
+		elseif talent_info.group == "aura" then
+			coherencies[#coherencies + 1] = talent
+		elseif talent_info.group == "passive" then
+			class_abilities[#class_abilities + 1] = talent
+		end
+	end
+
+	if selected_class.unique_weapons then
+		for i = 1, #selected_class.unique_weapons do
+			local weapon = selected_class.unique_weapons[i]
+			local item = MasterItems.get_item(weapon.item)
+
+			if item then
+				unique_weapons[#unique_weapons + 1] = {
+					item = table.clone_instance(item),
+					display_name = weapon.display_name
+				}
+			end
+		end
+	end
+
+	info_data[#info_data + 1] = {
+		type = "video",
+		data = {
+			video_path = self._selected_class.video
+		}
+	}
+	info_data[#info_data + 1] = {
+		type = "description_short",
+		data = {
+			text = self._selected_class.description_short
+		}
+	}
+	info_data[#info_data + 1] = {
+		size = 20,
+		type = "spacing"
+	}
+	info_data[#info_data + 1] = {
+		type = "description",
+		data = {
+			text = self._selected_class.description
+		}
+	}
+	info_data[#info_data + 1] = {
+		size = 80,
+		type = "spacing"
+	}
+
+	if #combat_abilities > 0 then
+		info_data[#info_data + 1] = {
+			type = "title",
+			data = Localize("loc_glossary_term_combat_ability")
+		}
+		info_data[#info_data + 1] = {
+			size = 20,
+			type = "spacing"
+		}
+		info_data[#info_data + 1] = {
+			ability_type = "combat_ability",
+			type = "ability",
+			data = combat_abilities,
+			icon_size = {
+				110,
+				96
+			}
+		}
+		info_data[#info_data + 1] = {
+			size = 40,
+			type = "spacing"
+		}
+	end
+
+	if #class_abilities > 0 then
+		info_data[#info_data + 1] = {
+			type = "title",
+			data = Localize("loc_glossary_term_passive")
+		}
+		info_data[#info_data + 1] = {
+			size = 20,
+			type = "spacing"
+		}
+		info_data[#info_data + 1] = {
+			type = "ability",
+			data = class_abilities
+		}
+		info_data[#info_data + 1] = {
+			size = 40,
+			type = "spacing"
+		}
+	end
+
+	if #grenades > 0 then
+		info_data[#info_data + 1] = {
+			type = "title",
+			data = Localize("loc_glossary_term_tactical")
+		}
+		info_data[#info_data + 1] = {
+			size = 20,
+			type = "spacing"
+		}
+		info_data[#info_data + 1] = {
+			type = "ability",
+			data = grenades
+		}
+		info_data[#info_data + 1] = {
+			size = 40,
+			type = "spacing"
+		}
+	end
+
+	if #coherencies > 0 then
+		info_data[#info_data + 1] = {
+			type = "title",
+			data = Localize("loc_glossary_term_aura")
+		}
+		info_data[#info_data + 1] = {
+			size = 20,
+			type = "spacing"
+		}
+		info_data[#info_data + 1] = {
+			type = "ability",
+			data = coherencies
+		}
+		info_data[#info_data + 1] = {
+			size = 40,
+			type = "spacing"
+		}
+	end
+
+	if #unique_weapons > 0 then
+		info_data[#info_data + 1] = {
+			type = "title",
+			data = Localize("loc_class_selection_specialization_class_unique_weapons_title")
+		}
+		info_data[#info_data + 1] = {
+			size = 20,
+			type = "spacing"
+		}
+		info_data[#info_data + 1] = {
+			type = "weapon",
+			data = unique_weapons
+		}
+	end
+
+	local widgets = {}
+	local alignment_widgets = {}
+
+	for i = 1, #info_data do
+		local info = info_data[i]
+		local type = info.type
+		local template = ContentBlueprints[type]
+		local pass_definitions = template and template.pass_definitions or {}
+
+		if type == "title" then
+			local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_pivot)
+			local widget_name = string.format("class_data_%d_%d", i, 1)
+			local widget = self:_create_widget(widget_name, widget_definition)
+			local element = {
+				text = string.upper(info.data)
+			}
+
+			template.init(self, widget, element)
+
+			widgets[#widgets + 1] = widget
+			alignment_widgets[#alignment_widgets + 1] = {
+				horizontal_alignment = "center",
+				size = {
+					ClassSelectionViewSettings.class_size[1],
+					widget.content.size[2]
+				},
+				offset = widget.offset,
+				name = widget.name
+			}
+		elseif type == "ability" then
+			for f = 1, #info.data do
+				local ability = info.data[f]
+				local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_pivot)
+				local widget_name = string.format("class_data_%d_%d", i, f)
+				local widget = self:_create_widget(widget_name, widget_definition)
+				local element = {
+					ability = ability,
+					icon_size = info.icon_size,
+					ability_type = info.ability_type,
+					type = type
+				}
+
+				template.init(self, widget, element)
+
+				if self._loaded_icons.all_loaded then
+					template.load_icon(self, widget, element)
+				end
+
+				widgets[#widgets + 1] = widget
+				alignment_widgets[#alignment_widgets + 1] = {
+					horizontal_alignment = "center",
+					size = {
+						ClassSelectionViewSettings.class_size[1],
+						widget.content.size[2]
+					},
+					offset = widget.offset,
+					name = widget.name
+				}
+			end
+		elseif type == "weapon" then
+			for f = 1, #info.data do
+				local weapon = info.data[f]
+				local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_pivot)
+				local widget_name = string.format("class_data_%d_%d", i, f)
+				local widget = self:_create_widget(widget_name, widget_definition)
+				local item = weapon.item
+				local element = {
+					item = item,
+					display_name = weapon.display_name
+				}
+
+				template.init(self, widget, element)
+				template.load_icon(self, widget, element)
+
+				widgets[#widgets + 1] = widget
+				alignment_widgets[#alignment_widgets + 1] = {
+					horizontal_alignment = "center",
+					size = {
+						ClassSelectionViewSettings.class_size[1],
+						widget.content.size[2]
+					},
+					offset = widget.offset,
+					name = widget.name
+				}
+				widgets[#widgets + 1] = nil
+				alignment_widgets[#alignment_widgets + 1] = {
+					size = {
+						ClassSelectionViewSettings.class_size[1],
+						20
+					}
+				}
+			end
+		elseif type == "spacing" then
+			widgets[#widgets + 1] = nil
+			alignment_widgets[#alignment_widgets + 1] = {
+				size = {
+					ClassSelectionViewSettings.class_size[1],
+					info.size
+				}
+			}
+		else
+			local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_pivot)
+			local widget_name = string.format("class_data_%d_%d", i, 1)
+			local widget = self:_create_widget(widget_name, widget_definition)
+			local element = table.clone(info.data)
+			element.type = type
+
+			template.init(self, widget, element)
+
+			widgets[#widgets + 1] = widget
+			alignment_widgets[#alignment_widgets + 1] = {
+				horizontal_alignment = "center",
+				size = {
+					ClassSelectionViewSettings.class_size[1],
+					widget.content.size[2]
+				},
+				offset = widget.offset,
+				name = widget.name
+			}
+		end
+	end
+
+	local ui_scenegraph = self._ui_scenegraph
+	local grid = UIWidgetGrid:new(widgets, alignment_widgets, ui_scenegraph, scenegraph_id, "down", {
+		0,
+		0
+	})
+	local scrollbar_widget = self._widgets_by_name.class_details_scrollbar
+	scrollbar_widget.content.visible = true
+
+	grid:assign_scrollbar(scrollbar_widget, scenegraph_pivot, scenegraph_id)
+	grid:set_scrollbar_progress(0)
+
+	self._class_abilities_info_grid = grid
+	self._class_abilities_info_widgets = widgets
+
+	grid:select_grid_index(1)
+end
+
 ClassSelectionView.on_choose_pressed = function (self)
 	self:_on_choose_pressed()
 end
@@ -401,6 +1035,10 @@ end
 
 ClassSelectionView.on_domain_pressed = function (self, target_option)
 	self:_on_domain_pressed(target_option)
+end
+
+ClassSelectionView._cb_on_open_options_pressed = function (self)
+	Managers.ui:open_view("options_view")
 end
 
 return ClassSelectionView

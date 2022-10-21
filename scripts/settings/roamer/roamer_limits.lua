@@ -1,74 +1,82 @@
 local DEFAULT_REPLACEMENTS = {
 	chaos_ogryn_bulwark = {
-		traitor_guards = {
+		renegade = {
 			"renegade_melee"
 		},
-		cultists = {
+		cultist = {
 			"cultist_melee"
 		}
 	},
 	chaos_ogryn_executor = {
-		traitor_guards = {
+		renegade = {
 			"renegade_melee"
 		},
-		cultists = {
+		cultist = {
 			"cultist_melee"
 		}
 	},
 	chaos_ogryn_gunner = {
-		traitor_guards = {
+		renegade = {
 			"renegade_melee"
 		},
-		cultists = {
+		cultist = {
 			"cultist_melee"
 		}
 	},
 	renegade_executor = {
-		traitor_guards = {
+		renegade = {
 			"renegade_melee"
 		},
-		cultists = {
+		cultist = {
 			"cultist_melee"
 		}
 	},
 	cultist_berzerker = {
-		traitor_guards = {
+		renegade = {
 			"renegade_melee"
 		},
-		cultists = {
+		cultist = {
 			"cultist_melee"
 		}
 	},
 	renegade_gunner = {
-		traitor_guards = {
+		renegade = {
 			"renegade_assault"
 		},
-		cultists = {
+		cultist = {
 			"cultist_assault"
 		}
 	},
 	cultist_gunner = {
-		traitor_guards = {
+		renegade = {
 			"renegade_assault"
 		},
-		cultists = {
+		cultist = {
 			"cultist_assault"
 		}
 	},
 	renegade_shocktrooper = {
-		traitor_guards = {
+		renegade = {
 			"renegade_assault"
 		},
-		cultists = {
+		cultist = {
 			"cultist_assault"
 		}
 	},
 	cultist_shocktrooper = {
-		traitor_guards = {
+		renegade = {
 			"renegade_assault"
 		},
-		cultists = {
+		cultist = {
 			"cultist_assault"
+		}
+	},
+	chaos_newly_infected = {
+		renegade = {
+			"renegade_melee"
+		},
+		cultist = {
+			"cultist_melee"
 		}
 	}
 }
@@ -127,6 +135,7 @@ local roamer_limits = {
 			renegade_shocktrooper = 2,
 			renegade_gunner = 2,
 			cultist_berzerker = 2,
+			chaos_newly_infected = 0,
 			chaos_ogryn_bulwark = 1,
 			chaos_ogryn_gunner = 0,
 			renegade_executor = 2,
@@ -142,6 +151,7 @@ local roamer_limits = {
 			renegade_shocktrooper = 2,
 			renegade_gunner = 2,
 			cultist_berzerker = 2,
+			chaos_newly_infected = 0,
 			chaos_ogryn_bulwark = 1,
 			chaos_ogryn_gunner = 0,
 			renegade_executor = 2,
@@ -207,6 +217,7 @@ local roamer_limits = {
 			renegade_shocktrooper = 3,
 			renegade_gunner = 3,
 			cultist_berzerker = 2,
+			chaos_newly_infected = 0,
 			chaos_ogryn_bulwark = 2,
 			chaos_ogryn_gunner = 2,
 			renegade_executor = 4,
@@ -222,6 +233,7 @@ local roamer_limits = {
 			renegade_shocktrooper = 3,
 			renegade_gunner = 3,
 			cultist_berzerker = 3,
+			chaos_newly_infected = 0,
 			chaos_ogryn_bulwark = 2,
 			chaos_ogryn_gunner = 2,
 			renegade_executor = 5,
@@ -288,6 +300,7 @@ local roamer_limits = {
 			renegade_gunner = 3,
 			chaos_ogryn_gunner = 2,
 			cultist_berzerker = 3,
+			chaos_newly_infected = 0,
 			cultist_shocktrooper = 3,
 			cultist_gunner = 3,
 			renegade_executor = 4,
@@ -304,6 +317,7 @@ local roamer_limits = {
 			renegade_gunner = 3,
 			chaos_ogryn_gunner = 2,
 			cultist_berzerker = 3,
+			chaos_newly_infected = 0,
 			cultist_shocktrooper = 3,
 			cultist_gunner = 3,
 			renegade_executor = 4,

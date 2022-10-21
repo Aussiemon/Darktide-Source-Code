@@ -24,7 +24,6 @@ VOSourcesCache.add_rule_file = function (self, rule_file_name)
 end
 
 VOSourcesCache.get_vo_source = function (self, voice_template)
-	fassert(voice_template, "VOSourcesCache: must be a string and can't be nil")
 	Log.debug("VOSourcesCache", "voice_template %s requested", voice_template)
 
 	if self._vo_sources[voice_template] ~= nil then

@@ -7,7 +7,7 @@ local asset_vo_ogryn_b = {
 			[2.0] = "loc_ogryn_b__zone_watertown_acid_clouds_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.796448,
+			[1.0] = 2.796458,
 			[2.0] = 3.336635
 		},
 		sound_event_weights = {
@@ -44,8 +44,8 @@ local asset_vo_ogryn_b = {
 		},
 		sound_events_duration = {
 			4.179844,
-			5.512708,
-			4.911583,
+			5.512719,
+			4.911594,
 			8.135229
 		},
 		randomize_indexes = {}
@@ -104,7 +104,7 @@ local asset_vo_ogryn_b = {
 		},
 		sound_events_duration = {
 			1.917688,
-			1.690354,
+			1.690344,
 			2.215906,
 			1.79751
 		},
@@ -122,7 +122,7 @@ local asset_vo_ogryn_b = {
 		sound_events_duration = {
 			1.469667,
 			2.870938,
-			2.820333,
+			2.820344,
 			2.042885
 		},
 		randomize_indexes = {}
@@ -135,7 +135,7 @@ local asset_vo_ogryn_b = {
 			[2.0] = "loc_ogryn_b__mission_cartel_water_course_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.434344,
+			[1.0] = 2.434333,
 			[2.0] = 2.190354
 		},
 		sound_event_weights = {

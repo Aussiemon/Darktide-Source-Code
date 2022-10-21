@@ -1,4 +1,5 @@
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewAnimations = require("scripts/ui/views/end_player_view/end_player_view_animations")
@@ -39,7 +40,7 @@ local scenegraph_definition = {
 		size = ViewStyles.progress_bar.size,
 		position = {
 			0,
-			-215,
+			-235,
 			3
 		}
 	},
@@ -92,7 +93,7 @@ local scenegraph_definition = {
 		size = wallet_bar_size,
 		position = {
 			0,
-			-133,
+			-155,
 			2
 		}
 	},
@@ -167,29 +168,6 @@ local widget_definitions = {
 			style = ViewStyles.progress_bar.character_progress_text
 		}
 	}, "character_progress_text"),
-	experience_gain = UIWidget.create_definition({
-		{
-			style_id = "rect",
-			pass_type = "rect",
-			change_function = function (content, style)
-				local progress = content.progress
-				local bar_length = content.bar_length
-				local width = style.size[1]
-				style.offset[1] = bar_length * progress - width
-			end
-		},
-		{
-			style_id = "text",
-			pass_type = "text",
-			value_id = "text",
-			value = "",
-			change_function = function (content, style)
-				local progress = content.progress
-				local bar_length = content.bar_length
-				style.size[1] = bar_length * progress
-			end
-		}
-	}, "progress_bar", progress_bar_content_extra, ViewStyles.experience_gain.size, ViewStyles.experience_gain),
 	credits_wallet = UIWidget.create_definition({
 		{
 			pass_type = "rect",
@@ -206,10 +184,11 @@ local widget_definitions = {
 			value = WalletSettings.credits.icon_texture_big
 		},
 		{
-			value = "0",
-			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
-			style_id = "text"
+			value_id = "text",
+			value = "0",
+			change_function = ViewAnimations.wallet_change_function
 		}
 	}, "wallet_panel_credits", nil, nil, ViewStyles.wallet_panel),
 	marks_wallet = UIWidget.create_definition({
@@ -250,10 +229,11 @@ local widget_definitions = {
 			value = WalletSettings.plasteel.icon_texture_big
 		},
 		{
-			value = "0",
-			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
-			style_id = "text"
+			value_id = "text",
+			value = "0",
+			change_function = ViewAnimations.wallet_change_function
 		}
 	}, "wallet_panel_plasteel", nil, nil, ViewStyles.wallet_panel),
 	diamantine_wallet = UIWidget.create_definition({
@@ -272,12 +252,63 @@ local widget_definitions = {
 			value = WalletSettings.diamantine.icon_texture_big
 		},
 		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
 			value = "0",
+			change_function = ViewAnimations.wallet_change_function
+		}
+	}, "wallet_panel_diamantine", nil, nil, ViewStyles.wallet_panel),
+	experience_gain = UIWidget.create_definition({
+		{
+			style_id = "rect",
+			pass_type = "rect",
+			change_function = ViewAnimations.experience_gain_change_function
+		},
+		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
+			value = "",
+			change_function = ViewAnimations.experience_gain_change_function
+		}
+	}, "progress_bar", progress_bar_content_extra, ViewStyles.experience_gain.size, ViewStyles.experience_gain),
+	credits_gain = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "rect"
+		},
+		{
+			value = "+0",
 			value_id = "text",
 			pass_type = "text",
 			style_id = "text"
 		}
-	}, "wallet_panel_diamantine", nil, nil, ViewStyles.wallet_panel)
+	}, "wallet_panel_credits", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain),
+	plasteel_gain = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "rect"
+		},
+		{
+			value = "+0",
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text"
+		}
+	}, "wallet_panel_plasteel", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain),
+	diamantine_gain = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "rect"
+		},
+		{
+			value = "+0",
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text"
+		}
+	}, "wallet_panel_diamantine", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain)
 }
 
 return {

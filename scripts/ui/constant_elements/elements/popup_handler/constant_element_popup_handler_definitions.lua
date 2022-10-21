@@ -92,8 +92,31 @@ local popup_type_style = {
 			92,
 			72
 		},
-		icon_color = Color.ui_brown_light(255, true),
-		background_color = Color.red(76.5, true)
+		icon_color = {
+			255,
+			162,
+			6,
+			6
+		},
+		background_color = {
+			50,
+			100,
+			0,
+			0
+		},
+		terminal_background_color = Color.red(255, true),
+		title_text_color = {
+			255,
+			162,
+			6,
+			6
+		},
+		description_text_color = {
+			255,
+			212,
+			194,
+			194
+		}
 	},
 	default = {
 		icon = "content/ui/materials/symbols/warning",
@@ -101,35 +124,48 @@ local popup_type_style = {
 			0,
 			0
 		},
-		icon_color = Color.ui_brown_light(255, true),
-		background_color = Color.ui_brown_light(76.5, true)
+		icon_color = Color.blue(127.5, true),
+		background_color = Color.terminal_grid_background(50, true),
+		terminal_background_color = Color.white(255, true),
+		title_text_color = Color.terminal_text_header(255, true),
+		description_text_color = Color.terminal_text_body(255, true)
 	}
 }
 local widget_definitions = {
 	popup_background = UIWidget.create_definition({
 		{
-			style_id = "rect",
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "terminal",
+			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				size_addition = {
+					0,
+					0
+				},
 				offset = {
 					0,
 					0,
 					start_layer
 				},
-				size_addition = {
-					0,
-					0
-				},
 				size = {
 					nil,
 					0
 				},
-				color = {
-					166,
-					0,
-					0,
-					0
+				size_addition = {
+					40,
+					150
+				},
+				uvs = {
+					{
+						0,
+						0
+					},
+					{
+						1,
+						1
+					}
 				}
 			}
 		},
@@ -140,6 +176,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(255, true),
 				size_addition = {
 					0,
 					0
@@ -174,8 +211,9 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				scale_to_material = true,
 				size_addition = {
-					0,
+					50,
 					0
 				},
 				offset = {
@@ -196,6 +234,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				scale_to_material = true,
 				size_addition = {
 					0,
 					0
@@ -220,8 +259,9 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				scale_to_material = true,
 				size_addition = {
-					0,
+					50,
 					0
 				},
 				offset = {
@@ -242,6 +282,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				scale_to_material = true,
 				size_addition = {
 					0,
 					0
@@ -263,7 +304,7 @@ local widget_definitions = {
 			style_id = "texture",
 			value_id = "texture",
 			pass_type = "texture",
-			value = "content/ui/materials/symbols/warning",
+			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
@@ -277,8 +318,8 @@ local widget_definitions = {
 					start_layer + 2
 				},
 				size = {
-					0,
-					0
+					100,
+					100
 				}
 			}
 		}
@@ -315,8 +356,8 @@ local animations = {
 				widgets.title_text.alpha_multiplier = alpha_multiplier
 				widgets.description_text.alpha_multiplier = alpha_multiplier
 				widgets.top_icon.alpha_multiplier = alpha_multiplier
-				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.rect.size[1]
-				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.rect.size[1]
+				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
+				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 				local popup_type = "default"
 
 				if parent._popup_type then
@@ -330,6 +371,9 @@ local animations = {
 				end
 
 				widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
+				widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
+				widgets.title_text.style.text.text_color = popup_type_style[popup_type].title_text_color
+				widgets.description_text.style.text.text_color = popup_type_style[popup_type].description_text_color
 				widgets.top_icon.content.texture = popup_type_style[popup_type].icon
 				widgets.top_icon.style.texture.color = popup_type_style[popup_type].icon_color
 				widgets.top_icon.style.texture.size = popup_type_style[popup_type].icon_size
@@ -356,7 +400,7 @@ local animations = {
 				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
 				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
 				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-				widgets.popup_background.style.rect.size_addition[2] = window_height
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
 			end
@@ -411,7 +455,7 @@ local animations = {
 				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
 				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
 				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-				widgets.popup_background.style.rect.size_addition[2] = window_height
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
 			end

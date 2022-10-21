@@ -321,6 +321,108 @@ blueprints.value_slider = {
 		return pass_input
 	end
 }
+blueprints.slider = {
+	size = {
+		settings_grid_width,
+		settings_value_height
+	},
+	pass_template = SliderPassTemplates.settings_value_slider(settings_grid_width, settings_value_height, settings_value_width, true),
+	init = function (parent, widget, entry, callback_name)
+		local content = widget.content
+		local display_name = entry.display_name or "n/a"
+		content.text = Managers.localization:localize(display_name)
+		content.entry = entry
+		content.area_length = settings_value_width
+		content.step_size = entry.step_size_fraction
+		content.apply_on_drag = entry.apply_on_drag and true
+		local get_function = entry.get_function
+		local _, value_fraction = get_function(entry)
+		content.previous_slider_value = value_fraction
+		content.slider_value = value_fraction
+		content.pressed_callback = callback(parent, callback_name, widget, entry)
+	end,
+	update = function (parent, widget, input_service, dt, t)
+		local using_gamepad = not parent:using_cursor_navigation()
+		local content = widget.content
+		local entry = content.entry
+		local get_function = entry.get_function
+		local value, value_fraction = get_function(entry)
+		local on_activated = entry.on_activated
+		local format_value_function = entry.format_value_function
+		local num_decimals = entry.num_decimals
+		local drag_value, new_value_fraction = nil
+		local apply_on_drag = entry.apply_on_drag
+		local drag_active = content.drag_active
+		local drag_previously_active = content.drag_previously_active
+		local focused = content.exclusive_focus and using_gamepad
+
+		if drag_active or focused then
+			drag_value = math.lerp(entry.min_value, entry.max_value, content.slider_value)
+		elseif not focused or drag_previously_active then
+			local previous_slider_value = content.previous_slider_value
+			local slider_value = content.slider_value
+
+			if drag_previously_active then
+				if previous_slider_value ~= slider_value then
+					new_value_fraction = slider_value
+					drag_value = math.lerp(entry.min_value, entry.max_value, new_value_fraction)
+				end
+			elseif value_fraction ~= slider_value then
+				content.slider_value = value_fraction
+				content.previous_slider_value = value_fraction
+				content.scroll_add = nil
+			end
+
+			content.previous_slider_value = slider_value
+		end
+
+		content.drag_previously_active = drag_active
+		local display_value = nil
+
+		if format_value_function then
+			display_value = format_value_function(entry, drag_value or value)
+		else
+			local number_format = string.format("%%.%sf", num_decimals or DEFAULT_NUM_DECIMALS)
+			display_value = string.format(number_format, drag_value or value)
+		end
+
+		if display_value then
+			content.value_text = display_value
+		end
+
+		local hotspot = content.hotspot
+
+		if hotspot.on_pressed then
+			if focused then
+				new_value_fraction = content.slider_value
+			elseif not hotspot.is_hover then
+				content.pressed_callback()
+			end
+		end
+
+		if focused and parent:can_exit() then
+			parent:set_can_exit(false)
+		end
+
+		if apply_on_drag and drag_value and not new_value_fraction and content.slider_value ~= content.previous_slider_value then
+			new_value_fraction = content.slider_value
+		end
+
+		if new_value_fraction then
+			local new_value = math.lerp(entry.min_value, entry.max_value, new_value_fraction)
+
+			on_activated(new_value, entry)
+
+			content.slider_value = new_value_fraction
+			content.previous_slider_value = new_value_fraction
+			content.scroll_add = nil
+		end
+
+		local pass_input = true
+
+		return pass_input
+	end
+}
 local max_visible_options = OptionsViewSettings.max_visible_dropdown_options or 5
 blueprints.dropdown = {
 	size = {
@@ -331,9 +433,6 @@ blueprints.dropdown = {
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local display_name = entry.display_name or "n/a"
-
-		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
-
 		local options = entry.options_function and entry.options_function() or entry.options
 		local num_visible_options = math.min(#options, max_visible_options)
 
@@ -346,9 +445,6 @@ blueprints.dropdown = {
 		content.entry = entry
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
-
-		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
-
 		local options = entry.options or entry.options_function and entry.options_function()
 		local num_options = #options
 		local num_visible_options = math.min(num_options, max_visible_options)

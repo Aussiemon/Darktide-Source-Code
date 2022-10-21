@@ -16,7 +16,7 @@ SocialXboxLive.destroy = function (self)
 end
 
 SocialXboxLive.friends_list_has_changes = function (self)
-	return false
+	return Managers.account:friends_list_has_changes()
 end
 
 local function _process_relationships_page(user_id, page_handle, promise, xuids)
@@ -77,61 +77,18 @@ SocialXboxLive.fetch_friends_list = function (self)
 		return friends_promise
 	end
 
+	local profiles = {}
 	self._friends_promise = Promise:new()
-	local user_id = nil
+	local friends_list = Managers.account:get_friends()
 
-	XboxLiveUtils.user_id():next(function (result)
-		user_id = result
-		local relationships_async, error = XSocial.get_relationships(user_id)
+	for i = 1, #friends_list do
+		local friend_data = friends_list[i]
+		profiles[#profiles + 1] = FriendXboxLive:new(friend_data)
+	end
 
-		if error then
-			self._friends_promise:reject({
-				error
-			})
-		else
-			return Managers.xasync:wrap(relationships_async, XSocial.release_block)
-		end
-	end):next(function (async_block)
-		local page_handle, error = XSocial.get_relationships_result(async_block)
+	self._num_friends = #profiles
 
-		if error then
-			self._friends_promise:reject({
-				error
-			})
-		else
-			local xuids_promise = Promise:new()
-
-			_process_relationships_page(user_id, page_handle, xuids_promise, {})
-
-			return xuids_promise
-		end
-	end):next(function (xuids)
-		if #xuids > 0 then
-			local profiles_promise = XboxLiveUtils.get_user_profiles(xuids)
-			local get_user_presence_data_promise = XboxLiveUtils.get_user_presence_data(xuids)
-
-			return Promise.all(profiles_promise, get_user_presence_data_promise)
-		else
-			return Promise.resolved({})
-		end
-	end):next(function (results)
-		local profiles, user_presence_data = unpack(results)
-		local is_blocked = false
-
-		for i = 1, #profiles do
-			local profile = profiles[i]
-			local user_presence_data = user_presence_data[profile.xuid]
-			profiles[i] = FriendXboxLive:new(profile.xuid, user_presence_data, profile.gamertag, is_blocked)
-		end
-
-		self._num_friends = #profiles
-
-		self._friends_promise:resolve(profiles)
-	end):catch(function (error)
-		self._friends_promise:reject({
-			error
-		})
-	end)
+	self._friends_promise:resolve(profiles)
 
 	return self._friends_promise
 end
@@ -176,7 +133,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 end
 
 SocialXboxLive.fetch_blocked_list_ids_forced = function (self)
-	return XboxLiveUtils.get_avoid_list()
+	return XboxLiveUtils.get_block_list()
 end
 
 implements(SocialXboxLive, PlatformSocialInterface)

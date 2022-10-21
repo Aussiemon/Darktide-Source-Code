@@ -4,12 +4,15 @@ local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templa
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeapnTraitsBespokeShotgunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
@@ -134,13 +137,6 @@ weapon_template.action_input_hierarchy = {
 		zoom_release = "base",
 		reload = "base",
 		combat_ability = "base"
-	},
-	inspect = {
-		reload = "stay",
-		wield = "base",
-		inspect_start = {
-			inspect_stop = "base"
-		}
 	}
 }
 
@@ -199,13 +195,13 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		kind = "shoot_pellets",
-		ammunition_usage = 1,
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.3,
 		spread_template = "default_shotgun_assault",
 		weapon_handling_template = "immediate_single_shot",
 		uninterruptible = true,
+		ammunition_usage = 1,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -279,15 +275,15 @@ weapon_template.actions = {
 				chain_time = 0.45
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_hip_from_reload = {
 		ammunition_usage = 1,
-		weapon_handling_template = "shotgun_from_reload",
 		kind = "shoot_pellets",
+		weapon_handling_template = "shotgun_from_reload",
 		spread_template = "default_shotgun_assault",
 		uninterruptible = true,
 		total_time = 1.5,
@@ -366,18 +362,18 @@ weapon_template.actions = {
 
 			return current_clip_amount > 0
 		end,
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		start_input = "zoom_shoot",
-		crosshair_type = "ironsight",
 		kind = "shoot_pellets",
 		weapon_handling_template = "immediate_single_shot",
 		spread_template = "default_shotgun_killshot",
 		ammunition_usage = 1,
+		crosshair_type = "ironsight",
 		uninterruptible = true,
 		total_time = 1,
 		action_movement_curve = {
@@ -443,7 +439,7 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -491,16 +487,19 @@ weapon_template.actions = {
 		}
 	},
 	action_start_reload = {
-		kind = "reload_shotgun",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		anim_end_event = "reload_end",
 		sprint_requires_press_to_interrupt = true,
-		abort_sprint = true,
-		crosshair_type = "none",
+		stop_alternate_fire = true,
+		kind = "reload_shotgun",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
+		abort_sprint = true,
 		anim_event = "reload_start",
 		total_time = 0.95,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		anim_variables_func = function (action_settings, condition_func_params)
 			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
 			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
@@ -570,18 +569,22 @@ weapon_template.actions = {
 				chain_time = 0.9
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_reload_loop = {
-		weapon_handling_template = "time_scale_1_3",
-		kind = "reload_shotgun",
-		anim_end_event = "reload_end",
 		sprint_requires_press_to_interrupt = true,
-		crosshair_type = "none",
+		anim_end_event = "reload_end",
+		weapon_handling_template = "time_scale_1",
+		kind = "reload_shotgun",
+		crosshair_type = "dot",
+		allowed_during_sprint = true,
 		anim_event = "reload_middle",
-		total_time = 0.65,
+		total_time = 0.5,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		anim_variables_func = function (action_settings, condition_func_params)
 			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
 			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
@@ -648,14 +651,14 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload_loop",
-				chain_time = 0.6
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
@@ -758,6 +761,7 @@ weapon_template.conditional_state_to_action_input = {
 weapon_template.ammo_template = "shotgun_p1_m1"
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
+weapon_template.keep_weapon_special_active_on_unwield = true
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -821,11 +825,7 @@ weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {
 	stability_up_ammo_down = {
 		shotgun_p1_m1_ammo_stat = -0.1,
@@ -938,6 +938,10 @@ local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
 
+local bespoke_shotgun_p1_traits = table.keys(WeapnTraitsBespokeShotgunP1)
+
+table.append(weapon_template.traits, bespoke_shotgun_p1_traits)
+
 weapon_template.perks = {
 	shotgun_p1_m1_stability_perk = {
 		description = "loc_trait_description_shotgun_p1_m1_stability_perk",
@@ -1026,6 +1030,34 @@ weapon_template.perks = {
 			}
 		}
 	}
+}
+weapon_template.displayed_keywords = {
+	{
+		display_name = "loc_weapon_keyword_close_combat"
+	},
+	{
+		display_name = "loc_weapon_keyword_high_damage"
+	}
+}
+weapon_template.displayed_attacks = {
+	primary = {
+		fire_mode = "shotgun",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
+	},
+	secondary = {
+		fire_mode = "shotgun",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
+	},
+	special = {
+		display_name = "loc_weapon_special_special_ammo",
+		type = "special_bullet"
+	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 0,
+	min = 0
 }
 
 return weapon_template

@@ -27,8 +27,7 @@ local template = {
 					}
 				},
 				attack_selection_template_tag = {
-					"ranged",
-					"melee"
+					"default"
 				}
 			},
 			{

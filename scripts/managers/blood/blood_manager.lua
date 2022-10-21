@@ -90,10 +90,6 @@ BloodManager.queue_blood_ball = function (self, position, direction, blood_ball_
 		return
 	end
 
-	fassert(position, "BloodManager:queue_blood_ball() needs position argument")
-	fassert(direction, "BloodManager:queue_blood_ball() needs direction argument")
-	fassert(blood_ball_unit, "BloodManager:queue_blood_ball() needs blood_ball_unit argument")
-
 	if not Vector3.is_valid(position) then
 		return
 	end
@@ -141,7 +137,7 @@ BloodManager.blood_ball_collision = function (self, unit, position, normal, velo
 	local tangent_rotation = Quaternion.look(tangent, normal)
 	local decals = blood_ball_settings.blood_type_decal[blood_type]
 	local decal_unit_name = decals[math.random(1, #decals)]
-	local extents = Vector3(1, 1, 1)
+	local extents = Vector3(2.5, 2.5, 2.5)
 
 	if Managers.state.decal ~= nil then
 		local t = Managers.time:time("gameplay")

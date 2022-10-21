@@ -15,6 +15,7 @@ end
 ThirdPersonLookDeltaAnimationControl.state_machine_changed = function (self, unit)
 	self._look_delta_x_variable = Unit.animation_find_variable(unit, "look_delta_x")
 	self._look_delta_y_variable = Unit.animation_find_variable(unit, "look_delta_y")
+	self._world_look_delta_y_variable = Unit.animation_find_variable(unit, "world_look_delta_y")
 end
 
 ThirdPersonLookDeltaAnimationControl.update = function (self, dt, t, game_object_id)
@@ -57,6 +58,7 @@ ThirdPersonLookDeltaAnimationControl.update = function (self, dt, t, game_object
 	local wanted_look_delta_x, wanted_look_delta_y, lerp_constant_x, lerp_constant_y = LookDelta.look_delta_values(settings, yaw_delta, pitch_delta)
 	local look_delta_x = math.lerp(self._look_delta_x, wanted_look_delta_x, lerp_constant_x)
 	local look_delta_y = math.lerp(self._look_delta_y, wanted_look_delta_y, lerp_constant_y)
+	local world_look_delta_y = Vector3.dot(Vector3.normalize(Vector3.flat(Quaternion.forward(rotation))), Quaternion.up(rotation))
 	look_delta_x = math.min(1, math.abs(look_delta_x)) * math.sign(look_delta_x)
 	look_delta_y = math.min(1, math.abs(look_delta_y)) * math.sign(look_delta_y)
 	self._look_delta_x = look_delta_x
@@ -72,6 +74,12 @@ ThirdPersonLookDeltaAnimationControl.update = function (self, dt, t, game_object
 
 	if look_delta_y_variable then
 		Unit.animation_set_variable(unit, look_delta_y_variable, look_delta_y)
+	end
+
+	local world_look_delta_y_variable = self._world_look_delta_y_variable
+
+	if world_look_delta_y_variable then
+		Unit.animation_set_variable(unit, world_look_delta_y_variable, world_look_delta_y)
 	end
 end
 

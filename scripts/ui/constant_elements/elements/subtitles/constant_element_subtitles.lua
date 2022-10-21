@@ -213,8 +213,9 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 		return
 	end
 
-	local is_dialogue_playing = dialogue_system:is_dialogue_playing()
-	local playing_dialogues_array = is_dialogue_playing and dialogue_system:playing_dialogues_array()
+	local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
+	local is_dialogue_playing = dialogue_system_subtitle:is_localized_dialogue_playing()
+	local playing_dialogues_array = is_dialogue_playing and dialogue_system_subtitle:playing_localized_dialogues_array()
 	local currently_playing = playing_dialogues_array and playing_dialogues_array[#playing_dialogues_array]
 
 	if currently_playing then
@@ -231,7 +232,6 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 				player = player_unit_spawn_manager and player_unit_spawn_manager:is_player_unit(currently_playing_unit) and player_unit_spawn_manager:owner(currently_playing_unit)
 			end
 
-			local display_subtitles = true
 			local speaker_display_name = nil
 
 			if player and player:is_human_controlled() then
@@ -239,27 +239,17 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 			else
 				local speaker_name = currently_playing.speaker_name
 				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
-
-				if speaker_voice_settings and speaker_voice_settings.subtitles_enabled then
-					local mission_giver_short_name = speaker_voice_settings.short_name
-					speaker_display_name = self:_localize(mission_giver_short_name)
-				else
-					display_subtitles = false
-				end
+				local character_short_name = speaker_voice_settings.short_name
+				speaker_display_name = self:_localize(character_short_name)
 			end
 
-			if display_subtitles then
-				local no_cache = true
-				local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
+			local no_cache = true
+			local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
+			subtitle_format_context.speaker = speaker_display_name
+			subtitle_format_context.subtitle = currently_playing_subtitle_localized
+			currently_playing_subtitle_localized = self:_localize("loc_subtitle_speaker_format", no_cache, subtitle_format_context)
 
-				if speaker_display_name then
-					subtitle_format_context.speaker = speaker_display_name
-					subtitle_format_context.subtitle = currently_playing_subtitle_localized
-					currently_playing_subtitle_localized = self:_localize("loc_subtitle_speaker_format", no_cache, subtitle_format_context)
-				end
-
-				self:_display_text_line(currently_playing_subtitle_localized)
-			end
+			self:_display_text_line(currently_playing_subtitle_localized)
 		end
 	elseif self._line_currently_playing then
 		self:_display_text_line("", nil)

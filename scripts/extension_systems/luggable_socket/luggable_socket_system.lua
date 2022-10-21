@@ -77,9 +77,6 @@ end
 
 LuggableSocketSystem.rpc_luggable_socket_hot_join = function (self, channel_id, socket_id, socket_is_level_unit, socketed_id, socketed_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(socket_id, socket_is_level_unit), "[LuggableSocketSystem] Incorrect socket_id")
-
 	local socket_unit = unit_spawner_manager:unit(socket_id, socket_is_level_unit)
 	local socketed_unit = nil
 
@@ -94,10 +91,6 @@ end
 
 LuggableSocketSystem.rpc_luggable_socket_luggable = function (self, channel_id, socket_id, socket_is_level_unit, socketed_id, socketed_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(socket_id, socket_is_level_unit), "[LuggableSocketSystem] Incorrect socket_id")
-	fassert(unit_spawner_manager:valid_unit_id(socketed_id, socketed_is_level_unit), "[LuggableSocketSystem] Incorrect socketed_id")
-
 	local socket_unit = unit_spawner_manager:unit(socket_id, socket_is_level_unit)
 	local socketed_unit = unit_spawner_manager:unit(socketed_id, socketed_is_level_unit)
 	local extension = self._unit_to_extension_map[socket_unit]
@@ -107,9 +100,6 @@ end
 
 LuggableSocketSystem.rpc_luggable_socket_unlock = function (self, channel_id, socket_id, socket_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(socket_id, socket_is_level_unit), "[LuggableSocketSystem] Incorrect socket_id")
-
 	local socket_unit = unit_spawner_manager:unit(socket_id, socket_is_level_unit)
 	local extension = self._unit_to_extension_map[socket_unit]
 
@@ -118,9 +108,6 @@ end
 
 LuggableSocketSystem.rpc_luggable_socket_set_visibility = function (self, channel_id, socket_id, socket_is_level_unit, value)
 	local unit_spawner_manager = Managers.state.unit_spawner
-
-	fassert(unit_spawner_manager:valid_unit_id(socket_id, socket_is_level_unit), "[LuggableSocketSystem] Incorrect socket_id")
-
 	local socket_unit = unit_spawner_manager:unit(socket_id, socket_is_level_unit)
 	local extension = self._unit_to_extension_map[socket_unit]
 

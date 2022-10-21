@@ -5,6 +5,7 @@ local ClassSelectionViewFontStyle = require("scripts/ui/views/class_selection_vi
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -75,7 +76,7 @@ local scenegraph_definition = {
 		}
 	},
 	domain_info = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "domain",
 		horizontal_alignment = "center",
 		size = {
@@ -84,8 +85,75 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-40,
+			40,
 			2
+		}
+	},
+	class_option = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			920,
+			680
+		},
+		position = {
+			220,
+			165,
+			2
+		}
+	},
+	class = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = ClassSelectionViewSettings.class_size,
+		position = {
+			-200,
+			-235,
+			1
+		}
+	},
+	class_title = {
+		vertical_alignment = "top",
+		parent = "class",
+		horizontal_alignment = "center",
+		size = {
+			ClassSelectionViewSettings.class_size[1],
+			50
+		},
+		position = {
+			0,
+			15,
+			3
+		}
+	},
+	class_description = {
+		vertical_alignment = "top",
+		parent = "class",
+		horizontal_alignment = "center",
+		size = {
+			ClassSelectionViewSettings.class_size[1],
+			540
+		},
+		position = {
+			0,
+			100,
+			3
+		}
+	},
+	class_switch_info_button = {
+		vertical_alignment = "bottom",
+		parent = "class",
+		horizontal_alignment = "center",
+		size = {
+			ClassSelectionViewSettings.class_size[1],
+			40
+		},
+		position = {
+			0,
+			60,
+			3
 		}
 	},
 	choose_button = {
@@ -101,318 +169,69 @@ local scenegraph_definition = {
 			-95,
 			2
 		}
+	},
+	class_details = {
+		vertical_alignment = "top",
+		parent = "class",
+		horizontal_alignment = "center",
+		size = {
+			ClassSelectionViewSettings.class_size[1],
+			ClassSelectionViewSettings.class_size[2]
+		},
+		position = {
+			0,
+			0,
+			2
+		}
+	},
+	class_details_mask = {
+		vertical_alignment = "center",
+		parent = "class_details",
+		horizontal_alignment = "center",
+		size = {
+			ClassSelectionViewSettings.class_size[1],
+			ClassSelectionViewSettings.class_size[2]
+		},
+		position = {
+			0,
+			0,
+			3
+		}
+	},
+	class_details_scrollbar = {
+		vertical_alignment = "top",
+		parent = "class",
+		horizontal_alignment = "right",
+		size = {
+			10,
+			ClassSelectionViewSettings.class_size[2]
+		},
+		position = {
+			-1,
+			0,
+			50
+		}
+	},
+	class_details_content_pivot = {
+		vertical_alignment = "top",
+		parent = "class_details",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			3
+		}
 	}
 }
 local widget_definitions = {
-	zealot_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "screen"),
-	ogryn_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "screen"),
-	veteran_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "screen"),
-	psyker_corners = UIWidget.create_definition({
+	corners = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
+			value_id = "left_lower",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "bottom",
@@ -435,6 +254,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_psyker_01_lower_right",
+			value_id = "right_lower",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "bottom",
@@ -458,6 +278,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
+			value_id = "right_upper",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "top",
@@ -490,6 +311,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
+			value_id = "left_upper",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "top",
@@ -549,9 +371,23 @@ local widget_definitions = {
 	}, "main_title"),
 	domain_info = UIWidget.create_definition({
 		{
-			value = "",
+			value = "content/ui/materials/backgrounds/blurred_rectangle_02",
+			pass_type = "texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				color = Color.black(204, true),
+				size_addition = {
+					150,
+					150
+				}
+			}
+		},
+		{
 			value_id = "title",
+			style_id = "title",
 			pass_type = "text",
+			value = "",
 			style = ClassSelectionViewFontStyle.domain_title_style
 		},
 		{
@@ -573,12 +409,151 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "",
 			value_id = "description",
+			style_id = "description",
 			pass_type = "text",
+			value = "",
 			style = ClassSelectionViewFontStyle.domain_description_style
 		}
 	}, "domain_info"),
+	class_background = UIWidget.create_definition({
+		{
+			style_id = "background",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "top",
+				color = {
+					178.5,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			value_id = "class_background_abilities",
+			style_id = "class_background_abilities",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/info_panels/psyker",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				color = {
+					51,
+					133,
+					66,
+					137
+				},
+				size = {
+					640,
+					512
+				},
+				offset = {
+					0,
+					0,
+					2
+				}
+			}
+		},
+		{
+			value_id = "class_background_details",
+			style_id = "class_background_details",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/info_panels/psyker",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				color = {
+					51,
+					133,
+					66,
+					137
+				},
+				size = {
+					640,
+					520
+				},
+				offset = {
+					0,
+					380,
+					2
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_medium",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				color = {
+					255,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					5
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					640,
+					36
+				},
+				offset = {
+					0,
+					-18,
+					6
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					640,
+					36
+				},
+				offset = {
+					0,
+					18,
+					6
+				}
+			}
+		}
+	}, "class"),
+	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "class_details_scrollbar"),
+	class_details_mask = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
+			pass_type = "texture",
+			style = {
+				color = {
+					255,
+					255,
+					255,
+					255
+				}
+			}
+		}
+	}, "class_details_mask"),
 	choose_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "choose_button", {
 		text = string.upper(Localize("loc_character_backstory_selection"))
 	})
@@ -700,6 +675,76 @@ local domain_selection_definition = {
 		}
 	}, "domain_option")
 }
+local class_option_definition = UIWidget.create_definition({
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = {
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	},
+	{
+		style_id = "icon",
+		value_id = "icon",
+		pass_type = "texture",
+		value = "content/ui/materials/base/ui_illustration_dissolve_base",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size = ClassSelectionViewSettings.class_option_icon_size,
+			offset = {
+				0,
+				0,
+				1
+			},
+			material_values = {
+				progression = 0,
+				main_texture = ""
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "highlight",
+		value = "content/ui/materials/frames/dropshadow_heavy",
+		style = {
+			vertical_alignment = "center",
+			hdr = true,
+			horizontal_alignment = "center",
+			color = Color.ui_terminal(255, true),
+			offset = {
+				0,
+				0,
+				2
+			},
+			size_addition = {
+				20,
+				20
+			}
+		},
+		change_function = function (content, style, _, dt)
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+			style.color[1] = 255 * math.easeOutCubic(progress)
+			local size_addition = 20 + 20 * math.easeInCubic(1 - progress)
+			local style_size_additon = style.size_addition
+			style_size_additon[1] = size_addition
+			style_size_additon[2] = size_addition
+			style.hdr = progress == 1
+		end
+	},
+	{
+		style_id = "title",
+		pass_type = "text",
+		value = "",
+		value_id = "title",
+		style = ClassSelectionViewFontStyle.class_option_title,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			style.material = hotspot.is_focused and UIFontSettings.grid_title.material or UIFontSettings.grid_title.disabled_material
+		end
+	}
+}, "class_option", nil, ClassSelectionViewSettings.class_option_icon_size)
 local legend_inputs = {
 	{
 		input_action = "back",
@@ -707,7 +752,7 @@ local legend_inputs = {
 		alignment = "left_alignment",
 		on_pressed_callback = "_on_back_pressed",
 		visibility_function = function (parent)
-			return not parent._force_character_creation
+			return parent._force_character_creation and parent._classes_visible == true or not parent._force_character_creation
 		end
 	},
 	{
@@ -715,6 +760,15 @@ local legend_inputs = {
 		display_name = "loc_quit_game_display_name",
 		alignment = "left_alignment",
 		on_pressed_callback = "_on_quit_pressed",
+		visibility_function = function (parent)
+			return parent._force_character_creation and PLATFORM == "win32" and parent._classes_visible == false
+		end
+	},
+	{
+		display_name = "loc_options_view_display_name",
+		input_action = "hotkey_item_sort",
+		alignment = "left_alignment",
+		on_pressed_callback = "_cb_on_open_options_pressed",
 		visibility_function = function (parent)
 			return parent._force_character_creation
 		end
@@ -734,6 +788,23 @@ local animations = {
 				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
 			end
 		}
+	},
+	class_selection = {
+		{
+			name = "class_selection",
+			end_time = 2,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				for i = 1, #parent._class_options_widgets do
+					local widget = parent._class_options_widgets[i]
+					widget.style.icon.material_values.progression = 0
+				end
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				params.selected_class_widget.style.icon.material_values.progression = anim_progress
+			end
+		}
 	}
 }
 
@@ -743,5 +814,6 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	domain_option_definition = domain_option_definition,
 	domain_selection_definition = domain_selection_definition,
+	class_option_definition = class_option_definition,
 	animations = animations
 }

@@ -5,15 +5,12 @@ local RPCS = {
 local LocalMasterItemsCheckState = class("LocalMasterItemsCheckState")
 
 LocalMasterItemsCheckState.init = function (self, state_machine, shared_state)
-	assert(type(shared_state.event_delegate) == "table", "Event delegate required")
-	assert(type(shared_state.channel_id) == "number", "Numeric channel id required")
-	assert(type(shared_state.timeout) == "number", "Numeric timeout required")
-
 	self._shared_state = shared_state
 	self._time = 0
 	self._items_ready = false
 	self._items_promise = nil
 	self._items_update_failed = false
+	self._got_reply = false
 
 	RPC.rpc_request_master_items_version(shared_state.channel_id)
 	shared_state.event_delegate:register_connection_channel_events(self, shared_state.channel_id, unpack(RPCS))
@@ -33,14 +30,17 @@ end
 
 LocalMasterItemsCheckState.update = function (self, dt)
 	local shared_state = self._shared_state
-	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
-		Log.info("LocalMasterItemsCheckState", "Timeout waiting for rpc_master_items_version_reply")
+	if not self._got_reply then
+		self._time = self._time + dt
 
-		return "timeout", {
-			game_reason = "timeout"
-		}
+		if shared_state.timeout < self._time then
+			Log.info("LocalMasterItemsCheckState", "Timeout waiting for rpc_master_items_version_reply")
+
+			return "timeout", {
+				game_reason = "timeout"
+			}
+		end
 	end
 
 	local state, reason = Network.channel_state(shared_state.channel_id)
@@ -65,6 +65,7 @@ LocalMasterItemsCheckState.update = function (self, dt)
 end
 
 LocalMasterItemsCheckState.rpc_master_items_version_reply = function (self, channel_id, host_items_version, host_items_url)
+	self._got_reply = true
 	local local_items_version = tostring(MasterItems.get_cached_version())
 
 	if local_items_version == host_items_version then

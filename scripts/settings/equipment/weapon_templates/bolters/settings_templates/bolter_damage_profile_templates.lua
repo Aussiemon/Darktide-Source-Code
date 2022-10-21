@@ -86,7 +86,7 @@ damage_templates.default_bolter_killshot = {
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = GibbingTypes.ballistic,
 	wounds_template = WoundsTemplates.bolter,
 	on_kill_area_suppression = {
 		distance = 8,
@@ -171,7 +171,7 @@ damage_templates.bolter_stop_explosion = {
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = GibbingTypes.ballistic,
 	wounds_template = WoundsTemplates.bolter,
 	targets = {
 		default_target = {
@@ -251,7 +251,7 @@ damage_templates.bolter_kill_explosion = {
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = GibbingTypes.ballistic,
 	wounds_template = WoundsTemplates.bolter,
 	on_kill_area_suppression = {
 		distance = 8,

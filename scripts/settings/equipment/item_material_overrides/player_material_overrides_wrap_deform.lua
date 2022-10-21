@@ -3,67 +3,18 @@ local material_overrides = {
 		texture_overrides = {
 			body_wrap_deform_map = {
 				resource = "content/characters/player/human/deformers/body/female_di"
-			},
-			body_wrap_normal_map = {
-				resource = "content/characters/player/human/deformers/body/female_ni"
 			}
 		},
 		property_overrides = {
 			body_wrap_deform_min = {
 				-0.033861207962,
-				-0.0135769629478,
-				-0.016219329834
+				-0.012380926609,
+				-0.0157511901855
 			},
 			body_wrap_deform_max = {
 				0.0338397884369,
 				0.0296514225006,
 				0.0206524658203
-			},
-			body_wrap_deform_normal_min = {
-				-0.189274496555,
-				-0.0268113150527,
-				-0.0209509118889,
-				0
-			},
-			body_wrap_deform_normal_max = {
-				1,
-				1,
-				1,
-				1
-			}
-		}
-	},
-	human_body_inv_normals = {
-		texture_overrides = {
-			body_wrap_deform_map = {
-				resource = "content/characters/player/human/deformers/body/inv_normals_di"
-			},
-			body_wrap_normal_map = {
-				resource = "content/characters/player/human/deformers/body/inv_normals_ni"
-			}
-		},
-		property_overrides = {
-			body_wrap_deform_min = {
-				-0.033861207962,
-				-0.0135769629478,
-				-0.016219329834
-			},
-			body_wrap_deform_max = {
-				0.0338397884369,
-				0.0296514225006,
-				0.0206524658203
-			},
-			body_wrap_deform_normal_min = {
-				-0.169538579406,
-				-0.250704959261,
-				-0.156906211048,
-				-2.77555756156e-17
-			},
-			body_wrap_deform_normal_max = {
-				0.142890328406,
-				0.247290028402,
-				0.171539813137,
-				1.26184573455
 			}
 		}
 	},
@@ -531,14 +482,14 @@ local material_overrides = {
 		},
 		property_overrides = {
 			facial_hair_wrap_deform_min = {
-				-0.00455035209656,
-				-0.00379343032837,
+				-0.00489056825638,
+				-0.00354875564575,
 				-0.0049870300293
 			},
 			facial_hair_wrap_deform_max = {
-				0.00425180435181,
+				0.00513455629349,
 				0.00628504753113,
-				0.00460388183594
+				0.00462005615234
 			}
 		}
 	},

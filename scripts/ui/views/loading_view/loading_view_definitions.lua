@@ -14,7 +14,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-100,
-			2
+			0
 		}
 	},
 	title_divider_bottom = {
@@ -28,7 +28,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			50,
-			1
+			2
 		}
 	},
 	hint_text = {
@@ -42,7 +42,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1
+			3
 		}
 	},
 	hint_input_description = {
@@ -56,7 +56,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			50,
-			1
+			4
 		}
 	},
 	hint_input_icon = {
@@ -70,7 +70,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1
+			5
 		}
 	},
 	logo = {
@@ -137,7 +137,7 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0
+					1
 				}
 			}
 		}
@@ -171,16 +171,7 @@ local widget_definitions = {
 				font_size = input_text_font_settings.font_size
 			}
 		}
-	}, "hint_input_description"),
-	hint_input_icon = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/icons/system/input_mouse_left",
-			pass_type = "texture",
-			style = {
-				color = input_text_font_color
-			}
-		}
-	}, "hint_input_icon")
+	}, "hint_input_description")
 }
 
 return {

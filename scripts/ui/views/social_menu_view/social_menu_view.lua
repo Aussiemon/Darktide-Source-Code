@@ -8,4 +8,14 @@ SocialMenuView.init = function (self, settings, context)
 	self._pass_draw = false
 end
 
+SocialMenuView.on_enter = function (self)
+	SocialMenuView.super.on_enter(self)
+	Managers.account:refresh_communcation_restrictions()
+end
+
+SocialMenuView.on_exit = function (self)
+	SocialMenuView.super.on_exit(self)
+	Managers.account:refresh_communcation_restrictions()
+end
+
 return SocialMenuView

@@ -2,7 +2,7 @@ local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_ga
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local MissionObjectiveBase = class("MissionObjectiveBase")
 local last_activation_order = 1
-local MUSIC_OBJECTIVE_NONE = WwiseGameSyncSettings.state_groups.music_objective.None
+local MUSIC_OBJECTIVE_NONE = WwiseGameSyncSettings.state_groups.music_game_state.none
 local OBJECTIVE_EVENT_TYPES = table.enum("None", "mid_event", "end_event")
 
 MissionObjectiveBase.init = function (self)
@@ -53,8 +53,8 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._objective_type = mission_objective_data.mission_objective_type
 	self._order_of_activation = last_activation_order
 	last_activation_order = last_activation_order + 1
-	self._header = Managers.localization:localize(mission_objective_data.header) or ""
-	self._description = Managers.localization:localize(mission_objective_data.description) or ""
+	self._header = mission_objective_data.header and Localize(mission_objective_data.header) or ""
+	self._description = mission_objective_data.description and Localize(mission_objective_data.description) or ""
 	self._music_objective = mission_objective_data.use_music_event or MUSIC_OBJECTIVE_NONE
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = not mission_objective_data.hidden or true
@@ -65,6 +65,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._icon = mission_objective_data.icon
 	self._marker_type = mission_objective_data.marker_type or self._marker_type
 	self._turn_off_backfill = mission_objective_data.turn_off_backfill == true
+	self._locally_added = mission_objective_data.locally_added or false
 	self._stage = 1
 	self._stage_count = 1
 	self._incremented_progression = 0
@@ -275,8 +276,6 @@ MissionObjectiveBase.clear_invalid_units = function (self)
 end
 
 MissionObjectiveBase._init_objective_unit = function (self, unit)
-	fassert(ALIVE[unit], "[MissionObjectiveBase][_init_objective_units] Objective unit is not valid.")
-
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 
 	if mission_objective_target_extension:enabled_only_during_mission() and self._name == mission_objective_target_extension:objective_name() then
@@ -291,7 +290,6 @@ MissionObjectiveBase._init_objective_unit = function (self, unit)
 end
 
 MissionObjectiveBase._deinit_objective_unit = function (self, unit)
-	fassert(ALIVE[unit], "[MissionObjectiveBase][_deinit_objective_unit] Objective unit is not valid.")
 	self:unregister_unit(unit)
 
 	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
@@ -487,6 +485,10 @@ end
 
 MissionObjectiveBase.use_hud = function (self)
 	return self._use_hud
+end
+
+MissionObjectiveBase.locally_added = function (self)
+	return self._locally_added
 end
 
 MissionObjectiveBase.use_counter = function (self)

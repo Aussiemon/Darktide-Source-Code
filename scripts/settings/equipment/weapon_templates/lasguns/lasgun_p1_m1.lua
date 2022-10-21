@@ -1,14 +1,16 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeLasgunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_lasgun_p1")
+local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedMediumFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_medium_fire_rate")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -186,8 +188,9 @@ weapon_template.actions = {
 		sprint_ready_up_time = 0.25,
 		weapon_handling_template = "immediate_single_shot",
 		abort_sprint = true,
-		ammunition_usage = 1,
+		ammunition_usage = 3,
 		allowed_during_sprint = true,
+		allow_shots_with_less_than_required_ammo = true,
 		total_time = 0.5,
 		action_movement_curve = {
 			{
@@ -255,18 +258,19 @@ weapon_template.actions = {
 				chain_time = 0.15
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
 		sprint_ready_up_time = 0.5,
-		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
-		ammunition_usage = 1,
+		allow_shots_with_less_than_required_ammo = true,
 		crosshair_type = "ironsight",
+		ammunition_usage = 3,
+		start_input = "zoom_shoot",
 		total_time = 0.4,
 		action_movement_curve = {
 			{
@@ -329,7 +333,7 @@ weapon_template.actions = {
 				chain_time = 0.2
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
 		}
@@ -384,12 +388,12 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "increased_reload_speed",
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -445,14 +449,16 @@ weapon_template.actions = {
 				action_name = "action_unzoom"
 			}
 		},
-		stat_buff_keywords = {
+		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
 	action_toggle_flashlight = {
 		kind = "toogle_special",
+		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
 		activation_time = 0,
+		skip_3p_anims = true,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -477,6 +483,8 @@ weapon_template.actions = {
 		crosshair_type = "none",
 		start_input = "zoom_weapon_special",
 		activation_time = 0,
+		anim_event = "toggle_flashlight",
+		skip_3p_anims = true,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -602,11 +610,7 @@ weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
-weapon_template.footstep_intervals = {
-	crouch_walking = 0.61,
-	walking = 0.4,
-	sprinting = 0.37
-}
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.base_stats = {
 	lasgun_p1_m1_dps_stat = {
@@ -703,6 +707,10 @@ local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
 
+local bespoke_lasgun_p1_traits = table.keys(WeaponTraitsBespokeLasgunP1)
+
+table.append(weapon_template.traits, bespoke_lasgun_p1_traits)
+
 weapon_template.perks = {
 	lasgun_p1_m1_stability_perk = {
 		description = "loc_trait_description_lasgun_p1_m1_stability_perk",
@@ -794,31 +802,31 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_1",
-		icon_type = "crosshair"
+		display_name = "loc_weapon_keyword_versatile_new"
 	},
 	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_2",
-		icon_type = "shield"
-	},
-	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_3",
-		icon_type = "shield"
+		display_name = "loc_weapon_keyword_high_ammo_count"
 	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_lasgun_p1_m1_attack_primary",
-		type = "ninja_fencer"
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
 	},
 	secondary = {
-		display_name = "loc_lasgun_p1_m1_attack_secondary",
-		type = "ninja_fencer"
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
 	},
 	special = {
-		display_name = "loc_lasgun_p1_m1_attack_special",
-		type = "ninja_fencer"
+		display_name = "loc_weapon_special_flashlight",
+		type = "flashlight"
 	}
+}
+weapon_template.displayed_attack_ranges = {
+	max = 100,
+	min = 7
 }
 
 return weapon_template

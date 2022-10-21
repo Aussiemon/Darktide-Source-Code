@@ -84,12 +84,14 @@ local template_groups = {
 		"combataxe_p1_m2",
 		"combataxe_p1_m3",
 		"combataxe_p2_m1",
-		"prologue_shovel_human",
+		"combataxe_p3_m1",
 		"combataxe_p3_m2"
 	},
 	{
 		"combat_blades",
-		"ogryn_combatblade_p1_m1"
+		"ogryn_combatblade_p1_m1",
+		"ogryn_combatblade_p1_m2",
+		"ogryn_combatblade_p1_m3"
 	},
 	{
 		"combat_knives",
@@ -106,7 +108,8 @@ local template_groups = {
 	{
 		"devices",
 		"auspex_scanner",
-		"skull_decoder"
+		"skull_decoder",
+		"servo_skull"
 	},
 	{
 		"flamers",
@@ -132,6 +135,7 @@ local template_groups = {
 		"frag_grenade",
 		"krak_grenade",
 		"ogryn_grenade",
+		"ogryn_grenade_box",
 		"psyker_smite",
 		"psyker_throwing_knives",
 		"psyker_chain_lightning",
@@ -153,7 +157,8 @@ local template_groups = {
 		"lasgun_p2_m2",
 		"lasgun_p2_m3",
 		"lasgun_p3_m1",
-		"lasgun_p3_m2"
+		"lasgun_p3_m2",
+		"lasgun_p3_m3"
 	},
 	{
 		"laspistols",
@@ -191,6 +196,7 @@ local template_groups = {
 		"ammo_cache_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",
+		"syringe_corruption_pocketable",
 		"tome_pocketable"
 	},
 	{
@@ -207,7 +213,9 @@ local template_groups = {
 	},
 	{
 		"ripperguns",
-		"ogryn_rippergun_p1_m1"
+		"ogryn_rippergun_p1_m1",
+		"ogryn_rippergun_p1_m2",
+		"ogryn_rippergun_p1_m3"
 	},
 	{
 		"scanner",
@@ -221,6 +229,7 @@ local template_groups = {
 	{
 		"shotguns",
 		"shotgun_p1_m1",
+		"shotgun_p2_m1",
 		"shotgun_p3_m1"
 	},
 	{
@@ -263,8 +272,6 @@ local unwield_action_kinds = {
 
 for name, weapon_template in pairs(weapon_templates) do
 	local weapon_template_sprint_ready_up_time = weapon_template.sprint_ready_up_time
-
-	fassert(weapon_template_sprint_ready_up_time, "weapon_template %q has no sprint_ready_up_time variable set.", name)
 
 	for _, action_settings in pairs(weapon_template.actions) do
 		if not action_settings.sprint_ready_up_time and not unwield_action_kinds[action_settings.kind] then

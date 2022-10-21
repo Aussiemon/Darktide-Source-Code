@@ -1,8 +1,9 @@
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
-local FIRST_ONBOARDING_MISSION = "prologue"
+local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 
 StateMainMenu.on_enter = function (self, parent, params, creation_context)
@@ -14,6 +15,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._main_menu_loader = main_menu_loader
 	self._is_booting = params.is_booting or false
 	self._item_definitions = MasterItems.get_cached()
+	self._gear = params.gear
 	self._wait_for_character_profile_upload = false
 	self._wait_for_character_profile_delete = false
 	self._wait_for_character_profiles_refresh = false
@@ -22,8 +24,6 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._character_is_syncing = false
 
 	Managers.presence:set_presence("main_menu")
-	fassert(profiles, "StateMainMenu expects preloaded profiles")
-	fassert(main_menu_loader, "StateMainMenu expects preloaded main_menu_loader")
 	self:_register_menu_events()
 
 	if has_created_first_character or #profiles > 0 then
@@ -37,6 +37,12 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	end
 
 	self._reconnect_popup_activated = true
+
+	Managers.frame_rate:request_full_frame_rate("main_menu")
+
+	self._full_frame_rate_enabled = true
+
+	Managers.backend.interfaces.region_latency:pre_get_region_latencies()
 end
 
 StateMainMenu._stay_in_main_menu = function (self, profiles, selected_profile)
@@ -83,9 +89,6 @@ end
 
 StateMainMenu.event_request_delete_character = function (self, character_id)
 	local selected_profile = self._selected_profile
-
-	fassert(selected_profile and selected_profile.character_id == character_id, "Tried to delete character that is not selected in StateMainMenu")
-
 	self._wait_for_character_profile_delete = true
 
 	Managers.data_service.profiles:delete_profile(character_id):next(function ()
@@ -116,6 +119,20 @@ StateMainMenu.event_create_new_character_back = function (self)
 	self:_previous_character_create_view()
 end
 
+StateMainMenu._start_game_or_onboarding = function (self)
+	local story_name = Managers.narrative.STORIES.onboarding
+	local current_chapter = Managers.narrative:current_chapter(story_name)
+
+	if current_chapter and not self:_skip_prologue() then
+		local chapter_data = current_chapter.data
+		local mission_name = chapter_data.mission_name
+
+		self:_start_onboarding(mission_name)
+	else
+		self:_start_game()
+	end
+end
+
 StateMainMenu.event_continue_cb = function (self)
 	local selected_profile = self._selected_profile
 
@@ -130,20 +147,11 @@ StateMainMenu.event_continue_cb = function (self)
 	Log.info("StateMainMenu", "Starting the game with selected character %s", character_id)
 	self:_unregister_menu_events()
 
-	local prologue_completed_promise = Managers.data_service.profiles:prologue_completed(character_id)
 	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
 	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
 
-	Promise.all(prologue_completed_promise, set_selected_character_promise, load_narrative_promise):next(function (results)
-		local prologue_completed, _, _ = unpack(results)
-
-		if prologue_completed or self:_skip_prologue() then
-			self:_start_game()
-		else
-			local mission_name = FIRST_ONBOARDING_MISSION
-
-			self:_start_onboarding(mission_name)
-		end
+	Promise.all(set_selected_character_promise, load_narrative_promise):next(function (_)
+		self:_start_game_or_onboarding()
 	end):catch(function ()
 		return
 	end)
@@ -160,9 +168,12 @@ StateMainMenu._refresh_profiles = function (self)
 		self._wait_for_character_profiles_refresh = false
 		local profiles = profile_data.profiles
 		local selected_profile = profile_data.selected_profile
+		local gear = profile_data.gear
 
 		self:_set_profiles(profiles)
 		self:_set_selected_profile(selected_profile)
+
+		self._gear = gear
 	end):catch(function ()
 		self._wait_for_character_profiles_refresh = false
 	end)
@@ -201,11 +212,17 @@ StateMainMenu._create_new_character_start = function (self)
 				"character_appearance_view"
 			}
 		}
-		self._character_create = CharacterCreate:new(self._item_definitions)
+		self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
 	end
 
 	self:_next_character_create_view()
 	Managers.time:register_timer("character_creation_timer", "main")
+end
+
+StateMainMenu.new_character_create = function (self)
+	self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
+
+	return self._character_create
 end
 
 StateMainMenu.in_character_create_state = function (self)
@@ -259,6 +276,10 @@ StateMainMenu._next_character_create_view = function (self)
 	end
 end
 
+StateMainMenu.set_wait_for_character_profile_upload = function (self, value)
+	self._wait_for_character_profile_upload = value
+end
+
 StateMainMenu._on_profile_create_completed = function (self, created_profile)
 	self._character_create_state_views = nil
 
@@ -276,6 +297,9 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 		Log.info("StateMainMenu", "Time in character creator %s", time)
 
 		local character_id = created_profile.character_id
+
+		self:_set_selected_profile(created_profile)
+
 		local promises = {
 			Managers.data_service.account:set_selected_character_id(character_id),
 			Managers.narrative:load_character_narrative(character_id)
@@ -286,18 +310,8 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 			promises[3] = Managers.data_service.account:set_has_created_first_character()
 		end
 
-		Promise.all(unpack(promises)):next(function ()
-			if self:_skip_prologue() then
-				_set_player_profile(created_profile)
-
-				local character_id = created_profile.character_id
-
-				Managers.data_service.account:set_selected_character_id(character_id)
-				self:_start_game()
-			else
-				_set_player_profile(created_profile)
-				self:_start_onboarding(FIRST_ONBOARDING_MISSION)
-			end
+		Promise.all(unpack(promises)):next(function (_)
+			self:_start_game_or_onboarding()
 		end):catch(function ()
 			self:_set_view_state_cb("main_menu")
 		end)
@@ -435,7 +449,7 @@ StateMainMenu.update = function (self, main_dt, main_t)
 
 	if error_state then
 		return error_state, error_state_params
-	elseif IS_XBS then
+	elseif IS_XBS or IS_GDK then
 		local error_state, error_state_params = Managers.account:wanted_transition()
 
 		if error_state then
@@ -446,13 +460,11 @@ StateMainMenu.update = function (self, main_dt, main_t)
 	local is_syncing = self:_waiting_for_profile_synchronization()
 
 	if self._continue and not is_syncing then
-		fassert(Managers.narrative:is_narrative_loaded_for_player_character(), "Narrative data not loaded for current player character")
-
 		self._reconnect_pressed = false
 		local next_state, state_context = nil
 
 		if self._onboarding_mission_name then
-			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name)
+			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name, SINGLEPLAY_TYPES.onboarding)
 		else
 			next_state, state_context = Managers.multiplayer_session:find_available_session()
 		end
@@ -488,9 +500,19 @@ StateMainMenu._should_open_news = function (self)
 end
 
 StateMainMenu.on_exit = function (self)
+	if self._full_frame_rate_enabled then
+		Managers.frame_rate:relinquish_request("main_menu")
+
+		self._full_frame_rate_enabled = false
+	end
+
 	self:_close_current_character_create_state_views()
 	self:_close_current_state_views()
 	self:_unregister_menu_events()
+
+	if Managers.time:has_timer("character_creation_timer") then
+		Managers.time:unregister_timer("character_creation_timer")
+	end
 
 	if self._main_menu_loader then
 		self._main_menu_loader:destroy()

@@ -126,8 +126,11 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 	local t = World.time(Unit.world(unit))
 	local slot_items = self._visual_loadout_extension:slot_items()
 
-	WoundMaterials.calculate(unit, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, t)
-	WoundMaterials.apply(unit, wounds_data, wound_index, slot_items)
+	WoundMaterials.calculate(unit, wounds_config, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, t)
+
+	if not DEDICATED_SERVER then
+		WoundMaterials.apply(unit, wounds_data, wound_index, slot_items)
+	end
 
 	if not at_max_wounds then
 		wounds_data.num_wounds = wound_index

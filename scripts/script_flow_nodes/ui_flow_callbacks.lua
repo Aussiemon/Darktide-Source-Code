@@ -11,7 +11,7 @@ local flow_callback_white_list = {
 for function_name, func in pairs(MainFlowCallbacks) do
 	if not table.find(flow_callback_white_list, function_name) then
 		UIFlowCallbacks[function_name] = function ()
-			fassert(false, "[UIFlowCallbacks] - Flow callback function %s was triggered. Not supported in UI levels.", function_name)
+			return
 		end
 	else
 		UIFlowCallbacks[function_name] = func

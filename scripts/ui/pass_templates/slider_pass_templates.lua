@@ -215,7 +215,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 
 				local inverse_scale = renderer.inverse_scale
 				local base_cursor = input_service:get("cursor")
-				local cursor = UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+				local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 				local cursor_direction = cursor[axis]
 				local input_coordinate = cursor_direction - (position[axis] + slider_horizontal_offset)
 				local input_offset = content.input_offset
@@ -615,7 +615,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 
 				local inverse_scale = renderer.inverse_scale
 				local base_cursor = input_service:get("cursor")
-				local cursor = UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+				local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 				local cursor_direction = cursor[axis]
 				local input_coordinate = cursor_direction - (position[axis] + slider_horizontal_offset)
 				local input_offset = content.input_offset

@@ -1,7 +1,7 @@
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local WwiseStateGroupCircumstance = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_circumstance")
 local WwiseStateGroupCombat = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_combat")
-local WwiseStateGroupCombatEffects = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_combat_effects")
+local WwiseStateGroupMinionAggroIntensity = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_minion_aggro_intensity")
 local WwiseStateGroupEventIntensity = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_event_intensity")
 local WwiseStateGroupEventType = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_event_type")
 local WwiseStateGroupGame = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_game")
@@ -15,7 +15,7 @@ local WWISE_STATE_GROUP_SETTINGS = {
 	music_game_state = WwiseStateGroupGame,
 	music_zone = WwiseStateGroupZone,
 	music_combat = WwiseStateGroupCombat,
-	sfx_combat = WwiseStateGroupCombatEffects,
+	minion_aggro_intensity = WwiseStateGroupMinionAggroIntensity,
 	music_objective = WwiseStateGroupObjective,
 	music_objective_progression = WwiseStateGroupObjectiveProgression,
 	circumstance = WwiseStateGroupCircumstance,

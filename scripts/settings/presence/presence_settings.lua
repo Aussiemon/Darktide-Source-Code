@@ -17,8 +17,14 @@ local presence_settings = {
 	hub = {
 		hud_localization = "loc_hud_presence_hub"
 	},
+	matchmaking = {
+		hud_localization = "loc_hud_presence_matchmaking"
+	},
 	mission = {
 		hud_localization = "loc_hud_presence_mission"
+	},
+	training_grounds = {
+		hud_localization = "loc_hud_presence_training_grounds"
 	},
 	end_of_round = {
 		hud_localization = "loc_hud_presence_end_of_round"
