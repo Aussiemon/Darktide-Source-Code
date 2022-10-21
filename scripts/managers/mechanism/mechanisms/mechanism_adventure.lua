@@ -215,7 +215,7 @@ MechanismAdventure._check_state_change = function (self, state, data)
 			elseif self._peers_ready_for_score_timeout < Managers.time:time("main") then
 				Log.info("MechanismAdventure", "Timeout while waiting for peers ready for state 'score'")
 
-				for i = 1, #not_ready_peers, 1 do
+				for i = 1, #not_ready_peers do
 					local peer_id = not_ready_peers[i]
 
 					Log.info("MechanismAdventure", "Kicking peer %s, reason: 'kicked_on_session_report_timeout'", peer_id)

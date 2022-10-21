@@ -72,7 +72,7 @@ table.crop = function (t, index)
 	local new_table = {}
 	local new_table_size = 0
 
-	for idx = index, #t, 1 do
+	for idx = index, #t do
 		new_table_size = new_table_size + 1
 		new_table[new_table_size] = t[idx]
 	end
@@ -139,7 +139,7 @@ table.merge = function (dest, source)
 end
 
 table.merge_array = function (dest, source)
-	for i = 1, #source, 1 do
+	for i = 1, #source do
 		dest[i] = source[i]
 	end
 
@@ -161,7 +161,7 @@ table.compact_array = function (t)
 	while p >= k do
 		if t[i] then
 			t[k] = t[i]
-			t[i] = (k == i and t[i]) or nil
+			t[i] = k == i and t[i] or nil
 			k = k + 1
 		end
 
@@ -214,7 +214,7 @@ end
 table.append = function (dest, source)
 	local dest_size = #dest
 
-	for i = 1, #source, 1 do
+	for i = 1, #source do
 		dest_size = dest_size + 1
 		dest[dest_size] = source[i]
 	end
@@ -232,7 +232,7 @@ table.append_non_indexed = function (dest, source)
 end
 
 table.array_contains = function (t, element)
-	for i = 1, #t, 1 do
+	for i = 1, #t do
 		if t[i] == element then
 			return true
 		end
@@ -260,7 +260,7 @@ table.find = function (t, element)
 end
 
 table.index_of = function (t, element)
-	for i = 1, #t, 1 do
+	for i = 1, #t do
 		if t[i] == element then
 			return i
 		end
@@ -270,10 +270,10 @@ table.index_of = function (t, element)
 end
 
 table.slice = function (t, start_index, length)
-	local end_index = math.min((start_index + length) - 1, #t)
+	local end_index = math.min(start_index + length - 1, #t)
 	local slice = {}
 
-	for i = start_index, end_index, 1 do
+	for i = start_index, end_index do
 		slice[i - start_index + 1] = t[i]
 	end
 
@@ -307,7 +307,7 @@ end
 table.reverse = function (t)
 	local size = #t
 
-	for i = 1, math.floor(size / 2), 1 do
+	for i = 1, math.floor(size / 2) do
 		t[size - i + 1] = t[i]
 		t[i] = t[size - i + 1]
 	end
@@ -322,7 +322,7 @@ if not pcall(require, "table.clear") then
 end
 
 table.clear_array = function (t, n)
-	for i = 1, n, 1 do
+	for i = 1, n do
 		t[i] = nil
 	end
 end
@@ -413,7 +413,7 @@ function _table_tostring_array(t, depth, max_depth, skip_private)
 	local tabs = last_tabs .. "\t"
 	local len = #t
 
-	for i = 1, len, 1 do
+	for i = 1, len do
 		str[#str + 1] = tabs
 
 		table.append(str, _value_to_string_array(t[i], depth, max_depth, skip_private))
@@ -506,11 +506,11 @@ table.get_random_array_indices = function (size, num_picks)
 	assert(num_picks <= size, "Can't pick more elements than the size of the")
 	assert(size < 128, "Don't use this for large arrays, since it will be inefficient. It creates large tables then.")
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		all[i] = i
 	end
 
-	for i = 1, num_picks, 1 do
+	for i = 1, num_picks do
 		local random_index = math.random(1, size)
 		random_indices[i] = all[random_index]
 		all[random_index] = all[size]
@@ -564,7 +564,7 @@ table.add_mirrored_entry = function (list, a, b)
 end
 
 table.mirror_array_inplace = function (t)
-	for i = 1, #t, 1 do
+	for i = 1, #t do
 		local value = t[i]
 		t[value] = i
 	end
@@ -588,7 +588,7 @@ table.append_varargs = function (t, ...)
 	local num_varargs = select("#", ...)
 	local t_size = #t
 
-	for i = 1, num_varargs, 1 do
+	for i = 1, num_varargs do
 		t[t_size + i] = select(i, ...)
 	end
 
@@ -686,11 +686,11 @@ table.remove_sequence = function (t, from, to)
 	local length = #t
 	local num_remove = to - from + 1
 
-	for i = 0, length - to, 1 do
+	for i = 0, length - to do
 		t[from + i] = t[to + 1 + i]
 	end
 
-	for i = length - num_remove + 1, length, 1 do
+	for i = length - num_remove + 1, length do
 		t[i] = nil
 	end
 end
@@ -704,7 +704,7 @@ local _enum_index_metatable = {
 table.enum = function (...)
 	local t = {}
 
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local v = select(i, ...)
 		t[v] = v
 	end
@@ -723,7 +723,7 @@ local _lookup_index_metatable = {
 table.index_lookup_table = function (...)
 	local t = {}
 
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local v = select(i, ...)
 		t[v] = i
 		t[i] = v
@@ -773,7 +773,7 @@ end
 table.make_strict_with_interface = function (t, name, interface)
 	local valid_keys = {}
 
-	for i = 1, #interface, 1 do
+	for i = 1, #interface do
 		local field_name = interface[i]
 		valid_keys[field_name] = true
 	end
@@ -855,20 +855,22 @@ table.make_strict_nil_exceptions = function (t)
 	end
 
 	local meta = {
-		__declared = declared_args,
-		__newindex = function (t, k, v)
-			if meta.__declared[k] then
-				rawset(t, k, v)
-			else
-				ferror("Table is strict. Not allowed to add new fields.")
-			end
-		end,
-		__index = function (t, k)
-			if not meta.__declared[k] then
-				ferror("Table does not have field_name %q defined.", k)
-			end
-		end
+		__declared = declared_args
 	}
+
+	meta.__newindex = function (t, k, v)
+		if meta.__declared[k] then
+			rawset(t, k, v)
+		else
+			ferror("Table is strict. Not allowed to add new fields.")
+		end
+	end
+
+	meta.__index = function (t, k)
+		if not meta.__declared[k] then
+			ferror("Table does not have field_name %q defined.", k)
+		end
+	end
 
 	setmetatable(t, meta)
 
@@ -881,7 +883,7 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 	if optional_interface then
 		interface = {}
 
-		for i = 1, #optional_interface, 1 do
+		for i = 1, #optional_interface do
 			local field_name = optional_interface[i]
 			interface[field_name] = true
 		end
@@ -933,7 +935,7 @@ table.unique_array_values = function (t, destination)
 	local result = destination or {}
 	local next_index = 1
 
-	for i = 1, #t, 1 do
+	for i = 1, #t do
 		local value = t[i]
 
 		if not TEMP_CHECKED_VALUES[value] then
@@ -959,7 +961,7 @@ table.generate_random_table = function (from, to, seed)
 	local temp = setmetatable({}, random_indexed_meta)
 	local last_seed = seed
 
-	for iter = 1, to, 1 do
+	for iter = 1, to do
 		local index = nil
 
 		if last_seed then
@@ -1011,7 +1013,7 @@ table.array_remove_if = function (t, predicate)
 	local i = 1
 	local v = nil
 
-	for j = 1, #t, 1 do
+	for j = 1, #t do
 		t[j] = nil
 		v = t[j]
 
@@ -1050,5 +1052,3 @@ table.variance = function (t)
 
 	return table.average(diff)
 end
-
-return

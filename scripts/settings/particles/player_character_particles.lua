@@ -35,12 +35,9 @@ player_character_particles.resolve_particle = function (particle_alias, properti
 			return true, particles.default
 		end
 
-		for i = 1, num_switches, 1 do
+		for i = 1, num_switches do
 			local switch_name = switches[i]
-
-			if not properties[switch_name] then
-				local switch_property = optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES[switch_name]
-			end
+			local switch_property = properties[switch_name] or (optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES)[switch_name]
 
 			if switch_property and particles[switch_property] then
 				particles = particles[switch_property]
@@ -86,14 +83,14 @@ player_character_particles.find_relevant_particles = function (profile_propertie
 			local resource_name = particles.default
 			temp_relevant_particles[resource_name] = true
 		else
-			for i = 1, num_switches, 1 do
+			for i = 1, num_switches do
 				local switch_name = switches[i]
 				local switch_property = profile_properties[switch_name]
 
 				if switch_property then
 					local default_particles = particles.default
 
-					fassert((not no_default and default_particles) or no_default)
+					fassert(not no_default and default_particles or no_default)
 
 					particles = particles[switch_property] or default_particles or particles
 				else

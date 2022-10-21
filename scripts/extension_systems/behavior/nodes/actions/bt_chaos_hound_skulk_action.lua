@@ -190,7 +190,7 @@ BtChaosHoundSkulkAction._update_ground_normal_rotation = function (self, unit, s
 	from_position_1 = self_position + offset_up + forward
 	local to_position_1 = from_position_1 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_1 = self:_ray_cast(physics_world, from_position_1, to_position_1)
-	local from_position_2 = (self_position + offset_up) - forward
+	local from_position_2 = self_position + offset_up - forward
 	local to_position_2 = from_position_2 - offset_up * TO_OFFSET_UP_DISTANCE
 	local _, hit_position_2 = self:_ray_cast(physics_world, from_position_2, to_position_2)
 

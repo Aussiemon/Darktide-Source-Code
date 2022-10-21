@@ -166,5 +166,3 @@ DialogueLookup[DialogueLookup_n + 81] = "traitor_trenchfighter_alerted_idle"
 DialogueLookup[DialogueLookup_n + 82] = "traitor_trenchfighter_assault"
 DialogueLookup[DialogueLookup_n + 83] = "traitor_trenchfighter_melee_idle"
 DialogueLookup_n = DialogueLookup_n + 83
-
-return

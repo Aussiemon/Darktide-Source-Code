@@ -62,7 +62,7 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 				end
 			end
 
-			local modifier = (players_have_improved_keyword and 1.5) or 1
+			local modifier = players_have_improved_keyword and 1.5 or 1
 			pickup_data.modifier = modifier
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data, seed)
 			local missing_clip = max_ammo_clip - ammo_clip

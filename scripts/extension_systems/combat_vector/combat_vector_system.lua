@@ -38,12 +38,12 @@ CombatVectorSystem.init = function (self, ...)
 		local nav_mesh_locations = {}
 		local claimed_location_counters = {}
 
-		for i = 1, #VECTOR_TYPES, 1 do
+		for i = 1, #VECTOR_TYPES do
 			local vector_type = VECTOR_TYPES[i]
 			local vector_segments = Script.new_array(max_segments)
 			vector_segments[1] = Vector3Box()
 
-			for j = 2, max_segments, 1 do
+			for j = 2, max_segments do
 				vector_segments[j] = {
 					Vector3Box(),
 					Vector3Box(),
@@ -55,7 +55,7 @@ CombatVectorSystem.init = function (self, ...)
 			local location_counters = {}
 			local locations = {}
 
-			for j = 1, #location_types, 1 do
+			for j = 1, #location_types do
 				local location_type = location_types[j]
 				locations[location_type] = {
 					close = {},
@@ -73,7 +73,7 @@ CombatVectorSystem.init = function (self, ...)
 		self._claimed_location_counters = claimed_location_counters
 		local segment_count = {}
 
-		for i = 1, #VECTOR_TYPES, 1 do
+		for i = 1, #VECTOR_TYPES do
 			local vector_type = VECTOR_TYPES[i]
 			segment_count[vector_type] = 0
 		end
@@ -123,11 +123,11 @@ CombatVectorSystem.on_gameplay_post_init = function (self, level)
 	self._traverse_logic = traverse_logic
 	local nav_mesh_manager = Managers.state.nav_mesh
 
-	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES, 1 do
+	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 		local volume_type = FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
-		for j = 1, #layer_ids, 1 do
+		for j = 1, #layer_ids do
 			GwNavTagLayerCostTable.forbid_layer(nav_tag_cost_table, layer_ids[j])
 		end
 	end
@@ -349,7 +349,7 @@ CombatVectorSystem._check_for_locked_in_melee_unit = function (self, t)
 	local side = side_system:get_side(target_side_id)
 	local valid_player_units = side.valid_player_units
 
-	for i = 1, #valid_player_units, 1 do
+	for i = 1, #valid_player_units do
 		local player_unit = valid_player_units[i]
 		local locked_in_melee = AttackIntensity.player_is_locked_in_melee(player_unit)
 
@@ -472,7 +472,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 	local num_segments_with_locations = segment_count - nav_mesh_location_start_index + 1
 	local one_third_num_segments_with_locations = math.ceil(num_segments_with_locations / 3)
 
-	for i = nav_mesh_location_start_index, segment_count, 1 do
+	for i = nav_mesh_location_start_index, segment_count do
 		local segment = segments[i]
 		local pos_on_nav_mesh_left = segment[LEFT_SEGMENT_INDEX]:unbox()
 		local pos_on_nav_mesh_mid = segment[MID_SEGMENT_INDEX]:unbox()
@@ -485,7 +485,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 			local quarter_lane_width = half_lane_width * 0.5
 			local location_segment_index = i - nav_mesh_location_start_index + 1
 			local range_identifier = _get_segment_range_identifier(location_segment_index, one_third_num_segments_with_locations)
-			local num_positions = math.ceil((segment_width * num_locations_per_segment_meter) / num_nav_mesh_location_types)
+			local num_positions = math.ceil(segment_width * num_locations_per_segment_meter / num_nav_mesh_location_types)
 			local radians_per_nav_mesh_location = two_pi / num_positions
 			local left_to_mid_direction = Vector3.normalize(pos_on_nav_mesh_mid - pos_on_nav_mesh_left)
 			local right_to_mid_direction = Vector3.normalize(pos_on_nav_mesh_mid - pos_on_nav_mesh_right)
@@ -505,7 +505,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 					location_origin = pos_on_nav_mesh_mid
 				end
 
-				for j = 1, num_positions, 1 do
+				for j = 1, num_positions do
 					current_radians = current_radians + radians_per_nav_mesh_location
 					local dir = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
 					local distance = math.random_range(quarter_lane_width, half_lane_width)
@@ -580,7 +580,7 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 	local num_alive_minions = alive_minions.size
 	local num_aggroed = 0
 
-	for i = 1, num_alive_minions, 1 do
+	for i = 1, num_alive_minions do
 		local unit = alive_minions[i]
 		local blackboard = BLACKBOARDS[unit]
 		local perception_component = blackboard.perception
@@ -674,7 +674,7 @@ function _calculate_flank_positions(from_position, combat_vector, flank_position
 	local combat_vector_length = Vector3.length(combat_vector)
 	local right = Vector3.normalize(Vector3.cross(combat_vector, Vector3.up()))
 
-	for i = 1, MAX_FLANK_FIND_POSITION_TRIES, 1 do
+	for i = 1, MAX_FLANK_FIND_POSITION_TRIES do
 		local offset = FLANK_OFFSET * (i - 1)
 		local length = math.max(combat_vector_length - offset, MIN_FLANK_LENGTH)
 		local right_flank_pos = from_position + right * length
@@ -691,7 +691,7 @@ function _calculate_flank_positions(from_position, combat_vector, flank_position
 
 	local left = -right
 
-	for i = 1, MAX_FLANK_FIND_POSITION_TRIES, 1 do
+	for i = 1, MAX_FLANK_FIND_POSITION_TRIES do
 		local offset = FLANK_OFFSET * (i - 1)
 		local length = math.max(combat_vector_length - offset, MIN_FLANK_LENGTH)
 		local left_flank_pos = from_position + left * length
@@ -712,7 +712,7 @@ function _calculate_flank_vectors(t, changed, from_position, flank_positions, fl
 	local num_nav_mesh_location_types = #CombatVectorSettings.location_types
 	local flank_vectors_calculated = false
 
-	for i = 1, #flank_vector_types, 1 do
+	for i = 1, #flank_vector_types do
 		local vector_type = flank_vector_types[i]
 		local astar_data = flank_astar_data[vector_type]
 		local flank_segments = segments[vector_type]

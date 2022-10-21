@@ -177,7 +177,7 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 	local best_cover_slot = nil
 	local num_nearby_cover_slots = #nearby_cover_slots
 
-	for i = 1, num_nearby_cover_slots, 1 do
+	for i = 1, num_nearby_cover_slots do
 		local cover_slot = nearby_cover_slots[i]
 
 		if not cover_slot.occupied then
@@ -218,10 +218,10 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	local current_target_unit = perception_component.target_unit
 	local cover_slot_position = cover_slot.position:unbox()
 	local slot_direction = cover_slot.direction:unbox()
-	local max_distance_from_target = (is_suppressed and cover_config.suppressed_max_distance_from_target) or cover_config.max_distance_from_target
+	local max_distance_from_target = is_suppressed and cover_config.suppressed_max_distance_from_target or cover_config.max_distance_from_target
 
 	if max_distance_from_target then
-		local max_distance_modified = (self._max_distance_modifier and max_distance_from_target * self._max_distance_modifier) or max_distance_from_target
+		local max_distance_modified = self._max_distance_modifier and max_distance_from_target * self._max_distance_modifier or max_distance_from_target
 		local target_position = POSITION_LOOKUP[current_target_unit]
 		local distance_to_slot = Vector3.distance(cover_slot_position, target_position)
 
@@ -254,7 +254,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 			combat_vector_direction = combat_vector_system:get_combat_direction()
 		end
 
-		local max_distance_from_combat_vector = (is_suppressed and cover_config.suppressed_max_distance_from_combat_vector) or cover_config.max_distance_from_combat_vector
+		local max_distance_from_combat_vector = is_suppressed and cover_config.suppressed_max_distance_from_combat_vector or cover_config.max_distance_from_combat_vector
 
 		if max_distance_from_combat_vector then
 			local combat_vector_to_position = combat_vector_system:get_to_position(current_vector_type)
@@ -302,7 +302,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	local valid_enemy_player_units = side.valid_enemy_player_units
 	local perception_extension = self._perception_extension
 
-	for i = 1, #valid_enemy_player_units, 1 do
+	for i = 1, #valid_enemy_player_units do
 		local target_unit = valid_enemy_player_units[i]
 		local last_los_position = perception_extension:last_los_position(target_unit)
 

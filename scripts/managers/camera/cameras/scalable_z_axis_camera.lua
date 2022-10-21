@@ -9,7 +9,7 @@ ScalableZAxisCamera.parse_parameters = function (self, camera_settings, parent_n
 	self._z_offset = camera_settings.z_offset
 	self._scale_function = camera_settings.scale_function
 	self._scale_variable = camera_settings.scale_variable
-	self._max_fov = camera_settings.vertical_fov and (camera_settings.vertical_fov * math.pi) / 180
+	self._max_fov = camera_settings.vertical_fov and camera_settings.vertical_fov * math.pi / 180
 end
 
 ScalableZAxisCamera.update = function (self, dt, position, rotation, data)

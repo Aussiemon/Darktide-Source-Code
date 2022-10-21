@@ -46,5 +46,3 @@ DialogueLookup[DialogueLookup_n + 21] = "guidance_wrong_way"
 DialogueLookup[DialogueLookup_n + 22] = "info_asset_cult_breaking_wheel"
 DialogueLookup[DialogueLookup_n + 23] = "info_asset_nurgle_growth"
 DialogueLookup_n = DialogueLookup_n + 23
-
-return

@@ -77,7 +77,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	local num_components = #sorted_components
 
-	for component_index = 1, num_components, 1 do
+	for component_index = 1, num_components do
 		local component_name = sorted_components[component_index]
 		local component = config[component_name]
 		local component_config = {}
@@ -88,7 +88,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		local num_sorted_fields = #sorted_fields
 
-		for field_index = 1, num_sorted_fields, 1 do
+		for field_index = 1, num_sorted_fields do
 			local field_name = sorted_fields[field_index]
 			local data = component[field_name]
 			lookup_index = lookup_index + 1
@@ -101,7 +101,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 				lookup = {}
 				local lookup_size = #data
 
-				for i = 1, lookup_size, 1 do
+				for i = 1, lookup_size do
 					local val = data[i]
 					lookup[i] = val
 					lookup[val] = i
@@ -143,7 +143,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	table.sort(sorted_husk_components)
 
-	for component_i = 1, #sorted_husk_components, 1 do
+	for component_i = 1, #sorted_husk_components do
 		local component_name = sorted_husk_components[component_i]
 
 		fassert(formatted_config[component_name], "[PlayerHuskDataComponentConfig] Component \"%s\" does not exist in PlayerUnitDataComponentConfig.", component_name)
@@ -155,13 +155,13 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		table.sort(husk_component)
 
-		for field_i = 1, #husk_component, 1 do
+		for field_i = 1, #husk_component do
 			local field_name = husk_component[field_i]
 
 			fassert(formatted_component[field_name], "[PlayerHuskDataComponentConfig] \"%s\" does not exist in \"%s\"", field_name, component_name)
 
 			formatted_husk_component[field_name] = true
-			slot28, slot29 = _get_network_info(field_name, formatted_component, field_network_lookup)
+			local network_name, network_type = _get_network_info(field_name, formatted_component, field_network_lookup)
 		end
 	end
 
@@ -169,7 +169,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	table.sort(sorted_husk_hud_components)
 
-	for component_i = 1, #sorted_husk_hud_components, 1 do
+	for component_i = 1, #sorted_husk_hud_components do
 		local component_name = sorted_husk_hud_components[component_i]
 
 		fassert(formatted_config[component_name], "[PlayerHuskHudDataComponentConfig] Component \"%s\" does not exist in PlayerUnitDataComponentConfig.", component_name)
@@ -181,7 +181,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		table.sort(husk_hud_component)
 
-		for field_i = 1, #husk_hud_component, 1 do
+		for field_i = 1, #husk_hud_component do
 			local field_name = husk_hud_component[field_i]
 
 			fassert(formatted_component[field_name], "[PlayerHuskHudDataComponentConfig] \"%s\" does not exist in \"%s\"", field_name, component_name)
@@ -193,7 +193,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 			end
 
 			formatted_husk_hud_component[field_name] = true
-			slot30, slot31 = _get_network_info(field_name, formatted_component, field_network_lookup)
+			local network_name, network_type = _get_network_info(field_name, formatted_component, field_network_lookup)
 		end
 	end
 

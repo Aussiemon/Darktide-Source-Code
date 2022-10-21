@@ -157,7 +157,7 @@ ChainWeaponEffects.update = function (self, unit, dt, t)
 		self._equipment_component.send_component_event(self._slot, "set_speed", anim_speed)
 	end
 
-	local resistance = (is_sawing and 1 - math.random() * 0.1) or 0
+	local resistance = is_sawing and 1 - math.random() * 0.1 or 0
 
 	WwiseWorld.set_source_parameter(wwise_world, engine_source, "combat_chainsword_cut", resistance)
 end

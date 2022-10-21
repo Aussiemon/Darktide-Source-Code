@@ -144,7 +144,7 @@ BotJumpAssist._editor_debug_draw = function (self, unit)
 		end
 
 		if any_error then
-			local start_position = (from and from) or wanted_from
+			local start_position = from and from or wanted_from
 
 			drawer:line(start_position, start_position + Vector3.up() * 15, Color.red())
 		end

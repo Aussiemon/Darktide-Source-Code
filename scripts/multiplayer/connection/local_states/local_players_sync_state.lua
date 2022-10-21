@@ -60,7 +60,7 @@ end
 LocalPlayersSyncState.rpc_sync_local_players_reply = function (self, channel_id, local_player_id_array, slot_array)
 	local peer_id = Network.peer_id()
 
-	for i = 1, #local_player_id_array, 1 do
+	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local slot = slot_array[i]
 		local player = Managers.player:player(peer_id, local_player_id)

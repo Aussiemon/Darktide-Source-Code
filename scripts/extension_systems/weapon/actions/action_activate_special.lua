@@ -55,6 +55,7 @@ ActionActivateSpecial.finish = function (self, reason, data, t, time_in_action)
 		local abort_sound_alias = action_settings.abort_sound_alias
 
 		if abort_sound_alias then
+			-- Nothing
 		end
 	end
 end

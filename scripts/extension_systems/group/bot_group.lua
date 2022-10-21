@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BotAoeThreat = require("scripts/utilities/attack/bot_aoe_threat")
 local BotOrder = require("scripts/utilities/bot_order")
@@ -40,41 +38,41 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 	self._in_carry_event = false
 	local up = Vector3.up()
 	self._left_vectors_outside_volume = {
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 1) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 2) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 3) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 4) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 5) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 6) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 7) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 0) / 8)))
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 2 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 3 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 4 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 5 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0 / 8)))
 	}
 	self._right_vectors_outside_volume = {
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 1) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 2) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 3) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 4) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 5) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 6) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 7) / 8)))
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 2 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 3 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 4 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 5 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8)))
 	}
 	self._left_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0.5))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 5) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 3) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 6) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 2) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 7) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (math.pi * 1) / 8)))
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 5 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 3 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 2 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8)))
 	}
 	self._right_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 0.5))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 5) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 3) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 6) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 2) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 7) / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, (-math.pi * 1) / 8)))
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 5 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 3 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 2 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8)))
 	}
 	self._previous_available_pickups_player_unit_index = 0
 	self._update_pickups_at = -math.huge
@@ -279,7 +277,7 @@ BotGroup._check_unaggroed_daemonhost_presence = function (self, side, unit_posit
 	local game_object_field = GameSession.game_object_field
 	local aggroed_minions = side.aggroed_minion_target_units
 
-	for i = 1, num_enemy_daemonhosts, 1 do
+	for i = 1, num_enemy_daemonhosts do
 		local daemonhost = enemy_daemonhost[i]
 
 		if not aggroed_minions[daemonhost] then
@@ -311,7 +309,7 @@ BotGroup._update_move_targets = function (self, bot_data, num_bots, nav_world, s
 	local human_units = side.valid_human_units
 	local num_human_units = #human_units
 
-	for i = 1, num_human_units, 1 do
+	for i = 1, num_human_units do
 		local human_unit = human_units[i]
 		local unit_data_extension = ScriptUnit.extension(human_unit, "unit_data_system")
 		local character_state_component = unit_data_extension:read_component("character_state")
@@ -347,7 +345,7 @@ BotGroup._update_move_targets = function (self, bot_data, num_bots, nav_world, s
 			selected_unit = self:_find_least_lonely_move_target(TEMP_HUMAN_UNITS, last_move_target_unit)
 		end
 	elseif num_units == 2 and num_bots == 2 and in_carry_event then
-		for j = 1, num_units, 1 do
+		for j = 1, num_units do
 			local unit = TEMP_HUMAN_UNITS[j]
 			local unit_position = POSITION_LOOKUP[unit]
 			local disallowed_at_position, volume_points = self:_selected_unit_is_in_disallowed_nav_tag_volume(nav_world, unit_position)
@@ -403,7 +401,8 @@ BotGroup._update_move_targets = function (self, bot_data, num_bots, nav_world, s
 		self:_assign_destination_points(bot_data, destination_points, selected_unit)
 	else
 		for _, data in pairs(bot_data) do
-			data.follow_unit, data.follow_position = nil
+			data.follow_position = nil
+			data.follow_unit = nil
 		end
 	end
 
@@ -418,7 +417,7 @@ local LONELINESS_FAR_AWAY_MODIFIER = 3
 BotGroup._find_most_lonely_move_target = function (self, targets, origin_unit)
 	local num_targets = #targets
 
-	for i = 1, num_targets, 1 do
+	for i = 1, num_targets do
 		local unit = targets[i]
 		TEMP_PLAYER_POSITIONS[i] = POSITION_LOOKUP[unit]
 	end
@@ -429,7 +428,7 @@ BotGroup._find_most_lonely_move_target = function (self, targets, origin_unit)
 	local Vector3_distance_squared = Vector3.distance_squared
 	local num_positions = #TEMP_PLAYER_POSITIONS
 
-	for i = 1, num_positions, 1 do
+	for i = 1, num_positions do
 		local position1 = TEMP_PLAYER_POSITIONS[i]
 		local loneliness = nil
 		local distance_sq = Vector3_distance_squared(position1, origin)
@@ -440,7 +439,7 @@ BotGroup._find_most_lonely_move_target = function (self, targets, origin_unit)
 			loneliness = 0
 		end
 
-		for j = 1, num_positions, 1 do
+		for j = 1, num_positions do
 			local position2 = TEMP_PLAYER_POSITIONS[j]
 			loneliness = loneliness + Vector3_distance_squared(position1, position2)
 		end
@@ -461,7 +460,7 @@ local LONELINESS_PREVIOUS_TARGET_STICKINESS = 25
 BotGroup._find_least_lonely_move_target = function (self, targets, last_target)
 	local num_targets = #targets
 
-	for i = 1, num_targets, 1 do
+	for i = 1, num_targets do
 		local unit = targets[i]
 		TEMP_PLAYER_POSITIONS[i] = POSITION_LOOKUP[unit]
 	end
@@ -471,7 +470,7 @@ BotGroup._find_least_lonely_move_target = function (self, targets, last_target)
 	local least_lonely_value = math.huge
 	local num_positions = #TEMP_PLAYER_POSITIONS
 
-	for i = 1, num_positions, 1 do
+	for i = 1, num_positions do
 		local position1 = TEMP_PLAYER_POSITIONS[i]
 		local loneliness = nil
 
@@ -481,7 +480,7 @@ BotGroup._find_least_lonely_move_target = function (self, targets, last_target)
 			loneliness = 0
 		end
 
-		for j = 1, num_positions, 1 do
+		for j = 1, num_positions do
 			local position2 = TEMP_PLAYER_POSITIONS[j]
 			loneliness = loneliness + Vector3_distance_squared(position1, position2)
 		end
@@ -502,7 +501,7 @@ local function _fetch_nav_tag_volume_points(nav_tag_volume)
 	local nav_tag_volume_data = nav_mesh_manager:nav_tag_volume_data()
 	local num_nav_tag_volume_data = #nav_tag_volume_data
 
-	for i = 1, num_nav_tag_volume_data, 1 do
+	for i = 1, num_nav_tag_volume_data do
 		local data = nav_tag_volume_data[i]
 
 		if data.nav_tag_volume == nav_tag_volume then
@@ -525,7 +524,7 @@ BotGroup._selected_unit_is_in_disallowed_nav_tag_volume = function (self, nav_wo
 		local disallowed_nav_tag_layer_ids = self._disallowed_nav_tag_layer_ids
 		local volume_count = GwNavQueries.nav_tag_volume_count(tag_volumes_query)
 
-		for i = 1, volume_count, 1 do
+		for i = 1, volume_count do
 			local nav_tag_volume = GwNavQueries_nav_tag_volume(tag_volumes_query, i)
 			local _, _, layer_id, _, _ = GwNavTagVolume_navtag(nav_tag_volume)
 
@@ -571,7 +570,7 @@ BotGroup._find_destination_points_outside_volume = function (self, nav_world, se
 	local last_point = points[current_index]
 
 	if num_points < needed_points then
-		for i = num_points + 1, needed_points, 1 do
+		for i = num_points + 1, needed_points do
 			points[i] = points[current_index] or last_point or origin_point
 			last_point = points[current_index] or last_point
 			current_index = current_index + 1
@@ -587,7 +586,7 @@ BotGroup._calculate_center_of_volume = function (self, volume_points)
 	local longest_distance_sq = 0
 	local num_points = #volume_points
 
-	for i = 1, num_points, 1 do
+	for i = 1, num_points do
 		local point = Vector3.from_array(volume_points[i])
 		local distance_sq = Vector3_distance_squared(center_position, point)
 		longest_distance_sq = math.max(distance_sq, longest_distance_sq)
@@ -603,7 +602,7 @@ local function _add_points(points, from_position, to_position, amount)
 		return
 	end
 
-	for i = 1, amount, 1 do
+	for i = 1, amount do
 		local position = Vector3.lerp(from_position, to_position, i / amount)
 		points[#points + 1] = position
 	end
@@ -619,15 +618,74 @@ BotGroup._find_points = function (self, nav_world, origin_point, rotation, left_
 	table.clear(points)
 
 	while (left_index < #left_vectors or right_index < #right_vectors) and needed_points > found_points_left + found_points_right do
+		if left_index + 1 > #left_vectors then
+			right_index = right_index + 1
+			local distance, hit_pos = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, right_vectors[right_index]:unbox()), range)
+			local num_points = math.floor(distance / space_per_player)
 
-		-- Decompilation error in this vicinity:
-		right_index = right_index + 1
-		local distance, hit_pos = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, right_vectors[right_index]:unbox()), range)
-		local num_points = math.floor(distance / space_per_player)
+			_add_points(points, origin_point, hit_pos, num_points)
 
-		_add_points(points, origin_point, hit_pos, num_points)
+			found_points_right = found_points_right + num_points
+		elseif right_index + 1 > #right_vectors then
+			left_index = left_index + 1
+			local distance, hit_pos = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, left_vectors[left_index]:unbox()), range)
+			local num_points = math.floor(distance / space_per_player)
 
-		found_points_right = found_points_right + num_points
+			_add_points(points, origin_point, hit_pos, num_points)
+
+			found_points_left = found_points_left + num_points
+		elseif found_points_right == found_points_left then
+			left_index = left_index + 1
+			right_index = right_index + 1
+			local distance_left, hit_pos_left = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, left_vectors[left_index]:unbox()), range)
+			local distance_right, hit_pos_right = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, right_vectors[right_index]:unbox()), range)
+			local points_left = math.floor(distance_left / space_per_player)
+			local points_right = math.floor(distance_right / space_per_player)
+			local points_total = points_left + points_right
+
+			if needed_points < points_total then
+				local assign_left = points_left / points_total * needed_points
+				local assign_right = points_right / points_total * needed_points
+				local floored_assign_left = math.floor(assign_left)
+				local fraction = assign_left - floored_assign_left
+
+				if fraction >= 0.5 then
+					assign_left = math.ceil(assign_left)
+					assign_right = math.floor(assign_right)
+				else
+					assign_left = floored_assign_left
+					assign_right = math.ceil(assign_right)
+				end
+
+				_add_points(points, origin_point, hit_pos_left, assign_left)
+				_add_points(points, origin_point, hit_pos_right, assign_right)
+
+				found_points_left = found_points_left + assign_left
+				found_points_right = found_points_right + assign_right
+			else
+				_add_points(points, origin_point, hit_pos_left, points_left)
+				_add_points(points, origin_point, hit_pos_right, points_right)
+
+				found_points_left = found_points_left + points_left
+				found_points_right = found_points_right + points_right
+			end
+		elseif found_points_left < found_points_right then
+			left_index = left_index + 1
+			local distance, hit_pos = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, left_vectors[left_index]:unbox()), range)
+			local num_points = math.floor(distance / space_per_player)
+
+			_add_points(points, origin_point, hit_pos, num_points)
+
+			found_points_left = found_points_left + num_points
+		elseif found_points_right < found_points_left then
+			right_index = right_index + 1
+			local distance, hit_pos = self:_raycast(nav_world, origin_point, Quaternion.rotate(rotation, right_vectors[right_index]:unbox()), range)
+			local num_points = math.floor(distance / space_per_player)
+
+			_add_points(points, origin_point, hit_pos, num_points)
+
+			found_points_right = found_points_right + num_points
+		end
 	end
 
 	return points
@@ -687,7 +745,7 @@ BotGroup._find_cluster_position = function (self, nav_world, selected_unit, sele
 	local cluster_position = nil
 
 	if ray_start_position then
-		local raycast_range = (in_unaggroed_daemonhost_presence and CLUSTER_RAYCAST_RANGE_DAEMONHOST) or CLUSTER_RAYCAST_RANGE
+		local raycast_range = in_unaggroed_daemonhost_presence and CLUSTER_RAYCAST_RANGE_DAEMONHOST or CLUSTER_RAYCAST_RANGE
 		local _, ray_position = self:_raycast(nav_world, ray_start_position, velocity, raycast_range)
 		cluster_position = Vector3.lerp(ray_start_position, ray_position, 0.6)
 		local altitude = GwNavQueries.triangle_from_position(nav_world, cluster_position, CLUSTER_NAV_MESH_ABOVE, CLUSTER_NAV_MESH_BELOW)
@@ -731,7 +789,7 @@ BotGroup._find_destination_points = function (self, nav_world, origin_point, rot
 	local num_points = #points
 
 	if needed_points > num_points then
-		for i = num_points + 1, needed_points, 1 do
+		for i = num_points + 1, needed_points do
 			points[i] = origin_point
 		end
 	end
@@ -744,7 +802,7 @@ local function _find_permutation(current_index, units, tested_points, current_so
 
 	if current_index > num_units then
 		if best_utility < utility then
-			for i = 1, num_units, 1 do
+			for i = 1, num_units do
 				best_solution[i] = current_solution[i]
 			end
 
@@ -755,7 +813,7 @@ local function _find_permutation(current_index, units, tested_points, current_so
 	else
 		local unit = units[current_index]
 
-		for i = 1, num_units, 1 do
+		for i = 1, num_units do
 			if not tested_points[i] then
 				current_solution[current_index] = i
 				tested_points[i] = true
@@ -787,7 +845,7 @@ BotGroup._assign_destination_points = function (self, bot_data, points, follow_u
 
 		local position = POSITION_LOOKUP[unit]
 
-		for i = 1, num_points, 1 do
+		for i = 1, num_points do
 			local point = points[i]
 			local distance = Vector3_distance(position, point)
 			utility[i] = 1 / math.sqrt(math.max(DESTINATION_POINTS_EPSILON, distance))
@@ -799,7 +857,7 @@ BotGroup._assign_destination_points = function (self, bot_data, points, follow_u
 	local best_utility = _find_permutation(1, TEMP_UNITS, TEMP_TESTED_POINTS, TEMP_CURRENT_SOLUTION, 0, bot_data, -math.huge, TEMP_BEST_SOLUTION)
 	local num_units = #TEMP_UNITS
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		local unit = TEMP_UNITS[i]
 		local data = bot_data[unit]
 		local behavior_extension = data.behavior_extension
@@ -836,7 +894,7 @@ BotGroup._find_closest_move_target = function (self, targets, last_target, posit
 	local closest_value = math.huge
 	local num_targets = #targets
 
-	for i = 1, num_targets, 1 do
+	for i = 1, num_targets do
 		local unit = targets[i]
 		local distance = Vector3_distance(position, POSITION_LOOKUP[unit])
 
@@ -862,7 +920,7 @@ BotGroup._update_priority_targets = function (self, bot_data, side, dt)
 	local player_units = side.valid_player_units
 	local num_players = #player_units
 
-	for i = 1, num_players, 1 do
+	for i = 1, num_players do
 		local player_unit = player_units[i]
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
@@ -916,7 +974,7 @@ end
 local STICKYNESS_DISTANCE_MODIFIER = -0.2
 
 BotGroup._calculate_priority_target_utility = function (self, self_position, current_target, target, duration)
-	local stickyness_modifier = (target == current_target and STICKYNESS_DISTANCE_MODIFIER) or 0
+	local stickyness_modifier = target == current_target and STICKYNESS_DISTANCE_MODIFIER or 0
 	local target_position = POSITION_LOOKUP[target]
 	local real_distance = Vector3.distance(self_position, target_position)
 	local distance = math.max(real_distance, 1)
@@ -1014,7 +1072,7 @@ BotGroup._update_pickups_and_deployables_near_player = function (self, bot_data,
 	local pickups_by_name = Pickups.by_name
 	local available_mule_pickups = self._available_mule_pickups
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		local pickup_unit = UNIT_CHECK_RESULTS[i]
 		local pickup_name = Unit.get_data(pickup_unit, "pickup_type")
 		local pickup_data = pickups_by_name[pickup_name]
@@ -1033,7 +1091,7 @@ BotGroup._update_pickups_and_deployables_near_player = function (self, bot_data,
 					local pickup_position = POSITION_LOOKUP[pickup_unit]
 					local distance = Vector3_distance(bot_position, pickup_position)
 					local follow_position = data.follow_position
-					local ammo_condition = (distance < AMMO_MAX_DISTANCE or (follow_position and Vector3_distance(follow_position, pickup_position) < AMMO_MAX_FOLLOW_DISTANCE)) and (not current_pickup or distance - ((current_pickup == pickup_unit and AMMO_STICKINESS) or 0) < pickup_component.ammo_pickup_distance)
+					local ammo_condition = (distance < AMMO_MAX_DISTANCE or follow_position and Vector3_distance(follow_position, pickup_position) < AMMO_MAX_FOLLOW_DISTANCE) and (not current_pickup or distance - (current_pickup == pickup_unit and AMMO_STICKINESS or 0) < pickup_component.ammo_pickup_distance)
 
 					if ammo_condition then
 						pickup_component.ammo_pickup = pickup_unit
@@ -1051,7 +1109,7 @@ BotGroup._update_pickups_and_deployables_near_player = function (self, bot_data,
 
 	num_units = Broadphase.query(broadphase, player_position, UNIT_CHECK_RANGE, UNIT_CHECK_RESULTS, DEPLOYABLE_BROADPHASE_CATEGORY)
 
-	for i = 1, num_units, 1 do
+	for i = 1, num_units do
 		local found_unit = UNIT_CHECK_RESULTS[i]
 		local deployable_name = Unit.get_data(found_unit, "deployable_type")
 
@@ -1085,7 +1143,7 @@ local BOT_PICKUP_COMPONENTS = {}
 local function _find_health_permutation(current_bot_index, current_utility, solution, best_utility, best_solution, empties_left, health_item_lookup, health_item_list, num_valid_bots)
 	if num_valid_bots < current_bot_index then
 		if current_utility < best_utility then
-			for i = 1, num_valid_bots, 1 do
+			for i = 1, num_valid_bots do
 				best_solution[i] = solution[i]
 			end
 
@@ -1102,8 +1160,8 @@ local function _find_health_permutation(current_bot_index, current_utility, solu
 
 		for unit, position in pairs(health_item_list) do
 			if health_item_lookup[unit] then
-				local stickiness_modifier = (current_pickup == unit and STICKINESS) or 0
-				local utility = (current_utility + Vector3_distance_squared(bot_position, position)) - stickiness_modifier - bot_hp * HP_DISTANCE_MODIFIER
+				local stickiness_modifier = current_pickup == unit and STICKINESS or 0
+				local utility = current_utility + Vector3_distance_squared(bot_position, position) - stickiness_modifier - bot_hp * HP_DISTANCE_MODIFIER
 				health_item_lookup[unit] = nil
 				solution[current_bot_index] = unit
 				best_utility = _find_health_permutation(current_bot_index + 1, utility, solution, best_utility, best_solution, empties_left, health_item_lookup, health_item_list, num_valid_bots)
@@ -1210,7 +1268,7 @@ BotGroup._update_mule_pickups = function (self, bot_data, side, t)
 
 		local num_nearby_humans = 0
 
-		for i = 1, num_human_units, 1 do
+		for i = 1, num_human_units do
 			local human_unit = human_units[i]
 
 			if HEALTH_ALIVE[human_unit] then

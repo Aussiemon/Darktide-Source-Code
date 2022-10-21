@@ -6,7 +6,7 @@ local fallback_color = {
 	255
 }
 ImguiLuaInspector._TYPE_TO_COLOR = setmetatable({
-	function = {
+	["function"] = {
 		181,
 		234,
 		215,
@@ -69,7 +69,9 @@ local format = string.format
 
 ImguiLuaInspector.init = function (self)
 	self._expr = ""
-	self._thunk, self._error, self._val = nil
+	self._val = nil
+	self._error = nil
+	self._thunk = nil
 	self._func_info_magic = setmetatable({}, magic_mt)
 	self._sort_keys = false
 end
@@ -112,7 +114,7 @@ ImguiLuaInspector._inspect_pair = function (self, k, v)
 	elseif t == "function" then
 		return self:_inspect_function(k, v)
 	elseif t == "string" then
-		v = "%q":format(v):gsub("\\\n", "\\n")
+		v = ("%q"):format(v):gsub("\\\n", "\\n")
 	end
 
 	Imgui.text(k .. " =")
@@ -124,12 +126,12 @@ ImguiLuaInspector._inspect_function = function (self, name, func)
 	local is_open = Imgui.tree_node(name, false)
 
 	Imgui.same_line()
-	Imgui.text_colored(format("[%s]", func), unpack(self._TYPE_TO_COLOR.function))
+	Imgui.text_colored(format("[%s]", func), unpack(self._TYPE_TO_COLOR["function"]))
 
 	if is_open then
 		local info = self._func_info_magic[func]
 		local is_file_func = info.source and not string.find(info.source, "\n")
-		local where = (is_file_func and format("%s:%s", info.source, info.linedefined)) or (info.addr and format("0x%012x", info.addr)) or "<unknown origin>"
+		local where = is_file_func and format("%s:%s", info.source, info.linedefined) or info.addr and format("0x%012x", info.addr) or "<unknown origin>"
 
 		Imgui.text_colored(where, unpack(fallback_color))
 
@@ -149,7 +151,7 @@ ImguiLuaInspector._inspect_function = function (self, name, func)
 		local upvals = info.upvalues
 
 		if upvals > 0 and Imgui.tree_node("[upvalues]", false) then
-			for up = 1, upvals, 1 do
+			for up = 1, upvals do
 				local k, v = debug.getupvalue(func, up)
 
 				self:_inspect_pair(up .. " (" .. k .. ")", v)
@@ -159,7 +161,7 @@ ImguiLuaInspector._inspect_function = function (self, name, func)
 		end
 
 		if info.nconsts and info.nconsts ~= 0 and info.gcconsts ~= 0 and Imgui.tree_node("[consts]", false) then
-			for i = -info.gcconsts, info.nconsts - 1, 1 do
+			for i = -info.gcconsts, info.nconsts - 1 do
 				self:_inspect_pair(i, util.funck(func, i))
 			end
 
@@ -186,7 +188,7 @@ end
 ImguiLuaInspector._inspect_table = function (self, name, tab)
 	local is_open = Imgui.tree_node(name, false)
 	local mt = getmetatable(tab)
-	local class_name = (rawget(tab, "__class_name") and "class") or (mt and mt ~= true and mt.__class_name) or "table"
+	local class_name = rawget(tab, "__class_name") and "class" or mt and mt ~= true and mt.__class_name or "table"
 
 	Imgui.same_line()
 	Imgui.text_colored(format("[%s: %p]", class_name, tab), unpack(self._TYPE_TO_COLOR.table))
@@ -227,7 +229,7 @@ end
 local function traceback_table(err)
 	local stack = {}
 
-	for i = 2, 9999, 1 do
+	for i = 2, 9999 do
 		local info = debug.getinfo(i, "nSluf")
 
 		if not info then
@@ -237,7 +239,7 @@ local function traceback_table(err)
 		local slots = {}
 		local ups = {}
 
-		for j = 1, 9999, 1 do
+		for j = 1, 9999 do
 			local k, v = debug.getlocal(i, j)
 
 			if not k then
@@ -247,10 +249,7 @@ local function traceback_table(err)
 			slots[k] = v
 		end
 
-		slot9 = 1
-		slot10 = info.nups or 0
-
-		for j = slot9, slot10, 1 do
+		for j = 1, info.nups or 0 do
 			local k, v = debug.getupvalue(info.func, j)
 
 			if not k then

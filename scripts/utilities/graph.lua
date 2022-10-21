@@ -23,7 +23,7 @@ end
 Graph.add_edge = function (self, value_1, value_2, edge_is_undiracted)
 	local nodes = self._nodes
 
-	if (nodes[value_1] and not edge_is_undiracted) or (nodes[value_1] and nodes[value_2]) then
+	if nodes[value_1] and not edge_is_undiracted or nodes[value_1] and nodes[value_2] then
 		local adjacency_nodes = nodes[value_1].adjacency_nodes
 		adjacency_nodes[#adjacency_nodes + 1] = value_2
 

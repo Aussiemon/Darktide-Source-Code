@@ -19,7 +19,7 @@ local function _select_throw_anim(action_settings, condition_func_params)
 	local anim_option_1 = action_settings.anim_event_non_last
 	local anim_option_2 = action_settings.anim_event_last
 
-	return (have_charges_left and anim_option_2) or anim_option_1
+	return have_charges_left and anim_option_2 or anim_option_1
 end
 
 weapon_template.action_inputs = {

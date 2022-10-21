@@ -20,7 +20,7 @@ end
 
 DifficultyManager.get_minion_attack_power_level = function (self, breed, attack_type)
 	local breed_power_level_type = breed.power_level_type
-	local power_level_type = (type(breed_power_level_type) == "table" and breed_power_level_type[attack_type]) or breed_power_level_type
+	local power_level_type = type(breed_power_level_type) == "table" and breed_power_level_type[attack_type] or breed_power_level_type
 	local power_level_settings = MinionDifficultySettings.power_level[power_level_type]
 	local current_challenge = self._challenge
 	local power_level = power_level_settings[math.min(#power_level_settings, current_challenge)]

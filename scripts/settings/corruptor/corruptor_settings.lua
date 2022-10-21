@@ -46,7 +46,7 @@ local corruptor_settings = {
 	liquid_area_template = LiquidAreaTemplates.prop_corruptor
 }
 
-for i = 1, corruptor_settings.destructible_count, 1 do
+for i = 1, corruptor_settings.destructible_count do
 	destructible_node_names[i] = "j_bulb_0" .. i
 end
 

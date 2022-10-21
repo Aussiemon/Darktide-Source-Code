@@ -33,7 +33,7 @@ ProximityHeal.init = function (self, logic_context, init_data)
 		end
 	end
 
-	local modifier = (players_have_improved_keyword and 1.5) or 1
+	local modifier = players_have_improved_keyword and 1.5 or 1
 	self._heal_reserve = self._med_kit_settings.optional_heal_reserve * modifier
 	self._heal_time = self._med_kit_settings.optional_heal_time * modifier
 end
@@ -88,7 +88,7 @@ ProximityHeal.update = function (self, dt, t)
 
 				if extra_heal_percentage > 0 then
 					local extra_heal_amount = damaged_max_health * extra_heal_percentage
-					slot23 = Health.add(unit, extra_heal_amount, heal_type)
+					local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
 				end
 			end
 

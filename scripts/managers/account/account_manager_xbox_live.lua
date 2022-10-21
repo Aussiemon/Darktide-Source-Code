@@ -246,7 +246,7 @@ end
 AccountManagerXboxLive._apply_render_settings = function (self, settings)
 	for _, setting in ipairs(settings) do
 		if setting.pages then
-			for i = 1, #setting.pages, 1 do
+			for i = 1, #setting.pages do
 				local page_setting = setting.pages[i].entries
 
 				self:_apply_render_settings(page_setting)
@@ -286,7 +286,7 @@ AccountManagerXboxLive._save_exists = function (self, data)
 
 	local save_container_name = Managers.save:save_container_name()
 
-	for i = 1, #container_info, 1 do
+	for i = 1, #container_info do
 		local container = container_info[i]
 
 		if container.name == save_container_name then
@@ -346,7 +346,7 @@ end
 AccountManagerXboxLive._find_user = function (self)
 	local users = XUser.users()
 
-	for i = 1, #users, 1 do
+	for i = 1, #users do
 		local user = users[i]
 
 		if user.xuid == self._xuid then
@@ -402,7 +402,7 @@ end
 
 AccountManagerXboxLive._cb_from_device_async = function (self, async_task)
 	local user_id = XUser.from_device_result(async_task)
-	local user_info = (user_id and XUser.user_info(user_id)) or nil
+	local user_info = user_id and XUser.user_info(user_id) or nil
 
 	if not user_info or user_info.xuid ~= self._xuid then
 		self:_show_disconnect_error()

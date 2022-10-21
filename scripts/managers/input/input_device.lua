@@ -51,7 +51,7 @@ InputDevice._any_analog_input = function (self)
 	local input_device = self._raw_device
 	local num_axes = input_device.num_axes()
 
-	for key = 0, num_axes - 1, 1 do
+	for key = 0, num_axes - 1 do
 		local button_name = input_device.axis_name(key)
 
 		if VALID_AXES[button_name] then
@@ -135,7 +135,7 @@ InputDevice.buttons_held = function (self)
 	local num = math.min(raw_device.num_buttons(), 255)
 	local button_list = {}
 
-	for i = 0, num - 1, 1 do
+	for i = 0, num - 1 do
 		if raw_device.button(i) > 0 then
 			local raw_name = raw_device.button_name(i)
 			local global_name = self:local_to_global_name(raw_name)
@@ -152,7 +152,7 @@ InputDevice.buttons_released = function (self)
 	local num = math.min(raw_device.num_buttons(), 255)
 	local button_list = {}
 
-	for i = 0, num - 1, 1 do
+	for i = 0, num - 1 do
 		if raw_device.released(i) then
 			local raw_name = raw_device.button_name(i)
 			local global_name = self:local_to_global_name(raw_name)

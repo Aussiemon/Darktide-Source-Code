@@ -89,7 +89,7 @@ HudElementCharacterNewsFeed._fetch_new_items = function (self)
 	if new_items_ids then
 		local new_items_by_inventory = {}
 
-		for i = 1, #new_items_ids, 1 do
+		for i = 1, #new_items_ids do
 			local gear_id = new_items_ids[i]
 			local has_item, item = self:_has_item_in_inventory(gear_id)
 

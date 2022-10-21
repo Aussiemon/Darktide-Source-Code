@@ -244,20 +244,20 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, input_sourc
 	local constants = self._constants
 	local archetype_sprint_template = self._archetype_sprint_template
 	local weapon_sprint_template = weapon_extension:sprint_template()
-	local side_acc = (weapon_sprint_template and weapon_sprint_template.sprint_sideway_acceleration) or 1
-	local side_dec = (weapon_sprint_template and weapon_sprint_template.sprint_sideway_deceleration) or 1
+	local side_acc = weapon_sprint_template and weapon_sprint_template.sprint_sideway_acceleration or 1
+	local side_dec = weapon_sprint_template and weapon_sprint_template.sprint_sideway_deceleration or 1
 	local new_x = _sideways_speed_function(current_x, wanted_x, side_acc, side_dec, dt)
 	local normal_move_speed = constants.move_speed
-	local weapon_sprint_speed_mod = (weapon_sprint_template and weapon_sprint_template.sprint_speed_mod) or 1
-	local weapon_no_stamina_sprint_speed_mod = (weapon_sprint_template and weapon_sprint_template.no_stamina_sprint_speed_mod) or 1
+	local weapon_sprint_speed_mod = weapon_sprint_template and weapon_sprint_template.sprint_speed_mod or 1
+	local weapon_no_stamina_sprint_speed_mod = weapon_sprint_template and weapon_sprint_template.no_stamina_sprint_speed_mod or 1
 	local sprint_move_speed = archetype_sprint_template.sprint_move_speed
 	local max_x = normal_move_speed / sprint_move_speed
 	new_x = math.clamp(new_x, -max_x, max_x)
-	local acc = (weapon_sprint_template and weapon_sprint_template.sprint_forward_acceleration) or 1
-	local dec = (weapon_sprint_template and weapon_sprint_template.sprint_forward_deceleration) or 1
+	local acc = weapon_sprint_template and weapon_sprint_template.sprint_forward_acceleration or 1
+	local dec = weapon_sprint_template and weapon_sprint_template.sprint_forward_deceleration or 1
 	local new_y = _forward_speed_function(current_y, wanted_y, acc, dec, dt)
 	local stopped = new_x == 0 and new_y == 0
-	local speed_scale = (stopped and 0) or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
+	local speed_scale = stopped and 0 or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
 	local time_in_sprint = t - self._character_state_component.entered_t
 	local slowdown_time = 0.11
 	local speed_mod = math.clamp(time_in_sprint, 0, slowdown_time) / slowdown_time
@@ -265,7 +265,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, input_sourc
 	local max_move_speed = sprint_move_speed + weapon_sprint_speed_mod
 	local archetype_stamina_template = self._archetype_stamina_template
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
-	local base_cost_per_second = (weapon_stamina_template and weapon_stamina_template.sprint_cost_per_second) or math.huge
+	local base_cost_per_second = weapon_stamina_template and weapon_stamina_template.sprint_cost_per_second or math.huge
 	local buff_cost_multiplier = stat_buffs.sprinting_cost_multiplier
 	local cost_per_second = base_cost_per_second * buff_cost_multiplier
 	local remaining_stamina = Stamina.drain(self._unit, cost_per_second * dt, t)
@@ -357,7 +357,7 @@ end
 
 local _abort_sprint_table = {}
 
-for i = 1, #ActionHandlerSettings.abort_sprint, 1 do
+for i = 1, #ActionHandlerSettings.abort_sprint do
 	local action_kind = ActionHandlerSettings.abort_sprint[i]
 	_abort_sprint_table[action_kind] = true
 end

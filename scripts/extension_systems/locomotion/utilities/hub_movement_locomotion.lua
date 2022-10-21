@@ -11,7 +11,7 @@ HubMovementLocomotion.update_movement = function (unit, dt, velocity_current, ve
 	local current_to_wanted_angle = Vector3.flat_angle(velocity_current_dir, velocity_wanted_dir)
 	local is_stopping = Vector3.length_squared(velocity_wanted) == 0
 	local is_moving = Vector3.length_squared(velocity_current) > 0
-	local acc = (hub_active_stopping and ((movement_settings_override and movement_settings_override.active_deceleration) or move_state_movement_settings.active_deceleration)) or (is_stopping and ((movement_settings_override and movement_settings_override.deceleration) or move_state_movement_settings.deceleration)) or (movement_settings_override and movement_settings_override.acceleration) or move_state_movement_settings.acceleration
+	local acc = hub_active_stopping and (movement_settings_override and movement_settings_override.active_deceleration or move_state_movement_settings.active_deceleration) or is_stopping and (movement_settings_override and movement_settings_override.deceleration or move_state_movement_settings.deceleration) or movement_settings_override and movement_settings_override.acceleration or move_state_movement_settings.acceleration
 	local new_velocity = nil
 	local velocity_diff = Vector3.flat(velocity_wanted - velocity_current)
 

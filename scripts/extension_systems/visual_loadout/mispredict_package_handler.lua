@@ -25,7 +25,7 @@ MispredictPackageHandler.post_update = function (self)
 
 	for fixed_frame, items in pairs(self._pending_unloads) do
 		if fixed_frame <= last_recieved_fixed_frame then
-			for i = 1, #items, 1 do
+			for i = 1, #items do
 				local item = items[i]
 
 				self:_unload_item_packages(item)
@@ -71,7 +71,7 @@ end
 
 MispredictPackageHandler.destroy = function (self)
 	for fixed_frame, items in pairs(self._pending_unloads) do
-		for i = 1, #items, 1 do
+		for i = 1, #items do
 			local item = items[i]
 
 			self:_unload_item_packages(item)

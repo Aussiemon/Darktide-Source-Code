@@ -127,7 +127,7 @@ BtChaosDaemonhostWarpSweepAction._deal_damage = function (self, unit, action_dat
 	local damage_profile = action_data.damage_profile
 	local damage_type = action_data.damage_type
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= unit then

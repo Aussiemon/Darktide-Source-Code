@@ -42,7 +42,7 @@ local function test(impact_fx_templates)
 			error_msg = _validate(error_msg, type(vfx) == "table", "%q: vfx needs to be a table.", name)
 			local num_vfx = #vfx
 
-			for i = 1, num_vfx, 1 do
+			for i = 1, num_vfx do
 				local entry = vfx[i]
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -56,7 +56,7 @@ local function test(impact_fx_templates)
 			error_msg = _validate(error_msg, type(vfx_1p) == "table", "%q: vfx_1p needs to be a table.", name)
 			local num_vfx_1p = #vfx_1p
 
-			for i = 1, num_vfx_1p, 1 do
+			for i = 1, num_vfx_1p do
 				local entry = vfx_1p[i]
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -70,7 +70,7 @@ local function test(impact_fx_templates)
 			error_msg = _validate(error_msg, type(vfx_3p) == "table", "%q: vfx_3p needs to be a table.", name)
 			local num_vfx_3p = #vfx_3p
 
-			for i = 1, num_vfx_3p, 1 do
+			for i = 1, num_vfx_3p do
 				local entry = vfx_3p[i]
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -102,7 +102,7 @@ local function test(impact_fx_templates)
 			error_msg = _validate(error_msg, type(material_switch_sfx) == "table", "%q: material_switch_sfx needs to be a table.", name)
 			local num_material_switch_sfx = #material_switch_sfx
 
-			for i = 1, num_material_switch_sfx, 1 do
+			for i = 1, num_material_switch_sfx do
 				error_msg = _validate(error_msg, material_switch_sfx[i].event, "%q: entry %d for material_switch_sfx needs to have 'event' entry defined", name, i)
 				error_msg = _validate(error_msg, material_switch_sfx[i].group, "%q: entry %d for material_switch_sfx needs to have 'group' entry defined", name, i)
 			end

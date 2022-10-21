@@ -32,7 +32,7 @@ BaseCamera.parse_parameters = function (self, camera_settings, parent_node)
 	self._fade_to_black = camera_settings.fade_to_black
 	self._vertical_fov = camera_settings.vertical_fov and camera_settings.vertical_fov * degrees_to_radians
 	self._custom_vertical_fov = camera_settings.custom_vertical_fov and camera_settings.custom_vertical_fov * degrees_to_radians
-	self._default_fov = (camera_settings.default_fov and camera_settings.default_fov * degrees_to_radians) or parent_node:default_fov()
+	self._default_fov = camera_settings.default_fov and camera_settings.default_fov * degrees_to_radians or parent_node:default_fov()
 	self._near_range = camera_settings.near_range or parent_node:near_range()
 	self._far_range = camera_settings.far_range or parent_node:far_range()
 	self._safe_position_offset = camera_settings.safe_position_offset or parent_node:safe_position_offset()
@@ -109,7 +109,7 @@ BaseCamera.fade_to_black = function (self)
 end
 
 BaseCamera.shading_environment = function (self)
-	return self._environment_params or (self._parent_node and self._parent_node:shading_environment())
+	return self._environment_params or self._parent_node and self._parent_node:shading_environment()
 end
 
 BaseCamera.near_range = function (self)

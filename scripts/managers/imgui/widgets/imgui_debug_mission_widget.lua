@@ -49,7 +49,7 @@ local function render_mission_dropdown(widget)
 	local focused_value = nil
 
 	if dropdown_is_active then
-		for i = 1, #maps, 1 do
+		for i = 1, #maps do
 			local opt_text = maps[i]
 			local opt_value = maps[i]
 			local selected = current_value.map == opt_value
@@ -97,7 +97,7 @@ local function render_circumstance_dropdown(widget)
 	local focused_value = nil
 
 	if dropdown_is_active then
-		for i = 1, #circumstances, 1 do
+		for i = 1, #circumstances do
 			local opt_text = circumstances[i]
 			local opt_value = circumstances[i]
 			local selected = current_value.circumstance_name == opt_value
@@ -145,7 +145,7 @@ local function render_side_mission_dropdown(widget)
 	local focused_value = nil
 
 	if dropdown_is_active then
-		for i = 1, #side_missions, 1 do
+		for i = 1, #side_missions do
 			local opt_text = side_missions[i]
 			local opt_value = side_missions[i]
 			local selected = current_value.side_mission == opt_value

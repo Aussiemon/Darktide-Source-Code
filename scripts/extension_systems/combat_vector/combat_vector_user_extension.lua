@@ -93,7 +93,7 @@ CombatVectorUserExtension._get_new_location = function (self, unit_position, loc
 	local range_locations = locations[combat_range]
 
 	if #range_locations == 0 then
-		local new_range = (combat_range == range_types.close and range_types.far) or range_types.close
+		local new_range = combat_range == range_types.close and range_types.far or range_types.close
 		range_locations = locations[new_range]
 
 		if not range_locations or #range_locations == 0 then
@@ -107,11 +107,11 @@ CombatVectorUserExtension._get_new_location = function (self, unit_position, loc
 	local config = self._config
 	local choose_furthest_away = config.choose_furthest_away
 	local choose_closest_to_target = config.choose_closest_to_target
-	local best_distance = (choose_furthest_away and 0) or math.huge
+	local best_distance = choose_furthest_away and 0 or math.huge
 	local target_unit = self._perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
 
-	for i = 1, #range_locations, 1 do
+	for i = 1, #range_locations do
 		local range_location = range_locations[i]
 
 		if not range_location.claimed then
@@ -125,7 +125,7 @@ CombatVectorUserExtension._get_new_location = function (self, unit_position, loc
 					new_location = range_location
 				end
 			else
-				local distance_to_range_position = Vector3.distance((choose_furthest_away and target_position) or unit_position, range_position)
+				local distance_to_range_position = Vector3.distance(choose_furthest_away and target_position or unit_position, range_position)
 
 				if min_dist < distance_to_range_position and distance_to_range_position < max_dist then
 					if choose_furthest_away then
@@ -176,7 +176,7 @@ CombatVectorUserExtension.update = function (self, unit, dt, t, context, nav_mes
 		local config = self._config
 		local valid_combat_ranges = config.valid_combat_ranges
 		local unit_position = POSITION_LOOKUP[unit]
-		local combat_range = (wants_new_location and self._wants_new_combat_range) or (valid_combat_ranges[current_combat_range] and current_combat_range) or config.default_combat_range
+		local combat_range = wants_new_location and self._wants_new_combat_range or valid_combat_ranges[current_combat_range] and current_combat_range or config.default_combat_range
 		local best_location_type, vector_type = self:_get_best_location_type(unit_position, claimed_location_counters, nav_mesh_locations, flank_positions, combat_vector_position, combat_range)
 		local chosen_location = nil
 

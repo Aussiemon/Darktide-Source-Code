@@ -84,7 +84,7 @@ end
 
 WwiseStateGroupCombat._update_locked_in_melee = function (self)
 	local locked_in_melee = self._music_parameter_extension:locked_in_melee()
-	local wwise_value = (locked_in_melee and 1) or 0
+	local wwise_value = locked_in_melee and 1 or 0
 
 	WwiseWorld.set_global_parameter(self._wwise_world, "player_locked_in_melee", wwise_value)
 end

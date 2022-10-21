@@ -52,7 +52,7 @@ SmartTagSystem.destroy = function (self)
 	self._network_event_delegate = nil
 	local tag_ids = table.keys(self._all_tags)
 
-	for i = 1, #tag_ids, 1 do
+	for i = 1, #tag_ids do
 		local tag_id = tag_ids[i]
 
 		self:_remove_tag_locally(tag_id, REMOVE_TAG_REASONS.smart_tag_system_destroyed)
@@ -82,7 +82,7 @@ SmartTagSystem.update = function (self, context, dt, t, ...)
 		end
 	end
 
-	for i = 1, #temp_remove_tag_ids, 1 do
+	for i = 1, #temp_remove_tag_ids do
 		local tag_id = temp_remove_tag_ids[i]
 		local reason = temp_remove_tag_reason[i]
 
@@ -106,7 +106,7 @@ SmartTagSystem.on_remove_extension = function (self, unit, extension_name)
 	local extension = self._unit_extension_data[unit]
 	local owned_tag_ids = extension:owned_tag_ids()
 
-	for i = 1, #owned_tag_ids, 1 do
+	for i = 1, #owned_tag_ids do
 		local tag_id = owned_tag_ids[i]
 
 		all_tags[tag_id]:clear_tagger()
@@ -288,7 +288,7 @@ end
 SmartTagSystem.is_unit_tagged = function (self, unit)
 	local tag_id = self:unit_tag_id(unit)
 
-	return (tag_id and true) or false
+	return tag_id and true or false
 end
 
 SmartTagSystem.location_tag_at_position = function (self, position, max_distance)
@@ -580,7 +580,7 @@ SmartTagSystem.rpc_set_smart_tag_hot_join = function (self, channel_id, tag_id, 
 
 	local replies = {}
 
-	for i = 1, #replier_array, 1 do
+	for i = 1, #replier_array do
 		local replier_game_object_id = replier_array[i]
 		local replier_unit = unit_spawner_manager:unit(replier_game_object_id)
 		local reply_name_id = reply_name_id_array[i]

@@ -39,9 +39,9 @@ local stat_circumstances_bonuses_icon_style = {
 	size = {
 		64,
 		64
-	},
-	offset = table.clone(stat_circumstances_bonuses_icon_style.orignal_offset)
+	}
 }
+stat_circumstances_bonuses_icon_style.offset = table.clone(stat_circumstances_bonuses_icon_style.orignal_offset)
 local styles = {
 	title_font_style = title_font_style,
 	mission_title_font_style = mission_title_font_style,

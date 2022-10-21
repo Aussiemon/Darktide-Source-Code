@@ -42,7 +42,7 @@ ClosestTargetingActionModule.fixed_update = function (self, dt, t)
 
 	local num_targets = 0
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
 
 		if target_unit and not hit_units[target_unit] then

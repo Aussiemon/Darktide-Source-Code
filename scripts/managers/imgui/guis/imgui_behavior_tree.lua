@@ -144,7 +144,7 @@ ImguiBehaviorTree._update_left_panel = function (self)
 	local history_stack = self._history_stack
 	local history_index = self._history_id
 
-	for i = 1, self._max_running_leaf_history, 1 do
+	for i = 1, self._max_running_leaf_history do
 		local text = ""
 		local history_entry = history_stack[history_index]
 
@@ -286,8 +286,8 @@ ImguiBehaviorTree._draw_behavior_tree = function (self, position_x, position_y, 
 	local curve_in_offset = self._curve_in_offset
 	TEMP_FORMATTING_CONFIG.font_size = font_size
 	TEMP_FORMATTING_CONFIG.text_distance = self._node_text_distance * zoom
-	TEMP_FORMATTING_CONFIG.width_padding = (self._use_node_width_padding_zoom and node_padding_x * zoom) or node_padding_x
-	TEMP_FORMATTING_CONFIG.height_padding = (self._use_node_height_padding_zoom and node_padding_y * zoom) or node_padding_y
+	TEMP_FORMATTING_CONFIG.width_padding = self._use_node_width_padding_zoom and node_padding_x * zoom or node_padding_x
+	TEMP_FORMATTING_CONFIG.height_padding = self._use_node_height_padding_zoom and node_padding_y * zoom or node_padding_y
 	TEMP_FORMATTING_CONFIG.curve_out_offset_x = curve_out_offset.x * zoom
 	TEMP_FORMATTING_CONFIG.curve_out_offset_y = curve_out_offset.y * zoom
 	TEMP_FORMATTING_CONFIG.curve_in_offset_x = curve_in_offset.x * zoom
@@ -305,7 +305,7 @@ ImguiBehaviorTree._draw_nodes = function (self, node, running_hierarchy, x, y, f
 
 	if children then
 		x = x + node_width + formatting_config.width_padding
-		local iterator_func = (#children > 0 and ipairs) or pairs
+		local iterator_func = #children > 0 and ipairs or pairs
 
 		for _, child_node in iterator_func(children) do
 			y = self:_draw_nodes(child_node, running_hierarchy, x, y, formatting_config, new_link_out_x, new_link_out_y)

@@ -30,7 +30,7 @@ MissionObjectiveZoneSystem.init = function (self, context, system_init_data, ...
 	self._servo_skull_target_extension = nil
 	self._progress = 0
 	self._scannable_units = {}
-	self._seed = (self._is_server and system_init_data.level_seed) or nil
+	self._seed = self._is_server and system_init_data.level_seed or nil
 	self._mission_objective_system = nil
 	self._spline_follower_system = nil
 	self._network_event_delegate = context.network_event_delegate
@@ -66,7 +66,7 @@ MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)
 
 	local seed = self._seed
 	local servo_skull_unit = self._servo_skull_unit
-	local servo_skull_unit_go_id = (servo_skull_unit and Managers.state.unit_spawner:game_object_id(servo_skull_unit)) or NetworkConstants.invalid_game_object_id
+	local servo_skull_unit_go_id = servo_skull_unit and Managers.state.unit_spawner:game_object_id(servo_skull_unit) or NetworkConstants.invalid_game_object_id
 
 	RPC.rpc_mission_objective_zone_system_hot_join_sync(channel, seed, servo_skull_unit_go_id)
 
@@ -148,11 +148,11 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 			local start_num_zones = math.min(num_end_positions, num_active_zones)
 			local counter = 0
 
-			for i = 1, start_num_zones, 1 do
+			for i = 1, start_num_zones do
 				local spline_end_position = spline_path_end_positions[i]
 				local selected_unit, closest = nil
 
-				for n = 1, num_units, 1 do
+				for n = 1, num_units do
 					local unit = sorted_units[n]
 					local unit_extension = self._unit_to_extension_map[unit]
 
@@ -175,7 +175,7 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 		else
 			random_table, seed = table.generate_random_table(1, #units, seed)
 
-			for i = 1, num_active_zones, 1 do
+			for i = 1, num_active_zones do
 				local index = random_table[i]
 				selected_units[#selected_units + 1] = sorted_units[index]
 			end
@@ -437,14 +437,14 @@ end
 
 MissionObjectiveZoneSystem.scannable_progression = function (self)
 	local extension = self:current_active_zone()
-	local scannable_progression = (extension and extension:num_objets_banked()) or 0
+	local scannable_progression = extension and extension:num_objets_banked() or 0
 
 	return scannable_progression
 end
 
 MissionObjectiveZoneSystem.second_progression = function (self)
 	local extension = self:current_active_zone()
-	local second_progression = (extension and extension:current_progression()) or 0
+	local second_progression = extension and extension:current_progression() or 0
 
 	return second_progression
 end

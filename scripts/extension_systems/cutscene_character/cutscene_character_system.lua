@@ -48,7 +48,7 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	local extensions_per_level = {}
 	local unit_level = Unit.level
 
-	for i = 1, #extensions, 1 do
+	for i = 1, #extensions do
 		local extension = extensions[i]
 
 		extension:unassign_player_loadout()
@@ -70,7 +70,7 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	if template.randomize_weapon then
 		table.shuffle(player_unique_ids)
 
-		for i = 1, num_players, 1 do
+		for i = 1, num_players do
 			local unique_id = player_unique_ids[i]
 
 			if i <= 2 then
@@ -96,12 +96,12 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	local slots_taken = {}
 	local none_slot = "none"
 
-	for i = 1, num_players, 1 do
+	for i = 1, num_players do
 		local unique_id = player_unique_ids[i]
 		local loadout_info = player_loadouts[unique_id]
 
 		for level, extensions_list in pairs(extensions_per_level) do
-			for j = 1, #extensions_list, 1 do
+			for j = 1, #extensions_list do
 				local extension = extensions_list[j]
 				local slot = extension:slot()
 
@@ -174,7 +174,7 @@ CutsceneCharacterSystem._fetch_players_loadout = function (self, cinematic_name)
 	local local_player = player_manager:local_player(1)
 	local local_unique_id = local_player and local_player:unique_id()
 	local local_player_only = template.local_player_only
-	local num_slots = (local_player_only and 1) or GameParameters.max_players
+	local num_slots = local_player_only and 1 or GameParameters.max_players
 	local slots_taken = 0
 	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 	local human_players = player_manager:human_players()

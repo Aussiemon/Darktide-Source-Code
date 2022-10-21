@@ -18,7 +18,7 @@ end
 local function _add_achievement_family(...)
 	local achievement_definitions = Factory.create_family(...)
 
-	for i = 1, #achievement_definitions, 1 do
+	for i = 1, #achievement_definitions do
 		AchievementList[#AchievementList + 1] = achievement_definitions[i]
 	end
 end
@@ -26,18 +26,15 @@ end
 local function _add_achievement_family_from_trigger(...)
 	local achievement_definitions = Factory.create_family_from_triggers(...)
 
-	for i = 1, #achievement_definitions, 1 do
+	for i = 1, #achievement_definitions do
 		AchievementList[#AchievementList + 1] = achievement_definitions[i]
 	end
 end
 
 local function _range(from, to, step)
 	local array = {}
-	slot4 = from
-	slot5 = to
-	slot6 = step or 1
 
-	for at = slot4, slot5, slot6 do
+	for at = from, to, step or 1 do
 		array[#array + 1] = at
 	end
 

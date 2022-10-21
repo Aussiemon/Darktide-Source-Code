@@ -101,7 +101,7 @@ ImguiInputWidgets.text_input = {
 
 		Imgui.pop_item_width()
 
-		if (return_value_on_enter and enter_pressed) or value ~= new_value then
+		if return_value_on_enter and enter_pressed or value ~= new_value then
 			on_value_changed(tostring(new_value), value)
 		end
 
@@ -181,9 +181,9 @@ ImguiInputWidgets.dropdown = {
 		fassert(not has_dynamic_contents or has_options_function, "%q can't have dynamic contents and static options list.", display_name)
 
 		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
-		local options_values = (has_options_function and options()) or options
+		local options_values = has_options_function and options() or options
 
-		for i = 1, #options_values, 1 do
+		for i = 1, #options_values do
 			options_texts[i] = WidgetUtilities.dropdown_value_to_string(options_values[i], number_format)
 		end
 
@@ -206,7 +206,7 @@ ImguiInputWidgets.dropdown = {
 
 		local label = widget.label
 		local value = nil
-		value = (not widget.get_value or widget.get_value()) and (widget.internal_value or "<not selected>")
+		value = widget.get_value and widget.get_value() or widget.internal_value or "<not selected>"
 		local on_value_changed = widget.on_value_changed
 		local options_texts = widget.options_texts
 		local options_values = widget.options_values
@@ -228,7 +228,7 @@ ImguiInputWidgets.dropdown = {
 		if is_active then
 			local focused_value = nil
 
-			for i = 1, #options_values, 1 do
+			for i = 1, #options_values do
 				local opt_text = options_texts[i]
 				local opt_value = options_values[i]
 				local selected = false

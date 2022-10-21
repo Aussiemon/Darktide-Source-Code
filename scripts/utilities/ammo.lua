@@ -204,43 +204,47 @@ local Ammo = {
 		else
 			return 1
 		end
-	end,
-	add_to_clip = function (inventory_slot_component, ammunition_to_add)
-		local max_ammo_in_clip = inventory_slot_component.max_ammunition_clip
-		local current_ammo_in_clip = inventory_slot_component.current_ammunition_clip
-		local new_ammo_clip_size = math.clamp(math.min(ammunition_to_add + current_ammo_in_clip, max_ammo_in_clip), 0, max_ammo_in_clip)
-		inventory_slot_component.current_ammunition_clip = new_ammo_clip_size
-		local actual_ammo_added = new_ammo_clip_size - current_ammo_in_clip
-
-		return actual_ammo_added
-	end,
-	transfer_from_reserve_to_clip = function (inventory_slot_component, ammunition_to_transfer)
-		local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
-		local actual_ammo_to_transfer = math.min(ammunition_to_transfer, current_ammo_in_reserve)
-		local actual_ammo_added = Ammo.add_to_clip(inventory_slot_component, actual_ammo_to_transfer)
-
-		if Managers.state.game_mode:is_locked_reserve_ammo() then
-			return
-		end
-
-		inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammo_added
-	end,
-	remove_from_reserve = function (inventory_slot_component, ammunition_to_remove)
-		local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
-		local actual_ammunition_to_remove = math.min(ammunition_to_remove, current_ammo_in_reserve)
-
-		if Managers.state.game_mode:is_locked_reserve_ammo() then
-			return
-		end
-
-		inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammunition_to_remove
-	end,
-	move_clip_to_reserve = function (inventory_slot_component)
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
-		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
-		inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve + current_ammunition_clip
-		inventory_slot_component.current_ammunition_clip = 0
 	end
 }
+
+Ammo.add_to_clip = function (inventory_slot_component, ammunition_to_add)
+	local max_ammo_in_clip = inventory_slot_component.max_ammunition_clip
+	local current_ammo_in_clip = inventory_slot_component.current_ammunition_clip
+	local new_ammo_clip_size = math.clamp(math.min(ammunition_to_add + current_ammo_in_clip, max_ammo_in_clip), 0, max_ammo_in_clip)
+	inventory_slot_component.current_ammunition_clip = new_ammo_clip_size
+	local actual_ammo_added = new_ammo_clip_size - current_ammo_in_clip
+
+	return actual_ammo_added
+end
+
+Ammo.transfer_from_reserve_to_clip = function (inventory_slot_component, ammunition_to_transfer)
+	local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
+	local actual_ammo_to_transfer = math.min(ammunition_to_transfer, current_ammo_in_reserve)
+	local actual_ammo_added = Ammo.add_to_clip(inventory_slot_component, actual_ammo_to_transfer)
+
+	if Managers.state.game_mode:is_locked_reserve_ammo() then
+		return
+	end
+
+	inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammo_added
+end
+
+Ammo.remove_from_reserve = function (inventory_slot_component, ammunition_to_remove)
+	local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
+	local actual_ammunition_to_remove = math.min(ammunition_to_remove, current_ammo_in_reserve)
+
+	if Managers.state.game_mode:is_locked_reserve_ammo() then
+		return
+	end
+
+	inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammunition_to_remove
+end
+
+Ammo.move_clip_to_reserve = function (inventory_slot_component)
+	local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+	local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
+	inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve + current_ammunition_clip
+	inventory_slot_component.current_ammunition_clip = 0
+end
 
 return Ammo

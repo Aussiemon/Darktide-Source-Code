@@ -44,6 +44,7 @@ end
 ServoSkullExtension.update = function (self, unit, dt, t)
 	if self._is_server then
 		if self._servo_skull_state == STATES.inactive then
+			-- Nothing
 		elseif self._servo_skull_state == STATES.traveling then
 			if not self._player_close then
 				if self:_servo_skull_is_wandering() then
@@ -100,7 +101,7 @@ end
 ServoSkullExtension._zone_has_active_scannables = function (self)
 	local scannable_units = self._scannable_units
 
-	for i = 1, #scannable_units, 1 do
+	for i = 1, #scannable_units do
 		local scannable_unit = scannable_units[i]
 		local script = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 
@@ -143,7 +144,7 @@ ServoSkullExtension.at_end_of_spline = function (self, last_spline)
 			local scannable_units_distance = self._scannable_units_distance
 			local servo_skull_position = POSITION_LOOKUP[self._unit]
 
-			for i = 1, #scannable_units, 1 do
+			for i = 1, #scannable_units do
 				local scannable_unit = scannable_units[i]
 				scannable_units_distance[scannable_unit] = Vector3.distance(POSITION_LOOKUP[scannable_unit], servo_skull_position)
 			end
@@ -159,7 +160,7 @@ end
 ServoSkullExtension.player_nearby = function (self, player_nearby)
 	if self._player_close ~= player_nearby then
 		self._player_close = player_nearby
-		local flow_event_name = (player_nearby and "lua_player_close") or "lua_no_player_close"
+		local flow_event_name = player_nearby and "lua_player_close" or "lua_no_player_close"
 
 		Unit.flow_event(self._unit, flow_event_name)
 
@@ -246,7 +247,7 @@ ServoSkullExtension._servo_skull_is_wandering = function (self)
 		end
 	end
 
-	return (closest_distance and wandering_distance < closest_distance) or false
+	return closest_distance and wandering_distance < closest_distance or false
 end
 
 return ServoSkullExtension

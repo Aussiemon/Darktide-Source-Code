@@ -59,10 +59,10 @@ PlayerUnitWeaponSpreadExtension._update_spread = function (self, dt, t, spread_s
 	local pitch = spread_component.pitch
 	local yaw = spread_component.yaw
 	local shooting_grace_duration = spread_settings.decay.from_shooting_grace_time or 0
-	local shooting = shooting_status_component.shooting or (not shooting_status_component.shooting and t <= shooting_status_component.shooting_end_time + shooting_grace_duration)
+	local shooting = shooting_status_component.shooting or not shooting_status_component.shooting and t <= shooting_status_component.shooting_end_time + shooting_grace_duration
 	local spread_settings_decay = spread_settings.decay
 	local player_event_grace, player_event_decay = self:_player_event_decay(spread_settings_decay, t)
-	local decay_settings = (player_event_grace and player_event_decay) or (shooting and spread_settings.decay.shooting) or spread_settings.decay.idle
+	local decay_settings = player_event_grace and player_event_decay or shooting and spread_settings.decay.shooting or spread_settings.decay.idle
 	local min_pitch = spread_settings.continuous_spread.min_pitch
 	local min_yaw = spread_settings.continuous_spread.min_yaw
 	local start_pitch = min_pitch
@@ -153,7 +153,7 @@ PlayerUnitWeaponSpreadExtension._max_pitch_rotation = function (self, roll_rotat
 		return 0
 	end
 
-	local max_pitch_rotation = (pitch * yaw) / length
+	local max_pitch_rotation = pitch * yaw / length
 
 	return math.degrees_to_radians(max_pitch_rotation)
 end
@@ -235,8 +235,8 @@ PlayerUnitWeaponSpreadExtension.target_style_spread = function (self, current_ro
 
 	local seed = self._spread_control_component.seed
 	local random_value = nil
-	local current_shot = (bullseye and num_shots_fired - 1) or num_shots_fired
-	local max_shots = (bullseye and num_shots_in_attack - 1) or num_shots_in_attack
+	local current_shot = bullseye and num_shots_fired - 1 or num_shots_fired
+	local max_shots = bullseye and num_shots_in_attack - 1 or num_shots_in_attack
 	local shot_roll_current_angle = num_spread_circles * current_shot / max_shots
 	local shot_roll_spread_modifier = num_spread_circles / max_shots
 	seed, random_value = math.next_random(seed)
@@ -250,7 +250,7 @@ PlayerUnitWeaponSpreadExtension.target_style_spread = function (self, current_ro
 		random_roll = 0.9 + 0.2 * random_value
 	end
 
-	local roll = ((roll_offset or 0) + random_roll * shot_roll_spread_modifier * 2 + shot_roll_current_angle) - shot_roll_spread_modifier
+	local roll = (roll_offset or 0) + random_roll * shot_roll_spread_modifier * 2 + shot_roll_current_angle - shot_roll_spread_modifier
 	local rolled_rotation = roll * PI_2
 	local max_pitch_rotation = self:_max_pitch_rotation(rolled_rotation, spread_pitch, spread_yaw)
 	local shots_per_layer = max_shots / num_spread_circles
@@ -284,7 +284,7 @@ end
 
 function _rotation_from_offset(offset, previous_offset, max_delta, around_vector)
 	local diff = math.abs(previous_offset - offset)
-	local lerp_ratio = (diff == 0 and 1) or math.min(max_delta, 1)
+	local lerp_ratio = diff == 0 and 1 or math.min(max_delta, 1)
 	local lerped_offset = math.lerp(previous_offset, offset, lerp_ratio)
 	local rotation = Quaternion(around_vector, math.degrees_to_radians(lerped_offset))
 

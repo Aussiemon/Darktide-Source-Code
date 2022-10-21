@@ -6,13 +6,8 @@ local function weapon_template_tests(weapon_templates)
 	for item_name, item in pairs(item_definitions) do
 		local weapon_template_name = item.weapon_template
 
-		if type(weapon_template_name) == "string" and weapon_template_name ~= "" then
-		else
+		if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
 			weapon_template_name = false
-
-			if false then
-				weapon_template_name = true
-			end
 		end
 
 		local workflow_state = item.workflow_state

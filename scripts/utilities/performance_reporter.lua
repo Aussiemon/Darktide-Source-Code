@@ -29,15 +29,15 @@ PerformanceReporter.update = function (self, dt, t)
 end
 
 PerformanceReporter._update_min_values = function (self, ms_per_frame, batchcount, primitives_count)
-	self._min_ms_per_frame = (ms_per_frame < self._min_ms_per_frame and ms_per_frame) or self._min_ms_per_frame
-	self._min_batchcount = (batchcount < self._min_batchcount and batchcount) or self._min_batchcount
-	self._min_primitives_count = (primitives_count < self._min_primitives_count and primitives_count) or self._min_primitives_count
+	self._min_ms_per_frame = ms_per_frame < self._min_ms_per_frame and ms_per_frame or self._min_ms_per_frame
+	self._min_batchcount = batchcount < self._min_batchcount and batchcount or self._min_batchcount
+	self._min_primitives_count = primitives_count < self._min_primitives_count and primitives_count or self._min_primitives_count
 end
 
 PerformanceReporter._update_max_values = function (self, ms_per_frame, batchcount, primitives_count)
-	self._max_ms_per_frame = (self._max_ms_per_frame < ms_per_frame and ms_per_frame) or self._max_ms_per_frame
-	self._max_batchcount = (self._max_batchcount < batchcount and batchcount) or self._max_batchcount
-	self._max_primitives_count = (self._max_primitives_count < primitives_count and primitives_count) or self._max_primitives_count
+	self._max_ms_per_frame = self._max_ms_per_frame < ms_per_frame and ms_per_frame or self._max_ms_per_frame
+	self._max_batchcount = self._max_batchcount < batchcount and batchcount or self._max_batchcount
+	self._max_primitives_count = self._max_primitives_count < primitives_count and primitives_count or self._max_primitives_count
 end
 
 PerformanceReporter._update_avg_values = function (self, ms_per_frame, batchcount, primitives_count)

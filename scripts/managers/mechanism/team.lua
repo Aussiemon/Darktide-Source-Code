@@ -18,7 +18,7 @@ Team.add_peer = function (self, peer_id)
 
 	local slot_id = 0
 
-	for i = 1, self._num_slots, 1 do
+	for i = 1, self._num_slots do
 		if not self._slots[i] then
 			slot_id = i
 

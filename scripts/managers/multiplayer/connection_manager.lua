@@ -1,7 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
 local ConnectionManager = class("ConnectionManager")
@@ -79,6 +75,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 		self._client = Network.init_wan_server(self.config_file_name, self.wan_port, self.oodle_net_file_name, game_udp_cert, game_udp_key)
 		self._client_destructor = Network.shutdown_lan_client
 	elseif options.network_platform == "wan_client" then
+		-- Nothing
 	elseif options.network_platform == "steam" then
 		self._client = Network.init_steam_client(self.config_file_name)
 		self._client_destructor = Network.shutdown_steam_client
@@ -125,7 +122,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	self._members = {}
 	local event_listeners = {}
 
-	for i = 1, #EVENT_NAMES, 1 do
+	for i = 1, #EVENT_NAMES do
 		event_listeners[EVENT_NAMES[i]] = {}
 	end
 
@@ -540,8 +537,6 @@ ConnectionManager._update_client = function (self, dt)
 	self._connection_client:update(dt)
 
 	while true do
-
-		-- Decompilation error in this vicinity:
 		local event, parameters = self._connection_client:next_event()
 
 		if event == nil then
@@ -551,7 +546,31 @@ ConnectionManager._update_client = function (self, dt)
 		local peer_id = parameters.peer_id
 		local channel_id = parameters.channel_id
 
-		self:_member_left(peer_id)
+		if event == "connecting" then
+			self._channel_to_peer[channel_id] = peer_id
+			self._peer_to_channel[peer_id] = channel_id
+
+			_info("Peer %s is connecting", peer_id)
+		elseif event == "connected" then
+			self:_peer_connected(channel_id, peer_id)
+		elseif event == "disconnected" then
+			local is_error = not parameters.engine_reason or parameters.engine_reason ~= "closed_connection"
+			local host_peer_id = self._connection_client:host()
+
+			if peer_id == host_peer_id then
+				self:_shutdown_connection_client(is_error, parameters.game_reason, parameters.engine_reason)
+
+				break
+			else
+				self:_peer_disconnected(channel_id, peer_id, IS_NOT_HOST, is_error, parameters.game_reason, parameters.engine_reason)
+			end
+		elseif event == "player_connected" then
+			local player_sync_data = parameters.player_sync_data
+
+			self:_member_joined(peer_id, player_sync_data)
+		elseif event == "player_disconnected" then
+			self:_member_left(peer_id)
+		end
 	end
 end
 
@@ -559,8 +578,6 @@ ConnectionManager._update_host = function (self, dt)
 	self._connection_host:update(dt)
 
 	while true do
-
-		-- Decompilation error in this vicinity:
 		local event, parameters = self._connection_host:next_event()
 
 		if event == nil then
@@ -570,7 +587,18 @@ ConnectionManager._update_host = function (self, dt)
 		local peer_id = parameters.peer_id
 		local channel_id = parameters.channel_id
 
-		self:_remove_client(channel_id, peer_id, parameters.game_reason, parameters.engine_reason)
+		if event == "connecting" then
+			self._channel_to_peer[channel_id] = peer_id
+			self._peer_to_channel[peer_id] = channel_id
+
+			self:_detected_client(channel_id, peer_id)
+		elseif event == "connected" then
+			local player_sync_data = parameters.player_sync_data
+
+			self:_add_client(channel_id, peer_id, player_sync_data)
+		elseif event == "disconnected" then
+			self:_remove_client(channel_id, peer_id, parameters.game_reason, parameters.engine_reason)
+		end
 	end
 end
 

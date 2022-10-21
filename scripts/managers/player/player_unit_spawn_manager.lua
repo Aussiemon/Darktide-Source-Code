@@ -83,7 +83,7 @@ end
 PlayerUnitSpawnManager._freeze_ragdoll = function (self, player_unit, frozen_ragdolls)
 	local num_actors = Unit.num_actors(player_unit)
 
-	for actor_index = 1, num_actors, 1 do
+	for actor_index = 1, num_actors do
 		local actor = Unit.actor(player_unit, actor_index)
 		local is_dynamic = Actor.is_dynamic(actor)
 		local is_physical = is_dynamic and not Actor.is_kinematic(actor)

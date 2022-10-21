@@ -12,11 +12,7 @@ local CutscenePlayerLoadout = {
 		for slot_name, _ in pairs(slot_configuration) do
 			if not ignored_slots[slot_name] then
 				local item = visual_loadout[slot_name]
-
-				if item then
-					items[slot_name] = item
-					slot14 = item.name or ""
-				end
+				local item_name = item and (item.name or "")
 			end
 		end
 

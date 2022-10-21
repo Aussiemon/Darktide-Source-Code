@@ -14,76 +14,80 @@ local Crouch = {
 		end
 
 		return wants_crouch
-	end,
-	check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
-		Profiler.start("crouch")
+	end
+}
 
-		local is_crouching = movement_state_component.is_crouching
-		local wants_crouch = nil
+Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
+	Profiler.start("crouch")
 
-		if input_source:get("hold_to_crouch") then
-			wants_crouch = input_source:get("crouching")
-		elseif input_source:get("crouch") then
-			wants_crouch = not is_crouching
-		else
-			wants_crouch = is_crouching
-		end
+	local is_crouching = movement_state_component.is_crouching
+	local wants_crouch = nil
 
-		if wants_crouch and not is_crouching then
-			Crouch.enter(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+	if input_source:get("hold_to_crouch") then
+		wants_crouch = input_source:get("crouching")
+	elseif input_source:get("crouch") then
+		wants_crouch = not is_crouching
+	else
+		wants_crouch = is_crouching
+	end
 
-			is_crouching = true
-		elseif not wants_crouch and is_crouching and Crouch.can_exit(unit) then
-			Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+	if wants_crouch and not is_crouching then
+		Crouch.enter(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
 
-			is_crouching = false
-		end
+		is_crouching = true
+	elseif not wants_crouch and is_crouching and Crouch.can_exit(unit) then
+		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
 
-		Profiler.stop("crouch")
+		is_crouching = false
+	end
 
-		return is_crouching
-	end,
-	can_exit = function (unit)
-		local mover = Unit.mover(unit)
-		local position = Mover.position(mover)
+	Profiler.stop("crouch")
 
-		return Unit.mover_fits_at(unit, "default", position)
-	end,
-	enter = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
-		animation_extension:anim_event("to_crouch")
-		animation_extension:anim_event_1p("to_crouch")
-		first_person_extension:set_wanted_player_height("crouch", 0.3)
-		ScriptUnit.extension(unit, "locomotion_system"):set_active_mover("crouch")
+	return is_crouching
+end
 
-		movement_state_component.is_crouching = true
-		movement_state_component.is_crouching_transition_start_t = t
-		local spread_template = weapon_extension:spread_template()
+Crouch.can_exit = function (unit)
+	local mover = Unit.mover(unit)
+	local position = Mover.position(mover)
+
+	return Unit.mover_fits_at(unit, "default", position)
+end
+
+Crouch.enter = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+	animation_extension:anim_event("to_crouch")
+	animation_extension:anim_event_1p("to_crouch")
+	first_person_extension:set_wanted_player_height("crouch", 0.3)
+	ScriptUnit.extension(unit, "locomotion_system"):set_active_mover("crouch")
+
+	movement_state_component.is_crouching = true
+	movement_state_component.is_crouching_transition_start_t = t
+	local spread_template = weapon_extension:spread_template()
+	local sway_template = weapon_extension:sway_template()
+
+	Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "crouch_transition")
+	Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
+end
+
+Crouch.exit = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+	animation_extension:anim_event("to_uncrouch")
+	animation_extension:anim_event_1p("to_uncrouch")
+	first_person_extension:set_wanted_player_height("default", 0.2)
+	ScriptUnit.extension(unit, "locomotion_system"):set_active_mover("default")
+
+	movement_state_component.is_crouching = false
+	movement_state_component.is_crouching_transition_start_t = t
+
+	if sway_control_component then
 		local sway_template = weapon_extension:sway_template()
 
 		Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "crouch_transition")
-		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
-	end,
-	exit = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
-		animation_extension:anim_event("to_uncrouch")
-		animation_extension:anim_event_1p("to_uncrouch")
-		first_person_extension:set_wanted_player_height("default", 0.2)
-		ScriptUnit.extension(unit, "locomotion_system"):set_active_mover("default")
-
-		movement_state_component.is_crouching = false
-		movement_state_component.is_crouching_transition_start_t = t
-
-		if sway_control_component then
-			local sway_template = weapon_extension:sway_template()
-
-			Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "crouch_transition")
-		end
-
-		if spread_control_component then
-			local spread_template = weapon_extension:spread_template()
-
-			Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
-		end
 	end
-}
+
+	if spread_control_component then
+		local spread_template = weapon_extension:spread_template()
+
+		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
+	end
+end
 
 return Crouch

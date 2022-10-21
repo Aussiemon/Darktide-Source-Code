@@ -30,7 +30,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	local header_width = width - settings_area_width
 	local header_passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
 
-	for i = 1, #header_passes, 1 do
+	for i = 1, #header_passes do
 		local pass = header_passes[i]
 
 		if pass.style_id and pass.style_id == "hotspot" then
@@ -455,7 +455,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	}
 	local default_hotspot_style = ListHeaderPassTemplates.default_hotspot_style
 
-	for i = 1, num_options, 1 do
+	for i = 1, num_options do
 		local current_fraction = (i - 1) / num_options
 		local hotspot_content = {
 			anim_hover_progress = 0,
@@ -521,8 +521,8 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			change_function = function (content, style)
 				local hotspot = content[hotspot_id]
 				local using_cursor_navigation = content.using_cursor_navigation
-				local cursor_navigation_progress = (using_cursor_navigation and hotspot.anim_hover_progress) or 0
-				local gamepad_navigation_progress = (not using_cursor_navigation and hotspot.anim_select_progress) or 0
+				local cursor_navigation_progress = using_cursor_navigation and hotspot.anim_hover_progress or 0
+				local gamepad_navigation_progress = not using_cursor_navigation and hotspot.anim_select_progress or 0
 				local progress = math.max(cursor_navigation_progress, gamepad_navigation_progress)
 				local focus_alpha = style.parent[text_id].text_color[1]
 				style.color[1] = math.min(255 * math.easeOutCubic(progress), focus_alpha)

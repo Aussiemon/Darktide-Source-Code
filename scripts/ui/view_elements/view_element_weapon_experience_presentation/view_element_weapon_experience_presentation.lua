@@ -59,7 +59,7 @@ local function linear_to_clip_depth(linear_depth, camera_near, camera_far)
 		return 0
 	end
 
-	return (camera_far * (linear_depth - camera_near)) / (linear_depth * (camera_far - camera_near))
+	return camera_far * (linear_depth - camera_near) / (linear_depth * (camera_far - camera_near))
 end
 
 ViewElementWeaponExperiencePresentation._get_spawn_position = function (self)
@@ -257,7 +257,7 @@ end
 
 ViewElementWeaponExperiencePresentation._set_next_level = function (self, level)
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.current_level_text.content.text = (level > 1 and tostring(level - 1)) or ""
+	widgets_by_name.current_level_text.content.text = level > 1 and tostring(level - 1) or ""
 	widgets_by_name.next_level_text.content.text = tostring(level)
 end
 

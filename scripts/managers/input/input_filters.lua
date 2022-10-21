@@ -37,9 +37,9 @@ InputFilters.virtual_axis = {
 		local forward = input_service:get(input_mappings.forward)
 		local back = input_service:get(input_mappings.back)
 		local up_key = input_mappings.up
-		local up = (up_key and input_service:get(up_key)) or 0
+		local up = up_key and input_service:get(up_key) or 0
 		local down_key = input_mappings.down
-		local down = (down_key and input_service:get(down_key)) or 0
+		local down = down_key and input_service:get(down_key) or 0
 		local result = Vector3(right - left, forward - back, up - down)
 
 		return result
@@ -112,7 +112,7 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 		return internal_filter_data
 	end,
 	update = function (filter_data, input_service)
-		local invert_look_y = (DevParameters[filter_data.invert_look_y] and -1) or 1
+		local invert_look_y = DevParameters[filter_data.invert_look_y] and -1 or 1
 		local multiplier = DevParameters[filter_data.multiplier]
 		local val = input_service:get(filter_data.input_mappings)
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
@@ -176,7 +176,7 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 			local atan2 = math_atan2(camera_forward.z - camera_horizon.z, camera_forward.y - camera_horizon.y)
 			local above_horizont = atan2 > 0
 			local moving_down = val.y < 0
-			local moving_towards_horizont = (above_horizont and moving_down) or (not above_horizont and not moving_down)
+			local moving_towards_horizont = above_horizont and moving_down or not above_horizont and not moving_down
 
 			if moving_towards_horizont then
 				local slow_down_angle = filter_data.angle_to_slow_down_inside
@@ -230,7 +230,7 @@ InputFilters.vector_x = {
 		return input.x * filter_data.multiplier
 	end
 }
-InputFilters.or = {
+InputFilters["or"] = {
 	init = function (filter_data)
 		return table.clone(filter_data)
 	end,
@@ -244,7 +244,7 @@ InputFilters.or = {
 		return false
 	end
 }
-InputFilters.and = {
+InputFilters["and"] = {
 	init = function (filter_data)
 		return table.clone(filter_data)
 	end,
@@ -258,7 +258,7 @@ InputFilters.and = {
 		return true
 	end
 }
-InputFilters.not = {
+InputFilters["not"] = {
 	init = function (filter_data)
 		return table.clone(filter_data)
 	end,

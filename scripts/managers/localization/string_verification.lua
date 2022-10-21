@@ -13,7 +13,7 @@ StringVerification.verify = function (text)
 		local forbidden_words_set = forbidden_words.words[len]
 
 		if forbidden_words_set then
-			for i = 1, #forbidden_words_set, 1 do
+			for i = 1, #forbidden_words_set do
 				if lowercase_word == forbidden_words_set[i] then
 					return string.rep("*", len)
 				end
@@ -25,11 +25,11 @@ StringVerification.verify = function (text)
 	local lowercase_text = string.lower(filtered_text)
 	local text_len = Utf8.string_length(lowercase_text)
 
-	for len = 1, text_len, 1 do
+	for len = 1, text_len do
 		local phrases = forbidden_words.phrases[len]
 
 		if phrases then
-			for i = 1, #phrases, 1 do
+			for i = 1, #phrases do
 				local phrase = phrases[i]
 				local offset = 0
 

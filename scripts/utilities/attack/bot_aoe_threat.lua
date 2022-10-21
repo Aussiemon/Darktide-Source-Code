@@ -79,17 +79,17 @@ BotAoeThreat.detect_oobb = function (nav_world, traverse_logic, bot_position, bo
 		return
 	end
 
-	local sign = (x_offset == 0 and 1 - math.random(0, 1) * 2) or math.sign(x_offset)
+	local sign = x_offset == 0 and 1 - math.random(0, 1) * 2 or math.sign(x_offset)
 	local to_direction = nil
 
-	for i = 1, 2, 1 do
+	for i = 1, 2 do
 		local to = bot_position - x_offset * right_vector + sign * (bot_radius + extents_x) * right_vector
 		local raycango = NavQueries.ray_can_go(nav_world, bot_position, to, traverse_logic, THREAT_NAV_MESH_ABOVE, THREAT_NAV_MESH_BELOW)
 
 		if raycango then
 			local in_liquid = false
 
-			if not in_liquid or (in_liquid and to_direction == nil) then
+			if not in_liquid or in_liquid and to_direction == nil then
 				to_direction = Vector3.normalize(to - bot_position)
 			end
 

@@ -18,7 +18,7 @@ local function dummy_update_frame_tables(side)
 	local player_units = side:added_player_units()
 	local num_player_units = #player_units
 
-	for i = 1, num_player_units, 1 do
+	for i = 1, num_player_units do
 		local unit = player_units[i]
 		local position = Vector3.zero()
 		num_human_and_bot_units = num_human_and_bot_units + 1
@@ -50,7 +50,7 @@ local function dummy_update_enemy_frame_tables(side)
 	local enemy_player_units = side:relation_player_units("enemy")
 	local num_enemy_player_units = #enemy_player_units
 
-	for i = 1, num_enemy_player_units, 1 do
+	for i = 1, num_enemy_player_units do
 		local unit = enemy_player_units[i]
 		local position = Vector3.zero()
 		num_human_and_bot_units = num_human_and_bot_units + 1
@@ -71,7 +71,7 @@ local function dummy_update_enemy_frame_tables(side)
 	local enemy_units = side:relation_units("enemy")
 	local num_enemy_units = #enemy_units
 
-	for i = 1, num_enemy_units, 1 do
+	for i = 1, num_enemy_units do
 		local unit = enemy_units[i]
 		num_ai_target_units = num_ai_target_units + 1
 		ai_target_units[num_ai_target_units] = unit
@@ -174,7 +174,7 @@ local function init_and_run_tests(side_system_object)
 	side_system:_add_unit_to_side("player_unit_2", 1)
 	side_system:_add_unit_to_side("player_unit_3", 1)
 
-	for i = 1, #side_compositions, 1 do
+	for i = 1, #side_compositions do
 		local side = sides[i]
 
 		dummy_update_frame_tables(side)
@@ -187,7 +187,7 @@ local function init_and_run_tests(side_system_object)
 	fassert(side_2:relation_player_units("enemy")[2] == "player_unit_3", "remove unit failed at removing from enemies.")
 	fassert(side_3:relation_player_units("enemy")[2] == "player_unit_3", "remove unit failed at removing from enemies.")
 
-	for i = 1, #side_compositions, 1 do
+	for i = 1, #side_compositions do
 		local side = sides[i]
 
 		dummy_update_frame_tables(side)
@@ -230,7 +230,7 @@ local function init_and_run_tests(side_system_object)
 	side_system:remove_unit_from_tag_units("player_unit_3")
 	side_system:_remove_unit_from_side("player_unit_3")
 
-	for i = 1, #side_compositions, 1 do
+	for i = 1, #side_compositions do
 		local side = sides[i]
 
 		dummy_update_frame_tables(side)

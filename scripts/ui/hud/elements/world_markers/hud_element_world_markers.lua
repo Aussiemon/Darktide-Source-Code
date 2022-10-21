@@ -33,7 +33,7 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 	self._marker_templates = {}
 	local marker_templates = HudElementWorldMarkersSettings.marker_templates
 
-	for i = 1, #marker_templates, 1 do
+	for i = 1, #marker_templates do
 		local template_path = marker_templates[i]
 		local template = require(template_path)
 		local name = template.name
@@ -63,7 +63,7 @@ HudElementWorldMarkers.destroy = function (self)
 end
 
 HudElementWorldMarkers._template_by_type = function (self, marker_type, clone)
-	return (clone and table.clone(self._marker_templates[marker_type])) or self._marker_templates[marker_type]
+	return clone and table.clone(self._marker_templates[marker_type]) or self._marker_templates[marker_type]
 end
 
 HudElementWorldMarkers.event_request_world_markers_list = function (self, response_callback)
@@ -76,7 +76,7 @@ HudElementWorldMarkers.event_remove_world_marker = function (self, id)
 	local marker_to_remove = nil
 	local markers = self._markers
 
-	for i = 1, #markers, 1 do
+	for i = 1, #markers do
 		local marker = markers[i]
 
 		if marker.id == id then
@@ -163,7 +163,7 @@ HudElementWorldMarkers._unregister_marker = function (self, marker)
 	local id = marker.id
 	markers_by_id[id] = nil
 
-	for i = 1, #markers, 1 do
+	for i = 1, #markers do
 		if markers[i].id == id then
 			markers[i].deleted = true
 
@@ -176,7 +176,7 @@ HudElementWorldMarkers._unregister_marker = function (self, marker)
 	local marker_type = marker.type
 	local type_markers = markers_by_type[marker_type]
 
-	for i = 1, #type_markers, 1 do
+	for i = 1, #type_markers do
 		if type_markers[i].id == id then
 			table.remove(type_markers, i)
 
@@ -228,7 +228,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 		local ALIVE = ALIVE
 
 		for marker_type, markers in pairs(markers_by_type) do
-			for i = 1, #markers, 1 do
+			for i = 1, #markers do
 				local marker = markers[i]
 				local id = marker.id
 				local template = marker.template
@@ -258,7 +258,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 
 						if ALIVE[unit] then
 							local unit_node = template.unit_node
-							local node = (unit_node and Unit.has_node(unit, unit_node) and Unit.node(unit, unit_node)) or 1
+							local node = unit_node and Unit.has_node(unit, unit_node) and Unit.node(unit, unit_node) or 1
 							marker_position = Unit.world_position(unit, node)
 						else
 							remove = true
@@ -306,7 +306,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						local camera_left = Vector3.cross(camera_direction, Vector3.up())
 						local left_dot_dir = Vector3.dot(camera_left, marker_direction)
 						local angle = math.atan2(left_dot_dir, forward_dot_dir)
-						local is_behind = (forward_dot_dir < 0 and true) or false
+						local is_behind = forward_dot_dir < 0 and true or false
 						local is_under = marker_position.z < camera_position.z
 						local x, y, _ = self:_convert_world_to_screen_position(camera, marker_position)
 						local screen_x, screen_y = self:_get_screen_offset(scale)
@@ -402,7 +402,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 		end
 
 		for marker_type, markers in pairs(markers_by_type) do
-			for i = 1, #markers, 1 do
+			for i = 1, #markers do
 				local marker = markers[i]
 
 				if marker.update then
@@ -422,7 +422,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 	local markers_to_remove = #temp_array_markers_to_remove
 
 	if markers_to_remove > 0 then
-		for i = 1, markers_to_remove, 1 do
+		for i = 1, markers_to_remove do
 			local marker = temp_array_markers_to_remove[i]
 
 			self:_unregister_marker(marker)
@@ -441,7 +441,7 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 		local markers_by_type = self._markers_by_type
 
 		for marker_type, markers in pairs(markers_by_type) do
-			for i = 1, #markers, 1 do
+			for i = 1, #markers do
 				local marker = markers[i]
 				local draw = marker.draw
 
@@ -455,7 +455,7 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 
 					if scale_settings then
 						marker.scale = self:_get_scale(scale_settings, distance)
-						local new_scale = (marker.ignore_scale and 1) or marker.scale
+						local new_scale = marker.ignore_scale and 1 or marker.scale
 
 						self:_apply_scale(widget, new_scale)
 					end
@@ -509,7 +509,7 @@ HudElementWorldMarkers._get_scale = function (self, scale_settings, distance)
 		return scale_settings.scale_to
 	else
 		local distance_fade_fraction = 1 - (distance - scale_settings.distance_min) / (scale_settings.distance_max - scale_settings.distance_min)
-		local eased_distance_scale_fraction = (easing_function and easing_function(distance_fade_fraction)) or distance_fade_fraction
+		local eased_distance_scale_fraction = easing_function and easing_function(distance_fade_fraction) or distance_fade_fraction
 		local adjusted_fade = scale_settings.scale_from + eased_distance_scale_fraction * (scale_settings.scale_to - scale_settings.scale_from)
 
 		return adjusted_fade
@@ -570,10 +570,10 @@ HudElementWorldMarkers._clamp_to_screen = function (self, x, y, screen_margins, 
 	local is_clamped_down = false
 	local root_width = root_size[1] * default_scale
 	local root_height = root_size[2] * default_scale
-	local margin_up = (screen_margins and screen_margins.up) or 0
-	local margin_down = (screen_margins and screen_margins.down) or 0
-	local margin_left = (screen_margins and screen_margins.left) or 0
-	local margin_right = (screen_margins and screen_margins.right) or 0
+	local margin_up = screen_margins and screen_margins.up or 0
+	local margin_down = screen_margins and screen_margins.down or 0
+	local margin_left = screen_margins and screen_margins.left or 0
+	local margin_right = screen_margins and screen_margins.right or 0
 	local clamped_x = math.max(margin_left, math.min(x, root_width - margin_right))
 	local clamped_y = math.max(margin_down, math.min(y, root_height - margin_up))
 	local is_clamped = clamped_x ~= x or clamped_y ~= y or is_behind
@@ -664,7 +664,7 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 	local raycasts_per_frame = HudElementWorldMarkersSettings.raycasts_per_frame
 	local num_raycast_to_check = math.min(num_raycast_queue, raycasts_per_frame)
 
-	for i = 1, num_raycast_to_check, 1 do
+	for i = 1, num_raycast_to_check do
 		local marker = marker_raycast_queue[i]
 		local widget = marker.widget
 		local content = widget.content

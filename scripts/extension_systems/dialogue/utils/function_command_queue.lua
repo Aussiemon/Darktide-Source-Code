@@ -10,13 +10,13 @@ FunctionCommandQueue.run_commands = function (self)
 	local command_queue = self.command_queue
 	local stride = self.command_stride
 
-	for index = 0, self.command_index - 1, 1 do
+	for index = 0, self.command_index - 1 do
 		local base_index = index * stride
 		local function_call = command_queue[base_index + 1]
 
 		function_call(unpack_index[stride - 1](command_queue, base_index + 2))
 
-		for j = 1, stride, 1 do
+		for j = 1, stride do
 			command_queue[base_index + j] = nil
 		end
 	end
@@ -41,7 +41,7 @@ FunctionCommandQueue.cleanup_destroyed_unit = function (self, unit)
 			if target_unit == unit then
 				local base_list_size = (list_size - 1) * stride
 
-				for j = 1, stride, 1 do
+				for j = 1, stride do
 					local copy_index = base_list_size + j
 					command_queue[base_index + j] = command_queue[copy_index]
 					command_queue[copy_index] = nil
@@ -69,7 +69,7 @@ FunctionCommandQueue.queue_function_command = function (self, function_call, ...
 
 	fassert(num_args < self.command_stride, "Trying to make a call with too many function args. Please increase in constructor.")
 
-	for i = 1, num_args, 1 do
+	for i = 1, num_args do
 		command_queue[base_index + i + 1] = select(i, ...)
 	end
 

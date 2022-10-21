@@ -13,7 +13,7 @@ end
 ImguiEnvironmentGui._set_header_texts = function (...)
 	local num_columns = select("#", ...)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.text_colored(select(i, ...), unpack(ImguiEnvironmentGui.HEADER))
 		Imgui.next_column()
 	end
@@ -24,7 +24,7 @@ ImguiEnvironmentGui._set_column_widths = function (...)
 
 	Imgui.columns(num_columns, true)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.set_column_width(select(i, ...), i - 1)
 	end
 end
@@ -38,7 +38,7 @@ ImguiEnvironmentGui.update = function (self, dt, t)
 		self._set_column_widths(600, 100, 100, 75, 100)
 		self._set_header_texts("Shading Environment Resource", "Percentage", "Blend Mask", "Layer", "Source")
 
-		for i = 1, #blends, 1 do
+		for i = 1, #blends do
 			local blend = blends[i]
 
 			Imgui.text(tostring(blend.resource_name))

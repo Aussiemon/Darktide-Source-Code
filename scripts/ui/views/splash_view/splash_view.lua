@@ -35,9 +35,9 @@ local function _handle_alignment(position, data, width, height, parent_size_x, p
 
 	if horizontal_alignment then
 		if horizontal_alignment == "center" then
-			position[1] = (position[1] + parent_size_x / 2) - width / 2
+			position[1] = position[1] + parent_size_x / 2 - width / 2
 		elseif horizontal_alignment == "right" then
-			position[1] = (position[1] + parent_size_x) - width
+			position[1] = position[1] + parent_size_x - width
 		end
 	end
 
@@ -45,9 +45,9 @@ local function _handle_alignment(position, data, width, height, parent_size_x, p
 
 	if vertical_alignment then
 		if vertical_alignment == "center" then
-			position[2] = (position[2] + parent_size_y / 2) - height / 2
+			position[2] = position[2] + parent_size_y / 2 - height / 2
 		elseif vertical_alignment == "bottom" then
-			position[2] = (position[2] + parent_size_y) - height
+			position[2] = position[2] + parent_size_y - height
 		end
 	end
 end
@@ -60,7 +60,7 @@ local temp_color = {
 }
 
 local function _get_entry_color(entry, alpha_multiplier)
-	local color = entry.color or (entry.style and (entry.style.color or entry.style.text_color))
+	local color = entry.color or entry.style and (entry.style.color or entry.style.text_color)
 
 	if color then
 		temp_color[1] = color[1] * alpha_multiplier
@@ -101,7 +101,7 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 		local page_definitions = self._page_definitions
 		local total_page_duration = 0
 
-		for i = 1, #page_definitions, 1 do
+		for i = 1, #page_definitions do
 			local page = page_definitions[i]
 			local page_duration = page.duration
 			local alpha_multiplier = 1
@@ -117,7 +117,7 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 					alpha_multiplier = math.easeOutCubic(pause_progress)
 				end
 
-				for j = 1, #page, 1 do
+				for j = 1, #page do
 					local entry = page[j]
 					local entry_type = entry.type
 					local position = entry.position
@@ -173,8 +173,8 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			else
 				total_page_duration = total_page_duration + page_duration
 
-				for k = 1, i, 1 do
-					for j = 1, #page_definitions[k], 1 do
+				for k = 1, i do
+					for j = 1, #page_definitions[k] do
 						local entry = page_definitions[k][j]
 						local entry_type = entry.type
 
@@ -203,7 +203,7 @@ SplashView._on_skip_pressed = function (self)
 		local page_definitions = self._page_definitions
 		local total_page_duration = 0
 
-		for i = 1, #page_definitions, 1 do
+		for i = 1, #page_definitions do
 			local page = page_definitions[i]
 			local page_duration = page.duration
 			total_page_duration = total_page_duration + page_duration
@@ -226,7 +226,7 @@ SplashView.update = function (self, dt, t)
 		local input_device_list = InputUtils.input_device_list
 		local xbox_controllers = input_device_list.xbox_controller
 
-		for i = 1, #xbox_controllers, 1 do
+		for i = 1, #xbox_controllers do
 			local xbox_controller = xbox_controllers[i]
 
 			if xbox_controller.active() and xbox_controller.any_pressed() then
@@ -234,7 +234,7 @@ SplashView.update = function (self, dt, t)
 			end
 		end
 	else
-		for i = 1, #device_list, 1 do
+		for i = 1, #device_list do
 			local device = device_list[i]
 
 			if device and device.active and device.any_pressed() then

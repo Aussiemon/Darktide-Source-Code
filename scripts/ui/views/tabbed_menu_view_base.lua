@@ -171,7 +171,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 	local tab_bar_views = table.clone_instance(tab_bar_params.tabs_params)
 
-	for i = 1, #tab_bar_views, 1 do
+	for i = 1, #tab_bar_views do
 		local tab_view = tab_bar_views[i]
 		local context = tab_view.context or {}
 
@@ -185,7 +185,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 	local layer = tab_bar_params.layer or 10
 	local tab_bar = self:_add_element(ViewElementMenuPanel, "tab_bar", layer)
 
-	for i = 1, #tab_bar_views, 1 do
+	for i = 1, #tab_bar_views do
 		local tab_params = tab_bar_views[i]
 		local show_tab = true
 
@@ -210,7 +210,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 	self:set_can_navigate(true)
 
-	self._next_tab_index = (#tab_bar_views > 0 and 1) or nil
+	self._next_tab_index = #tab_bar_views > 0 and 1 or nil
 end
 
 TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
@@ -218,7 +218,7 @@ TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
 	local input_legend = self:_add_element(ViewElementInputLegend, "input_legend", layer)
 	local buttons_params = input_legend_params.buttons_params
 
-	for i = 1, #buttons_params, 1 do
+	for i = 1, #buttons_params do
 		local legend_input = buttons_params[i]
 		local callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
@@ -237,7 +237,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 	local current_view = self._active_view
 	local ui_manager = Managers.ui
 
-	if (view ~= current_view and self._can_navigate) or not current_view then
+	if view ~= current_view and self._can_navigate or not current_view then
 		self:_close_active_view()
 
 		if view then

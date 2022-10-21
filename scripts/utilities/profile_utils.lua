@@ -10,9 +10,9 @@ local function profile_from_backend_data(backend_profile_data)
 	local profile_data = table.clone(backend_profile_data)
 	local character = profile_data.character
 	local archetype_name = character.archetype
-	local specialization = (character.career and character.career.specialization) or "none"
+	local specialization = character.career and character.career.specialization or "none"
 	local progression = backend_profile_data.progression
-	local current_level = (progression and progression.currentLevel) or 1
+	local current_level = progression and progression.currentLevel or 1
 	local item_ids = character.inventory
 	local backend_profile = {
 		character_id = character.id,
@@ -68,7 +68,7 @@ local function profile_from_backend_data(backend_profile_data)
 	local profile_talents = backend_profile.talents
 
 	if character_talents then
-		for i = 1, #character_talents, 1 do
+		for i = 1, #character_talents do
 			local talent_name = character_talents[i]
 			profile_talents[#profile_talents + 1] = talent_name
 		end
@@ -121,7 +121,7 @@ local function _generate_visual_loadout(visual_items)
 		local hidden_slots = data.item.hide_slots
 
 		if hidden_slots then
-			for i = 1, #hidden_slots, 1 do
+			for i = 1, #hidden_slots do
 				local hidden_slot_name = hidden_slots[i]
 				structure[hidden_slot_name] = nil
 			end
@@ -132,7 +132,7 @@ local function _generate_visual_loadout(visual_items)
 		local parent_slot_names = entry.parent_slot_names
 
 		if parent_slot_names then
-			for i = 1, #parent_slot_names, 1 do
+			for i = 1, #parent_slot_names do
 				local parent_slot_name = parent_slot_names[i]
 				local parent = structure[parent_slot_name]
 
@@ -307,7 +307,7 @@ ProfileUtils.split_for_network = function (profile_json, chunk_array)
 	local num_chunks = math.ceil(length / max_string_length)
 	local remaining_json = profile_json
 
-	for i = 1, num_chunks, 1 do
+	for i = 1, num_chunks do
 		local remaining_length = string.len(remaining_json)
 		local chunk_length = math.min(max_string_length, remaining_length)
 		local chunk = string.sub(remaining_json, 1, chunk_length)
@@ -319,7 +319,7 @@ end
 ProfileUtils.combine_network_chunks = function (chunk_array)
 	local profile_json = ""
 
-	for i = 1, #chunk_array, 1 do
+	for i = 1, #chunk_array do
 		local profile_chunk = chunk_array[i]
 		profile_json = profile_json .. profile_chunk
 	end
@@ -376,8 +376,8 @@ end
 ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	local archetype_name = character.archetype
 	local archetype = Archetypes[archetype_name]
-	local specialization = (character.career and character.career.specialization) or "none"
-	local current_level = (progression and progression.currentLevel) or 1
+	local specialization = character.career and character.career.specialization or "none"
+	local current_level = progression and progression.currentLevel or 1
 	local item_ids = character.inventory
 	local profile = {
 		character_id = character.id,
@@ -428,7 +428,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	local profile_talents = profile.talents
 
 	if character_talents then
-		for i = 1, #character_talents, 1 do
+		for i = 1, #character_talents do
 			local talent_name = character_talents[i]
 			profile_talents[talent_name] = true
 		end
@@ -452,7 +452,7 @@ ProfileUtils.character_title = function (profile)
 		local specializations = archetype.specializations
 		local specialization = specializations[specialization_key]
 		local title = specialization.title
-		local specialization_name = (title and Localize(title)) or ""
+		local specialization_name = title and Localize(title) or ""
 
 		return archetype_name .. " " .. specialization_name
 	else

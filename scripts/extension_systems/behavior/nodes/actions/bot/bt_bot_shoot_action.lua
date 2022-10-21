@@ -58,7 +58,7 @@ BtBotShootAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.can_charge_shot = attack_meta_data.can_charge_shot
 	scratchpad.charge_action_input = attack_meta_data.charge_action_input or "brace"
 	scratchpad.charge_against_armored_enemy = attack_meta_data.charge_against_armored_enemy
-	scratchpad.charge_range_sq = (attack_meta_data.charge_above_range and attack_meta_data.charge_above_range^2) or nil
+	scratchpad.charge_range_sq = attack_meta_data.charge_above_range and attack_meta_data.charge_above_range^2 or nil
 	scratchpad.charge_shot_delay = attack_meta_data.charge_shot_delay
 	scratchpad.charge_start_time = nil
 	scratchpad.charge_when_obstructed = attack_meta_data.charge_when_obstructed or false
@@ -73,8 +73,8 @@ BtBotShootAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.aim_fire_action_input = attack_meta_data.aim_fire_action_input or aim_attack_action.start_input or "zoom_shoot"
 	scratchpad.fired = false
 	scratchpad.first_person_component = unit_data_extension:read_component("first_person")
-	scratchpad.max_range_sq = (attack_meta_data.max_range and attack_meta_data.max_range^2) or math.huge
-	scratchpad.max_range_sq_charged = (attack_meta_data.max_range_charged and attack_meta_data.max_range_charged^2) or scratchpad.max_range_sq
+	scratchpad.max_range_sq = attack_meta_data.max_range and attack_meta_data.max_range^2 or math.huge
+	scratchpad.max_range_sq_charged = attack_meta_data.max_range_charged and attack_meta_data.max_range_charged^2 or scratchpad.max_range_sq
 	scratchpad.minimum_charge_time = attack_meta_data.minimum_charge_time
 	scratchpad.next_charge_shot_t = t
 	scratchpad.next_evaluate = t + action_data.evaluation_duration
@@ -235,7 +235,7 @@ BtBotShootAction._update_aim = function (self, unit, scratchpad, action_data, dt
 		self:_fire(scratchpad, action_data, bot_unit_input, t)
 	end
 
-	local evaluate = (scratchpad.fired and scratchpad.next_evaluate < t) or scratchpad.next_evaluate_without_firing < t
+	local evaluate = scratchpad.fired and scratchpad.next_evaluate < t or scratchpad.next_evaluate_without_firing < t
 
 	if evaluate then
 		scratchpad.next_evaluate = t + action_data.evaluation_duration
@@ -255,10 +255,10 @@ BtBotShootAction._aim_position = function (self, self_unit, scratchpad, dt, curr
 
 	if scratchpad.charging_shot then
 		projectile_template = scratchpad.projectile_template_charged
-		aim_at_node = (target_breed and target_breed.override_bot_target_node) or scratchpad.aim_at_node_charged
+		aim_at_node = target_breed and target_breed.override_bot_target_node or scratchpad.aim_at_node_charged
 	else
 		projectile_template = scratchpad.projectile_template
-		aim_at_node = (target_breed and target_breed.override_bot_target_node) or scratchpad.aim_at_node
+		aim_at_node = target_breed and target_breed.override_bot_target_node or scratchpad.aim_at_node
 	end
 
 	local wanted_rotation, aim_position = self:_wanted_aim_rotation(self_unit, target_unit, target_breed, current_position, projectile_template, aim_at_node)
@@ -352,15 +352,15 @@ BtBotShootAction._reevaluate_obstruction = function (self, self_unit, scratchpad
 	self:_update_collision_filter(target_unit, scratchpad)
 
 	local charging_shot = scratchpad.charging_shot
-	local ignore_allies = (charging_shot and scratchpad.ignore_hitting_allies_charged) or (not charging_shot and scratchpad.ignore_hitting_allies)
-	local ignore_enemies = (charging_shot and scratchpad.ignore_hitting_enemies_charged) or (not charging_shot and scratchpad.ignore_hitting_enemies)
+	local ignore_allies = charging_shot and scratchpad.ignore_hitting_allies_charged or not charging_shot and scratchpad.ignore_hitting_allies
+	local ignore_enemies = charging_shot and scratchpad.ignore_hitting_enemies_charged or not charging_shot and scratchpad.ignore_hitting_enemies
 	local direction = Quaternion.forward(wanted_aim_rotation)
-	local collision_filter = (charging_shot and scratchpad.collision_filter_charged) or scratchpad.collision_filter
+	local collision_filter = charging_shot and scratchpad.collision_filter_charged or scratchpad.collision_filter
 	local obstructed, distance_from_target, obstructed_by_static = self:_is_shot_obstructed(self_unit, scratchpad, collision_filter, ray_from, direction, target_unit, actual_aim_position, ignore_allies, ignore_enemies)
 	local fuzzyness = nil
 
 	if obstructed then
-		fuzzyness = (charging_shot and scratchpad.obstruction_fuzzyness_range_charged) or scratchpad.obstruction_fuzzyness_range
+		fuzzyness = charging_shot and scratchpad.obstruction_fuzzyness_range_charged or scratchpad.obstruction_fuzzyness_range
 
 		if fuzzyness and distance_from_target <= fuzzyness then
 			obstructed = false
@@ -382,7 +382,7 @@ BtBotShootAction._update_collision_filter = function (self, target_unit, scratch
 	local priority_target_enemy = perception_component.priority_target_enemy
 	local target_blackboard = BLACKBOARDS[target_unit]
 	local target_perception_component = target_blackboard and target_blackboard.perception
-	local has_important_target = target_unit == priority_target_enemy or (target_perception_component and target_perception_component.target_unit == target_ally_unit and (target_ally_need_type == "knocked_down" or target_ally_need_type == "ledge"))
+	local has_important_target = target_unit == priority_target_enemy or target_perception_component and target_perception_component.target_unit == target_ally_unit and (target_ally_need_type == "knocked_down" or target_ally_need_type == "ledge")
 
 	if has_important_target then
 		scratchpad.collision_filter = "filter_player_character_shooting_statics"
@@ -393,7 +393,7 @@ BtBotShootAction._update_collision_filter = function (self, target_unit, scratch
 
 	local attack_meta_data = scratchpad.attack_meta_data
 	local ignore_enemies_for_obstruction = attack_meta_data.ignore_enemies_for_obstruction
-	local ignore_enemies_for_obstruction_charged = (attack_meta_data.ignore_enemies_for_obstruction_charged == nil and ignore_enemies_for_obstruction) or attack_meta_data.ignore_enemies_for_obstruction_charged
+	local ignore_enemies_for_obstruction_charged = attack_meta_data.ignore_enemies_for_obstruction_charged == nil and ignore_enemies_for_obstruction or attack_meta_data.ignore_enemies_for_obstruction_charged
 	local ff_ranged = true
 	local ignore_hitting_allies, ignore_hitting_allies_charged = nil
 
@@ -409,8 +409,8 @@ BtBotShootAction._update_collision_filter = function (self, target_unit, scratch
 	scratchpad.ignore_hitting_allies = ignore_hitting_allies
 	scratchpad.ignore_hitting_enemies_charged = ignore_enemies_for_obstruction_charged
 	scratchpad.ignore_hitting_enemies = ignore_enemies_for_obstruction
-	scratchpad.collision_filter = (ignore_enemies_for_obstruction and ignore_hitting_allies and "filter_player_character_shooting_statics") or "filter_player_character_shooting"
-	scratchpad.collision_filter_charged = (ignore_enemies_for_obstruction_charged and ignore_hitting_allies_charged and "filter_player_character_shooting_statics") or "filter_player_character_shooting"
+	scratchpad.collision_filter = ignore_enemies_for_obstruction and ignore_hitting_allies and "filter_player_character_shooting_statics" or "filter_player_character_shooting"
+	scratchpad.collision_filter_charged = ignore_enemies_for_obstruction_charged and ignore_hitting_allies_charged and "filter_player_character_shooting_statics" or "filter_player_character_shooting"
 end
 
 local INDEX_DISTANCE = 2
@@ -434,7 +434,7 @@ BtBotShootAction._is_shot_obstructed = function (self, self_unit, scratchpad, co
 	local Health_is_ragdolled = Health.is_ragdolled
 	local num_hits = #raycast_hits
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		repeat
 			local hit = raycast_hits[i]
 			local hit_actor = hit[INDEX_ACTOR]
@@ -500,7 +500,7 @@ BtBotShootAction._should_charge = function (self, scratchpad, range_squared, tar
 		return false
 	end
 
-	if scratchpad.always_charge_before_firing or (scratchpad.charge_range_sq and scratchpad.charge_range_sq <= range_squared) then
+	if scratchpad.always_charge_before_firing or scratchpad.charge_range_sq and scratchpad.charge_range_sq <= range_squared then
 		return true
 	end
 
@@ -526,7 +526,7 @@ local AIM_REEVALUATION_INTERVAL = 0.1
 
 BtBotShootAction._aim_good_enough = function (self, unit, dt, t, scratchpad, yaw_offset, pitch_offset)
 	if scratchpad.reevaluate_aim_time < t then
-		local aim_data = (scratchpad.charging_shot and scratchpad.aim_data_charged) or scratchpad.aim_data
+		local aim_data = scratchpad.charging_shot and scratchpad.aim_data_charged or scratchpad.aim_data
 		local offset = math.sqrt(pitch_offset * pitch_offset + yaw_offset * yaw_offset)
 
 		if aim_data.max_radius < offset then
@@ -572,8 +572,8 @@ BtBotShootAction._may_fire = function (self, unit, scratchpad, range_squared, t)
 
 	local charging = scratchpad.charging_shot
 	local minimum_charge_time = scratchpad.minimum_charge_time
-	local sufficiently_charged = not minimum_charge_time or (not scratchpad.always_charge_before_firing and not charging) or (charging and minimum_charge_time <= t - scratchpad.charge_start_time)
-	local max_range_sq = (charging and scratchpad.max_range_sq_charged) or scratchpad.max_range_sq
+	local sufficiently_charged = not minimum_charge_time or not scratchpad.always_charge_before_firing and not charging or charging and minimum_charge_time <= t - scratchpad.charge_start_time
+	local max_range_sq = charging and scratchpad.max_range_sq_charged or scratchpad.max_range_sq
 	local may_fire = sufficiently_charged and range_squared < max_range_sq
 
 	if not may_fire then
@@ -597,7 +597,7 @@ BtBotShootAction._fire = function (self, scratchpad, action_data, bot_unit_input
 	local aiming_shot = scratchpad.aiming_shot
 	local fire_action_input = scratchpad.fire_action_input
 	local aim_fire_action_input = scratchpad.aim_fire_action_input
-	local action_input = (aiming_shot and aim_fire_action_input) or fire_action_input
+	local action_input = aiming_shot and aim_fire_action_input or fire_action_input
 	local raw_input = nil
 	scratchpad.fire_input_request_id = action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
 

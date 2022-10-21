@@ -318,5 +318,3 @@ end
 Testify.set_rpcs_registered_value = function (self, is_registered)
 	self._are_rpcs_registered = is_registered
 end
-
-return

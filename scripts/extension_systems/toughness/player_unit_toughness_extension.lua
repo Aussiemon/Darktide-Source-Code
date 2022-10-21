@@ -55,7 +55,7 @@ end
 
 PlayerUnitToughnessExtension.max_toughness = function (self)
 	local buffs = self._buff_extension and self._buff_extension:stat_buffs()
-	local buff_extra = (buffs and buffs.toughness) or 0
+	local buff_extra = buffs and buffs.toughness or 0
 
 	return self._max_toughness + buff_extra
 end
@@ -83,8 +83,8 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local velocity_magnitude = Vector3.length(locomotion_component.velocity_current)
 		local standing_still = velocity_magnitude > 0
 		local buffs = self._buff_extension:stat_buffs()
-		local base_rate = (standing_still and toughness_template.regeneration_speed.moving) or toughness_template.regeneration_speed.still
-		local weapon_rate_modifier = (weapon_toughness_template and ((standing_still and weapon_toughness_template.regeneration_speed_modifier.moving) or weapon_toughness_template.regeneration_speed_modifier.still)) or 1
+		local base_rate = standing_still and toughness_template.regeneration_speed.moving or toughness_template.regeneration_speed.still
+		local weapon_rate_modifier = weapon_toughness_template and (standing_still and weapon_toughness_template.regeneration_speed_modifier.moving or weapon_toughness_template.regeneration_speed_modifier.still) or 1
 		local buff_rate_modifier = buffs.toughness_regen_rate_modifier * buffs.toughness_regen_rate_multiplier
 		local coherency_rate_modifier = buffs.toughness_coherency_regen_rate_modifier
 		local regen_rate = base_rate * weapon_rate_modifier * buff_rate_modifier * coherency_rate_modifier
@@ -160,10 +160,10 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
 	local weapon_toughness_template = self._weapon_extension:toughness_template()
-	local modifier = (weapon_toughness_template and weapon_toughness_template.recovery_percentage_modifiers[recovery_type]) or 1
+	local modifier = weapon_toughness_template and weapon_toughness_template.recovery_percentage_modifiers[recovery_type] or 1
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local is_melee_kill = recovery_type == toughness_replenish_types.melee_kill
-	local toughness_melee_replenish_stat_buff = (is_melee_kill and stat_buffs.toughness_melee_replenish) or 1
+	local toughness_melee_replenish_stat_buff = is_melee_kill and stat_buffs.toughness_melee_replenish or 1
 	local total_toughness_replenish_stat_buff_multiplier = stat_buffs.toughness_replenish_multiplier
 	local stat_buff_multiplier = toughness_melee_replenish_stat_buff * total_toughness_replenish_stat_buff_multiplier
 	local recovery_percentage = toughness_template.recovery_percentages[recovery_type] * stat_buff_multiplier * modifier
@@ -251,7 +251,7 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 
 	local t = Managers.time:time("gameplay")
 	local buffs = self._buff_extension:stat_buffs()
-	local weapon_modifier = (weapon_toughness_template and weapon_toughness_template.regeneration_delay_modifier) or 1
+	local weapon_modifier = weapon_toughness_template and weapon_toughness_template.regeneration_delay_modifier or 1
 	local toughness_regen_delay_buff_modifier = (buffs.toughness_regen_delay_modifier or 1) * (buffs.toughness_regen_delay_multiplier or 1)
 	self._toughness_regen_delay = t + toughness_template.regeneration_delay * weapon_modifier * toughness_regen_delay_buff_modifier
 end

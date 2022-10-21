@@ -99,7 +99,7 @@ PacingManager.update = function (self, dt, t)
 	local decay_tension_rate = self._decay_tension_rate
 	local delay_duration = self._decay_tension_delay_duration
 
-	if not delay_duration or (delay_duration and delay_duration < t) then
+	if not delay_duration or delay_duration and delay_duration < t then
 		local new_tension = math.clamp(tension - dt * decay_tension_rate, 0, self._max_tension)
 		self._tension = new_tension
 		self._is_decaying_tension = new_tension > 0
@@ -147,7 +147,7 @@ PacingManager.update = function (self, dt, t)
 		local duration = conditions.duration
 
 		if duration and duration < t then
-			local state_name = (name == "next" and state_order.next_state) or state_order.back_state
+			local state_name = name == "next" and state_order.next_state or state_order.back_state
 
 			self:_change_state(t, state_name)
 
@@ -157,8 +157,8 @@ PacingManager.update = function (self, dt, t)
 		local tension_threshold = conditions.tension_threshold
 		local tension_min_threshold = conditions.tension_min_threshold
 
-		if (tension_threshold and tension_threshold <= tension) or (tension_min_threshold and tension <= tension_min_threshold) then
-			local state_name = (name == "next" and state_order.next_state) or state_order.back_state
+		if tension_threshold and tension_threshold <= tension or tension_min_threshold and tension <= tension_min_threshold then
+			local state_name = name == "next" and state_order.next_state or state_order.back_state
 
 			self:_change_state(t, state_name)
 
@@ -345,7 +345,7 @@ PacingManager._update_player_combat_state = function (self, dt, side_id)
 	local num_high = 0
 	local num_medium = 0
 
-	for i = 1, num_valid_player_units, 1 do
+	for i = 1, num_valid_player_units do
 		local player_unit = valid_player_units[i]
 		local tension = player_tension[player_unit] or 0
 		local new_tension = math.max(tension - dt * (base_decay_rate + decay_tension_rate), 0)

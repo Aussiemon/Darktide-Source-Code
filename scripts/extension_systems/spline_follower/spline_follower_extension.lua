@@ -62,6 +62,7 @@ end
 
 SplineFollowerExtension.update = function (self, unit, dt, t)
 	if self._current_state == STATES.waiting then
+		-- Nothing
 	elseif self._current_state == STATES.moving then
 		local new_speed = 0
 		local movement = self._spline_curve:movement()
@@ -91,7 +92,7 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 
 				self._servo_skull_extension:player_nearby(player_nearby)
 
-				target_speed = (player_speed == 0 and ground_speed) or player_speed
+				target_speed = player_speed == 0 and ground_speed or player_speed
 			end
 
 			local old_speed = movement:speed()
@@ -147,7 +148,7 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 	elseif self._current_state == STATES.end_of_spline then
 		local last_spline = self._last_spline
 		self._is_moving = false
-		local state = (last_spline and STATES.finished) or STATES.waiting
+		local state = last_spline and STATES.finished or STATES.waiting
 
 		self:_set_state(state)
 
@@ -211,7 +212,7 @@ SplineFollowerExtension._players_in_proximity = function (self)
 
 	local closest_player, closest_distance = nil
 
-	for i = 1, #valid_player_units, 1 do
+	for i = 1, #valid_player_units do
 		local unit = valid_player_units[i]
 		local position = POSITION_LOOKUP[unit]
 		local distance = Vector3.distance(position, follow_unit_position)
@@ -289,7 +290,7 @@ SplineFollowerExtension.hot_join_sync = function (self, current_spline_index, is
 		Unit.set_local_position(unit, 1, position)
 		Unit.set_local_rotation(unit, 1, rotation)
 
-		self._current_spline_index = (is_moving and current_spline_index - 1) or current_spline_index
+		self._current_spline_index = is_moving and current_spline_index - 1 or current_spline_index
 
 		if is_moving then
 			self:follow_spline(objective_name)

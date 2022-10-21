@@ -25,9 +25,9 @@ local scenegraph_definition = {
 }
 local widget_definitions = {}
 local position_x = start_offset[1] + panel_offset[1]
-local position_y = (start_offset[2] + panel_offset[2]) - personal_player_panel_size[2]
+local position_y = start_offset[2] + panel_offset[2] - personal_player_panel_size[2]
 
-for i = 1, max_panels - 1, 1 do
+for i = 1, max_panels - 1 do
 	local scenegraph_id = "player_" .. i
 	local position = {
 		position_x,

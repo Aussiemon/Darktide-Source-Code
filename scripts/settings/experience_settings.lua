@@ -33,7 +33,7 @@ local experience_per_level_array = {
 local num_defined_levels = #experience_per_level_array
 local total_defined_experience = 0
 
-for i = 1, num_defined_levels, 1 do
+for i = 1, num_defined_levels do
 	total_defined_experience = total_defined_experience + experience_per_level_array[i]
 end
 

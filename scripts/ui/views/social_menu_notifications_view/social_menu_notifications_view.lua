@@ -78,7 +78,7 @@ SocialMenuNotificationsView._create_notification_widgets = function (self)
 	local blueprints = self._definitions.notification_blueprints
 	local notification_types = self._definitions.notification_types
 
-	for i = 1, #notifications, 1 do
+	for i = 1, #notifications do
 		local notification = notifications[i]
 		local type_settings = notification_types[notification.notification_type]
 		local blueprint_name = type_settings.blueprint
@@ -97,7 +97,7 @@ end
 
 SocialMenuNotificationsView._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -114,7 +114,7 @@ SocialMenuNotificationsView._update_notification_widgets = function (self, dt, i
 	local seconds_in_an_hour = seconds_in_a_minute * 60
 	local seconds_in_a_day = seconds_in_an_hour * 24
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local widget_content = widget.content
 		local age = widget_content.age + dt
@@ -153,7 +153,7 @@ SocialMenuNotificationsView._draw_grid_widgets = function (self, dt, t, input_se
 	local grid = self._grid
 	local grid_widgets = self._grid_widgets
 
-	for i = 1, #grid_widgets, 1 do
+	for i = 1, #grid_widgets do
 		local widget = grid_widgets[i]
 
 		if grid:is_widget_visible(widget) then
@@ -242,7 +242,7 @@ SocialMenuNotificationsView._set_dummy_data = function (self, num_items)
 	num_items = num_items or math.floor(math.random() * 1.05)
 	local last_used_time_stamp = dummy_data.server_time
 
-	for i = 1, num_items, 1 do
+	for i = 1, num_items do
 		local random_notification = self:_generate_random_notification(i, last_used_time_stamp)
 		dummy_data.notifications[i] = random_notification
 		last_used_time_stamp = random_notification.time

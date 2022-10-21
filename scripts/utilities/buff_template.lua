@@ -9,7 +9,7 @@ local function _calculate_buff_values(buff_values, i)
 end
 
 BuffTemplate.generate_weapon_trait_buff_templates = function (templates, template, amount)
-	for i = 1, amount, 1 do
+	for i = 1, amount do
 		local template_clone = table.clone(template)
 		local stat_buffs = template_clone.stat_buffs
 

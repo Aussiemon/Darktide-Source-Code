@@ -9,7 +9,7 @@ PropShieldExtension.setup_from_component = function (self, actor_names)
 	local unit = self._unit
 	local shield_actors = self._shield_actors
 
-	for i = 1, #actor_names, 1 do
+	for i = 1, #actor_names do
 		shield_actors[Unit.actor(unit, actor_names[i])] = true
 	end
 end

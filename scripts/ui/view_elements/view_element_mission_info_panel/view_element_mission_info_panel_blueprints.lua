@@ -37,7 +37,7 @@ blueprint_templates.report_header = {
 			style_id = "time_left",
 			pass_type = "text",
 			value_id = "time_left",
-			value = "\ue007 40:30",
+			value = " 40:30",
 			change_function = function (content, style)
 				content.time_left = content.time_left_update()
 			end
@@ -110,8 +110,8 @@ blueprint_templates.risk_and_reward = {
 		local widget_content = widget.content
 		widget_content.resistance = string.format(difficulty_material_format, mission_data.resistance)
 		widget_content.challenge = string.format(difficulty_material_format, mission_data.challenge)
-		widget_content.tag_xp = string.format("%d \ue032", mission_data.mission_xp)
-		widget_content.tag_reward = string.format("%d \ue031", mission_data.mission_reward)
+		widget_content.tag_xp = string.format("%d ", mission_data.mission_xp)
+		widget_content.tag_reward = string.format("%d ", mission_data.mission_reward)
 	end
 }
 blueprint_templates.negative_circumstance_header = {
@@ -156,7 +156,7 @@ blueprint_templates.circumstance_bullet_point = {
 	size = blueprint_styles.circumstance_bullet_point.size,
 	pass_template = {
 		{
-			value = "�",
+			value = "•",
 			value_id = "bullet",
 			pass_type = "text",
 			style_id = "bullet"
@@ -310,18 +310,18 @@ local function _prepare_circumstance_data(circumstance, num_elements)
 		local circumstance_header_data = nil
 		circumstance_header_data, num_elements = _next_element(num_elements)
 		local is_positive_circumstance = circumstance_template.ui.favourable_to_players
-		circumstance_header_data.template = (is_positive_circumstance and "positive_circumstance_header") or "negative_circumstance_header"
+		circumstance_header_data.template = is_positive_circumstance and "positive_circumstance_header" or "negative_circumstance_header"
 		circumstance_header_data.widget_data.circumstance_template = circumstance_template
 		local mutators = circumstance_template.mutators
 
 		if mutators then
-			for i = 1, #mutators, 1 do
+			for i = 1, #mutators do
 				local mutator_name = mutators[i]
 				local mutator = MutatorTemplates[mutator_name]
 				local descriptions = mutator.description
 				local circumstance_bullet_point_data = nil
 
-				for j = 1, #descriptions, 1 do
+				for j = 1, #descriptions do
 					circumstance_bullet_point_data, num_elements = _next_element(num_elements)
 					circumstance_bullet_point_data.template = "circumstance_bullet_point"
 					circumstance_bullet_point_data.widget_data.bullet_point = descriptions[j]
@@ -370,11 +370,11 @@ blueprint_utility_functions.prepare_report_data = function (happening_data, time
 	header_data, num_elements = _next_element(num_elements)
 	header_data.template = "report_header"
 	local header_widget_data = header_data.widget_data
-	header_widget_data.headline = (happening_data.name and happening_data.name) or Localize("loc_mission_board_event_panel_label")
+	header_widget_data.headline = happening_data.name and happening_data.name or Localize("loc_mission_board_event_panel_label")
 	header_widget_data.time_left_update = time_left_callback
 	local circumstances = happening_data.circumstances
 
-	for i = 1, #circumstances, 1 do
+	for i = 1, #circumstances do
 		num_elements = _prepare_circumstance_data(circumstances[i], num_elements)
 	end
 

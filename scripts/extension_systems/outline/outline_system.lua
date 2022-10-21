@@ -53,7 +53,7 @@ OutlineSystem.on_add_extension = function (self, world, unit, extension_name, ex
 end
 
 local function _set_material_layers(unit, material_layers, enabled)
-	for i = 1, #material_layers, 1 do
+	for i = 1, #material_layers do
 		local layer = material_layers[i]
 
 		Unit.set_material_layer(unit, layer, enabled)
@@ -81,7 +81,7 @@ OutlineSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 local function _find_outline(outlines, name)
-	for i = 1, #outlines, 1 do
+	for i = 1, #outlines do
 		if outlines[i].name == name then
 			return i
 		end

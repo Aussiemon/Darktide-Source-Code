@@ -27,7 +27,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 
 	stagger_strength = stagger_strength * armor_damage_modifier
 	local current_hit_stagger_strength = stagger_strength
-	stagger_strength = (stagger_strength + stagger_strength_pool) - 0.5 * stagger_reduction
+	stagger_strength = stagger_strength + stagger_strength_pool - 0.5 * stagger_reduction
 	local stagger_resistance = breed.stagger_resistance or StaggerSettings.default_stagger_resistance
 	local stagger_type, stagger_threshold = _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield)
 
@@ -74,7 +74,7 @@ function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduc
 		return 0
 	end
 
-	local stagger_reduction = stagger_reduction_override_or_nil or (attack_type == attack_types.ranged and breed.stagger_reduction_ranged) or breed.stagger_reduction
+	local stagger_reduction = stagger_reduction_override_or_nil or attack_type == attack_types.ranged and breed.stagger_reduction_ranged or breed.stagger_reduction
 
 	if not stagger_reduction then
 		return 0
@@ -90,7 +90,7 @@ end
 local stagger_categories = StaggerSettings.stagger_categories
 
 function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield)
-	local stagger_category = (hit_shield and damage_profile.shield_stagger_category) or damage_profile.stagger_category
+	local stagger_category = hit_shield and damage_profile.shield_stagger_category or damage_profile.stagger_category
 	local stagger_list = stagger_categories[stagger_category]
 	local chosen_stagger_type = nil
 	local chosen_stagger_threshold = 0
@@ -98,7 +98,7 @@ function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resi
 	local stagger_thresholds = breed.stagger_thresholds or default_stagger_thresholds
 	local num_stagger_types = #stagger_list
 
-	for i = 1, num_stagger_types, 1 do
+	for i = 1, num_stagger_types do
 		local stagger_type = stagger_list[i]
 		local stagger_threshold = stagger_thresholds[stagger_type] or default_stagger_thresholds[stagger_type]
 
@@ -151,12 +151,12 @@ end
 
 function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
 	local impact_modifier = attacker_stat_buffs.impact_modifier or 1
-	local melee_impact_modifier = (attack_type == attack_types.melee and attacker_stat_buffs.melee_impact_modifier) or 1
-	local ranged_impact_modifier = (attack_type == attack_types.ranged and attacker_stat_buffs.ranged_impact_modifier) or 1
-	local explosion_impact_modifier = (attack_type == attack_types.explosion and attacker_stat_buffs.explosion_impact_modifier) or 1
-	local shout_impact_modifier = (attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier) or 1
-	local melee_weakspot_modifier = (attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier) or 1
-	local mod = (impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier) - 5
+	local melee_impact_modifier = attack_type == attack_types.melee and attacker_stat_buffs.melee_impact_modifier or 1
+	local ranged_impact_modifier = attack_type == attack_types.ranged and attacker_stat_buffs.ranged_impact_modifier or 1
+	local explosion_impact_modifier = attack_type == attack_types.explosion and attacker_stat_buffs.explosion_impact_modifier or 1
+	local shout_impact_modifier = attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier or 1
+	local melee_weakspot_modifier = attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier or 1
+	local mod = impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier - 5
 
 	return mod
 end

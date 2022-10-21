@@ -279,7 +279,7 @@ local settings_definitions = {
 }
 local settings = {}
 
-for i = 1, #settings_definitions, 1 do
+for i = 1, #settings_definitions do
 	local definition = settings_definitions[i]
 	local widget_type = definition.widget_type
 	local template_function = template_functions[widget_type]

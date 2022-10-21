@@ -84,7 +84,7 @@ TitleView.update = function (self, dt, t, input_service)
 			local input_device_list = InputUtils.input_device_list
 			local xbox_controllers = input_device_list.xbox_controller
 
-			for i = 1, #xbox_controllers, 1 do
+			for i = 1, #xbox_controllers do
 				local xbox_controller = xbox_controllers[i]
 
 				if xbox_controller.active() and (Managers.account:do_re_signin() or xbox_controller.pressed(xbox_controller.button_index("a"))) then
@@ -92,7 +92,7 @@ TitleView.update = function (self, dt, t, input_service)
 				end
 			end
 		else
-			for i = 1, #device_list, 1 do
+			for i = 1, #device_list do
 				local device = device_list[i]
 
 				if device and device.active() and device.any_pressed() then

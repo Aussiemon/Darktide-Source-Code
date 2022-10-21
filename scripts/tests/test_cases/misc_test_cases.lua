@@ -78,5 +78,3 @@ MiscTestCases = {
 		end)
 	end
 }
-
-return

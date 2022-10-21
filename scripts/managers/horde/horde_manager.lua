@@ -67,7 +67,7 @@ HordeManager.horde_positions = function (self, horde_type)
 	local hordes = self._hordes[horde_type]
 	local group_system = Managers.state.extension:system("group_system")
 
-	for ii = 1, #hordes, 1 do
+	for ii = 1, #hordes do
 		local horde = hordes[ii]
 		local position = group_system:group_position(horde.group_id)
 		HORDE_POSITIONS[#HORDE_POSITIONS + 1] = position

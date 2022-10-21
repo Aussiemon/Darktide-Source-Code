@@ -1,38 +1,121 @@
--- Decompilation Error: _run_step(_unwarp_expressions, node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local ObjectPenetration = {}
 local STEP_DISTANCE = 0.5
 
 ObjectPenetration.test_for_penetration = function (physics_world, entry_position, direction, depth)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-2, warpins: 1 ---
+	--- END OF BLOCK #0 ---
+
+	FLOW; TARGET BLOCK #1
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #1 3-3, warpins: 2 ---
 	local step_hit = nil
 	local steps_taken = 0
+	--- END OF BLOCK #1 ---
 
-	repeat
+	FLOW; TARGET BLOCK #1
 
-		-- Decompilation error in this vicinity:
-		local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
-		step_hit = PhysicsWorld.raycast(physics_world, cast_pos, direction, STEP_DISTANCE, "any", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
-		steps_taken = steps_taken + 1
 
-		break
-	until not step_hit
 
-	local exit_position, exit_normal, exit_unit = nil
+	-- Decompilation error in this vicinity:
+	--- BLOCK #2 4-25, warpins: 1 ---
+	local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
+	step_hit = PhysicsWorld.raycast(physics_world, cast_pos, direction, STEP_DISTANCE, "any", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
+	steps_taken = steps_taken + 1
 
-	if not step_hit and steps_taken > 0 then
-		local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
-		local hit, position, _, normal, hit_actor = PhysicsWorld.raycast(physics_world, cast_pos, -direction, STEP_DISTANCE * steps_taken, "closest", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
+	--- END OF BLOCK #2 ---
 
-		if hit then
-			exit_position = position
-			exit_normal = normal
-			exit_unit = Actor.unit(hit_actor)
-		end
+	if depth < steps_taken * STEP_DISTANCE then
+	JUMP TO BLOCK #3
+	else
+	JUMP TO BLOCK #4
 	end
 
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #3 26-26, warpins: 1 ---
+	break
+
+	--- END OF BLOCK #3 ---
+
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #4 27-28, warpins: 1 ---
+	--- END OF BLOCK #4 ---
+
+	slot4 = if not step_hit then
+	JUMP TO BLOCK #5
+	else
+	JUMP TO BLOCK #1
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #5 29-31, warpins: 2 ---
+	local exit_position, exit_normal, exit_unit = nil
+	--- END OF BLOCK #5 ---
+
+	slot4 = if not step_hit then
+	JUMP TO BLOCK #6
+	else
+	JUMP TO BLOCK #9
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #6 32-34, warpins: 1 ---
+	--- END OF BLOCK #6 ---
+
+	if steps_taken > 0 then
+	JUMP TO BLOCK #7
+	else
+	JUMP TO BLOCK #9
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #7 35-53, warpins: 1 ---
+	local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
+	local hit, position, _, normal, hit_actor = PhysicsWorld.raycast(physics_world, cast_pos, -direction, STEP_DISTANCE * steps_taken, "closest", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
+	--- END OF BLOCK #7 ---
+
+	slot10 = if hit then
+	JUMP TO BLOCK #8
+	else
+	JUMP TO BLOCK #9
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #8 54-60, warpins: 1 ---
+	exit_position = position
+	exit_normal = normal
+	exit_unit = Actor.unit(hit_actor)
+
+	--- END OF BLOCK #8 ---
+
+	FLOW; TARGET BLOCK #9
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #9 61-64, warpins: 4 ---
 	return exit_position, exit_normal, exit_unit
+	--- END OF BLOCK #9 ---
+
+
+
 end
 
 return ObjectPenetration

@@ -44,7 +44,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		network_transmit_function = creation_context.network_transmit_function
 	}
 
-	fassert((shared_state.is_dedicated_server == true and DEDICATED_SERVER) or shared_state.is_dedicated_server == false, "[StateGameplay][on_enter] Please check connection type.")
+	fassert(shared_state.is_dedicated_server == true and DEDICATED_SERVER or shared_state.is_dedicated_server == false, "[StateGameplay][on_enter] Please check connection type.")
 	Crashify.print_property("mission", tostring(params.mission_name))
 
 	local start_params = {

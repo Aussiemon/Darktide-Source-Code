@@ -371,7 +371,7 @@ end
 GameplayStateRun._mission_server_notify_shutdown = function (self, is_dedicated_mission_server)
 	if is_dedicated_mission_server then
 		local end_conditions_met, outcome = Managers.state.game_mode:has_met_end_conditions()
-		local mission_result = (end_conditions_met and outcome) or "incomplete"
+		local mission_result = end_conditions_met and outcome or "incomplete"
 
 		Managers.mission_server:on_gameplay_shutdown(mission_result)
 	end
@@ -433,7 +433,7 @@ GameplayStateRun._despawn_units = function (self, is_server, world, level, theme
 	local level_units = Level.units(level, true)
 	local num_level_units = #level_units
 
-	for i = 1, num_level_units, 1 do
+	for i = 1, num_level_units do
 		local unit = level_units[i]
 
 		unit_spawner_manager:mark_for_deletion(unit)
@@ -443,7 +443,7 @@ GameplayStateRun._despawn_units = function (self, is_server, world, level, theme
 
 	local World_destroy_theme = World.destroy_theme
 
-	for i = 1, #themes, 1 do
+	for i = 1, #themes do
 		World_destroy_theme(world, themes[i])
 	end
 
@@ -452,7 +452,7 @@ GameplayStateRun._despawn_units = function (self, is_server, world, level, theme
 	local remaining_units = World.units(world)
 	local num_remaining_units = #remaining_units
 
-	for i = 1, num_remaining_units, 1 do
+	for i = 1, num_remaining_units do
 		local unit = remaining_units[i]
 
 		_error("Unregistering orphaned unit %s.", unit)
@@ -464,7 +464,7 @@ GameplayStateRun._despawn_units = function (self, is_server, world, level, theme
 	local remaining_base_units = World.units(world)
 	local num_remaining_base_units = #remaining_base_units
 
-	for i = 1, num_remaining_base_units, 1 do
+	for i = 1, num_remaining_base_units do
 		local unit = remaining_base_units[i]
 
 		unit_spawner_manager:mark_for_deletion(unit)
@@ -610,7 +610,7 @@ GameplayStateRun._fixed_update = function (self, extension_manager, player_manag
 	local fixed_dt = fixed_frame_time
 	local keep_in_scope = true
 
-	for frame = self._fixed_frame_counter + 1, last_frame, 1 do
+	for frame = self._fixed_frame_counter + 1, last_frame do
 		Profiler.start("internal_fixed_update", keep_in_scope)
 
 		local fixed_t = fixed_dt * frame
@@ -636,7 +636,7 @@ GameplayStateRun._handle_load_failures = function (self)
 		table.clear(failed_clients)
 		loading_manager:failed_clients(failed_clients)
 
-		for i = 1, #failed_clients, 1 do
+		for i = 1, #failed_clients do
 			local peer_id = failed_clients[i]
 
 			Managers.connection:disconnect(peer_id)

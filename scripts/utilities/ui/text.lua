@@ -1,40 +1,44 @@
 local InputUtils = require("scripts/managers/input/input_utils")
-local TextUtilities = {
-	apply_color_to_text = function (text, color)
-		return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
-	end,
-	localize_to_upper = function (localization_key, optional_localization_context)
-		local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
+local TextUtilities = {}
 
-		return Utf8.upper(localized_text)
-	end,
-	localize_to_title_case = function (localization_key, optional_localization_context)
-		local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
-		local title_case_text = nil
+TextUtilities.apply_color_to_text = function (text, color)
+	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
+end
 
-		for word in string.gmatch(localized_text, "[^%s]+") do
-			local first_letter = Utf8.sub_string(word, 1, 1)
-			local rest_of_word = Utf8.sub_string(word, 2)
+TextUtilities.localize_to_upper = function (localization_key, optional_localization_context)
+	local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
 
-			if title_case_text then
-				title_case_text = string.format("%s %s%s", title_case_text, Utf8.upper(first_letter), Utf8.lower(rest_of_word))
-			else
-				title_case_text = string.format("%s%s", Utf8.upper(first_letter), Utf8.lower(rest_of_word))
-			end
+	return Utf8.upper(localized_text)
+end
+
+TextUtilities.localize_to_title_case = function (localization_key, optional_localization_context)
+	local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
+	local title_case_text = nil
+
+	for word in string.gmatch(localized_text, "[^%s]+") do
+		local first_letter = Utf8.sub_string(word, 1, 1)
+		local rest_of_word = Utf8.sub_string(word, 2)
+
+		if title_case_text then
+			title_case_text = string.format("%s %s%s", title_case_text, Utf8.upper(first_letter), Utf8.lower(rest_of_word))
+		else
+			title_case_text = string.format("%s%s", Utf8.upper(first_letter), Utf8.lower(rest_of_word))
 		end
-
-		return title_case_text
-	end,
-	localize_with_button_hint = function (action, localization_key, optional_localization_context, optional_service_type, optional_pattern)
-		local pattern = optional_pattern or "%s %s"
-		local service_type = optional_service_type or "View"
-		local alias_key = Managers.ui:get_input_alias_key(action, service_type)
-		local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
-		local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
-
-		return string.format(pattern, input_text, localized_text)
 	end
-}
+
+	return title_case_text
+end
+
+TextUtilities.localize_with_button_hint = function (action, localization_key, optional_localization_context, optional_service_type, optional_pattern)
+	local pattern = optional_pattern or "%s %s"
+	local service_type = optional_service_type or "View"
+	local alias_key = Managers.ui:get_input_alias_key(action, service_type)
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+	local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
+
+	return string.format(pattern, input_text, localized_text)
+end
+
 local SECONDS_IN_A_MINUTE = 60
 local SECONDS_IN_AN_HOUR = SECONDS_IN_A_MINUTE * 60
 local SECONDS_IN_A_DAY = SECONDS_IN_AN_HOUR * 24
@@ -162,7 +166,7 @@ TextUtilities.convert_to_roman_numerals = function (value)
 			value = value - num
 		end
 
-		for j = 1, i - 1, 1 do
+		for j = 1, i - 1 do
 			local n2 = _roman_number_array[j]
 
 			if value - (num - n2) >= 0 and value < num and value > 0 and num - n2 ~= n2 then

@@ -41,7 +41,7 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 
 			if HEALTH_ALIVE[new_target_unit] then
 				local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
-				local precision_target_settings = (smart_targeting_template and smart_targeting_template.precision_target) or EMPTY_TABLE
+				local precision_target_settings = smart_targeting_template and smart_targeting_template.precision_target or EMPTY_TABLE
 				local max_range = precision_target_settings.max_range
 				local target_pos = POSITION_LOOKUP[new_target_unit]
 				local player_pos = POSITION_LOOKUP[self._player_unit]
@@ -51,9 +51,9 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 			local soft_sticky_targeting = action_settings.soft_sticky_targeting
 
 			if not soft_sticky_targeting then
-				component.target_unit_1 = (is_in_range and new_target_unit) or nil
+				component.target_unit_1 = is_in_range and new_target_unit or nil
 			else
-				component.target_unit_1 = (is_in_range and new_target_unit) or current_target_unit
+				component.target_unit_1 = is_in_range and new_target_unit or current_target_unit
 			end
 		end
 	end

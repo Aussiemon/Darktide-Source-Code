@@ -54,7 +54,7 @@ Block.is_blocking = function (unit, action_type, weapon_template, is_server)
 
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local _, action_setting = Action.current_action(weapon_action_component, weapon_template)
-	local block_types = (action_setting and action_setting.block_attack_types) or default_block_types
+	local block_types = action_setting and action_setting.block_attack_types or default_block_types
 	local can_block_type = block_types[action_type]
 
 	return can_block_type
@@ -96,7 +96,7 @@ Block.attempt_block_break = function (unit, attacking_unit, hit_world_position, 
 	local block_broken = stamina_depleted
 
 	if block_broken then
-		local weapon_disorientation_type = (stamina_template and stamina_template.block_break_disorientation_type) or DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE
+		local weapon_disorientation_type = stamina_template and stamina_template.block_break_disorientation_type or DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE
 		local damage_disorientation_type = damage_profile.disorientation_type
 		local disorientation_type = damage_disorientation_type or weapon_disorientation_type
 
@@ -122,8 +122,7 @@ Block.player_blocked_attack = function (blocking_unit, attacking_unit, hit_world
 	end
 
 	if not player.remote then
-		if not player:is_human_controlled() then
-		else
+		if player:is_human_controlled() then
 			local ext = ScriptUnit.extension(blocking_unit, "weapon_system")
 
 			ext:blocked_attack(attacking_unit, hit_world_position, block_broken, weapon_template)

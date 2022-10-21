@@ -1,5 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
 local NameGenerator = require("scripts/multiplayer/utilities/name_generator")
 
 local function _warning(...)

@@ -11,7 +11,7 @@ end
 local function _agent_data(camera_data, health_data)
 	local camera_position = camera_data.position
 	local camera_rotation = camera_data.rotation
-	local current_health = (health_data and health_data.current_health) or 0
+	local current_health = health_data and health_data.current_health or 0
 	local agent_data = {
 		camera = {
 			position = {

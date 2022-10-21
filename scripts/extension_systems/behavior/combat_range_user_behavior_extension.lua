@@ -96,7 +96,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 	local target_distance = perception_component.target_distance
 	local has_line_of_sight = perception_component.has_line_of_sight
 
-	for i = 1, #combat_range_config, 1 do
+	for i = 1, #combat_range_config do
 		repeat
 			local config = combat_range_config[i]
 			local require_line_of_sight = config.require_line_of_sight
@@ -217,7 +217,7 @@ function _should_switch_combat_range(unit, blackboard, target_distance, config, 
 
 	if not max_z_distance or z_distance < max_z_distance then
 		local switch_distance = _get_combat_range_switch_distance(config, target_unit)
-		local switch_by_distance = (operator == "greater" and switch_distance <= target_distance) or (operator == "lesser" and target_distance <= switch_distance)
+		local switch_by_distance = operator == "greater" and switch_distance <= target_distance or operator == "lesser" and target_distance <= switch_distance
 
 		if switch_by_distance then
 			return true

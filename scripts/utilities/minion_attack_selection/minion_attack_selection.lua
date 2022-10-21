@@ -18,7 +18,7 @@ MinionAttackSelection.generate = function (attack_selection_template_name, initi
 			local entries = TEMP_CATEGORY_ATTACK_ENTRIES[category]
 			local num_entries = #entries
 
-			for i = 1, amount, 1 do
+			for i = 1, amount do
 				random_seed, num_entries = MinionAttackSelection._select_and_remove_random_attack(random_seed, entries, num_entries, selected_attack_names, used_weapon_slot_names)
 			end
 		end
@@ -33,7 +33,7 @@ MinionAttackSelection.generate = function (attack_selection_template_name, initi
 		local num_categories = #TEMP_CATEGORIES
 		local category_index = nil
 
-		for i = 1, amount, 1 do
+		for i = 1, amount do
 			random_seed, category_index = math.next_random(random_seed, num_categories)
 			local category = TEMP_CATEGORIES[category_index]
 			local entries = TEMP_CATEGORY_ATTACK_ENTRIES[category]
@@ -90,7 +90,7 @@ local TEMP_MATCHED_TEMPLATES = {}
 MinionAttackSelection.match_template_by_tag = function (attack_selection_templates, tag)
 	local matched_index = 0
 
-	for i = 1, #attack_selection_templates, 1 do
+	for i = 1, #attack_selection_templates do
 		local template = attack_selection_templates[i]
 		local template_tag = template.tag
 

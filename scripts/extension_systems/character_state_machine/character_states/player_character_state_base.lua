@@ -306,12 +306,12 @@ PlayerCharacterStateBase._update_footsteps_and_foley = function (self, t, footst
 		end
 
 		local breed_footstep_intervals = weapon_template.breed_footstep_intervals
-		local footstep_intervals = (breed_footstep_intervals and breed_footstep_intervals[self._breed.name]) or weapon_template.footstep_intervals
+		local footstep_intervals = breed_footstep_intervals and breed_footstep_intervals[self._breed.name] or weapon_template.footstep_intervals
 
 		if footstep_intervals then
 			local character_state_name = self._character_state_component.state_name
 			local is_crouching = self._movement_state_component.is_crouching
-			local interval = (is_crouching and footstep_intervals.crouch_walking) or footstep_intervals[character_state_name]
+			local interval = is_crouching and footstep_intervals.crouch_walking or footstep_intervals[character_state_name]
 
 			if interval then
 				self:_trigger_footstep_and_foley(footstep_sound_alias, ...)
@@ -338,7 +338,7 @@ PlayerCharacterStateBase._trigger_footstep_and_foley = function (self, footstep_
 		if foley_source_id then
 			local num_args = select("#", ...)
 
-			for i = 1, num_args, 1 do
+			for i = 1, num_args do
 				local sound_alias = select(i, ...)
 				local move_speed = self._locomotion_extension:move_speed()
 

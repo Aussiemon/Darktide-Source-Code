@@ -42,7 +42,7 @@ local HitReaction = {
 		local attack_have_stun = attack_disorientation_template and attack_disorientation_template.stun.interrupt_delay ~= nil
 		local fumbled = breed_hit_reaction_stun_types and breed_hit_reaction_stun_types.fumbled
 		local has_fumbled = (melee_hit_on_ranged or melee_hit_on_sprinting) and attack_have_stun
-		local wanted_disorientation_type = (has_fumbled and fumbled) or disorientation_type
+		local wanted_disorientation_type = has_fumbled and fumbled or disorientation_type
 		local disorientation_template = wanted_disorientation_type and disorientation_templates[wanted_disorientation_type]
 
 		if not disorientation_template then
@@ -103,7 +103,7 @@ function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, dama
 	if Stagger.can_stagger(attacked_unit) then
 		local applied_stagger = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, hit_weakspot, dropoff_scalar, has_power_boost, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
 
-		return (applied_stagger and "stagger") or "no_stagger"
+		return applied_stagger and "stagger" or "no_stagger"
 	end
 end
 

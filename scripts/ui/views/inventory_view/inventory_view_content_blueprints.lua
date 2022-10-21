@@ -225,7 +225,7 @@ local blueprints = {
 		init = function (parent, widget, element, callback_name, secondary_callback_name)
 			local content = widget.content
 			local item = element.item
-			local icon = element.icon or (item and item.icon) or "content/ui/materials/icons/items/default"
+			local icon = element.icon or item and item.icon or "content/ui/materials/icons/items/default"
 			content.title_text = ItemUtils.display_name(item)
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.hotspot.right_pressed_callback = callback(parent, secondary_callback_name, widget, element)
@@ -426,7 +426,7 @@ local blueprints = {
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.element = element
 			local slot_title = element.slot_title
-			content.slot_title = (slot_title and Utf8.upper(Localize(slot_title))) or ""
+			content.slot_title = slot_title and Utf8.upper(Localize(slot_title)) or ""
 			local slot = element.slot
 
 			if slot then
@@ -458,7 +458,7 @@ local blueprints = {
 				local slot_name = slot.name
 				local previous_item = content.item
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = (not equipped_item and previous_item) or (previous_item and previous_item.gear_id ~= equipped_item.gear_id)
+				local update = not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
 				if update then
 					content.item = equipped_item
@@ -573,7 +573,7 @@ local blueprints = {
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.element = element
 			local slot_title = element.slot_title
-			content.slot_title = (slot_title and Utf8.upper(Localize(slot_title))) or ""
+			content.slot_title = slot_title and Utf8.upper(Localize(slot_title)) or ""
 			local slot = element.slot
 
 			if slot then
@@ -606,7 +606,7 @@ local blueprints = {
 				local slot_name = slot.name
 				local previous_item = content.item
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = (not equipped_item and previous_item) or (previous_item and previous_item.gear_id ~= equipped_item.gear_id)
+				local update = not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
 				if update then
 					content.item = equipped_item
@@ -751,7 +751,7 @@ local blueprints = {
 				local slot_name = slot.name
 				local previous_item = content.item
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = (not equipped_item and previous_item) or (previous_item and previous_item.gear_id ~= equipped_item.gear_id)
+				local update = not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
 				if update then
 					content.item = equipped_item
@@ -828,7 +828,7 @@ local blueprints = {
 				local slot_name = slot.name
 				local previous_item = content.item
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = (not equipped_item and previous_item) or (previous_item and previous_item.gear_id ~= equipped_item.gear_id)
+				local update = not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
 				if update then
 					content.item = equipped_item

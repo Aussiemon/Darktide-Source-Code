@@ -38,7 +38,7 @@ function _action_input_tests(template)
 				local num_elements = #input_sequence
 
 				if num_elements > 0 then
-					for i = 1, num_elements, 1 do
+					for i = 1, num_elements do
 						local element = input_sequence[i]
 						local inputs = element.inputs
 
@@ -54,7 +54,7 @@ function _action_input_tests(template)
 								local num_inputs = #inputs
 
 								if num_inputs > 0 then
-									for j = 1, #inputs, 1 do
+									for j = 1, #inputs do
 										local input_config = inputs[j]
 										local input = input_config.input
 										local value = input_config.value

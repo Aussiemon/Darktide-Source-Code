@@ -71,7 +71,7 @@ Side._create_relation_tables = function (self)
 	local relation_units_lookup = Script.new_map(num_relations)
 	local relation_player_units = Script.new_map(num_relations)
 
-	for i = 1, num_relations, 1 do
+	for i = 1, num_relations do
 		local relation = relations[i]
 		relation_sides[relation] = {}
 		relation_sides_lookup[relation] = {}
@@ -101,7 +101,7 @@ Side.set_relation = function (self, relation, sides)
 	local relation_side_lookup = self._relation_sides_lookup[relation]
 	local relation_side_names = self._relation_side_names[relation]
 
-	for i = 1, #sides, 1 do
+	for i = 1, #sides do
 		local side = sides[i]
 		local side_name = side:name()
 		relation_sides[i] = side

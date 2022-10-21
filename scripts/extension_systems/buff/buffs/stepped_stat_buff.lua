@@ -13,7 +13,7 @@ SteppedStatBuff.update_stat_buffs = function (self, current_stat_buffs, t)
 	local template_context = self._template_contex
 	local template = self._template
 	local bonus_step_func = template.bonus_step_func
-	local bonus_step = (bonus_step_func and bonus_step_func(template_data, template_context)) or 0
+	local bonus_step = bonus_step_func and bonus_step_func(template_data, template_context) or 0
 	local min, max = nil
 	local min_max_step_func = template.min_max_step_func
 

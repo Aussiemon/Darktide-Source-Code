@@ -357,7 +357,7 @@ UIWorldSpawner._update_viewport_rect = function (self)
 end
 
 UIWorldSpawner._set_fov = function (self, fov)
-	Camera.set_vertical_fov(self._camera, (math.pi * fov) / 180)
+	Camera.set_vertical_fov(self._camera, math.pi * fov / 180)
 end
 
 UIWorldSpawner.boxed_camera_start_position = function (self)
@@ -409,7 +409,7 @@ end
 
 UIWorldSpawner._animate_axis = function (self, source, axis, value, animation_time, func_ptr, optional_start_time)
 	local data = source[axis]
-	data.from = (animation_time and data.value) or value
+	data.from = animation_time and data.value or value
 	data.to = value
 	data.total_time = animation_time
 	data.time = optional_start_time or 0
@@ -457,9 +457,9 @@ UIWorldSpawner._update_animation_data = function (self, animation_data, dt)
 		if total_time then
 			local old_time = data.time
 			data.time = math.min(old_time + dt, total_time)
-			local progress = (total_time > 0 and math.min(1, data.time / total_time)) or 1
+			local progress = total_time > 0 and math.min(1, data.time / total_time) or 1
 			local func = data.func
-			local anim_progress = (func and func(progress)) or progress
+			local anim_progress = func and func(progress) or progress
 			data.value = (data.to - data.from) * anim_progress + data.from
 
 			if progress == 1 then
@@ -503,8 +503,8 @@ UIWorldSpawner._update_world_blur = function (self, dt)
 	local duration = blur_animation_data.duration
 	local anim_func = blur_animation_data.anim_func
 	time = math.min(time + dt, duration)
-	local progress = (duration > 0 and time / duration) or 0
-	local anim_progress = (anim_func and anim_func(progress)) or progress
+	local progress = duration > 0 and time / duration or 0
+	local anim_progress = anim_func and anim_func(progress) or progress
 	local start_value = blur_animation_data.start_value
 	local value_difference = blur_animation_data.value_difference
 	local new_value = start_value + anim_progress * value_difference

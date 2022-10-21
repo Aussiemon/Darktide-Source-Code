@@ -21,24 +21,27 @@ local NavTagVolumeBox = {
 			p3,
 			p4
 		}, altitude_min, altitude_max
-	end,
-	create_from_node = function (nav_world, unit, node_name, half_size)
-		local node_index = Unit.node(unit, node_name)
-		local tm = Unit.world_pose(unit, node_index)
-
-		return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
-	end,
-	create_from_mesh = function (nav_world, unit, mesh_name)
-		local mesh = Unit.mesh(unit, mesh_name)
-		local tm, half_size = Mesh.box(mesh)
-
-		return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
-	end,
-	create_from_unit = function (nav_world, unit)
-		local tm, half_size = Unit.box(unit)
-
-		return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
 	end
 }
+
+NavTagVolumeBox.create_from_node = function (nav_world, unit, node_name, half_size)
+	local node_index = Unit.node(unit, node_name)
+	local tm = Unit.world_pose(unit, node_index)
+
+	return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
+end
+
+NavTagVolumeBox.create_from_mesh = function (nav_world, unit, mesh_name)
+	local mesh = Unit.mesh(unit, mesh_name)
+	local tm, half_size = Mesh.box(mesh)
+
+	return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
+end
+
+NavTagVolumeBox.create_from_unit = function (nav_world, unit)
+	local tm, half_size = Unit.box(unit)
+
+	return NavTagVolumeBox.create_from_pose(nav_world, tm, half_size)
+end
 
 return NavTagVolumeBox

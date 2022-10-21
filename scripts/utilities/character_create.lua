@@ -1,37 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local BackendInterface = require("scripts/backend/backend_interface")
 local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
@@ -301,7 +267,7 @@ CharacterCreate._verify_items = function (self, source_items)
 		local slots = item.slots
 
 		if slots then
-			for i = 1, #slots, 1 do
+			for i = 1, #slots do
 				local slot_name = slots[i]
 
 				if table.contains(inventory_slots_array, slot_name) then
@@ -334,8 +300,8 @@ CharacterCreate._setup_item_catagories = function (self, source_items)
 		}
 		local table_key = loop_table_order[lookup_index]
 		local values = {}
-		values = (not item[table_key] or table.is_empty(item[table_key]) or item[table_key]) and (default_table_arrays[table_key] or {})
-		local next_lookup_index = (lookup_index < #loop_table_order and lookup_index + 1) or nil
+		values = item[table_key] and not table.is_empty(item[table_key]) and item[table_key] or default_table_arrays[table_key] or {}
+		local next_lookup_index = lookup_index < #loop_table_order and lookup_index + 1 or nil
 
 		for _, key in ipairs(values) do
 			if not destination[key] then
@@ -751,63 +717,24 @@ CharacterCreate.upload_profile = function (self)
 			return character_id
 		end)
 	end):next(function (character_id)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
 		local height = self._character_height
 
 		return profiles_service:set_character_height(character_id, height)
-		--- END OF BLOCK #0 ---
-
-
-
 	end):next(function (character_id)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-5, warpins: 1 ---
 		return profiles_service:fetch_profile(character_id)
-		--- END OF BLOCK #0 ---
-
-
-
 	end):next(function (profile)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-6, warpins: 1 ---
 		self._created_profile = profile
 		self._done = true
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (errors)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-12, warpins: 1 ---
 		self._done = true
 		self._failed = true
 
 		Log.error("CharacterCreate", "Uploading character profile failed")
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
 end
 
 CharacterCreate.created_character_profile = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return self._created_profile
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return CharacterCreate

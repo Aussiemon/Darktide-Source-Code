@@ -102,7 +102,7 @@ local function _init_and_run_tests(breeds)
 			local target_selection_weights = breed_data.target_selection_weights
 
 			fassert(target_selection_weights, "[BreedsTest] Breed: %q is a not a player breed but is missing target_selection_weights", breed_name)
-			fassert((target_selection_weights.max_distance and target_selection_weights.max_distance < math.huge) or breed_data.detection_radius < math.huge, "[BreedsTest] Breed: %q has invalid target selection distsance usage. Ensure that 'target_selection_template.max_distance' is set or that 'breed.detection_radius' is not math.huge", breed_name)
+			fassert(target_selection_weights.max_distance and target_selection_weights.max_distance < math.huge or breed_data.detection_radius < math.huge, "[BreedsTest] Breed: %q has invalid target selection distsance usage. Ensure that 'target_selection_template.max_distance' is set or that 'breed.detection_radius' is not math.huge", breed_name)
 
 			if breed_data.tags.special and not running_from_batch then
 				local dev_parameter_name = string.format(ALLOWED_BREED_PATTERN, breed_name)

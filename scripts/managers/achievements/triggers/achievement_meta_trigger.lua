@@ -29,7 +29,7 @@ AchievementMetaTrigger.get_progress = function (self, constant_achievement_data)
 	local completed = constant_achievement_data.completed
 	local amount_completed = 0
 
-	for i = 1, #self._achievement_array, 1 do
+	for i = 1, #self._achievement_array do
 		local id = self._achievement_array[i]
 
 		if completed[id] then

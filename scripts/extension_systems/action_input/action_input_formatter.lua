@@ -2,61 +2,61 @@ local ActionInputFormatterSettings = require("scripts/settings/action_input_form
 local NO_ACTION_INPUT = "NO_ACTION_INPUT"
 local NO_RAW_INPUT = "NO_RAW_INPUT"
 local _read_action_inputs, _read_hierarchy = nil
-local ActionInputFormatter = {
-	format = function (action_input_type, templates, raw_inputs)
-		local raw_inputs_network_lookup = {}
+local ActionInputFormatter = {}
 
-		for i = 1, #raw_inputs, 1 do
-			local raw_input = raw_inputs[i]
-			raw_inputs_network_lookup[i] = raw_input
-			raw_inputs_network_lookup[raw_input] = i
-		end
+ActionInputFormatter.format = function (action_input_type, templates, raw_inputs)
+	local raw_inputs_network_lookup = {}
 
-		local no_raw_input_index = #raw_inputs_network_lookup + 1
-		raw_inputs_network_lookup[no_raw_input_index] = NO_RAW_INPUT
-		raw_inputs_network_lookup[NO_RAW_INPUT] = no_raw_input_index
-		local action_input_settings = ActionInputFormatterSettings[action_input_type]
-		local max_action_inputs = action_input_settings.max_action_inputs
-		local max_action_input_queue = action_input_settings.max_action_input_queue
-		local max_hierarchy_depth = 0
-		local action_inputs_hierarchy = {}
-		local action_inputs_configs = {}
-		local action_inputs_network_lookups = {}
-
-		for name, template in pairs(templates) do
-			local action_inputs = template.action_inputs
-
-			if action_inputs then
-				local sequences = {}
-				action_inputs_configs[name] = sequences
-				local network_lookup = {}
-				action_inputs_network_lookups[name] = network_lookup
-				local num_action_inputs = 1
-				network_lookup[num_action_inputs] = NO_ACTION_INPUT
-				network_lookup[NO_ACTION_INPUT] = num_action_inputs
-				num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
-
-				fassert(num_action_inputs <= max_action_inputs, "Too many action inputs defined for template (%s).", name)
-
-				local hierarchy_data = template.action_input_hierarchy
-
-				if hierarchy_data then
-					local hierarchy = hierarchy_data
-					action_inputs_hierarchy[name] = hierarchy
-					local hierarchy_depth = _read_hierarchy(hierarchy_data, sequences)
-
-					if max_hierarchy_depth < hierarchy_depth then
-						max_hierarchy_depth = hierarchy_depth
-					end
-				end
-			else
-				Log.error("ActionInputFormatter", "No action_inputs defined for Template (%s)", name)
-			end
-		end
-
-		return action_inputs_configs, action_inputs_network_lookups, action_inputs_hierarchy, raw_inputs_network_lookup, max_action_inputs, max_action_input_queue, max_hierarchy_depth, NO_ACTION_INPUT, NO_RAW_INPUT
+	for i = 1, #raw_inputs do
+		local raw_input = raw_inputs[i]
+		raw_inputs_network_lookup[i] = raw_input
+		raw_inputs_network_lookup[raw_input] = i
 	end
-}
+
+	local no_raw_input_index = #raw_inputs_network_lookup + 1
+	raw_inputs_network_lookup[no_raw_input_index] = NO_RAW_INPUT
+	raw_inputs_network_lookup[NO_RAW_INPUT] = no_raw_input_index
+	local action_input_settings = ActionInputFormatterSettings[action_input_type]
+	local max_action_inputs = action_input_settings.max_action_inputs
+	local max_action_input_queue = action_input_settings.max_action_input_queue
+	local max_hierarchy_depth = 0
+	local action_inputs_hierarchy = {}
+	local action_inputs_configs = {}
+	local action_inputs_network_lookups = {}
+
+	for name, template in pairs(templates) do
+		local action_inputs = template.action_inputs
+
+		if action_inputs then
+			local sequences = {}
+			action_inputs_configs[name] = sequences
+			local network_lookup = {}
+			action_inputs_network_lookups[name] = network_lookup
+			local num_action_inputs = 1
+			network_lookup[num_action_inputs] = NO_ACTION_INPUT
+			network_lookup[NO_ACTION_INPUT] = num_action_inputs
+			num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
+
+			fassert(num_action_inputs <= max_action_inputs, "Too many action inputs defined for template (%s).", name)
+
+			local hierarchy_data = template.action_input_hierarchy
+
+			if hierarchy_data then
+				local hierarchy = hierarchy_data
+				action_inputs_hierarchy[name] = hierarchy
+				local hierarchy_depth = _read_hierarchy(hierarchy_data, sequences)
+
+				if max_hierarchy_depth < hierarchy_depth then
+					max_hierarchy_depth = hierarchy_depth
+				end
+			end
+		else
+			Log.error("ActionInputFormatter", "No action_inputs defined for Template (%s)", name)
+		end
+	end
+
+	return action_inputs_configs, action_inputs_network_lookups, action_inputs_hierarchy, raw_inputs_network_lookup, max_action_inputs, max_action_input_queue, max_hierarchy_depth, NO_ACTION_INPUT, NO_RAW_INPUT
+end
 
 function _read_action_inputs(name, action_inputs, sequences, network_lookup, total_num_action_inputs)
 	for action_input, data in pairs(action_inputs) do
@@ -67,7 +67,7 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 		network_lookup[network_lookup_i] = action_input
 		network_lookup[action_input] = network_lookup_i
 		local input_sequence = data.input_sequence
-		local num_elements = (input_sequence and #input_sequence) or 0
+		local num_elements = input_sequence and #input_sequence or 0
 		local clear_input_queue = data.clear_input_queue or false
 		local config = {
 			action_input_name = action_input,
@@ -79,12 +79,12 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 			dont_queue = data.dont_queue
 		}
 
-		for i = 1, num_elements, 1 do
+		for i = 1, num_elements do
 			local element = input_sequence[i]
 			local inputs = element.inputs
 
 			if inputs then
-				for j = 1, #inputs, 1 do
+				for j = 1, #inputs do
 					local sub_element = inputs[j]
 
 					fassert(sub_element.input, "no input defined in input sequence's inputs table for input %q in template %q", action_input, name)
@@ -104,7 +104,7 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 end
 
 function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
-	hierarchy_depth = (hierarchy_depth and hierarchy_depth + 1) or 1
+	hierarchy_depth = hierarchy_depth and hierarchy_depth + 1 or 1
 	local best_children_hierarchy_depth = nil
 
 	for action_input, children in pairs(hierarchy_data) do

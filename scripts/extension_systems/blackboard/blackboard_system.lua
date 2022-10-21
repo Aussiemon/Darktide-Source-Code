@@ -39,7 +39,7 @@ BlackboardSystem._cleanup_extension = function (self, unit)
 	local blackboard_updates = self._blackboard_updates
 	local num_blackboard_updates = #blackboard_updates
 
-	for i = 1, num_blackboard_updates, 1 do
+	for i = 1, num_blackboard_updates do
 		if blackboard_updates[i] == unit then
 			table.swap_delete(blackboard_updates, i)
 
@@ -50,7 +50,7 @@ BlackboardSystem._cleanup_extension = function (self, unit)
 	local blackboard_prioritized_updates = self._blackboard_prioritized_updates
 	local num_blackboard_prioritized_updates = #blackboard_prioritized_updates
 
-	for i = 1, num_blackboard_prioritized_updates, 1 do
+	for i = 1, num_blackboard_prioritized_updates do
 		if blackboard_prioritized_updates[i] == unit then
 			table.swap_delete(blackboard_prioritized_updates, i)
 

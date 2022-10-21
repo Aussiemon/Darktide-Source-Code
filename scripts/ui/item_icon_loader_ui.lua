@@ -70,7 +70,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 		local package_ids = data.package_ids
 
 		if package_ids then
-			for i = 1, #package_ids, 1 do
+			for i = 1, #package_ids do
 				local package_load_id = package_ids[i]
 
 				package_manager:release(package_load_id)
@@ -79,7 +79,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 
 		self._requests[gear_id] = nil
 
-		for i = 1, #self._requests_queue_order, 1 do
+		for i = 1, #self._requests_queue_order do
 			if self._requests_queue_order[i] == gear_id then
 				table.remove(self._requests_queue_order, i)
 
@@ -89,7 +89,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 	else
 		references_lookup[id] = nil
 
-		for i = 1, #references_array, 1 do
+		for i = 1, #references_array do
 			if references_array[i] == id then
 				table.remove(references_array, i)
 
@@ -136,7 +136,7 @@ ItemIconLoaderUI.load_request = function (self, request)
 		local package_ids = {}
 		request.package_ids = package_ids
 
-		for i = 1, num_packages_to_load, 1 do
+		for i = 1, num_packages_to_load do
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "_cb_on_item_package_loaded", gear_id, package_name)
 			local prioritize = true
@@ -156,7 +156,7 @@ ItemIconLoaderUI._cb_on_item_package_loaded = function (self, gear_id, package_n
 
 	local packages_to_load = request.packages_to_load
 
-	for i = 1, #packages_to_load, 1 do
+	for i = 1, #packages_to_load do
 		if packages_to_load[i] == package_name then
 			table.remove(packages_to_load, i)
 

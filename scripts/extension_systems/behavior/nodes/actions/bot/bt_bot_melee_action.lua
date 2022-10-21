@@ -156,7 +156,7 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 			attack_performed = true
 		end
 
-		wants_engage = perception_component.aggressive_mode or (already_engaged and t - engage_change_time < ENGAGE_TIME_WINDOW_MELEE)
+		wants_engage = perception_component.aggressive_mode or already_engaged and t - engage_change_time < ENGAGE_TIME_WINDOW_MELEE
 		eval_timer = EVAL_TIMER_MELEE
 	elseif self:_is_in_engage_range(self_position, target_position, action_data, follow_position) then
 		wants_engage = true
@@ -273,7 +273,7 @@ BtBotMeleeAction._choose_attack = function (self, target_unit, target_breed, scr
 			utility = utility + 1
 		elseif attack_meta_data.no_damage and massively_outnumbered and attack_meta_data.arc > 1 then
 			utility = utility + 2
-		elseif not attack_meta_data.no_damage and ((outnumbered and attack_meta_data.arc > 1) or (not outnumbered and attack_meta_data.arc == 0)) then
+		elseif not attack_meta_data.no_damage and (outnumbered and attack_meta_data.arc > 1 or not outnumbered and attack_meta_data.arc == 0) then
 			utility = utility + 4
 		end
 
@@ -341,7 +341,7 @@ BtBotMeleeAction._time_to_next_attack = function (self, scratchpad, t)
 		local remaining_action_input_time = 0
 		local num_action_inputs = #action_inputs
 
-		for i = next_action_input_i + 1, num_action_inputs, 1 do
+		for i = next_action_input_i + 1, num_action_inputs do
 			local config = action_inputs[i]
 			remaining_action_input_time = remaining_action_input_time + config.timing
 		end
@@ -361,7 +361,7 @@ BtBotMeleeAction._should_defend = function (self, unit, target_unit, scratchpad)
 	for slot_type, slots in pairs(all_slots) do
 		local num_slots = #slots
 
-		for i = 1, num_slots, 1 do
+		for i = 1, num_slots do
 			local slot = slots[i]
 			local user_unit = slot.user_unit
 
@@ -447,7 +447,7 @@ BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, i
 	local archetype_stamina_template = scratchpad.archetype_stamina_template
 	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, archetype_stamina_template)
 	local push_type = defense_meta_data.push
-	local low_stamina = (push_type == "light" and current_stamina <= 2) or current_stamina <= 3
+	local low_stamina = push_type == "light" and current_stamina <= 2 or current_stamina <= 3
 	local armor_type = Armor.armor_type(target_unit, target_breed)
 	local breed_is_pushable = true
 
@@ -544,7 +544,7 @@ BtBotMeleeAction._target_unit_position = function (self, self_position, target_u
 			target_unit_position = math.closest_position(self_position, entrance_position, exit_position)
 		else
 			local node_name = "rp_center"
-			local node = (Unit.has_node(target_unit, node_name) and Unit.node(target_unit, node_name)) or 1
+			local node = Unit.has_node(target_unit, node_name) and Unit.node(target_unit, node_name) or 1
 			local node_position = Unit.world_position(target_unit, node)
 			target_unit_position = NavQueries.position_on_mesh(nav_world, node_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, traverse_logic) or node_position
 		end
@@ -575,7 +575,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 	end
 
 	local distance_to_follow_position = Vector3.distance(aim_position, follow_position)
-	local stickiness = (already_engaged and ALREADY_ENGAGED_STICKINESS) or 0
+	local stickiness = already_engaged and ALREADY_ENGAGED_STICKINESS or 0
 
 	if override_range < distance_to_follow_position - stickiness then
 		return false
@@ -586,7 +586,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 	local bot_group_data = scratchpad.bot_group_data
 	local target_ally = perception_component.target_ally
 	local target_ally_needs_aid = perception_component.target_ally_needs_aid
-	local follow_unit = (target_ally_needs_aid and target_ally) or bot_group_data.follow_unit
+	local follow_unit = target_ally_needs_aid and target_ally or bot_group_data.follow_unit
 
 	if follow_unit and main_path_manager:is_main_path_ready() then
 		local self_segment = main_path_manager:segment_index_by_unit(self_unit)
@@ -618,7 +618,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 		local enemies_in_proximity = scratchpad.enemies_in_proximity
 		local num_enemies_in_proximity = scratchpad.num_enemies_in_proximity
 
-		for i = 1, num_enemies_in_proximity, 1 do
+		for i = 1, num_enemies_in_proximity do
 			local enemy_unit = enemies_in_proximity[i]
 
 			if enemy_unit == target_unit then
@@ -703,7 +703,7 @@ local function _calculate_engage_position(nav_world, traverse_logic, target_posi
 		return position
 	end
 
-	for i = 1, SUBDIVISIONS_PER_SIDE, 1 do
+	for i = 1, SUBDIVISIONS_PER_SIDE do
 		local angle = ANGLE_INCREMENT * i
 		position = _check_angle(nav_world, traverse_logic, target_position, start_direction, angle, melee_distance)
 
@@ -735,13 +735,7 @@ local ENGAGE_UPDATE_MAX_INTERVAL = 2
 BtBotMeleeAction._update_engage_position = function (self, unit, self_position, target_unit, target_unit_position, target_velocity, target_breed, scratchpad, t, melee_range, nav_world, traverse_logic)
 	local melee_distance = nil
 	local target_speed_sq = Vector3.length_squared(target_velocity)
-
-	if TARGET_MOVING_SPEED_THRESHOLD_SQ < target_speed_sq then
-		melee_distance = 0
-	else
-		melee_distance = melee_range - 0.5
-	end
-
+	melee_distance = TARGET_MOVING_SPEED_THRESHOLD_SQ < target_speed_sq and 0 or melee_range - 0.5
 	local melee_distance_sq = melee_distance^2
 	local targeting_me = self:_is_targeting_me(unit, target_unit)
 	local enemy_offset = target_unit_position - self_position

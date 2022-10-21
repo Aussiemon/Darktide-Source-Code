@@ -90,7 +90,7 @@ PlayerUnitWeaponRecoilExtension._update_unsteadiness = function (self, dt, t, re
 	else
 		local shooting = recoil_control_component.shooting
 		local shooting_grace_decay = t <= rise_end_time + decay_grace
-		local decay_percent = ((shooting or shooting_grace_decay) and recoil_settings.decay.shooting) or recoil_settings.decay.idle
+		local decay_percent = (shooting or shooting_grace_decay) and recoil_settings.decay.shooting or recoil_settings.decay.idle
 		local unsteadiness_decay = decay_percent * dt
 		unsteadiness = unsteadiness - unsteadiness_decay * 1 / recoil_modifier
 	end

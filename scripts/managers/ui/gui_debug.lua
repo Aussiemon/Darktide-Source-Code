@@ -12,7 +12,7 @@ local function innergui(function_name, ...)
 		local gui = select(1, ...)
 		local str = "[%s][%s]"
 
-		for i = 2, num_args, 1 do
+		for i = 2, num_args do
 			args[i - 1] = tostring(select(i, ...))
 
 			if type(select(i, ...)) == "string" then

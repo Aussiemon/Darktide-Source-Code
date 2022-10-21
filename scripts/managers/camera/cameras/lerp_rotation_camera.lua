@@ -45,7 +45,7 @@ LerpRotationCamera.update = function (self, dt, position, rotation, data)
 
 		self._old_lerp_rotation:store(lerp_rotation)
 	else
-		lerp_rotation = (self._old_lerp_rotation and self._old_lerp_rotation:unbox()) or rotation
+		lerp_rotation = self._old_lerp_rotation and self._old_lerp_rotation:unbox() or rotation
 		self._old_lerp_rotation = nil
 	end
 

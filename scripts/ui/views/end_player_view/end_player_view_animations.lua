@@ -34,7 +34,7 @@ local animations = {
 
 		local card_offset_x = card_distance_x * math_ease_sine(1 - progress)
 
-		for i = 1, #card_widgets, 1 do
+		for i = 1, #card_widgets do
 			local widget = card_widgets[i]
 			local widget_offset = widget.offset
 			local x_offset = (i - current_card) * card_distance_x + card_offset_x
@@ -129,7 +129,7 @@ local function _create_icon_animation(animation_table, icons)
 			local icon_styles = params.icon_styles
 			local eased_progress = _math_ease_out_cubic(progress)
 
-			for i = 1, #icon_styles, 1 do
+			for i = 1, #icon_styles do
 				local icon_style = icon_styles[i]
 
 				_color_utils_color_lerp(start_color, dimmed_out_color, eased_progress, icon_style.color)
@@ -196,7 +196,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params.value_name = value_name
 			local widget_style = widget.style
-			params.target_color = (widget.content[value_name] > 0 and widget_style.in_focus_text_color) or widget_style.dimmed_out_text_color
+			params.target_color = widget.content[value_name] > 0 and widget_style.in_focus_text_color or widget_style.dimmed_out_text_color
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local color_utils_color_lerp = _color_utils_color_lerp
@@ -239,7 +239,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local eased_progress = (progress < 0.5 and _math_ease_sine(progress)) or _math_ease_cubic(progress)
+			local eased_progress = progress < 0.5 and _math_ease_sine(progress) or _math_ease_cubic(progress)
 			local value_name = params.value_name
 			local value_text_name = params.value_text_name
 			local content = widget.content
@@ -332,8 +332,8 @@ local function _create_show_talents_animation(animation_table, start_time)
 	_create_fade_in_pass_animation(animation_table, "unlocked_talents_label", start_time)
 	_create_fade_in_pass_animation(animation_table, "talent_group_name", start_time + _text_fade_in_time)
 
-	for i = 1, 3, 1 do
-		local alignment = (i == 1 and "left") or (i == 2 and "center") or "right"
+	for i = 1, 3 do
+		local alignment = i == 1 and "left" or i == 2 and "center" or "right"
 
 		_create_fade_in_pass_animation(animation_table, "talent_icon_" .. alignment, start_time + 2 * _text_fade_in_time)
 		_create_fade_in_pass_animation(animation_table, "talent_icon_frame_" .. alignment, start_time + 2 * _text_fade_in_time)
@@ -358,7 +358,7 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 			local gradiented_text_color = {}
 			local text_color_index = 0
 
-			for i = 1, #passes_to_dim, 1 do
+			for i = 1, #passes_to_dim do
 				local value_id = passes_to_dim[i]
 				local content_value = widget_content[value_id]
 				local pass_style = widget_style[value_id]
@@ -379,7 +379,7 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 				end
 			end
 
-			for i = 1, #passes_to_hide, 1 do
+			for i = 1, #passes_to_hide do
 				local value_id = passes_to_hide[i]
 				icon_backgrounds[#icon_backgrounds + 1] = widget_style[value_id]
 			end
@@ -405,7 +405,7 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 			local eased_progress = _math_ease_sine(progress)
 			local text_colors = params.text_colors
 
-			for i = 1, #text_colors, 1 do
+			for i = 1, #text_colors do
 				local ignore_alpha = true
 
 				color_utils_color_lerp(in_focus_text_color, dimmed_out_text_color, eased_progress, text_colors[i], ignore_alpha)
@@ -413,7 +413,7 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 
 			local gradiented_text_color = params.gradiented_text_color
 
-			for i = 1, #gradiented_text_color, 1 do
+			for i = 1, #gradiented_text_color do
 				local ignore_alpha = true
 
 				color_utils_color_lerp(in_focus_color, dimmed_out_gradiented_text_color, eased_progress, gradiented_text_color[i], ignore_alpha)
@@ -422,14 +422,14 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 			local icon_colors = params.icon_colors
 			local num_icons = #icon_colors
 
-			for i = 1, num_icons, 1 do
+			for i = 1, num_icons do
 				color_utils_color_lerp(in_focus_color, dimmed_out_color, eased_progress, icon_colors[i])
 			end
 
 			local icon_backgrounds = params.icon_backgrounds
 			local num_bg_icons = #icon_backgrounds
 
-			for i = 1, num_bg_icons, 1 do
+			for i = 1, num_bg_icons do
 				local icon_bg_style = icon_backgrounds[i]
 				local icon_bg_target_width = icon_bg_style.target_width
 				local background_width = _math_lerp(icon_bg_target_width, icon_bg_style.start_width, eased_progress)
@@ -439,7 +439,7 @@ local function _create_dim_out_animation(animation_table, start_time, end_time)
 				local icon_offset = (icon_bg_target_width - background_width) / 2
 				local icon_bg_offset = icon_bg_style.offset
 				icon_bg_offset[2] = icon_offset
-				local bg_start_color = (i == num_icons and in_focus_color) or dimmed_out_color
+				local bg_start_color = i == num_icons and in_focus_color or dimmed_out_color
 
 				color_utils_color_lerp(bg_start_color, bg_target_color, eased_progress, icon_bg_style.color)
 			end
@@ -512,7 +512,7 @@ local function _create_compress_content_animation(animation_table, start_time, e
 			local styles_to_compress = params.styles_to_compress
 			local original_icon_sizes = params.original_icon_sizes
 
-			for i = 1, #styles_to_compress, 1 do
+			for i = 1, #styles_to_compress do
 				local style = styles_to_compress[i]
 				local icon_size = style.size
 				local icon_start_width = original_icon_sizes[(i - 1) * 2 + 1]
@@ -525,7 +525,7 @@ local function _create_compress_content_animation(animation_table, start_time, e
 
 			local styles_to_move = params.styles_to_move
 
-			for i = 1, #styles_to_move, 1 do
+			for i = 1, #styles_to_move do
 				local style = styles_to_move[i]
 				local offset_original = style.offset_original
 				local offset_compressed = style.offset_compressed

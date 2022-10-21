@@ -8,7 +8,7 @@ for name, template in pairs(TerrorEventTemplates) do
 
 	if events then
 		for event_name, nodes in pairs(events) do
-			for i = 1, #nodes, 1 do
+			for i = 1, #nodes do
 				local node = nodes[i]
 				local sound_event_name = node.sound_event_name
 

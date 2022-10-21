@@ -238,5 +238,3 @@ DialogueLookup[DialogueLookup_n + 117] = "obj_mission_fortification"
 DialogueLookup[DialogueLookup_n + 118] = "obj_mission_hacking"
 DialogueLookup[DialogueLookup_n + 119] = "obj_mission_kill"
 DialogueLookup_n = DialogueLookup_n + 119
-
-return

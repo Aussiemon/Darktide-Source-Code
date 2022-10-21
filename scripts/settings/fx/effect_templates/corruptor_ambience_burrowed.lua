@@ -67,7 +67,7 @@ local effect_template = {
 function _distance_to_local_player_or_nil(position)
 	local local_player = Managers.player:local_player(1)
 	local local_player_unit = local_player and local_player.player_unit
-	local_player_unit = local_player_unit or (local_player and local_player.camera_handler:camera_follow_unit())
+	local_player_unit = local_player_unit or local_player and local_player.camera_handler:camera_follow_unit()
 
 	if not local_player_unit or not ALIVE[local_player_unit] then
 		return nil

@@ -1,31 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view_v2/mission_board_view_settings")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -211,8 +183,8 @@ MissionBoardView.draw_medium_mission_widget = function (self, mission, pos)
 	corners_borders(Vector3(0, 0, 1) + difficulty_holder_pos, difficulty_holder_size)
 	ProtoUI.draw_bitmap("content/ui/materials/mission_board_v2/danger_icon", Vector3(0, 0, 3), Vector2(51.2, 51.2), ui_color_green)
 
-	for i = 0, 4, 1 do
-		local color = (i < danger_number and ui_color_green) or Color(26, 33, 25)
+	for i = 0, 4 do
+		local color = i < danger_number and ui_color_green or Color(26, 33, 25)
 
 		ProtoUI.draw_rect(Vector3(50 + i * 11, 14, 3), Vector2(6.4, 24), color)
 	end
@@ -266,8 +238,8 @@ MissionBoardView.draw_small_mission_widget = function (self, mission, pos)
 
 	ProtoUI.draw_bitmap("content/ui/materials/mission_board_v2/danger_icon", Vector3(0, 0, 3), Vector2(32, 32), ui_color_green)
 
-	for i = 0, 4, 1 do
-		local color = (i < danger_number and ui_color_green) or Color(26, 33, 25)
+	for i = 0, 4 do
+		local color = i < danger_number and ui_color_green or Color(26, 33, 25)
 
 		ProtoUI.draw_rect(Vector3(30 + i * 8.25, 5.5, 3), Vector2(4.8, 18), color)
 	end
@@ -346,8 +318,8 @@ MissionBoardView._draw_side_panel = function (self, mission)
 	ProtoUI.begin_group("difficulty", Vector3(0, 20, 50))
 	ProtoUI.draw_bitmap("content/ui/materials/mission_board_v2/danger_icon", Vector3(0, -6, 3), Vector2(100, 100), ui_color_green)
 
-	for i = 0, 4, 1 do
-		local color = (i < danger_number and ui_color_green) or Color(26, 33, 25)
+	for i = 0, 4 do
+		local color = i < danger_number and ui_color_green or Color(26, 33, 25)
 
 		ProtoUI.draw_rect(Vector3(95 + i * 22, 20, 1), Vector2(12.8, 48), color)
 	end
@@ -538,7 +510,7 @@ MissionBoardView.draw = function (self, dt, t, input_service)
 
 		local MEDIUM_PANELS = 2
 
-		for i = 1, math.min(MEDIUM_PANELS, #missions), 1 do
+		for i = 1, math.min(MEDIUM_PANELS, #missions) do
 			local mission = missions[i]
 			local seed = mission.expiry_game_time
 			local pos = Vector3(150 + 500 * (i - 1) + noise(seed, -5, 5), 115 + noise(seed, -15, 15), 100)
@@ -552,11 +524,11 @@ MissionBoardView.draw = function (self, dt, t, input_service)
 
 		local PER_ROW = 5
 
-		for i = 3, #missions, 1 do
+		for i = 3, #missions do
 			local mission = missions[i]
 			local j = i - MEDIUM_PANELS - 1
 			local y = math.floor(j / PER_ROW)
-			local x = j % PER_ROW + 0.5 * y % 2
+			local x = j % PER_ROW + 0.5 * (y % 2)
 			local seed = mission.expiry_game_time
 			local pos = Vector3(100 + 200 * x + noise(seed, -10, 10), 430 + 200 * y + noise(seed, -50, 30), 100)
 
@@ -621,152 +593,55 @@ MissionBoardView._fetch_missions = function (self, t)
 end
 
 MissionBoardView.triggered_on_enter_animation = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return self._triggered_on_enter_animation
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.trigger_on_enter_animation = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	self._triggered_on_enter_animation = true
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.trigger_on_exit_animation = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	self._triggered_on_exit_animation = true
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.on_exit_animation_done = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return self._exit_animation_done
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.allow_close_hotkey = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return true
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.is_using_input = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return true
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.loading = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return false
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.dialogue_system = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-1, warpins: 1 ---
 	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.post_update = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-1, warpins: 1 ---
 	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.update = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	self:_update_exit()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.set_render_scale = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-1, warpins: 1 ---
 	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.trigger_resolution_update = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-1, warpins: 1 ---
 	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView.can_exit = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return true
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return MissionBoardView

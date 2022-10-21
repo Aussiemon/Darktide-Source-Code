@@ -46,12 +46,7 @@ XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, plat
 
 			if not result.is_allowed then
 				local reason = result.reasons[1].reason_string or deny_reasons[result.reasons[1].reason]
-
-				if not reason then
-					reason = "XBOX_JOIN_UNKNOWN_ERROR"
-				else
-					reason = reason .. context_suffix
-				end
+				reason = not reason and "XBOX_JOIN_UNKNOWN_ERROR" or reason .. context_suffix
 
 				return Promise.rejected(reason)
 			else

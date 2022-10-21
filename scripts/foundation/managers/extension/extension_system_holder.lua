@@ -117,7 +117,7 @@ ExtensionSystemHolder.on_reload = function (self, refreshed_resources)
 	local systems = self._systems
 	local num_systems = self._num_systems
 
-	for i = 1, num_systems, 1 do
+	for i = 1, num_systems do
 		local system = systems[i]
 
 		if system.on_reload then
@@ -172,7 +172,7 @@ ExtensionSystemHolder._system_update = function (self, update_func, system_updat
 
 	local update_list = self._update_lists[update_func]
 
-	for i = 1, #update_list, 1 do
+	for i = 1, #update_list do
 		local system = update_list[i]
 
 		Profiler.start(system.NAME)
@@ -205,7 +205,7 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 	local systems = self._systems
 	local num_systems = self._num_systems
 
-	for i = 1, num_systems, 1 do
+	for i = 1, num_systems do
 		local system = systems[i]
 		local extension_name = server_correction_system_map[system.NAME]
 
@@ -217,7 +217,7 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 	local update_list = self._update_lists.fixed_update
 	local system_list_size = 0
 
-	for i = 1, #update_list, 1 do
+	for i = 1, #update_list do
 		local system = update_list[i]
 
 		if system_map[system.NAME] then
@@ -228,12 +228,12 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 
 	local dt = self._fixed_frame_time
 
-	for frame = from_frame, to_frame, 1 do
+	for frame = from_frame, to_frame do
 		context.fixed_frame = frame
 		local t = dt * frame
 		local temp_byte_count = Script.temp_byte_count()
 
-		for i = 1, system_list_size, 1 do
+		for i = 1, system_list_size do
 			local system = TEMP_SYSTEM_LIST[i]
 			local extension_name = system_map[system.NAME]
 
@@ -296,7 +296,7 @@ ExtensionSystemHolder.update_time_slice_init_systems = function (self)
 	local num_systems = #system_configuration
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
 
-	for index = last_index + 1, num_systems, 1 do
+	for index = last_index + 1, num_systems do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
@@ -352,7 +352,7 @@ ExtensionSystemHolder.update_time_slice_post_init_systems = function (self)
 
 	Profiler.start("ExtensionSystemHolder:update_time_slice_post_init_systems")
 
-	for index = last_index + 1, num_systems, 1 do
+	for index = last_index + 1, num_systems do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then

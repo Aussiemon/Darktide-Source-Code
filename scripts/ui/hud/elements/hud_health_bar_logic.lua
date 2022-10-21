@@ -21,14 +21,14 @@ HudHealthBarLogic.init = function (self, settings)
 	}
 	self._stored_fractions = {}
 
-	for i = 1, #self._update_order, 1 do
+	for i = 1, #self._update_order do
 		local name = self._update_order[i]
 		self._stored_fractions[name] = 1
 	end
 end
 
 HudHealthBarLogic._verify_settings = function (self, settings)
-	for i = 1, #settings_list, 1 do
+	for i = 1, #settings_list do
 		local setting_name = settings_list[i]
 
 		fassert(settings[setting_name] ~= nil, "[HudHealthBarLogic] - Missing setting by name: ", setting_name)
@@ -58,8 +58,8 @@ HudHealthBarLogic._sync_player_health = function (self, bar_progress, bar_max_pr
 		self:_set_bar_fraction("health_max", bar_max_progress, current_bar_max_progress, settings.duration_health, health_animation_threshold, animating)
 
 		force_update = previous_fraction < bar_progress
-		local ghost_fraction = (animating and force_update and health_anim_fraction) or bar_progress
-		local ghost_duration = (force_update and settings.duration_health) or settings.duration_health_ghost
+		local ghost_fraction = animating and force_update and health_anim_fraction or bar_progress
+		local ghost_duration = force_update and settings.duration_health or settings.duration_health_ghost
 
 		self:_set_bar_fraction("health_ghost", ghost_fraction, force_update and previous_fraction, ghost_duration, nil, force_update or animating)
 	end
@@ -130,7 +130,7 @@ HudHealthBarLogic._update_bar_animations = function (self, dt, t)
 
 	table.clear(current_fraction_temp_table)
 
-	for i = 1, #update_order, 1 do
+	for i = 1, #update_order do
 		local name = update_order[i]
 		local anim_data = bar_animations[name]
 

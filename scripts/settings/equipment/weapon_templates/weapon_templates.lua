@@ -20,19 +20,19 @@ end
 local function _require_group(path_prefix, group_name, ...)
 	local new_prefix = string.format(path_prefix, string.format("%s/%s", group_name, "%s"))
 
-	for ii = 1, select("#", ...), 1 do
+	for ii = 1, select("#", ...) do
 		_require_template(new_prefix, select(ii, ...))
 	end
 end
 
 local function _require_weapon_templates(path_prefix, template_groups, template_names)
-	for ii = 1, #template_groups, 1 do
+	for ii = 1, #template_groups do
 		local group = template_groups[ii]
 
 		_require_group(path_prefix, unpack(group))
 	end
 
-	for ii = 1, #template_names, 1 do
+	for ii = 1, #template_names do
 		local template_name = template_names[ii]
 
 		_require_template(path_prefix, template_name)

@@ -52,7 +52,7 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local unit_position = Unit.world_position(unit, self._aim_node)
 	local target_unit = perception_component.target_unit
 
-	if not ALIVE[target_unit] or (self._require_line_of_sight and not perception_component.has_line_of_sight) then
+	if not ALIVE[target_unit] or self._require_line_of_sight and not perception_component.has_line_of_sight then
 		local perception_extension = self._perception_extension
 		local last_los_position = perception_extension:last_los_position(target_unit)
 		local fallback_target, fallback_direction = nil

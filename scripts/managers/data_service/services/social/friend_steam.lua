@@ -16,7 +16,7 @@ FriendSteam.platform = function (self)
 end
 
 FriendSteam.platform_icon = function (self)
-	return "\ue06b"
+	return ""
 end
 
 FriendSteam.name = function (self)

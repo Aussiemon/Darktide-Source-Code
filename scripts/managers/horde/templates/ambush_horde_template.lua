@@ -21,13 +21,13 @@ local function _compose_spawn_list(composition)
 
 	local breeds = composition.breeds
 
-	for i = 1, #breeds, 1 do
+	for i = 1, #breeds do
 		local breed_data = breeds[i]
 		local breed_name = breed_data.name
 		local amount = breed_data.amount
 		local num_to_spawn = Math_random(amount[1], amount[2])
 
-		for j = 1, num_to_spawn, 1 do
+		for j = 1, num_to_spawn do
 			breeds_to_spawn[#breeds_to_spawn + 1] = breed_name
 		end
 	end
@@ -82,12 +82,12 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_spawn_locations = 0
 	local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 
-	for i = 1, #minion_spawner_radius_checks, 1 do
+	for i = 1, #minion_spawner_radius_checks do
 		local radius = minion_spawner_radius_checks[i]
 		local spawners = minion_spawn_system:spawners_in_range(path_position, radius)
 
 		if spawners then
-			for j = 1, #spawners, 1 do
+			for j = 1, #spawners do
 				nearby_spawners[#nearby_spawners + 1] = spawners[j]
 				num_spawn_locations = num_spawn_locations + 1
 			end
@@ -101,12 +101,12 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	if num_spawn_locations < max_spawn_locations then
 		local spawn_locations_left = max_spawn_locations - num_spawn_locations
 
-		for i = 1, #minion_spawner_radius_checks, 1 do
+		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
 			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
 
 			if occluded_positions then
-				for j = 1, #occluded_positions, 1 do
+				for j = 1, #occluded_positions do
 					local occluded_position = occluded_positions[j]
 					nearby_occluded_positions[#nearby_occluded_positions + 1] = occluded_position
 					spawn_locations_left = spawn_locations_left - 1
@@ -132,11 +132,11 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_spawned = 0
 	local spawns_per_location = math.floor(num_to_spawn / num_spawn_locations)
 
-	for i = 1, #nearby_spawners, 1 do
+	for i = 1, #nearby_spawners do
 		local spawner = nearby_spawners[i]
 		local breed_list = {}
 
-		for j = 1, spawns_per_location, 1 do
+		for j = 1, spawns_per_location do
 			local breed_name = spawn_list[num_spawned + 1]
 			num_spawned = num_spawned + 1
 			breed_list[#breed_list + 1] = breed_name
@@ -155,7 +155,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		local spawn_rotation = Quaternion.identity()
 		local minion_spawn_manager = Managers.state.minion_spawn
 
-		for i = 1, spawns_left, 1 do
+		for i = 1, spawns_left do
 			local spawn_position = nearby_occluded_positions[math.random(1, #nearby_occluded_positions)]
 
 			if spawn_position then

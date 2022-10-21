@@ -29,7 +29,7 @@ AdaptiveClockHandlerServer.init = function (self, channel_id)
 	self._ping_buffer_size = size
 	self._ping_buffer = Script.new_array(size)
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		self._ping_buffer[i] = 0
 	end
 
@@ -91,7 +91,7 @@ AdaptiveClockHandlerServer.rewind_ms = function (self)
 
 	local rewind_ms = 0
 
-	for i = 1, num_buffered, 1 do
+	for i = 1, num_buffered do
 		rewind_ms = rewind_ms + rewind_ms_buffer[i]
 	end
 

@@ -31,7 +31,7 @@ RespawnBeaconSystem.on_add_extension = function (self, world, unit, ...)
 	local num_beacons = #beacon_main_path_data
 
 	if num_beacons > 0 then
-		for i = 1, num_beacons, 1 do
+		for i = 1, num_beacons do
 			local data = beacon_main_path_data[i]
 
 			if distance < data.distance then
@@ -55,7 +55,7 @@ RespawnBeaconSystem.on_remove_extension = function (self, unit, extension_name)
 	local beacon_main_path_data = self._beacon_main_path_data
 	local index = nil
 
-	for i = 1, #beacon_main_path_data, 1 do
+	for i = 1, #beacon_main_path_data do
 		local data = beacon_main_path_data[i]
 
 		if unit == data.unit then
@@ -212,7 +212,7 @@ RespawnBeaconSystem._move_hogtied_players = function (self, players, best_beacon
 	local extension = self._unit_to_extension_map[best_beacon]
 	local move_positions = extension:get_best_respawn_positions()
 
-	for i = 1, #players, 1 do
+	for i = 1, #players do
 		local player = players[i]
 		local move_position = move_positions[i]
 
@@ -247,7 +247,7 @@ RespawnBeaconSystem._find_nearest_beacon_with_mainpath = function (self, side_id
 	local min_distance = ahead_player_distance + 10
 	local nearest_beacon_unit = nil
 
-	for i = 1, num_beacons, 1 do
+	for i = 1, num_beacons do
 		local data = beacon_main_path_data[i]
 		local beacon_unit = data.unit
 		local distance = data.distance
@@ -270,7 +270,7 @@ RespawnBeaconSystem._find_nearest_beacon_no_mainpath = function (self)
 	local midpoint_position = Vector3.zero()
 	local num_alive_players = #alive_players
 
-	for ii = 1, num_alive_players, 1 do
+	for ii = 1, num_alive_players do
 		local player = alive_players[ii]
 		local player_unit = player.player_unit
 		local position = ALIVE[player_unit]

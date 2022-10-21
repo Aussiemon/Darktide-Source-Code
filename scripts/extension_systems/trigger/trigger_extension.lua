@@ -253,7 +253,7 @@ TriggerExtension._can_trigger = function (self, component_guid, entering_unit)
 	else
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local player = player_unit_spawn_manager:owner(entering_unit)
-		local is_remote = (player and player.remote) or false
+		local is_remote = player and player.remote or false
 		local action = self._trigger_actions[component_guid]
 		local should_trigger_on_server = action:action_on_server() and not is_remote
 		local should_trigger_on_client = action:action_on_client() and is_remote

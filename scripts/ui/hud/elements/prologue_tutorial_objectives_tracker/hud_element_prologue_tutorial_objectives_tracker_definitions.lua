@@ -196,39 +196,39 @@ local animations = {
 				widget.alpha_multiplier = 1 * math.easeOutCubic(progress)
 			end
 		}
+	}
+}
+animations.remove_entry = {
+	{
+		name = "remove_entry",
+		end_time = 0.8,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			for _, widget in pairs(widgets) do
+				local scenegraph_id = widget.scenegraph_id
+				local scenegraph_definition = scenegraph_definition[scenegraph_id]
+				local size = scenegraph_definition.size
+				local size_x = size[1]
+				local styles = widget.style
+
+				for _, style in pairs(styles) do
+					local offset_x = style.offset[1]
+					style.offset[1] = offset_x - size_x * -1 * math.easeInCubic(progress)
+				end
+			end
+		end
 	},
-	remove_entry = {
-		{
-			name = "remove_entry",
-			end_time = 0.8,
-			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				for _, widget in pairs(widgets) do
-					local scenegraph_id = widget.scenegraph_id
-					local scenegraph_definition = scenegraph_definition[scenegraph_id]
-					local size = scenegraph_definition.size
-					local size_x = size[1]
-					local styles = widget.style
+	{
+		name = "fade_out",
+		end_time = 0.8,
+		start_time = 0.6,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local alpha = -1 * math.easeOutCubic(progress)
 
-					for _, style in pairs(styles) do
-						local offset_x = style.offset[1]
-						style.offset[1] = offset_x - size_x * -1 * math.easeInCubic(progress)
-					end
-				end
+			for _, widget in pairs(widgets) do
+				widget.alpha_multiplier = alpha
 			end
-		},
-		{
-			name = "fade_out",
-			end_time = 0.8,
-			start_time = 0.6,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local alpha = -1 * math.easeOutCubic(progress)
-
-				for _, widget in pairs(widgets) do
-					widget.alpha_multiplier = alpha
-				end
-			end
-		}
+		end
 	}
 }
 

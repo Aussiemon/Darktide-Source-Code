@@ -52,7 +52,7 @@ CinematicLinkCamera.update = function (self, dt, data)
 			alignment_inverse_pose = Matrix4x4.identity()
 		end
 
-		for i = 1, #DOF_PARAMETERS, 1 do
+		for i = 1, #DOF_PARAMETERS do
 			local dof_parameter = DOF_PARAMETERS[i]
 			local unit_node_name = dof_parameter.unit_node_name
 			local node_id = Unit.node(root_unit, unit_node_name)

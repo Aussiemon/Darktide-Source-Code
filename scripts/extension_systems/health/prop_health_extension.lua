@@ -26,7 +26,7 @@ PropHealthExtension.setup_from_component = function (self, max_health, invulnera
 		local ignored_colliders = Script.new_array(num_ids)
 		local unit = self._unit
 
-		for i = 1, num_ids, 1 do
+		for i = 1, num_ids do
 			ignored_colliders[i] = Unit.actor(unit, ignored_collider_actor_ids[i])
 		end
 
@@ -62,7 +62,7 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 	local ignored_colliders = self._ignored_colliders
 
 	if ignored_colliders then
-		for i = 1, #ignored_colliders, 1 do
+		for i = 1, #ignored_colliders do
 			if hit_actor == ignored_colliders[i] then
 				return
 			end

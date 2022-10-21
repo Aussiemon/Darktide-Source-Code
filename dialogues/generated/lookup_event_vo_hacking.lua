@@ -20,5 +20,3 @@ DialogueLookup[DialogueLookup_n + 8] = "info_hacking_mission_almost_done"
 DialogueLookup[DialogueLookup_n + 9] = "info_hacking_mission_complete"
 DialogueLookup[DialogueLookup_n + 10] = "response_to_hacking_fix_decode"
 DialogueLookup_n = DialogueLookup_n + 10
-
-return

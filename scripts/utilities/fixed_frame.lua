@@ -6,12 +6,13 @@ local FixedFrame = {
 		local fixed_time_step = GameParameters.fixed_time_step
 
 		return math.round(not_fixed_t / fixed_time_step) * fixed_time_step
-	end,
-	approximate_latest_fixed_time = function ()
-		local gameplay_time = Managers.time:time("gameplay")
-
-		return FixedFrame.clamp_to_fixed_time(gameplay_time)
 	end
 }
+
+FixedFrame.approximate_latest_fixed_time = function ()
+	local gameplay_time = Managers.time:time("gameplay")
+
+	return FixedFrame.clamp_to_fixed_time(gameplay_time)
+end
 
 return FixedFrame

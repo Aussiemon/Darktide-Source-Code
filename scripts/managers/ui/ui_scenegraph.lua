@@ -1,118 +1,119 @@
-local UIScenegraph = {
-	init_scenegraph_cached = function (scenegraph)
-		local hierarchical_scenegraph = scenegraph.hierarchical_scenegraph
+local UIScenegraph = {}
 
-		for i = 1, scenegraph.n_hierarchical_scenegraph, 1 do
-			local scenegraph_object = hierarchical_scenegraph[i]
+UIScenegraph.init_scenegraph_cached = function (scenegraph)
+	local hierarchical_scenegraph = scenegraph.hierarchical_scenegraph
 
-			EngineOptimized.scenegraph_cached_deinit(scenegraph_object.scene_graph_ref)
+	for i = 1, scenegraph.n_hierarchical_scenegraph do
+		local scenegraph_object = hierarchical_scenegraph[i]
 
-			scenegraph_object.scene_graph_ref = nil
-			local children = scenegraph_object.children
+		EngineOptimized.scenegraph_cached_deinit(scenegraph_object.scene_graph_ref)
 
-			if children then
-				local scene_graph_ref = EngineOptimized.scenegraph_cached_init(scenegraph_object.children)
-				scenegraph_object.scene_graph_ref = scene_graph_ref
-			end
+		scenegraph_object.scene_graph_ref = nil
+		local children = scenegraph_object.children
+
+		if children then
+			local scene_graph_ref = EngineOptimized.scenegraph_cached_init(scenegraph_object.children)
+			scenegraph_object.scene_graph_ref = scene_graph_ref
 		end
-	end,
-	init_scenegraph = function (scenegraph, scale)
-		scenegraph = table.clone(scenegraph)
-		local hierarchical_scenegraph = {}
-		local n_hierarchical_scenegraph = 0
-		local is_static = false
-		local num_scenegraph_objects = 0
+	end
+end
 
+UIScenegraph.init_scenegraph = function (scenegraph, scale)
+	scenegraph = table.clone(scenegraph)
+	local hierarchical_scenegraph = {}
+	local n_hierarchical_scenegraph = 0
+	local is_static = false
+	local num_scenegraph_objects = 0
+
+	for name, scene_object_data in pairs(scenegraph) do
+		is_static = is_static or scene_object_data.is_static or false
+		scene_object_data.name = name
+		num_scenegraph_objects = num_scenegraph_objects + 1
+
+		if not scene_object_data.parent then
+			n_hierarchical_scenegraph = n_hierarchical_scenegraph + 1
+			hierarchical_scenegraph[n_hierarchical_scenegraph] = scene_object_data
+			local position = scene_object_data.position or {
+				0,
+				0,
+				0
+			}
+			scene_object_data.local_position = position
+			scene_object_data.world_position = table.clone(position)
+		end
+	end
+
+	local num_iterated_objects = n_hierarchical_scenegraph
+
+	while num_iterated_objects < num_scenegraph_objects do
 		for name, scene_object_data in pairs(scenegraph) do
-			is_static = is_static or scene_object_data.is_static or false
-			scene_object_data.name = name
-			num_scenegraph_objects = num_scenegraph_objects + 1
+			local parent = scene_object_data.parent
 
-			if not scene_object_data.parent then
-				n_hierarchical_scenegraph = n_hierarchical_scenegraph + 1
-				hierarchical_scenegraph[n_hierarchical_scenegraph] = scene_object_data
-				local position = scene_object_data.position or {
-					0,
-					0,
-					0
-				}
-				scene_object_data.local_position = position
-				scene_object_data.world_position = table.clone(position)
-			end
-		end
+			if parent and not scene_object_data.world_position then
+				fassert(scenegraph[parent], "No such parent %s in scene graph for object %s", parent, name)
+				fassert(parent ~= name, "Object %q can't have itself as parent", name)
 
-		local num_iterated_objects = n_hierarchical_scenegraph
+				local parent_data = scenegraph[parent]
 
-		while num_iterated_objects < num_scenegraph_objects do
-			for name, scene_object_data in pairs(scenegraph) do
-				local parent = scene_object_data.parent
+				if parent_data.world_position then
+					num_iterated_objects = num_iterated_objects + 1
+					local position = scene_object_data.position or {
+						0,
+						0,
+						0
+					}
+					scene_object_data.local_position = position
 
-				if parent and not scene_object_data.world_position then
-					fassert(scenegraph[parent], "No such parent %s in scene graph for object %s", parent, name)
-					fassert(parent ~= name, "Object %q can't have itself as parent", name)
+					fassert(parent_data.world_position, "[UIScenegraph] - No world position for parent: %s", parent)
+					fassert(parent_data.world_position[3], "[UIScenegraph] - No layer for parent: %s", parent)
 
-					local parent_data = scenegraph[parent]
+					local parent_world_position = Vector3.from_array(parent_data.world_position)
+					local local_position = Vector3.from_array(position)
+					scene_object_data.world_position = Vector3.to_array(local_position + parent_world_position, {})
+					scene_object_data.size = scene_object_data.size or table.clone(parent_data.size)
 
-					if parent_data.world_position then
-						num_iterated_objects = num_iterated_objects + 1
-						local position = scene_object_data.position or {
-							0,
-							0,
-							0
-						}
-						scene_object_data.local_position = position
-
-						fassert(parent_data.world_position, "[UIScenegraph] - No world position for parent: %s", parent)
-						fassert(parent_data.world_position[3], "[UIScenegraph] - No layer for parent: %s", parent)
-
-						local parent_world_position = Vector3.from_array(parent_data.world_position)
-						local local_position = Vector3.from_array(position)
-						scene_object_data.world_position = Vector3.to_array(local_position + parent_world_position, {})
-						scene_object_data.size = scene_object_data.size or table.clone(parent_data.size)
-
-						if (scene_object_data.size[1] or 0) < 0 then
-							scene_object_data.size[1] = scene_object_data.size[1] + parent_data.size[1]
-						else
-							scene_object_data.size[1] = scene_object_data.size[1] or 0
-						end
-
-						if (scene_object_data.size[2] or 0) < 0 then
-							scene_object_data.size[2] = scene_object_data.size[2] + parent_data.size[2]
-						else
-							scene_object_data.size[2] = scene_object_data.size[2] or 0
-						end
-
-						local children = parent_data.children or {}
-						local num_children = parent_data.num_children or 0
-						children[num_children + 1] = scene_object_data
-						parent_data.children = children
-						parent_data.num_children = num_children + 1
+					if (scene_object_data.size[1] or 0) < 0 then
+						scene_object_data.size[1] = scene_object_data.size[1] + parent_data.size[1]
+					else
+						scene_object_data.size[1] = scene_object_data.size[1] or 0
 					end
+
+					if (scene_object_data.size[2] or 0) < 0 then
+						scene_object_data.size[2] = scene_object_data.size[2] + parent_data.size[2]
+					else
+						scene_object_data.size[2] = scene_object_data.size[2] or 0
+					end
+
+					local children = parent_data.children or {}
+					local num_children = parent_data.num_children or 0
+					children[num_children + 1] = scene_object_data
+					parent_data.children = children
+					parent_data.num_children = num_children + 1
 				end
 			end
 		end
-
-		scenegraph.n_hierarchical_scenegraph = n_hierarchical_scenegraph
-		scenegraph.hierarchical_scenegraph = hierarchical_scenegraph
-		scenegraph.is_static = is_static
-
-		if scenegraph.is_static then
-			local w = RESOLUTION_LOOKUP.width
-			local h = RESOLUTION_LOOKUP.height
-			scenegraph.w = w
-			scenegraph.h = h
-			scenegraph.dirty = false
-
-			UIScenegraph.init_scenegraph_cached(scenegraph)
-		end
-
-		local strict_scenegraph_table = table.make_strict_nil_exceptions(scenegraph)
-
-		UIScenegraph.update_scenegraph(strict_scenegraph_table, scale)
-
-		return strict_scenegraph_table
 	end
-}
+
+	scenegraph.n_hierarchical_scenegraph = n_hierarchical_scenegraph
+	scenegraph.hierarchical_scenegraph = hierarchical_scenegraph
+	scenegraph.is_static = is_static
+
+	if scenegraph.is_static then
+		local w = RESOLUTION_LOOKUP.width
+		local h = RESOLUTION_LOOKUP.height
+		scenegraph.w = w
+		scenegraph.h = h
+		scenegraph.dirty = false
+
+		UIScenegraph.init_scenegraph_cached(scenegraph)
+	end
+
+	local strict_scenegraph_table = table.make_strict_nil_exceptions(scenegraph)
+
+	UIScenegraph.update_scenegraph(strict_scenegraph_table, scale)
+
+	return strict_scenegraph_table
+end
 
 local function _safe_rect()
 	local safe_rect_default_value = 0
@@ -125,9 +126,9 @@ local function _handle_alignment(position, data, width, height, parent_size_x, p
 
 	if horizontal_alignment then
 		if horizontal_alignment == "center" then
-			Vector3.set_x(position, (Vector3.x(position) + parent_size_x / 2) - width / 2)
+			Vector3.set_x(position, Vector3.x(position) + parent_size_x / 2 - width / 2)
 		elseif horizontal_alignment == "right" then
-			Vector3.set_x(position, (Vector3.x(position) + parent_size_x) - width)
+			Vector3.set_x(position, Vector3.x(position) + parent_size_x - width)
 		end
 	end
 
@@ -135,9 +136,9 @@ local function _handle_alignment(position, data, width, height, parent_size_x, p
 
 	if vertical_alignment then
 		if vertical_alignment == "center" then
-			Vector3.set_y(position, (Vector3.y(position) + parent_size_y / 2) - height / 2)
+			Vector3.set_y(position, Vector3.y(position) + parent_size_y / 2 - height / 2)
 		elseif vertical_alignment == "bottom" then
-			Vector3.set_y(position, (Vector3.y(position) + parent_size_y) - height)
+			Vector3.set_y(position, Vector3.y(position) + parent_size_y - height)
 		end
 	end
 end
@@ -179,7 +180,7 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 	local h_inverse_scale = h * inverse_scale
 	local n_hierarchical_scenegraph = scenegraph.n_hierarchical_scenegraph
 
-	for i = 1, n_hierarchical_scenegraph, 1 do
+	for i = 1, n_hierarchical_scenegraph do
 		local scenegraph_object = hierarchical_scenegraph[i]
 		local current_world_position = nil
 		local size = scenegraph_object.size
@@ -191,7 +192,7 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 		local scenegraph_object_scale = scenegraph_object.scale
 		local scenegraph_object_parent = scenegraph_object.parent
 
-		if (not scenegraph_object_parent and not scenegraph_object_scale) or scenegraph_object_scale == "fit" or scenegraph_object_scale == "hud_fit" then
+		if not scenegraph_object_parent and not scenegraph_object_scale or scenegraph_object_scale == "fit" or scenegraph_object_scale == "hud_fit" then
 			size_x = w_inverse_scale
 			size_y = h_inverse_scale
 			local scale_offset_x = 0
@@ -305,7 +306,7 @@ UIScenegraph.get_render_size = function (scenegraph, scenegraph_object_name, opt
 		w = w * safe_rect_scale
 		h = h * safe_rect_scale
 
-		if scenegraph_object_scale == "fit" or (not scenegraph_object_parent and not scenegraph_object_scale) then
+		if scenegraph_object_scale == "fit" or not scenegraph_object_parent and not scenegraph_object_scale then
 			return w, h
 		elseif scenegraph_object_scale == "hud_fit" then
 			return w, h
@@ -354,7 +355,7 @@ UIScenegraph.get_size = function (scenegraph, scenegraph_object_name, optional_s
 		w = w * safe_rect_scale
 		h = h * safe_rect_scale
 
-		if scenegraph_object_scale == "fit" or (not scenegraph_object_parent and not scenegraph_object_scale) then
+		if scenegraph_object_scale == "fit" or not scenegraph_object_parent and not scenegraph_object_scale then
 			return w * inverse_scale, h * inverse_scale
 		elseif scenegraph_object_scale == "hud_fit" then
 			return w * inverse_scale, h * inverse_scale
@@ -404,7 +405,7 @@ UIScenegraph.size_scaled = function (scenegraph, scenegraph_object_name, optiona
 	local scenegraph_object_scale = scenegraph_object.scale
 	local scenegraph_object_parent = scenegraph_object.parent
 
-	if (not scenegraph_object_parent and not scenegraph_object_scale) or scenegraph_object_scale == "fit" then
+	if not scenegraph_object_parent and not scenegraph_object_scale or scenegraph_object_scale == "fit" then
 		return Vector2(w * inverse_scale, h * inverse_scale)
 	elseif scenegraph_object_scale == "hud_fit" then
 		return Vector2(w * inverse_scale, h * inverse_scale)

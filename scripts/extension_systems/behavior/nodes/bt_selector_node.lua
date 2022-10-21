@@ -14,7 +14,7 @@ BtSelectorNode.init_values = function (self, blackboard, action_data, node_data)
 
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_tree_node = child_node.tree_node
 		local child_action_data = child_tree_node.action_data
@@ -34,7 +34,7 @@ BtSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, e
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_condition_name = child_node.condition_name
 		local child_tree_node = child_node.tree_node

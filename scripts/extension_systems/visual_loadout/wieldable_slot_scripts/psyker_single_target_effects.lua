@@ -79,7 +79,7 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	local new_effect_name = effect_name and effect_name ~= last_effect_name
 
 	if effect_name and (new_effect_name or not old_effect_id) then
-		effect_id = World.create_particles(world, ((not self._is_local_unit or self._is_husk) and husk_effect_name) or effect_name, spawn_pos)
+		effect_id = World.create_particles(world, (not self._is_local_unit or self._is_husk) and husk_effect_name or effect_name, spawn_pos)
 		self._targeting_effect_id = effect_id
 		self._last_effect_name = effect_name
 
@@ -93,14 +93,14 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	end
 
 	if wwise_event and not old_playing_id then
-		if not self._is_local_unit or (self._is_husk and has_husk_events) then
+		if not self._is_local_unit or self._is_husk and has_husk_events then
 			wwise_event = wwise_event .. "_husk" or wwise_event
 		end
 
 		local playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
 		self._targeting_playing_id = playing_id
 		local stop_event = targeting_fx.wwise_event_stop
-		self._wwise_event_stop = ((not self._is_local_unit or (self._is_husk and has_husk_events)) and stop_event .. "_husk") or stop_event
+		self._wwise_event_stop = (not self._is_local_unit or self._is_husk and has_husk_events) and stop_event .. "_husk" or stop_event
 	elseif not wwise_event and old_playing_id then
 		local stop_event = self._wwise_event_stop
 

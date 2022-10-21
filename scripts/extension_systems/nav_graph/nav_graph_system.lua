@@ -42,7 +42,7 @@ end
 NavGraphSystem.register_smart_object_ids_to_extension = function (self, smart_object_ids, extension)
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
 
-	for i = 1, #smart_object_ids, 1 do
+	for i = 1, #smart_object_ids do
 		local smart_object_id = smart_object_ids[i]
 
 		fassert(smart_object_id_to_extension[smart_object_id] == nil, "[NavGraphSystem] Tried to register smart object id (%d) that was already registered.", smart_object_id)

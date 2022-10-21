@@ -17,13 +17,8 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 		local breeds = item.breeds
 		local weapon_template_name = item.weapon_template
 
-		if type(weapon_template_name) == "string" and weapon_template_name ~= "" then
-		else
+		if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
 			weapon_template_name = false
-
-			if false then
-				weapon_template_name = true
-			end
 		end
 
 		local workflow_state = item.workflow_state
@@ -40,7 +35,7 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 			local has_error = false
 			local error_string = ""
 
-			for i = 1, #REQUIRED_EVENTS, 1 do
+			for i = 1, #REQUIRED_EVENTS do
 				if not Unit.has_animation_event(unit_1p, REQUIRED_EVENTS[i]) then
 					has_error = true
 					error_string = error_string .. "\n" .. REQUIRED_EVENTS[i]

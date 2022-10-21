@@ -53,7 +53,7 @@ Utility.get_action_utility = function (action, blackboard, t, utility_data)
 				utility = 0
 			end
 		else
-			local current_value = (consideration.time_diff and t - value) or value
+			local current_value = consideration.time_diff and t - value or value
 			local min_value = consideration.min_value or 0
 			local normalized_value = math.clamp((current_value - min_value) / (consideration.max_value - min_value), 0, 1)
 			utility = get_utility_from_spline(consideration.spline, normalized_value)

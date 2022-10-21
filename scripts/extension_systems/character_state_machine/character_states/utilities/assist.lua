@@ -75,7 +75,7 @@ Assist._try_start_anim = function (self)
 	local in_progress = assisted_state_input_component.in_progress
 	local interactee_extension = self._interactee_extension
 	local force_assist = self._assisted_state_input_component.force_assist
-	local duration = (force_assist and FORCE_ASSIST_TIME) or interactee_extension:interaction_length()
+	local duration = force_assist and FORCE_ASSIST_TIME or interactee_extension:interaction_length()
 
 	if not was_in_progress and in_progress then
 		local anim_event = self._anim_settings.start_anim_event

@@ -461,7 +461,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 
 				view_using_input = view_instance:is_using_input()
 				local use_real_input = allow_next_input and not is_closing and view_using_input
-				local input = (use_real_input and input_service) or null_service
+				local input = use_real_input and input_service or null_service
 				local pass_on_input, pass_on_draw = view_instance:update(dt, t, input, view_data)
 
 				if view_using_input then
@@ -576,7 +576,7 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 			if draw_view then
 				draw_view = not view_instance:loading()
 				draw_layer = math.max(1, layers_per_view * i - layers_per_view)
-				local input = (allow_input and input_service) or null_service
+				local input = allow_input and input_service or null_service
 
 				if draw_view then
 					view_instance:draw(dt, t, input, draw_layer)
@@ -597,10 +597,10 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 		local allow_next_draw = view_data.allow_next_draw
 
 		if can_draw_view then
-			allow_draw = (allow_draw and allow_next_draw) or false
+			allow_draw = allow_draw and allow_next_draw or false
 		end
 
-		allow_input = (allow_input and allow_next_input) or false
+		allow_input = allow_input and allow_next_input or false
 	end
 
 	self._top_draw_layer = top_draw_layer
@@ -636,7 +636,7 @@ UIViewHandler._force_close = function (self, view_name)
 
 	active_views_data[view_name] = nil
 
-	for i = 1, self._num_active_views, 1 do
+	for i = 1, self._num_active_views do
 		if active_views_array[i] == view_name then
 			table.remove(active_views_array, i)
 
@@ -693,7 +693,7 @@ end
 
 UIViewHandler._set_game_world_blur = function (self, enabled, blur_intese_multiplier)
 	self._game_world_fullscreen_blur_enabled = enabled
-	self._game_world_fullscreen_blur_amount = (enabled and (blur_intese_multiplier or 1) * 0.75) or 0
+	self._game_world_fullscreen_blur_amount = enabled and (blur_intese_multiplier or 1) * 0.75 or 0
 end
 
 UIViewHandler.top_draw_layer = function (self)
@@ -758,7 +758,7 @@ UIViewHandler._set_view_worlds_enabled = function (self, view_name, enabled)
 				world_data.enabled = enabled
 				local world_enabled_state = world_manager:is_world_enabled(world_name)
 
-				if (enabled and not world_enabled_state) or (world_enabled_state and not enabled) then
+				if enabled and not world_enabled_state or world_enabled_state and not enabled then
 					world_manager:enable_world(world_name, enabled)
 				end
 			end

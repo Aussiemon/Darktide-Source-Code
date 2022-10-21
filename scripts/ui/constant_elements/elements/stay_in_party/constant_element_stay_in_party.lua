@@ -128,7 +128,7 @@ ConstantElementStayInParty._setup_input_legend = function (self)
 	local legend_inputs = self._definitions.legend_inputs
 	local input_legends_by_key = {}
 
-	for i = 1, #legend_inputs, 1 do
+	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 		local id = self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)

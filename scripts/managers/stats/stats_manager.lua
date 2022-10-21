@@ -85,7 +85,7 @@ end
 
 StatsManager.remove_tracker = function (self, id)
 	if self._account_id[id] then
-		slot2, slot3 = self:_remove_id_from_player(id)
+		local removed, error = self:_remove_id_from_player(id)
 	end
 
 	local stat_data = self._stat_data[id]
@@ -149,9 +149,9 @@ StatsManager._on_triggered = function (self, id, trigger_id, trigger_value, ...)
 	end
 
 	local dependents = self._stat_group[id].triggered_by[trigger_id]
-	local dependent_count = (dependents and #dependents) or 0
+	local dependent_count = dependents and #dependents or 0
 
-	for i = 1, dependent_count, 1 do
+	for i = 1, dependent_count do
 		local stat_id_to_check = dependents[i]
 
 		self:_check_triggered(id, stat_id_to_check, trigger_id, trigger_value, ...)
@@ -162,9 +162,9 @@ StatsManager._trigger_hook = function (self, player, trigger_id, trigger_value, 
 	fassert(self._is_server, "Error, hook '%s' triggered on client.", trigger_id)
 
 	local player_to_ids = self._player_to_ids[player:account_id()]
-	local player_to_ids_count = (player_to_ids and #player_to_ids) or 0
+	local player_to_ids_count = player_to_ids and #player_to_ids or 0
 
-	for i = 1, player_to_ids_count, 1 do
+	for i = 1, player_to_ids_count do
 		local id = player_to_ids[i]
 
 		self:_on_triggered(id, trigger_id, trigger_value, ...)
@@ -238,7 +238,7 @@ end
 
 StatsManager.record_collect_material = function (self, player, type, size)
 	type = type or "unknown"
-	local amount = (size == "large" and 10) or (size == "small" and 5) or 0
+	local amount = size == "large" and 10 or size == "small" and 5 or 0
 
 	self:_trigger_hook(player, "hook_collect_material", amount, type, player:profile().specialization)
 end

@@ -119,7 +119,7 @@ BtAlertedAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 	elseif alerted_mode == ALERTED_MODES.directional_alerted and not scratchpad.triggered_directional_alerted_loop then
 		scratchpad.triggered_directional_alerted_loop = true
 		local alerted_anim_events = action_data.alerted_anim_events
-		local alerted_event = (alerted_anim_events and Animation.random_event(alerted_anim_events)) or DEFAULT_ALERTED_LOOP_EVENT
+		local alerted_event = alerted_anim_events and Animation.random_event(alerted_anim_events) or DEFAULT_ALERTED_LOOP_EVENT
 
 		scratchpad.animation_extension:anim_event(alerted_event)
 	end
@@ -193,7 +193,7 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 	local alerted_duration = scratchpad.alerted_duration
 	local alerted_durtation_done = alerted_duration and alerted_duration < t
 	local vo_event = action_data.vo_event
-	local alert_done = has_los and ((alerted_duration and alerted_duration < t) or alerted_mode == ALERTED_MODES.instant_aggro)
+	local alert_done = has_los and (alerted_duration and alerted_duration < t or alerted_mode == ALERTED_MODES.instant_aggro)
 	local trigger_vo = alert_done and vo_event and alerted_mode == ALERTED_MODES.moving_alerted
 
 	if trigger_vo then
@@ -204,7 +204,7 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		return "done"
 	elseif alerted_durtation_done and alerted_mode == ALERTED_MODES.directional_alerted and not scratchpad.triggered_directional_alerted_loop then
 		local alerted_anim_events = action_data.alerted_anim_events
-		local alerted_event = (alerted_anim_events and Animation.random_event(alerted_anim_events)) or DEFAULT_ALERTED_LOOP_EVENT
+		local alerted_event = alerted_anim_events and Animation.random_event(alerted_anim_events) or DEFAULT_ALERTED_LOOP_EVENT
 
 		scratchpad.animation_extension:anim_event(alerted_event)
 

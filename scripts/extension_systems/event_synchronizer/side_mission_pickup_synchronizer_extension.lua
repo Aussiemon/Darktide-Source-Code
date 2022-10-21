@@ -49,7 +49,7 @@ SideMissionPickupSynchronizerExtension._sync_buffs = function (self, t)
 
 	for unique_id, player in pairs(players) do
 		if not player_buff_indices[player] then
-			for i = 1, self._player_buff_amount, 1 do
+			for i = 1, self._player_buff_amount do
 				self:_add_buff(t, player)
 			end
 		end
@@ -67,7 +67,7 @@ SideMissionPickupSynchronizerExtension.update = function (self, unit, dt, t)
 		local increment_value = self._increment_value
 
 		if increment_value ~= 0 then
-			local picked_up_unit = (increment_value > 0 and true) or false
+			local picked_up_unit = increment_value > 0 and true or false
 
 			self:_update_mission_increment(dt, increment_value)
 
@@ -75,7 +75,7 @@ SideMissionPickupSynchronizerExtension.update = function (self, unit, dt, t)
 				self:_update_buff_amount(t, picked_up_unit)
 			end
 
-			local flow_event_name = (picked_up_unit and "lua_picked_up_unit") or "lua_released_unit"
+			local flow_event_name = picked_up_unit and "lua_picked_up_unit" or "lua_released_unit"
 
 			Unit.flow_event(unit, flow_event_name)
 
@@ -114,7 +114,7 @@ end
 SideMissionPickupSynchronizerExtension._update_buff_amount = function (self, t, add_buff)
 	local player_manager = Managers.player
 	local players = player_manager:players()
-	self._player_buff_amount = (add_buff and self._player_buff_amount + 1) or self._player_buff_amount - 1
+	self._player_buff_amount = add_buff and self._player_buff_amount + 1 or self._player_buff_amount - 1
 	local ALIVE = ALIVE
 
 	for unique_id, player in pairs(players) do

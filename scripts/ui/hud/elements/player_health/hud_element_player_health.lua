@@ -71,9 +71,9 @@ HudElementPlayerHealth._set_disabled = function (self, disabled)
 	widgets_by_name.toughness_death_pulse.content.visible = disabled
 	local color_tint_5 = UIHudSettings.color_tint_5
 	local health_bar_frame_color = widgets_by_name.frame.style.texture.color
-	health_bar_frame_color[2] = (disabled and 255) or color_tint_5[2]
-	health_bar_frame_color[3] = (disabled and 0) or color_tint_5[3]
-	health_bar_frame_color[4] = (disabled and 0) or color_tint_5[4]
+	health_bar_frame_color[2] = disabled and 255 or color_tint_5[2]
+	health_bar_frame_color[3] = disabled and 0 or color_tint_5[3]
+	health_bar_frame_color[4] = disabled and 0 or color_tint_5[4]
 end
 
 HudElementPlayerHealth._is_player_disabled = function (self, unit_data_extension)

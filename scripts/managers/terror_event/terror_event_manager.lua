@@ -30,6 +30,7 @@ TerrorEventManager.init = function (self, world, is_server, network_event_delega
 		self._active_events = {}
 
 		if not DEDICATED_SERVER then
+			-- Nothing
 		end
 
 		self._minion_spawner_system = Managers.state.extension:system("minion_spawner_system")
@@ -50,7 +51,7 @@ TerrorEventManager._load_mission_event_templates = function (self, mission)
 	local mission_template_files = mission.terror_event_templates
 
 	if mission_template_files then
-		for i = 1, #mission_template_files, 1 do
+		for i = 1, #mission_template_files do
 			local template_file = mission_template_files[i]
 			local template = TerrorEventTemplates[template_file]
 			local events = template.events
@@ -74,7 +75,7 @@ TerrorEventManager._create_network_lookups = function (self, events)
 	local flow_events_lookup = {}
 
 	for _, nodes in pairs(events) do
-		for i = 1, #nodes, 1 do
+		for i = 1, #nodes do
 			local node = nodes[i]
 			local flow_event_name = node.flow_event_name
 
@@ -155,7 +156,7 @@ TerrorEventManager.stop_event = function (self, event_name)
 
 	local active_events = self._active_events
 
-	for i = 1, #active_events, 1 do
+	for i = 1, #active_events do
 		local event = active_events[i]
 
 		if event.name == event_name then
@@ -173,7 +174,7 @@ TerrorEventManager._event_has_minion_spawners = function (self, event_name)
 	local minion_spawn_system = self._minion_spawner_system
 	local spawners_exists = true
 
-	for i = 1, #nodes, 1 do
+	for i = 1, #nodes do
 		local spawner_group = nodes[i].spawner_group
 
 		if spawner_group then
@@ -208,7 +209,7 @@ TerrorEventManager.update = function (self, dt, t)
 
 	local start_events = self._start_events
 
-	for i = 1, #start_events, 1 do
+	for i = 1, #start_events do
 		local event = start_events[i]
 		local event_name = event.name
 		local data = event.data
@@ -318,12 +319,12 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 		local composition = template.compositions[math.random(1, #template.compositions)]
 		local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(composition)
 		local use_occluded_positions = data.use_occluded_positions
-		local spawn_from_minion_spawners = not use_occluded_positions or (data.spawners and math.random() > 0.5)
+		local spawn_from_minion_spawners = not use_occluded_positions or data.spawners and math.random() > 0.5
 
 		if spawn_from_minion_spawners then
 			local breeds = resistance_scaled_composition.breeds
 
-			for i = 1, #breeds, 1 do
+			for i = 1, #breeds do
 				local breed_data = breeds[i]
 				local breed_name = breed_data.name
 				local amount_range = breed_data.amount

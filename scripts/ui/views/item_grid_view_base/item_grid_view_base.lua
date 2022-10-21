@@ -131,7 +131,7 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 	}
 	local tab_ids = {}
 
-	for i = 1, #content, 1 do
+	for i = 1, #content do
 		local tab_content = content[i]
 		local display_name = tab_content.display_name
 		local display_icon = tab_content.icon
@@ -479,7 +479,7 @@ ItemGridViewBase.focus_on_offer = function (self, offer)
 	local item_grid = self._item_grid
 	local widgets = item_grid:widgets()
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local element = content.element
@@ -511,7 +511,7 @@ ItemGridViewBase.focus_on_item = function (self, item)
 	local item_grid = self._item_grid
 	local widgets = item_grid:widgets()
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local element = content.element
@@ -543,7 +543,7 @@ ItemGridViewBase.item_grid_index = function (self, item)
 	local item_grid = self._item_grid
 	local widgets = item_grid:widgets()
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local element = content.element

@@ -65,7 +65,7 @@ HubAimConstraints._get_aim_weight = function (self, aim_state, target_name)
 		return 0
 	end
 
-	local aim_state_name = (aim_state > 0 and STATES[aim_state]) or "passive"
+	local aim_state_name = aim_state > 0 and STATES[aim_state] or "passive"
 
 	return target_settings[aim_state_name] or 0
 end
@@ -150,8 +150,8 @@ HubAimConstraints._lerp_target = function (self, unit, unit_forward, unit_right,
 	local same_look_side = math.sign(Vector3.dot(source_to_current_target, unit_right)) == math.sign(Vector3.dot(source_to_target, unit_right))
 
 	if not same_look_side then
-		local current_relative_angle = (Vector3.length_squared(source_to_current_target) > 0 and Vector3.angle(source_to_current_target, unit_forward)) or 0
-		local target_relative_angle = (Vector3.length_squared(source_to_target) > 0 and Vector3.angle(unit_forward, source_to_target)) or 0
+		local current_relative_angle = Vector3.length_squared(source_to_current_target) > 0 and Vector3.angle(source_to_current_target, unit_forward) or 0
+		local target_relative_angle = Vector3.length_squared(source_to_target) > 0 and Vector3.angle(unit_forward, source_to_target) or 0
 		local big_angle = current_relative_angle + target_relative_angle
 
 		if PI <= big_angle then

@@ -82,7 +82,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	for config_name, fields in pairs(component_config) do
 		local cache = {}
 
-		for i = 1, STATE_CACHE_SIZE, 1 do
+		for i = 1, STATE_CACHE_SIZE do
 			local component = {}
 
 			_populate_component(fields, component)
@@ -170,7 +170,7 @@ PlayerUnitDataExtension.game_object_initialized = function (self, session, objec
 	local husk_go_data_table = {}
 	local husk_hud_go_data_table = {}
 
-	for i = 1, NUM_FIELDS, 1 do
+	for i = 1, NUM_FIELDS do
 		local field = FIELD_NETWORK_LOOKUP[i]
 		local component_name = field[1]
 		local field_name = field[2]
@@ -548,7 +548,7 @@ PlayerUnitDataExtension.post_update = function (self, unit, dt, t)
 		local last_fixed_frame = self._last_fixed_frame
 		local network_constants = NetworkConstants
 
-		for i = 1, NUM_FIELDS, 1 do
+		for i = 1, NUM_FIELDS do
 			local field = FIELD_NETWORK_LOOKUP[i]
 			local component_name = field[1]
 			local field_name = field[2]
@@ -661,7 +661,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 	Profiler.stop("fetching_fields")
 	Profiler.start("comparing_fields")
 
-	for i = 1, NUM_FIELDS, 1 do
+	for i = 1, NUM_FIELDS do
 		local field = FIELD_NETWORK_LOOKUP[i]
 		local component_name = field[1]
 		local field_name = field[2]
@@ -702,12 +702,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 		elseif type == "string" then
 			real_simulated_value = simulated_value
 			local local_correct = lookup[real_simulated_value] == authoritative_value
-
-			if skip_predict_verification then
-				correct = true
-			else
-				correct = local_correct
-			end
+			correct = skip_predict_verification and true or local_correct
 
 			if not local_correct then
 				component[field_name] = lookup[authoritative_value]
@@ -717,7 +712,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 				real_simulated_value = math.round(simulated_value / self._fixed_time_step) - frame_index
 				local type_info = NetworkConstants[network_type]
 				local min_value = type_info.min
-				correct = real_simulated_value == authoritative_value or (real_simulated_value <= min_value and authoritative_value <= min_value)
+				correct = real_simulated_value == authoritative_value or real_simulated_value <= min_value and authoritative_value <= min_value
 
 				if correct then
 					component[field_name] = simulated_value

@@ -147,7 +147,7 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 		local include_children = true
 		local material_variables = breed.side_color_material_variables
 
-		for i = 1, #material_variables, 1 do
+		for i = 1, #material_variables do
 			local variable_name = material_variables[i]
 
 			Unit.set_vector3_for_materials(unit, variable_name, vector_color, include_children)
@@ -160,7 +160,7 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 	if gib_template then
 		local gib_overrides_or_nil = self._inventory.gib_overrides
 		local random_seed = self._random_seed
-		local wounds_extension_or_nil = (use_wounds and ScriptUnit.extension(unit, "wounds_system")) or nil
+		local wounds_extension_or_nil = use_wounds and ScriptUnit.extension(unit, "wounds_system") or nil
 		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_overrides_or_nil, wounds_extension_or_nil)
 	end
 end
@@ -292,7 +292,7 @@ MinionVisualLoadoutExtension._wield_slot = function (self, slot_name)
 end
 
 MinionVisualLoadoutExtension.has_slot = function (self, slot_name)
-	return (self._slots[slot_name] and true) or false
+	return self._slots[slot_name] and true or false
 end
 
 MinionVisualLoadoutExtension.wield_slot = function (self, slot_name)
@@ -688,7 +688,7 @@ MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_
 
 	if is_server and not unit_is_local and (spawned_gibs or DEDICATED_SERVER) then
 		local game_object_id = self._game_object_id
-		local hit_zone_id = (hit_zone_name_or_nil and NetworkLookup.hit_zones[hit_zone_name_or_nil]) or nil
+		local hit_zone_id = hit_zone_name_or_nil and NetworkLookup.hit_zones[hit_zone_name_or_nil] or nil
 		local damage_profile_id = NetworkLookup.damage_profile_templates[damage_profile.name]
 
 		Managers.state.game_session:send_rpc_clients("rpc_minion_gib", game_object_id, attack_direction, damage_profile_id, hit_zone_id, not not optional_is_critical_strike)

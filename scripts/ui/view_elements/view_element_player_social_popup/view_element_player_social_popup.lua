@@ -108,7 +108,7 @@ ViewElementPlayerSocialPopup._draw_widgets = function (self, dt, t, input_servic
 
 	local menu_widgets = self._menu_widgets
 
-	for i = 1, #menu_widgets, 1 do
+	for i = 1, #menu_widgets do
 		local widget = menu_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
@@ -215,13 +215,13 @@ ViewElementPlayerSocialPopup._setup_menu_items = function (self, menu_items, num
 	local menu_widgets = self._menu_widgets
 	local num_menu_widgets = #menu_widgets
 
-	for i = 1, num_menu_widgets, 1 do
+	for i = 1, num_menu_widgets do
 		self:_unregister_widget_name(menu_widgets[i].name)
 
 		menu_widgets[i] = nil
 	end
 
-	for i = 1, num_menu_items, 1 do
+	for i = 1, num_menu_items do
 		local menu_item = menu_items[i]
 		local widget = self:_create_menu_widget(menu_item)
 		menu_widgets[#menu_widgets + 1] = widget

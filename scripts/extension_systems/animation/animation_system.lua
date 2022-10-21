@@ -162,7 +162,7 @@ AnimationSystem.rpc_player_anim_event_variable_floats = function (self, channel_
 		unit = third_person_unit
 	end
 
-	for i = 1, #variable_indexes, 1 do
+	for i = 1, #variable_indexes do
 		local variable_index = variable_indexes[i]
 		local variable_value = variable_values[i]
 

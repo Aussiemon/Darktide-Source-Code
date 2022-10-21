@@ -82,7 +82,7 @@ ImguiProfiler._draw_filtered_scopes = function (self)
 	if FILTERED_SCOPES_INDEX >= 1 then
 		local is_open = Imgui.tree_node("root", true)
 
-		for i = 1, math.max(FILTERED_SCOPES_INDEX - 1, 1), 1 do
+		for i = 1, math.max(FILTERED_SCOPES_INDEX - 1, 1) do
 			local filtered_scope = FILTERED_SCOPES[i]
 
 			self:_draw_lookup_table(filtered_scope, false)
@@ -110,7 +110,7 @@ ImguiProfiler._draw_lookup_table = function (self, in_scope, is_top_scope, keep_
 
 	local is_root = false
 	local is_leaf = in_scope.is_leaf ~= false
-	local profiler_suffix = (in_scope.average_profiler_scope and string.format(((keep_in_scope and "fixed: ") or "") .. "%.3f", in_scope.average_profiler_scope)) or ""
+	local profiler_suffix = in_scope.average_profiler_scope and string.format((keep_in_scope and "fixed: " or "") .. "%.3f", in_scope.average_profiler_scope) or ""
 	local header = nil
 
 	if is_leaf then
@@ -160,7 +160,7 @@ ImguiProfiler._draw_lookup_table = function (self, in_scope, is_top_scope, keep_
 
 		for _, scope in pairs(in_scope) do
 			if type(scope) == "table" then
-				if scope.parent == parent and (((scope.keep_in_scope or keep_in_scope) and scope.frame_index == LuaProfiler.CURRENT_FIXED_FRAME_INDEX) or scope.frame_index == LuaProfiler.CURRENT_FRAME_INDEX) then
+				if scope.parent == parent and ((scope.keep_in_scope or keep_in_scope) and scope.frame_index == LuaProfiler.CURRENT_FIXED_FRAME_INDEX or scope.frame_index == LuaProfiler.CURRENT_FRAME_INDEX) then
 					SORTED_SCOPES[#SORTED_SCOPES + 1] = scope
 					local value = scope.average_profiler_scope or 0
 
@@ -173,7 +173,7 @@ ImguiProfiler._draw_lookup_table = function (self, in_scope, is_top_scope, keep_
 				local stack = scope.stack
 
 				if stack then
-					for i = 1, stack.stack_index, 1 do
+					for i = 1, stack.stack_index do
 						local entry = stack[i]
 						SORTED_SCOPES[#SORTED_SCOPES + 1] = entry
 						local value = entry.average_profiler_scope or 0
@@ -227,14 +227,14 @@ ImguiProfiler._apply_filter = function (self, in_scope, keep_in_scope)
 
 	for _, scope in pairs(in_scope) do
 		if type(scope) == "table" then
-			if scope.parent == parent and (((scope.keep_in_scope or keep_in_scope) and scope.frame_index == LuaProfiler.CURRENT_FIXED_FRAME_INDEX) or scope.frame_index == LuaProfiler.CURRENT_FRAME_INDEX) then
+			if scope.parent == parent and ((scope.keep_in_scope or keep_in_scope) and scope.frame_index == LuaProfiler.CURRENT_FIXED_FRAME_INDEX or scope.frame_index == LuaProfiler.CURRENT_FRAME_INDEX) then
 				SORTED_SCOPES[#SORTED_SCOPES + 1] = scope
 			end
 
 			local stack = scope.stack
 
 			if stack then
-				for i = 1, stack.stack_index, 1 do
+				for i = 1, stack.stack_index do
 					local entry = stack[i]
 					SORTED_SCOPES[#SORTED_SCOPES + 1] = entry
 				end

@@ -103,7 +103,7 @@ local function _check(world, particle_id, cloud_name, parameter_name, particle_n
 end
 
 ParticleEffect._set_non_boxed_parameters = function (self, world, particle_id, parameters, set_material_function)
-	for i = 1, #parameters, 1 do
+	for i = 1, #parameters do
 		local parameter = parameters[i]
 		local cloud_name = parameter.cloud_name
 		local parameter_name = parameter.parameter_name
@@ -120,7 +120,7 @@ ParticleEffect._set_non_boxed_parameters = function (self, world, particle_id, p
 end
 
 ParticleEffect._set_boxed_parameters = function (self, world, particle_id, parameters, set_material_function)
-	for i = 1, #parameters, 1 do
+	for i = 1, #parameters do
 		local parameter = parameters[i]
 		local cloud_name = parameter.cloud_name
 		local parameter_name = parameter.parameter_name

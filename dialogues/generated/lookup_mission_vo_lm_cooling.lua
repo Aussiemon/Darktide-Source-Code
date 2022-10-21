@@ -56,5 +56,3 @@ DialogueLookup[DialogueLookup_n + 26] = "mission_cooling_overseer_office"
 DialogueLookup[DialogueLookup_n + 27] = "mission_cooling_production_line"
 DialogueLookup[DialogueLookup_n + 28] = "mission_cooling_worker_habitation"
 DialogueLookup_n = DialogueLookup_n + 28
-
-return

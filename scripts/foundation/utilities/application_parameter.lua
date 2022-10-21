@@ -73,7 +73,7 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 		local t = {}
 
 		if type(value) == "table" then
-			for i = 1, #value, 1 do
+			for i = 1, #value do
 				t[i] = value[i]
 			end
 		else
@@ -102,7 +102,7 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 				application_parameters[param] = nil
 			end
 
-			local no_value_exists_for_param = (has_more_args_after_current() and next_is_parameter()) or not has_more_args_after_current()
+			local no_value_exists_for_param = has_more_args_after_current() and next_is_parameter() or not has_more_args_after_current()
 
 			if no_value_exists_for_param then
 				application_parameters[param] = true
@@ -151,5 +151,3 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 		end
 	end
 end
-
-return

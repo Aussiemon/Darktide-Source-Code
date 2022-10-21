@@ -108,17 +108,17 @@ UIWeaponSpawner.update = function (self, dt, t, input_service)
 		if loader:is_all_loaded() then
 			if self._weapon_spawn_data then
 				self:_despawn_current_weapon()
-
-				local position = loading_weapon_data.position and Vector3.from_array(loading_weapon_data.position)
-				local rotation = loading_weapon_data.rotation and QuaternionBox.unbox(loading_weapon_data.rotation)
-				local scale = loading_weapon_data.scale and Vector3.from_array(loading_weapon_data.scale)
-				local item = loading_weapon_data.item
-				local link_unit_name = loading_weapon_data.link_unit_name
-
-				self:_spawn_weapon(item, link_unit_name, loader, position, rotation, scale)
-
-				self._loading_weapon_data = nil
 			end
+
+			local position = loading_weapon_data.position and Vector3.from_array(loading_weapon_data.position)
+			local rotation = loading_weapon_data.rotation and QuaternionBox.unbox(loading_weapon_data.rotation)
+			local scale = loading_weapon_data.scale and Vector3.from_array(loading_weapon_data.scale)
+			local item = loading_weapon_data.item
+			local link_unit_name = loading_weapon_data.link_unit_name
+
+			self:_spawn_weapon(item, link_unit_name, loader, position, rotation, scale)
+
+			self._loading_weapon_data = nil
 		end
 	end
 end
@@ -304,7 +304,7 @@ UIWeaponSpawner._is_pressed = function (self, input_service)
 end
 
 UIWeaponSpawner.activate_auto_spin = function (self, ignore_randomness)
-	self._auto_spin_random_seed = (ignore_randomness and 0) or math.random(5, 30000)
+	self._auto_spin_random_seed = ignore_randomness and 0 or math.random(5, 30000)
 end
 
 UIWeaponSpawner._auto_spin_values = function (self, dt, t)
@@ -318,7 +318,7 @@ UIWeaponSpawner._auto_spin_values = function (self, dt, t)
 	local progress_range = 0.3
 	local progress = math.sin((start_seed + t) * progress_speed) * progress_range
 	local auto_tilt_angle = -(progress * 0.5)
-	local auto_turn_angle = -((progress * math.pi) / 2)
+	local auto_turn_angle = -(progress * math.pi / 2)
 
 	return auto_tilt_angle, auto_turn_angle
 end

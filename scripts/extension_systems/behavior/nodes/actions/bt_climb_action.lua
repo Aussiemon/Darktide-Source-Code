@@ -59,7 +59,7 @@ BtClimbAction._calculate_jump = function (self, navigation_extension, nav_smart_
 		local ledge_position2 = smart_object_data.ledge_position2:unbox()
 		local distance_to_ledge_position_1_sq = Vector3.distance_squared(ledge_position1, entrance_position)
 		local distance_to_ledge_position_2_sq = Vector3.distance_squared(ledge_position2, entrance_position)
-		ledge_position = (distance_to_ledge_position_1_sq < distance_to_ledge_position_2_sq and ledge_position1) or ledge_position2
+		ledge_position = distance_to_ledge_position_1_sq < distance_to_ledge_position_2_sq and ledge_position1 or ledge_position2
 		scratchpad.climb_height = ledge_position.z - entrance_position.z
 		scratchpad.fall_height = ledge_position.z - exit_position.z
 	elseif ledge_type == "narrow_fence" then
@@ -77,7 +77,7 @@ BtClimbAction._calculate_jump = function (self, navigation_extension, nav_smart_
 	end
 
 	scratchpad.ledge_position = Vector3Box(ledge_position)
-	scratchpad.jump_type = (ledge_type == "edge" and "edge") or "fence"
+	scratchpad.jump_type = ledge_type == "edge" and "edge" or "fence"
 
 	return entrance_position, exit_position, ledge_position
 end
@@ -114,7 +114,7 @@ BtClimbAction._start_jump = function (self, unit, breed, action_data, t, scratch
 		scratchpad.climb_done_t = t + jump_duration
 		scratchpad.climb_state = "climbing"
 		local blend_timings = action_data.blend_timings
-		local blend_duration = (blend_timings and blend_timings[jump_event]) or 0
+		local blend_duration = blend_timings and blend_timings[jump_event] or 0
 		scratchpad.blend_timing = t + blend_duration
 	else
 		local fall_height = scratchpad.fall_height
@@ -123,7 +123,7 @@ BtClimbAction._start_jump = function (self, unit, breed, action_data, t, scratch
 		scratchpad.climb_state = "falling"
 		scratchpad.jump_down_anim_event = jump_event
 		local blend_timings = action_data.blend_timings
-		local blend_duration = (blend_timings and blend_timings[jump_event]) or 0
+		local blend_duration = blend_timings and blend_timings[jump_event] or 0
 		scratchpad.blend_timing = t + blend_duration
 	end
 end
@@ -133,7 +133,7 @@ BtClimbAction._jump_anim_event = function (self, unit, jump_height, anim_thresho
 	local locomotion_extension = scratchpad.locomotion_extension
 	local num_anim_thresholds = #anim_thresholds
 
-	for i = 1, num_anim_thresholds, 1 do
+	for i = 1, num_anim_thresholds do
 		local anim_threshold = anim_thresholds[i]
 
 		if jump_height < anim_threshold.height_threshold then
@@ -286,7 +286,7 @@ BtClimbAction._update_climbing = function (self, unit, breed, scratchpad, action
 				navigation_extension:set_nav_bot_position(exit_position)
 				scratchpad.locomotion_extension:teleport_to(exit_position)
 
-				slot10 = POSITION_LOOKUP[unit]
+				local unit_position = POSITION_LOOKUP[unit]
 			end
 
 			scratchpad.climb_state = "done"
@@ -372,7 +372,7 @@ BtClimbAction._catapult_units = function (self, unit, scratchpad, action_data)
 	local enemy_side_names = scratchpad.enemy_side_names
 	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
 		local hit_position = POSITION_LOOKUP[hit_unit]
 		local offset = hit_position - unit_position

@@ -7,7 +7,7 @@ FrameTableManager.init = function (self, debug_enabled, buffer_size)
 	self._old_counter = 0
 	self._buffer_size = buffer_size
 
-	for i = 1, buffer_size, 1 do
+	for i = 1, buffer_size do
 		self._current_buffer[i] = {}
 		self._old_buffer[i] = {}
 	end
@@ -29,7 +29,7 @@ FrameTableManager.get_table = function (self)
 
 		buffer_size = buffer_size * 2
 
-		for i = new_table_index, buffer_size, 1 do
+		for i = new_table_index, buffer_size do
 			self._current_buffer[i] = {}
 			self._old_buffer[i] = {}
 		end
@@ -43,7 +43,7 @@ FrameTableManager.get_table = function (self)
 end
 
 local function _clear_buffer(buffer, counter, debug)
-	for i = 1, counter, 1 do
+	for i = 1, counter do
 		local t = buffer[i]
 
 		for k, _ in pairs(t) do

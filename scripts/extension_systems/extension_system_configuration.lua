@@ -1,7 +1,7 @@
 local function _system_require(dir, ...)
 	local path = "scripts/extension_systems/" .. dir
 
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		require(path .. "/" .. select(i, ...))
 	end
 end

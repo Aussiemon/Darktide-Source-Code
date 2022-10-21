@@ -35,7 +35,7 @@ end
 local _timer_params = {}
 
 ViewElementGrid.set_expire_time = function (self, time)
-	local timer_text = (time and Text.format_time_span_long_form_localized(time)) or ""
+	local timer_text = time and Text.format_time_span_long_form_localized(time) or ""
 	local timer_loc_string = self._menu_settings.timer_loc_string
 
 	if timer_loc_string then
@@ -64,7 +64,7 @@ end
 
 ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 	local options = self._sort_options
-	local next_index = start_index or (self._active_sort_index and math.index_wrapper(self._active_sort_index + 1, #options)) or 1
+	local next_index = start_index or self._active_sort_index and math.index_wrapper(self._active_sort_index + 1, #options) or 1
 	local next_option = options[next_index]
 	local input_action = next_option.input_action
 	local sort_display_name = next_option.display_name
@@ -220,7 +220,7 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service)
 	Gui.render_pass(gui, 1, "to_screen", false)
 	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if widget and grid:is_widget_visible(widget) then
@@ -246,7 +246,7 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 		local ui_renderer = self._ui_resource_renderer
 		local num_widgets = #widgets
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
@@ -270,7 +270,7 @@ ViewElementGrid._destroy_grid_widgets = function (self)
 		local ui_renderer = self._ui_resource_renderer
 		local num_widgets = #widgets
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
@@ -292,7 +292,7 @@ end
 
 ViewElementGrid._clear_widgets = function (self, widgets)
 	if widgets then
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 			local widget_name = widget.name
 
@@ -315,9 +315,9 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 
 	fassert(template, "[ViewElementGrid] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, config)) or template.size
+	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, config)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local optional_style = template.style
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
@@ -370,12 +370,12 @@ ViewElementGrid._update_window_size = function (self)
 		}
 	end
 
-	self:_set_scenegraph_size("grid_title_background", nil, (using_title and title_height) or 0)
+	self:_set_scenegraph_size("grid_title_background", nil, using_title and title_height or 0)
 	self:_set_scenegraph_size("grid_background", nil, active_grid_size[2])
 	self:_set_scenegraph_size("grid_mask", nil, active_mask_size[2])
 	self:_set_scenegraph_size("grid_interaction", nil, active_mask_size[2])
 	self:_set_scenegraph_size("grid_scrollbar", nil, active_mask_size[2] - 20 - scrollbar_vertical_margin)
-	self:_set_scenegraph_position("grid_background", nil, (using_title and title_height) or 0)
+	self:_set_scenegraph_position("grid_background", nil, using_title and title_height or 0)
 end
 
 ViewElementGrid._assign_display_name = function (self, display_name)
@@ -554,7 +554,7 @@ ViewElementGrid._update_grid_widgets_visibility = function (self)
 		local ui_renderer = self._ui_resource_renderer
 		local content_blueprints = self._content_blueprints
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
@@ -570,7 +570,7 @@ ViewElementGrid._update_grid_widgets_visibility = function (self)
 			end
 		end
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]

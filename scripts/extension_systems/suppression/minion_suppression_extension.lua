@@ -113,7 +113,7 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, type, att
 	if new_value < 2 then
 		self._attack_delay = 0
 	else
-		self._attack_delay = (breed.ignore_attack_delay and 0) or attack_delay
+		self._attack_delay = breed.ignore_attack_delay and 0 or attack_delay
 	end
 
 	local is_suppressed = suppression_component.is_suppressed

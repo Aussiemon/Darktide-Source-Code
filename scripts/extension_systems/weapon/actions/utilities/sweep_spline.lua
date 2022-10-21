@@ -42,7 +42,7 @@ end
 SweepSpline.position_and_rotation = function (self, t)
 	local num_splines = self._num_splines
 	local spline_t = t * num_splines
-	local splines_index = (t == 1 and num_splines) or math.floor(spline_t) + 1
+	local splines_index = t == 1 and num_splines or math.floor(spline_t) + 1
 	local local_t = spline_t - (splines_index - 1)
 	local points = self._splines[splines_index].points
 	local p1 = points[1]:unbox()
@@ -78,7 +78,7 @@ SweepSpline._build = function (self, spline_settings)
 	self._splines, self._num_splines = self:_build_splines(points)
 	local num_points = #points
 
-	for i = 1, num_points, 1 do
+	for i = 1, num_points do
 		local point = points[i]
 		points[i] = Vector3Box(point)
 	end
@@ -90,7 +90,7 @@ end
 SweepSpline._create_points = function (self, points)
 	local spline_points = {}
 
-	for i = 1, #points, 1 do
+	for i = 1, #points do
 		local point = points[i]
 		spline_points[i] = Vector3(point[1], point[2], point[3])
 	end

@@ -1,285 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Definitions = require("scripts/ui/views/mission_board_view/mission_board_view_definitions")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
@@ -490,7 +208,7 @@ MissionBoardView.update = function (self, dt, t, input_service)
 		local render_settings = self._render_settings
 		local inverse_scale = render_settings.inverse_scale
 
-		for i = 1, #widgets, 1 do
+		for i = 1, #widgets do
 			local widget = widgets[i]
 
 			self:_set_icon_position(widget, inverse_scale)
@@ -569,7 +287,7 @@ end
 MissionBoardView._init_widgets = function (self)
 	local widgets = self._widgets
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		widgets[i].alpha_multiplier = 0
 	end
 end
@@ -581,7 +299,7 @@ MissionBoardView._fade_widgets = function (self, target, dt)
 	local is_waiting_for_camera_transition = self._waiting_for_camera_transition
 	local widgets = self._widgets
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local alpha_multiplier = widget.alpha_multiplier
 
@@ -702,7 +420,7 @@ MissionBoardView._handle_navigation_between_icons = function (self, direction)
 	local shortest_distance = math_huge
 	local closest_widget = nil
 
-	for i = 1, #icon_widgets, 1 do
+	for i = 1, #icon_widgets do
 		local widget = icon_widgets[i]
 
 		if widget ~= current_widget then
@@ -746,7 +464,7 @@ MissionBoardView._draw_widgets = function (self, dt, t, input_service, ui_render
 
 	local hovered_widget = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 
 		if widget.visible then
@@ -804,92 +522,33 @@ MissionBoardView._refresh_missions = function (self, t)
 		Log.error("MissionBoardView", "Fetching missions failed %s", error)
 
 		self._is_loading = false
-		self._missions_data_expiry_time = (t and t + 5) or 0
+		self._missions_data_expiry_time = t and t + 5 or 0
 	end)
 end
 
 MissionBoardView._populate_missions_data = function (self, t)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local player_level = self._current_player_level
 	local widgets = self._icon_widgets
 	local active_missions = self._active_missions
 	local missions_data = self._missions_data
 
 	if missions_data.happening then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-12, warpins: 1 ---
 		self._mission_info_panel:set_report_data(missions_data.happening)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 13-15, warpins: 2 ---
 	local missions = missions_data.missions
 	local i = 1
 	local num_missions = #missions
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 16-17, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 18-67, warpins: 0 ---
 	while i <= num_missions do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 18-18, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 19-27, warpins: 1 ---
 		local mission_data = missions[i]
 		local mission_id = mission_data.id
 		local map_data = rawget(Missions, mission_data.map)
 
 		if not active_missions[mission_id] and map_data then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 30-32, warpins: 1 ---
 			local is_locked = player_level < mission_data.required_level
 
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 36-38, warpins: 2 ---
 			if t < mission_data.expiry_game_time then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 39-56, warpins: 1 ---
 				mission_data.flags.locked = is_locked
 				local widget_index = #widgets + 1
 				local widget, column, row = self:_create_map_icon_widget(mission_data, map_data)
@@ -898,224 +557,56 @@ MissionBoardView._populate_missions_data = function (self, t)
 				self:_set_widget_at_grid_pos(widget, column, row)
 
 				active_missions[mission_id] = mission_data
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #1 ---
-
-
-
-		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 57-58, warpins: 2 ---
-			if not map_data then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 59-64, warpins: 1 ---
-				Log.exception("MissionBoard", "Backend refers to unknown mission %s", mission_data.map)
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-			--- END OF BLOCK #0 ---
-
-
-
+		elseif not map_data then
+			Log.exception("MissionBoard", "Backend refers to unknown mission %s", mission_data.map)
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 65-66, warpins: 4 ---
 		i = i + 1
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 67-67, warpins: 4 ---
-		--- END OF BLOCK #3 ---
-
-
-
 	end
-
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 67-67, warpins: 1 ---
-	return
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 MissionBoardView._player_level = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-8, warpins: 1 ---
 	local player = self:_player()
 	local profile = player:profile()
 	local player_level = profile.current_level
 
 	return player_level
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._create_map_icon_widget = function (self, mission_data, map_data)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local zone_data = self._zone_data[map_data.zone_id]
 
 	if not zone_data then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-16, warpins: 1 ---
 		zone_data = table.clone(Zones[map_data.zone_id])
 		local visibility_group = zone_data.map_node
 		self._zone_data[map_data.zone_id] = zone_data
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 17-21, warpins: 2 ---
 	local widget_blueprint_name = nil
 	local flags = mission_data.flags
 
 	if flags.locked then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 22-23, warpins: 1 ---
 		widget_blueprint_name = "locked_mission_icon"
-		--- END OF BLOCK #0 ---
-
-
-
+	elseif flags.flash then
+		widget_blueprint_name = "flash_mission_icon"
+	elseif flags.happening_mission then
+		widget_blueprint_name = "happening_mission_icon"
+	elseif flags.altered then
+		widget_blueprint_name = "circumstance_mission_icon"
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 24-26, warpins: 1 ---
-		if flags.flash then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 27-28, warpins: 1 ---
-			widget_blueprint_name = "flash_mission_icon"
-			--- END OF BLOCK #0 ---
-
-
-
-		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 29-31, warpins: 1 ---
-			if flags.happening_mission then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 32-33, warpins: 1 ---
-				widget_blueprint_name = "happening_mission_icon"
-				--- END OF BLOCK #0 ---
-
-
-
-			else
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 34-36, warpins: 1 ---
-				if flags.altered then
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 37-38, warpins: 1 ---
-					widget_blueprint_name = "circumstance_mission_icon"
-					--- END OF BLOCK #0 ---
-
-
-
-				else
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 39-39, warpins: 1 ---
-					widget_blueprint_name = "mission_icon"
-					--- END OF BLOCK #0 ---
-
-
-
-				end
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-			--- END OF BLOCK #0 ---
-
-
-
-		end
-		--- END OF BLOCK #0 ---
-
-
-
+		widget_blueprint_name = "mission_icon"
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 40-45, warpins: 5 ---
 	local widget_blueprint = Blueprints[widget_blueprint_name]
 	local widget_definition = self._icon_widget_definitions[widget_blueprint_name]
 
 	if not widget_definition then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 46-57, warpins: 1 ---
 		local scenegraph_id = "screen"
 		widget_definition = UIWidget.create_definition(widget_blueprint.pass_template, scenegraph_id, widget_blueprint.content_overrides, widget_blueprint.size, widget_blueprint.style)
 		self._icon_widget_definitions[widget_blueprint_name] = widget_definition
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 58-92, warpins: 2 ---
 	local name_postfix = self._icon_name_postfix
 	local widget_name = "mission_icon_" .. name_postfix
 	self._icon_name_postfix = name_postfix + 1
@@ -1126,33 +617,9 @@ MissionBoardView._create_map_icon_widget = function (self, mission_data, map_dat
 	local on_select_callback = callback(self, "cb_select_mission", widget)
 
 	local function right_pressed_callback()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		if hotspot.is_hover then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 5-7, warpins: 1 ---
 			self._right_clicked_last_frame = false
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 8-8, warpins: 2 ---
-		return
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
 	widget_blueprint.init(widget, mission_data, zone_data, column, row, on_select_callback, right_pressed_callback)
@@ -1160,36 +627,14 @@ MissionBoardView._create_map_icon_widget = function (self, mission_data, map_dat
 	local mission_board_extension = self._mission_board_extension
 
 	if mission_board_extension and zone_data and zone_data.map_node then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 98-102, warpins: 1 ---
 		local zone_node_index = mission_board_extension:node_index(zone_data.map_node)
 		widget_content.zone_node_index = zone_node_index
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 103-107, warpins: 4 ---
 	return widget, column, row
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 MissionBoardView._set_icon_position = function (self, widget, inverse_scale)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-35, warpins: 1 ---
 	local node_name = widget.content.node_name
 	local node_camera_pos_x, node_camera_pos_y, camera_distance = self:_camera_position_for_node(node_name, inverse_scale)
 	local widget_content = widget.content
@@ -1203,76 +648,30 @@ MissionBoardView._set_icon_position = function (self, widget, inverse_scale)
 	widget.offset[2] = node_camera_pos_y + anchor_point_offset[2]
 
 	return camera_distance
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._icon_position = function (self, widget)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	local content = widget.content
 	local widget_offset = widget.offset
 	local widget_pos_x = widget_offset[1] - content.anchor_point_offset[1]
 	local widget_pos_y = widget_offset[2] - content.anchor_point_offset[2]
 
 	return widget_pos_x, widget_pos_y
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._set_icon_layers = function (self, widgets)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local icon_layer_step = ViewSettings.icon_layer_step
 
 	table.sort(widgets, _sort_comparison)
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-17, warpins: 0 ---
-	for i = 1, #widgets, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 12-17, warpins: 2 ---
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local layer = (i - 1) * icon_layer_step
 		widget.offset[3] = layer
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 18-18, warpins: 1 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._scale_icon = function (self, widget, scale)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-49, warpins: 1 ---
 	local content = widget.content
 	local style = widget.style
 	content.anchor_point_offset[1] = style.anchor_point_offset[1] * scale
@@ -1285,127 +684,32 @@ MissionBoardView._scale_icon = function (self, widget, scale)
 	hotspot_style.size[1] = hotspot_style.orig_size[1] * scale
 	hotspot_style.size[2] = hotspot_style.orig_size[2] * scale
 	hotspot_style.offset[2] = hotspot_style.orig_offset[2] * scale
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._calculate_min_max_distance = function (self, inverse_scale)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local min_distance = math.huge
 	local max_distance = 0
 	local grid_size = ViewSettings.grid_size
 	local node_name_format = ViewSettings.node_name_format
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-37, warpins: 0 ---
-	for row = 1, grid_size[2], 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 12-15, warpins: 2 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 16-34, warpins: 0 ---
-		for column = 1, grid_size[1], 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 16-28, warpins: 2 ---
+	for row = 1, grid_size[2] do
+		for column = 1, grid_size[1] do
 			local node_name = string.format(node_name_format, column, row)
 			local _, _, camera_distance = self:_camera_position_for_node(node_name, inverse_scale)
 
 			if camera_distance < min_distance then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 29-30, warpins: 1 ---
 				min_distance = camera_distance
-				--- END OF BLOCK #0 ---
-
-
-
-			else
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 31-32, warpins: 1 ---
-				if max_distance < camera_distance then
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 33-33, warpins: 1 ---
-					max_distance = camera_distance
-					--- END OF BLOCK #0 ---
-
-
-
-				end
-				--- END OF BLOCK #0 ---
-
-
-
+			elseif max_distance < camera_distance then
+				max_distance = camera_distance
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 34-34, warpins: 3 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 35-37, warpins: 1 ---
 		self._min_distance = min_distance
 		self._max_distance = max_distance
-		--- END OF BLOCK #2 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 38-38, warpins: 1 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._camera_position_for_node = function (self, node_name, inverse_scale)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-22, warpins: 1 ---
 	local mission_board_extension = self._mission_board_extension
 	local node_position = mission_board_extension:node_position(node_name)
 	local camera_manager = Managers.state.camera
@@ -1415,209 +719,69 @@ MissionBoardView._camera_position_for_node = function (self, node_name, inverse_
 	node_camera_pos_y = node_camera_pos_y * inverse_scale
 
 	return node_camera_pos_x, node_camera_pos_y, camera_distance
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._set_selected_mission_widget = function (self, widget)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	if widget then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 3-18, warpins: 1 ---
 		local content = widget.content
 		local mission_data = content.mission_data
 		local is_selected = self._mission_info_panel:set_active_mission(mission_data, callback(self, "cb_on_play_pressed"))
 		widget.content.hotspot.is_selected = is_selected
 
 		if not is_selected then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 19-20, warpins: 1 ---
 			return
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 21-25, warpins: 1 ---
 		self._mission_info_panel:set_active_mission(nil)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 26-28, warpins: 3 ---
 	if self._selected_mission_widget then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 29-33, warpins: 1 ---
 		local hotspot = self._selected_mission_widget.content.hotspot
 		hotspot.is_selected = false
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 34-39, warpins: 2 ---
 	self._selected_mission_widget = widget
 
 	self:_set_focused_grid_widget(widget)
-
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._update_refresh_missions = function (self, dt, t)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local refresh_in = self._missions_data_expiry_time - t
 	local status_widget = self._widgets_by_name.refresh_status
 
 	if self._is_loading then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-14, warpins: 1 ---
 		status_widget.content.text = self:_localize("loc_mission_board_view_syncing")
-		--- END OF BLOCK #0 ---
+	elseif refresh_in > 0 then
+		if math.floor(refresh_in) == 3 and not self._played_refresh_warning_sound then
+			self:_play_sound(UISoundEvents.mission_board_receiving_soon)
 
-
-
-	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 15-17, warpins: 1 ---
-		if refresh_in > 0 then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 18-23, warpins: 1 ---
-			if math.floor(refresh_in) == 3 and not self._played_refresh_warning_sound then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 27-33, warpins: 1 ---
-				self:_play_sound(UISoundEvents.mission_board_receiving_soon)
-
-				self._played_refresh_warning_sound = true
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 34-54, warpins: 3 ---
-			local time_left = {}
-			time_left.minutes = math.floor(refresh_in / 60)
-			time_left.seconds = math.floor(refresh_in) % 60
-			status_widget.content.text = self:_localize("loc_mission_board_view_time_til_next_sync", true, time_left)
-			--- END OF BLOCK #1 ---
-
-
-
-		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 55-65, warpins: 1 ---
-			self:_play_sound(UISoundEvents.mission_board_receiving)
-			self:_refresh_missions(t)
-
-			self._played_refresh_warning_sound = false
-			--- END OF BLOCK #0 ---
-
-
-
+			self._played_refresh_warning_sound = true
 		end
-		--- END OF BLOCK #0 ---
 
+		local time_left = {
+			minutes = math.floor(refresh_in / 60),
+			seconds = math.floor(refresh_in) % 60
+		}
+		status_widget.content.text = self:_localize("loc_mission_board_view_time_til_next_sync", true, time_left)
+	else
+		self:_play_sound(UISoundEvents.mission_board_receiving)
+		self:_refresh_missions(t)
 
-
+		self._played_refresh_warning_sound = false
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 66-66, warpins: 3 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 MissionBoardView._update_mission_icon = function (self, widget, time)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local content = widget.content
 	local data = content.mission_data
 	local expiry = data.expiry_game_time
 	local time_left = expiry - time
 	local expired = time_left < 0
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 11-13, warpins: 2 ---
 	local inactive = time < data.start_game_time
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 17-20, warpins: 2 ---
 	local hotspot = content.hotspot
 	local hotspot_disabled = hotspot.disabled
 
 	if hotspot_disabled and not inactive and not expired then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 25-40, warpins: 1 ---
 		widget.visible = true
 		hotspot.disabled = false
 
@@ -1626,96 +790,31 @@ MissionBoardView._update_mission_icon = function (self, widget, time)
 		self._play_icon_show_sound = true
 		self._recalculate_icon_positions = true
 		self._notify_navigation_input_changed = true
-		--- END OF BLOCK #0 ---
+	elseif expired and not hotspot_disabled then
+		hotspot.disabled = true
 
+		self:_animate_widget(widget, "hide_icon")
 
+		self._play_icon_hide_sound = true
 
-	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 41-42, warpins: 3 ---
-		if expired and not hotspot_disabled then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 45-58, warpins: 1 ---
-			hotspot.disabled = true
-
-			self:_animate_widget(widget, "hide_icon")
-
-			self._play_icon_hide_sound = true
-
-			if widget == self:_focused_grid_widget() then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 59-61, warpins: 1 ---
-				self:_focus_next_grid_widget()
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-			--- END OF BLOCK #0 ---
-
-
-
+		if widget == self:_focused_grid_widget() then
+			self:_focus_next_grid_widget()
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 62-64, warpins: 5 ---
 	content.time_left = time_left
 
 	return expired and not widget.visible
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 67-67, warpins: 2 ---
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 MissionBoardView._draw_icon_info = function (self, widget, ui_renderer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local info_widget = self._widgets_by_name.icon_info
 	local widget_content = widget.content
 
 	if widget_content.hotspot.disabled then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-8, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 9-45, warpins: 2 ---
 	local info_widget_content = info_widget.content
 	local formatted_time = _format_timer_text(math.max(widget_content.time_left, 0))
 	info_widget_content.tag_reward = widget_content.tag_reward
@@ -1724,151 +823,49 @@ MissionBoardView._draw_icon_info = function (self, widget, ui_renderer)
 	local widget_pos_x, widget_pos_y = self:_icon_position(widget)
 	local info_offset = widget_content.info_anchor_point_offset
 	local info_widget_size = info_widget_content.size
-	info_widget.offset[1] = (widget_pos_x + info_offset[1]) - info_widget_size[1]
-	info_widget.offset[2] = (widget_pos_y + info_offset[2]) - info_widget_size[2]
+	info_widget.offset[1] = widget_pos_x + info_offset[1] - info_widget_size[1]
+	info_widget.offset[2] = widget_pos_y + info_offset[2] - info_widget_size[2]
 
 	UIWidget.draw(info_widget, ui_renderer)
-
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 MissionBoardView._show_zones = function (self, shown_zones)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local zone_data = self._zone_data
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-44, warpins: 0 ---
 	for _, data in pairs(zone_data) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-10, warpins: 1 ---
 		local map_node = data.map_node
 		local is_visible = shown_zones[map_node]
 
 		if not data.is_visible and is_visible then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 13-25, warpins: 1 ---
 			local event = string.format("lua_mission_board_show_%s", map_node)
 
 			Unit.flow_event(self._mission_board_unit, event)
 
 			data.is_visible = true
-			--- END OF BLOCK #0 ---
+		elseif data.is_visible and not is_visible then
+			local event = string.format("lua_mission_board_hide_%s", map_node)
 
+			Unit.flow_event(self._mission_board_unit, event)
 
-
-		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 26-28, warpins: 2 ---
-			if data.is_visible and not is_visible then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 31-42, warpins: 1 ---
-				local event = string.format("lua_mission_board_hide_%s", map_node)
-
-				Unit.flow_event(self._mission_board_unit, event)
-
-				data.is_visible = false
-				--- END OF BLOCK #0 ---
-
-
-
-			end
-			--- END OF BLOCK #0 ---
-
-
-
+			data.is_visible = false
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 43-44, warpins: 5 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 45-45, warpins: 1 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._draw_zone_line = function (self, widget, ui_renderer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local mission_board_unit = self._mission_board_unit
 
 	if not mission_board_unit then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-4, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 5-9, warpins: 2 ---
 	local content = widget.content
 	local zone_node_name = content.zone_data.map_node
 
 	if not zone_node_name then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 10-10, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 11-65, warpins: 2 ---
 	local inverse_scale = ui_renderer.inverse_scale
 	local zone_node_camera_pos_x, zone_node_camera_pos_y = self:_camera_position_for_node(zone_node_name, inverse_scale)
 	local node_name = content.node_name
@@ -1884,85 +881,37 @@ MissionBoardView._draw_zone_line = function (self, widget, ui_renderer)
 	line_style.size[1] = line_length * content.zone_line_progress
 
 	UIWidget.draw(zone_line, ui_renderer)
-
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._animate_widget = function (self, widget, animation_name)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	local playing_animation = widget.content.animation_id
 
 	if playing_animation and self:_is_animation_active(playing_animation) then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 11-14, warpins: 1 ---
 		self:_complete_animation(playing_animation)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 15-25, warpins: 3 ---
-	local params = {}
-	params.widget = widget
+	local params = {
+		widget = widget
+	}
 	local animation_id = self:_start_animation(animation_name, nil, params)
 	widget.content.animation_id = animation_id
-
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 local _NUM_COLUMNS = ViewSettings.grid_size[1]
 local _NUM_ROWS = ViewSettings.grid_size[2]
 
 MissionBoardView._get_widget_at_grid_pos = function (self, column, row)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local index = row * _NUM_COLUMNS + column
 
 	return self._icon_widgets_by_grid_pos[index]
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._set_widget_at_grid_pos = function (self, widget, column, row)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local index = row * _NUM_COLUMNS + column
 	self._icon_widgets_by_grid_pos[index] = widget
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 MissionBoardView._get_cell_for_mission_icon = function (self, mission_data)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local row = math.ceil((mission_data.resistance + mission_data.challenge) / 2)
 
 	assert(row <= _NUM_ROWS)
@@ -1974,285 +923,70 @@ MissionBoardView._get_cell_for_mission_icon = function (self, mission_data)
 	local v = ViewSettings.icon_placement_v
 	local column = last_part * v
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 15-34, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 35-50, warpins: 0 ---
-	for i = 1, k, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 35-39, warpins: 2 ---
+	for i = 1, k do
 		column = (column + v) % k
 
 		if column < _NUM_COLUMNS and not self:_get_widget_at_grid_pos(column + 1, row) then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 47-49, warpins: 1 ---
 			return column + 1, row
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 50-50, warpins: 3 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 51-52, warpins: 1 ---
 	return nil, nil
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 MissionBoardView._focused_grid_widget = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local widget = self._icon_widgets[self._focused_widget_index]
 	widget = widget or self:_focus_next_grid_widget()
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 10-10, warpins: 2 ---
 	return widget
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 MissionBoardView._set_focused_grid_widget = function (self, widget_to_focus)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local icon_widgets = self._icon_widgets
 	widget_to_focus = widget_to_focus or icon_widgets[self._focused_widget_index]
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-7, warpins: 2 ---
 	if widget_to_focus then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 8-11, warpins: 1 ---
 		if widget_to_focus == icon_widgets[self._focused_widget_index] then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 12-12, warpins: 1 ---
 			return
-			--- END OF BLOCK #0 ---
-
-
-
 		end
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 13-16, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 17-36, warpins: 0 ---
-		for i = 1, #icon_widgets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 17-21, warpins: 2 ---
+		for i = 1, #icon_widgets do
 			local icon_widget = icon_widgets[i]
 			local icon_widget_hotspot = icon_widget.content.hotspot
 
 			if icon_widget == widget_to_focus then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 22-25, warpins: 1 ---
 				self._focused_widget_index = i
 				local is_focused = icon_widget == self._selected_mission_widget or not self._using_cursor_navigation
-				--- END OF BLOCK #0 ---
-
-				FLOW; TARGET BLOCK #1
-
-
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #1 32-33, warpins: 3 ---
 				icon_widget_hotspot.is_selected = is_focused
-				--- END OF BLOCK #1 ---
-
-
-
 			else
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 34-35, warpins: 1 ---
 				icon_widget_hotspot.is_selected = false
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 36-36, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 37-37, warpins: 1 ---
-		--- END OF BLOCK #3 ---
-
-
-
 	else
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 38-40, warpins: 1 ---
 		self:_focus_next_grid_widget()
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 41-41, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 MissionBoardView._focus_next_grid_widget = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local icon_widgets = self._icon_widgets
 	local old_widget = icon_widgets[self._focused_widget_index] or icon_widgets[#icon_widgets]
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 8-9, warpins: 2 ---
 	if not old_widget then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 10-11, warpins: 1 ---
 		return nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 12-23, warpins: 2 ---
 	old_widget.content.hotspot.is_selected = false
 	local old_widget_offset = old_widget.offset
 	local closest_distance = math.huge
 	local closest_widget, closest_widget_index = nil
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 24-53, warpins: 0 ---
-	for i = 1, #icon_widgets, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 24-26, warpins: 2 ---
+	for i = 1, #icon_widgets do
 		local widget = icon_widgets[i]
 
 		if widget ~= old_widget then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 27-30, warpins: 1 ---
 			local hotspot = widget.content.hotspot
 
 			if hotspot and not hotspot.disabled then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 34-49, warpins: 1 ---
 				hotspot.is_selected = false
 				local offset = widget.offset
 				local horizontal_distance = offset[1] - old_widget_offset[1]
@@ -2260,90 +994,26 @@ MissionBoardView._focus_next_grid_widget = function (self)
 				local distance_squared = horizontal_distance^2 + vertical_distance^2
 
 				if closest_distance > distance_squared then
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 50-52, warpins: 1 ---
 					closest_widget = widget
 					closest_distance = distance_squared
 					closest_widget_index = i
-					--- END OF BLOCK #0 ---
-
-
-
 				end
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 53-53, warpins: 5 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 54-55, warpins: 1 ---
 	if closest_widget then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 56-59, warpins: 1 ---
 		self._focused_widget_index = closest_widget_index
 
 		if not self._using_cursor_navigation then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 60-63, warpins: 1 ---
 			closest_widget.content.hotspot.is_selected = true
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 64-64, warpins: 3 ---
 	return closest_widget
-	--- END OF BLOCK #5 ---
-
-
-
 end
 
 MissionBoardView._test_function = function (self, dt, t, input_service, ui_renderer)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-14, warpins: 1 ---
 	local w = RESOLUTION_LOOKUP.width
 	local h = RESOLUTION_LOOKUP.height
 	local draw_layer = 10
@@ -2353,20 +1023,9 @@ MissionBoardView._test_function = function (self, dt, t, input_service, ui_rende
 	local start_offset_y = 50
 	local speed = 2
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 15-59, warpins: 0 ---
-	for i = 1, w, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 15-59, warpins: 2 ---
+	for i = 1, w do
 		local x = i
-		local fraction = (i / max_height) % 1
+		local fraction = i / max_height % 1
 
 		Application.time_since_launch()
 
@@ -2383,25 +1042,7 @@ MissionBoardView._test_function = function (self, dt, t, input_service, ui_rende
 		local size = Vector2(1 * inverse_scale, 1 * inverse_scale)
 
 		UIRenderer.draw_rect(ui_renderer, position, size, color)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 60-60, warpins: 1 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 return MissionBoardView

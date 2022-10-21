@@ -75,7 +75,7 @@ HudElementPlayerWeapon._destroy_widgets = function (self, ui_renderer, use_retai
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		UIWidget.destroy(ui_renderer, widget, use_retained_mode)
@@ -96,7 +96,7 @@ end
 
 HudElementPlayerWeapon.set_wielded = function (self, wielded, progress)
 	self._wielded = wielded
-	local wield_animation_progress = (wielded and progress) or 1 - progress
+	local wield_animation_progress = wielded and progress or 1 - progress
 
 	self:_set_wield_anim_progress(wield_animation_progress, progress)
 end
@@ -113,7 +113,7 @@ HudElementPlayerWeapon._draw_widgets = function (self, dt, t, input_service, ui_
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		if widget.dirty then
@@ -199,7 +199,13 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 							self._ammo_refill_progress = 0
 						end
 
-						self._low_on_ammo = total_ammo / total_max_ammo <= 0.2
+						if total_ammo / total_max_ammo > 0.2 then
+							slot17 = false
+						else
+							slot17 = true
+						end
+
+						self._low_on_ammo = slot17
 
 						self:set_ammo_amount(total_ammo, total_max_ammo)
 
@@ -224,9 +230,9 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 end
 
 local function animate_color_value(target, progress, from, to, include_alpha)
-	local start_index = (include_alpha and 1) or 2
+	local start_index = include_alpha and 1 or 2
 
-	for i = start_index, 4, 1 do
+	for i = start_index, 4 do
 		target[i] = (to[i] - from[i]) * progress + from[i]
 	end
 end
@@ -302,8 +308,8 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress)
 			local font_size_difference_animated = font_size_difference * progress
 			local animated_font_size = default_font_size + font_size_difference_animated
 			pass_style.font_size = animated_font_size
-			local wielded_color = (low_on_ammo and HudElementPlayerWeaponSettings.urgent_color) or color_tint_main_2
-			local secondary_color = (low_on_ammo and HudElementPlayerWeaponSettings.urgent_color_wielded) or (pass_style.primary_counter and color_tint_main_1) or color_tint_main_2
+			local wielded_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color or color_tint_main_2
+			local secondary_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color_wielded or pass_style.primary_counter and color_tint_main_1 or color_tint_main_2
 			local include_alpha = false
 
 			animate_color_value(pass_style.text_color, progress, wielded_color, secondary_color, include_alpha)
@@ -342,7 +348,7 @@ end
 local temp_ammo_display_texts = {}
 
 local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo, color_zero_values, ignore_coloring)
-	local zero_numeral_color = (low_on_ammo and UIHudSettings.color_tint_alert_3) or UIHudSettings.color_tint_main_3
+	local zero_numeral_color = low_on_ammo and UIHudSettings.color_tint_alert_3 or UIHudSettings.color_tint_main_3
 
 	table.clear(temp_ammo_display_texts)
 
@@ -350,15 +356,15 @@ local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo,
 	local length = string.len(amount)
 	local num_adds = max_character - length
 	local zero_string = "0"
-	local zero_string_colored = (ignore_coloring and zero_string) or _apply_color_to_text("0", zero_numeral_color)
+	local zero_string_colored = ignore_coloring and zero_string or _apply_color_to_text("0", zero_numeral_color)
 
-	for i = 1, num_adds, 1 do
+	for i = 1, num_adds do
 		temp_ammo_display_texts[#temp_ammo_display_texts + 1] = zero_string_colored
 	end
 
 	local num_amount_strings = string.format("%1d", amount)
 
-	for i = 1, string.len(num_amount_strings), 1 do
+	for i = 1, string.len(num_amount_strings) do
 		local value = string.sub(num_amount_strings, i, i)
 
 		if amount == 0 and color_zero_values then
@@ -382,12 +388,12 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 		if self._ammo_current_rounds_amount then
 			local display_texts = convert_ammo_to_display_texts(self._ammo_current_rounds_amount, string.len(self._ammo_max_clip_rounds or amount), self._low_on_ammo, self._ammo_current_rounds_amount == 0, self._total_ammo == 0)
 
-			for i = 1, 3, 1 do
+			for i = 1, 3 do
 				local key = "ammo_amount_" .. i
 				content[key] = display_texts[i] or ""
 			end
 		else
-			for i = 1, 3, 1 do
+			for i = 1, 3 do
 				content["ammo_amount_" .. i] = ""
 			end
 		end
@@ -397,14 +403,14 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 		if spare_clips then
 			local display_texts = convert_ammo_to_display_texts(spare_clips, string.len(self._ammo_max_clip_rounds), self._low_on_ammo, true, self._total_ammo == 0)
 
-			for i = 1, 3, 1 do
+			for i = 1, 3 do
 				local key = "ammo_spare_" .. i
 				content[key] = display_texts[i] or ""
 			end
 
 			self._ammo_text_height_offset = 0
 		else
-			for i = 1, 3, 1 do
+			for i = 1, 3 do
 				content["ammo_spare_" .. i] = ""
 			end
 
@@ -423,7 +429,7 @@ HudElementPlayerWeapon._update_input = function (self)
 	local alias_array_index = 1
 	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or "n/a"
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
 	self:set_input_text(input_key)
 end
@@ -444,7 +450,7 @@ HudElementPlayerWeapon._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerWeaponSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -455,7 +461,7 @@ HudElementPlayerWeapon._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerWeaponSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

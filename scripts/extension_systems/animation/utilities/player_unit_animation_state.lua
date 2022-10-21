@@ -18,46 +18,48 @@ local PlayerUnitAnimationState = {
 		animation_state_component.num_layers_3p = NUM_LAYERS_3P
 		animation_state_component.num_layers_1p = NUM_LAYERS_1P
 
-		for i = 1, NUM_LAYERS_3P, 1 do
+		for i = 1, NUM_LAYERS_3P do
 			animation_state_component[TIMES_3P[i]] = invalid_player_anim_time
 			animation_state_component[ANIMS_3P[i]] = invalid_player_anim
 			animation_state_component[STATES_3P[i]] = invalid_player_anim_state
 		end
 
-		for i = 1, NUM_LAYERS_1P, 1 do
+		for i = 1, NUM_LAYERS_1P do
 			animation_state_component[TIMES_1P[i]] = invalid_player_anim_time
 			animation_state_component[ANIMS_1P[i]] = invalid_player_anim
 			animation_state_component[STATES_1P[i]] = invalid_player_anim_state
 		end
-	end,
-	set_anim_state_machine = function (player_unit, first_person_unit, weapon_template, is_local_unit, anim_variables_3p, anim_variables_1p)
-		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-		local breed_name = unit_data_extension:breed_name()
-		local anim_state_machine_3p, anim_state_machine_1p = WeaponTemplate.state_machines(weapon_template, breed_name)
-
-		_set_anim_state_machine(player_unit, anim_state_machine_3p)
-		_set_anim_state_machine(first_person_unit, anim_state_machine_1p)
-		PlayerUnitAnimationState.cache_anim_variable_ids(player_unit, first_person_unit, anim_variables_3p, anim_variables_1p, anim_state_machine_3p, anim_state_machine_1p)
-
-		local aim_extension = ScriptUnit.has_extension(player_unit, "aim_system")
-
-		if aim_extension then
-			aim_extension:state_machine_changed(player_unit)
-		end
 	end
 }
+
+PlayerUnitAnimationState.set_anim_state_machine = function (player_unit, first_person_unit, weapon_template, is_local_unit, anim_variables_3p, anim_variables_1p)
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+	local breed_name = unit_data_extension:breed_name()
+	local anim_state_machine_3p, anim_state_machine_1p = WeaponTemplate.state_machines(weapon_template, breed_name)
+
+	_set_anim_state_machine(player_unit, anim_state_machine_3p)
+	_set_anim_state_machine(first_person_unit, anim_state_machine_1p)
+	PlayerUnitAnimationState.cache_anim_variable_ids(player_unit, first_person_unit, anim_variables_3p, anim_variables_1p, anim_state_machine_3p, anim_state_machine_1p)
+
+	local aim_extension = ScriptUnit.has_extension(player_unit, "aim_system")
+
+	if aim_extension then
+		aim_extension:state_machine_changed(player_unit)
+	end
+end
+
 local num_1p_variables = #animation_variables_to_cache_1p
 local num_3p_variables = #animation_variables_to_cache_3p
 local Unit_animation_find_variable = Unit.animation_find_variable
 
 PlayerUnitAnimationState.cache_anim_variable_ids = function (player_unit, first_person_unit, anim_variables_3p, anim_variables_1p, state_machine_3p_or_nil, state_machine_1p_or_nil)
-	for i = 1, num_3p_variables, 1 do
+	for i = 1, num_3p_variables do
 		local variable_name = animation_variables_to_cache_3p[i]
 		local id = Unit_animation_find_variable(player_unit, variable_name)
 		anim_variables_3p[variable_name] = id
 	end
 
-	for i = 1, num_1p_variables, 1 do
+	for i = 1, num_1p_variables do
 		local variable_name = animation_variables_to_cache_1p[i]
 		local id = Unit_animation_find_variable(first_person_unit, variable_name)
 		anim_variables_1p[variable_name] = id
@@ -112,7 +114,7 @@ function _record_times(animation_state_component, player_unit, first_person_unit
 
 	fassert(num_times_3p <= NUM_LAYERS_3P, "Found time for animation layer in the player unit we don't sync, need to up the amount of times we sync in the component.")
 
-	for i = 1, num_times_3p, 1 do
+	for i = 1, num_times_3p do
 		local time = times_3p[i]
 
 		if time then
@@ -128,7 +130,7 @@ function _record_times(animation_state_component, player_unit, first_person_unit
 
 	fassert(num_times_1p <= NUM_LAYERS_1P, "Found time for animation layer in the first person unit we don't sync, need to up the amount of times we sync in the component.")
 
-	for i = 1, num_times_1p, 1 do
+	for i = 1, num_times_1p do
 		local time = times_1p[i]
 
 		if time then
@@ -144,7 +146,7 @@ function _record_times(animation_state_component, player_unit, first_person_unit
 		local function build_string(array, length)
 			local s = ""
 
-			for i = 1, length, 1 do
+			for i = 1, length do
 				local time = array[i]
 
 				if type(time) == "number" then
@@ -190,7 +192,7 @@ function _override_times(animation_state_component, player_unit, first_person_un
 
 		local num_layers_3p = animation_state_component.num_layers_3p
 
-		for i = 1, num_layers_3p, 1 do
+		for i = 1, num_layers_3p do
 			local time = _retrieve_time(animation_state_component[TIMES_3P[i]], invalid_player_anim_time, simulated_time)
 			temp_times_3p[i] = time
 		end
@@ -203,7 +205,7 @@ function _override_times(animation_state_component, player_unit, first_person_un
 
 		local num_layers_1p = animation_state_component.num_layers_1p
 
-		for i = 1, num_layers_1p, 1 do
+		for i = 1, num_layers_1p do
 			local time = _retrieve_time(animation_state_component[TIMES_1P[i]], invalid_player_anim_time, simulated_time)
 			temp_times_1p[i] = time
 		end
@@ -217,7 +219,7 @@ function _record_animations(animation_state_component, player_unit, first_person
 
 	fassert(num_anims_3p <= NUM_LAYERS_3P, "Found animation for animation layer in the first person unit we don't sync, need to up the amount of animations we sync in the component.")
 
-	for i = 1, num_anims_3p, 1 do
+	for i = 1, num_anims_3p do
 		local anim = anims_3p[i]
 		animation_state_component[ANIMS_3P[i]] = anim
 	end
@@ -226,7 +228,7 @@ function _record_animations(animation_state_component, player_unit, first_person
 
 	fassert(num_anims_1p <= NUM_LAYERS_1P, "Found animation for animation layer in the first person unit we don't sync, need to up the amount of animations we sync in the component.")
 
-	for i = 1, num_anims_1p, 1 do
+	for i = 1, num_anims_1p do
 		local anim = anims_1p[i]
 		animation_state_component[ANIMS_1P[i]] = anim
 	end
@@ -235,7 +237,7 @@ function _record_animations(animation_state_component, player_unit, first_person
 		local function build_string(array, length)
 			local s = ""
 
-			for i = 1, length, 1 do
+			for i = 1, length do
 				s = string.format("%s%.5f ", s, array[i])
 			end
 
@@ -278,7 +280,7 @@ function _override_animations(animation_state_component, player_unit, first_pers
 
 		local num_layers_3p = animation_state_component.num_layers_3p
 
-		for i = 1, num_layers_3p, 1 do
+		for i = 1, num_layers_3p do
 			local anim = animation_state_component[ANIMS_3P[i]]
 
 			if anim == invalid_player_anim then
@@ -296,7 +298,7 @@ function _override_animations(animation_state_component, player_unit, first_pers
 
 		local num_layers_1p = animation_state_component.num_layers_1p
 
-		for i = 1, num_layers_1p, 1 do
+		for i = 1, num_layers_1p do
 			local anim = animation_state_component[ANIMS_1P[i]]
 
 			if anim == invalid_player_anim then
@@ -319,7 +321,7 @@ function _record_states(animation_state_component, player_unit, first_person_uni
 
 	animation_state_component.num_layers_3p = num_states_3p
 
-	for i = 1, num_states_3p, 1 do
+	for i = 1, num_states_3p do
 		local state = states_3p[i] or invalid_player_anim_state
 
 		fassert(state <= invalid_player_anim_state, "Animation state is larger than what network_type \"player_anim_state\" can support. Up it in global.network_config by a factor of 2")
@@ -333,7 +335,7 @@ function _record_states(animation_state_component, player_unit, first_person_uni
 
 	animation_state_component.num_layers_1p = num_states_1p
 
-	for i = 1, num_states_1p, 1 do
+	for i = 1, num_states_1p do
 		local state = states_1p[i] or invalid_player_anim_state
 
 		fassert(state <= invalid_player_anim_state, "Animation state is larger than what network_type \"player_anim_state\" can support. Up it in global.network_config by a factor of 2")
@@ -347,7 +349,7 @@ function _compare_states(animation_state_component, simulated_animation_state_co
 	local wants_override_1p = false
 	local num_layers_3p = animation_state_component.num_layers_3p
 
-	for i = 1, num_layers_3p, 1 do
+	for i = 1, num_layers_3p do
 		if _simulated_does_not_match(animation_state_component, simulated_animation_state_component, STATES_3P[i]) then
 			wants_override_3p = true
 
@@ -357,7 +359,7 @@ function _compare_states(animation_state_component, simulated_animation_state_co
 
 	local num_layers_1p = animation_state_component.num_layers_1p
 
-	for i = 1, num_layers_1p, 1 do
+	for i = 1, num_layers_1p do
 		if _simulated_does_not_match(animation_state_component, simulated_animation_state_component, STATES_1P[i]) then
 			wants_override_1p = true
 
@@ -379,7 +381,7 @@ function _override_states(animation_state_component, player_unit, first_person_u
 
 		local num_layers_3p = animation_state_component.num_layers_3p
 
-		for i = 1, num_layers_3p, 1 do
+		for i = 1, num_layers_3p do
 			local state = animation_state_component[STATES_3P[i]]
 
 			if state == invalid_player_anim_state then
@@ -397,7 +399,7 @@ function _override_states(animation_state_component, player_unit, first_person_u
 
 		local num_layers_1p = animation_state_component.num_layers_1p
 
-		for i = 1, num_layers_1p, 1 do
+		for i = 1, num_layers_1p do
 			local state = animation_state_component[STATES_1P[i]]
 
 			if state == invalid_player_anim_state then

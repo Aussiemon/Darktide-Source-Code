@@ -44,7 +44,7 @@ end
 DestructibleSystem.hot_join_sync = function (self, sender, channel)
 	local removed_level_unit_ids = self._removed_level_unit_ids
 
-	for i = 1, #removed_level_unit_ids, 1 do
+	for i = 1, #removed_level_unit_ids do
 		local level_unit_id = removed_level_unit_ids[i]
 
 		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id)

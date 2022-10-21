@@ -109,12 +109,12 @@ BotNavigationExtension._update_astar = function (self, t)
 
 				local GwNavAStar_node_at_index = GwNavAStar.node_at_index
 
-				for i = 1, num_nodes - 1, 1 do
+				for i = 1, num_nodes - 1 do
 					local position = GwNavAStar_node_at_index(astar, i)
 					self._path[i] = Vector3Box(position)
 				end
 
-				self._path[num_nodes] = (last_node_position and Vector3Box(last_node_position)) or nil
+				self._path[num_nodes] = last_node_position and Vector3Box(last_node_position) or nil
 				self._path_index = 2
 				self._close_to_goal_t = nil
 
@@ -188,7 +188,7 @@ BotNavigationExtension._update_path = function (self, unit, t)
 	local teleport_friendly_transition = transition_type == "bot_jumps" or transition_type == "bot_drops" or transition_type == "bot_leap_of_faith"
 	local time_in_transition = transition_type and t - current_transition.t
 
-	if current_transition == nil or (not teleport_friendly_transition and MAX_TIME_IN_TRANSITION <= time_in_transition) then
+	if current_transition == nil or not teleport_friendly_transition and MAX_TIME_IN_TRANSITION <= time_in_transition then
 		local is_path_valid = GwNavAStar.is_valid(self._live_path, self._astar)
 
 		if not is_path_valid then
@@ -494,7 +494,7 @@ BotNavigationExtension.position_when_destination_reached = function (self)
 end
 
 BotNavigationExtension.latest_position_on_nav_mesh = function (self)
-	return (self._is_latest_position_on_nav_mesh_valid and self._latest_position_on_nav_mesh:unbox()) or nil
+	return self._is_latest_position_on_nav_mesh_valid and self._latest_position_on_nav_mesh:unbox() or nil
 end
 
 BotNavigationExtension.is_in_transition = function (self)

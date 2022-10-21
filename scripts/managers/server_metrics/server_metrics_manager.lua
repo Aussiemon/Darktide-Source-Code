@@ -86,7 +86,7 @@ ServerMetricsManager.add_to_counter = function (self, metric_name, value)
 end
 
 ServerMetricsManager._flush_metric = function (self, metric, dt)
-	if (metric.dirty and metric.flush_dt > 5) or full_flush_interval < metric.flush_dt then
+	if metric.dirty and metric.flush_dt > 5 or full_flush_interval < metric.flush_dt then
 		Log.info("ServerMetricsManager", string.format("metric: %s %s %f", metric.name, metric.type, metric.value))
 
 		metric.flush_dt = 0
@@ -108,7 +108,7 @@ ServerMetricsManager.update = function (self, dt)
 		self:add_to_counter(ServerMetricNames.counter.lagging_frames, 1)
 	end
 
-	for i = 1, #self._metrics_as_array, 1 do
+	for i = 1, #self._metrics_as_array do
 		self:_flush_metric(self._metrics_as_array[i], dt)
 	end
 

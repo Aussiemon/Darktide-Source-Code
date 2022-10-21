@@ -134,7 +134,7 @@ PortraitUI.unload_profile_portrait = function (self, id)
 
 		self._profile_requests[character_id] = nil
 
-		for i = 1, #self._profile_requests_queue_order, 1 do
+		for i = 1, #self._profile_requests_queue_order do
 			if self._profile_requests_queue_order[i] == character_id then
 				table.remove(self._profile_requests_queue_order, i)
 
@@ -144,7 +144,7 @@ PortraitUI.unload_profile_portrait = function (self, id)
 	else
 		references_lookup[id] = nil
 
-		for i = 1, #references_array, 1 do
+		for i = 1, #references_array do
 			if references_array[i] == id then
 				table.remove(references_array, i)
 
@@ -339,7 +339,7 @@ end
 
 PortraitUI._setup_viewport = function (self, camera_unit)
 	local viewport_name = self._render_settings.viewport_name
-	local viewport_type = (DEBUG and "default") or self._render_settings.viewport_type
+	local viewport_type = DEBUG and "default" or self._render_settings.viewport_type
 	local viewport_layer = self._render_settings.viewport_layer
 	local shading_environment = self._render_settings.shading_environment
 
@@ -420,11 +420,11 @@ PortraitUI._create_uv_grid = function (self)
 	local num_rows = math.floor(target_resolution_height / portrait_height)
 	local uv_grid = {}
 
-	for i = 1, num_rows, 1 do
+	for i = 1, num_rows do
 		local y_start = (i - 1) / num_rows
 		local y_end = i / num_rows
 
-		for j = 1, num_columns, 1 do
+		for j = 1, num_columns do
 			local x_start = (j - 1) / num_columns
 			local x_end = j / num_columns
 			local uvs = {
@@ -451,7 +451,7 @@ end
 PortraitUI._get_free_grid_index = function (self)
 	local uv_grid_index_occupation_list = self._uv_grid_index_occupation_list
 
-	for i = 1, #uv_grid_index_occupation_list, 1 do
+	for i = 1, #uv_grid_index_occupation_list do
 		local occupied = uv_grid_index_occupation_list[i]
 
 		if not occupied then
@@ -496,11 +496,11 @@ PortraitUI._get_unit_by_value_key = function (self, key, value)
 	local level = world_spawner:level()
 	local level_units = Level.units(level)
 
-	for i = 1, #level_units, 1 do
+	for i = 1, #level_units do
 		local unit = level_units[i]
 		local unit_array_size = Unit.data_table_size(unit, key) or 0
 
-		for j = 1, unit_array_size, 1 do
+		for j = 1, unit_array_size do
 			local unit_array_value = Unit.get_data(unit, key, j)
 
 			if not unit_array_value then

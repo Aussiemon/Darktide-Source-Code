@@ -44,7 +44,7 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 	local logic_configuration = relation_init_data.logic
 	local num_logic = #logic_configuration
 
-	for i = 1, num_logic, 1 do
+	for i = 1, num_logic do
 		local config = logic_configuration[i]
 		local class_name = config.class_name
 		local init_data = config.init_data
@@ -93,14 +93,14 @@ SideRelationProximityExtension._update_unit_alive_check = function (self, unit, 
 			end
 		end
 
-		for j = 1, num_dead_units, 1 do
+		for j = 1, num_dead_units do
 			local dead_unit = dead_units[j]
 			units_in_proximity[dead_unit] = nil
 			stickiness_table[dead_unit] = nil
 			local data_logic = data.logic
 			local num_logic = data.num_logic
 
-			for i = 1, num_logic, 1 do
+			for i = 1, num_logic do
 				local logic = data_logic[i]
 
 				logic:unit_in_proximity_deleted(dead_unit)
@@ -138,7 +138,7 @@ SideRelationProximityExtension._update_proximity = function (self, unit, dt, t)
 			local in_proximity = current_in_proximity[exit_unit]
 
 			if not in_proximity then
-				for i = 1, num_logic, 1 do
+				for i = 1, num_logic do
 					local logic = data_logic[i]
 
 					if logic.unit_left_proximity ~= nil then
@@ -154,7 +154,7 @@ SideRelationProximityExtension._update_proximity = function (self, unit, dt, t)
 			local was_in_proximity = prev_in_proximity[enter_unit]
 
 			if not was_in_proximity then
-				for i = 1, num_logic, 1 do
+				for i = 1, num_logic do
 					local logic = data_logic[i]
 
 					if logic.unit_entered_proximity ~= nil then
@@ -180,7 +180,7 @@ SideRelationProximityExtension._update_logic = function (self, unit, dt, t)
 		local data_logic = data.logic
 		local num_logic = data.num_logic
 
-		for i = 1, num_logic, 1 do
+		for i = 1, num_logic do
 			local logic = data_logic[i]
 
 			if logic.update then

@@ -1,43 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Definitions = require("scripts/ui/views/vendor_view_base/vendor_view_base_definitions")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -213,7 +173,7 @@ VendorViewBase._fetch_store_items = function (self)
 		local menu_tab_content_by_store_category = {}
 		local menu_tab_content_array = {}
 
-		for i = 1, #layout, 1 do
+		for i = 1, #layout do
 			local layout_entry = layout[i]
 			local item = layout_entry.item
 
@@ -286,7 +246,7 @@ VendorViewBase._fetch_store_items = function (self)
 			local preview_offer_id = self._previewed_offer.offerId
 			local found = false
 
-			for i = 1, #self._offers, 1 do
+			for i = 1, #self._offers do
 				local offer = self._offers[i]
 				local offer_id = offer.offerId
 
@@ -322,7 +282,7 @@ end
 
 VendorViewBase._update_grid_height = function (self, use_tab_menu)
 	local grid_height_difference = 40
-	local item_grid_position_y = (use_tab_menu and 190) or 190 - grid_height_difference * 0.5
+	local item_grid_position_y = use_tab_menu and 190 or 190 - grid_height_difference * 0.5
 
 	self:_set_scenegraph_position("item_grid_pivot", nil, item_grid_position_y)
 
@@ -361,7 +321,7 @@ end
 VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 	local layout = {}
 
-	for i = 1, #item_offers, 1 do
+	for i = 1, #item_offers do
 		local offer = item_offers[i]
 		local offer_id = offer.offerId
 		local sku = offer.sku
@@ -416,7 +376,7 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local type = price_data.type
 	local can_afford = self:can_afford(amount, type)
 	local price_text = nil
-	price_text = (amount and tostring(amount)) or ""
+	price_text = amount and tostring(amount) or ""
 	local widgets_by_name = self._widgets_by_name
 	local price_text_widget = widgets_by_name.price_text
 	local price_text_widget_style = price_text_widget.style
@@ -425,7 +385,7 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local wallet_settings = WalletSettings[type]
 
 	if wallet_settings then
-		price_text_widget.style.text.material = (can_afford and wallet_settings.font_gradient_material) or wallet_settings.font_gradient_material_insufficient_funds
+		price_text_widget.style.text.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 		widgets_by_name.price_icon.content.texture = wallet_settings.icon_texture_big
 	end
 
@@ -465,203 +425,56 @@ VendorViewBase._purchase_item = function (self, offer)
 end
 
 VendorViewBase._update_wallets = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	local store_service = Managers.data_service.store
 	local promise = store_service:combined_wallets()
 
 	promise:next(function (wallets_data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-9, warpins: 1 ---
 		self:_update_wallets_presentation(wallets_data)
 
 		self._wallet_promise = nil
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
 
 	self._wallet_promise = promise
 
 	return promise
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 VendorViewBase._update_wallets_presentation = function (self, wallets_data)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	if wallets_data and wallets_data.wallets then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-10, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 11-21, warpins: 0 ---
-		for i = 1, #wallets_data.wallets, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 11-17, warpins: 2 ---
+		for i = 1, #wallets_data.wallets do
 			local currency = wallets_data.wallets[i].balance
 			local type = currency.type
 			local amount = currency.amount or 0
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 19-21, warpins: 2 ---
 			self._current_balance[type] = amount
-			--- END OF BLOCK #1 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 22-22, warpins: 3 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 VendorViewBase.can_afford = function (self, amount, type)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	return amount <= (self._current_balance[type] or 0)
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-7, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 11-11, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 VendorViewBase._handle_input = function (self, input_service)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	local is_mouse = self._using_cursor_navigation
 
 	if not is_mouse then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-6, warpins: 1 ---
 		if self._previewed_offer and input_service:get("confirm_pressed") then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 13-16, warpins: 1 ---
 			self:_cb_on_purchase_pressed()
-			--- END OF BLOCK #0 ---
+		elseif self._item_grid then
+			local grid = self._item_grid
+			local selected_index = grid:selected_grid_index()
 
+			if self._current_select_grid_index ~= selected_index then
+				self._current_select_grid_index = selected_index
+				local widgets = self._item_grid:widgets()
+				local widget = widgets[selected_index]
 
-
-		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 17-19, warpins: 2 ---
-			if self._item_grid then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 20-26, warpins: 1 ---
-				local grid = self._item_grid
-				local selected_index = grid:selected_grid_index()
-
-				if self._current_select_grid_index ~= selected_index then
-
-					-- Decompilation error in this vicinity:
-					--- BLOCK #0 27-34, warpins: 1 ---
-					self._current_select_grid_index = selected_index
-					local widgets = self._item_grid:widgets()
-					local widget = widgets[selected_index]
-
-					if widget and widget.content.hotspot.pressed_callback then
-
-						-- Decompilation error in this vicinity:
-						--- BLOCK #0 40-43, warpins: 1 ---
-						widget.content.hotspot.pressed_callback()
-						--- END OF BLOCK #0 ---
-
-
-
-					end
-					--- END OF BLOCK #0 ---
-
-
-
+				if widget and widget.content.hotspot.pressed_callback then
+					widget.content.hotspot.pressed_callback()
 				end
-				--- END OF BLOCK #0 ---
-
-
-
 			end
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 44-44, warpins: 7 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 return VendorViewBase

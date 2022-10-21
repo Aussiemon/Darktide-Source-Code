@@ -10,7 +10,7 @@ CinematicScene.init = function (self, unit)
 	self._cinematic_name = self:get_data(unit, "cinematic_name")
 	self._cinematic_category = cinematic_category
 
-	fassert((self._unit_type == "origin" and self._origin_level_name == "") or self._unit_type == "destination", "Only Destination cinematic scenes can reference an Origin Level.")
+	fassert(self._unit_type == "origin" and self._origin_level_name == "" or self._unit_type == "destination", "Only Destination cinematic scenes can reference an Origin Level.")
 
 	local origin_level_name = nil
 

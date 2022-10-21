@@ -129,8 +129,8 @@ MoveablePlatformExtension.get_interactables = function (self)
 end
 
 MoveablePlatformExtension.can_move = function (self)
-	local all_on_board = not self._require_all_players_onboard or (self._require_all_players_onboard and self._all_players_inside)
-	local can_activate_wall_collision_enabled = not self._wall_collision_enabled or (self._wall_collision_enabled and not self:_passengers_inside_walls())
+	local all_on_board = not self._require_all_players_onboard or self._require_all_players_onboard and self._all_players_inside
+	local can_activate_wall_collision_enabled = not self._wall_collision_enabled or self._wall_collision_enabled and not self:_passengers_inside_walls()
 
 	if not all_on_board or not can_activate_wall_collision_enabled then
 		self:_set_block_text("loc_platform_blocked_missing_players")
@@ -300,7 +300,7 @@ MoveablePlatformExtension._handle_friendly_bots_on_set_direction = function (sel
 		local player_units = side.player_units
 		local num_player_units = #player_units
 
-		for i = 1, num_player_units, 1 do
+		for i = 1, num_player_units do
 			local player_unit = player_units[i]
 			local player = player_unit_spawn_manager:owner(player_unit)
 
@@ -404,7 +404,7 @@ MoveablePlatformExtension._update_passengers = function (self)
 		local ActorBox_unbox = ActorBox.unbox
 		local Actor_unit = Actor.unit
 
-		for i = 1, #passenger_actors, 1 do
+		for i = 1, #passenger_actors do
 			local passenger_actor = ActorBox_unbox(passenger_actors[i])
 
 			if passenger_actor then
@@ -535,7 +535,7 @@ MoveablePlatformExtension._check_hostile_onboard = function (self)
 	local half_extents = self._bounding_box_half_extents:unbox()
 	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local unit = broadphase_results[i]
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
@@ -699,7 +699,7 @@ MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 
 		table.clear(units_inside)
 
-		for i = 1, #passenger_actors, 1 do
+		for i = 1, #passenger_actors do
 			local passenger_actor = ActorBox_unbox(passenger_actors[i])
 
 			if passenger_actor then
@@ -711,7 +711,7 @@ MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 		local all_valid_players_inside = true
 		local at_least_one_player_inside = false
 
-		for i = 1, #player_units, 1 do
+		for i = 1, #player_units do
 			local player_unit = player_units[i]
 			local player = player_unit_spawn_manager:owner(player_unit)
 			local is_human = player:is_human_controlled()
@@ -742,7 +742,7 @@ MoveablePlatformExtension._get_volume_alt_min_max = function (self, volume_point
 
 	local alt_min, alt_max = nil
 
-	for i = 1, #volume_points, 1 do
+	for i = 1, #volume_points do
 		local alt = volume_points[i].z
 
 		if not alt_min or alt < alt_min then

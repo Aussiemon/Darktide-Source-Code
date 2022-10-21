@@ -115,7 +115,7 @@ ForceWeaponEffects._update_active = function (self, t)
 end
 
 function _set_start_time(t, weapon_material_variables)
-	for i = 1, #weapon_material_variables, 1 do
+	for i = 1, #weapon_material_variables do
 		local weapon_material_variable = weapon_material_variables[i]
 
 		weapon_material_variable.component:set_start_time(t, weapon_material_variable.unit)
@@ -123,7 +123,7 @@ function _set_start_time(t, weapon_material_variables)
 end
 
 function _set_stop_time(t, weapon_material_variables)
-	for i = 1, #weapon_material_variables, 1 do
+	for i = 1, #weapon_material_variables do
 		local weapon_material_variable = weapon_material_variables[i]
 
 		weapon_material_variable.component:set_stop_time(t, weapon_material_variable.unit)
@@ -133,7 +133,7 @@ end
 function _unit_components(components, attachments)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local attachment_unit = attachments[i]
 		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
 

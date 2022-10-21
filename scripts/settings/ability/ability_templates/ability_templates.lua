@@ -1,7 +1,7 @@
 local ability_templates = {}
 
 local function _require_ability_templates(path_prefix, template_names)
-	for i = 1, #template_names, 1 do
+	for i = 1, #template_names do
 		local template_name = template_names[i]
 		local full_path = string.format(path_prefix, template_name)
 		local template_data = require(full_path)

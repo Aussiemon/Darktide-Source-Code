@@ -115,5 +115,3 @@ Utf8.find = function (text, pattern, init, plain)
 
 	return index_from, index_to
 end
-
-return

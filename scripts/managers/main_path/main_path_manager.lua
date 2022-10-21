@@ -48,7 +48,7 @@ MainPathManager.init = function (self, world, nav_world, level_name, level_seed,
 		local invalid_vector = Vector3.invalid_vector()
 		local side_progress_on_path = Script.new_array(num_sides)
 
-		for i = 1, num_sides, 1 do
+		for i = 1, num_sides do
 			side_progress_on_path[i] = {
 				furthest_travel_distance = 0,
 				ahead_path_position = Vector3Box(invalid_vector),
@@ -90,7 +90,7 @@ MainPathManager._calculate_travel_distances = function (self, main_path_segments
 	local total_travel_distance = 0
 	local num_segments = #main_path_segments
 
-	for i = 1, num_segments, 1 do
+	for i = 1, num_segments do
 		local segment = main_path_segments[i]
 		local nodes = segment.nodes
 		local p2 = nodes[1]:unbox()
@@ -100,7 +100,7 @@ MainPathManager._calculate_travel_distances = function (self, main_path_segments
 		}
 		local num_nodes = #nodes
 
-		for j = 2, num_nodes, 1 do
+		for j = 2, num_nodes do
 			p1 = nodes[j - 1]:unbox()
 			p2 = nodes[j]:unbox()
 			total_travel_distance = total_travel_distance + Vector3_distance(p1, p2)
@@ -118,7 +118,7 @@ MainPathManager._load_main_path_data = function (self, main_path_resource_name)
 	local path_markers = main_path_data.path_markers
 	local num_path_markers = #path_markers
 
-	for i = 1, num_path_markers, 1 do
+	for i = 1, num_path_markers do
 		local path_marker = path_markers[i]
 		local position_array = path_marker.position
 		path_marker.position = Vector3Box(position_array[1], position_array[2], position_array[3])
@@ -127,12 +127,12 @@ MainPathManager._load_main_path_data = function (self, main_path_resource_name)
 	local main_path_segments = main_path_data.main_path_segments
 	local num_path_segments = #main_path_segments
 
-	for i = 1, num_path_segments, 1 do
+	for i = 1, num_path_segments do
 		local segment = main_path_segments[i]
 		local nodes = segment.nodes
 		local num_nodes = #nodes
 
-		for j = 1, num_nodes, 1 do
+		for j = 1, num_nodes do
 			local position_array = nodes[j]
 			nodes[j] = Vector3Box(position_array[1], position_array[2], position_array[3])
 		end
@@ -186,7 +186,7 @@ MainPathManager.ahead_unit = function (self, side_id)
 
 	local side_progress_on_path = self._side_progress_on_path
 	local progress_on_path = side_progress_on_path[side_id]
-	local path_position = (progress_on_path.ahead_unit and progress_on_path.ahead_path_position:unbox()) or nil
+	local path_position = progress_on_path.ahead_unit and progress_on_path.ahead_path_position:unbox() or nil
 
 	return progress_on_path.ahead_unit, progress_on_path.ahead_travel_distance, path_position
 end
@@ -196,7 +196,7 @@ MainPathManager.behind_unit = function (self, side_id)
 
 	local side_progress_on_path = self._side_progress_on_path
 	local progress_on_path = side_progress_on_path[side_id]
-	local path_position = (progress_on_path.behind_unit and progress_on_path.behind_path_position:unbox()) or nil
+	local path_position = progress_on_path.behind_unit and progress_on_path.behind_path_position:unbox() or nil
 
 	return progress_on_path.behind_unit, progress_on_path.behind_travel_distance, path_position
 end
@@ -257,11 +257,11 @@ MainPathManager._generate_spawn_points = function (self)
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local spawn_point_cost_table = GwNavTagLayerCostTable.create()
 
-	for i = 1, #SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES, 1 do
+	for i = 1, #SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 		local volume_type = SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
-		for j = 1, #layer_ids, 1 do
+		for j = 1, #layer_ids do
 			GwNavTagLayerCostTable.forbid_layer(spawn_point_cost_table, layer_ids[j])
 		end
 	end
@@ -374,7 +374,7 @@ MainPathManager._update_progress_on_path = function (self)
 	local nav_spawn_points = self._nav_spawn_points
 	local num_sides = #sides
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local ahead_unit, behind_unit = nil
 		local ahead_path_position = invalid_vector
 		local behind_path_position = invalid_vector
@@ -384,7 +384,7 @@ MainPathManager._update_progress_on_path = function (self)
 		local valid_player_units = side.valid_player_units
 		local num_valid_player_units = #valid_player_units
 
-		for j = 1, num_valid_player_units, 1 do
+		for j = 1, num_valid_player_units do
 			local player_unit = valid_player_units[j]
 			local player_position = POSITION_LOOKUP[player_unit]
 			local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
@@ -422,12 +422,12 @@ MainPathManager._update_progress_on_path = function (self)
 
 		local progress_on_path = side_progress_on_path[i]
 		progress_on_path.ahead_unit = ahead_unit
-		progress_on_path.ahead_travel_distance = (ahead_unit and best_travel_distance) or nil
+		progress_on_path.ahead_travel_distance = ahead_unit and best_travel_distance or nil
 
 		progress_on_path.ahead_path_position:store(ahead_path_position)
 
 		progress_on_path.behind_unit = behind_unit
-		progress_on_path.behind_travel_distance = (behind_unit and worst_travel_distance) or nil
+		progress_on_path.behind_travel_distance = behind_unit and worst_travel_distance or nil
 
 		progress_on_path.behind_path_position:store(behind_path_position)
 

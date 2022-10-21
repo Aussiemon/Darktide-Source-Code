@@ -34,7 +34,7 @@ local templates = {
 			local special_rule = special_rules.veteran_squad_leader_increased_cooldown_restore_on_elite_kills
 			local small_reduction = template_data.cooldown_reduction
 			local large_reduction = template_data.talent_cooldown_reduction
-			local cooldown_reduction = (specialization_extension:has_special_rule(special_rule) and large_reduction) or small_reduction
+			local cooldown_reduction = specialization_extension:has_special_rule(special_rule) and large_reduction or small_reduction
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_reduction)
 		end

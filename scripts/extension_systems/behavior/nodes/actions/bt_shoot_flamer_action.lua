@@ -464,7 +464,7 @@ BtShootFlamerAction._shoot_sphere_cast = function (self, unit, t, shoot_position
 	local perception_extension = scratchpad.perception_extension
 
 	if hits then
-		for i = 1, #hits, 1 do
+		for i = 1, #hits do
 			repeat
 				local hit = hits[i]
 				local hit_actor = hit.actor or hit[INDEX_ACTOR]
@@ -519,7 +519,7 @@ end
 local function _get_point_on_segment(segments, num_segments, length)
 	local current_length = 0
 
-	for i = 2, num_segments, 1 do
+	for i = 2, num_segments do
 		local prev_segment = segments[i - 1]
 		local segment = segments[i]
 		local to_segment = segment - prev_segment

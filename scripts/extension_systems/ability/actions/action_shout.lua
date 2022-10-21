@@ -51,7 +51,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		if vo_type == "warp_charge" then
 			local warp_charge_component = self._unit_data_extension:read_component("warp_charge")
 			local warp_charge_current_percentage = warp_charge_component.current_percentage
-			local tag = (warp_charge_current_percentage > 0.9 and vo_tag.high) or vo_tag.low
+			local tag = warp_charge_current_percentage > 0.9 and vo_tag.high or vo_tag.low
 
 			Vo.play_combat_ability_event(player_unit, tag)
 		end
@@ -118,7 +118,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		local revive = action_settings.revive_allies
 		local radius = action_settings.radius
 
-		for i = 1, #player_units, 1 do
+		for i = 1, #player_units do
 			local unit = player_units[i]
 			local position = POSITION_LOOKUP[unit]
 			local distance_sq = Vector3.distance_squared(player_position, position)
@@ -184,7 +184,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		local shout_direction = self._shout_direction
 		local shout_dot = action_settings.shout_dot
 
-		for i = 1, num_hits, 1 do
+		for i = 1, num_hits do
 			repeat
 				local enemy_unit = broadphase_results[i]
 
@@ -202,7 +202,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 
 				local dot = Vector3.dot(shout_direction, attack_direction)
 
-				if not shout_dot or (shout_dot and shout_dot < dot) then
+				if not shout_dot or shout_dot and shout_dot < dot then
 					if buff_to_add then
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
@@ -267,7 +267,7 @@ ActionShout._suppress_units = function (self, action_settings)
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local enemy_unit = broadphase_results[i]
 		local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
 		local flat_direction = Vector3.flat(enemy_unit_position - player_position)

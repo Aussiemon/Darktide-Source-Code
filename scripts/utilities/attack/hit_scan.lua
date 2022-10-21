@@ -1,33 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
@@ -105,7 +75,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local is_attacker_player = Breed.is_player(optional_attacker_breed)
 	local num_hits = #hits
 
-	for index = 1, num_hits, 1 do
+	for index = 1, num_hits do
 		repeat
 			local hit = hits[index]
 			local hit_position = hit.position or hit[INDEX_POSITION]
@@ -132,8 +102,6 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 				MinionDeath.attack_ragdoll(hit_unit, direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_position, attacker_unit, hit_actor, nil, optional_is_critical_strike)
 			else
-
-				-- Decompilation error in this vicinity:
 				ImpactEffect.play(hit_unit, hit_actor, 0, damage_type, hit_zone_name_or_nil, attack_types.ranged, hit_position, hit_normal, direction, attacker_unit, impact_fx_data, stop, nil, "full", damage_profile)
 
 				if is_attacker_player and not HitScan.check_faded_players(hit_unit, hit_distance) then
@@ -157,7 +125,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				local dodging_player = player_unit_spawn_manager:owner(hit_unit)
 				local is_human = dodging_player and dodging_player:is_human_controlled()
 
-				Managers.stats:record_dodge(dodging_player, optional_attacker_breed_name, attack_types.ranged, (is_sprinting and dodge_types.sprint) or dodge_type)
+				Managers.stats:record_dodge(dodging_player, optional_attacker_breed_name, attack_types.ranged, is_sprinting and dodge_types.sprint or dodge_type)
 				Suppression.apply_suppression(hit_unit, attacker_unit, damage_profile, hit_position)
 
 				SUPPRESSED_UNITS[hit_unit] = true
@@ -257,7 +225,7 @@ HitScan.check_faded_players = function (hit_unit, hit_distance)
 	if unit_data_extension then
 		local breed = unit_data_extension:breed()
 		local is_target_player = breed and Breed.is_player(breed)
-		local fade_distance = (breed and breed.fade and (breed.fade.min_distance + breed.fade.max_distance) * 0.5) or 0
+		local fade_distance = breed and breed.fade and (breed.fade.min_distance + breed.fade.max_distance) * 0.5 or 0
 
 		if is_target_player and hit_distance < fade_distance then
 			return false

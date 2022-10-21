@@ -81,7 +81,7 @@ CinematicSceneSystem._fetch_settings = function (self, mission, circumstance_nam
 	local original_settings = mission.cinematics or {}
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = (mission_overrides and mission_overrides.cinematics) or nil
+	local circumstance_settings = mission_overrides and mission_overrides.cinematics or nil
 
 	return circumstance_settings or original_settings
 end
@@ -450,7 +450,7 @@ end
 CinematicSceneSystem._get_free_slot_id = function (self)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if not slot.occupied then
@@ -462,7 +462,7 @@ end
 CinematicSceneSystem._player_slot_id = function (self, unique_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied and slot.unique_id == unique_id then
@@ -475,7 +475,7 @@ CinematicSceneSystem._clear_spawn_slots = function (self)
 	local spawn_slots = self._spawn_slots
 	local num_slots = #spawn_slots
 
-	for i = 1, num_slots, 1 do
+	for i = 1, num_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then
@@ -493,13 +493,13 @@ CinematicSceneSystem._setup_spawn_slots = function (self, world, cinematic_name,
 	local spawn_slots = {}
 
 	if #player_spawner_units == NUM_PLAYER_SPAWN then
-		for i = 1, NUM_PLAYER_SPAWN, 1 do
+		for i = 1, NUM_PLAYER_SPAWN do
 			local spawn_point_unit = player_spawner_units[i]
 			local initial_position = Unit.world_position(spawn_point_unit, 1)
 			local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
 			local profile_spawner = UIProfileSpawner:new("CinematicSceneSystem_" .. i, world, camera, unit_spawner)
 
-			for j = 1, #ignored_slots, 1 do
+			for j = 1, #ignored_slots do
 				local slot_name = ignored_slots[j]
 
 				profile_spawner:ignore_slot(slot_name)
@@ -522,7 +522,7 @@ end
 CinematicSceneSystem._update_player_slots = function (self, dt, t, input_service)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then

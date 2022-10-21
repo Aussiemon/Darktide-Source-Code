@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Definitions = require("scripts/ui/views/news_view/news_view_definitions")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -113,7 +111,7 @@ NewsView.init = function (self, settings, context)
 end
 
 NewsView._add_viewed_slide = function (self, slide_to_add)
-	for i = 1, #self._viewed_slides_id, 1 do
+	for i = 1, #self._viewed_slides_id do
 		local viewed_slide = self._viewed_slides_id[i]
 
 		if viewed_slide == slide_to_add.id then
@@ -189,7 +187,7 @@ NewsView._create_grid_widgets = function (self, content)
 	local widget_content_scenegraph_id = "slide_content_grid_content"
 	local widget_background_scenegraph_id = "slide_content_left"
 
-	for i = 1, #content, 1 do
+	for i = 1, #content do
 		local entry = content[i]
 		local entry_type = entry.type
 
@@ -230,7 +228,7 @@ NewsView._create_slide_page_circles = function (self)
 	local circle_size_width = circle_widget_definition.style.circ.size[1]
 	local circle_offset = 20
 
-	for i = 1, #self._slides, 1 do
+	for i = 1, #self._slides do
 		circles[i] = self:_create_widget("slide_circ_" .. i, circle_widget_definition)
 		circles[i].offset[1] = (i - 1) * circle_offset
 		circles[i].content.hotspot.pressed_callback = callback(self, "_animate_slide_out", i)
@@ -257,7 +255,7 @@ NewsView._clean_current_slide = function (self)
 	local slide_left_image = self._slide_left_image
 
 	if grid_widgets then
-		for i = 1, #grid_widgets, 1 do
+		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
 			local widget_name = widget.name
 
@@ -275,8 +273,6 @@ NewsView._clean_current_slide = function (self)
 end
 
 NewsView._change_slide = function (self, new_value)
-
-	-- Decompilation error in this vicinity:
 	if new_value > #self._slides or new_value < 1 then
 		return
 	end
@@ -326,7 +322,7 @@ NewsView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	end
 
 	if slide_page_circles then
-		for i = 1, #slide_page_circles, 1 do
+		for i = 1, #slide_page_circles do
 			local slide_page_circles = slide_page_circles[i]
 
 			UIWidget.draw(slide_page_circles, self._ui_renderer)
@@ -346,7 +342,7 @@ NewsView.draw = function (self, dt, t, input_service, layer)
 		local grid_widgets = self._grid_widgets
 		local grid = self._grid
 
-		for i = 1, #grid_widgets, 1 do
+		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
 
 			if grid:is_widget_visible(widget) then
@@ -396,7 +392,7 @@ NewsView._get_animation_widgets = function (self)
 		scrollbar = self._widgets_by_name.slide_scrollbar
 	}
 
-	for i = 1, #self._grid_widgets, 1 do
+	for i = 1, #self._grid_widgets do
 		widgets[self._grid_widgets[i].name] = self._grid_widgets[i]
 	end
 
@@ -423,7 +419,7 @@ end
 NewsView._set_slide_indicator_focus = function (self, index)
 	local slide_page_circles = self._slide_page_circles
 
-	for i = 1, #slide_page_circles, 1 do
+	for i = 1, #slide_page_circles do
 		local widget = slide_page_circles[i]
 		widget.content.active = i == index
 	end
@@ -434,7 +430,7 @@ NewsView._enable_interactions = function (self, is_disabled)
 	self._widgets_by_name.next_button.content.hotspot.disabled = is_disabled
 	local slide_page_circles = self._slide_page_circles
 
-	for i = 1, #slide_page_circles, 1 do
+	for i = 1, #slide_page_circles do
 		local widget = slide_page_circles[i]
 		widget.content.hotspot.disabled = is_disabled
 	end

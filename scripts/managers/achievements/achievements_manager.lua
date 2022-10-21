@@ -1,91 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local AchievementList = require("scripts/managers/achievements/achievement_list")
 local AchievementsEvents = require("scripts/managers/achievements/utility/achievements_events")
 local AchievementTracker = require("scripts/managers/achievements/utility/achievement_tracker")
@@ -303,462 +215,139 @@ AchievementsManager.sync_achievement_data = function (self, account_id)
 end
 
 AchievementsManager.get_achievement_definitions = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	return self._achievements
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementsManager.achievement_definition_from_id = function (self, achievement_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	return self._achievements.achievement_from_id(achievement_id)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementsManager.track_player = function (self, session_id, player)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	if not self:_is_tracker() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-19, warpins: 2 ---
 	Log.info("AchievementsManager", "Track commendations for account %s.", player:account_id())
 
 	return self._achievement_tracker:track_player(player)
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager.untrack_player = function (self, session_id, account_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	if not self:_is_tracker() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-17, warpins: 2 ---
 	Log.info("AchievementsManager", "Untrack commendations for account %s.", account_id)
 
 	return self._achievement_tracker:untrack_player(account_id)
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager.untrack_all_players = function (self, session_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	if not self:_is_tracker() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-15, warpins: 2 ---
 	Log.info("AchievementsManager", "Untrack commendations for all accounts.")
 
 	return self._achievement_tracker:untrack_all()
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager.trigger_event = function (self, account_id, character_id, event_name, event_data)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	if not self:_is_tracker() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-21, warpins: 2 ---
 	Log.info("AchievementsManager", "Trigger event %s for %s.", event_name, account_id)
 	self._achievement_tracker:_on_event_trigger(account_id, event_name, event_data)
-
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager.unlock_achievement = function (self, achievement_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	if not self:_is_client() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-10, warpins: 1 ---
 	if self._unlocked[achievement_id] then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 11-11, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 12-34, warpins: 1 ---
 	Log.info("AchievementsManager", "Try to unlock achievement with id '%s'.", achievement_id)
 	Managers.data_service.account:unlock_achievement(achievement_id):next(function (_)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-11, warpins: 1 ---
 		local achievement_definition = self._achievements.achievement_from_id(achievement_id)
 
 		self:_unlock_achievement(achievement_definition)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-12, warpins: 1 ---
 		Log.warning("AchievementsManager", "Failed to unlock achievement '%s' with error '%s'.", achievement_id, table.tostring(error, 99))
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-
-	return
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 35-35, warpins: 2 ---
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 36-36, warpins: 2 ---
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 AchievementsManager._notify_achievement_unlock = function (self, achievement_definition)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-18, warpins: 1 ---
 	local achievement_label = achievement_definition:label()
 	local notification_string = string.format("Achievement '%s' completed!", achievement_label)
 
 	Managers.event:trigger("event_add_notification_message", "default", notification_string)
 
 	return true
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementsManager._notify_achievement_reward = function (self, reward)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
 	if reward.rewardType == "item" then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 4-9, warpins: 1 ---
 		if MasterItems.item_exists(reward.name) then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 10-28, warpins: 1 ---
 			local rewarded_master_item = MasterItems.get_item(reward.name)
 			local sound_event = UISoundEvents.character_news_feed_new_item
 
 			Managers.event:trigger("event_add_notification_message", "item_granted", rewarded_master_item, nil, sound_event)
 
 			return true
-			--- END OF BLOCK #0 ---
-
-
-
 		else
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 29-36, warpins: 1 ---
 			Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", reward.name)
 
 			return false
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 37-47, warpins: 3 ---
 	local notification_string = "You've received a reward!"
 
 	Managers.event:trigger("event_add_notification_message", "default", notification_string)
 
 	return true
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager._unlock_achievement = function (self, achievement_definition)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local player_notified = false
 
 	if achievement_definition:is_platform() and self:_platform_available() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 12-18, warpins: 1 ---
 		player_notified = self:_platform_unlock(achievement_definition:id())
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 19-20, warpins: 3 ---
 	player_notified = player_notified or self:_notify_achievement_unlock(achievement_definition)
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 26-30, warpins: 2 ---
 	local rewards = achievement_definition:get_rewards()
 
 	if rewards then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 31-34, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 35-42, warpins: 0 ---
-		for i = 1, #rewards, 1 do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 35-40, warpins: 2 ---
+		for i = 1, #rewards do
 			local notified_about_reward = self:_notify_achievement_reward(rewards[i])
 			player_notified = player_notified or notified_about_reward
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 42-42, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 43-49, warpins: 2 ---
 	self._unlocked[achievement_definition:id()] = true
-
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 AchievementsManager.rpc_notify_commendation_progress = function (self, channel_id, achievement_index, value)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	assert(self:_is_client(), "Only clients can be notified about achievements.")
 
 	local achievement_definition = self._achievements[achievement_index]
 
 	if achievement_definition:is_platform() and self:_platform_available() then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 19-23, warpins: 1 ---
 		self:_platform_indicate_progress(achievement_definition, value)
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 24-24, warpins: 3 ---
-	return
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 AchievementsManager.rpc_notify_commendation_complete = function (self, channel_id, achievement_index)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-13, warpins: 1 ---
 	assert(self:_is_client(), "Only clients can be notified about achievements.")
 
 	local achievement_definition = self._achievements[achievement_index]
 
 	self:_unlock_achievement(achievement_definition)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return AchievementsManager

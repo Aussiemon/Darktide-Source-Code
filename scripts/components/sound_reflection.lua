@@ -89,7 +89,7 @@ SoundReflection._set_reflection = function (self, from_event)
 	local query_material = self._use_material_reactions and from_event and Vector3.distance(position, self._last_position:unbox()) > 0.1
 	self._last_position = Vector3Box(position)
 
-	for i = 1, #self._directions, 1 do
+	for i = 1, #self._directions do
 		local rotation = Quaternion.multiply(rotation, self._directions[i]:unbox())
 		local distance, reflection_position, material = self:_get_reflection_distance(position, Quaternion.forward(rotation), self._max_distance, query_material)
 		distance = math.clamp(distance or self._max_distance, 0, self._max_distance)
@@ -115,7 +115,7 @@ SoundReflection._get_reflection_distance = function (self, position, direction, 
 	local results = PhysicsWorld.raycast(self._physics_world, position, direction, max_distance, "all", "types", "both", "collision_filter", "filter_player_character_shooting_statics")
 
 	if results then
-		for i = 1, #results, 1 do
+		for i = 1, #results do
 			local result = results[i]
 			local actor = result[INDEX_ACTOR]
 			local unit = Actor.unit(actor)
@@ -142,7 +142,7 @@ SoundReflection._get_reflection_distance = function (self, position, direction, 
 end
 
 SoundReflection._set_wwise_reflection_parameters = function (self)
-	local reflection_avg = (math.abs(self._distances[1]) * math.abs(self._distances[2]) * math.abs(self._distances[3]) * math.abs(self._distances[4])) / 4
+	local reflection_avg = math.abs(self._distances[1]) * math.abs(self._distances[2]) * math.abs(self._distances[3]) * math.abs(self._distances[4]) / 4
 
 	WwiseWorld.set_global_parameter(self._wwise_world, "reflection_lf", self._distances[1])
 	WwiseWorld.set_global_parameter(self._wwise_world, "reflection_rf", self._distances[2])
@@ -152,7 +152,7 @@ SoundReflection._set_wwise_reflection_parameters = function (self)
 end
 
 SoundReflection._play_material_reaction = function (self)
-	for i = 1, #self._positions, 1 do
+	for i = 1, #self._positions do
 		if self._positions[i] ~= nil then
 			local auto_source_id = WwiseWorld.make_auto_source(self._wwise_world, self._positions[i])
 

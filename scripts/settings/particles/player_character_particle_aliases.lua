@@ -123,10 +123,10 @@ local particles = {
 		},
 		particles = {
 			powersword_p1_m1 = {
-				true = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
 			},
 			thunderhammer_2h_p1_m1 = {
-				true = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
 			}
 		}
 	},

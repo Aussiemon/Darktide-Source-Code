@@ -123,92 +123,91 @@ local widget_definitions = {
 		}
 	}, "mission_popup")
 }
-local animations = {
-	popup_start = {
-		{
-			name = "reset",
-			end_time = 0,
-			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				widget.alpha_multiplier = 0
-				local style = widget.style
-				local alpha = 0
-				style.title_text.text_color[1] = alpha
-				style.description_text.text_color[1] = alpha
-				style.icon.color[1] = alpha
-				local scenegraph_id = widget.scenegraph_id
-				local default_scenegraph = scenegraph_definition[scenegraph_id]
-				local default_size = default_scenegraph.size
-				local width = default_size[1] * 0.1
-				style.background.size[1] = width
-			end
-		},
-		{
-			name = "fade_in",
-			end_time = 0.3,
-			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				local anim_progress = math.easeOutCubic(progress)
-				widget.alpha_multiplier = anim_progress
-			end
-		},
-		{
-			name = "background_size_in",
-			end_time = 0,
-			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				local anim_progress = math.easeOutCubic(progress)
-				local scenegraph_id = widget.scenegraph_id
-				local default_scenegraph = scenegraph_definition[scenegraph_id]
-				local default_size = default_scenegraph.size
-				local width = default_size[1] * 0.1 + default_size[1] * 0.9 * anim_progress
-				local style = widget.style
-				style.background.size[1] = width
-			end
-		},
-		{
-			name = "text_fade_in",
-			end_time = 0.7,
-			start_time = 0.3,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				local anim_progress = math.easeInCubic(progress)
-				local style = widget.style
-				local alpha = anim_progress * 255
-				style.title_text.text_color[1] = alpha
-				style.description_text.text_color[1] = alpha
-				style.icon.color[1] = alpha
-			end
-		},
-		{
-			name = "text_fade_out",
-			end_time = 5.5,
-			start_time = 5,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				local anim_progress = math.easeOutCubic(1 - progress)
-				local style = widget.style
-				local alpha = anim_progress * 255
-				style.title_text.text_color[1] = alpha
-				style.description_text.text_color[1] = alpha
-				style.icon.color[1] = alpha
-			end
-		},
-		{
-			name = "fade_out",
-			end_time = 6,
-			start_time = 5.5,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				local anim_progress = math.easeInCubic(1 - progress)
-				widget.alpha_multiplier = anim_progress
-			end
-		},
-		{
-			name = "delay",
-			end_time = 7,
-			start_time = 6.5,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
-				return
-			end
-		}
+local animations = {}
+animations.popup_start = {
+	{
+		name = "reset",
+		end_time = 0,
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			widget.alpha_multiplier = 0
+			local style = widget.style
+			local alpha = 0
+			style.title_text.text_color[1] = alpha
+			style.description_text.text_color[1] = alpha
+			style.icon.color[1] = alpha
+			local scenegraph_id = widget.scenegraph_id
+			local default_scenegraph = scenegraph_definition[scenegraph_id]
+			local default_size = default_scenegraph.size
+			local width = default_size[1] * 0.1
+			style.background.size[1] = width
+		end
+	},
+	{
+		name = "fade_in",
+		end_time = 0.3,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			local anim_progress = math.easeOutCubic(progress)
+			widget.alpha_multiplier = anim_progress
+		end
+	},
+	{
+		name = "background_size_in",
+		end_time = 0,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			local anim_progress = math.easeOutCubic(progress)
+			local scenegraph_id = widget.scenegraph_id
+			local default_scenegraph = scenegraph_definition[scenegraph_id]
+			local default_size = default_scenegraph.size
+			local width = default_size[1] * 0.1 + default_size[1] * 0.9 * anim_progress
+			local style = widget.style
+			style.background.size[1] = width
+		end
+	},
+	{
+		name = "text_fade_in",
+		end_time = 0.7,
+		start_time = 0.3,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			local anim_progress = math.easeInCubic(progress)
+			local style = widget.style
+			local alpha = anim_progress * 255
+			style.title_text.text_color[1] = alpha
+			style.description_text.text_color[1] = alpha
+			style.icon.color[1] = alpha
+		end
+	},
+	{
+		name = "text_fade_out",
+		end_time = 5.5,
+		start_time = 5,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			local anim_progress = math.easeOutCubic(1 - progress)
+			local style = widget.style
+			local alpha = anim_progress * 255
+			style.title_text.text_color[1] = alpha
+			style.description_text.text_color[1] = alpha
+			style.icon.color[1] = alpha
+		end
+	},
+	{
+		name = "fade_out",
+		end_time = 6,
+		start_time = 5.5,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			local anim_progress = math.easeInCubic(1 - progress)
+			widget.alpha_multiplier = anim_progress
+		end
+	},
+	{
+		name = "delay",
+		end_time = 7,
+		start_time = 6.5,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
+			return
+		end
 	}
 }
 

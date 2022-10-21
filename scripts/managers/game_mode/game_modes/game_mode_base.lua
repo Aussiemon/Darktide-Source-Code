@@ -166,7 +166,7 @@ GameModeBase._validate_bot_count = function (self)
 	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
 	local max_players = GameParameters.max_players
 	local num_players = Managers.player:num_human_players()
-	local max_bots = (bot_backfilling_allowed and self._settings.max_bots) or 0
+	local max_bots = bot_backfilling_allowed and self._settings.max_bots or 0
 	local num_bots = bot_synchronizer_host:num_bots() + self._queued_bots_n
 	local desired_bot_count = max_players - num_players
 	desired_bot_count = math.clamp(desired_bot_count, 0, max_bots)
@@ -174,7 +174,7 @@ GameModeBase._validate_bot_count = function (self)
 	if desired_bot_count < num_bots then
 		local bots_to_remove = num_bots - desired_bot_count
 
-		for ii = 1, bots_to_remove, 1 do
+		for ii = 1, bots_to_remove do
 			if self._queued_bots_n > 0 then
 				self._queued_bots_n = self._queued_bots_n - 1
 			else

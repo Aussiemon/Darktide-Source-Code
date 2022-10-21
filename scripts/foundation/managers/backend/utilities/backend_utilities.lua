@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = {}
@@ -58,7 +56,7 @@ BackendUtilities.fetch_embedded_links = function (body)
 	local len = #items
 	local promises = {}
 
-	for i = 1, len, 1 do
+	for i = 1, len do
 		local item = items[i]
 
 		table.insert(promises, Managers.backend:title_request(BackendUtilities.fetch_link(item, "self")))
@@ -136,7 +134,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 			if not template_error then
 				href = link.href
 
-				for i = 1, #template_keys, 1 do
+				for i = 1, #template_keys do
 					local key = template_keys[i]
 					href = href:gsub("%{" .. key .. "%}", template_data[key])
 				end
@@ -267,9 +265,7 @@ local function calc_time_to_expire(request_headers)
 	local cache_control = request_headers["cache-control"]
 
 	if cache_control then
-		local max_age = 
-		-- Decompilation error in this vicinity:
-		string.gmatch(cache_control, "max%-age=(%d+)")()
+		local max_age = string.gmatch(cache_control, "max%-age=(%d+)")()
 
 		if max_age then
 			local age = tonumber(request_headers.age) or 0

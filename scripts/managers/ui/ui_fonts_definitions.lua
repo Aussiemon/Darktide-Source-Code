@@ -13,7 +13,7 @@ local special_character_fonts = {
 }
 local definitions = {}
 
-for i = 1, #font_names, 1 do
+for i = 1, #font_names do
 	local name = font_names[i]
 	local path = table.append({
 		"content/ui/fonts/" .. name

@@ -90,7 +90,7 @@ MissionObjectiveZoneCaptureExtension._players_fulfill_in_zone_check = function (
 	local players_in_zone = 0
 	local total_players = #valid_player_units
 
-	for i = 1, total_players, 1 do
+	for i = 1, total_players do
 		local player_unit = valid_player_units[i]
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
@@ -126,7 +126,7 @@ MissionObjectiveZoneCaptureExtension._set_network_timer_state = function (self, 
 end
 
 MissionObjectiveZoneCaptureExtension.current_progression = function (self)
-	local progression = (self._activated and self._networked_timer_extension:progression()) or 0
+	local progression = self._activated and self._networked_timer_extension:progression() or 0
 
 	return progression
 end

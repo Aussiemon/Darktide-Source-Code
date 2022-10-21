@@ -9,7 +9,7 @@ PlayerInputStreamVisualizer.init = function (self, player, peer_id)
 	local size = BUFFER_SIZE
 	self._cache = Script.new_array(size)
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		self._cache[i] = false
 	end
 
@@ -48,19 +48,19 @@ PlayerInputStreamVisualizer.frames_received = function (self, from, to)
 
 	if from_in_range <= to and index_from <= to_in_range then
 		if index_to < index_from then
-			for i = index_from, BUFFER_SIZE, 1 do
+			for i = index_from, BUFFER_SIZE do
 				self:_write(cache, i, offset)
 
 				offset = offset + 1
 			end
 
-			for i = 1, index_to, 1 do
+			for i = 1, index_to do
 				self:_write(cache, i, offset)
 
 				offset = offset + 1
 			end
 		else
-			for i = index_from, index_to, 1 do
+			for i = index_from, index_to do
 				self:_write(cache, i, offset)
 
 				offset = offset + 1
@@ -72,7 +72,7 @@ end
 PlayerInputStreamVisualizer.step_frame = function (self, frame)
 	if not self._start_frame then
 		self._start_frame = frame - 1 - BUFFER_BACKWARDS
-		self._end_frame = (frame - 1 + BUFFER_SIZE) - BUFFER_BACKWARDS - 1
+		self._end_frame = frame - 1 + BUFFER_SIZE - BUFFER_BACKWARDS - 1
 	end
 
 	fassert(frame == self._start_frame + BUFFER_BACKWARDS + 1, "Trying to step more than one frame. old:%i, new:%i", self._start_frame + BUFFER_BACKWARDS, frame)
@@ -142,8 +142,8 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 	local frame_perfect_color = Color.yellow()
 	local time_step = GameParameters.fixed_time_step
 
-	for i = 1, BUFFER_SIZE, 1 do
-		local cache_index = self:_raw_index((self._start_frame + i) - 1)
+	for i = 1, BUFFER_SIZE do
+		local cache_index = self:_raw_index(self._start_frame + i - 1)
 		local value = cache[cache_index]
 
 		if value then
@@ -156,7 +156,7 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 			else
 				pos = Vector3(i * width, y_0, layer)
 				size = Vector2(width, value * height)
-				color = (value < 0 and late_color) or in_time_color
+				color = value < 0 and late_color or in_time_color
 			end
 
 			Gui.rect(gui, pos, size, color)
@@ -197,7 +197,7 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 
 	local frame_lines_color = Color.black(25)
 
-	for i = -25, 25, 1 do
+	for i = -25, 25 do
 		local pos = Vector3(0, y_0 + i * height, layer)
 		local size = Vector2(BUFFER_SIZE * width, 1)
 
@@ -206,9 +206,9 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 
 	local time_indicators_color = Color.dim_gray(125)
 
-	for i = 1, #TIME_INDICATORS, 1 do
+	for i = 1, #TIME_INDICATORS do
 		local ms = TIME_INDICATORS[i]
-		local pos = Vector3(0, math.floor(y_0 + (ms * height) / time_step), layer)
+		local pos = Vector3(0, math.floor(y_0 + ms * height / time_step), layer)
 		local size = Vector2(BUFFER_SIZE * width, 1)
 
 		Gui.rect(gui, pos, size, time_indicators_color)

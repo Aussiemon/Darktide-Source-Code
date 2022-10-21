@@ -93,7 +93,7 @@ BotPerceptionExtension.pre_update = function (self, unit, dt, t)
 	local broadphase = broadphase_system.broadphase
 	local num_hits = broadphase:query(search_position, FORCED_PRIO_UPDATE_RANGE, broadphase_results, enemy_side_names)
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		repeat
 			local enemy_unit = broadphase_results[i]
 
@@ -304,7 +304,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 	local valid_player_units = side.valid_player_units
 	local num_valid_player_units = #valid_player_units
 
-	for i = 1, num_valid_player_units, 1 do
+	for i = 1, num_valid_player_units do
 		local player_unit = valid_player_units[i]
 		local player_segment_index = main_path_manager:segment_index_by_unit(player_unit)
 
@@ -324,7 +324,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 						local alive_monsters = side:alive_units_by_tag("enemy", "monster")
 						local num_alive_monsters = alive_monsters.size
 
-						for j = 1, num_alive_monsters, 1 do
+						for j = 1, num_alive_monsters do
 							local monster_unit = alive_monsters[j]
 							local monster_blackboard = BLACKBOARDS[monster_unit]
 							local monster_perception_component = monster_blackboard.perception
@@ -340,7 +340,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 							end
 
 							local is_target_ally_and_needs_aid = perception_component.target_ally == player_unit and perception_component.target_ally_needs_aid
-							local monster_to_target_range = (is_target_ally_and_needs_aid and ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE) or ALLOWED_AID_MIN_RANGE_MONSTER_ALLY_BASE
+							local monster_to_target_range = is_target_ally_and_needs_aid and ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE or ALLOWED_AID_MIN_RANGE_MONSTER_ALLY_BASE
 
 							if monster_target == player_unit then
 								monster_to_target_range = monster_to_target_range + ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_ALLY_MODIFIER
@@ -394,9 +394,9 @@ local IS_WOUNDED_QUICK_USE_MODIFIER = 0.5
 
 BotPerceptionExtension._calculate_healing_item_utility = function (self, health_percent, is_wounded, is_quick_use_item)
 	if is_quick_use_item then
-		return 1 - ((is_wounded and health_percent - IS_WOUNDED_QUICK_USE_MODIFIER) or health_percent)
+		return 1 - (is_wounded and health_percent - IS_WOUNDED_QUICK_USE_MODIFIER or health_percent)
 	else
-		return 1 - ((is_wounded and health_percent * IS_WOUNDED_MODIFIER) or health_percent)
+		return 1 - (is_wounded and health_percent * IS_WOUNDED_MODIFIER or health_percent)
 	end
 end
 

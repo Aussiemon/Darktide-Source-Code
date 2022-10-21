@@ -91,7 +91,7 @@ PhysicsUnitProximitySystem.post_update = function (self, context, dt, t, ...)
 		if peer_id ~= local_peer_id then
 			local units = PhysicsProximitySystem.get_observer_proximity_units(physics_world, index)
 
-			for i = 1, #units, 1 do
+			for i = 1, #units do
 				local unit = units[i]
 				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local breed = unit_data_extension:breed()

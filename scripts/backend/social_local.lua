@@ -39,7 +39,7 @@ SocialLocal.send_friend_request = function (self, account_id, method)
 			local friend = {
 				accountName = "DummyData",
 				accountId = account_id,
-				status = (is_sent and FriendStatus.invited) or FriendStatus.invite,
+				status = is_sent and FriendStatus.invited or FriendStatus.invite,
 				invitedTime = tostring(server_time)
 			}
 			self._friends[account_id] = friend
@@ -100,7 +100,7 @@ SocialLocal.suggested_names_by_archetype = function (self, archetype)
 		local names = {}
 		local main_part = "Generic_" .. archetype .. "_"
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			names[i] = main_part .. i
 		end
 

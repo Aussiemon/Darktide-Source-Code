@@ -45,7 +45,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	local aligned_vfx_buffer = Script.new_array(ALIGNED_VFX_RING_BUFFER_SIZE)
 
-	for i = 1, ALIGNED_VFX_RING_BUFFER_SIZE, 1 do
+	for i = 1, ALIGNED_VFX_RING_BUFFER_SIZE do
 		aligned_vfx_buffer[i] = {
 			end_position = Vector3Box()
 		}
@@ -57,7 +57,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	}
 	local moving_sfx_buffer = Script.new_array(MOVING_SFX_RING_BUFFER_SIZE)
 
-	for i = 1, MOVING_SFX_RING_BUFFER_SIZE, 1 do
+	for i = 1, MOVING_SFX_RING_BUFFER_SIZE do
 		moving_sfx_buffer[i] = {
 			position = Vector3Box(),
 			direction = Vector3Box()
@@ -276,7 +276,7 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 
 	local moving_sfx = self._moving_sfx
 
-	for i = 1, MOVING_SFX_RING_BUFFER_SIZE, 1 do
+	for i = 1, MOVING_SFX_RING_BUFFER_SIZE do
 		local data = moving_sfx[i]
 
 		if data then
@@ -316,7 +316,7 @@ PlayerUnitFxExtension._update_first_person_mode_all_sources = function (self, fi
 	local wwise_world = self._wwise_world
 	local sources = self._sources
 	local WwiseWorld_set_source_parameter = WwiseWorld.set_source_parameter
-	local parameter_value = (first_person_mode and 1) or 0
+	local parameter_value = first_person_mode and 1 or 0
 
 	for source_name, source in pairs(sources) do
 		WwiseWorld_set_source_parameter(wwise_world, source, "first_person_mode", parameter_value)
@@ -350,7 +350,7 @@ end
 PlayerUnitFxExtension._update_first_person_mode = function (self, source_name, first_person_mode)
 	local sound_source = self._sources[source_name]
 	local wwise_world = self._wwise_world
-	local parameter_value = (first_person_mode and 1) or 0
+	local parameter_value = first_person_mode and 1 or 0
 
 	WwiseWorld.set_source_parameter(wwise_world, sound_source, "first_person_mode", parameter_value)
 end
@@ -526,7 +526,7 @@ PlayerUnitFxExtension._update_looping_particle_variables = function (self, dt, t
 		if variables and id then
 			local num_variables = #variables
 
-			for i = 1, num_variables, 1 do
+			for i = 1, num_variables do
 				local variable_config = variables[i]
 				local variable_name = variable_config.variable_name
 				local variable_type = variable_config.variable_type
@@ -610,7 +610,7 @@ PlayerUnitFxExtension.server_correction_occurred = function (self, unit, from_fr
 			for property_name, _ in pairs(external_properties) do
 				local property_value = looping_particle_component[property_name]
 				local saved_property_value = saved_external_properties[property_name]
-				property_value = (property_value ~= "n/a" and property_value) or nil
+				property_value = property_value ~= "n/a" and property_value or nil
 				different_external_properties = different_external_properties or property_value ~= saved_property_value
 				server_correction_external_properties[property_name] = property_value
 			end
@@ -657,7 +657,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 	local unit_cache = wwise_source_node_cache[unit]
 
 	if not unit_cache[node_name] then
-		local node = (node_name == "root" and 1) or Unit.node(unit, node_name)
+		local node = node_name == "root" and 1 or Unit.node(unit, node_name)
 		local source = WwiseWorld.make_manual_source(wwise_world, unit, node)
 		unit_cache[node_name] = {
 			num_registered_sources = 0,
@@ -679,7 +679,7 @@ end
 local function _register_sound_source_from_attachments(wwise_source_node_cache, parent_unit, attachments, node_name, wwise_world, source_name)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local unit = attachments[i]
 
 		if Unit.has_node(unit, node_name) then
@@ -979,7 +979,7 @@ PlayerUnitFxExtension._trigger_wwise_event_synced = function (self, event_name, 
 end
 
 PlayerUnitFxExtension.trigger_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
-	Managers.state.game_session:send_rpc_clients("rpc_play_server_controlled_player_sound", self._game_object_id, NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, (optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name]) or nil, optional_parameter_value)
+	Managers.state.game_session:send_rpc_clients("rpc_play_server_controlled_player_sound", self._game_object_id, NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value)
 
 	return self:_trigger_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
 end
@@ -1037,7 +1037,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	local line = end_position - spawner_position
 	local line_length = Vector3.length(line)
 	local line_direction = Vector3.normalize(line)
-	local effect_to_use = (is_critical_strike and critical_effect_name) or effect_name
+	local effect_to_use = is_critical_strike and critical_effect_name or effect_name
 
 	if effect_to_use then
 		local line_rotation = Quaternion.look(line_direction)
@@ -1099,13 +1099,13 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			else
 				local line_rotation = Quaternion.look(line_direction)
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
-				local chosen_effect_name = (num_emitters == 0 and start_emitter_effect_name) or emitter_effect_name
+				local chosen_effect_name = num_emitters == 0 and start_emitter_effect_name or emitter_effect_name
+
+				World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
+
+				emitter_distance = new_emitter_distance
+				num_emitters = num_emitters + 1
 			end
-
-			World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
-
-			emitter_distance = new_emitter_distance
-			num_emitters = num_emitters + 1
 		end
 	end
 
@@ -1127,13 +1127,13 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			else
 				local line_rotation = Quaternion.look(line_direction)
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
-				local chosen_effect_name = (num_critical_emitters == 0 and start_emitter_effect_name) or emitter_effect_name
+				local chosen_effect_name = num_critical_emitters == 0 and start_emitter_effect_name or emitter_effect_name
+
+				World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
+
+				emitter_distance = new_emitter_distance
+				num_critical_emitters = num_critical_emitters + 1
 			end
-
-			World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
-
-			emitter_distance = new_emitter_distance
-			num_critical_emitters = num_critical_emitters + 1
 		end
 	end
 
@@ -1531,7 +1531,7 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 		local event_id = nil
 
 		if resolved then
-			local wwise_event_name = (is_husk and has_husk_events and event_name .. "_husk") or event_name
+			local wwise_event_name = is_husk and has_husk_events and event_name .. "_husk" or event_name
 
 			if is_2d then
 				event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
@@ -1607,7 +1607,7 @@ PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, f
 	local event_id = data.id
 
 	if stop_event_name and not force_stop then
-		local wwise_event_name = (is_husk and stop_event_name .. "_husk") or stop_event_name
+		local wwise_event_name = is_husk and stop_event_name .. "_husk" or stop_event_name
 
 		if config.is_2d then
 			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
@@ -1621,14 +1621,19 @@ PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, f
 		WwiseWorld.stop_event(self._wwise_world, event_id)
 	end
 
-	data.is_husk, data.id, data.event_alias, data.event_name, data.stop_event_name, data.source_name = nil
+	data.source_name = nil
+	data.stop_event_name = nil
+	data.event_name = nil
+	data.event_alias = nil
+	data.id = nil
+	data.is_husk = nil
 	data.is_playing = false
 end
 
 local function _register_vfx_spawner_from_attachments(parent_unit, attachments, node_name, spawner_name)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments, 1 do
+	for i = 1, num_attachments do
 		local unit = attachments[i]
 
 		if Unit.has_node(unit, node_name) then
@@ -1775,7 +1780,7 @@ PlayerUnitFxExtension.spawn_looping_particles = function (self, looping_particle
 		local particle_id = NetworkLookup.player_character_particles[particle_name]
 		local except = self._player:channel_id()
 
-		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_looping_player_particles", except, self._game_object_id, looping_particle_alias_id, particle_id, (optional_spawner_name and NetworkLookup.player_character_fx_sources[optional_spawner_name]) or nil, link)
+		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_looping_player_particles", except, self._game_object_id, looping_particle_alias_id, particle_id, optional_spawner_name and NetworkLookup.player_character_fx_sources[optional_spawner_name] or nil, link)
 	end
 end
 
@@ -2017,7 +2022,7 @@ end
 
 PlayerUnitFxExtension.rpc_play_server_controlled_player_sound = function (self, channel_id, game_object_id, event_id, append_husk_to_event_name, optional_position, optional_parameter_name_id, optional_parameter_value)
 	local event_name = NetworkLookup.player_character_sounds[event_id]
-	local optional_parameter_name = (optional_parameter_name_id and NetworkLookup.sound_parameters[optional_parameter_name_id]) or nil
+	local optional_parameter_name = optional_parameter_name_id and NetworkLookup.sound_parameters[optional_parameter_name_id] or nil
 
 	self:_trigger_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
 end

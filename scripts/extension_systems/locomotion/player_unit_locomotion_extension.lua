@@ -141,7 +141,7 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 		local rotation = Quaternion.look(-Vector3.up())
 		local physics_world = self._physics_world
 		local _, num_hits = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", self._collision_filter)
-		local new_on_ground = num_hits > 0 or (Mover.flying_frames(Unit.mover(unit)) == 0 and steering_component.velocity_wanted.z <= 0)
+		local new_on_ground = num_hits > 0 or Mover.flying_frames(Unit.mover(unit)) == 0 and steering_component.velocity_wanted.z <= 0
 		inair_component.on_ground = new_on_ground
 
 		if not new_on_ground then
@@ -176,7 +176,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 		local query_position = current_position + flat_move_direction * 0.5
 		local num_results = broadphase:query(query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
-		for i = 1, num_results, 1 do
+		for i = 1, num_results do
 			local minion_unit = BROADPHASE_RESULTS[i]
 			local breed = ScriptUnit.extension(minion_unit, "unit_data_system"):breed()
 			local minion_radius = breed.player_locomotion_constrain_radius
@@ -292,7 +292,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	end
 
 	velocity_wanted = self:_handle_push_velocity(velocity_wanted, on_ground, dt, t)
-	local drag_koeff = (self._use_drag and 0.00855) or 0
+	local drag_koeff = self._use_drag and 0.00855 or 0
 	local speed = Vector3.length(velocity_wanted)
 	local drag_force = drag_koeff * speed * speed * Vector3.normalize(-velocity_wanted)
 	local dragged_velocity = velocity_wanted + drag_force * dt
@@ -332,7 +332,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 				local num_constraints = 0
 				local num_results = broadphase:query(query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
-				for i = 1, num_results, 1 do
+				for i = 1, num_results do
 					local minion_unit = BROADPHASE_RESULTS[i]
 					local breed = ScriptUnit.extension(minion_unit, "unit_data_system"):breed()
 
@@ -630,7 +630,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 	local locomotion_steering_component = self._locomotion_steering_component
 
 	if locomotion_steering_component.move_method == "script_driven_hub" then
-		local current_active_stop = (locomotion_steering_component.hub_active_stopping and 1) or 0
+		local current_active_stop = locomotion_steering_component.hub_active_stopping and 1 or 0
 		local active_stop_anim_var_id = Unit.animation_find_variable(unit, self._active_stop_anim_var)
 		local old_anim_var_id = Unit.animation_get_variable(unit, active_stop_anim_var_id)
 		local active_stop = math.clamp(math.lerp(old_anim_var_id, current_active_stop, dt * 5), 0, 1)
@@ -670,6 +670,7 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	self._visual_loadout_extension:update_unit_position(unit, dt, t)
 
 	if self._is_local_unit then
+		-- Nothing
 	end
 
 	if self._is_server then

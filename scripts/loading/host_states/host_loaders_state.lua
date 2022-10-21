@@ -16,7 +16,7 @@ end
 HostLoadersState.update = function (self, dt)
 	local loaders = self._loaders
 
-	for i = 1, #loaders, 1 do
+	for i = 1, #loaders do
 		if not loaders[i]:is_loading_done() then
 			return
 		end

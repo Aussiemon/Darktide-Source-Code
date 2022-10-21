@@ -20,7 +20,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 	self._level = level
 	local vo_classes_2d = NetworkLookup.voice_classes_2d
 
-	for i = 1, #vo_classes_2d, 1 do
+	for i = 1, #vo_classes_2d do
 		local vo_class = vo_classes_2d[i]
 		local breed_dialogue_settings = DialogueBreedSettings[vo_class]
 

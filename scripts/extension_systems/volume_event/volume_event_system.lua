@@ -30,7 +30,7 @@ VolumeEventSystem.init = function (self, extension_system_creation_context, syst
 	local units_by_extension = {}
 	local traversal_costs = {}
 
-	for i = 1, #extension_list, 1 do
+	for i = 1, #extension_list do
 		local extension_name = extension_list[i]
 		units_by_extension[extension_name] = {}
 		traversal_costs[extension_name] = {}
@@ -43,7 +43,7 @@ end
 VolumeEventSystem._require_level_volumes = function (self, level_name, volume_data)
 	local num_nested_levels = LevelResource.nested_level_count(level_name)
 
-	for i = 1, num_nested_levels, 1 do
+	for i = 1, num_nested_levels do
 		local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
 
 		self:_require_level_volumes(nested_level_name, volume_data)
@@ -65,7 +65,7 @@ end
 VolumeEventSystem._create_event_volume_data = function (self, level_volumes)
 	local volumes_by_name = {}
 
-	for i = 1, #level_volumes, 1 do
+	for i = 1, #level_volumes do
 		local level_volume = level_volumes[i]
 		local volume_type = level_volume.type
 		local volume_events = volume_type_events[volume_type]
@@ -96,7 +96,7 @@ end
 VolumeEventSystem._add_nested_levels = function (self, level, levels)
 	local nested_levels = Level.nested_levels(level)
 
-	for i = 1, #nested_levels, 1 do
+	for i = 1, #nested_levels do
 		local nested_level = nested_levels[i]
 		levels[#levels + 1] = nested_level
 
@@ -118,7 +118,7 @@ VolumeEventSystem.on_gameplay_post_init = function (self, main_level)
 	self:_add_nested_levels(main_level, levels)
 
 	for volume_name, volume in pairs(self._level_volumes_by_name) do
-		for i = 1, #levels, 1 do
+		for i = 1, #levels do
 			local level = levels[i]
 
 			if Level.has_volume(level, volume_name) then
@@ -166,7 +166,7 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 			connected_units = connected_units
 		}
 
-		for i = 1, #volume_levels, 1 do
+		for i = 1, #volume_levels do
 			local level = volume_levels[i]
 			local volume_id = VolumeEvent.register_volume(engine_volume_event_system, level, volume_name, extension_name, invert_volume, data, on_enter, on_exit, filter)
 
@@ -223,7 +223,7 @@ VolumeEventSystem._unregister_level_volume = function (self, volume_name)
 	local volume_ids = volume.volume_ids
 
 	for extension_name, _ in pairs(volume.events) do
-		for i = 1, #volume_ids, 1 do
+		for i = 1, #volume_ids do
 			local volume_id = volume_ids[i]
 
 			VolumeEvent.unregister_volume(engine_volume_event_system, volume_id, extension_name)
@@ -245,13 +245,13 @@ end
 VolumeEventSystem._update_traversal_cost = function (self, extension_name, volume_name, cost)
 	local extension_units = self._units_by_extension[extension_name]
 
-	for i = 1, #extension_units, 1 do
+	for i = 1, #extension_units do
 		local unit = extension_units[i]
 
 		self:_set_unit_nav_tag_layer_cost(unit, volume_name, cost)
 	end
 
-	self._traversal_costs[extension_name][volume_name] = (cost ~= 1 and cost) or nil
+	self._traversal_costs[extension_name][volume_name] = cost ~= 1 and cost or nil
 end
 
 VolumeEventSystem._set_unit_nav_tag_layer_cost = function (self, unit, layer_name, layer_cost)
@@ -410,7 +410,7 @@ VolumeEventSystem.end_zone_conditions_fulfilled = function (self, volume_id)
 	local alive_players = player_unit_spawn_manager:alive_players()
 	local num_alive_players = #alive_players
 
-	for i = 1, num_alive_players, 1 do
+	for i = 1, num_alive_players do
 		local player = alive_players[i]
 		local player_unit = player.player_unit
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")

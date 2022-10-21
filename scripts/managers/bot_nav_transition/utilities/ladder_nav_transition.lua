@@ -21,7 +21,7 @@ local NAV_MESH_BELOW = 0.5
 LadderNavTransition.find_position_on_nav_mesh = function (start_position, nav_world, search_direction, traverse_logic, drawer)
 	local check_position, nav_mesh_position = nil
 
-	for step_index = 0, NAV_MESH_MAX_STEPS, 1 do
+	for step_index = 0, NAV_MESH_MAX_STEPS do
 		check_position = start_position + search_direction * NAV_MESH_STEP_SIZE * step_index
 		nav_mesh_position = NavQueries.position_on_mesh(nav_world, check_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
 

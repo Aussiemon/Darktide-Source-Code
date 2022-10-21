@@ -4,7 +4,7 @@ local _damper_implicit, _halflife_to_damping, _fast_negexp = nil
 DampenedString.step = function (position, target_position, halflife, dt)
 	local damping = _halflife_to_damping(halflife, dt)
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local p = position[i]
 		local p_goal = target_position[i]
 		position[i] = _damper_implicit(p, p_goal, damping)
@@ -14,7 +14,7 @@ end
 local EPS = 1e-05
 
 function _halflife_to_damping(halflife, dt)
-	return (0.69314718056 * dt) / (halflife + EPS)
+	return 0.69314718056 * dt / (halflife + EPS)
 end
 
 function _damper_implicit(p, p_goal, damping)

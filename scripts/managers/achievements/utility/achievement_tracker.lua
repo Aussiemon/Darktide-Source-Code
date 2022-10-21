@@ -1,75 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local Promise = require("scripts/foundation/utilities/promise")
 local AchievementTypes = require("scripts/settings/achievements/achievement_types")
 local AchievementStats = require("scripts/managers/stats/groups/achievement_stats")
@@ -128,7 +56,7 @@ AchievementTracker._get_data_diff = function (self, account_id, initial_data, cu
 	for achievement_id, _ in pairs(current_data.completed) do
 		if not initial_data.completed[achievement_id] then
 			local type, triggers = self._achievement_definitions.achievement_from_id(achievement_id):get_triggers()
-			local stat_name = (type == AchievementTypes.stat and triggers[1]) or "none"
+			local stat_name = type == AchievementTypes.stat and triggers[1] or "none"
 			unlocked_achievements[#unlocked_achievements + 1] = {
 				complete = true,
 				id = achievement_id,
@@ -181,233 +109,66 @@ AchievementTracker.track_player = function (self, player)
 end
 
 AchievementTracker._untrack_player = function (self, account_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	local tracked_table = self._tracked_players[account_id]
 
 	if not tracked_table then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 5-12, warpins: 1 ---
 		Log.warning("AchievementTracker", "Can't untrack '%s', they aren't tracked.", account_id)
 
 		return nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 13-18, warpins: 2 ---
 	self._tracked_players[account_id] = nil
 
 	if not tracked_table.stat_id then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 19-25, warpins: 1 ---
 		Log.debug("AchievementTracker", "Untracked player '%s' before data was downloaded from the backend.")
 
 		return nil
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 26-41, warpins: 2 ---
 	local stat_id = tracked_table.stat_id
 	self._tracked_stats[stat_id] = nil
 
 	Managers.stats:remove_tracker(stat_id)
 
 	return self:_get_data_diff(account_id, tracked_table.initial_data, tracked_table.current_data)
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 AchievementTracker.untrack_player = function (self, account_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local achievement_update = self:_untrack_player(account_id)
 
 	if not achievement_update then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 7-9, warpins: 1 ---
 		return Promise.resolved()
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 10-27, warpins: 1 ---
 	return Managers.backend.interfaces.commendations:bulk_update_commendations({
 		achievement_update
 	}):next(function (_)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-6, warpins: 1 ---
 		Log.debug("AchievementTracker", "Sending achievement update complete.")
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-9, warpins: 1 ---
 		Log.error("AchievementTracker", "Sending achievement update failed %s.", tostring(error))
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 28-28, warpins: 2 ---
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 AchievementTracker.untrack_all = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local achievement_updates = {}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-14, warpins: 0 ---
 	for account_id, _ in pairs(self._tracked_players) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-12, warpins: 1 ---
 		local achievement_update = self:_untrack_player(account_id)
 		achievement_updates[#achievement_updates + 1] = achievement_update
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 13-14, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 15-17, warpins: 1 ---
 	if #achievement_updates == 0 then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 18-20, warpins: 1 ---
 		return Promise.resolved()
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 21-37, warpins: 1 ---
 	return Managers.backend.interfaces.commendations:bulk_update_commendations(achievement_updates):next(function (_)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-6, warpins: 1 ---
 		Log.debug("AchievementTracker", "Sending achievement update complete.")
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-9, warpins: 1 ---
 		Log.error("AchievementTracker", "Sending achievement update failed %s.", tostring(error))
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end)
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 38-38, warpins: 2 ---
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 AchievementTracker._unlock_achievement = function (self, account_id, achievement_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-20, warpins: 1 ---
 	local tracked_table = self._tracked_players[account_id]
 	local achievement_data = tracked_table.current_data
 	achievement_data.completed[achievement_id] = true
@@ -415,135 +176,40 @@ AchievementTracker._unlock_achievement = function (self, account_id, achievement
 
 	RPC.rpc_notify_commendation_complete(tracked_table.connection_channel_id, achievement_index)
 	self:_on_achievement_unlock(account_id, achievement_id)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementTracker._on_trigger = function (self, account_id, type, trigger_id, ...)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-8, warpins: 1 ---
 	local tracked_table = self._tracked_players[account_id]
 	local achievement_data = tracked_table.current_data
 	local triggered_by = self._triggered_by[type][trigger_id]
 
 	if not triggered_by then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 9-9, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 10-13, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 14-33, warpins: 0 ---
-	for index = 1, #triggered_by, 1 do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 14-25, warpins: 2 ---
+	for index = 1, #triggered_by do
 		local achievement_index = triggered_by[index]
 		local achievement_definition = self._achievement_definitions[achievement_index]
 
 		if achievement_definition:trigger(achievement_data, type, trigger_id, ...) then
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 26-32, warpins: 1 ---
 			self:_unlock_achievement(account_id, achievement_definition:id())
-			--- END OF BLOCK #0 ---
-
-
-
 		end
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 33-33, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 34-34, warpins: 1 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 AchievementTracker._on_achievement_unlock = function (self, account_id, achievement_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-8, warpins: 1 ---
 	self:_on_trigger(account_id, AchievementTypes.meta, achievement_id)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementTracker._on_event_trigger = function (self, account_id, event_name, event_params)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-9, warpins: 1 ---
 	self:_on_trigger(account_id, AchievementTypes.event, event_name, event_params)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 AchievementTracker._on_stat_trigger = function (self, id, trigger_id, trigger_value, trigger_params)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-17, warpins: 1 ---
 	local account_id = self._tracked_stats[id]
 
 	fassert(account_id, "Recieved stat when not tracking stats for id '%s'.", id)
 	self:_on_trigger(account_id, AchievementTypes.stat, trigger_id, trigger_value, trigger_params)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return AchievementTracker

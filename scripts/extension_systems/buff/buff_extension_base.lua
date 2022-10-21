@@ -45,7 +45,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._proc_events = Script.new_array(MAX_PROC_EVENTS)
 	self._unique_frame_proc = {}
 
-	for i = 1, MAX_PROC_EVENTS, 1 do
+	for i = 1, MAX_PROC_EVENTS do
 		self._proc_events[i] = {}
 		self._proc_event_param_tables[i] = {}
 	end
@@ -59,7 +59,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		if initial_buffs then
 			local t = Managers.time:time("gameplay")
 
-			for i = 1, #initial_buffs, 1 do
+			for i = 1, #initial_buffs do
 				local buff_name = initial_buffs[i]
 
 				self:add_internally_controlled_buff(buff_name, t)
@@ -98,7 +98,7 @@ BuffExtensionBase.game_object_initialized = function (self, game_session, game_o
 	local buffs_added_before_game_object_cration = self._buffs_added_before_game_object_creation
 
 	if buffs_added_before_game_object_cration then
-		for i = 1, #buffs_added_before_game_object_cration, 1 do
+		for i = 1, #buffs_added_before_game_object_cration do
 			local buff_added_before_game_object_cration = buffs_added_before_game_object_cration[i]
 			local buff_template_id = buff_added_before_game_object_cration.buff_template_id
 			local index = buff_added_before_game_object_cration.index
@@ -138,7 +138,7 @@ BuffExtensionBase._update_buffs = function (self, dt, t)
 	local buffs = self._buffs
 	local portable_random = self._portable_random
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 
 		buff:update(dt, t, portable_random)
@@ -163,7 +163,7 @@ end
 BuffExtensionBase.progressbar = function (self)
 	local buffs = self._buffs
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 		local progress_bar = buff:progressbar()
 
@@ -196,7 +196,7 @@ BuffExtensionBase._update_proc_events = function (self, t)
 	local local_portable_random = self._local_portable_random
 	local is_server = self._is_server
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 		local is_predicted = buff:is_predicted()
 
@@ -212,11 +212,11 @@ BuffExtensionBase._update_proc_events = function (self, t)
 		end
 	end
 
-	for i = 1, num_proc_events, 1 do
+	for i = 1, num_proc_events do
 		table.clear(self._proc_events[i])
 	end
 
-	for i = 1, self._param_table_index, 1 do
+	for i = 1, self._param_table_index do
 		table.clear(self._proc_event_param_tables[i])
 	end
 
@@ -256,7 +256,7 @@ BuffExtensionBase._update_stat_buffs_and_keywords = function (self, t)
 	local buffs = self._buffs
 	local current_stat_buffs = self._stat_buffs
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 
 		if buff then
@@ -270,7 +270,7 @@ BuffExtensionBase._check_keywords = function (self, template)
 	local forbidden_keywords = template.forbidden_keywords
 
 	if forbidden_keywords then
-		for i = 1, #forbidden_keywords, 1 do
+		for i = 1, #forbidden_keywords do
 			local keyword = forbidden_keywords[i]
 
 			if self:has_keyword(keyword) then
@@ -282,7 +282,7 @@ BuffExtensionBase._check_keywords = function (self, template)
 	local required_keywords = template.required_keywords
 
 	if required_keywords then
-		for i = 1, #required_keywords, 1 do
+		for i = 1, #required_keywords do
 			local keyword = required_keywords[i]
 
 			if not self:has_keyword(keyword) then
@@ -323,7 +323,7 @@ BuffExtensionBase._can_add_internally_controlled_buff = function (self, template
 end
 
 BuffExtensionBase.add_internally_controlled_buff_with_stacks = function (self, template_name, number_of_stacks, t, ...)
-	for i = 1, number_of_stacks, 1 do
+	for i = 1, number_of_stacks do
 		self:add_internally_controlled_buff(template_name, t, ...)
 	end
 end
@@ -372,7 +372,7 @@ end
 BuffExtensionBase._add_buff = function (self, template, t, ...)
 	local local_index = self:_next_local_index()
 	local template_name = template.name
-	local can_stack = (template.max_stacks and true) or false
+	local can_stack = template.max_stacks and true or false
 	local buff_instance = nil
 
 	if can_stack then
@@ -415,7 +415,7 @@ end
 
 BuffExtensionBase._is_valid_target = function (self, new_template)
 	local buff_context = self._buff_context
-	local is_player = (buff_context.player and true) or false
+	local is_player = buff_context.player and true or false
 	local player_only = new_template.target == BUFF_TARGETS.player_only and is_player
 	local minion_only = new_template.target == BUFF_TARGETS.minion_only and not is_player
 	local any = new_template.target == nil or new_template.target == BUFF_TARGETS.any
@@ -487,7 +487,7 @@ end
 BuffExtensionBase.current_stacks = function (self, buff_name)
 	local buff_instance = self._stacking_buffs[buff_name]
 
-	return (buff_instance and buff_instance:stack_count()) or 0
+	return buff_instance and buff_instance:stack_count() or 0
 end
 
 BuffExtensionBase.remove_externally_controlled_buff = function (self, local_index)
@@ -514,7 +514,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 	if current_stack_count > 1 then
 		buff_instance:remove_stack()
 	else
-		local can_stack = (template.max_stacks and true) or false
+		local can_stack = template.max_stacks and true or false
 
 		if can_stack then
 			local template_name = template.name
@@ -524,7 +524,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 		local buffs = self._buffs
 		local instance_index = nil
 
-		for i = 1, #buffs, 1 do
+		for i = 1, #buffs do
 			local instance = buffs[i]
 
 			if instance == buff_instance then
@@ -556,7 +556,7 @@ end
 BuffExtensionBase.has_buff_id = function (self, buff_id)
 	local buffs = self._buffs
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff_instance = buffs[i]
 		local intance_template = buff_instance:template()
 		local instance_buff_name = intance_template.buff_id
@@ -572,7 +572,7 @@ end
 BuffExtensionBase.has_unique_buff_id = function (self, unique_buff_id)
 	local buffs = self._buffs
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff_instance = buffs[i]
 		local intance_template = buff_instance:template()
 		local instance_buff_id = intance_template.unique_buff_id
@@ -682,7 +682,7 @@ BuffExtensionBase._stop_fx = function (self, index, template)
 
 	local active_vfx = self._active_vfx[index]
 
-	for i = 1, #active_vfx, 1 do
+	for i = 1, #active_vfx do
 		local effect = active_vfx[i]
 		local particle_id = effect.particle_id
 		local stop_type = effect.stop_type
@@ -701,7 +701,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects, unit, worl
 	local active_wwise_node_sources = self._active_wwise_node_sources
 	local num_effects = #node_effects
 
-	for i = 1, num_effects, 1 do
+	for i = 1, num_effects do
 		local effect = node_effects[i]
 		local node_name = effect.node_name
 		local attach_node = Unit.node(unit, node_name)
@@ -762,7 +762,7 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 	local buff_context = self._buff_context
 	local wwise_world = buff_context.wwise_world
 
-	for i = 1, #node_effects, 1 do
+	for i = 1, #node_effects do
 		local effect = node_effects[i]
 		local sfx = effect.sfx
 

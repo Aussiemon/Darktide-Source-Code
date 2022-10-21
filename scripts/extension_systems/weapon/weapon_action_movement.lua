@@ -27,18 +27,13 @@ WeaponActionMovement.move_speed_modifier = function (self, t)
 	local p2 = 1
 	local segment_progress = 0
 
-	for i = 1, #action_movement_curve, 1 do
+	for i = 1, #action_movement_curve do
 		local segment = action_movement_curve[i]
 		local segment_t = segment.t
 
 		if move_curve_t <= segment_t then
 			p2 = segment.modifier
-
-			if segment_t == 0 then
-				segment_progress = 1
-			else
-				segment_progress = move_curve_t / segment_t
-			end
+			segment_progress = segment_t == 0 and 1 or move_curve_t / segment_t
 
 			break
 		else
@@ -72,20 +67,20 @@ function _apply_buffs(movement_mod, weapon_action_component, buff_extension)
 		local is_shielding = action_kind == "shield"
 
 		if is_venting then
-			local decrease_modifier = (stat_buffs and stat_buffs[BuffSettings.stat_buffs.vent_warp_charge_decrease_movement_reduction]) or 1
+			local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.vent_warp_charge_decrease_movement_reduction] or 1
 			local reduction = 1 - movement_mod
 			local decreased_reduction = reduction * decrease_modifier
 			local new_mod = 1 - decreased_reduction
 			movement_mod = new_mod
 		elseif is_shielding then
-			local decrease_modifier = (stat_buffs and stat_buffs[BuffSettings.stat_buffs.psyker_force_field_movespeed_reduction_multiplier]) or 1
+			local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.psyker_force_field_movespeed_reduction_multiplier] or 1
 			local reduction = 1 - movement_mod
 			local decreased_reduction = reduction * decrease_modifier
 			local new_mod = 1 - decreased_reduction
 			movement_mod = new_mod
 		end
 
-		local decrease_modifier = (stat_buffs and stat_buffs[BuffSettings.stat_buffs.weapon_action_movespeed_reduction_multiplier]) or 1
+		local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.weapon_action_movespeed_reduction_multiplier] or 1
 		local reduction = 1 - movement_mod
 		local decreased_reduction = reduction * decrease_modifier
 		local new_mod = 1 - decreased_reduction

@@ -1,9 +1,10 @@
 Components = Components or {}
-local destroyed_mt = {
-	__index = function (t, k)
-		ferror("Tried accessing %s on destroyed component of type %s", tostring(k), t.__component_name)
-	end
-}
+local destroyed_mt = {}
+
+destroyed_mt.__index = function (t, k)
+	ferror("Tried accessing %s on destroyed component of type %s", tostring(k), t.__component_name)
+end
+
 local special_functions = {
 	__index = true,
 	name = true,
@@ -22,7 +23,7 @@ local function _component_data_default_value(component_data, unit, guid, ...)
 	local num_args = select("#", ...)
 	local data = component_data
 
-	for i = 1, num_args, 1 do
+	for i = 1, num_args do
 		local key = select(i, ...)
 		data = data[key]
 
@@ -50,7 +51,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 	local num_args = select("#", ...)
 	local data = component_data
 
-	for i = 1, num_args, 1 do
+	for i = 1, num_args do
 		local key = select(i, ...)
 		data = data[key]
 
@@ -67,7 +68,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 				if string.lower(data_type) == "text_box_array" then
 					local result = {}
 
-					for j = 1, data.size, 1 do
+					for j = 1, data.size do
 						table.insert(result, "")
 					end
 
@@ -75,7 +76,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 				elseif string.lower(data_type) == "check_box_array" then
 					local result = {}
 
-					for j = 1, data.size, 1 do
+					for j = 1, data.size do
 						table.insert(result, false)
 					end
 
@@ -83,7 +84,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 				elseif string.lower(data_type) == "number_array" then
 					local result = {}
 
-					for j = 1, data.size, 1 do
+					for j = 1, data.size do
 						table.insert(result, 0)
 					end
 
@@ -91,7 +92,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 				elseif string.lower(data_type) == "resource_array" then
 					local result = {}
 
-					for j = 1, data.size, 1 do
+					for j = 1, data.size do
 						table.insert(result, "")
 					end
 
@@ -116,7 +117,7 @@ local function _component_data_type(component_data, ...)
 	local num_args = select("#", ...)
 	local data = component_data
 
-	for i = 1, num_args, 1 do
+	for i = 1, num_args do
 		local key = select(i, ...)
 		data = data[key]
 
@@ -160,7 +161,7 @@ local function _component_data_get_array(self, unit, data_type, ...)
 	local array = Script.new_array(unit_array_size)
 
 	if string.lower(data_type) == "resource_array" then
-		for ii = 1, unit_array_size, 1 do
+		for ii = 1, unit_array_size do
 			local resource_data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii, "resource")
 
 			if resource_data ~= nil then
@@ -174,7 +175,7 @@ local function _component_data_get_array(self, unit, data_type, ...)
 			end
 		end
 	else
-		for ii = 1, unit_array_size, 1 do
+		for ii = 1, unit_array_size do
 			local data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
 
 			if data ~= nil then
@@ -198,7 +199,7 @@ local function _component_data_get_vector3(self, unit, guid, ...)
 		vector = default_boxed_vector:unbox()
 	end
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local data = Unit.get_data(unit, "components", guid, "component_data", ..., i)
 
 		if data then
@@ -228,7 +229,7 @@ local function _component_data_get_color(self, unit, guid, ...)
 		}
 	end
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		local data = Unit.get_data(unit, "components", guid, "component_data", ..., i)
 
 		if data then
@@ -270,7 +271,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 					vector = default_boxed_vector:unbox()
 				end
 
-				for i = 1, 3, 1 do
+				for i = 1, 3 do
 					local data = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name, i)
 
 					if data then
@@ -298,7 +299,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 					}
 				end
 
-				for i = 1, 4, 1 do
+				for i = 1, 4 do
 					local data = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name, i)
 
 					if data then
@@ -345,67 +346,72 @@ function component(component_name, super_name, ...)
 			__component_name = component_name,
 			__index = component_table,
 			__interfaces = {},
-			events = {},
-			new = function (self, guid, network_index, unit, is_server, ...)
-				local object = {}
-
-				setmetatable(object, component_table)
-
-				object.guid = guid
-				object.network_index = network_index
-				object.unit = unit
-				object.is_server = is_server
-				local run_update = nil
-
-				if (EDITOR and object.editor_init) or (rawget(_G, "EditorApi") and object.editor_init) then
-					run_update = object:editor_init(unit, is_server, ...)
-				elseif object.init then
-					run_update = object:init(unit, is_server, ...)
-				end
-
-				object.run_update_on_enable = run_update
-
-				return object, run_update
-			end,
-			delete = function (self, ...)
-				self:destroy(...)
-				setmetatable(self, destroyed_mt)
-			end,
-			get_data = function (self, unit, ...)
-				local data_type, array_struct_definition = _component_data_type(self.component_data, ...)
-
-				if data_type ~= nil and _is_vector3(data_type) then
-					return _component_data_get_vector3(self, unit, self.guid, ...)
-				end
-
-				if data_type ~= nil and _is_struct_array(data_type) then
-					return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, ...)
-				end
-
-				if data_type ~= nil and _is_color(data_type) then
-					return _component_data_get_color(self, unit, self.guid, ...)
-				end
-
-				if data_type ~= nil and _is_array(data_type) then
-					return _component_data_get_array(self, unit, data_type, ...) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, ...)
-				end
-
-				if data_type ~= nil and _is_resource(data_type) then
-					return _component_data_get_resource(self.component_data, unit, self.guid, ...) or _component_data_default_value(self.component_data, unit, self.guid, ...)
-				end
-
-				local value = Unit.get_data(unit, "components", self.guid, "component_data", ...)
-
-				if value == nil then
-					value = _component_data_default_value(self.component_data, unit, self.guid, ...)
-				end
-
-				return value
-			end,
-			name = function (self)
-				return self.__component_name
-			end
+			events = {}
 		}
+
+		component_table.new = function (self, guid, network_index, unit, is_server, ...)
+			local object = {}
+
+			setmetatable(object, component_table)
+
+			object.guid = guid
+			object.network_index = network_index
+			object.unit = unit
+			object.is_server = is_server
+			local run_update = nil
+
+			if EDITOR and object.editor_init or rawget(_G, "EditorApi") and object.editor_init then
+				run_update = object:editor_init(unit, is_server, ...)
+			elseif object.init then
+				run_update = object:init(unit, is_server, ...)
+			end
+
+			object.run_update_on_enable = run_update
+
+			return object, run_update
+		end
+
+		component_table.delete = function (self, ...)
+			self:destroy(...)
+			setmetatable(self, destroyed_mt)
+		end
+
+		component_table.get_data = function (self, unit, ...)
+			local data_type, array_struct_definition = _component_data_type(self.component_data, ...)
+
+			if data_type ~= nil and _is_vector3(data_type) then
+				return _component_data_get_vector3(self, unit, self.guid, ...)
+			end
+
+			if data_type ~= nil and _is_struct_array(data_type) then
+				return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, ...)
+			end
+
+			if data_type ~= nil and _is_color(data_type) then
+				return _component_data_get_color(self, unit, self.guid, ...)
+			end
+
+			if data_type ~= nil and _is_array(data_type) then
+				return _component_data_get_array(self, unit, data_type, ...) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, ...)
+			end
+
+			if data_type ~= nil and _is_resource(data_type) then
+				return _component_data_get_resource(self.component_data, unit, self.guid, ...) or _component_data_default_value(self.component_data, unit, self.guid, ...)
+			end
+
+			local value = Unit.get_data(unit, "components", self.guid, "component_data", ...)
+
+			if value == nil then
+				value = _component_data_default_value(self.component_data, unit, self.guid, ...)
+			end
+
+			return value
+		end
+
+		component_table.name = function (self)
+			return self.__component_name
+		end
+
 		Components[component_name] = component_table
 	end
 

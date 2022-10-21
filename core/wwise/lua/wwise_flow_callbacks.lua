@@ -202,7 +202,18 @@ local function make_source(t, wwise_world_function)
 		r1 = wwise_world_function(wwise_world, unit, unit_node_index)
 	else
 		local position = t.Position or t.position
-		r1 = (not position or wwise_world_function(wwise_world, position)) and (not source_id or wwise_world_function(wwise_world, source_id)) and wwise_world_function(wwise_world)
+
+		if position then
+			r1 = wwise_world_function(wwise_world, position)
+		else
+			local source_id = t.Source_Id or t.source_id
+
+			if source_id then
+				r1 = wwise_world_function(wwise_world, source_id)
+			else
+				r1 = wwise_world_function(wwise_world)
+			end
+		end
 	end
 
 	return r1
@@ -381,39 +392,35 @@ M.wwise_add_soundscape_source = function (t)
 					ss_source_id = result_id,
 					SS_Source_Id = result_id
 				}
+			end
+		end
 
-				shape = shape or Unit.get_data(unit, "Wwise", "shape") or "point"
-				shape = string.lower(shape)
-				local shape_map = {
-					point = Wwise.SHAPE_POINT,
-					sphere = Wwise.SHAPE_SPHERE,
-					box = Wwise.SHAPE_BOX
-				}
-				shape = shape_map[shape] or Wwise.SHAPE_POINT
+		shape = shape or Unit.get_data(unit, "Wwise", "shape") or "point"
+		shape = string.lower(shape)
+		local shape_map = {
+			point = Wwise.SHAPE_POINT,
+			sphere = Wwise.SHAPE_SPHERE,
+			box = Wwise.SHAPE_BOX
+		}
+		shape = shape_map[shape] or Wwise.SHAPE_POINT
+		positioning = positioning or string.lower(Unit.get_data(unit, "Wwise", "positioning") or "closest")
+		local default_scale = 10
+		local scale = default_scale
 
-				if not positioning then
-					positioning = string.lower(Unit.get_data(unit, "Wwise", "positioning") or "closest")
-				end
+		if shape == Wwise.SHAPE_SPHERE then
+			scale = t.Sphere_Radius or t.sphere_radius
 
-				local default_scale = 10
-				local scale = default_scale
+			if not scale or scale <= 0 then
+				scale = Unit.get_data(unit, "Wwise", "sphere_radius") or default_scale
+			end
+		elseif shape == Wwise.SHAPE_BOX then
+			scale = t.Box_Scale or t.box_scale
 
-				if shape == Wwise.SHAPE_SPHERE then
-					scale = t.Sphere_Radius or t.sphere_radius
-
-					if not scale or scale <= 0 then
-						scale = Unit.get_data(unit, "Wwise", "sphere_radius") or default_scale
-					end
-				elseif shape == Wwise.SHAPE_BOX then
-					scale = t.Box_Scale or t.box_scale
-
-					if not scale then
-						scale = Vector3(0, 0, 0)
-						scale.x = Unit.get_data(unit, "Wwise", "box_extents", 1) or default_scale
-						scale.y = Unit.get_data(unit, "Wwise", "box_extents", 2) or default_scale
-						scale.z = Unit.get_data(unit, "Wwise", "box_extents", 3) or default_scale
-					end
-				end
+			if not scale then
+				scale = Vector3(0, 0, 0)
+				scale.x = Unit.get_data(unit, "Wwise", "box_extents", 1) or default_scale
+				scale.y = Unit.get_data(unit, "Wwise", "box_extents", 2) or default_scale
+				scale.z = Unit.get_data(unit, "Wwise", "box_extents", 3) or default_scale
 			end
 		end
 
@@ -614,5 +621,3 @@ M.dialogue_silence_unit = function (t)
 		print("Warning: dialogue silence unit: nil unit doing nothing.")
 	end
 end
-
-return

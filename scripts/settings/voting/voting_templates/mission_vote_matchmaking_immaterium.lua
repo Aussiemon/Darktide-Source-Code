@@ -30,71 +30,76 @@ local mission_vote_matchmaking_immaterium = {
 	},
 	static_params = {
 		matchmaker_type = "mission"
-	},
-	on_started = function (voting_id, template, params)
-		if Managers.ui:view_active("system_view") then
-			Managers.ui:close_view("system_view")
-		end
+	}
+}
 
-		if GameParameters.debug_mission then
-			Managers.voting:cast_vote(voting_id, "yes")
-		elseif not Managers.voting:has_voted(voting_id, Managers.party_immaterium:get_myself():unique_id()) then
-			local view_context = {
-				voting_id = voting_id,
-				backend_mission_id = params.backend_mission_id,
-				mission_data = cjson.decode(params.mission_data).mission
-			}
+mission_vote_matchmaking_immaterium.on_started = function (voting_id, template, params)
+	if Managers.ui:view_active("system_view") then
+		Managers.ui:close_view("system_view")
+	end
 
-			_open_voting_view(view_context)
-		end
-	end,
-	on_completed = function (voting_id, template, vote_state, result)
-		_close_voting_view()
+	if GameParameters.debug_mission then
+		Managers.voting:cast_vote(voting_id, "yes")
+	elseif not Managers.voting:has_voted(voting_id, Managers.party_immaterium:get_myself():unique_id()) then
+		local view_context = {
+			voting_id = voting_id,
+			backend_mission_id = params.backend_mission_id,
+			mission_data = cjson.decode(params.mission_data).mission
+		}
 
-		if result == "rejected" then
-			Log.info("party declined mission!")
-		else
-			local ui_manager = Managers.ui
+		_open_voting_view(view_context)
+	end
+end
 
-			if ui_manager and ui_manager:has_active_view() then
-				ui_manager:close_all_views()
-			end
-		end
-	end,
-	fetch_my_vote_params = function (template, params, option)
-		if option == "yes" then
-			local profile = Managers.player:local_player_backend_profile()
-			local character_id = profile and profile.character_id
+mission_vote_matchmaking_immaterium.on_completed = function (voting_id, template, vote_state, result)
+	_close_voting_view()
 
-			return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_mission(params.backend_mission_id, character_id):next(function (response)
-				return {
-					ticket = response.ticket
-				}
-			end)
-		else
-			return Promise.resolved({})
-		end
-	end,
-	on_aborted = function (voting_id, template, params, abort_reason)
-		_close_voting_view()
-	end,
-	on_vote_casted = function (voting_id, template, voter_account_id, vote_option)
-		if vote_option == "no" then
-			if voter_account_id == Managers.party_immaterium:get_myself():account_id() then
-				_close_voting_view()
-			else
-				local _, promise = Managers.presence:get_presence(voter_account_id)
+	if result == "rejected" then
+		Log.info("party declined mission!")
+	else
+		local ui_manager = Managers.ui
 
-				promise:next(function (presence)
-					local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
-						member_character_name = presence:character_name()
-					})
-
-					Managers.event:trigger("event_add_notification_message", "default", message)
-				end)
-			end
+		if ui_manager and ui_manager:has_active_view() then
+			ui_manager:close_all_views()
 		end
 	end
-}
+end
+
+mission_vote_matchmaking_immaterium.fetch_my_vote_params = function (template, params, option)
+	if option == "yes" then
+		local profile = Managers.player:local_player_backend_profile()
+		local character_id = profile and profile.character_id
+
+		return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_mission(params.backend_mission_id, character_id):next(function (response)
+			return {
+				ticket = response.ticket
+			}
+		end)
+	else
+		return Promise.resolved({})
+	end
+end
+
+mission_vote_matchmaking_immaterium.on_aborted = function (voting_id, template, params, abort_reason)
+	_close_voting_view()
+end
+
+mission_vote_matchmaking_immaterium.on_vote_casted = function (voting_id, template, voter_account_id, vote_option)
+	if vote_option == "no" then
+		if voter_account_id == Managers.party_immaterium:get_myself():account_id() then
+			_close_voting_view()
+		else
+			local _, promise = Managers.presence:get_presence(voter_account_id)
+
+			promise:next(function (presence)
+				local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
+					member_character_name = presence:character_name()
+				})
+
+				Managers.event:trigger("event_add_notification_message", "default", message)
+			end)
+		end
+	end
+end
 
 return mission_vote_matchmaking_immaterium

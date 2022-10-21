@@ -18,7 +18,7 @@ local function _init_function(widget, mission_data, zone_data, column, row, on_s
 	local circumstance_id = mission_data.circumstance
 	local circumstance = CircumstanceTemplates[circumstance_id]
 	local circumstance_ui = circumstance and circumstance.ui
-	local circumstance_icon = (circumstance_ui and circumstance_ui.mission_board_icon) or "content/ui/materials/mission_board/badges/addons/circumstance_rain"
+	local circumstance_icon = circumstance_ui and circumstance_ui.mission_board_icon or "content/ui/materials/mission_board/badges/addons/circumstance_rain"
 	local node_name_format = ViewSettings.node_name_format
 	widget.visible = false
 	local widget_content = widget.content

@@ -211,7 +211,7 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
 	local trickle_hordes = self._trickle_hordes
 
-	for i = 1, #trickle_hordes, 1 do
+	for i = 1, #trickle_hordes do
 		repeat
 			local trickle_horde = trickle_hordes[i]
 			local cooldown = trickle_horde.cooldown
@@ -259,7 +259,7 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 					success = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset)
 				end
 
-				local trickle_horde_travel_distance_range = (success and template.trickle_horde_travel_distance_range) or FAILED_TRAVEL_RANGE
+				local trickle_horde_travel_distance_range = success and template.trickle_horde_travel_distance_range or FAILED_TRAVEL_RANGE
 				local next_trickle_horde_at = math.random_range(trickle_horde_travel_distance_range[1], trickle_horde_travel_distance_range[2])
 				trickle_horde.next_trickle_horde_travel_distance_trigger = next_trickle_horde_at
 				trickle_horde.trickle_horde_travel_distance = 0
@@ -271,7 +271,7 @@ end
 HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
-	if (horde_template.requires_main_path and main_path_available) or not horde_template.requires_main_path then
+	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
 		local horde_manager = Managers.state.horde
 		local towards_combat_vector = true
 		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset)

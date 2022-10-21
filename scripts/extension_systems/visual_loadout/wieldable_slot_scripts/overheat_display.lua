@@ -10,7 +10,7 @@ OverheatDisplay.init = function (self, context, slot, weapon_template, fx_source
 		self._ammo_displays = {}
 		local num_attachments = #slot.attachments_1p
 
-		for i = 1, num_attachments, 1 do
+		for i = 1, num_attachments do
 			local attachment_unit = slot.attachments_1p[i]
 			local ammo_display_components = Component.get_components_by_name(attachment_unit, "OverheatDisplay")
 
@@ -31,7 +31,7 @@ OverheatDisplay.fixed_update = function (self, unit, dt, t, frame)
 	local warning_threshold = overheat_configuration.critical_threshold
 	local num_displays = #self._ammo_displays
 
-	for i = 1, num_displays, 1 do
+	for i = 1, num_displays do
 		local display = self._ammo_displays[i]
 
 		display.component:set_overheat_level(display.unit, current_overheat, warning_threshold)

@@ -111,7 +111,7 @@ WorldInteractionManager._update_water = function (self, dt, t)
 	local local_player = Managers.player:local_player(1)
 	local player_unit = local_player and local_player.player_unit
 
-	if Unit.alive(player_unit) and (#self._water_ripples > 0 or (available_units and next(available_units))) then
+	if Unit.alive(player_unit) and (#self._water_ripples > 0 or available_units and next(available_units)) then
 		self:_cleanup_removed_units()
 		self:_update_water_data(dt, t)
 		self:_update_water_ripples(dt, t)
@@ -153,7 +153,7 @@ local function collect_characters(available_units, player_pos, window_size)
 	local side_names = side_system:side_names()
 	local num_results = broadphase:query(player_pos, window_size * 0.5, BROADPHASE_RESULTS, side_names)
 
-	for ii = 1, num_results, 1 do
+	for ii = 1, num_results do
 		local unit = BROADPHASE_RESULTS[ii]
 
 		if available_units[unit] then
@@ -187,7 +187,7 @@ WorldInteractionManager._update_water_data = function (self, dt, t)
 			local speed_limit_squared = speed_limit * speed_limit
 			local contributing_units = 0
 
-			for ii = 1, #COLLECTED_UNITS, 1 do
+			for ii = 1, #COLLECTED_UNITS do
 				local unit = COLLECTED_UNITS[ii]
 
 				if ALIVE[unit] then
@@ -198,7 +198,7 @@ WorldInteractionManager._update_water_data = function (self, dt, t)
 						local flat_dir = Vector3.normalize(Vector3(dir[1], dir[2], 0))
 						local dot_value = Vector3.dot(flat_dir, Vector3(0, 1, 0))
 						local safe_dot_value = math.clamp(dot_value, -1, 1)
-						local angle = math.acos(safe_dot_value) * ((flat_dir[1] > 0 and 1) or -1)
+						local angle = math.acos(safe_dot_value) * (flat_dir[1] > 0 and 1 or -1)
 						local pos = POSITION_LOOKUP[unit]
 
 						if angle == angle then
@@ -248,7 +248,7 @@ WorldInteractionManager._update_water_ripples = function (self, dt, t)
 	local water_data = nil
 	local num_water_data = #self._water_ripples
 
-	for idx = 1, num_water_data, 1 do
+	for idx = 1, num_water_data do
 		water_data = self._water_ripples[idx]
 		local ref_time = water_data.ref_time or default_ripple_timer
 		local pos = water_data.pos:unbox()
@@ -261,7 +261,7 @@ WorldInteractionManager._update_water_ripples = function (self, dt, t)
 		local relative_world_pos = Vector2(pos[1] % window_size, pos[2] % window_size)
 		local relative_texture_pos = Vector2(relative_world_pos[1] / window_size, relative_world_pos[2] / window_size)
 		local relative_screen_pos = Vector3(relative_texture_pos[1] * gui_width, relative_texture_pos[2] * gui_height, 0)
-		local relative_texture_size = Vector2((size * stretch_multiplier[1]) / window_size * gui_width, (size * stretch_multiplier[2]) / window_size * gui_height)
+		local relative_texture_size = Vector2(size * stretch_multiplier[1] / window_size * gui_width, size * stretch_multiplier[2] / window_size * gui_height)
 		local layer = 50
 		local angle = water_data.angle
 		local relative_start_pos = relative_screen_pos - relative_texture_size * 0.5

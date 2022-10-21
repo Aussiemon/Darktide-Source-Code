@@ -40,7 +40,7 @@ PlayerNavTransitionGenerator.fixed_update = function (self, unit, is_on_nav_mesh
 
 	if state == STATES.waiting then
 		if character_state_name == "jumping" or character_state_name == "falling" then
-			local from_position = (is_on_nav_mesh and latest_position_on_nav_mesh) or self:_find_from_position(current_position, latest_position_on_nav_mesh)
+			local from_position = is_on_nav_mesh and latest_position_on_nav_mesh or self:_find_from_position(current_position, latest_position_on_nav_mesh)
 
 			if from_position then
 				self._from_position:store(from_position)
@@ -49,7 +49,7 @@ PlayerNavTransitionGenerator.fixed_update = function (self, unit, is_on_nav_mesh
 
 			self._state = STATES[character_state_name]
 		elseif character_state_name == "ledge_vaulting" then
-			local from_position = (is_on_nav_mesh and latest_position_on_nav_mesh) or self:_find_from_position(current_position, latest_position_on_nav_mesh)
+			local from_position = is_on_nav_mesh and latest_position_on_nav_mesh or self:_find_from_position(current_position, latest_position_on_nav_mesh)
 
 			if from_position then
 				self._from_position:store(from_position)

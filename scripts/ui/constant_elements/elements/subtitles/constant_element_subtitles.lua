@@ -111,7 +111,7 @@ ConstantElementSubtitles._update_letterbox_size = function (self)
 		local num_lines = #letterbox_lines_width
 		local text_height = self._letterbox_height or 0
 
-		for i = 1, num_lines, 1 do
+		for i = 1, num_lines do
 			local width = letterbox_lines_width[i]
 			local widget = self._letterbox_widget
 			local rect_size = widget.style.rect.size
@@ -126,7 +126,7 @@ ConstantElementSubtitles._setup_letterbox = function (self)
 	local interface_settings = save_data.interface_settings
 	local subtitle_background_opacity = interface_settings.subtitle_background_opacity
 	local subtitle_background_enabled = subtitle_background_opacity > 0
-	local alpha = (subtitle_background_enabled and 255 * subtitle_background_opacity * 0.01) or nil
+	local alpha = subtitle_background_enabled and 255 * subtitle_background_opacity * 0.01 or nil
 
 	self:_set_letterbox_opacity(alpha)
 end
@@ -160,7 +160,7 @@ ConstantElementSubtitles.destroy = function (self)
 end
 
 ConstantElementSubtitles._debug_add_subtitle_lines = function (self)
-	for i = 1, #debug_subtitles, 1 do
+	for i = 1, #debug_subtitles do
 		local line_data = debug_subtitles[i]
 
 		self:_debug_trigger_subtitle(line_data.text, line_data.duration)
@@ -336,7 +336,7 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 	local text_max_height = 0
 	local num_rows = #rows
 
-	for i = 1, num_rows, 1 do
+	for i = 1, num_rows do
 		local text_line = rows[i]
 		local line_text_width, _, _, _ = UIRenderer.text_size(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
 		local line_height = UIRenderer.text_height(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
@@ -350,7 +350,7 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 	self._letterbox_total_height = math.ceil(total_height)
 	self._letterbox_height = math.ceil(text_max_height)
 	local total_spacing = math.max(self._letterbox_total_height - self._letterbox_height * num_rows, 0)
-	self._letterbox_spacing = (total_spacing > 0 and total_spacing / num_rows) or 0
+	self._letterbox_spacing = total_spacing > 0 and total_spacing / num_rows or 0
 end
 
 ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -369,7 +369,7 @@ ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, u
 		local text_height = self._letterbox_height or 0
 		local start_offset = -((num_lines - 1) * (text_height + line_spacing)) * 0.5
 
-		for i = 1, num_lines, 1 do
+		for i = 1, num_lines do
 			local width = letterbox_lines_width[i]
 			local widget = self._letterbox_widget
 			local offset = widget.offset
@@ -391,7 +391,7 @@ ConstantElementSubtitles._register_events = function (self)
 	local event_manager = Managers.event
 	local events = ConstantElementSubtitlesSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -402,7 +402,7 @@ ConstantElementSubtitles._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = ConstantElementSubtitlesSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

@@ -40,7 +40,7 @@ local function _test_movement_modifier(dt, t)
 	elseif self.trigger_time <= 0 then
 		self.trigger_time = 0.1 + math.random() * 0.4
 
-		for i = 1, math.random(1, 3), 1 do
+		for i = 1, math.random(1, 3) do
 			local num_ids = #ids
 			local p = (self.max_size - num_ids) / self.max_size
 

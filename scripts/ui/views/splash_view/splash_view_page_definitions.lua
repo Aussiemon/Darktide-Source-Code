@@ -127,7 +127,7 @@ local splash_definitions = {
 }
 local total_duration = 0
 
-for i = 1, #splash_definitions, 1 do
+for i = 1, #splash_definitions do
 	total_duration = total_duration + splash_definitions[i].duration or 0
 end
 

@@ -74,14 +74,14 @@ local target_selection_template = {
 			local vector3_normalize = Vector3.normalize
 			local vector3_angle = Vector3.angle
 
-			for i = 1, #target_units, 1 do
+			for i = 1, #target_units do
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit then
 					local target_position = POSITION_LOOKUP[target_unit]
 					local distance_sq = vector3_distance_squared(position, target_position)
 					local target_direction = vector3_normalize(target_position - position)
-					local angle = (distance_sq > 0 and vector3_angle(target_direction, forward_direction)) or math.huge
+					local angle = distance_sq > 0 and vector3_angle(target_direction, forward_direction) or math.huge
 					local is_valid_target = _is_valid_target(unit, target_unit, behavior_component, distance_sq, angle, force_new_target_attempt_config_or_nil)
 
 					if is_valid_target then
@@ -141,7 +141,7 @@ function _is_valid_target(attacking_unit, target_unit, attacking_unit_behavior_c
 	local is_dragging = attacking_unit_behavior_component.is_dragging
 	local is_netting_unit = netting_unit == attacking_unit
 
-	return not requires_help or (is_netting_unit and is_dragging)
+	return not requires_help or is_netting_unit and is_dragging
 end
 
 return target_selection_template

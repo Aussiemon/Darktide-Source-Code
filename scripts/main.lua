@@ -28,9 +28,9 @@ Main.init = function (self)
 	ParameterResolver.resolve_command_line()
 	ParameterResolver.resolve_game_parameters()
 	ParameterResolver.resolve_dev_parameters()
-	Application.set_time_step_policy("throttle", (DEDICATED_SERVER and 1 / GameParameters.fixed_time_step) or 30)
+	Application.set_time_step_policy("throttle", DEDICATED_SERVER and 1 / GameParameters.fixed_time_step or 30)
 
-	local package_manager = (LEVEL_EDITOR_TEST and PackageManagerEditor:new()) or PackageManager:new()
+	local package_manager = LEVEL_EDITOR_TEST and PackageManagerEditor:new() or PackageManager:new()
 	local localization_manager = LocalizationManager:new()
 	local params = {
 		next_state = "StateGame",
@@ -145,5 +145,3 @@ end
 function shutdown()
 	Main:shutdown()
 end
-
-return

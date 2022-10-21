@@ -29,7 +29,7 @@ HudElementWieldInfo._draw_widgets = function (self, dt, t, input_service, ui_ren
 	local active_wield_inputs = self._active_wield_inputs
 	local num_inputs = #active_wield_inputs
 
-	for i = 1, num_inputs, 1 do
+	for i = 1, num_inputs do
 		local input_data = active_wield_inputs[i]
 		local widget = input_data.widget
 		local alpha_multiplier = input_data.alpha_multiplier
@@ -47,7 +47,7 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 	local id = input.id
 	local input_action = input.input_action
 	local description = input.description
-	local icon = (input.icon and input.icon ~= "" and input.icon) or nil
+	local icon = input.icon and input.icon ~= "" and input.icon or nil
 	local icon_width = input.icon_width or 0
 	local icon_height = input.icon_height or 0
 	local service_type = "Ingame"
@@ -65,7 +65,7 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 		widget = widget,
 		widget_name = widget_name,
 		icon = icon,
-		extra_height = (icon and icon_height + 10) or 0
+		extra_height = icon and icon_height + 10 or 0
 	}
 	local style = widget.style
 	local content = widget.content
@@ -85,7 +85,7 @@ end
 HudElementWieldInfo._input_by_id = function (self, id)
 	local active_wield_inputs = self._active_wield_inputs
 
-	for i = 1, #active_wield_inputs, 1 do
+	for i = 1, #active_wield_inputs do
 		local input = active_wield_inputs[i]
 
 		if input.id == id then
@@ -119,7 +119,7 @@ HudElementWieldInfo.update = function (self, dt, t)
 	local ability_extension = extensions.ability
 	local active_wield_inputs = self._active_wield_inputs
 
-	for i = 1, #active_wield_inputs, 1 do
+	for i = 1, #active_wield_inputs do
 		active_wield_inputs[i].synced = false
 	end
 
@@ -137,7 +137,7 @@ HudElementWieldInfo.update = function (self, dt, t)
 	local update_weapon_action = input_descriptions and current_action_name ~= self._previous_action_name
 
 	if not input_descriptions then
-		for i = 1, #WieldInfoPassivesTemplates, 1 do
+		for i = 1, #WieldInfoPassivesTemplates do
 			local data = WieldInfoPassivesTemplates[i]
 			local name = data.name
 			local validation_function = data.validation_function
@@ -233,7 +233,7 @@ HudElementWieldInfo._get_input_text = function (self, alias_name)
 	local alias_array_index = 1
 	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or "n/a"
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
 	return input_key
 end

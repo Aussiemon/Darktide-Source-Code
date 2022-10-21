@@ -95,8 +95,8 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	end
 
-	local next_index = (pass_template[last_index].pass_type == "empty_row" and last_index) or last_index + 1
-	local label_style = (row_type == "small" and table.clone(card_content_styles.text_small)) or table.clone(card_content_styles.text_normal)
+	local next_index = pass_template[last_index].pass_type == "empty_row" and last_index or last_index + 1
+	local label_style = row_type == "small" and table.clone(card_content_styles.text_small) or table.clone(card_content_styles.text_normal)
 	label_style.offset[2] = offset_y
 	pass_template[next_index] = {
 		pass_type = "text",
@@ -250,8 +250,8 @@ local function _get_talents_passes(pass_template, group_name, talent_icons)
 		value = Localize("loc_eor_unlocked_talents_label")
 	}
 
-	for i = 1, #talent_icons, 1 do
-		local alignment = (i == 1 and "left") or (i == 2 and "center") or "right"
+	for i = 1, #talent_icons do
+		local alignment = i == 1 and "left" or i == 2 and "center" or "right"
 		pass_template[#pass_template + 1] = {
 			pass_type = "texture",
 			value_id = "talent_icon_" .. alignment,
@@ -337,7 +337,7 @@ end_player_view_blueprints.experience = {
 }
 
 local function _add_currency_passes(pass_template, currency, rewards, optional_offset_y)
-	for i = 1, #rewards, 1 do
+	for i = 1, #rewards do
 		local reward = rewards[i]
 
 		if reward.currency == currency then
@@ -383,7 +383,7 @@ end_player_view_blueprints.salary = {
 		content.label = Localize("loc_eor_card_title_salary")
 		local rewards = config.rewards
 
-		for i = 1, #rewards, 1 do
+		for i = 1, #rewards do
 			local reward = rewards[i]
 			local currency = reward.currency
 			local details = reward.details
@@ -479,7 +479,7 @@ end_player_view_blueprints.level_up = {
 
 		content.blueprint_name = "level_up"
 		content.label = Localize("loc_eor_card_title_level_up_reward")
-		content.content_animation = (config.unlocked_talents and "level_up_show_content") or "item_reward_show_content"
+		content.content_animation = config.unlocked_talents and "level_up_show_content" or "item_reward_show_content"
 	end,
 	load_icon = _reward_load_icon_func,
 	unload_icon = _reward_unload_icon_func,

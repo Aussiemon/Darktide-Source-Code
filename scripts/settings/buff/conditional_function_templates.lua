@@ -1,35 +1,38 @@
 local Action = require("scripts/utilities/weapon/action")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ConditionalFunctionTemplates = {
-	is_item_slot_wielded = function (template_data, template_context)
-		local item_slot_name = template_context.item_slot_name
+local ConditionalFunctionTemplates = {}
 
-		if not item_slot_name then
-			return true
-		end
+ConditionalFunctionTemplates.is_item_slot_wielded = function (template_data, template_context)
+	local item_slot_name = template_context.item_slot_name
 
-		if not template_data.inventory_component then
-			local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
-			template_data.inventory_component = unit_data_extension:read_component("inventory")
-		end
-
-		local wielded_slot = template_data.inventory_component.wielded_slot
-		local is_wielded = item_slot_name == wielded_slot
-
-		return is_wielded
-	end,
-	is_item_slot_not_wielded = function (template_data, template_context)
-		return not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context)
-	end,
-	has_full_toughness = function (tempalte_data, template_context)
-		local unit = template_context.unit
-		local toughness_extension = ScriptUnit.extension(unit, "toughness_system")
-		local current_toughness = toughness_extension:current_toughness_percent()
-
-		return current_toughness == 1
+	if not item_slot_name then
+		return true
 	end
-}
+
+	if not template_data.inventory_component then
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+	end
+
+	local wielded_slot = template_data.inventory_component.wielded_slot
+	local is_wielded = item_slot_name == wielded_slot
+
+	return is_wielded
+end
+
+ConditionalFunctionTemplates.is_item_slot_not_wielded = function (template_data, template_context)
+	return not ConditionalFunctionTemplates.is_item_slot_wielded(template_data, template_context)
+end
+
+ConditionalFunctionTemplates.has_full_toughness = function (tempalte_data, template_context)
+	local unit = template_context.unit
+	local toughness_extension = ScriptUnit.extension(unit, "toughness_system")
+	local current_toughness = toughness_extension:current_toughness_percent()
+
+	return current_toughness == 1
+end
+
 local reloading_states = {
 	vent_overheat = true,
 	reload_shotgun = true,

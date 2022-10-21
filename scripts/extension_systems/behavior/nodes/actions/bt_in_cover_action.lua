@@ -30,7 +30,7 @@ BtInCoverAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
 	local line_of_sight_data = breed.line_of_sight_data
 
-	for i = 1, #line_of_sight_data, 1 do
+	for i = 1, #line_of_sight_data do
 		local data = line_of_sight_data[i]
 
 		if data.id == clear_shot_line_of_sight_id then

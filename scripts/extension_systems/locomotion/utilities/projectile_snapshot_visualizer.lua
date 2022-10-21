@@ -56,11 +56,11 @@ ProjectileSnapshotVisualizer.draw_ring_buffer = function (snapshot_ring_buffer, 
 	local max_spr = 0
 	local num_spr = #snapshots_per_read
 
-	for i = 1, num_spr, 1 do
+	for i = 1, num_spr do
 		max_spr = max_spr + snapshots_per_read[i]
 	end
 
-	local avg_spr = (num_spr > 0 and math.round(max_spr / num_spr)) or 0
+	local avg_spr = num_spr > 0 and math.round(max_spr / num_spr) or 0
 	local avg_spr_s = string.format("avg_spr: %i", avg_spr)
 	local avg_spr_pos = Vector3(anchor_pos.x + 5, anchor_pos.y + 5 + y_offset, anchor_pos.z + 1)
 
@@ -70,11 +70,11 @@ ProjectileSnapshotVisualizer.draw_ring_buffer = function (snapshot_ring_buffer, 
 	local max_sbl = 0
 	local num_sbl = #snapshots_behind_latest
 
-	for i = 1, num_sbl, 1 do
+	for i = 1, num_sbl do
 		max_sbl = max_sbl + snapshots_behind_latest[i]
 	end
 
-	local avg_sbl = (num_sbl > 0 and math.round(max_sbl / num_sbl)) or 0
+	local avg_sbl = num_sbl > 0 and math.round(max_sbl / num_sbl) or 0
 	local avg_sbl_s = string.format("avg_sbl: %i", avg_sbl)
 	local avg_sbl_pos = Vector3(anchor_pos.x + 5, anchor_pos.y + 5 + y_offset * 2, anchor_pos.z + 1)
 
@@ -100,7 +100,7 @@ ProjectileSnapshotVisualizer.draw_ring_buffer = function (snapshot_ring_buffer, 
 	Gui.slug_text(gui, loc_state_s, font, font_size, loc_state_pos, nil, Color.cheeseburger(), "flags", Gui.FormatDirectives, "shadow", Color.black())
 
 	local window_size = Vector2(SNAPSHOT_WINDOW_SIZE[1], SNAPSHOT_WINDOW_SIZE[2])
-	local window_pos = Vector3(anchor_pos.x + SNAPSHOT_WINDOW_POS[1], (anchor_pos.y + bg_size.y) - window_size.y + SNAPSHOT_WINDOW_POS[2], anchor_pos.z + SNAPSHOT_WINDOW_POS[3])
+	local window_pos = Vector3(anchor_pos.x + SNAPSHOT_WINDOW_POS[1], anchor_pos.y + bg_size.y - window_size.y + SNAPSHOT_WINDOW_POS[2], anchor_pos.z + SNAPSHOT_WINDOW_POS[3])
 
 	Gui.rect(gui, window_pos, window_size, Color.light_cyan(200))
 
@@ -109,7 +109,7 @@ ProjectileSnapshotVisualizer.draw_ring_buffer = function (snapshot_ring_buffer, 
 	local num_snapshots_per_row = math.floor(SNAPSHOT_WINDOW_SIZE[1] / snapshot_plus_padding_x)
 	local num_snapshots = #snapshot_ring_buffer
 
-	for i = 1, num_snapshots, 1 do
+	for i = 1, num_snapshots do
 		local snapshot = snapshot_ring_buffer[i]
 		local row = math.ceil(i / num_snapshots_per_row)
 		local column = (i - 1) % num_snapshots_per_row + 1

@@ -8,15 +8,15 @@ UITestCases = {
 
 			local render_settings = Testify:make_request("display_and_graphics_presets_settings")
 
-			for i = 1, #render_settings, 1 do
+			for i = 1, #render_settings do
 				local setting = render_settings[i]
 				local setting_display_name = setting.display_name
 				local options = setting.options
 
 				if options then
-					for j = 1, #options, 1 do
+					for j = 1, #options do
 						local old_value = Testify:make_request("setting_value", setting)
-						local new_value = (setting_display_name == "loc_setting_resolution" and j) or options[j].id
+						local new_value = setting_display_name == "loc_setting_resolution" and j or options[j].id
 
 						if new_value ~= old_value then
 							local option_data = {
@@ -51,7 +51,7 @@ UITestCases = {
 			Testify:make_request("delete_all_characters")
 			Testify:make_request("wait_for_profile_synchronization")
 
-			for i = 1, NUM_ARCHETYPES, 1 do
+			for i = 1, NUM_ARCHETYPES do
 				Testify:make_request("navigate_to_create_character_from_main_menu")
 				Testify:make_request("class_selection_view_select_archetype", i)
 				TestifySnippets.create_new_character()
@@ -65,5 +65,3 @@ UITestCases = {
 		end)
 	end
 }
-
-return

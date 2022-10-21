@@ -51,7 +51,7 @@ NavGraphExtension._create_nav_graphs = function (self)
 	local smart_object_id_to_nav_graph = self._smart_object_id_to_nav_graph
 	local debug_color = Color.orange()
 
-	for i = 1, #smart_objects, 1 do
+	for i = 1, #smart_objects do
 		local smart_object = smart_objects[i]
 		local smart_object_id = smart_object:id()
 		local layer_type = smart_object:layer_type()
@@ -80,7 +80,7 @@ end
 NavGraphExtension.destroy = function (self)
 	local nav_graphs = self._nav_graphs
 
-	for i = 1, #nav_graphs, 1 do
+	for i = 1, #nav_graphs do
 		local nav_graph = nav_graphs[i]
 
 		GwNavGraph.destroy(nav_graph)
@@ -103,7 +103,7 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 	table.clear_array(TEMP_SMART_OBJECT_IDS, #TEMP_SMART_OBJECT_IDS)
 
 	if optional_simple_smart_objects then
-		for i = 1, #optional_simple_smart_objects, 1 do
+		for i = 1, #optional_simple_smart_objects do
 			local simple_smart_object = optional_simple_smart_objects[i]
 			local smart_object = SmartObject:new()
 
@@ -123,7 +123,7 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 			new_smart_objects = NavGraphQueries.generate_smart_objects(unit, self._nav_world, self._physics_world, component)
 		end
 
-		for i = 1, #new_smart_objects, 1 do
+		for i = 1, #new_smart_objects do
 			local smart_object = new_smart_objects[i]
 			local smart_object_id = smart_object:id()
 			smart_objects[#smart_objects + 1] = smart_object
@@ -195,7 +195,7 @@ NavGraphExtension.remove_smart_object = function (self, smart_object_id)
 	local smart_object_index_to_remove = nil
 	local smart_objects = self._smart_objects
 
-	for i = 1, #smart_objects, 1 do
+	for i = 1, #smart_objects do
 		local smart_object = smart_objects[i]
 
 		if smart_object:id() == smart_object_id then
@@ -233,7 +233,7 @@ NavGraphExtension.smart_object_from_id = function (self, smart_object_id)
 
 	local smart_objects = self._smart_objects
 
-	for i = 1, #smart_objects, 1 do
+	for i = 1, #smart_objects do
 		local smart_object = smart_objects[i]
 
 		if smart_object:id() == smart_object_id then
@@ -266,7 +266,7 @@ NavGraphExtension.add_nav_graphs_to_database = function (self)
 	local nav_graphs = self._nav_graphs
 	local nav_graph_added = self._nav_graph_added
 
-	for i = 1, #nav_graphs, 1 do
+	for i = 1, #nav_graphs do
 		local nav_graph = nav_graphs[i]
 
 		if not nav_graph_added[nav_graph] then
@@ -299,7 +299,7 @@ NavGraphExtension.remove_nav_graphs_from_database = function (self)
 	local nav_graphs = self._nav_graphs
 	local nav_graph_added = self._nav_graph_added
 
-	for i = 1, #nav_graphs, 1 do
+	for i = 1, #nav_graphs do
 		local nav_graph = nav_graphs[i]
 
 		if nav_graph_added[nav_graph] then

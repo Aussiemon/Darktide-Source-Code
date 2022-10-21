@@ -24,13 +24,13 @@ local animation_state_component = {
 	num_layers_1p = "player_anim_layer"
 }
 
-for i = 1, NUM_LAYERS_3P, 1 do
+for i = 1, NUM_LAYERS_3P do
 	animation_state_component[TIMES_3P[i]] = "player_anim_time"
 	animation_state_component[ANIMATIONS_3P[i]] = "player_anim"
 	animation_state_component[STATES_3P[i]] = "player_anim_state"
 end
 
-for i = 1, NUM_LAYERS_1P, 1 do
+for i = 1, NUM_LAYERS_1P do
 	animation_state_component[TIMES_1P[i]] = "player_anim_time"
 	animation_state_component[ANIMATIONS_1P[i]] = "player_anim"
 	animation_state_component[STATES_1P[i]] = "player_anim_state"
@@ -317,7 +317,7 @@ local function _gather_camera_tree_nodes(tree, node_map, num_nodes, node_list)
 			node_list[num_nodes] = node_name
 		end
 
-		for i = 1, #node, 1 do
+		for i = 1, #node do
 			local child = node[i]
 			stack_size = stack_size + 1
 			stack[stack_size] = child
@@ -915,7 +915,7 @@ local buff_component_config = {
 	seed = "random_seed"
 }
 
-for i = 1, max_component_buffs, 1 do
+for i = 1, max_component_buffs do
 	local key_lookup = component_key_lookup[i]
 	local template_name_key = key_lookup.template_name_key
 	local start_time_key = key_lookup.start_time_key

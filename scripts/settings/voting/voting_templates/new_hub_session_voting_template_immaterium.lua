@@ -1,9 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local new_hub_session_voting_template_immaterium = {
 	voting_impl = "party_immaterium",
 	name = "new_hub_session_immaterium",
@@ -29,24 +23,10 @@ local new_hub_session_voting_template_immaterium = {
 		end
 	end,
 	on_aborted = function (voting_id, template, params, abort_reason)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-1, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_vote_casted = function (voting_id, template, voter_peer_id, vote_option)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-1, warpins: 1 ---
 		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 

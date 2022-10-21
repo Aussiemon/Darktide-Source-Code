@@ -38,7 +38,7 @@ local function _setup_specials_slot(specials_slot, template, timer_modifier, opt
 	local breed_name = optional_breed_name
 
 	if optional_breed_name == nil then
-		local breeds = (optional_coordinated_strike and template.coordinated_strike_breeds) or template.breeds.all
+		local breeds = optional_coordinated_strike and template.coordinated_strike_breeds or template.breeds.all
 		breed_name = breeds[math.random(1, #breeds)]
 	end
 
@@ -52,7 +52,7 @@ local function _setup_specials_slot(specials_slot, template, timer_modifier, opt
 
 	spawn_timer = spawn_timer * timer_modifier
 	specials_slot.spawn_timer = spawn_timer
-	local prefered_spawn_direction = optional_prefered_spawn_direction or (template.optional_prefered_spawn_direction and template.optional_prefered_spawn_direction[breed_name])
+	local prefered_spawn_direction = optional_prefered_spawn_direction or template.optional_prefered_spawn_direction and template.optional_prefered_spawn_direction[breed_name]
 	specials_slot.optional_prefered_spawn_direction = prefered_spawn_direction
 	local optional_mainpath_offset = template.optional_mainpath_offset
 	specials_slot.optional_mainpath_offset = optional_mainpath_offset and optional_mainpath_offset[breed_name]
@@ -85,7 +85,7 @@ SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	self._num_spawned_specials = 0
 	self._max_alive_specials = max_alive_specials
 
-	for i = 1, max_alive_specials, 1 do
+	for i = 1, max_alive_specials do
 		local specials_slot = {}
 
 		_setup_specials_slot(specials_slot, template, optional_first_spawn_modifier or self._timer_modifier)
@@ -116,7 +116,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local max_alive_specials = self._max_alive_specials
 	local template = self._template
 
-	for i = 1, max_alive_specials, 1 do
+	for i = 1, max_alive_specials do
 		local specials_slot = specials_slots[i]
 
 		if specials_slot.spawned then
@@ -249,7 +249,7 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 	end
 
 	local slot_target_unit = specials_slot.target_unit
-	local target_unit = (ALIVE[slot_target_unit] and slot_target_unit) or closest_target_unit
+	local target_unit = ALIVE[slot_target_unit] and slot_target_unit or closest_target_unit
 	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_states.aggroed, target_unit, nil, nil, nil, nil)
 
 	return true, unit
@@ -345,12 +345,12 @@ SpecialsPacing._find_nearby_spawner = function (self, target_side_id)
 	local num_target_units = #target_units
 	local nearby_valid_spawner = nil
 
-	for i = 1, #nearby_spawners, 1 do
+	for i = 1, #nearby_spawners do
 		local spawner = nearby_spawners[i]
 		local spawner_position = spawner:position()
 		local is_valid_spawner = true
 
-		for j = 1, num_target_units, 1 do
+		for j = 1, num_target_units do
 			local player_unit = target_units[j]
 			local player_position = POSITION_LOOKUP[player_unit]
 			local distance = Vector3.distance(spawner_position, player_position)
@@ -437,7 +437,7 @@ SpecialsPacing._check_alone_target_override = function (self, template, target_s
 	local num_target_units = #target_units
 	local num_non_disabled_players = 0
 
-	for i = 1, num_target_units, 1 do
+	for i = 1, num_target_units do
 		local player_unit = target_units[i]
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local character_state_component = unit_data_extension:read_component("character_state")
@@ -510,7 +510,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	local specials_slots = self._specials_slots
 
-	for i = 1, self._max_alive_specials, 1 do
+	for i = 1, self._max_alive_specials do
 		local specials_slot = specials_slots[i]
 		local optional_coordinated_strike = true
 
@@ -554,7 +554,7 @@ SpecialsPacing._update_rush_prevention = function (self, side_id, target_side_id
 		second_ahead_distance = behind_travel_distance
 		second_behind_distance = ahead_travel_distance
 	else
-		for i = 1, num_target_units, 1 do
+		for i = 1, num_target_units do
 			local target_unit = target_units[i]
 
 			if target_unit ~= ahead_unit and target_unit ~= behind_unit then
@@ -593,7 +593,7 @@ SpecialsPacing._update_rush_prevention = function (self, side_id, target_side_id
 		Log.info("SpecialsPacing", "Trying to inject rush prevention breed ahead %s.", rush_prevention_breed_name)
 
 		local success = self:try_inject_special(rush_prevention_breed_name, "ahead", ahead_unit)
-		local cooldown = (success and template.rush_prevention_cooldown) or template.rush_prevention_failed_cooldown
+		local cooldown = success and template.rush_prevention_cooldown or template.rush_prevention_failed_cooldown
 		self._rush_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
 	elseif rushing_distance <= behind_travel_distance_diff then
 		local rush_prevention_breed_name = rush_prevention_breeds[math.random(1, #rush_prevention_breeds)]
@@ -601,7 +601,7 @@ SpecialsPacing._update_rush_prevention = function (self, side_id, target_side_id
 		Log.info("SpecialsPacing", "Trying to inject rush prevention breed behind %s.", rush_prevention_breed_name)
 
 		local success = self:try_inject_special(rush_prevention_breed_name, "behind", behind_unit)
-		local cooldown = (success and template.rush_prevention_cooldown) or template.rush_prevention_failed_cooldown
+		local cooldown = success and template.rush_prevention_cooldown or template.rush_prevention_failed_cooldown
 		self._rush_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
 	end
 end
@@ -616,7 +616,7 @@ SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefere
 	local specials_slots = self._specials_slots
 	local chosen_slot = nil
 
-	for i = 1, self._max_alive_specials, 1 do
+	for i = 1, self._max_alive_specials do
 		local specials_slot = specials_slots[i]
 
 		if not specials_slot.spawned and not specials_slot.foreshadow_triggered then

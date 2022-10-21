@@ -12,11 +12,11 @@ local function _add_vfx_names_from_explosion_templates(templates)
 		local scalable_vfx = template.scalable_vfx
 
 		if scalable_vfx then
-			for i = 1, #scalable_vfx, 1 do
+			for i = 1, #scalable_vfx do
 				local data = scalable_vfx[i]
 				local effects = data.effects
 
-				for j = 1, #effects, 1 do
+				for j = 1, #effects do
 					local effect_name = effects[j]
 					vfx_names[effect_name] = true
 				end
@@ -25,7 +25,7 @@ local function _add_vfx_names_from_explosion_templates(templates)
 
 		local vfx = template.vfx
 
-		for i = 1, #vfx, 1 do
+		for i = 1, #vfx do
 			local vfx_name = vfx[i]
 			vfx_names[vfx_name] = true
 		end
@@ -63,7 +63,7 @@ for name, template in pairs(GroundImpactFxTemplates) do
 
 		if vfx then
 			if type(vfx) == "table" then
-				for i = 1, #vfx, 1 do
+				for i = 1, #vfx do
 					local entry = vfx[i]
 					vfx_names[entry] = true
 				end

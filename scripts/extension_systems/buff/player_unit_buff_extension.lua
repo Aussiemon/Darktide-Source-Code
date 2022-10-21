@@ -24,7 +24,7 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 end
 
 PlayerUnitBuffExtension._init_components = function (self, buff_component)
-	for i = 1, MAX_COMPONENT_BUFFS, 1 do
+	for i = 1, MAX_COMPONENT_BUFFS do
 		local key_lookup = COMPONENT_KEY_LOOKUP[i]
 		local template_name_key = key_lookup.template_name_key
 		local start_time_key = key_lookup.start_time_key
@@ -146,7 +146,7 @@ PlayerUnitBuffExtension._next_available_component_index = function (self, templa
 	local component_buffs = self._component_buffs
 	local max_component_buffs = self._max_component_buffs
 
-	for i = 1, max_component_buffs, 1 do
+	for i = 1, max_component_buffs do
 		local buff = component_buffs[i]
 
 		if not buff then
@@ -156,9 +156,9 @@ PlayerUnitBuffExtension._next_available_component_index = function (self, templa
 
 	local buffs_error_string = ""
 
-	for i = 1, max_component_buffs, 1 do
+	for i = 1, max_component_buffs do
 		local buff = component_buffs[i]
-		buffs_error_string = buffs_error_string .. i .. ": " .. buff:template_name() .. ((i < max_component_buffs and "\n") or "")
+		buffs_error_string = buffs_error_string .. i .. ": " .. buff:template_name() .. (i < max_component_buffs and "\n" or "")
 	end
 
 	ferror("Tried adding a predicted buff %s with no available component buff slot.\nCurrent component buffs: \n%s", template.name, buffs_error_string)
@@ -295,7 +295,7 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 	local component_buffs = self._component_buffs
 	local max_component_buffs = self._max_component_buffs
 
-	for i = 1, max_component_buffs, 1 do
+	for i = 1, max_component_buffs do
 		local lookup = COMPONENT_KEY_LOOKUP[i]
 		local template_name_key = lookup.template_name_key
 		local component_template_name = buff_component[template_name_key]
@@ -312,7 +312,7 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 		end
 	end
 
-	for i = 1, max_component_buffs, 1 do
+	for i = 1, max_component_buffs do
 		local lookup = COMPONENT_KEY_LOOKUP[i]
 		local template_name_key = lookup.template_name_key
 		local start_time_key = lookup.start_time_key
@@ -325,7 +325,7 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 		end
 	end
 
-	for i = 1, max_component_buffs, 1 do
+	for i = 1, max_component_buffs do
 		local lookup = COMPONENT_KEY_LOOKUP[i]
 		local current_buff = component_buffs[i]
 
@@ -342,7 +342,7 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 			local stack_count_difference = component_stack_count - current_buff:stack_count()
 
 			if stack_count_difference > 0 then
-				for _ = 1, stack_count_difference, 1 do
+				for _ = 1, stack_count_difference do
 					local template = BuffTemplates[component_template_name]
 
 					self:_add_buff(template, component_start_time)

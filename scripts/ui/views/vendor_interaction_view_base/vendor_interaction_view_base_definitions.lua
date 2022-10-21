@@ -370,7 +370,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 				local alpha_multiplier = 1 - anim_progress
 
-				for i = 1, #widgets, 1 do
+				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = alpha_multiplier
 				end
 
@@ -401,7 +401,7 @@ local animations = {
 				local anim_progress = math.easeInCubic(progress)
 				local alpha_multiplier = anim_progress
 
-				for i = 1, #widgets, 1 do
+				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = alpha_multiplier
 				end
 

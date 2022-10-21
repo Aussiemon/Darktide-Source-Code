@@ -30,7 +30,7 @@ DLCManager.initialize = function (self)
 
 	local durable_dlc_settings = DLCSettings.durable_dlcs
 
-	for i = 1, #durable_dlc_settings, 1 do
+	for i = 1, #durable_dlc_settings do
 		local durable_dlc_data = durable_dlc_settings[i]
 		local name = durable_dlc_data.name
 		self._durable_dlcs[name] = DLCDurable:new(durable_dlc_data)

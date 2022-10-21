@@ -46,7 +46,7 @@ PlayerInteracteeExtension._set_interaction_contexts = function (self, interactio
 		local interaction_objects = self._interaction_objects
 		local override_contexts_by_type = self._override_contexts_by_type
 
-		for i = 1, #interaction_contexts, 1 do
+		for i = 1, #interaction_contexts do
 			local context = interaction_contexts[i]
 			local interaction_type = context.interaction_type
 
@@ -178,7 +178,7 @@ PlayerInteracteeExtension.ui_interaction_type = function (self)
 	local interaction = self._interaction_objects[interaction_type]
 	local override_config = self._override_contexts_by_type[interaction_type]
 
-	return (override_config and override_config.ui_interaction_type) or interaction:ui_interaction_type()
+	return override_config and override_config.ui_interaction_type or interaction:ui_interaction_type()
 end
 
 PlayerInteracteeExtension.interaction_icon = function (self)
@@ -197,7 +197,7 @@ PlayerInteracteeExtension.interaction_icon = function (self)
 	local interaction = self._interaction_objects[interaction_type]
 	local override_config = self._override_contexts_by_type[interaction_type]
 
-	return (override_config and override_config.interaction_icon) or interaction:interaction_icon()
+	return override_config and override_config.interaction_icon or interaction:interaction_icon()
 end
 
 PlayerInteracteeExtension.interaction_length = function (self)
@@ -216,7 +216,7 @@ PlayerInteracteeExtension.interaction_length = function (self)
 	local interaction = self._interaction_objects[interaction_type]
 	local override_config = self._override_contexts_by_type[interaction_type]
 
-	return (override_config and override_config.duration) or interaction:duration()
+	return override_config and override_config.duration or interaction:duration()
 end
 
 PlayerInteracteeExtension.action_text = function (self)
@@ -235,7 +235,7 @@ PlayerInteracteeExtension.action_text = function (self)
 	local interaction = self._interaction_objects[interaction_type]
 	local override_config = self._override_contexts_by_type[interaction_type]
 
-	return (override_config and override_config.action_text) or interaction:action_text()
+	return override_config and override_config.action_text or interaction:action_text()
 end
 
 PlayerInteracteeExtension.description = function (self)
@@ -254,7 +254,7 @@ PlayerInteracteeExtension.description = function (self)
 	local interaction = self._interaction_objects[interaction_type]
 	local override_config = self._override_contexts_by_type[interaction_type]
 
-	return (override_config and override_config.description) or interaction:description()
+	return override_config and override_config.description or interaction:description()
 end
 
 PlayerInteracteeExtension.block_text = function (self)

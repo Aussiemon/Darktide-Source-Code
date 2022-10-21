@@ -81,7 +81,7 @@ Vector3.project_on_normal = function (vector, plane_normal)
 	end
 
 	local dot = Vector3.dot(vector, plane_normal)
-	local projected_vector = (plane_normal * dot) / square_magnitude
+	local projected_vector = plane_normal * dot / square_magnitude
 
 	return projected_vector
 end
@@ -95,7 +95,5 @@ Vector3.project_on_plane = function (vector, plane_normal)
 
 	local dot = Vector3.dot(vector, plane_normal)
 
-	return Vector3(vector.x - (plane_normal.x * dot) / square_magnitude, vector.y - (plane_normal.y * dot) / square_magnitude, vector.z - (plane_normal.z * dot) / square_magnitude)
+	return Vector3(vector.x - plane_normal.x * dot / square_magnitude, vector.y - plane_normal.y * dot / square_magnitude, vector.z - plane_normal.z * dot / square_magnitude)
 end
-
-return

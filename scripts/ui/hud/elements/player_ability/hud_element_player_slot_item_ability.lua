@@ -49,7 +49,7 @@ HudElementPlayerSlotItemAbility._update_input = function (self)
 	local alias_array_index = 1
 	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, _input_devices)
-	local input_key = (key_info and InputUtils.localized_string_from_key_info(key_info)) or "n/a"
+	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
 	self:set_input_text(tostring(input_key))
 end
@@ -58,7 +58,7 @@ HudElementPlayerSlotItemAbility.set_charges_amount = function (self, amount)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
-	content.text = (amount and tostring(amount)) or nil
+	content.text = amount and tostring(amount) or nil
 end
 
 HudElementPlayerSlotItemAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
@@ -76,7 +76,7 @@ HudElementPlayerSlotItemAbility._set_widget_state_colors = function (self, on_co
 		else
 			source_colors = HudElementPlayerAbilitySettings.cooldown_colors
 		end
-	elseif not uses_charges or (uses_charges and has_charges_left) then
+	elseif not uses_charges or uses_charges and has_charges_left then
 		source_colors = HudElementPlayerAbilitySettings.active_colors
 	else
 		source_colors = HudElementPlayerAbilitySettings.inactive
@@ -117,7 +117,7 @@ HudElementPlayerSlotItemAbility._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerAbilitySettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -128,7 +128,7 @@ HudElementPlayerSlotItemAbility._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementPlayerAbilitySettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

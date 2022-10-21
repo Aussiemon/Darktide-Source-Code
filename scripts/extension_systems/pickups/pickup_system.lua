@@ -31,7 +31,7 @@ PickupSystem._fetch_settings = function (self, mission, circumstance_name)
 	local original_settings = mission.pickup_settings
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = (mission_overrides and mission_overrides.pickup_settings) or nil
+	local circumstance_settings = mission_overrides and mission_overrides.pickup_settings or nil
 
 	return circumstance_settings or original_settings
 end
@@ -52,7 +52,7 @@ PickupSystem.delete_units = function (self)
 	local num_spawned_pickups = #spawned_pickups
 	local ALIVE = ALIVE
 
-	for i = 1, num_spawned_pickups, 1 do
+	for i = 1, num_spawned_pickups do
 		local unit = spawned_pickups[i]
 
 		if ALIVE[unit] then
@@ -159,7 +159,7 @@ PickupSystem._populate_pickups = function (self)
 
 	table.sort(pickup_spawners, _compare_absolute_spawner_position)
 
-	for i = 1, num_spawners, 1 do
+	for i = 1, num_spawners do
 		pickup_spawners[i]:spawn_guaranteed()
 	end
 
@@ -214,7 +214,7 @@ PickupSystem.get_pickup_choice = function (self, distribution_type, pickup_optio
 	local num_options = #pickup_options
 	local total_weight = 1
 
-	for i = 1, num_options, 1 do
+	for i = 1, num_options do
 		local pickup_name = pickup_options[i]
 		local already_spawned = guaranteed_spawned_pickups[pickup_name]
 		local pickup_weight = nil
@@ -259,7 +259,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 
 	table.clear(usable_spawners)
 
-	for i = 1, num_spawners, 1 do
+	for i = 1, num_spawners do
 		pickup_spawners[i]:register_spawn_locations(usable_spawners, distribution_type, pickup_settings)
 	end
 
@@ -268,7 +268,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 
 		if type(value) == "table" then
 			for pickup_name, amount in pairs(value) do
-				for i = 1, amount, 1 do
+				for i = 1, amount do
 					pickups_to_spawn[#pickups_to_spawn + 1] = pickup_name
 				end
 			end
@@ -277,7 +277,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 		else
 			local pickups = PICKUPS_BY_GROUP[pickup_type]
 
-			for i = 1, value, 1 do
+			for i = 1, value do
 				local spawn_value = self:_random()
 				local spawn_weighting_total = 0
 				local selected_pickup = false
@@ -312,19 +312,19 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 			section_start_point = section_start_point_offset
 		end
 
-		for i = 1, num_sections, 1 do
+		for i = 1, num_sections do
 			table.clear(section_spawners)
 			table.clear(used_spawners)
 
 			section_end_point = section_start_point + section_size
 			local num_pickup_spawners = #usable_spawners
 
-			for j = 1, num_pickup_spawners, 1 do
+			for j = 1, num_pickup_spawners do
 				local spawner = usable_spawners[j]
 				local spawner_extension = spawner.extension
 				local percentage_through_level = spawner_extension:percentage_through_level()
 
-				if (section_start_point <= percentage_through_level and percentage_through_level < section_end_point) or (num_sections == i and percentage_through_level == 1) then
+				if section_start_point <= percentage_through_level and percentage_through_level < section_end_point or num_sections == i and percentage_through_level == 1 then
 					section_spawners[#section_spawners + 1] = spawner
 				end
 			end
@@ -338,14 +338,14 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 				local rnd = self:_random()
 				local near_pickup_spawn_chance = PICKUPS_DATA.near_pickup_spawn_chance[pickup_type]
 				local bonus_spawn = remaining_sections ~= 1 and pickups_in_section == 1 and rnd < near_pickup_spawn_chance
-				pickups_in_section = pickups_in_section + ((bonus_spawn and 1) or 0)
+				pickups_in_section = pickups_in_section + (bonus_spawn and 1 or 0)
 
 				self:_shuffle(section_spawners)
 
 				local num_spawned_pickups_in_section = 0
 				local previously_selected_spawner = nil
 
-				for j = 1, pickups_in_section, 1 do
+				for j = 1, pickups_in_section do
 					local num_available_section_spawners = #section_spawners
 					local selected_spawner, pickup_index = nil
 
@@ -364,7 +364,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 						table.sort(section_spawners, _compare_relative_spawner_position)
 					end
 
-					for k = 1, num_available_section_spawners, 1 do
+					for k = 1, num_available_section_spawners do
 						local index = nil
 						selected_spawner, index = self:_check_spawn(section_spawners[k], pickups_to_spawn, pickup_type)
 
@@ -394,7 +394,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 
 			local num_used_spawners = #used_spawners
 
-			for j = 1, num_used_spawners, 1 do
+			for j = 1, num_used_spawners do
 				local spawner_unit = used_spawners[j]
 				local index = table.find(usable_spawners, spawner_unit)
 
@@ -410,10 +410,10 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 			if #usable_spawners > 0 then
 				self:_shuffle(usable_spawners)
 
-				for i = 1, num_pickups_to_spawn, 1 do
+				for i = 1, num_pickups_to_spawn do
 					local num_pickup_spawners = #usable_spawners
 
-					for j = 1, num_pickup_spawners, 1 do
+					for j = 1, num_pickup_spawners do
 						local spawner, pickup_index = self:_check_spawn(usable_spawners[j], pickup_type)
 
 						if spawner then
@@ -431,6 +431,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_s
 			end
 
 			if num_pickups_to_spawn > 0 then
+				-- Nothing
 			end
 		end
 	end
@@ -441,7 +442,7 @@ PickupSystem._check_spawn = function (self, spawner, pickup_type)
 	local spawner_extension = spawner.extension
 	local component_index = spawner.index
 
-	for i = 1, num_pickups_to_spawn, 1 do
+	for i = 1, num_pickups_to_spawn do
 		local pickup_name = pickups_to_spawn[i]
 		local can_spawn = spawner_extension:can_spawn_pickup(component_index, pickup_name)
 
@@ -523,7 +524,7 @@ PickupSystem.despawn_pickup = function (self, pickup_unit)
 	local deleted_index = nil
 	local ALIVE = ALIVE
 
-	for i = 1, num_spawned_pickups, 1 do
+	for i = 1, num_spawned_pickups do
 		local unit = spawned_pickups[i]
 
 		if ALIVE[unit] and unit == pickup_unit then

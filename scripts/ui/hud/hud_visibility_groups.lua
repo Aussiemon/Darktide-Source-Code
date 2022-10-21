@@ -36,47 +36,47 @@ local visibility_groups = {
 		validation_function = function (hud)
 			return not Managers.ui:allow_hud()
 		end
-	},
-	{
-		name = "communication_wheel",
-		validation_function = function (hud)
-			return hud:communication_wheel_active()
-		end
-	},
-	{
-		name = "tactical_overlay",
-		validation_function = function (hud)
-			return hud:tactical_overlay_active()
-		end
-	},
-	{
-		name = "testify",
-		validation_function = function (hud)
-			return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
-		end
-	},
-	{
-		name = "dead",
-		validation_function = function (hud)
-			local player = hud:player()
-
-			return not player:unit_is_alive()
-		end
-	},
-	{
-		name = "alive",
-		validation_function = function (hud)
-			local player_extensions = hud:player_extensions()
-
-			if player_extensions then
-				local health_extension = player_extensions.health
-
-				return health_extension:is_alive()
-			end
-
-			return false
-		end
 	}
+}
+visibility_groups[6] = {
+	name = "communication_wheel",
+	validation_function = function (hud)
+		return hud:communication_wheel_active()
+	end
+}
+visibility_groups[7] = {
+	name = "tactical_overlay",
+	validation_function = function (hud)
+		return hud:tactical_overlay_active()
+	end
+}
+visibility_groups[8] = {
+	name = "testify",
+	validation_function = function (hud)
+		return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
+	end
+}
+visibility_groups[9] = {
+	name = "dead",
+	validation_function = function (hud)
+		local player = hud:player()
+
+		return not player:unit_is_alive()
+	end
+}
+visibility_groups[10] = {
+	name = "alive",
+	validation_function = function (hud)
+		local player_extensions = hud:player_extensions()
+
+		if player_extensions then
+			local health_extension = player_extensions.health
+
+			return health_extension:is_alive()
+		end
+
+		return false
+	end
 }
 
 return visibility_groups

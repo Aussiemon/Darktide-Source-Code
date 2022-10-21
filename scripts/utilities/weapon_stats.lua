@@ -25,7 +25,7 @@ WeaponStats.init = function (self, item)
 	local weapon_traits = self:calculate_traits(buffs)
 	self._name = weapon_stats.name
 	self._is_ranged_weapon = weapon_stats.is_ranged_weapon
-	self._type = (weapon_stats.is_ranged_weapon and "Ranged") or "Melee"
+	self._type = weapon_stats.is_ranged_weapon and "Ranged" or "Melee"
 	self._dps = weapon_stats.dps or 0
 	self._damage = weapon_stats.damage or 0
 	self._stagger = weapon_stats.stagger or 0
@@ -84,7 +84,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local reload_time = nil
 	local entry_actions = weapon_template.entry_actions
 	local is_ranged_weapon = self:_is_weapon_template_ranged(weapon_template)
-	local target_index = (is_ranged_weapon and "default_target") or 1
+	local target_index = is_ranged_weapon and "default_target" or 1
 
 	for action_name, action in pairs(actions) do
 		local kind = action.kind
@@ -110,7 +110,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 			local reload_settings = action.reload_settings
 
 			if reload_settings then
-				slot51 = reload_settings.refill_amount
+				local refill_amount = reload_settings.refill_amount
 			end
 		end
 
@@ -152,7 +152,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 				if critical_strike then
 					local chance_modifier = critical_strike.chance_modifier
-					slot58 = critical_strike.max_critical_shots
+					local max_critical_shots = critical_strike.max_critical_shots
 				end
 
 				local fire_rate = weapon_handling_template and weapon_handling_template.fire_rate
@@ -179,7 +179,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					while tot_bullets > 0 do
 						local burst_rate_of_fire = 0
 
-						for i = 1, max_shots, 1 do
+						for i = 1, max_shots do
 							if tot_bullets > 0 then
 								if i == 1 then
 									burst_rate_of_fire = burst_rate_of_fire + fire_time
@@ -263,17 +263,17 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 		total_attacks_duration = total_attacks_duration + reload_time
 	end
 
-	local average_action_duration = (num_attack_actions > 0 and total_attacks_duration > 0 and total_attacks_duration / num_attack_actions) or 0
-	local average_action_damage = (num_attack_actions > 0 and total_attacks_damage > 0 and total_attacks_damage / num_attack_actions) or 0
-	local average_action_stagger_strength = (num_attack_actions > 0 and total_stagger_strength > 0 and total_stagger_strength / num_attack_actions) or 0
-	local dps_raw = (average_action_duration > 0 and average_action_damage > 0 and average_action_damage / average_action_duration) or average_action_damage
+	local average_action_duration = num_attack_actions > 0 and total_attacks_duration > 0 and total_attacks_duration / num_attack_actions or 0
+	local average_action_damage = num_attack_actions > 0 and total_attacks_damage > 0 and total_attacks_damage / num_attack_actions or 0
+	local average_action_stagger_strength = num_attack_actions > 0 and total_stagger_strength > 0 and total_stagger_strength / num_attack_actions or 0
+	local dps_raw = average_action_duration > 0 and average_action_damage > 0 and average_action_damage / average_action_duration or average_action_damage
 	local dps = math.round_with_precision(dps_raw, 1)
 	local stats = {}
 
 	if dps and num_attack_actions > 0 then
 		stats.name = weapon_template.name
 		stats.is_ranged_weapon = is_ranged_weapon
-		stats.type = (is_ranged_weapon and "Ranged") or "Melee"
+		stats.type = is_ranged_weapon and "Ranged" or "Melee"
 		stats.dps = dps
 		stats.damage = average_action_damage
 
@@ -399,12 +399,12 @@ WeaponStats.get_compare_stats_limits = function (self, weapon_template)
 		weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = Weapon._init_traits(nil, compare_weapon_template, max_item, nil, nil, {})
 		local max_compare_stats = self:calculate_stats(compare_weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
 
-		for i = 1, #stats_list, 1 do
+		for i = 1, #stats_list do
 			local stat_name = stats_list[i]
 			local min_compare_stat = min_compare_stats[stat_name] or 0
 			local max_compare_stat = max_compare_stats[stat_name] or 0
-			min_stats[stat_name] = (min_stats[stat_name] and min_stats[stat_name] < min_compare_stat and min_stats[stat_name]) or min_compare_stat
-			max_stats[stat_name] = (max_stats[stat_name] and max_compare_stat < max_stats[stat_name] and max_stats[stat_name]) or max_compare_stat
+			min_stats[stat_name] = min_stats[stat_name] and min_stats[stat_name] < min_compare_stat and min_stats[stat_name] or min_compare_stat
+			max_stats[stat_name] = max_stats[stat_name] and max_compare_stat < max_stats[stat_name] and max_stats[stat_name] or max_compare_stat
 			min_stats_total[stat_name] = (min_stats_total[stat_name] or 0) + min_compare_stat
 			max_stats_total[stat_name] = (max_stats_total[stat_name] or 0) + max_compare_stat
 		end
@@ -413,7 +413,7 @@ WeaponStats.get_compare_stats_limits = function (self, weapon_template)
 	local stats = {}
 	local num_compare_templates = table.size(templates_to_compare)
 
-	for i = 1, #stats_list, 1 do
+	for i = 1, #stats_list do
 		local stat_name = stats_list[i]
 		stats[stat_name] = {
 			min = min_stats[stat_name],
@@ -438,7 +438,7 @@ WeaponStats.get_compairing_stats = function (self)
 	local values = {}
 
 	if item_base_stats then
-		for i = 1, #item_base_stats, 1 do
+		for i = 1, #item_base_stats do
 			local stat = item_base_stats[i]
 			local stat_name = stat.name
 			local stat_value = stat.value or 0

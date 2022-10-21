@@ -72,7 +72,7 @@ WwiseStateGroupEventIntensity.update = function (self, dt, t)
 		local progression_intensity = math.max(event_progress - self._previous_event_progress, 0) * self._progression_rate
 		self._previous_event_progress = event_progress
 		local previous_intensity = self._intensity
-		local new_intensity = (self._intensity + progression_intensity) - dt
+		local new_intensity = self._intensity + progression_intensity - dt
 
 		if previous_intensity <= 0 and new_intensity > 0 then
 			new_intensity = new_intensity + TRIGGER_THRESHOLD

@@ -27,8 +27,8 @@ function _generate_spawn_volume_positions(beacon_unit, player_radius)
 	local volume_scale = Unit.world_scale(beacon_unit, volume_node)
 	local volume_height = volume_scale.z
 
-	for j = 1, num_players_per_axis, 1 do
-		for i = 1, num_players_per_axis, 1 do
+	for j = 1, num_players_per_axis do
+		for i = 1, num_players_per_axis do
 			local position = Vector3(start_position.x + steps * i, start_position.y + steps * j, start_position.z + volume_height)
 
 			if Unit.is_point_inside_volume(beacon_unit, "c_respawn_volume", position) then

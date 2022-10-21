@@ -97,7 +97,7 @@ Door._spawn_control_panels = function (self, unit)
 	local control_panel_props = self:_get_non_empty_control_panels(unit)
 	local world = Unit.world(unit)
 
-	for i = 1, #control_panel_props, 1 do
+	for i = 1, #control_panel_props do
 		local control_panel_prop = control_panel_props[i]
 		local node_name = "ap_control_panel_" .. tostring(i)
 
@@ -121,7 +121,7 @@ Door._unspawn_control_panels = function (self, unit)
 	local world = Unit.world(unit)
 	local control_panel_units = self._control_panel_units
 
-	for i = 1, #control_panel_units, 1 do
+	for i = 1, #control_panel_units do
 		local control_panel_unit = control_panel_units[i]
 
 		World.unlink_unit(world, control_panel_unit)
@@ -202,7 +202,7 @@ Door._get_non_empty_control_panels = function (self, unit)
 	local control_panel_props = self:get_data(unit, "control_panel_props")
 	local cleared_list = {}
 
-	for i = 1, #control_panel_props, 1 do
+	for i = 1, #control_panel_props do
 		local control_panel_prop = control_panel_props[i]
 
 		if control_panel_prop ~= "empty" then

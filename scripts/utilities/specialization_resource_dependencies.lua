@@ -50,9 +50,6 @@ function _resolve_data_recursive(data, resource_packages, validation_func)
 
 					if Application.can_get_resource("package", husk_event) then
 						resource_packages[husk_event] = true
-
-						if true then
-						end
 					end
 				end
 			end

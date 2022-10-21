@@ -72,7 +72,7 @@ RemotePlayersSyncState.rpc_sync_local_players = function (self, channel_id, loca
 	player_sync_data.player_session_id_array = player_session_id_array
 	local slot_array = {}
 
-	for i = 1, num_players, 1 do
+	for i = 1, num_players do
 		local slot = Managers.player:claim_slot()
 		slot_array[i] = slot
 	end

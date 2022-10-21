@@ -10,5 +10,3 @@ end
 ProtoUI.input_get = function (action)
 	return ProtoUI.input_service:get(action)
 end
-
-return

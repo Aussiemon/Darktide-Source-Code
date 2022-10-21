@@ -389,7 +389,7 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 						if on_done then
 							local user_contexts = self._unit_extension_data[source]
 
-							for i = 1, #on_done, 1 do
+							for i = 1, #on_done do
 								local on_done_command = on_done[i]
 								local table_name = on_done_command[1]
 								local argument_name = on_done_command[2]
@@ -673,7 +673,7 @@ DialogueSystem.random_player = function (self)
 	local unit_list = {}
 	local unit_list_n = 0
 
-	for i = 1, #players, 1 do
+	for i = 1, #players do
 		local unit = players[i]
 
 		if HEALTH_ALIVE[unit] then
@@ -733,7 +733,7 @@ DialogueSystem._update_lowest_player_level = function (self)
 	local HEALTH_ALIVE = HEALTH_ALIVE
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
-	for i = 1, #player_units, 1 do
+	for i = 1, #player_units do
 		local player_unit = player_units[i]
 
 		if HEALTH_ALIVE[player_unit] then
@@ -900,11 +900,11 @@ end
 DialogueSystem.rpc_dialogue_system_joined = function (self, channel_id, total_breed_wwise_voices, breed_names, voice_indexes, counter_extension_data, extension_unit_ids, extension_profiles)
 	table.clear(self._extension_per_breed_wwise_voice_index)
 
-	for index = 1, total_breed_wwise_voices, 1 do
+	for index = 1, total_breed_wwise_voices do
 		self._extension_per_breed_wwise_voice_index[breed_names[index]] = voice_indexes[index]
 	end
 
-	for index = 1, counter_extension_data, 1 do
+	for index = 1, counter_extension_data do
 		repeat
 			local unit = Managers.state.unit_spawner:unit(extension_unit_ids[index], false)
 
@@ -935,7 +935,7 @@ DialogueSystem.rpc_trigger_dialogue_event = function (self, channel_id, go_id, e
 	local pairs_in_event_data = #event_data_array / 2
 	local index = 1
 
-	for i = 1, pairs_in_event_data, 1 do
+	for i = 1, pairs_in_event_data do
 		local context = self.dialogueLookupContexts.all_context_names[event_data_array[index]]
 		event_data_array[index] = context
 		index = index + 1

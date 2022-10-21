@@ -48,7 +48,7 @@ end
 Reportify._get_mission_info = function (self)
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager and mission_manager:mission()
-	local mission_name = (mission and mission.name) or "n/a"
+	local mission_name = mission and mission.name or "n/a"
 	local chunk_short_name = nil
 
 	if Managers.state and Managers.state.chunk_lod then
@@ -135,5 +135,3 @@ Reportify._get_player_info = function (self)
 
 	return ret
 end
-
-return

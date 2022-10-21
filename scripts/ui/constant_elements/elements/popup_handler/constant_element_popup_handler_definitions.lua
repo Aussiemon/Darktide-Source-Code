@@ -335,7 +335,7 @@ local animations = {
 				widgets.top_icon.style.texture.size = popup_type_style[popup_type].icon_size
 				local button_widgets = parent._button_widgets
 
-				for i = 1, #button_widgets, 1 do
+				for i = 1, #button_widgets do
 					button_widgets[i].alpha_multiplier = alpha_multiplier
 				end
 			end
@@ -372,7 +372,7 @@ local animations = {
 				widgets.top_icon.alpha_multiplier = anim_progress
 				local button_widgets = parent._button_widgets
 
-				for i = 1, #button_widgets, 1 do
+				for i = 1, #button_widgets do
 					button_widgets[i].alpha_multiplier = anim_progress
 				end
 			end
@@ -390,7 +390,7 @@ local animations = {
 				widgets.top_icon.alpha_multiplier = anim_progress
 				local button_widgets = parent._button_widgets
 
-				for i = 1, #button_widgets, 1 do
+				for i = 1, #button_widgets do
 					button_widgets[i].alpha_multiplier = anim_progress
 				end
 			end

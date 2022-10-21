@@ -25,6 +25,7 @@ for name, template in pairs(explosion_templates) do
 	fassert(template.radius, "Explosion template [\"%s\"] is missing 'radius' setting", name)
 
 	if template.min_radius then
+		-- Nothing
 	end
 
 	fassert(template.damage_profile, "Explosion template [\"%s\"] is missing 'damage_profile' setting", name)

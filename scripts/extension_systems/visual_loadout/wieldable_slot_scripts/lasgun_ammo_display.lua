@@ -9,7 +9,7 @@ LasgunAmmoDisplay.init = function (self, context, slot, weapon_template, fx_sour
 	local ammo_displays = {}
 	local num_attachments_1p = #slot.attachments_1p
 
-	for i = 1, num_attachments_1p, 1 do
+	for i = 1, num_attachments_1p do
 		local attachment_unit = slot.attachments_1p[i]
 		local ammo_display_components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
 
@@ -23,7 +23,7 @@ LasgunAmmoDisplay.init = function (self, context, slot, weapon_template, fx_sour
 
 	local num_attachments_3p = #slot.attachments_3p
 
-	for i = 1, num_attachments_3p, 1 do
+	for i = 1, num_attachments_3p do
 		local attachment_unit = slot.attachments_3p[i]
 		local ammo_display_components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
 
@@ -50,7 +50,7 @@ LasgunAmmoDisplay.update = function (self, unit, dt, t)
 	local ammo_displays = self._ammo_displays
 	local num_displays = #ammo_displays
 
-	for i = 1, num_displays, 1 do
+	for i = 1, num_displays do
 		local display = ammo_displays[i]
 
 		display.component:set_ammo(display.unit, current_ammo, max_ammo, critical_threshold)

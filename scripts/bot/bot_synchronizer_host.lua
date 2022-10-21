@@ -143,7 +143,7 @@ end
 BotSynchronizerHost.handle_queued_bot_removals = function (self)
 	local queued_bots = self._bots_queued_for_removal
 
-	for i = 1, #queued_bots, 1 do
+	for i = 1, #queued_bots do
 		self:remove_bot(queued_bots[i])
 
 		queued_bots[i] = nil

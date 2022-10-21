@@ -90,7 +90,7 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 
 	fassert(num_criterias <= (RuleDatabase.RULE_MAX_NUM_CRITERIA or 8), "Too many criteria in dialogue %s", dialogue_name)
 
-	for i = 1, num_criterias, 1 do
+	for i = 1, num_criterias do
 		local criteria = criterias[i]
 		local context_name = criteria[1]
 
@@ -157,7 +157,7 @@ TagQueryDatabase.iterate_queries = function (self, t)
 	local best_query = nil
 	local best_query_value = 0
 
-	for i = 1, num_iterations, 1 do
+	for i = 1, num_iterations do
 		local query = self:_iterate_query(t)
 		local result = query.result
 

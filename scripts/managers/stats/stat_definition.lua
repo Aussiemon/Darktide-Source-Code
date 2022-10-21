@@ -13,7 +13,7 @@ StatDefinition.init = function (self, triggers, storage_component, optional_flag
 	self._flags = {}
 	optional_flags = optional_flags or {}
 
-	for i = 1, #optional_flags, 1 do
+	for i = 1, #optional_flags do
 		local flag_name = optional_flags[i]
 		self._flags[flag_name] = true
 	end

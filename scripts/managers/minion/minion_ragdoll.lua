@@ -12,7 +12,7 @@ MinionRagdoll.init = function (self)
 	self._new_delayed_ragdoll_anim_events = Script.new_array(ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME)
 	local delayed_ragdoll_push_cache = Script.new_array(RAGDOLL_PUSH_CACHE_SIZE)
 
-	for i = 1, RAGDOLL_PUSH_CACHE_SIZE, 1 do
+	for i = 1, RAGDOLL_PUSH_CACHE_SIZE do
 		delayed_ragdoll_push_cache[i] = {}
 	end
 
@@ -36,7 +36,7 @@ MinionRagdoll.update = function (self, soft_cap_out_of_bounds_units)
 	local Unit_animation_event = Unit.animation_event
 	local delayed_ragdoll_anim_events = self._delayed_ragdoll_anim_events
 
-	for i = 1, #delayed_ragdoll_anim_events, 1 do
+	for i = 1, #delayed_ragdoll_anim_events do
 		local unit = delayed_ragdoll_anim_events[i]
 
 		Unit_animation_event(unit, "ragdoll")
@@ -101,7 +101,7 @@ MinionRagdoll._clear_delayed_ragdoll_push_entry = function (self, index)
 	local delayed_ragdoll_push_cache = self._delayed_ragdoll_push_cache
 	local current_cache_index = self._delayed_ragdoll_push_index
 
-	for i = index + 1, current_cache_index, 1 do
+	for i = index + 1, current_cache_index do
 		local prev_data = delayed_ragdoll_push_cache[i - 1]
 		local data = delayed_ragdoll_push_cache[i]
 		prev_data.unit = data.unit

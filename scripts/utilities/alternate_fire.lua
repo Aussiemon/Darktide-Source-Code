@@ -80,95 +80,94 @@ local AlternateFire = {
 		if not alternate_fire_settings then
 			return true
 		end
-	end,
-	movement_speed_modifier = function (alternate_fire_component, weapon_template, t, weapon_extension)
-		if not alternate_fire_component.is_active then
-			return 1
-		end
-
-		local alternate_fire_settings = weapon_template.alternate_fire_settings
-		local movement_speed_modifier = alternate_fire_settings.movement_speed_modifier
-
-		if not movement_speed_modifier then
-			return 1
-		end
-
-		local start_t = alternate_fire_component.start_t
-		local time_in_alternate_fire = t - start_t
-		local p1 = 1
-		local p2 = 1
-		local segment_progress = 0
-
-		for i = 1, #movement_speed_modifier, 1 do
-			local segment = movement_speed_modifier[i]
-			local segment_t = segment.t
-
-			if time_in_alternate_fire <= segment_t then
-				p2 = segment.modifier
-
-				if segment_t == 0 then
-					segment_progress = 0
-				else
-					segment_progress = math.min(time_in_alternate_fire / segment_t, 1)
-				end
-			else
-				local modifier = segment.modifier
-				p1 = modifier
-				p2 = modifier
-			end
-		end
-
-		local mod = math.lerp(p1, p2, segment_progress)
-		mod = AlternateFire.modify_movement_curve(weapon_extension, mod)
-		local unit = weapon_extension._unit
-		local buff_extension = ScriptUnit.extension(unit, "buff_system")
-		local stat_buffs = buff_extension:stat_buffs()
-		local alternate_fire_movement_speed_reduction_modifier = stat_buffs.alternate_fire_movement_speed_reduction_modifier
-		local delta = 1 - mod
-		delta = delta * alternate_fire_movement_speed_reduction_modifier
-		mod = 1 - delta
-
-		fassert(mod == mod, "Mod is nan")
-
-		return mod
-	end,
-	modify_movement_curve = function (weapon_extension, base_value)
-		local weapon_movement_curve_modifier_template = weapon_extension:movement_curve_modifier_template()
-
-		if weapon_movement_curve_modifier_template then
-			local value = base_value * weapon_movement_curve_modifier_template.modifier or base_value
-
-			return value
-		end
-
-		return base_value
-	end,
-	camera_variables = function (weapon_template)
-		if not weapon_template then
-			return nil, nil, nil
-		end
-
-		local alternate_fire_settings = weapon_template.alternate_fire_settings
-
-		if not alternate_fire_settings then
-			return nil, nil, nil
-		end
-
-		local camera_settings = alternate_fire_settings.camera
-
-		if not camera_settings then
-			return nil, nil, nil
-		end
-
-		local vertical_fov = math.degrees_to_radians(camera_settings.vertical_fov)
-		local custom_vertical_fov = math.degrees_to_radians(camera_settings.custom_vertical_fov)
-		local near_range = camera_settings.near_range
-
-		return vertical_fov, custom_vertical_fov, near_range
-	end,
-	debug_set_alternate_fire = function (alternate_fire_component, active)
-		alternate_fire_component.is_active = active
 	end
 }
+
+AlternateFire.movement_speed_modifier = function (alternate_fire_component, weapon_template, t, weapon_extension)
+	if not alternate_fire_component.is_active then
+		return 1
+	end
+
+	local alternate_fire_settings = weapon_template.alternate_fire_settings
+	local movement_speed_modifier = alternate_fire_settings.movement_speed_modifier
+
+	if not movement_speed_modifier then
+		return 1
+	end
+
+	local start_t = alternate_fire_component.start_t
+	local time_in_alternate_fire = t - start_t
+	local p1 = 1
+	local p2 = 1
+	local segment_progress = 0
+
+	for i = 1, #movement_speed_modifier do
+		local segment = movement_speed_modifier[i]
+		local segment_t = segment.t
+
+		if time_in_alternate_fire <= segment_t then
+			p2 = segment.modifier
+			segment_progress = segment_t == 0 and 0 or math.min(time_in_alternate_fire / segment_t, 1)
+		else
+			local modifier = segment.modifier
+			p1 = modifier
+			p2 = modifier
+		end
+	end
+
+	local mod = math.lerp(p1, p2, segment_progress)
+	mod = AlternateFire.modify_movement_curve(weapon_extension, mod)
+	local unit = weapon_extension._unit
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local alternate_fire_movement_speed_reduction_modifier = stat_buffs.alternate_fire_movement_speed_reduction_modifier
+	local delta = 1 - mod
+	delta = delta * alternate_fire_movement_speed_reduction_modifier
+	mod = 1 - delta
+
+	fassert(mod == mod, "Mod is nan")
+
+	return mod
+end
+
+AlternateFire.modify_movement_curve = function (weapon_extension, base_value)
+	local weapon_movement_curve_modifier_template = weapon_extension:movement_curve_modifier_template()
+
+	if weapon_movement_curve_modifier_template then
+		local value = base_value * weapon_movement_curve_modifier_template.modifier or base_value
+
+		return value
+	end
+
+	return base_value
+end
+
+AlternateFire.camera_variables = function (weapon_template)
+	if not weapon_template then
+		return nil, nil, nil
+	end
+
+	local alternate_fire_settings = weapon_template.alternate_fire_settings
+
+	if not alternate_fire_settings then
+		return nil, nil, nil
+	end
+
+	local camera_settings = alternate_fire_settings.camera
+
+	if not camera_settings then
+		return nil, nil, nil
+	end
+
+	local vertical_fov = math.degrees_to_radians(camera_settings.vertical_fov)
+	local custom_vertical_fov = math.degrees_to_radians(camera_settings.custom_vertical_fov)
+	local near_range = camera_settings.near_range
+
+	return vertical_fov, custom_vertical_fov, near_range
+end
+
+AlternateFire.debug_set_alternate_fire = function (alternate_fire_component, active)
+	alternate_fire_component.is_active = active
+end
 
 return AlternateFire

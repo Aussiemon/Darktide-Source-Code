@@ -46,10 +46,10 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 
 	local _, half_extents = Unit.box(unit, true)
 	self._radius = math.max(half_extents.x, half_extents.y, half_extents.z)
-	self._mass = (dynamic_actor and Actor.mass(dynamic_actor)) or projectile_locomotion_template.integrator_parameters.mass
+	self._mass = dynamic_actor and Actor.mass(dynamic_actor) or projectile_locomotion_template.integrator_parameters.mass
 	local position = Unit.world_position(unit, 1)
 	local rotation = Unit.world_rotation(unit, 1)
-	self._last_fixed_t = (Managers.time:has_timer("gameplay") and Managers.time:time("gameplay")) or 0
+	self._last_fixed_t = Managers.time:has_timer("gameplay") and Managers.time:time("gameplay") or 0
 	self._position = Vector3Box(position)
 	self._rotation = QuaternionBox(rotation)
 	self._old_position = Vector3Box(position)
@@ -144,8 +144,7 @@ ProjectileUnitLocomotionExtension.fixed_update = function (self, unit, dt, t)
 	elseif state == locomotion_states.sticky then
 		self:_update_sticky(unit, dt, t)
 	elseif state ~= locomotion_states.socket_lock and state ~= locomotion_states.sleep then
-		if state == locomotion_states.carried then
-		else
+		if state ~= locomotion_states.carried then
 			local position = Unit.world_position(unit, 1)
 			local rotation = Unit.world_rotation(unit, 1)
 

@@ -43,7 +43,7 @@ local function _enqueue_error(error_object, queue)
 	if #queue == ERROR_QUEUE_MAX_SIZE then
 		local level = error_object:level()
 
-		for i = 1, #queue, 1 do
+		for i = 1, #queue do
 			if queue[i]:level() < level then
 				queue[i] = error_object
 
@@ -138,7 +138,7 @@ end
 ErrorManager.destroy = function (self)
 	local queue = self._error_queue
 
-	for i = 1, #queue, 1 do
+	for i = 1, #queue do
 		queue[i]:delete()
 	end
 

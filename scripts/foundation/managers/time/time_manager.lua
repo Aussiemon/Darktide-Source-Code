@@ -44,7 +44,7 @@ TimeManager.unregister_timer = function (self, name)
 end
 
 TimeManager.has_timer = function (self, name)
-	return (self._timers[name] and true) or false
+	return self._timers[name] and true or false
 end
 
 TimeManager.update = function (self, dt)
@@ -65,7 +65,7 @@ TimeManager._update_mean_dt = function (self, dt)
 	local dt_sum = 0
 	local dt_stack_size = #dt_stack
 
-	for i = 1, dt_stack_size, 1 do
+	for i = 1, dt_stack_size do
 		local dt_stack_entry = dt_stack[i]
 		dt_sum = dt_sum + dt_stack_entry
 	end

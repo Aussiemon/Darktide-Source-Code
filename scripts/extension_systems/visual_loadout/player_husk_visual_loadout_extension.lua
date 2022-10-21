@@ -255,7 +255,7 @@ PlayerHuskVisualLoadoutExtension._update_item_visibility = function (self, is_in
 	if slot_scripts then
 		local num_scripts = #slot_scripts
 
-		for i = 1, num_scripts, 1 do
+		for i = 1, num_scripts do
 			local wieldable_slot_script = slot_scripts[i]
 
 			wieldable_slot_script:update_first_person_mode(is_in_first_person_mode)
@@ -327,7 +327,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local profile = self._player:profile()
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
-	local deform_overrides = (item.deform_overrides and table.clone(item.deform_overrides)) or {}
+	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
 
 	if profile.gender == "female" then
 		deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"

@@ -109,6 +109,7 @@ ItemPreviewer.preview = function (self, resource)
 				item_data.material_overrides = table.append(item_data.material_overrides, skin_data.material_overrides)
 			elseif item_data.item_type ~= "CHARACTER_INSIGNIA" then
 				if item_data.item_type == "PORTRAIT_FRAME" then
+					-- Nothing
 				elseif item_data.item_type == "SET" then
 					item_data.attachments = item_data.set_items
 					item_data.base_unit = root_unit_resource
@@ -304,5 +305,3 @@ end
 ItemPreviewer.allow_camera_vertical_orbit = function (self)
 	return true
 end
-
-return

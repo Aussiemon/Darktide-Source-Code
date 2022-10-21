@@ -323,7 +323,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, scratchpad,
 			scratchpad.played_prepare_grab_anim = true
 		end
 
-		locomotion_extension:set_rotation_speed((scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed) or action_data.close_rotation_speed)
+		locomotion_extension:set_rotation_speed(scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed or action_data.close_rotation_speed)
 
 		if action_data.min_time_spent_charging <= time_spent_charging then
 			local dot = Vector3.dot(wanted_direction, true_direction_to_target)
@@ -536,7 +536,7 @@ BtMutantChargerChargeAction._align_throwing = function (self, unit, scratchpad, 
 	local position_up = POSITION_LOOKUP[unit] + Vector3.up() * UP_POSITION_OFFSET
 	local position_down = POSITION_LOOKUP[unit] + Vector3.up() * DOWN_POSITION_OFFSET
 
-	for i = 1, #throw_directions, 1 do
+	for i = 1, #throw_directions do
 		local test_direction = throw_directions[i]:unbox()
 		local up_throw_test_position = position_up + test_direction * action_data.throw_test_distance
 		local down_throw_test_position = position_down + test_direction * action_data.throw_test_distance
@@ -667,7 +667,7 @@ local MAX_TIME = 1.25
 BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
 	local is_human = scratchpad.hit_unit_breed_name == "human"
-	local up = Vector3.up() * ((is_human and THROW_TELEPORT_UP_OFFSET_HUMAN) or THROW_TELEPORT_UP_OFFSET_OGRYN)
+	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
 	local from = unit_position + test_direction + up
 	local catapult_force = action_data.catapult_force[scratchpad.hit_unit_breed_name]
 	local catapult_z_force = action_data.catapult_z_force[scratchpad.hit_unit_breed_name]
@@ -747,7 +747,7 @@ BtMutantChargerChargeAction._check_colliding_players = function (self, unit, scr
 	local dodge_radius = action_data.dodge_collision_radius
 	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
 
-	for i = 1, actor_count, 1 do
+	for i = 1, actor_count do
 		repeat
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
@@ -829,7 +829,7 @@ BtMutantChargerChargeAction._calculate_randomized_throw_directions = function (s
 	local current_degree = -(DEGREE_RANGE / 2)
 	local directions = {}
 
-	for i = 1, num_directions, 1 do
+	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
@@ -864,7 +864,7 @@ BtMutantChargerChargeAction._push_friendly_minions = function (self, unit, actio
 	local damage_type = action_data.push_minions_damage_type
 	local pushed_minions = scratchpad.pushed_minions
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= unit and not pushed_minions[hit_unit] then
@@ -945,7 +945,7 @@ BtMutantChargerChargeAction._allow_gibbing = function (self, unit, action_data, 
 	if disallowed_hit_zones_for_gibbing then
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
-		for i = 1, #disallowed_hit_zones_for_gibbing, 1 do
+		for i = 1, #disallowed_hit_zones_for_gibbing do
 			local disallowed_hit_zone = disallowed_hit_zones_for_gibbing[i]
 
 			visual_loadout_extension:allow_gib_for_hit_zone(disallowed_hit_zone, allowed)
@@ -961,7 +961,7 @@ BtMutantChargerChargeAction._add_threat_to_other_targets = function (self, unit,
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local max_threat = breed.threat_config.max_threat
 
-	for i = 1, num_enemies, 1 do
+	for i = 1, num_enemies do
 		local target_unit = valid_enemy_player_units[i]
 
 		if target_unit ~= excluded_target then

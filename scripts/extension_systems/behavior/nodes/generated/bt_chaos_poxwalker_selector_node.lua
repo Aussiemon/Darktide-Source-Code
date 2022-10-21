@@ -13,7 +13,7 @@ BtChaosPoxwalkerSelectorNode.init_values = function (self, blackboard, action_da
 
 	local children = self._children
 
-	for i = 1, #children, 1 do
+	for i = 1, #children do
 		local child_node = children[i]
 		local child_tree_node = child_node.tree_node
 		local child_action_data = child_tree_node.action_data

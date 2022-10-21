@@ -80,5 +80,3 @@ local mt_state = {
 
 setmetatable(Managers, mt_global)
 setmetatable(Managers.state, mt_state)
-
-return

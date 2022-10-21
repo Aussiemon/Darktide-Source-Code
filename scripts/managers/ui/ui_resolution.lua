@@ -19,9 +19,9 @@ UIResolution.save = function (width, height)
 end
 
 UIResolution.scale_vector = function (position, scale, pixel_snap, use_real_coordinates)
-	local pos_x = (position[1] > 0 and math_max(position[1] * scale, 1)) or position[1] * scale
-	local pos_y = (position[2] > 0 and math_max(position[2] * scale, 1)) or position[2] * scale
-	local pos_z = position[3] and ((position[3] > 0 and math_max(position[3] * scale, 1)) or position[2] * scale)
+	local pos_x = position[1] > 0 and math_max(position[1] * scale, 1) or position[1] * scale
+	local pos_y = position[2] > 0 and math_max(position[2] * scale, 1) or position[2] * scale
+	local pos_z = position[3] and (position[3] > 0 and math_max(position[3] * scale, 1) or position[2] * scale)
 
 	if pixel_snap then
 		if use_real_coordinates then
@@ -37,8 +37,8 @@ UIResolution.scale_vector = function (position, scale, pixel_snap, use_real_coor
 end
 
 UIResolution.scale_lua_vector2 = function (position, scale, pixel_snap)
-	local pos_x = (position[1] > 0 and math_max(position[1] * scale, 1)) or position[1] * scale
-	local pos_y = (position[2] > 0 and math_max(position[2] * scale, 1)) or position[2] * scale
+	local pos_x = position[1] > 0 and math_max(position[1] * scale, 1) or position[1] * scale
+	local pos_y = position[2] > 0 and math_max(position[2] * scale, 1) or position[2] * scale
 
 	if pixel_snap then
 		return math_round(pos_x), math_round(pos_y), 0
@@ -49,8 +49,8 @@ end
 
 UIResolution.scale_vector3 = function (position, scale, pixel_snap)
 	local x, y, z = Vector3.to_elements(position)
-	local pos_x = (x > 0 and math_max(x * scale, 1)) or x * scale
-	local pos_y = (y > 0 and math_max(y * scale, 1)) or y * scale
+	local pos_x = x > 0 and math_max(x * scale, 1) or x * scale
+	local pos_y = y > 0 and math_max(y * scale, 1) or y * scale
 
 	if pixel_snap then
 		return math_round(pos_x), math_round(pos_y), z

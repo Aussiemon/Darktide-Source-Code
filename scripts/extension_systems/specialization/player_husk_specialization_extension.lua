@@ -125,7 +125,7 @@ PlayerHuskSpecializationExtension.rpc_update_talents = function (self, channel_i
 
 	table.clear(temp_talent_name_set)
 
-	for i = 1, #talent_id_array, 1 do
+	for i = 1, #talent_id_array do
 		local talent_name_id = talent_id_array[i]
 		local talent_name = NetworkLookup.archetype_talent_names[talent_name_id]
 		temp_talent_name_set[talent_name] = true

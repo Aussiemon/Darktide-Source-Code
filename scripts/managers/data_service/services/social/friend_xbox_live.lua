@@ -36,7 +36,7 @@ FriendXboxLive.platform = function (self)
 end
 
 FriendXboxLive.platform_icon = function (self)
-	return "\ue06c"
+	return ""
 end
 
 FriendXboxLive.name = function (self)

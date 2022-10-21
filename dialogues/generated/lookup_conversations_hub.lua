@@ -186,5 +186,3 @@ DialogueLookup[DialogueLookup_n + 91] = "purser_purchase"
 DialogueLookup[DialogueLookup_n + 92] = "tech_priest_distance"
 DialogueLookup[DialogueLookup_n + 93] = "tech_priest_goodbye"
 DialogueLookup_n = DialogueLookup_n + 93
-
-return

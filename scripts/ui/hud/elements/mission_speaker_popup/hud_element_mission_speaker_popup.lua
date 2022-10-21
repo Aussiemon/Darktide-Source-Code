@@ -13,7 +13,7 @@ HudElementMissionSpeakerPopup.init = function (self, parent, draw_layer, start_s
 	local bar_spacing = HudElementMissionSpeakerPopupSettings.bar_spacing
 	local bar_widgets = {}
 
-	for i = 1, num_bars, 1 do
+	for i = 1, num_bars do
 		local name = "bar_" .. i
 		local widget = self._widgets_by_name[name]
 		widget.offset = {
@@ -91,7 +91,7 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 		local mission_givers_settings = dialogue_breed_settings.mission_giver
 		local mission_giver_voices = mission_givers_settings.wwise_voices
 
-		for i = 1, #playing_dialogues_array, 1 do
+		for i = 1, #playing_dialogues_array do
 			local currently_playing = playing_dialogues_array[i]
 			local current_speaker_name = currently_playing.speaker_name
 

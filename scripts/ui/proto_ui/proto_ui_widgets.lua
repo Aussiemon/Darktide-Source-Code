@@ -32,5 +32,3 @@ ProtoUI.bishop_button_primary = function (idx, label, pos, disabled)
 
 	return data, not disabled and is_clicked
 end
-
-return

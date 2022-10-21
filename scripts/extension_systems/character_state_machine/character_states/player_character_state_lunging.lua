@@ -327,7 +327,7 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 	end
 
 	local block_cancel = lunge_template and lunge_template.block_input_cancel and input_extension:get("action_two_pressed")
-	local move_back_cancel_time_threshold = (lunge_template and lunge_template.move_back_cancel_time_threshold) or 0
+	local move_back_cancel_time_threshold = lunge_template and lunge_template.move_back_cancel_time_threshold or 0
 	local move_back_cancel = lunge_template and lunge_template.move_back_cancel and input_extension:get("move").y < -0.1 and move_back_cancel_time_threshold < time_in_lunge
 
 	if block_cancel or move_back_cancel then
@@ -416,7 +416,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	local max_hit_mass = _max_hit_mass(damage_settings, lunge_template)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
-	local current_mass_hit = (math.huge <= max_hit_mass and 0) or max_hit_mass * used_hit_mass_percentage
+	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
 	local have_hit_stop_armor = false
 	local fp_position = self._first_person_component.position
 	local lunge_direction = self._lunge_character_state_component.direction
@@ -428,7 +428,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local right_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward + right))
 	local hit_enemy_units = self._hit_enemy_units
 
-	for i = 1, num_actors, 1 do
+	for i = 1, num_actors do
 		local hit_actor = actors[i]
 		local hit_unit = Actor.unit(hit_actor)
 
@@ -459,7 +459,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 				local armor_type = Armor.armor_type(unit, hit_unit_breed)
 				local stop_armor_types = lunge_template.stop_armor_types
 
-				for i = 1, #stop_armor_types, 1 do
+				for i = 1, #stop_armor_types do
 					if armor_type == stop_armor_types[i] then
 						have_hit_stop_armor = true
 
@@ -470,7 +470,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 		end
 	end
 
-	character_state_hit_mass_component.used_hit_mass_percentage = math.clamp((max_hit_mass > 0 and current_mass_hit / max_hit_mass) or 0, 0, 1)
+	character_state_hit_mass_component.used_hit_mass_percentage = math.clamp(max_hit_mass > 0 and current_mass_hit / max_hit_mass or 0, 0, 1)
 	local max_hit_mass_reached = max_hit_mass <= current_mass_hit
 
 	return have_hit_stop_armor

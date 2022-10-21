@@ -63,7 +63,7 @@ end
 ObjectLinkCamera.vertical_fov = function (self)
 	local yfov = self._curve_params.yfov
 
-	return (yfov and yfov * math.pi / 180) or ObjectLinkCamera.super.vertical_fov(self)
+	return yfov and yfov * math.pi / 180 or ObjectLinkCamera.super.vertical_fov(self)
 end
 
 return ObjectLinkCamera

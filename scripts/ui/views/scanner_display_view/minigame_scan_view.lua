@@ -77,13 +77,13 @@ MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
 	local is_active, blinking, progress, color_lerp = _calculate_aupex_scanner_hud_view_values(self._scanning_component, self._weapon_action_component, self._first_person_component, latest_fixed_t)
 	self._is_scaning = is_active
-	local target = (is_active and progress) or 0
+	local target = is_active and progress or 0
 	local current = self._scanning_intensity
 	local to_target = target - current
 	local direction = math.sign(to_target)
 	local distance = math.abs(to_target)
 	local is_target_on_spot = ON_SPOT_THRESHOLD <= target
-	local max_speed = MAX_SPEED * ((is_target_on_spot and 2) or 1)
+	local max_speed = MAX_SPEED * (is_target_on_spot and 2 or 1)
 	local move = math.clamp(max_speed * direction * dt, -distance, distance)
 	self._color_lerp = color_lerp or 0
 	self._scanning_intensity = math.clamp01(current + move)
@@ -92,7 +92,7 @@ MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	local WWISE_PARAMETER_NAME_BEEP_VOLUME = "scanner_beep_volume"
 	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, self._speaker_fx_source)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
-	self._intense_blink_alpha = (current_beep_normalized > 0.7 and 1) or 0
+	self._intense_blink_alpha = current_beep_normalized > 0.7 and 1 or 0
 end
 
 MinigameScanView.set_local_player = function (self, local_player)
@@ -117,7 +117,7 @@ MinigameScanView._draw_skulls = function (self, ui_renderer)
 		local skull_widgets = self._skull_widgets
 		local cog_widgets = self._cog_widgets
 
-		for i = 1, max_scannable_per_player, 1 do
+		for i = 1, max_scannable_per_player do
 			if i <= scanned_objects then
 				local skull_widget = skull_widgets[i]
 
@@ -138,10 +138,10 @@ MinigameScanView._draw_segments = function (self, ui_renderer)
 	local is_scaning = self._is_scaning
 	local intence_blinking = self._blinking
 	local intense_blink_alpha = self._intense_blink_alpha
-	local color = (is_scaning and Color.lerp(Color.red(), Color.green(), self._color_lerp)) or Color.green()
+	local color = is_scaning and Color.lerp(Color.red(), Color.green(), self._color_lerp) or Color.green()
 	local _, r, g, b = Quaternion.to_elements(color)
 
-	for i = 1, max_segments, 1 do
+	for i = 1, max_segments do
 		local segment_widget = segments[i]
 		local segement_color = segment_widget.style.segment.color
 		segement_color[2] = r
@@ -151,7 +151,7 @@ MinigameScanView._draw_segments = function (self, ui_renderer)
 		if i == max_segments then
 			segement_color[1] = intense_blink_alpha * 255
 		else
-			segement_color[1] = ((intence_blinking and intense_blink_alpha) or 1) * 255
+			segement_color[1] = (intence_blinking and intense_blink_alpha or 1) * 255
 		end
 
 		UIWidget.draw(segment_widget, ui_renderer)
@@ -178,8 +178,8 @@ MinigameScanView._create_wallet_widgets = function (self, material_name, widget_
 
 	table.clear(widgets)
 
-	for i = 1, num_skulls_rows, 1 do
-		for j = 1, num_skulls_columns, 1 do
+	for i = 1, num_skulls_rows do
+		for j = 1, num_skulls_columns do
 			local widget_name = widget_name_prefix .. tostring(i)
 			local widget_offset = {
 				start_offset[1] + j * widget_size[1] + spacing[1] * j,
@@ -218,12 +218,12 @@ MinigameScanView._create_segment_widgets = function (self)
 	local material_path = "content/ui/materials/backgrounds/scanner/scanner_scan_segment"
 	local widget_name_prefix = "segment_"
 	local angle = ScannerDisplayViewSettings.scan_segment_half_angle
-	local angle_step = (angle * 2) / num_segments
+	local angle_step = angle * 2 / num_segments
 	local segments = self._segments
 
 	table.clear(segments)
 
-	for i = 1, num_segments, 1 do
+	for i = 1, num_segments do
 		local widget_name = widget_name_prefix .. tostring(i)
 		local widget_definition = UIWidget.create_definition({
 			{

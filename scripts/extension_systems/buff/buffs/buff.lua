@@ -15,7 +15,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		unit = context.unit,
 		buff_extension = context.buff_extension,
 		is_local_unit = context.is_local_unit,
-		is_player = (context.player and true) or false,
+		is_player = context.player and true or false,
 		is_server = context.is_server,
 		breed = context.breed,
 		template = template
@@ -78,10 +78,10 @@ Buff._calculate_weapon_trait_override_data = function (self, override_data, item
 
 	if not use_override then
 		local equiped_item = profile.visual_loadout[item_slot_name]
-		local traits = (equiped_item and equiped_item.traits) or EMPTY_TABLE
+		local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
 		local item_definitions = MasterItems.get_cached()
 
-		for i = 1, #traits, 1 do
+		for i = 1, #traits do
 			local trait = traits[i]
 			local trait_item_id = trait.id
 			local rarity = trait.rarity or 1
@@ -96,9 +96,9 @@ Buff._calculate_weapon_trait_override_data = function (self, override_data, item
 			end
 		end
 	else
-		local traits = (debug_weapon_modifiers and debug_weapon_modifiers.traits) or EMPTY_TABLE
+		local traits = debug_weapon_modifiers and debug_weapon_modifiers.traits or EMPTY_TABLE
 
-		for i = 1, #traits, 1 do
+		for i = 1, #traits do
 			local trait_data = traits[i]
 			local trait_name = trait_data.name
 			local rarity = trait_data.rarity
@@ -410,7 +410,7 @@ Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
 		local current_value = current_stat_buffs[key]
 		local stat_buff_type = stat_buff_types[key]
 
-		for _ = 1, stack_count, 1 do
+		for _ = 1, stack_count do
 			if stat_buff_type == "multiplicative_multiplier" then
 				current_value = current_value * value
 			else

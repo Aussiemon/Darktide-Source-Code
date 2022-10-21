@@ -72,7 +72,7 @@ ActionScanConfirm.running_action_state = function (self, t, time_in_action)
 	local has_valid_target = self:_has_valid_target()
 	local action_settings = self._action_settings
 	local scan_settings = action_settings.scan_settings
-	local done_time = (has_valid_target and scan_settings.confirm_time) or scan_settings.fail_time_time
+	local done_time = has_valid_target and scan_settings.confirm_time or scan_settings.fail_time_time
 	local enough_time = done_time < time_in_action
 
 	if enough_time then

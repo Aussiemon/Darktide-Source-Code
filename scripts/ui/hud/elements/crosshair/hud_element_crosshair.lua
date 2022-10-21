@@ -20,7 +20,7 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 	self._crosshair_widget_definitions = {}
 	local crosshair_templates = HudElementCrosshairSettings.templates
 
-	for i = 1, #crosshair_templates, 1 do
+	for i = 1, #crosshair_templates do
 		local template_path = crosshair_templates[i]
 		local template = require(template_path)
 		local name = template.name

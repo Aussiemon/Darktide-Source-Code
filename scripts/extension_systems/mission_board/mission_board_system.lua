@@ -56,7 +56,7 @@ end
 MissionBoardSystem.set_group_visibility = function (self, is_visible)
 	local units = self._visibility_group_units
 
-	for i = 1, #units, 1 do
+	for i = 1, #units do
 		Unit.set_visibility(units[i], "mission_board_active", is_visible)
 	end
 end

@@ -10,7 +10,7 @@ local POINT_MODIFICATION_TYPES = {
 	"depth"
 }
 
-for i = 1, #POINT_MODIFICATION_TYPES, 1 do
+for i = 1, #POINT_MODIFICATION_TYPES do
 	local type_name = POINT_MODIFICATION_TYPES[i]
 	POINT_MODIFICATION_TYPES[type_name] = i
 end
@@ -64,7 +64,7 @@ SweepEditor._dump = function (self)
 	local points = spline_settings.points
 	dump_string = string.format("%s    points = {\n", dump_string)
 
-	for i = 1, #points, 1 do
+	for i = 1, #points do
 		local point = points[i]
 		dump_string = string.format("%s        {%.2f, %.2f, %.2f},\n", dump_string, point[1], point[2], point[3])
 	end
@@ -85,6 +85,7 @@ SweepEditor.update = function (self, dt, t)
 
 	if sweep_spline then
 		if self._sweep_type == "exported" then
+			-- Nothing
 		elseif self._sweep_type == "hermite" then
 			self._selected_point = self:_update_point_cycling(sweep_spline, self._selected_point)
 			self._modifying_anchor_point = self:_update_anchor_point_toggle(self._modifying_anchor_point)
@@ -244,9 +245,9 @@ end
 SweepEditor._draw_points = function (self, drawer, sweep_spline, modification_index)
 	local num_points = sweep_spline:num_points()
 
-	for i = 1, num_points, 1 do
+	for i = 1, num_points do
 		local selected_point = self._modifying_anchor_point or i == self._selected_point
-		local color = (selected_point and Color.gold()) or Color.black()
+		local color = selected_point and Color.gold() or Color.black()
 
 		sweep_spline:draw_point(drawer, color, i)
 

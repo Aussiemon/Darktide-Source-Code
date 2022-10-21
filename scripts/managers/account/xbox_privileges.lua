@@ -46,11 +46,11 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 			local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
 			self._privileges_data[privilege] = {
 				has_privilege = has_privilege,
-				deny_reason = (HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason]) or "OK",
+				deny_reason = HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
 				resolution_required = resolution_required
 			}
 
-			debug_log("[XboxPrivileges] User %q %s the privilege to %q - Reason: %s", tostring(user_id), (has_privilege and "has") or "do NOT have", XBOX_PRIVILEGE_LUT[privilege] or "unknown", (HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason]) or "UNKNOWN")
+			debug_log("[XboxPrivileges] User %q %s the privilege to %q - Reason: %s", tostring(user_id), has_privilege and "has" or "do NOT have", XBOX_PRIVILEGE_LUT[privilege] or "unknown", HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "UNKNOWN")
 		end
 	end
 
@@ -66,7 +66,7 @@ XboxPrivileges.update_privileges = function (self, user_id)
 		local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
 		self._privileges_data[privilege] = {
 			has_privilege = has_privilege,
-			deny_reason = (HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason]) or "OK",
+			deny_reason = HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
 			resolution_required = resolution_required
 		}
 	end
@@ -75,7 +75,7 @@ end
 XboxPrivileges._cb_user_privilege_done = function (self, user_id, privilege, async_task)
 	local has_privilege = XUser.get_resolve_privilege_result(async_task)
 
-	debug_log("[XboxPrivileges] User %q %s the privilege to %q", tostring(user_id), (has_privilege and "has") or "do NOT have", XBOX_PRIVILEGE_LUT[privilege] or "unknown")
+	debug_log("[XboxPrivileges] User %q %s the privilege to %q", tostring(user_id), has_privilege and "has" or "do NOT have", XBOX_PRIVILEGE_LUT[privilege] or "unknown")
 
 	self._privileges_data[privilege] = {
 		deny_reason = "OK",
@@ -93,7 +93,7 @@ end
 XboxPrivileges._cb_user_privilege_failed = function (self, user_id, privilege, result)
 	local h_result = result[1]
 
-	debug_log("[XboxPrivileges] User %q failed getting privilege %q - Reason: %s", tostring(user_id), XBOX_PRIVILEGE_LUT[privilege] or "unknown", (HRESULT.S_OK < h_result and PrivilegesManagerConstants.DenyReason[h_result]) or "UNKNOWN")
+	debug_log("[XboxPrivileges] User %q failed getting privilege %q - Reason: %s", tostring(user_id), XBOX_PRIVILEGE_LUT[privilege] or "unknown", HRESULT.S_OK < h_result and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN")
 
 	self._async_privileges[privilege] = nil
 	self._has_error = true

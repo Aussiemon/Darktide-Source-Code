@@ -164,7 +164,7 @@ PlayerManager.update_time_slice_on_game_state_enter = function (self)
 
 	Profiler.start("PlayerManager:update_time_slice_on_game_state_enter")
 
-	for index = last_index + 1, num_players, 1 do
+	for index = last_index + 1, num_players do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
@@ -275,7 +275,7 @@ end
 PlayerManager.player_exists = function (self, peer_id, local_player_id)
 	local peer_table = self._players_by_peer[peer_id]
 
-	return (peer_table and peer_table[local_player_id or 1]) or false
+	return peer_table and peer_table[local_player_id or 1] or false
 end
 
 PlayerManager.remove_player_safe = function (self, peer_id, local_player_id)
@@ -563,7 +563,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 end
 
 PlayerManager.create_players_from_sync_data = function (self, player_class, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array)
-	for i = 1, #local_player_id_array, 1 do
+	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local is_human_controlled = is_human_controlled_array[i]
 		local account_id = account_id_array[i]

@@ -5,11 +5,11 @@ local temp_args = {}
 local function format_error_message(message, ...)
 	local num_new_args = select("#", ...)
 
-	for i = 1, num_new_args, 1 do
+	for i = 1, num_new_args do
 		temp_args[i] = tostring(select(i, ...))
 	end
 
-	for i = num_new_args + 1, #temp_args, 1 do
+	for i = num_new_args + 1, #temp_args do
 		temp_args[i] = nil
 	end
 

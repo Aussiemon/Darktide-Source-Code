@@ -20,15 +20,15 @@ local function convert_number_to_display_texts(amount, max_character, zero_numer
 	local length = string.len(amount)
 	local num_adds = max_character - length
 	local zero_string = "0"
-	local zero_string_colored = (ignore_coloring and zero_string) or _apply_color_to_text("0", zero_numeral_color)
+	local zero_string_colored = ignore_coloring and zero_string or _apply_color_to_text("0", zero_numeral_color)
 
-	for i = 1, num_adds, 1 do
+	for i = 1, num_adds do
 		temp_ammo_display_texts[#temp_ammo_display_texts + 1] = zero_string_colored
 	end
 
 	local num_amount_strings = string.format("%1d", amount)
 
-	for i = 1, string.len(num_amount_strings), 1 do
+	for i = 1, string.len(num_amount_strings) do
 		local value = string.sub(num_amount_strings, i, i)
 
 		if amount == 0 and color_zero_values then
@@ -66,7 +66,7 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 	if health_bar_segment_definition then
 		local segment_widgets = {}
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			local widget = self:_create_widget("health_bar_segment_" .. i, health_bar_segment_definition)
 			segment_widgets[i] = widget
 		end
@@ -115,7 +115,7 @@ HudElementPlayerPanelBase._visor_effect_draw_widgets = function (self, dt, t, in
 	if visor_effect_widget_array then
 		local num_widgets = #visor_effect_widget_array
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = visor_effect_widget_array[i]
 
 			UIWidget.draw(widget, ui_renderer)
@@ -131,7 +131,7 @@ HudElementPlayerPanelBase.visor_effect_set_visible = function (self, visible, ui
 			if visor_effect_widget_array then
 				local num_widgets = #visor_effect_widget_array
 
-				for i = 1, num_widgets, 1 do
+				for i = 1, num_widgets do
 					local widget = visor_effect_widget_array[i]
 					widget.dirty = true
 				end
@@ -157,7 +157,7 @@ HudElementPlayerPanelBase.visor_effect_destroy = function (self, ui_renderer)
 	if visor_effect_widget_array then
 		local num_widgets = #visor_effect_widget_array
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = visor_effect_widget_array[i]
 
 			UIWidget.destroy(ui_renderer, widget)
@@ -168,7 +168,7 @@ end
 HudElementPlayerPanelBase._update_disabled_pulse = function (self, reset)
 	local speed = 7
 	local red_anim_progress = 0.5 + math.sin(Application.time_since_launch() * speed) * 0.5
-	local intesity = (reset and 0) or 1
+	local intesity = reset and 0 or 1
 	local red = red_anim_progress * 75 * intesity
 	local widget = self._widgets_by_name.panel_background
 	widget.style.background.color[2] = red
@@ -215,7 +215,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		end
 	end
 
-	local is_party_player = (player.is_party_player and player:is_party_player()) or false
+	local is_party_player = player.is_party_player and player:is_party_player() or false
 	local presence_id = player.presence_id and player:presence_id()
 
 	if is_party_player ~= self._is_party_player or presence_id ~= self._presence_id then
@@ -259,9 +259,9 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		disabled_state_updated = true
 	end
 
-	local show_as_dead = dead or hogtied or (dead and not is_party_player)
+	local show_as_dead = dead or hogtied or dead and not is_party_player
 	local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")
-	local carrying_luggable = (not dead and not disabled and visual_loadout_extension and self:_is_player_carrying_luggable(inventory_component, visual_loadout_extension)) or false
+	local carrying_luggable = not dead and not disabled and visual_loadout_extension and self:_is_player_carrying_luggable(inventory_component, visual_loadout_extension) or false
 
 	if disabled and not hogtied then
 		local my_player = parent:player()
@@ -286,7 +286,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	if supported_features.throwables then
 		local throwables_visible = not dead and not hogtied and ability_extension ~= nil
-		local has_throwables = (ability_extension and self:_get_weapon_has_throwables(ability_extension)) or false
+		local has_throwables = ability_extension and self:_get_weapon_has_throwables(ability_extension) or false
 
 		if has_throwables ~= self._has_throwables or throwables_visible ~= self._throwables_visible then
 			self:_set_has_throwables(has_throwables, throwables_visible, ui_renderer)
@@ -313,13 +313,13 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		local time_manager = Managers.time
 		local has_gameplay_timer = time_manager:has_timer("gameplay")
 		local current_time = has_gameplay_timer and time_manager:time("gameplay")
-		local ready_time_to_spawn = has_gameplay_timer and ((hogtied and current_time) or game_mode_manager:player_time_until_spawn(player))
+		local ready_time_to_spawn = has_gameplay_timer and (hogtied and current_time or game_mode_manager:player_time_until_spawn(player))
 
 		self:_set_player_respawn_timer(current_time, ready_time_to_spawn, dead)
 	end
 
-	local toughness_percentage = (toughness_extension and toughness_extension:current_toughness_percent()) or 0
-	local max_toughness = (toughness_extension and toughness_extension.max_toughness and toughness_extension:max_toughness()) or 0
+	local toughness_percentage = toughness_extension and toughness_extension:current_toughness_percent() or 0
+	local max_toughness = toughness_extension and toughness_extension.max_toughness and toughness_extension:max_toughness() or 0
 
 	if supported_features.toughness then
 		local update_max_toughness = max_toughness ~= self._max_toughness
@@ -329,7 +329,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 		local bar_fraction, bar_ghost_fraction, bar_max_fraction = toughness_bar_logic:animated_health_fractions()
 
-		if (bar_fraction and bar_ghost_fraction) or update_max_toughness then
+		if bar_fraction and bar_ghost_fraction or update_max_toughness then
 			bar_fraction = bar_fraction or self._toughness_fraction or 0
 			bar_ghost_fraction = bar_ghost_fraction or self._toughness_ghost_fraction or 0
 
@@ -412,7 +412,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		end
 	end
 
-	local shadow_portrait = (player_status and true) or false
+	local shadow_portrait = player_status and true or false
 
 	if self._shadow_portrait ~= shadow_portrait then
 		self._shadow_portrait = shadow_portrait
@@ -437,11 +437,11 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.health then
-		local max_health = (health_extension and health_extension:max_health()) or 0
-		local max_wounds = ((not health_extension or knocked_down) and 1) or health_extension:max_wounds()
-		local permanent_damage = (health_extension and health_extension:permanent_damage_taken()) or 0
-		local health_percentage = (health_extension and health_extension:current_damaged_health_percent()) or 0
-		local health_max_percentage = (max_health > 0 and 1 - permanent_damage / max_health) or 0
+		local max_health = health_extension and health_extension:max_health() or 0
+		local max_wounds = (not health_extension or knocked_down) and 1 or health_extension:max_wounds()
+		local permanent_damage = health_extension and health_extension:permanent_damage_taken() or 0
+		local health_percentage = health_extension and health_extension:current_damaged_health_percent() or 0
+		local health_max_percentage = max_health > 0 and 1 - permanent_damage / max_health or 0
 		local health_bar_logic = self._health_bar_logic
 
 		health_bar_logic:update(dt, t, health_percentage, health_max_percentage)
@@ -452,7 +452,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		local update_max_health = max_health ~= self._max_health
 		local update_max_wounds = max_wounds ~= self._max_wounds
 
-		if (bar_fraction and bar_ghost_fraction) or update_max_health or update_max_wounds then
+		if bar_fraction and bar_ghost_fraction or update_max_health or update_max_wounds then
 			local force_update = disabled_state_updated or player_status_changed or update_max_wounds
 
 			self:_apply_health_fraction(bar_fraction, bar_ghost_fraction, bar_max_fraction, max_wounds, force_update)
@@ -486,13 +486,13 @@ HudElementPlayerPanelBase._set_toughness_hit_anim_progress = function (self, pro
 	local hit_indicator_style = widget.style.hit_indicator
 	local alpha = alpha_progress * max_alpha
 	hit_indicator_style.color[1] = alpha
-	local extra_size = (armor_break and 40) or 0
+	local extra_size = armor_break and 40 or 0
 	local size_addition = hit_indicator_style.size_addition
 	local default_size_addition = hit_indicator_style.default_size_addition
 	size_addition[1] = default_size_addition[1] + extra_size * anim_progress
 	size_addition[2] = default_size_addition[2] + extra_size * anim_progress
 	local hit_indicator_armor_break_style = widget.style.hit_indicator_armor_break
-	hit_indicator_armor_break_style.color[1] = (armor_break and alpha) or 0
+	hit_indicator_armor_break_style.color[1] = armor_break and alpha or 0
 	size_addition = hit_indicator_armor_break_style.size_addition
 	size_addition[1] = extra_size * anim_progress
 	size_addition[2] = extra_size * anim_progress
@@ -569,11 +569,11 @@ HudElementPlayerPanelBase._set_dead = function (self, is_dead, show_as_dead, ui_
 		local style = panel_background_widget.style
 
 		if style.health_icon then
-			style.health_icon.color[1] = (show_as_dead and 0) or 255
+			style.health_icon.color[1] = show_as_dead and 0 or 255
 		end
 
 		if style.toughness_icon then
-			style.toughness_icon.color[1] = (show_as_dead and 0) or 255
+			style.toughness_icon.color[1] = show_as_dead and 0 or 255
 		end
 
 		panel_background_widget.dirty = true
@@ -590,8 +590,8 @@ end
 HudElementPlayerPanelBase._set_shadowing_portrait = function (self, should_shadow)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
-	material_values.desaturation = (should_shadow and 1) or 0
-	material_values.intensity = (should_shadow and 0.25) or 1
+	material_values.desaturation = should_shadow and 1 or 0
+	material_values.intensity = should_shadow and 0.25 or 1
 	widget.dirty = true
 end
 
@@ -611,7 +611,7 @@ HudElementPlayerPanelBase._set_status_icon = function (self, status_icon, status
 		color[4] = status_color[4]
 	end
 
-	widget.content.visible = (status_icon and true) or false
+	widget.content.visible = status_icon and true or false
 	widget.dirty = true
 end
 
@@ -633,7 +633,7 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 	local total_current_ammo = 0
 	local total_max_ammo = 0
 
-	for i = 1, #weapon_slots, 1 do
+	for i = 1, #weapon_slots do
 		local slot_id = weapon_slots[i]
 		local inventory_component = unit_data_extension:read_component(slot_id)
 
@@ -662,7 +662,7 @@ HudElementPlayerPanelBase._set_has_throwables = function (self, has_throwables, 
 	local widget = self._widgets_by_name.throwable
 	local style = widget.style.texture
 	local icon_color = style.color
-	icon_color[1] = (has_throwables and 0) or 255
+	icon_color[1] = has_throwables and 0 or 255
 
 	self:_set_widget_visible(widget, visible, ui_renderer)
 
@@ -677,7 +677,7 @@ HudElementPlayerPanelBase._set_ammo_level = function (self, ammo_status, visible
 	local icon_style_name = "ammo"
 	local icon_style = style[icon_style_name]
 	local icon_color = icon_style.color
-	icon_color[1] = (is_empty and 255) or 0
+	icon_color[1] = is_empty and 255 or 0
 
 	self:_set_widget_visible(widget, visible, ui_renderer)
 
@@ -797,7 +797,7 @@ HudElementPlayerPanelBase._set_rich_presence = function (self, text, visible, ui
 	local rich_presence_widget = self._widgets_by_name.rich_presence
 
 	if rich_presence_widget then
-		rich_presence_widget.content.text = (visible and text) or ""
+		rich_presence_widget.content.text = visible and text or ""
 		rich_presence_widget.dirty = true
 
 		self:_set_widget_visible(rich_presence_widget, visible, ui_renderer)
@@ -879,10 +879,10 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 	local is_dead = self._dead
 	local knocked_down = self._knocked_down
 	local hogtied = self._hogtied
-	local health_max_wounds = ((is_dead or hogtied) and 0) or self._health_max_wounds or 1
+	local health_max_wounds = (is_dead or hogtied) and 0 or self._health_max_wounds or 1
 
 	if self._previously_drawn_health_segments and self._previously_drawn_health_segments ~= health_max_wounds then
-		for i = 1, #segment_widgets, 1 do
+		for i = 1, #segment_widgets do
 			local widget = segment_widgets[i]
 			local visible = i <= health_max_wounds
 
@@ -895,8 +895,8 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 	self._previously_drawn_health_segments = nil
 	self._draw_health_segments = nil
 	local health_fraction = self._health_fraction or 1
-	local health_ghost_fraction = (knocked_down and 0) or self._health_ghost_fraction
-	local health_max_fraction = (knocked_down and 1) or self._health_max_fraction
+	local health_ghost_fraction = knocked_down and 0 or self._health_ghost_fraction
+	local health_max_fraction = knocked_down and 1 or self._health_max_fraction
 	local num_segments = health_max_wounds
 	local spacing = 4
 	local bar_size = self:scenegraph_size("bar")
@@ -927,7 +927,7 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 		local segment_fraction_corruption = nil
 
 		if health_max_fraction then
-			local end_value = ((num_segments + 1) - i) * step_fraction
+			local end_value = (num_segments + 1 - i) * step_fraction
 			local start_value = end_value - step_fraction
 			segment_fraction_corruption = math.clamp((1 - health_max_fraction - start_value) / step_fraction, 0, 1)
 		end
@@ -957,7 +957,7 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 end
 
 HudElementPlayerPanelBase._apply_health_fraction = function (self, health_fraction, health_ghost_fraction, health_max_fraction, max_wounds, force_update)
-	local update = (force_update and true) or false
+	local update = force_update and true or false
 
 	if health_fraction ~= self._health_fraction then
 		update = true
@@ -998,7 +998,7 @@ HudElementPlayerPanelBase._apply_widget_number_text = function (self, widget_id,
 		local ignore_coloring = false
 		local health_texts = convert_number_to_display_texts(health_value, 3, zero_numeral_color, true, ignore_coloring)
 
-		for i = 1, 3, 1 do
+		for i = 1, 3 do
 			local key = "text_" .. i
 			text_widget.content[key] = health_texts[i] or ""
 		end
@@ -1018,9 +1018,9 @@ HudElementPlayerPanelBase._apply_color_values = function (self, destination_colo
 end
 
 HudElementPlayerPanelBase._animate_color_value_by_progress = function (self, target, progress, from, to, include_alpha)
-	local start_index = (include_alpha and 1) or 2
+	local start_index = include_alpha and 1 or 2
 
-	for i = start_index, 4, 1 do
+	for i = start_index, 4 do
 		target[i] = (to[i] - from[i]) * progress + from[i]
 	end
 end
@@ -1053,7 +1053,7 @@ HudElementPlayerPanelBase._update_coherency = function (self, coherency_extensio
 
 	local set_dirty = false
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local style_name = "texture_" .. i
 		local texture_style = style[style_name]
 		local texture_color = texture_style.color
@@ -1061,10 +1061,10 @@ HudElementPlayerPanelBase._update_coherency = function (self, coherency_extensio
 
 		if player_slot ~= temp_player_slots[i] then
 			local color = player_slot_colors[player_slot]
-			texture_color[1] = (color and 255) or 75
-			texture_color[2] = (color and color[2]) or coherency_disabled_color[2]
-			texture_color[3] = (color and color[3]) or coherency_disabled_color[3]
-			texture_color[4] = (color and color[4]) or coherency_disabled_color[4]
+			texture_color[1] = color and 255 or 75
+			texture_color[2] = color and color[2] or coherency_disabled_color[2]
+			texture_color[3] = color and color[3] or coherency_disabled_color[3]
+			texture_color[4] = color and color[4] or coherency_disabled_color[4]
 			set_dirty = true
 		end
 
@@ -1121,7 +1121,7 @@ HudElementPlayerPanelBase._draw_widgets = function (self, dt, t, input_service, 
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		if widget.dirty then
@@ -1150,7 +1150,7 @@ HudElementPlayerPanelBase._destroy_widgets = function (self, ui_renderer)
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		UIWidget.destroy(ui_renderer, widget)
@@ -1159,7 +1159,7 @@ HudElementPlayerPanelBase._destroy_widgets = function (self, ui_renderer)
 	local segment_widgets = self._health_bar_segment_widgets
 
 	if segment_widgets then
-		for i = 1, #segment_widgets, 1 do
+		for i = 1, #segment_widgets do
 			local widget = segment_widgets[i]
 
 			UIWidget.destroy(ui_renderer, widget)
@@ -1175,7 +1175,7 @@ HudElementPlayerPanelBase.set_dirty = function (self)
 	if visor_effect_widget_array then
 		local num_widgets = #visor_effect_widget_array
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = visor_effect_widget_array[i]
 			widget.dirty = true
 		end
@@ -1186,7 +1186,7 @@ HudElementPlayerPanelBase.set_dirty = function (self)
 	if health_bar_segment_widgets then
 		local num_widgets = #health_bar_segment_widgets
 
-		for i = 1, num_widgets, 1 do
+		for i = 1, num_widgets do
 			local widget = health_bar_segment_widgets[i]
 			widget.dirty = true
 		end

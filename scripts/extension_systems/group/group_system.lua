@@ -36,7 +36,7 @@ GroupSystem.init = function (self, extension_system_creation_context, ...)
 	if is_server then
 		local num_server_rpcs = #BOT_SERVER_RPCS
 
-		for i = 1, num_server_rpcs, 1 do
+		for i = 1, num_server_rpcs do
 			local rpc_name = BOT_SERVER_RPCS[i]
 			self[rpc_name] = _register_bot_rpc(rpc_name)
 		end
@@ -192,7 +192,7 @@ GroupSystem.bot_groups_from_sides = function (self, sides)
 	local bot_groups = self._bot_groups
 	local num_sides = #sides
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local side = sides[i]
 		local bot_group = bot_groups[side]
 
@@ -207,7 +207,7 @@ end
 GroupSystem.group_from_id = function (self, group_id)
 	local groups = self._groups
 
-	for i = 1, self._num_groups, 1 do
+	for i = 1, self._num_groups do
 		local group = groups[i]
 		local id = group.id
 
@@ -248,7 +248,7 @@ local function _get_group_average_position(group)
 	local average_position = Vector3(0, 0, 0)
 	local num_members = #members
 
-	for i = 1, num_members, 1 do
+	for i = 1, num_members do
 		local member_unit = members[i]
 		local position = Unit.world_position(member_unit, 1)
 		average_position = average_position + position
@@ -272,7 +272,7 @@ end
 GroupSystem._update_group_sfx = function (self)
 	local wwise_world = self._wwise_world
 
-	for i = 1, self._num_groups, 1 do
+	for i = 1, self._num_groups do
 		local group = self._groups[i]
 		local group_sfx = group.sfx
 
@@ -318,7 +318,7 @@ GroupSystem.start_group_sfx = function (self, group_id, start_event_name, stop_e
 
 	if self._is_server then
 		local start_event_id = NetworkLookup.sound_events[start_event_name]
-		local stop_event_id = (stop_event_name_or_nil and NetworkLookup.sound_events[stop_event_name_or_nil]) or nil
+		local stop_event_id = stop_event_name_or_nil and NetworkLookup.sound_events[stop_event_name_or_nil] or nil
 
 		Managers.state.game_session:send_rpc_clients("rpc_start_group_sfx", group_id, start_event_id, stop_event_id)
 	end
@@ -346,7 +346,7 @@ end
 
 GroupSystem.rpc_start_group_sfx = function (self, channel_id, group_id, start_event_id, stop_event_id)
 	local start_event_name = NetworkLookup.sound_events[start_event_id]
-	local stop_event_name = (stop_event_id and NetworkLookup.sound_events[stop_event_id]) or nil
+	local stop_event_name = stop_event_id and NetworkLookup.sound_events[stop_event_id] or nil
 
 	self:start_group_sfx(group_id, start_event_name, stop_event_name)
 end

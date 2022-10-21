@@ -195,7 +195,7 @@ HudElementMissionObjectivePopup._setup_mission_update_texts = function (self, wi
 	local icon_width = icon_style.size[1]
 	local spacing = 5
 	local total_width = text_width + icon_width + spacing
-	update_text_style.offset[1] = (icon_width + text_width * 0.5 + spacing) - total_width * 0.5
+	update_text_style.offset[1] = icon_width + text_width * 0.5 + spacing - total_width * 0.5
 	icon_style.offset[1] = icon_width * 0.5 - total_width * 0.5
 end
 
@@ -224,7 +224,7 @@ HudElementMissionObjectivePopup._register_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectivePopupSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:register(self, event[1], event[2])
@@ -235,7 +235,7 @@ HudElementMissionObjectivePopup._unregister_events = function (self)
 	local event_manager = Managers.event
 	local events = HudElementMissionObjectivePopupSettings.events
 
-	for i = 1, #events, 1 do
+	for i = 1, #events do
 		local event = events[i]
 
 		event_manager:unregister(self, event[1])

@@ -45,15 +45,15 @@ SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_
 	local seed = start_seed
 	local math_next_random = math.next_random
 
-	for i = 1, num_groups, 1 do
+	for i = 1, num_groups do
 		local group_positions = {}
 
-		for j = 1, num_sub_groups, 1 do
+		for j = 1, num_sub_groups do
 			local sub_group_positions = {}
 			local num_triangles = GwNavSpawnPoints_get_triangle_count(nav_spawn_points, i, j)
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
 
-			for k = 1, num_sub_group_spawn_points, 1 do
+			for k = 1, num_sub_group_spawn_points do
 				local start_triangle_index = nil
 				seed, start_triangle_index = math_next_random(seed, 1, num_triangles)
 				local found, position = GwNavSpawnPoints_get_spawn_point_position(nav_spawn_points, nav_world, i, j, start_triangle_index, min_free_radius, min_distance_to_others, nav_tag_cost_table)
@@ -94,7 +94,7 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 
 	Profiler.start("SpawnPointQueries.update_time_slice_nav_spawn_points")
 
-	for index = last_index + 1, num_groups, 1 do
+	for index = last_index + 1, num_groups do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
@@ -103,12 +103,12 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 
 		local group_positions = {}
 
-		for j = 1, num_sub_groups, 1 do
+		for j = 1, num_sub_groups do
 			local sub_group_positions = {}
 			local num_triangles = GwNavSpawnPoints_get_triangle_count(nav_spawn_points, index, j)
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
 
-			for k = 1, num_sub_group_spawn_points, 1 do
+			for k = 1, num_sub_group_spawn_points do
 				local start_triangle_index = nil
 				seed, start_triangle_index = math_next_random(seed, 1, num_triangles)
 				local found, position = GwNavSpawnPoints_get_spawn_point_position(nav_spawn_points, nav_world, index, j, start_triangle_index, min_free_radius, min_distance_to_others, nav_tag_cost_table)
@@ -158,11 +158,11 @@ SpawnPointQueries.occluded_positions_in_group = function (nav_world, nav_spawn_p
 	local occluded_positions = {}
 	local spawn_point_cost_table = Managers.state.main_path:spawn_point_cost_table()
 
-	for i = 1, num_sub_groups, 1 do
+	for i = 1, num_sub_groups do
 		local points = GwNavSpawnPoints.get_occluded_points(nav_spawn_points, nav_world, group_index, i, occluded_from_positions, spawn_point_cost_table)
 		local num_points = GwNavOccludedPointCollection.get_count(points)
 
-		for j = 1, num_points, 1 do
+		for j = 1, num_points do
 			occluded_positions[#occluded_positions + 1] = GwNavOccludedPointCollection.get_position(points, nav_world, j)
 		end
 	end
@@ -171,14 +171,14 @@ SpawnPointQueries.occluded_positions_in_group = function (nav_world, nav_spawn_p
 end
 
 local function _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, min_distance, max_distance)
-	for k = 1, #valid_enemy_player_units_positions, 1 do
+	for k = 1, #valid_enemy_player_units_positions do
 		local player_position = valid_enemy_player_units_positions[k]
 
 		for j = num_occluded_positions, 1, -1 do
 			local occluded_position = occluded_positions[j]
 			local distance = Vector3.distance(player_position, occluded_position)
 
-			if (min_distance and distance < min_distance) or (max_distance and max_distance < distance) then
+			if min_distance and distance < min_distance or max_distance and max_distance < distance then
 				table.remove(occluded_positions, j)
 
 				num_occluded_positions = num_occluded_positions - 1
@@ -204,7 +204,7 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 		local start_index = math.max(group_index - half_range, 1)
 		local end_index = math.min(group_index + half_range, num_groups)
 
-		for i = start_index, end_index, 1 do
+		for i = start_index, end_index do
 			if occluded_positions then
 				table.append(occluded_positions, SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions))
 			else

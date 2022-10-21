@@ -31,7 +31,7 @@ HudElementMissionObjective.is_synchronized_with_objective = function (self, obje
 		return false
 	end
 
-	if self._progression ~= objective:progression() or (self._has_second_progression and self._second_progression ~= objective:second_progression()) then
+	if self._progression ~= objective:progression() or self._has_second_progression and self._second_progression ~= objective:second_progression() then
 		return false
 	end
 
@@ -126,7 +126,7 @@ HudElementMissionObjective._add_unit_marker = function (self, unit)
 	local marker_callback = callback(self, "_cb_on_marker_spawned", unit)
 	local marker_type = self._marker_type or "objective"
 	local extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
-	local ui_target_type = (extension and extension:ui_target_type()) or "default"
+	local ui_target_type = extension and extension:ui_target_type() or "default"
 	local data = {
 		hud_element = self,
 		ui_target_type = ui_target_type,

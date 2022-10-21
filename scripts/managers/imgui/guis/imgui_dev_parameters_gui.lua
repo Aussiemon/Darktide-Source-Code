@@ -54,7 +54,7 @@ ImguiDevParametersGui._parse_config = function (self, config)
 	all_categories[#all_categories + 1] = "Uncategorized"
 	local categories = {}
 
-	for i = 1, #all_categories, 1 do
+	for i = 1, #all_categories do
 		local category = all_categories[i]
 
 		if widgets_by_category[category] then
@@ -93,9 +93,9 @@ ImguiDevParametersGui._create_widget_from_config = function (self, param_key, co
 		elseif config.vector3_input then
 			return InputWidgets.vector3.new(display_name, config.button_text, config.on_activated, config.num_decimals, config.width)
 		elseif config.number_button then
-			return InputWidgets.number_button.new(display_name, (config.button_text and config.button_text) or "Activate", config.on_activated, config.num_decimals, config.width)
+			return InputWidgets.number_button.new(display_name, config.button_text and config.button_text or "Activate", config.on_activated, config.num_decimals, config.width)
 		elseif config.debug_mission_input then
-			return InputWidgets.debug_mission_input.new(display_name, (config.button_text and config.button_text) or "Activate", config.on_activated, config.maps, config.circumstances, config.side_missions, config.default_value, config.width)
+			return InputWidgets.debug_mission_input.new(display_name, config.button_text and config.button_text or "Activate", config.on_activated, config.maps, config.circumstances, config.side_missions, config.default_value, config.width)
 		elseif config.get_function then
 			param_type = type(config.get_function())
 
@@ -107,7 +107,7 @@ ImguiDevParametersGui._create_widget_from_config = function (self, param_key, co
 				return InputWidgets.text_input.new(display_name, config.get_function, config.on_activated, true)
 			end
 		else
-			return InputWidgets.function_button.new(display_name, (config.button_text and config.button_text) or "Activate", config.on_activated)
+			return InputWidgets.function_button.new(display_name, config.button_text and config.button_text or "Activate", config.on_activated)
 		end
 	end
 
@@ -232,7 +232,7 @@ ImguiDevParametersGui._filter_list = function (self, filter_string, filter_func)
 
 	table.clear(filtered_widgets)
 
-	for i = 1, #filtered_widget_names, 1 do
+	for i = 1, #filtered_widget_names do
 		local widget_name = filtered_widget_names[i]
 		filtered_widgets[i] = widgets_by_name[widget_name]
 	end

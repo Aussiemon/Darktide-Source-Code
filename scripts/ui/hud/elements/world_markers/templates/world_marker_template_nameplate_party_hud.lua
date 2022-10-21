@@ -67,7 +67,7 @@ end
 template.on_enter = function (widget, marker)
 	local data = marker.data
 	local content = widget.content
-	content.header_text = "\ue004 " .. data:name()
+	content.header_text = " " .. data:name()
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)

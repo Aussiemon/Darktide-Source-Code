@@ -32,7 +32,7 @@ end
 UIConstantElements.using_input = function (self)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 
 		if element.using_input and element:using_input() then
@@ -57,7 +57,7 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 		visibility_groups_lookup[name] = settings
 	end
 
-	for definitions_index = 1, #element_definitions, 1 do
+	for definitions_index = 1, #element_definitions do
 		local definition = element_definitions[definitions_index]
 		local class_name = definition.class_name
 		local visibility_groups = definition.visibility_groups
@@ -65,7 +65,7 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 		local fallback_parameter_key = definition.visibility_group_parameters_fallback
 		local fallback_parameters = visibility_group_parameters and fallback_parameter_key and visibility_group_parameters[fallback_parameter_key]
 
-		for group_index = 1, #visibility_groups, 1 do
+		for group_index = 1, #visibility_groups do
 			local group_name = visibility_groups[group_index]
 			local visibility_group = visibility_groups_lookup[group_name]
 
@@ -88,7 +88,7 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 				group_parameters = self._visibility_group_parameters[group_name]
 			end
 
-			group_parameters[class_name] = (visibility_group_parameters and visibility_group_parameters[group_name]) or fallback_parameters
+			group_parameters[class_name] = visibility_group_parameters and visibility_group_parameters[group_name] or fallback_parameters
 		end
 	end
 end
@@ -153,7 +153,7 @@ UIConstantElements.update = function (self, dt, t, input_service)
 	local render_settings = self._render_settings
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
@@ -183,7 +183,7 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 	local elements_array = self._elements_array
 	local alpha_multiplier = render_settings.alpha_multiplier
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
@@ -237,7 +237,7 @@ UIConstantElements._update_element_visibility = function (self)
 	local visibility_groups = self._visibility_groups
 	local num_visibility_groups = #visibility_groups
 
-	for i = 1, num_visibility_groups, 1 do
+	for i = 1, num_visibility_groups do
 		local visibility_group = visibility_groups[i]
 		local group_name = visibility_group.name
 		local validation_function = visibility_group.validation_function
@@ -249,10 +249,10 @@ UIConstantElements._update_element_visibility = function (self)
 				local visible_elements = visibility_group.visible_elements
 				local visibility_group_parameters = self._visibility_group_parameters[group_name]
 
-				for j = 1, #elements_array, 1 do
+				for j = 1, #elements_array do
 					local element = elements_array[j]
 					local element_name = element.__class_name
-					local status = (visible_elements and visible_elements[element_name]) or false
+					local status = visible_elements and visible_elements[element_name] or false
 					local visibility_parameters = visibility_group_parameters and visibility_group_parameters[element_name]
 
 					element:set_visible(status, visibility_parameters)

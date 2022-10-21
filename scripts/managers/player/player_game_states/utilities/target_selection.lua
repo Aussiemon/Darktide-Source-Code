@@ -17,7 +17,7 @@ local TargetSelection = {
 		local max = math.max
 		local dot = Vector3.dot
 
-		for i = 1, hits_n, 1 do
+		for i = 1, hits_n do
 			local hit = hits[i]
 			local actor = hit[INDEX_ACTOR]
 			local hit_position = hit[INDEX_POSITION]

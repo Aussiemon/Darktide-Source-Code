@@ -45,14 +45,14 @@ MissionBoardExtension.pre_update = function (self, main_t, main_dt, input, sensi
 	elseif move_left then
 		movement = math.min(movement + acceleration * main_dt, wanted_speed)
 	elseif movement ~= 0 then
-		movement = (movement > 0 and math.max(movement - deceleration * main_dt, 0)) or math.min(movement + deceleration * main_dt, 0)
+		movement = movement > 0 and math.max(movement - deceleration * main_dt, 0) or math.min(movement + deceleration * main_dt, 0)
 	end
 
 	self._camera_movement = movement
 end
 
 MissionBoardExtension.zoom = function (self, zoom, node_name)
-	local camera_node_name = (zoom and "mission_board_zoom") or "mission_board"
+	local camera_node_name = zoom and "mission_board_zoom" or "mission_board"
 
 	if zoom then
 		local node_index = Unit.node(self._unit, node_name)

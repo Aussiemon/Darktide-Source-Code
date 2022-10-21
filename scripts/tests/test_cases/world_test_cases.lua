@@ -129,5 +129,3 @@ WorldTestCases = {
 		end)
 	end
 }
-
-return

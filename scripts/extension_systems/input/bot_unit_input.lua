@@ -83,7 +83,7 @@ BotUnitInput._store_ephemeral_input = function (self, input)
 	local ephemeral_actions = InputHandlerSettings.ephemeral_actions
 	local num_ephemeral_actions = #ephemeral_actions
 
-	for i = 1, num_ephemeral_actions, 1 do
+	for i = 1, num_ephemeral_actions do
 		local action_name = ephemeral_actions[i]
 		local input_value = input[action_name]
 
@@ -103,8 +103,8 @@ end
 
 BotUnitInput.set_aiming = function (self, aiming, soft, use_rotation)
 	self._aiming = aiming
-	self._aim_with_rotation = (use_rotation and aiming) or false
-	self._soft_aiming = (soft and aiming) or false
+	self._aim_with_rotation = use_rotation and aiming or false
+	self._soft_aiming = soft and aiming or false
 end
 
 BotUnitInput.set_look_at_player_unit = function (self, player_unit, rotation_allowed)
@@ -152,7 +152,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local current_goal = navigation_extension:current_goal()
 	local is_on_nav_mesh = navigation_extension.is_on_nav_mesh
 	local unit_position = POSITION_LOOKUP[unit]
-	local position_on_navmesh = (is_on_nav_mesh and navigation_extension:latest_position_on_nav_mesh()) or unit_position
+	local position_on_navmesh = is_on_nav_mesh and navigation_extension:latest_position_on_nav_mesh() or unit_position
 	local transition_jump = nil
 	local first_person_component = self._first_person_component
 	local camera_position = first_person_component.position
@@ -161,7 +161,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local character_state_component = self._character_state_component
 	local character_state_name = character_state_component.state_name
 	local on_ladder = character_state_name == "ladder_climbing"
-	local look_at_player_unit = (ALIVE[self._look_at_player_unit] and self._look_at_player_unit) or nil
+	local look_at_player_unit = ALIVE[self._look_at_player_unit] and self._look_at_player_unit or nil
 	local look_at_player_has_moved = look_at_player_unit and ScriptUnit.extension(look_at_player_unit, "locomotion_system").has_moved_from_start_position
 	local has_cinematic_finished = not Managers.state.cinematic:active()
 	local up = Vector3.up()
@@ -230,11 +230,11 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 			local transition_jump_valid = false
 
 			if transition_jump then
-				local bot_direction = (current_speed_sq < JUMP_DOT_USE_WANTED_DIR_EPS_SQ and flat_goal_direction) or flat_velocity_current_direction
+				local bot_direction = current_speed_sq < JUMP_DOT_USE_WANTED_DIR_EPS_SQ and flat_goal_direction or flat_velocity_current_direction
 				transition_jump_valid = MIN_JUMP_DIRECTION_DOT <= Vector3.dot(bot_direction, flat_goal_direction)
 			end
 
-			if (lower_hit and not upper_hit) or transition_jump_valid then
+			if lower_hit and not upper_hit or transition_jump_valid then
 				input.jump = true
 			elseif not lower_hit and upper_hit and (is_crouching or current_speed_sq <= STUCK_CROUCH_SPEED_THRESHOLD_SQ) then
 				input.crouching = true

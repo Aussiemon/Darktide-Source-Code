@@ -74,7 +74,7 @@ MissionVotingView.draw = function (self, dt, t, input_service, layer)
 		local offscreen_widgets = self._mission_details_widgets
 		local grid = self._details_list_grid
 
-		for i = 1, #offscreen_widgets, 1 do
+		for i = 1, #offscreen_widgets do
 			local widget = offscreen_widgets[i]
 
 			if grid:is_widget_visible(widget) then
@@ -97,6 +97,7 @@ MissionVotingView.cb_on_accept_mission_pressed = function (self)
 	local success, fail_reason = Managers.voting:cast_vote(self._voting_id, "yes")
 
 	if not success then
+		-- Nothing
 	end
 
 	self:_show_confirmed_message()
@@ -127,8 +128,8 @@ MissionVotingView.cb_on_toggle_details_pressed = function (self)
 		local show_details_flag = not self._is_showing_details
 		local params = {
 			show_details_flag = show_details_flag,
-			source_heights = (show_details_flag and self._main_page_heights) or self._details_page_heights,
-			target_heights = (show_details_flag and self._details_page_heights) or self._main_page_heights
+			source_heights = show_details_flag and self._main_page_heights or self._details_page_heights,
+			target_heights = show_details_flag and self._details_page_heights or self._main_page_heights
 		}
 		self._toggle_details_page_animation_id = self:_start_animation("switch_page", nil, params)
 	end
@@ -174,7 +175,7 @@ MissionVotingView._draw_widgets = function (self, dt, t, input_service, ui_rende
 	local additional_widgets = self._additional_widgets
 	local num_widgets = #additional_widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = additional_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
@@ -264,7 +265,7 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 
 	local mission_info_widget = self._widgets_by_name.mission_info
 	local mission_info_widget_content = mission_info_widget.content
-	local mission_title = (mission_settings.mission_name and self:_localize(mission_settings.mission_name)) or mission_data.map
+	local mission_title = mission_settings.mission_name and self:_localize(mission_settings.mission_name) or mission_data.map
 	mission_info_widget_content.mission_title = mission_title
 
 	self:_set_salary(mission_data)
@@ -362,7 +363,7 @@ MissionVotingView._create_details_widgets = function (self, content, scenegraph_
 	local widget_definitions = {}
 	local created_widgets = {}
 
-	for i = 1, #content, 1 do
+	for i = 1, #content do
 		local entry = content[i]
 		local template_name = entry.template
 		local template = templates[template_name]
@@ -403,7 +404,7 @@ MissionVotingView._layout_details_widgets = function (self, widgets, grid_sceneg
 		list_end_margin
 	}
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		alignment_list[#alignment_list + 1] = widgets[i]
 	end
 

@@ -19,7 +19,7 @@ local position_x = 0
 local position_y = 0
 local max_slots = table.size(slots_settings)
 
-for i = 1, max_slots, 1 do
+for i = 1, max_slots do
 	local scenegraph_id = "weapon_slot_" .. i
 	local position = {
 		screen_offset[1] + position_x,

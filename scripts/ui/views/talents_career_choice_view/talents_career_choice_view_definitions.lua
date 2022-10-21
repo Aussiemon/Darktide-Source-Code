@@ -211,7 +211,7 @@ local blueprints = {
 	}
 }
 
-for i = 1, 3, 1 do
+for i = 1, 3 do
 	local banner_position = {
 		banner_size[1] * (i - 1),
 		ViewStyles.banner_offset_y,
@@ -290,7 +290,7 @@ for i = 1, 3, 1 do
 	}, list_name .. "_mask")
 end
 
-for i = 1, 4, 1 do
+for i = 1, 4 do
 	local divider_position = {
 		(i - 1) * banner_size[1] - divider_size[1] / 2,
 		ViewStyles.banner_offset_y,
@@ -359,7 +359,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				params.talents_start_alpha = widgets.mask.alpha_multiplier or 0
-				params.talents_target_alpha = (params.banner_target_style.show_talents and 1) or 0
+				params.talents_target_alpha = params.banner_target_style.show_talents and 1 or 0
 				widgets.banner_widget.style.title.material = nil
 
 				if params.sound then

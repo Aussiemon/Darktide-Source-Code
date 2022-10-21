@@ -38,14 +38,14 @@ HitZone.initialize_lookup = function (unit, hit_zones)
 	local hit_zone_lookup = {}
 	local hit_zone_actors_lookup = {}
 
-	for ii = 1, #hit_zones, 1 do
+	for ii = 1, #hit_zones do
 		local hit_zone = hit_zones[ii]
 		local create_on_startup = hit_zone.create_on_startup
 		local actors = hit_zone.actors
 		local actors_lookup = {}
 		hit_zone_actors_lookup[hit_zone.name] = actors_lookup
 
-		for jj = 1, #actors, 1 do
+		for jj = 1, #actors do
 			local actor_name = actors[jj]
 
 			if create_on_startup then
@@ -67,7 +67,7 @@ local destroy_actor = Unit.destroy_actor
 HitZone.destroy_hit_zone = function (unit, hit_zone_lookup, hit_zone_actors_lookup, hit_zone_name)
 	local actor_names = hit_zone_actors_lookup[hit_zone_name]
 
-	for ii = 1, #actor_names, 1 do
+	for ii = 1, #actor_names do
 		local actor_name = actor_names[ii]
 		local actor = Unit_actor(unit, actor_name)
 		hit_zone_lookup[actor] = nil
@@ -97,7 +97,7 @@ HitZone.hit_zone_center_of_mass = function (target_unit, hit_zone_name, average_
 		position = Vector3.zero()
 		local num_actors = #target_hitzone_actors_names
 
-		for ii = 1, num_actors, 1 do
+		for ii = 1, num_actors do
 			position = position + _hit_zone_position(target_unit, target_hitzone_actors_names[ii])
 		end
 
@@ -111,7 +111,7 @@ end
 
 function _hit_zone_position(unit, actor_name)
 	local actor = Unit_actor(unit, actor_name)
-	local position = (Actor.is_dynamic(actor) and Actor.center_of_mass(actor)) or Actor.position(actor)
+	local position = Actor.is_dynamic(actor) and Actor.center_of_mass(actor) or Actor.position(actor)
 
 	return position
 end

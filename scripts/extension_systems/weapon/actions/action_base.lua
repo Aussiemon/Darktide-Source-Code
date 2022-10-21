@@ -78,7 +78,7 @@ end
 
 ActionBase.sensitivity_modifier = function (self, t)
 	local action_settings = self._action_settings
-	local sensitivity_modifier = (action_settings and action_settings.sensitivity_modifier) or 1
+	local sensitivity_modifier = action_settings and action_settings.sensitivity_modifier or 1
 
 	return sensitivity_modifier
 end

@@ -3,12 +3,12 @@ local WeaponTweaks = {}
 local function create_new(damage_profiles, parent_template_name, template_overrides)
 	local new_template = table.clone(damage_profiles[parent_template_name])
 
-	for i = 1, #template_overrides, 1 do
+	for i = 1, #template_overrides do
 		local overrides_table = template_overrides[i]
 		local num_keys = #overrides_table - 1
 		local entry = new_template
 
-		for j = 1, num_keys, 1 do
+		for j = 1, num_keys do
 			if j < num_keys then
 				local key = overrides_table[j]
 				entry = entry[key]

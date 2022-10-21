@@ -45,7 +45,7 @@ UnitCoherencyExtension.add_external_buff = function (self, buff_name)
 	if num_free_external_buff_indexes == 0 then
 		index = 1
 	else
-		for i = 1, num_free_external_buff_indexes, 1 do
+		for i = 1, num_free_external_buff_indexes do
 			local is_free = free_external_buff_indexes[i]
 
 			if is_free == true then
@@ -112,7 +112,7 @@ UnitCoherencyExtension.current_radius = function (self)
 		end
 	end
 
-	stickiness_limit = (stickiness_limit and stickiness_limit * modifier) or nil
+	stickiness_limit = stickiness_limit and stickiness_limit * modifier or nil
 
 	return radius, stickiness_limit
 end
@@ -197,7 +197,7 @@ local function _add_buff_to_lists(buff_name, should_be_active_buffs, unique_cohe
 		local coherency_priority = buff_template.coherency_priority or math.huge
 		local current_hightest_name = unique_coherency_buffs[coherency_id]
 		local current_hightest_buff = current_hightest_name and BuffTemplates[current_hightest_name]
-		local current_hightest_priority = (current_hightest_buff and current_hightest_buff.coherency_priority) or math.huge
+		local current_hightest_priority = current_hightest_buff and current_hightest_buff.coherency_priority or math.huge
 
 		if coherency_priority < current_hightest_priority then
 			unique_coherency_buffs[coherency_id] = buff_name
@@ -268,7 +268,7 @@ UnitCoherencyExtension.update_active_buffs = function (self, t)
 	for buff_name, number in pairs(should_be_active_buffs) do
 		local buff_indices = coherency_buff_indexes[buff_name] or {}
 
-		for i = 1, number, 1 do
+		for i = 1, number do
 			local _, local_index, component_index = self._buff_extension:add_externally_controlled_buff(buff_name, t)
 			local indices = {
 				local_index = local_index,

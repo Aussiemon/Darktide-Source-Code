@@ -42,9 +42,9 @@ SweepTrail.set_critical_strike = function (self, unit, is_enabled)
 	if self._critical_strike_trail_enabled ~= is_enabled then
 		local critical_strike_variable_name = self._critical_strike_variable_name
 		local critical_material_slot_names = self._critical_material_slot_names
-		local value = (is_enabled and 1) or 0
+		local value = is_enabled and 1 or 0
 
-		for i = 1, #critical_material_slot_names, 1 do
+		for i = 1, #critical_material_slot_names do
 			local material_slot_name = critical_material_slot_names[i]
 
 			Unit.set_scalar_for_material(unit, material_slot_name, critical_strike_variable_name, value)
@@ -62,9 +62,9 @@ SweepTrail.set_powered = function (self, unit, is_enabled)
 	if self._powered_trail_enabled ~= is_enabled then
 		local powered_variable_name = self._powered_variable_name
 		local powered_material_slot_names = self._powered_material_slot_names
-		local value = (is_enabled and 1) or 0
+		local value = is_enabled and 1 or 0
 
-		for i = 1, #powered_material_slot_names, 1 do
+		for i = 1, #powered_material_slot_names do
 			local material_slot_name = powered_material_slot_names[i]
 
 			Unit.set_scalar_for_material(unit, material_slot_name, powered_variable_name, value)

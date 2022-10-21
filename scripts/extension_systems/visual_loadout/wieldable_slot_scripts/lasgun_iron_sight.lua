@@ -10,7 +10,7 @@ LasgunIronSight.init = function (self, context, slot, weapon_template, fx_source
 		self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 		local num_attachments = #slot.attachments_1p
 
-		for i = 1, num_attachments, 1 do
+		for i = 1, num_attachments do
 			local attachment_unit = slot.attachments_1p[i]
 			local has_front_walls = Unit.has_visibility_group(attachment_unit, "front_walls")
 

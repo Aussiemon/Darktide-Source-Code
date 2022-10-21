@@ -6,7 +6,7 @@ ScalableFovCamera.parse_parameters = function (self, camera_settings, parent_nod
 
 	self._scale_function = camera_settings.scale_function
 	self._scale_variable = camera_settings.scale_variable
-	self._max_fov_offset = (camera_settings.fov_offset * math.pi) / 180
+	self._max_fov_offset = camera_settings.fov_offset * math.pi / 180
 	self._current_fov_offset = 0
 end
 

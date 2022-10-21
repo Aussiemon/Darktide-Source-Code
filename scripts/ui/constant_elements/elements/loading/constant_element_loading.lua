@@ -46,11 +46,11 @@ local ConstantElementLoading = class("ConstantElementLoading")
 ConstantElementLoading.init = function (self, parent, draw_layer, start_scale)
 	local view_settings_by_state = {}
 
-	for i = 1, #VIEW_SETTINGS, 1 do
+	for i = 1, #VIEW_SETTINGS do
 		local setting = VIEW_SETTINGS[i]
 		local valid_states = setting.valid_states
 
-		for j = 1, #valid_states, 1 do
+		for j = 1, #valid_states do
 			local state = valid_states[j]
 			local settings = view_settings_by_state[state]
 
@@ -70,7 +70,7 @@ end
 
 ConstantElementLoading.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local current_sub_state_name = Managers.ui:get_current_sub_state_name()
-	local current_state_name = (current_sub_state_name == "" and Managers.ui:get_current_state_name()) or current_sub_state_name
+	local current_state_name = current_sub_state_name == "" and Managers.ui:get_current_state_name() or current_sub_state_name
 
 	if current_state_name ~= self._current_state_name then
 		self:_on_state_changed(current_state_name)
@@ -91,12 +91,12 @@ ConstantElementLoading._on_state_changed = function (self, new_state_name)
 	Log.info("ConstantElementLoading", "State changed %s -> %s", self._current_state_name, new_state_name)
 
 	if current_settings then
-		for i = 1, #current_settings, 1 do
+		for i = 1, #current_settings do
 			local view_name = current_settings[i].view_name
 			local keep_view = false
 
 			if new_settings then
-				for j = 1, #new_settings, 1 do
+				for j = 1, #new_settings do
 					if new_settings[j].view_name == view_name then
 						Log.info("ConstantElementLoading", "Keeping view %q open from previous state", view_name)
 
@@ -120,7 +120,7 @@ end
 ConstantElementLoading._update_state_views = function (self, state_view_settings)
 	local valid_view_name = nil
 
-	for i = 1, #state_view_settings, 1 do
+	for i = 1, #state_view_settings do
 		local settings = state_view_settings[i]
 		local is_valid = settings.validation_func()
 
@@ -131,7 +131,7 @@ ConstantElementLoading._update_state_views = function (self, state_view_settings
 		end
 	end
 
-	for i = 1, #state_view_settings, 1 do
+	for i = 1, #state_view_settings do
 		local settings = state_view_settings[i]
 		local view_name = settings.view_name
 

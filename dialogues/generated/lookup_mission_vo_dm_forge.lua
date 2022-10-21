@@ -68,5 +68,3 @@ DialogueLookup[DialogueLookup_n + 32] = "mission_forge_tutorial_corruptor_done"
 DialogueLookup[DialogueLookup_n + 33] = "mission_forge_tutorial_corruptor_response"
 DialogueLookup[DialogueLookup_n + 34] = "mission_forge_use_elevator"
 DialogueLookup_n = DialogueLookup_n + 34
-
-return

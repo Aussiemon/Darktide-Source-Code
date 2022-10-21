@@ -293,7 +293,7 @@ local NUM_DIRECTIONS = RADIANS_RANGE / RADIANS_PER_DIRECTION
 BtGrenadierFollowAction._calculate_throw_directions = function (self, randomized_directions)
 	local current_radians = -(RADIANS_RANGE / 2)
 
-	for i = 1, NUM_DIRECTIONS, 1 do
+	for i = 1, NUM_DIRECTIONS do
 		current_radians = current_radians + RADIANS_PER_DIRECTION
 		local direction = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
 		randomized_directions[i] = Vector3Box(direction)

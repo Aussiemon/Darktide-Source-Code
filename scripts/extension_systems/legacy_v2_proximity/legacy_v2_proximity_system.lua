@@ -17,7 +17,7 @@ local legacy_extensions = {
 }
 local legacy_extension_lookup = {}
 
-for i = 1, #legacy_extensions, 1 do
+for i = 1, #legacy_extensions do
 	legacy_extension_lookup[legacy_extensions[i]] = true
 end
 
@@ -303,7 +303,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 			local check = proximity_data.check
 			local num_matching_units = 0
 
-			for i = 1, num_nearby_units, 1 do
+			for i = 1, num_nearby_units do
 				local nearby_unit = broadphase_result[i]
 
 				if nearby_unit ~= unit and check[nearby_unit] and HEALTH_ALIVE[nearby_unit] then
@@ -320,7 +320,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 				event_data.num_units = num_matching_units
 
 				if proximity_type == "friends_close" then
-					for i = 1, num_nearby_units, 1 do
+					for i = 1, num_nearby_units do
 						local nearby_unit = broadphase_result[i]
 
 						if nearby_unit ~= unit and check[nearby_unit] and HEALTH_ALIVE[nearby_unit] then
@@ -355,7 +355,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 			look_direction.z = 0
 			local num_nearby_units = Broadphase.query(special_units_broadphase, position, SPECIAL_PROXIMITY_DISTANCE, broadphase_result)
 
-			for i = 1, num_nearby_units, 1 do
+			for i = 1, num_nearby_units do
 				local nearby_unit = broadphase_result[i]
 				broadphase_result[i] = nil
 
@@ -467,7 +467,7 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 		local list = self._pseudo_sorted_list
 		local list_len = #list
 
-		for i = 1, num_units, 1 do
+		for i = 1, num_units do
 			local unit = broadphase_result[i]
 			broadphase_result[i] = nil
 			new_nearby[unit] = Vector3.distance_squared(POSITION_LOOKUP[unit], average_local_human_player_position)
@@ -613,7 +613,7 @@ LegacyV2ProximitySystem._process_distance_based_vo_query = function (self)
 	local broadphase_result = self._broadphase_result
 	local num_nearby_enemies = Broadphase.query(self._enemy_broadphase, position, HEARD_SPEAK_DEFAULT_DISTANCE, broadphase_result)
 
-	for i = 1, num_nearby_enemies, 1 do
+	for i = 1, num_nearby_enemies do
 		local enemy_unit = broadphase_result[i]
 		broadphase_result[i] = nil
 		local dialogue_extension = ScriptUnit.has_extension(enemy_unit, "dialogue_system")
@@ -625,7 +625,7 @@ LegacyV2ProximitySystem._process_distance_based_vo_query = function (self)
 
 	local num_nearby_players = Broadphase.query(self._player_units_broadphase, position, HEARD_SPEAK_DEFAULT_DISTANCE, broadphase_result)
 
-	for i = 1, num_nearby_players, 1 do
+	for i = 1, num_nearby_players do
 		local player_unit = broadphase_result[i]
 		broadphase_result[i] = nil
 
@@ -669,7 +669,7 @@ LegacyV2ProximitySystem._async_raycast_result_cb = function (self, id, hits, num
 
 	local hit_target = nil
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local hit_data = hits[i]
 		local hit_unit = Actor.unit(hit_data[INDEX_ACTOR])
 

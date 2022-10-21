@@ -32,7 +32,7 @@ local PowerLevel = {
 				scaled_power_level_section = (power_level - min_power_level_cap) * power_type_diff_ratio
 			else
 				local starting_bonus = starting_power_level_bonus * (1 - (power_level - min_power_level_cap) / starting_bonus_range)
-				scaled_power_level_section = ((power_level + starting_bonus) - min_power_level_cap) * power_type_diff_ratio
+				scaled_power_level_section = (power_level + starting_bonus - min_power_level_cap) * power_type_diff_ratio
 			end
 
 			scaled_power_level = min_power_level_cap + scaled_power_level_section
@@ -43,7 +43,7 @@ local PowerLevel = {
 		return scaled_power_level
 	end,
 	scale_by_charge_level = function (power_level, charge_level)
-		local scaled_power_level = (charge_level and charge_level * power_level) or power_level
+		local scaled_power_level = charge_level and charge_level * power_level or power_level
 
 		return scaled_power_level
 	end

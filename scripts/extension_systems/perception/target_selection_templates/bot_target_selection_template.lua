@@ -22,7 +22,7 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 	local aggroed_minion_target_units = side.aggroed_minion_target_units
 	local target_ally = perception_component.target_ally
 	local current_target_enemy = perception_component.target_enemy
-	current_target_enemy = (HEALTH_ALIVE[current_target_enemy] and current_target_enemy) or nil
+	current_target_enemy = HEALTH_ALIVE[current_target_enemy] and current_target_enemy or nil
 	local vector3_distance_squared = Vector3.distance_squared
 	local POSITION_LOOKUP = POSITION_LOOKUP
 	local should_fully_reevaluate = false
@@ -39,7 +39,7 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 		local proximity_i = 1
 		local num_target_units = #target_units
 
-		for i = 1, num_target_units, 1 do
+		for i = 1, num_target_units do
 			local target_unit = target_units[i]
 			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 			local target_breed = target_unit_data_extension:breed()
@@ -87,7 +87,7 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 			end
 		end
 
-		for i = proximity_i, #enemies_in_proximity, 1 do
+		for i = proximity_i, #enemies_in_proximity do
 			enemies_in_proximity[i] = nil
 		end
 
@@ -111,13 +111,7 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local target_breed = target_unit_data_extension:breed()
 		local melee_score, ranged_score, _, _, _ = _calculate_score(unit, target_unit, target_breed, target_distance_sq, melee_gestalt, ranged_gestalt, t, bot_group, current_target_enemy, target_ally, threat_units, debug_info_or_nil)
-
-		if ranged_score < melee_score then
-			new_target_enemy_type = "melee"
-		else
-			new_target_enemy_type = "ranged"
-		end
-
+		new_target_enemy_type = ranged_score < melee_score and "melee" or "ranged"
 		new_target_enemy = current_target_enemy
 		new_target_enemy_distance_sq = target_distance_sq
 	end

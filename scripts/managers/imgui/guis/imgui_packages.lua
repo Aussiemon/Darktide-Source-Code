@@ -25,7 +25,7 @@ end
 ImguiPackages._set_header_texts = function (...)
 	local num_columns = select("#", ...)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.text_colored(select(i, ...), unpack(ImguiPackages.HEADER))
 		Imgui.next_column()
 	end
@@ -36,7 +36,7 @@ ImguiPackages._set_column_widths = function (...)
 
 	Imgui.columns(num_columns, true)
 
-	for i = 1, num_columns, 1 do
+	for i = 1, num_columns do
 		Imgui.set_column_width(select(i, ...), i - 1)
 	end
 end
@@ -58,7 +58,7 @@ ImguiPackages.update = function (self, dt, t)
 				self._set_header_texts("ID", "Package name", "Load time", "Unload time")
 			end
 
-			for i = 1, #value, 1 do
+			for i = 1, #value do
 				local item = value[i]
 
 				Imgui.text(item.id)

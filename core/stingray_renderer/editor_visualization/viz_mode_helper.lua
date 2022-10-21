@@ -15,5 +15,3 @@ core.render_vis_on = function (settings)
 		core.vis_modes[render_setting] = prev_value
 	end
 end
-
-return

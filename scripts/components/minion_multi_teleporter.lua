@@ -235,7 +235,7 @@ MinionMultiTeleporter._editor_debug_draw = function (self, unit)
 		local smart_objects, smart_object_id_lookup = MinionMultiTeleporterQueries.generate_smart_objects(unit, nav_world, AVAILABLE_DESTINATION_TELEPORTERS)
 
 		if smart_objects then
-			for i = 1, #smart_objects, 1 do
+			for i = 1, #smart_objects do
 				local smart_object = smart_objects[i]
 				local smart_object_id = smart_object:id()
 				local entrance_position, exit_position = smart_object:get_entrance_exit_positions()

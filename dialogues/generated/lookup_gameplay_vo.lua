@@ -510,5 +510,3 @@ DialogueLookup[DialogueLookup_n + 253] = "zealot_start_revive_psyker"
 DialogueLookup[DialogueLookup_n + 254] = "zealot_start_revive_veteran"
 DialogueLookup[DialogueLookup_n + 255] = "zealot_start_revive_zealot"
 DialogueLookup_n = DialogueLookup_n + 255
-
-return

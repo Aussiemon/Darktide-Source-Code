@@ -13,7 +13,7 @@ EnvironmentBlend.register_environment = function (self, blend)
 	if layer > #blend_layers then
 		local start_index = math.max(1, #blend_layers)
 
-		for i = start_index, layer, 1 do
+		for i = start_index, layer do
 			if blend_layers[i] == nil then
 				blend_layers[i] = {}
 			end
@@ -68,7 +68,7 @@ EnvironmentBlend.blend_list = function (self, camera_pos, default_shading_enviro
 
 				if remaining_weight < total_layer_weight then
 					for _, weight_index in ipairs(weight_indices) do
-						blend_list[weight_index] = (blend_list[weight_index] * remaining_weight) / total_layer_weight
+						blend_list[weight_index] = blend_list[weight_index] * remaining_weight / total_layer_weight
 					end
 
 					remaining_weight = 0

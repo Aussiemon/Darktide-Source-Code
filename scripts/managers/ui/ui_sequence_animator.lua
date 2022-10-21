@@ -28,7 +28,7 @@ UISequenceAnimator.start_animation = function (self, parent, animation_sequence_
 	}
 	local times = self._active_animations[animation_id].times
 
-	for i = 1, #animation_sequence, 1 do
+	for i = 1, #animation_sequence do
 		local animation = animation_sequence[i]
 		local start_time = animation.start_time
 		local end_time = animation.end_time
@@ -69,7 +69,7 @@ UISequenceAnimator.update = function (self, dt, t)
 		local all_done = true
 		local animation_sequence = animation_definitions[animation_sequence_name]
 
-		for i = 1, #animation_sequence, 1 do
+		for i = 1, #animation_sequence do
 			local animation = animation_sequence[i]
 			local animation_name = animation.name
 			local start_time = times[(i - 1) * 2 + 1]
@@ -80,7 +80,7 @@ UISequenceAnimator.update = function (self, dt, t)
 			end
 
 			if (force_complete or start_time < time) and not completed_animations[animation.name] then
-				local local_progress = (force_complete and 1) or math.min((time - start_time) / (end_time - start_time), 1)
+				local local_progress = force_complete and 1 or math.min((time - start_time) / (end_time - start_time), 1)
 				local running_animations = data.running_animations
 
 				if not running_animations[animation_name] then

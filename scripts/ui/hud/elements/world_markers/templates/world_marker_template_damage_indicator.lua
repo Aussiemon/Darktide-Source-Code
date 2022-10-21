@@ -270,7 +270,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local unit = marker.unit
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 	local is_dead = not health_extension or not health_extension:is_alive()
-	local health_percent = (is_dead and 0) or health_extension:current_health_percent()
+	local health_percent = is_dead and 0 or health_extension:current_health_percent()
 	local max_health = Managers.state.difficulty:get_minion_max_health(content.breed.name)
 	local damage_taken = nil
 
@@ -336,7 +336,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local background_width = math.max(bar_width - ghost_bar_width - health_width, 0)
 		background_width = math.max(background_width - spacing, 0)
 		local background_style = style.background
-		background_style.offset[1] = (default_width_offset + bar_width) - background_width
+		background_style.offset[1] = default_width_offset + bar_width - background_width
 		background_style.size[1] = background_width
 		local health_max_style = style.health_max
 		local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
@@ -382,7 +382,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 		if visibility_delay then
 			visibility_delay = visibility_delay - dt
-			content.visibility_delay = (visibility_delay >= 0 and visibility_delay) or nil
+			content.visibility_delay = visibility_delay >= 0 and visibility_delay or nil
 
 			if not content.visibility_delay then
 				content.fade_delay = damage_number_settings.fade_delay
@@ -393,7 +393,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 		if fade_delay then
 			fade_delay = fade_delay - dt
-			content.fade_delay = (fade_delay >= 0 and fade_delay) or nil
+			content.fade_delay = fade_delay >= 0 and fade_delay or nil
 			local progress = math.clamp(fade_delay / damage_number_settings.fade_delay, 0, 1)
 			alpha_multiplier = alpha_multiplier * progress
 		elseif not visibility_delay then

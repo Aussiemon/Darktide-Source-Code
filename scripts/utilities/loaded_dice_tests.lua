@@ -9,7 +9,7 @@ local function _test_roll()
 	}
 	local weight_sum = 0
 
-	for i = 1, #weights, 1 do
+	for i = 1, #weights do
 		weight_sum = weight_sum + weights[i]
 	end
 
@@ -22,14 +22,14 @@ local function _test_roll()
 		0
 	}
 
-	for i = 1, tries, 1 do
+	for i = 1, tries do
 		local column = LoadedDice.roll(p, a)
 		count[column] = count[column] + 1
 	end
 
 	Log.debug("LoadedDice", "| Loaded Dice - Roll Test (%d rolls) |", tries)
 
-	for i = 1, #weights, 1 do
+	for i = 1, #weights do
 		local weight = weights[i]
 
 		Log.debug("LoadedDice", "Weight %d\t: Rolls %d\t(%05.2f%%) : [Wanted: %05.2f%%)]", weight, count[i], count[i] / tries * 100, weight / weight_sum * 100)
@@ -53,11 +53,11 @@ local function _test_roll_seeded()
 	local normalized_weights = Script.new_array(num_weights)
 	local weight_sum = 0
 
-	for i = 1, num_weights, 1 do
+	for i = 1, num_weights do
 		weight_sum = weight_sum + weights[i]
 	end
 
-	for i = 1, num_weights, 1 do
+	for i = 1, num_weights do
 		normalized_weights[i] = weights[i] / weight_sum
 	end
 
@@ -78,7 +78,7 @@ local function _test_roll_seeded()
 	local probabilities, alias = LoadedDice.create(weights, false)
 	local seed = start_seed
 
-	for i = 1, tries, 1 do
+	for i = 1, tries do
 		seed, column = LoadedDice.roll_seeded(probabilities, alias, seed)
 
 		fassert(column == result[i], TEST_FAILED_STRING, string.format("mismatching result from seeded roll (roll #%d : got %d expected %d)", i, column, result[i]))
@@ -87,7 +87,7 @@ local function _test_roll_seeded()
 	probabilities, alias = LoadedDice.create(normalized_weights, true)
 	seed = start_seed
 
-	for i = 1, tries, 1 do
+	for i = 1, tries do
 		seed, column = LoadedDice.roll_seeded(probabilities, alias, seed)
 
 		fassert(column == result[i], TEST_FAILED_STRING, string.format("mismatching result from seeded roll (roll #%d : got %d expected %d)", i, column, result[i]))

@@ -8,6 +8,7 @@ EACServerManager.init = function (self)
 	self._has_eac = self:has_eac()
 
 	if not self._has_eac then
+		-- Nothing
 	end
 
 	EOS.set_server(true)

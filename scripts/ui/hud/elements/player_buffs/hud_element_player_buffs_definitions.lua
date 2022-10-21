@@ -152,7 +152,7 @@ local buff_widget_definition = UIWidget.create_definition({
 	}
 }, "buff")
 
-for i = 1, MAX_BUFFS, 1 do
+for i = 1, MAX_BUFFS do
 	local name = "buff_" .. i
 	widget_definitions[name] = buff_widget_definition
 end

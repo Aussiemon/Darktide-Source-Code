@@ -97,7 +97,7 @@ ActionFlamerGas._acquire_targets = function (self, t)
 	local weapon_spread_extension = self._weapon_spread_extension
 	local num_rays_this_frame = 8
 
-	for i = 1, num_rays_this_frame, 1 do
+	for i = 1, num_rays_this_frame do
 		local bullseye = true
 		local ray_rotation = weapon_spread_extension:target_style_spread(rotation, i, num_rays_this_frame, 2, bullseye, spread_angle, spread_angle)
 		local direction = Quaternion.forward(ray_rotation)
@@ -109,7 +109,7 @@ ActionFlamerGas._acquire_targets = function (self, t)
 		if hits then
 			local num_hit_results = #hits
 
-			for j = 1, num_hit_results, 1 do
+			for j = 1, num_hit_results do
 				repeat
 					local hit = hits[j]
 					local hit_pos = hit[INDEX_POSITION]
@@ -135,7 +135,7 @@ ActionFlamerGas._acquire_targets = function (self, t)
 					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 					local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos)
 
-					if is_unit_blocking or (not health_extension and not buff_extension) then
+					if is_unit_blocking or not health_extension and not buff_extension then
 						stop = true
 
 						if i == 1 then
@@ -340,7 +340,7 @@ ActionFlamerGas._acquire_suppressed_units = function (self, t)
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local enemy_unit = broadphase_results[i]
 		local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
 		local flat_direction = Vector3.flat(enemy_unit_position - player_position)

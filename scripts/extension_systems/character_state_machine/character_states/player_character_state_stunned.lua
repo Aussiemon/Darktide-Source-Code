@@ -120,7 +120,7 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 		local is_wield_input = action_input and action_input == WIELD_ACTION_INPUT
 		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, self._inventory_component)
 		local wanted_weapon_template_or_nil = wanted_slot_name_or_nil and self._visual_loadout_extension:weapon_template_from_slot(wanted_slot_name_or_nil)
-		local weapon_keywords = (wanted_weapon_template_or_nil and wanted_weapon_template_or_nil.keywords) or NO_KEYWORDS
+		local weapon_keywords = wanted_weapon_template_or_nil and wanted_weapon_template_or_nil.keywords or NO_KEYWORDS
 		local wants_melee_weapon = wanted_weapon_template_or_nil and table.array_contains(weapon_keywords, "melee")
 
 		if wants_melee_weapon then
@@ -191,7 +191,7 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 	local disorientation_template = disorientation_templates[self._stunned_character_state_component.disorientation_type]
 	local stun_settings = disorientation_template.stun
 
-	if not switched_to_melee_while_interrupted and not stunned_character_state_component.exit_event_played and t > (stunned_character_state_component.start_time + math.max(stun_settings.stun_duration)) - 0.5 then
+	if not switched_to_melee_while_interrupted and not stunned_character_state_component.exit_event_played and t > stunned_character_state_component.start_time + math.max(stun_settings.stun_duration) - 0.5 then
 		stunned_character_state_component.exit_event_played = true
 		local end_anim = stun_settings.end_anim
 		local end_anim_3p = stun_settings.end_anim_3p or end_anim

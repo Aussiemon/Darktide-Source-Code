@@ -7,7 +7,7 @@ PerlinNoise.calculate_perlin_value = function (x, persistance, octaves, seed)
 	local frequency = 1
 	local amplitude = 1
 
-	for i = 0, octaves, 1 do
+	for i = 0, octaves do
 		total = total + _interpolated_noise(x * frequency, seed) * amplitude
 		max_value = max_value + amplitude
 		frequency = frequency * 2

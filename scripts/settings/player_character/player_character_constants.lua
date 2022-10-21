@@ -12,7 +12,7 @@ local RELOAD_STATES = {
 for _, reload_template in pairs(ReloadTemplates) do
 	local states = reload_template.states
 
-	for i = 1, #states, 1 do
+	for i = 1, #states do
 		local state_name = states[i]
 
 		if not table.contains(RELOAD_STATES, state_name) then
@@ -144,7 +144,7 @@ local constants = {
 		else
 			local friction_threshold = 7
 			local speed_threshold = 4
-			local friction_speed = (speed < speed_threshold and math.lerp(10, friction_threshold, speed / speed_threshold)) or friction_threshold
+			local friction_speed = speed < speed_threshold and math.lerp(10, friction_threshold, speed / speed_threshold) or friction_threshold
 
 			if slide_time < grace_time + lerp_time then
 				return math.lerp(0, friction_speed, (slide_time - grace_time) / lerp_time)
@@ -564,7 +564,7 @@ local inventory_component_data = constants.inventory_component_data
 local weapon_component_data = inventory_component_data.weapon
 
 for _, lookups in pairs(buff_target_component_lookups) do
-	for i = 1, #lookups, 1 do
+	for i = 1, #lookups do
 		local key = lookups[i]
 
 		fassert(weapon_component_data[key] == nil, "weapon_component_data already has %q defined.", key)
@@ -635,7 +635,7 @@ table.sort(slot_priorities, function (a, b)
 	return a.priority < b.priority
 end)
 
-for i = 1, #slot_priorities, 1 do
+for i = 1, #slot_priorities do
 	local slot_name = slot_priorities[i].slot_name
 	equip_order[#equip_order + 1] = slot_name
 end
@@ -662,7 +662,7 @@ end
 
 local buff_component_key_lookup = {}
 
-for i = 1, constants.max_component_buffs, 1 do
+for i = 1, constants.max_component_buffs do
 	buff_component_key_lookup[i] = {
 		template_name_key = "buff_" .. i .. "_template_name",
 		start_time_key = "buff_" .. i .. "_start_time",

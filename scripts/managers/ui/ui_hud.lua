@@ -32,7 +32,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name)
 	self._offscreen_targets = {}
 
-	for i = 1, #offscreen_target_definitions, 1 do
+	for i = 1, #offscreen_target_definitions do
 		local definition = offscreen_target_definitions[i]
 		local target_reference_name = definition.name
 		local viewport_type = definition.viewport_type
@@ -78,7 +78,7 @@ UIHud._setup_plane_unit = function (self)
 	local player_camera = self:player_camera()
 	local camera_unit = Camera.get_data(player_camera, "unit")
 	local unit_node = "hud_plane_transform"
-	local node = (unit_node and Unit.has_node(unit, unit_node) and Unit.node(unit, unit_node)) or 1
+	local node = unit_node and Unit.has_node(unit, unit_node) and Unit.node(unit, unit_node) or 1
 
 	World.link_unit(world, unit, node, camera_unit, 1)
 	Unit.set_local_position(unit, node, Vector3(0, 0.15, 0))
@@ -291,7 +291,7 @@ UIHud._add_element = function (self, definition, elements, elements_array)
 		local use_hud_scale = definition.use_hud_scale
 		local class = require(filename)
 		local draw_layer = 0
-		local hud_scale = (use_hud_scale and self:_hud_scale()) or RESOLUTION_LOOKUP.scale
+		local hud_scale = use_hud_scale and self:_hud_scale() or RESOLUTION_LOOKUP.scale
 		local element = class:new(self, draw_layer, hud_scale)
 		elements[class_name] = element
 		local id = #elements_array + 1
@@ -316,7 +316,7 @@ UIHud._update_element_visibility = function (self)
 	local element_offscreen_target_functions_by_element_name = self._element_offscreen_target_functions_by_element_name
 	local offscreen_targets = self._offscreen_targets
 
-	for i = 1, num_visibility_groups, 1 do
+	for i = 1, num_visibility_groups do
 		local visibility_group = visibility_groups[i]
 		local group_name = visibility_group.name
 		local validation_function = visibility_group.validation_function
@@ -328,7 +328,7 @@ UIHud._update_element_visibility = function (self)
 				local currently_visible_elements = self._currently_visible_elements
 				local visible_elements = visibility_group.visible_elements
 
-				for j = 1, #elements_array, 1 do
+				for j = 1, #elements_array do
 					local element = elements_array[j]
 					local element_name = element.__class_name
 					local render_target = offscreen_target_name_by_element_name[element_name]
@@ -340,7 +340,7 @@ UIHud._update_element_visibility = function (self)
 						ui_renderer = default_ui_renderer
 					end
 
-					local status = (visible_elements and visible_elements[element_name]) or false
+					local status = visible_elements and visible_elements[element_name] or false
 					local use_retained_mode = elements_hud_retained_mode_lookup[element_name]
 
 					if element.set_visible then
@@ -445,7 +445,7 @@ UIHud.update = function (self, dt, t, input_service)
 	local dragging_element = false
 	self._element_using_input = false
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
@@ -460,7 +460,7 @@ UIHud.update = function (self, dt, t, input_service)
 
 			if scenegraph_id then
 				if type(scenegraph_id) == "table" then
-					for j = 1, #scenegraph_id, 1 do
+					for j = 1, #scenegraph_id do
 						element_coordinator:refresh_coordinates(element, scenegraph_id[j])
 					end
 				else
@@ -492,7 +492,7 @@ UIHud.update = function (self, dt, t, input_service)
 
 			if scenegraph_id then
 				if type(scenegraph_id) == "table" then
-					for j = 1, #scenegraph_id, 1 do
+					for j = 1, #scenegraph_id do
 						dragging_element = dragging_element or element_coordinator:handle_scenegraph_coordinates(element, scenegraph_id[j], input_service, render_settings)
 					end
 				else
@@ -533,7 +533,7 @@ UIHud.draw = function (self, dt, t, input_service)
 	local elements_hud_retained_mode_lookup = self._elements_hud_retained_mode_lookup
 	local pass_number = 0
 
-	for i = 1, #offscreen_target_definitions, 1 do
+	for i = 1, #offscreen_target_definitions do
 		local definition = offscreen_target_definitions[i]
 		local name = definition.name
 		local renderer = offscreen_targets[name].ui_renderer
@@ -555,7 +555,7 @@ UIHud.draw = function (self, dt, t, input_service)
 
 	local num_elements_rendered = 0
 
-	for i = 1, #elements_array, 1 do
+	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
 
@@ -622,7 +622,7 @@ UIHud.draw = function (self, dt, t, input_service)
 		local size = Vector3(draw_width, draw_height, 0)
 		local offscreen_targets = self._offscreen_targets
 
-		for i = 1, #offscreen_target_definitions, 1 do
+		for i = 1, #offscreen_target_definitions do
 			local definition_name = offscreen_target_definitions[i].name
 			local name = offscreen_target_definitions[i].name
 			local offscreen_target_data = offscreen_targets[name]

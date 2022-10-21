@@ -103,7 +103,7 @@ local notification_blueprints = {
 				pass_type = "hotspot",
 				content_id = "hotspot",
 				change_function = function (content, style)
-					local highlight_progress = (content.anim_hover_progress and math.max(content.anim_select_progress, content.anim_hover_progress, content.anim_focus_progress)) or 0
+					local highlight_progress = content.anim_hover_progress and math.max(content.anim_select_progress, content.anim_hover_progress, content.anim_focus_progress) or 0
 					content.parent.highlight_progress = highlight_progress
 				end
 			},
@@ -149,7 +149,7 @@ local notification_blueprints = {
 					local progress_time = content.alert_anim_time or 0
 					progress_time = math.fmod(progress_time + dt, total_time)
 					content.alert_anim_time = progress_time
-					local progress = (progress_time <= anim_time and anim_time and progress_time / anim_time) or 1
+					local progress = progress_time <= anim_time and anim_time and progress_time / anim_time or 1
 					local size_addition = math.sirp(-style.size[1], 0, progress)
 					local style_size_additon = style.size_addition
 					style_size_additon[1] = size_addition
@@ -199,7 +199,7 @@ local notification_blueprints = {
 					return highlight_progress > 0
 				end,
 				change_function = function (content, style)
-					local highlight_progress = (content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress)) or 0
+					local highlight_progress = content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress) or 0
 					content.parent.join_highlight_progress = highlight_progress
 				end
 			},
@@ -241,7 +241,7 @@ local notification_blueprints = {
 				pass_type = "text",
 				value_id = "join_text",
 				change_function = function (content, style)
-					local default_color = (content.hotspot.disabled and style.disabled_color) or style.default_color
+					local default_color = content.hotspot.disabled and style.disabled_color or style.default_color
 					local text_color = style.text_color
 					local visibility_progress = content.highlight_progress
 					local hover_progress = content.join_highlight_progress
@@ -250,7 +250,7 @@ local notification_blueprints = {
 
 					ColorUtilities.color_lerp(default_color, style.hover_color, hover_progress, text_color, ignore_alpha)
 
-					style.material = (hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr") or nil
+					style.material = hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr" or nil
 				end,
 				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function
 			},
@@ -264,7 +264,7 @@ local notification_blueprints = {
 					return highlight_progress > 0
 				end,
 				change_function = function (content, style)
-					local highlight_progress = (content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress)) or 0
+					local highlight_progress = content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress) or 0
 					content.parent.remove_highlight_progress = highlight_progress
 				end
 			},
@@ -303,7 +303,7 @@ local notification_blueprints = {
 
 					ColorUtilities.color_lerp(style.default_color, style.hover_color, hover_progress, style.text_color, ignore_alpha)
 
-					style.material = (hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr") or nil
+					style.material = hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr" or nil
 				end,
 				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function
 			}

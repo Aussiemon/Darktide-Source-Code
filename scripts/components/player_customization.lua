@@ -136,7 +136,7 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 			local unit_array_size = Unit.data_table_size(unit, "attached_items") or 0
 
-			for i = 1, unit_array_size, 1 do
+			for i = 1, unit_array_size do
 				local attachment = Unit.get_data(unit, "attached_items", i)
 
 				if Unit.has_lod_object(attachment, "lod") then
@@ -155,7 +155,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 	local is_first_person = attach_settings.is_first_person
 	local in_editor = self._in_editor
 
-	for i = 1, #items, 1 do
+	for i = 1, #items do
 		local item = items[i]
 
 		if item then
@@ -182,7 +182,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 				if attachment_units then
 					local num_attachments = #attachment_units
 
-					for j = 1, num_attachments, 1 do
+					for j = 1, num_attachments do
 						Unit.set_data(item_unit, "attached_items", num_attachments - j + 1, attachment_units[j])
 					end
 				end
@@ -229,7 +229,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		if face_attachment_units then
 			local num_attachments = #face_attachment_units
 
-			for j = 1, num_attachments, 1 do
+			for j = 1, num_attachments do
 				Unit.set_data(face_unit, "attached_items", num_attachments - j + 1, face_attachment_units[j])
 			end
 		end
@@ -244,7 +244,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 
 		local face_material_overrides = self:get_data(self._unit, "face_material_overrides")
 
-		for i = 1, #face_material_overrides, 1 do
+		for i = 1, #face_material_overrides do
 			VisualLoadoutCustomization.apply_material_override(face_unit, self._unit, false, face_material_overrides[i], self._in_editor)
 		end
 	end

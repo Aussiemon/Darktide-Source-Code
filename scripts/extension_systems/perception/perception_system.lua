@@ -124,7 +124,7 @@ PerceptionSystem.update = function (self, context, dt, t)
 	local current_update_extension = self._current_update_extension
 	local counter = 1
 	local num_update_units = self._num_update_units - num_prioritized_update_units
-	local num_to_update = math.min(math.ceil((num_update_units * dt) / UPDATE_ALL_UNITS_TIME), num_update_units)
+	local num_to_update = math.min(math.ceil(num_update_units * dt / UPDATE_ALL_UNITS_TIME), num_update_units)
 
 	while counter <= num_to_update do
 		if current_update_unit and not prioritized_update_units[current_update_unit] then

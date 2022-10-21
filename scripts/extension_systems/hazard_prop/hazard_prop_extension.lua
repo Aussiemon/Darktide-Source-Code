@@ -31,14 +31,14 @@ HazardPropExtension._sort_colliders = function (self)
 	local intact_colliders = self._intact_colliders
 	local intact_collider_names = HazardPropSettings.intact_colliders[self._shape]
 
-	for i = 1, #intact_collider_names, 1 do
+	for i = 1, #intact_collider_names do
 		intact_colliders[#intact_colliders + 1] = Unit.actor(unit, intact_collider_names[i])
 	end
 
 	local broken_colliders = self._broken_colliders
 	local broken_collider_names = HazardPropSettings.broken_colliders[self._shape]
 
-	for i = 1, #broken_collider_names, 1 do
+	for i = 1, #broken_collider_names do
 		broken_colliders[#broken_colliders + 1] = Unit.actor(unit, broken_collider_names[i])
 	end
 end
@@ -154,13 +154,13 @@ HazardPropExtension._update_mesh_visuals = function (self)
 
 	local intact_colliders = self._intact_colliders
 
-	for i = 1, #intact_colliders, 1 do
+	for i = 1, #intact_colliders do
 		Actor.set_scene_query_enabled(intact_colliders[i], intact)
 	end
 
 	local broken_colliders = self._broken_colliders
 
-	for i = 1, #broken_colliders, 1 do
+	for i = 1, #broken_colliders do
 		Actor.set_scene_query_enabled(broken_colliders[i], not intact)
 	end
 end
@@ -208,7 +208,7 @@ HazardPropExtension.create_hazard = function (self)
 
 		Explosion.create_explosion(self._world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type)
 
-		for i = 1, HazardPropSettings.fire_settings.fire_node_count, 1 do
+		for i = 1, HazardPropSettings.fire_settings.fire_node_count do
 			local node_position = Unit.world_position(unit, Unit.node(unit, "c_fire" .. i))
 			local los_hit, hit_position, _, _ = PhysicsWorld.raycast(physics_world, node_position, Vector3.down(), HazardPropSettings.fire_settings.raycast_distance, "closest", "collision_filter", "filter_player_mover")
 

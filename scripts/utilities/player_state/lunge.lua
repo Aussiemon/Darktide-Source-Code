@@ -2,7 +2,7 @@ local Lunge = {
 	find_speed_settings_index = function (time_in_lunge, start_index, lunge_speed_at_times)
 		local speed_settings_index = #lunge_speed_at_times
 
-		for index = start_index, #lunge_speed_at_times, 1 do
+		for index = start_index, #lunge_speed_at_times do
 			if time_in_lunge <= lunge_speed_at_times[index].time_in_lunge then
 				speed_settings_index = index - 1
 
@@ -26,35 +26,37 @@ local Lunge = {
 		end
 
 		return speed
-	end,
-	calculate_lunge_total_time = function (distance, lunge_speed_at_times)
-		local time_step = GameParameters.fixed_time_step
-		local hit_end = false
-		local time_in_lunge = 0
-		local distance_travelled = 0
-
-		while not hit_end do
-			time_in_lunge = time_in_lunge + time_step
-			local start_point = 1
-			local current_speed_setting_index = Lunge.find_speed_settings_index(time_in_lunge, start_point, lunge_speed_at_times)
-			local speed = Lunge.find_current_lunge_speed(time_in_lunge, current_speed_setting_index, lunge_speed_at_times)
-
-			fassert(speed > 0, "Speed is 0, will never hit end.")
-
-			distance_travelled = distance_travelled + speed * time_step
-
-			if distance < distance_travelled then
-				hit_end = true
-			end
-		end
-
-		return time_in_lunge
-	end,
-	distance = function (lunge_template, has_target)
-		local distance = (has_target and lunge_template.has_target_distance) or lunge_template.distance
-
-		return distance
 	end
 }
+
+Lunge.calculate_lunge_total_time = function (distance, lunge_speed_at_times)
+	local time_step = GameParameters.fixed_time_step
+	local hit_end = false
+	local time_in_lunge = 0
+	local distance_travelled = 0
+
+	while not hit_end do
+		time_in_lunge = time_in_lunge + time_step
+		local start_point = 1
+		local current_speed_setting_index = Lunge.find_speed_settings_index(time_in_lunge, start_point, lunge_speed_at_times)
+		local speed = Lunge.find_current_lunge_speed(time_in_lunge, current_speed_setting_index, lunge_speed_at_times)
+
+		fassert(speed > 0, "Speed is 0, will never hit end.")
+
+		distance_travelled = distance_travelled + speed * time_step
+
+		if distance < distance_travelled then
+			hit_end = true
+		end
+	end
+
+	return time_in_lunge
+end
+
+Lunge.distance = function (lunge_template, has_target)
+	local distance = has_target and lunge_template.has_target_distance or lunge_template.distance
+
+	return distance
+end
 
 return Lunge

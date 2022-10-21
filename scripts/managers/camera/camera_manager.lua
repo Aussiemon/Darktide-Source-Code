@@ -254,11 +254,11 @@ CameraManager.shading_callback = function (self, world, shading_env, viewport, d
 
 		table.clear(merged_blend_list)
 
-		for i = 1, #environment_blend_list, 1 do
+		for i = 1, #environment_blend_list do
 			merged_blend_list[i] = environment_blend_list[i]
 		end
 
-		for i = 1, #mood_blend_list, 1 do
+		for i = 1, #mood_blend_list do
 			merged_blend_list[#merged_blend_list + 1] = mood_blend_list[i]
 		end
 
@@ -379,7 +379,7 @@ CameraManager.world_to_screen_position = function (self, viewport_name, world_po
 end
 
 CameraManager._remove_camera_node = function (self, camera_nodes, index)
-	for i = 1, index, 1 do
+	for i = 1, index do
 		local node_table = table.remove(camera_nodes, 1)
 
 		node_table.node:set_active(false)
@@ -605,7 +605,7 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 			if y < near_radius then
 				cd = x - cast_radius
 			else
-				cd = (x + (y - near_radius) / (smooth_radius - near_radius) * (len - x)) - cast_radius
+				cd = x + (y - near_radius) / (smooth_radius - near_radius) * (len - x) - cast_radius
 			end
 
 			if cast_distance > cd then
@@ -696,12 +696,12 @@ CameraManager.camera_effect_shake_event = function (self, event_name, source_uni
 end
 
 CameraManager.set_offset = function (self, x, y, z)
-	self._camera_offset = (self._camera_offset and self._camera_offset:store(Vector3(x, y, z))) or Vector3Box(x, y, z)
+	self._camera_offset = self._camera_offset and self._camera_offset:store(Vector3(x, y, z)) or Vector3Box(x, y, z)
 end
 
 CameraManager._apply_offset = function (self, current_data, t)
 	local new_data = current_data
-	local offset = (self._camera_offset and self._camera_offset:unbox()) or Vector3(0, 0, 0)
+	local offset = self._camera_offset and self._camera_offset:unbox() or Vector3(0, 0, 0)
 	local offset_x = offset.x
 	local offset_y = offset.y
 	local offset_z = offset.z
@@ -951,7 +951,7 @@ CameraManager._update_angular_velocity = function (self, dt, viewport_name)
 	if Quaternion.is_valid(camera_rot) and Quaternion.is_valid(last_rot) then
 		local rotation_delta = Quaternion.multiply(Quaternion.inverse(camera_rot), last_rot)
 		local angular_velocity_vector, angular_delta = Quaternion.decompose(rotation_delta)
-		self._angular_velocity = Vector3Box((angular_velocity_vector * angular_delta) / dt)
+		self._angular_velocity = Vector3Box(angular_velocity_vector * angular_delta / dt)
 	end
 
 	self._last_rotation = QuaternionBox(camera_rot)

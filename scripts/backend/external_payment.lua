@@ -86,10 +86,9 @@ local function get_platform_token()
 				return nil, string.format("get_xbs_token_async_result returned error_code=0x%x", error_code)
 			end
 		end)
-		return
+	else
+		return Promise.resolved(nil)
 	end
-
-	return Promise.resolved(nil)
 end
 
 local function show_xbox_purchase_ui(product_id)
@@ -300,7 +299,7 @@ ExternalPayment.get_options = function (self)
 			local options = body.options
 
 			for _, v in ipairs(options) do
-				self:_decorate_option(v, (platform_entitlements and platform_entitlements.data) or {})
+				self:_decorate_option(v, platform_entitlements and platform_entitlements.data or {})
 			end
 
 			local result = {

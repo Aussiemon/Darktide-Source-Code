@@ -194,7 +194,7 @@ PlayerHuskHealthExtension._calculate_num_wounds = function (self)
 	local max_wounds = self:max_wounds()
 	local max_health = self:max_health()
 	local permanent_damage = self:permanent_damage_taken()
-	local health_per_wound = (max_wounds > 0 and max_health / max_wounds) or 0
+	local health_per_wound = max_wounds > 0 and max_health / max_wounds or 0
 
 	if health_per_wound <= 0 then
 		return 0

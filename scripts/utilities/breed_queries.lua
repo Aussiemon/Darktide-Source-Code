@@ -15,17 +15,17 @@ local BreedQueries = {
 		local best_breeds = {}
 		local num_template_breed_tags = #template_breed_tags
 
-		for i = 1, #minion_list, 1 do
+		for i = 1, #minion_list do
 			local breed = minion_list[i]
 			local minion_breed_tags = breed.tags
 			local score, tag_amount = nil
 
-			for j = 1, num_template_breed_tags, 1 do
+			for j = 1, num_template_breed_tags do
 				local tags = template_breed_tags[j]
 				tag_amount = 0
 				score = 0
 
-				for k = 1, #tags, 1 do
+				for k = 1, #tags do
 					local tag = tags[k]
 
 					if minion_breed_tags[tag] then
@@ -49,7 +49,7 @@ local affordable_breeds = {}
 BreedQueries.pick_random_minion_by_points = function (minion_breeds, points)
 	table.clear_array(affordable_breeds, #affordable_breeds)
 
-	for i = 1, #minion_breeds, 1 do
+	for i = 1, #minion_breeds do
 		local breed = minion_breeds[i]
 		local cost = breed.point_cost
 
@@ -86,7 +86,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 		breed_index = breed_index + 1
 	end
 
-	for i = 1, #breed_lists, 1 do
+	for i = 1, #breed_lists do
 		local spawner = spawners[i]
 		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, target_side_id, nil, optional_mission_objective_id, nil, optional_attack_selection_template_name)
 		local spawner_queue_id = spawned_minion_data.spawner_queue_id

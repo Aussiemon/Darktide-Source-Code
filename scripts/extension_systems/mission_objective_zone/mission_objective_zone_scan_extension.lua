@@ -59,7 +59,7 @@ MissionObjectiveZoneScanExtension.hot_join_sync = function (self, unit, sender, 
 	local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
 	local scannable_units = self._scannable_units
 
-	for i = 1, #scannable_units, 1 do
+	for i = 1, #scannable_units do
 		local scannable_unit = scannable_units[i]
 		local level_scannable_id = Managers.state.unit_spawner:level_index(scannable_unit)
 
@@ -166,7 +166,7 @@ MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (
 
 	local random_table, _ = table.generate_random_table(1, #scannable_units, self._seed)
 
-	for i = 1, num_scannables_in_zone, 1 do
+	for i = 1, num_scannables_in_zone do
 		local index = random_table[i]
 		local selected_unit = scannable_units[index]
 		selected_units[#selected_units + 1] = selected_unit
@@ -250,7 +250,7 @@ MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function 
 	if scannable_extensions and #scannable_extensions > 0 then
 		local scannable_count = #scannable_extensions
 
-		for i = 1, scannable_count, 1 do
+		for i = 1, scannable_count do
 			if player_incapacitated then
 				local scannable_extension = scannable_extensions[i]
 
@@ -305,7 +305,7 @@ MissionObjectiveZoneScanExtension.add_scanned_points_to_player = function (self,
 
 	if scanned_points > 0 then
 		local current_scanned_points = self._scanned_objects_per_player[player]
-		new_scan_points = (current_scanned_points and current_scanned_points + scanned_points) or scanned_points
+		new_scan_points = current_scanned_points and current_scanned_points + scanned_points or scanned_points
 	end
 
 	self._scanned_objects_per_player[player] = new_scan_points
@@ -362,7 +362,7 @@ MissionObjectiveZoneScanExtension.activate_zone = function (self)
 		local selected_scannable_units = self:_select_scannable_units_for_event()
 		local num_scannable_units = #selected_scannable_units
 
-		for i = 1, num_scannable_units, 1 do
+		for i = 1, num_scannable_units do
 			local scannable_unit_extension = ScriptUnit.extension(selected_scannable_units[i], "mission_objective_zone_scannable_system")
 
 			scannable_unit_extension:set_active(true)

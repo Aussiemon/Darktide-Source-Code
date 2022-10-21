@@ -68,7 +68,7 @@ MissionIntroView.draw = function (self, dt, t, input_service, layer)
 	local debug_ui = false
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
-	local ui_renderer = (debug_ui and self._ui_renderer) or self._ui_offscreen_renderer
+	local ui_renderer = debug_ui and self._ui_renderer or self._ui_offscreen_renderer
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
@@ -154,7 +154,7 @@ MissionIntroView.on_exit = function (self)
 	local spawn_slots = self._spawn_slots
 	local num_slots = #spawn_slots
 
-	for i = 1, num_slots, 1 do
+	for i = 1, num_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then
@@ -215,7 +215,7 @@ MissionIntroView._get_free_slot_id = function (self, player)
 	local prioritized_ogryn_slots = MissionIntroViewSettings.prioritized_ogryn_slots
 
 	if is_ogryn then
-		for i = 1, #prioritized_ogryn_slots, 1 do
+		for i = 1, #prioritized_ogryn_slots do
 			local slot_index = prioritized_ogryn_slots[i]
 			local slot = spawn_slots[slot_index]
 
@@ -224,7 +224,7 @@ MissionIntroView._get_free_slot_id = function (self, player)
 			end
 		end
 	else
-		for i = 1, #spawn_slots, 1 do
+		for i = 1, #spawn_slots do
 			if not table.find(prioritized_ogryn_slots, i) then
 				local slot = spawn_slots[i]
 
@@ -235,7 +235,7 @@ MissionIntroView._get_free_slot_id = function (self, player)
 		end
 	end
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if not slot.occupied then
@@ -247,7 +247,7 @@ end
 MissionIntroView._player_slot_id = function (self, unique_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied and slot.unique_id == unique_id then
@@ -265,13 +265,13 @@ MissionIntroView._setup_spawn_slots = function (self)
 	local spawn_slots = {}
 	local num_players = 4
 
-	for i = 1, num_players, 1 do
+	for i = 1, num_players do
 		local spawn_point_unit = spawn_point_units[i]
 		local initial_position = Unit.world_position(spawn_point_unit, 1)
 		local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
 		local profile_spawner = UIProfileSpawner:new("MissionIntroView_" .. i, world, camera, unit_spawner)
 
-		for j = 1, #ignored_slots, 1 do
+		for j = 1, #ignored_slots do
 			local slot_name = ignored_slots[j]
 
 			profile_spawner:ignore_slot(slot_name)
@@ -293,7 +293,7 @@ end
 MissionIntroView.event_mission_intro_trigger_players_event = function (self, animation_event)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then
@@ -307,7 +307,7 @@ end
 MissionIntroView._update_player_slots = function (self, dt, t, input_service)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots, 1 do
+	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 
 		if slot.occupied then
@@ -343,7 +343,7 @@ MissionIntroView._assign_player_slots = function (self)
 
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #temp_sorted_players, 1 do
+	for i = 1, #temp_sorted_players do
 		local player = temp_sorted_players[i]
 		local unique_id = player:unique_id()
 		local slot_id = self:_player_slot_id(unique_id)

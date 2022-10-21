@@ -249,7 +249,7 @@ FirstRunSettingsView._change_settings_page = function (self, next_index)
 	local page_number_widget = self._widgets_by_name.page_number
 
 	if current_widgets then
-		for i = 1, #current_widgets, 1 do
+		for i = 1, #current_widgets do
 			local widget = current_widgets[i]
 			local widget_name = widget.name
 
@@ -257,7 +257,7 @@ FirstRunSettingsView._change_settings_page = function (self, next_index)
 		end
 	end
 
-	for i = 1, #settings_widgets, 1 do
+	for i = 1, #settings_widgets do
 		local setting_template = settings_widgets[i]
 		local widget_type = setting_template.widget_type
 		local template_function = template_functions[widget_type]
@@ -291,9 +291,9 @@ FirstRunSettingsView._create_setting_widget = function (self, widget_options, su
 
 	fassert(template, "[FirstRunSettingsView] - Could not find content blueprint for type: %s", widget_type)
 
-	local size = (template.size_function and template.size_function(self, widget_options)) or template.size
+	local size = template.size_function and template.size_function(self, widget_options) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = (pass_template_function and pass_template_function(self, widget_options)) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, widget_options) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 
 	if widget_definition then
@@ -342,7 +342,7 @@ end
 FirstRunSettingsView._update_settings_widgets = function (self, dt, t, input_service)
 	local settings = self._current_settings_widgets
 
-	for i = 1, #settings, 1 do
+	for i = 1, #settings do
 		local widget = settings[i]
 		local widget_type = widget.type
 		local template = ContentBlueprints[widget_type]
@@ -393,7 +393,7 @@ FirstRunSettingsView._draw_grid = function (self, dt, t, input_service)
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
-	for j = 1, #widgets, 1 do
+	for j = 1, #widgets do
 		local widget = widgets[j]
 
 		if grid:is_widget_visible(widget) then

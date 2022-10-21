@@ -56,7 +56,7 @@ local target_selection_template = {
 		local lock_target = perception_component.lock_target
 
 		if not lock_target then
-			for i = 1, #target_units, 1 do
+			for i = 1, #target_units do
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit then

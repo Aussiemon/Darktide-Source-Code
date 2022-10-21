@@ -118,7 +118,7 @@ ScriptUnit.optimize = function (unit)
 		if disable_shadows then
 			local num_meshes = Unit.num_meshes(unit)
 
-			for i = 1, num_meshes, 1 do
+			for i = 1, num_meshes do
 				Unit.set_mesh_visibility(unit, i, false, VisibilityContexts.SHADOW_CASTER_CONTEXT)
 			end
 		end
@@ -128,7 +128,7 @@ ScriptUnit.optimize = function (unit)
 		if disable_physics then
 			local num_actors = Unit.num_actors(unit)
 
-			for i = 1, num_actors, 1 do
+			for i = 1, num_actors do
 				Unit.destroy_actor(unit, i)
 			end
 		end

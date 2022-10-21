@@ -79,7 +79,7 @@ SplineCurve.get_travel_dist_to_spline_point = function (self, point_index)
 	local spline_points = self._splines
 	local travel_dist = 0
 
-	for i = 1, point_index, 1 do
+	for i = 1, point_index do
 		local data = spline_points[i]
 		local segment_length = data.length
 		travel_dist = travel_dist + segment_length
@@ -93,7 +93,7 @@ SplineCurve.get_point_at_distance = function (self, dist)
 	local spline_class = self._spline_class
 	local travel_dist = 0
 
-	for i = 1, #spline_points, 1 do
+	for i = 1, #spline_points do
 		if self._num_points < i then
 			break
 		end

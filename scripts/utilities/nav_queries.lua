@@ -128,10 +128,10 @@ NavQueries.position_near_nav_position = function (nav_position, check_direction,
 	local best_distance_sq = -math.huge
 	local angle_sign = 1
 
-	for i = 0, CHECKS_PER_DIRECTION, 1 do
-		local directions_to_check = (i > 0 and 2) or 1
+	for i = 0, CHECKS_PER_DIRECTION do
+		local directions_to_check = i > 0 and 2 or 1
 
-		for j = 1, directions_to_check, 1 do
+		for j = 1, directions_to_check do
 			local angle = angle_sign * ANGLE_INCREMENT * i
 			local rotation = Quaternion_axis_angle(Vector3.up(), angle)
 			local new_direction = Quaternion_rotate(rotation, check_direction)

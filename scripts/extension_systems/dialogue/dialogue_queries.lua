@@ -29,7 +29,7 @@ DialogueQueries = {
 
 			local accumulator = 0
 
-			for i = 1, dialogue.sound_events_n, 1 do
+			for i = 1, dialogue.sound_events_n do
 				temp_weight_table[i] = dialogue.sound_event_weights[i] + accumulator
 				temp_indexes[i] = i
 				accumulator = accumulator + dialogue.sound_event_weights[i]
@@ -37,7 +37,7 @@ DialogueQueries = {
 
 			local temp_weight_table_n = dialogue.sound_events_n
 
-			for i = 1, dialogue.sound_events_n, 1 do
+			for i = 1, dialogue.sound_events_n do
 				if temp_weight_table_n == 1 then
 					dialogue.randomize_indexes[i] = temp_indexes[1]
 
@@ -47,7 +47,7 @@ DialogueQueries = {
 				local rand = math.random()
 				local selected_index = 1
 
-				for temp_index = 1, temp_weight_table_n, 1 do
+				for temp_index = 1, temp_weight_table_n do
 					if rand <= temp_weight_table[temp_index] then
 						selected_index = temp_index
 
@@ -56,7 +56,7 @@ DialogueQueries = {
 				end
 
 				dialogue.randomize_indexes[i] = temp_indexes[selected_index]
-				local length_selected = temp_weight_table[selected_index] - ((selected_index == 1 and 0) or temp_weight_table[selected_index - 1])
+				local length_selected = temp_weight_table[selected_index] - (selected_index == 1 and 0 or temp_weight_table[selected_index - 1])
 
 				table.remove(temp_weight_table, selected_index)
 				table.remove(temp_indexes, selected_index)

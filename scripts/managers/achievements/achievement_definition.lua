@@ -63,13 +63,13 @@ end
 AchievementDefinition.label = function (self, unlocalized)
 	local label = string.format("loc_achievement_%s_name", self._id)
 
-	return (unlocalized and label) or Localize(label)
+	return unlocalized and label or Localize(label)
 end
 
 AchievementDefinition.description = function (self, unlocalized)
 	local description = string.format("loc_achievement_%s_description", self._description_id)
 
-	return (unlocalized and description) or Localize(description, true, self._description_table)
+	return unlocalized and description or Localize(description, true, self._description_table)
 end
 
 AchievementDefinition.icon = function (self)

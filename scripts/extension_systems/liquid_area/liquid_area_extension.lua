@@ -144,7 +144,7 @@ LiquidAreaExtension._fill_neighbors = function (self, liquid, num_directions, de
 	local neighbors = liquid.neighbors
 	local next_depth = depth - 1
 
-	for neighbor_index = 1, num_directions, 1 do
+	for neighbor_index = 1, num_directions do
 		local neighbor_real_index = neighbors[neighbor_index]
 
 		if neighbor_real_index then
@@ -190,7 +190,7 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 	local GwNavQueries_raycango = GwNavQueries.raycango
 	local directions, num_directions = grid:directions()
 
-	for index = 1, num_directions, 1 do
+	for index = 1, num_directions do
 		local direction = directions[index]
 		local offset_i = direction.i
 		local offset_j = direction.j
@@ -283,7 +283,7 @@ LiquidAreaExtension._set_filled = function (self, real_index)
 	local neighbors = liquid.neighbors
 	local _, num_directions = self._grid:directions()
 
-	for index = 1, num_directions, 1 do
+	for index = 1, num_directions do
 		local neighbor_real_index = neighbors[index]
 
 		if neighbor_real_index and not flow[neighbor_real_index] then
@@ -387,7 +387,7 @@ LiquidAreaExtension.is_position_inside = function (self, position)
 
 	local real_index = grid:real_index_from_ijk(i, j, k)
 	local liquid = self._flow[real_index]
-	local is_inside = (liquid and liquid.full) or false
+	local is_inside = liquid and liquid.full or false
 
 	return is_inside
 end
@@ -445,7 +445,7 @@ LiquidAreaExtension.post_update = function (self, unit, dt, t)
 		self._transmit_wait_t = transmit_wait_t
 	end
 
-	if (size > 0 and transmit_wait_t < t) or FORCE_SEND_AMOUNT <= size then
+	if size > 0 and transmit_wait_t < t or FORCE_SEND_AMOUNT <= size then
 		self:_transmit_set_filled(set_filled_buffer, size)
 
 		self._transmit_wait_t = nil
@@ -477,7 +477,7 @@ LiquidAreaExtension._transmit_set_filled = function (self, set_filled_buffer, si
 		until size == 0
 
 		if send_array_i > 0 then
-			for i = send_array_i + 1, max_send_array_size, 1 do
+			for i = send_array_i + 1, max_send_array_size do
 				set_filled_send_array[i] = nil
 			end
 
@@ -550,7 +550,7 @@ LiquidAreaExtension._update_flow = function (self, dt)
 		local neighbors = liquid.neighbors
 		local flow_angle = liquid.angle
 
-		for i = 1, num_directions, 1 do
+		for i = 1, num_directions do
 			repeat
 				local neighbor_real_index = neighbors[i]
 
@@ -593,7 +593,7 @@ LiquidAreaExtension._update_flow = function (self, dt)
 			until true
 		end
 
-		for i = 1, fill_list_index, 1 do
+		for i = 1, fill_list_index do
 			local entry = fill_list[i]
 			local weight = entry.weight
 			local flow_fraction = weight / total_weight
@@ -659,7 +659,7 @@ LiquidAreaExtension._calculate_broadphase_size = function (self)
 	local max_distance_sq = -math.huge
 	local center_position = (max_position + min_position) / 2
 
-	for i = 1, num_liquid, 1 do
+	for i = 1, num_liquid do
 		local position = TEMP_POSITIONS[i]
 		local distance_sq = Vector3_distance_squared(center_position, position)
 
@@ -736,7 +736,7 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 	local broadphase_radius = self._broadphase_radius
 	local num_results = broadphase:query(broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local unit = BROADPHASE_RESULTS[i]
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
@@ -754,7 +754,7 @@ LiquidAreaExtension._is_unit_colliding = function (self, grid, unit)
 	local flow = self._flow
 	local unit_position = POSITION_LOOKUP[unit]
 
-	for index = 0, 1, 1 do
+	for index = 0, 1 do
 		local i, j, k = grid:ijk_from_position(unit_position + index * Vector3.up())
 
 		if grid:is_out_of_bounds(i, j, k) then

@@ -59,14 +59,14 @@ HudElementBlocking._update_shield_amount = function (self)
 		local segment_spacing = HudElementBlockingSettings.spacing
 		local total_segment_spacing = segment_spacing * math.max(shield_amount - 1, 0)
 		local total_bar_length = bar_size[1] - total_segment_spacing
-		self._shield_width = math.round((shield_amount > 0 and total_bar_length / shield_amount) or total_bar_length)
+		self._shield_width = math.round(shield_amount > 0 and total_bar_length / shield_amount or total_bar_length)
 		local widget = self._shield_widget
 
 		self:_set_scenegraph_size("shield", self._shield_width)
 
 		local add_shields = amount_difference < 0
 
-		for i = 1, math.abs(amount_difference), 1 do
+		for i = 1, math.abs(amount_difference) do
 			if add_shields then
 				self:_add_shield()
 			else
@@ -89,7 +89,7 @@ HudElementBlocking._update_visibility = function (self, dt)
 			local sprint_component = player_unit_data:read_component("sprint_character_state")
 			local stamina_component = player_unit_data:read_component("stamina")
 
-			if (block_component and block_component.is_blocking) or (sprint_component and sprint_component.is_sprinting) or (stamina_component and stamina_component.current_fraction < 1) then
+			if block_component and block_component.is_blocking or sprint_component and sprint_component.is_sprinting or stamina_component and stamina_component.current_fraction < 1 then
 				draw = true
 			end
 		end

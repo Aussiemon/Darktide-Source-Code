@@ -92,7 +92,7 @@ MinionSpawnerExtension.clear_all_spawns = function (self)
 end
 
 MinionSpawnerExtension.is_spawning = function (self)
-	return (self._next_spawn_time and true) or false
+	return self._next_spawn_time and true or false
 end
 
 MinionSpawnerExtension.spawned_minions_by_queue_id = function (self, queue_id)

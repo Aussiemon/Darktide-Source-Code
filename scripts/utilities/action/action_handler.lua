@@ -132,7 +132,7 @@ ActionHandler._update_action = function (self, handler_data, action, dt, t)
 	local time_in_action = t - start_t
 	local is_done = action:fixed_update(dt, t, time_in_action)
 	local is_infinite_duration = component.is_infinite_duration
-	local end_t = (is_infinite_duration and math.huge) or component.end_t
+	local end_t = is_infinite_duration and math.huge or component.end_t
 
 	self:_update_timeline_anims(action, t, start_t, end_t)
 
@@ -230,7 +230,7 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	component.time_scale = time_scale
 	component.sprint_ready_time = sprint_ready_time
 	local is_infinite = total_time == math.huge
-	component.end_t = (is_infinite and t) or t + total_time
+	component.end_t = is_infinite and t or t + total_time
 	component.is_infinite_duration = is_infinite
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
@@ -284,7 +284,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local num_applied_stat_buffs = 0
 	local total_modifier = 0
 
-	for i = 1, #action_stat_buff_keywords, 1 do
+	for i = 1, #action_stat_buff_keywords do
 		local keyword = action_stat_buff_keywords[i]
 		local stat_buff_value = stat_buffs[keyword]
 
@@ -429,8 +429,7 @@ ActionHandler._handle_action_input_on_stop_action = function (self, id, t, runni
 
 	if stop_input then
 		self._action_input_extension:action_transitioned_with_automatic_input(id, stop_input, t)
-	elseif self._alternate_fire_component.is_active then
-	else
+	elseif not self._alternate_fire_component.is_active then
 		self._action_input_extension:clear_input_queue_and_sequences(id)
 	end
 
@@ -621,7 +620,7 @@ ActionHandler._validate_chain_action = function (self, chain_action, t, current_
 	local chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
 	local chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
 	local chain_validated = nil
-	chain_validated = not chain_time or (((chain_time and chain_time <= current_action_t) or (chain_until and current_action_t <= chain_until)) and true)
+	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or chain_until and current_action_t <= chain_until) and true
 	local action_name = chain_action.action_name
 	local action_settings = actions[action_name]
 	local action_is_validated = chain_validated and self:_validate_action(action_settings, condition_func_params, t, used_input)
@@ -670,7 +669,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 		local conditional_state_to_action_input = template.conditional_state_to_action_input or EMPTY_TABLE
 		local conditional_state_funcs = self._conditional_state_functions
 
-		for i = 1, #conditional_state_to_action_input, 1 do
+		for i = 1, #conditional_state_to_action_input do
 			local conditional_state_config = conditional_state_to_action_input[i]
 			local conditional_state = conditional_state_config.conditional_state
 			local func = conditional_state_funcs[conditional_state]
@@ -712,7 +711,7 @@ ActionHandler._check_new_actions = function (self, handler_data, actions, condit
 		local action_settings = running_action:action_settings()
 		local start_t = component.start_t
 		local is_infinite_duration = component.is_infinite_duration
-		local end_t = (is_infinite_duration and math.huge) or component.end_t
+		local end_t = is_infinite_duration and math.huge or component.end_t
 		local allow_chain_actions = running_action:allow_chain_actions()
 
 		if allow_chain_actions then

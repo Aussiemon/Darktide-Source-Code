@@ -175,14 +175,14 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 		local slot_index = scroll_wield_order[wielded_slot]
 
 		if slot_index then
-			local next_slot_index = math.clamp((wield_prev and slot_index - 1) or slot_index + 1, 1, #scroll_wield_order)
+			local next_slot_index = math.clamp(wield_prev and slot_index - 1 or slot_index + 1, 1, #scroll_wield_order)
 			next_slot_name = scroll_wield_order[next_slot_index]
 		end
 	end
 
 	if next_slot_name then
 		return next_slot_name
-	elseif wield_input == "quick_wield" or ((wield_prev or wield_next) and not next_slot_name) then
+	elseif wield_input == "quick_wield" or (wield_prev or wield_next) and not next_slot_name then
 		next_slot_name = quick_wield_configuration[wielded_slot]
 		next_slot_name = next_slot_name or quick_wield_configuration.default
 
@@ -237,7 +237,7 @@ PlayerUnitVisualLoadout.slot_flow_event = function (first_person_extension, visu
 		end
 
 		if attachments_1p then
-			for i = 1, #attachments_1p, 1 do
+			for i = 1, #attachments_1p do
 				local attachment_unit = attachments_1p[i]
 
 				unit_flow_event(attachment_unit, flow_event_name)
@@ -249,7 +249,7 @@ PlayerUnitVisualLoadout.slot_flow_event = function (first_person_extension, visu
 		end
 
 		if attachments_3p then
-			for i = 3, #attachments_3p, 1 do
+			for i = 3, #attachments_3p do
 				local attachment_unit = attachments_3p[i]
 
 				unit_flow_event(attachment_unit, flow_event_name)

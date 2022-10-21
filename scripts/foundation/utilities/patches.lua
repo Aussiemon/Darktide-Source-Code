@@ -18,9 +18,9 @@ if IS_XBS then
 			local t = UserSettings
 			local num_args = select("#", ...)
 
-			for i = 1, num_args - 2, 1 do
+			for i = 1, num_args - 2 do
 				local key = select(i, ...)
-				t[key] = (type(t[key]) == "table" and t[key]) or {}
+				t[key] = type(t[key]) == "table" and t[key] or {}
 				t = t[key]
 			end
 
@@ -43,7 +43,7 @@ if IS_XBS then
 			local t = UserSettings
 			local num_args = select("#", ...)
 
-			for i = 1, num_args - 1, 1 do
+			for i = 1, num_args - 1 do
 				local key = select(i, ...)
 				t = t[key]
 
@@ -76,5 +76,3 @@ if IS_XBS then
 		PATCHED_USER_SETTINGS = true
 	end
 end
-
-return

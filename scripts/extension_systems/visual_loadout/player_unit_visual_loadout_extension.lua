@@ -122,14 +122,20 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	end
 
 	self._mission = mission
-	self._game_object_created = not is_server
+
+	if is_server then
+		self._game_object_created = false
+	else
+		self._game_object_created = true
+	end
+
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 	local initial_items = extension_init_data.initial_items
 	local optional_existing_unit_3p = nil
 	local fixed_frame_t = extension_init_context.fixed_frame_t
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 
-	for i = 1, #slot_equip_order, 1 do
+	for i = 1, #slot_equip_order do
 		local slot_name = slot_equip_order[i]
 		local item = initial_items[slot_name]
 
@@ -164,7 +170,7 @@ PlayerUnitVisualLoadoutExtension.game_object_initialized = function (self, sessi
 	self._wieldable_slot_scripts_context.game_session = session
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 
-	for i = 1, #slot_equip_order, 1 do
+	for i = 1, #slot_equip_order do
 		local slot_name = slot_equip_order[i]
 		local slot = self._equipment[slot_name]
 		local slot_config = self._slot_configuration[slot_name]
@@ -177,7 +183,7 @@ PlayerUnitVisualLoadoutExtension.game_object_initialized = function (self, sessi
 			else
 				local item = slot.item
 				local item_id = NetworkLookup.player_item_names[item.name]
-				local optional_existing_unit_3p_id = (slot.use_existing_unit_3p and Managers.state.unit_spawner:game_object_id(slot.unit_3p)) or NetworkConstants.invalid_game_object_id
+				local optional_existing_unit_3p_id = slot.use_existing_unit_3p and Managers.state.unit_spawner:game_object_id(slot.unit_3p) or NetworkConstants.invalid_game_object_id
 
 				Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_to_slot", self._player:channel_id(), object_id, slot_id, item_id, optional_existing_unit_3p_id)
 			end
@@ -464,7 +470,7 @@ PlayerUnitVisualLoadoutExtension.hot_join_sync = function (self, unit, sender)
 	local game_object_id = self._game_object_id
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 
-	for i = 1, #slot_equip_order, 1 do
+	for i = 1, #slot_equip_order do
 		local slot_name = slot_equip_order[i]
 		local slot = self._equipment[slot_name]
 		local slot_config = self._slot_configuration[slot_name]
@@ -476,7 +482,7 @@ PlayerUnitVisualLoadoutExtension.hot_join_sync = function (self, unit, sender)
 				RPC.rpc_player_equip_item_from_profile_to_slot(channel, game_object_id, slot_id)
 			else
 				local item_id = NetworkLookup.player_item_names[slot.item.name]
-				local optional_existing_unit_3p_id = (slot.use_existing_unit_3p and Managers.state.unit_spawner:game_object_id(slot.unit_3p)) or NetworkConstants.invalid_game_object_id
+				local optional_existing_unit_3p_id = slot.use_existing_unit_3p and Managers.state.unit_spawner:game_object_id(slot.unit_3p) or NetworkConstants.invalid_game_object_id
 
 				RPC.rpc_player_equip_item_to_slot(channel, game_object_id, slot_id, item_id, optional_existing_unit_3p_id)
 			end
@@ -503,7 +509,7 @@ PlayerUnitVisualLoadoutExtension.equip_item_to_slot = function (self, item, slot
 			Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_from_profile_to_slot", self._player:channel_id(), self._game_object_id, slot_id)
 		else
 			local item_id = NetworkLookup.player_item_names[item.name]
-			local optional_existing_unit_3p_id = (optional_existing_unit_3p and Managers.state.unit_spawner:game_object_id(optional_existing_unit_3p)) or NetworkConstants.invalid_game_object_id
+			local optional_existing_unit_3p_id = optional_existing_unit_3p and Managers.state.unit_spawner:game_object_id(optional_existing_unit_3p) or NetworkConstants.invalid_game_object_id
 
 			Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_to_slot", self._player:channel_id(), self._game_object_id, slot_id, item_id, optional_existing_unit_3p_id)
 		end
@@ -519,7 +525,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
-	local deform_overrides = (item.deform_overrides and table.clone(item.deform_overrides)) or {}
+	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
 	local profile = self._player:profile()
 
 	if profile.gender == "female" then
@@ -830,7 +836,7 @@ PlayerUnitVisualLoadoutExtension._update_item_visibility = function (self, first
 	if slot_scripts then
 		local num_scripts = #slot_scripts
 
-		for i = 1, num_scripts, 1 do
+		for i = 1, num_scripts do
 			local wieldable_slot_script = slot_scripts[i]
 
 			wieldable_slot_script:update_first_person_mode(first_person_mode)

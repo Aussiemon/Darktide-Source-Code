@@ -100,13 +100,13 @@ ActionDebugDrawer._draw_chain_actions = function (self, gui, anchor_position, an
 		local chain_time = chain_action.chain_time or 0
 		local chain_start_t = chain_time / time_scale
 		local chain_end_t = action_settings.total_time / time_scale
-		local chain_time_window = (chain_end_t == math.huge and 1) or (chain_end_t - chain_start_t) / action_timeline
+		local chain_time_window = chain_end_t == math.huge and 1 or (chain_end_t - chain_start_t) / action_timeline
 		local offset_y = CHAIN_ACTION_BAR_OFFSET_Y * (chain_action_index - 1)
 		local chain_time_start = bar_size_x * chain_start_t / action_timeline
-		local pos = Vector3((anchor_position.x + anchor_size.x / 2) - bar_size_x / 2 + chain_time_start, anchor_position.y + CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
+		local pos = Vector3(anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + chain_time_start, anchor_position.y + CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
 		local chain_bar_size_x = bar_size_x * chain_time_window
 		local size = Vector2(chain_bar_size_x, CHAIN_ACTION_BAR_SIZE_Y)
-		local chain_color = (chain_action.auto_chain and Color.red()) or Color.cheeseburger()
+		local chain_color = chain_action.auto_chain and Color.red() or Color.cheeseburger()
 
 		Gui.rect(gui, pos, size, chain_color)
 
@@ -127,8 +127,8 @@ ActionDebugDrawer._draw_timeline_indicator = function (self, gui, anchor_positio
 	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
 	local action_timeline = action_end_t - action_start_t
 	local current_t = latest_fixed_t - action_start_t
-	local p = (action_timeline == 0 and 0) or current_t / action_timeline
-	local pos_x = (anchor_position.x + anchor_size.x / 2) - bar_size_x / 2 + bar_size_x * p
+	local p = action_timeline == 0 and 0 or current_t / action_timeline
+	local pos_x = anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + bar_size_x * p
 	local pos_y = anchor_position.y + 23
 	local pos = Vector3(pos_x, pos_y, DRAWER_LAYER + 2)
 	local chain_action_size_y = _chain_actions_size_y(self._action_settings)
@@ -148,9 +148,9 @@ ActionDebugDrawer._draw_timeline_bars = function (self, gui, anchor_position, an
 	local action_timeline = _action_timeline(self._weapon_action_component, action_settings)
 	local timeline_bar_layer = DRAWER_LAYER + 1
 
-	for timeline_i = 1, #timeline_bars, 1 do
+	for timeline_i = 1, #timeline_bars do
 		local timeline_bar = timeline_bars[timeline_i]
-		local pos_x = (anchor_position.x + anchor_size.x / 2) - bar_size_x / 2
+		local pos_x = anchor_position.x + anchor_size.x / 2 - bar_size_x / 2
 		local pos_y = anchor_position.y + chain_action_size_y + TIMELINEBAR_POS_Y + TIMELINEBAR_OFFSET_Y * (timeline_i - 1)
 		local pos = Vector3(pos_x, pos_y, timeline_bar_layer)
 		local size = Vector2(bar_size_x, TIMELINEBAR_SIZE_Y)
@@ -159,7 +159,7 @@ ActionDebugDrawer._draw_timeline_bars = function (self, gui, anchor_position, an
 
 		local indicators = timeline_bar.indicators
 
-		for indicator_i = 1, #indicators, 1 do
+		for indicator_i = 1, #indicators do
 			local indicator = indicators[indicator_i]
 			local p = indicator.time / action_timeline
 			local x = pos_x + bar_size_x * p
@@ -179,7 +179,7 @@ ActionDebugDrawer._draw_variables = function (self, gui, anchor_position)
 	local chain_action_size_y = _chain_actions_size_y(self._action_settings)
 	local font_size = 14
 
-	for i = 1, #variables, 1 do
+	for i = 1, #variables do
 		local variable = variables[i]
 		local source = variable.source
 		local id = variable.id

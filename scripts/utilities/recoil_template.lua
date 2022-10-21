@@ -6,7 +6,7 @@ RecoilTemplate.generate_offset_range = function (num_shots, offset_pitch, offset
 	local scale_values_pitch = scale_values.pitch
 	local scale_values_yaw = scale_values.yaw
 
-	for ii = 1, num_shots, 1 do
+	for ii = 1, num_shots do
 		local this_pitch = offset_pitch * scale_values_pitch[ii]
 		local this_yaw = offset_yaw * scale_values_yaw[ii]
 		offset_range[ii] = {
@@ -33,13 +33,13 @@ RecoilTemplate.create_scale = function (scale_values)
 	local current_pitch = 0
 	local current_yaw = 0
 
-	for ii = 1, #scale_values, 1 do
+	for ii = 1, #scale_values do
 		local scale_value = scale_values[ii]
 		local index = scale_value[1]
 		local values = scale_value[2]
 		local steps = index - current_index
 
-		for jj = 1, steps, 1 do
+		for jj = 1, steps do
 			current_index = current_index + 1
 			local this_pitch = lerp(current_pitch, values[1], jj / steps)
 			local this_yaw = lerp(current_yaw, values[2], jj / steps)

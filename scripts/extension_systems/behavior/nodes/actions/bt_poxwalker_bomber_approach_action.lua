@@ -288,7 +288,7 @@ BtPoxwalkerBomberApproachAction._set_state_max_speed = function (self, breed, sc
 
 	if state == "walking" then
 		local walk_speeds = action_data.walk_speeds
-		new_speed = (walk_speeds and walk_speeds[scratchpad.current_walk_anim_event]) or action_data.walk_speed or breed.walk_speed
+		new_speed = walk_speeds and walk_speeds[scratchpad.current_walk_anim_event] or action_data.walk_speed or breed.walk_speed
 	elseif state == "running" then
 		new_speed = action_data.move_speed or breed.run_speed
 	end

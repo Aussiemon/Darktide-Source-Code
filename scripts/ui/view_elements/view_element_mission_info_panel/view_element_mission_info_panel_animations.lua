@@ -25,7 +25,7 @@ animations.sequence_animations.resize_mission_window = {
 				fade_in_widgets = {}
 				local widget_names = _mission_info_panel_widgets
 
-				for i = 1, #widget_names, 1 do
+				for i = 1, #widget_names do
 					local name = widget_names[i]
 					local widget = widgets_by_name[name]
 					fade_in_widgets[#fade_in_widgets + 1] = widget
@@ -34,7 +34,7 @@ animations.sequence_animations.resize_mission_window = {
 				params.fade_in_widgets = fade_in_widgets
 			end
 
-			for i = 1, #fade_in_widgets, 1 do
+			for i = 1, #fade_in_widgets do
 				fade_in_widgets[i].visible = true
 			end
 		end,
@@ -43,14 +43,14 @@ animations.sequence_animations.resize_mission_window = {
 			local alpha_multiplier = math.lerp(params.original_alpha, 1, eased_progress)
 			local widgets = params.fade_in_widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = alpha_multiplier
 			end
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local widgets = params.fade_in_widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
 		end
@@ -172,7 +172,7 @@ animations.sequence_animations.resize_mission_window = {
 			panel_content.flash_mission = flag_flash and not flag_locked
 			panel_content.can_flash = true
 			local panel_style = panel_widget.style
-			panel_style.event_frame.visible = flag_happening or (flag_flash and not flag_locked)
+			panel_style.event_frame.visible = flag_happening or flag_flash and not flag_locked
 			panel_style.frame_top_red.visible = flag_flash or flag_locked
 			panel_style.frame_top_event.visible = flag_happening and not flag_flash and not flag_locked
 			panel_style.frame_top_regular.visible = not flag_flash and not flag_locked and not flag_happening
@@ -255,7 +255,7 @@ animations.sequence_animations.resize_mission_window = {
 			local last_index = 0
 			local old_widgets = params.old_details_list_widgets
 
-			for i = 1, #old_widgets, 1 do
+			for i = 1, #old_widgets do
 				last_index = last_index + 1
 				local widget = old_widgets[i]
 				widgets_to_fade[last_index] = widget
@@ -265,7 +265,7 @@ animations.sequence_animations.resize_mission_window = {
 
 			local new_widgets = params.new_details_list_widgets
 
-			for i = 1, #new_widgets, 1 do
+			for i = 1, #new_widgets do
 				last_index = last_index + 1
 				local widget = new_widgets[i]
 				widget.visible = true
@@ -286,7 +286,7 @@ animations.sequence_animations.resize_mission_window = {
 			local button_widget = widgets_by_name.play_button
 			button_widget.visible = true
 			local button_orig_alpha = button_widget.alpha_multiplier or 0
-			local button_target_alpha = (flags.locked and 0) or 1
+			local button_target_alpha = flags.locked and 0 or 1
 
 			if button_orig_alpha ~= button_target_alpha then
 				last_index = last_index + 1
@@ -298,7 +298,7 @@ animations.sequence_animations.resize_mission_window = {
 			local banner_widget = widgets_by_name.header_banner
 			banner_widget.visible = true
 			local banner_orig_alpha = banner_widget.alpha_multiplier or 0
-			local banner_target_alpha = (flags.locked and 1) or 0
+			local banner_target_alpha = flags.locked and 1 or 0
 
 			if banner_orig_alpha ~= banner_target_alpha then
 				last_index = last_index + 1
@@ -317,7 +317,7 @@ animations.sequence_animations.resize_mission_window = {
 			local target_alphas = params._widgets_to_fade_target_alphas
 			local num_widgets_to_fade = params._num_widgets_to_fade
 
-			for i = 1, num_widgets_to_fade, 1 do
+			for i = 1, num_widgets_to_fade do
 				local widget = widgets_to_fade[i]
 				widget.alpha_multiplier = ease_exp(lerp(start_alphas[i], target_alphas[i], progress))
 			end
@@ -327,7 +327,7 @@ animations.sequence_animations.resize_mission_window = {
 			local target_alphas = params._widgets_to_fade_target_alphas
 			local num_widgets_to_fade = params._num_widgets_to_fade
 
-			for i = 1, num_widgets_to_fade, 1 do
+			for i = 1, num_widgets_to_fade do
 				local widget = widgets_to_fade[i]
 				local target_alpha = target_alphas[i]
 				widget.alpha_multiplier = target_alpha
@@ -357,7 +357,7 @@ animations.sequence_animations.resize_report_window = {
 				fade_in_widgets = {}
 				local widget_names = _status_report_panel_widgets
 
-				for i = 1, #widget_names, 1 do
+				for i = 1, #widget_names do
 					local name = widget_names[i]
 					local widget = widgets_by_name[name]
 					fade_in_widgets[#fade_in_widgets + 1] = widget
@@ -366,7 +366,7 @@ animations.sequence_animations.resize_report_window = {
 				params.fade_in_widgets = fade_in_widgets
 			end
 
-			for i = 1, #fade_in_widgets, 1 do
+			for i = 1, #fade_in_widgets do
 				fade_in_widgets[i].visible = true
 			end
 		end,
@@ -375,14 +375,14 @@ animations.sequence_animations.resize_report_window = {
 			local alpha_multiplier = math.lerp(params.original_alpha, 1, eased_progress)
 			local widgets = params.fade_in_widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = alpha_multiplier
 			end
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local widgets = params.fade_in_widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
 		end
@@ -512,7 +512,7 @@ animations.sequence_animations.resize_report_window = {
 			local num_scenegraph_ids = params._num_scenegraph_ids
 			local anim_progress = math.easeCubic(progress)
 
-			for i = 1, num_scenegraph_ids, 1 do
+			for i = 1, num_scenegraph_ids do
 				local scenegraph_id = scenegraph_ids[i]
 				local target_height = target_heights[i]
 				local start_height = start_heights[i]
@@ -580,7 +580,7 @@ animations.sequence_animations.retract_window = {
 			local target_heights = params.target_heights
 			local anim_progress = math.easeCubic(progress)
 
-			for i = 1, #scnengraph_ids, 1 do
+			for i = 1, #scnengraph_ids do
 				local scenegraph_id = scnengraph_ids[i]
 				local start_height = start_heights[i]
 				local target_height = target_heights[i]
@@ -625,7 +625,7 @@ animations.sequence_animations.retract_window = {
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local scnengraph_ids = params.scnengraph_ids
 
-			for i = 1, #scnengraph_ids, 1 do
+			for i = 1, #scnengraph_ids do
 				local scenegraph_id = scnengraph_ids[i]
 				ui_scenegraph[scenegraph_id].size[2] = scenegraph_definition[scenegraph_id].size[2]
 			end
@@ -692,7 +692,7 @@ animations.sequence_animations.retract_window = {
 			local alpha_multiplier = math.lerp(params.original_alpha, 0, math.easeCubic(progress))
 			local widgets = params.widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				local widget = widgets[i]
 
 				if alpha_multiplier < widget.alpha_multiplier then
@@ -703,7 +703,7 @@ animations.sequence_animations.retract_window = {
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local widgets = params.widgets
 
-			for i = 1, #widgets, 1 do
+			for i = 1, #widgets do
 				local widget = widgets[i]
 				widget.alpha_multiplier = 0
 				widget.visible = false
@@ -738,7 +738,7 @@ animations.change_functions.frame_lights = function (content, style, animations,
 		return
 	end
 
-	local speed = (content.flash_mission and style.anim_flash_speed) or style.anim_speed
+	local speed = content.flash_mission and style.anim_flash_speed or style.anim_speed
 	local anim_time = (content.anim_time + dt * speed) % 1
 	content.anim_time = anim_time
 	style.color[1] = math.lerp(255, style.anim_lower_alpha, _ease_function(anim_time))

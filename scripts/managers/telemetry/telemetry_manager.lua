@@ -1,7 +1,3 @@
--- Decompilation Error: _glue_flows(node)
-
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local TelemetryManagerTestify = GameParameters.testify and require("scripts/managers/telemetry/telemetry_manager_testify")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
 local POST_INTERVAL = TelemetrySettings.batch.post_interval
@@ -110,16 +106,7 @@ TelemetryManager.post_batch = function (self)
 end
 
 TelemetryManager.destroy = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	self:post_batch()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return TelemetryManager

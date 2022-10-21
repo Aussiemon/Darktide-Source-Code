@@ -13,7 +13,7 @@ local events = {
 }
 local AchievementsEvents = {
 	install = function (target)
-		for i = 1, #events, 1 do
+		for i = 1, #events do
 			local call_back_name = "_on_" .. events[i].name
 			target[call_back_name] = events[i].response
 
@@ -21,7 +21,7 @@ local AchievementsEvents = {
 		end
 	end,
 	uninstall = function (target)
-		for i = 1, #events, 1 do
+		for i = 1, #events do
 			local call_back_name = "_on_" .. events[i].name
 
 			Managers.event:unregister(target, events[i].name)

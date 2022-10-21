@@ -25,7 +25,7 @@ end
 ComponentExtension.extensions_ready = function (self, world, unit)
 	local list = self._component_list
 
-	for i = 1, #list, 1 do
+	for i = 1, #list do
 		local component = list[i]
 
 		if component.extensions_ready then
@@ -37,7 +37,7 @@ end
 ComponentExtension.hot_join_sync = function (self, unit, client, channel)
 	local list = self._component_list
 
-	for i = 1, #list, 1 do
+	for i = 1, #list do
 		local component = list[i]
 
 		if component.hot_join_sync then
@@ -49,7 +49,7 @@ end
 ComponentExtension.on_gameplay_post_init = function (self, unit, level)
 	local list = self._component_list
 
-	for i = 1, #list, 1 do
+	for i = 1, #list do
 		local component = list[i]
 
 		if component.on_gameplay_post_init then
@@ -177,7 +177,7 @@ ComponentExtension._parse_components = function (self, unit)
 
 		local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
 		local is_enabled = component:get_data(unit, "starts_enabled")
-		component.is_enabled = (is_enabled == nil and true) or is_enabled or false
+		component.is_enabled = is_enabled == nil and true or is_enabled or false
 
 		if component.update and component.is_enabled and run_update then
 			self:_enable_update(component)
@@ -226,7 +226,7 @@ ComponentExtension.add_component = function (self, component_name, unit, starts_
 	local component_class = Components[component_name]
 	local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
 	component.name = component_name
-	component.is_enabled = (starts_enabled == nil and true) or starts_enabled or false
+	component.is_enabled = starts_enabled == nil and true or starts_enabled or false
 
 	if component.update and component.is_enabled and run_update then
 		self:_enable_update(component)
@@ -287,7 +287,7 @@ end
 ComponentExtension.destroy = function (self, unit)
 	local list = self._component_list
 
-	for i = 1, #list, 1 do
+	for i = 1, #list do
 		local component = list[i]
 
 		component:delete(unit)
@@ -301,7 +301,7 @@ ComponentExtension.trigger_event = function (self, event_name, ...)
 		return self._num_updates
 	end
 
-	for i = 1, #cb_list, 1 do
+	for i = 1, #cb_list do
 		local component = cb_list[i]
 
 		if component.is_enabled then

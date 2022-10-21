@@ -81,7 +81,7 @@ local groups_added = {}
 
 table.sort(settings, group_name_sort_function)
 
-for i = 1, #settings, 1 do
+for i = 1, #settings do
 	local setting = settings[i]
 	local group_name = setting.group_name
 

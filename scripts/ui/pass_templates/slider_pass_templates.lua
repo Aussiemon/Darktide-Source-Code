@@ -20,12 +20,12 @@ local function thumb_position_change_function(content, style)
 end
 
 local function highlight_color_change_function(content, style)
-	local default_color = (content.disabled and style.disabled_color) or style.default_color
+	local default_color = content.disabled and style.disabled_color or style.default_color
 	local hover_color = style.hover_color
 	local color = style.color or style.text_color
 	local hotspot = content.hotspot
 	local is_highlighted = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
-	local progress = (is_highlighted and content.highlight_progress) or 0
+	local progress = is_highlighted and content.highlight_progress or 0
 
 	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 
@@ -45,7 +45,7 @@ SliderPassTemplates.value_slider = function (width, height, use_is_focused)
 end
 
 SliderPassTemplates._settings_slider = function (width, height, settings_area_width, use_is_focused, is_percent_slider)
-	local track_thickness = (is_percent_slider and 10) or SLIDER_ENDPLATE_WIDTH
+	local track_thickness = is_percent_slider and 10 or SLIDER_ENDPLATE_WIDTH
 	local slider_area_width = settings_area_width - (SLIDER_ENDPLATE_WIDTH * 2 + SLIDER_THUMB_SIZE)
 	local header_width = width - settings_area_width
 	local slider_horizontal_offset = header_width + SLIDER_ENDPLATE_WIDTH
@@ -257,7 +257,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local input_service = renderer.input_service
 				local left_axis = input_service:get("navigate_left_continuous_fast")
 				local right_axis = input_service:get("navigate_right_continuous_fast")
-				local scroll_axis = (left_axis and -1) or (right_axis and 1) or 0
+				local scroll_axis = left_axis and -1 or right_axis and 1 or 0
 				local step_size = content.step_size
 				local scroll_amount = content.scroll_amount or 0.01
 
@@ -392,7 +392,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				thumb_position_change_function(content, style)
 
 				local active = content.drag_active or content.focused
-				local progress = (active and 1) or content.track_hotspot.anim_hover_progress
+				local progress = active and 1 or content.track_hotspot.anim_hover_progress
 				style.color[1] = 255 * math.easeOutCubic(progress)
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size
@@ -413,7 +413,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 end
 
 SliderPassTemplates._slider = function (width, height, use_is_focused, is_percent_slider)
-	local track_thickness = (is_percent_slider and 10) or SLIDER_ENDPLATE_WIDTH
+	local track_thickness = is_percent_slider and 10 or SLIDER_ENDPLATE_WIDTH
 	local thumb_highlight_expanded_size = THUMB_HIGHLIGHT_SIZE + ListHeaderPassTemplates.highlight_size_addition
 	local slider_horizontal_offset = LABEL_WIDTH + UIFontSettings.header_4.offset[1] + SLIDER_ENDPLATE_WIDTH
 	local settings_area_width = width - slider_horizontal_offset
@@ -657,7 +657,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 				local input_service = renderer.input_service
 				local left_axis = input_service:get("navigate_left_continuous_fast")
 				local right_axis = input_service:get("navigate_right_continuous_fast")
-				local scroll_axis = (left_axis and -1) or (right_axis and 1) or 0
+				local scroll_axis = left_axis and -1 or right_axis and 1 or 0
 				local step_size = content.step_size
 				local scroll_amount = content.scroll_amount or 0.01
 
@@ -792,7 +792,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 				thumb_position_change_function(content, style)
 
 				local active = content.drag_active or content.focused
-				local progress = (active and 1) or content.track_hotspot.anim_hover_progress
+				local progress = active and 1 or content.track_hotspot.anim_hover_progress
 				style.color[1] = 255 * math.easeOutCubic(progress)
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size

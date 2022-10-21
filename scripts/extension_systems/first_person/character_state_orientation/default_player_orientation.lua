@@ -51,11 +51,12 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 
 		if yaw_contraint and yaw_contraint >= 0 then
 			look_delta.x = math.clamp(look_delta.x, -yaw_contraint, yaw_contraint)
-			local pitch_contraint = rotation_contraints.pitch and rotation_contraints.pitch * main_dt
+		end
 
-			if pitch_contraint and pitch_contraint >= 0 then
-				look_delta.y = math.clamp(look_delta.y, -pitch_contraint, pitch_contraint)
-			end
+		local pitch_contraint = rotation_contraints.pitch and rotation_contraints.pitch * main_dt
+
+		if pitch_contraint and pitch_contraint >= 0 then
+			look_delta.y = math.clamp(look_delta.y, -pitch_contraint, pitch_contraint)
 		end
 	end
 

@@ -72,7 +72,7 @@ target_selection_template.ranged = function (unit, side, perception_component, b
 	if not lock_target then
 		local aggro_state = perception_component.aggro_state
 
-		for i = 1, #target_units, 1 do
+		for i = 1, #target_units do
 			local target_unit = target_units[i]
 			local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 			local target_breed = unit_data_extension:breed()
@@ -80,13 +80,13 @@ target_selection_template.ranged = function (unit, side, perception_component, b
 
 			if Breed.is_player(target_breed) then
 				local shooting_status = unit_data_extension:read_component("shooting_status")
-				is_shooting = shooting_status.shooting or (not shooting_status.shooting and t <= shooting_status.shooting_end_time + 1)
+				is_shooting = shooting_status.shooting or not shooting_status.shooting and t <= shooting_status.shooting_end_time + 1
 			end
 
 			if target_unit ~= current_target_unit then
 				local target_position = POSITION_LOOKUP[target_unit]
 				local distance_to_target_sq = vector3_distance_squared(position, target_position)
-				local distance_sq = (is_shooting and distance_to_target_sq - EXTRA_SHOOT_DISTANCE_SQ) or distance_to_target_sq
+				local distance_sq = is_shooting and distance_to_target_sq - EXTRA_SHOOT_DISTANCE_SQ or distance_to_target_sq
 
 				if aggro_state == aggro_states.aggroed or distance_sq < detection_radius_sq then
 					local score = _calculate_score(breed, unit, target_unit, distance_sq, true, threat_units, line_of_sight_lookup, debug_target_weighting_or_nil)

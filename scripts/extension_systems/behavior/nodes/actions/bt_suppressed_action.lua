@@ -21,7 +21,7 @@ BtSuppressedAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 		anim_events = action_data.anim_events
 	end
 
-	local durations = (is_jumping and action_data.jump_durations) or action_data.durations
+	local durations = is_jumping and action_data.jump_durations or action_data.durations
 
 	self:_trigger_anim(unit, scratchpad, anim_events, durations, t)
 
@@ -95,7 +95,24 @@ BtSuppressedAction._setup_jump_anim = function (self, unit, scratchpad, blackboa
 	local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 	local dot = Vector3.dot(forward, direction)
 	local use_bwd_and_fwd = math.random() > 0.5
-	chosen_anim_events = (not use_bwd_and_fwd or ((not is_fwd or jump_anim_events.bwd) and jump_anim_events.fwd)) and (not is_to_the_left or jump_anim_events.right) and jump_anim_events.left
+
+	if use_bwd_and_fwd then
+		local is_fwd = dot > 0
+
+		if is_fwd then
+			chosen_anim_events = jump_anim_events.bwd
+		else
+			chosen_anim_events = jump_anim_events.fwd
+		end
+	else
+		local is_to_the_left = Vector3.cross(forward, direction).z > 0
+
+		if is_to_the_left then
+			chosen_anim_events = jump_anim_events.right
+		else
+			chosen_anim_events = jump_anim_events.left
+		end
+	end
 
 	return chosen_anim_events
 end

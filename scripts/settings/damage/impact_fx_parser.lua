@@ -221,8 +221,7 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 					blood_ball = _extract_armor_hit_fx(blood_ball_config, hit_type)
 				}
 
-				if table.size(fx_table) == 0 then
-				else
+				if table.size(fx_table) ~= 0 then
 					local fx_name = string.format("armor_fx_%s_%s_%s", damage_type, armor_type, hit_type)
 					fx_table.name = fx_name
 
@@ -250,8 +249,7 @@ local function _create_surface_impact_fx_templates(lookup_table, templates_table
 			local decal = surface_material_decal[hit_type]
 			local fx_table = _create_surface_impact_fx_entry(material_type, damage_fx, material_fx, decal)
 
-			if table.size(fx_table) == 0 then
-			else
+			if table.size(fx_table) ~= 0 then
 				local fx_name = string.format("surface_fx_%s_%s_%s", damage_type, material_type, hit_type)
 				fx_table.name = fx_name
 

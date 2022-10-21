@@ -49,7 +49,7 @@ MoodHandler.destroy = function (self)
 	local created_shading_environments = self._created_shading_environments
 	local world = self._world
 
-	for i = 1, #created_shading_environments, 1 do
+	for i = 1, #created_shading_environments do
 		local resource = created_shading_environments[i]
 
 		World.destroy_shading_environment_resource(world, resource)
@@ -114,7 +114,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 		local looping_sound_start_events = added_mood_settings.looping_sound_start_events
 
 		if looping_sound_start_events then
-			for i = 1, #looping_sound_start_events, 1 do
+			for i = 1, #looping_sound_start_events do
 				if not self._sfx_source_ids[added_mood][i] then
 					self._sfx_source_ids[added_mood][i] = {}
 				end
@@ -141,7 +141,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 		local looping_sound_stop_events = removed_mood_settings.looping_sound_stop_events
 
 		if looping_sound_stop_events then
-			for i = 1, #looping_sound_stop_events, 1 do
+			for i = 1, #looping_sound_stop_events do
 				local sound_event = looping_sound_stop_events[i]
 
 				WwiseWorld.trigger_resource_event(self._wwise_world, sound_event)
@@ -155,7 +155,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 			local source_parameters = mood.source_parameters
 
 			if source_parameters then
-				for i = 1, #source_parameters, 1 do
+				for i = 1, #source_parameters do
 					local source_parameter = source_parameters[i]
 					local value = mood.source_parameter_func(self._player)
 					local looping_sound_start_events = mood.looping_sound_start_events
@@ -186,7 +186,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 		local particle_effects_on_enter = added_mood_settings.particle_effects_on_enter
 
 		if particle_effects_on_enter then
-			for i = 1, #particle_effects_on_enter, 1 do
+			for i = 1, #particle_effects_on_enter do
 				self:_spawn_particles(particle_effects_on_enter[i])
 			end
 		end
@@ -195,7 +195,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 		local particle_effects_looping = added_mood_settings.particle_effects_looping
 
 		if particle_effects_looping then
-			for i = 1, #particle_effects_looping, 1 do
+			for i = 1, #particle_effects_looping do
 				local looping_particle_id = self:_spawn_particles(particle_effects_looping[i])
 				looping_particles[i] = looping_particle_id
 			end
@@ -207,7 +207,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 		local particle_effects_on_exit = removed_mood_settings.particle_effects_on_exit
 
 		if particle_effects_on_exit then
-			for i = 1, #particle_effects_on_exit, 1 do
+			for i = 1, #particle_effects_on_exit do
 				self:_spawn_particles(particle_effects_on_exit[i])
 			end
 		end
@@ -224,7 +224,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			local particles_material_scalars = mood.particles_material_scalars
 
 			if particles_material_scalars then
-				for j = 1, #particles_material_scalars, 1 do
+				for j = 1, #particles_material_scalars do
 					table.clear(self._particle_material_scalar_values[removing_mood][j])
 				end
 			end
@@ -237,7 +237,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			local particles_material_scalars = mood.particles_material_scalars
 
 			if particles_material_scalars then
-				for i = 1, #particles_material_scalars, 1 do
+				for i = 1, #particles_material_scalars do
 					if not self._particle_material_scalar_values[mood_type][i] then
 						self._particle_material_scalar_values[mood_type][i] = {}
 					end
@@ -260,7 +260,7 @@ end
 MoodHandler._blend_list = function (self, blend_list, moods_data)
 	local game_t = Managers.time:time("gameplay")
 
-	for i = 1, #mood_priority, 1 do
+	for i = 1, #mood_priority do
 		local mood_type = mood_priority[i]
 		local mood_data = moods_data[mood_type]
 		local settings = moods[mood_type]

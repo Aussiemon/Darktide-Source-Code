@@ -106,7 +106,7 @@ HudElementSmartTagging._populate_wheel = function (self, options)
 	local entries = self._entries
 	local wheel_slots = HudElementSmartTaggingSettings.wheel_slots
 
-	for i = 1, wheel_slots, 1 do
+	for i = 1, wheel_slots do
 		local option = options[i]
 		local entry = entries[i]
 		local widget = entry.widget
@@ -122,7 +122,7 @@ end
 
 HudElementSmartTagging._setup_entries = function (self, num_entries)
 	if self._entries then
-		for i = 1, #self._entries, 1 do
+		for i = 1, #self._entries do
 			local entry = self._entries[i]
 			local widget = entry.widget
 			local widget_name = widget.name
@@ -134,7 +134,7 @@ HudElementSmartTagging._setup_entries = function (self, num_entries)
 	local entries = {}
 	local definition = Definitions.entry_widget_definition
 
-	for i = 1, num_entries, 1 do
+	for i = 1, num_entries do
 		local name = "entry_" .. i
 		local widget = self:_create_widget(name, definition)
 		entries[i] = {
@@ -298,7 +298,7 @@ end
 HudElementSmartTagging._find_marker_by_unit = function (self, unit)
 	local world_markers_list = self._world_markers_list
 
-	for i = 1, #world_markers_list, 1 do
+	for i = 1, #world_markers_list do
 		local marker = world_markers_list[i]
 
 		if marker.unit == unit and marker.template.using_smart_tag_system then
@@ -425,7 +425,7 @@ HudElementSmartTagging._find_world_marker_target = function (self, ui_renderer, 
 	local player = parent:player()
 	local player_unit = player.player_unit
 
-	for i = 1, #world_markers_list, 1 do
+	for i = 1, #world_markers_list do
 		local marker = world_markers_list[i]
 		local widget = marker.widget
 
@@ -488,7 +488,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 	local hovered_entry = nil
 	local entries = self._entries
 
-	for i = 1, #entries, 1 do
+	for i = 1, #entries do
 		local entry = entries[i]
 		local widget = entry.widget
 		local content = widget.content
@@ -513,7 +513,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 	local wheel_background_widget = self._widgets_by_name.wheel_background
 	wheel_background_widget.content.angle = cursor_angle_from_center
 	wheel_background_widget.content.force_hover = any_hover
-	wheel_background_widget.style.mark.color[1] = (any_hover and 255) or 0
+	wheel_background_widget.style.mark.color[1] = any_hover and 255 or 0
 
 	if hovered_entry then
 		local option = hovered_entry.option
@@ -525,7 +525,7 @@ end
 HudElementSmartTagging._is_wheel_entry_hovered = function (self)
 	local entries = self._entries
 
-	for i = 1, #entries, 1 do
+	for i = 1, #entries do
 		local entry = entries[i]
 		local widget = entry.widget
 
@@ -553,7 +553,7 @@ HudElementSmartTagging._update_widget_locations = function (self)
 	local entries = self._entries
 	local start_angle = 0
 	local num_entries = #entries
-	local radians_per_widget = (math.pi * 2) / num_entries
+	local radians_per_widget = math.pi * 2 / num_entries
 	local active_progress = self._wheel_active_progress
 	local anim_progress = math.smoothstep(active_progress, 0, 1)
 	local wheel_slots = HudElementSmartTaggingSettings.wheel_slots
@@ -561,7 +561,7 @@ HudElementSmartTagging._update_widget_locations = function (self)
 	local max_radius = HudElementSmartTaggingSettings.max_radius
 	local radius = min_radius + anim_progress * (max_radius - min_radius)
 
-	for i = 1, wheel_slots, 1 do
+	for i = 1, wheel_slots do
 		local entry = entries[i]
 
 		if entry then
@@ -718,7 +718,7 @@ HudElementSmartTagging._draw_widgets = function (self, dt, t, input_service, ui_
 	local entries = self._entries
 
 	if entries then
-		for i = 1, #entries, 1 do
+		for i = 1, #entries do
 			local entry = entries[i]
 			local widget = entry.widget
 
@@ -952,7 +952,7 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 	local input_display_text = Localize(input_text_key)
 	input_action_localization_params.input = input_text
 	input_action_localization_params.action = input_display_text
-	local input_type_string = (hold_required and "loc_interaction_input_type_hold") or "loc_interaction_input_type"
+	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
 	return Localize(input_type_string, true, input_action_localization_params)
 end

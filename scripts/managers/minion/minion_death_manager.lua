@@ -53,7 +53,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 	death_component.hit_zone_name = hit_zone_name_or_nil
 	local damage_profile_name = damage_profile.name
 	death_component.damage_profile_name = damage_profile_name
-	death_component.herding_template_name = (herding_template_or_nil and herding_template_or_nil.name) or nil
+	death_component.herding_template_name = herding_template_or_nil and herding_template_or_nil.name or nil
 	death_component.killing_damage_type = damage_type_or_nil
 	local was_alive = not death_component.is_dead
 
@@ -82,7 +82,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 
 		local hit_zones = breed.hit_zones
 
-		for i = 1, #hit_zones, 1 do
+		for i = 1, #hit_zones do
 			local hit_zone = hit_zones[i]
 
 			if hit_zone.destroy_on_death then
@@ -100,7 +100,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 			local stagger_type = stagger_component.type
 			local num_triggered_staggers = stagger_component.num_triggered_staggers
 
-			if (num_triggered_staggers > 0 and INSTANT_RAGDOLL_STAGGER_TYPES[stagger_type]) or stagger_component.controlled_stagger then
+			if num_triggered_staggers > 0 and INSTANT_RAGDOLL_STAGGER_TYPES[stagger_type] or stagger_component.controlled_stagger then
 				death_component.force_instant_ragdoll = true
 			end
 		end
@@ -171,7 +171,7 @@ MinionDeathManager._server_update_minions_awaiting_death = function (self, t)
 	local minions_awaiting_death = self._minions_awaiting_death
 	local num_minions_awaiting_death = #minions_awaiting_death
 
-	for i = 1, num_minions_awaiting_death, 1 do
+	for i = 1, num_minions_awaiting_death do
 		local death_data = minions_awaiting_death[i]
 
 		self:_server_finalize_death(death_data)
@@ -294,7 +294,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 	local victim_side = side_system.side_by_unit[unit]
 	local player_units = victim_side.valid_enemy_player_units
 
-	for i = 1, #player_units, 1 do
+	for i = 1, #player_units do
 		local player_unit = player_units[i]
 		local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 

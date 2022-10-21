@@ -67,7 +67,7 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local num_sides = #side_compositions
 	local side_names = Script.new_array(num_sides)
 
-	for i = 1, num_sides, 1 do
+	for i = 1, num_sides do
 		local side_data = side_compositions[i]
 		side_names[i] = side_data.name
 	end

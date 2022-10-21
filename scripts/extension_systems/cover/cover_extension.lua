@@ -24,7 +24,7 @@ CoverExtension.setup_from_component = function (self, cover_type, enabled)
 		self._cover_slots = cover_slots
 		local cover_system = Managers.state.extension:system("cover_system")
 
-		for i = 1, #cover_slots, 1 do
+		for i = 1, #cover_slots do
 			local cover_slot = cover_slots[i]
 
 			cover_system:add_cover_slot_to_broadphase(unit, cover_slot)

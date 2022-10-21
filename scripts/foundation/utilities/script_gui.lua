@@ -43,13 +43,14 @@ local ScriptGui = {
 		local transform = Rotation2D(p1, angle)
 
 		Gui.rect_3d(gui, transform, Vector2(0, 0), layer, size, color)
-	end,
-	hud_iline = function (gui, res_x, res_y, p1, p2, layer, line_width, color)
-		local c1 = Vector2(p1.x * res_x, p1.y * res_y)
-		local c2 = Vector2(p2.x * res_x, p2.y * res_y)
-
-		ScriptGui.hud_line(gui, c1, c2, layer, line_width, color)
 	end
 }
+
+ScriptGui.hud_iline = function (gui, res_x, res_y, p1, p2, layer, line_width, color)
+	local c1 = Vector2(p1.x * res_x, p1.y * res_y)
+	local c2 = Vector2(p2.x * res_x, p2.y * res_y)
+
+	ScriptGui.hud_line(gui, c1, c2, layer, line_width, color)
+end
 
 return ScriptGui

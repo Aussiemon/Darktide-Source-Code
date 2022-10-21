@@ -29,12 +29,7 @@ PlayerCharacterStateJumping._play_jump_animation = function (self, animation_ext
 	local event_name_3p = nil
 	local input_ext = self._input_extension
 	local move = input_ext:get("move")
-
-	if Vector3.length_squared(move) > 0 then
-		event_name_3p = "jump_fwd"
-	else
-		event_name_3p = "jump_idle"
-	end
+	event_name_3p = Vector3.length_squared(move) > 0 and "jump_fwd" or "jump_idle"
 
 	animation_extension:anim_event(event_name_3p)
 	animation_extension:anim_event_1p("jump")
@@ -60,7 +55,7 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 		local velocity_current = self._locomotion_component.velocity_current
 		local jump_speed = self._constants.jump_speed
 		local speed = Vector3.length(velocity_current)
-		local speed_mod = (speed == 0 and 0) or 5 / math.max(speed, 5)
+		local speed_mod = speed == 0 and 0 or 5 / math.max(speed, 5)
 		jump_velocity = Vector3(velocity_current.x * speed_mod, velocity_current.y * speed_mod, jump_speed)
 	end
 

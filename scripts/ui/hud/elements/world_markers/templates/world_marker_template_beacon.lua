@@ -118,7 +118,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local distance_text = tostring(math.floor(distance)) .. "m"
-	content.text = (distance > 1 and distance_text) or ""
+	content.text = distance > 1 and distance_text or ""
 
 	return animating
 end

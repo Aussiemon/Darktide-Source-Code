@@ -2,27 +2,30 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local PlayerSpecialization = {
 	specialization_level_requirement = function ()
 		return 1
-	end,
-	talent_array_to_set = function (talent_array, talent_set)
-		table.clear(talent_set)
-
-		for i = 1, #talent_array, 1 do
-			local talent_name = talent_array[i]
-			talent_set[talent_name] = i
-		end
-
-		return talent_set
-	end,
-	talent_set_to_array = function (talent_set, talent_array)
-		table.clear(talent_array)
-
-		for talent_name in pairs(talent_set) do
-			talent_array[#talent_array + 1] = talent_name
-		end
-
-		return talent_array
 	end
 }
+
+PlayerSpecialization.talent_array_to_set = function (talent_array, talent_set)
+	table.clear(talent_set)
+
+	for i = 1, #talent_array do
+		local talent_name = talent_array[i]
+		talent_set[talent_name] = i
+	end
+
+	return talent_set
+end
+
+PlayerSpecialization.talent_set_to_array = function (talent_set, talent_array)
+	table.clear(talent_array)
+
+	for talent_name in pairs(talent_set) do
+		talent_array[#talent_array + 1] = talent_name
+	end
+
+	return talent_array
+end
+
 local _required_levels = {}
 
 PlayerSpecialization.talent_set_to_sorted_array = function (archetype, specialization_name, talent_set, talent_array)
@@ -33,12 +36,12 @@ PlayerSpecialization.talent_set_to_sorted_array = function (archetype, specializ
 	local talent_groups = specialization.talent_groups
 	local i = 0
 
-	for j = 1, #talent_groups, 1 do
+	for j = 1, #talent_groups do
 		local talent_group = talent_groups[j]
 		local required_level = talent_group.required_level
 		local talents_in_group = talent_group.talents
 
-		for k = 1, #talents_in_group, 1 do
+		for k = 1, #talents_in_group do
 			local talent_name = talents_in_group[k]
 
 			if talent_set[talent_name] then
@@ -62,13 +65,13 @@ PlayerSpecialization.add_nonselected_talents = function (archetype, specializati
 	local specialization = archetype.specializations[specialization_name]
 	local talent_groups = specialization.talent_groups
 
-	for i = 1, #talent_groups, 1 do
+	for i = 1, #talent_groups do
 		local talent_group = talent_groups[i]
 
 		if talent_group.non_selectable_group and talent_group.required_level <= player_level then
 			local talents_in_group = talent_group.talents
 
-			for j = 1, #talents_in_group, 1 do
+			for j = 1, #talents_in_group do
 				local talent_name = talents_in_group[j]
 				talents[talent_name] = true
 			end
@@ -82,13 +85,13 @@ PlayerSpecialization.filter_nonselectable_talents = function (archetype, special
 	local specialization = archetype.specializations[specialization_name]
 	local talent_groups = specialization.talent_groups
 
-	for i = 1, #talent_groups, 1 do
+	for i = 1, #talent_groups do
 		local talent_group = talent_groups[i]
 
 		if talent_group.non_selectable_group and talent_group.required_level <= player_level then
 			local talents_in_group = talent_group.talents
 
-			for j = 1, #talents_in_group, 1 do
+			for j = 1, #talents_in_group do
 				local unwanted_talent_name = talents_in_group[j]
 				talents[unwanted_talent_name] = nil
 			end
@@ -108,7 +111,7 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
 	local talent_array = PlayerSpecialization.talent_set_to_sorted_array(archetype, specialization_name, talents, {})
 
-	for i = 1, #talent_array, 1 do
+	for i = 1, #talent_array do
 		local talent_name = talent_array[i]
 		local talent_definition = talent_definitions[talent_name]
 		local player_ability = talent_definition.player_ability
@@ -142,7 +145,7 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 			local special_rule_name = special_rule.special_rule_name
 
 			if type(identifier) == "table" then
-				for j = 1, #identifier, 1 do
+				for j = 1, #identifier do
 					special_rules[identifier[j]] = special_rule_name[j]
 				end
 			else

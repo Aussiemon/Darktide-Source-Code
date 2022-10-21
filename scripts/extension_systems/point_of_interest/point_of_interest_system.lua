@@ -153,7 +153,7 @@ PointOfInterestSystem._update_lookat = function (self, t)
 
 	local num_nearby = Broadphase.query(broadphase, query_position, query_radius, FOUND_UNITS)
 
-	for i = 1, num_nearby, 1 do
+	for i = 1, num_nearby do
 		local target_unit = FOUND_UNITS[i]
 		local saw_unit_recently = seen_recently[target_unit]
 

@@ -100,7 +100,7 @@ end
 GadgetSystem._remove_meta_buff = function (self, buff_instance_id)
 	local buffs = self._buffs
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		if instance_id == buff:instance_id() then
 			table.remove(buffs, i)
 
@@ -116,7 +116,7 @@ GadgetSystem._update_meta_stat_buffs = function (self, player)
 	local current_stat_buffs = self._stat_buffs[player]
 	local t = FixedFrame.get_latest_fixed_time()
 
-	for i = 1, #buffs, 1 do
+	for i = 1, #buffs do
 		local buff = buffs[i]
 
 		if buff:player() == player then

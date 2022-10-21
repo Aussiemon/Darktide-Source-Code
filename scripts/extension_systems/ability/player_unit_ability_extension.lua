@@ -131,7 +131,7 @@ end
 
 PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, ability, fixed_t, from_server_correction)
 	fassert(ability, "Ability of type %q must not be nil!", ability_type)
-	Log.info("PlayerUnitAbilityExtension", "Equipping ability %q of type %q%s", ability.name, ability_type, (from_server_correction and " from server correction") or "")
+	Log.info("PlayerUnitAbilityExtension", "Equipping ability %q of type %q%s", ability.name, ability_type, from_server_correction and " from server correction" or "")
 
 	self._equipped_abilities[ability_type] = ability
 	local inventory_item_name = ability.inventory_item_name
@@ -172,7 +172,7 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 end
 
 PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, ability, fixed_t, from_server_correction)
-	Log.info("PlayerUnitAbilityExtension", "Unequipping ability %q of type %q%s", ability.name, ability_type, (from_server_correction and " from server correction") or "")
+	Log.info("PlayerUnitAbilityExtension", "Unequipping ability %q of type %q%s", ability.name, ability_type, from_server_correction and " from server correction" or "")
 
 	local inventory_item_name = ability.inventory_item_name
 	from_server_correction = not not from_server_correction
@@ -245,7 +245,7 @@ PlayerUnitAbilityExtension.server_correction_occurred = function (self, unit, fr
 	for ability_type, _ in pairs(ability_configuration) do
 		local server_authoritative_equipped_ability_name = equipped_abilities_component[ability_type]
 		local locally_equipped_ability = locally_equipped_abilities[ability_type]
-		local locally_equipped_ability_name = (locally_equipped_ability and locally_equipped_ability.name) or "none"
+		local locally_equipped_ability_name = locally_equipped_ability and locally_equipped_ability.name or "none"
 
 		if locally_equipped_ability_name ~= server_authoritative_equipped_ability_name then
 			if locally_equipped_ability_name ~= "none" then
@@ -376,7 +376,7 @@ end
 PlayerUnitAbilityExtension.has_ability_type = function (self, ability_type)
 	local abilities = self._equipped_abilities
 	local ability = abilities[ability_type]
-	local has_ability_type = (ability and true) or false
+	local has_ability_type = ability and true or false
 
 	return has_ability_type
 end

@@ -24,232 +24,246 @@ local ScriptWorld = {
 		else
 			return nil
 		end
-	end,
-	create_viewport = function (world, name, template, layer, camera_unit, position, rotation, add_shadow_cull_camera, shading_environment_name, shading_callback, mood_setting)
-		local viewports = World.get_data(world, "viewports")
-
-		fassert(viewports[name] == nil, "Viewport %q already exists", name)
-
-		local viewport = Application.create_viewport(world, template)
-
-		Viewport.set_data(viewport, "layer", layer or 1)
-		Viewport.set_data(viewport, "active", true)
-		Viewport.set_data(viewport, "name", name)
-
-		viewports[name] = viewport
-
-		fassert(shading_environment_name, "Missing shading environment name for viewport %s!", name)
-		ScriptWorld.create_shading_environment(world, viewport, shading_environment_name, shading_callback, mood_setting or "default")
-
-		if camera_unit then
-			local camera = Unit.camera(camera_unit, "camera")
-
-			if position then
-				ScriptCamera.set_local_position(camera, position)
-			end
-
-			if rotation then
-				ScriptCamera.set_local_rotation(camera, rotation)
-			end
-		elseif position and rotation then
-			camera_unit = World.spawn_unit_ex(world, "core/units/camera", nil, position, rotation)
-		elseif position then
-			camera_unit = World.spawn_unit_ex(world, "core/units/camera", nil, position)
-		else
-			camera_unit = World.spawn_unit_ex(world, "core/units/camera")
-		end
-
-		ScriptWorld.change_camera_unit(viewport, camera_unit, add_shadow_cull_camera)
-		ScriptWorld._update_render_queue(world)
-
-		return viewport
-	end,
-	change_camera_unit = function (viewport, camera_unit, add_shadow_cull_camera)
-		local camera = Unit.camera(camera_unit, "camera")
-
-		Camera.set_data(camera, "unit", camera_unit)
-		Viewport.set_data(viewport, "camera", camera)
-
-		if add_shadow_cull_camera then
-			local shadow_cull_camera = Unit.camera(camera_unit, "shadow_cull_camera")
-
-			Camera.set_data(shadow_cull_camera, "unit", camera_unit)
-			Viewport.set_data(viewport, "shadow_cull_camera", shadow_cull_camera)
-		end
-	end,
-	has_viewport = function (world, name)
-		local viewports = World.get_data(world, "viewports")
-
-		return (viewports[name] and true) or false
-	end,
-	viewport = function (world, name, return_free_flight_viewport)
-		local viewport = nil
-
-		if return_free_flight_viewport then
-			viewport = World.get_data(world, "free_flight_viewports")[name] or World.get_data(world, "viewports")[name]
-		else
-			viewport = World.get_data(world, "viewports")[name]
-		end
-
-		fassert(viewport, "Viewport %q doesn't exist", name)
-
-		return viewport
-	end,
-	destroy_viewport = function (world, name)
-		local viewports = World.get_data(world, "viewports")
-
-		fassert(viewports[name], "Viewport %q doesn't exist", name)
-
-		local viewport = viewports[name]
-		viewports[name] = nil
-
-		ScriptWorld.destroy_shading_environment(world, viewport)
-
-		local camera = Viewport.get_data(viewport, "camera")
-		local camera_unit = Camera.get_data(camera, "unit")
-
-		World.destroy_unit(world, camera_unit)
-		Application.destroy_viewport(world, viewport)
-		ScriptWorld._update_render_queue(world)
-	end,
-	create_global_free_flight_viewport = function (world, template)
-		fassert(not World.has_data(world, "global_free_flight_viewport"), "Trying to spawn global freeflight viewport when one already exists.")
-
-		local viewports = World.get_data(world, "viewports")
-
-		if table.is_empty(viewports) then
-			return nil
-		end
-
-		local bottom_viewport = ScriptWorld.bottom_viewport(world)
-		local bottom_layer = Viewport.get_data(bottom_viewport, "layer")
-		local free_flight_viewport = Application.create_viewport(world, template)
-
-		Viewport.set_data(free_flight_viewport, "layer", bottom_layer)
-		Viewport.set_data(free_flight_viewport, "name", "global_free_flight")
-		Viewport.set_data(free_flight_viewport, "is_first_render", true)
-		World.set_data(world, "global_free_flight_viewport", free_flight_viewport)
-
-		local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
-		local camera = Unit.camera(camera_unit, "camera")
-
-		Camera.set_data(camera, "unit", camera_unit)
-
-		local bottom_layer_camera = ScriptViewport.camera(bottom_viewport)
-		local pose = Camera.local_pose(bottom_layer_camera)
-
-		ScriptCamera.set_local_pose(camera, pose)
-
-		local vertical_fov = Camera.vertical_fov(bottom_layer_camera)
-
-		Camera.set_vertical_fov(camera, vertical_fov)
-		Viewport.set_data(free_flight_viewport, "camera", camera)
-
-		return free_flight_viewport
-	end,
-	global_free_flight_viewport = function (world)
-		return World.get_data(world, "global_free_flight_viewport")
-	end,
-	destroy_global_free_flight_viewport = function (world)
-		local viewport = World.get_data(world, "global_free_flight_viewport")
-
-		fassert(viewport, "Trying to destroy global free flight viewport when none exists.")
-
-		local camera = Viewport.get_data(viewport, "camera")
-		local camera_unit = Camera.get_data(camera, "unit")
-
-		World.destroy_unit(world, camera_unit)
-		Application.destroy_viewport(world, viewport)
-		World.set_data(world, "global_free_flight_viewport", nil)
-	end,
-	create_free_flight_viewport = function (world, overridden_viewport_name, template, shading_environment_name, shading_callback, mood_setting)
-		local overridden_viewport = ScriptWorld.viewport(world, overridden_viewport_name)
-		local free_flight_viewport = Application.create_viewport(world, template)
-
-		Viewport.set_data(free_flight_viewport, "layer", Viewport.get_data(overridden_viewport, "layer"))
-
-		local free_flight_viewports = World.get_data(world, "free_flight_viewports")
-
-		fassert(free_flight_viewports[overridden_viewport_name] == nil, "Free flight viewport %q already exists", overridden_viewport_name)
-
-		free_flight_viewports[overridden_viewport_name] = free_flight_viewport
-
-		fassert(shading_environment_name, "Missing shading environment name for global free flight viewport!")
-		ScriptWorld.create_shading_environment(world, free_flight_viewport, shading_environment_name, shading_callback, mood_setting or "default")
-
-		local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
-		local camera = Unit.camera(camera_unit, "camera")
-
-		Camera.set_data(camera, "unit", camera_unit)
-
-		local overridden_viewport_camera = ScriptViewport.camera(overridden_viewport)
-		local pose = Camera.local_pose(overridden_viewport_camera)
-
-		ScriptCamera.set_local_pose(camera, pose)
-		Viewport.set_data(free_flight_viewport, "camera", camera)
-		Viewport.set_data(free_flight_viewport, "overridden_viewport", overridden_viewport)
-		ScriptWorld._update_render_queue(world)
-
-		return free_flight_viewport
-	end,
-	free_flight_viewport = function (world, name)
-		local viewports = World.get_data(world, "free_flight_viewports")
-
-		fassert(viewports[name], "Free flight viewport %q doesn't exists", name)
-
-		return viewports[name]
-	end,
-	destroy_free_flight_viewport = function (world, name)
-		local viewports = World.get_data(world, "free_flight_viewports")
-
-		fassert(viewports[name], "Viewport %q doesn't exist", name)
-
-		local viewport = viewports[name]
-		viewports[name] = nil
-
-		ScriptWorld.destroy_shading_environment(world, viewport)
-
-		local camera = Viewport.get_data(viewport, "camera")
-		local camera_unit = Camera.get_data(camera, "unit")
-
-		World.destroy_unit(world, camera_unit)
-		Application.destroy_viewport(world, viewport)
-		ScriptWorld._update_render_queue(world)
-	end,
-	activate_viewport = function (world, viewport)
-		Viewport.set_data(viewport, "active", true)
-		ScriptWorld._update_render_queue(world)
-	end,
-	deactivate_viewport = function (world, viewport)
-		Viewport.set_data(viewport, "active", false)
-		ScriptWorld._update_render_queue(world)
-	end,
-	update = function (world, dt, anim_callback, scene_callback)
-		if World.get_data(world, "active") then
-			if World.get_data(world, "paused") then
-				dt = 0
-			end
-
-			Profiler.start(ScriptWorld.name(world))
-
-			if anim_callback then
-				World.update_animations_with_callback(world, dt, anim_callback)
-			else
-				World.update_animations(world, dt)
-			end
-
-			if scene_callback then
-				World.update_scene_with_callback(world, dt, scene_callback)
-			else
-				World.update_scene(world, dt)
-			end
-
-			Profiler.stop(ScriptWorld.name(world))
-		else
-			World.update_timer(world, dt)
-		end
 	end
 }
+
+ScriptWorld.create_viewport = function (world, name, template, layer, camera_unit, position, rotation, add_shadow_cull_camera, shading_environment_name, shading_callback, mood_setting)
+	local viewports = World.get_data(world, "viewports")
+
+	fassert(viewports[name] == nil, "Viewport %q already exists", name)
+
+	local viewport = Application.create_viewport(world, template)
+
+	Viewport.set_data(viewport, "layer", layer or 1)
+	Viewport.set_data(viewport, "active", true)
+	Viewport.set_data(viewport, "name", name)
+
+	viewports[name] = viewport
+
+	fassert(shading_environment_name, "Missing shading environment name for viewport %s!", name)
+	ScriptWorld.create_shading_environment(world, viewport, shading_environment_name, shading_callback, mood_setting or "default")
+
+	if camera_unit then
+		local camera = Unit.camera(camera_unit, "camera")
+
+		if position then
+			ScriptCamera.set_local_position(camera, position)
+		end
+
+		if rotation then
+			ScriptCamera.set_local_rotation(camera, rotation)
+		end
+	elseif position and rotation then
+		camera_unit = World.spawn_unit_ex(world, "core/units/camera", nil, position, rotation)
+	elseif position then
+		camera_unit = World.spawn_unit_ex(world, "core/units/camera", nil, position)
+	else
+		camera_unit = World.spawn_unit_ex(world, "core/units/camera")
+	end
+
+	ScriptWorld.change_camera_unit(viewport, camera_unit, add_shadow_cull_camera)
+	ScriptWorld._update_render_queue(world)
+
+	return viewport
+end
+
+ScriptWorld.change_camera_unit = function (viewport, camera_unit, add_shadow_cull_camera)
+	local camera = Unit.camera(camera_unit, "camera")
+
+	Camera.set_data(camera, "unit", camera_unit)
+	Viewport.set_data(viewport, "camera", camera)
+
+	if add_shadow_cull_camera then
+		local shadow_cull_camera = Unit.camera(camera_unit, "shadow_cull_camera")
+
+		Camera.set_data(shadow_cull_camera, "unit", camera_unit)
+		Viewport.set_data(viewport, "shadow_cull_camera", shadow_cull_camera)
+	end
+end
+
+ScriptWorld.has_viewport = function (world, name)
+	local viewports = World.get_data(world, "viewports")
+
+	return viewports[name] and true or false
+end
+
+ScriptWorld.viewport = function (world, name, return_free_flight_viewport)
+	local viewport = nil
+
+	if return_free_flight_viewport then
+		viewport = World.get_data(world, "free_flight_viewports")[name] or World.get_data(world, "viewports")[name]
+	else
+		viewport = World.get_data(world, "viewports")[name]
+	end
+
+	fassert(viewport, "Viewport %q doesn't exist", name)
+
+	return viewport
+end
+
+ScriptWorld.destroy_viewport = function (world, name)
+	local viewports = World.get_data(world, "viewports")
+
+	fassert(viewports[name], "Viewport %q doesn't exist", name)
+
+	local viewport = viewports[name]
+	viewports[name] = nil
+
+	ScriptWorld.destroy_shading_environment(world, viewport)
+
+	local camera = Viewport.get_data(viewport, "camera")
+	local camera_unit = Camera.get_data(camera, "unit")
+
+	World.destroy_unit(world, camera_unit)
+	Application.destroy_viewport(world, viewport)
+	ScriptWorld._update_render_queue(world)
+end
+
+ScriptWorld.create_global_free_flight_viewport = function (world, template)
+	fassert(not World.has_data(world, "global_free_flight_viewport"), "Trying to spawn global freeflight viewport when one already exists.")
+
+	local viewports = World.get_data(world, "viewports")
+
+	if table.is_empty(viewports) then
+		return nil
+	end
+
+	local bottom_viewport = ScriptWorld.bottom_viewport(world)
+	local bottom_layer = Viewport.get_data(bottom_viewport, "layer")
+	local free_flight_viewport = Application.create_viewport(world, template)
+
+	Viewport.set_data(free_flight_viewport, "layer", bottom_layer)
+	Viewport.set_data(free_flight_viewport, "name", "global_free_flight")
+	Viewport.set_data(free_flight_viewport, "is_first_render", true)
+	World.set_data(world, "global_free_flight_viewport", free_flight_viewport)
+
+	local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
+	local camera = Unit.camera(camera_unit, "camera")
+
+	Camera.set_data(camera, "unit", camera_unit)
+
+	local bottom_layer_camera = ScriptViewport.camera(bottom_viewport)
+	local pose = Camera.local_pose(bottom_layer_camera)
+
+	ScriptCamera.set_local_pose(camera, pose)
+
+	local vertical_fov = Camera.vertical_fov(bottom_layer_camera)
+
+	Camera.set_vertical_fov(camera, vertical_fov)
+	Viewport.set_data(free_flight_viewport, "camera", camera)
+
+	return free_flight_viewport
+end
+
+ScriptWorld.global_free_flight_viewport = function (world)
+	return World.get_data(world, "global_free_flight_viewport")
+end
+
+ScriptWorld.destroy_global_free_flight_viewport = function (world)
+	local viewport = World.get_data(world, "global_free_flight_viewport")
+
+	fassert(viewport, "Trying to destroy global free flight viewport when none exists.")
+
+	local camera = Viewport.get_data(viewport, "camera")
+	local camera_unit = Camera.get_data(camera, "unit")
+
+	World.destroy_unit(world, camera_unit)
+	Application.destroy_viewport(world, viewport)
+	World.set_data(world, "global_free_flight_viewport", nil)
+end
+
+ScriptWorld.create_free_flight_viewport = function (world, overridden_viewport_name, template, shading_environment_name, shading_callback, mood_setting)
+	local overridden_viewport = ScriptWorld.viewport(world, overridden_viewport_name)
+	local free_flight_viewport = Application.create_viewport(world, template)
+
+	Viewport.set_data(free_flight_viewport, "layer", Viewport.get_data(overridden_viewport, "layer"))
+
+	local free_flight_viewports = World.get_data(world, "free_flight_viewports")
+
+	fassert(free_flight_viewports[overridden_viewport_name] == nil, "Free flight viewport %q already exists", overridden_viewport_name)
+
+	free_flight_viewports[overridden_viewport_name] = free_flight_viewport
+
+	fassert(shading_environment_name, "Missing shading environment name for global free flight viewport!")
+	ScriptWorld.create_shading_environment(world, free_flight_viewport, shading_environment_name, shading_callback, mood_setting or "default")
+
+	local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
+	local camera = Unit.camera(camera_unit, "camera")
+
+	Camera.set_data(camera, "unit", camera_unit)
+
+	local overridden_viewport_camera = ScriptViewport.camera(overridden_viewport)
+	local pose = Camera.local_pose(overridden_viewport_camera)
+
+	ScriptCamera.set_local_pose(camera, pose)
+	Viewport.set_data(free_flight_viewport, "camera", camera)
+	Viewport.set_data(free_flight_viewport, "overridden_viewport", overridden_viewport)
+	ScriptWorld._update_render_queue(world)
+
+	return free_flight_viewport
+end
+
+ScriptWorld.free_flight_viewport = function (world, name)
+	local viewports = World.get_data(world, "free_flight_viewports")
+
+	fassert(viewports[name], "Free flight viewport %q doesn't exists", name)
+
+	return viewports[name]
+end
+
+ScriptWorld.destroy_free_flight_viewport = function (world, name)
+	local viewports = World.get_data(world, "free_flight_viewports")
+
+	fassert(viewports[name], "Viewport %q doesn't exist", name)
+
+	local viewport = viewports[name]
+	viewports[name] = nil
+
+	ScriptWorld.destroy_shading_environment(world, viewport)
+
+	local camera = Viewport.get_data(viewport, "camera")
+	local camera_unit = Camera.get_data(camera, "unit")
+
+	World.destroy_unit(world, camera_unit)
+	Application.destroy_viewport(world, viewport)
+	ScriptWorld._update_render_queue(world)
+end
+
+ScriptWorld.activate_viewport = function (world, viewport)
+	Viewport.set_data(viewport, "active", true)
+	ScriptWorld._update_render_queue(world)
+end
+
+ScriptWorld.deactivate_viewport = function (world, viewport)
+	Viewport.set_data(viewport, "active", false)
+	ScriptWorld._update_render_queue(world)
+end
+
+ScriptWorld.update = function (world, dt, anim_callback, scene_callback)
+	if World.get_data(world, "active") then
+		if World.get_data(world, "paused") then
+			dt = 0
+		end
+
+		Profiler.start(ScriptWorld.name(world))
+
+		if anim_callback then
+			World.update_animations_with_callback(world, dt, anim_callback)
+		else
+			World.update_animations(world, dt)
+		end
+
+		if scene_callback then
+			World.update_scene_with_callback(world, dt, scene_callback)
+		else
+			World.update_scene(world, dt)
+		end
+
+		Profiler.stop(ScriptWorld.name(world))
+	else
+		World.update_timer(world, dt)
+	end
+end
 
 local function _check_shadow_baking(world, shading_environment)
 	local shadow_baked = World.get_data(world, "shadow_baked")
@@ -302,7 +316,7 @@ ScriptWorld.render = function (world)
 		local should_blend = not World.get_data(world, "avoid_blend")
 		local render_queue_size = #render_queue
 
-		for i = 1, render_queue_size, 1 do
+		for i = 1, render_queue_size do
 			local viewport = render_queue[i]
 			local shading_environment = Viewport.get_data(viewport, "shading_environment")
 
@@ -426,7 +440,7 @@ ScriptWorld._register_nested_levels = function (levels, parent, last_count)
 	local sub_level_names = {}
 	local sub_levels = Level.nested_levels(parent)
 
-	for i = 1, num_sub_levels, 1 do
+	for i = 1, num_sub_levels do
 		sub_level_names[i] = Level.name(sub_levels[i])
 
 		fassert(levels[sub_level_names[i]] == nil, "Level %q already spawned", sub_level_names[i])
@@ -445,7 +459,7 @@ ScriptWorld._unregister_nested_levels = function (levels, parent_level)
 	local num_sub_levels = Level.num_nested_levels(parent_level)
 	local sub_levels = Level.nested_levels(parent_level)
 
-	for i = 1, num_sub_levels, 1 do
+	for i = 1, num_sub_levels do
 		local sub_level_name = Level.name(sub_levels[i])
 		levels[sub_level_name] = nil
 
@@ -530,7 +544,7 @@ ScriptWorld.optimize_level_units = function (world)
 		local level = level_data.level
 		local level_units = Level_units(level)
 
-		for i = 1, #level_units, 1 do
+		for i = 1, #level_units do
 			ScriptUnit_optimize(level_units[i])
 		end
 	end

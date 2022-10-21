@@ -41,7 +41,7 @@ end
 BreedUnitTester.destroy = function (self)
 	local package_manager = self._package_manager
 
-	for i = 1, #self._load_ids, 1 do
+	for i = 1, #self._load_ids do
 		package_manager:release(self._load_ids[i])
 	end
 
@@ -64,7 +64,7 @@ BreedUnitTester.update_time_slice_package_load = function (self)
 	local callback = nil
 	local package_manager = self._package_manager
 
-	for index = last_index + 1, num_resources, 1 do
+	for index = last_index + 1, num_resources do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
@@ -95,7 +95,7 @@ BreedUnitTester.update = function (self)
 	local package_manager = self._package_manager
 	local all_packages_loaded = true
 
-	for i = 1, #self._load_ids, 1 do
+	for i = 1, #self._load_ids do
 		if not package_manager:has_loaded_id(self._load_ids[i]) then
 			all_packages_loaded = false
 

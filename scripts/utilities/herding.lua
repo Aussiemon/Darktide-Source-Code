@@ -41,7 +41,7 @@ local Herding = {
 
 		if stagger_override == "up" or stagger_override == "down" then
 			local vertical = Vector3.normalize(target_position - attacker_position)
-			vertical.z = (stagger_override == "up" and 1) or -1
+			vertical.z = stagger_override == "up" and 1 or -1
 			custom_attack_direction = Vector3.normalize(vertical)
 		elseif stagger_override == "left" or stagger_override == "right" then
 			local horizontal = Vector3.normalize(target_position - attacker_position)

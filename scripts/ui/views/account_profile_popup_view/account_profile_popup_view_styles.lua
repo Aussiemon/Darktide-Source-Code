@@ -40,9 +40,9 @@ local background_style = {
 			0,
 			1
 		}
-	},
-	bottom_border = table.clone(background_style.top_border)
+	}
 }
+background_style.bottom_border = table.clone(background_style.top_border)
 background_style.bottom_border.vertical_alignment = "bottom"
 PopupStyles.background = background_style
 PopupStyles.headline = table.clone(UIFontSettings.header_2)

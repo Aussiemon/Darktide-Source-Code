@@ -6,6 +6,7 @@ WeatherExtension.init = function (self, extension_init_context, unit, extension_
 	self._unit = unit
 
 	if DevParameters.debug_weather_vfx then
+		-- Nothing
 	end
 end
 

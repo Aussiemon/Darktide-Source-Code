@@ -54,16 +54,16 @@ UIHudElementCoordinator.update = function (self, dt, t, ui_renderer, input_servi
 	}
 	local line_thickness = 1
 
-	for i = 1, num_rows + 1, 1 do
+	for i = 1, num_rows + 1 do
 		local x = safe_rect_width
-		local y = (safe_rect_height + (i - 1) * grid_cell_height) - line_thickness
+		local y = safe_rect_height + (i - 1) * grid_cell_height - line_thickness
 		local position = Vector3(x * inverse_scale, y * inverse_scale, draw_layer)
 		local size = Vector2(w * inverse_scale, line_thickness)
 
 		UIRenderer.draw_rect(ui_renderer, position, size, line_color_table)
 	end
 
-	for i = 1, num_columns + 1, 1 do
+	for i = 1, num_columns + 1 do
 		local x = safe_rect_width + (i - 1) * grid_cell_width
 		local y = safe_rect_height
 		local position = Vector3(x * inverse_scale, y * inverse_scale, draw_layer)
@@ -83,7 +83,7 @@ UIHudElementCoordinator.update = function (self, dt, t, ui_renderer, input_servi
 		255
 	}
 
-	for i = 1, num_columns * num_rows, 1 do
+	for i = 1, num_columns * num_rows do
 		local column = (i - 1) % num_rows + 1
 		local row = math.ceil(i / num_columns)
 		local area_size = Vector2(w / num_columns, h / num_rows)
@@ -161,8 +161,8 @@ UIHudElementCoordinator.handle_scenegraph_coordinates = function (self, element,
 	end
 
 	local saved_scenegraph_settings = self._saved_scenegraph_settings
-	local render_scale = (render_settings and render_settings.scale) or RESOLUTION_LOOKUP.scale
-	local render_inverse_scale = (render_settings and render_settings.inverse_scale) or RESOLUTION_LOOKUP.inverse_scale
+	local render_scale = render_settings and render_settings.scale or RESOLUTION_LOOKUP.scale
+	local render_inverse_scale = render_settings and render_settings.inverse_scale or RESOLUTION_LOOKUP.inverse_scale
 	local safe_rect = self:safe_rect()
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height

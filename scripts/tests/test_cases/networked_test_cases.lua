@@ -91,5 +91,3 @@ NetworkedTestCases = {
 		end)
 	end
 }
-
-return

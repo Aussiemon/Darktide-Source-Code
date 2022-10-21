@@ -171,7 +171,7 @@ ViewElementUniformGrid.remove_widget = function (self, widget)
 	local widgets = self._widgets
 	local focused_widget = self._focused_widget
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		if widgets[i] == widget then
 			self:_unregister_widget_name(widget.name)
 			table.remove(widgets, i)
@@ -191,7 +191,7 @@ end
 ViewElementUniformGrid.grid_widget = function (self, column, row)
 	local widgets = self._widgets
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 
@@ -221,7 +221,7 @@ ViewElementUniformGrid.set_focused_grid_cell = function (self, column, row)
 	self._focused_widget = nil
 	local widgets = self._widgets
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -254,7 +254,7 @@ ViewElementUniformGrid.set_focused_grid_widget = function (self, widget_to_focus
 	self._focused_widget = nil
 	local widgets = self._widgets
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -322,15 +322,15 @@ end
 
 ViewElementUniformGrid._find_next_cell = function (self, start_column, start_row, direction)
 	local is_hexagonal = self._is_hexagonal
-	local column_padding = (is_hexagonal and 0.5) or 0
-	local row_offset = (is_hexagonal and math.sqrt(3) / 2) or 1
+	local column_padding = is_hexagonal and 0.5 or 0
+	local row_offset = is_hexagonal and math.sqrt(3) / 2 or 1
 	start_column = start_column + start_row % 2 * column_padding
 	start_row = start_row * row_offset
 	local widgets = self._widgets
 	local closest_distance = math.huge
 	local closest_widget = nil
 
-	for i = 1, #widgets, 1 do
+	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local column = content.column
@@ -343,7 +343,7 @@ ViewElementUniformGrid._find_next_cell = function (self, start_column, start_row
 		if closest_distance > distance_squared then
 			local hotspot = content.hotspot
 
-			if hotspot and not hotspot.disabled and (not direction or (direction == "left" and horizontal_distance < 0) or (direction == "right" and horizontal_distance > 0) or (direction == "up" and vertical_distance < 0) or (direction == "down" and vertical_distance > 0)) then
+			if hotspot and not hotspot.disabled and (not direction or direction == "left" and horizontal_distance < 0 or direction == "right" and horizontal_distance > 0 or direction == "up" and vertical_distance < 0 or direction == "down" and vertical_distance > 0) then
 				closest_distance = distance_squared
 				closest_widget = widget
 			end
@@ -359,8 +359,8 @@ ViewElementUniformGrid._recalculate_grid = function (self)
 	local cell_size = self._cell_size
 	local grid_spacing = self._grid_spacing
 	local is_hexagonal = self._is_hexagonal
-	local column_padding = (is_hexagonal and 0.5) or 0
-	local row_extra_offset = (is_hexagonal and math.sqrt(3) / 2) or 1
+	local column_padding = is_hexagonal and 0.5 or 0
+	local row_extra_offset = is_hexagonal and math.sqrt(3) / 2 or 1
 	local num_vertical_gutters = num_cells[1] - 1
 	cell_size[1] = (grid_width - grid_spacing[1] * num_vertical_gutters) / (num_cells[1] + column_padding)
 	local num_horizontal_gutters = num_cells[2] - 1
@@ -375,11 +375,11 @@ ViewElementUniformGrid._recalculate_grid = function (self)
 	new_grid_area_definition.horizontal_alignment = old_grid_area_definition.horizontal_alignment
 	new_grid_area_definition.vertical_alignment = old_grid_area_definition.vertical_alignment
 
-	for row = 1, num_cells[2], 1 do
-		local column_extra_offset = (row % 2 == 1 and cell_size[1] * column_padding) or 0
+	for row = 1, num_cells[2] do
+		local column_extra_offset = row % 2 == 1 and cell_size[1] * column_padding or 0
 		local row_offset = (row - 1) * (cell_size[2] + grid_spacing[2]) * row_extra_offset
 
-		for column = 1, num_cells[1], 1 do
+		for column = 1, num_cells[1] do
 			local new_scenegraph_id = string.format(GRID_CELL_ID_FORMAT, column, row)
 			local new_node_definition = table.clone(grid_cell_blueprint)
 			local position = new_node_definition.position
@@ -414,7 +414,7 @@ ViewElementUniformGrid._insert_widget_widget_in_grid = function (self, widget, c
 	local mid_widget_column = mid_widget_content.column
 	local mid_widget_row = mid_widget_content.row
 
-	if row < mid_widget_row or (mid_widget_row == row and column < mid_widget_column) then
+	if row < mid_widget_row or mid_widget_row == row and column < mid_widget_column then
 		self:_insert_widget_widget_in_grid(widget, column, row, start_index, mid_index - 1)
 	else
 		self:_insert_widget_widget_in_grid(widget, column, row, mid_index + 1, end_index)

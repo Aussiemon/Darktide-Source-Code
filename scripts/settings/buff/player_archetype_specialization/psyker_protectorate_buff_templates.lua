@@ -168,9 +168,9 @@ templates.psyker_protectorate_base_passive = {
 				return
 			end
 
-			local max_stacks = (template_data.increased_stacks and max_stack_talent) or max_stack
+			local max_stacks = template_data.increased_stacks and max_stack_talent or max_stack
 			template_data.charges = math.clamp(template_data.charges + 1, 0, max_stacks)
-			local buff_name = (template_data.increased_stacks and "psyker_protectorate_base_passive_visual_buff_increased") or "psyker_protectorate_base_passive_visual_buff"
+			local buff_name = template_data.increased_stacks and "psyker_protectorate_base_passive_visual_buff_increased" or "psyker_protectorate_base_passive_visual_buff"
 			local t = Managers.time:time("gameplay")
 
 			template_data.fx_extension:spawn_exclusive_particle("content/fx/particles/screenspace/screen_biomancer_souls", Vector3(0, 0, 1))
@@ -476,7 +476,7 @@ templates.psyker_protectorate_toughness_regen_at_shield = {
 		if #extensions > 0 then
 			local valid_player_units = template_data.side.valid_player_units
 
-			for i = 1, #valid_player_units, 1 do
+			for i = 1, #valid_player_units do
 				local player_unit = valid_player_units[i]
 
 				for _, extension in pairs(extensions) do

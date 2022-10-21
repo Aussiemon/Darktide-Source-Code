@@ -67,7 +67,7 @@ local target_selection_template = {
 		if not lock_target then
 			local aggro_state = perception_component.aggro_state
 
-			for i = 1, #target_units, 1 do
+			for i = 1, #target_units do
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit then
@@ -80,7 +80,7 @@ local target_selection_template = {
 						if best_score < score then
 							local has_line_of_sight = line_of_sight_lookup[target_unit]
 
-							if (not current_target_unit and aggro_state == aggro_states.aggroed) or has_line_of_sight then
+							if not current_target_unit and aggro_state == aggro_states.aggroed or has_line_of_sight then
 								local z_distance = math.abs(position.z - target_position.z)
 								closest_z_distance = z_distance
 								closest_distance_sq = distance_sq

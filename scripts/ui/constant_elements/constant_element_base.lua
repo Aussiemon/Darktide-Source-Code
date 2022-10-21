@@ -203,7 +203,7 @@ ConstantElementBase._draw_widgets = function (self, dt, t, input_service, ui_ren
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
-	for i = 1, num_widgets, 1 do
+	for i = 1, num_widgets do
 		local widget = widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)

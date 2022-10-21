@@ -76,7 +76,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, st
 
 	if not state_machine then
 		local archetype = profile.archetype
-		local breed_name = (archetype and archetype.breed) or profile.breed
+		local breed_name = archetype and archetype.breed or profile.breed
 		local breed_settings = Breeds[breed_name]
 		state_machine = breed_settings.character_creation_state_machine
 	end
@@ -147,9 +147,9 @@ UIProfileSpawner._change_slot_item = function (self, slot_id, item)
 	local character_spawn_data = self._character_spawn_data
 	local loading_profile_data = self._loading_profile_data
 	local use_loader_version = loading_profile_data ~= nil
-	local loading_items = (use_loader_version and loading_profile_data.loading_items) or character_spawn_data.loading_items
+	local loading_items = use_loader_version and loading_profile_data.loading_items or character_spawn_data.loading_items
 	loading_items[slot_id] = item
-	local loader = (use_loader_version and loading_profile_data.loader) or self._single_item_profile_loader
+	local loader = use_loader_version and loading_profile_data.loader or self._single_item_profile_loader
 	local complete_callback = callback(self, "cb_on_single_slot_item_loaded", slot_id, item)
 
 	if item then
@@ -163,8 +163,8 @@ UIProfileSpawner.cb_on_single_slot_item_loaded = function (self, slot_id, item)
 	local character_spawn_data = self._character_spawn_data
 	local loading_profile_data = self._loading_profile_data
 	local use_loader_version = loading_profile_data ~= nil
-	local profile_loader = (use_loader_version and loading_profile_data.loader) or character_spawn_data.profile_loader
-	local profile = (use_loader_version and loading_profile_data.profile) or character_spawn_data.profile
+	local profile_loader = use_loader_version and loading_profile_data.loader or character_spawn_data.profile_loader
+	local profile = use_loader_version and loading_profile_data.profile or character_spawn_data.profile
 	local loadout = profile.loadout
 	loadout[slot_id] = item
 
@@ -247,17 +247,17 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 		if loader:is_all_loaded() then
 			if self._character_spawn_data then
 				self:_despawn_current_character_profile()
-
-				local position = loading_profile_data.position and Vector3.from_array(loading_profile_data.position)
-				local rotation = loading_profile_data.rotation and QuaternionBox.unbox(loading_profile_data.rotation)
-				local state_machine = loading_profile_data.state_machine
-				local animation_event = loading_profile_data.animation_event
-				local profile = loading_profile_data.profile
-
-				self:_spawn_character_profile(profile, loader, position, rotation, state_machine, animation_event)
-
-				self._loading_profile_data = nil
 			end
+
+			local position = loading_profile_data.position and Vector3.from_array(loading_profile_data.position)
+			local rotation = loading_profile_data.rotation and QuaternionBox.unbox(loading_profile_data.rotation)
+			local state_machine = loading_profile_data.state_machine
+			local animation_event = loading_profile_data.animation_event
+			local profile = loading_profile_data.profile
+
+			self:_spawn_character_profile(profile, loader, position, rotation, state_machine, animation_event)
+
+			self._loading_profile_data = nil
 		end
 	end
 end
@@ -437,7 +437,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local loadout = profile.loadout
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
-	local breed_name = (archetype and archetype.breed) or profile.breed
+	local breed_name = archetype and archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local base_unit = breed_settings.base_unit
 	position = position or Vector3.zero()
@@ -469,7 +469,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 	local equipped_items = {}
 
-	for i = 1, #slot_equip_order, 1 do
+	for i = 1, #slot_equip_order do
 		local slot_id = slot_equip_order[i]
 		local slot = slots[slot_id]
 		local item = loadout[slot_id]
@@ -735,7 +735,7 @@ UIProfileSpawner._get_raycast_hit = function (self, from, to, physics_world, col
 	local INDEX_ACTOR = 4
 	local num_hits = #result
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local hit = result[i]
 		local hit_distance = hit[INDEX_DISTANCE]
 		local hit_actor = hit[INDEX_ACTOR]

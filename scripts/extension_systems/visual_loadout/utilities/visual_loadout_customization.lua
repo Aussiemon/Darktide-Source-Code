@@ -97,7 +97,7 @@ VisualLoadoutCustomization.spawn_item_attachments = function (item_data, attach_
 	local attachments = item_data.attachments
 
 	if item_unit and attachments then
-		attachment_units_bind_poses = (optional_extract_attachment_units_bind_poses and {}) or nil
+		attachment_units_bind_poses = optional_extract_attachment_units_bind_poses and {} or nil
 		attachment_units = {}
 
 		for _, attachment_slot_data in pairs(attachments) do
@@ -166,7 +166,7 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		return nil
 	end
 
-	local base_unit = (is_first_person and item_data.base_unit_1p) or item_data.base_unit
+	local base_unit = is_first_person and item_data.base_unit_1p or item_data.base_unit
 
 	if not base_unit or base_unit == "" then
 		assert(settings.in_editor == true, string.format("ItemCustomization: Could not find a base_unit in the item data, make sure item data passed is correctly. Parent unit %s", tostring(parent_unit)))
@@ -182,12 +182,12 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		attach_node_index = tonumber(attach_node)
 	elseif settings.is_minion then
 		if settings.from_script_component then
-			attach_node_index = (Unit.has_node(parent_unit, item_data.wielded_attach_node or attach_node) and Unit.node(parent_unit, item_data.wielded_attach_node or attach_node)) or 1
+			attach_node_index = Unit.has_node(parent_unit, item_data.wielded_attach_node or attach_node) and Unit.node(parent_unit, item_data.wielded_attach_node or attach_node) or 1
 		else
-			attach_node_index = (Unit.has_node(parent_unit, item_data.unwielded_attach_node or attach_node) and Unit.node(parent_unit, item_data.unwielded_attach_node or attach_node)) or 1
+			attach_node_index = Unit.has_node(parent_unit, item_data.unwielded_attach_node or attach_node) and Unit.node(parent_unit, item_data.unwielded_attach_node or attach_node) or 1
 		end
 	elseif attach_node then
-		attach_node_index = (Unit.has_node(parent_unit, attach_node) and Unit.node(parent_unit, attach_node)) or 1
+		attach_node_index = Unit.has_node(parent_unit, attach_node) and Unit.node(parent_unit, attach_node) or 1
 	end
 
 	local spawned_unit = nil

@@ -22,7 +22,7 @@ LocalMechanismVerificationState.init = function (self, state_machine, shared_sta
 
 	Log.info("LocalMechanismVerificationState", "Sending JWT Ticket, total length %s split into %s chunks", string.len(jwt_ticket), #ticket_array)
 
-	for i = 1, #ticket_array, 1 do
+	for i = 1, #ticket_array do
 		local ticket_part = ticket_array[i]
 		local is_last_part = i == ticket_array_size
 

@@ -91,7 +91,7 @@ MainMenuBackgroundView.event_main_menu_set_presentation_profile = function (self
 	local loading = false
 	local profiles_loading_data = self._profiles_loading_data
 
-	for i = 1, #profiles_loading_data, 1 do
+	for i = 1, #profiles_loading_data do
 		local loading_data = profiles_loading_data[i]
 
 		if loading_data.profile == profile then
@@ -149,7 +149,7 @@ MainMenuBackgroundView._spawn_profile = function (self, profile)
 
 	local ignored_slots = MainMenuBackgroundViewSettings.ignored_slots
 
-	for i = 1, #ignored_slots, 1 do
+	for i = 1, #ignored_slots do
 		local slot_name = ignored_slots[i]
 
 		self._profile_spawner:ignore_slot(slot_name)
@@ -225,7 +225,7 @@ MainMenuBackgroundView._unload_profile = function (self, profile)
 	else
 		local loading_data_index = nil
 
-		for i = 1, #self._profiles_loading_data, 1 do
+		for i = 1, #self._profiles_loading_data do
 			local loading_data = self._profiles_loading_data[i]
 
 			if loading_data.profile == profile then
@@ -257,7 +257,7 @@ MainMenuBackgroundView.on_exit = function (self)
 
 	table.clear(self._loading_profile_queue)
 
-	for i = 1, #self._profiles_loading_data, 1 do
+	for i = 1, #self._profiles_loading_data do
 		local loading_data = self._profiles_loading_data[i]
 		local loader = loading_data.loader
 
@@ -338,7 +338,7 @@ MainMenuBackgroundView.update = function (self, dt, t, input_service)
 
 	local profiles_loading_data = self._profiles_loading_data
 
-	for i = 1, #profiles_loading_data, 1 do
+	for i = 1, #profiles_loading_data do
 		local loading_data = profiles_loading_data[i]
 		local profile = loading_data.profile
 

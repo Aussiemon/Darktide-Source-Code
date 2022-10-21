@@ -57,7 +57,7 @@ NetworkEventDelegate.register_session_unit_events = function (self, object, unit
 end
 
 NetworkEventDelegate.unregister_events = function (self, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 
 		fassert(self._registered_objects[callback_name], "Trying to unregister non-registered event %q", callback_name)
@@ -69,7 +69,7 @@ NetworkEventDelegate.unregister_events = function (self, ...)
 end
 
 NetworkEventDelegate.unregister_channel_events = function (self, channel_id, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 		local object_table = self._registered_channel_objects[callback_name]
 
@@ -89,7 +89,7 @@ NetworkEventDelegate.unregister_channel_events = function (self, channel_id, ...
 end
 
 NetworkEventDelegate.unregister_unit_events = function (self, unit_id, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 		local object_table = self._registered_unit_objects[callback_name]
 
@@ -109,7 +109,7 @@ NetworkEventDelegate.unregister_unit_events = function (self, unit_id, ...)
 end
 
 NetworkEventDelegate._register_events = function (self, is_session_event, object, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 
 		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)
@@ -141,7 +141,7 @@ NetworkEventDelegate._register_events = function (self, is_session_event, object
 end
 
 NetworkEventDelegate._register_channel_events = function (self, is_session_event, object, channel_id, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 
 		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)
@@ -191,7 +191,7 @@ NetworkEventDelegate._register_channel_events = function (self, is_session_event
 end
 
 NetworkEventDelegate._register_session_unit_events = function (self, object, unit_id, ...)
-	for i = 1, select("#", ...), 1 do
+	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 
 		fassert(object[callback_name], "No callback function with name %q specified in passed object", callback_name)

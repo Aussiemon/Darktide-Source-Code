@@ -4,7 +4,7 @@ local ItemPackage = {}
 local function _require_level_items(level_name, item_data)
 	local num_nested_levels = LevelResource.nested_level_count(level_name)
 
-	for i = 1, num_nested_levels, 1 do
+	for i = 1, num_nested_levels do
 		local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
 
 		_require_level_items(nested_level_name, item_data)
@@ -59,7 +59,7 @@ end
 ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_dependencies)
 	for key, value in pairs(item_entry_data) do
 		if key == "vfx_resources" or key == "sfx_resources" then
-			for i = 1, #value, 1 do
+			for i = 1, #value do
 				local vfx_resource = value[i]
 				resource_dependencies[vfx_resource] = true
 			end
@@ -107,7 +107,7 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 	if weapon_template and weapon_template ~= "" then
 		local resource_list = WeaponTemplateResourceDependencies.generate(weapon_template)
 
-		for i = 1, #resource_list, 1 do
+		for i = 1, #resource_list do
 			local resource_name = resource_list[i]
 			resource_dependencies[resource_name] = true
 		end
@@ -178,7 +178,7 @@ end
 ItemPackage._resolve_item_packages_recursive = function (attachments, items_dictionary, result)
 	for key, value in pairs(attachments) do
 		if key == "item" then
-			local item_name = (type(value) == "table" and value.name) or value
+			local item_name = type(value) == "table" and value.name or value
 
 			if item_name ~= "" then
 				local item_entry = rawget(items_dictionary, item_name)

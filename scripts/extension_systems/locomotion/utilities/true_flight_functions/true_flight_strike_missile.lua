@@ -1,7 +1,7 @@
 local true_flight_strike_missile = {}
 
 local function _lerp_modifier_func_default(integration_data, distance, height_over_target)
-	return (distance < 5 and 1) or 5 / distance
+	return distance < 5 and 1 or 5 / distance
 end
 
 local function _lerp_modifier_func(true_flight_template)

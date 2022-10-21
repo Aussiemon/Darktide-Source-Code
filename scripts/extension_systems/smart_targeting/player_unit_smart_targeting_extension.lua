@@ -111,7 +111,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local target_node_name = precision_target_settings.wanted_target
 	local breed_weights = precision_target_settings.breed_weights or EMPTY_TABLE
 	local smart_tagging = precision_target_settings.smart_tagging
-	local collision_filter = precision_target_settings.collision_filter or (smart_tagging and "filter_player_ping_target_selection") or "filter_ray_aim_assist"
+	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
 
 	Profiler.start("raycast")
 
@@ -128,7 +128,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local Vector3_dot = Vector3.dot
 	local Vector3_length = Vector3.length
 
-	for i = 1, num_hits, 1 do
+	for i = 1, num_hits do
 		local hit = hits[i]
 		local hit_actor = hit[INDEX_ACTOR]
 		local hit_position = hit[INDEX_POSITION]
@@ -210,6 +210,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 					end
 
 					if not visible_target then
+						-- Nothing
 					elseif direct_hit then
 						best_unit = hit_unit
 						best_unit_distance = distance
@@ -355,7 +356,7 @@ PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function
 		local center_mass_distance = Vector3.length(center_mass_pos - own_position)
 		hit = PhysicsWorld.raycast(physics_world, own_position, center_mass_direction, center_mass_distance, "closest", "collision_filter", "filter_ray_aim_assist_line_of_sight")
 		visible_target = not hit
-		target_position = (visible_target and center_mass_pos) or nil
+		target_position = visible_target and center_mass_pos or nil
 	end
 
 	Profiler.stop("target_visibility")
@@ -373,7 +374,7 @@ PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position_non_breed 
 	local hit, _, _, _, blocking_actor = PhysicsWorld.raycast(physics_world, own_position, actor_direction, actor_distance, "closest", "collision_filter", "filter_ray_aim_assist_line_of_sight")
 	local visible_target, target_position = nil
 
-	if not hit or (hit and Actor.unit(blocking_actor) == target_unit) then
+	if not hit or hit and Actor.unit(blocking_actor) == target_unit then
 		visible_target = true
 		target_position = actor_pos
 	end

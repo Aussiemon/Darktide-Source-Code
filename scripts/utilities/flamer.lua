@@ -55,7 +55,7 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, flam
 			if num_parabola_control_points then
 				local parabola_particle_variables = {}
 
-				for index = 1, num_parabola_control_points, 1 do
+				for index = 1, num_parabola_control_points do
 					local particle_variable_id = World.find_particles_variable(world, flamer_particle_name, tostring(index))
 
 					table.insert(parabola_particle_variables, particle_variable_id)
@@ -227,7 +227,7 @@ end
 function _set_flamer_parabola(world, attachment_unit, source_node, flamer_particle_id, parabola_particle_variables, start_position, control_point_1, control_point_2, aim_position)
 	local num_variables = #parabola_particle_variables
 
-	for i = 1, num_variables, 1 do
+	for i = 1, num_variables do
 		local position = nil
 
 		if i == 1 then

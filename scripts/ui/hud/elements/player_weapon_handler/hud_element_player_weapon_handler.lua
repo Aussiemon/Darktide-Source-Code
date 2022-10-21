@@ -241,7 +241,8 @@ HudElementPlayerWeaponHandler.update = function (self, dt, t, ui_renderer, rende
 			height_offset = height_offset + height + weapon_spacing[2]
 		end
 
-		for slot15, slot16 in pairs(self._player_weapons) do
+		for slot_id, data in pairs(self._player_weapons) do
+			-- Nothing
 		end
 
 		self._wield_anim_progress = anim_progress

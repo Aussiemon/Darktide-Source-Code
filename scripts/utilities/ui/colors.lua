@@ -1,27 +1,28 @@
-local ColorUtilities = {
-	color_lerp = function (source, target, p, out, ignore_alpha)
-		local math_lerp = math.lerp
+local ColorUtilities = {}
 
-		if not ignore_alpha then
-			out[1] = math_lerp(source[1], target[1], p)
-		end
+ColorUtilities.color_lerp = function (source, target, p, out, ignore_alpha)
+	local math_lerp = math.lerp
 
-		out[2] = math_lerp(source[2], target[2], p)
-		out[3] = math_lerp(source[3], target[3], p)
-		out[4] = math_lerp(source[4], target[4], p)
-
-		return out
-	end,
-	color_copy = function (source, target, ignore_alpha)
-		if not ignore_alpha then
-			target[1] = source[1]
-		end
-
-		target[2] = source[2]
-		target[3] = source[3]
-		target[4] = source[4]
+	if not ignore_alpha then
+		out[1] = math_lerp(source[1], target[1], p)
 	end
-}
+
+	out[2] = math_lerp(source[2], target[2], p)
+	out[3] = math_lerp(source[3], target[3], p)
+	out[4] = math_lerp(source[4], target[4], p)
+
+	return out
+end
+
+ColorUtilities.color_copy = function (source, target, ignore_alpha)
+	if not ignore_alpha then
+		target[1] = source[1]
+	end
+
+	target[2] = source[2]
+	target[3] = source[3]
+	target[4] = source[4]
+end
 
 local function hue2rgb(p, q, t)
 	if t < 0 then
@@ -45,7 +46,7 @@ ColorUtilities.hsl2rgb = function (h, s, l)
 	local r, g, b = nil
 
 	if s ~= 0 then
-		local q = (l < 0.5 and l * (1 + s)) or s + l * (1 - s)
+		local q = l < 0.5 and l * (1 + s) or s + l * (1 - s)
 		local p = 2 * l - q
 		r = hue2rgb(p, q, h + 0.3333333333333333)
 		g = hue2rgb(p, q, h)

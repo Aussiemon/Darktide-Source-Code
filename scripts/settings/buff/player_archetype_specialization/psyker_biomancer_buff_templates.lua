@@ -57,7 +57,7 @@ local function psyker_biomancer_passive_start(template_data, template_context)
 	template_data.psyker_biomancer_efficient_smites = specialization_extension:has_special_rule(special_rules.psyker_biomancer_efficient_smites)
 	template_data.psyker_biomancer_discharge_applies_warpfire = specialization_extension:has_special_rule(special_rules.psyker_biomancer_discharge_applies_warpfire)
 	template_data.psyker_biomancer_all_kills_can_generate_souls = specialization_extension:has_special_rule(special_rules.psyker_biomancer_all_kills_can_generate_souls)
-	template_data.buff_name = (template_data.psyker_biomancer_increased_max_souls and "psyker_biomancer_souls_increased_max_stacks") or (template_data.psyker_biomancer_increased_souls_duration and "psyker_biomancer_souls_increased_duration") or "psyker_biomancer_souls"
+	template_data.buff_name = template_data.psyker_biomancer_increased_max_souls and "psyker_biomancer_souls_increased_max_stacks" or template_data.psyker_biomancer_increased_souls_duration and "psyker_biomancer_souls_increased_duration" or "psyker_biomancer_souls"
 	local is_playing = fx_extension:is_looping_particles_playing("psyker_biomancer_soul")
 
 	if not is_playing then
@@ -75,7 +75,7 @@ local function psyker_biomancer_passive_start(template_data, template_context)
 	}
 	template_data.toughness_talent_soul_requirement = toughness_talent_soul_requirement
 	template_data.max_souls_talent = max_souls_talent
-	template_data.max_souls = (template_data.psyker_biomancer_increased_max_souls and max_souls_talent) or base_max_souls
+	template_data.max_souls = template_data.psyker_biomancer_increased_max_souls and max_souls_talent or base_max_souls
 	template_data.cooldown_reduction_percent = cooldown_reduction_percent
 	template_data.specialization_resource_component.max_resource = max_souls_talent
 	template_data.specialization_resource_component.current_resource = 0
@@ -202,12 +202,7 @@ local function add_soul_function(template_data, template_context)
 	template_data.specialization_resource_component.current_resource = stacks
 	local soul_screenspace_effect = nil
 	local max_stacks = template_context.template.max_stacks
-
-	if stacks == max_stacks then
-		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_maxsouls"
-	else
-		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_souls"
-	end
+	soul_screenspace_effect = stacks == max_stacks and "content/fx/particles/screenspace/screen_biomancer_maxsouls" or "content/fx/particles/screenspace/screen_biomancer_souls"
 
 	template_data.fx_extension:spawn_exclusive_particle(soul_screenspace_effect, Vector3(0, 0, 1))
 end
@@ -245,7 +240,7 @@ local function souls_proc_func(params, template_data, template_context)
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
-		for i = 1, num_souls, 1 do
+		for i = 1, num_souls do
 			if ability_extension then
 				ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_reduction_percent)
 			end
@@ -641,7 +636,7 @@ templates.psyker_biomancer_warpfire_debuff = {
 		if HEALTH_ALIVE[unit] then
 			local damage_template = DamageProfileTemplates.warpfire
 			local power_level = template_data.power_level
-			local owner = (template_context.is_server and template_context.owner_unit) or nil
+			local owner = template_context.is_server and template_context.owner_unit or nil
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.warpfire, "attacking_unit", owner)
 		end

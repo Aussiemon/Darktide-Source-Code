@@ -29,7 +29,7 @@ PlayerUnitGadgetExtension.game_object_initialized = function (self, session, obj
 	local visual_loadout_extension = self._visual_loadout_extension
 	local num_slots = 3
 
-	for i = 1, num_slots, 1 do
+	for i = 1, num_slots do
 		repeat
 			local slot_name = "slot_attachment_" .. i
 			local item = visual_loadout_extension:item_in_slot(slot_name)
@@ -64,7 +64,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 	local perks = item.perks
 
 	if perks then
-		for i = 1, #perks, 1 do
+		for i = 1, #perks do
 			local data = perks[i]
 			local master_item_id = data.id
 			local lerp_value = data.value
@@ -79,7 +79,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 	local traits = item.traits
 
 	if traits then
-		for i = 1, #traits, 1 do
+		for i = 1, #traits do
 			local data = traits[i]
 			local master_item_id = data.id
 			local lerp_value = data.value

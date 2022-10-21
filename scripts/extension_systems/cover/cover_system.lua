@@ -52,7 +52,7 @@ CoverSystem.on_remove_extension = function (self, unit, extension_name)
 		local cover_slot_broadphase_lookup = self._cover_slot_broadphase_lookup
 		local broadphase = self._broadphase
 
-		for i = 1, #cover_unit_broadphase_ids, 1 do
+		for i = 1, #cover_unit_broadphase_ids do
 			local broadphase_id = cover_unit_broadphase_ids[i]
 
 			Broadphase.remove(broadphase, broadphase_id)
@@ -122,7 +122,7 @@ CoverSystem.find_cover_slots = function (self, search_position, radius)
 	local num_results = broadphase:query(search_position, radius, broadphase_results, BROADPHASE_CATEGORIES)
 	local cover_slot_broadphase_lookup = self._cover_slot_broadphase_lookup
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		local id = broadphase_results[i]
 		local cover_slot = cover_slot_broadphase_lookup[id]
 		cover_slot_results[i] = cover_slot

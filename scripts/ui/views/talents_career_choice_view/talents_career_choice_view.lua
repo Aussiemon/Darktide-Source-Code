@@ -63,7 +63,7 @@ TalentsCareerChoiceView.on_back_pressed = function (self)
 	local back_pressed_handled = false
 	local career_banners = self._career_banners
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		local banner = career_banners[i]
 
 		if banner.state == BANNER_STATES.selected_show_talents or banner.state == BANNER_STATES.selected_show_description then
@@ -100,7 +100,7 @@ TalentsCareerChoiceView.update = function (self, dt, t, input_service)
 
 	local career_banners = self._career_banners or {}
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		career_banners[i].grid:update(dt, t, input_service)
 	end
 
@@ -117,7 +117,7 @@ end
 TalentsCareerChoiceView.cb_banner_button_pressed = function (self, banner_index)
 	local career_banners = self._career_banners
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		local banner = career_banners[i]
 		local is_selected = i == banner_index
 
@@ -187,7 +187,7 @@ TalentsCareerChoiceView._handle_input = function (self, input_service, dt, t)
 	local career_banners = self._career_banners
 	local focused_banner_index, selected_banner_index = nil
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		local banner = career_banners[i]
 
 		if using_cursor_navigation then
@@ -242,7 +242,7 @@ TalentsCareerChoiceView._handle_input = function (self, input_service, dt, t)
 		end
 	end
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		if career_banners[i].disabled then
 			self:_set_banner_state(i, BANNER_STATES.greyed_out)
 		elseif not focused_banner_index and not selected_banner_index then
@@ -277,7 +277,7 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 	if using_cursor_navigation then
 		confirmation_button_content.text = Localize(confirm_choice_button_loc_key)
 		confirmation_button_content.hotspot.is_selected = false
-		text_param.button_hint = "\ue063"
+		text_param.button_hint = ""
 		local show_details_hint = Localize(show_details_hint_loc_key, true, text_param)
 		local hide_details_hint = Localize(hide_details_hint_loc_key, true, text_param)
 		text_param.button_hint = "[S]"
@@ -300,19 +300,19 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 	else
 		confirmation_button_content.text = TextUtils.localize_with_button_hint("confirm_pressed", confirm_choice_button_loc_key)
 		confirmation_button_content.hotspot.is_selected = true
-		text_param.button_hint = "\ue0c9"
+		text_param.button_hint = ""
 		local show_details_hint = Localize(show_details_hint_loc_key, true, text_param)
 		local hide_details_hint = Localize(hide_details_hint_loc_key, true, text_param)
-		text_param.button_hint = "\ue0d8"
+		text_param.button_hint = ""
 		local show_description_hint = Localize(show_description_hint_loc_key, true, text_param)
-		text_param.button_hint = "\ue0d6"
+		text_param.button_hint = ""
 		local show_talents_hint = Localize(show_talents_hint_loc_key, true, text_param)
 		local focused_index, state = nil
 
-		for i = 1, #banners, 1 do
+		for i = 1, #banners do
 			local banner = banners[i]
 
-			if banner.is_selected or (not focused_index and banner.state == BANNER_STATES.focused) then
+			if banner.is_selected or not focused_index and banner.state == BANNER_STATES.focused then
 				focused_index = i
 				state = banner.state
 			end
@@ -345,7 +345,7 @@ TalentsCareerChoiceView._draw_grid_widgets = function (self, dt, t, input_servic
 	local render_settings = self._render_settings
 	local career_banners = self._career_banners
 
-	for i = 1, #career_banners, 1 do
+	for i = 1, #career_banners do
 		local banner = career_banners[i]
 
 		if offscreen_renderer and banner.mask.alpha_multiplier > 0 then
@@ -354,7 +354,7 @@ TalentsCareerChoiceView._draw_grid_widgets = function (self, dt, t, input_servic
 			local list_widgets = banner.details_widgets
 			local grid = banner.grid
 
-			for j = 1, #list_widgets, 1 do
+			for j = 1, #list_widgets do
 				local widget = list_widgets[j]
 
 				if grid:is_widget_visible(widget, MASK_MARGIN) then
@@ -495,7 +495,7 @@ TalentsCareerChoiceView._setup_archetype_data = function (self)
 			content.background = specialization.choice_banner
 			content.background_blurred = specialization.choice_banner .. "_blurred"
 			content.title = TextUtils.localize_to_upper(specialization.title)
-			content.short_description = (specialization.description_short and self:_localize(specialization.description_short)) or "Unique Point 1, Unique Point 2, Unique Point 3"
+			content.short_description = specialization.description_short and self:_localize(specialization.description_short) or "Unique Point 1, Unique Point 2, Unique Point 3"
 			content.description = self:_localize(specialization.description)
 			local disabled = specialization.disabled
 			local hotspot = content.hotspot
@@ -533,20 +533,20 @@ TalentsCareerChoiceView._setup_details_list = function (self, column, archetype_
 	local item_spacing = list_style.item_spacing
 	local min_level = PlayerSpecialization.specialization_level_requirement()
 
-	for j = 1, #talent_groups, 1 do
+	for j = 1, #talent_groups do
 		local talent_group = talent_groups[j]
 
 		if talent_group.required_level <= min_level and not talent_group.invisible_in_ui then
 			local widget_name_prefix = list_name .. "_widget_" .. j .. "_"
 			local talents_in_group = talent_group.talents
 
-			for i = 1, #talents_in_group, 1 do
+			for i = 1, #talents_in_group do
 				local talent_name = talents_in_group[i]
 				local talent_data = archetype_talents[talent_name]
 				local label = self:_localize(talent_data.display_name)
 				local description = self:_localize(talent_data.description)
 				local icon = talent_data.icon or talent_data.large_icon
-				local blueprint = (icon and blueprints.list_entry_with_icon) or blueprints.list_entry_no_icon
+				local blueprint = icon and blueprints.list_entry_with_icon or blueprints.list_entry_no_icon
 				local text_style = blueprint.style.description
 				local text_options = UIFonts.get_font_options_by_style(text_style)
 				local text_size = {
@@ -566,7 +566,7 @@ TalentsCareerChoiceView._setup_details_list = function (self, column, archetype_
 				content.description = description
 				content.icon = icon
 				widgets[#widgets + 1] = new_widget
-				alignment_widgets[#alignment_widgets + 1] = (i == 1 and list_padding) or item_spacing
+				alignment_widgets[#alignment_widgets + 1] = i == 1 and list_padding or item_spacing
 				alignment_widgets[#alignment_widgets + 1] = new_widget
 			end
 		end

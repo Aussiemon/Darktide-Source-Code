@@ -20,7 +20,7 @@ WorldManager.create_world = function (self, name, parameters, ...)
 	local has_physics_world = true
 	local n_varargs = select("#", ...)
 
-	for i = 1, n_varargs, 1 do
+	for i = 1, n_varargs do
 		if select(i, ...) == Application.DISABLE_PHYSICS then
 			has_physics_world = false
 		end
@@ -137,7 +137,7 @@ WorldManager.update = function (self, dt, t)
 	local time_manager = Managers.time
 	local update_queue = self._update_queue
 
-	for i = 1, #update_queue, 1 do
+	for i = 1, #update_queue do
 		local world = update_queue[i]
 		local timer_name = World.get_data(world, "timer_name")
 
@@ -180,7 +180,7 @@ WorldManager.render = function (self)
 	local update_queue = self._update_queue
 	local ScriptWorld_render = ScriptWorld.render
 
-	for i = 1, #update_queue, 1 do
+	for i = 1, #update_queue do
 		local world = update_queue[i]
 
 		if dlss_reset_by_world[world] then

@@ -44,7 +44,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	local line_of_sight_lookup_by_id = Script.new_map(max_main_index)
 	local num_blocked_per_main_index = Script.new_array(max_main_index)
 
-	for main_index = 1, max_main_index, 1 do
+	for main_index = 1, max_main_index do
 		local id = line_of_sight_data[main_index].id
 		line_of_sight_lookup_by_id[id] = {}
 		num_blocked_per_main_index[main_index] = 0
@@ -194,7 +194,7 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, los_raycast_dat
 		local least_blocked_main_index = nil
 		local least_blocked_percentage = 1
 
-		for i = 1, max_main_index, 1 do
+		for i = 1, max_main_index do
 			local data = line_of_sight_data[i]
 			local num_blocked = num_blocked_per_main_index[i]
 			local num_offsets = data.num_offsets
@@ -234,7 +234,7 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, los_raycast_dat
 		end
 	end
 
-	for i = 1, max_main_index, 1 do
+	for i = 1, max_main_index do
 		num_blocked_per_main_index[i] = 0
 	end
 end
@@ -305,7 +305,7 @@ MinionPerceptionExtension.alert_nearby_allies = function (self, target_unit, opt
 	local target_position = POSITION_LOOKUP[target_unit]
 	local num_results = broadphase:query(from_position, optional_radius or DEFAULT_ALERT_NEARBY_RADIUS, BROADPHASE_RESULTS, side_name)
 
-	for i = 1, num_results, 1 do
+	for i = 1, num_results do
 		repeat
 			local nearby_unit = BROADPHASE_RESULTS[i]
 			local unit_data_extension = ScriptUnit.extension(nearby_unit, "unit_data_system")
@@ -340,7 +340,7 @@ end
 
 MinionPerceptionExtension.set_ignore_alerted_los = function (self, value)
 	local perception_component = self._perception_component
-	perception_component.ignore_alerted_los = (value and true) or false
+	perception_component.ignore_alerted_los = value and true or false
 end
 
 MinionPerceptionExtension.use_action_controlled_alert = function (self)
@@ -413,7 +413,7 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 	local line_of_sight_queue = self._line_of_sight_queue
 	local running_line_of_sight_checks = self._running_line_of_sight_checks
 
-	for i = 1, #target_units, 1 do
+	for i = 1, #target_units do
 		local target_unit = target_units[i]
 
 		if not running_line_of_sight_checks[target_unit] then
@@ -430,7 +430,7 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 	local up = Vector3.up()
 	local line_of_sight_data = self._line_of_sight_data
 
-	for main_index = 1, #line_of_sight_data, 1 do
+	for main_index = 1, #line_of_sight_data do
 		local data = line_of_sight_data[main_index]
 		local from_node = data.from_node
 		local to_node = data.to_node
@@ -443,7 +443,7 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 		local raycast_offsets = data.offsets
 		local num_offsets = data.num_offsets
 
-		for i = 1, num_offsets, 1 do
+		for i = 1, num_offsets do
 			local raycast_offset = raycast_offsets[i]:unbox()
 			local offset_vector = to_los_position + Vector3(right_vector.x * raycast_offset.x, right_vector.y * raycast_offset.x, raycast_offset.z)
 			local los_direction = Vector3.normalize(offset_vector)
@@ -501,7 +501,7 @@ MinionPerceptionExtension._on_target_change = function (self, old_target_unit, n
 	perception_component.target_changed_t = t
 	local game_session = self._game_session
 	local game_object_id = self._game_object_id
-	local target_unit_id = (new_target_unit and Managers.state.unit_spawner:game_object_id(new_target_unit)) or NetworkConstants.invalid_game_object_id
+	local target_unit_id = new_target_unit and Managers.state.unit_spawner:game_object_id(new_target_unit) or NetworkConstants.invalid_game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "target_unit_id", target_unit_id)
 end

@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local RoomsAndPortalsManager = class("RoomsAndPortalsManager")
 
 RoomsAndPortalsManager.init = function (self, world)

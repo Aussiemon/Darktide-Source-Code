@@ -53,7 +53,7 @@ Trajectory.angle_to_hit_moving_target = function (from_position, target_position
 	local old_flat_distance = flat_distance
 	local t = nil
 
-	for i = 1, 10, 1 do
+	for i = 1, 10 do
 		local height = estimated_target_position.z - from_position.z
 		local speed_sq = projectile_speed^2
 
@@ -70,7 +70,7 @@ Trajectory.angle_to_hit_moving_target = function (from_position, target_position
 		local second_degree_component = math.sqrt(sqrt_val)
 		local angle1 = math.atan((speed_sq + second_degree_component) / (gravity * flat_distance))
 		local angle2 = math.atan((speed_sq - second_degree_component) / (gravity * flat_distance))
-		angle = (use_greatest_angle and math.max(angle1, angle2)) or math.min(angle1, angle2)
+		angle = use_greatest_angle and math.max(angle1, angle2) or math.min(angle1, angle2)
 		t = flat_distance / (projectile_speed * math.cos(angle))
 		estimated_target_position = target_position + t * target_velocity
 		flat_distance = Vector3.length(Vector3.flat(estimated_target_position - from_position))
@@ -125,7 +125,7 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 	SEGMENT_LIST[1] = from_position
 	local t = nil
 
-	for i = 1, sections, 1 do
+	for i = 1, sections do
 		t = time_in_flight * i / sections
 		local x = x_vel_0 * t
 		local z = y_vel_0 * t - 0.5 * gravity * t^2
@@ -167,7 +167,7 @@ Trajectory.ballistic_raycast = function (physics_world, collision_filter, origin
 	SEGMENTS[1] = position
 	local total_length = 0
 
-	for i = 1, MAX_STEPS, 1 do
+	for i = 1, MAX_STEPS do
 		local new_position = position + velocity * time_step
 		local delta = new_position - position
 		local direction = Vector3.normalize(delta)

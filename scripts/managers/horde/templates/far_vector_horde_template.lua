@@ -19,7 +19,7 @@ local function _try_find_spawn_position(nav_world, center_position, index, num_c
 	local below = 2
 	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
 
-	for i = 1, max_attempts, 1 do
+	for i = 1, max_attempts do
 		local spawn_position = NavQueries.position_on_mesh(nav_world, center_position + offset, above, below)
 
 		if spawn_position then
@@ -39,13 +39,13 @@ local function _compose_spawn_list(composition)
 
 	local breeds = composition.breeds
 
-	for i = 1, #breeds, 1 do
+	for i = 1, #breeds do
 		local breed_data = breeds[i]
 		local breed_name = breed_data.name
 		local amount = breed_data.amount
 		local num_to_spawn = Math_random(amount[1], amount[2])
 
-		for j = 1, num_to_spawn, 1 do
+		for j = 1, num_to_spawn do
 			breeds_to_spawn[#breeds_to_spawn + 1] = breed_name
 		end
 	end
@@ -62,7 +62,7 @@ local function _position_has_line_of_sight_to_any_enemy_player(physics_world, fr
 	local offset = Vector3.up()
 	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
 
-	for i = 1, #valid_enemy_player_units_positions, 1 do
+	for i = 1, #valid_enemy_player_units_positions do
 		local target_position = valid_enemy_player_units_positions[i] + offset
 		local to_target = target_position - from_position
 		local distance_sq = Vector3_length_squared(to_target)
@@ -98,7 +98,7 @@ local function _try_find_position_ahead_or_behind_target_on_main_path(physics_wo
 		return false
 	end
 
-	local check_travel_distance = target_travel_distance + travel_distance * ((check_ahead and 1) or -1)
+	local check_travel_distance = target_travel_distance + travel_distance * (check_ahead and 1 or -1)
 
 	if check_travel_distance < 0 then
 		Log.info("FarVectorHorde", "\t\tCouldn't find path position at travel distance %.2f.", check_travel_distance)
@@ -142,19 +142,19 @@ local function _try_find_position_on_main_path(physics_world, chance_spawning_ah
 	local spawn_horde_ahead = random_roll <= chance_spawning_ahead
 	local min_main_path_distance = main_path_distances[1]
 
-	Log.info("FarVectorHorde", "Attempting to spawn %s within %.2f m.", (spawn_horde_ahead and "ahead") or "behind", min_main_path_distance)
+	Log.info("FarVectorHorde", "Attempting to spawn %s within %.2f m.", spawn_horde_ahead and "ahead" or "behind", min_main_path_distance)
 
 	local success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
 
 	if not success then
-		Log.info("FarVectorHorde", "\tNo position found, will try to spawn %s.", (not spawn_horde_ahead and "ahead") or "behind")
+		Log.info("FarVectorHorde", "\tNo position found, will try to spawn %s.", not spawn_horde_ahead and "ahead" or "behind")
 
 		success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, not spawn_horde_ahead, min_main_path_distance, euclidean_distance, side, target_side)
 
 		if not success then
 			local max_main_path_distance = main_path_distances[2]
 
-			Log.info("FarVectorHorde", "\tNo position found, will try a final time to spawn %s within %.2f m.", (spawn_horde_ahead and "ahead") or "behind", max_main_path_distance)
+			Log.info("FarVectorHorde", "\tNo position found, will try a final time to spawn %s within %.2f m.", spawn_horde_ahead and "ahead" or "behind", max_main_path_distance)
 
 			success, horde_position, target_direction, target_unit = _try_find_position_ahead_or_behind_target_on_main_path(physics_world, spawn_horde_ahead, max_main_path_distance, euclidean_distance, side, target_side)
 		end
@@ -217,7 +217,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local side_id = side.side_id
 	local minion_spawn_manager = Managers.state.minion_spawn
 
-	for i = 1, num_to_spawn, 1 do
+	for i = 1, num_to_spawn do
 		local spawn_position = _try_find_spawn_position(nav_world, horde_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
 
 		if spawn_position then
