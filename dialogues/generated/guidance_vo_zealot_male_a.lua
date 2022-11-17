@@ -1668,7 +1668,7 @@ local guidance_vo_zealot_male_a = {
 		sound_events_duration = {
 			3.324469,
 			3.834521,
-			5.255875,
+			3.027619,
 			3.214313,
 			5.360927
 		},

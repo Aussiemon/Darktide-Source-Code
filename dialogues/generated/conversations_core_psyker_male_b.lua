@@ -5351,6 +5351,19 @@ local conversations_core_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_psyker_male_b__lore_the_emperor_two_c_01",
+			[2.0] = "loc_psyker_male_b__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.911354,
+			[2.0] = 4.968813
+		},
+		randomize_indexes = {}
+	},
 	lore_the_warp_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

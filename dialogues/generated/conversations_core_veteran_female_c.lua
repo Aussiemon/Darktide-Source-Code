@@ -689,17 +689,6 @@ local conversations_core_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
-	combat_pause_limited_veteran_c_06_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_female_c__combat_pause_limited_veteran_c_06_a_01"
-		},
-		sound_events_duration = {
-			[1.0] = 2.899365
-		},
-		randomize_indexes = {}
-	},
 	combat_pause_limited_veteran_c_07_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -3513,23 +3502,6 @@ local conversations_core_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
-	lore_hive_cities_three_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_veteran_female_c__lore_hive_cities_three_c_01",
-			[2.0] = "loc_veteran_female_c__lore_hive_cities_three_c_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
-		randomize_indexes = {}
-	},
 	lore_imperium_four_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -4532,6 +4504,19 @@ local conversations_core_veteran_female_c = {
 		sound_events_duration = {
 			[1.0] = 3.369104,
 			[2.0] = 2.494417
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__lore_the_emperor_two_c_01",
+			[2.0] = "loc_veteran_female_c__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.732344,
+			[2.0] = 4.057
 		},
 		randomize_indexes = {}
 	},

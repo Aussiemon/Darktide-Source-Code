@@ -644,7 +644,7 @@ return function ()
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_mutant_charger"
+				"cultist_mutant"
 			},
 			{
 				"user_memory",
@@ -662,7 +662,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_chaos_mutant_charger",
+				"cultist_mutant",
 				OP.TIMESET
 			}
 		},
@@ -894,7 +894,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_flamer",
+				"cultist_flamer",
 				OP.TIMESET
 			}
 		},
@@ -1217,6 +1217,51 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_plague_ogryn",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_renegade_berserker",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_renegade_berserker",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_berserker"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_berserker",
 				OP.TIMESET
 			}
 		},
@@ -2045,10 +2090,10 @@ return function ()
 	})
 	define_rule({
 		name = "smart_tag_vo_seen_netgunner_flee",
-		category = "player_on_demand_vo",
 		wwise_route = 0,
 		response = "smart_tag_vo_seen_netgunner_flee",
 		database = "on_demand_vo",
+		category = "player_on_demand_vo",
 		criterias = {
 			{
 				"query_context",
@@ -2093,6 +2138,9 @@ return function ()
 				"seen_netgunner_flee",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

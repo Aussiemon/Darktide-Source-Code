@@ -212,6 +212,57 @@ local mission_giver_vo_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_archives_brief_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_archives_brief_a_01",
+			"loc_explicator_a__mission_archives_brief_a_02",
+			"loc_explicator_a__mission_archives_brief_a_03",
+			"loc_explicator_a__mission_archives_brief_a_04"
+		},
+		sound_events_duration = {
+			6.984583,
+			5.183417,
+			6.181313,
+			7.622583
+		},
+		randomize_indexes = {}
+	},
+	mission_archives_brief_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_archives_brief_b_01",
+			"loc_explicator_a__mission_archives_brief_b_02",
+			"loc_explicator_a__mission_archives_brief_b_03",
+			"loc_explicator_a__mission_archives_brief_b_04"
+		},
+		sound_events_duration = {
+			8.019313,
+			5.746,
+			7.303583,
+			7.741292
+		},
+		randomize_indexes = {}
+	},
+	mission_archives_brief_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_archives_brief_c_01",
+			"loc_explicator_a__mission_archives_brief_c_02",
+			"loc_explicator_a__mission_archives_brief_c_03",
+			"loc_explicator_a__mission_archives_brief_c_04"
+		},
+		sound_events_duration = {
+			7.418771,
+			7.001542,
+			7.565646,
+			6.171063
+		},
+		randomize_indexes = {}
+	},
 	mission_cargo_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -277,20 +328,14 @@ local mission_giver_vo_explicator_a = {
 	},
 	mission_cartel_brief_one = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 3,
 		sound_events = {
 			"loc_explicator_a__mission_cartel_brief_one_01",
-			"loc_explicator_a__mission_cartel_brief_one_02",
-			"loc_explicator_a__mission_cartel_brief_one_03",
-			"loc_explicator_a__mission_cartel_brief_one_04",
 			"loc_explicator_a__mission_cartel_brief_one_05",
 			"loc_explicator_a__mission_cartel_brief_one_06"
 		},
 		sound_events_duration = {
 			8.421645,
-			9.026604,
-			7.75625,
-			9.596292,
 			6.774354,
 			7.99575
 		},
@@ -333,6 +378,57 @@ local mission_giver_vo_explicator_a = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	mission_complex_brief_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_complex_brief_a_01",
+			"loc_explicator_a__mission_complex_brief_a_02",
+			"loc_explicator_a__mission_complex_brief_a_03",
+			"loc_explicator_a__mission_complex_brief_a_04"
+		},
+		sound_events_duration = {
+			7.102396,
+			6.648521,
+			8.743917,
+			7.759021
+		},
+		randomize_indexes = {}
+	},
+	mission_complex_brief_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_complex_brief_b_01",
+			"loc_explicator_a__mission_complex_brief_b_02",
+			"loc_explicator_a__mission_complex_brief_b_03",
+			"loc_explicator_a__mission_complex_brief_b_04"
+		},
+		sound_events_duration = {
+			6.213271,
+			5.991542,
+			7.3885,
+			7.20975
+		},
+		randomize_indexes = {}
+	},
+	mission_complex_brief_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_complex_brief_c_01",
+			"loc_explicator_a__mission_complex_brief_c_02",
+			"loc_explicator_a__mission_complex_brief_c_03",
+			"loc_explicator_a__mission_complex_brief_c_04"
+		},
+		sound_events_duration = {
+			7.323563,
+			5.323771,
+			6.526271,
+			6.443729
 		},
 		randomize_indexes = {}
 	},

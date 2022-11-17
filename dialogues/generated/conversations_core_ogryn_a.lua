@@ -3469,14 +3469,12 @@ local conversations_core_ogryn_a = {
 	},
 	lore_era_indomitus_one_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__lore_era_indomitus_one_c_01",
-			[2.0] = "loc_ogryn_a__lore_era_indomitus_one_c_02"
+			[1.0] = "loc_ogryn_a__lore_era_indomitus_one_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.886281,
-			[2.0] = 4.470396
+			[1.0] = 3.886281
 		},
 		randomize_indexes = {}
 	},
@@ -5014,6 +5012,19 @@ local conversations_core_ogryn_a = {
 		sound_events_duration = {
 			[1.0] = 3.299104,
 			[2.0] = 3.009208
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__lore_the_emperor_two_c_01",
+			[2.0] = "loc_ogryn_a__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.535167,
+			[2.0] = 2.028927
 		},
 		randomize_indexes = {}
 	},

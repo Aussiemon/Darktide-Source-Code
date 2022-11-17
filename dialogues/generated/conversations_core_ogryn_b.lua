@@ -5003,6 +5003,19 @@ local conversations_core_ogryn_b = {
 		},
 		randomize_indexes = {}
 	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_b__lore_the_emperor_two_c_01",
+			[2.0] = "loc_ogryn_b__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.014625,
+			[2.0] = 1.92774
+		},
+		randomize_indexes = {}
+	},
 	lore_the_warp_four_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

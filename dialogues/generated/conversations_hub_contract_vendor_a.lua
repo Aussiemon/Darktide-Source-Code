@@ -304,7 +304,7 @@ local conversations_hub_contract_vendor_a = {
 	},
 	hub_interact_contract_vendor_dislikes_character = {
 		randomize_indexes_n = 0,
-		sound_events_n = 20,
+		sound_events_n = 14,
 		sound_events = {
 			"loc_contract_vendor_a__hub_interact_dislikes_character_01",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_02",
@@ -314,18 +314,12 @@ local conversations_hub_contract_vendor_a = {
 			"loc_contract_vendor_a__hub_interact_dislikes_character_06",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_07",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_08",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_09",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_10",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_11",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_12",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_13",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_14",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_15",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_16",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_17",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_18",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_19",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_20"
+			"loc_contract_vendor_a__hub_interact_dislikes_character_18"
 		},
 		sound_events_duration = {
 			2.596625,
@@ -336,18 +330,12 @@ local conversations_hub_contract_vendor_a = {
 			4.299938,
 			7.153958,
 			2.165104,
-			3.45678,
-			3.45678,
-			3.45678,
 			1.998563,
 			3.777583,
 			1.392938,
-			3.45678,
 			2.907,
 			2.074271,
-			1.953146,
-			3.45678,
-			3.45678
+			1.953146
 		},
 		randomize_indexes = {}
 	},
@@ -400,14 +388,58 @@ local conversations_hub_contract_vendor_a = {
 		},
 		randomize_indexes = {}
 	},
-	npc_first_interaction_contract_vendor = {
+	npc_first_interaction_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__npc_first_interaction_01"
+			[1.0] = "loc_contract_vendor_a__npc_first_interaction_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 31.5944
+			[1.0] = 3.977937
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_contract_vendor_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__npc_first_interaction_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 10.02921
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_contract_vendor_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__npc_first_interaction_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.413651
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_contract_vendor_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__npc_first_interaction_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 7.468912
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_contract_vendor_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__npc_first_interaction_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.704694
 		},
 		randomize_indexes = {}
 	}

@@ -2908,29 +2908,6 @@ local conversations_core_zealot_female_c = {
 		},
 		randomize_indexes = {}
 	},
-	lore_ecclesiarchy_two_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_zealot_female_c__lore_ecclesiarchy_two_a_01",
-			"loc_zealot_female_c__lore_ecclesiarchy_two_a_02",
-			"loc_zealot_female_c__lore_ecclesiarchy_two_a_03",
-			"loc_zealot_female_c__lore_ecclesiarchy_two_a_04"
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
 	lore_grendyl_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -3291,23 +3268,6 @@ local conversations_core_zealot_female_c = {
 		sound_events_duration = {
 			[1.0] = 6.47024,
 			[2.0] = 4.20526
-		},
-		randomize_indexes = {}
-	},
-	lore_hive_cities_three_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_female_c__lore_hive_cities_three_c_01",
-			[2.0] = "loc_zealot_female_c__lore_hive_cities_three_c_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

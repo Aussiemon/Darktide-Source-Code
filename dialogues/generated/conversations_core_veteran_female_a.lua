@@ -5281,6 +5281,19 @@ local conversations_core_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__lore_the_emperor_two_c_01",
+			[2.0] = "loc_veteran_female_a__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.025063,
+			[2.0] = 3.914667
+		},
+		randomize_indexes = {}
+	},
 	lore_the_warp_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -5892,16 +5905,14 @@ local conversations_core_veteran_female_a = {
 	},
 	region_periferus = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_veteran_female_a__region_periferus_01",
-			"loc_veteran_female_a__region_periferus_02",
-			"loc_veteran_female_a__region_periferus_03"
+			[1.0] = "loc_veteran_female_a__region_periferus_02",
+			[2.0] = "loc_veteran_female_a__region_periferus_03"
 		},
 		sound_events_duration = {
-			5.143333,
-			5.179604,
-			2.863271
+			[1.0] = 5.179604,
+			[2.0] = 2.863271
 		},
 		randomize_indexes = {}
 	}

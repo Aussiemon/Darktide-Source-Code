@@ -400,7 +400,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3.7
+				duration = 0.25
 			}
 		}
 	})
@@ -637,7 +637,7 @@ return function ()
 				"last_rapid_loosing_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				300
 			}
 		},
 		on_done = {
@@ -1203,6 +1203,124 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "enemy_kill_renegade_berserker",
+		wwise_route = 0,
+		response = "enemy_kill_renegade_berserker",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"renegade_berzerker"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_berserker",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_berserker",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker",
+				OP.ADD,
+				"1"
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_scab_flamer",
+		wwise_route = 0,
+		response = "enemy_kill_scab_flamer",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_renegade_flamer",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_renegade_flamer",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_kill_renegade_flamer",
+				OP.ADD,
+				"1"
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "enemy_kill_tox_flamer",
 		wwise_route = 0,
 		response = "enemy_kill_tox_flamer",
@@ -1361,7 +1479,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				0
 			},
 			{
 				"query_context",
@@ -1429,7 +1547,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				3
 			},
 			{
 				"query_context",
@@ -1505,7 +1623,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				3
 			},
 			{
 				"query_context",
@@ -1581,7 +1699,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				3
 			},
 			{
 				"query_context",
@@ -1657,7 +1775,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				3
 			},
 			{
 				"query_context",
@@ -2028,7 +2146,7 @@ return function ()
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				180
 			}
 		},
 		on_done = {
@@ -2037,6 +2155,9 @@ return function ()
 				"last_saw_health",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "all"
 		}
 	})
 	define_rule({
@@ -2095,7 +2216,7 @@ return function ()
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				180
 			}
 		},
 		on_done = {
@@ -2104,6 +2225,9 @@ return function ()
 				"last_saw_health",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "all"
 		}
 	})
 	define_rule({
@@ -2162,7 +2286,7 @@ return function ()
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				180
 			}
 		},
 		on_done = {
@@ -2171,6 +2295,9 @@ return function ()
 				"last_saw_health",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "all"
 		}
 	})
 	define_rule({
@@ -2229,7 +2356,7 @@ return function ()
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				180
 			}
 		},
 		on_done = {
@@ -2238,14 +2365,17 @@ return function ()
 				"last_saw_health",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "all"
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_ogryn_to_ogryn",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_ogryn_to_ogryn",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2272,6 +2402,12 @@ return function ()
 				args = {
 					"low"
 				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
 			},
 			{
 				"user_memory",
@@ -2302,13 +2438,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
@@ -2341,77 +2470,14 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
-			},
-			{
-				"user_memory",
-				"time_since_friendly_fire",
-				OP.TIMEDIFF,
-				OP.GT,
-				45
-			},
-			{
-				"faction_memory",
-				"time_since_friendly_fire_global",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_friendly_fire",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"time_since_friendly_fire_global",
-				OP.TIMESET
-			}
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
-		}
-	})
-	define_rule({
-		name = "friendly_fire_from_ogryn_to_veteran",
-		wwise_route = 0,
-		response = "friendly_fire_from_ogryn_to_veteran",
-		database = "gameplay_vo",
-		category = "player_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"friendly_fire"
-			},
-			{
-				"query_context",
-				"attacking_class",
-				OP.EQ,
-				"ogryn"
-			},
-			{
-				"query_context",
-				"attacked_class",
-				OP.EQ,
-				"veteran"
 			},
 			{
 				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low"
-				}
+				"enemies_close",
+				OP.LT,
+				5
 			},
 			{
 				"user_memory",
@@ -2442,21 +2508,84 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
+		}
+	})
+	define_rule({
+		name = "friendly_fire_from_ogryn_to_veteran",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "friendly_fire_from_ogryn_to_veteran",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"friendly_fire"
+			},
+			{
+				"query_context",
+				"attacking_class",
+				OP.EQ,
+				"ogryn"
+			},
+			{
+				"query_context",
+				"attacked_class",
+				OP.EQ,
+				"veteran"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"user_memory",
+				"time_since_friendly_fire",
+				OP.TIMEDIFF,
+				OP.GT,
+				45
+			},
+			{
+				"faction_memory",
+				"time_since_friendly_fire_global",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
 			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_friendly_fire",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_friendly_fire_global",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_ogryn_to_zealot",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_ogryn_to_zealot",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2485,6 +2614,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -2513,21 +2648,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_psyker_to_ogryn",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_psyker_to_ogryn",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2556,6 +2684,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -2584,21 +2718,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_psyker_to_psyker",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_psyker_to_psyker",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2627,6 +2754,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -2655,21 +2788,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_psyker_to_veteran",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_psyker_to_veteran",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2696,6 +2822,12 @@ return function ()
 				args = {
 					"low"
 				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
 			},
 			{
 				"user_memory",
@@ -2737,21 +2869,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_psyker_to_zealot",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_psyker_to_zealot",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2778,6 +2903,12 @@ return function ()
 				args = {
 					"low"
 				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
 			},
 			{
 				"user_memory",
@@ -2808,13 +2939,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
@@ -2851,6 +2975,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -2877,20 +3007,16 @@ return function ()
 				OP.TIMESET
 			}
 		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
+		heard_speak_routing = {
+			target = "players"
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_veteran_to_psyker",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_veteran_to_psyker",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2919,6 +3045,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -2947,21 +3079,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_veteran_to_veteran",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_veteran_to_veteran",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2990,6 +3115,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -3018,21 +3149,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_veteran_to_zealot",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_veteran_to_zealot",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3061,6 +3185,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -3089,21 +3219,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_zealot_to_ogryn",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_zealot_to_ogryn",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3132,6 +3255,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -3160,21 +3289,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_zealot_to_psyker",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_zealot_to_psyker",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3203,6 +3325,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -3231,21 +3359,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_zealot_to_veteran",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_zealot_to_veteran",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3274,6 +3395,12 @@ return function ()
 				}
 			},
 			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
@@ -3302,21 +3429,14 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
 		name = "friendly_fire_from_zealot_to_zealot",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "friendly_fire_from_zealot_to_zealot",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3341,9 +3461,14 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"low"
 				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
 			},
 			{
 				"user_memory",
@@ -3374,13 +3499,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0.6,
-				max_failed_tries = 3,
-				hold_for = 1
-			}
 		}
 	})
 	define_rule({
@@ -3401,7 +3519,7 @@ return function ()
 				"time_since_head_shot",
 				OP.TIMEDIFF,
 				OP.GT,
-				15
+				120
 			}
 		},
 		on_done = {
@@ -3450,8 +3568,8 @@ return function ()
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-					"medium"
+					"medium",
+					"high"
 				}
 			},
 			{
@@ -4393,7 +4511,7 @@ return function ()
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				60
+				180
 			}
 		},
 		on_done = {
@@ -4404,7 +4522,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "players"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -4447,22 +4565,290 @@ return function ()
 			{
 				"faction_context",
 				"health",
+				OP.LTEQ,
+				0.9
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.GT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		}
+	})
+	define_rule({
+		name = "look_at_healthstation_personal",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "look_at_healthstation_personal",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at"
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"charged_health_station"
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				25
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5
+			},
+			{
+				"user_context",
+				"health",
 				OP.LT,
 				0.9
 			},
 			{
-				"user_memory",
+				"faction_memory",
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				60
+				180
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		}
+	})
+	define_rule({
+		name = "medicae_servitor_idle_empty_a",
+		category = "npc_prio_1",
+		wwise_route = 45,
+		response = "medicae_servitor_idle_empty_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"medicae_servitor_idle_empty_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"medicae_servitor"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "medicae_servitor_idle_full_a",
+		category = "npc_prio_1",
+		wwise_route = 45,
+		response = "medicae_servitor_idle_full_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"look_at_healthstation",
+					"found_health_station_zealot_low_on_health",
+					"found_health_station_veteran_low_on_health",
+					"found_health_station_psyker_low_on_health",
+					"found_health_station_ogryn_low_on_health",
+					"look_at_healthstation_personal"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"medicae_servitor"
+				}
+			},
+			{
+				"user_memory",
+				"medicae_servitor_idle_full_a",
+				OP.EQ,
+				OP.GT,
+				0
+			},
+			{
+				"user_memory",
+				"has_been_seen",
+				OP.EQ,
+				1
+			},
+			{
+				"user_memory",
+				"has_been_seen_time",
+				OP.TIMEDIFF,
+				OP.LT,
+				10
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"last_saw_health",
+				"medicae_servitor_idle_full_a",
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"has_been_seen",
+				OP.SUB,
+				1
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "medicae_servitor_recharge_a",
+		category = "npc_prio_1",
+		wwise_route = 45,
+		response = "medicae_servitor_recharge_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"medicae_servitor_recharge_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"medicae_servitor"
+				}
+			},
+			{
+				"user_memory",
+				"medicae_servitor_recharge_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"medicae_servitor_recharge_a",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"medicae_servitor_idle_full_a",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
+		name = "medicae_servitor_working_a",
+		category = "npc_prio_1",
+		wwise_route = 45,
+		response = "medicae_servitor_working_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"medicae_servitor_working_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"medicae_servitor"
+				}
+			},
+			{
+				"user_memory",
+				"medicae_servitor_working_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"medicae_servitor_working_a",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"medicae_servitor_idle_full_a",
+				OP.ADD,
+				1
 			}
 		}
 	})
@@ -5793,7 +6179,7 @@ return function ()
 				"reloading",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				90
 			},
 			{
 				"faction_memory",
@@ -5870,7 +6256,7 @@ return function ()
 				"reloading",
 				OP.TIMEDIFF,
 				OP.GT,
-				30
+				90
 			},
 			{
 				"faction_memory",
@@ -11405,13 +11791,25 @@ return function ()
 				"assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				180
+			},
+			{
+				"user_memory",
+				"assault_user",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
 			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"assault",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"assault_user",
 				OP.TIMESET
 			}
 		},
@@ -11492,7 +11890,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_mutant_charger",
+				"cultist_mutant",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -11501,7 +11899,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_mutant_charger",
+				"cultist_mutant",
 				OP.TIMESET
 			}
 		},
@@ -11680,6 +12078,58 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "seen_enemy_renegade_berserker",
+		wwise_route = 0,
+		response = "seen_enemy_renegade_berserker",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_berzerker"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"seen_enemy_berserker",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"seen_enemy_berserker",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "seen_enemy_renegade_shocktrooper",
 		wwise_route = 0,
 		response = "seen_enemy_renegade_shocktrooper",
@@ -11719,6 +12169,59 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "seen_enemy_scab_flamer",
+		wwise_route = 0,
+		response = "seen_enemy_scab_flamer",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"renegade_flamer",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"renegade_flamer",
 				OP.TIMESET
 			}
 		},

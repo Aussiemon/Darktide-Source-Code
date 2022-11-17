@@ -637,6 +637,100 @@ local gameplay_vo_veteran_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_b__enemy_kill_berserker_01",
+			"loc_veteran_female_b__enemy_kill_berserker_02",
+			"loc_veteran_female_b__enemy_kill_berserker_03",
+			"loc_veteran_female_b__enemy_kill_berserker_04",
+			"loc_veteran_female_b__enemy_kill_berserker_05",
+			"loc_veteran_female_b__enemy_kill_berserker_06",
+			"loc_veteran_female_b__enemy_kill_berserker_07",
+			"loc_veteran_female_b__enemy_kill_berserker_08",
+			"loc_veteran_female_b__enemy_kill_berserker_09",
+			"loc_veteran_female_b__enemy_kill_berserker_10"
+		},
+		sound_events_duration = {
+			1.103479,
+			2.066,
+			0.762479,
+			1.013375,
+			0.795771,
+			1.058208,
+			0.944354,
+			1.232771,
+			1.136188,
+			1.726417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 14,
+		sound_events = {
+			"loc_veteran_female_b__enemy_kill_monster_01",
+			"loc_veteran_female_b__enemy_kill_monster_02",
+			"loc_veteran_female_b__enemy_kill_monster_03",
+			"loc_veteran_female_b__enemy_kill_monster_04",
+			"loc_veteran_female_b__enemy_kill_monster_05",
+			"loc_veteran_female_b__enemy_kill_monster_06",
+			"loc_veteran_female_b__enemy_kill_monster_07",
+			"loc_veteran_female_b__enemy_kill_monster_09",
+			"loc_veteran_female_b__enemy_kill_monster_10",
+			"loc_veteran_female_b__kill_enemy_specials_generic_01",
+			"loc_veteran_female_b__kill_enemy_specials_generic_02",
+			"loc_veteran_female_b__kill_enemy_specials_generic_03",
+			"loc_veteran_female_b__kill_enemy_specials_generic_04",
+			"loc_veteran_female_b__kill_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			2.296313,
+			0.980438,
+			1.899021,
+			1.417188,
+			1.279854,
+			2.654438,
+			1.572813,
+			1.746271,
+			2.352583,
+			0.652604,
+			1.092229,
+			1.520479,
+			2.464479,
+			1.145625
+		},
+		sound_event_weights = {
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_tox_flamer = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -1096,18 +1190,6 @@ local gameplay_vo_veteran_female_b = {
 			2.446938,
 			2.044688,
 			1.976396
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1760,17 +1842,40 @@ local gameplay_vo_veteran_female_b = {
 			0.8635,
 			2.613313
 		},
+		randomize_indexes = {}
+	},
+	look_at_healthstation_personal = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_veteran_female_b__look_at_healthstation_01",
+			"loc_veteran_female_b__look_at_healthstation_02",
+			"loc_veteran_female_b__look_at_healthstation_03",
+			"loc_veteran_female_b__look_at_healthstation_04",
+			"loc_veteran_female_b__look_at_healthstation_05",
+			"loc_veteran_female_b__look_at_healthstation_06",
+			"loc_veteran_female_b__look_at_healthstation_07",
+			"loc_veteran_female_b__look_at_healthstation_09"
+		},
+		sound_events_duration = {
+			0.645938,
+			0.971,
+			1.060688,
+			0.857104,
+			0.770833,
+			2.840208,
+			2.639438,
+			0.8635
+		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
 		},
 		randomize_indexes = {}
 	},
@@ -1819,13 +1924,6 @@ local gameplay_vo_veteran_female_b = {
 			2.178021,
 			3.227125,
 			3.122271
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -1964,13 +2062,12 @@ local gameplay_vo_veteran_female_b = {
 	},
 	player_tip_armor_hit_generic = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_veteran_female_b__player_tip_armor_hit_generic_01",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_02",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_03",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_04",
-			"loc_veteran_female_b__player_tip_armor_hit_generic_05",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_06",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_07",
 			"loc_veteran_female_b__player_tip_armor_hit_generic_08",
@@ -1982,7 +2079,6 @@ local gameplay_vo_veteran_female_b = {
 			1.928979,
 			1.889125,
 			1.709104,
-			2.302188,
 			1.411063,
 			2.671479,
 			1.1015,
@@ -3027,11 +3123,8 @@ local gameplay_vo_veteran_female_b = {
 	},
 	seen_enemy_berserker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 7,
 		sound_events = {
-			"loc_veteran_female_b__seen_enemy_berserker_01",
-			"loc_veteran_female_b__seen_enemy_berserker_02",
-			"loc_veteran_female_b__seen_enemy_berserker_03",
 			"loc_veteran_female_b__seen_enemy_berserker_04",
 			"loc_veteran_female_b__seen_enemy_berserker_05",
 			"loc_veteran_female_b__seen_enemy_berserker_06",
@@ -3041,9 +3134,6 @@ local gameplay_vo_veteran_female_b = {
 			"loc_veteran_female_b__seen_enemy_berserker_10"
 		},
 		sound_events_duration = {
-			0.646563,
-			0.653458,
-			1.247625,
 			0.517042,
 			0.629833,
 			0.907271,
@@ -3420,6 +3510,38 @@ local gameplay_vo_veteran_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	seen_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_veteran_female_b__seen_enemy_berserker_04",
+			"loc_veteran_female_b__seen_enemy_berserker_05",
+			"loc_veteran_female_b__seen_enemy_berserker_06",
+			"loc_veteran_female_b__seen_enemy_berserker_07",
+			"loc_veteran_female_b__seen_enemy_berserker_08",
+			"loc_veteran_female_b__seen_enemy_berserker_09",
+			"loc_veteran_female_b__seen_enemy_berserker_10"
+		},
+		sound_events_duration = {
+			0.517042,
+			0.629833,
+			0.907271,
+			0.969833,
+			1.099354,
+			0.78525,
+			1.651375
+		},
+		sound_event_weights = {
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
+		},
+		randomize_indexes = {}
+	},
 	seen_enemy_renegade_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -3440,6 +3562,32 @@ local gameplay_vo_veteran_female_b = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_b__seen_enemy_specials_generic_01",
+			"loc_veteran_female_b__seen_enemy_specials_generic_02",
+			"loc_veteran_female_b__seen_enemy_specials_generic_03",
+			"loc_veteran_female_b__seen_enemy_specials_generic_04",
+			"loc_veteran_female_b__seen_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			0.976,
+			0.942729,
+			1.536354,
+			1.218583,
+			1.305479
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},

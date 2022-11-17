@@ -43,6 +43,17 @@ local conversations_disabled_psyker_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	combat_pause_limited_veteran_c_06_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__combat_pause_limited_veteran_c_06_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.301469
+		},
+		randomize_indexes = {}
+	},
 	lore_brunt_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

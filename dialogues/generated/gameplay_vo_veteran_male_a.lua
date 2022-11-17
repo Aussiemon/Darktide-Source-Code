@@ -640,6 +640,100 @@ local gameplay_vo_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_a__enemy_kill_berserker_01",
+			"loc_veteran_male_a__enemy_kill_berserker_02",
+			"loc_veteran_male_a__enemy_kill_berserker_03",
+			"loc_veteran_male_a__enemy_kill_berserker_04",
+			"loc_veteran_male_a__enemy_kill_berserker_05",
+			"loc_veteran_male_a__enemy_kill_berserker_06",
+			"loc_veteran_male_a__enemy_kill_berserker_07",
+			"loc_veteran_male_a__enemy_kill_berserker_08",
+			"loc_veteran_male_a__enemy_kill_berserker_09",
+			"loc_veteran_male_a__enemy_kill_berserker_10"
+		},
+		sound_events_duration = {
+			1.19025,
+			0.975208,
+			2.885042,
+			1.258813,
+			1.074729,
+			0.948708,
+			0.801292,
+			1.331563,
+			1.377792,
+			1.179813
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 14,
+		sound_events = {
+			"loc_veteran_male_a__enemy_kill_monster_01",
+			"loc_veteran_male_a__enemy_kill_monster_02",
+			"loc_veteran_male_a__enemy_kill_monster_03",
+			"loc_veteran_male_a__enemy_kill_monster_04",
+			"loc_veteran_male_a__enemy_kill_monster_05",
+			"loc_veteran_male_a__enemy_kill_monster_06",
+			"loc_veteran_male_a__enemy_kill_monster_07",
+			"loc_veteran_male_a__enemy_kill_monster_09",
+			"loc_veteran_male_a__enemy_kill_monster_10",
+			"loc_veteran_male_a__kill_enemy_specials_generic_01",
+			"loc_veteran_male_a__kill_enemy_specials_generic_02",
+			"loc_veteran_male_a__kill_enemy_specials_generic_03",
+			"loc_veteran_male_a__kill_enemy_specials_generic_04",
+			"loc_veteran_male_a__kill_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			2.940875,
+			1.880021,
+			1.67025,
+			2.549208,
+			3.108667,
+			3.928333,
+			2.030063,
+			2.158208,
+			2.381771,
+			0.738625,
+			0.822729,
+			0.785229,
+			0.642292,
+			1.475229
+		},
+		sound_event_weights = {
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_tox_flamer = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -1099,18 +1193,6 @@ local gameplay_vo_veteran_male_a = {
 			1.249333,
 			1.699792,
 			2.829958
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1763,17 +1845,37 @@ local gameplay_vo_veteran_male_a = {
 			3.382479,
 			1.850375
 		},
+		randomize_indexes = {}
+	},
+	look_at_healthstation_personal = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_veteran_male_a__look_at_healthstation_01",
+			"loc_veteran_male_a__look_at_healthstation_03",
+			"loc_veteran_male_a__look_at_healthstation_04",
+			"loc_veteran_male_a__look_at_healthstation_05",
+			"loc_veteran_male_a__look_at_healthstation_06",
+			"loc_veteran_male_a__look_at_healthstation_07",
+			"loc_veteran_male_a__look_at_healthstation_08"
+		},
+		sound_events_duration = {
+			1.141563,
+			1.633,
+			1.474417,
+			0.839563,
+			1.175583,
+			1.543417,
+			0.877813
+		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
 		},
 		randomize_indexes = {}
 	},
@@ -1822,13 +1924,6 @@ local gameplay_vo_veteran_male_a = {
 			2.876667,
 			1.725917,
 			2.464208
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3033,11 +3128,8 @@ local gameplay_vo_veteran_male_a = {
 	},
 	seen_enemy_berserker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 7,
 		sound_events = {
-			"loc_veteran_male_a__seen_enemy_berserker_01",
-			"loc_veteran_male_a__seen_enemy_berserker_02",
-			"loc_veteran_male_a__seen_enemy_berserker_03",
 			"loc_veteran_male_a__seen_enemy_berserker_04",
 			"loc_veteran_male_a__seen_enemy_berserker_05",
 			"loc_veteran_male_a__seen_enemy_berserker_06",
@@ -3047,9 +3139,6 @@ local gameplay_vo_veteran_male_a = {
 			"loc_veteran_male_a__seen_enemy_berserker_10"
 		},
 		sound_events_duration = {
-			0.603104,
-			0.739167,
-			0.987354,
 			0.526833,
 			0.737167,
 			0.917438,
@@ -3435,6 +3524,38 @@ local gameplay_vo_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	seen_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_veteran_male_a__seen_enemy_berserker_04",
+			"loc_veteran_male_a__seen_enemy_berserker_05",
+			"loc_veteran_male_a__seen_enemy_berserker_06",
+			"loc_veteran_male_a__seen_enemy_berserker_07",
+			"loc_veteran_male_a__seen_enemy_berserker_08",
+			"loc_veteran_male_a__seen_enemy_berserker_09",
+			"loc_veteran_male_a__seen_enemy_berserker_10"
+		},
+		sound_events_duration = {
+			0.526833,
+			0.737167,
+			0.917438,
+			0.986646,
+			1.336104,
+			1.229979,
+			1.041708
+		},
+		sound_event_weights = {
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
+		},
+		randomize_indexes = {}
+	},
 	seen_enemy_renegade_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -3455,6 +3576,32 @@ local gameplay_vo_veteran_male_a = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_a__seen_enemy_specials_generic_01",
+			"loc_veteran_male_a__seen_enemy_specials_generic_02",
+			"loc_veteran_male_a__seen_enemy_specials_generic_03",
+			"loc_veteran_male_a__seen_enemy_specials_generic_04",
+			"loc_veteran_male_a__seen_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			1.075771,
+			1.722125,
+			1.6505,
+			1.754438,
+			1.813792
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},

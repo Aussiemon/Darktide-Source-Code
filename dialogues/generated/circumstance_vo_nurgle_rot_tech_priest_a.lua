@@ -26,10 +26,10 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			"loc_tech_priest_a__nurgle_circumstance_start_b_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			4.379729,
+			6.023917,
+			5.064708,
+			5.575417
 		},
 		randomize_indexes = {}
 	},

@@ -18,28 +18,6 @@ local conversations_core_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	bonding_conversation_cadia_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__bonding_conversation_cadia_b_01"
-		},
-		sound_events_duration = {
-			[1.0] = 4.776708
-		},
-		randomize_indexes = {}
-	},
-	bonding_conversation_cadia_d = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__bonding_conversation_cadia_d_01"
-		},
-		sound_events_duration = {
-			[1.0] = 5.961417
-		},
-		randomize_indexes = {}
-	},
 	bonding_conversation_good_soldier_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -5349,6 +5327,19 @@ local conversations_core_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_a__lore_the_emperor_two_c_01",
+			[2.0] = "loc_veteran_male_a__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.327833,
+			[2.0] = 4.60125
+		},
+		randomize_indexes = {}
+	},
 	lore_the_warp_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -5811,19 +5802,6 @@ local conversations_core_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	lore_zola_one_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__lore_zola_one_b_01",
-			[2.0] = "loc_veteran_male_a__lore_zola_one_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
-		},
-		randomize_indexes = {}
-	},
 	lore_zola_one_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -5960,16 +5938,14 @@ local conversations_core_veteran_male_a = {
 	},
 	region_periferus = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_veteran_male_a__region_periferus_01",
-			"loc_veteran_male_a__region_periferus_02",
-			"loc_veteran_male_a__region_periferus_03"
+			[1.0] = "loc_veteran_male_a__region_periferus_02",
+			[2.0] = "loc_veteran_male_a__region_periferus_03"
 		},
 		sound_events_duration = {
-			5.286771,
-			5.981667,
-			2.45425
+			[1.0] = 5.981667,
+			[2.0] = 2.45425
 		},
 		randomize_indexes = {}
 	}

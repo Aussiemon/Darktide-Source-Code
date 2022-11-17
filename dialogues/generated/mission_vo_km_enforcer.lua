@@ -901,8 +901,8 @@ return function ()
 			{
 				"global_context",
 				"circumstance_vo_id",
-				OP.EQ,
-				"default"
+				OP.NEQ,
+				"thischeckisdisabled"
 			},
 			{
 				"faction_memory",

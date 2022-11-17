@@ -35,6 +35,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				30
+			},
+			{
+				"faction_memory",
+				"mission_scan_final",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
