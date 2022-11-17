@@ -4,6 +4,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local title_height = 108
 local edge_padding = 44
 local grid_width = 640
@@ -114,7 +115,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			100,
-			100,
+			40,
 			1
 		}
 	},
@@ -128,7 +129,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140,
-			100,
+			60,
+			3
+		}
+	},
+	weapon_compare_stats_pivot = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-1140 + grid_size[1] - 50,
+			60,
 			3
 		}
 	},
@@ -156,64 +171,26 @@ local scenegraph_definition = {
 		},
 		position = {
 			-560,
-			100,
+			40,
 			3
 		}
 	},
 	equip_button = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		size = {
 			374,
 			76
 		},
 		position = {
-			-162,
-			-120,
-			1
-		}
-	},
-	customize_button = {
-		vertical_alignment = "bottom",
-		parent = "equip_button",
-		horizontal_alignment = "right",
-		size = {
-			374,
-			50
-		},
-		position = {
-			0,
-			-80,
+			857,
+			-90,
 			1
 		}
 	}
 }
 local widget_definitions = {
-	corner_top_left = UIWidget.create_definition({
-		{
-			value_id = "texture",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		}
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value_id = "texture"
-		}
-	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -228,9 +205,7 @@ local widget_definitions = {
 	}, "corner_bottom_right"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
-		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_equip_weapon
-		}
+		hotspot = {}
 	}),
 	background = UIWidget.create_definition({
 		{
@@ -265,9 +240,20 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_customize_pressed",
 		visibility_function = function (parent)
-			local is_previewing_weapon = parent:is_previewing_weapon()
+			local is_previewing_item = parent:is_previewing_item()
 
-			return is_previewing_weapon
+			if is_previewing_item then
+				local is_previewing_item = parent:is_previewing_item()
+				local previewed_item = parent:previewed_item()
+				local item_type = previewed_item.item_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+
+				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED then
+					return true
+				end
+			end
+
+			return false
 		end
 	},
 	{
@@ -276,9 +262,31 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
-			local is_previewing_weapon = parent:is_previewing_weapon()
+			local is_previewing_item = parent:is_previewing_item()
 
-			return is_previewing_weapon
+			if is_previewing_item then
+				local is_previewing_item = parent:is_previewing_item()
+				local previewed_item = parent:previewed_item()
+				local item_type = previewed_item.item_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+
+				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED then
+					return true
+				end
+			end
+
+			return false
+		end
+	},
+	{
+		input_action = "hotkey_item_compare",
+		display_name = "loc_item_toggle_equipped_compare",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_toggle_item_compare",
+		visibility_function = function (parent)
+			local is_previewing_item = parent:is_previewing_item()
+
+			return is_previewing_item
 		end
 	},
 	{

@@ -40,6 +40,13 @@ foundry_1.slots.envrionmental_override.items = {
 templates.cultist_grenadier[zone_ids.tank_foundry] = {
 	foundry_1
 }
+local dust_1 = table.clone(basic_cultist_grenadier_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.cultist_grenadier[zone_ids.dust] = {
+	dust_1
+}
 local watertown_1 = table.clone(basic_cultist_grenadier_template)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

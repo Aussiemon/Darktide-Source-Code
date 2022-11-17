@@ -113,7 +113,7 @@ templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_crit,
 	dot_data = {
-		dot_buff_name = "warp_fire_assault",
+		dot_buff_name = "warp_fire",
 		num_stacks_on_proc = 1,
 		max_stacks = math.huge
 	},

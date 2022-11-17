@@ -61,9 +61,7 @@ InventoryWeaponsView._setup_background_frames_by_archetype = function (self, arc
 	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
 	local frame_textures = inventory_frames_by_archetype[archetype_name]
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.corner_top_left.content.texture = frame_textures.right_upper
 	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
-	widgets_by_name.corner_top_right.content.texture = frame_textures.right_upper
 	widgets_by_name.corner_bottom_right.content.texture = frame_textures.right_lower
 end
 
@@ -172,6 +170,10 @@ InventoryWeaponsView.cb_on_discard_held = function (self)
 
 	if selected_grid_widget and not selected_grid_widget.content.equipped then
 		self._update_item_discard = true
+
+		if not self._discard_item_timer then
+			self:_play_sound(UISoundEvents.weapons_discard_hold)
+		end
 	end
 end
 
@@ -246,21 +248,25 @@ InventoryWeaponsView._handle_back_pressed = function (self)
 end
 
 InventoryWeaponsView.cb_on_customize_pressed = function (self)
-	self._customize_view_opened = true
+	if not Managers.ui:view_active("inventory_weapon_cosmetics_view") then
+		self._customize_view_opened = true
 
-	Managers.ui:open_view("inventory_weapon_cosmetics_view", nil, nil, nil, nil, {
-		player = self._preview_player,
-		preview_item = self._previewed_item
-	})
+		Managers.ui:open_view("inventory_weapon_cosmetics_view", nil, nil, nil, nil, {
+			player = self._preview_player,
+			preview_item = self._previewed_item
+		})
+	end
 end
 
 InventoryWeaponsView.cb_on_inspect_pressed = function (self)
-	self._inpect_view_opened = true
+	if not Managers.ui:view_active("inventory_weapon_details_view") then
+		self._inpect_view_opened = true
 
-	Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
-		player = self._preview_player,
-		preview_item = self._previewed_item
-	})
+		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
+			player = self._preview_player,
+			preview_item = self._previewed_item
+		})
+	end
 end
 
 InventoryWeaponsView.cb_on_equip_pressed = function (self)
@@ -354,8 +360,6 @@ InventoryWeaponsView.on_exit = function (self)
 		end
 	end
 
-	Managers.event:trigger("event_equip_local_changes")
-
 	if self._is_equipped_weapon_changed then
 		local selected_slot = self._selected_slot
 
@@ -367,6 +371,8 @@ InventoryWeaponsView.on_exit = function (self)
 				Managers.event:trigger("event_change_wield_slot", selected_slot_name)
 			end
 		end
+	else
+		self:_play_sound(UISoundEvents.default_menu_exit)
 	end
 
 	InventoryWeaponsView.super.on_exit(self)
@@ -418,9 +424,6 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 
 		self._offer_items_layout = layout
 		local slot_display_name = selected_slot and selected_slot.display_name
-
-		self:_present_layout_by_slot_filter(nil, slot_display_name)
-
 		local start_index = #layout > 0 and 1
 		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
 
@@ -428,9 +431,19 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 			start_index = self:item_grid_index(equipped_item) or start_index
 
 			if start_index then
-				self:focus_on_item(equipped_item)
+				self._selected_gear_id = equipped_item and equipped_item.gear_id
 			end
 		else
+			local first_item = self:first_grid_item()
+
+			if first_item then
+				self._selected_gear_id = first_item and first_item.gear_id
+			end
+		end
+
+		self:_present_layout_by_slot_filter(nil, slot_display_name)
+
+		if not equipped_item and not self._selected_gear_id then
 			local instant_scroll = true
 			local scrollbar_animation_progress = 0
 
@@ -484,20 +497,102 @@ InventoryWeaponsView._item_valid_by_current_profile = function (self, item)
 	return false
 end
 
+InventoryWeaponsView._on_double_click = function (self, widget, element)
+	local selected_slot = self._selected_slot
+
+	if not selected_slot then
+		return
+	end
+
+	local previewed_item = self._previewed_item
+
+	if not previewed_item then
+		return
+	end
+
+	local selected_slot_name = selected_slot.name
+
+	self:_equip_item(selected_slot_name, previewed_item)
+end
+
+InventoryWeaponsView._fetch_item_compare_slot_name = function (self, item)
+	local selected_slot = self._selected_slot
+
+	if selected_slot then
+		local selected_slot_name = selected_slot.name
+
+		if selected_slot_name then
+			return selected_slot_name
+		end
+	end
+
+	local slots = item and item.slots
+	local slot_name = slots and slots[1]
+
+	return slot_name
+end
+
 InventoryWeaponsView._equip_item = function (self, slot_name, item)
 	if self._equip_button_disabled then
 		return
 	end
 
-	local equipped_slot_item = self:equipped_item_in_slot(slot_name)
+	local ITEM_TYPES = UISettings.ITEM_TYPES
+	local item_type = item.item_type
+	local add_item = false
 
-	if not equipped_slot_item or equipped_slot_item.gear_id ~= item.gear_id then
+	if item_type == ITEM_TYPES.GADGET then
+		local slots = item.slots
+
+		if not self:is_item_equipped_in_any_slot(item, slots) then
+			add_item = true
+		end
+	else
+		local equipped_slot_item = self:equipped_item_in_slot(slot_name)
+
+		if not equipped_slot_item or equipped_slot_item.gear_id ~= item.gear_id then
+			add_item = true
+		end
+	end
+
+	if add_item then
+		if item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_MELEE then
+			self:_play_sound(UISoundEvents.weapons_equip_weapon)
+		elseif item_type == ITEM_TYPES.GADGET then
+			self:_play_sound(UISoundEvents.weapons_equip_gadget)
+		else
+			self:_play_sound(UISoundEvents.weapons_equip_weapon)
+		end
+
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 
 		self._is_equipped_weapon_changed = true
 	end
+end
 
-	self:_play_sound(UISoundEvents.weapons_select_weapon)
+InventoryWeaponsView.has_equipped_item_in_any_slot = function (self, slots)
+	for i = 1, #slots do
+		local slot_name = slots[i]
+
+		if self:equipped_item_in_slot(slot_name) then
+			return true
+		end
+	end
+
+	return false
+end
+
+InventoryWeaponsView.is_item_equipped_in_any_slot = function (self, item, slots)
+	for i = 1, #slots do
+		local slot_name = slots[i]
+		local equipped_item = self:equipped_item_in_slot(slot_name)
+
+		if equipped_item and equipped_item.gear_id == item.gear_id then
+			return true
+		end
+	end
+
+	return false
 end
 
 InventoryWeaponsView.equipped_item_in_slot = function (self, slot_name)
@@ -643,6 +738,8 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 		else
 			self:_stop_previewing()
 		end
+
+		self:update_grid_widgets_visibility()
 	end
 
 	self:_discard_items(item)
@@ -679,8 +776,17 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 	if not disable_button then
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot.name
-		local equipped_item = self:equipped_item_in_slot(selected_slot_name)
-		disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
+
+		if previewed_item.item_type == UISettings.ITEM_TYPES.GADGET then
+			local slots = previewed_item.slots
+
+			if self:is_item_equipped_in_any_slot(previewed_item, slots) then
+				disable_button = true
+			end
+		else
+			local equipped_item = self:equipped_item_in_slot(selected_slot_name)
+			disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
+		end
 
 		if not disable_button then
 			local required_level = ItemUtils.character_level(previewed_item)
@@ -700,9 +806,9 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 		button_content.hotspot.disabled = disable_button
 
 		if level_requirement_met then
-			button_content.text = string.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
+			button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 		else
-			button_content.text = string.upper(Localize("loc_weapon_inventory_equip_button"))
+			button_content.text = Utf8.upper(Localize("loc_weapon_inventory_equip_button"))
 		end
 	end
 end
@@ -729,10 +835,14 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 			if selected_grid_index then
 				self:_mark_item_for_discard(selected_grid_index)
 			end
+
+			self:_play_sound(UISoundEvents.weapons_discard_complete)
 		end
 	elseif self._discard_item_timer then
 		self._discard_item_timer = nil
 		self._discard_item_hold_progress = nil
+
+		self:_play_sound(UISoundEvents.weapons_discard_release)
 	end
 end
 

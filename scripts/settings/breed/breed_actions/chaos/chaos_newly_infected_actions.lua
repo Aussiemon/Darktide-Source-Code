@@ -211,7 +211,7 @@ local action_data = {
 			alerted_left_3 = 1.5
 		},
 		alerted_durations = {
-			alerted_fwd_2 = 3.9,
+			alerted_fwd_2 = 4.166666666666667,
 			alerted_bwd_2 = 5.1,
 			alerted_bwd_3 = 4.433333333333334,
 			alerted_right_2 = 3.9,
@@ -555,9 +555,9 @@ local action_data = {
 	moving_melee_attack = {
 		move_speed = 4,
 		utility_weight = 1,
-		vo_event = "assault",
+		catch_up_movementspeed = true,
 		moving_attack = true,
-		move_speed_variable_lerp_speed = 4,
+		move_speed_variable_lerp_speed = 5,
 		weapon_reach = 3,
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_moving_melee_attack,
@@ -601,19 +601,19 @@ local action_data = {
 			attack_move_01 = {
 				{
 					value = 4,
-					distance = 4.61
+					distance = 2.1
 				},
 				{
 					value = 3,
-					distance = 3.39
+					distance = 1.5
 				},
 				{
 					value = 2,
-					distance = 2.12
+					distance = 1.12
 				},
 				{
 					value = 1,
-					distance = 1.12
+					distance = 0.6
 				},
 				{
 					value = 0,
@@ -623,19 +623,19 @@ local action_data = {
 			attack_move_02 = {
 				{
 					value = 4,
-					distance = 4.64
+					distance = 2.1
 				},
 				{
 					value = 3,
-					distance = 3.31
+					distance = 1.5
 				},
 				{
 					value = 2,
-					distance = 2.14
+					distance = 1.14
 				},
 				{
 					value = 1,
-					distance = 1.13
+					distance = 0.65
 				},
 				{
 					value = 0,
@@ -645,19 +645,19 @@ local action_data = {
 			attack_move_03 = {
 				{
 					value = 4,
-					distance = 4.53
+					distance = 2.1
 				},
 				{
 					value = 3,
-					distance = 3.02
+					distance = 1.5
 				},
 				{
 					value = 2,
-					distance = 2.12
+					distance = 1.12
 				},
 				{
 					value = 1,
-					distance = 1.09
+					distance = 0.75
 				},
 				{
 					value = 0,
@@ -667,15 +667,15 @@ local action_data = {
 			attack_move_04 = {
 				{
 					value = 4,
-					distance = 4.5
+					distance = 2.1
 				},
 				{
 					value = 3,
-					distance = 3.42
+					distance = 1.5
 				},
 				{
 					value = 2,
-					distance = 2.12
+					distance = 1.12
 				},
 				{
 					value = 1,
@@ -692,8 +692,9 @@ local action_data = {
 		move_speed = 4,
 		utility_weight = 1,
 		vo_event = "assault",
+		catch_up_movementspeed = true,
 		moving_attack = true,
-		move_speed_variable_lerp_speed = 4,
+		move_speed_variable_lerp_speed = 5,
 		weapon_reach = 3,
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_running_melee_attack,
@@ -729,19 +730,19 @@ local action_data = {
 			attack_run_01 = {
 				{
 					value = 4,
-					distance = 5
+					distance = 2.6
 				},
 				{
 					value = 3,
-					distance = 3.9
+					distance = 1.9
 				},
 				{
 					value = 2,
-					distance = 2.5
+					distance = 1.5
 				},
 				{
 					value = 1,
-					distance = 1.5
+					distance = 1.2
 				},
 				{
 					value = 0,
@@ -751,15 +752,15 @@ local action_data = {
 			attack_run_02 = {
 				{
 					value = 4,
-					distance = 5
+					distance = 2.8
 				},
 				{
 					value = 3,
-					distance = 4
+					distance = 1.5
 				},
 				{
 					value = 2,
-					distance = 2
+					distance = 1
 				},
 				{
 					value = 1,
@@ -773,11 +774,11 @@ local action_data = {
 			attack_run_03 = {
 				{
 					value = 4,
-					distance = 4.2
+					distance = 2.2
 				},
 				{
 					value = 3,
-					distance = 2.9
+					distance = 2.1
 				},
 				{
 					value = 2,

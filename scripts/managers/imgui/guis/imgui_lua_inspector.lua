@@ -47,24 +47,17 @@ ImguiLuaInspector._TYPE_TO_COLOR = setmetatable({
 		return fallback_color
 	end
 })
-local util = require("jit.util")
+local has_util, util = pcall(require, "jit.util")
+local funcinfo = has_util and util.funcinfo or debug.getinfo
 local magic_mt = {
 	__mode = "kv",
 	__index = function (t, fn)
-		local i = util.funcinfo(fn)
+		local i = funcinfo(fn)
 		t[fn] = i
 
 		return i
 	end
 }
-local has_ffi, ffi, shell32 = pcall(require, "ffi")
-
-if has_ffi then
-	has_ffi, shell32 = pcall(ffi.load, "shell32")
-
-	ffi.cdef(" void *ShellExecuteA(void*, const char*, const char*, const char*, const char*, int); ")
-end
-
 local format = string.format
 
 ImguiLuaInspector.init = function (self)
@@ -134,18 +127,6 @@ ImguiLuaInspector._inspect_function = function (self, name, func)
 		local where = is_file_func and format("%s:%s", info.source, info.linedefined) or info.addr and format("0x%012x", info.addr) or "<unknown origin>"
 
 		Imgui.text_colored(where, unpack(fallback_color))
-
-		if has_ffi and is_file_func then
-			Imgui.same_line()
-
-			if Imgui.small_button("Open##" .. info.source) then
-				local base_path = ParameterResolver._command_line_parameters.parameters["-source-dir"]
-				local path = base_path .. info.source:gsub("^@", "\\"):gsub("/", "\\")
-
-				shell32.ShellExecuteA(nil, "open", path, nil, base_path, 10)
-			end
-		end
-
 		self:_inspect_table("[info]", info)
 
 		local upvals = info.upvalues

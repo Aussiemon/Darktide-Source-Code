@@ -15,7 +15,27 @@ local PlayerVOStoryStage = {
 }
 
 PlayerVOStoryStage.refresh_hub_story_stage = function ()
-	local mission_board = Managers.narrative:event_is_complete(Managers.narrative.EVENTS.mission_board)
+	local pot_chapter = Managers.narrative:current_chapter(Managers.narrative.STORIES.path_of_trust)
+
+	if pot_chapter then
+		local story_stage = pot_chapter.data.vo_story_stage
+
+		PlayerVOStoryStage.set_story_stage(story_stage)
+
+		return
+	end
+
+	pot_chapter = Managers.narrative:last_completed_chapter(Managers.narrative.STORIES.path_of_trust)
+
+	if pot_chapter then
+		local story_stage = pot_chapter.data.vo_story_stage
+
+		PlayerVOStoryStage.set_story_stage(story_stage)
+
+		return
+	end
+
+	local mission_board = Managers.narrative:is_event_complete(Managers.narrative.EVENTS.mission_board)
 
 	if not mission_board then
 		PlayerVOStoryStage.set_story_stage("mission_board")

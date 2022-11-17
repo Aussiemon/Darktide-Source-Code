@@ -88,6 +88,12 @@ PlayerCharacterStateExploding._check_transition = function (self, unit, t, next_
 		return health_state_transition
 	end
 
+	local disabled_state_input = unit_data_extension:read_component("disabled_state_input")
+
+	if disabled_state_input.wants_disable and disabled_state_input.disabling_unit then
+		Interrupt.action(t, unit, disabled_state_input.disabling_type, nil, true)
+	end
+
 	local disruptive_state_transition = DisruptiveStateTransition.poll(unit, unit_data_extension, next_state_params)
 
 	if disruptive_state_transition and disruptive_state_transition ~= "exploding" then

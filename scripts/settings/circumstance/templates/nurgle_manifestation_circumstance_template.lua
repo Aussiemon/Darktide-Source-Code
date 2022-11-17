@@ -1,5 +1,6 @@
 local circumstance_templates = {
 	nurgle_manifestation_01 = {
+		dialogue_id = "circumstance_vo_nurgle_rot",
 		wwise_state = "nurgle_manifestation_01",
 		theme_tag = "nurgle_manifestation",
 		ui = {
@@ -14,6 +15,7 @@ local circumstance_templates = {
 		mission_overrides = {}
 	},
 	heretical_disruption_01 = {
+		dialogue_id = "circumstance_vo_nurgle_rot",
 		wwise_state = "nurgle_manifestation_01",
 		theme_tag = "nurgle_manifestation",
 		ui = {

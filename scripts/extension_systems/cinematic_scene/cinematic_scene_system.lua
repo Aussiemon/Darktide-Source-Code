@@ -33,7 +33,17 @@ local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.cutscene_7] = "cutscene_view",
 	[CINEMATIC_NAMES.cutscene_8] = "cutscene_view",
 	[CINEMATIC_NAMES.cutscene_9] = "cutscene_view",
-	[CINEMATIC_NAMES.cutscene_10] = "cutscene_view"
+	[CINEMATIC_NAMES.cutscene_10] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_01] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_02] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_03] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_04] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_05] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_06] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_07] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_08] = "cutscene_view",
+	[CINEMATIC_NAMES.path_of_trust_09] = "cutscene_view",
+	[CINEMATIC_NAMES.traitor_captain_intro] = "cutscene_view"
 }
 
 local function get_origin_level_names(cinematic_name)
@@ -93,20 +103,21 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 
 	if not mission_cinematics[CINEMATIC_NAMES.intro_abc] then
 		self._intro_played = true
+		self._skip_intro_cinematic = true
 	end
 end
 
-CinematicSceneSystem._on_preload_cinematic = function (self)
-	if not self._intro_played and not self._intro_loading_started then
-		self:load_cutscene(CINEMATIC_NAMES.intro_abc)
+CinematicSceneSystem._on_preload_cinematic = function (self, preload_id)
+	if self._skip_intro_cinematic then
+		Managers.event:trigger("cutscene_loaded_all_clients", true, preload_id)
+	elseif not self._intro_played and not self._intro_loading_started then
+		self:load_cutscene(CINEMATIC_NAMES.intro_abc, preload_id)
 	end
 end
 
 CinematicSceneSystem._on_spawn_group_loaded = function (self)
 	if self._intro_played == false then
 		self:play_cutscene(CINEMATIC_NAMES.intro_abc)
-
-		self._intro_played = true
 	end
 end
 
@@ -156,7 +167,7 @@ CinematicSceneSystem.on_gameplay_post_init = function (self, level)
 
 		local host_type = Managers.multiplayer_session:host_type()
 
-		if host_type == HOST_TYPES.player or host_type == HOST_TYPES.singleplay or HOST_TYPES.singleplay_backend_session then
+		if host_type == HOST_TYPES.player or host_type == HOST_TYPES.singleplay or host_type == HOST_TYPES.singleplay_backend_session then
 			self:_on_spawn_group_loaded()
 		end
 	end
@@ -215,6 +226,16 @@ CinematicSceneSystem._cinematic_played = function (self, cinematic_name, cinemat
 		if self._is_server then
 			Managers.event:trigger("intro_cinematic_played", cinematic_name)
 		end
+
+		local host_type = Managers.multiplayer_session:host_type()
+
+		if host_type == HOST_TYPES.singleplay then
+			local cinematic_template = CinematicSceneTemplates[cinematic_name]
+
+			if cinematic_template.mission_outro then
+				Managers.event:trigger("mission_outro_played")
+			end
+		end
 	end
 end
 
@@ -226,8 +247,8 @@ CinematicSceneSystem._send_cinematic_played_flow_event = function (self, cinemat
 		local cinematic_setup = sub_cinematics_setup[cinematic_category]
 
 		if cinematic_setup and cinematic_setup.is_valid then
-			Unit.flow_event(cinematic_setup.scene_unit_origin, "lua_cinematic_played")
-			Unit.flow_event(cinematic_setup.scene_unit_destination, "lua_cinematic_played")
+			Unit.flow_event(cinematic_setup.scene_unit_origin, "lua_cinematic_played_server")
+			Unit.flow_event(cinematic_setup.scene_unit_destination, "lua_cinematic_played_server")
 
 			break
 		end
@@ -238,17 +259,17 @@ CinematicSceneSystem._on_level_loaded = function (self, cinematic_name)
 	return
 end
 
-CinematicSceneSystem.load_cutscene = function (self, cinematic_name, client_channel_id)
+CinematicSceneSystem.load_cutscene = function (self, cinematic_name, preload_id)
 	local origin_level_names = get_origin_level_names(cinematic_name)
 
 	if #origin_level_names == 0 then
-		Managers.event:trigger("cutscene_loaded_all_clients")
+		Managers.event:trigger("cutscene_loaded_all_clients", true, preload_id)
 	else
 		local template = CinematicSceneTemplates[cinematic_name]
 		local hotjoin_only = template.hotjoin_only
 		local on_level_loaded_cb = callback(self, "_on_level_loaded", cinematic_name)
 
-		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_loaded_cb, nil, hotjoin_only, true)
+		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_loaded_cb, nil, hotjoin_only, true, preload_id)
 
 		self._intro_loading_started = true
 	end
@@ -274,6 +295,7 @@ CinematicSceneSystem.play_cutscene = function (self, cinematic_name, client_chan
 
 	if cinematic_name == CINEMATIC_NAMES.intro_abc then
 		self._intro_played = true
+		self._intro_loading_started = true
 	end
 end
 
@@ -350,7 +372,10 @@ CinematicSceneSystem._queue_cinematics = function (self, cinematic_name, client_
 			local played_callback = callback(self, "_cinematic_played", cinematic_name, cinematic_category)
 			local template = CinematicSceneTemplates[cinematic_name]
 			local hotjoin_only = template.hotjoin_only
-			local success = Managers.state.cinematic:queue_story(cinematic_name, cinematic_category, scene_unit_origin, scene_unit_destination, played_callback, client_channel_id, hotjoin_only)
+			local is_skippable = template.is_skippable
+			local wait_for_player_input = template.wait_for_player_input
+			local popup_info = template.popup_info
+			local success = Managers.state.cinematic:queue_story(cinematic_name, cinematic_category, scene_unit_origin, scene_unit_destination, played_callback, client_channel_id, hotjoin_only, is_skippable, wait_for_player_input, popup_info)
 
 			if success then
 				self._cinematics_left_to_play = self._cinematics_left_to_play + 1
@@ -668,7 +693,11 @@ CinematicSceneSystem.is_cinematic_active = function (self, cinematic_name)
 	return self._current_cinematic_name == cinematic_name
 end
 
-CinematicSceneSystem._activate_view = function (self, cinematic_name, is_loading)
+CinematicSceneSystem.intro_loading_started = function (self)
+	return self._intro_loading_started
+end
+
+CinematicSceneSystem._activate_view = function (self, cinematic_name)
 	local ui_manager = Managers.ui
 
 	if ui_manager then
@@ -681,7 +710,10 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name, is_loading
 
 			if not ui_manager:view_active(view) then
 				local view_context = {}
-				local view_settings_override = is_loading and {
+				local template = CinematicSceneTemplates[cinematic_name]
+				local use_transition_ui = template.use_transition_ui
+				local no_transition_ui = use_transition_ui == false
+				local view_settings_override = no_transition_ui and {
 					use_transition_ui = false
 				}
 

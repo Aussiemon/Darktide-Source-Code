@@ -29,6 +29,20 @@ local volume_event_functions = {
 		end
 	}
 }
+volume_event_functions.end_zone = {
+	on_enter = function (entering_unit, dt, t, data)
+		local volume_unit = data.connected_units
+		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
+
+		trigger_extension:on_volume_enter(entering_unit, dt, t)
+	end,
+	on_exit = function (exiting_unit, data)
+		local volume_unit = data.connected_units
+		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
+
+		trigger_extension:on_volume_exit(exiting_unit)
+	end
+}
 volume_event_functions.trigger = {
 	on_enter = function (entering_unit, dt, t, data)
 		local volume_unit = data.connected_units

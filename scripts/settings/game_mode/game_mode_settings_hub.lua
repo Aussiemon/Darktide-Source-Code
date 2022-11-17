@@ -7,7 +7,6 @@ local settings = {
 	use_third_person_hub_camera = true,
 	use_foot_ik = true,
 	host_singleplay = false,
-	presence_name = "hub",
 	bot_backfilling_allowed = false,
 	use_side_color = false,
 	is_social_hub = true,
@@ -60,6 +59,11 @@ local settings = {
 		zealot = {
 			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_zealot"
 		}
+	},
+	afk_check = {
+		warning_time_minutes = 10,
+		kick_time_minutes = 15,
+		include_menu_activity = true
 	}
 }
 

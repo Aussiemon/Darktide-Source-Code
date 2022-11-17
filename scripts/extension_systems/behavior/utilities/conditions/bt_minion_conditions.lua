@@ -678,13 +678,6 @@ conditions.beast_of_nurgle_has_consume_target = function (unit, blackboard, scra
 	end
 
 	local behavior_component = blackboard.behavior
-	local cooldown = behavior_component.consume_cooldown
-	local t = Managers.time:time("gameplay")
-
-	if t < cooldown then
-		return false
-	end
-
 	local scratchpad_consumed_unit = scratchpad.consumed_unit
 
 	if HEALTH_ALIVE[scratchpad_consumed_unit] then
@@ -767,6 +760,21 @@ conditions.beast_of_nurgle_should_vomit = function (unit, blackboard, scratchpad
 		return false
 	end
 
+	local target_unit = perception_component.target_unit
+	local line_of_sight_id = "vomit"
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
+
+	if not has_clear_shot then
+		return false
+	end
+
+	local target_distance_z = perception_component.target_distance_z
+
+	if target_distance_z >= 3 then
+		return false
+	end
+
 	local target_distance = perception_component.target_distance
 	local wanted_distance = condition_args.wanted_distance
 
@@ -801,8 +809,9 @@ conditions.beast_of_nurgle_has_spit_out_target = function (unit, blackboard, scr
 
 	local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
 	local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+	local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
 
-	if permanent_damage_taken_percent < 0.5 then
+	if permanent_damage_taken_percent < required_permanent_damage_taken_percent then
 		return false
 	end
 
@@ -846,14 +855,14 @@ conditions.beast_of_nurgle_can_vomit = function (unit, blackboard, scratchpad, c
 end
 
 conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	if is_running then
-		return true
-	end
-
 	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
 	if not is_aggroed then
 		return false
+	end
+
+	if is_running then
+		return true
 	end
 
 	local target_side_id = 1
@@ -870,11 +879,12 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
 
 	for i = 1, num_valid_target_units do
 		local player_unit = target_units[i]
 
-		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit and player_unit ~= perception_component.target_unit then
+		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit and player_unit ~= target_unit then
 			local has_line_of_sight_to_target = perception_extension:has_line_of_sight(player_unit)
 
 			if has_line_of_sight_to_target then
@@ -954,14 +964,14 @@ conditions.beast_of_nurgle_wants_to_run_away = function (unit, blackboard, scrat
 end
 
 conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	if is_running then
-		return true
-	end
-
 	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
 	if not is_aggroed then
 		return false
+	end
+
+	if is_running then
+		return true
 	end
 
 	local behavior_component = blackboard.behavior
@@ -969,6 +979,16 @@ conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scr
 	local t = Managers.time:time("gameplay")
 
 	if t < melee_aoe_cooldown then
+		return false
+	end
+
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+	local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+	local target_is_vomited = buff_extension:current_stacks(vomit_buff_name) > 0
+
+	if target_is_vomited then
 		return false
 	end
 
@@ -984,7 +1004,6 @@ conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scr
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local num_close_players = 0
 	local has_very_close_player = false
-	local perception_component = blackboard.perception
 
 	for i = 1, num_valid_target_units do
 		local player_unit = target_units[i]
@@ -1001,7 +1020,7 @@ conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scr
 					local player_position = POSITION_LOOKUP[player_unit]
 					local distance = Vector3.distance(position, player_position)
 
-					if player_unit ~= perception_component.target_unit and distance < action_data.very_close_distance then
+					if player_unit ~= target_unit and distance < action_data.very_close_distance then
 						has_very_close_player = true
 
 						break
@@ -1023,6 +1042,13 @@ conditions.beast_of_nurgle_should_eat = function (unit, blackboard, scratchpad, 
 		return true
 	end
 
+	local perception_component = blackboard.perception
+	local target_is_close = perception_component.target_distance < 5
+
+	if not target_is_close then
+		return false
+	end
+
 	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
 	if not is_aggroed then
@@ -1037,18 +1063,106 @@ conditions.beast_of_nurgle_should_eat = function (unit, blackboard, scratchpad, 
 		return false
 	end
 
-	local perception_component = blackboard.perception
-	local target_is_close = perception_component.target_distance < 5.25
+	local target_unit = perception_component.target_unit
+	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+	local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+	local current_stacks = buff_extension:current_stacks(vomit_buff_name)
 
-	return target_is_close
+	if current_stacks == 0 then
+		return false
+	end
+
+	return true
 end
 
 conditions.beast_of_nurgle_wants_to_play_change_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local perception_component = blackboard.perception
-	local target_is_close = perception_component.target_distance < 5.25
-	local behavior_component = blackboard.behavior
+	if is_running then
+		return true
+	end
 
-	return behavior_component.wants_to_play_change_target and not target_is_close
+	local perception_component = blackboard.perception
+
+	if perception_component.target_changed then
+		local new_target_unit = perception_component.target_unit
+		local target_is_close = perception_component.target_distance < 5.25
+
+		return new_target_unit and ALIVE[new_target_unit] and not target_is_close
+	end
+
+	return false
+end
+
+conditions.beast_of_nurgle_wants_to_play_alerted = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local perception_component = blackboard.perception
+	local behavior_component = blackboard.behavior
+	local target_is_close = perception_component.target_distance < 5.25
+
+	return behavior_component.wants_to_play_alerted and not target_is_close
+end
+
+conditions.beast_of_nurgle_normal_stagger = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local stagger_component = blackboard.stagger
+	local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "explosion"
+
+	return is_staggered
+end
+
+conditions.beast_of_nurgle_weakspot_stagger = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local consumed_unit = behavior_component.consumed_unit
+
+	if not HEALTH_ALIVE[consumed_unit] or ALIVE[scratchpad.consumed_unit] then
+		return false
+	end
+
+	local stagger_component = blackboard.stagger
+	local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "heavy"
+
+	return is_staggered
+end
+
+conditions.beast_of_nurgle_movement = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+	local target_is_far_away = perception_component.target_distance > 3.5
+
+	if target_is_far_away then
+		return true
+	end
+
+	local target_unit = perception_component.target_unit
+	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+	local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+	local target_is_vomited = buff_extension:current_stacks(vomit_buff_name) > 0
+
+	if target_is_vomited then
+		return true
+	end
+
+	return false
 end
 
 return conditions

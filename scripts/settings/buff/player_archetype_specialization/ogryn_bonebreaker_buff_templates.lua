@@ -20,7 +20,9 @@ local talent_settings = TalentSettings.ogryn_2
 local damage_types = DamageSettings.damage_types
 local templates = {
 	ogryn_bonebreaker_speed_on_lunge = {
+		hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_1_3",
 		predicted = true,
+		hud_priority = 3,
 		class_name = "proc_buff",
 		active_duration = talent_settings.combat_ability.active_duration,
 		proc_events = {
@@ -39,426 +41,512 @@ local templates = {
 			[stat_buffs.damage_taken_multiplier] = talent_settings.passive_2.damage_taken_multiplier
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_lunging
-	},
-	ogryn_bonebreaker_passive_revive = {
-		predicted = false,
-		class_name = "buff",
-		conditional_keywords = {
-			buff_keywords.uninterruptible
-		},
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-			template_data.interactor_extension = interactor_extension
-		end,
-		conditional_keywords_func = function (template_data, template_context)
-			local is_interacting = template_data.interactor_extension:is_interacting()
-
-			if is_interacting then
-				local interaction = template_data.interactor_extension:interaction()
-				local interaction_type = interaction:type()
-				local is_reviving = interaction_type == "revive"
-
-				return is_reviving
-			end
-		end
-	},
-	ogryn_bonebreaker_passive_stagger = {
-		predicted = false,
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.impact_modifier] = talent_settings.passive_1.impact_modifier
-		}
-	},
-	ogryn_bonebreaker_increased_coherency_regen = {
-		predicted = false,
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.toughness_coherency_regen_rate_multiplier] = talent_settings.toughness_1.toughness_multiplier
-		}
-	},
-	ogryn_bonebreaker_heavy_hits_toughness = {
-		class_name = "proc_buff",
-		predicted = false,
-		proc_events = {
-			[proc_events.on_sweep_finish] = talent_settings.toughness_2.on_sweep_finish_proc_chance
-		},
-		check_proc_func = CheckProcFunctions.on_heavy_hit,
-		proc_func = function (params, template_data, template_context)
-			if params.num_hit_units ~= 1 then
-				return
-			end
-
-			Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_2.toughness, false, "talent_toughness_2")
-		end
-	},
-	ogryn_bonebreaker_multiple_enemy_heavy_hits_restore_toughness = {
-		class_name = "proc_buff",
-		predicted = false,
-		proc_events = {
-			[proc_events.on_sweep_finish] = talent_settings.toughness_3.on_sweep_finish_proc_chance
-		},
-		check_proc_func = CheckProcFunctions.on_heavy_hit,
-		proc_func = function (params, template_data, template_context)
-			if params.num_hit_units <= 1 then
-				return
-			end
-
-			Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
-		end
-	},
-	ogryn_bonebreaker_better_ogryn_fighting = {
-		predicted = false,
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.damage_vs_ogryn] = talent_settings.offensive_1.damage_vs_ogryn,
-			[stat_buffs.ogryn_damage_taken_multiplier] = talent_settings.offensive_1.ogryn_damage_taken_multiplier
-		}
-	},
-	ogryn_bonebreaker_heavy_attacks_bleed = {
-		class_name = "proc_buff",
-		predicted = false,
-		proc_events = {
-			[proc_events.on_hit] = 1
-		},
-		check_proc_func = CheckProcFunctions.on_heavy_hit,
-		proc_func = function (params, template_data, template_context, t)
-			if CheckProcFunctions.on_kill(params) then
-				return
-			end
-
-			local victim_unit = params.attacked_unit
-			local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
-
-			if buff_extension then
-				buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", template_context.unit)
-			end
-		end
-	},
-	ogryn_bonebreaker_direct_grenade_hits_on_supers_explode = {
-		predicted = false,
-		class_name = "buff",
-		keywords = {
-			buff_keywords.cluster_explode_on_super_armored
-		}
-	},
-	ogryn_bonebreaker_bigger_coherency_radius = {
-		predicted = false,
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.coherency_radius_modifier] = talent_settings.coop_1.coherency_aura_size_increase
-		}
-	},
-	ogryn_bonebreaker_charge_grants_allied_movement_speed = {
-		predicted = false,
-		class_name = "proc_buff",
-		proc_events = {
-			[proc_events.on_lunge_start] = talent_settings.coop_2.on_lunge_start_proc_chance
-		},
-		proc_func = function (params, template_data, template_context)
-			if not template_context.is_server then
-				return
-			end
-
-			local unit = template_context.unit
-			local coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")
-
-			if coherency_extension then
-				local units_in_coherence = coherency_extension:in_coherence_units()
-				local movement_speed_buff = "ogryn_bonebreaker_allied_movement_speed_buff"
-				local t = FixedFrame.get_latest_fixed_time()
-
-				for coherency_unit, _ in pairs(units_in_coherence) do
-					local is_local_unit = coherency_unit == unit
-
-					if not is_local_unit then
-						local coherency_buff_extension = ScriptUnit.extension(coherency_unit, "buff_system")
-
-						coherency_buff_extension:add_internally_controlled_buff(movement_speed_buff, t, "owner_unit", unit)
-					end
-				end
-			end
-		end
-	},
-	ogryn_bonebreaker_allied_movement_speed_buff = {
-		predicted = true,
-		refresh_duration_on_stack = true,
-		class_name = "buff",
-		duration = talent_settings.coop_2.duration,
-		max_stacks = talent_settings.coop_2.max_stacks,
-		stat_buffs = {
-			[stat_buffs.movement_speed] = talent_settings.coop_2.movement_speed
-		}
-	},
-	ogryn_bonebreaker_take_ally_damage = {
-		predicted = false,
-		class_name = "proc_buff",
-		proc_events = {
-			[proc_events.on_damage_taken] = 1
-		},
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
-			template_data.coherency_extension = coherency_extension
-			template_data.ally_unit = nil
-			template_data.ally_buff_extension = nil
-			template_data.buff_id = nil
-			template_data.buff_name = "ogryn_bonebreaker_ally_damage_reduction"
-			local t = Managers.time:time("gameplay")
-			template_data.next_update_t = t
-			template_data.health_extension = ScriptUnit.extension(unit, "health_system")
-			template_data.damage = 0
-			template_data.permanent_damage = 0
-			local max_health = template_data.health_extension:max_health()
-			local max_wounds = template_data.health_extension:max_wounds()
-			template_data.health_cut_off = math.round(max_health / max_wounds)
-		end,
-		proc_func = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return
-			end
-
-			local attacked_unit = params.attacked_unit
-
-			if attacked_unit ~= template_data.ally_unit then
-				return
-			end
-
-			local damage = params.damage_amount < 1 and 0 or params.damage_amount
-			local permanent_damage = params.permanent_damage < 1 and 0 or params.permanent_damage
-			template_data.attacking_unit = template_data.attacking_unit or params.attacking_unit
-			template_data.attacking_unit_owner_unit = template_data.attacking_unit_owner_unit or params.attacking_unit_owner_unit
-			template_data.damage = template_data.damage + damage
-			template_data.permanent_damage = template_data.permanent_damage + permanent_damage
-		end,
-		update_func = function (template_data, template_context, dt, t)
-			if not template_context.is_server then
-				return
-			end
-
-			local current_damaged_health = template_data.health_extension:current_damaged_health()
-
-			if current_damaged_health <= template_data.health_cut_off then
-				if template_data.ally_unit then
-					local buff_id = template_data.buff_id
-
-					if buff_id then
-						local component_index = template_data.component_index
-
-						template_data.ally_buff_extension:remove_externally_controlled_buff(buff_id, component_index)
-					end
-
-					template_data.ally_unit = nil
-					template_data.ally_buff_extension = nil
-					template_data.buff_id = nil
-				end
-
-				return
-			end
-
-			local damage = template_data.damage
-			local permanent_damage = template_data.permanent_damage
-			local excess_damage = 1 - (current_damaged_health - damage)
-
-			if excess_damage > 0 then
-				damage = damage - excess_damage
-			end
-
-			if damage > 0 or permanent_damage > 0 then
-				local unit = template_context.unit
-				local attack_direction = Vector3.direction_length(POSITION_LOOKUP[unit], POSITION_LOOKUP[template_data.ally_unit])
-				local attacking_unit = template_data.attacking_unit
-				local attacking_unit_owner_unit = template_data.attacking_unit_owner_unit
-				attacking_unit = attacking_unit_owner_unit or attacking_unit
-
-				if damage > 0 then
-					local damage_profile = DamageProfileTemplates.ogryn_bonebreaker_ally_damage
-
-					Attack.execute(unit, damage_profile, "power_level", damage, "attacking_unit", attacking_unit, "attack_direction", attack_direction)
-
-					template_data.damage = 0
-				end
-
-				if permanent_damage > 0 then
-					local damage_profile = DamageProfileTemplates.ogryn_bonebreaker_ally_damage_permanent
-
-					Attack.execute(unit, damage_profile, "power_level", permanent_damage, "attacking_unit", attacking_unit, "attack_direction", attack_direction)
-
-					template_data.permanent_damage = 0
-				end
-
-				template_data.attacking_unit = nil
-				template_data.attacking_unit_owner_unit = nil
-			end
-
-			if t < template_data.next_update_t then
-				return
-			end
-
-			template_data.next_update_t = t + 1
-			local unit = template_context.unit
-			local units_in_coherence = template_data.coherency_extension:in_coherence_units()
-			local closest_ally_unit = nil
-			local dist = math.huge
-			local pos = POSITION_LOOKUP[unit]
-
-			for ally_unit, _ in pairs(units_in_coherence) do
-				if ally_unit ~= unit then
-					local unit_data_extension = ScriptUnit.has_extension(ally_unit, "unit_data_system")
-
-					if unit_data_extension then
-						local component = unit_data_extension:read_component("character_state")
-						local is_knocked_down = PlayerUnitStatus.is_knocked_down(component)
-
-						if not is_knocked_down then
-							local ally_pos = POSITION_LOOKUP[ally_unit]
-							local distance = Vector3.distance_squared(pos, ally_pos)
-
-							if distance < dist then
-								dist = distance
-								closest_ally_unit = ally_unit
-							end
-						end
-					end
-				end
-			end
-
-			if (not closest_ally_unit or closest_ally_unit ~= template_data.ally_unit) and ALIVE[template_data.ally_unit] then
-				local buff_id = template_data.buff_id
-
-				if buff_id then
-					template_data.ally_buff_extension:remove_externally_controlled_buff(buff_id, nil)
-				end
-
-				template_data.ally_unit = nil
-				template_data.ally_buff_extension = nil
-				template_data.buff_id = nil
-			end
-
-			if closest_ally_unit and closest_ally_unit ~= template_data.ally_unit then
-				local buff_name = template_data.buff_name
-				local buff_extension = ScriptUnit.extension(closest_ally_unit, "buff_system")
-				local _, buff_id = buff_extension:add_externally_controlled_buff(buff_name, t)
-				template_data.ally_unit = closest_ally_unit
-				template_data.ally_buff_extension = buff_extension
-				template_data.buff_id = buff_id
-			end
-		end,
-		stop_func = function (template_data, template_context)
-			if ALIVE[template_data.ally_unit] then
-				local buff_id = template_data.buff_id
-
-				if buff_id then
-					template_data.ally_buff_extension:remove_externally_controlled_buff(buff_id, nil)
-				end
-
-				template_data.ally_unit = nil
-				template_data.ally_buff_extension = nil
-				template_data.buff_id = nil
-			end
-		end
-	},
-	ogryn_bonebreaker_ally_damage_reduction = {
-		predicted = false,
-		max_stacks = 1,
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.damage_taken_multiplier] = talent_settings.coop_3.damage_taken_multiplier
-		}
-	},
-	ogryn_bonebreaker_coherency_increased_melee_damage = {
-		predicted = false,
-		coherency_priority = 2,
-		coherency_id = "ogryn_bonebreaker_coherency_aura",
-		class_name = "buff",
-		max_stacks = talent_settings.coherency.max_stacks,
-		keywords = {},
-		stat_buffs = {
-			[stat_buffs.melee_damage] = talent_settings.coherency.melee_damage
-		}
-	},
-	ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence = {
-		predicted = false,
-		class_name = "proc_buff",
-		proc_events = {
-			[proc_events.on_minion_death] = 1
-		},
-		proc_func = function (params, template_data, template_context)
-			local breed_name = params.breed_name
-			local breed = breed_name and Breeds[breed_name]
-
-			if not breed or not breed.tags or not breed.tags.elite then
-				return
-			end
-
-			local attacker_unit = params.attacking_unit
-			local unit = template_context.unit
-			local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
-			local units_in_coherence = coherency_extension:in_coherence_units()
-
-			if not units_in_coherence[attacker_unit] then
-				return
-			end
-
-			local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-			local ability_type = "combat_ability"
-
-			if not ability_extension or not ability_extension:has_ability_type(ability_type) then
-				return
-			end
-
-			ability_extension:reduce_ability_cooldown_percentage(ability_type, talent_settings.defensive_1.cooldown)
-		end
-	},
-	ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
-		predicted = false,
-		class_name = "buff",
-		lerped_stat_buffs = {
-			[stat_buffs.damage_taken_multiplier] = {
-				max = 0.25,
-				min = 1
-			}
-		},
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			local side_system = Managers.state.extension:system("side_system")
-			local side = side_system.side_by_unit[unit]
-			template_data.side = side
-			template_data.lerp_t = 0
-			local t = Managers.time:time("gameplay")
-			template_data.update_t = t + 0.1
-		end,
-		lerp_t_func = function (t, start_time, duration, template_data, template_context)
-			if template_data.update_t < t then
-				local max_players = 3
-				local player_units = template_data.side.valid_player_units
-				local valid_units = 0
-
-				for i = 1, #player_units do
-					local player_unit = player_units[i]
-
-					if player_unit ~= template_context.unit then
-						local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-						local character_state_component = unit_data_extension:read_component("character_state")
-						local requires_immediate_help = PlayerUnitStatus.requires_immediate_help(character_state_component)
-
-						if requires_immediate_help then
-							valid_units = valid_units + 1
-						end
-					end
-				end
-
-				template_data.lerp_t = valid_units / max_players
-				template_data.update_t = t + 0.1
-			end
-
-			return template_data.lerp_t
-		end
 	}
+}
+
+local function _passive_revive_conditional(template_data, template_context)
+	local is_interacting = template_data.interactor_extension:is_interacting()
+
+	if is_interacting then
+		local interaction = template_data.interactor_extension:interaction()
+		local interaction_type = interaction:type()
+		local is_reviving = interaction_type == "revive" or interaction_type == "rescue"
+
+		return is_reviving
+	end
+end
+
+templates.ogryn_bonebreaker_passive_revive = {
+	predicted = false,
+	class_name = "buff",
+	conditional_keywords = {
+		buff_keywords.uninterruptible
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.push_speed_modifier] = -0.9
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
+		template_data.interactor_extension = interactor_extension
+	end,
+	conditional_keywords_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
+}
+templates.ogryn_bonebreaker_passive_stagger = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.impact_modifier] = talent_settings.passive_1.impact_modifier
+	}
+}
+templates.ogryn_bonebreaker_increased_coherency_regen = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.toughness_coherency_regen_rate_multiplier] = talent_settings.toughness_1.toughness_bonus
+	}
+}
+templates.ogryn_bonebreaker_heavy_hits_toughness = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_sweep_finish] = talent_settings.toughness_2.on_sweep_finish_proc_chance
+	},
+	check_proc_func = CheckProcFunctions.on_heavy_hit,
+	proc_func = function (params, template_data, template_context)
+		if params.num_hit_units ~= 1 then
+			return
+		end
+
+		Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_2.toughness, false, "talent_toughness_2")
+	end
+}
+templates.ogryn_bonebreaker_multiple_enemy_heavy_hits_restore_toughness = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_sweep_finish] = talent_settings.toughness_3.on_sweep_finish_proc_chance
+	},
+	check_proc_func = CheckProcFunctions.on_heavy_hit,
+	proc_func = function (params, template_data, template_context)
+		if params.num_hit_units <= 1 then
+			return
+		end
+
+		Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+	end
+}
+templates.ogryn_bonebreaker_better_ogryn_fighting = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.damage_vs_ogryn] = talent_settings.offensive_1.damage_vs_ogryn,
+		[stat_buffs.ogryn_damage_taken_multiplier] = talent_settings.offensive_1.ogryn_damage_taken_multiplier
+	}
+}
+templates.ogryn_bonebreaker_heavy_attacks_bleed = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	check_proc_func = CheckProcFunctions.on_heavy_hit,
+	proc_func = function (params, template_data, template_context, t)
+		if CheckProcFunctions.on_kill(params) then
+			return
+		end
+
+		local victim_unit = params.attacked_unit
+		local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", template_context.unit)
+		end
+	end
+}
+templates.ogryn_bonebreaker_direct_grenade_hits_on_supers_explode = {
+	predicted = false,
+	class_name = "buff",
+	keywords = {
+		buff_keywords.cluster_explode_on_super_armored
+	}
+}
+templates.ogryn_bonebreaker_bigger_coherency_radius = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.coherency_radius_modifier] = talent_settings.coop_1.coherency_aura_size_increase
+	}
+}
+templates.ogryn_bonebreaker_charge_grants_allied_movement_speed = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_lunge_start] = talent_settings.coop_2.on_lunge_start_proc_chance
+	},
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")
+
+		if coherency_extension then
+			local units_in_coherence = coherency_extension:in_coherence_units()
+			local movement_speed_buff = "ogryn_bonebreaker_allied_movement_speed_buff"
+			local t = FixedFrame.get_latest_fixed_time()
+
+			for coherency_unit, _ in pairs(units_in_coherence) do
+				local is_local_unit = coherency_unit == unit
+
+				if not is_local_unit then
+					local coherency_buff_extension = ScriptUnit.extension(coherency_unit, "buff_system")
+
+					coherency_buff_extension:add_internally_controlled_buff(movement_speed_buff, t, "owner_unit", unit)
+				end
+			end
+		end
+	end
+}
+templates.ogryn_bonebreaker_allied_movement_speed_buff = {
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_1_3",
+	predicted = true,
+	refresh_duration_on_stack = true,
+	class_name = "buff",
+	duration = talent_settings.coop_2.duration,
+	max_stacks = talent_settings.coop_2.max_stacks,
+	stat_buffs = {
+		[stat_buffs.movement_speed] = talent_settings.coop_2.movement_speed
+	}
+}
+templates.ogryn_bonebreaker_take_ally_damage = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_damage_taken] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.coherency_extension = coherency_extension
+		template_data.ally_unit = nil
+		template_data.buff_id = nil
+		template_data.buff_name = "ogryn_bonebreaker_ally_damage_reduction"
+		local t = Managers.time:time("gameplay")
+		template_data.next_update_t = t
+		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.damage = 0
+		template_data.permanent_damage = 0
+		local max_health = template_data.health_extension:max_health()
+		local max_wounds = template_data.health_extension:max_wounds()
+		template_data.health_cut_off = math.round(max_health / max_wounds)
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		if not template_context.is_server then
+			return
+		end
+
+		local attacked_unit = params.attacked_unit
+
+		if attacked_unit ~= template_data.ally_unit then
+			return
+		end
+
+		local damage = params.damage_amount < 1 and 0 or params.damage_amount
+		local permanent_damage = params.permanent_damage < 1 and 0 or params.permanent_damage
+		template_data.attacking_unit = template_data.attacking_unit or params.attacking_unit
+		template_data.attacking_unit_owner_unit = template_data.attacking_unit_owner_unit or params.attacking_unit_owner_unit
+		template_data.damage = template_data.damage + damage
+		template_data.permanent_damage = template_data.permanent_damage + permanent_damage
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
+		local current_health = template_data.health_extension:current_health()
+
+		if current_health <= template_data.health_cut_off then
+			local unit = template_data.ally_unit
+
+			if unit then
+				local buff_id = template_data.buff_id
+
+				if buff_id then
+					local component_index = template_data.component_index
+					local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+					if buff_extension then
+						buff_extension:remove_externally_controlled_buff(buff_id, component_index)
+					end
+				end
+
+				template_data.ally_unit = nil
+				template_data.buff_id = nil
+			end
+
+			return
+		end
+
+		local damage = template_data.damage
+		local permanent_damage = template_data.permanent_damage
+		local excess_damage = 1 - (current_health - damage)
+
+		if excess_damage > 0 then
+			damage = damage - excess_damage
+		end
+
+		if damage > 0 or permanent_damage > 0 then
+			local unit = template_context.unit
+			local attack_direction = Vector3.direction_length(POSITION_LOOKUP[unit], POSITION_LOOKUP[template_data.ally_unit])
+			local attacking_unit = template_data.attacking_unit
+			local attacking_unit_owner_unit = template_data.attacking_unit_owner_unit
+			attacking_unit = attacking_unit_owner_unit or attacking_unit
+
+			if damage > 0 then
+				local damage_profile = DamageProfileTemplates.ogryn_bonebreaker_ally_damage
+
+				Attack.execute(unit, damage_profile, "power_level", damage, "attacking_unit", attacking_unit, "attack_direction", attack_direction)
+
+				template_data.damage = 0
+			end
+
+			if permanent_damage > 0 then
+				local damage_profile = DamageProfileTemplates.ogryn_bonebreaker_ally_damage_permanent
+
+				Attack.execute(unit, damage_profile, "power_level", permanent_damage, "attacking_unit", attacking_unit, "attack_direction", attack_direction)
+
+				template_data.permanent_damage = 0
+			end
+
+			template_data.attacking_unit = nil
+			template_data.attacking_unit_owner_unit = nil
+		end
+
+		if t < template_data.next_update_t then
+			return
+		end
+
+		template_data.next_update_t = t + 1
+		local unit = template_context.unit
+		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
+		local closest_ally_unit = nil
+		local dist = math.huge
+		local pos = POSITION_LOOKUP[unit]
+
+		for ally_unit, _ in pairs(units_in_coherence) do
+			if HEALTH_ALIVE[ally_unit] and ally_unit ~= unit then
+				local unit_data_extension = ScriptUnit.has_extension(ally_unit, "unit_data_system")
+
+				if unit_data_extension then
+					local component = unit_data_extension:read_component("character_state")
+					local is_knocked_down = PlayerUnitStatus.is_knocked_down(component)
+
+					if not is_knocked_down then
+						local ally_pos = POSITION_LOOKUP[ally_unit]
+						local distance = Vector3.distance_squared(pos, ally_pos)
+
+						if distance < dist then
+							dist = distance
+							closest_ally_unit = ally_unit
+						end
+					end
+				end
+			end
+		end
+
+		if (not closest_ally_unit or closest_ally_unit ~= template_data.ally_unit) and ALIVE[template_data.ally_unit] then
+			local buff_id = template_data.buff_id
+
+			if buff_id then
+				local ally_unit = template_data.ally_unit
+				local buff_extension = ScriptUnit.has_extension(ally_unit, "buff_system")
+
+				if buff_extension then
+					buff_extension:remove_externally_controlled_buff(buff_id, nil)
+				end
+			end
+
+			template_data.ally_unit = nil
+			template_data.buff_id = nil
+		end
+
+		if closest_ally_unit and closest_ally_unit ~= template_data.ally_unit then
+			local buff_name = template_data.buff_name
+			local buff_extension = ScriptUnit.extension(closest_ally_unit, "buff_system")
+			local _, buff_id = buff_extension:add_externally_controlled_buff(buff_name, t)
+			template_data.ally_unit = closest_ally_unit
+			template_data.buff_id = buff_id
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if ALIVE[template_data.ally_unit] then
+			local buff_id = template_data.buff_id
+
+			if buff_id then
+				local ally_unit = template_data.ally_unit
+				local buff_extension = ScriptUnit.has_extension(ally_unit, "buff_system")
+
+				if buff_extension then
+					buff_extension:remove_externally_controlled_buff(buff_id, nil)
+				end
+			end
+
+			template_data.ally_unit = nil
+			template_data.buff_id = nil
+		end
+	end
+}
+templates.ogryn_bonebreaker_ally_damage_reduction = {
+	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = talent_settings.coop_3.damage_taken_multiplier
+	}
+}
+templates.ogryn_bonebreaker_coherency_increased_melee_damage = {
+	predicted = false,
+	coherency_priority = 2,
+	coherency_id = "ogryn_bonebreaker_coherency_aura",
+	class_name = "buff",
+	max_stacks = talent_settings.coherency.max_stacks,
+	keywords = {},
+	stat_buffs = {
+		[stat_buffs.melee_damage] = talent_settings.coherency.melee_damage
+	}
+}
+templates.ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_minion_death] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		local breed_name = params.breed_name
+		local breed = breed_name and Breeds[breed_name]
+
+		if not breed or not breed.tags or not breed.tags.elite then
+			return
+		end
+
+		local attacker_unit = params.attacking_unit
+		local unit = template_context.unit
+		local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		local units_in_coherence = coherency_extension:in_coherence_units()
+
+		if not units_in_coherence[attacker_unit] then
+			return
+		end
+
+		local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
+		local ability_type = "combat_ability"
+
+		if not ability_extension or not ability_extension:has_ability_type(ability_type) then
+			return
+		end
+
+		ability_extension:reduce_ability_cooldown_percentage(ability_type, talent_settings.coop_3.cooldown)
+	end
+}
+local bleed_dr_max_stacks = talent_settings.defensive_1.max_stacks
+local bleed_range = DamageSettings.in_melee_range
+templates.ogryn_bonebreaker_reduce_damage_taken_per_bleed = {
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_3",
+	predicted = false,
+	hud_priority = 3,
+	class_name = "buff",
+	lerped_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = {
+			min = talent_settings.defensive_1.min,
+			max = talent_settings.defensive_1.max
+		}
+	},
+	start_func = function (template_data, template_context)
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+		template_data.broadphase = broadphase
+		template_data.broadphase_results = {}
+		template_data.num_stacks = 0
+		local unit = template_context.unit
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		local enemy_side_names = side:relation_side_names("enemy")
+		local t = FixedFrame.get_latest_fixed_time()
+		template_data.next_bleed_check_t = t + talent_settings.defensive_1.time
+		template_data.enemy_side_names = enemy_side_names
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local next_bleed_check_t = template_data.next_bleed_check_t
+
+		if next_bleed_check_t < t then
+			local player_unit = template_context.unit
+			local player_position = POSITION_LOOKUP[player_unit]
+			local broadphase = template_data.broadphase
+			local enemy_side_names = template_data.enemy_side_names
+			local broadphase_results = template_data.broadphase_results
+
+			table.clear(broadphase_results)
+
+			local num_stacks = 0
+			local num_hits = broadphase:query(player_position, bleed_range, broadphase_results, enemy_side_names)
+
+			for i = 1, num_hits do
+				local enemy_unit = broadphase_results[i]
+				local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
+
+				if buff_extension then
+					local target_is_bleeding = buff_extension:has_keyword(buff_keywords.bleeding)
+
+					if target_is_bleeding then
+						num_stacks = num_stacks + 1
+					end
+				end
+			end
+
+			template_data.num_stacks = num_stacks
+			template_data.next_bleed_check_t = t + talent_settings.defensive_1.time
+		end
+
+		return math.clamp(template_data.num_stacks / bleed_dr_max_stacks, 0, 1)
+	end,
+	visual_stack_count = function (template_data, template_context)
+		return math.clamp(template_data.num_stacks, 0, bleed_dr_max_stacks)
+	end
+}
+templates.ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
+	predicted = false,
+	class_name = "buff",
+	lerped_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = {
+			min = talent_settings.defensive_2.min,
+			max = talent_settings.defensive_2.max
+		}
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		template_data.side = side
+		template_data.lerp_t = 0
+		local t = Managers.time:time("gameplay")
+		template_data.update_t = t + 0.1
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		if template_data.update_t < t then
+			local max_players = 3
+			local player_units = template_data.side.valid_player_units
+			local valid_units = 0
+
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+
+				if player_unit ~= template_context.unit then
+					local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+					local character_state_component = unit_data_extension:read_component("character_state")
+					local requires_immediate_help = PlayerUnitStatus.requires_immediate_help(character_state_component)
+
+					if requires_immediate_help then
+						valid_units = valid_units + 1
+					end
+				end
+			end
+
+			template_data.lerp_t = valid_units / max_players
+			template_data.update_t = t + 0.1
+		end
+
+		return template_data.lerp_t
+	end
 }
 local increased_toughness_health_threshold = talent_settings.defensive_3.increased_toughness_health_threshold
 templates.ogryn_bonebreaker_increased_toughness_at_low_health = {
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_3",
 	predicted = false,
+	hud_priority = 3,
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.toughness_replenish_multiplier] = talent_settings.defensive_3.toughness_replenish_multiplier

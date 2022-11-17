@@ -52,7 +52,7 @@ local abilities = {
 		ability_template_tweak_data = {
 			lunge_template_name = LungeTemplates.zealot_dash.name
 		},
-		cooldown = maniac_talent_settings.combat_ability_3.cooldown,
+		cooldown = maniac_talent_settings.combat_ability.cooldown,
 		max_charges = maniac_talent_settings.combat_ability_3.max_charges,
 		archetypes = {
 			"zealot"

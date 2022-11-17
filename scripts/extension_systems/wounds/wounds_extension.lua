@@ -1,4 +1,5 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local attack_results = AttackSettings.attack_results
@@ -15,7 +16,14 @@ WoundsExtension.init = function (self, extension_init_context, unit, extension_i
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	self._next_wound_health_percent = math.huge
+	local wounds_config = self._breed.wounds_config
+	local health_percent_throttle = nil
+
+	if wounds_config then
+		health_percent_throttle = wounds_config.health_percent_throttle
+	end
+
+	self._next_wound_health_percent = health_percent_throttle and 1 - health_percent_throttle or math.huge
 	local is_server = extension_init_context.is_server
 	self._is_server = is_server
 
@@ -128,7 +136,13 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 
 	WoundMaterials.calculate(unit, wounds_config, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, t)
 
-	if not DEDICATED_SERVER then
+	local wounds_enabled_locally = Application.user_setting("gore_settings", "minion_wounds_enabled")
+
+	if wounds_enabled_locally == nil then
+		wounds_enabled_locally = DefaultGameParameters.minion_wounds_enabled
+	end
+
+	if not DEDICATED_SERVER and wounds_enabled_locally then
 		WoundMaterials.apply(unit, wounds_data, wound_index, slot_items)
 	end
 

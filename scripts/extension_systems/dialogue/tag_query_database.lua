@@ -197,9 +197,14 @@ TagQueryDatabase._iterate_query = function (self, t)
 
 	if rule_index_found then
 		local rule = self._rule_id_mapping[rule_index_found]
-		query.validated_rule = rule
-		query.result = rule.response
-		query.rule_index = rule_index_found
+		local response = rule.response
+		local has_event = dialogue_extension:has_dialogue(response)
+
+		if has_event then
+			query.validated_rule = rule
+			query.result = response
+			query.rule_index = rule_index_found
+		end
 	end
 
 	return query

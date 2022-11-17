@@ -16,6 +16,8 @@ SwayWeaponModule.init = function (self, unit, unit_data_extension, weapon_extens
 	self._shooting_status_component = unit_data_extension:read_component("shooting_status")
 	self._weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	self._action_module_charge_component = unit_data_ext:read_component("action_module_charge")
 	self._sway_component.pitch = 0
 	self._sway_component.yaw = 0
 	self._sway_component.offset_x = 0
@@ -128,6 +130,20 @@ SwayWeaponModule._calculate_sway_offsets = function (self, dt, t)
 	local yaw = sway_component.yaw
 	pitch, yaw = Suppression.apply_suppression_offsets_to_sway(suppression_component, pitch, yaw)
 	local offset_x, offset_y = sway_pattern(dt, t, sway_settings, yaw, pitch)
+
+	if self._action_module_charge_component then
+		local charge_level = self._action_module_charge_component.charge_level
+
+		if sway_template.charge_scale then
+			local charge_max_pitch = sway_template.charge_scale.max_pitch
+			local charge_max_yaw = sway_template.charge_scale.max_yaw
+			local pitch_charge_offset = math.lerp(1, charge_max_pitch, math.sqrt(charge_level))
+			local yaw_charge_offset = math.lerp(1, charge_max_yaw, math.sqrt(charge_level))
+			offset_x = offset_x * pitch_charge_offset
+			offset_y = offset_y * yaw_charge_offset
+		end
+	end
+
 	offset_x = math_clamp(offset_x, MIN, MAX)
 	offset_y = math_clamp(offset_y, MIN, MAX)
 	sway_component.offset_x = offset_x

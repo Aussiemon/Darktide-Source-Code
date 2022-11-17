@@ -69,6 +69,10 @@ TitleView.event_state_title_reset = function (self)
 end
 
 TitleView._apply_title_text = function (self)
+	if self._continue_triggered then
+		return
+	end
+
 	local input_alias_name = self._continue_input_name
 	local service_type = "View"
 	local color_tint_text = true

@@ -29,17 +29,6 @@ LoadingIcon.render = function (gui)
 	local icon_size = Vector2(icon_width, icon_height)
 
 	Gui.bitmap(gui, "content/ui/materials/loading/loading_icon", position, icon_size, Color(255, 255, 255, 255))
-
-	local text = "Loading" .. string.rep(".", Application.time_since_launch() % 4)
-	local text_font_setting_name = "body"
-	local text_font_settings = UIFontSettings[text_font_setting_name]
-	local text_font_color = text_font_settings.text_color
-	local font_size = text_font_settings.font_size * resolution_scale
-	local color = Color(text_font_color[1], text_font_color[2], text_font_color[3], text_font_color[4])
-	position[1] = position[1] + icon_size[1] * 0.36
-	position[2] = position[2] + icon_size[2] * 0.8
-
-	Gui.slug_text(gui, text, "core/performance_hud/debug", font_size, position, nil, color)
 end
 
 return LoadingIcon

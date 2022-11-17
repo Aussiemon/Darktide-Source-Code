@@ -45,12 +45,28 @@ BtInCoverAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	self:_enter_cover(unit, breed, scratchpad, action_data, cover_component, t)
 end
 
+local DEFAULT_ABORTED_COVER_DISABLE_RANGE = {
+	3,
+	10
+}
+local DEFAULT_DONE_COVER_DISABLE_RANGE = {
+	2,
+	5
+}
+
 BtInCoverAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local cover_component = scratchpad.cover_component
 	cover_component.is_in_cover = false
 	local cover_user_extension = ScriptUnit.extension(unit, "cover_system")
+	local disable_cover_range = nil
 
-	cover_user_extension:release_cover_slot()
+	if reason ~= "done" then
+		disable_cover_range = action_data.aborted_disable_cover_range or DEFAULT_ABORTED_COVER_DISABLE_RANGE
+	else
+		disable_cover_range = action_data.done_disable_cover_range or DEFAULT_DONE_COVER_DISABLE_RANGE
+	end
+
+	cover_user_extension:release_cover_slot(math.random_range(disable_cover_range[1], disable_cover_range[2]))
 	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 
 	local state = scratchpad.state
@@ -106,12 +122,16 @@ BtInCoverAction._enter_cover = function (self, unit, breed, scratchpad, action_d
 	Vo.enemy_generic_vo_event(unit, "take_cover", breed_name)
 end
 
+local DEFAULT_MIN_PEAK_DISTANCE = 40
+
 BtInCoverAction._update_entering = function (self, unit, scratchpad, action_data, t, cover_component)
 	local cover_position = cover_component.position:unbox()
 	local cover_rotation = Quaternion.look(cover_component.direction:unbox())
 	local enter_cover_duration = scratchpad.enter_cover_duration
+	local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
+	local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
 
-	if enter_cover_duration <= t then
+	if can_peak and enter_cover_duration <= t then
 		self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
 		scratchpad.locomotion_extension:teleport_to(cover_position, cover_rotation)
 
@@ -138,13 +158,13 @@ local DEFAULT_SUPPRESSED_DURATION = {
 	3
 }
 
-BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_data, t, delayed_suppresed_anim)
+BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_data, t, delayed_suppresed_anim, teleport)
 	Vo.enemy_call_backup_event(unit)
 
 	local animation_extension = scratchpad.animation_extension
+	local cover_component = scratchpad.cover_component
 
 	if delayed_suppresed_anim then
-		local cover_component = scratchpad.cover_component
 		local cover_type = cover_component.type
 		local enter_cover_anim_state = action_data.enter_cover_anim_states[cover_type]
 
@@ -160,6 +180,13 @@ BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_dat
 		animation_extension:anim_event(suppressed_anim)
 	end
 
+	if teleport then
+		local cover_position = cover_component.position:unbox()
+		local cover_rotation = Quaternion.look(cover_component.direction:unbox())
+
+		scratchpad.locomotion_extension:teleport_to(cover_position, cover_rotation)
+	end
+
 	scratchpad.state = "suppressed"
 end
 
@@ -173,9 +200,14 @@ BtInCoverAction._update_suppressed = function (self, unit, scratchpad, action_da
 		local suppressed_duration = action_data.suppressed_duration or DEFAULT_SUPPRESSED_DURATION
 		scratchpad.suppressed_duration = t + math.random_range(suppressed_duration[1], suppressed_duration[2])
 	elseif not is_suppressed and scratchpad.suppressed_duration and scratchpad.suppressed_duration <= t then
-		self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
+		local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
+		local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
 
-		scratchpad.suppressed_duration = nil
+		if can_peak then
+			self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
+
+			scratchpad.suppressed_duration = nil
+		end
 	end
 end
 
@@ -249,9 +281,10 @@ end
 
 BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data, t, cover_component, perception_component, is_suppressed)
 	if is_suppressed then
-		local delayed_suppresed_anim = true
+		local delayed_suppresed_anim = false
+		local teleport = true
 
-		self:_start_suppressed(unit, scratchpad, action_data, t, delayed_suppresed_anim)
+		self:_start_suppressed(unit, scratchpad, action_data, t, delayed_suppresed_anim, teleport)
 
 		return
 	end
@@ -269,11 +302,16 @@ BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data,
 			AttackIntensity.add_intensity(target_unit, action_data.attack_intensities)
 			AttackIntensity.set_attacked(target_unit)
 		else
-			local peek_identifier = self:_get_peek_identifier(unit, scratchpad, cover_component)
+			local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
+			local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
 
-			if peek_identifier ~= scratchpad.current_peak_identifier then
-				self:_start_peeking(unit, scratchpad, action_data, cover_component, peek_identifier, t)
-				Vo.enemy_ranged_idle_event(unit)
+			if can_peak then
+				local peek_identifier = self:_get_peek_identifier(unit, scratchpad, cover_component)
+
+				if peek_identifier ~= scratchpad.current_peak_identifier then
+					self:_start_peeking(unit, scratchpad, action_data, cover_component, peek_identifier, t)
+					Vo.enemy_ranged_idle_event(unit)
+				end
 			end
 		end
 	end

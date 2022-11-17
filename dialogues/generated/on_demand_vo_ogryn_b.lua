@@ -715,6 +715,29 @@ local on_demand_vo_ogryn_b = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_b__smart_tag_vo_enemy_berserker_01",
+			"loc_ogryn_b__smart_tag_vo_enemy_berserker_02",
+			"loc_ogryn_b__smart_tag_vo_enemy_berserker_03",
+			"loc_ogryn_b__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			0.987979,
+			1.082615,
+			1.129115,
+			1.850385
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -1101,42 +1124,30 @@ local on_demand_vo_ogryn_b = {
 	},
 	smart_tag_vo_seen_netgunner_flee = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_ogryn_b__seen_netgunner_flee_01",
-			"loc_ogryn_b__seen_netgunner_flee_02",
 			"loc_ogryn_b__seen_netgunner_flee_03",
 			"loc_ogryn_b__seen_netgunner_flee_04",
 			"loc_ogryn_b__seen_netgunner_flee_05",
 			"loc_ogryn_b__seen_netgunner_flee_06",
-			"loc_ogryn_b__seen_netgunner_flee_07",
-			"loc_ogryn_b__seen_netgunner_flee_08",
 			"loc_ogryn_b__seen_netgunner_flee_09",
 			"loc_ogryn_b__seen_netgunner_flee_10"
 		},
 		sound_events_duration = {
-			1.482917,
-			1.719979,
 			2.793417,
 			1.135573,
 			2.877156,
 			1.712208,
-			3.32724,
-			2.817052,
 			2.699635,
 			3.620948
 		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

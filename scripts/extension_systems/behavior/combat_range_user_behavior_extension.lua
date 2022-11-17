@@ -22,6 +22,12 @@ CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, 
 	else
 		self._combat_range_config = combat_range_data.config
 	end
+
+	if combat_range_data.calculate_target_velocity_dot then
+		self._target_velocity_dot_duration = 0
+		self._target_velocity_dot_reset = combat_range_data.target_velocity_dot_reset
+		self._target_velocity_dot_reset_timer = 0
+	end
 end
 
 local DEFAULT_SPAWN_INVENTORY_SLOT = "unarmed"
@@ -80,6 +86,30 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 	local perception_component = self._perception_component
 	local target_unit = perception_component.target_unit
 	local switch_is_locked = behavior_component.lock_combat_range_switch or t <= behavior_component.combat_range_sticky_time
+	local current_combat_range = behavior_component.combat_range
+	local combat_range_config = self._combat_range_config[current_combat_range]
+
+	if self._target_velocity_dot_duration and HEALTH_ALIVE[target_unit] then
+		if target_unit ~= self._old_target_unit then
+			self._target_unit_locomotion_extension = ScriptUnit.extension(target_unit, "locomotion_system")
+			self._old_target_unit = target_unit
+		end
+
+		local target_unit_locomotion_extension = self._target_unit_locomotion_extension
+		local target_velocity_normalized = Vector3.normalize(target_unit_locomotion_extension:current_velocity())
+		local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
+
+		if Vector3.dot(forward, target_velocity_normalized) > 0 then
+			self._target_velocity_dot_duration = self._target_velocity_dot_duration + dt
+		else
+			self._target_velocity_dot_reset_timer = self._target_velocity_dot_reset_timer + dt
+
+			if self._target_velocity_dot_reset <= self._target_velocity_dot_reset_timer then
+				self._target_velocity_dot_duration = 0
+				self._target_velocity_dot_reset_timer = 0
+			end
+		end
+	end
 
 	if switch_is_locked or not HEALTH_ALIVE[target_unit] or not HEALTH_ALIVE[unit] then
 		return
@@ -91,8 +121,6 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 		return
 	end
 
-	local current_combat_range = behavior_component.combat_range
-	local combat_range_config = self._combat_range_config[current_combat_range]
 	local target_distance = perception_component.target_distance
 	local has_line_of_sight = perception_component.has_line_of_sight
 
@@ -105,7 +133,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 				break
 			end
 
-			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit)
+			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, self._target_velocity_dot_duration)
 
 			if should_switch_combat_range then
 				local switch_weapon_slot = config.switch_weapon_slot
@@ -210,7 +238,13 @@ function _get_combat_range_switch_distance(config, target_unit)
 	return config.distance
 end
 
-function _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit)
+function _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, target_velocity_dot_duration)
+	local return_on_target_velocity_dot_inverted = target_velocity_dot_duration and config.target_velocity_dot_duration_inverted and config.target_velocity_dot_duration_inverted < target_velocity_dot_duration
+
+	if return_on_target_velocity_dot_inverted then
+		return false
+	end
+
 	local z_distance = math.abs(POSITION_LOOKUP[target_unit].z - POSITION_LOOKUP[unit].z)
 	local operator = config.distance_operator
 	local max_z_distance = config.max_z_distance
@@ -235,6 +269,12 @@ function _should_switch_combat_range(unit, blackboard, target_distance, config, 
 	local switch_by_z_distance = config.z_distance and config.z_distance <= z_distance
 
 	if switch_by_z_distance then
+		return true
+	end
+
+	local switch_on_target_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration and config.target_velocity_dot_duration <= target_velocity_dot_duration
+
+	if switch_on_target_velocity_dot then
 		return true
 	end
 end

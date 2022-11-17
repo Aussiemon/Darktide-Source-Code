@@ -1,4 +1,11 @@
 local material_overrides = {
+	mutant_charger_cloth_var_01 = {
+		texture_overrides = {
+			bca = {
+				resource = "content/characters/enemy/chaos_mutant_charger/attachments_base/body/textures/cloth_var_01_bca"
+			}
+		}
+	},
 	cultist_upperbody_d_var_01 = {
 		texture_overrides = {
 			bcm = {
@@ -550,6 +557,36 @@ local material_overrides = {
 			}
 		}
 	},
+	chaos_mutant_charger_tattoo_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_mutant_charger/attachments_base/body/textures/tattoo_01"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.2,
+				0.05,
+				0,
+				0.013
+			}
+		}
+	},
+	chaos_mutant_charger_tattoo_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_mutant_charger/attachments_base/body/textures/tattoo_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.2,
+				0.05,
+				0,
+				0.013
+			}
+		}
+	},
 	chaos_ogryn_torso_a_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -1029,11 +1066,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_denim/fabric_denim_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.65
-			}
 		}
 	},
 	cloth_variation_02 = {
@@ -1062,11 +1094,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_suit/fabric_suit_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.41
-			}
 		}
 	},
 	cloth_variation_03 = {
@@ -1091,14 +1118,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/leather_01/leather_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.73
-			},
-			mat_1_tiling = {
-				1.4
 			}
 		}
 	},
@@ -1128,11 +1147,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.529
-			}
 		}
 	},
 	cloth_variation_05 = {
@@ -1161,11 +1175,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_suit/fabric_suit_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.597
-			}
 		}
 	},
 	cloth_variation_06 = {
@@ -1190,11 +1199,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_suit/fabric_suit_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.8
 			}
 		}
 	},
@@ -1224,11 +1228,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/nylon_01/nylon_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.427
-			}
 		}
 	},
 	cloth_variation_08 = {
@@ -1256,11 +1255,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.7
 			}
 		}
 	},
@@ -1290,11 +1284,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.208
-			}
 		}
 	},
 	cloth_variation_10 = {
@@ -1322,11 +1311,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.558
 			}
 		}
 	},
@@ -1356,11 +1340,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.587
-			}
 		}
 	},
 	cloth_variation_foundry_01 = {
@@ -1388,11 +1367,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
 			}
 		}
 	},
@@ -1422,11 +1396,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.56
-			}
 		}
 	},
 	cloth_variation_foundry_03 = {
@@ -1454,11 +1423,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.6
 			}
 		}
 	},
@@ -1488,11 +1452,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.62
-			}
 		}
 	},
 	cloth_variation_dust_01 = {
@@ -1521,11 +1480,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
-			}
 		}
 	},
 	cloth_variation_dust_02 = {
@@ -1534,30 +1488,25 @@ local material_overrides = {
 				resource = "content/textures/colors/2_colour_mars_06"
 			},
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_mars_06"
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			}
 		}
 	},
@@ -1587,11 +1536,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
-			}
 		}
 	},
 	cloth_variation_dust_04 = {
@@ -1600,30 +1544,25 @@ local material_overrides = {
 				resource = "content/textures/colors/3_colour_desert_03"
 			},
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_desert_03"
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			}
 		}
 	},
@@ -1633,30 +1572,25 @@ local material_overrides = {
 				resource = "content/textures/colors/3_colour_desert_01"
 			},
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_desert_01"
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			}
 		}
 	},
@@ -1675,18 +1609,13 @@ local material_overrides = {
 				resource = "content/textures/colors/2_colour_forest_01"
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.8
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			}
 		}
 	},
@@ -1716,11 +1645,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
-			}
 		}
 	},
 	cloth_variation_wt_03 = {
@@ -1749,11 +1673,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.66
-			}
 		}
 	},
 	cloth_variation_wt_04 = {
@@ -1762,30 +1681,25 @@ local material_overrides = {
 				resource = "content/textures/colors/2_colour_forest_06"
 			},
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_forest_06"
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
 			}
 		}
 	},
@@ -1815,11 +1729,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
-			}
 		}
 	},
 	cloth_variation_wt_06 = {
@@ -1847,11 +1756,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/tarp/cloth_tarp_01_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
 			}
 		}
 	},
@@ -1881,11 +1785,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
-			}
 		}
 	},
 	cloth_variation_wt_08 = {
@@ -1913,11 +1812,6 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
-			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
 			}
 		}
 	},
@@ -1947,11 +1841,6 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
-			}
 		}
 	},
 	cloth_variation_wt_10 = {
@@ -1980,10 +1869,427 @@ local material_overrides = {
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
 			}
-		},
-		property_overrides = {
-			chip_dirt = {
-				0.86
+		}
+	},
+	cloth_variation_ts_poxwalker_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_desert_02"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_desert_02"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_04"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_04"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_03 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_01"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_04"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_04 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_09"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_bca"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_orm"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_09"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_05 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_violet_01"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_bca"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_orm"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_violet_01"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_06 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_04"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_04"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			}
+		}
+	},
+	cloth_variation_ts_poxwalker_07 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_05"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_05"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_tattered/linen_tattered_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_08"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_08"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_03"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_03"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_03 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_06"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_city_06"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_04 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_08"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_bca"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_orm"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_08"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_05 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_05"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_bca"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_02_minion/wool_02_minion_orm"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_city_05"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_06 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_06"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_city_06"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			}
+		}
+	},
+	cloth_variation_ts_new_infected_07 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_07"
+			},
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
+			},
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_29"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_07"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linen_worn/linen_worn_orm"
 			}
 		}
 	},
@@ -2015,6 +2321,18 @@ local material_overrides = {
 		texture_overrides = {
 			hair_color_gradient = {
 				resource = "content/textures/colors/hair_color_brown_02"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0
+			}
+		}
+	},
+	hair_minion_gray_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_gray_01"
 			}
 		},
 		property_overrides = {

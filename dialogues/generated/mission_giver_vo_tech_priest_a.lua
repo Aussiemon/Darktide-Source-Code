@@ -645,21 +645,15 @@ local mission_giver_vo_tech_priest_a = {
 	},
 	mission_cartel_brief_one = {
 		randomize_indexes_n = 0,
-		sound_events_n = 7,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_tech_priest_a__mission_cartel_brief_one_01",
-			"loc_tech_priest_a__mission_cartel_brief_one_02",
-			"loc_tech_priest_a__mission_cartel_brief_one_03",
-			"loc_tech_priest_a__mission_cartel_brief_one_04",
 			"loc_tech_priest_a__mission_cartel_brief_one_06",
 			"loc_tech_priest_a__mission_cartel_brief_one_07",
 			"loc_tech_priest_a__mission_cartel_brief_one_08"
 		},
 		sound_events_duration = {
 			7.541875,
-			10.45046,
-			7.401396,
-			7.609271,
 			11.02698,
 			7.996061,
 			8.062542
@@ -1085,20 +1079,16 @@ local mission_giver_vo_tech_priest_a = {
 	},
 	mission_scavenge_briefing_one = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_tech_priest_a__mission_scavenge_briefing_one_01",
 			"loc_tech_priest_a__mission_scavenge_briefing_one_02",
 			"loc_tech_priest_a__mission_scavenge_briefing_one_03",
-			"loc_tech_priest_a__mission_scavenge_briefing_one_04",
 			"loc_tech_priest_a__mission_scavenge_briefing_one_05",
 			"loc_tech_priest_a__mission_scavenge_briefing_one_06"
 		},
 		sound_events_duration = {
-			10.00965,
 			12.75538,
 			9.810625,
-			11.31088,
 			9.840251,
 			10.87392
 		},
@@ -1123,17 +1113,15 @@ local mission_giver_vo_tech_priest_a = {
 	},
 	mission_scavenge_briefing_two = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 3,
 		sound_events = {
 			"loc_tech_priest_a__mission_scavenge_briefing_two_01",
 			"loc_tech_priest_a__mission_scavenge_briefing_two_02",
-			"loc_tech_priest_a__mission_scavenge_briefing_two_03",
 			"loc_tech_priest_a__mission_scavenge_briefing_two_04"
 		},
 		sound_events_duration = {
 			8.556561,
 			13.04067,
-			8.899229,
 			11.1871
 		},
 		randomize_indexes = {}
@@ -1191,18 +1179,16 @@ local mission_giver_vo_tech_priest_a = {
 	},
 	mission_strain_briefing_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_tech_priest_a__mission_strain_briefing_a_01",
 			"loc_tech_priest_a__mission_strain_briefing_a_02",
-			"loc_tech_priest_a__mission_strain_briefing_a_03",
 			"loc_tech_priest_a__mission_strain_briefing_a_04",
 			"loc_tech_priest_a__mission_strain_briefing_a_05"
 		},
 		sound_events_duration = {
 			8.338562,
 			10.37056,
-			7.407104,
 			10.551,
 			6.843604
 		},

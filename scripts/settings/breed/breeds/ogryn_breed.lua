@@ -8,21 +8,26 @@ local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_results = AttackSettings.stagger_results
+local ogryn_size_variation_range = {
+	0.9,
+	0.925
+}
+local average_ogryn_size = ogryn_size_variation_range[1] + (ogryn_size_variation_range[2] - ogryn_size_variation_range[1]) / 2
 local breed_data = {
 	name = "ogryn",
 	display_name = "loc_breed_display_name_undefined",
-	inventory_state_machine = "content/characters/player/ogryn/third_person/animations/menu/inventory",
+	first_person_unit = "content/characters/player/ogryn/first_person/base",
 	end_of_round_state_machine = "content/characters/player/ogryn/third_person/animations/menu/end_of_round",
+	inventory_state_machine = "content/characters/player/ogryn/third_person/animations/menu/inventory",
 	mission_intro_state_machine = "content/characters/player/ogryn/third_person/animations/menu/mission_briefing",
 	portrait_state_machine = "content/characters/player/ogryn/third_person/animations/menu/portrait",
-	first_person_unit = "content/characters/player/ogryn/first_person/base",
-	behavior_tree_name = "bot",
 	character_creation_state_machine = "content/characters/player/ogryn/third_person/animations/menu/character_creation",
 	faction_name = "imperium",
 	debug_color_name = "sea_green",
 	broadphase_radius = 1,
 	ladder_max_distance_allow_climb = 1.3,
 	ladder_whole_movement_anim_distance = 1.4,
+	behavior_tree_name = "bot",
 	ladder_movement_anim_length = 4,
 	base_unit = "content/characters/player/ogryn/third_person/base",
 	hit_mass = 2,
@@ -38,16 +43,14 @@ local breed_data = {
 	},
 	armor_type = armor_types.player,
 	heights = {
-		default = 2.2,
-		crouch = 1.8,
-		sprint = 1.9,
-		vault = 1.8,
-		slide = 1.6
+		default = 2.2 / average_ogryn_size,
+		sprint = 1.75 / average_ogryn_size,
+		crouch = 1.7 / average_ogryn_size,
+		slide = 1.6 / average_ogryn_size,
+		vault = 1.8 / average_ogryn_size
 	},
-	size_variation_range = {
-		0.9,
-		0.925
-	},
+	size_variation_range = ogryn_size_variation_range,
+	first_person_pose_scale = average_ogryn_size * 0.8,
 	fade = {
 		max_distance = 1.2,
 		max_height_difference = 1.2,

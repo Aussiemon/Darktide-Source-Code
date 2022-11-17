@@ -204,7 +204,7 @@ local smart_targeting_templates = {
 		trajectory_assist = {
 			range = 35,
 			assist_multiplier = 1,
-			falloff_func = Range.power_7,
+			falloff_func = Range.power_4,
 			min_angle = _degrees_to_radians(3),
 			max_angle = _degrees_to_radians(15)
 		}
@@ -235,6 +235,7 @@ local smart_targeting_templates = {
 	smite = {
 		precision_target = {
 			max_range = 100,
+			hit_dot_check = 0.995,
 			min_range = 1,
 			breed_weights = {
 				chaos_poxwalker_bomber = 20,
@@ -271,7 +272,7 @@ local smart_targeting_templates = {
 		trajectory_assist = {
 			range = 35,
 			assist_multiplier = 1,
-			falloff_func = Range.power_7,
+			falloff_func = Range.power_4,
 			min_angle = _degrees_to_radians(3),
 			max_angle = _degrees_to_radians(15)
 		}
@@ -294,7 +295,7 @@ local smart_targeting_templates = {
 		trajectory_assist = {
 			range = 35,
 			assist_multiplier = 1,
-			falloff_func = Range.power_7,
+			falloff_func = Range.power_4,
 			min_angle = _degrees_to_radians(3),
 			max_angle = _degrees_to_radians(15)
 		}

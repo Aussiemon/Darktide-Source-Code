@@ -31,6 +31,7 @@ local action_data = {
 		push_minions_side_relation = "allied",
 		max_slowdown_angle = 60,
 		push_minions_radius = 2,
+		aoe_bot_threat_duration = 1,
 		wall_raycast_node_name = "j_spine",
 		min_time_spent_charging = 0.25,
 		throw_test_distance = 8,
@@ -38,6 +39,7 @@ local action_data = {
 		dodge_collision_radius = 0.75,
 		wall_stun_time = 3,
 		close_rotation_speed = 5,
+		aoe_bot_threat_distance = 8,
 		rotation_speed = 6,
 		charge_speed_max = 12,
 		after_throw_taunt_anim = "idle_shout",
@@ -195,9 +197,9 @@ local action_data = {
 			melee = 20,
 			running_melee = 20,
 			elite_ranged = 20,
-			moving_melee = 20,
+			ranged_close = 20,
 			ranged = 20,
-			grenade = 20
+			moving_melee = 20
 		},
 		start_colliding_with_players_timing = {
 			charge_fwd = 0.3333333333333333,
@@ -218,7 +220,8 @@ local action_data = {
 		push_minions_fx_cooldown = {
 			0.03,
 			0.18
-		}
+		},
+		aoe_bot_threat_size = Vector3Box(1.5, 2, 2)
 	},
 	climb = {
 		stagger_immune = true,
@@ -420,8 +423,9 @@ local action_data = {
 		}
 	},
 	open_door = {
-		rotation_duration = 0.1,
-		stagger_immune = true
+		open_door_time_offset = 2,
+		stagger_immune = true,
+		rotation_duration = 0.1
 	},
 	exit_spawner = {
 		run_anim_event = "charge_start_fwd"

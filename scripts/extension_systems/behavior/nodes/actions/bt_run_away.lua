@@ -1,6 +1,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtRunAwayAction = class("BtRunAwayAction", "BtNode")
@@ -57,6 +58,12 @@ BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	scratchpad.fx_system = fx_system
 
 	self:_start_effect_template(unit, scratchpad, action_data)
+
+	if action_data.push_nearby_players_frequency then
+		scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
+		scratchpad.pushed_enemies = {}
+		scratchpad.push_nearby_players_frequency = action_data.push_nearby_players_frequency
+	end
 end
 
 BtRunAwayAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -162,6 +169,20 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 
 	if move_state ~= "moving" then
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data)
+	elseif scratchpad.push_nearby_players_frequency then
+		scratchpad.push_nearby_players_frequency = scratchpad.push_nearby_players_frequency - dt
+
+		if scratchpad.push_nearby_players_frequency <= 0 then
+			table.clear(scratchpad.pushed_enemies)
+
+			scratchpad.push_nearby_players_frequency = action_data.push_nearby_players_frequency
+		end
+
+		local dont_push_consumed_unit = action_data.dont_push_consumed_unit
+		local ignored_unit = dont_push_consumed_unit and scratchpad.behavior_component.consumed_unit
+		local optional_only_ahead_targets = true
+
+		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, ignored_unit, optional_only_ahead_targets)
 	end
 
 	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then

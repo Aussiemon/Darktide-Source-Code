@@ -1,5 +1,13 @@
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
+local NO_TRANSITION_UI = {
+	use_transition_ui = false
+}
+local LOADING_ICON = {
+	loading_icon = true
+}
+local CINEMATIC_VIEWS = {}
 local VIEW_SETTINGS = {
 	{
 		view_name = "mission_intro_view",
@@ -37,22 +45,22 @@ local VIEW_SETTINGS = {
 			end
 
 			if Managers.mechanism:mechanism_state() == "adventure_selected" then
-				return true
+				return true, LOADING_ICON
 			end
 
 			if Managers.mechanism:mechanism_state() == "client_wait_for_server" then
-				return true
+				return true, LOADING_ICON
 			end
 
 			if Managers.mechanism:mechanism_state() == "client_exit_gameplay" then
-				return true
+				return true, LOADING_ICON
 			end
 
 			if Managers.mechanism:mechanism_state() == false then
 				local host_type = Managers.connection:host_type()
 
 				if host_type == HOST_TYPES.mission_server then
-					return true
+					return true, LOADING_ICON
 				end
 			end
 
@@ -62,8 +70,34 @@ local VIEW_SETTINGS = {
 				local waiting_for_intro_cinematics = not intro_played
 
 				if waiting_for_intro_cinematics then
+					return true, LOADING_ICON
+				end
+			end
+		end
+	},
+	{
+		view_name = "blank_view",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function ()
+			local cinematic = Managers.state.cinematic:is_loading_cinematic_levels()
+
+			if cinematic then
+				local template = CinematicSceneTemplates[cinematic]
+				local instant_black_screen_during_cutscene_loading = template.instant_black_screen_during_cutscene_loading
+
+				if instant_black_screen_during_cutscene_loading then
+					return true, nil, NO_TRANSITION_UI
+				else
 					return true
 				end
+			end
+
+			local mission_outro_played = Managers.state.game_mode:mission_outro_played()
+
+			if mission_outro_played then
+				return true, nil, NO_TRANSITION_UI
 			end
 		end
 	},
@@ -142,8 +176,6 @@ ConstantElementLoading._on_state_changed = function (self, new_state_name)
 			if new_settings then
 				for j = 1, #new_settings do
 					if new_settings[j].view_name == view_name then
-						Log.info("ConstantElementLoading", "Keeping view %q open from previous state", view_name)
-
 						keep_view = true
 
 						break
@@ -162,14 +194,16 @@ ConstantElementLoading._on_state_changed = function (self, new_state_name)
 end
 
 ConstantElementLoading._update_state_views = function (self, state_view_settings)
-	local valid_view_name = nil
+	local valid_view_name, view_settings_override, view_context = nil
 
 	for i = 1, #state_view_settings do
 		local settings = state_view_settings[i]
-		local is_valid = settings.validation_func()
+		local is_valid, context, settings_override = settings.validation_func()
 
 		if is_valid then
 			valid_view_name = settings.view_name
+			view_context = context
+			view_settings_override = settings_override
 
 			break
 		end
@@ -180,19 +214,19 @@ ConstantElementLoading._update_state_views = function (self, state_view_settings
 		local view_name = settings.view_name
 
 		if view_name == valid_view_name then
-			self:_open_view_if_inactive(valid_view_name)
+			self:_open_view_if_inactive(valid_view_name, view_context, view_settings_override)
 		else
 			self:_close_view_if_active(view_name)
 		end
 	end
 end
 
-ConstantElementLoading._open_view_if_inactive = function (self, view_name)
+ConstantElementLoading._open_view_if_inactive = function (self, view_name, view_context, view_settings_override)
 	local ui_manager = Managers.ui
 
 	if not ui_manager:view_active(view_name) then
 		Log.info("ConstantElementLoading", "Opening view %q", view_name)
-		ui_manager:open_view(view_name)
+		ui_manager:open_view(view_name, nil, nil, nil, nil, view_context, view_settings_override)
 	end
 end
 

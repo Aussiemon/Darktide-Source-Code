@@ -18,8 +18,33 @@ local settings_mask_size = {
 	grid_height + grid_blur_edge_size[2]
 }
 local settings_grid_height = grid_height + mask_offset_y
+local tooltip_text_style = table.clone(UIFontSettings.body)
+tooltip_text_style.text_horizontal_alignment = "left"
+tooltip_text_style.text_vertical_alignment = "center"
+tooltip_text_style.horizontal_alignment = "left"
+tooltip_text_style.vertical_alignment = "center"
+tooltip_text_style.color = Color.white(255, true)
+tooltip_text_style.offset = {
+	0,
+	0,
+	2
+}
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
+	tooltip = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			200
+		}
+	},
 	background = {
 		vertical_alignment = "top",
 		parent = "screen",
@@ -305,6 +330,51 @@ local widget_definitions = {
 			}
 		}
 	}, "background_icon"),
+	tooltip = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					0,
+					0
+				},
+				color = Color.ui_terminal(255, true),
+				size_addition = {
+					23,
+					23
+				}
+			}
+		},
+		{
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					0,
+					1
+				},
+				color = Color.black(255, true),
+				size_addition = {
+					20,
+					20
+				}
+			}
+		},
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = tooltip_text_style
+		}
+	}, "tooltip", {
+		visible = false
+	}),
 	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar"),
 	grid_mask = UIWidget.create_definition({
 		{
@@ -351,14 +421,17 @@ local widget_definitions = {
 local legend_inputs = {
 	{
 		input_action = "back",
-		on_pressed_callback = "cb_on_close_pressed",
+		on_pressed_callback = "cb_on_back_pressed",
 		display_name = "loc_settings_menu_close_menu",
 		alignment = "left_alignment"
 	},
 	{
 		input_action = "next",
+		display_name = "loc_settings_menu_reset_to_default",
 		on_pressed_callback = "cb_reset_category_to_default",
-		display_name = "loc_settings_menu_reset_to_default"
+		visibility_function = function (parent)
+			return not not parent._selected_category
+		end
 	}
 }
 local OptionsViewDefinitions = {

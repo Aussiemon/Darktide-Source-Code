@@ -1,4 +1,6 @@
-jit.off()
+if jit then
+	jit.off()
+end
 
 if not LEVEL_EDITOR_TEST then
 	LEVEL_EDITOR_TEST = false
@@ -77,6 +79,39 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	ENGINE_FUNCTIONS_OVERRIDDEN = true
 end
 
+local ARGS = {
+	Application.argv()
+}
+
+local function arg_value(key)
+	for i, arg in ipairs(ARGS) do
+		if arg == key then
+			return ARGS[i + 1]
+		end
+	end
+end
+
+local function backend_env()
+	local auth_url = arg_value("--backend-auth-service-url")
+
+	if auth_url then
+		local match = string.match(auth_url, "https://bsp%-auth%-(%a+)%.fatsharkgames%.se")
+
+		if match then
+			return match
+		end
+
+		match = string.match(auth_url, "https://bsp%-auth%-(%a+)%.atoma%.cloud")
+
+		if match then
+			return match
+		end
+	end
+
+	return "dev"
+end
+
+BACKEND_ENV = backend_env()
 HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
 CLASSES = CLASSES or {}
@@ -165,6 +200,34 @@ if not NETWORK_INIT_WRAPPED then
 			shutdown_lan_client(...)
 
 			Network._is_active = false
+		end
+	end
+
+	local init_wan_server = Network.init_wan_server
+
+	if init_wan_server then
+		Network.init_wan_server = function (...)
+			local server = init_wan_server(...)
+
+			if server then
+				Network._is_active = true
+			end
+
+			return server
+		end
+	end
+
+	local init_wan_client = Network.init_wan_client
+
+	if init_wan_client then
+		Network.init_wan_client = function (...)
+			local client = init_wan_client(...)
+
+			if client then
+				Network._is_active = true
+			end
+
+			return client
 		end
 	end
 end

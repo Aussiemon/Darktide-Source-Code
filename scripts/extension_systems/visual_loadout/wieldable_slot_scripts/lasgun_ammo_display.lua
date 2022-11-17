@@ -6,36 +6,36 @@ LasgunAmmoDisplay.init = function (self, context, slot, weapon_template, fx_sour
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._wieldable_component = unit_data_extension:read_component(slot.name)
-	local ammo_displays = {}
+	local unit_components = {}
 	local num_attachments_1p = #slot.attachments_1p
 
-	for i = 1, num_attachments_1p do
-		local attachment_unit = slot.attachments_1p[i]
-		local ammo_display_components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
+	for ii = 1, num_attachments_1p do
+		local attachment_unit = slot.attachments_1p[ii]
+		local components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
 
-		for _, ammo_display_component in ipairs(ammo_display_components) do
-			ammo_displays[#ammo_displays + 1] = {
+		for _, component in ipairs(components) do
+			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = ammo_display_component
+				component = component
 			}
 		end
 	end
 
 	local num_attachments_3p = #slot.attachments_3p
 
-	for i = 1, num_attachments_3p do
-		local attachment_unit = slot.attachments_3p[i]
-		local ammo_display_components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
+	for ii = 1, num_attachments_3p do
+		local attachment_unit = slot.attachments_3p[ii]
+		local components = Component.get_components_by_name(attachment_unit, "AmmoDisplay")
 
-		for _, ammo_display_component in ipairs(ammo_display_components) do
-			ammo_displays[#ammo_displays + 1] = {
+		for _, component in ipairs(components) do
+			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = ammo_display_component
+				component = component
 			}
 		end
 	end
 
-	self._ammo_displays = ammo_displays
+	self._unit_components = unit_components
 end
 
 LasgunAmmoDisplay.fixed_update = function (self, unit, dt, t, frame)
@@ -47,11 +47,11 @@ LasgunAmmoDisplay.update = function (self, unit, dt, t)
 	local current_ammo = wieldable_component.current_ammunition_clip
 	local max_ammo = wieldable_component.max_ammunition_clip
 	local critical_threshold = max_ammo * CRITICAL_THRESHOLD_MULTIPLIER
-	local ammo_displays = self._ammo_displays
-	local num_displays = #ammo_displays
+	local unit_components = self._unit_components
+	local num_displays = #unit_components
 
-	for i = 1, num_displays do
-		local display = ammo_displays[i]
+	for ii = 1, num_displays do
+		local display = unit_components[ii]
 
 		display.component:set_ammo(display.unit, current_ammo, max_ammo, critical_threshold)
 	end

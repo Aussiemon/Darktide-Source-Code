@@ -4,7 +4,7 @@ local APPROACH_SOUND_EVENT = "wwise/events/minions/play_cultist_flamer_proximity
 local TARGET_NODE_NAME = "j_spine"
 local TRIGGER_DISTANCE = 25
 local RESTART_TRIGGER_DISTANCE = 28
-local TIME_BETWEEN_TRIGGERS = 10
+local TIME_BETWEEN_TRIGGERS = 20
 local resources = {
 	approach_sound_event = APPROACH_SOUND_EVENT
 }

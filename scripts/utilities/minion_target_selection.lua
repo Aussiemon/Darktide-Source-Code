@@ -64,7 +64,7 @@ local DEFAULT_DISTANCE_WEIGHT = 1
 
 MinionTargetSelection.distance_weight = function (target_selection_weights, distance_sq, attacker_breed, optional_use_quadratic_falloff)
 	local distance_weight = nil
-	local max_distance = target_selection_weights.max_distance or attacker_breed.detection_radius
+	local max_distance = target_selection_weights.max_distance or MinionTargetSelection.detection_radius(attacker_breed)
 	local max_distance_sq = max_distance * max_distance
 	local inverse_radius = math.clamp(1 - distance_sq / max_distance_sq, 0, 1)
 	local weight = target_selection_weights.distance_to_target or DEFAULT_DISTANCE_WEIGHT
@@ -220,6 +220,38 @@ MinionTargetSelection.knocked_down_weight = function (target_selection_weights, 
 	end
 
 	return 0
+end
+
+MinionTargetSelection.ledge_hanging_weight = function (target_selection_weights, target_unit_data_extension, target_breed)
+	local ledge_hanging_weight = target_selection_weights.ledge_hanging_weight
+
+	if ledge_hanging_weight and Breed.is_player(target_breed) then
+		local character_state_component = target_unit_data_extension:read_component("character_state")
+		local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+
+		if is_ledge_hanging then
+			return ledge_hanging_weight
+		end
+	end
+
+	return 0
+end
+
+local CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS = {
+	darkness_01 = 0.5,
+	ventilation_purge_01 = 0.65
+}
+
+MinionTargetSelection.detection_radius = function (breed)
+	local circumstance_name = Managers.state.circumstance:circumstance_name()
+	local detection_radius = breed.detection_radius
+	local circumstance_modifier = CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS[circumstance_name]
+
+	if circumstance_modifier then
+		return detection_radius * circumstance_modifier
+	end
+
+	return detection_radius
 end
 
 return MinionTargetSelection

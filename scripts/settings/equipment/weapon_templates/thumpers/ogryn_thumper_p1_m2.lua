@@ -8,9 +8,10 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeThumperP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local template_types = WeaponTweakTemplateSettings.template_types
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
@@ -144,7 +145,7 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload",
-				chain_time = 0.4
+				chain_time = 0.2
 			},
 			wield = {
 				action_name = "action_unwield",
@@ -360,10 +361,10 @@ weapon_template.actions = {
 	action_reload = {
 		kind = "reload_state",
 		hold_combo = true,
-		weapon_handling_template = "time_scale_0_75",
+		weapon_handling_template = "time_scale_1",
 		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "dot",
+		crosshair_type = "ironsight",
 		uninterruptible = true,
 		total_time = 2.333,
 		reload_settings = {
@@ -422,16 +423,18 @@ weapon_template.actions = {
 		}
 	},
 	action_bash = {
-		damage_window_start = 0.5666666666666667,
-		allow_conditional_chain = true,
+		damage_window_start = 0.5333333333333333,
+		hit_armor_anim = "attack_hit_shield",
 		start_input = "bash",
-		range_mod = 1.15,
+		allow_conditional_chain = true,
 		kind = "sweep",
+		range_mod = 1.15,
+		first_person_hit_stop_anim = "attack_hit",
 		attack_direction_override = "left",
-		anim_event = "attack_bash",
-		damage_window_end = 0.7,
+		damage_window_end = 0.7333333333333333,
 		unaim = true,
 		uninterruptible = true,
+		anim_event = "attack_bash",
 		total_time = 1.75,
 		action_movement_curve = {
 			{
@@ -462,6 +465,10 @@ weapon_template.actions = {
 				modifier = 0.75,
 				t = 1
 			},
+			{
+				modifier = 1,
+				t = 1.75
+			},
 			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
@@ -469,8 +476,9 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload",
-				reset_combo = true
+				chain_time = 0.8,
+				reset_combo = true,
+				action_name = "action_reload"
 			},
 			shoot_pressed = {
 				chain_time = 1.1,
@@ -487,6 +495,14 @@ weapon_template.actions = {
 				action_name = "action_zoom"
 			}
 		},
+		conditional_state_to_action_input = {
+			started_reload = {
+				input_name = "reload"
+			},
+			no_ammo = {
+				input_name = "reload"
+			}
+		},
 		weapon_box = {
 			0.2,
 			1.5,
@@ -496,7 +512,7 @@ weapon_template.actions = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_left",
 			anchor_point_offset = {
 				0,
-				0,
+				0.3,
 				-0.15
 			}
 		},
@@ -505,11 +521,13 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_bash_right = {
-		damage_window_end = 0.7333333333333333,
+		damage_window_start = 0.6,
+		hit_armor_anim = "attack_hit_shield",
+		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
-		attack_direction_override = "right",
 		range_mod = 1.15,
-		damage_window_start = 0.6333333333333333,
+		attack_direction_override = "right",
+		damage_window_end = 0.8,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
 		total_time = 1.75,
@@ -542,15 +560,28 @@ weapon_template.actions = {
 				modifier = 0.75,
 				t = 1
 			},
+			{
+				modifier = 1,
+				t = 1.75
+			},
 			start_modifier = 0.8
+		},
+		conditional_state_to_action_input = {
+			started_reload = {
+				input_name = "reload"
+			},
+			no_ammo = {
+				input_name = "reload"
+			}
 		},
 		allowed_chain_actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload",
-				reset_combo = true
+				chain_time = 0.8,
+				reset_combo = true,
+				action_name = "action_reload"
 			},
 			shoot_pressed = {
 				chain_time = 1.1,
@@ -576,7 +607,7 @@ weapon_template.actions = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_right",
 			anchor_point_offset = {
 				0,
-				0,
+				0.3,
 				0
 			}
 		},
@@ -602,11 +633,12 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/shotgun_grenade"
 weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_person/animations/shotgun_grenade"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "none",
-	toughness_template = "killshot_zoomed",
+	sway_template = "default_thumper_killshot",
 	stop_anim_event = "to_unaim_braced",
-	start_anim_event = "to_braced",
+	crosshair_type = "none",
 	spread_template = "thumper_aim_demolition",
+	toughness_template = "killshot_zoomed",
+	start_anim_event = "to_braced",
 	camera = {
 		custom_vertical_fov = 55,
 		vertical_fov = 50,
@@ -643,7 +675,9 @@ weapon_template.alternate_fire_settings = {
 		}
 	},
 	projectile_aim_effect_settings = {
+		arc_vfx_spawner_name = "_muzzle",
 		arc_show_delay = 0.1,
+		use_sway_and_recoil = true,
 		throw_type = "shoot",
 		stop_on_impact = false,
 		projectile_template = ProjectileTemplates.ogryn_thumper_grenade_aim,
@@ -658,10 +692,11 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.1
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.uses_ammunition = true
@@ -699,14 +734,6 @@ weapon_template.base_stats = {
 	ogryn_thumper_p1_m2_explosion_damage_stat = {
 		display_name = "loc_stats_display_explosion_damage_stat",
 		is_stat_trait = true,
-		explosion = {
-			action_shoot_hip = {
-				explosion_trait_templates.default_explosion_damage_stat
-			},
-			action_shoot_zoomed = {
-				explosion_trait_templates.default_explosion_damage_stat
-			}
-		},
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_stat
@@ -761,6 +788,10 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP2)
+
+table.append(weapon_template.traits, bespoke_traits)
+
 weapon_template.perks = {
 	ogryn_thumper_p1_m2_ammo_perk = {
 		description = "loc_trait_description_ogryn_thumper_p1_m2_ammo_perk",

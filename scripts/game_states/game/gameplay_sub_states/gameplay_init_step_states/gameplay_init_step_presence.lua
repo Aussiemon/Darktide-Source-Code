@@ -19,7 +19,9 @@ end
 GameplayInitStepPresence._init_presence = function (self)
 	local presence_name = Managers.state.game_mode:presence_name()
 
-	Managers.presence:set_presence(presence_name)
+	if presence_name then
+		Managers.presence:set_presence(presence_name)
+	end
 end
 
 implements(GameplayInitStepPresence, GameplayInitStepInterface)

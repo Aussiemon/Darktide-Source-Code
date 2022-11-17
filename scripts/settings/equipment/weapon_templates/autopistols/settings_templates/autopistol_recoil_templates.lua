@@ -166,7 +166,7 @@ recoil_templates.default_autopistol_assault = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
-			intensity = 40,
+			intensity = 7,
 			lerp_scalar = 0.4,
 			yaw_intensity = 3
 		}
@@ -221,6 +221,11 @@ recoil_templates.default_autopistol_spraynpray = {
 		offset_limit = {
 			yaw = 2,
 			pitch = 0.75
+		},
+		visual_recoil_settings = {
+			intensity = 7,
+			lerp_scalar = 0.4,
+			yaw_intensity = 3
 		},
 		aim_assist = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness

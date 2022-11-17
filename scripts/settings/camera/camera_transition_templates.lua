@@ -61,6 +61,19 @@ CameraTransitionTemplates.to_third_person = {
 		duration = CameraTransitionSettings.perspective_transition_time
 	}
 }
+CameraTransitionTemplates.to_consumed = {
+	position = {
+		class = "CameraTransitionPositionLinear",
+		duration = CameraTransitionSettings.perspective_transition_time,
+		transition_func = function (t)
+			return 0.1
+		end
+	},
+	rotation = {
+		class = "CameraTransitionRotationLerp",
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
+}
 CameraTransitionTemplates.zoom = {
 	position = {
 		class = "CameraTransitionPositionLinear",
@@ -193,35 +206,6 @@ CameraTransitionTemplates.from_third_person_hanging = {
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
 		end
-	}
-}
-CameraTransitionTemplates.to_mission_board = {
-	position = {
-		duration = 0.75,
-		class = "CameraTransitionPositionLinear",
-		transition_func = function (t)
-			return math.smoothstep(t, 0, 1)
-		end
-	},
-	rotation = {
-		duration = 1,
-		class = "CameraTransitionRotationLerp",
-		on_complete_func = function ()
-			Managers.event:trigger("event_mission_board_camera_transition_done")
-		end
-	}
-}
-CameraTransitionTemplates.from_mission_board = {
-	position = {
-		duration = 0.5,
-		class = "CameraTransitionPositionLinear",
-		transition_func = function (t)
-			return math.smoothstep(t, 0, 1)
-		end
-	},
-	rotation = {
-		class = "CameraTransitionRotationLerp",
-		duration = 0.5
 	}
 }
 CameraTransitionTemplates.from_scanning = {

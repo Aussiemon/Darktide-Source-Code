@@ -74,6 +74,8 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 
 			if health_added > 0 then
 				Health.play_fx(interactor_unit)
+			else
+				success = false
 			end
 		end
 
@@ -81,17 +83,13 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 	end
 
 	if success then
-		local target_unit = unit_data_component.target_unit
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local player = player_unit_spawn_manager:owner(interactor_unit)
-
 		if DialogueSettings.health_hog_health_before_healing < current_health_percent then
 			Vo.health_hog_event(interactor_unit)
 		end
 
-		if not player.remote then
-			Unit.flow_event(target_unit, "lua_heal_success_local")
-		end
+		local fx_extension = ScriptUnit.extension(interactor_unit, "fx_system")
+
+		fx_extension:trigger_exclusive_wwise_event("wwise/events/ui/play_hud_health_station_2d", nil, true)
 	end
 end
 

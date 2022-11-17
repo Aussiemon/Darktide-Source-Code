@@ -123,14 +123,39 @@ Side.add_unit = function (self, unit, side_extension)
 	units_lookup[unit] = new_index
 end
 
+local function _swap_delete_lookup(t, index, unit)
+	local table_length = #t
+	local keep_unit = t[table_length]
+	t[index] = keep_unit
+	t[keep_unit] = index
+	t[table_length] = nil
+	t[unit] = nil
+end
+
 Side.remove_unit = function (self, unit, side_extension)
 	local units_lookup = self.units_lookup
 
 	if side_extension.is_player_unit then
-		local player_units = self._added_player_units
-		local index = table.find(player_units, unit)
+		local added_player_units = self._added_player_units
+		local index = table.find(added_player_units, unit)
 
-		table.swap_delete(player_units, index)
+		table.swap_delete(added_player_units, index)
+
+		local player_units = self.player_units
+		local player_units_index = table.find(player_units, unit)
+
+		if player_units_index then
+			_swap_delete_lookup(player_units, player_units_index, unit)
+			table.swap_delete(self.player_unit_positions, player_units_index)
+		end
+
+		local valid_player_units = self.valid_player_units
+		local valid_player_units_index = valid_player_units[unit]
+
+		if valid_player_units_index then
+			_swap_delete_lookup(valid_player_units, valid_player_units_index, unit)
+			table.swap_delete(self.valid_player_units_positions, valid_player_units_index)
+		end
 	end
 
 	local units = self._units

@@ -1,5 +1,6 @@
-require("scripts/extension_systems/ability/utilities/targeted_dash_effects")
+require("scripts/extension_systems/ability/utilities/lunge_effects")
 require("scripts/extension_systems/ability/utilities/shout_effects")
+require("scripts/extension_systems/ability/utilities/targeted_dash_effects")
 
 local EquippedAbilityEffectScripts = {
 	create = function (equiped_ability_effect_scripts_context, equiped_ability_effect_scripts, ability_template, ability_type)

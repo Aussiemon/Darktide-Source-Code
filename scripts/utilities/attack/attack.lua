@@ -74,6 +74,9 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 	return _execute(attacked_unit, damage_profile, unpack(attack_args_temp, 1, NUM_ARGS))
 end
 
+local damage_types_no_proc = {
+	grimoire = true
+}
 local min_power_level = PowerLevelSettings.min_power_level
 local max_power_level = PowerLevelSettings.max_power_level
 ARGS = {
@@ -196,7 +199,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	if instakill then
 		local health_extension = ScriptUnit.extension(attacked_unit, "health_system")
 		damage_efficiency = damage_efficiencies.full
-		calculated_damage = health_extension:damaged_max_health()
+		calculated_damage = health_extension:max_health()
 	else
 		local target_blackboard = BLACKBOARDS[attacked_unit]
 		local target_stagger_count = 0
@@ -229,7 +232,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, attacking_unit, auto_completed_action)
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action)
 		end
 	end
 
@@ -254,7 +257,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
 
 	if is_server then
-		stagger_result = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
+		stagger_result = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
@@ -268,7 +271,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
 			end
 
-			_record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil)
+			_record_telemetry(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
 		end
 
 		on_damage_event_data.attacking_unit = attacking_unit
@@ -286,7 +289,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	end
 
 	if was_alive_at_attack_start and attack_result == attack_results.died then
-		_trigger_elite_special_kill_interfacing(attacking_unit_owner_unit, attacker_breed_or_nil, target_breed_or_nil)
+		_trigger_elite_special_kill_interfacing(attacking_unit_owner_unit, attacker_breed_or_nil, target_breed_or_nil, is_server)
 
 		on_killed_event_data.attacked_unit = attacked_unit
 		on_killed_event_data.attacking_unit_owner_unit = attacking_unit_owner_unit
@@ -345,13 +348,14 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 	local past_blocking = true
 	local damage_through_block = nil
 
-	if not instakill and Block.is_blocking(attacked_unit, attack_type, target_weapon_template, is_server) then
+	if not instakill and Block.is_blocking(attacked_unit, attacking_unit, attack_type, target_weapon_template, is_server) then
 		local side_system = Managers.state.extension:system("side_system")
 		local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
 		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit)
 		local target_is_player = Breed.is_player(target_breed_or_nil)
+		local is_blockable = Block.attack_is_blockable(damage_profile, attacked_unit, target_weapon_template)
 
-		if Block.attack_is_blockable(damage_profile) then
+		if is_blockable then
 			damage_dealt = 0
 			damage = 0
 			permanent_damage = 0
@@ -436,7 +440,9 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		alternative_fire = alternate_fire_component.is_active
 	end
 
-	if attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc then
+	local should_proc = not damage_type or not damage_types_no_proc[damage_type]
+
+	if should_proc and attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc then
 		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
@@ -467,7 +473,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		end
 	end
 
-	if is_server then
+	if is_server and should_proc then
 		local target_is_player = Breed.is_player(target_breed_or_nil)
 
 		if target_buff_extension_or_nil and target_is_player then
@@ -516,6 +522,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		local attacking_position_or_nil = POSITION_LOOKUP[attacking_unit]
 		local either_unit_lacks_position = not attacked_position_or_nil or not attacking_position_or_nil
 		local distance_between_units = either_unit_lacks_position and 0 or Vector3.length(attacked_position_or_nil - attacking_position_or_nil)
+		local rounded_distance_between_units = math.round(distance_between_units)
 		local attacking_health_extension_or_nil = ScriptUnit.has_extension(attacking_unit, "health_system")
 		local attacking_health_percent = attacking_health_extension_or_nil and attacking_health_extension_or_nil:current_health_percent() or 0
 		local target_buff_keywords = target_buff_extension and target_buff_extension:keywords()
@@ -525,17 +532,19 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		if attacked_health_extension_or_nil then
 			local damaging_players = attacked_health_extension_or_nil.damaging_players and attacked_health_extension_or_nil:damaging_players()
 
-			if damaging_players and #damaging_players == 1 and attacking_player and damaging_players[1] == attacking_player then
+			if damaging_players and #damaging_players == 1 and damaging_players[1] == attacking_player then
 				solo_kill = true
 			end
 		end
 
 		if attacking_is_human then
-			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt, damage_type)
+			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, rounded_distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt, damage_type)
 		end
 
 		if attack_result == attack_results.died then
-			Managers.stats:record_team_kill()
+			Managers.telemetry.stats_kill = true
+
+			Managers.stats:record_team_kill(target_breed_name_or_nil, attack_type)
 
 			if attacking_is_human then
 				Managers.stats:record_kill(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, target_buff_keywords, damage_type, solo_kill)
@@ -544,13 +553,17 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 	end
 
 	if attacked_player then
-		if attack_result == attack_results.blocked and attacked_is_human then
+		if attack_result == attack_results.blocked then
 			local attacker_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
 			local weapon_action_component = attacker_data_extension:read_component("weapon_action")
 			local target_weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
 			local weapon_template_name = target_weapon_template and target_weapon_template.name
 
-			Managers.stats:record_blocked_damage(attacked_player, damage_absorbed, weapon_template_name)
+			Managers.stats:record_team_blocked_damage(damage_absorbed)
+
+			if attacked_is_human then
+				Managers.stats:record_blocked_damage(attacked_player, damage_absorbed, weapon_template_name)
+			end
 		end
 
 		local did_damage_to_health = did_damage and attack_result ~= attack_results.toughness_absorbed
@@ -578,7 +591,7 @@ end
 
 local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
 
-function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil)
+function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
 	local attacking_player = attacking_unit and Managers.state.player_unit_spawn:owner(attacking_unit)
 	local visual_loadout_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "visual_loadout_system")
 	local attack_weapon = visual_loadout_extension and visual_loadout_extension:wielded_weapon()
@@ -596,6 +609,7 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 		damage_type = damage_type,
 		damage = damage,
 		permanent_damage = permanent_damage,
+		actual_damage = actual_damage_dealt or 0,
 		damage_absorbed = damage_absorbed
 	}
 
@@ -616,7 +630,7 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 		data.attacker = attacker_breed_or_nil and attacker_breed_or_nil.name
 		data.is_boss = attacker_breed_or_nil and attacker_breed_or_nil.is_boss
 
-		if damage_dealt > 0 or damage_absorbed > 0 then
+		if (damage_dealt > 0 or damage_absorbed > 0) and not instakill then
 			Managers.telemetry_reporters:reporter("player_taken_damage"):register_event(attacked_player, data)
 		end
 
@@ -671,7 +685,7 @@ function _handle_result(attacking_unit_owner_unit, attacked_unit, attack_result,
 			Toughness.replenish(attacking_unit_owner_unit, toughness_replenish_types.melee_kill)
 		end
 	elseif is_ranged_friendly_fire then
-		Vo.friendly_fire_event(attacking_unit_owner_unit, attacked_unit)
+		Vo.friendly_fire_counter_event(attacking_unit_owner_unit, attacked_unit)
 	end
 end
 
@@ -711,7 +725,11 @@ end
 
 local _elite_special_killed_gear_wwise_event_options = {}
 
-function _trigger_elite_special_kill_interfacing(attacking_unit, attacker_breed_or_nil, target_breed_or_nil)
+function _trigger_elite_special_kill_interfacing(attacking_unit, attacker_breed_or_nil, target_breed_or_nil, is_server)
+	if not is_server then
+		return
+	end
+
 	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
 
 	if not attacker_is_player then
@@ -725,7 +743,7 @@ function _trigger_elite_special_kill_interfacing(attacking_unit, attacker_breed_
 		table.clear(_elite_special_killed_gear_wwise_event_options)
 
 		_elite_special_killed_gear_wwise_event_options.enemy_type = enemy_type
-		local except_sender = true
+		local except_sender = false
 		local optional_position = nil
 
 		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("elite_special_killed_stinger", _elite_special_killed_gear_wwise_event_options, optional_position, except_sender)

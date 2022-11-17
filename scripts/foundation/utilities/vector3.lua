@@ -1,5 +1,10 @@
+local Vector3 = Vector3
+local Vector3_to_elements = Vector3.to_elements
+
 Vector3.flat = function (v)
-	return Vector3(v[1], v[2], 0)
+	local x, y = Vector3_to_elements(v)
+
+	return Vector3(x, y, 0)
 end
 
 Vector3.step = function (start, target, step_size)
@@ -50,12 +55,22 @@ Vector3.from_array = function (array)
 	return Vector3(array[1], array[2], array[3])
 end
 
+Vector3.from_array_flat = function (array)
+	return Vector3(array[1], array[2], 0)
+end
+
 Vector3.from_table = function (table)
 	return Vector3(table.x, table.y, table.z)
 end
 
 Vector3.compact_string = function (v)
 	return string.format("(%g,%g,%g)", v[1], v[2], v[3])
+end
+
+Vector3.from_compact_string = function (s)
+	local x, y, z = string.match(s, "([%d%.]+)%,([%d%.]+)%,([%d%.]+)")
+
+	return Vector3(x, y, z)
 end
 
 Vector3.one = function ()

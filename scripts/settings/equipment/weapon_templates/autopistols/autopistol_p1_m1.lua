@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -202,12 +203,13 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		kind = "shoot_hit_scan",
-		weapon_handling_template = "autogun_full_auto_fast",
 		start_input = "shoot",
-		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "autogun_full_auto_fast",
 		sprint_ready_up_time = 0.2,
+		sprint_requires_press_to_interrupt = true,
 		ammunition_usage = 1,
 		recoil_template = "default_autopistol_assault",
+		anim_end_event = "attack_finished",
 		spread_template = "default_autopistol_assault",
 		stop_input = "shoot_release",
 		total_time = math.huge,
@@ -268,9 +270,6 @@ weapon_template.actions = {
 				chain_time = 0.45
 			}
 		},
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return false
-		end,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
@@ -280,14 +279,15 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
+		ammunition_usage = 1,
+		kind = "shoot_hit_scan",
 		start_input = "zoom_shoot",
 		recoil_template = "default_autopistol_spraynpray",
-		kind = "shoot_hit_scan",
-		sprint_ready_up_time = 0,
-		spread_template = "default_autopistol_spraynpray",
 		weapon_handling_template = "autogun_full_auto_fast",
-		ammunition_usage = 1,
+		sprint_ready_up_time = 0,
 		minimum_hold_time = 0.05,
+		anim_end_event = "attack_finished",
+		spread_template = "default_autopistol_spraynpray",
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -349,7 +349,7 @@ weapon_template.actions = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle_rotated",
 			num_pre_loop_events = 1,
 			spread_rotated_muzzle_flash = true,
 			auto_fire_time_parameter_name = "wpn_fire_interval",
@@ -453,7 +453,7 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 2.15,
 		action_movement_curve = {
@@ -594,14 +594,16 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.15
 weapon_template.ammo_template = "autopistol_p1_m1"
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.keep_weapon_special_active_on_unwield = true
+weapon_template.flashlight_template = FlashlightTemplates.assault
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -748,10 +750,10 @@ table.append(weapon_template.traits, bespoke_autogun_p1_traits)
 
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_rapid_fire"
+		display_name = "loc_weapon_keyword_mobile"
 	},
 	{
-		display_name = "loc_weapon_keyword_mobile"
+		display_name = "loc_weapon_keyword_spray_n_pray"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -769,10 +771,6 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
 	}
-}
-weapon_template.displayed_attack_ranges = {
-	max = 0,
-	min = 0
 }
 
 return weapon_template

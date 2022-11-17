@@ -17,7 +17,7 @@ end
 
 BallisticRaycastPostionFinderActionModule.fixed_update = function (self, dt, t)
 	local physics_world = self._physics_world
-	local collision_filter = "filter_player_character_shooting_statics"
+	local collision_filter = "filter_player_character_ballistic_raycast"
 	local hit, hit_position, _, normal = self:_ballistic_raycast(physics_world, collision_filter)
 
 	if hit then

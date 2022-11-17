@@ -7,7 +7,7 @@ local SLIDER_TRACK_HEIGHT = 20
 local SLIDER_ENDPLATE_WIDTH = 4
 local SLIDER_THUMB_SIZE = 38
 local THUMB_HIGHLIGHT_SIZE = 58
-local LABEL_WIDTH = 75
+local LABEL_WIDTH = 130
 local EXTRA_SLIDER_TRACK_SIZE = 5
 
 local function thumb_position_change_function(content, style)
@@ -56,7 +56,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 		height
 	}
 	value_font_style.offset = {
-		slider_horizontal_offset - (LABEL_WIDTH + UIFontSettings.header_4.offset[1]),
+		slider_horizontal_offset - (LABEL_WIDTH + 10),
 		0,
 		8
 	}
@@ -191,10 +191,11 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local axis = content.axis or 1
 				local hotspot = content.track_hotspot
 				local on_pressed = hotspot.on_pressed
+				local is_disabled = content.entry and content.entry.disabled or false
 
 				if not content.drag_active then
 					if on_pressed then
-						content.drag_active = true
+						content.drag_active = not is_disabled
 					else
 						return
 					end
@@ -249,7 +250,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				return content.exclusive_focus or content.hotspot.is_hover
 			end,
 			value = function (pass, renderer, style, content, position, size)
-				if content.drag_active then
+				local is_disabled = content.entry and content.entry.disabled or false
+
+				if content.drag_active or not content.is_gamepad_active or is_disabled then
 					return
 				end
 
@@ -391,8 +394,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
 
+				local is_disabled = content.entry and content.entry.disabled or false
 				local active = content.drag_active or content.focused
-				local progress = active and 1 or content.track_hotspot.anim_hover_progress
+				local progress = is_disabled and 0 or active and 1 or content.track_hotspot.anim_hover_progress
 				style.color[1] = 255 * math.easeOutCubic(progress)
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size
@@ -591,10 +595,11 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 				local axis = content.axis or 1
 				local hotspot = content.track_hotspot
 				local on_pressed = hotspot.on_pressed
+				local is_disabled = content.entry and content.entry.disabled or false
 
 				if not content.drag_active then
 					if on_pressed then
-						content.drag_active = true
+						content.drag_active = not is_disabled
 					else
 						return
 					end
@@ -649,7 +654,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 				return content.exclusive_focus or content.hotspot.is_hover
 			end,
 			value = function (pass, renderer, style, content, position, size)
-				if content.drag_active then
+				local is_disabled = content.entry and content.entry.disabled or false
+
+				if content.drag_active or is_disabled then
 					return
 				end
 
@@ -791,8 +798,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
 
+				local is_disabled = content.entry and content.entry.disabled or false
 				local active = content.drag_active or content.focused
-				local progress = active and 1 or content.track_hotspot.anim_hover_progress
+				local progress = is_disabled and 0 or active and 1 or content.track_hotspot.anim_hover_progress
 				style.color[1] = 255 * math.easeOutCubic(progress)
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size

@@ -77,7 +77,7 @@ ActionUnwield.fixed_update = function (self, dt, t, time_in_action)
 end
 
 ActionUnwield._next_slot = function (self, used_input, action_settings)
-	return PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, self._inventory_component)
+	return PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, self._inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
 end
 
 ActionUnwield.finish = function (self, reason, data, t, time_in_action)

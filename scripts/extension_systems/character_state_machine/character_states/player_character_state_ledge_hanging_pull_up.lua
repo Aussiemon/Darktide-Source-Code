@@ -31,6 +31,8 @@ PlayerCharacterStateLedgeHangingPullUp._restore_locomotion = function (self)
 end
 
 PlayerCharacterStateLedgeHangingPullUp.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
+	Unit.set_local_pose(unit, Unit.node(unit, "j_hips_handle"), Matrix4x4.identity())
+
 	return self:_check_transition(unit, t, next_state_params)
 end
 
@@ -43,7 +45,7 @@ PlayerCharacterStateLedgeHangingPullUp._teleport = function (self, unit, hang_le
 		local new_position = HangLedge.calculate_pull_up_end_position(self._nav_world, hang_ledge_unit, unit)
 		local rotation = Unit.local_rotation(unit, 1)
 
-		PlayerMovement.teleport(self._player, new_position, rotation)
+		PlayerMovement.teleport_fixed_update(unit, new_position, rotation)
 	end
 end
 

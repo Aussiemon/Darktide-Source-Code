@@ -12,6 +12,14 @@ local visibility_groups = {
 		end
 	},
 	{
+		name = "tactical_overlay",
+		validation_function = function (element)
+			local hud = Managers.ui:get_hud()
+
+			return hud and hud:tactical_overlay_active() or false
+		end
+	},
+	{
 		name = "cutscene",
 		validation_function = function (element)
 			return Managers.state.cinematic and Managers.state.cinematic:active_camera()

@@ -8,7 +8,7 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTraitsBespokeForcestaffdP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p1")
+local WeaponTraitsBespokeForcestaffP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -45,7 +45,7 @@ local weapon_template = {
 			}
 		},
 		charge_explosion_release = {
-			buffer_time = 0.1,
+			buffer_time = 0.31,
 			input_sequence = {
 				{
 					value = false,
@@ -153,6 +153,7 @@ weapon_template.action_input_hierarchy = {
 		wield = "base",
 		trigger_explosion = "base",
 		charge_explosion_release = "base",
+		vent = "base",
 		combat_ability = "base"
 	},
 	vent = {
@@ -178,6 +179,7 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
+		crosshair_type = "dot",
 		start_input = "wield",
 		uninterruptible = true,
 		kind = "unwield",
@@ -186,6 +188,7 @@ weapon_template.actions = {
 	},
 	action_wield = {
 		kind = "wield",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		uninterruptible = true,
 		anim_event = "equip",
@@ -207,6 +210,10 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
+				chain_time = 0.2
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.2
 			}
 		}
@@ -241,6 +248,12 @@ weapon_template.actions = {
 			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -252,6 +265,10 @@ weapon_template.actions = {
 				chain_time = 0.3,
 				reset_combo = true,
 				action_name = "action_stab_start"
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		},
 		fx = {
@@ -269,10 +286,12 @@ weapon_template.actions = {
 		kind = "overload_charge_position_finder",
 		sprint_ready_up_time = 0.25,
 		min_scale = 0,
-		hold_combo = true,
-		allowed_during_sprint = true,
 		max_scale = 5,
 		anim_end_event = "attack_finished",
+		crosshair_type = "dot",
+		hold_combo = true,
+		allowed_during_sprint = true,
+		minimum_hold_time = 0.3,
 		charge_template = "forcestaff_p1_m1_charge_aoe",
 		anim_event = "explosion_start",
 		stop_input = "charge_explosion_release",
@@ -336,6 +355,10 @@ weapon_template.actions = {
 				chain_time = 0.2,
 				reset_combo = true,
 				action_name = "action_stab_start"
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -351,6 +374,7 @@ weapon_template.actions = {
 	},
 	action_trigger_explosion = {
 		use_charge = true,
+		crosshair_type = "dot",
 		charge_template = "forcestaff_p1_m1_use_aoe",
 		kind = "explosion",
 		sprint_ready_up_time = 0,
@@ -399,13 +423,18 @@ weapon_template.actions = {
 				chain_time = 0.2,
 				reset_combo = true,
 				action_name = "action_stab_start"
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		}
 	},
 	action_stab_start = {
-		start_input = "special_action_hold",
 		anim_end_event = "attack_finished",
+		start_input = "special_action_hold",
 		kind = "windup",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "attack_special_charge",
 		total_time = 1.1,
@@ -429,9 +458,12 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			trigger_explosion = {
-				action_name = "action_trigger_explosion",
-				chain_time = 1
+			charge_explosion = {
+				action_name = "action_charge_explosion",
+				chain_time = 0.5
+			},
+			vent = {
+				action_name = "action_vent"
 			},
 			special_action_light = {
 				action_name = "action_stab",
@@ -452,10 +484,11 @@ weapon_template.actions = {
 		end
 	},
 	action_swipe_start = {
-		allowed_during_sprint = true,
-		anim_event = "attack_special_swipe_charge",
 		anim_end_event = "attack_finished",
 		kind = "windup",
+		crosshair_type = "dot",
+		allowed_during_sprint = true,
+		anim_event = "attack_special_swipe_charge",
 		total_time = 1.1,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -472,6 +505,13 @@ weapon_template.actions = {
 				chain_time = 1,
 				reset_combo = true,
 				action_name = "rapid_left"
+			},
+			charge_explosion = {
+				action_name = "action_charge_explosion",
+				chain_time = 1
+			},
+			vent = {
+				action_name = "action_vent"
 			},
 			special_action_light = {
 				action_name = "action_swipe",
@@ -494,15 +534,16 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.11666666666666667,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.26666666666666666,
 		uninterruptible = true,
-		anim_event = "attack_special",
+		allow_conditional_chain = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -555,6 +596,10 @@ weapon_template.actions = {
 				action_name = "action_charge_explosion",
 				chain_time = 0.5
 			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.5
+			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
 				chain_time = 0.5
@@ -569,7 +614,7 @@ weapon_template.actions = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
 			anchor_point_offset = {
 				0.1,
-				0.8,
+				1.1,
 				0
 			}
 		},
@@ -577,17 +622,19 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_stab_heavy = {
-		damage_window_start = 0.11666666666666667,
+		damage_window_start = 0.16666666666666666,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		damage_window_end = 0.26666666666666666,
+		damage_window_end = 0.18333333333333332,
 		uninterruptible = true,
-		anim_event = "attack_special",
+		allow_conditional_chain = true,
+		power_level = 800,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -640,6 +687,10 @@ weapon_template.actions = {
 				action_name = "action_charge_explosion",
 				chain_time = 0.5
 			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.5
+			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
 				chain_time = 0.5
@@ -654,7 +705,7 @@ weapon_template.actions = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
 			anchor_point_offset = {
 				0.1,
-				0.8,
+				1.1,
 				0
 			}
 		},
@@ -662,17 +713,19 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_swipe = {
-		damage_window_start = 0.6166666666666667,
+		damage_window_start = 0.6333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special_swipe",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		damage_window_end = 0.7833333333333333,
+		attack_direction_override = "left",
+		damage_window_end = 0.7,
 		uninterruptible = true,
-		anim_event = "attack_special_swipe",
+		allow_conditional_chain = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -728,18 +781,22 @@ weapon_template.actions = {
 			charge_explosion = {
 				action_name = "action_charge_explosion",
 				chain_time = 1
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.9
 			}
 		},
 		weapon_box = {
-			0.08,
-			1.2,
-			0.08
+			0.15,
+			0.15,
+			1.2
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_sweep_bake",
 			anchor_point_offset = {
-				0.1,
-				0.8,
+				0,
+				-0.2,
 				0
 			}
 		},
@@ -747,17 +804,20 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_swipe_heavy = {
-		damage_window_start = 0.25,
+		damage_window_start = 0.31666666666666665,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special_swipe_heavy",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		damage_window_end = 0.43333333333333335,
+		attack_direction_override = "left",
+		damage_window_end = 0.35,
 		uninterruptible = true,
-		anim_event = "attack_special_swipe_heavy",
+		allow_conditional_chain = true,
+		power_level = 800,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -813,18 +873,22 @@ weapon_template.actions = {
 			charge_explosion = {
 				action_name = "action_charge_explosion",
 				chain_time = 0.7
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.7
 			}
 		},
 		weapon_box = {
-			0.08,
-			1.2,
-			0.08
+			0.15,
+			0.15,
+			1.2
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_heavy_sweep_bake",
 			anchor_point_offset = {
-				0.1,
-				0.8,
+				0,
+				-0.2,
 				0
 			}
 		},
@@ -832,34 +896,35 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_vent = {
-		allowed_during_sprint = true,
+		crosshair_type = "dot",
 		start_input = "vent",
-		anim_end_event = "vent_end",
-		kind = "vent_warp_charge",
-		vent_vfx = "content/fx/particles/abilities/psyker_venting",
-		vo_tag = "ability_venting",
 		vent_source_name = "fx_left_hand",
-		abort_sprint = true,
+		kind = "vent_warp_charge",
+		allowed_during_sprint = true,
 		prevent_sprint = true,
+		vent_vfx = "content/fx/particles/abilities/psyker_venting",
+		anim_end_event = "vent_end",
+		vo_tag = "ability_venting",
+		abort_sprint = true,
 		uninterruptible = true,
 		anim_event = "vent_start",
 		stop_input = "vent_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.4,
+				modifier = 0.5,
 				t = 0.1
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.6,
 				t = 0.15
 			},
 			{
-				modifier = 0.2,
-				t = 0.2
+				modifier = 0.7,
+				t = 0.4
 			},
 			{
-				modifier = 0.01,
+				modifier = 0.85,
 				t = 5
 			},
 			start_modifier = 1
@@ -881,7 +946,7 @@ weapon_template.actions = {
 				chain_time = 0.15
 			},
 			special_action_hold = {
-				action_name = "rapid_left",
+				action_name = "action_stab_start",
 				chain_time = 0.4
 			}
 		}
@@ -913,7 +978,7 @@ weapon_template.fx_sources = {
 	_overheat = "fx_overheat",
 	_muzzle = "fx_overheat"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair_type = "assault"
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",
@@ -935,6 +1000,16 @@ weapon_template.base_stats = {
 		damage = {
 			rapid_left = {
 				damage_trait_templates.forcestaff_p1_m1_dps_stat
+			},
+			action_trigger_explosion = {
+				overrides = {
+					default_force_staff_demolition = {
+						damage_trait_templates.forcestaff_p1_m1_dps_stat
+					},
+					close_force_staff_demolition = {
+						damage_trait_templates.forcestaff_p1_m1_dps_stat
+					}
+				}
 			}
 		}
 	},
@@ -994,60 +1069,12 @@ local ranged_warp_charge_traits = table.keys(WeaponTraitsRangedWarpCharge)
 
 table.append(weapon_template.traits, ranged_warp_charge_traits)
 
-local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeForcestaffdP1)
+local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeForcestaffP1)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)
 
-weapon_template.perks = {
-	forcestaff_p1_m1_dps_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_dps_perk",
-		display_name = "loc_trait_display_forcestaff_p1_m1_dps_perk",
-		damage = {
-			rapid_left = {
-				damage_trait_templates.forcestaff_p1_m1_dps_perk
-			}
-		}
-	},
-	forcestaff_p1_m1_explosion_size_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_explosion_size_perk",
-		display_name = "loc_trait_display_forcestaff_p1_m1_explosion_size_perk",
-		explosion = {
-			action_trigger_explosion = {
-				explosion_trait_templates.forcestaff_p1_m1_explosion_size_perk
-			}
-		}
-	},
-	forcestaff_p1_m1_vent_speed_perk = {
-		warp_charge = {
-			base = {
-				warp_charge_trait_templates.forcestaff_p1_m1_vent_speed_perk
-			}
-		}
-	},
-	forcestaff_p1_m1_charge_speed_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_charge_speed_perk",
-		display_name = "loc_trait_display_forcestaff_p1_m1_charge_speed_perk",
-		charge = {
-			rapid_left = {
-				charge_trait_templates.forcestaff_p1_m1_charge_speed_perk
-			},
-			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_charge_speed_perk
-			}
-		}
-	},
-	forcestaff_p1_m1_warp_charge_cost_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_perk",
-		display_name = "loc_trait_display_forcestaff_p1_m1_warp_charge_cost_perk",
-		charge = {
-			rapid_left = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_perk
-			},
-			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_perk
-			}
-		}
-	}
+weapon_template.hipfire_inputs = {
+	shoot_pressed = true
 }
 weapon_template.displayed_keywords = {
 	{

@@ -62,7 +62,7 @@ BossExtension.destroy = function (self)
 	Managers.event:trigger("boss_encounter_end", self._unit, self)
 
 	if self._boss_template then
-		self._boss_template:stop(self._template_data, self._template_context)
+		self._boss_template.stop(self._template_data, self._template_context)
 	end
 end
 
@@ -91,6 +91,10 @@ end
 
 BossExtension.start_boss_encounter = function (self)
 	self._start_boss_encounter = true
+
+	if self._is_server then
+		Managers.telemetry_events:boss_encounter_started(self._breed.name)
+	end
 end
 
 BossExtension._generate_display_name = function (self)

@@ -944,34 +944,30 @@ local surface_decal = {
 	concrete = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.2,
-				min = 0.2
+				max = 0.26,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.2,
-				min = 0.2
+				max = 0.26,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01"
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.2,
-				min = 0.2
+				max = 0.35,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
 				"content/fx/units/weapons/small_caliber_concrete_large_01"
 			}
 		}

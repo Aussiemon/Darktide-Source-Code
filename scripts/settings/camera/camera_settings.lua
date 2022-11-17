@@ -101,6 +101,20 @@ CameraSettings.player_third_person = {
 				{
 					_node = {
 						near_range = 0.025,
+						name = "consumed",
+						class = "TransformCamera",
+						custom_vertical_fov = 65,
+						vertical_fov = 65,
+						offset_position = {
+							z = 0,
+							x = 0,
+							y = -4
+						}
+					}
+				},
+				{
+					_node = {
+						near_range = 0.025,
 						name = "disabled",
 						class = "TransformCamera",
 						offset_position = {
@@ -163,8 +177,7 @@ CameraSettings.player_third_person = {
 		tree_transitions = {
 			world = CameraTransitionTemplates.instant_cut,
 			first_person = CameraTransitionTemplates.to_first_person,
-			dead = CameraTransitionTemplates.dead,
-			mission_board = CameraTransitionTemplates.to_mission_board
+			dead = CameraTransitionTemplates.dead
 		},
 		node_transitions = {
 			default = CameraTransitionTemplates.to_third_person
@@ -443,8 +456,7 @@ CameraSettings.player_third_person_hub = {
 		tree_transitions = {
 			world = CameraTransitionTemplates.instant_cut,
 			first_person = CameraTransitionTemplates.to_first_person,
-			dead = CameraTransitionTemplates.dead,
-			mission_board = CameraTransitionTemplates.to_mission_board
+			dead = CameraTransitionTemplates.dead
 		},
 		node_transitions = {
 			default = CameraTransitionTemplates.to_third_person
@@ -604,115 +616,12 @@ CameraSettings.player_first_person = {
 			world = CameraTransitionTemplates.instant_cut,
 			third_person = CameraTransitionTemplates.to_third_person,
 			pounced = CameraTransitionTemplates.to_third_person,
+			consumed = CameraTransitionTemplates.to_consumed,
 			dead = CameraTransitionTemplates.dead,
-			ledge_hanging_no_flip = CameraTransitionTemplates.to_third_person_hanging,
-			mission_board = CameraTransitionTemplates.to_mission_board
+			ledge_hanging_no_flip = CameraTransitionTemplates.to_third_person_hanging
 		},
 		node_transitions = {
 			default = CameraTransitionTemplates.zoom
-		}
-	}
-}
-CameraSettings.mission_board = {
-	{
-		{
-			{
-				{
-					_node = {
-						name = "mission_board",
-						class = "ScalableTransformCamera",
-						scale_variable = "camera_goto_height",
-						offset_position = {
-							z = 0.2,
-							x = 0,
-							y = 0
-						},
-						scale_function = function (height)
-							return height
-						end,
-						node_transitions = {}
-					}
-				},
-				_node = {
-					name = "right",
-					class = "ScalableTransformCamera",
-					scale_variable = "camera_goto_right",
-					offset_position = {
-						z = 0,
-						x = 1,
-						y = 0
-					},
-					scale_function = function (amount)
-						return amount
-					end
-				}
-			},
-			_node = {
-				name = "back_translation",
-				class = "ScalableTransformCamera",
-				scale_variable = "camera_goto_radius",
-				offset_position = {
-					z = 0,
-					x = 0,
-					y = -1
-				},
-				scale_function = function (amount)
-					return amount
-				end
-			}
-		},
-		{
-			{
-				{
-					_node = {
-						name = "mission_board_zoom",
-						class = "RotationCamera",
-						offset_pitch = -45,
-						vertical_fov = 45,
-						node_transitions = {}
-					}
-				},
-				_node = {
-					name = "back_translation",
-					class = "ScalableTransformCamera",
-					scale_variable = "camera_goto_radius",
-					offset_position = {
-						z = 0,
-						x = 0,
-						y = -1
-					},
-					scale_function = function (amount)
-						return amount
-					end
-				}
-			},
-			_node = {
-				start_rotation_variable = "start_rotation",
-				name = "set_rotation",
-				class = "LerpRotationCamera",
-				end_rotation_variable = "end_rotation"
-			}
-		},
-		_node = {
-			name = "mission_board_orientation",
-			class = "AimCamera",
-			offset_pitch = -10,
-			offset_roll = -2,
-			ignore_aim_pitch = true
-		}
-	},
-	_node = {
-		near_range = 0.08,
-		name = "root_node",
-		class = "RootCamera",
-		far_range = 800,
-		disable_collision = true,
-		vertical_fov = 30,
-		root_object_name = "j_camera_attach",
-		tree_transitions = {
-			world = CameraTransitionTemplates.instant_cut,
-			first_person = CameraTransitionTemplates.from_mission_board,
-			third_person = CameraTransitionTemplates.from_mission_board
 		}
 	}
 }

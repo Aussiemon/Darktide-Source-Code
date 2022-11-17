@@ -385,8 +385,8 @@ BtBotShootAction._update_collision_filter = function (self, target_unit, scratch
 	local has_important_target = target_unit == priority_target_enemy or target_perception_component and target_perception_component.target_unit == target_ally_unit and (target_ally_need_type == "knocked_down" or target_ally_need_type == "ledge")
 
 	if has_important_target then
-		scratchpad.collision_filter = "filter_player_character_shooting_statics"
-		scratchpad.collision_filter_charged = "filter_player_character_shooting_statics"
+		scratchpad.collision_filter = "filter_player_character_shooting_raycast_statics"
+		scratchpad.collision_filter_charged = "filter_player_character_shooting_raycast_statics"
 
 		return
 	end
@@ -409,8 +409,8 @@ BtBotShootAction._update_collision_filter = function (self, target_unit, scratch
 	scratchpad.ignore_hitting_allies = ignore_hitting_allies
 	scratchpad.ignore_hitting_enemies_charged = ignore_enemies_for_obstruction_charged
 	scratchpad.ignore_hitting_enemies = ignore_enemies_for_obstruction
-	scratchpad.collision_filter = ignore_enemies_for_obstruction and ignore_hitting_allies and "filter_player_character_shooting_statics" or "filter_player_character_shooting"
-	scratchpad.collision_filter_charged = ignore_enemies_for_obstruction_charged and ignore_hitting_allies_charged and "filter_player_character_shooting_statics" or "filter_player_character_shooting"
+	scratchpad.collision_filter = ignore_enemies_for_obstruction and ignore_hitting_allies and "filter_player_character_shooting_raycast_statics" or "filter_player_character_shooting_raycast"
+	scratchpad.collision_filter_charged = ignore_enemies_for_obstruction_charged and ignore_hitting_allies_charged and "filter_player_character_shooting_raycast_statics" or "filter_player_character_shooting_raycast"
 end
 
 local INDEX_DISTANCE = 2

@@ -2,7 +2,7 @@ local PresenceEntryInterface = require("scripts/managers/presence/presence_entry
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local PresenceEntryMyself = class("PresenceEntryMyself")
 
-PresenceEntryMyself.init = function (self)
+PresenceEntryMyself.get_platform = function ()
 	local platform = nil
 	local authenticate_method = Managers.backend:get_auth_method()
 
@@ -18,6 +18,11 @@ PresenceEntryMyself.init = function (self)
 		platform = "unknown"
 	end
 
+	return platform
+end
+
+PresenceEntryMyself.init = function (self)
+	local platform = self.get_platform()
 	self._platform = platform
 	self._profile_version_counter = 1
 

@@ -240,7 +240,6 @@ HudElementBase._play_3d_sound = function (self, event_name, position)
 end
 
 HudElementBase.destroy = function (self, ui_renderer)
-	self._parent:destroy_offscreen_widgets(self.__class_name, self)
 	self:_unregister_events()
 
 	self.destroyed = true

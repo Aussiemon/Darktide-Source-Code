@@ -24,7 +24,7 @@ HudElementPlayerHealth.update = function (self, dt, t, ui_renderer, render_setti
 	if player_extensions then
 		local health_extension = player_extensions.health
 		local toughness_extension = player_extensions.toughness
-		health_percentage = health_extension:current_damaged_health_percent()
+		health_percentage = health_extension:current_health_percent()
 		local permanent_damage = health_extension:permanent_damage_taken()
 		local max_health = health_extension:max_health()
 		health_max_percentage = (max_health - permanent_damage) / max_health

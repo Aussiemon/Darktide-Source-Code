@@ -27,7 +27,7 @@ local DamageProfile = {
 		return power_type_power
 	end,
 	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit)
-		local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level)
+		local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
 		local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave")
 		local cleave_output = PowerLevelSettings.cleave_output
 		local cleave_min = cleave_output.min
@@ -70,7 +70,7 @@ function _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, clea
 	return max_hit_mass
 end
 
-DamageProfile.armor_damage_modifier = function (power_type, damage_profile, target_settings, damage_profile_lerp_values, armor_type, is_critical_strike, dropoff_scalar, armor_penetrating)
+DamageProfile.armor_damage_modifier = function (power_type, damage_profile, target_settings, damage_profile_lerp_values, armor_type, is_critical_strike, dropoff_scalar, armor_penetrating, charge_level)
 	local target_settings_lerp_values = damage_profile_lerp_values.current_target_settings_lerp_values
 
 	if armor_penetrating then
@@ -78,17 +78,30 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		armor_type = new_armor_type or armor_type
 	end
 
-	local from_target_settings_near, from_target_settings_far, adm_near, adm_far = nil
+	local from_target_settings_near, from_target_settings_far, adm_near, adm_far, adm_near_charged, adm_far_charged = nil
 	local target_adm_ranged = target_settings.armor_damage_modifier_ranged
 	local adm_ranged = damage_profile.armor_damage_modifier_ranged
+	local target_adm_ranged_charged = target_settings.armor_damage_modifier_ranged_charged
+	local adm_ranged_charged = damage_profile.armor_damage_modifier_ranged_charged
+	local target_settings_adm_near_charged = target_adm_ranged_charged and target_adm_ranged_charged.near and target_adm_ranged_charged.near[power_type] and target_adm_ranged_charged.near[power_type][armor_type] or nil
+	local target_settings_adm_far_charged = target_adm_ranged_charged and target_adm_ranged_charged.far and target_adm_ranged_charged.far[power_type] and target_adm_ranged_charged.far[power_type][armor_type] or nil
 	local target_settings_adm_near = target_adm_ranged and target_adm_ranged.near and target_adm_ranged.near[power_type] and target_adm_ranged.near[power_type][armor_type] or nil
 	local target_settings_adm_far = target_adm_ranged and target_adm_ranged.far and target_adm_ranged.far[power_type] and target_adm_ranged.far[power_type][armor_type] or nil
+
+	if charge_level and target_settings_adm_near_charged then
+		target_settings_adm_near = target_settings_adm_near and math.lerp(target_settings_adm_near, target_settings_adm_near_charged, charge_level)
+	end
+
+	if charge_level and target_settings_adm_far_charged then
+		target_settings_adm_far = target_settings_adm_far and math.lerp(target_settings_adm_far, target_settings_adm_far_charged, charge_level)
+	end
 
 	if target_settings_adm_near then
 		adm_near = target_settings_adm_near
 		from_target_settings_near = true
 	else
 		adm_near = adm_ranged and adm_ranged.near[power_type][armor_type]
+		adm_near_charged = adm_ranged_charged and adm_ranged_charged.near[power_type][armor_type]
 		from_target_settings_near = false
 	end
 
@@ -97,6 +110,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		from_target_settings_far = true
 	else
 		adm_far = adm_ranged and adm_ranged.far[power_type][armor_type]
+		adm_far_charged = adm_ranged_charged and adm_ranged_charged.far[power_type][armor_type]
 		from_target_settings_far = false
 	end
 
@@ -108,6 +122,8 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		local far_lerp_values = from_target_settings_far and target_settings_lerp_values or damage_profile_lerp_values
 		local near = adm_near
 		local far = adm_far
+		local near_charged = adm_near_charged
+		local far_charged = adm_far_charged
 		local near_is_lerpable = type(near) == "table"
 
 		if near_is_lerpable then
@@ -115,11 +131,33 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 			near = DamageProfile.lerp_damage_profile_entry(near, lerp_value)
 		end
 
+		local near_charged_is_lerpable = near_charged and type(near_charged) == "table"
+
+		if near_charged_is_lerpable then
+			lerp_value = DamageProfile.lerp_value_from_path(near_lerp_values, "armor_damage_modifier_ranged", "near", power_type, armor_type)
+			near_charged = DamageProfile.lerp_damage_profile_entry(near_charged, lerp_value)
+		end
+
 		local far_is_lerpable = type(far) == "table"
 
 		if far_is_lerpable then
 			lerp_value = DamageProfile.lerp_value_from_path(far_lerp_values, "armor_damage_modifier_ranged", "far", power_type, armor_type)
 			far = DamageProfile.lerp_damage_profile_entry(far, lerp_value)
+		end
+
+		local far_charged_is_lerpable = far_charged and type(far_charged) == "table"
+
+		if far_charged_is_lerpable then
+			lerp_value = DamageProfile.lerp_value_from_path(far_lerp_values, "armor_damage_modifier_ranged", "far", power_type, armor_type)
+			far_charged = DamageProfile.lerp_damage_profile_entry(far_charged, lerp_value)
+		end
+
+		if charge_level and near_charged then
+			near = math.lerp(near, near_charged, charge_level)
+		end
+
+		if charge_level and far_charged then
+			far = math.lerp(far, far_charged, charge_level)
 		end
 
 		armor_damage_modifier = math.lerp(near, far, dropoff_scalar or 0)

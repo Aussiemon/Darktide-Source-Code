@@ -145,7 +145,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.5,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		instant_aggro_chance = 0,
 		moving_alerted_anim_events = {
 			fwd = {
@@ -521,7 +521,7 @@ local action_data = {
 			attack_06 = 1.3793103448275863
 		},
 		attack_intensities = {
-			ranged = 1,
+			ranged = 0.5,
 			melee = 0.25
 		},
 		stagger_type_reduction = {
@@ -534,9 +534,10 @@ local action_data = {
 	moving_melee_attack = {
 		move_speed = 4,
 		utility_weight = 1,
-		weapon_reach = 3.25,
-		move_speed_variable_lerp_speed = 4,
+		catch_up_movementspeed = true,
 		moving_attack = true,
+		move_speed_variable_lerp_speed = 4,
+		weapon_reach = 3.25,
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_moving_melee_attack,
 		attack_anim_events = {
@@ -559,9 +560,9 @@ local action_data = {
 		},
 		attack_intensities = {
 			melee = 0.25,
-			running_melee = 1,
+			running_melee = 0.5,
 			moving_melee = 0.5,
-			ranged = 1
+			ranged = 0.5
 		},
 		move_start_timings = {
 			attack_move_03 = 0.12345679012345678,
@@ -670,6 +671,7 @@ local action_data = {
 		move_speed = 4,
 		utility_weight = 1,
 		vo_event = "assault",
+		catch_up_movementspeed = true,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 4,
 		weapon_reach = 3.25,
@@ -692,9 +694,9 @@ local action_data = {
 		},
 		attack_intensities = {
 			melee = 0.25,
-			running_melee = 1,
+			running_melee = 0.5,
 			moving_melee = 0.5,
-			ranged = 1
+			ranged = 0.5
 		},
 		move_start_timings = {
 			attack_run_03 = 0,

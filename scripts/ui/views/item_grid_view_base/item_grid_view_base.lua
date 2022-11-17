@@ -36,7 +36,10 @@ end
 ItemGridViewBase.on_enter = function (self)
 	ItemGridViewBase.super.on_enter(self)
 	self:_setup_weapon_preview()
-	self:_setup_weapon_stats()
+
+	self._weapon_stats = self:_setup_weapon_stats("weapon_stats", "weapon_stats_pivot")
+	self._weapon_compare_stats = self:_setup_weapon_stats("weapon_compare_stats", "weapon_compare_stats_pivot")
+
 	self:_setup_item_grid()
 	self:_stop_previewing()
 
@@ -150,14 +153,16 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 end
 
 ItemGridViewBase.cb_switch_tab = function (self, index)
-	self._tab_menu_element:set_selected_index(index)
+	if index ~= self._tab_menu_element:selected_index() then
+		self._tab_menu_element:set_selected_index(index)
 
-	local tabs_content = self._tabs_content
-	local tab_content = tabs_content[index]
-	local slot_types = tab_content.slot_types
-	local display_name = tab_content.display_name
+		local tabs_content = self._tabs_content
+		local tab_content = tabs_content[index]
+		local slot_types = tab_content.slot_types
+		local display_name = tab_content.display_name
 
-	self:_present_layout_by_slot_filter(slot_types, display_name)
+		self:_present_layout_by_slot_filter(slot_types, not tab_content.hide_display_name and display_name or nil)
+	end
 end
 
 ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, optional_display_name)
@@ -182,6 +187,8 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, o
 							break
 						end
 					end
+				else
+					add_item = true
 				end
 			else
 				add_item = true
@@ -220,6 +227,10 @@ ItemGridViewBase.selected_grid_widget = function (self)
 	return self._item_grid:selected_grid_widget()
 end
 
+ItemGridViewBase.update_grid_widgets_visibility = function (self)
+	return self._item_grid:update_grid_widgets_visibility()
+end
+
 ItemGridViewBase._update_tab_bar_position = function (self)
 	if not self._tab_menu_element then
 		return
@@ -255,7 +266,7 @@ ItemGridViewBase._stop_previewing = function (self)
 end
 
 ItemGridViewBase._preview_element = function (self, element)
-	local item = element.item
+	local item = element.real_item or element.item
 
 	self:_preview_item(item)
 end
@@ -263,26 +274,50 @@ end
 ItemGridViewBase._preview_item = function (self, item)
 	self:_stop_previewing()
 
+	self._previewed_item = item
 	local item_display_name = item.display_name
 
 	if string.match(item_display_name, "unarmed") then
 		return
 	end
 
-	self._previewed_item = item
 	local slots = item.slots or {}
-	local item_name = item.name
-	local gear_id = item.gear_id or item_name
 	local item_type = item.item_type
+	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+	local can_compare = is_weapon or item_type == "GADGET"
 
-	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
+	if is_weapon or item_type == "GADGET" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
 		if self._weapon_stats then
 			self._weapon_stats:present_item(item)
 		end
-	elseif self._weapon_preview then
-		local disable_auto_spin = true
 
-		self._weapon_preview:present_item(item, disable_auto_spin)
+		if self._weapon_compare_stats then
+			local slot_name = self:_fetch_item_compare_slot_name(item)
+			local equipped_item = slot_name and self.equipped_item_in_slot and self:equipped_item_in_slot(slot_name)
+
+			if equipped_item and can_compare then
+				if not self._previewed_equipped_item or self._previewed_equipped_item.gear_id ~= equipped_item.gear_id then
+					self._previewed_equipped_item = equipped_item
+					local is_equipped = true
+
+					self._weapon_compare_stats:present_item(equipped_item, is_equipped)
+				end
+			else
+				self._previewed_equipped_item = nil
+			end
+
+			local visible = can_compare and equipped_item and self._item_compare_toggled or false
+
+			self._weapon_compare_stats:set_visibility(visible)
+		end
+	elseif item_type == "WEAPON_SKIN" then
+		local visual_item = ItemUtils.weapon_skin_preview_item(item)
+
+		if visual_item and self._weapon_stats then
+			self._weapon_stats:present_item(item)
+		end
+	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND") and self._weapon_stats then
+		self._weapon_stats:present_item(item)
 	end
 
 	local display_name = ItemUtils.display_name(item)
@@ -297,8 +332,19 @@ ItemGridViewBase._preview_item = function (self, item)
 	self:_set_preview_widgets_visibility(visible)
 end
 
-ItemGridViewBase.is_previewing_weapon = function (self)
+ItemGridViewBase._fetch_item_compare_slot_name = function (self, item)
+	local slots = item and item.slots
+	local slot_name = slots and slots[1]
+
+	return slot_name
+end
+
+ItemGridViewBase.is_previewing_item = function (self)
 	return self._previewed_item ~= nil
+end
+
+ItemGridViewBase.previewed_item = function (self)
+	return self._previewed_item
 end
 
 ItemGridViewBase._destroy_weapon_preview = function (self)
@@ -322,49 +368,44 @@ ItemGridViewBase._setup_weapon_preview = function (self)
 	end
 end
 
-ItemGridViewBase._setup_weapon_stats = function (self)
-	if not self._weapon_stats then
-		local reference_name = "weapon_stats"
-		local layer = 10
-		local title_height = 70
-		local edge_padding = 12
-		local grid_width = 530
-		local grid_height = 840
-		local grid_size = {
-			grid_width - edge_padding,
-			grid_height
-		}
-		local grid_spacing = {
-			0,
-			0
-		}
-		local mask_size = {
-			grid_width + 40,
-			grid_height
-		}
-		local context = {
-			scrollbar_width = 7,
-			ignore_blur = true,
-			grid_spacing = grid_spacing,
-			grid_size = grid_size,
-			mask_size = mask_size,
-			title_height = title_height,
-			edge_padding = edge_padding
-		}
-		self._weapon_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
+ItemGridViewBase._setup_weapon_stats = function (self, reference_name, scenegraph_id)
+	local layer = 10
+	local title_height = 70
+	local edge_padding = 12
+	local grid_width = 530
+	local grid_height = 920
+	local grid_size = {
+		grid_width - edge_padding,
+		grid_height
+	}
+	local grid_spacing = {
+		0,
+		0
+	}
+	local mask_size = {
+		grid_width + 40,
+		grid_height
+	}
+	local context = {
+		scrollbar_width = 7,
+		ignore_blur = true,
+		grid_spacing = grid_spacing,
+		grid_size = grid_size,
+		mask_size = mask_size,
+		title_height = title_height,
+		edge_padding = edge_padding
+	}
+	local weapon_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
 
-		self:_update_weapon_stats_position()
-	end
+	self:_update_weapon_stats_position(scenegraph_id, weapon_stats)
+
+	return weapon_stats
 end
 
-ItemGridViewBase._update_weapon_stats_position = function (self)
-	if not self._weapon_stats then
-		return
-	end
+ItemGridViewBase._update_weapon_stats_position = function (self, scenegraph_id, weapon_stats)
+	local position = self:_scenegraph_world_position(scenegraph_id)
 
-	local position = self:_scenegraph_world_position("weapon_stats_pivot")
-
-	self._weapon_stats:set_pivot_offset(position[1], position[2])
+	weapon_stats:set_pivot_offset(position[1], position[2])
 end
 
 ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
@@ -415,6 +456,12 @@ ItemGridViewBase.on_exit = function (self)
 		self:_remove_element("weapon_stats")
 
 		self._weapon_stats = nil
+	end
+
+	if self._weapon_compare_stats then
+		self:_remove_element("weapon_compare_stats")
+
+		self._weapon_compare_stats = nil
 	end
 
 	if self._ui_default_renderer then
@@ -471,8 +518,8 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 	local widget_index = item_grid:selected_grid_index()
 	local selected_element = widget_index and item_grid:element_by_index(widget_index)
 	local selected_item = selected_element and selected_element.item
-	local selected_gear_id = selected_item and selected_item.gear_id
-	local on_present_callback = selected_gear_id and callback(function ()
+	self._selected_gear_id = self._selected_gear_id or selected_item and selected_item.gear_id
+	local on_present_callback = self._selected_gear_id and callback(function ()
 		local new_selection_index = nil
 		local grid_widgets = item_grid:widgets()
 
@@ -484,13 +531,15 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 			if element then
 				local item = element.item
 
-				if item and item.gear_id == selected_gear_id then
+				if item and item.gear_id == self._selected_gear_id then
 					new_selection_index = i
 
 					break
 				end
 			end
 		end
+
+		self._selected_gear_id = nil
 
 		if new_selection_index then
 			self._item_grid:focus_grid_index(new_selection_index)
@@ -503,6 +552,7 @@ end
 ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callback)
 	local grid_display_name = self._grid_display_name
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
+	local left_double_click_callback = callback(self, "cb_on_grid_entry_left_double_click")
 	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 	local grid_settings = self._definitions.grid_settings
@@ -517,7 +567,7 @@ ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callba
 
 	local grow_direction = self._grow_direction or "down"
 
-	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction, on_present_callback)
+	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction, on_present_callback, left_double_click_callback)
 end
 
 ItemGridViewBase.cb_on_grid_entry_right_pressed = function (self, widget, element)
@@ -528,6 +578,22 @@ ItemGridViewBase.cb_on_grid_entry_right_pressed = function (self, widget, elemen
 	end
 
 	self._update_callback_on_grid_entry_right_pressed = callback(cb_func)
+end
+
+ItemGridViewBase.cb_on_grid_entry_left_double_click = function (self, widget, element)
+	local function cb_func()
+		if self._destroyed then
+			return
+		end
+
+		self:_on_double_click(widget, element)
+	end
+
+	self._update_callback_on_grid_entry_left_double_click = callback(cb_func)
+end
+
+ItemGridViewBase._on_double_click = function (self, widget, element)
+	return
 end
 
 ItemGridViewBase.cb_on_grid_entry_left_pressed = function (self, widget, element)
@@ -563,6 +629,12 @@ ItemGridViewBase.update = function (self, dt, t, input_service)
 		self._update_callback_on_grid_entry_right_pressed()
 
 		self._update_callback_on_grid_entry_right_pressed = nil
+	end
+
+	if self._update_callback_on_grid_entry_left_double_click then
+		self._update_callback_on_grid_entry_left_double_click()
+
+		self._update_callback_on_grid_entry_left_double_click = nil
 	end
 
 	local synced_grid_index = self._synced_grid_index
@@ -626,7 +698,15 @@ end
 ItemGridViewBase.on_resolution_modified = function (self, scale)
 	ItemGridViewBase.super.on_resolution_modified(self, scale)
 	self:_update_item_grid_position()
-	self:_update_weapon_stats_position()
+
+	if self._weapon_stats then
+		self:_update_weapon_stats_position("weapon_stats_pivot", self._weapon_stats)
+	end
+
+	if self._weapon_compare_stats then
+		self:_update_weapon_stats_position("weapon_compare_stats_pivot", self._weapon_compare_stats)
+	end
+
 	self:_update_tab_bar_position()
 end
 
@@ -728,6 +808,22 @@ ItemGridViewBase.item_grid_index = function (self, item)
 	end
 end
 
+ItemGridViewBase.first_grid_item = function (self)
+	local item_grid = self._item_grid
+	local widgets = item_grid:widgets()
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+		local content = widget.content
+		local element = content.element
+		local element_item = element.item
+
+		if element_item then
+			return element_item
+		end
+	end
+end
+
 ItemGridViewBase.element_by_index = function (self, index)
 	return self._item_grid:element_by_index(index)
 end
@@ -739,12 +835,12 @@ ItemGridViewBase.trigger_sort_index = function (self, index)
 end
 
 ItemGridViewBase.cb_on_inspect_pressed = function (self)
-	if self._previewed_item then
-		self._inpect_view_opened = true
-
+	if self._previewed_item and not Managers.ui:view_active("inventory_weapon_details_view") then
 		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
 			preview_item = self._previewed_item
 		})
+
+		self._inpect_view_opened = true
 	end
 end
 
@@ -754,6 +850,14 @@ ItemGridViewBase.can_inspect_item = function (self)
 	end
 
 	return false
+end
+
+ItemGridViewBase.cb_on_toggle_item_compare = function (self)
+	self._item_compare_toggled = not self._item_compare_toggled
+
+	if self._weapon_compare_stats then
+		self._weapon_compare_stats:set_visibility(self._item_compare_toggled)
+	end
 end
 
 return ItemGridViewBase

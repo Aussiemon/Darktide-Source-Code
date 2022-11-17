@@ -6,6 +6,7 @@ local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass
 local ViewStyles = require("scripts/ui/views/contracts_view/contracts_view_styles")
 local ViewSettings = require("scripts/ui/views/contracts_view/contracts_view_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local wallet_settings = WalletSettings[ViewSettings.wallet_type]
 local task_grid_style = ViewStyles.task_grid
 local grid_size = task_grid_style.size
@@ -26,12 +27,15 @@ local contract_info_size = {
 	80
 }
 local contract_progress_size = ViewStyles.contract_progress.size
-local task_grid_size = grid_size
+local task_grid_size = {
+	grid_size[1] + 2 * grid_margin,
+	grid_size[2]
+}
 local task_grid_mask_size = {
 	grid_size[1] + 40,
 	grid_size[2]
 }
-local reroll_button_size = ButtonPassTemplates.terminal_button.size
+local reroll_button_size = ButtonPassTemplates.default_button.size
 local task_info_size = ViewStyles.task_info.size
 local task_info_nugget_size = {
 	150,
@@ -58,8 +62,8 @@ local task_grid_position = {
 	1
 }
 local reroll_button_position = {
-	-contract_info_margin,
-	120,
+	0,
+	100,
 	10
 }
 local task_info_reward_position = {
@@ -124,7 +128,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = task_info_size,
 		position = {
-			task_grid_size[1] + 60,
+			grid_size[1] + 60,
 			-16,
 			0
 		}
@@ -176,9 +180,7 @@ local widget_definitions = {
 			style_id = "background_candles",
 			pass_type = "texture"
 		}
-	}, "contract_info_header", {
-		visible = false
-	}, nil, ViewStyles.contract_info_header),
+	}, "contract_info_header", nil, nil, ViewStyles.contract_info_header),
 	contract_info = UIWidget.create_definition({
 		{
 			pass_type = "rect",
@@ -186,13 +188,15 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/backgrounds/headline_terminal",
-			style_id = "background_highlight",
-			pass_type = "texture"
+			value_id = "background_highlight",
+			pass_type = "texture",
+			style_id = "background_highlight"
 		},
 		{
 			value = "content/ui/materials/frames/frame_glow_01",
-			style_id = "frame",
-			pass_type = "texture"
+			value_id = "frame",
+			pass_type = "texture",
+			style_id = "frame"
 		},
 		{
 			value_id = "label",
@@ -212,9 +216,7 @@ local widget_definitions = {
 			pass_type = "text",
 			style_id = "reward_text"
 		}
-	}, "contract_info", {
-		visible = false
-	}, nil, ViewStyles.contract_info),
+	}, "contract_info", nil, nil, ViewStyles.contract_info),
 	contract_progress = UIWidget.create_definition({
 		{
 			value = "N/A",
@@ -237,9 +239,7 @@ local widget_definitions = {
 			style_id = "progress_bar_edge",
 			pass_type = "texture"
 		}
-	}, "contract_progress", {
-		visible = false
-	}, nil, ViewStyles.contract_progress),
+	}, "contract_progress", nil, nil, ViewStyles.contract_progress),
 	contract_fulfilled = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -250,19 +250,22 @@ local widget_definitions = {
 	}, "contract_info", {
 		visible = false
 	}, nil, ViewStyles.contract_fulfilled),
+	task_grid_background = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background"
+		}
+	}, "task_grid", nil, nil, ViewStyles.task_grid_background),
 	task_info = UIWidget.create_definition({
 		{
+			pass_type = "rect",
+			style_id = "background_rect"
+		},
+		{
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			value_id = "background",
 			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				size_addition = {
-					26,
-					22
-				}
-			}
+			style_id = "background"
 		},
 		{
 			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
@@ -277,10 +280,25 @@ local widget_definitions = {
 			style_id = "edge_bottom"
 		},
 		{
-			value = "",
-			value_id = "label",
+			style_id = "icon",
+			pass_type = "texture",
+			value_id = "icon",
+			value = "content/ui/materials/icons/contracts/contract_task",
+			change_function = ViewStyles.task_info_change_function
+		},
+		{
+			style_id = "label",
 			pass_type = "text",
-			style_id = "label"
+			value_id = "label",
+			value = "",
+			change_function = ViewStyles.task_info_change_function
+		},
+		{
+			style_id = "description",
+			pass_type = "text",
+			value_id = "description",
+			value = "",
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
 			value_id = "reward_label",
@@ -290,20 +308,17 @@ local widget_definitions = {
 			value = Localize("loc_contracts_contract_task_info_reward_label")
 		},
 		{
-			value_id = "reward_icon",
-			pass_type = "texture",
 			style_id = "reward_icon",
-			value = wallet_settings.icon_texture_big
+			pass_type = "texture",
+			value_id = "reward_icon",
+			value = wallet_settings.icon_texture_big,
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
-			style_id = "reward_text",
 			value_id = "reward_text",
-			pass_type = "text"
-		},
-		{
-			style_id = "description",
-			value_id = "description",
-			pass_type = "text"
+			pass_type = "text",
+			style_id = "reward_text",
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
 			value_id = "completion_label",
@@ -313,11 +328,12 @@ local widget_definitions = {
 			value = Localize("loc_contracts_contract_task_info_completion_label")
 		},
 		{
-			value_id = "completion_text",
 			style_id = "completion_text",
 			pass_type = "text",
 			scenegraph_id = "task_info_completion",
-			value = Localize("loc_contracts_contract_task_info_completion_label")
+			value = "",
+			value_id = "completion_text",
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
 			value_id = "complexity_label",
@@ -327,33 +343,37 @@ local widget_definitions = {
 			value = Localize("loc_contracts_contract_task_info_complexity_label")
 		},
 		{
-			value_id = "complexity_icon",
 			style_id = "complexity_icon",
 			pass_type = "texture",
 			scenegraph_id = "task_info_complexity",
-			value = "content/ui/materials/icons/contracts/complexity_tutorial"
+			value = "content/ui/materials/icons/contracts/complexity_tutorial",
+			value_id = "complexity_icon",
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
-			value_id = "complexity_text",
 			style_id = "complexity_text",
 			pass_type = "text",
 			scenegraph_id = "task_info_complexity",
-			value = Localize("loc_contracts_contract_task_info_complexity_label")
+			value = "",
+			value_id = "complexity_text",
+			change_function = ViewStyles.task_info_change_function
 		},
 		{
 			value_id = "completed_text",
-			pass_type = "text",
 			style_id = "completed_text",
-			value = "Completed " .. ViewSettings.task_fulfilled_check_mark
+			pass_type = "text",
+			value = Localize("loc_contracts_task_completed"),
+			visibility_function = ViewStyles.task_info_fulfilled_visibility
 		},
 		{
+			style_id = "completed_overlay",
 			pass_type = "rect",
-			style_id = "completed_overlay"
+			visibility_function = ViewStyles.task_info_fulfilled_visibility
 		}
 	}, "task_info_plate", {
 		visible = false
 	}, nil, ViewStyles.task_info),
-	reroll_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "reroll_button", {
+	reroll_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "reroll_button", {
 		text = "",
 		visible = false
 	})
@@ -376,34 +396,39 @@ local widget_blueprints = {
 				}
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				style_id = "background",
 				pass_type = "texture",
+				value_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				change_function = ViewStyles.task_list_item_background_change_function
 			},
 			{
-				value = "content/ui/materials/masks/gradient_horizontal_sides_dynamic_02",
 				style_id = "background_gradient",
 				pass_type = "texture",
-				change_function = ViewStyles.task_list_item_background_hover_change_function
+				value_id = "background_gradient",
+				value = "content/ui/materials/masks/gradient_horizontal_sides_dynamic_02",
+				change_function = ViewStyles.task_list_item_hover_change_function
 			},
 			{
-				value = "content/ui/materials/frames/frame_tile_2px",
 				style_id = "frame",
 				pass_type = "texture",
-				change_function = ViewStyles.task_list_item_background_frame_change_function
+				value_id = "frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
+				change_function = ViewStyles.task_list_item_hover_change_function
 			},
 			{
-				value = "content/ui/materials/frames/frame_corner_2px",
 				style_id = "corner",
 				pass_type = "texture",
-				change_function = ViewStyles.task_list_item_background_frame_change_function
+				value_id = "corner",
+				value = "content/ui/materials/frames/frame_corner_2px",
+				change_function = ViewStyles.task_list_item_hover_change_function
 			},
 			{
-				value = "content/ui/materials/icons/contracts/contracts_type_icon_01",
 				style_id = "icon",
 				pass_type = "texture",
-				change_function = ViewStyles.task_list_item_task_name_change_function
+				value_id = "icon",
+				value = "content/ui/materials/icons/contracts/contract_task",
+				change_function = ViewStyles.task_list_item_task_icon_change_function
 			},
 			{
 				style_id = "task_name",
@@ -434,7 +459,7 @@ local widget_blueprints = {
 				style_id = "progress_bar_frame",
 				pass_type = "texture",
 				value = "content/ui/materials/backgrounds/default_square",
-				change_function = ViewStyles.task_list_item_background_frame_change_function,
+				change_function = ViewStyles.task_list_item_hover_change_function,
 				visibility_function = ViewStyles.task_list_progress_bar_visibility_function
 			},
 			{
@@ -444,10 +469,9 @@ local widget_blueprints = {
 				visibility_function = ViewStyles.task_list_progress_bar_visibility_function
 			},
 			{
+				value = "content/ui/materials/bars/simple/end",
 				style_id = "progress_bar_edge",
 				pass_type = "texture",
-				value = "content/ui/materials/bars/simple/end",
-				change_function = ViewStyles.task_list_item_progress_bar_edge_change_function,
 				visibility_function = ViewStyles.task_list_progress_bar_visibility_function
 			},
 			{
@@ -456,16 +480,18 @@ local widget_blueprints = {
 				visibility_function = ViewStyles.task_list_completion_visibility_function
 			},
 			{
-				value_id = "task_completed_text",
 				style_id = "task_completed_text",
 				pass_type = "text",
+				value_id = "task_completed_text",
 				value = "Completed",
+				change_function = ViewStyles.task_list_item_task_name_change_function,
 				visibility_function = ViewStyles.task_list_completion_visibility_function
 			}
 		},
 		style = ViewStyles.task_list_item,
 		init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 			local task_info = config.task_info
+			local task_type = task_info.criteria.taskType
 			local task_is_fulfilled = task_info.fulfilled
 			local task_name = config.task_name
 			local normalized_progress = config.task_progress_normalized
@@ -477,22 +503,26 @@ local widget_blueprints = {
 			widget_content.task_target = config.task_target
 			widget_content.task_reward_text = reward_text
 			widget_content.task_info = task_info
+			widget_content.task_is_fulfilled = task_is_fulfilled
 			local hotspot = widget_content.hotspot
 			hotspot.pressed_callback = callback(parent, callback_name, widget, config)
 			local widget_style = widget.style
 			local progress_bar_style = widget_style.progress_bar
 			local progress_bar_width = normalized_progress * progress_bar_style.size[1]
 			progress_bar_style.size[1] = progress_bar_width
+			local material_values = widget_style.icon.material_values
+			material_values.contract_type = task_type and UISettings.contracts_icons_by_type[task_type] or UISettings.contracts_icons_by_type.default
+			material_values.checkbox = task_is_fulfilled and 1 or 0
 			local task_progress_bar_edge_style = widget_style.progress_bar_edge
 			task_progress_bar_edge_style.offset[1] = task_progress_bar_edge_style.offset[1] + progress_bar_width
-			local task_name_style = widget_style.task_name
-			local reward_text_style = widget_style.task_reward_text
-			local reward_icon_style = widget_style.task_reward_icon
-			local reward_background_style = widget_style.task_reward_background
+			local alpha_multiplier = math.clamp(normalized_progress / 0.2, 0, 1)
+			task_progress_bar_edge_style.color[1] = 255 * alpha_multiplier
 
-			if not task_is_fulfilled then
-				local reward_text_width = UIRenderer.text_size(ui_renderer, reward_text, reward_text_style.font_type, reward_text_style.font_size)
-				reward_background_style.size[1] = reward_icon_style.size[1] + reward_text_width + 24
+			if task_is_fulfilled then
+				local reward_icon_style = widget_style.task_reward_icon
+				reward_icon_style.color = reward_icon_style.fulfilled_color
+				local reward_text_style = widget_style.task_reward_text
+				reward_text_style.text_color = reward_text_style.fulfilled_color
 			end
 		end
 	}
@@ -503,13 +533,13 @@ local task_grid_settings = {
 	use_terminal_background = true,
 	title_height = 0,
 	grid_spacing = {
-		task_grid_size[1],
-		15
+		grid_size[1],
+		8
 	},
-	grid_size = task_grid_size,
+	grid_size = grid_size,
 	mask_size = task_grid_mask_size,
-	scrollbar_pass_templates = ScrollbarPassTemplates.metal_scrollbar,
-	scrollbar_width = ScrollbarPassTemplates.metal_scrollbar.default_width,
+	scrollbar_pass_templates = ScrollbarPassTemplates.terminal_scrollbar,
+	scrollbar_width = ScrollbarPassTemplates.terminal_scrollbar.default_width,
 	edge_padding = grid_margin * 2
 }
 local contracts_view_definitions = {

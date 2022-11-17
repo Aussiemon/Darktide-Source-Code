@@ -16,6 +16,10 @@ local ScriptWorld = "scripts/foundation/utilities/script_world"
 local Vo = require("scripts/utilities/vo")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local unit_alive = Unit.alive
+local Vector3 = Vector3
+local Quaternion = Quaternion
+local Matrix4x4 = Matrix4x4
+local Unit = Unit
 local flow_return_table = {}
 FlowCallbacks = FlowCallbacks or {}
 local unit_flow_event = Unit.flow_event
@@ -246,6 +250,13 @@ local function _minion_update_targeted_in_melee_parameter(unit, wwise_world, sou
 end
 
 FlowCallbacks.minion_fx = function (params)
+	if DEDICATED_SERVER then
+		flow_return_table.effect_id = nil
+		flow_return_table.playing_id = nil
+
+		return flow_return_table
+	end
+
 	local unit = params.unit
 	local legacy_v2_proximity_extension = ScriptUnit.has_extension(unit, "legacy_v2_proximity_system")
 
@@ -374,6 +385,13 @@ FlowCallbacks.minion_fx = function (params)
 end
 
 FlowCallbacks.minion_material_fx = function (params)
+	if DEDICATED_SERVER then
+		flow_return_table.effect_id = nil
+		flow_return_table.playing_id = nil
+
+		return flow_return_table
+	end
+
 	local unit = params.unit
 	local proximity_extension = ScriptUnit.has_extension(unit, "legacy_v2_proximity_system")
 
@@ -388,41 +406,30 @@ FlowCallbacks.minion_material_fx = function (params)
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local sounds = breed.sounds
 	local query_position_object = Unit.node(unit, params.query_position_object)
-	local unit_rotation = Unit.world_rotation(unit, 1)
 	local query_from = Unit.world_position(unit, query_position_object)
+	local unit_rotation = Unit.world_rotation(unit, 1)
 
 	if params.query_clamp_to_ground then
 		query_from.z = POSITION_LOOKUP[unit].z
 	end
 
 	local query_offset = params.query_offset
-	local right = Quaternion.right(unit_rotation)
-	local forward = Quaternion.forward(unit_rotation)
-	local up = Quaternion.up(unit_rotation)
 
 	if query_offset then
-		local x, y, z = Vector3.to_elements(query_offset)
-		query_from = query_from + x * right + y * forward + z * up
+		query_from = query_from + Quaternion.rotate(unit_rotation, query_offset)
 	end
 
 	local query_to = nil
 	local query_vector = params.query_vector
-
-	if query_vector then
-		local x, y, z = Vector3.to_elements(query_vector)
-		query_to = query_from + x * right + y * forward + z * up
-	else
-		ferror("Material query with event name %q in unit %q did not supply QueryVector", name, unit)
-	end
-
+	query_to = query_from + Quaternion.rotate(unit_rotation, query_vector)
 	local wm = Managers.world
 	local world = wm:world("level_world")
 	local wwise_event = sounds[name]
 	local vfx_table = breed.vfx.material_vfx[name]
-	local hit, material, impact_position, normal, hit_unit, hit_actor = nil
+	local hit, material, impact_position, normal = nil
 
 	if wwise_event or vfx_table then
-		hit, material, impact_position, normal, hit_unit, hit_actor = MaterialQuery.query_material(World.get_data(world, "physics_world"), query_from, query_to, name)
+		hit, material, impact_position, normal = MaterialQuery.query_material(World.get_data(world, "physics_world"), query_from, query_to, name)
 
 		if hit then
 			Unit.set_data(unit, "cache_material", material)
@@ -432,7 +439,7 @@ FlowCallbacks.minion_material_fx = function (params)
 	local wwise_playing_id = nil
 
 	if wwise_event then
-		local wwise_world = wm:wwise_world(world)
+		local wwise_world = World.get_data(world, "wwise_world")
 
 		if source_id then
 			if not hit then
@@ -528,6 +535,7 @@ FlowCallbacks.minion_material_fx = function (params)
 
 				if rotation_source == "Normal" then
 					local particle_forward = normal
+					local right = Quaternion.right(unit_rotation)
 					local particle_up = Vector3.cross(particle_forward, right)
 					rotation = Quaternion.look(normal, particle_up)
 				elseif rotation_source == "Object" then
@@ -547,7 +555,7 @@ FlowCallbacks.minion_material_fx = function (params)
 				end
 
 				if params.particle_randomize_roll then
-					rotation = Quaternion.multiply(rotation, Quaternion(Vector3.forward(), math.random() * math.pi * 2))
+					rotation = Quaternion.multiply(rotation, Quaternion.from_yaw_pitch_roll(0, 0, math.random() * math.pi * 2))
 				end
 
 				effect_id = World.create_particles(world, particle_name, position, rotation)
@@ -1222,6 +1230,16 @@ FlowCallbacks.prologue_local_player_equip_slot = function (params)
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 
 	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, item, slot_name, nil, fixed_t)
+	PlayerUnitVisualLoadout.wield_slot(slot_name, player_unit, fixed_t)
+end
+
+FlowCallbacks.prologue_local_player_wield_slot = function (params)
+	local slot_name = params.slot_name
+	local local_player = Managers.player:local_player(1)
+	local player_unit = local_player.player_unit
+	local fixed_t = FixedFrame.get_latest_fixed_time()
+
+	PlayerUnitVisualLoadout.wield_slot(slot_name, player_unit, fixed_t)
 end
 
 FlowCallbacks.get_peer_id_from_unit = function (params)
@@ -1512,8 +1530,9 @@ FlowCallbacks.trigger_local_vo_event = function (params)
 	local unit = params.source
 	local rule_name = params.rule_name
 	local wwise_route_key = params.wwise_route_key
+	local opinion_vo = params.opinion_vo
 
-	Vo.play_local_vo_event(unit, rule_name, wwise_route_key)
+	Vo.play_local_vo_event(unit, rule_name, wwise_route_key, nil, opinion_vo)
 end
 
 FlowCallbacks.trigger_on_demand_vo = function (params)
@@ -1571,6 +1590,12 @@ FlowCallbacks.mission_giver_check = function (params)
 	Vo.mission_giver_check_event()
 end
 
+FlowCallbacks.stop_unit_vo = function (params)
+	local unit = params.source
+
+	Vo.stop_currently_playing_vo(unit)
+end
+
 FlowCallbacks.start_terror_event = function (params)
 	local terror_event_manager = Managers.state.terror_event
 
@@ -1624,6 +1649,20 @@ FlowCallbacks.get_crossroad_road_id = function (params)
 	local main_path_manager = Managers.state.main_path
 	local chosen_road_id = main_path_manager:crossroad_road_id(crossroads_id)
 	flow_return_table.road_id = chosen_road_id
+
+	return flow_return_table
+end
+
+FlowCallbacks.spawn_network_unit = function (params)
+	local unit_name = params.unit_name
+	local template_name = params.template_name
+	local position = params.position
+	local rotation = params.rotation
+	local unit_spawner = Managers.state.unit_spawner
+
+	if unit_spawner ~= nil then
+		flow_return_table.unit = unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
+	end
 
 	return flow_return_table
 end
@@ -1779,7 +1818,7 @@ FlowCallbacks.mission_objective_reset_override_ui_string = function (params)
 		local objective_name = params.mission_objective_name
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_override_ui_string(objective_name, "", "")
+		mission_objective_system:flow_callback_override_ui_string(objective_name, "empty_objective_string", "empty_objective_string")
 	end
 end
 
@@ -2023,29 +2062,13 @@ FlowCallbacks.empty = function (params)
 	return
 end
 
-FlowCallbacks.training_grounds_register_teleporter = function (params)
-	local teleporter_name = params.teleporter_name
-	local teleporter_unit = params.teleporter_unit
-	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
-
-	scenario_system:flow_cb_register_teleporter(teleporter_unit, teleporter_name)
-end
-
-FlowCallbacks.training_grounds_teleport_airlock = function (params)
-	local source_name = params.source_name
-	local target_name = params.target_name
-	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
-
-	scenario_system:flow_cb_teleport_player(source_name, target_name)
-end
-
-FlowCallbacks.start_training_grounds_scenario = function (params)
+FlowCallbacks.start_scripted_scenario = function (params)
 	local scenario_alias = params.scenario_alias
 	local scenario_name = params.scenario_name
-	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 	if not scenario_system then
-		Log.error("FlowCallbacks", "TrainingGroundsScenarioSystem is not initiated.")
+		Log.error("FlowCallbacks", "ScriptedScenarioSystem is not initiated.")
 
 		return
 	end
@@ -2055,8 +2078,20 @@ FlowCallbacks.start_training_grounds_scenario = function (params)
 	scenario_system:start_scenario(scenario_alias, scenario_name, t)
 end
 
-FlowCallbacks.training_grounds_on_exit_safe_zone = function ()
-	Managers.event:trigger("tg_on_exit_safe_zone")
+FlowCallbacks.start_parallel_scripted_scenario = function (params)
+	local scenario_alias = params.scenario_alias
+	local scenario_name = params.scenario_name
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
+
+	if not scenario_system then
+		Log.error("FlowCallbacks", "ScriptedScenarioSystem is not initiated.")
+
+		return
+	end
+
+	local t = Managers.time:time("gameplay")
+
+	scenario_system:start_parallel_scenario(scenario_alias, scenario_name, t)
 end
 
 FlowCallbacks.training_grounds_servitor_interact = function ()
@@ -2132,13 +2167,19 @@ end
 
 FlowCallbacks.new_path_of_trust = function (params)
 	local event_name = "none"
+	local chapter = Managers.narrative:current_chapter(Managers.narrative.STORIES.path_of_trust)
+
+	if chapter then
+		event_name = chapter.name
+	end
+
 	flow_return_table[event_name] = true
 
 	return flow_return_table
 end
 
 FlowCallbacks.new_path_of_trust_viewed = function (params)
-	return
+	Managers.narrative:complete_current_chapter(Managers.narrative.STORIES.path_of_trust)
 end
 
 FlowCallbacks.unlock_achievement = function (params)
@@ -2147,7 +2188,7 @@ end
 
 FlowCallbacks.is_narrative_event_completed = function (params)
 	local event_name = params.event_name
-	flow_return_table.event_completed = Managers.narrative:event_is_complete(event_name)
+	flow_return_table.event_completed = Managers.narrative:is_event_complete(event_name)
 
 	return flow_return_table
 end
@@ -2179,6 +2220,20 @@ FlowCallbacks.complete_narrative_chapter = function (params)
 	flow_return_table.success = Managers.narrative:complete_current_chapter(story_name, chapter_name)
 
 	return flow_return_table
+end
+
+FlowCallbacks.delete_impact_fx_unit = function (params)
+	local unit = params.unit
+	local extension_manager = Managers.state and Managers.state.extension
+	local fx_system = extension_manager and extension_manager:system("fx_system")
+
+	if fx_system then
+		fx_system:delete_impact_fx_unit(unit)
+	end
+end
+
+FlowCallbacks.leave_shooting_range = function (params)
+	Managers.event:trigger("leave_shooting_range")
 end
 
 return FlowCallbacks

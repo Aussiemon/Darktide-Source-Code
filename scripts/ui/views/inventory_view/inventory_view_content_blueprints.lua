@@ -239,31 +239,36 @@ local blueprints = {
 	},
 	emote_item_slot = {
 		size = {
-			grid_width,
-			50
+			64,
+			64
 		},
-		pass_template = ItemPassTemplates.emote_item_slot,
-		init = function (parent, widget, element, callback_name)
+		pass_template = ItemPassTemplates.ui_item_emote_slot,
+		init = function (parent, widget, element, callback_name, secondary_callback_name)
 			local content = widget.content
 			local style = widget.style
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.element = element
+			local slot_title = element.slot_title
+			content.slot_title = slot_title and Utf8.upper(Localize(slot_title)) or ""
 			local slot = element.slot
 
 			if slot then
 				local slot_name = slot.name
-				local slot_display_name = slot.display_name
-				local slot_icon_angle = slot.icon_angle
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
 				content.item = equipped_item
-				style.slot_icon.angle = slot_icon_angle or 0
-				content.title_text = Localize(slot_display_name)
-				local item_display_name = equipped_item and equipped_item.display_name
+				local display_name = equipped_item and equipped_item.display_name
 
-				if item_display_name then
-					content.name_text = ItemUtils.display_name(equipped_item)
-				else
-					content.name_text = Localize("loc_item_slot_empty")
+				if display_name then
+					content.display_name = ItemUtils.display_name(equipped_item)
+					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+				end
+
+				local item_icon_size = slot.item_icon_size
+				style.icon.material_values.icon_size = item_icon_size
+
+				if equipped_item then
+					local cb = callback(_apply_package_item_icon_cb_func, widget, equipped_item)
+					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 				end
 			end
 		end,
@@ -274,24 +279,41 @@ local blueprints = {
 
 			if slot then
 				local slot_name = slot.name
-				local slot_display_name = slot.display_name
-				local item = content.item
-				local item_name = item and item.name
+				local previous_item = content.item
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local equipped_item_name = equipped_item and equipped_item.name
-				local update = item_name ~= equipped_item_name
+				local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
 				if update then
 					content.item = equipped_item
-					content.title_text = Localize(slot_display_name)
-					local item_display_name = equipped_item and equipped_item.display_name
+					local display_name = equipped_item and equipped_item.display_name
 
-					if item_display_name then
-						content.name_text = ItemUtils.display_name(equipped_item)
-					else
-						content.name_text = Localize("loc_item_slot_empty")
+					if display_name then
+						content.display_name = ItemUtils.display_name(equipped_item)
+						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					end
+
+					if content.icon_load_id then
+						_remove_package_item_icon_cb_func(widget, ui_renderer)
+						Managers.ui:unload_item_icon(content.icon_load_id)
+
+						content.icon_load_id = nil
+					end
+
+					if equipped_item then
+						local cb = callback(_apply_package_item_icon_cb_func, widget, equipped_item)
+						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 					end
 				end
+			end
+		end,
+		destroy = function (parent, widget, element, ui_renderer)
+			local content = widget.content
+
+			if content.icon_load_id then
+				_remove_package_item_icon_cb_func(widget, ui_renderer)
+				Managers.ui:unload_item_icon(content.icon_load_id)
+
+				content.icon_load_id = nil
 			end
 		end
 	},
@@ -691,22 +713,27 @@ local blueprints = {
 					if traits then
 						local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
 
-						for i = 1, #traits do
-							local trait = traits[i]
-							local trait_id = trait.id
-							local rarity = trait.rarity
-							local trait_item = MasterItems.get_item(trait_id)
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+						for i = 1, 3 do
 							local pass_id = "trait_" .. i
-							local trait_style = style[pass_id]
+							local trait = traits[i]
 
-							if trait_style then
-								local material_values = trait_style.material_values
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
+							if trait then
+								local trait_id = trait.id
+								local rarity = trait.rarity
+								local trait_item = MasterItems.get_item(trait_id)
+								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+								local trait_style = style[pass_id]
+
+								if trait_style then
+									local material_values = trait_style.material_values
+									material_values.icon = texture_icon
+									material_values.frame = texture_frame
+								end
+
+								content[pass_id] = trait_id
+							else
+								content[pass_id] = nil
 							end
-
-							content[pass_id] = trait_id
 						end
 					end
 				end
@@ -752,22 +779,27 @@ local blueprints = {
 					if traits then
 						local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
 
-						for i = 1, #traits do
-							local trait = traits[i]
-							local trait_id = trait.id
-							local rarity = trait.rarity
-							local trait_item = MasterItems.get_item(trait_id)
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+						for i = 1, 3 do
 							local pass_id = "trait_" .. i
-							local trait_style = style[pass_id]
+							local trait = traits[i]
 
-							if trait_style then
-								local material_values = trait_style.material_values
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
+							if trait then
+								local trait_id = trait.id
+								local rarity = trait.rarity
+								local trait_item = MasterItems.get_item(trait_id)
+								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+								local trait_style = style[pass_id]
+
+								if trait_style then
+									local material_values = trait_style.material_values
+									material_values.icon = texture_icon
+									material_values.frame = texture_frame
+								end
+
+								content[pass_id] = trait_id
+							else
+								content[pass_id] = nil
 							end
-
-							content[pass_id] = trait_id
 						end
 					end
 
@@ -804,9 +836,20 @@ local blueprints = {
 			local style = widget.style
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.element = element
+			local required_level = element.required_level
+
+			if required_level then
+				local current_level = parent.profile_level and parent:profile_level()
+				local unlocked = required_level <= current_level
+				content.unlock_text = Localize("loc_hub_vendor_unlocks_at", true, {
+					level = required_level
+				})
+				content.unlocked = unlocked
+			end
+
 			local slot = element.slot
 
-			if slot then
+			if slot and content.unlocked then
 				local slot_name = slot.name
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
 				content.item = equipped_item
@@ -838,7 +881,7 @@ local blueprints = {
 				local equipped_item = parent:equipped_item_in_slot(slot_name)
 				local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
 
-				if update then
+				if update and content.unlocked then
 					content.item = equipped_item
 					local display_name = equipped_item and equipped_item.display_name
 

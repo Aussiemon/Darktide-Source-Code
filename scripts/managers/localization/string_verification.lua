@@ -7,6 +7,17 @@ local WORD_CHARACTERS = "[^ %p]+"
 local StringVerification = class("StringVerification")
 
 StringVerification.verify = function (text)
+	local verify = true
+
+	if Managers.save then
+		local save_data = Managers.save:account_data()
+		verify = save_data.interface_settings.profanity_filter_enabled == true
+	end
+
+	if not verify then
+		return Promise.resolved(text)
+	end
+
 	local filtered_text = text:gsub(WORD_CHARACTERS, function (word)
 		local lowercase_word = string.lower(word)
 		local len = Utf8.string_length(lowercase_word)

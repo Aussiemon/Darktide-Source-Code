@@ -66,6 +66,33 @@ local function _breed_unit_name_position_rotation_from_game_object(session, obje
 	end
 end
 
+local function _player_character_third_person_scale(breed, profile, random_seed)
+	local profile_size = profile.personal and profile.personal.character_height
+	local size_variation_range = breed.size_variation_range
+	local scale = 1
+
+	if profile_size then
+		scale = profile_size
+	elseif size_variation_range then
+		scale = _random_seeded_size_scale(random_seed, size_variation_range)
+	end
+
+	return scale
+end
+
+local function _player_character_first_person_heights(breed, profile, random_seed)
+	local third_person_scale = _player_character_third_person_scale(breed, profile, random_seed)
+	local heights = breed.heights
+	local num_heights = table.size(heights)
+	local first_person_heights = Script.new_map(num_heights)
+
+	for name, height in pairs(heights) do
+		first_person_heights[name] = height * third_person_scale
+	end
+
+	return first_person_heights
+end
+
 local function _player_unit_name_position_rotation_from_game_object(session, object_id)
 	local go_field = GameSession.game_object_field
 	local breed_id = go_field(session, object_id, "breed_id")
@@ -76,19 +103,14 @@ local function _player_unit_name_position_rotation_from_game_object(session, obj
 	local owner_peer_id = go_field(session, object_id, "owner_peer_id")
 	local player = Managers.player:player(owner_peer_id, local_player_id)
 	local profile = player:profile()
-	local profile_size = profile.personal and profile.personal.character_height
 	local position, rotation = _position_rotation_from_game_object(session, object_id)
-	local size_variation_range = breed.size_variation_range
+	local random_seed = go_field(session, object_id, "random_seed")
+	local third_person_scale = _player_character_third_person_scale(breed, profile, random_seed)
 
-	if profile_size then
+	if third_person_scale ~= 1 then
 		local pose = Matrix4x4.from_quaternion_position(rotation, position)
 
-		Matrix4x4.set_scale(pose, Vector3(profile_size, profile_size, profile_size))
-
-		return unit_name, pose
-	elseif size_variation_range then
-		local random_seed = go_field(session, object_id, "random_seed")
-		local pose = _size_variation_pose_from_breed(position, rotation, size_variation_range, random_seed)
+		Matrix4x4.set_scale(pose, Vector3(third_person_scale, third_person_scale, third_person_scale))
 
 		return unit_name, pose
 	else
@@ -233,17 +255,12 @@ local unit_templates = {
 		local_unit = function (unit_name, position, rotation, material, player, breed, side_id, optional_starting_state, input_handler, random_seed, ...)
 			unit_name = unit_name or breed.base_unit
 			local profile = player:profile()
-			local profile_size = profile.personal and profile.personal.character_height
-			local size_variation_range = breed.size_variation_range
+			local third_person_scale = _player_character_third_person_scale(breed, profile, random_seed)
 
-			if profile_size then
+			if third_person_scale ~= 1 then
 				local pose = Matrix4x4.from_quaternion_position(rotation, position)
 
-				Matrix4x4.set_scale(pose, Vector3(profile_size, profile_size, profile_size))
-
-				return unit_name, pose, material
-			elseif size_variation_range then
-				local pose = _size_variation_pose_from_breed(position, rotation, size_variation_range, random_seed)
+				Matrix4x4.set_scale(pose, Vector3(third_person_scale, third_person_scale, third_person_scale))
 
 				return unit_name, pose, material
 			else
@@ -265,17 +282,7 @@ local unit_templates = {
 			local initial_items = _player_character_initial_items(game_mode_manager, profile, player)
 			local mission = Managers.state.mission:mission()
 			local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
-			local size_scale = 1
-			local profile_size = profile.personal and profile.personal.character_height
-			local size_variation_range = breed.size_variation_range
-
-			if profile_size then
-				size_scale = profile_size
-			elseif size_variation_range then
-				size_scale = _random_seeded_size_scale(random_seed, size_variation_range)
-			end
-
-			local first_person_size_scale = breed.first_person_size or size_scale
+			local first_person_heights = _player_character_first_person_heights(breed, profile, random_seed)
 			local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed = nil
 			next_seed, recoil_seed = math.random_seed(random_seed)
 			next_seed, buff_seed = math.random_seed(next_seed)
@@ -340,8 +347,7 @@ local unit_templates = {
 				player = player,
 				is_local_unit = is_local_unit,
 				unit_name = breed.first_person_unit,
-				heights = breed.heights,
-				pose_scale = first_person_size_scale,
+				heights = first_person_heights,
 				force_third_person_mode = force_third_person_mode,
 				breed = breed
 			})
@@ -588,20 +594,17 @@ local unit_templates = {
 			local specialization_name = profile.specialization
 			local specialization = archetype.specializations[specialization_name]
 			local talents = profile.talents
-			local size_scale = 1
-			local profile_size = profile.personal and profile.personal.character_height
-			local size_variation_range = breed.size_variation_range
-
-			if profile_size then
-				size_scale = profile_size
-			elseif size_variation_range then
-				size_scale = _random_seeded_size_scale(random_seed, size_variation_range)
-			end
-
+			local first_person_heights = _player_character_first_person_heights(breed, profile, random_seed)
 			local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 			local toughness_template = specialization.toughness
+			local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 
 			if not is_server and player.remote then
+				config:add("BroadphaseExtension", {
+					moving = true,
+					radius = broadphase_radius,
+					categories = broadphase_categories
+				})
 				config:add("PlayerHuskDataExtension", {
 					player = player,
 					breed = breed,
@@ -616,7 +619,7 @@ local unit_templates = {
 				config:add("PlayerHuskFirstPersonExtension", {
 					player = player,
 					unit_name = breed.first_person_unit,
-					heights = breed.heights,
+					heights = first_person_heights,
 					breed = breed
 				})
 				config:add("PlayerHuskAnimationExtension")
@@ -727,7 +730,6 @@ local unit_templates = {
 
 				player_unit_spawn_manager:assign_unit_ownership(unit, player, true)
 			else
-				local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 				local rotation = Unit.local_rotation(unit, 1)
 				local pitch = Quaternion.pitch(rotation)
 				local yaw = Quaternion.yaw(rotation)
@@ -780,8 +782,7 @@ local unit_templates = {
 					player = player,
 					is_local_unit = is_local_unit,
 					unit_name = breed.first_person_unit,
-					heights = breed.heights,
-					pose_scale = size_scale,
+					heights = first_person_heights,
 					force_third_person_mode = force_third_person_mode,
 					breed = breed
 				})
@@ -1182,6 +1183,8 @@ local unit_templates = {
 					target_type = breed.smart_tag_target_type
 				})
 				config:add("MinionOutlineExtension")
+			elseif breed.volley_fire_target then
+				config:add("MinionOutlineExtension")
 			end
 
 			local behavior_extension_init_data = {
@@ -1201,6 +1204,12 @@ local unit_templates = {
 
 			if breed.weakspot_config then
 				config:add("WeakspotExtension", {
+					breed = breed
+				})
+			end
+
+			if breed.dissolve_config then
+				config:add("MinionDissolveExtension", {
 					breed = breed
 				})
 			end
@@ -1353,10 +1362,18 @@ local unit_templates = {
 
 			config:add("FadeExtension")
 
+			if breed.dissolve_config then
+				config:add("MinionDissolveExtension", {
+					breed = breed
+				})
+			end
+
 			if breed.smart_tag_target_type then
 				config:add("SmartTagExtension", {
 					target_type = breed.smart_tag_target_type
 				})
+				config:add("MinionOutlineExtension")
+			elseif breed.volley_fire_target then
 				config:add("MinionOutlineExtension")
 			end
 		end
@@ -1479,6 +1496,12 @@ local unit_templates = {
 				local inventory_item = pickup_settings.inventory_item
 				local item_definitions = MasterItems.get_cached()
 				local item = item_definitions[inventory_item]
+
+				if not item then
+					Log.error("UnitTemplates", "missing inventory item: %s for luggable pickup: %s", inventory_item, pickup_name)
+
+					item = MasterItems.find_fallback_item("slot_luggable")
+				end
 
 				config:add("MissionObjectiveTargetExtension")
 				config:add("ProjectileUnitLocomotionExtension", {
@@ -1687,7 +1710,8 @@ local unit_templates = {
 			local projectile_template_name_id = NetworkLookup.projectile_template_names[projectile_template_name]
 
 			config:add("ProjectileFxExtension", {
-				projectile_template_name = projectile_template_name
+				projectile_template_name = projectile_template_name,
+				charge_level = charge_level
 			})
 			config:add("ProjectileUnitLocomotionExtension", {
 				handle_oob_despawning = true,
@@ -1704,6 +1728,7 @@ local unit_templates = {
 
 			game_object_data.item_id = item_id
 			game_object_data.projectile_template_id = projectile_template_name_id
+			game_object_data.charge_level = charge_level
 			local spawn_flow_event = projectile_template.spawn_flow_event
 
 			if spawn_flow_event then
@@ -1718,9 +1743,11 @@ local unit_templates = {
 			local item_id = go_field(game_session, game_object_id, "item_id")
 			local item_name = NetworkLookup.player_item_names[item_id]
 			local item = item_definitions[item_name]
+			local charge_level = go_field(game_session, game_object_id, "charge_level")
 
 			config:add("ProjectileFxExtension", {
-				projectile_template_name = projectile_template_name
+				projectile_template_name = projectile_template_name,
+				charge_level = charge_level
 			})
 			config:add("ProjectileHuskLocomotionExtension", {
 				hide_until_initial_interpolation_start = true,
@@ -1867,6 +1894,9 @@ local unit_templates = {
 				is_local_unit = false,
 				interaction_contexts = PlayerCharacterConstants.player_interactions
 			})
+			config:add("DialogueActorExtension", {
+				selected_voice = "medicae_servitor"
+			})
 			config:add("PickupSpawnerExtension")
 			config:add("PointOfInterestTargetExtension", {
 				tag = "healthstation"
@@ -1886,6 +1916,9 @@ local unit_templates = {
 			config:add("InteracteeExtension", {
 				is_local_unit = false,
 				interaction_contexts = PlayerCharacterConstants.player_interactions
+			})
+			config:add("DialogueActorExtension", {
+				selected_voice = "medicae_servitor"
 			})
 			config:add("PickupSpawnerExtension")
 			config:add("PointOfInterestTargetExtension", {
@@ -1935,6 +1968,108 @@ local unit_templates = {
 				is_local_unit = false,
 				interaction_contexts = PlayerCharacterConstants.player_interactions
 			})
+			config:add("ComponentExtension")
+		end,
+		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+			return
+		end
+	},
+	shooting_range_loadout = {
+		local_unit = function (unit_name, position, rotation, material, ...)
+			unit_name = "content/environment/gameplay/chests/shooting_range_loadout"
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			unit_name = "content/environment/gameplay/chests/shooting_range_loadout"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "shooting_range_loadout"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, battery_spawning_mode)
+			local is_server = template_context.is_server
+
+			config:add("InteracteeExtension", {
+				is_local_unit = false,
+				interaction_contexts = PlayerCharacterConstants.player_interactions
+			})
+			config:add("ComponentExtension")
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			config:add("InteracteeExtension", {
+				is_local_unit = false,
+				interaction_contexts = PlayerCharacterConstants.player_interactions
+			})
+			config:add("ComponentExtension")
+		end,
+		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+			return
+		end
+	},
+	shooting_range_locked_indicator = {
+		local_unit = function (unit_name, position, rotation, material, ...)
+			unit_name = "content/levels/training_grounds/fx/locked_sr_unit_indicator"
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local unit_name = "content/levels/training_grounds/fx/locked_sr_unit_indicator"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "shooting_range_locked_indicator"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, battery_spawning_mode)
+			local is_server = template_context.is_server
+
+			config:add("InteracteeExtension", {})
+			config:add("ComponentExtension")
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			config:add("InteracteeExtension", {})
+			config:add("ComponentExtension")
+		end,
+		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+			return
+		end
+	},
+	shooting_range_portal = {
+		local_unit = function (unit_name, position, rotation, material, ...)
+			unit_name = "content/levels/training_grounds/fx/shooting_range_portal"
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local unit_name = "content/levels/training_grounds/fx/shooting_range_portal"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "shooting_range_locked_indicator"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, battery_spawning_mode)
+			local is_server = template_context.is_server
+
+			config:add("InteracteeExtension", {})
+			config:add("ComponentExtension")
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			config:add("InteracteeExtension", {})
 			config:add("ComponentExtension")
 		end,
 		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)

@@ -1,3 +1,4 @@
+local LocalAwaitConnectionBootedState = require("scripts/multiplayer/connection/local_states/local_await_connection_booted_state")
 local LocalAwaitHostConnectState = require("scripts/multiplayer/connection/local_states/local_await_host_connect_state")
 local LocalConnectChannelState = require("scripts/multiplayer/connection/local_states/local_connect_channel_state")
 local LocalConnectedState = require("scripts/multiplayer/connection/local_states/local_connected_state")
@@ -21,6 +22,7 @@ ConnectionLocalStateMachine.RESERVE_TIMEOUT = 300
 ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby, host_peer_id, network_hash, host_type, profile_synchronizer_client, slots_to_reserve, jwt_ticket)
 	local parent = nil
 	local shared_state = {
+		boot_complete = false,
 		has_reserved = false,
 		event_delegate = event_delegate,
 		engine_lobby = engine_lobby,
@@ -41,10 +43,13 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 
 	state_machine:add_transition("LocalConnectChannelState", "channel connected", LocalVersionCheckState)
 	state_machine:add_transition("LocalConnectChannelState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalVersionCheckState", "versions matched", LocalMasterItemsCheckState)
+	state_machine:add_transition("LocalVersionCheckState", "versions matched", LocalAwaitConnectionBootedState)
 	state_machine:add_transition("LocalVersionCheckState", "versions mismatched", LocalDisconnectedState)
 	state_machine:add_transition("LocalVersionCheckState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalVersionCheckState", "disconnected", LocalDisconnectedState)
+	state_machine:add_transition("LocalAwaitConnectionBootedState", "done", LocalMasterItemsCheckState)
+	state_machine:add_transition("LocalAwaitConnectionBootedState", "timeout", LocalDisconnectedState)
+	state_machine:add_transition("LocalAwaitConnectionBootedState", "disconnected", LocalDisconnectedState)
 	state_machine:add_transition("LocalMasterItemsCheckState", "items ready", LocalRequestHostTypeState)
 	state_machine:add_transition("LocalMasterItemsCheckState", "update failed", LocalDisconnectedState)
 	state_machine:add_transition("LocalMasterItemsCheckState", "timeout", LocalDisconnectedState)
@@ -133,6 +138,10 @@ end
 
 ConnectionLocalStateMachine.ready_to_join = function (self)
 	self._shared_state.ready_to_claim_slots = true
+end
+
+ConnectionLocalStateMachine.boot_complete = function (self)
+	self._shared_state.boot_complete = true
 end
 
 ConnectionLocalStateMachine.next_event = function (self)

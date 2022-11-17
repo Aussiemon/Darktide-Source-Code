@@ -41,7 +41,7 @@ local breed_data = {
 	can_patrol = true,
 	slot_template = "renegade_melee",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	challenge_rating = 2,
+	challenge_rating = 1,
 	hit_mass = 1.25,
 	bone_lod_radius = 1,
 	has_direct_ragdoll_flow_event = true,
@@ -72,7 +72,8 @@ local breed_data = {
 		[stagger_types.light] = 0.2,
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 1.75,
-		[stagger_types.light_ranged] = 0.2
+		[stagger_types.light_ranged] = 0.2,
+		[stagger_types.killshot] = 0.5
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_assault,
 	sounds = require("scripts/settings/breed/breeds/renegade/renegade_assault_sounds"),
@@ -89,6 +90,7 @@ local breed_data = {
 		choose_furthest_away = false,
 		can_flank = true,
 		default_combat_range = "close",
+		switch_location_preference_on_locked_in_melee = true,
 		valid_combat_ranges = {
 			far = true,
 			close = true
@@ -120,7 +122,7 @@ local breed_data = {
 			0.2,
 			0.3
 		},
-		ranged = {
+		ranged_close = {
 			0.05,
 			0.2
 		},

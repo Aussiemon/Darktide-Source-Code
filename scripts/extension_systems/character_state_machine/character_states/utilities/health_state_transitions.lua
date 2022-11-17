@@ -11,10 +11,13 @@ HealthStateTransitions.poll = function (unit_data_extension, next_state_params)
 	end
 
 	local character_state_component = unit_data_extension:read_component("character_state")
-	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
 
-	if not PlayerUnitStatus.is_knocked_down(character_state_component) and knocked_down_state_input.knock_down then
-		return "knocked_down"
+	if not PlayerUnitStatus.is_knocked_down(character_state_component) then
+		local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
+
+		if knocked_down_state_input.knock_down then
+			return "knocked_down"
+		end
 	end
 
 	local hogtied_state_input = unit_data_extension:read_component("hogtied_state_input")

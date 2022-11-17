@@ -1,6 +1,8 @@
 local WARN_MISSING_CATCH = false
+local CAPTURE_PROMISE_DEBUG_DATA = true
 local queue = {}
 local State = {
+	CANCELED = "canceled",
 	REJECTED = "rejected",
 	FULFILLED = "fulfilled",
 	PENDING = "pending"
@@ -39,6 +41,7 @@ end
 
 local function cancel(promise)
 	promise.queue = {}
+	promise.state = State.CANCELED
 end
 
 local function reject(promise, reason)
@@ -60,6 +63,16 @@ function transition(promise, state, value)
 	run(promise)
 end
 
+local getinfo = nil
+
+if CAPTURE_PROMISE_DEBUG_DATA then
+	getinfo = debug.getinfo
+else
+	function getinfo()
+		return nil
+	end
+end
+
 Promise.next = function (self, on_fulfilled, on_rejected)
 	local promise = Promise.new()
 
@@ -67,8 +80,8 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 		fulfill = is_callable(on_fulfilled) and on_fulfilled or nil,
 		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
-		debug_traceback_info_1 = debug.getinfo(2, "Sl"),
-		debug_traceback_info_2 = debug.getinfo(3, "Sl")
+		debug_traceback_info_1 = getinfo(2, "Sl"),
+		debug_traceback_info_2 = getinfo(3, "Sl")
 	})
 	run(self)
 
@@ -79,7 +92,7 @@ local function extract_locals(level_base)
 	local level = level_base
 	local res = ""
 
-	while debug.getinfo(level) ~= nil do
+	while getinfo(level) ~= nil do
 		res = string.format("%s\n[%i] ", res, level - level_base + 1)
 		local v = 1
 
@@ -175,7 +188,7 @@ function resolve(promise, x)
 
 	if not success then
 		if reason.fatal then
-			-- Nothing
+			reject(promise, reason)
 		end
 
 		if not called then
@@ -213,12 +226,23 @@ function run(promise)
 				err.__traceback = "<<Promise Stack>>" .. debug.traceback("Error in promise resolve", 2) .. "<</Promise Stack>><<Promise Context>>" .. extract_stored_traceback(obj) .. "<</Promise Context>>"
 				err.__locals = extract_locals(4)
 
+				if err.fatal then
+					err.__fatal_message = "<<Promise Error>>" .. tostring(err.message) .. "<</Promise Error>>\n" .. err.__traceback .. "<<Promise Locals>>" .. err.__locals .. "<</Promise Locals>>"
+
+					if BUILD ~= "release" then
+						Log.error("Promise", "%s", err.__fatal_message)
+						Script.do_break()
+
+						local BREAKPOINT = " An error has ocurred inside a promise callback. "
+					end
+				end
+
 				return err
 			end)
 
 			if not success then
 				if result.fatal then
-					-- Nothing
+					reject(promise, result)
 				end
 
 				reject(obj.promise, result)
@@ -275,6 +299,10 @@ end
 
 Promise.cancel = function (self)
 	cancel(self)
+end
+
+Promise.is_canceled = function (self)
+	return self.state == State.CANCELED
 end
 
 Promise.is_rejected = function (self)
@@ -372,7 +400,10 @@ Promise._check_delayed = function (t)
 		local p = delayed[i]
 
 		if p.time < latest_time then
-			p.promise:resolve(nil)
+			if not p.promise:is_canceled() then
+				p.promise:resolve(nil)
+			end
+
 			table.remove(delayed, i)
 		end
 	end

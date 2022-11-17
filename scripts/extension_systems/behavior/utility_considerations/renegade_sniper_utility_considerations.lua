@@ -3,12 +3,12 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 10,
+			max_value = 50,
 			spline = {
 				0,
 				0,
-				0.5,
-				0.5,
+				0.1,
+				0,
 				0.751,
 				1,
 				0.900001,
@@ -71,6 +71,25 @@ local considerations = {
 			blackboard_component = "cover",
 			invert = true,
 			is_condition = true
+		}
+	},
+	sniper_movement = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 50,
+			spline = {
+				0,
+				0.1,
+				0.5,
+				0.5,
+				0.751,
+				1,
+				0.900001,
+				1,
+				1,
+				1
+			}
 		}
 	}
 }

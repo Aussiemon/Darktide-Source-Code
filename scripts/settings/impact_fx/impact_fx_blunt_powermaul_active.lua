@@ -16,6 +16,14 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -26,6 +34,14 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -46,11 +62,27 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -58,11 +90,27 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -70,11 +118,27 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		shove = {
 			{
 				event = "wwise/events/weapon/play_player_push_unarmored",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -99,12 +163,22 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		died = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -113,12 +187,22 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -127,6 +211,11 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage_negated = {
@@ -134,12 +223,22 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -158,7 +257,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_small"
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			},
 			{
@@ -191,6 +290,14 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -205,6 +312,14 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -218,6 +333,14 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -233,6 +356,14 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
@@ -243,11 +374,27 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -255,17 +402,41 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		shove = {
 			{
 				event = "wwise/events/weapon/play_player_push_armored",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -290,12 +461,22 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		died = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -304,12 +485,22 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -318,6 +509,11 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage_negated = {
@@ -325,12 +521,22 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -354,7 +560,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_small"
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		}
@@ -383,6 +589,14 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -401,6 +615,14 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -411,6 +633,14 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -425,6 +655,14 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
@@ -435,11 +673,27 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -447,17 +701,41 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
 			}
 		},
 		shove = {
 			{
 				event = "wwise/events/weapon/play_player_push_resilient",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
 			}
 		},
@@ -482,12 +760,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		died = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -496,12 +784,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -510,6 +808,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		damage_negated = {
@@ -517,12 +820,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
+				}
 			}
 		},
 		shield_blocked = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		},
@@ -546,7 +859,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_small"
+					"content/fx/particles/weapons/power_maul/power_maul_activated_impact_01"
 				}
 			}
 		}

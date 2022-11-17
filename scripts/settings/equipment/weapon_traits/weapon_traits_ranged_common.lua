@@ -170,6 +170,294 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_disgustin
 		}
 	}
 }
+weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_chance = {
+	weapon_trait_ranged_increase_crit_chance = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.05
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_damage = {
+	weapon_trait_ranged_increase_crit_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_stamina = {
+	weapon_trait_ranged_increase_stamina = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_weakspot_damage = {
+	weapon_trait_ranged_increase_weakspot_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_damage = {
+	weapon_trait_ranged_increase_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_finesse = {
+	weapon_trait_ranged_increase_finesse = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_power = {
+	weapon_trait_ranged_increase_power = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_elites = {
+	weapon_trait_ranged_increase_damage_elites = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_hordes = {
+	weapon_trait_ranged_increase_damage_hordes = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_specials = {
+	weapon_trait_ranged_increase_damage_specials = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_reduce_sprint_cost = {
+	weapon_trait_ranged_reduce_sprint_cost = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.95
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.9
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.85
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.8
+			}
+		}
+	}
+}
+weapon_traits_ranged_common.weapon_trait_ranged_increased_reload_speed = {
+	weapon_trait_ranged_increased_reload_speed = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.reload_speed] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.reload_speed] = 0.07
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.reload_speed] = 0.085
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.reload_speed] = 0.1
+			}
+		}
+	}
+}
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_corruption_damage_taken = {
 	weapon_trait_ranged_common_equip_decrease_corruption_damage_taken_buff = {
 		{

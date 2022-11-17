@@ -105,7 +105,7 @@ local action_data = {
 		}
 	},
 	alerted = {
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		vo_event = "alerted_idle",
 		moving_alerted_anim_events = {
 			bwd = "alerted_bwd",
@@ -360,6 +360,7 @@ local action_data = {
 	},
 	melee_cleave_attack = {
 		weapon_reach = 3.5,
+		aoe_threat_timing = 0.3,
 		utility_weight = 2,
 		vo_event = "special_atack",
 		set_weapon_intensity = true,
@@ -401,6 +402,7 @@ local action_data = {
 		ground_impact_fx_template = GroundImpactFxTemplates.renegade_executor_cleave
 	},
 	moving_melee_cleave_attack = {
+		aoe_threat_timing = 0.3,
 		utility_weight = 4,
 		vo_event = "assault",
 		set_weapon_intensity = true,

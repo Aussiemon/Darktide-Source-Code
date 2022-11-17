@@ -14,12 +14,7 @@ text_style.offset = {
 	0,
 	0
 }
-text_style.text_color = {
-	255,
-	140,
-	125,
-	104
-}
+text_style.text_color = Color.terminal_text_body(255, true)
 local friends_online_text = table.clone(UIFontSettings.symbol)
 friends_online_text.vertical_alignment = "center"
 friends_online_text.text_horizontal_alignment = "left"
@@ -30,12 +25,7 @@ friends_online_text.offset = {
 	0
 }
 friends_online_text.font_size = 24
-friends_online_text.text_color = {
-	255,
-	140,
-	125,
-	104
-}
+friends_online_text.text_color = Color.terminal_text_body(255, true)
 local strike_team_text = table.clone(UIFontSettings.symbol)
 strike_team_text.vertical_alignment = "center"
 strike_team_text.text_horizontal_alignment = "left"
@@ -46,12 +36,7 @@ strike_team_text.offset = {
 	0
 }
 strike_team_text.font_size = 24
-strike_team_text.text_color = {
-	255,
-	140,
-	125,
-	104
-}
+strike_team_text.text_color = Color.terminal_text_body(255, true)
 local symbol_style = table.clone(UIFontSettings.symbol)
 symbol_style.text_vertical_alignment = "center"
 symbol_style.offset = {
@@ -60,12 +45,7 @@ symbol_style.offset = {
 	0
 }
 symbol_style.font_size = 24
-symbol_style.text_color = {
-	255,
-	140,
-	125,
-	104
-}
+symbol_style.text_color = Color.terminal_text_body(255, true)
 local character_name = table.clone(UIFontSettings.header_2)
 character_name.text_horizontal_alignment = "center"
 character_name.offset = {
@@ -73,8 +53,6 @@ character_name.offset = {
 	220,
 	1
 }
-character_name.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
-character_name.text_color = Color.white(255, true)
 local specialization_name = table.clone(UIFontSettings.body)
 specialization_name.text_horizontal_alignment = "center"
 specialization_name.offset = {
@@ -82,6 +60,7 @@ specialization_name.offset = {
 	260,
 	1
 }
+specialization_name.text_color = Color.terminal_text_body_sub_header(255, true)
 local overlay_text_style = table.clone(UIFontSettings.header_2)
 overlay_text_style.offset = {
 	0,
@@ -94,14 +73,7 @@ local new_button_text_style = table.clone(UIFontSettings.button_primary)
 new_button_text_style.offset = {
 	0,
 	0,
-	4
-}
-new_button_text_style.text_horizontal_alignment = "center"
-new_button_text_style.text_vertical_alignment = "center"
-new_button_text_style.offset = {
-	0,
-	0,
-	1
+	6
 }
 local new_character_intro = table.clone(UIFontSettings.body)
 new_character_intro.text_horizontal_alignment = "center"
@@ -168,7 +140,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			600,
-			800
+			700
 		},
 		position = {
 			100,
@@ -181,12 +153,12 @@ local scenegraph_definition = {
 		parent = "character_list_background",
 		horizontal_alignment = "left",
 		size = {
-			580,
-			590
+			560,
+			490
 		},
 		position = {
-			10,
-			200,
+			15,
+			185,
 			1
 		}
 	},
@@ -195,8 +167,8 @@ local scenegraph_definition = {
 		parent = "character_grid_background",
 		horizontal_alignment = "left",
 		size = {
-			580,
-			590
+			560,
+			490
 		},
 		position = {
 			0,
@@ -210,7 +182,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			600,
-			610
+			510
 		},
 		position = {
 			0,
@@ -237,11 +209,11 @@ local scenegraph_definition = {
 		parent = "character_grid_start",
 		horizontal_alignment = "right",
 		size = {
-			10,
-			590
+			8,
+			495
 		},
 		position = {
-			10,
+			13,
 			0,
 			2
 		}
@@ -251,8 +223,8 @@ local scenegraph_definition = {
 		parent = "character_grid_start",
 		horizontal_alignment = "left",
 		size = {
-			580,
-			590
+			550,
+			490
 		},
 		position = {
 			0,
@@ -266,7 +238,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			600,
-			80
+			55
 		},
 		position = {
 			0,
@@ -312,12 +284,12 @@ local scenegraph_definition = {
 		},
 		position = {
 			-100,
-			-150,
+			-160,
 			1
 		}
 	},
 	character_info_pivot = {
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		parent = "character_selected_background",
 		horizontal_alignment = "center",
 		size = {
@@ -326,7 +298,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			-100,
 			1
 		}
 	},
@@ -354,7 +326,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			40,
 			2
 		}
 	},
@@ -365,7 +337,7 @@ local scenegraph_definition = {
 		size = ButtonPassTemplates.ready_button.size,
 		position = {
 			250,
-			-65,
+			0,
 			2
 		}
 	},
@@ -374,12 +346,12 @@ local scenegraph_definition = {
 		parent = "character_list_background",
 		horizontal_alignment = "center",
 		size = {
-			600,
-			30
+			430,
+			70
 		},
 		position = {
 			0,
-			50,
+			82,
 			2
 		}
 	},
@@ -393,7 +365,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			85,
+			150,
 			2
 		}
 	},
@@ -457,47 +429,6 @@ local widget_definitions = {
 				size = {
 					600,
 					55
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/buttons/background_selected",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "left",
-				color = Color.ui_terminal(255, true),
-				offset = {
-					0,
-					-10,
-					1
-				},
-				size = {
-					600,
-					70
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "center",
-				color = {
-					255,
-					169,
-					162,
-					142
-				},
-				size = {
-					600,
-					44
-				},
-				offset = {
-					0,
-					0,
-					6
 				}
 			}
 		}
@@ -607,38 +538,27 @@ local widget_definitions = {
 	}, "character_info"),
 	character_list_background = UIWidget.create_definition({
 		{
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style_id = "background",
-			pass_type = "rect",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
-				color = Color.black(178.5, true),
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size_addition = {
+					10,
+					30
+				},
 				offset = {
 					0,
-					120,
+					112,
 					0
 				},
 				size = {
 					600,
-					680
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/line_medium",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "left",
-				color = Color.black(255, true),
-				offset = {
-					0,
-					120,
-					5
+					580
 				},
-				size = {
-					600,
-					680
-				}
+				color = Color.terminal_grid_background(nil, true)
 			}
 		},
 		{
@@ -659,48 +579,24 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			value = "content/ui/materials/frames/character_selection_bottom",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = {
 					600,
-					36
-				},
-				color = {
-					255,
-					169,
-					162,
-					142
+					134
 				},
 				offset = {
 					0,
-					18,
+					114,
 					6
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/backgrounds/blurred_rectangle",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "center",
-				color = Color.black(76.5, true),
-				offset = {
-					0,
-					80,
-					0
-				},
-				size = {
-					640,
-					140
 				}
 			}
 		}
 	}, "character_list_background"),
-	character_grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "character_grid_scrollbar"),
+	character_grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "character_grid_scrollbar"),
 	character_grid_mask = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
@@ -722,7 +618,7 @@ local widget_definitions = {
 		}
 	}, "character_grid_interaction"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.ready_button, "play_button", {
-		text = Localize("loc_main_menu_play_button")
+		text = Utf8.upper(Localize("loc_main_menu_play_button"))
 	}),
 	create_button = UIWidget.create_definition({
 		{
@@ -731,6 +627,123 @@ local widget_definitions = {
 			content = {
 				use_is_focused = true
 			}
+		},
+		{
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "background",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size_addition = {
+					20,
+					20
+				},
+				offset = {
+					0,
+					0,
+					0
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "background_gradient",
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				size_addition = {
+					20,
+					20
+				},
+				color = Color.terminal_background_gradient(nil, true)
+			},
+			offset = {
+				0,
+				0,
+				1
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+			end,
+			visibility_function = function (content, style)
+				return not content.hotspot.disabled
+			end
+		},
+		{
+			style_id = "frame",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size_addition = {
+					-30,
+					-20
+				},
+				color = Color.terminal_frame(255, true),
+				offset = {
+					0,
+					0,
+					3
+				}
+			},
+			visibility_function = function (content, style)
+				return not content.hotspot.disabled
+			end
+		},
+		{
+			style_id = "corner",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size_addition = {
+					-30,
+					-20
+				},
+				color = Color.terminal_corner(255, true),
+				offset = {
+					0,
+					0,
+					4
+				}
+			},
+			visibility_function = function (content, style)
+				return not content.hotspot.disabled
+			end
+		},
+		{
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				size_addition = {
+					20,
+					20
+				},
+				color = {
+					150,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			},
+			visibility_function = function (content, style)
+				return content.hotspot.disabled
+			end
 		},
 		{
 			style_id = "text",
@@ -743,12 +756,9 @@ local widget_definitions = {
 				local default_color = hotspot.disabled and style.disabled_color or style.default_color
 				local hover_color = style.hover_color
 				local text_color = style.text_color
-				local hotspot = content.hotspot
 				local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
 				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-
-				style.hdr = progress == 1
 			end
 		}
 	}, "create_button"),

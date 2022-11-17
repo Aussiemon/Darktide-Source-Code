@@ -10,6 +10,7 @@ local EXTRA_FOLEY = "sfx_player_extra_slot"
 PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local wwise_world = extension_init_context.wwise_world
 	local physics_world = extension_init_context.physics_world
+	local breed = extension_init_data.breed
 	self._wwise_world = wwise_world
 	self._world = extension_init_context.world
 	local heights = extension_init_data.heights
@@ -25,13 +26,19 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = first_person_component
 	self._character_state_component = character_state_component
+	local pose_scale = breed.first_person_pose_scale or 1
 	local character_height = heights.default
 	local position_root = Unit.local_position(unit, 1)
+	local rotation_root = Unit.local_rotation(unit, 1)
 	local offset_height = Vector3(0, 0, character_height)
 	local position = position_root + offset_height
 	local unit_name = extension_init_data.unit_name
 	local unit_spawner_manager = Managers.state.unit_spawner
-	local first_person_unit = unit_spawner_manager:spawn_unit(unit_name, position)
+	local pose = Matrix4x4.from_quaternion_position(rotation_root, position)
+
+	Matrix4x4.set_scale(pose, Vector3(pose_scale, pose_scale, pose_scale))
+
+	local first_person_unit = unit_spawner_manager:spawn_unit(unit_name, pose)
 	self._first_person_unit = first_person_unit
 	self._unit = unit
 
@@ -45,7 +52,7 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 		character_state_component = character_state_component,
 		sprint_character_state_component = sprint_character_state_component,
 		weapon_action_component = weapon_action_component,
-		breed = extension_init_data.breed,
+		breed = breed,
 		movement_state_component = movement_state_component,
 		wwise_world = wwise_world,
 		unit = unit,

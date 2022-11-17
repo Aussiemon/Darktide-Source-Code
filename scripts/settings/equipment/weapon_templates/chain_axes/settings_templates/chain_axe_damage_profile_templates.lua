@@ -136,7 +136,8 @@ damage_templates.default_light_chainaxe = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.chainsword,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
+	wounds_template = WoundsTemplates.chainaxe,
 	armor_damage_modifier = chain_axe_light_mod,
 	targets = {
 		{
@@ -249,11 +250,7 @@ overrides.light_chainaxe_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
-		},
-		{
-			"skip_on_hit_proc",
-			true
+			WoundsTemplates.chainaxe_sawing
 		}
 	}
 }
@@ -298,7 +295,7 @@ overrides.light_chainaxe_active_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"melee_attack_strength",
@@ -310,8 +307,8 @@ overrides.light_chainaxe_active_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				10,
-				20
+				50,
+				100
 			}
 		},
 		{
@@ -373,7 +370,7 @@ overrides.light_chainaxe_active_sticky_last = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"melee_attack_strength",
@@ -407,6 +404,10 @@ overrides.light_chainaxe_active_sticky_last = {
 		},
 		{
 			"weapon_special",
+			true
+		},
+		{
+			"skip_on_hit_proc",
 			true
 		}
 	}
@@ -444,7 +445,7 @@ overrides.light_chainaxe_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"melee_attack_strength",
@@ -456,8 +457,8 @@ overrides.light_chainaxe_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				10,
-				20
+				30,
+				60
 			}
 		},
 		{
@@ -509,7 +510,7 @@ overrides.light_chainaxe_sticky_last_quick = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"melee_attack_strength",
@@ -524,6 +525,10 @@ overrides.light_chainaxe_sticky_last_quick = {
 				50,
 				100
 			}
+		},
+		{
+			"skip_on_hit_proc",
+			true
 		}
 	}
 }
@@ -539,7 +544,8 @@ damage_templates.heavy_chainaxe = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.chainsword,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
+	wounds_template = WoundsTemplates.chainaxe,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
@@ -680,7 +686,7 @@ overrides.heavy_chainaxe_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"targets",
@@ -690,10 +696,6 @@ overrides.heavy_chainaxe_active = {
 		},
 		{
 			"weapon_special",
-			true
-		},
-		{
-			"skip_on_hit_proc",
 			true
 		}
 	}
@@ -746,8 +748,8 @@ overrides.heavy_chainaxe_active_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				20,
-				60
+				100,
+				200
 			}
 		},
 		{
@@ -813,7 +815,7 @@ overrides.heavy_chainaxe_active_sticky_last = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"targets",
@@ -843,6 +845,10 @@ overrides.heavy_chainaxe_active_sticky_last = {
 		},
 		{
 			"weapon_special",
+			true
+		},
+		{
+			"skip_on_hit_proc",
 			true
 		}
 	}
@@ -970,7 +976,7 @@ overrides.heavy_chainaxe_sticky_last_quick = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing
+			WoundsTemplates.chainaxe_sawing
 		},
 		{
 			"targets",
@@ -991,18 +997,23 @@ overrides.heavy_chainaxe_sticky_last_quick = {
 		{
 			"weapon_special",
 			true
+		},
+		{
+			"skip_on_hit_proc",
+			true
 		}
 	}
 }
 damage_templates.chainaxe_tank = {
-	ragdoll_push_force = 250,
 	ragdoll_only = true,
+	ragdoll_push_force = 250,
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.blunt_light,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	armor_damage_modifier = chain_axe_light_mod,
 	targets = {
 		{

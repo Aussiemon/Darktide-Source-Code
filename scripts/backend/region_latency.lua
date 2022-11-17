@@ -88,8 +88,6 @@ RegionLatency._do_refresh = function (self)
 
 		return promise
 	end):next(function (ping_responses)
-		Log.info("RegionLatency", "Ping responses: " .. table.tostring(ping_responses, 3))
-
 		local region_latencies = {}
 
 		for region, latencies in pairs(ping_responses) do
@@ -111,11 +109,9 @@ RegionLatency._do_refresh = function (self)
 
 		return region_latencies
 	end):next(function (result)
-		Log.info("RegionLatency", "Refreshed region latencies: " .. table.tostring(result, 3))
-
 		return Promise.resolved(result)
 	end):catch(function (e)
-		Log.error("RegionLatency", "Could not refresh latencies: " .. table.tostring(e, 3))
+		Log.error("RegionLatency", "Could not refresh latencies: %s", table.tostring(e, 3))
 	end)
 end
 

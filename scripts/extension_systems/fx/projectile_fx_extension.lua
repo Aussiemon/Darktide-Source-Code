@@ -23,6 +23,7 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	self._physics_world = World.physics_world(self._world)
 	self._wwise_world = wwise_world
 	self._is_server = is_server
+	self._charge_level = extension_init_data.charge_level
 	local projectile_template_name = extension_init_data.projectile_template_name
 	local projectile_template = ProjectileTemplates[projectile_template_name]
 	local effects = projectile_template.effects
@@ -258,6 +259,18 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 				local pose = Matrix4x4.identity()
 
 				World.link_particles(world, effect_id, unit, node_index, pose, orphaned_policy)
+			end
+
+			if vfx.use_charge_level then
+				local charge_level = self._charge_level
+				local start_charge_level = vfx.min_charge_level or 0
+				local max_charge_level = vfx.max_charge_level or 1
+				local dif = max_charge_level - start_charge_level
+				local fraction = charge_level * dif
+				local variable_charge_level = start_charge_level + fraction
+				local variable_index = World.find_particles_variable(self._world, particle_name, "charge_level")
+
+				World.set_particles_variable(world, effect_id, variable_index, Vector3(variable_charge_level, variable_charge_level, variable_charge_level))
 			end
 		end
 

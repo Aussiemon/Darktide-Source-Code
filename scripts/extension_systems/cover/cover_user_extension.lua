@@ -148,6 +148,7 @@ CoverUserExtension._claim_cover_slot = function (self, cover_slot)
 	cover_component.peek_type = cover_slot_peek_type
 	cover_slot.occupied = true
 	self._current_cover_slot = cover_slot
+	self._current_cover_slot_id = cover_slot.id
 end
 
 CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target_unit, t)
@@ -200,6 +201,12 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 end
 
 CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_config, t)
+	local disable_t = cover_slot.disable_t
+
+	if disable_t and t < disable_t then
+		return false
+	end
+
 	local sticky_time = cover_slot.sticky_time
 
 	if sticky_time and t < sticky_time then
@@ -319,16 +326,27 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	return true
 end
 
-CoverUserExtension.release_cover_slot = function (self)
+CoverUserExtension.release_cover_slot = function (self, optional_cover_disable_t)
 	local current_cover_slot = self._current_cover_slot
 
 	if current_cover_slot then
 		local cover_component = self._cover_component
 		cover_component.has_cover = false
+		cover_component.is_in_cover = false
 		current_cover_slot.occupied = false
+
+		if optional_cover_disable_t then
+			local t = Managers.time:time("gameplay")
+			current_cover_slot.disable_t = t + optional_cover_disable_t
+		end
 	end
 
 	self._current_cover_slot = nil
+	self._current_cover_slot_id = nil
+end
+
+CoverUserExtension.cover_slot_id = function (self)
+	return self._cover_slot_id
 end
 
 CoverUserExtension.has_claimed_cover_slot = function (self)

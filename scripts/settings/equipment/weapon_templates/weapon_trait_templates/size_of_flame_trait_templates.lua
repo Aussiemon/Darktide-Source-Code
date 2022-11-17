@@ -5,22 +5,22 @@ local size_of_flame_trait_templates = {
 		{
 			"range",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"spread_angle",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"suppression",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		}
 	},
@@ -38,6 +38,29 @@ local size_of_flame_trait_templates = {
 		{
 			"spread_angle",
 			0.1
+		}
+	},
+	forcestaff_p2_m1_size_of_flame_stat = {
+		{
+			"range",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"spread_angle",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"suppression",
+			{
+				max = 1,
+				min = 0
+			}
 		}
 	}
 }

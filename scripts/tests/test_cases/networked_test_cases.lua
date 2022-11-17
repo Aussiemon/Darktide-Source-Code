@@ -5,6 +5,16 @@ NetworkedTestCases = {
 			Testify:make_request("complete_game_mode")
 		end)
 	end,
+	wait_for_cinematic_to_be_over = function ()
+		Testify:run_case(function (dt, t)
+			TestifySnippets.wait_for_cinematic_to_be_over()
+		end)
+	end,
+	fast_forward_end_of_round = function ()
+		Testify:run_case(function (dt, t)
+			Testify:make_request("fast_forward_end_of_round")
+		end)
+	end,
 	join_mission_server = function (case_settings)
 		Testify:run_case(function (dt, t)
 			local settings = cjson.decode(case_settings or "{}")
@@ -40,18 +50,18 @@ NetworkedTestCases = {
 		Testify:run_case(function (dt, t)
 			local party_id = Testify:make_request_on_client(TestifySnippets.first_peer(), "immaterium_party_id", true)
 			local peers_except_first = TestifySnippets.peers_except_first()
+			local first_peer = TestifySnippets.first_peer()
 
-			for _, peer in pairs(peers_except_first) do
-				local joiner_account_id = Testify:make_request_on_client(peer, "immaterium_join_party", true, party_id)
-
-				Testify:make_request_on_client(TestifySnippets.first_peer(), "accept_join_party", true, joiner_account_id)
+			for _, peer_id in pairs(peers_except_first) do
+				Testify:make_request_on_client(peer_id, "immaterium_join_party", true, party_id)
+				Testify:make_request_on_client(first_peer, "accept_join_party", true)
 				TestifySnippets.wait(1)
 			end
 
-			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default", TestifySnippets.first_peer())
+			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default", first_peer)
 
-			for _, peer in pairs(peers_except_first) do
-				Testify:make_request_on_client(peer, "accept_mission_board_vote", true)
+			for _, peer_id in pairs(peers_except_first) do
+				Testify:make_request_on_client(peer_id, "accept_mission_board_vote", true)
 			end
 
 			TestifySnippets.send_request_to_all_peers("wait_for_ongoing_vote", true)

@@ -4,107 +4,161 @@ local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local shapes = WoundsSettings.shapes
 local hit_zone_names = HitZone.hit_zone_names
 local attack_results = AttackSettings.attack_results
-local wounds_templates = {
-	lasgun = {
-		[attack_results.damaged] = {
-			default = {
-				default_shape = shapes.lasgun,
-				[shapes.lasgun] = {
-					shape_scaling = false,
-					duration = 2.5,
-					radius = {
-						4,
-						5
-					},
-					color_brightness = {
-						1,
-						0.09
-					}
-				}
-			}
-		}
-	}
+local wounds_templates = {}
+local laser_red = {
+	1,
+	0.09
 }
-wounds_templates.lasgun[attack_results.died] = table.clone(wounds_templates.lasgun[attack_results.damaged])
-wounds_templates.lasgun[attack_results.died].default[shapes.lasgun].radius = {
-	6,
-	8
+local standard_ranged = {
+	0.06,
+	1
 }
-wounds_templates.lasgun[attack_results.died].default[shapes.lasgun].duration = {
+local standard_melee = {
+	0.06,
+	0
+}
+local force_teal = {
+	0.53,
+	0.7
+}
+local plasma_blue = {
+	0.6,
+	1
+}
+local energy_blue = {
+	0.6,
+	0.5
+}
+local electric_blue = {
+	0.55,
+	0.5
+}
+local smoldering_red = {
+	0.02,
+	0.8
+}
+local flash_quick = {
+	0.35,
+	0.35
+}
+local flash_slow = {
+	0.5,
+	0.6
+}
+local linger_light = {
+	2.5,
+	2.75
+}
+local linger_medium = {
 	3.5,
 	4
 }
-wounds_templates.autogun = {
+local linger_heavy = {
+	5,
+	6
+}
+wounds_templates.laser = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.lasgun,
 			[shapes.lasgun] = {
 				shape_scaling = false,
-				duration = 0.75,
 				radius = {
-					2.5,
-					3.25
+					0,
+					5
 				},
-				color_brightness = {
-					0.045,
-					0.25
-				}
+				color_brightness = laser_red,
+				duration = linger_light
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					5,
+					5.25
+				},
+				color_brightness = laser_red,
+				duration = linger_medium
 			}
 		}
 	}
 }
-wounds_templates.autogun[attack_results.died] = table.clone(wounds_templates.autogun[attack_results.damaged])
-wounds_templates.autogun[attack_results.died].default[shapes.lasgun].radius = {
-	1.75,
-	2.25
-}
-wounds_templates.autogun[attack_results.died].default[shapes.lasgun].duration = {
-	0.8,
-	0
-}
-wounds_templates.stubgun = {
+wounds_templates.ballistic = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.lasgun,
 			[shapes.lasgun] = {
 				shape_scaling = false,
-				duration = 0.25,
 				radius = {
-					1.9,
-					2.25
+					2.25,
+					2.5
 				},
-				color_brightness = {
-					0.03,
-					0.12
-				}
+				color_brightness = standard_ranged,
+				duration = flash_quick
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5
+				},
+				color_brightness = standard_ranged,
+				duration = flash_quick
 			}
 		}
 	}
 }
-wounds_templates.stubgun[attack_results.died] = table.clone(wounds_templates.stubgun[attack_results.damaged])
-wounds_templates.stubgun[attack_results.died].default[shapes.lasgun].radius = {
-	1.9,
-	2.25
+wounds_templates.stubber = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					5
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	}
 }
-wounds_templates.stubgun[attack_results.died].default[shapes.lasgun].duration = {
-	0.3,
-	0.4
-}
-wounds_templates.plasma_rifle = {
+wounds_templates.plasma = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
 				shape_scaling = false,
-				duration = 2,
 				radius = {
-					5,
-					6.5
+					3,
+					5
 				},
-				color_brightness = {
-					0.6,
-					0.8
-				}
+				color_brightness = plasma_blue,
+				duration = linger_heavy
 			}
 		}
 	},
@@ -112,148 +166,95 @@ wounds_templates.plasma_rifle = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
-				shape_scaling = true,
-				duration = 2,
-				radius = {
-					5,
-					6.5
-				},
-				color_brightness = {
-					0.6,
-					0.8
-				}
-			}
-		}
-	}
-}
-wounds_templates.plasma_rifle_small = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
 				shape_scaling = false,
-				duration = 2,
 				radius = {
 					3,
-					3.75
+					5
 				},
-				color_brightness = {
-					0.6,
-					0.8
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				shape_scaling = true,
-				duration = 2,
-				radius = {
-					3,
-					3.75
-				},
-				color_brightness = {
-					0.6,
-					0.8
-				}
+				color_brightness = plasma_blue,
+				duration = linger_heavy
 			}
 		}
 	}
 }
-wounds_templates.psyker_ball = {
+wounds_templates.force_projectile = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.sphere,
 			[shapes.sphere] = {
-				duration = 6,
+				shape_scaling = false,
 				radius = {
-					5,
-					6
+					3,
+					5
 				},
-				color_brightness = {
-					0.5,
-					0.7
-				}
+				color_brightness = force_teal,
+				duration = linger_light
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.sphere,
+			[shapes.sphere] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					5
+				},
+				color_brightness = force_teal,
+				duration = linger_light
 			}
 		}
 	}
 }
-wounds_templates.psyker_ball[attack_results.died] = table.clone(wounds_templates.psyker_ball[attack_results.damaged])
-wounds_templates.chainsword = {
+wounds_templates.chain_light = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = false,
 				radius = {
-					1.5,
-					1.75
+					2.25,
+					2.5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					2.5,
 					3
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					2.5,
 					3
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					2.5,
 					3
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					2.5,
 					3
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			}
 		}
 	},
@@ -261,302 +262,152 @@ wounds_templates.chainsword = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = false,
 				radius = {
-					2.5,
-					3
+					2.25,
+					2.5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					3.5,
-					4
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					3.5,
-					4
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					3.5,
-					4
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					3.5,
-					4
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			}
 		}
 	}
 }
-wounds_templates.chainsword_sawing = {
+wounds_templates.chain_heavy = {
 	[attack_results.damaged] = {
-		head = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					2,
-					2
-				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
-			},
-			[shapes.left_45_slash_coarse] = {
-				radius = {
-					2,
-					2
-				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.right_45_slash_coarse] = {
-				radius = {
-					2,
-					2
-				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.horizontal_slash_coarse] = {
-				radius = {
-					2,
-					2
-				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash_coarse] = {
-				radius = {
-					2,
-					2
-				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		},
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = false,
 				radius = {
-					7,
-					8
+					2.25,
+					2.5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
-					7,
-					8
+					3.5,
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
-					7,
-					8
+					3.5,
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
-					7,
-					8
+					3.5,
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			},
 			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
-					7,
-					8
+					3.5,
+					5
 				},
-				color_brightness = {
-					0.04,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
 			}
 		}
-	}
-}
-wounds_templates.chainsword_sawing[attack_results.died] = table.clone(wounds_templates.chainsword_sawing[attack_results.damaged])
-wounds_templates.chainsword_sawing[attack_results.died].head = {
-	default_shape = shapes.default,
-	[shapes.default] = {
-		radius = {
-			2,
-			2.5
-		},
-		color_brightness = {
-			0.04,
-			0.01
-		},
-		duration = {
-			0.1,
-			0.2
-		}
 	},
-	[shapes.left_45_slash_coarse] = {
-		radius = {
-			5,
-			5
-		},
-		color_brightness = {
-			0.04,
-			0.01
-		},
-		duration = {
-			0.3,
-			0.5
-		}
-	},
-	[shapes.right_45_slash_coarse] = {
-		shape_scaling = true,
-		radius = {
-			5,
-			5
-		},
-		color_brightness = {
-			0.04,
-			0.01
-		},
-		duration = {
-			0.3,
-			0.5
-		}
-	},
-	[shapes.horizontal_slash_coarse] = {
-		shape_scaling = true,
-		radius = {
-			5,
-			5
-		},
-		color_brightness = {
-			0.04,
-			0.01
-		},
-		duration = {
-			0.3,
-			0.5
-		}
-	},
-	[shapes.vertical_slash_coarse] = {
-		shape_scaling = true,
-		radius = {
-			5,
-			5
-		},
-		color_brightness = {
-			0.04,
-			0.01
-		},
-		duration = {
-			0.3,
-			0.5
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4.5,
+					5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4.5,
+					5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4.5,
+					5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4.5,
+					5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
 		}
 	}
 }
@@ -565,18 +416,49 @@ wounds_templates.blunt = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = false,
 				radius = {
-					1.5,
-					1.75
+					2,
+					2
 				},
-				color_brightness = {
-					0.02,
-					0.05
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
 				},
-				duration = {
-					0.25,
-					0.3
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
 			}
 		}
 	},
@@ -584,875 +466,862 @@ wounds_templates.blunt = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
+				shape_scaling = false,
 				radius = {
-					1.75,
-					2.25
+					2,
+					2
 				},
-				color_brightness = {
-					0.02,
-					0.05
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
 				},
-				duration = {
-					0.25,
-					0.3
-				}
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
 			}
 		}
 	}
 }
-wounds_templates.thunder_hammer = {
+wounds_templates.shock_blunt = {
 	[attack_results.damaged] = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
 				shape_scaling = false,
 				radius = {
-					1.75,
+					2,
 					2
 				},
-				color_brightness = {
-					0.05,
-					1
-				},
-				duration = {
-					0.175,
-					0.2
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					3.25
-				},
-				color_brightness = {
-					0.05,
-					1
-				},
-				duration = {
-					0.175,
-					0.2
-				}
-			}
-		}
-	}
-}
-wounds_templates.thunder_hammer_active = table.clone(wounds_templates.thunder_hammer)
-wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].radius = {
-	4,
-	5
-}
-wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].shape_scaling = true
-wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].color_brightness = {
-	0.5,
-	1
-}
-wounds_templates.thunder_hammer_active[attack_results.damaged].default[shapes.default].duration = {
-	0.35,
-	0.4
-}
-wounds_templates.thunder_hammer_active[attack_results.died] = table.clone(wounds_templates.thunder_hammer_active[attack_results.damaged])
-wounds_templates.power_sword = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					4.55,
-					5.25
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
+				color_brightness = electric_blue,
+				duration = flash_slow
 			},
-			[shapes.left_45_slash_clean] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.right_45_slash_clean] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.horizontal_slash_clean] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash_clean] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		}
-	}
-}
-wounds_templates.power_sword[attack_results.died] = table.clone(wounds_templates.power_sword[attack_results.damaged])
-wounds_templates.power_sword_active = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					4.55,
-					5.25
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.2,
-					0.3
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			}
-		}
-	}
-}
-wounds_templates.power_sword_active[attack_results.died] = table.clone(wounds_templates.power_sword_active[attack_results.damaged])
-wounds_templates.force_sword = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					4.55,
-					5.25
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.2,
-					0.3
-				}
-			},
-			[shapes.left_45_slash_clean] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.right_45_slash_clean] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.horizontal_slash_clean] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.vertical_slash_clean] = {
-				radius = {
-					5,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			}
-		}
-	}
-}
-wounds_templates.force_sword[attack_results.died] = table.clone(wounds_templates.force_sword[attack_results.damaged])
-wounds_templates.force_sword_active = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					1.75,
-					2
-				},
-				color_brightness = {
-					0.6,
-					0.9
-				},
-				duration = {
-					0.3,
-					0.4
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				shape_scaling = true,
-				radius = {
-					5,
-					6
-				},
-				color_brightness = {
-					0.6,
-					0.9
-				},
-				duration = {
-					0.3,
-					0.4
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					6,
-					7.5
-				},
-				color_brightness = {
-					0.6,
-					0.7
-				},
-				duration = {
-					0.5,
-					0.6
-				}
-			}
-		}
-	}
-}
-wounds_templates.combat_sword = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					2.75
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
-			},
-			[shapes.left_45_slash] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					2.75
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.right_45_slash] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					2.75
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.horizontal_slash] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					2.75
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash] = {
-				shape_scaling = true,
-				radius = {
-					2.5,
-					2.75
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					4.55,
-					5.25
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					4,
-					5.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		}
-	}
-}
-wounds_templates.combat_axe = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					2.75,
-					3.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.1,
-					0.2
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					2.75,
-					3.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					2.75,
-					3.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					2.75,
-					3.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					2.75,
-					3.5
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		}
-	}
-}
-wounds_templates.combat_axe[attack_results.died] = table.clone(wounds_templates.combat_axe[attack_results.damaged])
-wounds_templates.combat_blade = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.default,
-			[shapes.default] = {
-				radius = {
-					6,
-					7
-				},
-				color_brightness = {
-					0.08,
-					0.15
-				},
-				duration = {
-					0.3,
-					0.6
-				}
-			},
-			[shapes.left_45_slash] = {
-				radius = {
-					3,
-					4
-				},
-				color_brightness = {
-					0.08,
-					0.15
-				},
-				duration = {
-					0.3,
-					0.6
-				}
-			},
-			[shapes.right_45_slash] = {
-				radius = {
-					3,
-					4
-				},
-				color_brightness = {
-					0.08,
-					0.15
-				},
-				duration = {
-					0.3,
-					0.6
-				}
-			},
-			[shapes.horizontal_slash] = {
-				radius = {
-					5,
-					6
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			},
-			[shapes.vertical_slash] = {
-				radius = {
-					5,
-					6
-				},
-				color_brightness = {
-					0.6,
-					0.01
-				},
-				duration = {
-					0.3,
-					0.5
-				}
-			}
-		}
-	}
-}
-wounds_templates.combat_blade[attack_results.died] = table.clone(wounds_templates.combat_blade[attack_results.damaged])
-wounds_templates.rippergun = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.shotgun,
-			[shapes.shotgun] = {
-				shape_scaling = true,
-				duration = 0.3,
-				radius = {
-					3,
-					3.5
-				},
-				color_brightness = {
-					0.03,
-					0.7
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.shotgun,
-			[shapes.shotgun] = {
-				shape_scaling = true,
-				duration = 0.3,
-				radius = {
-					6,
-					7
-				},
-				color_brightness = {
-					0.03,
-					0.7
-				}
-			}
-		}
-	}
-}
-wounds_templates.shotgun = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.shotgun,
-			[shapes.shotgun] = {
-				shape_scaling = true,
-				duration = 0.5,
-				radius = {
-					3,
-					3.25
-				},
-				color_brightness = {
-					0.02,
-					0.09
-				}
-			}
-		}
-	}
-}
-wounds_templates.shotgun[attack_results.died] = table.clone(wounds_templates.shotgun[attack_results.damaged])
-wounds_templates.shotgun[attack_results.died].default[shapes.shotgun].radius = {
-	3.5,
-	4
-}
-wounds_templates.bolter = {
-	[attack_results.damaged] = {
-		default = {
-			default_shape = shapes.sphere,
-			[shapes.sphere] = {
-				shape_scaling = true,
-				duration = 1.5,
-				radius = {
-					1,
-					2
-				},
-				color_brightness = {
-					0.02,
-					0.09
-				}
-			}
-		}
-	},
-	[attack_results.died] = {
-		default = {
-			default_shape = shapes.sphere,
-			[shapes.sphere] = {
-				shape_scaling = true,
-				duration = 1.5,
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
 				radius = {
 					2,
-					4
+					2
 				},
-				color_brightness = {
-					0.02,
-					0.09
-				}
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2
+				},
+				color_brightness = electric_blue,
+				duration = flash_slow
 			}
 		}
 	}
 }
+wounds_templates.slash = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1.5,
+					1.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.95
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1,
+					1.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					2.75
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
+		}
+	}
+}
+wounds_templates.slash_large = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					4.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					4.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					4.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					4.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
+		}
+	}
+}
+wounds_templates.energy_blunt = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					4,
+					5
+				},
+				color_brightness = energy_blue,
+				duration = linger_light
+			}
+		}
+	}
+}
+wounds_templates.energy_slash = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1,
+					1.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1,
+					1.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.left_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = energy_blue,
+				duration = flash_slow
+			}
+		}
+	}
+}
+wounds_templates.slash_force = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1,
+					1.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.left_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					1,
+					1.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.left_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.right_45_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.horizontal_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			},
+			[shapes.vertical_slash_clean] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					3.5
+				},
+				color_brightness = force_teal,
+				duration = flash_slow
+			}
+		}
+	}
+}
+wounds_templates.shotgun_large = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.shotgun,
+			[shapes.shotgun] = {
+				shape_scaling = true,
+				radius = {
+					3,
+					3.25
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.shotgun,
+			[shapes.shotgun] = {
+				shape_scaling = true,
+				radius = {
+					4.5,
+					4.75
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	}
+}
+wounds_templates.shotgun_small = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.shotgun,
+			[shapes.shotgun] = {
+				shape_scaling = true,
+				radius = {
+					2.5,
+					3
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.shotgun,
+			[shapes.shotgun] = {
+				shape_scaling = true,
+				radius = {
+					3.75,
+					4
+				},
+				color_brightness = standard_ranged,
+				duration = flash_slow
+			}
+		}
+	}
+}
+wounds_templates.boltshell = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					4
+				},
+				color_brightness = smoldering_red,
+				duration = flash_slow
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = true,
+				radius = {
+					5,
+					5
+				},
+				color_brightness = smoldering_red,
+				duration = flash_slow
+			}
+		}
+	}
+}
+wounds_templates.lasgun = table.clone(wounds_templates.laser)
+wounds_templates.laspistol = table.clone(wounds_templates.laser)
+wounds_templates.autogun = table.clone(wounds_templates.ballistic)
+wounds_templates.autopistol = table.clone(wounds_templates.ballistic)
+wounds_templates.stubrevolver = table.clone(wounds_templates.stubber)
+wounds_templates.plasma_rifle = table.clone(wounds_templates.plasma)
+wounds_templates.psyker_ball = table.clone(wounds_templates.force_projectile)
+wounds_templates.chainsword_2h = table.clone(wounds_templates.chain_heavy)
+wounds_templates.chainsword_sawing_2h = table.clone(wounds_templates.chain_heavy)
+wounds_templates.chainsword = table.clone(wounds_templates.chain_light)
+wounds_templates.chainsword_sawing = table.clone(wounds_templates.chain_light)
+wounds_templates.chainaxe = table.clone(wounds_templates.chain_light)
+wounds_templates.chainaxe_sawing = table.clone(wounds_templates.chain_light)
+wounds_templates.thunder_hammer = table.clone(wounds_templates.blunt)
+wounds_templates.thunder_hammer_active = table.clone(wounds_templates.energy_blunt)
+wounds_templates.power_maul = table.clone(wounds_templates.shock_blunt)
+wounds_templates.ogryn_power_maul = table.clone(wounds_templates.blunt)
+wounds_templates.ogryn_power_maul_activated = table.clone(wounds_templates.energy_blunt)
+wounds_templates.combat_sword = table.clone(wounds_templates.slash)
+wounds_templates.power_sword = table.clone(wounds_templates.slash)
+wounds_templates.power_sword_active = table.clone(wounds_templates.energy_slash)
+wounds_templates.force_sword = table.clone(wounds_templates.slash_force)
+wounds_templates.force_sword_active = table.clone(wounds_templates.slash_force)
+wounds_templates.combat_knife = table.clone(wounds_templates.slash)
+wounds_templates.combat_axe = table.clone(wounds_templates.slash)
+wounds_templates.combat_blade = table.clone(wounds_templates.slash_large)
+wounds_templates.rippergun = table.clone(wounds_templates.shotgun_large)
+wounds_templates.shotgun = table.clone(wounds_templates.shotgun_small)
+wounds_templates.bolter = table.clone(wounds_templates.boltshell)
+wounds_templates.bayonet = table.clone(wounds_templates.slash)
+wounds_templates.thumper_shotgun = table.clone(wounds_templates.shotgun_large)
+wounds_templates.gauntlet_melee = table.clone(wounds_templates.blunt)
+wounds_templates.ogryn_shovel = table.clone(wounds_templates.blunt)
+wounds_templates.ogryn_club = table.clone(wounds_templates.blunt)
+wounds_templates.heavy_stubber = table.clone(wounds_templates.stubber)
 
 for template_name, template in pairs(wounds_templates) do
 	template.name = template_name

@@ -337,6 +337,10 @@ LoadingView.on_enter = function (self)
 	self:_cycle_next_hint()
 	self:_update_input_display()
 	self:_register_event("event_on_active_input_changed", "event_on_input_changed")
+
+	if Managers.loading.black_screen then
+		Managers.loading:hide_instant_black_screen()
+	end
 end
 
 LoadingView.draw = function (self, dt, t, input_service, layer)
@@ -423,22 +427,7 @@ LoadingView._set_overlay_opacity = function (self, opacity)
 	widget.alpha_multiplier = opacity
 end
 
-LoadingView._set_logo_pulse_progress = function (self, progress)
-	local size_progress = math.easeOutCubic(progress)
-	local background_start_size = LoadingViewSettings.background_start_size
-	local background_end_size = LoadingViewSettings.background_end_size
-	local width = background_start_size[1] + (background_end_size[1] - background_start_size[1]) * size_progress
-	local height = background_start_size[2] + (background_end_size[2] - background_start_size[2]) * size_progress
-
-	self:_set_scenegraph_size("logo", width, height)
-end
-
 LoadingView.update = function (self, dt, t, input_service)
-	local logo_progress = Application.time_since_launch() * 0.05 % 1
-	local logo_anim_progress = (logo_progress * 2 - 1)^2
-
-	self:_set_logo_pulse_progress(logo_anim_progress)
-
 	local entry_duration = self._entry_duration
 
 	if entry_duration then

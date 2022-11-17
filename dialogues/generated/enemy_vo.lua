@@ -408,14 +408,14 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_chaos_newly_infected_alerted_idle",
+				"enemy_memory_ni_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				10
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_alerted_idle",
+				"faction_memory_ni_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				5
@@ -424,12 +424,12 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_chaos_newly_infected_alerted_idle",
+				"enemy_memory_ni_alerted_idle",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_alerted_idle",
+				"faction_memory_ni_alerted_idle",
 				OP.TIMESET
 			}
 		}
@@ -461,14 +461,14 @@ return function ()
 			},
 			{
 				"user_memory",
-				"chaos_newly_infected_assault",
+				"enemy_memory_ni_assault",
 				OP.TIMEDIFF,
 				OP.GT,
 				8
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_assault",
+				"faction_memory_ni_assault",
 				OP.TIMEDIFF,
 				OP.GT,
 				4
@@ -477,65 +477,12 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"chaos_newly_infected_assault",
+				"enemy_memory_ni_assault",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_assault",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "chaos_newly_infected_idle",
-		category = "enemy_vo_prio_1",
-		wwise_route = 20,
-		response = "chaos_newly_infected_idle",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"generic_enemy_vo_event"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"passive_idle"
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"chaos_newly_infected"
-			},
-			{
-				"user_memory",
-				"chaos_newly_infected_idle",
-				OP.TIMEDIFF,
-				OP.GT,
-				15
-			},
-			{
-				"faction_memory",
-				"faction_memory_chaos_newly_infected_idle",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"chaos_newly_infected_idle",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_chaos_newly_infected_idle",
+				"faction_memory_ni_assault",
 				OP.TIMESET
 			}
 		}
@@ -567,14 +514,14 @@ return function ()
 			},
 			{
 				"user_memory",
-				"chaos_newly_infected_melee_idle",
+				"enemy_memory_ni_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				10
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_melee_idle",
+				"faction_memory_ni_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				5
@@ -583,12 +530,12 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"chaos_newly_infected_melee_idle",
+				"enemy_memory_ni_melee_idle",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_newly_infected_melee_idle",
+				"faction_memory_ni_melee_idle",
 				OP.TIMESET
 			}
 		},
@@ -893,14 +840,14 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_chaos_ogryn_heavy_gunner_alerted_idle",
+				"enemy_memory_ogryn_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				6
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_heavy_gunner_alerted_idle",
+				"faction_memory_ogryn_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				3
@@ -909,12 +856,12 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_chaos_ogryn_heavy_gunner_alerted_idle",
+				"enemy_memory_ogryn_gunner_alerted_idle",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_heavy_gunner_alerted_idle",
+				"faction_memory_ogryn_gunner_alerted_idle",
 				OP.TIMESET
 			}
 		},
@@ -949,28 +896,28 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_start_shooting",
+				"enemy_memory_ogryn_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				3
 			},
 			{
 				"faction_memory",
-				"faction_memory_start_shooting",
+				"faction_memory_ogryn_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_start_shooting",
+				"enemy_memory_ogryn_start_shooting",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_start_shooting",
+				"faction_memory_ogryn_start_shooting",
 				OP.TIMESET
 			}
 		}
@@ -1054,26 +1001,14 @@ return function ()
 				"cultist_flamer"
 			},
 			{
-				"user_memory",
-				"enemy_memory_cultist_flamer_spawned",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			},
-			{
 				"faction_memory",
 				"faction_memory_cultist_flamer_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				2
 			}
 		},
 		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_cultist_flamer_spawned",
-				OP.TIMESET
-			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_flamer_spawned",
@@ -1082,13 +1017,13 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5
+				duration = 1
 			}
 		}
 	})
 	define_rule({
 		name = "cultist_flamer_start_shooting",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		wwise_route = 23,
 		response = "cultist_flamer_start_shooting",
 		database = "enemy_vo",
@@ -1113,34 +1048,34 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_cultist_flamer_start_shooting",
+				"enemy_memory_cf_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
 				4
 			},
 			{
 				"faction_memory",
-				"faction_memory_cultist_flamer_start_shooting",
+				"faction_memory_cf_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				2
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_cultist_flamer_start_shooting",
+				"enemy_memory_cf_start_shooting",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_cultist_flamer_start_shooting",
+				"faction_memory_cf_start_shooting",
 				OP.TIMESET
 			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1
+				duration = 1.5
 			}
 		}
 	})
@@ -1223,26 +1158,14 @@ return function ()
 				"cultist_grenadier"
 			},
 			{
-				"user_memory",
-				"enemy_memory_cultist_grenadier_spawned",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			},
-			{
 				"faction_memory",
 				"faction_memory_cultist_grenadier_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				2
 			}
 		},
 		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_cultist_grenadier_spawned",
-				OP.TIMESET
-			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_grenadier_spawned",
@@ -1251,7 +1174,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5
+				duration = 1
 			}
 		}
 	})
@@ -1432,14 +1355,14 @@ return function ()
 				"memory_cultist_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				3
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				1
 			}
 		},
 		on_done = {
@@ -2647,26 +2570,14 @@ return function ()
 				"renegade_grenadier"
 			},
 			{
-				"user_memory",
-				"enemy_memory_traitor_grenadier_spawned",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			},
-			{
 				"faction_memory",
 				"faction_memory_traitor_grenadier_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				2
 			}
 		},
 		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_traitor_grenadier_spawned",
-				OP.TIMESET
-			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_grenadier_spawned",
@@ -2717,6 +2628,163 @@ return function ()
 				"user_memory",
 				"throwing_grenade",
 				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "traitor_guard_flamer_assault",
+		category = "enemy_vo_prio_0",
+		wwise_route = 44,
+		response = "traitor_guard_flamer_assault",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"assault"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"user_memory",
+				"traitor_guard_flamer_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			},
+			{
+				"faction_memory",
+				"faction_traitor_guard_flamer_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"traitor_guard_flamer_assault",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"faction_traitor_guard_flamer_assault",
+				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "traitor_guard_flamer_spawned",
+		category = "enemy_vo_prio_0",
+		wwise_route = 44,
+		response = "traitor_guard_flamer_spawned",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"spawned"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"faction_memory",
+				"faction_memory_traitor_flamer_spawned",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"faction_memory_traitor_flamer_spawned",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
+		}
+	})
+	define_rule({
+		name = "traitor_guard_flamer_start_shooting",
+		category = "enemy_vo_prio_0",
+		wwise_route = 44,
+		response = "traitor_guard_flamer_start_shooting",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"start_shooting"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"faction_memory",
+				"faction_memory_traitor_flamer_start_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
+			},
+			{
+				"user_memory",
+				"enemy_memory_traitor_flamer_start_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				4
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"faction_memory_traitor_flamer_start_shooting",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"enemy_memory_traitor_flamer_start_shooting",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1.5
 			}
 		}
 	})
@@ -3373,23 +3441,23 @@ return function ()
 			},
 			{
 				"user_memory",
-				"traitor_gunner_ranged_idle",
+				"enemy_memory_traitor_gunner_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				40
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				20
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"traitor_gunner_ranged_idle",
+				"enemy_memory_traitor_gunner_ranged_idle",
 				OP.TIMESET
 			},
 			{
@@ -3496,28 +3564,28 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_start_shooting",
+				"enemy_memory_traitor_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				3
 			},
 			{
 				"faction_memory",
-				"faction_memory_start_shooting",
+				"faction_memory_traitor_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_start_shooting",
+				"enemy_memory_traitor_gunner_start_shooting",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_start_shooting",
+				"faction_memory_traitor_gunner_start_shooting",
 				OP.TIMESET
 			}
 		}
@@ -3727,14 +3795,14 @@ return function ()
 				"enemy_memory_traitor_netgunner_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				4
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_netgunner_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				2
 			}
 		},
 		on_done = {

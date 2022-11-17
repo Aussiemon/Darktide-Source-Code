@@ -225,16 +225,16 @@ weapon_template.actions = {
 				t = 0.1
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.3,
 				t = 0.15
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.2,
 				t = 0.2
 			},
 			{
-				modifier = 0.4,
-				t = 1
+				modifier = 0.01,
+				t = 5
 			},
 			start_modifier = 1
 		},
@@ -273,13 +273,11 @@ weapon_template.actions = {
 		target_charge = true,
 		minimum_hold_time = 0.3,
 		target_locked = true,
-		target_anim_event = "attack_charge",
-		target_missing_anim_event = "attack_charge_cancel",
 		anim_end_event = "attack_charge_cancel",
+		attack_target_time = 1,
 		charge_template = "psyker_smite_lock_target",
-		charge_time = 2,
-		attack_target_cooldown = 1,
 		overload_module_class_name = "warp_charge",
+		charge_time = 2,
 		attack_target = true,
 		uninterruptible = true,
 		anim_event = "attack_charge",
@@ -356,12 +354,10 @@ weapon_template.actions = {
 		kill_charge = true,
 		allowed_during_sprint = true,
 		ability_type = "grenade_ability",
-		target_missing_anim_event = "attack_charge_cancel",
+		anim_end_event = "attack_charge_cancel",
 		target_charge = true,
 		minimum_hold_time = 0.3,
 		anim_event = "attack_charge",
-		anim_end_event = "attack_charge_cancel",
-		target_anim_event = "attack_charge",
 		uninterruptible = true,
 		always_charge = true,
 		stop_input = "charge_power_release",
@@ -436,8 +432,8 @@ weapon_template.actions = {
 		target_missing_anim_event = "attack_charge_cancel",
 		target_locked = true,
 		anim_end_event = "attack_charge_cancel",
+		attack_target_time = 0.25,
 		sticky_targeting = true,
-		attack_target_cooldown = 1,
 		attack_target = true,
 		uninterruptible = true,
 		dont_reset_charge = true,
@@ -510,11 +506,10 @@ weapon_template.actions = {
 		kind = "damage_target",
 		sprint_ready_up_time = 0.25,
 		use_charge_level = true,
-		charge_template = "psyker_smite_use_power",
 		fire_time = 0.2,
-		anim_event = "attack_charge_shoot",
+		charge_template = "psyker_smite_use_power",
 		allowed_during_sprint = true,
-		anim_end_event = "attack_finished",
+		anim_event = "attack_charge_shoot",
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -533,6 +528,12 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.psyker_smite_kill,
 		damage_type = damage_types.smite,
+		suppression_settings = {
+			suppression_falloff = true,
+			instant_aggro = true,
+			distance = 5,
+			suppression_value = 1
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -540,10 +541,7 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			}
-		},
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return false
-		end
+		}
 	},
 	action_inspect = {
 		skip_3p_anims = true,
@@ -613,13 +611,13 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_right",
 	_charge = "fx_charge"
 }
-weapon_template.dodge_template = "default"
+weapon_template.dodge_template = "default_ranged"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "psyker_smite"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/stun_grenade"
+weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/smite"
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"

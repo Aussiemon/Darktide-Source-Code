@@ -105,6 +105,7 @@ local MAX_DISTANCE_FROM_PLAYERS = 40
 local INITIAL_GROUP_OFFSET = 2
 local nearby_spawners = {}
 local nearby_occluded_positions = {}
+local SPAWNER_MIN_RANGE = 10
 
 local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
 	table.clear(nearby_spawners)
@@ -114,6 +115,10 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local max_spawn_locations = math.min(horde_template.max_spawn_locations, num_to_spawn)
 	local num_spawn_locations = 0
 	local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+	local side_system = Managers.state.extension:system("side_system")
+	local target_side = side_system:get_side(target_side_id)
+	local target_units = target_side.valid_player_units
+	local num_target_units = #target_units
 
 	for i = 1, #minion_spawner_radius_checks do
 		local radius = minion_spawner_radius_checks[i]
@@ -121,8 +126,26 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 		if spawners then
 			for j = 1, #spawners do
-				nearby_spawners[#nearby_spawners + 1] = spawners[j]
-				num_spawn_locations = num_spawn_locations + 1
+				local spawner = spawners[j]
+				local spawner_position = spawner:position()
+				local is_valid_spawner = true
+
+				for j = 1, num_target_units do
+					local player_unit = target_units[j]
+					local player_position = POSITION_LOOKUP[player_unit]
+					local distance = Vector3.distance(spawner_position, player_position)
+
+					if distance < SPAWNER_MIN_RANGE then
+						is_valid_spawner = false
+
+						break
+					end
+				end
+
+				if is_valid_spawner then
+					nearby_spawners[#nearby_spawners + 1] = spawner
+					num_spawn_locations = num_spawn_locations + 1
+				end
 			end
 
 			if max_spawn_locations <= num_spawn_locations then

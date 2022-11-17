@@ -146,6 +146,50 @@ local conversations_hub_barber_a = {
 		},
 		randomize_indexes = {}
 	},
+	barber_intro_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_barber_a__barber_intro_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 9.263424
+		},
+		randomize_indexes = {}
+	},
+	barber_intro_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_barber_a__barber_intro_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.44551
+		},
+		randomize_indexes = {}
+	},
+	barber_intro_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_barber_a__barber_intro_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.451066
+		},
+		randomize_indexes = {}
+	},
+	barber_intro_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_barber_a__barber_intro_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.558254
+		},
+		randomize_indexes = {}
+	},
 	barber_purchase = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,

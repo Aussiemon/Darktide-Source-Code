@@ -61,7 +61,7 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 			local teleport_position = Unit.world_position(disabling_unit, 1)
 			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
 
-			PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+			PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
 		end
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -110,7 +110,7 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
-		PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+		PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
 	end
 
 	local first_person_mode_component = self._first_person_mode_component

@@ -45,13 +45,6 @@ ActionCharacterStateChange.start = function (self, action_settings, t, time_scal
 		elseif action_settings.state_params then
 			self._wanted_state_params = action_settings.state_params
 		end
-
-		local vo_tag = action_settings.vo_tag
-		local player_unit = unit
-
-		if vo_tag then
-			Vo.play_combat_ability_event(player_unit, vo_tag)
-		end
 	else
 		self._wanted_state_name = "walking"
 		self._wanted_state_params = {}
@@ -116,6 +109,15 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 			local ability_extension = self._ability_extension
 
 			ability_extension:use_ability_charge(ability_type)
+		end
+	end
+
+	if is_in_wanted_state then
+		local vo_tag = action_settings.vo_tag
+		local player_unit = unit
+
+		if vo_tag then
+			Vo.play_combat_ability_event(player_unit, vo_tag)
 		end
 	end
 

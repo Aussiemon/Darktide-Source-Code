@@ -15,6 +15,7 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponStats = class("WeaponStats")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local template_types = WeaponTweakTemplateSettings.template_types
 
 WeaponStats.init = function (self, item)
 	self._item = item
@@ -162,7 +163,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 				local fire_rate = weapon_handling_template and weapon_handling_template.fire_rate
 
-				if fire_rate then
+				if fire_rate and ammo_clip_size then
 					local auto_fire_time = fire_rate.auto_fire_time
 					local fire_time = fire_rate.fire_time
 					local max_shots = fire_rate.max_shots
@@ -232,9 +233,9 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local is_critical_strike = false
 						local armor_penetrating = false
 						local auto_completed_action = false
-						local target_unit, attacking_unit, attacker_breed_or_nil = nil
+						local target_unit, attacker_breed_or_nil = nil
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
-						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, attacking_unit, auto_completed_action)
+						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
 						damage = damage * num_damage_itterations
 
 						if damage > 0 then
@@ -301,7 +302,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 			stats.stamina_modifier = stamina_modifier
 		end
 
-		if rate_of_fire then
+		if rate_of_fire and ammo_clip_size then
 			local bullets_per_second = math.ceil(1 / (rate_of_fire / ammo_clip_size))
 			stats.rate_of_fire = rate_of_fire
 			stats.bullets_per_second = bullets_per_second
@@ -312,11 +313,11 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 		else
 			stats.attack_speed = average_action_duration
 		end
+	end
 
-		if uses_ammunition then
-			stats.ammo = ammo_clip_size
-			stats.ammo_reserve = ammo_reserve_size
-		end
+	if uses_ammunition and ammo_clip_size and ammo_reserve_size then
+		stats.ammo = ammo_clip_size
+		stats.ammo_reserve = ammo_reserve_size
 	end
 
 	return stats

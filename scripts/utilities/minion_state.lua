@@ -1,4 +1,23 @@
+local Breed = require("scripts/utilities/breed")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local buff_keywords = BuffSettings.keywords
 local MinionState = {
+	is_minion = function (unit)
+		if not unit then
+			return false
+		end
+
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local target_breed = unit_data and unit_data:breed()
+
+		if not target_breed then
+			return false
+		end
+
+		local is_minion = Breed.is_minion(target_breed)
+
+		return is_minion
+	end,
 	is_sleeping_deamonhost = function (unit)
 		if not unit then
 			return false
@@ -38,6 +57,11 @@ local MinionState = {
 		end
 
 		return nil
+	end,
+	is_burning = function (unit)
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+		return buff_extension and buff_extension:has_keyword(buff_keywords.burning)
 	end
 }
 

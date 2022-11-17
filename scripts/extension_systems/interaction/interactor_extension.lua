@@ -36,6 +36,20 @@ InteractorExtension.init = function (self, extension_init_context, unit, extensi
 	self:_init_action_components(unit_data_extension)
 end
 
+InteractorExtension.destroy = function (self)
+	if self._is_server then
+		local interaction_component = self._interaction_component
+		local state = interaction_component.state
+		local target_unit = interaction_component.target_unit
+
+		if state == interaction_states.is_interacting and ALIVE[target_unit] then
+			local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
+
+			interactee_extension:stopped(interaction_results.interaction_cancelled)
+		end
+	end
+end
+
 InteractorExtension._init_action_components = function (self, unit_data_extension)
 	self._interaction_component = unit_data_extension:write_component("interaction")
 	self._first_person_component = unit_data_extension:read_component("first_person")

@@ -15,6 +15,14 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_torso_keep_pecs = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.5
+			}
+		}
+	},
 	mask_arms_keep_forearms = {
 		property_overrides = {
 			mask_top_bottom = {
@@ -28,6 +36,14 @@ local material_overrides = {
 			mask_top_bottom = {
 				0,
 				0.4
+			}
+		}
+	},
+	mask_arms_keep_wrist_and_hands = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.65
 			}
 		}
 	},
@@ -47,6 +63,14 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_arms_keep_finger_tops = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.915
+			}
+		}
+	},
 	mask_arms_shoulders_01 = {
 		property_overrides = {
 			mask_top_bottom = {
@@ -60,6 +84,14 @@ local material_overrides = {
 			mask_top_bottom = {
 				0,
 				0.1
+			}
+		}
+	},
+	mask_arms_shoulders_03 = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.2
 			}
 		}
 	},

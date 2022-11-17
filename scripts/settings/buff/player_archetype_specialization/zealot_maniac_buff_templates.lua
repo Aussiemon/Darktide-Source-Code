@@ -18,13 +18,83 @@ local special_rules = SpecialRulesSettings.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.zealot_2
 local templates = {}
+local Action = require("scripts/utilities/weapon/action")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+templates.zealot_maniac_dash_buff = {
+	predicted = false,
+	refresh_duration_on_stack = true,
+	class_name = "proc_buff",
+	max_stacks = talent_settings.combat_ability.max_stacks,
+	duration = talent_settings.combat_ability.duration,
+	stat_buffs = {
+		[stat_buffs.melee_damage] = talent_settings.combat_ability.melee_damage,
+		[stat_buffs.melee_critical_strike_chance] = talent_settings.combat_ability.melee_critical_strike_chance
+	},
+	keywords = {
+		keywords.armor_penetrating
+	},
+	proc_events = {
+		[proc_events.on_hit] = talent_settings.combat_ability.on_hit_proc_chance
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		local _, current_action = Action.current_action(weapon_action_component, weapon_template)
+
+		if current_action and current_action.kind == "sweep" then
+			local critical_strike_component = unit_data_extension:write_component("critical_strike")
+			critical_strike_component.is_active = true
+		end
+	end,
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	proc_func = function (params, template_data, template_context)
+		local is_push = params.damage_efficiency and params.damage_efficiency == damage_efficiencies.push
+		local is_ranged = params.attack_type == attack_types.ranged
+
+		if is_push or is_ranged then
+			return
+		end
+
+		template_data.finish = true
+	end,
+	conditional_exit_func = function (template_data)
+		return template_data.finish
+	end,
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash_charge"
+	}
+}
 local martyrdom_health_step = talent_settings.passive_1.health_step
 local martyrdom_default_stacks = talent_settings.passive_1.max_stacks
 local martyrdom_talent_stacks = talent_settings.offensive_2_3.max_stacks
 local martyrdom_damage_step = talent_settings.passive_1.damage_per_step
+
+local function martyrdom_stack_added(template_data, template_context, t)
+	if not template_context.is_server then
+		return
+	end
+
+	if template_data.martyrdom_grants_ally_power_bonus then
+		local in_coherence_units = template_data.coherency_extension:in_coherence_units()
+		local buff_name = "zealot_maniac_martyrdom_power_level_bonus"
+
+		for coherency_unit, _ in pairs(in_coherence_units) do
+			local buff_extension = ScriptUnit.has_extension(coherency_unit, "buff_system")
+
+			if buff_extension then
+				buff_extension:add_internally_controlled_buff(buff_name, t)
+			end
+		end
+	end
+end
+
 templates.zealot_maniac_martyrdom_base = {
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_3",
 	predicted = true,
-	class_name = "buff",
+	hud_priority = 1,
+	class_name = "zealot_maniac_passive_buff",
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
 			min = 0,
@@ -33,25 +103,42 @@ templates.zealot_maniac_martyrdom_base = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local increased_stacks_talent = specialization_extension:has_special_rule(special_rules.martyrdom_increased_stacks)
 		template_data.max_stacks = increased_stacks_talent and martyrdom_talent_stacks or martyrdom_default_stacks
+		template_data.martyrdom_grants_ally_power_bonus = specialization_extension:has_special_rule(special_rules.zealot_maniac_martyrdom_grants_ally_power_bonus)
+		template_data.current_stacks = 0
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local max_stacks = template_data.max_stacks
-		local health_extension = template_data.health_extension
-		local health_percentage = health_extension:current_health_percent()
-		local damage_taken_percentage = 1 - health_percentage
-		local current_stacks = math.floor(damage_taken_percentage / martyrdom_health_step)
-		current_stacks = math.clamp(current_stacks, 0, max_stacks)
-		local lerp_t = current_stacks / martyrdom_talent_stacks
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-		return lerp_t
+		if health_extension then
+			local health_percentage = health_extension:current_health_percent()
+			local damage_taken_percentage = 1 - health_percentage
+			local current_stacks = math.floor(damage_taken_percentage / martyrdom_health_step)
+			current_stacks = math.clamp(current_stacks, 0, max_stacks)
+
+			if template_data.current_stacks < current_stacks then
+				martyrdom_stack_added(template_data, template_context, t)
+			end
+
+			template_data.current_stacks = current_stacks
+			local lerp_t = current_stacks / martyrdom_talent_stacks
+
+			return lerp_t
+		end
+
+		return 0
 	end
 }
 templates.zealot_maniac_resist_death = {
 	predicted = false,
+	hud_priority = 2,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
+	always_show_in_hud = true,
 	class_name = "proc_buff",
 	active_duration = talent_settings.passive_2.active_duration,
 	cooldown_duration = talent_settings.passive_2.cooldown_duration,
@@ -109,54 +196,6 @@ templates.zealot_maniac_increased_melee_attack_speed = {
 		[stat_buffs.melee_attack_speed] = talent_settings.passive_3.melee_attack_speed
 	}
 }
-local Action = require("scripts/utilities/weapon/action")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-templates.zealot_maniac_dash_buff = {
-	predicted = false,
-	refresh_duration_on_stack = true,
-	class_name = "proc_buff",
-	max_stacks = talent_settings.combat_ability.max_stacks,
-	duration = talent_settings.combat_ability.duration,
-	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.combat_ability.melee_damage,
-		[stat_buffs.melee_critical_strike_chance] = talent_settings.combat_ability.melee_critical_strike_chance
-	},
-	keywords = {
-		keywords.armor_penetrating
-	},
-	proc_events = {
-		[proc_events.on_hit] = talent_settings.combat_ability.on_hit_proc_chance
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local weapon_action_component = unit_data_extension:read_component("weapon_action")
-		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local _, current_action = Action.current_action(weapon_action_component, weapon_template)
-
-		if current_action and current_action.kind == "sweep" then
-			local critical_strike_component = unit_data_extension:write_component("critical_strike")
-			critical_strike_component.is_active = true
-		end
-	end,
-	check_proc_func = CheckProcFunctions.on_melee_hit,
-	proc_func = function (params, template_data, template_context)
-		local is_push = params.damage_efficiency and params.damage_efficiency == damage_efficiencies.push
-		local is_ranged = params.attack_type == attack_types.ranged
-
-		if is_push or is_ranged then
-			return
-		end
-
-		template_data.finish = true
-	end,
-	conditional_exit_func = function (template_data)
-		return template_data.finish
-	end,
-	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash_charge"
-	}
-}
 templates.zealot_maniac_toughness_recovery_from_kills_increased = {
 	predicted = false,
 	class_name = "buff",
@@ -188,8 +227,10 @@ templates.zealot_maniac_critical_strike_toughness_defense = {
 }
 templates.zealot_maniac_critical_strike_toughness_defense_buff = {
 	predicted = false,
-	max_stacks = 1,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_5_3",
+	max_stacks = 1,
+	hud_priority = 4,
 	class_name = "buff",
 	duration = talent_settings.toughness_2.duration,
 	stat_buffs = {
@@ -210,6 +251,7 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
 		template_data.enemy_side_names = enemy_side_names
+		template_data.current_tick = 0
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		if not template_context.is_server then
@@ -235,10 +277,18 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 
 			local num_hits = broadphase:query(player_position, range, broadphase_results, enemy_side_names)
 
-			if num_hits > 0 then
-				Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+			if talent_settings.toughness_3.num_enemies < num_hits then
+				template_data.current_tick = template_data.current_tick + 1
+
+				if talent_settings.toughness_3.num_ticks_to_trigger <= template_data.current_tick then
+					Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+
+					template_data.current_tick = 0
+				end
 
 				template_data.next_regen_t = t + talent_settings.toughness_3.time
+			else
+				template_data.current_tick = 0
 			end
 		end
 	end
@@ -256,6 +306,94 @@ templates.zealot_maniac_increased_damage_vs_shocked = {
 	stat_buffs = {
 		[stat_buffs.damage_vs_stunned] = talent_settings.offensive_2.damage
 	}
+}
+templates.zealot_maniac_bleeding_crits = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		template_data.buff_extension = buff_extension
+	end,
+	proc_func = function (params, template_data, template_context)
+		local victim_unit = params.attacked_unit
+		local victim_buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
+		local target_is_bleeding = victim_buff_extension and victim_buff_extension:has_keyword(keywords.bleeding)
+
+		if target_is_bleeding then
+			local t = FixedFrame.get_latest_fixed_time()
+
+			template_data.buff_extension:add_internally_controlled_buff("zealot_maniac_critical_strike_chance_buff", t)
+		end
+
+		local damage = params.damage or 0
+		local is_damaging_crit = params.is_critical_strike and damage > 0
+
+		if is_damaging_crit and HEALTH_ALIVE[victim_unit] and victim_buff_extension then
+			local bleeding_dot_buff_name = "bleed"
+			local t = FixedFrame.get_latest_fixed_time()
+			local unit = template_context.unit
+
+			victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
+		end
+	end
+}
+templates.zealot_maniac_critical_strike_chance_buff = {
+	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_2_1",
+	predicted = false,
+	hud_priority = 4,
+	class_name = "buff",
+	duration = talent_settings.offensive_1.duration,
+	stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = talent_settings.offensive_1.melee_critical_strike_chance
+	}
+}
+local min_hits = talent_settings.offensive_2.min_hits
+templates.zealot_maniac_multi_hits_increase_impact = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_sweep_finish] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		template_data.buff_extension = buff_extension
+	end,
+	proc_func = function (params, template_data, template_context)
+		if params.num_hit_units < min_hits then
+			return
+		end
+
+		local t = FixedFrame.get_latest_fixed_time()
+
+		template_data.buff_extension:add_internally_controlled_buff("zealot_maniac_multi_hits_impact_buff", t)
+	end
+}
+local impact_buff_max_stacks = talent_settings.offensive_2.max_stacks
+templates.zealot_maniac_multi_hits_impact_buff = {
+	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_2_2_b",
+	duration = talent_settings.offensive_2.duration,
+	max_stacks = impact_buff_max_stacks,
+	stat_buffs = {
+		[stat_buffs.impact_modifier] = talent_settings.offensive_2.impact_modifier
+	},
+	conditional_keywords = {
+		keywords.uninterruptible
+	},
+	conditional_keywords_func = function (template_data, template_context)
+		return impact_buff_max_stacks <= template_context.stack_count
+	end
 }
 templates.zealot_maniac_attack_speed_low_health = {
 	predicted = false,
@@ -298,7 +436,7 @@ templates.zealot_maniac_coherency_crit_aura = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.source_unit = unit
 		local side_system = Managers.state.extension:system("side_system")
 		template_data.side = side_system.side_by_unit[unit]
 		template_data.max_stacks = martyrdom_default_stacks
@@ -310,14 +448,15 @@ templates.zealot_maniac_coherency_crit_aura = {
 			local has_special_rule = specialization_extension and specialization_extension:has_special_rule(special_rules.zealot_maniac_crit_aura)
 
 			if has_special_rule then
-				template_data.source_unit = player_unit
-				template_data.health_extension = ScriptUnit.extension(player_unit, "health_system")
 				local increased_stacks_talent = specialization_extension:has_special_rule(special_rules.martyrdom_increased_stacks)
 
 				if increased_stacks_talent then
+					template_data.source_unit = player_unit
 					template_data.max_stacks = martyrdom_talent_stacks
 
-					break
+					if player_unit == unit then
+						break
+					end
 				end
 			end
 		end
@@ -328,15 +467,33 @@ templates.zealot_maniac_coherency_crit_aura = {
 		end
 
 		local max_stacks = template_data.max_stacks
-		local health_extension = template_data.health_extension
-		local health_percentage = health_extension:current_health_percent()
-		local damage_taken_percentage = 1 - health_percentage
-		local current_stacks = math.floor(damage_taken_percentage / martyrdom_health_step)
-		current_stacks = math.clamp(current_stacks, 0, max_stacks)
-		local lerp_t = current_stacks / martyrdom_talent_stacks
+		local unit = template_data.source_unit
+		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-		return lerp_t
+		if health_extension then
+			local health_percentage = health_extension:current_health_percent()
+			local damage_taken_percentage = 1 - health_percentage
+			local current_stacks = math.floor(damage_taken_percentage / martyrdom_health_step)
+			current_stacks = math.clamp(current_stacks, 0, max_stacks)
+			local lerp_t = current_stacks / martyrdom_talent_stacks
+
+			return lerp_t
+		end
+
+		return 0
 	end
+}
+templates.zealot_maniac_martyrdom_power_level_bonus = {
+	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_1_2",
+	max_stacks = 1,
+	predicted = false,
+	hud_priority = 4,
+	class_name = "buff",
+	duration = talent_settings.coop_1.duration,
+	stat_buffs = {
+		[stat_buffs.power_level_modifier] = talent_settings.coop_1.power_level_modifier
+	}
 }
 templates.zealot_maniac_coherency_toughness_damage_resistance = {
 	predicted = false,
@@ -442,6 +599,7 @@ local melee_multiplier = talent_settings.defensive_1.melee_multiplier
 templates.zealot_maniac_resist_death_healing = {
 	predicted = false,
 	class_name = "proc_buff",
+	allow_proc_while_active = true,
 	proc_events = {
 		[proc_events.on_hit] = talent_settings.defensive_1.on_hit_proc_chance
 	},
@@ -470,30 +628,44 @@ templates.zealot_maniac_resist_death_healing = {
 		Health.add(unit, amount_to_add, "leech")
 
 		if DEDICATED_SERVER then
-			local health_extension = ScriptUnit.extension(unit, "health_system")
-			local max_health = health_extension:max_health()
-			local heal_percentage = amount_to_add / max_health
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-			local player = player_unit_spawn_manager:owner(unit)
+			local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-			Managers.stats:record_zealot_2_health_healed_with_leech_during_resist_death(player, heal_percentage)
+			if health_extension then
+				local max_health = health_extension:max_health()
+				local heal_percentage = amount_to_add / max_health
+				local player_unit_spawn_manager = Managers.state.player_unit_spawn
+				local player = player_unit_spawn_manager:owner(unit)
+
+				Managers.stats:record_zealot_2_health_healed_with_leech_during_resist_death(player, heal_percentage)
+			end
 		end
 	end
 }
 templates.zealot_maniac_movement_enhanced = {
 	predicted = true,
+	hud_priority = 4,
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_3_3",
 	class_name = "proc_buff",
 	active_duration = talent_settings.defensive_2.active_duration,
 	proc_events = {
 		[proc_events.on_damage_taken] = talent_settings.defensive_2.on_damage_taken_proc_chance
 	},
+	check_proc_func = function (params, template_data, template_context)
+		local attacked_unit = params.attacked_unit
+		local unit = template_context.unit
+
+		return attacked_unit == unit
+	end,
 	proc_stat_buffs = {
 		[stat_buffs.movement_speed] = talent_settings.defensive_2.movement_speed
 	},
 	keywords = {
-		keywords.slowdown_immune
+		keywords.slowdown_immune,
+		keywords.stun_immune
 	}
 }
+local num_slices = 10
 templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 	predicted = false,
 	class_name = "proc_buff",
@@ -507,7 +679,7 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 		template_data.last_update_t = 0
 		template_data.damage_pool = {}
 
-		for i = 1, 10 do
+		for i = 1, num_slices do
 			local damage_pool_slice = {
 				ticks = 0,
 				current_damage = 0
@@ -516,13 +688,19 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 		end
 	end,
 	proc_func = function (params, template_data, template_context)
+		local victim_unit = params.attacked_unit
+
+		if victim_unit ~= template_context.unit then
+			return
+		end
+
 		local damage_amount = params.damage_amount
 		local found_empty = false
 		local damage_pool = template_data.damage_pool
 		local recuperate_percentage = talent_settings.defensive_3.recuperate_percentage
 		damage_amount = damage_amount * recuperate_percentage
 
-		for i = 1, 10 do
+		for i = 1, num_slices do
 			local slice = damage_pool[i]
 
 			if slice.ticks == 0 then
@@ -560,7 +738,7 @@ templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 			local active = false
 			local total_heal = 0
 
-			for i = 1, 10 do
+			for i = 1, num_slices do
 				local slice = damage_pool[i]
 				local ticks = slice.ticks
 
@@ -607,11 +785,12 @@ templates.zealot_maniac_close_ranged_damage = {
 	end
 }
 templates.zealot_maniac_stacking_melee_damage = {
-	predicted = false,
 	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = talent_settings.offensive_2_2.on_hit_proc_chance
 	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
@@ -629,10 +808,11 @@ templates.zealot_maniac_stacking_melee_damage = {
 }
 templates.zealot_maniac_stacking_melee_damage_buff = {
 	predicted = false,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_5_1",
 	refresh_duration_on_stack = true,
+	hud_priority = 4,
 	class_name = "buff",
 	max_stacks = talent_settings.offensive_2_2.max_stacks,
-	max_stacks_cap = talent_settings.offensive_2_2.max_stacks_cap,
 	duration = talent_settings.offensive_2_2.duration,
 	stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings.offensive_2_2.melee_damage
@@ -673,7 +853,10 @@ templates.zealot_maniac_combat_ability_crits_reduce_cooldown = {
 	end
 }
 templates.zealot_maniac_combat_ability_attack_speed_increase = {
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_6_2",
 	predicted = false,
+	hud_priority = 3,
 	class_name = "proc_buff",
 	active_duration = talent_settings.combat_ability_2.active_duration,
 	proc_events = {

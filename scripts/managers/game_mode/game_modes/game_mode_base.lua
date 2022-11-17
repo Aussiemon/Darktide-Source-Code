@@ -1,3 +1,4 @@
+local AFKChecker = require("scripts/managers/game_mode/afk_checker")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local GameModeBase = class("GameModeBase")
@@ -55,6 +56,10 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 		local player_profile = player:profile()
 		self._cached_player_profile = table.clone_instance(player_profile)
 	end
+
+	if settings.afk_check then
+		self._afk_checker = AFKChecker:new(self._is_server, settings.afk_check, network_event_delegate)
+	end
 end
 
 GameModeBase.destroy = function (self)
@@ -74,10 +79,26 @@ GameModeBase.destroy = function (self)
 
 		player:set_profile(cached_profile)
 	end
+
+	if self._afk_checker then
+		self._afk_checker:delete()
+
+		self._afk_checker = nil
+	end
 end
 
 GameModeBase.server_update = function (self, dt, t)
 	self:_handle_bot_spawning()
+
+	if self._afk_checker then
+		self._afk_checker:server_update(dt, t)
+	end
+end
+
+GameModeBase.client_update = function (self, dt, t)
+	if self._afk_checker then
+		self._afk_checker:client_update(dt, t)
+	end
 end
 
 GameModeBase.name = function (self)
@@ -92,7 +113,7 @@ GameModeBase.state = function (self)
 	return self._state
 end
 
-GameModeBase.on_player_unit_spawn = function (self, player, is_respawn)
+GameModeBase.on_player_unit_spawn = function (self, player, unit, is_respawn)
 	return
 end
 
@@ -112,15 +133,19 @@ GameModeBase.cleanup_game_mode_units = function (self)
 	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
 
 	if bot_backfilling_allowed then
-		local bot_manager = Managers.bot
-		local bot_synchronizer_host = bot_manager:synchronizer_host()
+		self:_remove_all_bots()
+	end
+end
 
-		if bot_synchronizer_host then
-			local bot_ids = bot_synchronizer_host:active_bot_ids()
+GameModeBase._remove_all_bots = function (self)
+	local bot_manager = Managers.bot
+	local bot_synchronizer_host = bot_manager:synchronizer_host()
 
-			for local_player_id, _ in pairs(bot_ids) do
-				bot_synchronizer_host:remove_bot(local_player_id)
-			end
+	if bot_synchronizer_host then
+		local bot_ids = bot_synchronizer_host:active_bot_ids()
+
+		for local_player_id, _ in pairs(bot_ids) do
+			bot_synchronizer_host:remove_bot(local_player_id)
 		end
 	end
 end

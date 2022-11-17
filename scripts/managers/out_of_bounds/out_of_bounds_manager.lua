@@ -34,7 +34,7 @@ local function out_of_bounds_error(current_hard_oob)
 			is_owned_by_death_manager = true
 		end
 
-		units_text = string.format("%s\n\t%s (%s%s) is_owned_by_death_manager: %s", units_text, tostring(unit), tostring(position), ragdoll_position_text, tostring(is_owned_by_death_manager))
+		units_text = string.format("%s\n\t%s (%s%s) is_owned_by_death_manager: %s; level(%s)", units_text, tostring(unit), tostring(position), ragdoll_position_text, tostring(is_owned_by_death_manager), tostring(Unit.level(unit)))
 	end
 
 	ferror("[OutOfBoundsManager] Following units were out-of-bounds: %s\n", units_text)
@@ -56,9 +56,11 @@ local function register_new_hard_oob_units(current_hard_oob, previous_hard_oob)
 	end
 end
 
-OutOfBoundsManager.init = function (self)
+OutOfBoundsManager.init = function (self, world, hard_cap_extents, soft_cap_extents)
 	self._registered_units = Script.new_map(16)
 	self._local_hard_cap_out_of_bounds_units = Script.new_map(16)
+	self._hard_cap_extents = Vector3Box(hard_cap_extents)
+	self._soft_cap_extents = Vector3Box(soft_cap_extents)
 end
 
 OutOfBoundsManager.pre_update = function (self, shared_state)
@@ -119,6 +121,14 @@ OutOfBoundsManager.unregister_soft_oob_unit = function (self, unit, object)
 			registered_units[unit] = nil
 		end
 	end
+end
+
+OutOfBoundsManager.hard_cap_extents = function (self)
+	return self._hard_cap_extents:unbox()
+end
+
+OutOfBoundsManager.soft_cap_extents = function (self)
+	return self._soft_cap_extents:unbox()
 end
 
 return OutOfBoundsManager

@@ -19,7 +19,62 @@ local default_armor_decal = {
 	}
 }
 local unarmored = {
-	sfx = {},
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_unarmored",
+				append_husk_to_event_name = true
+			}
+		}
+	},
 	vfx = {},
 	linked_decal = {
 		weakspot_died = default_armor_decal,
@@ -44,10 +99,18 @@ local default_surface_decal = {
 		"content/fx/units/decal_cross_01"
 	}
 }
-local default_surface_fx = nil
+local default_surface_fx = {
+	sfx = {
+		{
+			group = "surface_material",
+			append_husk_to_event_name = true,
+			event = "wwise/events/weapon/play_grenade_surface_impact",
+			normal_rotation = true
+		}
+	},
+	vfx = {}
+}
 local surface_decal = {}
-
-ImpactFxHelper.create_missing_surface_decals(surface_decal)
 
 return {
 	armor = {

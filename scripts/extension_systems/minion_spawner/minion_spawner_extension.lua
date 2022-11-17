@@ -5,6 +5,7 @@ local MinionSpawnerSpawnPosition = require("scripts/extension_systems/minion_spa
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
 local MinionSpawnerExtension = class("MinionSpawnerExtension")
+MinionSpawnerExtension.UPDATE_DISABLED_BY_DEFAULT = true
 local DEFAULT_SPAWN_DELAY = 0.25
 
 MinionSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -13,6 +14,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._nav_world = extension_init_context.nav_world
 	self._nav_tag_cost_table = extension_init_context.nav_tag_cost_table
 	self._traverse_logic = extension_init_context.traverse_logic
+	self._owner_system = extension_init_context.owner_system
 	self._spawn_queue = MinionSpawnerQueue:new()
 	self._next_spawn_time = nil
 	self._is_setup = false
@@ -78,6 +80,7 @@ MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, o
 		self._next_spawn_time = 0
 
 		Component.event(self._unit, "minion_spawner_spawning_started")
+		self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 	end
 
 	return queue_id
@@ -125,6 +128,7 @@ MinionSpawnerExtension.update = function (self, unit, dt, t)
 			self._next_spawn_time = nil
 
 			Component.event(self._unit, "minion_spawner_spawning_done")
+			self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
 		end
 	end
 end

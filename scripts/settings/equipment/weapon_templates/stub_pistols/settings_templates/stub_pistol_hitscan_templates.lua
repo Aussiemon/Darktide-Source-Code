@@ -16,13 +16,13 @@ hitscan_templates.default_stub_pistol_bfg = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.025,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }

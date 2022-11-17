@@ -1,8 +1,10 @@
 local TrainingGroundsObjectivesLookup = require("scripts/settings/training_grounds/training_grounds_objectives_lookup")
+local TrainingGroundsActionsLookup = require("scripts/settings/training_grounds/training_grounds_actions_lookup")
 local step_info_lookup = {
 	armor_types = {
 		description = "loc_armor_desc",
 		title = "loc_armor",
+		input_descriptions = TrainingGroundsActionsLookup.armor_heavy_attack,
 		objectives = {
 			TrainingGroundsObjectivesLookup.armor_objective_2
 		}
@@ -18,6 +20,7 @@ local step_info_lookup = {
 	pushing = {
 		description = "loc_pushing_desc",
 		title = "loc_pushing",
+		input_descriptions = TrainingGroundsActionsLookup.push,
 		objectives = {
 			TrainingGroundsObjectivesLookup.push
 		}
@@ -25,6 +28,7 @@ local step_info_lookup = {
 	push_follow_up = {
 		description = "loc_push_follow_up_desc",
 		title = "loc_push_follow_up",
+		input_descriptions = TrainingGroundsActionsLookup.push_follow_up,
 		objectives = {
 			TrainingGroundsObjectivesLookup.push_follow
 		}
@@ -63,6 +67,7 @@ local step_info_lookup = {
 	grunt_blitz = {
 		description = "loc_ability_frag_grenade_description",
 		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
 		objectives = {
 			TrainingGroundsObjectivesLookup.grenade
 		}
@@ -70,6 +75,7 @@ local step_info_lookup = {
 	bonebreaker_blitz = {
 		description = "loc_ability_ogryn_grenade_box_description",
 		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
 		objectives = {
 			TrainingGroundsObjectivesLookup.bonebreaker_blitz
 		}
@@ -77,6 +83,7 @@ local step_info_lookup = {
 	maniac_blitz = {
 		description = "loc_ability_shock_grenade_description",
 		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
 		objectives = {
 			TrainingGroundsObjectivesLookup.maniac_blitz
 		}
@@ -84,6 +91,7 @@ local step_info_lookup = {
 	biomancer_blitz = {
 		description = "loc_psyker_ability_desc",
 		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_psyker_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.biomancer_blitz
 		}
@@ -91,6 +99,7 @@ local step_info_lookup = {
 	ranged_grenade = {
 		description = "loc_ranged_grenade_desc",
 		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
 		objectives = {
 			TrainingGroundsObjectivesLookup.grenade
 		}
@@ -98,6 +107,7 @@ local step_info_lookup = {
 	tagging = {
 		description = "loc_tagging_desc",
 		title = "loc_tagging",
+		input_descriptions = TrainingGroundsActionsLookup.tag_and_world_markers,
 		objectives = {
 			TrainingGroundsObjectivesLookup.tag_sniper,
 			TrainingGroundsObjectivesLookup.tag_world
@@ -106,6 +116,7 @@ local step_info_lookup = {
 	dodge = {
 		description = "loc_dodging_tutorial_desc",
 		title = "loc_dodging_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.dodge,
 		objectives = {
 			TrainingGroundsObjectivesLookup.dodge_left,
 			TrainingGroundsObjectivesLookup.dodge_backward,
@@ -115,6 +126,7 @@ local step_info_lookup = {
 	sprint_slide = {
 		description = "loc_sprint_slide_desc",
 		title = "loc_sprint_slide",
+		input_descriptions = TrainingGroundsActionsLookup.sprint_and_slide,
 		objectives = {
 			TrainingGroundsObjectivesLookup.slide
 		}
@@ -138,8 +150,7 @@ local step_info_lookup = {
 		description = "loc_toughness_tutorial_desc",
 		title = "loc_toughness_tutorial",
 		objectives = {
-			TrainingGroundsObjectivesLookup.toughness_melee,
-			TrainingGroundsObjectivesLookup.toughness_coherency
+			TrainingGroundsObjectivesLookup.toughness_melee
 		}
 	},
 	toughness_pre = {
@@ -154,6 +165,7 @@ local step_info_lookup = {
 	combat_ability = {
 		description = "loc_combat_ability_tutorial_desc",
 		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability
 		}
@@ -161,6 +173,7 @@ local step_info_lookup = {
 	combat_ability_bone_breaker = {
 		description = "loc_combat_ability_tutorial_ogryn_desc",
 		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_ogryn_1,
 			TrainingGroundsObjectivesLookup.combat_ability_ogryn_2
@@ -169,6 +182,7 @@ local step_info_lookup = {
 	combat_ability_biomancer = {
 		description = "loc_combat_ability_tutorial_psyker_desc",
 		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3
 		}
@@ -176,6 +190,7 @@ local step_info_lookup = {
 	combat_ability_protectorate = {
 		description = "loc_combat_ability_tutorial_psyker_3_desc",
 		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_1,
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_2
@@ -184,23 +199,49 @@ local step_info_lookup = {
 	combat_ability_maniac = {
 		description = "loc_combat_ability_tutorial_zealot_desc",
 		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_zealot_1,
 			TrainingGroundsObjectivesLookup.combat_ability_zealot_2
 		}
 	},
-	weapon_special = {
+	weapon_special_chainsword = {
 		description = "loc_weapon_special_desc",
 		title = "loc_weapon_special",
+		input_descriptions = TrainingGroundsActionsLookup.weapon_special_chainsword,
+		objectives = {
+			TrainingGroundsObjectivesLookup.weapon_special
+		}
+	},
+	weapon_special_forcesword = {
+		description = "loc_weapon_special_desc",
+		title = "loc_weapon_special",
+		input_descriptions = TrainingGroundsActionsLookup.weapon_special_forcesword,
+		objectives = {
+			TrainingGroundsObjectivesLookup.weapon_special
+		}
+	},
+	weapon_special_ogrynknife = {
+		description = "loc_weapon_special_desc",
+		title = "loc_weapon_special",
+		input_descriptions = TrainingGroundsActionsLookup.weapon_special_ogrynknife,
 		objectives = {
 			TrainingGroundsObjectivesLookup.weapon_special
 		}
 	},
 	chain_attack = {
-		description = "loc_chain_light_desc",
+		description = "loc_tg_attack_chain_light",
 		title = "loc_chain_light",
+		input_descriptions = TrainingGroundsActionsLookup.attack_chains,
 		objectives = {
-			TrainingGroundsObjectivesLookup.attack_chain,
+			TrainingGroundsObjectivesLookup.attack_chain
+		}
+	},
+	chain_attack_heavy = {
+		description = "loc_tg_attack_chain_heavy",
+		title = "loc_chain_light",
+		input_descriptions = TrainingGroundsActionsLookup.attack_chains_heavy,
+		objectives = {
 			TrainingGroundsObjectivesLookup.attack_chain_2
 		}
 	},
@@ -229,11 +270,10 @@ local step_info_lookup = {
 	healing_self_and_others = {
 		description = "loc_healing_self_and_others_desc",
 		title = "loc_healing_self_and_others",
+		input_descriptions = TrainingGroundsActionsLookup.health_and_ammo_kits,
 		objectives = {
 			TrainingGroundsObjectivesLookup.healing_objective_1,
-			TrainingGroundsObjectivesLookup.healing_objective_2,
-			TrainingGroundsObjectivesLookup.healing_objective_3,
-			TrainingGroundsObjectivesLookup.healing_objective_4
+			TrainingGroundsObjectivesLookup.healing_objective_3
 		}
 	},
 	end_of_tg = {

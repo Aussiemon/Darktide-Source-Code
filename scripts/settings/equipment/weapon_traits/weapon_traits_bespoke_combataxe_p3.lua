@@ -26,7 +26,7 @@ local templates = {
 		}
 	},
 	weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger = {
-		weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger = {
+		weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger_parent = {
 			{
 				stat_buffs = {
 					[stat_buffs.melee_impact_modifier] = 0.1

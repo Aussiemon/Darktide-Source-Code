@@ -34,8 +34,8 @@ local FAR_COMBAT = {
 	"BtRandomUtilityNode",
 	{
 		"BtMoveToCombatVectorAction",
-		name = "move_to_combat_vector",
-		action_data = action_data.move_to_combat_vector
+		name = "move_to_combat_vector_far",
+		action_data = action_data.move_to_combat_vector_far
 	},
 	{
 		"BtShootAction",

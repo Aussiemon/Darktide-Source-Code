@@ -35,7 +35,7 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 
 	health_ext:kill()
 
-	self._time_to_despawn = t + params.time_to_despawn_corpse or 0
+	self._time_to_despawn = t + (params.time_to_despawn_corpse or 0)
 
 	if not self._triggered_ragdoll then
 		self._animation_extension:anim_event("ragdoll")

@@ -118,6 +118,9 @@ end
 TelemetryEvents.game_shutdown = function (self)
 	local event = self:_create_event("game_shutdown")
 
+	event:set_data({
+		time_in_game = Application.time_since_launch()
+	})
 	self._manager:register_event(event)
 end
 
@@ -187,6 +190,10 @@ TelemetryEvents.gameplay_stopped = function (self)
 
 	local event = self:_create_event("gameplay_stopped")
 
+	event:set_data({
+		map = self._context.map,
+		host_type = self._context.host_type
+	})
 	self._manager:register_event(event)
 
 	self._session.gameplay = nil
@@ -198,6 +205,11 @@ TelemetryEvents.player_authenticated = function (self, account)
 	local event = self:_create_event("player_authenticated")
 
 	self._manager:register_event(event)
+end
+
+TelemetryEvents.local_player_spawned = function (self, player)
+	self._subject.account_id = player:account_id()
+	self._subject.character_id = player:character_id()
 end
 
 TelemetryEvents.system_settings = function (self)
@@ -317,6 +329,22 @@ TelemetryEvents.player_knocked_down = function (self, player, data)
 end
 
 TelemetryEvents.player_died = function (self, player, data)
+	local reason = data.reason or ""
+
+	if reason == "player_unit_despawned" then
+		Log.debug("TelemetryEvents", "Skipping 'player_died' event due to reason = '%s'", reason)
+
+		return
+	end
+
+	local damage_profile = data.damage_profile or ""
+
+	if damage_profile == "kill_volume_and_ofF_navmesh" then
+		Log.debug("TelemetryEvents", "Skipping 'player_died' event due to damage profile = '%s'", damage_profile)
+
+		return
+	end
+
 	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
 	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
 
@@ -438,6 +466,15 @@ TelemetryEvents.player_completed_objective = function (self, player, objective)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.boss_encounter_started = function (self, breed)
+	local event = self:_create_event("boss_encounter_started")
+
+	event:set_data({
+		breed = breed
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.picked_items_report = function (self, reports)
 	for player, report in pairs(reports) do
 		local entries = report.entries
@@ -535,6 +572,18 @@ TelemetryEvents.camera_performance_measurements = function (self, map, camera, m
 		camera_id = camera.id_string,
 		camera_name = camera.name,
 		go_to_camera_position_link = camera.go_to_camera_position_link,
+		ms_per_frame = measurements.ms_per_frame,
+		batchcount = measurements.batchcount,
+		primitives_count = measurements.primitives_count
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.performance_measurements = function (self, map, measurements)
+	local event = self:_create_event("performance_measurements")
+
+	event:set_data({
+		map = map,
 		ms_per_frame = measurements.ms_per_frame,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
@@ -738,6 +787,15 @@ TelemetryEvents.training_grounds_completed = function (self, start_type, finish_
 		user_quit = user_quit,
 		is_onboarding = is_onboarding,
 		duration = duration
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.chat_message_sent = function (self, message_body)
+	local event = self:_create_event("chat_message_sent")
+
+	event:set_data({
+		message_length = message_body:len()
 	})
 	self._manager:register_event(event)
 end

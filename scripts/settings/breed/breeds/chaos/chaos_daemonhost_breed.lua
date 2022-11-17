@@ -21,15 +21,15 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_daemonhost"
 local breed_data = {
-	navigation_propagation_box_extent = 200,
 	walk_speed = 1.9,
 	use_navigation_path_splines = true,
-	use_bone_lod = true,
+	use_bone_lod = false,
+	navigation_propagation_box_extent = 200,
 	sub_faction_name = "chaos",
-	ignore_ally_alerts = true,
 	unit_template_name = "minion",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
+	ignore_ally_alerts = true,
 	stagger_resistance = 1,
 	boss_health_bar_disabled = true,
 	use_action_controlled_alert = true,
@@ -46,7 +46,6 @@ local breed_data = {
 	state_machine = "content/characters/enemy/chaos_daemonhost_witch/third_person/animations/chaos_daemonhost_witch",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 50,
-	trigger_boss_health_bar_on_aggro = true,
 	player_locomotion_constrain_radius = 0.3,
 	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
@@ -59,6 +58,9 @@ local breed_data = {
 		minion = true,
 		witch = true,
 		monster = true
+	},
+	testify_flags = {
+		spawn_all_enemies = false
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,
@@ -99,15 +101,15 @@ local breed_data = {
 	},
 	combat_range_data = BreedCombatRanges.chaos_daemonhost,
 	suppress_config = {
-		threat_factor = 3,
+		threat_factor = 20,
 		require_line_of_sight = true,
-		threshold = 8,
-		decay_amount = 0.5,
-		max_value = math.huge,
+		threshold = 40,
+		max_value = 50,
+		decay_amount = 1,
 		decay_speeds = {
-			melee = 0.05,
-			far = 2,
-			close = 2
+			melee = 1,
+			far = 1,
+			close = 1
 		}
 	},
 	attack_intensity_cooldowns = {
@@ -139,7 +141,8 @@ local breed_data = {
 		lerp_speed = 10,
 		target = "head_aim_target",
 		distance = 5,
-		require_line_of_sight = true,
+		require_line_of_sight = false,
+		ignore_require_target = true,
 		node = "j_neck",
 		target_node = "enemy_aim_target_03"
 	},
@@ -378,6 +381,34 @@ local breed_data = {
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
+	},
+	hitzone_damage_multiplier = {
+		melee = {
+			[hit_zone_names.head] = 0.9,
+			[hit_zone_names.torso] = 0.7,
+			[hit_zone_names.lower_left_arm] = 0.7,
+			[hit_zone_names.lower_right_arm] = 0.7,
+			[hit_zone_names.lower_left_leg] = 0.7,
+			[hit_zone_names.lower_right_leg] = 0.7,
+			[hit_zone_names.upper_left_arm] = 0.7,
+			[hit_zone_names.upper_right_arm] = 0.7,
+			[hit_zone_names.upper_left_leg] = 0.7,
+			[hit_zone_names.upper_right_leg] = 0.7,
+			[hit_zone_names.center_mass] = 0.7
+		},
+		ranged = {
+			[hit_zone_names.head] = 0.7,
+			[hit_zone_names.torso] = 0.6,
+			[hit_zone_names.lower_left_arm] = 0.6,
+			[hit_zone_names.lower_right_arm] = 0.6,
+			[hit_zone_names.lower_left_leg] = 0.6,
+			[hit_zone_names.lower_right_leg] = 0.6,
+			[hit_zone_names.upper_left_arm] = 0.6,
+			[hit_zone_names.upper_right_arm] = 0.6,
+			[hit_zone_names.upper_left_leg] = 0.6,
+			[hit_zone_names.upper_right_leg] = 0.6,
+			[hit_zone_names.center_mass] = 0.6
+		}
 	},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_daemonhost
 }

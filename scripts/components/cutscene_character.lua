@@ -10,13 +10,15 @@ CutsceneCharacter.init = function (self, unit)
 	self._character_type = character_type
 	local breed_name = self:get_data(unit, "breed_name")
 	self._breed_name = breed_name
-	local prop_items = self:get_data(unit, "prop_items")
 	local cinematic_slot = self:get_data(unit, "cinematic_slot")
 	self._cinematic_slot = cinematic_slot
 	local cutscene_character_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
 
 	if cutscene_character_extension then
-		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot)
+		local prop_items = self:get_data(unit, "prop_items")
+		local animation_event = self:get_data(unit, "animation_event")
+
+		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event)
 	end
 end
 
@@ -54,6 +56,12 @@ CutsceneCharacter.start_weapon_specific_walk_animation = function (self)
 	cutscene_character_extension:start_weapon_specific_walk_animation()
 end
 
+CutsceneCharacter.start_inventory_specific_walk_animation = function (self)
+	local cutscene_character_extension = ScriptUnit.extension(self._unit, "cutscene_character_system")
+
+	cutscene_character_extension:start_inventory_specific_walk_animation()
+end
+
 CutsceneCharacter.component_data = {
 	cinematic_name = {
 		value = "none",
@@ -83,7 +91,8 @@ CutsceneCharacter.component_data = {
 			"Path of Trust 06",
 			"Path of Trust 07",
 			"Path of Trust 08",
-			"Path of Trust 09"
+			"Path of Trust 09",
+			"Traitor Captain Intro"
 		},
 		options_values = {
 			"none",
@@ -109,7 +118,8 @@ CutsceneCharacter.component_data = {
 			"path_of_trust_06",
 			"path_of_trust_07",
 			"path_of_trust_08",
-			"path_of_trust_09"
+			"path_of_trust_09",
+			"traitor_captain_intro"
 		}
 	},
 	character_type = {
@@ -168,8 +178,29 @@ CutsceneCharacter.component_data = {
 			4
 		}
 	},
+	animation_event = {
+		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Animation Inventory Event",
+		options_keys = {
+			"None",
+			"ready_idle",
+			"unready_idle",
+			"to_ready"
+		},
+		options_values = {
+			"none",
+			"cin_ready",
+			"unready_idle",
+			"ready"
+		}
+	},
 	inputs = {
 		start_weapon_specific_walk_animation = {
+			accessibility = "public",
+			type = "event"
+		},
+		start_inventory_specific_walk_animation = {
 			accessibility = "public",
 			type = "event"
 		}

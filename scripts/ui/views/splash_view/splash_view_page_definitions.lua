@@ -115,14 +115,35 @@ local splash_definitions = {
 	{
 		{
 			video_name = "content/videos/darktide_world_intro",
-			sound_name = "wwise/events/cinematics/play_e3_trailer",
-			exit_sound_name = "wwise/events/cinematics/stop_e3_trailer",
-			type = "video"
+			sound_name = "wwise/events/cinematics/play_intro_cinematic_surround",
+			type = "video",
+			exit_sound_name = "wwise/events/cinematics/stop_intro_cinematic_surround",
+			size = {
+				1920,
+				816
+			},
+			position = {
+				0,
+				132,
+				0
+			}
 		},
-		duration = 115
+		two_step_skip = true,
+		duration = 165
 	},
 	{
 		duration = 1
+	}
+}
+local legend_inputs = {
+	{
+		input_action = "skip_cinematic",
+		display_name = "loc_continue",
+		alignment = "left_alignment",
+		on_pressed_callback = "on_skip_pressed",
+		visibility_function = function (parent)
+			return parent._show_skip
+		end
 	}
 }
 local total_duration = 0
@@ -134,5 +155,6 @@ end
 return {
 	time_between_pages = 1,
 	pages = splash_definitions,
-	duration = total_duration
+	duration = total_duration,
+	legend_inputs = legend_inputs
 }

@@ -1,3 +1,7 @@
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local MasterItems = require("scripts/backend/master_items")
+local Pickups = require("scripts/settings/pickup/pickups")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local SideMissionPickupSynchronizerExtension = class("SideMissionPickupSynchronizerExtension", "EventSynchronizerBaseExtension")
 
 SideMissionPickupSynchronizerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -8,8 +12,9 @@ SideMissionPickupSynchronizerExtension.init = function (self, extension_init_con
 	self._increment_value = 0
 	self._player_buff_amount = 0
 	self._pickup_data = nil
-	self._player_buff_indices = {}
+	self._player_buff_id = {}
 	self._should_sync_buffs = false
+	self._stored_grimoires = 0
 end
 
 SideMissionPickupSynchronizerExtension.setup_from_component = function (self, auto_start_on_level_spawned)
@@ -45,10 +50,10 @@ end
 SideMissionPickupSynchronizerExtension._sync_buffs = function (self, t)
 	local player_manager = Managers.player
 	local players = player_manager:players()
-	local player_buff_indices = self._player_buff_indices
+	local player_buff_id = self._player_buff_id
 
 	for unique_id, player in pairs(players) do
-		if not player_buff_indices[player] then
+		if not player_buff_id[player] then
 			for i = 1, self._player_buff_amount do
 				self:_add_buff(t, player)
 			end
@@ -82,6 +87,38 @@ SideMissionPickupSynchronizerExtension.update = function (self, unit, dt, t)
 			self._increment_value = 0
 		end
 	end
+end
+
+SideMissionPickupSynchronizerExtension.grant_grimoire = function (self, player_unit)
+	if self._stored_grimoires <= 0 then
+		return
+	end
+
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+	local inventory_component = unit_data_extension:read_component("inventory")
+	local slot_pocketable = "slot_pocketable"
+	local item_name = inventory_component[slot_pocketable]
+
+	if not item_name == "not_equipped" then
+		return
+	end
+
+	local t = FixedFrame.get_latest_fixed_time()
+	local pickup_data = Pickups.by_name.grimoire
+	local item_definitions = MasterItems.get_cached()
+	local inventory_item = item_definitions[pickup_data.inventory_item]
+
+	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, slot_pocketable, nil, t)
+
+	if inventory_component.wielded_slot == slot_pocketable then
+		PlayerUnitVisualLoadout.wield_slot(slot_pocketable, player_unit, t)
+	end
+
+	self._stored_grimoires = self._stored_grimoires - 1
+end
+
+SideMissionPickupSynchronizerExtension.store_grimoire = function (self)
+	self._stored_grimoires = self._stored_grimoires + 1
 end
 
 SideMissionPickupSynchronizerExtension.start_event = function (self)
@@ -130,34 +167,30 @@ end
 
 SideMissionPickupSynchronizerExtension._add_buff = function (self, t, player)
 	local buff_extension = ScriptUnit.extension(player.player_unit, "buff_system")
-	local _, index, component_index = buff_extension:add_externally_controlled_buff(self._pickup_data.buff_name, t)
-	local index_array = self._player_buff_indices[player]
-	index_array = index_array or {}
-	local indexes = {
-		index,
-		component_index
+	local buff_array = self._player_buff_id[player] or {}
+	local _, buff_id, component_index = buff_extension:add_externally_controlled_buff(self._pickup_data.buff_name, t)
+	local buff_data = {
+		buff_id = buff_id,
+		component_index = component_index
 	}
-	index_array[#index_array + 1] = indexes
-	self._player_buff_indices[player] = index_array
+	buff_array[#buff_array + 1] = buff_data
+	self._player_buff_id[player] = buff_array
 end
 
 SideMissionPickupSynchronizerExtension._remove_buff = function (self, player)
-	local index_array = self._player_buff_indices[player]
+	local buff_array = self._player_buff_id[player]
 
-	if not index_array then
+	if not buff_array or #buff_array == 0 then
 		return
 	end
 
-	local array_length = #index_array
-	local indexes = index_array[array_length]
-	local index = indexes[1]
-	local component_index = indexes[2]
+	local buff_index = #buff_array
+	local buff_data = buff_array[buff_index]
 	local buff_extension = ScriptUnit.extension(player.player_unit, "buff_system")
 
-	buff_extension:remove_externally_controlled_buff(index, component_index)
+	buff_extension:remove_externally_controlled_buff(buff_data.buff_id, buff_data.component_index)
 
-	index_array[array_length] = nil
-	self._player_buff_indices[player] = index_array
+	buff_array[buff_index] = nil
 end
 
 return SideMissionPickupSynchronizerExtension

@@ -5,31 +5,30 @@ local LUA_TYPES = {
 	weapon_sway = "number",
 	prd_state = "prd_state",
 	weapon_spread = "number",
-	powered_weapon_intensity = "number",
 	Unit = "Unit",
 	number = "number",
+	fixed_frame_offset_start_t_7bit = "number",
 	specialization_resource = "number",
 	player_anim_time = "number",
-	minigame_state_id = "number",
 	actor_node_index = "number",
 	locomotion_rotation = "Quaternion",
-	weapon_overheat = "number",
 	buff_stack_count = "number",
+	weapon_overheat = "number",
+	minigame_state_id = "number",
 	mover_frames = "number",
-	fixed_frame_offset_start_t_7bit = "number",
+	Vector3 = "Vector3",
 	fixed_frame_offset_end_t_7bit = "number",
 	percentage = "number",
-	Vector3 = "Vector3",
 	fixed_frame_offset = "number",
 	fixed_frame_offset_small = "number",
+	high_precision_direction = "Vector3",
 	extra_long_distance = "number",
 	player_anim_layer = "number",
 	local_move_speed = "number",
-	high_precision_direction = "Vector3",
+	buff_id = "number",
 	stamina_fraction = "number",
 	buff_proc_count = "number",
 	low_precision_long_distance = "number",
-	buff_id = "number",
 	action_time_scale = "number",
 	bool = "boolean",
 	player_anim = "number",
@@ -107,23 +106,27 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 			local field_network_name = component_name .. "_" .. field_name
 			local field_type, field_network_type, lookup = nil
 			local skip_predict_verification = false
+			local use_network_lookup = nil
 
 			if type(data) == "table" then
 				field_type = "string"
-				lookup = {}
-				local lookup_size = #data
-
-				for i = 1, lookup_size do
-					local val = data[i]
-					lookup[i] = val
-					lookup[val] = i
-				end
-
+				use_network_lookup = data.use_network_lookup
 				field_network_type = data.network_type
 
-				if not field_network_type then
-					local num_bits = math.floor(math.log(lookup_size) / math.log(2)) + 1
-					field_network_type = "lookup_" .. num_bits .. "bit"
+				if not use_network_lookup then
+					lookup = {}
+					local lookup_size = #data
+
+					for i = 1, lookup_size do
+						local val = data[i]
+						lookup[i] = val
+						lookup[val] = i
+					end
+
+					if not field_network_type then
+						local num_bits = math.floor(math.log(lookup_size) / math.log(2)) + 1
+						field_network_type = "lookup_" .. num_bits .. "bit"
+					end
 				end
 
 				skip_predict_verification = data.skip_predict_verification or false
@@ -157,7 +160,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 				field_network_name,
 				field_network_type,
 				lookup,
-				skip_predict_verification
+				skip_predict_verification,
+				use_network_lookup
 			}
 			component_config[field_name] = {
 				type = field_type,

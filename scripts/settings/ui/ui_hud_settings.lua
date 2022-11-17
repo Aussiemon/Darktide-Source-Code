@@ -11,10 +11,10 @@ local ui_hud_settings = {
 			0.238
 		}
 	},
-	color_tint_main_1 = Color.ui_hud_green_super_light(255, true),
-	color_tint_main_2 = Color.ui_hud_green_light(255, true),
-	color_tint_main_3 = Color.ui_hud_green_medium(255, true),
-	color_tint_main_4 = Color.ui_hud_green_dark(255, true),
+	color_tint_main_1 = Color.terminal_text_header(255, true),
+	color_tint_main_2 = Color.terminal_text_body(255, true),
+	color_tint_main_3 = Color.terminal_text_body_sub_header(255, true),
+	color_tint_main_4 = Color.terminal_frame(255, true),
 	color_tint_secondary_1 = Color.ui_hud_yellow_super_light(255, true),
 	color_tint_secondary_2 = Color.ui_hud_yellow_light(255, true),
 	color_tint_secondary_3 = Color.ui_hud_yellow_medium(255, true),
@@ -22,6 +22,9 @@ local ui_hud_settings = {
 	color_tint_alert_2 = Color.ui_hud_red_light(255, true),
 	color_tint_alert_3 = Color.ui_hud_red_medium(255, true),
 	color_tint_alert_4 = Color.ui_hud_red_dark(255, true),
+	color_tint_ammo_low = Color.ui_hud_overcharge_low(255, true),
+	color_tint_ammo_medium = Color.ui_hud_overcharge_medium(255, true),
+	color_tint_ammo_high = Color.ui_hud_overcharge_high(255, true),
 	color_tint_0 = {
 		150,
 		0,

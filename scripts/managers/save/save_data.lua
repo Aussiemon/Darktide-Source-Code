@@ -5,7 +5,10 @@ SaveData.default_account_data = {
 		controller_layout = "default",
 		controller_look_scale = 1,
 		controller_enable_acceleration = true,
+		mouse_invert_look_y = false,
+		com_wheel_delay = 0.3,
 		controller_look_dead_zone = 0.1,
+		mouse_look_scale = 1,
 		controller_invert_look_y = false,
 		stationary_dodge = false,
 		diagonal_forward_dodge = true,
@@ -18,7 +21,9 @@ SaveData.default_account_data = {
 		subtitle_font_size = 32,
 		news_enabled = true,
 		subtitle_text_opacity = 100,
-		subtitle_speaker_enabled = true
+		camera_movement_offset_sway_intensity = 100,
+		subtitle_speaker_enabled = true,
+		profanity_filter_enabled = true
 	},
 	completed_profile_prologues = {},
 	viewed_news_slides = {},
@@ -29,7 +34,8 @@ SaveData.default_character_data = {
 	new_items = {},
 	new_items_by_type = {},
 	new_item_notifications = {},
-	new_completed_contracts = {}
+	new_completed_contracts = {},
+	new_unlocked_talent_groups = {}
 }
 
 SaveData.init = function (self)

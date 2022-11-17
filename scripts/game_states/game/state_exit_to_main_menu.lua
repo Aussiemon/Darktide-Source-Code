@@ -46,6 +46,7 @@ StateExitToMainMenu._update_loading = function (self)
 			local next_state_params = self._next_state_params
 			next_state_params.main_menu_loader = main_menu_loader
 			next_state_params.profiles = profiles_data.profiles
+			next_state_params.gear = profiles_data.gear
 			next_state_params.selected_profile = profiles_data.selected_profile
 			next_state_params.has_created_first_character = true
 		else

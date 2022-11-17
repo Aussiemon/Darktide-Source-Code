@@ -7,6 +7,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local Suppression = require("scripts/utilities/attack/suppression")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
@@ -30,9 +31,14 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 
 	if last_action_warp_charge_percent then
 		local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
-		local extreme_warp_charge_threshold = specialization_warp_charge_template.extreme_threshold
+		local critical_warp_charge_threshold = specialization_warp_charge_template.critical_threshold
+		local dif = 1 - critical_warp_charge_threshold
+		local stat_buffs = self._buff_extension:stat_buffs()
+		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1
+		local new_dif = dif * warp_charge_reduction
+		critical_warp_charge_threshold = 1 - new_dif
 
-		if last_action_warp_charge_percent < extreme_warp_charge_threshold then
+		if last_action_warp_charge_percent < critical_warp_charge_threshold then
 			self._prevent_explosion = true
 		end
 	end
@@ -47,8 +53,9 @@ ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 	local target_unit = targeting_component.target_unit_1
 
 	if should_fire then
+		local charge_level = self:_consume_charge_level()
+
 		if target_unit then
-			local charge_level = self:_consume_charge_level()
 			local dealt_damage = self:_deal_damage(charge_level)
 
 			if prevent_explosion and dealt_damage then
@@ -63,7 +70,7 @@ ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 	end
 
 	if not prevent_explosion then
-		local warp_charge_time = 0.5
+		local warp_charge_time = action_settings.pay_warp_charge_time or 0.5
 		local should_add_warp_charge = ActionUtility.is_within_trigger_time(time_in_action, dt, warp_charge_time)
 
 		if self._dealt_damage and should_add_warp_charge then
@@ -117,6 +124,14 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 		hit_world_position = Unit.world_position(target_unit, actor_node)
 	end
 
+	if self._is_server then
+		local suppression_settings = action_settings.suppression_settings
+
+		if suppression_settings then
+			Suppression.apply_area_minion_suppression(player_unit, suppression_settings, hit_unit_pos)
+		end
+	end
+
 	local herding_template = action_settings.herding_template
 	local damage_dealt, attack_result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "hit_actor", hit_actor, "attacking_unit", player_unit, "attack_direction", attack_direction, "herding_template", herding_template, "attack_type", AttackSettings.attack_types.ranged, "damage_type", damage_type, "item", self._weapon.item)
 
@@ -154,19 +169,19 @@ ActionDamageTarget._play_particles = function (self)
 	end
 
 	local effect_name = fx.vfx_effect
-	local effect_to_play = effect_name
 
-	if not effect_to_play then
+	if not effect_name then
 		return
 	end
 
 	local spawner_name = fx.fx_source
 	local fx_extension = self._fx_extension
 	local link = true
-	local orphaned_policy = "destroy"
+	local orphaned_policy = "stop"
 	local position_offset = fx.fx_position_offset and fx.fx_position_offset:unbox()
 	local rotation_offset = fx.fx_rotation_offset and fx.fx_rotation_offset:unbox()
-	local particle_id = fx_extension:spawn_unit_particles(effect_to_play, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+
+	fx_extension:spawn_unit_particles(effect_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
 end
 
 return ActionDamageTarget

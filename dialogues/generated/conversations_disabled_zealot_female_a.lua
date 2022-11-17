@@ -10,6 +10,17 @@ local conversations_disabled_zealot_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	combat_pause_limited_veteran_c_06_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__combat_pause_limited_veteran_c_06_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.790583
+		},
+		randomize_indexes = {}
+	},
 	lore_brunt_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

@@ -538,7 +538,7 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		start_input = "reload",
 		stop_alternate_fire = true,
 		kind = "reload_state",

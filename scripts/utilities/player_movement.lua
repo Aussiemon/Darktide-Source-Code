@@ -6,44 +6,50 @@ PlayerMovement.teleport = function (player, position, rotation)
 	Managers.state.game_mode:register_physics_safe_callback(cb)
 end
 
+PlayerMovement.teleport_fixed_update = function (player_unit, position, rotation)
+	PlayerMovement._teleport(player_unit, position, rotation)
+end
+
 PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation)
 	if ALIVE[player_unit] then
-		local position = boxed_position:unbox()
-		local rotation = boxed_rotation and boxed_rotation:unbox() or nil
-		local mover = Unit.mover(player_unit)
+		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil)
+	end
+end
 
-		Mover.set_position(mover, position)
+PlayerMovement._teleport = function (player_unit, position, rotation)
+	local mover = Unit.mover(player_unit)
 
-		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-		local locomotion_component = unit_data_extension:write_component("locomotion")
-		locomotion_component.position = position
+	Mover.set_position(mover, position)
 
-		if rotation then
-			locomotion_component.rotation = rotation
-		end
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+	local locomotion_component = unit_data_extension:write_component("locomotion")
+	locomotion_component.position = position
 
-		local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
-		locomotion_steering.velocity_wanted = Vector3.zero()
-		local player = Managers.state.player_unit_spawn:owner(player_unit)
+	if rotation then
+		locomotion_component.rotation = rotation
+	end
 
-		if not player.remote and rotation then
-			local pitch = Quaternion.pitch(rotation)
-			local yaw = Quaternion.yaw(rotation)
+	local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
+	locomotion_steering.velocity_wanted = Vector3.zero()
+	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
-			player:set_orientation(yaw, pitch, 0)
-		end
+	if not player.remote and rotation then
+		local pitch = Quaternion.pitch(rotation)
+		local yaw = Quaternion.yaw(rotation)
 
-		local navigation_extension = ScriptUnit.has_extension(player_unit, "navigation_system")
+		player:set_orientation(yaw, pitch, 0)
+	end
 
-		if navigation_extension then
-			navigation_extension:teleport(position)
-		end
+	local navigation_extension = ScriptUnit.has_extension(player_unit, "navigation_system")
 
-		local behavior_extension = ScriptUnit.has_extension(player_unit, "behavior_system")
+	if navigation_extension then
+		navigation_extension:teleport(position)
+	end
 
-		if behavior_extension then
-			behavior_extension:clear_failed_paths()
-		end
+	local behavior_extension = ScriptUnit.has_extension(player_unit, "behavior_system")
+
+	if behavior_extension then
+		behavior_extension:clear_failed_paths()
 	end
 end
 

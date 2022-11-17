@@ -15,10 +15,6 @@ local AchievementWeaponCategories = {
 		"autopistol",
 		"p1"
 	},
-	autopistol_p2 = {
-		"autopistol",
-		"p2"
-	},
 	bolter_p1 = {
 		"bolter",
 		"p1"
@@ -75,10 +71,6 @@ local AchievementWeaponCategories = {
 		"force_staff",
 		"p2"
 	},
-	force_staff_p3 = {
-		"force_staff",
-		"p3"
-	},
 	force_sword_p1 = {
 		"force_sword",
 		"p1"
@@ -127,10 +119,6 @@ local AchievementWeaponCategories = {
 		"plasma_rifle",
 		"p1"
 	},
-	plasma_rifle_p2 = {
-		"plasma_rifle",
-		"p2"
-	},
 	power_maul_p1 = {
 		"power_maul",
 		"p1"
@@ -147,20 +135,12 @@ local AchievementWeaponCategories = {
 		"shotgun",
 		"p1"
 	},
-	shotgun_p3 = {
-		"shotgun",
-		"p3"
-	},
 	shotgun_grenade_p1 = {
 		"shotgun_grenade",
 		"p1"
 	},
 	stub_pistol_p1 = {
 		"stub_pistol",
-		"p1"
-	},
-	stub_rifle_p1 = {
-		"stub_rifle",
 		"p1"
 	},
 	thunder_hammer_p1 = {

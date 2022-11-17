@@ -50,7 +50,7 @@ local considerations = {
 		},
 		last_done_time = {
 			time_diff = true,
-			max_value = 12,
+			max_value = 10,
 			component_field = "last_done_time",
 			spline = {
 				0,
@@ -62,11 +62,6 @@ local considerations = {
 				1,
 				1
 			}
-		},
-		has_slot = {
-			component_field = "has_slot",
-			blackboard_component = "slot",
-			is_condition = true
 		}
 	},
 	chaos_plague_ogryn_slam_attack = {

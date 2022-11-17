@@ -108,7 +108,7 @@ HudElementWieldInfo._remove_entry = function (self, index)
 	self:_unregister_widget_name(widget_name)
 end
 
-HudElementWieldInfo.update = function (self, dt, t)
+HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local parent = self._parent
 	local extensions = parent:player_extensions()
 
@@ -154,9 +154,9 @@ HudElementWieldInfo.update = function (self, dt, t)
 		end
 	end
 
-	local training_grounds_scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local scripted_scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
-	if training_grounds_scenario_system:enabled() then
+	if scripted_scenario_system:enabled() then
 		for i = 1, #TrainingGroundsInfoPassivesTemplates do
 			local data = TrainingGroundsInfoPassivesTemplates[i]
 			local name = data.name
@@ -225,6 +225,8 @@ HudElementWieldInfo.update = function (self, dt, t)
 	end
 
 	self._draw_info = #active_wield_inputs > 0
+
+	HudElementWieldInfo.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 end
 
 HudElementWieldInfo._validate_input_description = function (self, input_description)
@@ -236,8 +238,8 @@ HudElementWieldInfo._validate_input_description = function (self, input_descript
 	end
 
 	if input_description.training_grounds_specific then
-		local training_grounds_scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
-		local tg_enabled = training_grounds_scenario_system:enabled()
+		local scripted_scenario_system = Managers.state.extension:system("scripted_scenario_system")
+		local tg_enabled = scripted_scenario_system:enabled()
 
 		if not tg_enabled then
 			return false

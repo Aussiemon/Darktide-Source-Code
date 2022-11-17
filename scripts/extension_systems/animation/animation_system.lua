@@ -48,7 +48,7 @@ AnimationSystem.register_extension_update = function (self, unit, extension_name
 
 		if use_bone_lod then
 			local radius = breed.bone_lod_radius or BoneLod.DEFAULT_UNIT_RADIUS
-			extension.bone_lod_extension_id = Managers.state.bone_lod:register_unit(unit, radius, false)
+			extension.bone_lod_extension_id = Managers.state.bone_lod:register_unit(unit, radius, true)
 			self._animation_lod_units[unit] = extension
 		end
 	end
@@ -85,7 +85,7 @@ AnimationSystem.anim_callback = function (self, unit, callback_name, param1)
 end
 
 AnimationSystem.rpc_prop_anim_event = function (self, channel_id, unit_id, is_level_unit, event_index)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	if not is_level_unit or unit_id ~= NetworkConstants.invalid_level_unit_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 
 		Unit.animation_event_by_index(unit, event_index)
@@ -93,7 +93,7 @@ AnimationSystem.rpc_prop_anim_event = function (self, channel_id, unit_id, is_le
 end
 
 AnimationSystem.rpc_prop_anim_event_variable_float = function (self, channel_id, unit_id, is_level_unit, event_index, variable_index, variable_value)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	if not is_level_unit or unit_id ~= NetworkConstants.invalid_level_unit_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 
 		Unit.animation_set_variable(unit, variable_index, variable_value)
@@ -102,7 +102,7 @@ AnimationSystem.rpc_prop_anim_event_variable_float = function (self, channel_id,
 end
 
 AnimationSystem.rpc_prop_anim_set_variable = function (self, channel_id, unit_id, is_level_unit, variable_index, variable_value)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	if not is_level_unit or unit_id ~= NetworkConstants.invalid_level_unit_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 
 		Unit.animation_set_variable(unit, variable_index, variable_value)

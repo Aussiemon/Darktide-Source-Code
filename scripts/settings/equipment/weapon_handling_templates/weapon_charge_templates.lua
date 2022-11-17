@@ -1,20 +1,33 @@
 local weapon_charge_templates = {
 	lasgun_p2_m1_charge_up = {
-		charge_duration = 3.2,
+		max_ammo_charge = 6,
 		limit_max_charge_to_ammo_clip = true,
-		max_ammo_charge = 5,
 		charge_on_action_start = true,
-		min_charge = 0.05
-	},
-	lasgungun_p2_m1_shoot = {
-		use_charge = true,
-		overheat_percent = 0.14
+		charge_delay = 0,
+		charge_duration = {
+			lerp_perfect = 0.5,
+			lerp_basic = 1
+		}
 	},
 	lasgun_p2_m2_charge_up = {
-		charge_duration = 1,
-		charge_on_action_start = true,
+		max_ammo_charge = 4,
 		limit_max_charge_to_ammo_clip = true,
-		max_ammo_charge = 7
+		charge_on_action_start = true,
+		charge_delay = 0,
+		charge_duration = {
+			lerp_perfect = 0.35,
+			lerp_basic = 0.75
+		}
+	},
+	lasgun_p2_m3_charge_up = {
+		max_ammo_charge = 12,
+		limit_max_charge_to_ammo_clip = true,
+		charge_on_action_start = true,
+		charge_delay = 0,
+		charge_duration = {
+			lerp_perfect = 0.65,
+			lerp_basic = 1.25
+		}
 	},
 	plasmagun_p1_m1_charge_direct = {
 		fully_charged_charge_level = 0.5,
@@ -23,18 +36,18 @@ local weapon_charge_templates = {
 		charge_on_action_start = true,
 		min_charge = 0.05,
 		charge_duration = {
-			lerp_perfect = 0.4,
+			lerp_perfect = 0.5,
 			lerp_basic = 1
 		},
 		overheat_percent = {
-			lerp_perfect = 0.01,
+			lerp_perfect = 0.045,
 			lerp_basic = 0.09
 		}
 	},
 	plasmagun_p1_m1_shoot = {
 		use_charge = true,
 		overheat_percent = {
-			lerp_perfect = 0.1,
+			lerp_perfect = 0.15,
 			lerp_basic = 0.3
 		}
 	},
@@ -49,11 +62,11 @@ local weapon_charge_templates = {
 	plasmagun_p1_m1_charge = {
 		charge_on_action_start = true,
 		charge_duration = {
-			lerp_perfect = 0.5,
+			lerp_perfect = 1,
 			lerp_basic = 2
 		},
 		overheat_percent = {
-			lerp_perfect = 0.05,
+			lerp_perfect = 0.1,
 			lerp_basic = 0.15
 		},
 		extra_overheat_percent = {
@@ -98,11 +111,36 @@ local weapon_charge_templates = {
 	},
 	psyker_smite_use_power = {
 		charge_duration = 0.5,
-		extra_warp_charge_percent = 0.08,
+		extra_warp_charge_percent = 0.1,
 		psyker_smite = true,
-		warp_charge_percent = 0.08
+		warp_charge_percent = 0.25
 	},
 	forcestaff_p1_m1_charge_aoe = {
+		charge_on_action_start = true,
+		charge_duration = {
+			lerp_perfect = 0.5,
+			lerp_basic = 3
+		},
+		warp_charge_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.3
+		},
+		extra_warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.06
+		}
+	},
+	forcestaff_p1_m1_use_aoe = {
+		use_charge = true,
+		warp_charge_percent = 0.25
+	},
+	forcestaff_p1_m1_projectile = {
+		warp_charge_percent = {
+			lerp_perfect = 0.025,
+			lerp_basic = 0.075
+		}
+	},
+	forcestaff_p2_m1_charge = {
 		charge_on_action_start = true,
 		charge_duration = {
 			lerp_perfect = 1.5,
@@ -117,14 +155,74 @@ local weapon_charge_templates = {
 			lerp_basic = 0.05
 		}
 	},
-	forcestaff_p1_m1_use_aoe = {
-		use_charge = true,
-		warp_charge_percent = 0.25
-	},
-	forcestaff_p1_m1_projectile = {
+	forcestaff_p2_m1_flame_burst = {
 		warp_charge_percent = {
 			lerp_perfect = 0.025,
 			lerp_basic = 0.075
+		}
+	},
+	forcestaff_p2_m1_flamer_gas = {
+		warp_charge_percent = {
+			lerp_perfect = 0.005,
+			lerp_basic = 0.02
+		},
+		charge_cost = {
+			lerp_perfect = 0.4,
+			lerp_basic = 0.2
+		}
+	},
+	forcestaff_p3_m1_projectile = {
+		warp_charge_percent = {
+			lerp_perfect = 0.025,
+			lerp_basic = 0.075
+		}
+	},
+	forcestaff_p3_m1_charge = {
+		charge_on_action_start = true,
+		min_charge = 0.2,
+		charge_duration = {
+			lerp_perfect = 1.5,
+			lerp_basic = 3
+		},
+		warp_charge_percent = {
+			lerp_perfect = 0.1,
+			lerp_basic = 0.2
+		},
+		extra_warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.05
+		}
+	},
+	forcestaff_p3_m1_chain_ligthning = {
+		chain_lightning = true,
+		warp_charge_percent = {
+			lerp_perfect = 0.1,
+			lerp_basic = 0.2
+		}
+	},
+	forcestaff_p4_m1_projectile = {
+		warp_charge_percent = {
+			lerp_perfect = 0.025,
+			lerp_basic = 0.075
+		}
+	},
+	forcestaff_p4_m1_projectile_charged = {
+		use_charge = true,
+		warp_charge_percent = 0.25
+	},
+	forcestaff_p4_m1_charge_projectile = {
+		charge_on_action_start = true,
+		charge_duration = {
+			lerp_perfect = 1.5,
+			lerp_basic = 2
+		},
+		warp_charge_percent = {
+			lerp_perfect = 0.1,
+			lerp_basic = 0.2
+		},
+		extra_warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.05
 		}
 	},
 	forcesword_p1_m1_weapon_special_hit = {
@@ -139,9 +237,13 @@ local weapon_charge_templates = {
 		extra_warp_charge_percent = 0.025,
 		warp_charge_percent = 0.025
 	},
-	forcesword_p1_m1_use_single_target = {
+	forcesword_p1_m1_fling = {
 		use_charge = true,
-		warp_charge_percent = 0.1
+		warp_charge_percent = 0.04
+	},
+	forcesword_p1_m1_push = {
+		use_charge = true,
+		warp_charge_percent = 0.08
 	},
 	chain_lightning_charge_fast = {
 		charge_duration = 2,

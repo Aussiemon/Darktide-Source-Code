@@ -15,7 +15,8 @@ local GibbingPower = GibbingSettings.gibbing_power
 local GibbingThresholds = GibbingSettings.gibbing_thresholds
 local GibbingTypes = GibbingSettings.gibbing_types
 local GibPushForceMultipliers = GibbingSettings.gib_push_force_multipliers
-local _apply_ailment_material_effect, _apply_material_overrides, _apply_push_forces, _create_inverse_root_node_bind_pose_lookup, _destroy_ragdoll_actors, _disable_hit_zone_actors, _get_gibbing_template, _parse_gib_template_entry, _play_root_sound, _play_gib_fx, _scale_node, _spawn_gib, _spawn_stump, _modify_gib_push_direction = nil
+local GibMaxExtraHitZoneGibs = GibbingSettings.max_extra_hit_zone_gibs
+local _apply_ailment_material_effect, _apply_push_forces, _create_inverse_root_node_bind_pose_lookup, _destroy_ragdoll_actors, _disable_hit_zone_actors, _get_gibbing_template, _parse_gib_template_entry, _play_root_sound, _play_gib_fx, _scale_node, _spawn_gib, _spawn_stump, _modify_gib_push_direction = nil
 local INVERSE_ROOT_NODE_BIND_POSE_LOOKUP_BY_BREED_NAME = {}
 local MinionGibbing = class("MinionGibbing")
 
@@ -33,6 +34,7 @@ MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_templa
 	self._template = gib_template
 	self._portable_random = PortableRandom:new(random_seed)
 	self._breed = breed
+	self._dissolve_extension = ScriptUnit.has_extension(unit, "dissolve_system")
 
 	if optional_wounds_extension then
 		self._wounds_data = optional_wounds_extension:wounds_data()
@@ -45,6 +47,82 @@ MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_templa
 		end
 
 		self._inverse_root_node_bind_pose_lookup = inverse_root_node_bind_pose_lookup
+	end
+
+	self._visual_loadout_system = Managers.state.extension:system("visual_loadout_system")
+end
+
+MinionGibbing.spawn_gib_from_queue = function (self, unit, gib_settings, gib_position, gib_rotation, hit_zone_name, attack_direction, damage_profile, hit_zone_gib_template, optional_override_gib_forces)
+	local world = self._world
+	local wwise_world = self._wwise_world
+	local visual_loadout_extension = self._visual_loadout_extension
+	local gib_unit, gib_node, gib_flesh_unit = _spawn_gib(unit, gib_settings, world, self._gib_variations, gib_position, gib_rotation)
+
+	Managers.state.out_of_bounds:register_soft_oob_unit(gib_unit, self, "_update_soft_oob")
+
+	local hit_zone_gibs = self._gibs[hit_zone_name]
+	hit_zone_gibs[#hit_zone_gibs + 1] = gib_unit
+
+	if gib_flesh_unit then
+		self._flesh_gibs[gib_unit] = gib_flesh_unit
+	end
+
+	_play_gib_fx(gib_unit, gib_settings, world, wwise_world)
+
+	if not damage_profile.ignore_gib_push and gib_settings.gib_actor then
+		local optional_override_push_force = gib_settings.override_push_force
+		local gib_actor = Unit.actor(gib_unit, gib_settings.gib_actor)
+		local gib_push_direction = attack_direction
+
+		if gib_settings.push_override then
+			gib_push_direction = _modify_gib_push_direction(gib_settings.push_override, attack_direction, hit_zone_name, gib_actor)
+		end
+
+		_apply_push_forces(gib_actor, gib_push_direction, damage_profile, hit_zone_name, optional_override_gib_forces, optional_override_push_force)
+	end
+
+	local slot_material_override_names = hit_zone_gib_template.material_overrides
+
+	if slot_material_override_names then
+		for i = 1, #slot_material_override_names do
+			local slot_material_override_name = slot_material_override_names[i]
+			local apply_to_parent, material_overrides = visual_loadout_extension:slot_material_override(slot_material_override_name)
+
+			if material_overrides then
+				for _, material_override in pairs(material_overrides) do
+					VisualLoadoutCustomization.apply_material_override(gib_unit, gib_unit, apply_to_parent, material_override, false)
+				end
+			end
+		end
+	end
+
+	local ailment_effect = visual_loadout_extension:ailment_effect()
+
+	if ailment_effect then
+		_apply_ailment_material_effect(gib_unit, ailment_effect)
+	end
+
+	local wounds_data = self._wounds_data
+
+	if wounds_data then
+		local inverse_root_node_bind_pose_lookup = self._inverse_root_node_bind_pose_lookup
+		local inverse_root_node_bind_pose = inverse_root_node_bind_pose_lookup[gib_node]:unbox()
+
+		WoundMaterials.apply(gib_unit, wounds_data, nil, nil, inverse_root_node_bind_pose)
+	end
+
+	local attach_inventory_slots_to_gib = gib_settings.attach_inventory_slots_to_gib
+
+	if attach_inventory_slots_to_gib then
+		for i = 1, #attach_inventory_slots_to_gib do
+			local slot_name = attach_inventory_slots_to_gib[i]
+
+			if visual_loadout_extension:can_unequip_slot(slot_name) then
+				visual_loadout_extension:_attach_slot_to_gib(slot_name, gib_unit)
+			end
+		end
+
+		self._inventory_slots_on_gibs[hit_zone_name] = attach_inventory_slots_to_gib
 	end
 end
 
@@ -151,6 +229,8 @@ MinionGibbing._update_soft_oob = function (self, unit)
 	end
 end
 
+local extra_gib_order = Script.new_array(5)
+
 MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, damage_profile, override_gib_type, optional_override_gib_forces, optional_is_critical_strike)
 	if hit_zone_name_or_nil and self._disallowed_hit_zones[hit_zone_name_or_nil] then
 		return false
@@ -208,6 +288,11 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	if stump_settings then
 		local stump_unit, stump_attach_node = _spawn_stump(minion_unit, stump_settings, world, self._gib_variations)
 		hit_zone_gibs[#hit_zone_gibs + 1] = stump_unit
+		local dissolve_extension = self._dissolve_extension
+
+		if dissolve_extension then
+			dissolve_extension:register_stump_unit(stump_unit)
+		end
 
 		_play_gib_fx(stump_unit, stump_settings, world, wwise_world)
 
@@ -216,8 +301,13 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		if slot_material_override_names then
 			for i = 1, #slot_material_override_names do
 				local slot_material_override_name = slot_material_override_names[i]
+				local apply_to_parent, material_overrides = visual_loadout_extension:slot_material_override(slot_material_override_name)
 
-				_apply_material_overrides(stump_unit, visual_loadout_extension, slot_material_override_name)
+				if material_overrides then
+					for _, material_override in pairs(material_overrides) do
+						VisualLoadoutCustomization.apply_material_override(stump_unit, stump_unit, apply_to_parent, material_override, false)
+					end
+				end
 			end
 		end
 
@@ -237,63 +327,12 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	local gib_settings = hit_zone_gib_template.gib_settings
 
 	if gib_settings then
-		local gib_unit, gib_node, gib_flesh_unit = _spawn_gib(minion_unit, gib_settings, world, self._gib_variations)
+		local gib_spawn_node_name = gib_settings.gib_spawn_node
+		local gib_node = Unit.node(minion_unit, gib_spawn_node_name)
+		local gib_position = Unit.world_position(minion_unit, gib_node)
+		local gib_rotation = Unit.world_rotation(minion_unit, gib_node)
 
-		Managers.state.out_of_bounds:register_soft_oob_unit(gib_unit, self, "_update_soft_oob")
-
-		hit_zone_gibs[#hit_zone_gibs + 1] = gib_unit
-
-		if gib_flesh_unit then
-			self._flesh_gibs[gib_unit] = gib_flesh_unit
-		end
-
-		_play_gib_fx(gib_unit, gib_settings, world, wwise_world)
-
-		if not damage_profile.ignore_gib_push and gib_settings.gib_actor then
-			local optional_override_push_force = gib_settings.override_push_force
-			local gib_actor = Unit.actor(gib_unit, gib_settings.gib_actor)
-			local gib_push_direction = attack_direction
-
-			if gib_settings.push_override then
-				gib_push_direction = _modify_gib_push_direction(gib_settings.push_override, attack_direction, hit_zone_name, gib_actor)
-			end
-
-			_apply_push_forces(gib_actor, gib_push_direction, damage_profile, hit_zone_name, optional_override_gib_forces, optional_override_push_force)
-		end
-
-		local slot_material_override_names = hit_zone_gib_template.material_overrides
-
-		if slot_material_override_names then
-			for i = 1, #slot_material_override_names do
-				local slot_material_override_name = slot_material_override_names[i]
-
-				_apply_material_overrides(gib_unit, visual_loadout_extension, slot_material_override_name)
-			end
-		end
-
-		if ailment_effect then
-			_apply_ailment_material_effect(gib_unit, ailment_effect)
-		end
-
-		if wounds_data then
-			local inverse_root_node_bind_pose = inverse_root_node_bind_pose_lookup[gib_node]:unbox()
-
-			WoundMaterials.apply(gib_unit, wounds_data, nil, nil, inverse_root_node_bind_pose)
-		end
-
-		local attach_inventory_slots_to_gib = gib_settings.attach_inventory_slots_to_gib
-
-		if attach_inventory_slots_to_gib then
-			for i = 1, #attach_inventory_slots_to_gib do
-				local slot_name = attach_inventory_slots_to_gib[i]
-
-				if visual_loadout_extension:can_unequip_slot(slot_name) then
-					visual_loadout_extension:_attach_slot_to_gib(slot_name, gib_unit)
-				end
-			end
-
-			self._inventory_slots_on_gibs[hit_zone_name] = attach_inventory_slots_to_gib
-		end
+		self._visual_loadout_system:queue_gib_spawn(minion_unit, gib_settings, gib_position, gib_rotation, hit_zone_name, attack_direction, damage_profile, hit_zone_gib_template, optional_override_gib_forces)
 	end
 
 	local unequip_inventory_slot = hit_zone_gib_template.unequip_inventory_slot
@@ -306,11 +345,30 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	local extra_hit_zone_gibs = hit_zone_gib_template.extra_hit_zone_gibs
 
 	if extra_hit_zone_gibs then
-		for i = 1, #extra_hit_zone_gibs do
-			local extra_hit_zone = extra_hit_zone_gibs[i]
-			local extra_hit_zone_gib_push_forces = hit_zone_gib_template.extra_hit_zone_gib_push_forces
+		local num_extra_gibs = #extra_hit_zone_gibs
+		local extra_hit_zone_gib_push_forces = hit_zone_gib_template.extra_hit_zone_gib_push_forces
+		local extra_gibbing_type = GibbingTypes.default
 
-			self:gib(extra_hit_zone, attack_direction, damage_profile, GibbingTypes.default, extra_hit_zone_gib_push_forces)
+		if num_extra_gibs <= GibMaxExtraHitZoneGibs then
+			for i = 1, num_extra_gibs do
+				local extra_hit_zone = extra_hit_zone_gibs[i]
+
+				self:gib(extra_hit_zone, attack_direction, damage_profile, extra_gibbing_type, extra_hit_zone_gib_push_forces)
+			end
+		else
+			for i = 1, num_extra_gibs do
+				extra_gib_order[i] = i
+			end
+
+			for i = 1, math.min(num_extra_gibs, GibMaxExtraHitZoneGibs) do
+				local next_gib = self._portable_random:random_range(1, num_extra_gibs + 1 - i)
+
+				table.swap_delete(extra_gib_order, next_gib)
+
+				local extra_hit_zone = extra_hit_zone_gibs[next_gib]
+
+				self:gib(extra_hit_zone, attack_direction, damage_profile, extra_gibbing_type, extra_hit_zone_gib_push_forces)
+			end
 		end
 	end
 
@@ -355,6 +413,10 @@ end
 
 MinionGibbing.allow_gib_for_hit_zone = function (self, hit_zone, allowed)
 	self._disallowed_hit_zones[hit_zone] = not allowed
+end
+
+MinionGibbing.hit_zone_is_disallowed = function (self, hit_zone)
+	return self._disallowed_hit_zones[hit_zone]
 end
 
 function _get_gibbing_template(gib_template, gibs, hit_zone_name, gibbing_type, portable_random, debug_explicit_gib_index)
@@ -430,7 +492,7 @@ function _spawn_stump(minion_unit, stump_settings, world, gib_variations_or_nil)
 	return stump_unit, stump_attach_node
 end
 
-function _spawn_gib(minion_unit, gib_settings, world, gib_variations_or_nil)
+function _spawn_gib(minion_unit, gib_settings, world, gib_variations_or_nil, position, rotation)
 	local gib_unit_name = gib_settings.gib_unit
 
 	if type(gib_unit_name) == "table" then
@@ -453,8 +515,8 @@ function _spawn_gib(minion_unit, gib_settings, world, gib_variations_or_nil)
 
 	local gib_spawn_node_name = gib_settings.gib_spawn_node
 	local gib_node = Unit.node(minion_unit, gib_spawn_node_name)
-	local gib_position = Unit.world_position(minion_unit, gib_node)
-	local gib_rotation = Unit.world_rotation(minion_unit, gib_node)
+	local gib_position = position or Unit.world_position(minion_unit, gib_node)
+	local gib_rotation = rotation or Unit.world_rotation(minion_unit, gib_node)
 	local gib_unit = Managers.state.unit_spawner:spawn_unit(gib_unit_name, gib_position, gib_rotation)
 	local gib_flesh_unit = nil
 	local gib_flesh_unit_name = gib_settings.gib_flesh_unit
@@ -500,24 +562,14 @@ function _scale_node(unit, hit_zone_gib_template)
 	end
 end
 
-function _apply_material_overrides(unit, visual_loadout_extension, slot_material_override_name)
-	local apply_to_parent, material_overrides = visual_loadout_extension:slot_material_override(slot_material_override_name)
-
-	if material_overrides then
-		for _, material_override in pairs(material_overrides) do
-			VisualLoadoutCustomization.apply_material_override(unit, unit, apply_to_parent, material_override, false)
-		end
-	end
-end
-
 local DEFAULT_PUSH_FORCE = 15
-local MAX_FORCE_PER_MASS_UNIT = 50
+local MAX_FORCE_PER_MASS_UNIT = 500
 
 function _apply_push_forces(gib_actor, attack_direction, damage_profile, hit_zone_name, optional_override_gib_forces, optional_override_force)
 	local push_force = DEFAULT_PUSH_FORCE
 
-	if damage_profile.ragdoll_push_force then
-		push_force = damage_profile.ragdoll_push_force
+	if damage_profile.gib_push_force then
+		push_force = damage_profile.gib_push_force
 
 		if type(push_force) == "table" then
 			push_force = math.random_range(push_force[1], push_force[2])
@@ -542,15 +594,13 @@ function _apply_push_forces(gib_actor, attack_direction, damage_profile, hit_zon
 	Actor.add_torque_impulse(gib_actor, left * 0.5)
 end
 
+local engine_optimized_set_hit_zone_actors_enabled = EngineOptimized.set_hit_zone_actors_enabled
+
 function _disable_hit_zone_actors(unit, breed, hit_zone_name, hit_zone_gib_template)
 	local actor_names = HitZone.get_actor_names(unit, hit_zone_name)
 
-	for i = 1, #actor_names do
-		local actor_name = actor_names[i]
-		local actor = Unit.actor(unit, actor_name)
-
-		Actor.set_collision_enabled(actor, false)
-		Actor.set_scene_query_enabled(actor, false)
+	if actor_names then
+		engine_optimized_set_hit_zone_actors_enabled(unit, actor_names, false)
 	end
 
 	local extra_hit_zone_actors_to_destroy = hit_zone_gib_template.extra_hit_zone_actors_to_destroy
@@ -560,14 +610,7 @@ function _disable_hit_zone_actors(unit, breed, hit_zone_name, hit_zone_gib_templ
 			local extra_hit_zone_name = extra_hit_zone_actors_to_destroy[i]
 			local extra_actor_names = HitZone.get_actor_names(unit, extra_hit_zone_name)
 
-			for j = 1, #extra_actor_names do
-				local extra_actor_name = extra_actor_names[j]
-				local actor = Unit.actor(unit, extra_actor_name)
-
-				Actor.set_collision_enabled(actor, false)
-				Actor.set_scene_query_enabled(actor, false)
-			end
-
+			engine_optimized_set_hit_zone_actors_enabled(unit, extra_actor_names, false)
 			_destroy_ragdoll_actors(unit, breed, extra_hit_zone_name)
 		end
 	end
@@ -659,7 +702,13 @@ end
 function _modify_gib_push_direction(push_override_settings, original_push_direction, hit_zone_name, gib_actor)
 	local custom_push_vector = Vector3.from_array(push_override_settings.custom_push_vector)
 	local rotated_custom_push_vector = Quaternion.rotate(Quaternion.look(original_push_direction), custom_push_vector)
-	local custom_push_direction = Vector3.normalize(0.5 * original_push_direction + rotated_custom_push_vector)
+	local custom_push_direction = nil
+
+	if push_override_settings.ignore_attack_direction then
+		custom_push_direction = Vector3.normalize(-0.1 * original_push_direction + rotated_custom_push_vector)
+	else
+		custom_push_direction = Vector3.normalize(0.5 * original_push_direction + rotated_custom_push_vector)
+	end
 
 	return custom_push_direction
 end

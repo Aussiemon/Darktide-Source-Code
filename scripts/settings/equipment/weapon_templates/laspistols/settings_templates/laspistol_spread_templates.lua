@@ -94,53 +94,156 @@ spread_templates.default_laspistol_killshot = {
 		}
 	}
 }
+local spread_multi = 0.65
 spread_templates.default_laspistol_assault = {
 	still = {
-		randomized_spread = {
-			first_shot_min_ratio = 0.15,
-			max_yaw_delta = 0.4,
-			first_shot_random_ratio = 0.2,
-			random_ratio = 0.5,
-			max_pitch_delta = 0.4,
-			min_ratio = 0.4
-		},
 		max_spread = {
-			yaw = 4,
-			pitch = 4
+			pitch = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			},
+			yaw = {
+				lerp_perfect = 6,
+				lerp_basic = 6.25
+			}
 		},
 		decay = {
-			from_shooting_grace_time = 0.075,
+			from_shooting_grace_time = 0.15,
 			shooting = {
-				yaw = 0.25,
-				pitch = 0.25
+				pitch = {
+					lerp_perfect = 0.3,
+					lerp_basic = 0.15
+				},
+				yaw = {
+					lerp_perfect = 0.3,
+					lerp_basic = 0.15
+				}
 			},
 			idle = {
-				yaw = 1.25,
-				pitch = 1.5
+				pitch = {
+					lerp_perfect = 2,
+					lerp_basic = 1
+				},
+				yaw = {
+					lerp_perfect = 2,
+					lerp_basic = 1
+				}
 			}
 		},
 		continuous_spread = {
-			min_yaw = 1.3,
-			min_pitch = 1.3
+			min_pitch = {
+				lerp_perfect = 1,
+				lerp_basic = 1.75
+			},
+			min_yaw = {
+				lerp_perfect = 1,
+				lerp_basic = 1.75
+			}
+		},
+		randomized_spread = {
+			first_shot_min_ratio = 0.15,
+			max_yaw_delta = 0.95,
+			first_shot_random_ratio = 0.5,
+			random_ratio = 0.15,
+			max_pitch_delta = 0.95,
+			min_ratio = 0.8
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
 			suppression_hit = {
 				{
-					yaw = 0.25,
-					pitch = 0.25
+					pitch = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 0.75,
+						lerp_basic = 1.5
+					}
 				}
 			},
 			damage_hit = {
 				{
-					yaw = 0.4,
-					pitch = 0.4
+					pitch = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					},
+					yaw = {
+						lerp_perfect = 1,
+						lerp_basic = 1.5
+					}
 				}
 			},
 			shooting = {
 				{
-					yaw = 0.5,
-					pitch = 0.5
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.75 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.75 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.35,
+						lerp_basic = 0.85 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.35,
+						lerp_basic = 0.85 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.45,
+						lerp_basic = 0.95 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.45,
+						lerp_basic = 0.95 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.475,
+						lerp_basic = 1 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.475,
+						lerp_basic = 1 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.1 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.1 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.2 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.2 * spread_multi
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.15 * spread_multi
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1.15 * spread_multi
+					}
 				}
 			}
 		}
@@ -151,8 +254,37 @@ spread_templates.default_laspistol_assault = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 1,
-			min_pitch = 1
+			min_pitch = {
+				lerp_perfect = 1.75,
+				lerp_basic = 2.25
+			},
+			min_yaw = {
+				lerp_perfect = 1.75,
+				lerp_basic = 2.25
+			}
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			shooting = {
+				pitch = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 1.5,
+					lerp_basic = 0.25
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2.5,
+					lerp_basic = 1.5
+				}
+			}
 		}
 	},
 	crouch_still = {
@@ -161,8 +293,14 @@ spread_templates.default_laspistol_assault = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 1.15,
-			min_pitch = 1.15
+			min_pitch = {
+				lerp_perfect = 1.5,
+				lerp_basic = 1.85
+			},
+			min_yaw = {
+				lerp_perfect = 1.5,
+				lerp_basic = 1.85
+			}
 		}
 	},
 	crouch_moving = {
@@ -171,8 +309,14 @@ spread_templates.default_laspistol_assault = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 1.5,
-			min_pitch = 1.5
+			min_pitch = {
+				lerp_perfect = 1.85,
+				lerp_basic = 2.75
+			},
+			min_yaw = {
+				lerp_perfect = 1.85,
+				lerp_basic = 2.75
+			}
 		}
 	}
 }

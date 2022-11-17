@@ -130,6 +130,7 @@ BotBehaviorExtension._init_blackboard_components = function (self, blackboard, p
 	local health_station_component = Blackboard.write_component(blackboard, "health_station")
 	health_station_component.needs_health = false
 	health_station_component.needs_health_queue_number = 0
+	health_station_component.time_in_proximity = 0
 	local ranged_obstructed_by_static_component = Blackboard.write_component(blackboard, "ranged_obstructed_by_static")
 	ranged_obstructed_by_static_component.t = -math.huge
 	ranged_obstructed_by_static_component.target_unit = nil
@@ -184,7 +185,7 @@ BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 	if HEALTH_ALIVE[unit] then
 		self:_update_ammo(unit)
 		self:_update_health_deployables(unit)
-		self:_update_health_stations(unit)
+		self:_update_health_stations(unit, dt, t)
 		self:_verify_target_ally_aid_destination(unit)
 		self._brain:update(unit, dt, t)
 
@@ -267,16 +268,41 @@ BotBehaviorExtension._update_health_deployables = function (self, unit)
 	end
 end
 
-local DAMAGE_TAKEN_VALUE_REQUIRED = 0.75
+local DAMAGE_TAKEN_VALUE_REQUIRED = 0.66
 local HEALTH_VALUE_PER_PERMANTENT_DAMAGE = 3
+local TIME_IN_PROXIMITY_MAX_T = 20
+local TIME_IN_PROIXMITY_DAMAGE_TAKEN_VALUE_REQUIRED = 0.25
+local PROXIMITY_DISTANCE = 5625
 
-BotBehaviorExtension._update_health_stations = function (self, unit)
+BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
+	local perception_component = self._perception_component
 	local health_station_component = self._health_station_component
+	local target_level_unit = perception_component.target_level_unit
+	local health_station_extension = target_level_unit and ScriptUnit.has_extension(target_level_unit, "health_station_system")
+
+	if not health_station_extension then
+		return
+	end
+
+	local damage_taken_required = nil
+	local distance = perception_component.target_level_unit_distance
+
+	if distance * distance < PROXIMITY_DISTANCE then
+		health_station_component.time_in_proximity = health_station_component.time_in_proximity + dt
+		local time_in_proximity = health_station_component.time_in_proximity
+		local damage_taken_dif = DAMAGE_TAKEN_VALUE_REQUIRED - TIME_IN_PROIXMITY_DAMAGE_TAKEN_VALUE_REQUIRED
+		local fraction = math.clamp(time_in_proximity / TIME_IN_PROXIMITY_MAX_T, 0, 1)
+		damage_taken_required = DAMAGE_TAKEN_VALUE_REQUIRED - damage_taken_dif * fraction
+	else
+		damage_taken_required = DAMAGE_TAKEN_VALUE_REQUIRED
+		health_station_component.time_in_proximity = 0
+	end
+
 	local damage_taken = 1 - Health.current_health_percent(unit)
 	local permanent_damage_taken = Health.permanent_damage_taken_percent(unit)
 	local total_damage_value = damage_taken + permanent_damage_taken * HEALTH_VALUE_PER_PERMANTENT_DAMAGE
 
-	if DAMAGE_TAKEN_VALUE_REQUIRED < total_damage_value then
+	if damage_taken_required < total_damage_value then
 		local players_with_less_health = 0
 		local human_player_units = self._side.valid_human_units
 

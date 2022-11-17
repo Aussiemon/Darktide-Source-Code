@@ -43,6 +43,10 @@ GameplayStateRun.on_enter = function (self, parent, params)
 		Managers.boons:activate_boons()
 	end
 
+	if not DEDICATED_SERVER then
+		Managers.dlc:evaluate_consumables()
+	end
+
 	local telemetry_params = {
 		mission_name = shared_state.mission_name,
 		host_type = Managers.connection:host_type()
@@ -53,6 +57,18 @@ end
 
 GameplayStateRun.on_exit = function (self)
 	local shared_state = self._shared_state
+
+	if Managers.account:leaving_game() then
+		local ui_manager = Managers.ui
+		local active_views = ui_manager:active_views()
+		local force_close = true
+
+		while not table.is_empty(active_views) do
+			local view_name = active_views[1]
+
+			ui_manager:close_view(view_name, force_close)
+		end
+	end
 
 	Managers.telemetry_events:gameplay_stopped()
 
@@ -315,6 +331,7 @@ GameplayStateRun._despawn_units = function (self, is_server, world, level, theme
 	extension_manager:system("pickup_system"):delete_units()
 	extension_manager:system("weapon_system"):delete_units()
 	extension_manager:system("mission_objective_zone_system"):delete_units()
+	extension_manager:system("fx_system"):delete_units()
 	Managers.state.unit_job:delete_units()
 
 	local flow_spawned_units = extension_manager:units_by_category("flow_spawned")

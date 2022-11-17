@@ -350,7 +350,7 @@ local widget_definitions = {
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		text = Utf8.upper(Localize("loc_confirm")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.apparel_equip
+			on_pressed_sound = UISoundEvents.weapons_skin_confirm
 		}
 	})
 }

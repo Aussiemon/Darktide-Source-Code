@@ -29,6 +29,9 @@ local state_machine_settings = {
 	},
 	["content/characters/player/ogryn/third_person/animations/slab_shield"] = {
 		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/third_person/animations/sabre"] = {
+		blend_time = DEFAULT_BLEND_TIME
 	}
 }
 

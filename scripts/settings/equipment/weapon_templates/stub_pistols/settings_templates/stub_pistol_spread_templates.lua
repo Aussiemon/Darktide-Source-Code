@@ -7,14 +7,14 @@ table.make_unique(overrides)
 spread_templates.default_stub_pistol_assault = {
 	still = {
 		max_spread = {
-			yaw = 10,
-			pitch = 10
+			yaw = 5,
+			pitch = 5
 		},
 		decay = {
 			from_shooting_grace_time = 0.075,
 			shooting = {
-				yaw = 0.25,
-				pitch = 0.25
+				yaw = 0.15,
+				pitch = 0.15
 			},
 			idle = {
 				yaw = 4.5,
@@ -28,8 +28,8 @@ spread_templates.default_stub_pistol_assault = {
 			min_ratio = 0.15
 		},
 		continuous_spread = {
-			min_yaw = 2.5,
-			min_pitch = 2.5
+			min_yaw = 1.5,
+			min_pitch = 1.5
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,

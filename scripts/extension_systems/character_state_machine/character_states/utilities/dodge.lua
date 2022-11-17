@@ -84,16 +84,6 @@ local Dodge = {
 
 		local is_melee = attack_type == attack_types.melee
 		local is_ranged = attack_type == attack_types.ranged
-
-		if is_melee then
-			local unit_inventory_component = unit_data_extension:read_component("inventory")
-			local target_wielded_slot = unit_inventory_component.wielded_slot
-
-			if target_wielded_slot == "slot_secondary" then
-				return false
-			end
-		end
-
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 		if buff_extension and (buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_all) or is_melee and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_melee) or is_ranged and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_ranged)) then
@@ -103,7 +93,8 @@ local Dodge = {
 		local movement_state_component = unit_data_extension:read_component("movement_state")
 		local is_sliding = movement_state_component.method == "sliding"
 		local dodge_type = is_sliding and dodge_types.slide or dodge_types.dodge
-		local is_dodging = movement_state_component.is_dodging
+		local slide_vs_melee = is_sliding and is_melee
+		local is_dodging = movement_state_component.is_dodging and not slide_vs_melee
 
 		if is_dodging then
 			return true, dodge_type

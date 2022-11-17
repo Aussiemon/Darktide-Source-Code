@@ -1,16 +1,19 @@
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
 local TrainingGroundsOptionsViewStyles = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_styles")
+local TrainingGroundsOptionsViewSettings = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local get_hud_color = UIHudSettings.get_hud_color
 local view_styles = TrainingGroundsOptionsViewStyles
-local left_panel_size = {
-	760,
-	650
-}
+local left_panel_size = TrainingGroundsOptionsViewSettings.panel_size.default
 local reward_size = {
-	230.39999999999998,
+	288,
+	153.6
+}
+local weapon_size = {
+	288,
 	153.6
 }
 local scenegraph_definition = {
@@ -36,7 +39,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			25,
+			60,
 			10
 		}
 	},
@@ -50,7 +53,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			65,
+			95,
 			10
 		}
 	},
@@ -64,7 +67,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			120,
+			155,
 			10
 		}
 	},
@@ -78,7 +81,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			-100,
 			10
 		}
 	},
@@ -92,7 +95,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			45,
+			-40,
 			10
 		}
 	},
@@ -102,8 +105,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = reward_size,
 		position = {
-			-170,
-			-50,
+			-160,
+			-120,
 			10
 		}
 	},
@@ -113,14 +116,14 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = reward_size,
 		position = {
-			170,
-			-50,
+			160,
+			-120,
 			10
 		}
 	},
 	rewards_claimed = {
 		vertical_alignment = "bottom",
-		parent = "left_panel",
+		parent = "rewards_header",
 		horizontal_alignment = "center",
 		size = {
 			600,
@@ -128,7 +131,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-70,
+			80,
 			11
 		}
 	},
@@ -142,7 +145,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			100,
+			60,
+			10
+		}
+	},
+	difficulty_stepper = {
+		vertical_alignment = "bottom",
+		parent = "separator",
+		horizontal_alignment = "center",
+		size = {
+			300,
+			60
+		},
+		position = {
+			0,
+			130,
 			10
 		}
 	}
@@ -155,6 +172,7 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
+				scale_to_material = true,
 				size = {
 					left_panel_size[1] - 40,
 					left_panel_size[2] + 135
@@ -168,12 +186,7 @@ local widget_definitions = {
 					60,
 					6
 				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
+				color = Color.terminal_grid_background(nil, true)
 			}
 		}
 	}, "left_panel", nil, nil),
@@ -197,14 +210,15 @@ local widget_definitions = {
 			value_id = "body_text",
 			pass_type = "text",
 			style = view_styles.body_font_style
-		},
+		}
+	}, "body"),
+	separator = UIWidget.create_definition({
 		{
 			value_id = "separator",
 			style_id = "separator",
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				scenegraph_id = "separator",
 				color = {
 					50,
 					255,
@@ -213,7 +227,7 @@ local widget_definitions = {
 				}
 			}
 		}
-	}, "body"),
+	}, "separator"),
 	rewards_header = UIWidget.create_definition({
 		{
 			style_id = "text",
@@ -229,8 +243,9 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 			style = {
-				size = reward_size,
-				default_size = reward_size,
+				horizontal_alignment = "center",
+				size = weapon_size,
+				default_size = weapon_size,
 				offset = {
 					0,
 					0,
@@ -253,12 +268,7 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = {
-					160,
-					0,
-					0,
-					0
-				}
+				color = Color.black(60, true)
 			}
 		},
 		{
@@ -267,6 +277,32 @@ local widget_definitions = {
 			pass_type = "text",
 			value = "text",
 			style = view_styles.reward_font_style
+		},
+		{
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style_id = "diffulty_icon_background_frame",
+			pass_type = "texture",
+			style = {
+				offset = {
+					0,
+					0,
+					10
+				},
+				color = Color.terminal_text_body_dark(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "diffulty_icon_background_frame_corner",
+			pass_type = "texture",
+			style = {
+				offset = {
+					0,
+					0,
+					11
+				},
+				color = Color.terminal_text_body(255, true)
+			}
 		}
 	}, "reward_one"),
 	reward_2 = UIWidget.create_definition({
@@ -276,12 +312,7 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = {
-					160,
-					0,
-					0,
-					0
-				}
+				color = Color.black(60, true)
 			}
 		},
 		{
@@ -290,8 +321,9 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 			style = {
-				size = reward_size,
-				default_size = reward_size,
+				horizontal_alignment = "center",
+				size = weapon_size,
+				default_size = weapon_size,
 				offset = {
 					0,
 					0,
@@ -314,6 +346,32 @@ local widget_definitions = {
 			pass_type = "text",
 			value = "text",
 			style = view_styles.reward_font_style
+		},
+		{
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style_id = "diffulty_icon_background_frame",
+			pass_type = "texture",
+			style = {
+				offset = {
+					0,
+					0,
+					10
+				},
+				color = Color.terminal_text_body_dark(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "diffulty_icon_background_frame_corner",
+			pass_type = "texture",
+			style = {
+				offset = {
+					0,
+					0,
+					11
+				},
+				color = Color.terminal_text_body(255, true)
+			}
 		}
 	}, "reward_two"),
 	play_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.terminal_button), "play_button", {
@@ -321,7 +379,7 @@ local widget_definitions = {
 	}),
 	edge_top = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			value = "content/ui/materials/frames/training_grounds_upper",
 			style_id = "texture",
 			pass_type = "texture_uv",
 			style = {
@@ -333,19 +391,19 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					-5,
+					-116,
 					11
 				},
 				size = {
-					left_panel_size[1] + 2,
-					40
+					840,
+					200
 				}
 			}
 		}
 	}, "left_panel"),
 	edge_bottom = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			value = "content/ui/materials/frames/training_grounds_lower",
 			style_id = "texture",
 			pass_type = "texture_uv",
 			style = {
@@ -357,12 +415,12 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					145,
+					185,
 					11
 				},
 				size = {
-					left_panel_size[1] + 2,
-					40
+					740,
+					120
 				}
 			}
 		}
@@ -374,7 +432,17 @@ local widget_definitions = {
 			pass_type = "text",
 			style = view_styles.rewards_claimed_font_style
 		}
-	}, "rewards_claimed")
+	}, "rewards_claimed"),
+	select_difficulty_text = UIWidget.create_definition({
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = view_styles.select_difficulty_text_style
+		}
+	}, "difficulty_stepper"),
+	difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.difficulty_stepper, "difficulty_stepper")
 }
 
 return {

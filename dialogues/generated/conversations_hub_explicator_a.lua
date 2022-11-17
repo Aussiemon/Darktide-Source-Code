@@ -213,7 +213,7 @@ local conversations_hub_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
-	hub_idle_conversation_thirteen_b = {
+	hub_idle_conversation_thirteen_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {

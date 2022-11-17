@@ -50,20 +50,33 @@ local default_imgui_input_settings = {
 		hotkey_culling_gui = {
 			type = "pressed",
 			raw = {
-				"keyboard_f3",
-				"xbox_controller_right_thumb+xbox_controller_d_down"
+				"keyboard_f3"
 			}
 		},
 		hotkey_feedback_streamer_gui = {
-			raw = "keyboard_f2",
-			type = "pressed"
+			type = "pressed",
+			raw = {
+				"keyboard_f2"
+			}
+		},
+		hotkey_resource_events_gui = {
+			type = "pressed",
+			raw = {
+				"keyboard_left shift+keyboard_f3"
+			}
+		},
+		hotkey_particle_world_gui = {
+			type = "pressed",
+			raw = {
+				"keyboard_left shift+keyboard_f4"
+			}
 		},
 		hotkey_mesh_streamer_gui = {
-			raw = "keyboard_left shift+keyboard_f2",
+			raw = "keyboard_right shift+keyboard_r",
 			type = "pressed"
 		},
 		hotkey_behavior_tree = {
-			raw = "keyboard_left shift+keyboard_t",
+			raw = "keyboard_right shift+keyboard_t",
 			type = "pressed"
 		},
 		hotkey_chat = {
@@ -96,6 +109,10 @@ local default_imgui_input_settings = {
 		},
 		toggle_main_view = {
 			raw = "keyboard_f7",
+			type = "pressed"
+		},
+		hotkey_ui_tool_gui = {
+			raw = "keyboard_left ctrl+keyboard_f4",
 			type = "pressed"
 		}
 	}

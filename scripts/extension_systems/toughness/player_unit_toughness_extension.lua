@@ -52,15 +52,19 @@ end
 PlayerUnitToughnessExtension.max_toughness_visual = function (self)
 	local buffs = self._buff_extension and self._buff_extension:stat_buffs()
 	local buff_extra = buffs and buffs.toughness or 0
+	local toughness_bonus = buffs and buffs.toughness_bonus or 1
+	local max_toughness = self._max_toughness * toughness_bonus
 
-	return self._max_toughness + buff_extra
+	return max_toughness + buff_extra
 end
 
 PlayerUnitToughnessExtension.max_toughness = function (self)
 	local buffs = self._buff_extension and self._buff_extension:stat_buffs()
-	local buff_extra = buffs and buffs.toughness + buffs.toughness_bonus or 0
+	local buff_extra = buffs and buffs.toughness + buffs.toughness_bonus_flat or 0
+	local toughness_bonus = buffs and buffs.toughness_bonus or 1
+	local max_toughness = self._max_toughness * toughness_bonus
 
-	return self._max_toughness + buff_extra
+	return max_toughness + buff_extra
 end
 
 PlayerUnitToughnessExtension.toughness_damage = function (self)
@@ -146,8 +150,8 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local is_melee_kill = recovery_type == toughness_replenish_types.melee_kill
 	local toughness_melee_replenish_stat_buff = is_melee_kill and stat_buffs.toughness_melee_replenish or 1
-	local total_toughness_replenish_stat_buff_multiplier = stat_buffs.toughness_replenish_multiplier
-	local stat_buff_multiplier = toughness_melee_replenish_stat_buff * total_toughness_replenish_stat_buff_multiplier
+	local total_toughness_replenish_stat_buff = stat_buffs.toughness_replenish_multiplier
+	local stat_buff_multiplier = toughness_melee_replenish_stat_buff + total_toughness_replenish_stat_buff - 1
 	local recovery_percentage = toughness_template.recovery_percentages[recovery_type] * stat_buff_multiplier * modifier
 	local new_toughness = math.max(0, toughness_damage - max_toughness * recovery_percentage)
 	local network_toughness_damage = math.min(new_toughness, NetworkConstants.toughness.max)

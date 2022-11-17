@@ -61,7 +61,7 @@ ConstantElementOnboardingHandler._on_state_changed = function (self, new_state_n
 	self._current_state_tutorial_settings = new_tutorial_settings
 end
 
-ConstantElementOnboardingHandler._sync_state_settings = function (self)
+ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destroy)
 	local current_state_tutorial_settings = self._current_state_tutorial_settings
 
 	if current_state_tutorial_settings then
@@ -79,6 +79,21 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self)
 	end
 
 	local tutorial_settings = self._tutorial_settings
+
+	for i = 1, #tutorial_settings do
+		local settings = tutorial_settings[i]
+
+		if settings.active then
+			local close_condition = on_destroy or settings.close_condition and settings:close_condition()
+
+			if close_condition then
+				settings:on_deactivation()
+
+				settings.active = false
+				settings.synced = nil
+			end
+		end
+	end
 
 	for i = 1, #tutorial_settings do
 		local settings = tutorial_settings[i]
@@ -146,7 +161,7 @@ end
 
 ConstantElementOnboardingHandler.destroy = function (self)
 	self:_on_state_changed("")
-	self:_sync_state_settings()
+	self:_sync_state_settings(true)
 end
 
 return ConstantElementOnboardingHandler

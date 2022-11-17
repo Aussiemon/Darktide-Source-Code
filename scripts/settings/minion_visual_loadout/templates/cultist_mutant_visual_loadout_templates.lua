@@ -7,7 +7,12 @@ local basic_cultist_mutant_template = {
 	slots = {
 		slot_body = {
 			items = {
-				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body"
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body",
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_tattoo_01",
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_tattoo_02",
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_var_01",
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_var_01_tattoo_01",
+				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_var_01_tattoo_02"
 			}
 		},
 		slot_flesh = {
@@ -20,6 +25,15 @@ local basic_cultist_mutant_template = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item"
+			}
+		},
+		skin_color_override = {
+			is_material_override_slot = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_01",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_02",
+				"content/items/characters/minions/skin_color_overrides/chaos_skin_color_03"
 			}
 		}
 	}
@@ -34,6 +48,13 @@ foundry_1.slots.envrionmental_override.items = {
 }
 templates.cultist_mutant[zone_ids.tank_foundry] = {
 	foundry_1
+}
+local dust_1 = table.clone(basic_cultist_mutant_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.cultist_mutant[zone_ids.dust] = {
+	dust_1
 }
 local watertown_1 = table.clone(basic_cultist_mutant_template)
 watertown_1.slots.envrionmental_override.items = {

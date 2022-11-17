@@ -19,7 +19,84 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
 			},
+			chainsword_p1_m2 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainsword_p1_m3 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainsword_2h_p1_m1 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainsword_2h_p1_m2 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainsword_2h_p1_m3 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
 			chainaxe_p1_m1 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainaxe_p1_m2 = {
+				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.player] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.berserker] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.armored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
+				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
+				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
+			},
+			chainaxe_p1_m3 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.unarmored] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
 				[armor_types.resistant] = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -41,8 +118,9 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			ogryn_thumper_p1_m2 = "content/fx/particles/weapons/rifles/ogryn_thumper/ogryn_thumper_reload_smoke",
 			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_reload",
+			ogryn_thumper_p1_m2 = "content/fx/particles/weapons/rifles/ogryn_thumper/ogryn_thumper_reload_smoke",
+			bot_zola_laspistol = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
 			lasgun_p1_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload"
 		}
 	},
@@ -52,11 +130,28 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			psyker_chain_lightning = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
-			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
 			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_gun_charge",
-			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging",
-			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_bfg_charging"
+			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
+			psyker_chain_lightning = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
+			forcestaff_p2_m1 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
+			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
+			forcestaff_p2_m2 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
+			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_01",
+			forcestaff_p3_m1 = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
+			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup"
+		}
+	},
+	ranged_charging_done = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		particles = {
+			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull",
+			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_done_01",
+			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull"
 		}
 	},
 	psyker_biomancer_soul = {
@@ -100,8 +195,12 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate",
-			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff"
+			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff",
+			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff",
+			thunderhammer_2h_p1_m3 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff",
+			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			powersword_p1_m3 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
 		}
 	},
 	weapon_special_custom = {
@@ -110,8 +209,12 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate",
-			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge"
+			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			thunderhammer_2h_p1_m3 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			powersword_p1_m3 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
 		}
 	},
 	weapon_special_loop = {
@@ -122,9 +225,18 @@ local particles = {
 		particles = {
 			chainsword_2h_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
 			chainsword_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
+			chainaxe_p1_m3 = "content/fx/particles/weapons/swords/chainsword/chain_axe_special_weapon_activate_sparks_smoke",
+			chainsword_p1_m2 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
+			chainaxe_p1_m2 = "content/fx/particles/weapons/swords/chainsword/chain_axe_special_weapon_activate_sparks_smoke",
+			chainsword_2h_p1_m3 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
+			chainsword_2h_p1_m2 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
+			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
+			powermaul_2h_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated",
 			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated",
-			chainaxe_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
-			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger"
+			thunderhammer_2h_p1_m3 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
+			chainsword_p1_m3 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
+			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
+			chainaxe_p1_m1 = "content/fx/particles/weapons/swords/chainsword/chain_axe_special_weapon_activate_sparks_smoke"
 		}
 	},
 	weapon_overload_loop = {
@@ -156,7 +268,19 @@ local particles = {
 			powersword_p1_m1 = {
 				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
 			},
+			powersword_p1_m2 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+			},
+			powersword_p1_m3 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+			},
 			thunderhammer_2h_p1_m1 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+			},
+			thunderhammer_2h_p1_m2 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+			},
+			thunderhammer_2h_p1_m3 = {
 				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
 			}
 		}
@@ -183,13 +307,30 @@ local particles = {
 	},
 	melee_blocked_attack = {
 		switch = {
-			"wielded_weapon_tFchaemplate"
+			"wielded_weapon_template"
 		},
 		particles = {
 			default = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
 			chainsword_p1_m1 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			thunderhammer_2h_p1_m3 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
 			forcesword_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01",
-			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01"
+			chainsword_p1_m2 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			forcesword_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
+			forcesword_p1_m3 = "content/fx/particles/abilities/psyker_block_impact_01",
+			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			chainsword_p1_m3 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01"
+		}
+	},
+	ranged_blocked_attack = {
+		switch = {
+			"wielded_weapon_template"
+		},
+		particles = {
+			default = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			forcesword_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
+			forcesword_p1_m3 = "content/fx/particles/abilities/psyker_block_impact_01",
+			forcesword_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01"
 		}
 	},
 	grimoire_smoke = {

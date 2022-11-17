@@ -6,41 +6,20 @@ table.make_unique(overrides)
 
 recoil_templates.default_stub_pistol_assault = {
 	still = {
-		camera_recoil_percentage = 0.65,
-		decay_grace = 0.05,
-		new_influence_percent = 0.6,
+		camera_recoil_percentage = 0.15,
+		decay_grace = 0.03,
+		new_influence_percent = 0.3,
 		rise_duration = 0.05,
 		rise = {
-			0.75,
-			1,
-			0.4,
-			0.5
+			0.1,
+			0.04,
+			0.025
 		},
 		decay = {
-			shooting = 1,
+			shooting = 1.5,
 			idle = 2
 		},
 		offset_range = {
-			{
-				pitch = {
-					0.125,
-					0.125
-				},
-				yaw = {
-					-0,
-					0
-				}
-			},
-			{
-				pitch = {
-					0.075,
-					0.075
-				},
-				yaw = {
-					-0.01,
-					0.01
-				}
-			},
 			{
 				pitch = {
 					0.065,
@@ -67,7 +46,7 @@ recoil_templates.default_stub_pistol_assault = {
 			pitch = 2
 		},
 		visual_recoil_settings = {
-			intensity = 5,
+			intensity = 1,
 			lerp_scalar = 1
 		}
 	},
@@ -163,6 +142,62 @@ recoil_templates.default_stub_pistol_bfg = {
 		rise_duration = 0.05,
 		rise = {
 			1
+		},
+		decay = {
+			shooting = 1,
+			idle = 2
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.15,
+					0.175
+				},
+				yaw = {
+					-0,
+					0
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 5,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.7,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.5,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.7,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	}
+}
+recoil_templates.default_stub_pistol_bfg_p1_m3 = {
+	still = {
+		camera_recoil_percentage = 0.65,
+		decay_grace = 0.15,
+		new_influence_percent = 0.8,
+		rise_duration = 0.25,
+		rise = {
+			3
 		},
 		decay = {
 			shooting = 1,

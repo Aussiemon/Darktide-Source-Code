@@ -22,22 +22,22 @@ local scenegraph_definition = {
 	}
 }
 local title_text_style = table.clone(UIFontSettings.hud_body)
-title_text_style.horizontal_alignment = "right"
-title_text_style.vertical_alignment = "bottom"
-title_text_style.text_horizontal_alignment = "right"
+title_text_style.horizontal_alignment = "center"
+title_text_style.vertical_alignment = "top"
+title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "center"
 title_text_style.size = {
 	450,
 	50
 }
 title_text_style.offset = {
-	-50,
-	9,
+	0,
+	2,
 	4
 }
 title_text_style.drop_shadow = true
-title_text_style.text_color = UIHudSettings.color_tint_main_2
-title_text_style.font_type = "rexlia"
+title_text_style.text_color = UIHudSettings.color_tint_main_1
+title_text_style.font_type = "machine_medium"
 local description_text_style = table.clone(UIFontSettings.header_2)
 description_text_style.horizontal_alignment = "center"
 description_text_style.vertical_alignment = "center"
@@ -50,12 +50,12 @@ description_text_style.size = {
 }
 description_text_style.offset = {
 	0,
-	-10,
+	12,
 	4
 }
 description_text_style.drop_shadow = true
 description_text_style.line_spacing = 1
-description_text_style.font_type = "rexlia"
+description_text_style.font_type = "machine_medium"
 description_text_style.font_size = 30
 local widget_definitions = {
 	mission_popup = UIWidget.create_definition({
@@ -74,8 +74,8 @@ local widget_definitions = {
 			style = description_text_style
 		},
 		{
-			value = "content/ui/materials/hud/backgrounds/objective_update",
-			style_id = "background",
+			value = "content/ui/materials/hud/backgrounds/objective_update_frame",
+			style_id = "frame",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
@@ -84,31 +84,54 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0
+					2
 				},
-				color = get_hud_color("color_tint_main_2", 255),
-				default_color = get_hud_color("color_tint_main_1", 255)
+				color = get_hud_color("color_tint_main_2", 255)
 			}
 		},
 		{
-			value_id = "icon",
-			style_id = "icon",
+			value = "content/ui/materials/hud/backgrounds/objective_update_effect",
+			style_id = "effect",
 			pass_type = "texture",
-			value = "content/ui/materials/icons/objectives/main",
 			style = {
 				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
+				horizontal_alignment = "center",
 				size = {
-					30,
-					30
+					660,
+					26
 				},
 				offset = {
-					-7,
+					0,
 					-2,
-					3
+					1
 				},
-				color = UIHudSettings.color_tint_main_1,
-				default_color = UIHudSettings.color_tint_main_1
+				color = {
+					100,
+					101,
+					133,
+					96
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/hud/backgrounds/objective_update_background",
+			style_id = "background",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size = popup_size,
+				offset = {
+					-2,
+					0,
+					0
+				},
+				size_addition = {
+					-14,
+					-4
+				},
+				color = get_hud_color("color_tint_main_3", 255)
 			}
 		}
 	}, "mission_popup")
@@ -125,7 +148,6 @@ animations.popup_start = {
 			local alpha = 0
 			style.title_text.text_color[1] = alpha
 			style.description_text.text_color[1] = alpha
-			style.icon.color[1] = alpha
 			local scenegraph_id = widget.scenegraph_id
 			local default_scenegraph = scenegraph_definition[scenegraph_id]
 			local default_size = default_scenegraph.size
@@ -166,7 +188,6 @@ animations.popup_start = {
 			local alpha = anim_progress * 255
 			style.title_text.text_color[1] = alpha
 			style.description_text.text_color[1] = alpha
-			style.icon.color[1] = alpha
 		end
 	},
 	{
@@ -179,7 +200,6 @@ animations.popup_start = {
 			local alpha = anim_progress * 255
 			style.title_text.text_color[1] = alpha
 			style.description_text.text_color[1] = alpha
-			style.icon.color[1] = alpha
 		end
 	},
 	{

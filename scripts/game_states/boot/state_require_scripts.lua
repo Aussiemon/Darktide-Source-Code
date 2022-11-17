@@ -38,6 +38,7 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("rendering_backend", Renderer.render_device_string())
 	Crashify.print_property("teamcity_build_id", APPLICATION_SETTINGS.teamcity_build_id)
 	Crashify.print_property("server", DEDICATED_SERVER)
+	Crashify.print_property("backend_env", BACKEND_ENV)
 
 	if PLATFORM == "win32" then
 		if HAS_STEAM then

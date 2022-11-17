@@ -126,7 +126,6 @@ WeaponDetailsPassTemplates.seal_slot = {
 		}
 	},
 	{
-		change_function = " style.color[1] = math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress)*100 ",
 		pass_type = "rect",
 		style = {
 			color = {
@@ -140,7 +139,10 @@ WeaponDetailsPassTemplates.seal_slot = {
 				0,
 				0
 			}
-		}
+		},
+		change_function = function (content, style)
+			style.color[1] = math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 100
+		end
 	}
 }
 WeaponDetailsPassTemplates.trait_slot_size = {

@@ -31,7 +31,9 @@ OverheatActionModule.running_action_state = function (self, t, time_in_action)
 	local current_heat = self._inventory_slot_component.overheat_current_percentage
 
 	if current_heat >= 0.99 then
-		return "fully_charged"
+		self._inventory_slot_component.overheat_state = "idle"
+
+		return "overheating"
 	end
 
 	local charge_template = self._weapon_extension:charge_template()

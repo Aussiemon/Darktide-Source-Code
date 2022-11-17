@@ -1,7 +1,7 @@
 local TelemetryHelper = class("TelemetryHelper")
 
 TelemetryHelper.unit_position = function (unit)
-	return unit and POSITION_LOOKUP[unit]
+	return POSITION_LOOKUP[unit]
 end
 
 TelemetryHelper.unit_coherency = function (unit)

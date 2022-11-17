@@ -111,10 +111,10 @@ local circumstance_vo_nurgle_rot_explicator_a = {
 			"loc_explicator_a__nurgle_circumstance_start_b_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.671167,
+			4.326042,
+			3.523313,
+			4.854375
 		},
 		randomize_indexes = {}
 	}

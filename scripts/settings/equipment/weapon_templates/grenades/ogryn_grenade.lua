@@ -7,6 +7,6 @@ weapon_template.actions.action_wield.total_time = 1
 weapon_template.actions.action_aim.allowed_chain_actions.aim_released.chain_time = 0.6
 weapon_template.actions.action_aim_underhand.allowed_chain_actions.short_hand_throw.chain_time = 0.6
 weapon_template.projectile_template = ProjectileTemplates.ogryn_grenade
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/ogryn_grenade"
+weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/frag_grenade"
 
 return weapon_template

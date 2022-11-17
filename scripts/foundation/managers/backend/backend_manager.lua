@@ -187,7 +187,7 @@ end
 BackendManager.authenticate = function (self)
 	local debug_log = false
 
-	if not self._initialize_promise then
+	if not self._initialize_promise or self._initialize_promise:is_rejected() then
 		self._initialize_promise = Promise:new()
 
 		if Backend.get_auth_method() == BackendManager.AUTH_METHOD_XBOXLIVE then
@@ -207,20 +207,26 @@ BackendManager.authenticate = function (self)
 				end
 
 				return default_result
-			end):catch(function (error)
-				if error[1] == -2145844844 then
+			end):catch(function (error_data)
+				local error_code = error_data.error_code or error_data[1]
+
+				if error_code == -2145844844 then
 					Log.info("BackendManager", "Got no backend_config.json from title storage")
 
 					return Promise.resolved(default_result)
 				end
+
+				self._initialize_promise:reject(error_data)
+
+				return Promise.rejected(error_data)
 			end):next(function (result)
-				local success, error = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
+				local success, error_code = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
 				self._initialized = true
 
 				self._initialize_promise:resolve()
 			end)
 		else
-			local success, error = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
+			local success, error_code = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
 			self._initialized = true
 
 			self._initialize_promise:resolve()
@@ -234,19 +240,20 @@ BackendManager.authenticate = function (self)
 
 		local auth_promise = Promise:new()
 		local user_id = Managers.account:user_id()
-		local operation_identifier, error = Backend.authenticate(user_id)
+		local operation_identifier, error_code = Backend.authenticate(user_id)
 
 		if operation_identifier then
 			self._promises[operation_identifier] = auth_promise
 			self._auth_cache = auth_promise
 		else
-			error = error or "Missing backend operation identifier"
+			error_code = error_code or "Missing backend operation identifier"
 
-			auth_promise:reject(BackendUtilities.create_error(BackendError.NoIdentifier, error))
+			auth_promise:reject(BackendUtilities.create_error(BackendError.NoIdentifier, error_code))
 		end
 
 		auth_promise:next(function (account)
 			Managers.telemetry_events:player_authenticated(account)
+			Crashify.print_property("account_id", string.value_or_nil(account.sub))
 
 			if Managers.event then
 				Managers.event:trigger("event_player_authenticated")
@@ -277,8 +284,6 @@ BackendManager.account_id = function (self)
 end
 
 BackendManager.title_request = function (self, path, options)
-	Log.info("BackendManager", "title_request: %s %s", options and options.method or "GET", path)
-
 	if not self._initialized then
 		return self:_not_initialized()
 	end
@@ -296,6 +301,8 @@ BackendManager.title_request = function (self, path, options)
 			end
 		end
 	end
+
+	Log.info("BackendManager", "title_request: %s %s", options and options.method or "GET", path)
 
 	options = options or {}
 	options.headers = options.headers or {}

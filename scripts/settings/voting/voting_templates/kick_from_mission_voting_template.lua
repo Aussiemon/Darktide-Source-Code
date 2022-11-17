@@ -42,7 +42,6 @@ local function _show_voting_popup(voting_id, peer_id)
 			{
 				text = "loc_party_kick_vote_vote_to_kick",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				callback = function ()
 					_cast_kick_vote(voting_id, OPTIONS.yes)
 				end

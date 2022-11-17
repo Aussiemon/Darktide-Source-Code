@@ -1,10 +1,9 @@
 local BreedShieldTemplates = require("scripts/settings/breed/breed_shield_templates")
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
-local MinionExplosionTemplates = require("scripts/settings/damage/explosion_templates/minion_explosion_templates")
 local MinionPushFxTemplates = require("scripts/settings/fx/minion_push_fx_templates")
 local MinionToughnessTemplates = require("scripts/settings/toughness/minion_toughness_templates")
-local PropExplosionTemplates = require("scripts/settings/damage/explosion_templates/prop_explosion_templates")
 local vfx_names = {}
 
 local function _add_vfx_names_from_explosion_templates(templates)
@@ -25,15 +24,16 @@ local function _add_vfx_names_from_explosion_templates(templates)
 
 		local vfx = template.vfx
 
-		for i = 1, #vfx do
-			local vfx_name = vfx[i]
-			vfx_names[vfx_name] = true
+		if vfx then
+			for i = 1, #vfx do
+				local vfx_name = vfx[i]
+				vfx_names[vfx_name] = true
+			end
 		end
 	end
 end
 
-_add_vfx_names_from_explosion_templates(MinionExplosionTemplates)
-_add_vfx_names_from_explosion_templates(PropExplosionTemplates)
+_add_vfx_names_from_explosion_templates(ExplosionTemplates)
 
 for name, template in pairs(BreedShootTemplates) do
 	local shoot_vfx_name = template.shoot_vfx_name

@@ -6,12 +6,20 @@ local function lerpable_timescale(value)
 end
 
 local multiplier = nil
+local ninja_crit_bump = 0.15
+local hatchet_crit_bump = {
+	lerp_perfect = 0.15,
+	lerp_basic = 0
+}
 local weapon_handling_templates = {
-	time_scale_0_75 = {
-		time_scale = lerpable_timescale(0.75)
+	time_scale_0_5 = {
+		time_scale = lerpable_timescale(0.5)
 	},
 	time_scale_0_7 = {
 		time_scale = lerpable_timescale(0.7)
+	},
+	time_scale_0_75 = {
+		time_scale = lerpable_timescale(0.75)
 	},
 	time_scale_0_8 = {
 		time_scale = lerpable_timescale(0.8)
@@ -40,6 +48,9 @@ local weapon_handling_templates = {
 	time_scale_1_3 = {
 		time_scale = lerpable_timescale(1.3)
 	},
+	time_scale_1_4 = {
+		time_scale = lerpable_timescale(1.4)
+	},
 	time_scale_1_5 = {
 		time_scale = lerpable_timescale(1.5)
 	},
@@ -55,6 +66,132 @@ local weapon_handling_templates = {
 	time_scale_2_5 = {
 		time_scale = lerpable_timescale(2.5)
 	},
+	time_scale_0_9_hatchet = {
+		time_scale = lerpable_timescale(0.9),
+		critical_strike = {
+			chance_modifier = hatchet_crit_bump
+		}
+	},
+	time_scale_1_hatchet = {
+		time_scale = lerpable_timescale(1),
+		critical_strike = {
+			chance_modifier = hatchet_crit_bump
+		}
+	},
+	time_scale_1_1_hatchet = {
+		time_scale = lerpable_timescale(1.1),
+		critical_strike = {
+			chance_modifier = hatchet_crit_bump
+		}
+	},
+	time_scale_1_3_hatchet = {
+		time_scale = lerpable_timescale(1.3),
+		critical_strike = {
+			chance_modifier = hatchet_crit_bump
+		}
+	},
+	time_scale_0_75_ninja = {
+		time_scale = lerpable_timescale(0.75),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_0_7_ninja = {
+		time_scale_ninja = lerpable_timescale(0.7),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_0_8_ninja = {
+		time_scale = lerpable_timescale(0.8),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_0_85_ninja = {
+		time_scale = lerpable_timescale(0.85),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_0_9_ninja = {
+		time_scale = lerpable_timescale(0.9),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_0_95_ninja = {
+		time_scale = lerpable_timescale(0.95),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_ninja = {
+		time_scale = lerpable_timescale(1),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_05_ninja = {
+		time_scale = lerpable_timescale(1.05),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_1_ninja = {
+		time_scale = lerpable_timescale(1.1),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_2_ninja = {
+		time_scale = lerpable_timescale(1.2),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_3_ninja = {
+		time_scale = lerpable_timescale(1.3),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_4_ninja = {
+		time_scale = lerpable_timescale(1.4),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_5_ninja = {
+		time_scale = lerpable_timescale(1.5),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_65_ninja = {
+		time_scale = lerpable_timescale(1.65),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_1_75_ninja = {
+		time_scale = lerpable_timescale(1.75),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_2_0_ninja = {
+		time_scale = lerpable_timescale(2),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
+	time_scale_2_5_ninja = {
+		time_scale = lerpable_timescale(2.5),
+		critical_strike = {
+			chance_modifier = ninja_crit_bump
+		}
+	},
 	increased_reload_speed = {
 		time_scale = 1.1
 	},
@@ -66,10 +203,18 @@ local weapon_handling_templates = {
 			chance_modifier = 0.05
 		}
 	},
+	immediate_single_shot_pistol = {
+		fire_rate = {
+			fire_time = 0
+		},
+		critical_strike = {
+			chance_modifier = 0.15
+		}
+	},
 	flamer_burst = {
 		fire_rate = {
 			max_shots = 1,
-			fire_time = 0.3
+			fire_time = 0.1
 		}
 	},
 	flamer_auto = {
@@ -105,6 +250,64 @@ local weapon_handling_templates = {
 			{
 				lerp_perfect = 0.3,
 				lerp_basic = 0.6
+			}
+		}
+	},
+	forcestaff_p2_m1_burst = {
+		fire_rate = {
+			max_shots = 1,
+			fire_time = 0.1
+		}
+	},
+	forcestaff_p2_m1_auto = {
+		fire_rate = {
+			fire_time = 0.1,
+			auto_fire_time = 0.25
+		},
+		flamer_ramp_up_times = {
+			{
+				lerp_perfect = 0.2,
+				lerp_basic = 0.4
+			},
+			{
+				lerp_perfect = 0.2,
+				lerp_basic = 0.4
+			},
+			{
+				lerp_perfect = 0.2,
+				lerp_basic = 0.4
+			},
+			{
+				lerp_perfect = 0.25,
+				lerp_basic = 0.5
+			},
+			{
+				lerp_perfect = 0.25,
+				lerp_basic = 0.5
+			},
+			{
+				lerp_perfect = 0.25,
+				lerp_basic = 0.5
+			},
+			{
+				lerp_perfect = 0.3,
+				lerp_basic = 0.6
+			}
+		}
+	},
+	forcestaff_p3_m1_single_shot = {
+		critical_strike = {
+			chance_modifier = {
+				lerp_perfect = 0.25,
+				lerp_basic = 0.05
+			}
+		}
+	},
+	forcestaff_p3_m1_chain_lightning = {
+		critical_strike = {
+			chance_modifier = {
+				lerp_perfect = 0.25,
+				lerp_basic = 0.05
 			}
 		}
 	},
@@ -208,39 +411,39 @@ local weapon_handling_templates = {
 		fire_rate = {
 			fire_time = 0,
 			auto_fire_time = {
-				lerp_perfect = 0.12000000000000001,
-				lerp_basic = 0.14
-			}
-		},
-		critical_strike = {
-			chance_modifier = -0.02,
-			max_critical_shots = 2
-		}
-	},
-	lasgun_p3_m3_full_auto = {
-		fire_rate = {
-			fire_time = 0,
-			auto_fire_time = {
-				lerp_perfect = 0.16,
-				lerp_basic = 0.18000000000000002
-			}
-		},
-		critical_strike = {
-			chance_modifier = -0.02,
-			max_critical_shots = 2
-		}
-	},
-	lasgun_p3_m2_full_auto = {
-		fire_rate = {
-			fire_time = 0,
-			auto_fire_time = {
 				lerp_perfect = 0.08,
 				lerp_basic = 0.09999999999999999
 			}
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 2
+			max_critical_shots = 4
+		}
+	},
+	lasgun_p3_m3_full_auto = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_perfect = 0.12000000000000001,
+				lerp_basic = 0.14
+			}
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	lasgun_p3_m2_full_auto = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_perfect = 0.049999999999999996,
+				lerp_basic = 0.06999999999999999
+			}
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 5
 		}
 	},
 	lasgun_triple_burst_slow = {
@@ -275,38 +478,31 @@ local weapon_handling_templates = {
 			}
 		}
 	},
-	autogun_triple_burst = {
+	autogun_single_shot = {
 		fire_rate = {
-			max_shots = 3,
+			max_shots = 1,
 			auto_fire_time = 0.075,
 			fire_time = 0
 		}
 	},
-	autogun_triple_burst_slow = {
+	autogun_triple_burst = {
 		fire_rate = {
 			max_shots = 3,
-			auto_fire_time = 0.11,
-			fire_time = 0
-		}
-	},
-	autogun_double_burst_slow = {
-		fire_rate = {
-			max_shots = 2,
-			auto_fire_time = 0.1,
+			auto_fire_time = 0.125,
 			fire_time = 0
 		}
 	},
 	autogun_quad_burst = {
 		fire_rate = {
-			max_shots = 4,
-			auto_fire_time = 0.075,
+			max_shots = 2,
+			auto_fire_time = 0.175,
 			fire_time = 0
 		}
 	},
-	autogun_quad_burst_fast = {
+	autogun_quintuple_burst_fast = {
 		fire_rate = {
-			max_shots = 4,
-			auto_fire_time = 0.065,
+			max_shots = 5,
+			auto_fire_time = 0.059,
 			fire_time = 0
 		}
 	},
@@ -349,12 +545,12 @@ local weapon_handling_templates = {
 			max_critical_shots = 4
 		}
 	},
-	autogun_full_auto_support = {
+	autogun_p2_m1 = {
 		fire_rate = {
-			fire_time = 0.2,
+			fire_time = 0,
 			auto_fire_time = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.06
+				lerp_perfect = 0.08,
+				lerp_basic = 0.09999999999999999
 			}
 		},
 		critical_strike = {
@@ -362,12 +558,38 @@ local weapon_handling_templates = {
 			max_critical_shots = 3
 		}
 	},
-	autogun_full_auto_support_braced = {
+	autogun_p2_m2 = {
 		fire_rate = {
 			fire_time = 0,
 			auto_fire_time = {
-				lerp_perfect = 0.052,
-				lerp_basic = 0.065
+				lerp_perfect = 0.060000000000000005,
+				lerp_basic = 0.08
+			}
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	autogun_p2_m2_hip = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_perfect = 0.08,
+				lerp_basic = 0.09999999999999999
+			}
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	autogun_p2_m3 = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_perfect = 0.11,
+				lerp_basic = 0.13
 			}
 		},
 		critical_strike = {
@@ -381,6 +603,19 @@ local weapon_handling_templates = {
 			auto_fire_time = {
 				lerp_perfect = 0.068,
 				lerp_basic = 0.085
+			}
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	autopistol_p1_m3 = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_perfect = 0.061,
+				lerp_basic = 0.101
 			}
 		},
 		critical_strike = {
@@ -408,7 +643,7 @@ local weapon_handling_templates = {
 	ogryn_heavystubber_p1_m1_full_auto = {
 		fire_rate = {
 			fire_time = 0.22,
-			auto_fire_time = 0.05
+			auto_fire_time = 0.11
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
@@ -418,7 +653,7 @@ local weapon_handling_templates = {
 	ogryn_heavystubber_p1_m1_hip_fire = {
 		fire_rate = {
 			fire_time = 0.22,
-			auto_fire_time = 0.05
+			auto_fire_time = 0.11
 		},
 		critical_strike = {
 			chance_modifier = -0.02,

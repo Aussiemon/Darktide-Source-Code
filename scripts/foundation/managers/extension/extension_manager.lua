@@ -74,6 +74,10 @@ ExtensionManager.update_time_slice_post_init = function (self)
 	return self._extension_system_holder:update_time_slice_post_init_systems()
 end
 
+ExtensionManager.is_in_fixed_update = function (self)
+	return self._in_fixed_update
+end
+
 ExtensionManager.pre_update = function (self, dt, t)
 	self._extension_system_holder:pre_update(dt, t)
 end
@@ -259,6 +263,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 		until true
 	end
 
+	Managers.event:trigger("unit_registered", unit)
 	Unit.flow_event(unit, "unit_registered")
 
 	return true

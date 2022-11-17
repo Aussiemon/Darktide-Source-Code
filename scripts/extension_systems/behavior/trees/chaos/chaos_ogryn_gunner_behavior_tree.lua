@@ -8,16 +8,20 @@ local COMBAT = {
 		action_data = action_data.melee_attack
 	},
 	{
+		"BtMeleeAttackAction",
+		name = "melee_attack_push",
+		action_data = action_data.melee_attack_push
+	},
+	{
 		"BtShootAction",
 		name = "shoot",
 		condition = "has_clear_shot",
 		action_data = action_data.shoot
 	},
 	{
-		"BtRangedFollowTargetAction",
-		name = "ranged_follow",
-		condition = "dont_have_clear_shot",
-		action_data = action_data.ranged_follow
+		"BtMoveToCombatVectorAction",
+		name = "move_to_combat_vector",
+		action_data = action_data.move_to_combat_vector
 	},
 	condition = "is_aggroed",
 	name = "combat"

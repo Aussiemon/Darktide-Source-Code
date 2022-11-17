@@ -348,7 +348,6 @@ sway_templates.fullauto_autogun_killshot = {
 		sway_pattern = default_autogun_sway_pattern
 	},
 	moving = {
-		rotation_speed = 0.55,
 		inherits = {
 			"fullauto_autogun_killshot",
 			"still"
@@ -381,7 +380,6 @@ sway_templates.fullauto_autogun_killshot = {
 		}
 	},
 	crouch_still = {
-		rotation_speed = 0.45,
 		inherits = {
 			"fullauto_autogun_killshot",
 			"still"
@@ -414,7 +412,6 @@ sway_templates.fullauto_autogun_killshot = {
 		}
 	},
 	crouch_moving = {
-		rotation_speed = 0.55,
 		inherits = {
 			"fullauto_autogun_killshot",
 			"still"

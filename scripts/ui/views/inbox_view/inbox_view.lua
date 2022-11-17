@@ -434,10 +434,13 @@ InboxView._create_grid_layout = function (self, item_offers)
 
 		if category == "item_instance" then
 			local item = MasterItems.get_store_item_instance(offer.description)
-			layout[#layout + 1] = {
-				item = item,
-				slot = ItemSlotSettings.slot_secondary
-			}
+
+			if item then
+				layout[#layout + 1] = {
+					item = item,
+					slot = ItemSlotSettings.slot_secondary
+				}
+			end
 		end
 	end
 

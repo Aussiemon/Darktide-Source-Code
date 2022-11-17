@@ -111,19 +111,21 @@ local action_data = {
 	},
 	melee_combat_idle = {
 		utility_weight = 2,
-		anim_events = "idle",
 		rotate_towards_target = true,
+		vo_event = "melee_idle",
+		anim_events = "idle",
 		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	close_combat_idle = {
 		utility_weight = 2,
-		anim_events = "close_ranged_idle",
 		rotate_towards_target = true,
+		vo_event = "melee_idle",
+		anim_events = "close_ranged_idle",
 		considerations = UtilityConsiderations.close_combat_idle
 	},
 	alerted = {
 		hesitate_chance = 0,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
@@ -325,6 +327,7 @@ local action_data = {
 		controlled_stagger = true,
 		move_anim_events = "move_fwd",
 		controlled_stagger_min_speed = 2,
+		attack_intensity_type = "elite_shotgun",
 		range = "close",
 		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
@@ -395,10 +398,11 @@ local action_data = {
 		max_distance_to_target = 18,
 		min_distance_to_target = 10,
 		utility_weight = 1,
-		controlled_stagger = true,
+		vo_event = "ranged_idle",
 		degree_per_direction = 10,
-		controlled_stagger_min_speed = 2,
+		controlled_stagger = true,
 		move_anim_events = "move_fwd",
+		controlled_stagger_min_speed = 2,
 		anim_events = "idle",
 		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
@@ -582,24 +586,23 @@ local action_data = {
 		}
 	},
 	shoot = {
-		ignore_backstab_sfx = true,
 		dodge_tell_sfx_delay = 0.13333333333333333,
+		ignore_backstab_sfx = true,
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
 		randomized_direction_degree_range = 180,
 		max_distance_to_target = 11,
-		vo_event = "start_shooting",
 		strafe_end_anim_event = "hip_fire",
+		not_allowed_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		inventory_slot = "slot_ranged_weapon",
 		first_shoot_timing = 1.2,
 		strafe_speed = 2.3,
-		utility_weight = 1,
+		utility_weight = 10,
 		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
 		strafe_shoot_distance = 3,
-		exit_after_cooldown = true,
 		trigger_shoot_sound_event_once = true,
 		strafe_shoot_ranged_position_fallback = true,
 		suppressive_fire = true,
@@ -646,11 +649,19 @@ local action_data = {
 			turn_shoot_left = 0.6410256410256411
 		},
 		aim_stances = {
+			turn_shoot_right = "standing",
+			turn_shoot_left = "standing",
+			move_fwd_walk_aim = "standing",
+			move_left_walk_aim = "standing",
+			move_right_walk_aim = "standing",
+			turn_shoot_bwd = "standing",
+			move_bwd_walk_aim = "standing",
 			hip_fire = "standing"
 		},
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
@@ -674,7 +685,7 @@ local action_data = {
 		vo_event = "start_shooting",
 		trigger_shoot_sound_event_once = true,
 		step_anim_distance = 2,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx_delay = 0.13333333333333333,
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		fx_source_name = "muzzle",
@@ -705,8 +716,9 @@ local action_data = {
 			step_right_shoot = "standing"
 		},
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
@@ -725,7 +737,7 @@ local action_data = {
 		vo_event = "start_shooting",
 		trigger_shoot_sound_event_once = true,
 		suppressive_fire = true,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
@@ -791,8 +803,9 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		shoot_template = BreedShootTemplates.renegade_shocktrooper_default,
 		stagger_type_reduction = {
@@ -806,6 +819,7 @@ local action_data = {
 		controlled_stagger_min_speed = 2,
 		leave_walk_distance = 4,
 		controlled_stagger_ignored_combat_range = "melee",
+		vo_event = "melee_idle",
 		walk_anim_event = "move_fwd_walk",
 		running_stagger_duration = 1.1666666666666667,
 		running_stagger_anim_left = "run_stagger_01",
@@ -1039,32 +1053,34 @@ local action_data = {
 			}
 		}
 	},
-	throw_frag_grenade = {
-		utility_weight = 20,
-		vo_event = "throwing_grenade",
-		considerations = UtilityConsiderations.renegade_shocktrooper_frag_grenade,
-		aim_anim_events = {
-			"throw_grenade"
+	bayonet_melee_attack = {
+		weapon_reach = 3.5,
+		utility_weight = 10,
+		considerations = UtilityConsiderations.melee_attack_bayonet,
+		attack_anim_events = {
+			"attack_bayonet_01",
+			"attack_bayonet_02",
+			"attack_bayonet_04",
+			"attack_bayonet_05"
 		},
-		aim_duration = {
-			throw_grenade = 1.564102564102564
+		attack_anim_damage_timings = {
+			attack_bayonet_01 = 0.5747126436781609,
+			attack_bayonet_02 = 0.7586206896551724,
+			attack_bayonet_04 = 1.2222222222222223,
+			attack_bayonet_05 = 1.3333333333333333
 		},
-		action_durations = {
-			throw_grenade = 3.076923076923077
-		},
-		effect_template = EffectTemplates.cultist_shocktrooper_grenade,
-		effect_template_timings = {
-			throw_grenade = 0.5384615384615384
-		},
-		throw_config = {
-			acceptable_accuracy = 1,
-			item = "content/items/weapons/minions/ranged/renegade_grenade",
-			unit_node = "j_lefthand",
-			projectile_template = ProjectileTemplates.renegade_shocktrooper_frag_grenade
+		attack_anim_durations = {
+			attack_bayonet_01 = 1.4444444444444444,
+			attack_bayonet_02 = 2.0689655172413794,
+			attack_bayonet_04 = 2.2222222222222223,
+			attack_bayonet_05 = 2.6
 		},
 		attack_intensities = {
-			grenade = 16
-		}
+			ranged = 1,
+			melee = 0.75
+		},
+		damage_profile = DamageProfileTemplates.melee_roamer_default,
+		damage_type = damage_types.minion_melee_sharp
 	},
 	switch_weapon = {
 		slot_melee_weapon = {
@@ -1091,7 +1107,7 @@ local action_data = {
 		}
 	},
 	blocked = {
-		blocked_duration = 2.6666666666666665,
+		blocked_duration = 1.6666666666666667,
 		blocked_anims = {
 			"blocked"
 		}

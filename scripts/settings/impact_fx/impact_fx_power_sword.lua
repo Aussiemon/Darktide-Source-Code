@@ -333,6 +333,26 @@ local armored = {
 				only_1p = true
 			}
 		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_power_sword_hit",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/melee_hits_sword_no_damage",
+				only_1p = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_power_sword_hit",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/melee_hits_sword_no_damage",
+				only_1p = true
+			}
+		},
 		dead = {
 			{
 				event = "wwise/events/weapon/play_power_sword_hit",

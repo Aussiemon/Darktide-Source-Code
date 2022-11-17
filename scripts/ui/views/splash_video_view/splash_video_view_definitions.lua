@@ -21,8 +21,9 @@ local scenegraph_definition = {
 local widget_definitions = {
 	video = UIWidget.create_definition({
 		{
-			pass_type = "video",
-			value_id = "video_path"
+			style_id = "video",
+			value_id = "video_path",
+			pass_type = "video"
 		}
 	}, "video_canvas"),
 	background = UIWidget.create_definition({

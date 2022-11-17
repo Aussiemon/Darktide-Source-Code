@@ -70,14 +70,39 @@ DefaultGameParameters.beta_label_overlay_text = "Closed Beta Test October 14-16 
 DefaultGameParameters.enable_string_tags = false
 DefaultGameParameters.vertical_fov = 65
 DefaultGameParameters.min_vertical_fov = 45
-DefaultGameParameters.max_vertical_fov = 120
+DefaultGameParameters.max_vertical_fov = 85
 DefaultGameParameters.min_console_vertical_fov = 45
-DefaultGameParameters.max_console_vertical_fov = 90
+DefaultGameParameters.max_console_vertical_fov = 85
+slot0 = DefaultGameParameters
+
+if DEDICATED_SERVER then
+	-- Nothing
+end
+
+slot0.blood_decals_enabled = true
+slot0 = DefaultGameParameters
+
+if DEDICATED_SERVER then
+	-- Nothing
+end
+
+slot0.attack_ragdolls_enabled = true
+slot0 = DefaultGameParameters
+
+if DEDICATED_SERVER then
+	-- Nothing
+end
+
+slot0.minion_wounds_enabled = true
+slot0 = DefaultGameParameters
+
+if DEDICATED_SERVER then
+	-- Nothing
+end
+
+slot0.gibbing_enabled = true
+DefaultGameParameters.enable_afk_check = BUILD == "release"
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
-DefaultGameParameters.show_beta_label_overlay = true
-DefaultGameParameters.prod_like_backend = true
-DefaultGameParameters.backend_fetch_master_items = true
-DefaultGameParameters.show_beta_label_overlay = true
 
 return DefaultGameParameters

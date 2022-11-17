@@ -59,6 +59,16 @@ local roamer_packs = {
 			}
 		},
 		{
+			weight = 0.5,
+			breeds = {
+				"chaos_newly_infected",
+				"chaos_newly_infected",
+				"chaos_newly_infected",
+				roamer_melee,
+				roamer_melee
+			}
+		},
+		{
 			weight = 1,
 			breeds = {
 				elite_berzerker,
@@ -204,6 +214,15 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				elite_shocktrooper,
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
 				elite_berzerker,
 				roamer_assault,
 				roamer_assault,
@@ -301,6 +320,16 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,

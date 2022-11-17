@@ -7,10 +7,10 @@ local HUNT = {
 		name = "movement",
 		action_data = action_data.movement
 	},
-	condition = "is_aggroed",
+	condition = "beast_of_nurgle_movement",
 	name = "hunting"
 }
-local VOMIT_OR_CONSUME = {
+local VOMIT = {
 	"BtSequenceNode",
 	{
 		"BtBeastOfNurgleAlignAction",
@@ -18,27 +18,31 @@ local VOMIT_OR_CONSUME = {
 		action_data = action_data.align
 	},
 	{
-		"BtSelectorNode",
-		{
-			"BtBeastOfNurgleConsumeAction",
-			leave_hook = "beast_of_nurgle_set_consume_cooldown",
-			name = "consume",
-			condition = "beast_of_nurgle_should_eat",
-			action_data = action_data.consume
-		},
-		{
-			"BtShootLiquidBeamAction",
-			name = "vomit",
-			leave_hook = "beast_of_nurgle_set_vomit_cooldown",
-			action_data = action_data.vomit
-		},
-		name = "eat_or_vomit"
+		"BtShootLiquidBeamAction",
+		name = "vomit",
+		leave_hook = "beast_of_nurgle_set_vomit_cooldown",
+		action_data = action_data.vomit
 	},
 	name = "vomiting",
 	condition = "beast_of_nurgle_should_vomit",
 	condition_args = {
 		wanted_distance = 10
 	}
+}
+local CONSUME = {
+	"BtSequenceNode",
+	{
+		"BtBeastOfNurgleAlignAction",
+		name = "align",
+		action_data = action_data.align
+	},
+	{
+		"BtBeastOfNurgleConsumeAction",
+		name = "consume",
+		action_data = action_data.consume
+	},
+	condition = "beast_of_nurgle_should_eat",
+	name = "consuming"
 }
 local DASH_AND_CONSUME = {
 	"BtSequenceNode",
@@ -50,7 +54,6 @@ local DASH_AND_CONSUME = {
 	{
 		"BtBeastOfNurgleConsumeAction",
 		name = "consume",
-		leave_hook = "beast_of_nurgle_set_consume_cooldown",
 		action_data = action_data.consume
 	},
 	condition = "beast_of_nurgle_has_consume_target",
@@ -64,8 +67,9 @@ local SPIT_OUT_CONSUMED_UNIT = {
 		leave_hook = "beast_of_nurgle_set_consume_cooldown",
 		action_data = action_data.spit_out
 	},
+	name = "spit_out",
 	condition = "beast_of_nurgle_has_spit_out_target",
-	name = "spit_out"
+	action_data = action_data.spit_out
 }
 local MELEE_PUSH_BACK_ATTACKS = {
 	"BtSelectorNode",
@@ -140,7 +144,7 @@ local RUN_AWAY = {
 	condition = "beast_of_nurgle_wants_to_run_away",
 	name = "run_away_sequence"
 }
-local TARGET_CHANGED = {
+local ALERTED = {
 	"BtSequenceNode",
 	{
 		"BtBeastOfNurgleAlignAction",
@@ -149,22 +153,21 @@ local TARGET_CHANGED = {
 	},
 	{
 		"BtBeastOfNurgleAlignAction",
-		name = "change_target",
-		leave_hook = "beast_of_nurgle_reset_change_target_flag",
-		action_data = action_data.change_target
+		name = "alerted",
+		leave_hook = "beast_of_nurgle_reset_alerted",
+		action_data = action_data.alerted
 	},
+	condition = "beast_of_nurgle_wants_to_play_alerted",
+	name = "alerted_sequence"
+}
+local TARGET_CHANGED = {
+	"BtChangeTargetAction",
+	name = "change_target",
 	condition = "beast_of_nurgle_wants_to_play_change_target",
-	name = "target_changed_sequence"
+	action_data = action_data.change_target
 }
 local behavior_tree = {
 	"BtSelectorNode",
-	{
-		"BtDieAction",
-		enter_hook = "beast_of_nurgle_stagger_enter",
-		name = "death",
-		condition = "is_dead",
-		action_data = action_data.death
-	},
 	{
 		"BtExitSpawnerAction",
 		name = "exit_spawner",
@@ -206,15 +209,30 @@ local behavior_tree = {
 		name = "smart_object"
 	},
 	{
+		"BtBeastOfNurgleDieAction",
+		enter_hook = "beast_of_nurgle_stagger_enter",
+		name = "death",
+		condition = "is_dead",
+		action_data = action_data.death
+	},
+	{
 		"BtStaggerAction",
 		enter_hook = "beast_of_nurgle_stagger_enter",
 		name = "stagger",
-		condition = "is_staggered",
+		condition = "beast_of_nurgle_normal_stagger",
 		action_data = action_data.stagger
+	},
+	{
+		"BtStaggerAction",
+		enter_hook = "beast_of_nurgle_stagger_enter",
+		name = "weakspot_stagger",
+		condition = "beast_of_nurgle_weakspot_stagger",
+		action_data = action_data.weakspot_stagger
 	},
 	SPIT_OUT_CONSUMED_UNIT,
 	DASH_AND_CONSUME,
 	MELEE_PUSH_BACK_ATTACKS,
+	ALERTED,
 	TARGET_CHANGED,
 	RUN_AWAY,
 	{
@@ -223,7 +241,8 @@ local behavior_tree = {
 		condition = "beast_of_nurgle_can_consume_minion",
 		action_data = action_data.consume_minion
 	},
-	VOMIT_OR_CONSUME,
+	CONSUME,
+	VOMIT,
 	HUNT,
 	{
 		"BtIdleAction",

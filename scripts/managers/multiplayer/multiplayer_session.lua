@@ -4,7 +4,6 @@ local RemotePlayer = require("scripts/managers/player/remote_player")
 local MasterItems = require("scripts/backend/master_items")
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
-local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MultiplayerSession = class("MultiplayerSession")
 MultiplayerSession.STATES = table.enum("booting", "host", "client", "dead")
@@ -16,7 +15,6 @@ MultiplayerSession.init = function (self)
 	self._joined_host_peer_id = nil
 	self._joined_host_channel_id = nil
 	self._host_type = nil
-	self._updated_recent_players = {}
 	self._vivox_backend_info = nil
 end
 
@@ -218,43 +216,6 @@ MultiplayerSession.set_vivox_backend_info = function (self, vivox_backend_info)
 	self._vivox_backend_info = vivox_backend_info
 end
 
-local function _update_recent_player(account_id)
-	local _, promise = Managers.presence:get_presence(account_id)
-
-	promise:next(function (presence)
-		if presence and presence:platform() == "xbox" then
-			local xuid = presence:platform_user_id()
-
-			if xuid then
-				Log.info("MultiplayerSession", "[XboxLive] Updating recent player (account_id: %s, xuid: %s)", account_id, xuid)
-				XboxLiveUtilities.update_recent_player_teammate(xuid)
-			end
-		end
-	end):catch(function (err)
-		Log.info("MultiplayerSession", "[XboxLive] Couldn't update recent player, presence error: %s", table.tostring(err))
-	end)
-end
-
-MultiplayerSession._update_recent_players = function (self)
-	local my_presence = Managers.presence:presence_entry_myself()
-
-	if my_presence:platform() ~= "xbox" then
-		return
-	end
-
-	local my_account_id = my_presence:account_id()
-
-	for id, player in pairs(Managers.player:players()) do
-		local account_id = player:account_id()
-
-		if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID and account_id ~= my_account_id and not self._updated_recent_players[account_id] then
-			_update_recent_player(account_id)
-
-			self._updated_recent_players[account_id] = true
-		end
-	end
-end
-
 MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_type)
 	self._state = self.STATES.client
 	self._joined_host_channel_id = channel_id
@@ -302,8 +263,20 @@ MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_
 
 	if host_type == HOST_TYPES.mission_server then
 		Managers.presence:set_num_mission_members(Managers.connection:num_members())
-		self:_update_recent_players()
+
+		local my_presence = Managers.presence:presence_entry_myself()
+		local my_account_id = my_presence:account_id()
+
+		for id, player in pairs(Managers.player:players()) do
+			local account_id = player:account_id()
+
+			if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID and account_id ~= my_account_id then
+				Managers.data_service.social:update_recent_players(account_id)
+			end
+		end
 	end
+
+	Managers.event:trigger("event_multiplayer_session_joined_host")
 end
 
 MultiplayerSession.has_successfully_joined_host = function (self)
@@ -358,6 +331,8 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 
 		Managers.boons = nil
 	end
+
+	Managers.event:trigger("event_multiplayer_session_disconnected_from_host")
 end
 
 MultiplayerSession.failed_to_boot = function (self, is_error, source, reason, optional_error_details)
@@ -369,6 +344,8 @@ MultiplayerSession.failed_to_boot = function (self, is_error, source, reason, op
 		error_details = optional_error_details
 	}
 	self._state = self.STATES.dead
+
+	Managers.event:trigger("event_multiplayer_session_failed_to_boot")
 end
 
 MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_data)
@@ -389,7 +366,14 @@ MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_da
 
 	if self._host_type == HOST_TYPES.mission_server then
 		Managers.presence:set_num_mission_members(Managers.connection:num_members())
-		self:_update_recent_players()
+
+		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
+			local account_id = player:account_id()
+
+			if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+				Managers.data_service.social:update_recent_players(account_id)
+			end
+		end
 	end
 
 	if Managers.chat then

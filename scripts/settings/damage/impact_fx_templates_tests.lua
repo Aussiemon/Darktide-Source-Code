@@ -12,6 +12,7 @@ local IMPACT_FX_INTERFACE = {
 	material_switch_sfx_husk = true,
 	decal = true,
 	material_switch_sfx = true,
+	unit = true,
 	blood_ball = true
 }
 local success = nil

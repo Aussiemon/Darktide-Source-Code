@@ -10,7 +10,6 @@ local hazard_prop_settings = {
 	},
 	fire_settings = {
 		charge_level = 1,
-		fire_node_count = 4,
 		raycast_distance = 5,
 		power_level = 500,
 		explosion_template = ExplosionTemplates.fire_barrel,

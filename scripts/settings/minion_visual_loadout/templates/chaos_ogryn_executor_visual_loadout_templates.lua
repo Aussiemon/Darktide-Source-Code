@@ -22,7 +22,10 @@ local basic_chaos_ogryn_executor_template = {
 			drop_on_death = true,
 			is_weapon = true,
 			items = {
-				"content/items/weapons/minions/melee/chaos_ogryn_executor_2h_club"
+				"content/items/weapons/minions/melee/chaos_ogryn_executor_2h_club",
+				"content/items/weapons/minions/melee/chaos_ogryn_executor_2h_club_02",
+				"content/items/weapons/minions/melee/chaos_ogryn_executor_2h_club_03",
+				"content/items/weapons/minions/melee/chaos_ogryn_executor_2h_club_04"
 			}
 		},
 		slot_head = {
@@ -67,6 +70,13 @@ foundry_1.slots.envrionmental_override.items = {
 }
 templates.chaos_ogryn_executor[zone_ids.tank_foundry] = {
 	foundry_1
+}
+local dust_1 = table.clone(basic_chaos_ogryn_executor_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.chaos_ogryn_executor[zone_ids.dust] = {
+	dust_1
 }
 local watertown_1 = table.clone(basic_chaos_ogryn_executor_template)
 watertown_1.slots.envrionmental_override.items = {

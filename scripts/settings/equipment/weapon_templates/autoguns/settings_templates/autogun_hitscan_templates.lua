@@ -53,6 +53,65 @@ overrides.killshot_autogun_bullet = {
 		}
 	}
 }
+overrides.burst_autogun_bullet = {
+	parent_template_name = "default_autogun_bullet",
+	overrides = {
+		{
+			"damage",
+			"impact",
+			"damage_profile",
+			DamageProfileTemplates.autogun_burst_shot
+		}
+	}
+}
+hitscan_templates.autogun_p2_m1_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p2_m1
+		}
+	}
+}
+hitscan_templates.autogun_p2_m2_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p2_m2
+		}
+	}
+}
+hitscan_templates.autogun_p2_m3_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p2_m3
+		}
+	}
+}
+hitscan_templates.autogun_p3_m1_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p3_m1
+		}
+	}
+}
+hitscan_templates.autogun_p3_m2_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p3_m2
+		}
+	}
+}
+hitscan_templates.autogun_p3_m3_bullet = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.autogun_p3_m3
+		}
+	}
+}
 
 return {
 	base_templates = hitscan_templates,

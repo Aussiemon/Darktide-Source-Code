@@ -96,6 +96,11 @@ local mission_objective_templates = {
 				description = "Escape!",
 				mission_objective_type = "goal",
 				header = "Escape!"
+			},
+			objective_ship_port_arena_main = {
+				description = "Survive while data is being transferred",
+				mission_objective_type = "luggable",
+				header = "Ensure Vox Array Data Transfer"
 			}
 		}
 	}

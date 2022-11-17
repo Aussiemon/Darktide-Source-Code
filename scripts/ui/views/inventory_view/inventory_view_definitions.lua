@@ -37,6 +37,17 @@ local scenegraph_definition = {
 			1
 		}
 	},
+	grid_background = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = grid_size,
+		position = {
+			grid_start_offset_x,
+			216,
+			1
+		}
+	},
 	grid_content_pivot = {
 		vertical_alignment = "top",
 		parent = "grid_background",
@@ -304,15 +315,10 @@ local widget_definitions = {
 				scale_to_material = true,
 				horizontal_alignment = "center",
 				size_addition = {
-					22,
+					20,
 					70
 				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
+				color = Color.terminal_grid_background(255, true)
 			}
 		},
 		{

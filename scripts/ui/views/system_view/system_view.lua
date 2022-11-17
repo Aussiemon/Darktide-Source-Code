@@ -17,16 +17,30 @@ end
 
 SystemView.on_enter = function (self)
 	SystemView.super.on_enter(self)
-
-	local scenegraph_id = "grid_content_pivot"
-	local callback_name = "_on_entry_pressed_cb"
-	self._content_widgets, self._alignment_list = self:_setup_content_widgets(ContentList, scenegraph_id, callback_name)
-	self._content_grid = self:_setup_grid(self._content_widgets, self._alignment_list)
-
-	self:_setup_content_grid_scrollbar()
+	self:_setup_widgets()
 	self:_setup_input_legend()
 	self:_setup_default_gui()
 	self:_setup_background_gui()
+end
+
+SystemView._setup_widgets = function (self)
+	local scenegraph_id = "grid_content_pivot"
+	local callback_name = "_on_entry_pressed_cb"
+
+	if self._content_widgets then
+		for i = 1, #self._content_widgets do
+			local widget = self._content_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._content_widgets = nil
+	end
+
+	self._content_widgets, self._alignment_list, self._list_verification = self:_setup_content_widgets(ContentList, scenegraph_id, callback_name)
+	self._content_grid = self:_setup_grid(self._content_widgets, self._alignment_list)
+
+	self:_setup_content_grid_scrollbar()
 end
 
 SystemView._setup_input_legend = function (self)
@@ -69,6 +83,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 	local widget_definitions = {}
 	local widgets = {}
 	local alignment_list = {}
+	local list_verification = {}
 	local current_state_name = Managers.ui:get_current_state_name()
 	local list = content.default
 
@@ -90,6 +105,11 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 
 		if validation_function and verified then
 			verified, disabled = validation_function()
+			list_verification[#list_verification + 1] = {
+				verified = verified,
+				disabled = disabled,
+				validation_function = validation_function
+			}
 		end
 
 		if verified then
@@ -130,7 +150,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 		end
 	end
 
-	return widgets, alignment_list
+	return widgets, alignment_list, list_verification
 end
 
 SystemView.draw = function (self, dt, t, input_service, layer)
@@ -171,7 +191,7 @@ SystemView._setup_grid = function (self, widgets, alignment_list)
 	local direction = "down"
 	local spacing = ContentBlueprints.vertical_spacing
 
-	return UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing, nil, true)
+	return UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing)
 end
 
 SystemView.set_render_scale = function (self, scale)
@@ -187,6 +207,17 @@ SystemView.update = function (self, dt, t, input_service)
 	end
 
 	self._content_grid:update(dt, t, input_service)
+
+	if self._list_verification then
+		for i = 1, #self._list_verification do
+			local verification = self._list_verification[i]
+			local verified, disabled = verification.validation_function()
+
+			if verified ~= verification.verified or disabled ~= verification.disabled then
+				self:_setup_widgets()
+			end
+		end
+	end
 
 	return SystemView.super.update(self, dt, t, input_service)
 end

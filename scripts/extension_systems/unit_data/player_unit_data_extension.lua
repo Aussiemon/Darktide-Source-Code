@@ -96,7 +96,8 @@ local POST_UPDATE_FIELDS = {
 	string = function (value, fixed_time_step, network_name)
 		local field_idx = FIELDS_LOOKUP[network_name]
 		local field = FIELD_NETWORK_LOOKUP[field_idx]
-		local lookup = field[6]
+		local use_network_lookup = field[8]
+		local lookup = use_network_lookup and NetworkLookup[use_network_lookup] or field[6]
 		local networked_value = lookup[value]
 
 		return networked_value
@@ -241,6 +242,8 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	self._network_max_time_offset = NetworkConstants.max_time_offset
+	self._in_panic = false
+	self._in_panic_at_t = 0
 end
 
 PlayerUnitDataExtension.game_object_initialized = function (self, session, object_id)
@@ -259,13 +262,15 @@ PlayerUnitDataExtension.game_object_initialized = function (self, session, objec
 		local network_name = field[4]
 		local network_type = field[5]
 		local lookup = field[6]
+		local use_network_lookup = field[8]
 		local value = self._components[component_name][self._component_index][field_name]
 		local actual_value = nil
 
 		if type == "Vector3" or type == "Quaternion" then
 			actual_value = value:unbox()
 		elseif type == "string" then
-			local lookup_index = lookup[value]
+			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+			local lookup_index = string_lookup[value]
 			actual_value = lookup_index
 		elseif network_type == "fixed_frame_time" then
 			local frame = math.round(value / self._fixed_time_step)
@@ -698,12 +703,12 @@ PlayerUnitDataExtension.is_local_unit = function (self)
 	return self._is_local_unit
 end
 
-PlayerUnitDataExtension.pre_update = function (self, dt, t)
+PlayerUnitDataExtension.pre_update = function (self, unit, dt, t)
 	if self._is_server then
 		return
 	end
 
-	self:_read_server_unit_data_state()
+	self:_read_server_unit_data_state(t)
 end
 
 PlayerUnitDataExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
@@ -839,7 +844,7 @@ local _vector3_distance_sq = Vector3.distance_squared
 local _quaternion_is_valid = Quaternion.is_valid
 local _quaternion_dot = Quaternion.dot
 
-PlayerUnitDataExtension._read_server_unit_data_state = function (self)
+PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 	local server_data_state_game_object_id = self._server_data_state_game_object_id
 
 	if not server_data_state_game_object_id then
@@ -851,18 +856,45 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 	local remainder_time = _game_object_field(game_session, server_data_state_game_object_id, REMAINDER_TIME_FIELD)
 	local frame_time = _game_object_field(game_session, server_data_state_game_object_id, FRAME_TIME_FIELD)
 	local state_cache_size = self._state_cache_size
+	local input_handler = self._player.input_handler
 
 	if frame_index <= self._last_received_frame then
 		return
 	elseif self._last_fixed_frame < frame_index then
-		self._player.input_handler:frame_parsed(frame_index, remainder_time, frame_time)
-		info("Received state package from the future, this is likely because we haven't run any fixed frames yet or had a major stall. Received frame (%i), last frame (%i).", frame_index, self._last_fixed_frame)
+		input_handler:frame_parsed(frame_index, remainder_time, frame_time)
+
+		if not self._in_panic then
+			info("Panic started. Received state package from the future, this is likely because we haven't run any fixed frames yet or had a major stall. Received frame (%i), last frame (%i).", frame_index, self._last_fixed_frame)
+
+			self._in_panic = true
+			self._in_panic_at_t = t
+
+			input_handler:set_in_panic(true)
+		end
 
 		return
 	elseif frame_index <= self._last_fixed_frame - state_cache_size then
-		info("Received state package so old it would trash newer entries due to ringbuffer size.")
+		input_handler:frame_parsed(frame_index, remainder_time, frame_time)
+
+		if not self._in_panic then
+			info("Panic started. Received state package so old it would trash newer entries due to ringbuffer size.")
+
+			self._in_panic = true
+			self._in_panic_at_t = t
+
+			input_handler:set_in_panic(true)
+		end
 
 		return
+	end
+
+	if self._in_panic then
+		info("Panic resolved, took %.3f seconds.", t - self._in_panic_at_t)
+
+		self._in_panic = false
+		self._in_panic_at_t = 0
+
+		input_handler:set_in_panic(false)
 	end
 
 	local mispredict = false
@@ -882,6 +914,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 		local network_type = field[5]
 		local lookup = field[6]
 		local skip_predict_verification = field[7]
+		local use_network_lookup = field[8]
 		local component = components[component_name][wrapped_frame_index]
 		local rollback_component = rollback_components[component_name]
 		local simulated_value = component[field_name]
@@ -892,7 +925,8 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 			correct = false
 
 			if type == "string" then
-				component[field_name] = lookup[authoritative_value]
+				local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+				component[field_name] = string_lookup[authoritative_value]
 			elseif type == "number" and FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				component[field_name] = (authoritative_value + frame_index) * self._fixed_time_step
 			elseif type == "number" and network_type == "fixed_frame_time" then
@@ -911,12 +945,13 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 
 			simulated_value:store(authoritative_value)
 		elseif type == "string" then
+			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
 			real_simulated_value = simulated_value
-			local local_correct = lookup[real_simulated_value] == authoritative_value
+			local local_correct = string_lookup[real_simulated_value] == authoritative_value
 			correct = skip_predict_verification and true or local_correct
 
 			if not local_correct then
-				component[field_name] = lookup[authoritative_value]
+				component[field_name] = string_lookup[authoritative_value]
 			end
 		elseif type == "number" then
 			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
@@ -979,7 +1014,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self)
 
 	self._last_received_frame = frame_index
 
-	self._player.input_handler:frame_parsed(frame_index, remainder_time, frame_time)
+	input_handler:frame_parsed(frame_index, remainder_time, frame_time)
 end
 
 return PlayerUnitDataExtension

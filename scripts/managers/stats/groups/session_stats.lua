@@ -29,21 +29,21 @@ Factory.add_to_group(SessionStats, Factory.create_simple("complete_mission_no_de
 	Flags.save_to_backend,
 	Flags.ephemeral
 }))
-Factory.add_to_group(SessionStats, Factory.create_simple("team_kills", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_kills"), {
-	Flags.save_to_backend
-}))
-Factory.add_to_group(SessionStats, Factory.create_simple("team_deaths", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_deaths"), {
-	Flags.save_to_backend
-}))
-Factory.add_to_group(SessionStats, Factory.create_smart_reducer("collect_pickup", SessionStats.definitions.mission, {
+Factory.add_to_group(SessionStats, Factory.create_smart_reducer("collect_pickup", Hooks.definitions.hook_mission, {
 	"side_objective_name"
 }, {
 	Parameters.transformers.side_objective_to_type
 }, {
 	"type"
-}, Activations.on_condition(Conditions.all(Conditions.param_has_value(SessionStats.definitions.mission, "win", true), Conditions.param_has_value(SessionStats.definitions.mission, "side_objective_complete", true)), Activations.sum), {
+}, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.any(Conditions.param_has_value(Hooks.definitions.hook_mission, "side_objective_name", "side_mission_grimoire"), Conditions.param_has_value(Hooks.definitions.hook_mission, "side_objective_name", "side_mission_tome"), Conditions.param_has_value(Hooks.definitions.hook_mission, "side_objective_name", "side_mission_consumable"))), Activations.replace_trigger_value(Activations.sum, Values.param(Hooks.definitions.hook_mission, "side_objective_count"))), {
 	Flags.save_to_backend,
 	Flags.ephemeral
+}))
+Factory.add_to_group(SessionStats, Factory.create_simple("team_kills", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_kills"), {
+	Flags.save_to_backend
+}))
+Factory.add_to_group(SessionStats, Factory.create_simple("team_deaths", Hooks.definitions.hook_mission, Activations.use_parameter_value(Hooks.definitions.hook_mission, "team_deaths"), {
+	Flags.save_to_backend
 }))
 Factory.add_to_group(SessionStats, Factory.create_dynamic_reducer("collect_resource", Hooks.definitions.hook_collect_material, {
 	"type"
@@ -55,9 +55,6 @@ Factory.add_to_group(SessionStats, Factory.create_simple("blocked_damage", Hooks
 	Flags.save_to_backend,
 	Flags.ephemeral
 }))
-Factory.add_to_group(SessionStats, Factory.create_dynamic_reducer("boss_damage_by_id", Hooks.definitions.hook_damage, {
-	"id"
-}, Activations.on_condition(Conditions.breed_is_boss(Hooks.definitions.hook_damage), Activations.sum)))
 Factory.add_to_group(SessionStats, Factory.create_smart_reducer("kill_minion", Hooks.definitions.hook_kill, {
 	"weapon_attack_type",
 	"breed_name"
@@ -67,13 +64,26 @@ Factory.add_to_group(SessionStats, Factory.create_smart_reducer("kill_minion", H
 	"type",
 	"name"
 }, Activations.on_condition(Conditions.inverse(Conditions.breed_is_boss(Hooks.definitions.hook_kill)), Activations.sum), {
+	Flags.save_to_backend
+}))
+Factory.add_to_group(SessionStats, Factory.create_simple("kill_boss", Hooks.definitions.hook_boss_kill, Activations.increment, {
+	Flags.save_to_backend
+}))
+Factory.add_to_group(SessionStats, Factory.create_smart_reducer("contract_team_kills", Hooks.definitions.hook_team_kill, {
+	"weapon_attack_type",
+	"breed_name"
+}, {
+	[2] = Parameters.transformers.faction_of_breed
+}, {
+	"type",
+	"name"
+}, Activations.on_condition(Conditions.inverse(Conditions.breed_is_boss(Hooks.definitions.hook_kill)), Activations.increment), {
 	Flags.save_to_backend,
 	Flags.ephemeral
 }))
-Factory.add_to_group(SessionStats, Factory.create_simple("kill_boss", Hooks.definitions.hook_boss_kill, Activations.on_condition(Conditions.calculated_value_comparasions(Values.stat(Hooks.definitions.hook_boss_kill, SessionStats.definitions.boss_damage_by_id, {
-	id = "id"
-}, {}), Values.multiply(Values.param(Hooks.definitions.hook_boss_kill, "max_health"), 0.1), Comparators.greater_than), Activations.sum), {
-	Flags.save_to_backend
+Factory.add_to_group(SessionStats, Factory.create_simple("contract_team_blocked_damage", Hooks.definitions.hook_team_blocked_damage, Activations.sum, {
+	Flags.save_to_backend,
+	Flags.ephemeral
 }))
 
 return SessionStats

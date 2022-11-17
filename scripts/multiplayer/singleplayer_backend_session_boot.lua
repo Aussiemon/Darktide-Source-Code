@@ -2,15 +2,30 @@ local ConnectionSingleplayer = require("scripts/multiplayer/connection/connectio
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local SessionBootBase = require("scripts/multiplayer/session_boot_base")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
-local STATES = table.enum("creating_backend_session", "ready", "failed")
+local STATES = table.enum("waiting_for_view", "creating_backend_session", "ready", "failed")
 local SingleplayerBackendSessionBoot = class("SingleplayerBackendSessionBoot", "SessionBootBase")
+SingleplayerBackendSessionBoot.SINGLEPLAYER_BACKEND_SESSION = true
 
-SingleplayerBackendSessionBoot.init = function (self, event_object, backend_mission_data)
+SingleplayerBackendSessionBoot.init = function (self, event_object, backend_mission_data, optional_starting_view_name)
 	SingleplayerBackendSessionBoot.super.init(self, STATES, event_object)
 
+	self._backend_mission_data = backend_mission_data
+
+	if optional_starting_view_name and Managers.ui:is_view_closing(optional_starting_view_name) then
+		self._starting_view_name = optional_starting_view_name
+
+		self:_set_state(STATES.waiting_for_view)
+	else
+		self:_create_backend_session(backend_mission_data)
+	end
+end
+
+SingleplayerBackendSessionBoot._create_backend_session = function (self)
+	self:_set_state(STATES.creating_backend_session)
+
+	local backend_mission_data = self._backend_mission_data
 	local mission_id = backend_mission_data.id
 
-	self:_set_state(STATES.creating_backend_session)
 	Managers.party_immaterium:create_single_player_game(mission_id):next(function (response)
 		local session_id = response.game_session_id
 
@@ -30,6 +45,10 @@ end
 
 SingleplayerBackendSessionBoot.update = function (self, dt)
 	SingleplayerBackendSessionBoot.super.update(self, dt)
+
+	if self._state == STATES.waiting_for_view and not Managers.ui:is_view_closing(self._starting_view_name) then
+		self:_create_backend_session()
+	end
 end
 
 SingleplayerBackendSessionBoot.result = function (self)

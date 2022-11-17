@@ -17,6 +17,8 @@ local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
 local Lunge = require("scripts/utilities/player_state/lunge")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
+local MinionPushFx = require("scripts/utilities/minion_push_fx")
+local MinionPushFxTemplates = require("scripts/settings/fx/minion_push_fx_templates")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -44,9 +46,11 @@ PlayerCharacterStateLunging.init = function (self, character_state_init_context,
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 	self._character_state_hit_mass_component = character_state_hit_mass_component
 	self._locomotion_push_component = character_state_init_context.unit_data:write_component("locomotion_push")
+	self._push_sfx_cooldown = 0
 	self._hit_enemy_units = {}
 	self._number_of_units_hit = 0
 	self._last_hit_unit = nil
+	self._moving_backwards = nil
 	self._played_timing_anims = {}
 end
 
@@ -62,6 +66,8 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 	self._locomotion_push_component.new_velocity = Vector3.zero()
+	self._push_sfx_cooldown = 0
+	self._moving_backwards = self._input_extension:get("move").y < -0.1
 	local lunge_template_name = params.lunge_template_name
 	local lunge_template = LungeTemplates[lunge_template_name]
 
@@ -150,7 +156,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	end
 
 	if self._is_server and lunge_template.restore_toughness then
-		Toughness.recover_max_toughness(unit)
+		Toughness.replenish_percentage(unit, 0.5, true)
 	end
 
 	local buff = lunge_template.add_buff
@@ -165,18 +171,6 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		else
 			buff_extension:add_internally_controlled_buff(buff, t)
 		end
-	end
-
-	local start_sound_event = lunge_template.start_sound_event
-
-	if start_sound_event and self._is_local_unit then
-		self._fx_extension:trigger_wwise_event(start_sound_event, false)
-	end
-
-	local wwise_state = lunge_template.wwise_state
-
-	if wwise_state then
-		Wwise.set_state(wwise_state.group, wwise_state.on_state)
 	end
 
 	table.clear(self._played_timing_anims)
@@ -194,6 +188,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	movement_state_component.is_dodging = false
 	local lunge_character_state_component = self._lunge_character_state_component
 	lunge_character_state_component.is_lunging = false
+	self._moving_backwards = false
 	self._locomotion_steering_component.disable_minion_collision = false
 
 	if next_state == "sprinting" then
@@ -264,18 +259,6 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 				buff_extension:add_internally_controlled_buff(add_delayed_buff, t)
 			end
 		end
-	end
-
-	local stop_sound_event = lunge_template.stop_sound_event
-
-	if stop_sound_event and self._is_local_unit then
-		self._fx_extension:trigger_wwise_event(stop_sound_event, false)
-	end
-
-	local wwise_state = lunge_template.wwise_state
-
-	if wwise_state then
-		Wwise.set_state(wwise_state.group, wwise_state.off_state)
 	end
 
 	_record_stat_on_lunge_complete(self._player, self._hit_enemy_units, lunge_template)
@@ -356,11 +339,31 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 		return "ledge_hanging"
 	end
 
-	local block_cancel = lunge_template and lunge_template.block_input_cancel and input_extension:get("action_two_pressed")
-	local move_back_cancel_time_threshold = lunge_template and lunge_template.move_back_cancel_time_threshold or 0
-	local move_back_cancel = lunge_template and lunge_template.move_back_cancel and input_extension:get("move").y < -0.1 and move_back_cancel_time_threshold < time_in_lunge
+	local weapon_action_component = self._weapon_action_component
+	local start_t = weapon_action_component.start_t or t
+	local time_in_action = t - start_t
+	local block_cancel_valid = false
 
-	if block_cancel or move_back_cancel then
+	if time_in_action < time_in_lunge then
+		block_cancel_valid = true
+	end
+
+	local block_input_cancel_time_threshold = lunge_template and lunge_template.block_input_cancel_time_threshold or 0
+	local block_cancel = lunge_template and lunge_template.block_input_cancel and input_extension:get("action_two_hold") and block_cancel_valid and block_input_cancel_time_threshold < time_in_lunge
+
+	if block_cancel then
+		return "walking"
+	end
+
+	if self._moving_backwards and input_extension:get("move").y >= -0.1 then
+		self._moving_backwards = false
+	end
+
+	local move_back_cancel_valid = not self._moving_backwards
+	local move_back_cancel_time_threshold = lunge_template and lunge_template.move_back_cancel_time_threshold or 0
+	local move_back_cancel = lunge_template and lunge_template.move_back_cancel and move_back_cancel_valid and input_extension:get("move").y < -0.1 and move_back_cancel_time_threshold < time_in_lunge
+
+	if move_back_cancel then
 		return "walking"
 	end
 
@@ -369,9 +372,8 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 	end
 
 	if not still_lunging then
-		local weapon_action_component = self._weapon_action_component
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local wants_sprint = Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_extension, self._locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants)
+		local wants_sprint = Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_extension, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants)
 
 		if wants_sprint then
 			return "sprinting"
@@ -392,7 +394,7 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 	local current_length_sq = Vector3.length_squared(velocity_current_flat)
 	local amount_progressed_from_wanted = current_length_sq / prev_length_sq
 
-	if amount_progressed_from_wanted < 0.1 then
+	if amount_progressed_from_wanted < 0.1 and time_in_lunge > 0.3 then
 		return false
 	end
 
@@ -410,9 +412,9 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 	if lunge_target then
 		local lunge_target_position = POSITION_LOOKUP[lunge_target]
 		local unit_position = POSITION_LOOKUP[unit]
-		local remianing_distance_to_target = Vector3.distance_squared(unit_position, lunge_target_position)
+		local remaining_distance_to_target = Vector3.distance_squared(unit_position, lunge_target_position)
 
-		if remianing_distance_to_target < 2 then
+		if remaining_distance_to_target < 2 then
 			return false
 		end
 
@@ -486,6 +488,12 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", 1000, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
+
+			if self._push_sfx_cooldown <= t and self._is_server then
+				MinionPushFx.play_sfx_for_clients_except(hit_unit, MinionPushFxTemplates.lunge_push, self._player)
+
+				self._push_sfx_cooldown = t + math.random_range(0, 0.2)
+			end
 
 			if attack_result ~= "died" then
 				local add_debuff_on_hit = lunge_template.add_debuff_on_hit

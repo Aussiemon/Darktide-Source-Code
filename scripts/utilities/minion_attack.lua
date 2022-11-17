@@ -196,7 +196,13 @@ local function _spread_direction(target_unit, minion_unit, shoot_direction, spre
 	return spread_direction
 end
 
-MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier)
+local DEFAULT_DAMAGE_FALLOFF = {
+	falloff_range = 20,
+	max_range = 20,
+	max_power_reduction = 0.5
+}
+
+MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier, perception_component)
 	local toughness_broken_grace_settings = AttackIntensitySettings.toughness_broken_grace
 	local diff_toughness_broken_grace_settings = Managers.state.difficulty:get_table_entry_by_challenge(toughness_broken_grace_settings)
 	local toughness_extension = ScriptUnit.has_extension(target_unit, "toughness_system")
@@ -216,6 +222,19 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local power_level = Managers.state.difficulty:get_minion_attack_power_level(breed, "ranged")
+	local damage_falloff = shoot_template.damage_falloff or DEFAULT_DAMAGE_FALLOFF
+	local distance = perception_component.target_distance
+	local max_range = damage_falloff.max_range
+
+	if max_range < distance then
+		local falloff_range = damage_falloff.falloff_range
+		local falloff_distance = math.max(distance - falloff_range, 1)
+		local max_power_reduction = damage_falloff.max_power_reduction
+		local percentage = math.min(falloff_distance / falloff_range, 1)
+		local power_percentage_reduction = 1 - max_power_reduction * percentage
+		power_level = power_level * power_percentage_reduction
+	end
+
 	local charge_level = 1
 	local hit_scan_template = shoot_template.hit_scan_template
 	local range = hit_scan_template.range
@@ -489,7 +508,7 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 		spread_multiplier = action_data.suppressive_fire_spread_multiplier
 	end
 
-	local target_unit = scratchpad.perception_component.target_unit
+	local target_unit = perception_component.target_unit
 	local shoot_position_boxed = scratchpad.dodge_position or scratchpad.current_aim_position
 	local weapon_item = scratchpad.weapon_item
 	local shoot_position = shoot_position_boxed:unbox()
@@ -497,7 +516,7 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 	local fx_source_name = action_data.fx_source_name
 	local world = scratchpad.world
 	local physics_world = scratchpad.physics_world
-	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, spread_multiplier)
+	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, spread_multiplier, perception_component)
 
 	MinionAttack.trigger_shoot_sfx_and_vfx(unit, scratchpad, action_data, end_position)
 
@@ -586,7 +605,7 @@ end
 
 local ENEMY_BROADPHASE_RESULTS = {}
 
-MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, ignored_unit)
+MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, ignored_unit, optional_only_ahead_targets)
 	table.clear(ENEMY_BROADPHASE_RESULTS)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -607,23 +626,30 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 	local from = POSITION_LOOKUP[unit]
 	local damage_profile = action_data.push_enemies_damage_profile
 	local power_level = action_data.push_enemies_power_level
+	local unit_fwd = optional_only_ahead_targets and Quaternion.forward(Unit.local_rotation(unit, 1))
 
 	for i = 1, num_results do
-		local hit_unit = ENEMY_BROADPHASE_RESULTS[i]
+		repeat
+			local hit_unit = ENEMY_BROADPHASE_RESULTS[i]
 
-		if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and hit_unit ~= ignored_unit then
-			local to = POSITION_LOOKUP[hit_unit]
-			local direction = Vector3.normalize(to - from)
+			if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and hit_unit ~= ignored_unit then
+				local to = POSITION_LOOKUP[hit_unit]
+				local direction = Vector3.normalize(Vector3.flat(to - from))
 
-			if Vector3.length_squared(direction) == 0 then
-				local current_rotation = Unit.local_rotation(unit, 1)
-				direction = Quaternion.forward(current_rotation)
+				if Vector3.length_squared(direction) == 0 then
+					local current_rotation = Unit.local_rotation(unit, 1)
+					direction = Quaternion.forward(current_rotation)
+				end
+
+				if optional_only_ahead_targets and Vector3.dot(unit_fwd, direction) < 0 then
+					break
+				end
+
+				pushed_enemies[hit_unit] = true
+
+				Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso")
 			end
-
-			pushed_enemies[hit_unit] = true
-
-			Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso")
-		end
+		until true
 	end
 end
 
@@ -687,7 +713,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data, t,
 end
 
 local _check_max_z_diff, _check_weapon_reach, _get_weapon_reach, _melee_hit, _melee_with_broadphase, _melee_with_oobb, _melee_with_weapon_reach = nil
-local DEFAULT_DODGE_REACH = 2.75
+local DEFAULT_DODGE_REACH = 2.4
 
 MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
 	local node_name = action_data.sweep_node
@@ -695,7 +721,20 @@ MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit,
 	local position = Unit.world_position(unit, node)
 	local radius = _get_weapon_reach(action_data, attack_event)
 	local collision_filter = action_data.collision_filter
-	local actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", radius, "types", "both", "collision_filter", collision_filter)
+	local shape = action_data.sweep_shape or "sphere"
+	local actors, actor_count, extents = nil
+
+	if shape == "oobb" then
+		local sweep_length = action_data.sweep_length
+		local sweep_height = action_data.sweep_height
+		local sweep_width = action_data.sweep_width
+		local rotation = Unit.world_rotation(unit, node)
+		extents = Vector3(sweep_width, sweep_length, sweep_height)
+		actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", shape, "position", position, "rotation", rotation, "size", extents, "types", "both", "collision_filter", collision_filter)
+	else
+		actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", shape, "position", position, "size", radius, "types", "both", "collision_filter", collision_filter)
+	end
+
 	local hit = false
 	local hits_one_target = action_data.hits_one_target
 	local HEALTH_ALIVE = HEALTH_ALIVE
@@ -756,7 +795,7 @@ end
 
 local DEFAULT_DODGE_REACH_LAG_COMPENSATION = 2.25
 local DEFAULT_REACH_CONE = 0.75
-local DEFAULT_DODGE_REACH_CONE = 0.93
+local DEFAULT_DODGE_REACH_CONE = 0.94
 local NUM_LAG_COMPENSATION_CHECKS = 10
 
 MinionAttack.update_lag_compensation_melee = function (unit, breed, scratchpad, blackboard, t, action_data)
@@ -877,8 +916,8 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 	if not offtarget_hit_or_nil and is_player_character and scratchpad.lag_compensation_timing then
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local is_blockable = Block.attack_is_blockable(damage_profile)
-		local is_blocking = Block.is_blocking(target_unit, attack_type, target_weapon_template, true)
+		local is_blockable = Block.attack_is_blockable(damage_profile, target_unit, target_weapon_template)
+		local is_blocking = Block.is_blocking(target_unit, unit, attack_type, target_weapon_template, true)
 		local is_dodging = Dodge.is_dodging(target_unit, attack_type)
 
 		if not is_blocking and is_blockable or is_dodging or scratchpad.target_dodged_during_attack then
@@ -903,6 +942,18 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 	local unit_position = POSITION_LOOKUP[unit]
 	local target_position = POSITION_LOOKUP[target_unit]
 	local attack_direction = Vector3.normalize(target_position - unit_position)
+
+	if Vector3.length_squared(attack_direction) == 0 then
+		local rotation = Unit.local_rotation(unit, 1)
+		attack_direction = Quaternion.forward(rotation)
+	end
+
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+
+	if action_data.bot_power_level_modifier and is_player_character and not player_unit_spawn_manager:owner(target_unit):is_human_controlled() then
+		power_level = power_level * action_data.bot_power_level_modifier
+	end
+
 	local damage_type = override_damage_type_or_nil or action_data.damage_type
 	local damage, result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "hit_world_position", hit_position, "attack_direction", attack_direction, "attack_type", attack_type, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)
 

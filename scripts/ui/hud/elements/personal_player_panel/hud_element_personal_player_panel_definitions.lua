@@ -50,7 +50,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = bar_size,
 		position = {
-			156,
+			128,
 			18,
 			2
 		}
@@ -98,7 +98,7 @@ local value_text_style = {
 	text_horizontal_alignment = "right",
 	vertical_alignment = "center",
 	drop_shadow = true,
-	font_type = "rexlia",
+	font_type = "machine_medium",
 	text_color = UIHudSettings.color_tint_main_2,
 	offset = {
 		0,
@@ -185,27 +185,6 @@ local widget_definitions = {
 			}
 		}
 	}, "toughness_bar"),
-	toughness_bar_end = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/bars/simple/end",
-			style_id = "texture",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "right",
-				offset = {
-					1,
-					0,
-					6
-				},
-				size = {
-					12,
-					toughness_bar_size[2] + 8
-				},
-				color = UIHudSettings.color_tint_main_1
-			}
-		}
-	}, "toughness_bar"),
 	toughness_ghost = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/backgrounds/default_square",
@@ -243,24 +222,24 @@ local widget_definitions = {
 					1
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_main_4
+				color = UIHudSettings.color_tint_0
 			}
 		}
 	}, "toughness_bar"),
 	voice_indicator = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/icons/player_states/voice_chat_top",
+			value = "content/ui/materials/hud/icons/speaker",
 			style_id = "texture",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "right",
+				horizontal_alignment = "left",
 				size = {
-					28,
-					28
+					16,
+					16
 				},
 				offset = {
-					25,
+					6,
 					0,
 					6
 				},
@@ -268,137 +247,16 @@ local widget_definitions = {
 			}
 		}
 	}, "panel_background"),
-	coherency_meter = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/backgrounds/default_square",
-			style_id = "texture_1",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					6,
-					25
-				},
-				offset = {
-					10,
-					54,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_0, 75)
-			}
-		},
-		{
-			value = "content/ui/materials/backgrounds/default_square",
-			style_id = "texture_2",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					6,
-					25
-				},
-				offset = {
-					10,
-					27,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_0, 75)
-			}
-		},
-		{
-			value = "content/ui/materials/backgrounds/default_square",
-			style_id = "texture_3",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					6,
-					25
-				},
-				offset = {
-					10,
-					0,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_0, 75)
-			}
-		}
-	}, "panel_background"),
-	player_color_bar = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/backgrounds/gradient_horizontal_thin_edge",
-			style_id = "texture",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "left",
-				size = {
-					125
-				},
-				offset = {
-					0,
-					0,
-					3
-				},
-				color = {
-					100,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "panel_background"),
 	panel_background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_team_panels",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
-				color = {
-					100,
-					0,
-					0,
-					0
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/buttons/background_selected",
-			style_id = "background_glow",
-			pass_type = "texture",
-			style = {
+				horizontal_alignment = "left",
+				color = Color.terminal_background_gradient(178.5, true),
 				offset = {
-					0,
-					0,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_main_1, 255)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "shadow_frame",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					0,
+					110,
 					0,
 					0
 				}
@@ -447,44 +305,6 @@ local widget_definitions = {
 					1
 				}
 			}
-		},
-		{
-			value = "content/ui/materials/hud/icons/health",
-			style_id = "health_icon",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scenegraph_id = "bar",
-				color = UIHudSettings.color_tint_main_1,
-				size = {
-					20,
-					20
-				},
-				offset = {
-					-30,
-					0,
-					2
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/hud/icons/faith",
-			style_id = "toughness_icon",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scenegraph_id = "toughness_bar",
-				color = UIHudSettings.color_tint_6,
-				size = {
-					20,
-					20
-				},
-				offset = {
-					-30,
-					0,
-					2
-				}
-			}
 		}
 	}, "panel_background"),
 	health_text = UIWidget.create_definition({
@@ -499,7 +319,7 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					55
+					40
 				}
 			})
 		},
@@ -514,7 +334,7 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					40
+					28
 				}
 			})
 		},
@@ -529,7 +349,7 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					25
+					16
 				}
 			})
 		}
@@ -546,7 +366,7 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					55
+					40
 				}
 			})
 		},
@@ -561,7 +381,7 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					40
+					28
 				}
 			})
 		},
@@ -576,11 +396,43 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					25
+					16
 				}
 			})
 		}
-	}, "toughness_bar")
+	}, "toughness_bar"),
+	player_icon = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/base/ui_portrait_frame_base",
+			style_id = "texture",
+			pass_type = "texture",
+			style = {
+				material_values = {
+					use_placeholder_texture = 1,
+					rows = 1,
+					columns = 1,
+					grid_index = 1
+				},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
+	}, "player_icon"),
+	status_icon = UIWidget.create_definition({
+		{
+			value_id = "texture",
+			style_id = "texture",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/player_states/dead",
+			style = {
+				color = UIHudSettings.color_tint_main_1,
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "player_icon")
 }
 local health_bar_segment_definition = UIWidget.create_definition({
 	{
@@ -653,44 +505,9 @@ local health_bar_segment_definition = UIWidget.create_definition({
 		}
 	}
 }, "bar", nil, bar_size)
-local visor_effect_widget_definitions = {
-	player_icon = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/base/ui_portrait_frame_base",
-			style_id = "texture",
-			pass_type = "texture",
-			style = {
-				material_values = {
-					use_placeholder_texture = 1,
-					rows = 1,
-					columns = 1,
-					grid_index = 1
-				},
-				color = UIHudSettings.color_tint_main_1
-			}
-		}
-	}, "player_icon"),
-	status_icon = UIWidget.create_definition({
-		{
-			value_id = "texture",
-			style_id = "texture",
-			pass_type = "texture",
-			value = "content/ui/materials/icons/player_states/dead",
-			style = {
-				color = UIHudSettings.color_tint_main_1,
-				offset = {
-					0,
-					0,
-					1
-				}
-			}
-		}
-	}, "player_icon")
-}
 
 return {
 	health_bar_segment_definition = health_bar_segment_definition,
-	visor_effect_widget_definitions = visor_effect_widget_definitions,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition
 }

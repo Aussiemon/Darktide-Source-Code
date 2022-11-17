@@ -271,11 +271,15 @@ end
 
 VotingHost._handle_undecided_votes = function (self)
 	local timeout_option = self._template.timeout_option
+	local force_timeout_option = self._template.force_timeout_option
 	local votes = self._votes
 
 	for voter_peer_id, vote in pairs(votes) do
 		if vote == StrictNil then
 			_info("Casting timeout option %q for undecided member %s", timeout_option, voter_peer_id)
+			self:register_vote(voter_peer_id, timeout_option)
+		elseif force_timeout_option and vote ~= force_timeout_option then
+			_info("Casting force timeout option %q for member %s, previous vote was", force_timeout_option, voter_peer_id, vote)
 			self:register_vote(voter_peer_id, timeout_option)
 		end
 	end

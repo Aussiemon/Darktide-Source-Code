@@ -26,7 +26,8 @@ local hud_element_crosshair_settings = {
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_bfg",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_spray_n_pray",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault",
-		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_charge_up"
+		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_charge_up",
+		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_charge_up_ads"
 	},
 	hit_indicator_colors = {
 		blocked = {

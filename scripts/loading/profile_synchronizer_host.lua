@@ -1,6 +1,7 @@
 local MasterItems = require("scripts/backend/master_items")
 local RPCQueue = require("scripts/utilities/rpc_queue")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local TextUtilities = require("scripts/utilities/ui/text")
 local RPCS = {
 	"rpc_player_profile_synced",
 	"rpc_notify_profile_changed"
@@ -120,6 +121,9 @@ end
 
 ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
 	local connected_peer_channel_ids = self._connected_peers
+	local generated_name = ProfileUtils.generate_random_name(profile)
+	generated_name = string.format("%s {#color(216,229,207,120)}[%s]{#reset()}", generated_name, TextUtilities.localize_to_upper("loc_bot_tag"))
+	profile.name = generated_name
 	local profile_json = ProfileUtils.pack_profile(profile)
 	local profile_chunks = {}
 

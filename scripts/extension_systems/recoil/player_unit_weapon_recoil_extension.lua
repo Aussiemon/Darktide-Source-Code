@@ -1,3 +1,4 @@
+local Recoil = require("scripts/utilities/recoil")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local PlayerUnitWeaponRecoilExtension = class("PlayerUnitWeaponRecoilExtension")
 
@@ -6,30 +7,34 @@ PlayerUnitWeaponRecoilExtension.init = function (self, extension_init_context, u
 	self._player = extension_init_data.player
 	local initial_seed = extension_init_data.recoil_seed
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local recoil_component = unit_data_ext:write_component("recoil")
+	local recoil_control_component = unit_data_ext:write_component("recoil_control")
 	self._movement_state_component = unit_data_ext:read_component("movement_state")
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
-	self._recoil_component = unit_data_ext:write_component("recoil")
-	self._recoil_control_component = unit_data_ext:write_component("recoil_control")
+	self._recoil_component = recoil_component
+	self._recoil_control_component = recoil_control_component
 	self._weapon_tweak_templates_component = unit_data_ext:write_component("weapon_tweak_templates")
 	self._first_person_component = unit_data_ext:read_component("first_person")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
-	self._recoil_control_component.seed = initial_seed
+	recoil_control_component.seed = initial_seed
 
 	self:_reset()
 end
 
 PlayerUnitWeaponRecoilExtension._reset = function (self)
-	self._recoil_component.pitch_offset = 0
-	self._recoil_component.yaw_offset = 0
-	self._recoil_component.unsteadiness = 0
-	self._recoil_control_component.rise_end_time = 0
-	self._recoil_control_component.shooting = false
-	self._recoil_control_component.num_shots = 0
-	self._recoil_control_component.target_pitch = 0
-	self._recoil_control_component.target_yaw = 0
-	self._recoil_control_component.starting_rotation = Quaternion.identity()
-	self._recoil_control_component.recoiling = false
+	local recoil_component = self._recoil_component
+	recoil_component.pitch_offset = 0
+	recoil_component.yaw_offset = 0
+	recoil_component.unsteadiness = 0
+	local recoil_control_component = self._recoil_control_component
+	recoil_control_component.rise_end_time = 0
+	recoil_control_component.shooting = false
+	recoil_control_component.num_shots = 0
+	recoil_control_component.target_pitch = 0
+	recoil_control_component.target_yaw = 0
+	recoil_control_component.starting_rotation = Quaternion.identity()
+	recoil_control_component.recoiling = false
 end
 
 PlayerUnitWeaponRecoilExtension._snap_camera = function (self)
@@ -39,8 +44,8 @@ PlayerUnitWeaponRecoilExtension._snap_camera = function (self)
 
 	local player = self._player
 	local orientation = player:get_orientation()
-	local yaw_offset = self._recoil_component.yaw_offset
-	local pitch_offset = self._recoil_component.pitch_offset
+	local recoil_template = self._weapon_extension:recoil_template()
+	local pitch_offset, yaw_offset = Recoil.weapon_offset(recoil_template, self._recoil_component, self._movement_state_component)
 	local new_yaw = math.mod_two_pi(orientation.yaw + yaw_offset)
 	local new_pitch = math.mod_two_pi(orientation.pitch + pitch_offset)
 
@@ -115,30 +120,31 @@ PlayerUnitWeaponRecoilExtension._update_offset = function (self, recoil_componen
 	local old_yaw_offset = recoil_component.yaw_offset
 	local target_pitch = recoil_control_component.target_pitch
 	local target_yaw = recoil_control_component.target_yaw
-	local influence = recoil_settings.new_influence_percent
-	local final_pitch_offset = unsteadiness * (old_pitch_offset * (1 - influence) + target_pitch * influence)
-	local final_yaw_offset = unsteadiness * (old_yaw_offset * (1 - influence) + target_yaw * influence)
 	local rise_end_time = recoil_control_component.rise_end_time
+	local influence = recoil_settings.new_influence_percent
+
+	if t > rise_end_time + 0.1 then
+		local fp_rotation = self._first_person_component.rotation
+		local current_pitch = Quaternion.pitch(fp_rotation)
+		local starting_pitch = Quaternion.pitch(recoil_control_component.starting_rotation)
+		local pitch_diff = starting_pitch - current_pitch
+
+		if pitch_diff > 0 then
+			influence = 0
+		end
+	end
+
+	local influence_inv = 1 - influence
+	local final_pitch_offset = (old_pitch_offset * influence_inv + target_pitch * influence) * unsteadiness
+	local final_yaw_offset = (old_yaw_offset * influence_inv + target_yaw * influence) * unsteadiness
 
 	if t <= rise_end_time then
-		local new_yaw_offset = target_yaw * unsteadiness * influence
-		final_yaw_offset = old_yaw_offset * (1 - influence) + new_yaw_offset
+		local new_yaw_offset = target_yaw * influence * unsteadiness
+		final_yaw_offset = old_yaw_offset * influence_inv + new_yaw_offset
 	end
 
 	recoil_component.pitch_offset = final_pitch_offset
 	recoil_component.yaw_offset = final_yaw_offset
-
-	if recoil_control_component.recoiling and t > rise_end_time + 0.1 then
-		local fp_rotation = self._first_person_component.rotation
-		local current_pitch = Quaternion.pitch(fp_rotation)
-		local starting_pitch = Quaternion.pitch(recoil_control_component.starting_rotation)
-		local pitch_distance_diff = starting_pitch - current_pitch
-
-		if pitch_distance_diff > 0.1 and final_pitch_offset - pitch_distance_diff < 0.5 and old_pitch_offset > 0.01 then
-			self:_snap_camera()
-			self:_reset()
-		end
-	end
 end
 
 return PlayerUnitWeaponRecoilExtension

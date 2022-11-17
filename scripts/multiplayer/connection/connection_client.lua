@@ -156,6 +156,10 @@ ConnectionClient.ready_to_join = function (self)
 	self._host_connection:ready_to_join()
 end
 
+ConnectionClient.boot_complete = function (self)
+	self._host_connection:boot_complete()
+end
+
 ConnectionClient.disconnect = function (self, channel_id)
 	self._engine_lobby:close_channel(channel_id)
 end

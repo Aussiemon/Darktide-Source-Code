@@ -12,9 +12,9 @@ local sound_events = {
 	tg_scenario_complete = "wwise/events/ui/play_ui_silence",
 	tg_level_enter = "wwise/events/ui/play_hud_new_zone",
 	tg_level_exit = "wwise/events/ui/play_hud_tg_objective_complete",
-	hub_pod_interact_enter = "wwise/events/ui/play_ui_silence",
+	hub_pod_interact_enter = "wwise/events/ui/play_ui_npc_interacts_psykhanium_enter",
 	tg_objective_new = "wwise/events/ui/play_hud_tg_new_objective",
-	hub_pod_interact_exit = "wwise/events/ui/play_ui_silence"
+	hub_pod_interact_exit = "wwise/events/ui/play_ui_npc_interacts_default_exit"
 }
 
 return sound_events

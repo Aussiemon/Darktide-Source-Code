@@ -129,7 +129,7 @@ StoreService.purchase_item = function (self, offer)
 	local wallet_type = amount.type
 	local wallet_promise = nil
 
-	if wallet_type == "credits" then
+	if wallet_type == "credits" or wallet_type == "marks" then
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()

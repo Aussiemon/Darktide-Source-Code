@@ -39,6 +39,23 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_gen"
 		}
 	},
+	beast_of_nurgle_death = {
+		damage_falloff = false,
+		radius = 6,
+		min_radius = 3,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 3,
+		scalable_radius = true,
+		min_close_radius = 0.5,
+		close_damage_profile = DamageProfileTemplates.poxwalker_explosion_close,
+		damage_profile = DamageProfileTemplates.poxwalker_explosion,
+		vfx = {
+			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter"
+		},
+		sfx = {
+			"wwise/events/minions/play_beast_of_nurgle_death_explode"
+		}
+	},
 	renegade_captain_bolt_shell_kill = {
 		damage_falloff = true,
 		radius = 5,

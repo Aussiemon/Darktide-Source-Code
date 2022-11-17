@@ -93,9 +93,9 @@ end
 
 AuspexScanningEffects.destroy = function (self)
 	self:_stop_searching_sfx_loop()
-	self:_set_outline_unit(self._highlighted_unit, false)
-	self:_set_outline_unit(self._highlighted_unit, false)
+	self:_set_outline_unit(self._outline_unit, false)
 
+	self._outline_unit = nil
 	local player_holo_unit = self._player_holo_unit
 
 	if player_holo_unit then
@@ -117,7 +117,9 @@ AuspexScanningEffects.unwield = function (self)
 	self:_set_scanner_light(false)
 	self:_stop_searching_sfx_loop()
 	self:_stop_confirm_sfx_loop()
-	self:_set_outline_unit(self._highlighted_unit, false)
+	self:_set_outline_unit(self._outline_unit, false)
+
+	self._outline_unit = nil
 end
 
 AuspexScanningEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -266,6 +268,8 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 	local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
+	local is_in_first_person = self._is_in_first_person
+	local holo_units = self._holo_units
 	local current_holo_unit = 1
 
 	if current_scan_mission_zone then
@@ -298,12 +302,12 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 				local current_lerp = math.lerp(0.2, 1, normalized_alpha_distance)
 				local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
 				local size = is_current_scanable_unit and active_size or scaled_size
-				local holo_unit = self._holo_units[current_holo_unit]
+				local holo_unit = holo_units[current_holo_unit]
 				current_holo_unit = current_holo_unit + 1
 
 				if not holo_unit then
 					holo_unit = World.spawn_unit_ex(self._world, SCAN_HOLO_UNIT_NAME)
-					self._holo_units[#self._holo_units + 1] = holo_unit
+					holo_units[#holo_units + 1] = holo_unit
 					local holo_mesh = Unit.mesh(holo_unit, "g_auspex_scanner_holo_ball_01")
 					local holo_material = Mesh.material(holo_mesh, 1)
 					self._holo_materials[holo_unit] = holo_material
@@ -314,17 +318,28 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 				Unit.set_local_pose(holo_unit, 1, local_holo_pose)
 				Unit.set_unit_visibility(holo_unit, true)
 				World.update_unit(self._world, holo_unit)
+				Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(holo_unit, "custom_fov", is_in_first_person)
 			end
 		end
 	end
 
-	for i = current_holo_unit, #self._holo_units do
-		Unit.set_unit_visibility(self._holo_units[i], false)
+	for i = current_holo_unit, #holo_units do
+		Unit.set_unit_visibility(holo_units[i], false)
 	end
 end
 
 AuspexScanningEffects.update_first_person_mode = function (self, first_person_mode)
-	return
+	if first_person_mode ~= self._is_in_first_person then
+		local holo_units = self._holo_units
+
+		for i = 1, #holo_units do
+			local holo_unit = holo_units[i]
+
+			Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(holo_unit, "custom_fov", first_person_mode)
+		end
+	end
+
+	self._is_in_first_person = first_person_mode
 end
 
 AuspexScanningEffects._start_searching_sfx_loop = function (self)

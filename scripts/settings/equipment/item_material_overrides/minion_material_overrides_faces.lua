@@ -1,4 +1,19 @@
 local material_overrides = {
+	traitor_guard_face_tattoo_berserker = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/enemy/chaos_traitor_guard/attachments_base/textures/face_tattoos/tattoo_berserker"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.1,
+				0.07,
+				0.07,
+				0.013
+			}
+		}
+	},
 	traitor_guard_face_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {

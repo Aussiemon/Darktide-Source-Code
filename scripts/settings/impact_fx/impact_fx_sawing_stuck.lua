@@ -45,6 +45,16 @@ local unarmored = {
 				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
 				append_husk_to_event_name = true
 			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/melee_hits_chain_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_chain_add",
+				append_husk_to_event_name = true
+			}
 		}
 	},
 	vfx = {
@@ -168,11 +178,11 @@ local armored = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/melee_hits_chain_gen",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_weakspot_blood",
+				event = "wwise/events/weapon/play_melee_hits_chain_add",
 				append_husk_to_event_name = true
 			}
 		},

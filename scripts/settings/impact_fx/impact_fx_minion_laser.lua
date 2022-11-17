@@ -671,10 +671,6 @@ local player = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
-				hit_direction_interface = true
-			},
-			{
 				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated_husk",
 				only_3p = true
 			}
@@ -686,10 +682,6 @@ local player = {
 			}
 		},
 		shield_blocked = {
-			{
-				event = "wwise/events/player/play_player_get_hit_bullet_laser",
-				hit_direction_interface = true
-			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated_husk",
 				only_3p = true

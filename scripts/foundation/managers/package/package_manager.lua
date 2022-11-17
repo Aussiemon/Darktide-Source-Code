@@ -1,6 +1,6 @@
 local PackageManager = class("PackageManager")
 PackageManager.FIRST_ITEM = 1
-PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 50
+PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 20
 
 PackageManager.init = function (self)
 	self._packages = {}
@@ -30,7 +30,7 @@ PackageManager._new_load_call_item = function (self, package_name, reference_nam
 	return load_call_item
 end
 
-PackageManager.load = function (self, package_name, reference_name, callback, prioritize)
+PackageManager.load = function (self, package_name, reference_name, callback, prioritize, use_resident_loading)
 	local load_call_item = self:_new_load_call_item(package_name, reference_name, callback)
 
 	if self._package_to_load_call_item[package_name] then
@@ -43,10 +43,26 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 		end
 
 		if self._queued_async_packages[package_name] and prioritize then
-			local index = table.find(self._queue_order, package_name)
+			local index = nil
+
+			for i = 1, #self._queue_order do
+				local package_data = self._queue_order[i]
+
+				if package_data.package_name == package_name then
+					index = i
+
+					break
+				end
+			end
 
 			table.remove(self._queue_order, index)
-			table.insert(self._queue_order, 1, package_name)
+
+			local package_data = {
+				package_name = package_name,
+				use_resident_loading = use_resident_loading
+			}
+
+			table.insert(self._queue_order, 1, package_data)
 		end
 
 		return load_call_item.id
@@ -58,16 +74,24 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 
 	if PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES <= table.size(self._asynch_packages) then
 		self._queued_async_packages[package_name] = true
+		local package_data = {
+			package_name = package_name,
+			use_resident_loading = use_resident_loading
+		}
 
 		if prioritize then
-			table.insert(self._queue_order, 1, package_name)
+			table.insert(self._queue_order, 1, package_data)
 		else
-			self._queue_order[#self._queue_order + 1] = package_name
+			self._queue_order[#self._queue_order + 1] = package_data
 		end
 	else
 		local resource_handle = Application.resource_package(package_name)
 
-		ResourcePackage.load(resource_handle)
+		if use_resident_loading then
+			ResourcePackage.load_resident(resource_handle)
+		else
+			ResourcePackage.load(resource_handle)
+		end
 
 		self._asynch_packages[package_name] = resource_handle
 	end
@@ -92,8 +116,6 @@ PackageManager._bring_in = function (self, package_name)
 			table.insert(self._queued_callback_items, item)
 		end
 	end
-
-	self:_pop_queue()
 end
 
 PackageManager._pop_queue = function (self)
@@ -102,10 +124,13 @@ PackageManager._pop_queue = function (self)
 	end
 
 	local queued_package_name = nil
+	local use_resident_loading = false
 	local index = 1
 
 	while #self._queue_order > 0 and index <= #self._queue_order do
-		queued_package_name = self._queue_order[index]
+		local queued_package_data = self._queue_order[index]
+		queued_package_name = queued_package_data.package_name
+		use_resident_loading = queued_package_data.use_resident_loading
 
 		if self._queued_async_packages[queued_package_name] then
 			break
@@ -118,7 +143,11 @@ PackageManager._pop_queue = function (self)
 	if queued_package_name then
 		local resource_handle = Application.resource_package(queued_package_name)
 
-		ResourcePackage.load(resource_handle)
+		if use_resident_loading then
+			ResourcePackage.load_resident(resource_handle)
+		else
+			ResourcePackage.load(resource_handle)
+		end
 
 		self._asynch_packages[queued_package_name] = resource_handle
 		self._queued_async_packages[queued_package_name] = nil
@@ -253,11 +282,18 @@ local temp_callback_items = {}
 
 PackageManager.update = function (self, dt, t)
 	self._current_time = t
+	local freed_slots = 0
 
 	for package_name, resource_handle in pairs(self._asynch_packages) do
 		if ResourcePackage.has_loaded(resource_handle) then
 			self:_bring_in(package_name)
+
+			freed_slots = freed_slots + 1
 		end
+	end
+
+	for i = 1, freed_slots do
+		self:_pop_queue()
 	end
 
 	local queued_callback_items = self._queued_callback_items

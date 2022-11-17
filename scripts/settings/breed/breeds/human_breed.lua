@@ -6,6 +6,11 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
+local human_size_variation_range = {
+	0.95,
+	1.08
+}
+local average_human_size = human_size_variation_range[1] + (human_size_variation_range[2] - human_size_variation_range[1]) / 2
 local breed_data = {
 	name = "human",
 	display_name = "loc_breed_display_name_undefined",
@@ -37,16 +42,13 @@ local breed_data = {
 	},
 	armor_type = armor_types.player,
 	heights = {
-		default = 1.65,
-		crouch = 0.9,
-		sprint = 1.4,
-		vault = 0.9,
-		slide = 0.85
+		default = 1.65 / average_human_size,
+		sprint = 1.4 / average_human_size,
+		crouch = 1 / average_human_size,
+		slide = 0.85 / average_human_size,
+		vault = 0.9 / average_human_size
 	},
-	size_variation_range = {
-		0.95,
-		1.08
-	},
+	size_variation_range = human_size_variation_range,
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1,

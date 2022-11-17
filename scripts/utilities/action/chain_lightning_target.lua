@@ -1,7 +1,8 @@
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
+local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = class("ChainLightningTarget")
 
-ChainLightningTarget.init = function (self, max_num_children, depth, optional_parent, ...)
+ChainLightningTarget.init = function (self, max_targets_settings, depth, use_random, optional_parent, ...)
 	local num_values = select("#", ...)
 	local values = {}
 	local num_key_value_pairs = select("#", ...)
@@ -15,7 +16,9 @@ ChainLightningTarget.init = function (self, max_num_children, depth, optional_pa
 	self._parent = optional_parent
 	self._children = {}
 	self._num_children = 0
-	self._max_num_children = max_num_children
+	self._max_targets_settings = max_targets_settings
+	self._max_num_children = ChainLightning.calculate_max_targets(max_targets_settings, depth + 1, use_random)
+	self._use_random = use_random
 	self._depth = depth
 	self._marked_for_deletion = false
 end
@@ -36,7 +39,9 @@ ChainLightningTarget.add_child = function (self, ...)
 		return
 	end
 
-	local node = ChainLightningTarget:new(max_children, self._depth + 1, self, ...)
+	local max_targets_settings = self._max_targets_settings
+	local use_random = self._use_random
+	local node = ChainLightningTarget:new(max_targets_settings, self._depth + 1, use_random, self, ...)
 	self._children[node] = true
 	self._num_children = new_num_children
 

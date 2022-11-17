@@ -214,6 +214,12 @@ templates.coherency_toughness_regen = {
 		return min, nil
 	end
 }
+templates.sprint_with_stamina_buff = {
+	predicted = false,
+	hud_priority = 1,
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud"
+}
 templates.no_toughness_damage_buff = {
 	predicted = false,
 	class_name = "proc_buff",

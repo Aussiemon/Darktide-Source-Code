@@ -28,6 +28,18 @@ local push_fx_templates = {
 			[armor_types.prop_armor] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
 		}
+	},
+	lunge_push = {
+		sfx = {
+			[armor_types.armored] = "wwise/events/weapon/play_specials_push_armored",
+			[armor_types.berserker] = "wwise/events/weapon/play_specials_push_unarmored",
+			[armor_types.disgustingly_resilient] = "wwise/events/weapon/play_specials_push_resilient",
+			[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
+			[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
+			[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
+			[armor_types.prop_armor] = "wwise/events/weapon/play_specials_push_unarmored",
+			[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
+		}
 	}
 }
 

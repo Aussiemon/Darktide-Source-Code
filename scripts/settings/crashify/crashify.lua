@@ -1,5 +1,5 @@
 local settings = {
-	branch = "cbt_2022_08_30_external",
+	branch = "rel_2022_10_27_week2and3_for_pob_external",
 	project = "bishop"
 }
 

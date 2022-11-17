@@ -1,3 +1,4 @@
+local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Definitions = require("scripts/ui/views/end_player_view/end_player_view_definitions")
 local MasterItems = require("scripts/backend/master_items")
@@ -7,9 +8,10 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
-local REWARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop")
+local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "talents_unlock")
 local item_type_group_lookup = UISettings.item_type_group_lookup
 local EndPlayerView = class("EndPlayerView", "BaseView")
+local animation_speed = 1
 
 EndPlayerView.init = function (self, settings, context)
 	self._card_widgets = {}
@@ -122,7 +124,7 @@ EndPlayerView.update = function (self, dt, t, input_service)
 	local on_enter_animation_done = EndPlayerView.super.on_enter_animation_done(self)
 
 	if on_enter_animation_done and not self._continue_called then
-		self:_update_carousel(dt, t, input_service)
+		self:_update_carousel(dt, t * animation_speed, input_service)
 	end
 
 	self:_update_timed_visibility_widgets(dt)
@@ -135,7 +137,7 @@ EndPlayerView.event_trigger_current_end_presentation_skip = function (self)
 end
 
 EndPlayerView.start_card_animation = function (self, card_widget, animation_name)
-	local animation_id = self:_start_animation(animation_name, card_widget)
+	local animation_id = self:_start_animation(animation_name, card_widget, nil, nil, animation_speed)
 
 	return animation_id
 end
@@ -272,64 +274,74 @@ EndPlayerView._create_cards = function (self)
 		return
 	end
 
+	local card_index = 0
+
 	for i = 1, num_cards do
 		local card_data = reward_card_data[i]
+		local card_type = card_data.kind
 
-		if card_data.kind == "salary" then
+		if card_type == CARD_TYPES.salary then
 			local rewards = card_data.rewards
 
 			self:_setup_wallets(session_report.wallets, rewards)
 
 			if #rewards > 0 then
-				card_widgets[#card_widgets + 1] = self:_create_card_widget(i, card_data, session_report)
+				card_index = card_index + 1
+				card_widgets[card_index] = self:_create_card_widget(card_index, card_type, card_data)
+			end
+		elseif card_type == CARD_TYPES.levelUp then
+			local rewards = card_data.rewards
+
+			for j = 1, #rewards do
+				local reward = rewards[j]
+				local reward_type = reward.reward_type
+				local widget = self:_create_card_widget(card_index + 1, reward_type, reward)
+
+				if widget then
+					card_index = card_index + 1
+					card_widgets[card_index] = widget
+				end
 			end
 		else
-			card_widgets[#card_widgets + 1] = self:_create_card_widget(i, card_data, session_report)
+			local widget = self:_create_card_widget(card_index + 1, card_type, card_data)
+
+			if widget then
+				card_index = card_index + 1
+				card_widgets[card_index] = widget
+			end
 		end
 	end
 
 	self._current_card = 1
 end
 
-EndPlayerView._create_card_widget = function (self, index, card_data)
+EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	local blueprints = self._definitions.blueprints
 	local scenegraph_id = CARD_CAROUSEL_SCENEGRAPH_ID
-	local kind = card_data.kind
 	local blueprint_name = nil
 
-	if kind == REWARD_TYPES.xp then
+	if card_type == CARD_TYPES.xp then
 		blueprint_name = "experience"
-	elseif kind == REWARD_TYPES.salary then
+	elseif card_type == CARD_TYPES.salary then
 		blueprint_name = "salary"
-	elseif kind == REWARD_TYPES.levelUp then
-		local reward_item, item_group, rarity = self:_get_item(card_data.rewards[1])
-		local player_level = card_data.level
-		local talent_group_name, unlocked_talents = self:_get_unlocked_talents(player_level)
-		card_data.reward_item = reward_item
-		card_data.item_group = item_group
-		card_data.rarity = rarity
-		card_data.unlocked_talents = unlocked_talents
-		card_data.talent_group_name = talent_group_name
-
-		if reward_item then
-			blueprint_name = "level_up"
-		elseif unlocked_talents then
-			blueprint_name = "level_up_talents_only"
-		else
-			return
-		end
-	elseif kind == REWARD_TYPES.weaponDrop then
+	elseif card_type == CARD_TYPES.weapon_unlock then
+		blueprint_name = "weapon_unlock"
+		card_data.reward_item = self:_get_item(card_data)
+	elseif card_type == CARD_TYPES.talents_unlock then
+		blueprint_name = "talents_unlocked"
+		card_data.talent_group_name, card_data.unlocked_talents = self:_get_unlocked_talents(card_data)
+	elseif card_type == CARD_TYPES.weaponDrop then
 		blueprint_name = "item_reward"
-		card_data.reward_item, card_data.item_group, card_data.rarity = self:_get_item(card_data.rewards[1])
-		card_data.label = kind
+		card_data.reward_item, card_data.item_group, card_data.rarity, card_data.item_level = self:_get_item(card_data.rewards[1])
+		card_data.label = card_type
 	else
-		blueprint_name = "empty_test_card"
-		card_data.label = kind
+		return
 	end
 
 	local blueprint = blueprints[blueprint_name]
 	local pass_template = blueprint.pass_template_function and blueprint.pass_template_function(self, card_data) or blueprint.pass_template
-	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, blueprint.size, blueprint.style)
+	local style = blueprint.style_function and blueprint.style_function(self, card_data) or blueprint.style
+	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, blueprint.size, style)
 	local widget_name = "card_" .. index
 	local widget = UIWidget.init(widget_name, widget_definition)
 
@@ -348,9 +360,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 	local currency_gain_widgets = self._currency_gain_widgets
 	local wallet_types = {
 		"credits",
-		"marks",
-		"plasteel",
-		"diamantine"
+		"marks"
 	}
 
 	for _, wallet_type in ipairs(wallet_types) do
@@ -368,13 +378,16 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 		local salary_reward = salary_rewards[i]
 		local currency = salary_reward.currency
 		local wallet_widget = wallet_widgets[currency]
-		local widget_content = wallet_widget and wallet_widget.content
-		local total_amount = salary_reward.current_amount
-		local current_amount = total_amount - salary_reward.amount_gained
-		widget_content.start_amount = current_amount
-		widget_content.current_amount = current_amount
-		widget_content.total_amount = total_amount
-		widget_content.text = tostring(current_amount)
+
+		if wallet_widget then
+			local widget_content = wallet_widget.content
+			local total_amount = salary_reward.current_amount
+			local current_amount = total_amount - salary_reward.amount_gained
+			widget_content.start_amount = current_amount
+			widget_content.current_amount = current_amount
+			widget_content.total_amount = total_amount
+			widget_content.text = tostring(current_amount)
+		end
 	end
 
 	local wallets = wallet_data.wallets
@@ -411,36 +424,26 @@ EndPlayerView._get_item = function (self, card_reward)
 	local item_group = item_type_group_lookup[item_type]
 	local item_overrides = card_reward.overrides
 	local rarity = item_overrides and item_overrides.rarity
+	local item_level = item_overrides and item_overrides.itemLevel
 
-	return item, item_group, rarity
+	return item, item_group, rarity, item_level
 end
 
-EndPlayerView._get_unlocked_talents = function (self, player_level)
+EndPlayerView._get_unlocked_talents = function (self, card_data)
 	local player = self:_player()
 	local profile = player:profile()
 	local specialization_name = profile.specialization
 	local archetype = profile.archetype
-	local specialization = archetype.specializations[specialization_name]
 	local talents = archetype.talents[specialization_name]
-	local talent_groups = specialization.talent_groups
+	local unlocked_talents = card_data.talents
+	local talent_icons = {}
 
-	for i = 1, #talent_groups do
-		local talent_group = talent_groups[i]
-
-		if talent_group.required_level == player_level then
-			local talent_icons = {}
-			local group_talents = talent_group.talents
-
-			for j = 1, #group_talents do
-				local talent_id = group_talents[j]
-				talent_icons[j] = talents[talent_id].icon
-			end
-
-			return talent_group.group_name, talent_icons
-		end
+	for i = 1, #unlocked_talents do
+		local talent_id = unlocked_talents[i]
+		talent_icons[i] = talents[talent_id].icon
 	end
 
-	return nil, nil
+	return card_data.talent_group_name, #talent_icons > 0 and talent_icons
 end
 
 EndPlayerView._set_carousel_state = function (self, state_id)

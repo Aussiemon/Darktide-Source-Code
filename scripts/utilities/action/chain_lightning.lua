@@ -11,7 +11,28 @@ local BROADPHASE_RESULTS = {}
 local EPSILON = 0.010000000000000002
 local LINE_OF_SIGHT_FILTER = "filter_chain_lightning_line_of_sight"
 local LINE_OF_SIGHT_NODE = "enemy_aim_target_02"
+local DEFAULT_MAX_TARGETS = 1
 local _is_in_cover, _has_line_of_sight, _check_line_of_sight = nil
+
+ChainLightning.calculate_max_targets = function (max_targets_settings, depth, use_random)
+	local max_targets = max_targets_settings
+
+	if not max_targets_settings then
+		return DEFAULT_MAX_TARGETS
+	end
+
+	if type(max_targets) == "table" then
+		max_targets = max_targets[depth] or 0
+	end
+
+	if type(max_targets) == "table" then
+		local min = max_targets[1]
+		local max = max_targets[2]
+		max_targets = use_random and math.random(min, max) or max
+	end
+
+	return max_targets
+end
 
 ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, max_z_diff, on_add_func, jump_validation_func)
 	local source_unit = source_target:value("unit")

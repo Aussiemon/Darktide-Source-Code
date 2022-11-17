@@ -27,7 +27,7 @@ end
 
 local function _elite_health_steps(health)
 	local health_steps = {
-		health * 0.5,
+		health * 0.75,
 		health * 0.75,
 		health * 1,
 		health * 1.25,
@@ -54,8 +54,8 @@ local function _shoot_steps_asc(from, to, ceil)
 		0.75,
 		0.85,
 		1,
-		1.5,
-		2
+		1.25,
+		1.5
 	}
 	local shoot_steps = {}
 
@@ -108,13 +108,14 @@ minion_difficulty_settings.health = {
 	renegade_netgunner = _health_steps(450),
 	cultist_mutant = _health_steps(2000),
 	cultist_flamer = _health_steps(750),
+	renegade_flamer = _health_steps(750),
 	cultist_grenadier = _health_steps(400),
 	renegade_grenadier = _health_steps(400),
 	renegade_sniper = _health_steps(250),
 	chaos_ogryn_gunner = _elite_health_steps(2500),
-	chaos_ogryn_bulwark = _elite_health_steps(1500),
-	chaos_ogryn_executor = _elite_health_steps(1400),
-	chaos_daemonhost = _health_steps(13000),
+	chaos_ogryn_bulwark = _elite_health_steps(1800),
+	chaos_ogryn_executor = _elite_health_steps(1700),
+	chaos_daemonhost = _health_steps(16000),
 	renegade_captain = _health_steps(16000),
 	renegade_melee = _health_steps(200),
 	renegade_rifleman = _health_steps(150),
@@ -122,8 +123,9 @@ minion_difficulty_settings.health = {
 	renegade_executor = _elite_health_steps(1200),
 	renegade_shocktrooper = _elite_health_steps(500),
 	renegade_gunner = _elite_health_steps(600),
-	cultist_melee = _health_steps(200),
-	cultist_assault = _health_steps(180),
+	renegade_berzerker = _elite_health_steps(900),
+	cultist_melee = _health_steps(225),
+	cultist_assault = _health_steps(200),
 	cultist_shocktrooper = _elite_health_steps(500),
 	cultist_gunner = _elite_health_steps(700),
 	cultist_berzerker = _elite_health_steps(900)
@@ -140,9 +142,9 @@ minion_difficulty_settings.power_level = {
 	chaos_ogryn_default_melee = _step_dmg(500),
 	chaos_ogryn_default_ranged = _step_dmg(320),
 	chaos_daemonhost_melee = {
-		300,
-		500,
-		750,
+		350,
+		600,
+		800,
 		1000,
 		1250
 	},
@@ -168,6 +170,21 @@ minion_difficulty_settings.power_level = {
 		150,
 		175
 	},
+	renegade_flamer_default = _step_dmg(50),
+	renegade_flamer_on_hit_fire = {
+		35,
+		50,
+		75,
+		100,
+		125
+	},
+	renegade_flamer_fire = {
+		75,
+		100,
+		125,
+		150,
+		175
+	},
 	renegade_grenadier_fire = _step_dmg(100),
 	renegade_sniper_shot = {
 		125,
@@ -176,8 +193,20 @@ minion_difficulty_settings.power_level = {
 		300,
 		350
 	},
-	renegade_captain_melee_one_hand = _step_dmg(200),
-	renegade_captain_melee_two_hand = _step_dmg(300),
+	renegade_captain_melee_one_hand = {
+		75,
+		100,
+		250,
+		400,
+		600
+	},
+	renegade_captain_melee_two_hand = {
+		100,
+		150,
+		300,
+		500,
+		800
+	},
 	renegade_captain_default_shot = _step_dmg(225),
 	daemonhost_corruption_aura = {
 		6,
@@ -187,25 +216,25 @@ minion_difficulty_settings.power_level = {
 		40
 	},
 	chaos_plague_ogryn_melee = {
+		250,
 		400,
-		500,
 		600,
 		700,
 		800
 	},
 	chaos_beast_of_nurgle_melee = {
-		200,
+		150,
 		250,
 		300,
 		350,
 		400
 	},
 	chaos_beast_of_nurgle_ranged = {
-		1,
-		2,
-		3,
-		6,
-		8
+		25,
+		40,
+		50,
+		60,
+		70
 	},
 	chaos_beast_of_nurgle_hit_by_vomit_tick = {
 		1,
@@ -215,8 +244,8 @@ minion_difficulty_settings.power_level = {
 		8
 	},
 	chaos_beast_of_nurgle_being_eaten = {
-		0.5,
-		0.5,
+		0.35,
+		0.425,
 		0.5,
 		0.5,
 		0.5
@@ -224,12 +253,17 @@ minion_difficulty_settings.power_level = {
 }
 minion_difficulty_settings.shooting = {
 	chaos_ogryn_gunner = {
-		aim_durations = _shoot_steps_desc(1.25, 1.5),
-		shoot_cooldown = _shoot_steps_desc(2.5, 4),
-		time_per_shot = _equal_difficulty_values(0.125, 0.125),
+		aim_durations = _equal_difficulty_values(1.3, 1.3),
+		shoot_cooldown = _shoot_steps_desc(2, 3),
+		time_per_shot = _equal_difficulty_values(0.115, 0.115),
 		num_shots = _shoot_steps_asc(60, 60, true)
 	},
 	cultist_flamer = {
+		aim_durations = _equal_difficulty_values(1, 1),
+		shoot_cooldown = _shoot_steps_desc(3, 4),
+		time_per_shot = _equal_difficulty_values(0.35, 0.35)
+	},
+	renegade_flamer = {
 		aim_durations = _equal_difficulty_values(1, 1),
 		shoot_cooldown = _shoot_steps_desc(3, 4),
 		time_per_shot = _equal_difficulty_values(0.35, 0.35)
@@ -266,7 +300,7 @@ minion_difficulty_settings.shooting = {
 		num_shots_cover = _equal_difficulty_values(2, 4, true)
 	},
 	renegade_shocktrooper = {
-		aim_durations = _shoot_steps_desc(0.3, 0.4),
+		aim_durations = _shoot_steps_desc(0.1, 0.2),
 		shoot_cooldown = _shoot_steps_desc(1, 1.25),
 		time_per_shot = _equal_difficulty_values(0, 0),
 		num_shots = _equal_difficulty_values(10, 10),
@@ -400,10 +434,17 @@ minion_difficulty_settings.damage_tension_to_add = {
 minion_difficulty_settings.cooldowns = {
 	chaos_hound_pounce = {
 		10,
-		10,
 		8,
-		8,
-		6
+		6,
+		5,
+		4
+	},
+	chaos_hound_pounce_fail = {
+		6,
+		6,
+		4,
+		3,
+		2
 	},
 	shoot_net_cooldown = {
 		10,
@@ -423,9 +464,9 @@ minion_difficulty_settings.cooldowns = {
 minion_difficulty_settings.terror_event_point_costs = {
 	1,
 	1.25,
-	1.5,
-	2,
-	3
+	1.75,
+	2.25,
+	2.75
 }
 
 return settings("MinionDifficultySettings", minion_difficulty_settings)

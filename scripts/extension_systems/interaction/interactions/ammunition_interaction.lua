@@ -47,7 +47,6 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 	local unit_data_ext = ScriptUnit.extension(interactor_unit, "unit_data_system")
 	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
-	local seed = math.random_seed()
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local wieldable_component = unit_data_ext:write_component(slot_name)
@@ -90,13 +89,13 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 				end
 			end
 
-			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data, seed)
+			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
 			wieldable_component.current_ammunition_reserve = new_ammo_amount
 			local missing_player_ammo = max_ammo_reserve - ammo_reserve
 
-			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share then
+			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
 				Vo.ammo_hog_event(interactor_unit, wieldable_component, pickup_data)
 			end
 

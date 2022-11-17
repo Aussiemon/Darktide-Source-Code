@@ -234,7 +234,7 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep 
 	}
 }
 templates.weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger = {
-	weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger = {
+	weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger_parent = {
 		{
 			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.1

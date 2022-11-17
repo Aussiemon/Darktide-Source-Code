@@ -62,7 +62,10 @@ local function construct_interface_settings_boolean(template)
 	local entry = {
 		default_value = template.default_value,
 		display_name = template.display_name,
-		on_value_changed = template.on_value_changed
+		on_value_changed = template.on_value_changed,
+		indentation_level = template.indentation_level,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 	local id = template.id
 	local save_location = template.save_location
@@ -151,7 +154,10 @@ local function construct_interface_settings_percent_slider(template)
 		step_size_value = percent_step_size,
 		value_get_function = value_get_function,
 		on_value_changed_function = on_value_changed_function,
-		format_value_function = format_value_function
+		format_value_function = format_value_function,
+		indentation_level = template.indentation_level,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -188,7 +194,10 @@ local function construct_interface_settings_value_slider(template)
 		num_decimals = num_decimals,
 		step_size_value = step_size_value,
 		value_get_function = value_get_function,
-		on_value_changed_function = on_value_changed_function
+		on_value_changed_function = on_value_changed_function,
+		indentation_level = template.indentation_level,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -230,7 +239,7 @@ local settings_definitions = {
 		min_value = 0,
 		display_name = "loc_interface_setting_subtitle_background_opacity",
 		id = "subtitle_background_opacity",
-		default_value = 80,
+		default_value = 75,
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_background_opacity", value)
@@ -253,7 +262,7 @@ local settings_definitions = {
 		display_name = "loc_interface_setting_subtitle_font_size",
 		num_decimals = 0,
 		max_value = 72,
-		default_value = 32,
+		default_value = 25,
 		widget_type = "value_slider",
 		id = "subtitle_font_size",
 		save_location = "interface_settings",
@@ -263,17 +272,43 @@ local settings_definitions = {
 	},
 	{
 		group_name = "other_settings",
+		display_name = "loc_settings_menu_group_accessibility_settings",
+		widget_type = "group_header"
+	},
+	{
+		step_size_value = 1,
+		min_value = 50,
+		display_name = "loc_interface_setting_hud_scale",
+		max_value = 100,
+		default_value = 100,
+		widget_type = "percent_slider",
+		id = "hud_scale",
+		save_location = "interface_settings",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_hud_scale", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		min_value = 0,
+		display_name = "loc_interface_setting_camera_sway_intensity",
+		id = "camera_movement_offset_sway_intensity",
+		default_value = 100,
+		widget_type = "percent_slider"
+	},
+	{
+		group_name = "other_settings",
 		display_name = "loc_settings_menu_group_other_settings",
 		widget_type = "group_header"
 	},
 	{
 		save_location = "interface_settings",
-		display_name = "loc_interface_setting_news_enabled",
-		id = "news_enabled",
+		display_name = "loc_interface_setting_profanity_filter_enabled",
+		id = "profanity_filter_enabled",
 		default_value = true,
 		widget_type = "boolean",
 		on_value_changed = function (value)
-			Managers.event:trigger("event_update_news_enabled", value)
+			Managers.event:trigger("event_update_profanity_filter_enabled", value)
 		end
 	}
 }

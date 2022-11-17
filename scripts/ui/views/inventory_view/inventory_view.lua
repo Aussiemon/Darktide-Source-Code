@@ -39,11 +39,13 @@ InventoryView.init = function (self, settings, context)
 	self._context = context
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items or {}
+	self._current_profile_equipped_items = context.current_profile_equipped_items or table.clone(self._preview_profile_equipped_items)
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
 	self._loaded_item_icons_info = {}
 	self._num_active_wallet_widgets = 0
 	self._wallet_widgets = {}
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
 	InventoryView.super.init(self, Definitions, settings)
 
@@ -117,6 +119,7 @@ InventoryView._switch_active_layout = function (self, layout, is_grid_layout, ca
 	if is_grid_layout then
 		self:_destroy_loadout_widgets(self._ui_renderer)
 		self:_setup_grid_layout(layout)
+		self:_on_navigation_input_changed()
 	else
 		self:_reset_grid_layout(self._ui_offscreen_renderer)
 		self:_setup_individual_layout(layout)
@@ -310,6 +313,10 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 
 	local slot = element.slot
 	local slots = element.slots
+	local initial_rotation = element.initial_rotation
+	local disable_rotation_input = element.disable_rotation_input
+	local animation_event_name_suffix = element.animation_event_name_suffix
+	local animation_event_variable_data = element.animation_event_variable_data
 	local view_name = element.view_name
 
 	if slot then
@@ -323,7 +330,12 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 					player = self._preview_player,
 					player_specialization = self._chosen_specialization,
 					preview_profile_equipped_items = self._preview_profile_equipped_items,
-					selected_slot = slot
+					current_profile_equipped_items = self._current_profile_equipped_items,
+					selected_slot = slot,
+					initial_rotation = initial_rotation,
+					disable_rotation_input = disable_rotation_input,
+					animation_event_name_suffix = animation_event_name_suffix,
+					animation_event_variable_data = animation_event_variable_data
 				}
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -339,7 +351,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 				player = self._preview_player,
 				player_specialization = self._chosen_specialization,
 				preview_profile_equipped_items = self._preview_profile_equipped_items,
-				selected_slot = slot
+				selected_slot = slot,
+				initial_rotation = initial_rotation
 			}
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -509,7 +522,6 @@ InventoryView._setup_grid_layout = function (self, layout)
 
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
 	grid:set_scrollbar_progress(0)
-	self:_on_navigation_input_changed()
 end
 
 InventoryView.cb_switch_tab = function (self, index)
@@ -1028,6 +1040,14 @@ InventoryView._update_wallets_presentation = function (self, wallets_data, hide_
 	end
 
 	self._num_active_wallet_widgets = num_active_widgets
+end
+
+InventoryView.profile_level = function (self)
+	local preview_player = self._preview_player
+	local profile = preview_player:profile()
+	local current_level = profile.current_level
+
+	return current_level
 end
 
 return InventoryView

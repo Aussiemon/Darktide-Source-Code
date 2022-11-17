@@ -141,6 +141,10 @@ ParameterFunctions.transformers = {
 			return "tome"
 		end
 
+		if side_objective_name == "side_mission_consumable" then
+			return "relic"
+		end
+
 		return "unknown"
 	end
 }

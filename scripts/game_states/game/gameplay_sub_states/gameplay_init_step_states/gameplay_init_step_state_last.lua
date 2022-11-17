@@ -6,14 +6,14 @@ GameplayInitStepStateLast.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
 	local is_server = shared_state.is_server
 
-	self:_finalize_network_init(is_server)
+	self:_finalize_network_init(is_server, shared_state)
 end
 
 GameplayInitStepStateLast.update = function (self, main_dt, main_t)
 	return nil, nil
 end
 
-GameplayInitStepStateLast._finalize_network_init = function (self, is_server)
+GameplayInitStepStateLast._finalize_network_init = function (self, is_server, shared_state)
 	if is_server then
 		local fixed_frame_transmit_rate = GameParameters.fixed_frame_transmit_rate
 
@@ -31,7 +31,8 @@ GameplayInitStepStateLast._finalize_network_init = function (self, is_server)
 		local network_delegate = connection_manager:network_event_delegate()
 		local engine_lobby = connection_manager:engine_lobby()
 		local engine_game_session = game_session_manager:game_session()
-		local session_client = SessionClient:new(network_delegate, engine_lobby, engine_game_session, game_session_manager)
+		local clock_handler_client = shared_state.clock_handler_client
+		local session_client = SessionClient:new(network_delegate, engine_lobby, engine_game_session, game_session_manager, clock_handler_client)
 
 		game_session_manager:set_session_client(session_client)
 	end

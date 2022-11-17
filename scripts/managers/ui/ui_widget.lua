@@ -69,10 +69,6 @@ UIWidget.stop_animations = function (widget)
 	table.clear(widget.animations)
 end
 
-UIWidget.localize = function (text)
-	return Managers.localization:localize(text)
-end
-
 UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_overrides, optional_size, style_overrides)
 	local definition = {}
 
@@ -116,18 +112,6 @@ UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_
 	end
 
 	return definition
-end
-
-local function _convert_visibility_argument_to_function(text_arg)
-	local result = loadstring("return function(content, style) return " .. text_arg .. " end")
-
-	return result()
-end
-
-local function _convert_change_argument_to_function(text_arg)
-	local result = loadstring("return function(content, style, animations, dt) " .. text_arg .. " end")
-
-	return result()
 end
 
 UIWidget.add_definition_pass = function (destination, pass_info)
@@ -210,25 +194,13 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 		value_content_table[value_id] = value
 	end
 
-	local visibility_function = pass_info.visibility_function
-
-	if visibility_function and type(visibility_function) == "string" then
-		visibility_function = _convert_visibility_argument_to_function(visibility_function)
-	end
-
-	local change_function = pass_info.change_function
-
-	if change_function and type(change_function) == "string" then
-		change_function = _convert_change_argument_to_function(change_function)
-	end
-
 	local new_pass_info = {
 		pass_type = pass_type,
 		value_id = value_id,
 		style_id = style_id,
 		content_id = content_id,
-		change_function = change_function,
-		visibility_function = visibility_function,
+		change_function = pass_info.change_function,
+		visibility_function = pass_info.visibility_function,
 		scenegraph_id = pass_info.scenegraph_id,
 		retained_mode = pass_info.retained_mode
 	}

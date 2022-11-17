@@ -488,8 +488,18 @@ GameSessionManager._client_left = function (self, channel_id, peer_id, game_reas
 
 	if players_at_peer then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local unit_spawner_manager = Managers.state.unit_spawner
 
 		for local_player_id, player in pairs(players_at_peer) do
+			local owned_units = player.owned_units
+			local player_unit = player.player_unit
+
+			for unit in pairs(owned_units) do
+				if unit ~= player_unit then
+					unit_spawner_manager:mark_for_deletion(unit)
+				end
+			end
+
 			player_unit_spawn_manager:despawn(player)
 
 			if player.input_handler then

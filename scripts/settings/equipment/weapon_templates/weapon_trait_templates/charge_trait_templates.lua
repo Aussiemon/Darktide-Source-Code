@@ -40,6 +40,72 @@ local charge_trait_templates = {
 			0.05
 		}
 	},
+	forcestaff_p2_m1_warp_charge_cost_stat = {
+		{
+			"warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"extra_warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	forcestaff_p3_m1_warp_charge_cost_stat = {
+		{
+			"warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"extra_warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	forcestaff_p3_m1_charge_speed_stat = {
+		{
+			"charge_duration",
+			{
+				max = 0.8,
+				min = 0.2
+			}
+		}
+	},
+	forcestaff_p4_m1_charge_speed_stat = {
+		{
+			"charge_duration",
+			{
+				max = 0.8,
+				min = 0.2
+			}
+		}
+	},
+	forcestaff_p4_m1_warp_charge_cost_stat = {
+		{
+			"warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"extra_warp_charge_percent",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
 	forcesword_p1_m1_warp_charge_cost_stat = {
 		{
 			"warp_charge_percent",

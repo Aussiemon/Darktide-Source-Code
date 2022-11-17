@@ -34,6 +34,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 			40
 		}
 	},
+	wounds_template = WoundsTemplates.heavy_stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -62,7 +63,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_3,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_3,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
@@ -86,11 +87,11 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 	},
 	power_distribution = {
 		attack = {
-			50,
-			145
+			75,
+			150
 		},
 		impact = {
-			4,
+			8,
 			16
 		}
 	},
@@ -102,6 +103,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 		distance = 3,
 		suppression_value = 1
 	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -122,7 +124,7 @@ damage_templates.default_ogryn_heavystubber_assault = {
 		}
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.autogun,
+	wounds_template = WoundsTemplates.heavy_stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -213,6 +215,7 @@ damage_templates.default_ogryn_heavystubber_assault = {
 		200,
 		300
 	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,

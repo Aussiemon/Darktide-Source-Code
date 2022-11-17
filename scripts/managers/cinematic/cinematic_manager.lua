@@ -165,8 +165,21 @@ CinematicManager.update = function (self, dt, t)
 		local length = self._storyteller:length(story_id)
 		local story_done = length < story_time
 
+		if not DEDICATED_SERVER and not GameParameters.testify and story.is_skippable then
+			local input_service = Managers.ui:input_service()
+
+			if input_service:get("skip_cinematic") then
+				story_done = true
+			end
+		end
+
 		if story_done then
 			self._storyteller:stop(story_id)
+
+			if not self._is_server and table.is_empty(self._queued_stories) then
+				Unit.flow_event(story.scene_unit_origin, "lua_cinematic_played_client")
+				Unit.flow_event(story.scene_unit_destination, "lua_cinematic_played_client")
+			end
 
 			if story.played_callback then
 				story.played_callback()
@@ -228,24 +241,24 @@ end
 CinematicManager.active_camera = function (self)
 	if self._active_testify_camera then
 		return self._active_testify_camera, CameraModes.testify
-	else
-		local story = self._active_story
-		local camera = nil
-		local camera_mode = CameraModes.cutscene
-
-		if story and story.story_id and story.story_id >= 0 then
-			local story_length = self._storyteller:length(story.story_id)
-			local story_time = self._storyteller:time(story.story_id)
-			story_time = math.clamp(story_time, 0, story_length - 1e-05)
-			camera = self._storyteller:get_active_camera(story.story_id, story_time)
-
-			if story.smooth_transition_to_gameplay then
-				camera_mode = CameraModes.cutscene_gameplay
-			end
-		end
-
-		return camera, camera_mode
 	end
+
+	local story = self._active_story
+	local camera = nil
+	local camera_mode = CameraModes.cutscene
+
+	if story and story.story_id and story.story_id >= 0 then
+		local story_length = self._storyteller:length(story.story_id)
+		local story_time = self._storyteller:time(story.story_id)
+		story_time = math.clamp(story_time, 0, story_length - 1e-05)
+		camera = self._storyteller:get_active_camera(story.story_id, story_time)
+
+		if story.smooth_transition_to_gameplay then
+			camera_mode = CameraModes.cutscene_gameplay
+		end
+	end
+
+	return camera, camera_mode
 end
 
 CinematicManager.is_playing = function (self)
@@ -289,14 +302,17 @@ CinematicManager.register_story = function (self, params)
 		alignment_inverse_pose = nil,
 		origin_level = nil,
 		destination_level = nil,
-		story_id = nil
+		story_id = nil,
+		is_skippable = nil,
+		wait_for_player_input = nil,
+		popup_info = nil
 	}
 	local category_stories = self._stories[category] or {}
 	category_stories[#category_stories + 1] = story_definition
 	self._stories[category] = category_stories
 end
 
-CinematicManager.queue_story = function (self, cinematic_scene_name, category, optional_scene_unit_origin, optional_scene_unit_destination, played_callback, client_channel_id, hotjoin_only)
+CinematicManager.queue_story = function (self, cinematic_scene_name, category, optional_scene_unit_origin, optional_scene_unit_destination, played_callback, client_channel_id, hotjoin_only, is_skippable, wait_for_player_input, popup_info)
 	local category_stories = self._stories[category]
 
 	if category_stories and #category_stories > 0 then
@@ -321,6 +337,9 @@ CinematicManager.queue_story = function (self, cinematic_scene_name, category, o
 
 		story_definition.played_callback = played_callback
 		story_definition.cinematic_scene_name = cinematic_scene_name
+		story_definition.is_skippable = is_skippable
+		story_definition.wait_for_player_input = wait_for_player_input
+		story_definition.popup_info = popup_info
 
 		if optional_scene_unit_origin ~= nil and optional_scene_unit_destination ~= nil then
 			story_definition.category = category
@@ -414,8 +433,6 @@ CinematicManager.stop_all_stories = function (self)
 
 		self._active_story = nil
 	end
-
-	table.clear(self._queued_stories)
 end
 
 CinematicManager._on_levels_loaded = function (self, request_id, load_only, cinematic_name, levels_loaded)
@@ -435,10 +452,12 @@ CinematicManager._on_levels_loaded = function (self, request_id, load_only, cine
 		self._on_levels_spawned_callback[request_id](cinematic_name)
 
 		self._on_levels_spawned_callback[request_id] = nil
-		self._waiting_for_peers[Network.peer_id()] = nil
+		local peer_id = Network.peer_id()
+		local id = self._waiting_for_peers[peer_id]
+		self._waiting_for_peers[peer_id] = nil
 
 		if table.is_empty(self._waiting_for_peers) then
-			Managers.event:trigger("cutscene_loaded_all_clients")
+			Managers.event:trigger("cutscene_loaded_all_clients", load_only, id)
 		end
 	else
 		self._on_levels_spawned_callback[request_id]()
@@ -449,7 +468,7 @@ CinematicManager._on_levels_loaded = function (self, request_id, load_only, cine
 	Managers.state.game_mode:set_wants_single_threaded_physics(false, "CinematicManager")
 end
 
-CinematicManager.load_levels = function (self, cinematic_name, level_names, on_levels_spawned_callback, client_channel_id, hotjoin_only, load_only)
+CinematicManager.load_levels = function (self, cinematic_name, level_names, on_levels_spawned_callback, client_channel_id, hotjoin_only, load_only, preload_id)
 	local request_id = cinematic_name .. "_" .. tostring(client_channel_id)
 	self._on_levels_spawned_callback[request_id] = on_levels_spawned_callback
 
@@ -478,13 +497,13 @@ CinematicManager.load_levels = function (self, cinematic_name, level_names, on_l
 				local peer = peers[i]
 
 				if synchronizer_client:peer_enabled(peer) then
-					self._waiting_for_peers[peer] = true
+					self._waiting_for_peers[peer] = preload_id or true
 
 					Managers.connection:send_rpc_client("rpc_cinematic_load_levels", peer, cinematic_name_id, level_names, load_only)
 				end
 			end
 
-			self._waiting_for_peers[Network.peer_id()] = true
+			self._waiting_for_peers[Network.peer_id()] = preload_id or true
 		end
 	end
 end
@@ -513,6 +532,8 @@ CinematicManager._unload_all_levels = function (self)
 	end
 
 	table.clear(cinematic_levels)
+	table.clear(self._stories)
+	table.clear(self._queued_stories)
 	self._level_loader:cleanup()
 end
 
@@ -536,6 +557,7 @@ CinematicManager.unload_levels = function (self, cinematic_name)
 		table.clear(self._aligned_levels)
 	end
 
+	table.clear(self._stories)
 	self._level_loader:cleanup()
 end
 
@@ -577,6 +599,10 @@ CinematicManager._unspawn_level = function (self, level)
 	level_name = level_name:match("(.+)%..+$")
 
 	ScriptWorld.destroy_level(world, level_name)
+end
+
+CinematicManager.intro_loading_started = function (self)
+	return Managers.state.extension:system("cinematic_scene_system"):intro_loading_started()
 end
 
 CinematicManager.rpc_cinematic_story_sync = function (self, channel_id, cinematic_scene_name_id, category, story_name, scene_unit_origin_level_id, scene_unit_destination_level_id, has_origin_level, origin_level_name)
@@ -648,10 +674,11 @@ end
 
 CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
 	local peer = Managers.connection:channel_to_peer(channel_id)
+	local preload_id = self._waiting_for_peers[peer]
 	self._waiting_for_peers[peer] = nil
 
 	if table.is_empty(self._waiting_for_peers) then
-		Managers.event:trigger("cutscene_loaded_all_clients")
+		Managers.event:trigger("cutscene_loaded_all_clients", true, preload_id)
 	end
 end
 

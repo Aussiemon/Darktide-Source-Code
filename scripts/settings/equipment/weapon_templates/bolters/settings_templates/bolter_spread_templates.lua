@@ -143,16 +143,22 @@ spread_templates.default_bolter_killshot = {
 spread_templates.default_bolter_spraynpray = {
 	still = {
 		randomized_spread = {
-			first_shot_min_ratio = 0.75,
+			first_shot_min_ratio = 0.5,
 			max_yaw_delta = 1,
-			first_shot_random_ratio = 0.25,
+			first_shot_random_ratio = 0.5,
 			random_ratio = 0.75,
 			max_pitch_delta = 1,
 			min_ratio = 0.25
 		},
 		max_spread = {
-			yaw = 4,
-			pitch = 3
+			pitch = {
+				lerp_perfect = 2,
+				lerp_basic = 4
+			},
+			yaw = {
+				lerp_perfect = 2,
+				lerp_basic = 4
+			}
 		},
 		decay = {
 			from_shooting_grace_time = 0.2,
@@ -166,27 +172,71 @@ spread_templates.default_bolter_spraynpray = {
 			}
 		},
 		continuous_spread = {
-			min_yaw = 0.75,
-			min_pitch = 0.75
+			min_pitch = {
+				lerp_perfect = 0.25,
+				lerp_basic = 1
+			},
+			min_yaw = {
+				lerp_perfect = 0.75,
+				lerp_basic = 1.5
+			}
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
 			suppression_hit = {
 				{
-					yaw = 0.25,
-					pitch = 0.25
+					pitch = {
+						lerp_perfect = 0.15,
+						lerp_basic = 0.35
+					},
+					yaw = {
+						lerp_perfect = 0.15,
+						lerp_basic = 0.35
+					}
 				}
 			},
 			damage_hit = {
 				{
-					yaw = 0.4,
-					pitch = 0.4
+					pitch = {
+						lerp_perfect = 0.3,
+						lerp_basic = 0.5
+					},
+					yaw = {
+						lerp_perfect = 0.3,
+						lerp_basic = 0.5
+					}
 				}
 			},
 			shooting = {
 				{
-					yaw = 0.4,
-					pitch = 0.3
+					pitch = {
+						lerp_perfect = 0.15,
+						lerp_basic = 0.3
+					},
+					yaw = {
+						lerp_perfect = 1.25,
+						lerp_basic = 2
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.11249999999999999,
+						lerp_basic = 0.22499999999999998
+					},
+					yaw = {
+						lerp_perfect = 0.1875,
+						lerp_basic = 0.75
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.075,
+						lerp_basic = 0.15
+					},
+					yaw = {
+						lerp_perfect = 0.125,
+						lerp_basic = 0.5
+					}
 				}
 			}
 		}
@@ -197,8 +247,14 @@ spread_templates.default_bolter_spraynpray = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 1,
-			min_pitch = 1
+			min_pitch = {
+				lerp_perfect = 1,
+				lerp_basic = 1.5
+			},
+			min_yaw = {
+				lerp_perfect = 1.5,
+				lerp_basic = 2
+			}
 		}
 	},
 	crouch_still = {

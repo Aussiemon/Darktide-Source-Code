@@ -31,18 +31,6 @@ local function _chapter_index_from_backend_id(story_name, backend_id)
 	end
 end
 
-local function _chapter_index_from_name(story_name, chapter_name)
-	local chapters = Stories[story_name]
-
-	for i = 1, #chapters do
-		local c = chapters[i]
-
-		if c.name == chapter_name then
-			return i
-		end
-	end
-end
-
 local function _setup_backend_narrative_data(backend_data)
 	local data = {
 		stories = {},
@@ -108,6 +96,11 @@ end
 NarrativeManager.last_completed_chapter = function (self, story_name)
 	local chapters = Stories[story_name]
 	local profile = _player_profile()
+
+	if not profile then
+		return
+	end
+
 	local character_id = profile.character_id
 	local last_completed_index = self._character_narrative_data[character_id].stories[story_name]
 	local last_chapter = chapters[last_completed_index]
@@ -127,7 +120,7 @@ NarrativeManager.chapter_by_name = function (self, story_name, chapter_name)
 	end
 end
 
-NarrativeManager.current_chapter = function (self, story_name)
+NarrativeManager.current_chapter = function (self, story_name, ignore_requirement)
 	local chapters = Stories[story_name]
 	local profile = _player_profile()
 	local character_id = profile.character_id
@@ -137,6 +130,10 @@ NarrativeManager.current_chapter = function (self, story_name)
 
 	if not chapter then
 		return nil
+	end
+
+	if ignore_requirement then
+		return chapter
 	end
 
 	local requirement = chapter.requirement
@@ -184,9 +181,14 @@ end
 
 NarrativeManager.complete_chapter_by_name = function (self, story_name, chapter_name)
 	local chapters = Stories[story_name]
-	local chapter_index = _chapter_index_from_name(story_name, chapter_name)
+	local chapter_index = self:chapter_index_from_name(story_name, chapter_name)
 	local chapter = chapters[chapter_index]
 	local profile = _player_profile()
+
+	if not profile then
+		return
+	end
+
 	local requirement = chapter.requirement
 
 	if requirement and not requirement(profile) then
@@ -198,11 +200,50 @@ NarrativeManager.complete_chapter_by_name = function (self, story_name, chapter_
 	local character_id = profile.character_id
 	self._character_narrative_data[character_id].stories[story_name] = chapter_index
 
+	if chapter.on_complete then
+		chapter.on_complete()
+	end
+
 	Managers.backend.interfaces.characters:set_narrative_story_chapter(character_id, story_name, chapter.backend_id):catch(function (err)
 		Log.warning("NarrativeManager", "Backend fail setting chapter %s in story %s for character %s: %s", chapter_name, story_name, character_id, table.tostring(err))
 	end)
 
 	return true
+end
+
+NarrativeManager.chapter_index_from_name = function (self, story_name, chapter_name)
+	local chapters = Stories[story_name]
+
+	for i = 1, #chapters do
+		local c = chapters[i]
+
+		if c.name == chapter_name then
+			return i
+		end
+	end
+end
+
+NarrativeManager.skip_story = function (self, story_name)
+	local chapters = Stories[story_name]
+	local current_chapter = self:current_chapter(story_name)
+	local start_idx = current_chapter and current_chapter.index or 1
+
+	for i = start_idx, #chapters do
+		local chapter = chapters[i]
+
+		if chapter.on_complete then
+			chapter.on_complete()
+		end
+	end
+
+	local profile = _player_profile()
+	local character_id = profile.character_id
+	local last_chapter = chapters[#chapters]
+	self._character_narrative_data[character_id].stories[story_name] = last_chapter.index
+
+	Managers.backend.interfaces.characters:set_narrative_story_chapter(character_id, story_name, last_chapter.backend_id):catch(function (err)
+		Log.warning("NarrativeManager", "Backend fail setting chapter %s in story %s for character %s: %s", last_chapter.name, story_name, character_id, table.tostring(err))
+	end)
 end
 
 NarrativeManager.is_chapter_complete = function (self, story_name, chapter_name)
@@ -214,7 +255,7 @@ NarrativeManager.is_chapter_complete = function (self, story_name, chapter_name)
 		return false
 	end
 
-	local index = _chapter_index_from_name(story_name, chapter_name)
+	local index = self:chapter_index_from_name(story_name, chapter_name)
 
 	if not index then
 		Log.warning("NarrativeManager", "No chapter '%s' in story '%s'.", chapter_name, story_name)
@@ -228,16 +269,37 @@ NarrativeManager.is_chapter_complete = function (self, story_name, chapter_name)
 		return false
 	end
 
-	local last_completed_index = _chapter_index_from_name(story_name, last_completed_chapter.name)
+	local last_completed_index = last_completed_chapter.index
 
 	return index <= last_completed_index
+end
+
+NarrativeManager.is_story_complete = function (self, story_name)
+	local chapters = Stories[story_name]
+
+	if not chapters then
+		Log.warning("NarrativeManager", "No story with the name '%s'.", story_name)
+
+		return false
+	end
+
+	local last_completed_chapter = self:last_completed_chapter(story_name)
+
+	if last_completed_chapter == nil or not last_completed_chapter.name then
+		return false
+	end
+
+	local last_completed_index = last_completed_chapter.index
+	local last_chapter_index = chapters[#chapters].index
+
+	return last_chapter_index <= last_completed_index
 end
 
 NarrativeManager.reset = function (self)
 	table.clear(self._character_narrative_data)
 end
 
-NarrativeManager.event_is_complete = function (self, event_name)
+NarrativeManager.is_event_complete = function (self, event_name)
 	if Events[event_name] == nil then
 		Log.warning("NarrativeManager", "No event with name '%s'.", event_name)
 
@@ -259,7 +321,7 @@ NarrativeManager.can_complete_event = function (self, event_name)
 		return false
 	end
 
-	local event_completed = self:event_is_complete(event_name)
+	local event_completed = self:is_event_complete(event_name)
 
 	if event_completed then
 		return false

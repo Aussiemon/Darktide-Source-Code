@@ -9,6 +9,21 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local Vo = require("scripts/utilities/vo")
 local MissionIntroView = class("MissionIntroView", "BaseView")
 
+local function _generate_seed(mission_id)
+	if not mission_id then
+		return 0
+	end
+
+	local seed = 1
+
+	for i = 1, 5 do
+		local num = string.byte(mission_id, i) or 1
+		seed = seed * num
+	end
+
+	return seed
+end
+
 MissionIntroView.init = function (self, settings, context)
 	self._spawn_point_units = {}
 	self._context = context
@@ -17,6 +32,8 @@ MissionIntroView.init = function (self, settings, context)
 	self._camera = nil
 	self._profile_loaders = {}
 	self._spawn_slots = {}
+	local backend_mission_id = Managers.mechanism:backend_mission_id()
+	self._seed = _generate_seed(backend_mission_id)
 
 	self:_setup_offscreen_gui()
 	MissionIntroView.super.init(self, Definitions, settings)
@@ -29,6 +46,9 @@ end
 
 MissionIntroView.on_enter = function (self)
 	MissionIntroView.super.on_enter(self)
+
+	self._animation_events_used = {}
+	self._num_animation_events_used = 0
 end
 
 MissionIntroView._setup_offscreen_gui = function (self)
@@ -138,6 +158,7 @@ MissionIntroView._initialize_background_world = function (self)
 
 	if mission_name then
 		self:_play_mission_brief_vo(mission_name, mission_giver_vo)
+		self:_set_hologram_briefing_material(mission_name)
 	else
 		self.mission_briefing_done = true
 	end
@@ -376,10 +397,23 @@ MissionIntroView._assign_player_to_slot = function (self, player, slot)
 	local mission_intro_state_machine = breed_settings.mission_intro_state_machine
 	local animations_per_archetype = MissionIntroViewSettings.animations_per_archetype
 	local animations_settings = animations_per_archetype[archetype_name]
-	local anim_index = math.random(1, #animations_settings)
-	local animation_event = animations_settings[anim_index]
+	local animation_event = nil
+	local num_animations = #animations_settings
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, mission_intro_state_machine, animation_event)
+	while not animation_event do
+		local new_seed, random_index = math.next_random(self._seed, 1, num_animations)
+		local wanted_event = animations_settings[random_index]
+
+		if not self._animation_events_used[wanted_event] or num_animations <= self._num_animation_events_used then
+			animation_event = wanted_event
+			self._animation_events_used[animation_event] = true
+			self._num_animation_events_used = self._num_animation_events_used + 1
+		end
+
+		self._seed = new_seed
+	end
+
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, mission_intro_state_machine, animation_event)
 
 	slot.occupied = true
 	slot.player = player
@@ -431,6 +465,17 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed)
 	self._vo_unit = vo_unit
 	self._last_vo_event = events[#events]
+end
+
+MissionIntroView._set_hologram_briefing_material = function (self, mission_name)
+	local mission = Missions[mission_name]
+	local material = mission.mission_brief_material
+
+	if material then
+		local unit = World.unit_by_name(self._world_spawner._world, "valkyrie_hologram_prototype_01")
+
+		Unit.set_material(unit, "hologram_briefing_placeholder", material)
+	end
 end
 
 MissionIntroView._cb_on_play_mission_brief_vo = function (self, id, event_name)

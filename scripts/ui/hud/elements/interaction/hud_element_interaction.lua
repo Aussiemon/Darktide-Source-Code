@@ -225,32 +225,30 @@ HudElementInteraction._update_tag_input_information = function (self, interactee
 	local player = parent:player()
 	local player_unit = player.player_unit
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-	local tag_id = smart_tag_system:unit_tag_id(interactee_unit)
-	local tagger_player = tag_id and smart_tag_system:tagger_player_by_tag_id(tag_id)
-	local is_my_tag = tagger_player and tagger_player:unique_id() == player:unique_id()
-	local taggable = false
-	local smart_tag_extension = ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
+	local tag = smart_tag_system:unit_tag(interactee_unit)
+	local input_text_tag = ""
 
-	if smart_tag_extension and not tag_id and smart_tag_extension:can_tag(player_unit) then
-		taggable = true
-	end
+	if tag then
+		local tagger_player = tag:tagger_player()
+		local is_my_tag = tagger_player and tagger_player:unique_id() == player:unique_id()
 
-	local input_text_tag = nil
-
-	if taggable then
 		if is_my_tag then
-			if tag_id then
+			if tag:is_cancelable() then
 				input_text_tag = _get_input_text("smart_tag", "loc_untag_smart_tag")
-			else
-				input_text_tag = _get_input_text("smart_tag", "loc_tag_smart_tag")
 			end
-		elseif tag_id then
-			input_text_tag = _get_input_text("smart_tag", "loc_untag_smart_tag")
 		else
-			input_text_tag = _get_input_text("smart_tag", "loc_tag_smart_tag")
+			local default_reply = tag:default_reply()
+
+			if default_reply then
+				input_text_tag = _get_input_text("smart_tag", default_reply.description)
+			end
 		end
 	else
-		input_text_tag = ""
+		local smart_tag_extension = ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
+
+		if smart_tag_extension and smart_tag_extension:can_tag(player_unit) then
+			input_text_tag = _get_input_text("smart_tag", "loc_tag_smart_tag")
+		end
 	end
 
 	local widgets_by_name = self._widgets_by_name
@@ -309,10 +307,10 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	local interactee_extension = active_presentation_data.interactee_extension
 	local player_unit = active_presentation_data.player_unit
 	local hold_progress = 0
-	local can_interact = interactee_extension:can_interact(player_unit)
+	local can_interact = interactee_extension and interactee_extension:can_interact(player_unit)
 
-	if can_interact and interactor_extension then
-		hold_progress = interactor_extension:interaction_progress()
+	if can_interact then
+		hold_progress = interactor_extension and interactor_extension:interaction_progress()
 	end
 
 	local background_size = HudElementInteractionSettings.background_size

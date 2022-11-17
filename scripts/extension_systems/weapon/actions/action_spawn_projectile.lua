@@ -29,7 +29,8 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	self._charge_component = unit_data_extension:write_component("action_module_charge")
 	self._shooting_status_component = unit_data_extension:write_component("shooting_status")
 	local weapon = action_params.weapon
-	self._muzzle_fx_source_name = weapon.fx_sources._muzzle
+	self._fx_sources = weapon.fx_sources
+	self._muzzle_fx_source_name = self._fx_sources._muzzle
 
 	if action_settings.use_target then
 		local targeting_component = unit_data_extension:write_component("action_module_targeting")
@@ -66,8 +67,9 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	local vfx_name = action_settings.vfx_effect_name
 
 	if vfx_name then
-		local vfx_node = action_settings.vfx_effect_source_name
-		self._particle_id = self._fx_extension:spawn_unit_particles(vfx_name, vfx_node, true, "stop", nil, nil, nil, false)
+		local vfx_effect_source_name = action_settings.vfx_effect_source_name
+		local source_name = self._fx_sources[vfx_effect_source_name] or vfx_effect_source_name
+		self._particle_id = self._fx_extension:spawn_unit_particles(vfx_name, source_name, true, "stop", nil, nil, nil, false)
 	end
 
 	if self._is_server then
@@ -177,6 +179,19 @@ ActionSpawnProjectile.finish = function (self, reason, data, t, time_in_action)
 	if particle_id then
 		self._fx_extension:stop_player_particles(particle_id)
 	end
+
+	local action_settings = self._action_settings
+	local fx_settings = action_settings.fx
+	local use_charge_level = fx_settings and fx_settings.sfx_use_charge_level
+
+	if use_charge_level then
+		local charge_component = self._charge_component
+		local parameter_name = "charge_level"
+		local parameter_value = charge_component.charge_level
+		local source_name = self._muzzle_fx_source_name
+
+		self._fx_extension:set_source_parameter(parameter_name, parameter_value, source_name)
+	end
 end
 
 ActionSpawnProjectile.running_action_state = function (self, t, time_in_action)
@@ -225,9 +240,9 @@ ActionSpawnProjectile._pay_ability_charge_cost = function (self)
 	ability_extension:use_ability_charge(ability_type)
 end
 
-local COLLISION_FILTER = "filter_player_character_throwing"
+local COLLISION_FILTER = "filter_player_character_shooting_projectile"
 
-ActionSpawnProjectile._get_target = function (self)
+ActionSpawnProjectile._target_unit_and_position = function (self)
 	local target_unit = nil
 	local action_settings = self._action_settings
 	local use_target = action_settings.use_target
@@ -282,10 +297,12 @@ end
 
 ActionSpawnProjectile._pay_for_projectile = function (self, t)
 	local action_settings = self._action_settings
+	local charge_component = self._charge_component
+	local charge_level = action_settings.use_charge and charge_component.charge_level or 1
 	local charge_template = action_settings.charge_template
 
 	if charge_template then
-		self:_pay_warp_charge_cost(t)
+		self:_pay_warp_charge_cost(t, charge_level)
 	end
 
 	local use_ability_charge = action_settings.use_ability_charge
@@ -294,15 +311,26 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 		self:_pay_ability_charge_cost()
 	end
 
-	if action_settings.use_charge then
-		self._charge_component.charge_level = 0
-	end
-
 	local fx_settings = action_settings.fx
 	local shoot_sfx_alias = fx_settings and fx_settings.shoot_sfx_alias
 
 	if shoot_sfx_alias then
+		local source_name = self._muzzle_fx_source_name
+
 		self._fx_extension:trigger_gear_wwise_event_with_source(shoot_sfx_alias, EXTERNAL_PROPERTIES, self._muzzle_fx_source_name, SYNC_TO_CLIENTS)
+
+		local use_charge_level = fx_settings.sfx_use_charge_level
+
+		if use_charge_level then
+			local parameter_name = "charge_level"
+			local parameter_value = charge_component.charge_level
+
+			self._fx_extension:set_source_parameter(parameter_name, parameter_value, source_name)
+		end
+	end
+
+	if action_settings.use_charge then
+		charge_component.charge_level = 0
 	end
 
 	local projectile_template = self:_get_projectile_template()
@@ -326,7 +354,7 @@ end
 ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from_paying, projectile_locomotion_extension, offset)
 	local action_settings = self._action_settings
 	local unit = self._player_unit
-	local target_unit, target_position = self:_get_target()
+	local target_unit, target_position = self:_target_unit_and_position()
 	local projectile_template = self:_get_projectile_template()
 	local projetile_locomotion_template = projectile_template.locomotion_template
 	local shoot_parameters = projetile_locomotion_template.shoot_parameters

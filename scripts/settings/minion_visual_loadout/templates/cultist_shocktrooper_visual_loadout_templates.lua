@@ -30,14 +30,6 @@ local basic_cultist_shocktrooper_template = {
 				"content/items/weapons/minions/ranged/renegade_shotgun"
 			}
 		},
-		slot_melee_weapon = {
-			drop_on_death = true,
-			is_weapon = true,
-			items = {
-				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_05",
-				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
-			}
-		},
 		slot_flesh = {
 			starts_invisible = true,
 			items = {
@@ -71,6 +63,13 @@ foundry_1.slots.envrionmental_override.items = {
 }
 templates.cultist_shocktrooper[zone_ids.tank_foundry] = {
 	foundry_1
+}
+local dust_1 = table.clone(basic_cultist_shocktrooper_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.cultist_shocktrooper[zone_ids.dust] = {
+	dust_1
 }
 local watertown_1 = table.clone(basic_cultist_shocktrooper_template)
 watertown_1.slots.envrionmental_override.items = {

@@ -18,16 +18,12 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local ClassSelectionViewTestify = GameParameters.testify and require("scripts/ui/views/class_selection_view/class_selection_view_testify")
 local PACKAGE_BASE_PATH = "packages/ui/views/talents_view/"
 local ClassSelectionView = class("ClassSelectionView", "BaseView")
-
-local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
-	local material_values = widget.style.icon.material_values
-	material_values.use_placeholder_texture = 0
-	material_values.use_render_target = 1
-	material_values.rows = rows
-	material_values.columns = columns
-	material_values.grid_index = grid_index - 1
-	material_values.render_target = render_target
-end
+local default_classes = {
+	veteran = "veteran_2",
+	psyker = "psyker_2",
+	zealot = "zealot_2",
+	ogryn = "ogryn_2"
+}
 
 ClassSelectionView.init = function (self, settings, context)
 	ClassSelectionView.super.init(self, Definitions, settings)
@@ -40,6 +36,9 @@ end
 
 ClassSelectionView.on_enter = function (self)
 	ClassSelectionView.super.on_enter(self)
+
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
+
 	self:_create_offscreen_renderer()
 	self:_setup_input_legend()
 	self:_register_button_callbacks()
@@ -48,7 +47,9 @@ ClassSelectionView.on_enter = function (self)
 	local profile = self._character_create:profile()
 	self._classes_visible = false
 
+	self:_create_domain_option_widgets()
 	self:_show_classes_widgets(false, profile.archetype)
+	self:_handle_continue_button_text()
 	self:_start_loading_talent_icons()
 
 	self._setup_complete = true
@@ -150,8 +151,12 @@ ClassSelectionView._setup_input_legend = function (self)
 end
 
 ClassSelectionView._register_button_callbacks = function (self)
-	self._widgets_by_name.choose_button.content.hotspot.pressed_callback = function ()
-		self:_on_choose_pressed()
+	self._widgets_by_name.continue_button.content.hotspot.pressed_callback = function ()
+		self:_on_continue_pressed()
+	end
+
+	self._widgets_by_name.details_button.content.hotspot.pressed_callback = function ()
+		self:_on_details_pressed()
 	end
 end
 
@@ -289,31 +294,30 @@ ClassSelectionView._on_choose_pressed = function (self)
 		self:_play_sound(UISoundEvents.character_create_confirm)
 		Managers.event:trigger("event_create_new_character_continue")
 	else
-		local selected_class_name = nil
+		self:_on_class_pressed(self._selected_class.name)
+	end
+end
 
-		if self._selected_class and self._selected_domain.archetype_title == self._selected_class.archetype then
-			selected_class_name = self._selected_class.title
-		else
-			for class_name, class in pairs(self._selected_domain.specializations) do
-				if class.title and not class.disabled then
-					selected_class_name = class_name
+ClassSelectionView._on_continue_pressed = function (self)
+	self._character_create:set_specialization(self._selected_class.name)
+	self:_play_sound(UISoundEvents.character_create_confirm)
+	Managers.event:trigger("event_create_new_character_continue")
+end
 
-					break
-				end
-			end
-		end
+ClassSelectionView._on_details_pressed = function (self)
+	if self._classes_visible then
+		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
 
-		self:_on_class_pressed(selected_class_name)
+		self:_show_classes_widgets(false)
+	else
+		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_hide_details"))
+
+		self:_on_class_pressed(self._selected_class.name)
 	end
 end
 
 ClassSelectionView._on_back_pressed = function (self)
-	if self._classes_visible then
-		self:_show_classes_widgets(false)
-	else
-		Managers.event:trigger("event_create_new_character_back")
-	end
-
+	Managers.event:trigger("event_create_new_character_back")
 	self:_play_sound(UISoundEvents.character_create_abort)
 end
 
@@ -366,10 +370,16 @@ end
 ClassSelectionView._handle_input = function (self, input_service)
 	local input_handled = false
 
-	if input_service:get("confirm_pressed") then
-		self:_on_choose_pressed()
+	if not self._using_cursor_navigation then
+		if input_service:get("confirm_pressed") then
+			self:_on_details_pressed()
 
-		input_handled = true
+			input_handled = true
+		elseif input_service:get("secondary_action_pressed") then
+			self:_on_continue_pressed()
+
+			input_handled = true
+		end
 	end
 
 	local domain_options = self._domain_options
@@ -377,7 +387,6 @@ ClassSelectionView._handle_input = function (self, input_service)
 
 	if not input_handled then
 		local new_selection_index, current_selection_index = nil
-		local class_options = {}
 		current_selection_index = self._selected_domain and table.index_of(domain_options, self._selected_domain) or 1
 		num_options = #domain_options
 
@@ -399,6 +408,7 @@ end
 
 ClassSelectionView._on_navigation_input_changed = function (self)
 	ClassSelectionView.super._on_navigation_input_changed(self)
+	self:_handle_continue_button_text()
 end
 
 ClassSelectionView._create_domain_option_widgets = function (self)
@@ -462,6 +472,8 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 
 		self._widgets_by_name.transition_fade.alpha_multiplier = 1
 		self._new_level_name = selected_domain.archetype_selection_level
+	else
+		self._widgets_by_name.transition_fade.alpha_multiplier = 0
 	end
 
 	local domain_options_widgets = self._domain_options_widgets
@@ -475,6 +487,7 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 	if self._classes_visible then
 		self:_show_class_details(false)
 
+		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
 		self._widgets_by_name.class_background.content.visible = false
 
 		self:_enable_blur(false)
@@ -485,7 +498,7 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 	local selected_class_name = nil
 
 	for class_name, class in pairs(self._selected_domain.specializations) do
-		if class.title and not class.disabled then
+		if class.title and not class.disabled and class.name == default_classes[self._selected_domain.name] then
 			selected_class_name = class_name
 
 			break
@@ -502,27 +515,14 @@ ClassSelectionView._update_domain_info = function (self)
 	local selected_domain = self._selected_domain
 	local selected_class = self._selected_class
 	local widget = widgets_by_name.domain_info
-	widget.content.title = string.format("%s %s", Localize(selected_domain.archetype_title), Localize(selected_class.title))
+	local domain_titles = {
+		psyker = "loc_class_psyker-psykinetic_title",
+		veteran = "loc_class_veteran-sharpshooter_title",
+		zealot = "loc_class_zealot-preacher_title",
+		ogryn = "loc_class_ogryn-skullbreaker_title"
+	}
+	widget.content.title = Localize(domain_titles[selected_domain.name])
 	widget.content.description = Localize(selected_domain.archetype_description)
-
-	self:_update_choose_button_text()
-
-	local title_style = widget.style.title
-	local title_font_options = UIFonts.get_font_options_by_style(title_style)
-	local description_style = widget.style.description
-	local description_font_options = UIFonts.get_font_options_by_style(description_style)
-	local scenegraph_width = self:_scenegraph_size("domain_info")
-	local title_width, title_height = UIRenderer.text_size(self._ui_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
-		scenegraph_width,
-		0
-	}, title_font_options)
-	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
-		scenegraph_width,
-		0
-	}, description_font_options)
-
-	self:_set_scenegraph_size("domain_info", nil, title_height + description_height + description_style.offset[2])
-
 	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
 	widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
 	widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_domain.name].left_lower
@@ -531,8 +531,8 @@ end
 
 ClassSelectionView._update_choose_button_text = function (self)
 	local widgets_by_name = self._widgets_by_name
-	local details_button_display_name = string.upper(Localize("loc_character_create_button_details"))
-	local choose_button_display_name = string.upper(Localize("loc_character_backstory_selection"))
+	local details_button_display_name = Utf8.upper(Localize("loc_character_create_button_details"))
+	local choose_button_display_name = Utf8.upper(Localize("loc_character_backstory_selection"))
 	local title = nil
 
 	if self._classes_visible then
@@ -567,10 +567,9 @@ ClassSelectionView._show_classes_widgets = function (self, show, force_domain)
 		self._widgets_by_name.transition_fade.alpha_multiplier = 0.5
 	else
 		widgets_by_name.main_title.content.visible = true
-		widgets_by_name.main_title.content.text = string.upper(Localize("loc_main_menu_create_button"))
+		widgets_by_name.main_title.content.text = Utf8.upper(Localize("loc_main_menu_create_button"))
 
 		self:_show_class_details(false)
-		self:_create_domain_option_widgets()
 
 		self._widgets_by_name.transition_fade.alpha_multiplier = 0
 
@@ -616,7 +615,7 @@ ClassSelectionView._create_class_option_widgets = function (self)
 			start_offset_x = start_offset_x + size[1] + spacing
 			content.hotspot.is_focused = class.title == self._selected_class.title
 			content.class_name = class_name
-			content.title = string.upper(Localize(class.title))
+			content.title = Utf8.upper(Localize(class.title))
 			widget.style.icon.material_values.main_texture = class.specialization_banner
 		end
 	end
@@ -628,13 +627,9 @@ ClassSelectionView._on_class_pressed = function (self, class_name)
 	if not self._classes_visible or not self._selected_class or class_name ~= self._selected_class.name then
 		local widgets_by_name = self._widgets_by_name
 		self._selected_class = self._selected_domain.specializations[class_name]
-		widgets_by_name.class_background.content.class_background_abilities = self._selected_domain.archetype_selection_background
-		widgets_by_name.class_background.content.class_background_details = self._selected_domain.archetype_selection_background
-		widgets_by_name.class_background.style.class_background_abilities.color = Color["ui_" .. self._selected_domain.name](51, true)
-		widgets_by_name.class_background.style.class_background_details.color = Color["ui_" .. self._selected_domain.name](51, true)
+		widgets_by_name.class_background.content.class_background = self._selected_domain.archetype_icon_large
 
 		self:_show_classes_widgets(true)
-		self:_update_choose_button_text()
 	end
 
 	self:_play_sound(UISoundEvents.character_create_class_select)
@@ -692,9 +687,6 @@ ClassSelectionView._show_class_details = function (self, show)
 	else
 		self:_destroy_class_abilities_info()
 	end
-
-	widgets_by_name.class_background.style.class_background_details.color[1] = 0
-	widgets_by_name.class_background.style.class_background_abilities.color[1] = 51
 end
 
 ClassSelectionView._create_class_abilities_info = function (self)
@@ -703,9 +695,6 @@ ClassSelectionView._create_class_abilities_info = function (self)
 
 	self:_destroy_class_abilities_info()
 
-	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.class_background.style.class_background_details.color[1] = 0
-	widgets_by_name.class_background.style.class_background_abilities.color[1] = 51
 	local info_data = {}
 	local selected_class = self._selected_class
 	local class_name = selected_class.name
@@ -900,7 +889,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 			local widget_name = string.format("class_data_%d_%d", i, 1)
 			local widget = self:_create_widget(widget_name, widget_definition)
 			local element = {
-				text = string.upper(info.data)
+				text = Utf8.upper(info.data)
 			}
 
 			template.init(self, widget, element)
@@ -1039,6 +1028,22 @@ end
 
 ClassSelectionView._cb_on_open_options_pressed = function (self)
 	Managers.ui:open_view("options_view")
+end
+
+ClassSelectionView._handle_continue_button_text = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local service_type = DefaultViewInputSettings.service_type
+	local continue_button_action = "secondary_action_pressed"
+	local continue_button_action_display_name = "loc_character_creator_continue"
+	local continue_button_text = nil
+
+	if not self._using_cursor_navigation then
+		continue_button_text = TextUtils.localize_with_button_hint(continue_button_action, continue_button_action_display_name, nil, service_type, Localize("loc_input_legend_text_template"))
+	else
+		continue_button_text = Localize(continue_button_action_display_name)
+	end
+
+	widgets_by_name.continue_button.content.text = Utf8.upper(continue_button_text)
 end
 
 return ClassSelectionView

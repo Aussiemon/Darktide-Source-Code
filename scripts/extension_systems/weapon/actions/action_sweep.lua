@@ -158,6 +158,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, params)
 		param_table.is_chain_action = is_chain_action
 		param_table.combo_count = combo_count
 		param_table.is_heavy = is_heavy
+		param_table.is_weapon_special_active = special_active
 
 		buff_extension:add_proc_event(proc_events.on_sweep_start, param_table)
 	end
@@ -220,20 +221,6 @@ end
 
 ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	table.clear(self._hit_units)
-
-	local buff_extension = self._buff_extension
-	local damage_profile = self._damage_profile
-	local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
-	local param_table = buff_extension:request_proc_event_param_table()
-
-	if param_table then
-		param_table.num_hit_units = self._num_hit_enemies
-		param_table.hit_weakspot = self._hit_weakspot
-		param_table.combo_count = self._combo_count
-		param_table.is_heavy = is_heavy
-
-		buff_extension:add_proc_event(proc_events.on_sweep_finish, param_table)
-	end
 
 	local action_settings = self._action_settings
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
@@ -320,22 +307,8 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 
 		self:_do_overlap(t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
 
-		if is_final_frame then
+		if is_final_frame or action_sweep_component.sweep_aborted then
 			self:_exit_damage_window(t, self._num_hit_enemies)
-		elseif action_sweep_component.sweep_aborted then
-			local buff_extension = self._buff_extension
-			local damage_profile = self._damage_profile
-			local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
-			local param_table = buff_extension:request_proc_event_param_table()
-
-			if param_table then
-				param_table.num_hit_units = self._num_hit_enemies
-				param_table.hit_weakspot = self._hit_weakspot
-				param_table.combo_count = self._combo_count
-				param_table.is_heavy = is_heavy
-
-				buff_extension:add_proc_event(proc_events.on_sweep_finish, param_table)
-			end
 		end
 
 		action_sweep_component.sweep_position = end_position
@@ -385,6 +358,16 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	local action_sweep_component = self._action_sweep_component
 	action_sweep_component.is_sticky = true
 	action_sweep_component.attack_direction = attack_direction
+	local buff_to_add = hit_stickyness_settings.buff_to_add
+
+	if buff_to_add and self._is_server then
+		local stick_to_unit = action_sweep_component.sweep_aborted_unit
+		local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
+
+		if stick_to_buff_extension then
+			stick_to_buff_extension:add_internally_controlled_buff(buff_to_add, t)
+		end
+	end
 
 	self:_add_weapon_blood("full")
 	self:_exit_damage_window(t, self._num_hit_enemies)
@@ -996,7 +979,10 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local ignore_armor_aborts_attack = buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
 	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, use_reduced_hit_mass)
-	local amount_of_mass_hit = current_amount_of_mass_hit + target_hit_mass
+	local attack_type = AttackSettings.attack_types.melee
+	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
+	local action_armor_hit_mass_mod = action_settings.action_armor_hit_mass_mod and action_settings.action_armor_hit_mass_mod[target_armor]
+	local amount_of_mass_hit = current_amount_of_mass_hit + target_hit_mass * (action_armor_hit_mass_mod or 1)
 	local aim_assist_ramp_template = action_settings.aim_assist_ramp_template
 
 	if amount_of_mass_hit > 0 and aim_assist_ramp_template and aim_assist_ramp_template.reset_on_attack then
@@ -1019,6 +1005,10 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	else
 		damage_profile = abort_attack and self._damage_profile_on_abort or self._damage_profile
 		damage_type = abort_attack and self._damage_type_on_abort or self._damage_type
+	end
+
+	if type(damage_type) == "table" then
+		damage_type = damage_type[num_hit_enemies] or damage_type.default
 	end
 
 	local damage, result, damage_efficiency, _, hit_weakspot = nil
@@ -1245,6 +1235,10 @@ end
 
 ActionSweep._play_hit_animations = function (self, action_settings, abort_attack, armor_aborts_attack, special_active)
 	local first_person_hit_anim, third_person_hit_anim = nil
+
+	if special_active and action_settings.no_hit_stop_on_active then
+		return
+	end
 
 	if abort_attack and special_active then
 		first_person_hit_anim = action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim

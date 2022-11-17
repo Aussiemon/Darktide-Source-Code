@@ -191,11 +191,10 @@ StatsManager.can_record_stats = function ()
 	return false
 end
 
-StatsManager.record_mission_end = function (self, player, mission_name, main_objective_type, circumstance_name, challenge, resistance, win, mission_time, team_kills, team_downs, team_deaths, side_objective_complete, side_objective_name)
-	local difficulty = math.min(challenge, resistance)
+StatsManager.record_mission_end = function (self, player, mission_name, main_objective_type, circumstance_name, difficulty, win, mission_time, team_kills, team_downs, team_deaths, side_objective_progress, side_objective_complete, side_objective_name, is_flash)
 	side_objective_name = side_objective_name or "none"
 
-	self:_trigger_hook(player, "hook_mission", 1, mission_name, main_objective_type, circumstance_name, difficulty, win, mission_time, team_kills, team_downs, team_deaths, side_objective_complete, side_objective_name, player:profile().specialization)
+	self:_trigger_hook(player, "hook_mission", 1, mission_name, main_objective_type, circumstance_name, difficulty, win, mission_time, team_kills, team_downs, team_deaths, side_objective_progress, side_objective_complete, side_objective_name, is_flash, player:profile().specialization)
 end
 
 StatsManager.record_objective_complete = function (self, player, mission_name, objective_name, objective_type, objective_time)
@@ -226,12 +225,19 @@ StatsManager.record_kill = function (self, player, breed_name, weapon_template_n
 	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, buff_keywords, damage_type, solo_kill, player:profile().specialization)
 end
 
+StatsManager.record_team_blocked_damage = function (self, amount)
+	self:_trigger_global_hook("hook_team_blocked_damage", amount)
+end
+
 StatsManager.record_blocked_damage = function (self, player, amount, weapon_template_name)
 	self:_trigger_hook(player, "hook_blocked_damage", amount, weapon_template_name or "unknown", player:profile().specialization)
 end
 
-StatsManager.record_team_kill = function (self)
-	self:_trigger_global_hook("hook_team_kill", 1)
+StatsManager.record_team_kill = function (self, breed_name, weapon_attack_type)
+	breed_name = breed_name or "unknown"
+	weapon_attack_type = weapon_attack_type or "unknown"
+
+	self:_trigger_global_hook("hook_team_kill", 1, breed_name, weapon_attack_type)
 end
 
 StatsManager.record_toughness_regen = function (self, player, reason, amount)
@@ -252,11 +258,11 @@ StatsManager.record_help_ally = function (self, player, target_player)
 	self:_trigger_hook(player, "hook_help_ally", 1, target_player:session_id(), player:profile().specialization)
 end
 
-StatsManager.record_collect_material = function (self, player, type, size)
+StatsManager.record_collect_material = function (self, type, size)
 	type = type or "unknown"
 	local amount = size == "large" and 10 or size == "small" and 5 or 0
 
-	self:_trigger_hook(player, "hook_collect_material", amount, type, player:profile().specialization)
+	self:_trigger_global_hook("hook_collect_material", amount, type)
 end
 
 StatsManager.record_pickup_item = function (self, player, pickup_name)

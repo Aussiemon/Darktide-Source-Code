@@ -17,20 +17,32 @@ if XblPermissionDenyReason then
 	}
 end
 
-local permission_array = nil
+local PERMISSION_ARRAY = nil
 
 if XblPermission then
-	permission_array = {
-		XblPermission.PlayMultiplayer
+	PERMISSION_ARRAY = {
+		default = {
+			XblPermission.PlayMultiplayer
+		},
+		INVITE = {
+			XblPermission.PlayMultiplayer,
+			XblPermission.CommunicateUsingText
+		},
+		JOIN_REQUEST = {
+			XblPermission.PlayMultiplayer,
+			XblPermission.CommunicateUsingText
+		}
 	}
 end
 
-XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, platform, platform_user_id, context_suffix)
+XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, platform, platform_user_id, context)
 	if platform == "xbox" then
+		local context_suffix = context and "_" .. context or ""
+		local permission_array = PERMISSION_ARRAY[context] or PERMISSION_ARRAY.default
 		local promise_check = XboxLiveUtilities.batch_check_permission(permission_array, {
 			platform_user_id
 		}, empty_array):catch(function (error)
-			Log.error("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission failed with hresult " .. tostring(error[1]))
+			Log.error("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission failed with hresult %s", tostring(error[1]))
 
 			return Promise.resolved({
 				{
@@ -40,18 +52,15 @@ XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, plat
 		end)
 
 		return promise_check:next(function (result_array)
-			Log.info("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission result=" .. table.tostring(result_array, 5))
+			Log.info("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission result=%s", table.tostring(result_array, 5))
 
-			local result = result_array[1]
-
-			if not result.is_allowed then
-				local reason = result.reasons[1].reason_string or deny_reasons[result.reasons[1].reason]
-				reason = not reason and "XBOX_JOIN_UNKNOWN_ERROR" or reason .. context_suffix
-
-				return Promise.rejected(reason)
-			else
-				return Promise.resolved("OK")
+			for _, result in ipairs(result_array) do
+				if not result.is_allowed then
+					return Promise.rejected("declined")
+				end
 			end
+
+			return Promise.resolved("OK")
 		end)
 	else
 		return Promise.resolved("OK")

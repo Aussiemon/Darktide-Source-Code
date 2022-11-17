@@ -30,13 +30,12 @@ PartyImmateriumHubSessionBoot.init = function (self, event_object, current_hub_s
 		self:_start_hot_joining_party_hub_server()
 	end
 
+	self._hot_join_promise = nil
 	self._server_details_promise = nil
 end
 
 PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
-	self._server_details_promise = self._backend_interface.hub_session:fetch_server_details(self._matched_hub_session_id)
-
-	self._server_details_promise:next(function (response)
+	self._server_details_promise = self._backend_interface.hub_session:fetch_server_details(self._matched_hub_session_id):next(function (response)
 		_info("Got server details: %s", table.tostring(response, 3))
 
 		if response.vivoxToken then
@@ -69,6 +68,7 @@ PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
 			self:_start_hot_joining_party_hub_server()
 		end
 	end)
+
 	self:_set_state(STATES.fetchingserverdetails)
 end
 
@@ -127,14 +127,27 @@ end
 PartyImmateriumHubSessionBoot._create_connection = function (self)
 	local event_delegate = Managers.connection:network_event_delegate()
 	local network_hash = Managers.connection.combined_hash
-	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, Network.leave_lan_lobby, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
+	local client = self._wan_client
+	local server_ip = self._server_ip
+	local server_port = self._server_port
+
+	local function cleanup(lobby)
+		local browser = LanClient.create_lobby_browser(client)
+
+		browser:disconnect(server_ip, server_port)
+		LanClient.destroy_lobby_browser(client, browser)
+		Network.leave_lan_lobby(lobby)
+	end
+
+	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, cleanup, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
 end
 
 PartyImmateriumHubSessionBoot._start_hot_joining_party_hub_server = function (self)
 	self._has_tried_hot_joining = true
 
 	self:_set_state(STATES.hotjoining)
-	Managers.party_immaterium:hot_join_party_hub_server():next(function (response)
+
+	self._hot_join_promise = Managers.party_immaterium:hot_join_party_hub_server():next(function (response)
 		self._matched_hub_session_id = response
 
 		self:_fetch_server_details()
@@ -145,7 +158,7 @@ PartyImmateriumHubSessionBoot._start_hot_joining_party_hub_server = function (se
 			self:_failed("hot_join_party_hub_failed")
 		end
 
-		_info("hot_join_party_hub_failed " .. table.tostring(error))
+		_info("hot_join_party_hub_failed %s", table.tostring(error))
 	end)
 end
 
@@ -157,6 +170,10 @@ PartyImmateriumHubSessionBoot._failed = function (self, reason, optional_error_d
 end
 
 PartyImmateriumHubSessionBoot._fail_or_retry_non_accelerated = function (self, reason)
+	if self._wan_lobby_browser and self._server_ip and self._server_port then
+		self._wan_lobby_browser:disconnect(self._server_ip, self._server_port)
+	end
+
 	if self._accelerated then
 		self:_start_handshaking(true)
 	else
@@ -227,6 +244,12 @@ PartyImmateriumHubSessionBoot.result = function (self)
 end
 
 PartyImmateriumHubSessionBoot._clear = function (self)
+	if self._hot_join_promise then
+		self._hot_join_promise:cancel()
+
+		self._hot_join_promise = nil
+	end
+
 	if self._server_details_promise then
 		self._server_details_promise:cancel()
 

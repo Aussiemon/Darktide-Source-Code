@@ -1,4 +1,48 @@
 local conversations_disabled_veteran_male_c = {
+	bonding_conversation_cadia_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.654448
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_cadia_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.611771
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_cadia_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.885365
+		},
+		randomize_indexes = {}
+	},
+	combat_pause_limited_veteran_c_06_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__combat_pause_limited_veteran_c_06_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.772375
+		},
+		randomize_indexes = {}
+	},
 	lore_brunt_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

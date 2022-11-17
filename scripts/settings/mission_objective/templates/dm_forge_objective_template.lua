@@ -53,11 +53,12 @@ local mission_objective_templates = {
 				header = "loc_objective_dm_forge_find_foundry_header"
 			},
 			objective_dm_forge_activate_smelter = {
+				use_music_event = "demolition_event",
 				description = "loc_objective_dm_forge_activate_smelter_desc",
-				turn_off_backfill = true,
 				header = "loc_objective_dm_forge_activate_smelter_header",
-				event_type = "end_event",
-				mission_objective_type = "goal"
+				turn_off_backfill = true,
+				mission_objective_type = "goal",
+				music_ignore_start_event = true
 			},
 			objective_dm_forge_destroy_corruptor_one = {
 				use_music_event = "demolition_event",
@@ -75,10 +76,12 @@ local mission_objective_templates = {
 				mission_objective_type = "goal"
 			},
 			objective_dm_forge_reactivate_smelter = {
+				use_music_event = "demolition_event",
 				description = "loc_objective_dm_forge_reactivate_smelter_desc",
+				header = "loc_objective_dm_forge_reactivate_smelter_header",
 				event_type = "end_event",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_forge_reactivate_smelter_header"
+				music_ignore_start_event = true
 			},
 			objective_dm_forge_hold_position = {
 				use_music_event = "demolition_event",

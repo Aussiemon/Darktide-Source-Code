@@ -125,7 +125,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
@@ -327,6 +327,7 @@ local action_data = {
 		controlled_stagger = true,
 		move_anim_events = "move_fwd",
 		controlled_stagger_min_speed = 2,
+		attack_intensity_type = "elite_shotgun",
 		range = "close",
 		use_animation_running_stagger_speed = true,
 		move_to_fail_cooldown = 1,
@@ -585,15 +586,16 @@ local action_data = {
 		}
 	},
 	shoot = {
-		ignore_backstab_sfx = true,
 		dodge_tell_sfx_delay = 0.13333333333333333,
+		ignore_backstab_sfx = true,
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
 		randomized_direction_degree_range = 180,
 		max_distance_to_target = 11,
 		strafe_end_anim_event = "hip_fire",
+		not_allowed_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		inventory_slot = "slot_ranged_weapon",
 		first_shoot_timing = 1.2,
@@ -601,7 +603,6 @@ local action_data = {
 		utility_weight = 1,
 		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
 		strafe_shoot_distance = 3,
-		exit_after_cooldown = true,
 		trigger_shoot_sound_event_once = true,
 		strafe_shoot_ranged_position_fallback = true,
 		suppressive_fire = true,
@@ -648,11 +649,19 @@ local action_data = {
 			turn_shoot_left = 0.6410256410256411
 		},
 		aim_stances = {
+			turn_shoot_right = "standing",
+			turn_shoot_left = "standing",
+			move_fwd_walk_aim = "standing",
+			move_left_walk_aim = "standing",
+			move_right_walk_aim = "standing",
+			turn_shoot_bwd = "standing",
+			move_bwd_walk_aim = "standing",
 			hip_fire = "standing"
 		},
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
@@ -676,7 +685,7 @@ local action_data = {
 		vo_event = "start_shooting",
 		trigger_shoot_sound_event_once = true,
 		step_anim_distance = 2,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx_delay = 0.13333333333333333,
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		fx_source_name = "muzzle",
@@ -707,8 +716,9 @@ local action_data = {
 			step_right_shoot = "standing"
 		},
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
@@ -727,7 +737,7 @@ local action_data = {
 		vo_event = "start_shooting",
 		trigger_shoot_sound_event_once = true,
 		suppressive_fire = true,
-		attack_intensity_type = "elite_ranged",
+		attack_intensity_type = "elite_shotgun",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
 		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
@@ -793,8 +803,9 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
+			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 2
+			elite_ranged = 5
 		},
 		shoot_template = BreedShootTemplates.renegade_shocktrooper_default,
 		stagger_type_reduction = {
@@ -1042,33 +1053,8 @@ local action_data = {
 			}
 		}
 	},
-	throw_frag_grenade = {
-		utility_weight = 20,
-		considerations = UtilityConsiderations.renegade_shocktrooper_frag_grenade,
-		aim_anim_events = {
-			"throw_grenade"
-		},
-		aim_duration = {
-			throw_grenade = 1.564102564102564
-		},
-		action_durations = {
-			throw_grenade = 3.076923076923077
-		},
-		effect_template = EffectTemplates.renegade_shocktrooper_grenade,
-		effect_template_timings = {
-			throw_grenade = 0.5384615384615384
-		},
-		throw_config = {
-			acceptable_accuracy = 1,
-			item = "content/items/weapons/minions/ranged/renegade_grenade",
-			unit_node = "j_lefthand",
-			projectile_template = ProjectileTemplates.renegade_shocktrooper_frag_grenade
-		},
-		attack_intensities = {
-			grenade = 16
-		}
-	},
 	switch_weapon = {
+		vo_event = "ranged_idle",
 		slot_melee_weapon = {
 			switch_anim_events = {
 				"equip_sword"
@@ -1077,7 +1063,7 @@ local action_data = {
 				equip_sword = 0.2833333333333333
 			},
 			switch_anim_durations = {
-				equip_sword = 0.5833333333333334
+				equip_sword = 0.5
 			}
 		},
 		slot_ranged_weapon = {
@@ -1088,12 +1074,12 @@ local action_data = {
 				equip_gun = 0.2
 			},
 			switch_anim_durations = {
-				equip_gun = 0.8333333333333334
+				equip_gun = 0.4
 			}
 		}
 	},
 	blocked = {
-		blocked_duration = 2.6666666666666665,
+		blocked_duration = 2,
 		blocked_anims = {
 			"blocked"
 		}

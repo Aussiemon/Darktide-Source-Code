@@ -58,7 +58,7 @@ recoil_templates.default_bolter_spraynpray = {
 			pitch = 2
 		},
 		visual_recoil_settings = {
-			intensity = 4,
+			intensity = 1,
 			lerp_scalar = 0.1
 		},
 		aim_assist = {
@@ -140,7 +140,7 @@ recoil_templates.bolter_p1_m2_spraynpray = {
 		},
 		visual_recoil_settings = {
 			intensity = 4,
-			lerp_scalar = 0.1
+			lerp_scalar = 0.5
 		},
 		aim_assist = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
@@ -237,45 +237,43 @@ recoil_templates.bolter_p1_m3_spraynpray = {
 }
 recoil_templates.default_bolter_killshot = {
 	still = {
-		camera_recoil_percentage = 0.4,
-		new_influence_percent = 0.65,
-		rise_duration = 0.05,
+		camera_recoil_percentage = 0.2,
+		new_influence_percent = 0.42,
+		rise_duration = 0.07,
 		rise = {
+			0.75,
+			0.65,
 			0.5
 		},
 		decay = {
-			shooting = 0.05,
-			idle = 1.1
+			shooting = 0.2,
+			idle = 0.8
 		},
 		offset = {
 			{
 				yaw = 0,
-				pitch = 0.175
-			},
-			{
-				yaw = 0,
-				pitch = 0.1
-			},
-			{
-				yaw = 0,
 				pitch = 0.075
+			},
+			{
+				yaw = 0,
+				pitch = 0.05
+			},
+			{
+				yaw = 0,
+				pitch = 0.035
 			}
 		},
 		offset_random_range = {
 			{
-				yaw = 0.02,
+				yaw = 0.1,
 				pitch = 0.025
 			},
 			{
-				yaw = 0.02,
+				yaw = 0.1,
 				pitch = 0.025
 			},
 			{
-				yaw = 0.02,
-				pitch = 0.025
-			},
-			{
-				yaw = 0.02,
+				yaw = 0.1,
 				pitch = 0.025
 			}
 		},
@@ -285,7 +283,8 @@ recoil_templates.default_bolter_killshot = {
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1
+			lerp_scalar = 0.8,
+			yaw_intensity = 7.5
 		}
 	},
 	moving = {

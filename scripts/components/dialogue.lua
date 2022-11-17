@@ -69,6 +69,7 @@ Dialogue.component_data = {
 			"Explicator",
 			"Interrogator",
 			"Ogryn",
+			"Medicae Servitor",
 			"Mourningstar Servitor",
 			"Pilot",
 			"Prison Guard",
@@ -83,7 +84,9 @@ Dialogue.component_data = {
 			"Veteran",
 			"Vocator",
 			"Zealot",
-			"Credit Store Servitor"
+			"Credit Store Servitor",
+			"Mourningstar Soldier",
+			"Barber"
 		},
 		options_values = {
 			"none",
@@ -94,6 +97,7 @@ Dialogue.component_data = {
 			"explicator",
 			"interrogator",
 			"ogryn",
+			"medicae_servitor",
 			"mourningstar_servitor",
 			"pilot",
 			"prison_guard",
@@ -108,7 +112,9 @@ Dialogue.component_data = {
 			"veteran",
 			"vocator",
 			"zealot",
-			"credit_store_servitor"
+			"credit_store_servitor",
+			"mourningstar_soldier",
+			"barber"
 		}
 	},
 	dialogue_profile = {
@@ -124,6 +130,7 @@ Dialogue.component_data = {
 			"Emora Brahms, The Shipmistress",
 			"Explicator Zola, Female",
 			"Interrogator Rannick, Male",
+			"Medicae Servitor A",
 			"Mourningstar Servitor A",
 			"Mourningstar Servitor B",
 			"Mourningstar Servitor C",
@@ -153,7 +160,15 @@ Dialogue.component_data = {
 			"Zealot, Female, The Fanatic",
 			"Zealot, Male, The Crusader",
 			"Zealot, Male, The Fanatic",
-			"Credit Store Servitor"
+			"Credit Store Servitor A",
+			"Credit Store Servitor B",
+			"Credit Store Servitor C",
+			"Mourningstar Soldier Male A",
+			"Mourningstar Soldier Male B",
+			"Mourningstar Soldier Male F",
+			"Mourningstar Soldier Female A",
+			"Mourningstar Initiate A",
+			"Barber A"
 		},
 		options_values = {
 			"none",
@@ -163,6 +178,7 @@ Dialogue.component_data = {
 			"shipmistress_a",
 			"explicator_a",
 			"interrogator_a",
+			"medicae_servitor_a",
 			"mourningstar_servitor_a",
 			"mourningstar_servitor_b",
 			"mourningstar_servitor_c",
@@ -192,7 +208,15 @@ Dialogue.component_data = {
 			"zealot_female_b",
 			"zealot_male_a",
 			"zealot_male_b",
-			"credit_store_servitor_a"
+			"credit_store_servitor_a",
+			"credit_store_servitor_b",
+			"credit_store_servitor_c",
+			"mourningstar_soldier_male_a",
+			"mourningstar_soldier_male_b",
+			"mourningstar_soldier_male_f",
+			"mourningstar_soldier_female_a",
+			"mourningstar_initiate_a",
+			"barber_a"
 		}
 	},
 	faction_memory_name = {

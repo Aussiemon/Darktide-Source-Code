@@ -682,6 +682,29 @@ local on_demand_vo_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_c__smart_tag_vo_enemy_berserker_01",
+			"loc_veteran_female_c__smart_tag_vo_enemy_berserker_02",
+			"loc_veteran_female_c__smart_tag_vo_enemy_berserker_03",
+			"loc_veteran_female_c__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			1.078031,
+			0.684792,
+			1.21375,
+			0.51151
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

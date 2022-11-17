@@ -31,7 +31,7 @@ local look_delta_context = {}
 DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, sensitivity_modifier, rotation_contraints)
 	local player = self._player
 	local viewport_name = player.viewport_name
-	local current_fov = Fov.from_viewport(viewport_name)
+	local current_fov = Fov.sensitivity_modifier(viewport_name)
 	local sensitivity = player.sensitivity * sensitivity_modifier * current_fov
 	local mouse_scale = self._mouse_scale
 	local min_pitch = self._min_pitch
@@ -72,14 +72,13 @@ DefaultPlayerOrientation.orientation_offset = function (self)
 	local recoil_component = self._recoil_component
 	local pitch_offset = 0
 	local yaw_offset = 0
-	local roll_offset = 0
 
 	if recoil_component then
 		local recoil_template = self._weapon_extension:recoil_template()
 		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component)
 	end
 
-	return yaw_offset, pitch_offset, roll_offset
+	return yaw_offset, pitch_offset, 0
 end
 
 return DefaultPlayerOrientation

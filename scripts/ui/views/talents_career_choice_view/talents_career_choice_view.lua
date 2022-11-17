@@ -155,7 +155,6 @@ TalentsCareerChoiceView.cb_confirm_choice_button_pressed = function (self)
 			{
 				text = "loc_talents_choose_specialization_confirm_choice_popup_yes",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				text_params = {
 					specialization = specialization_name
 				},

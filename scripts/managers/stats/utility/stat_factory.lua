@@ -36,6 +36,18 @@ StatFactory.create_hook = function (id, params, optional_flags)
 	return StatDefinition:new({}, NoSave:new(id, params), optional_flags)
 end
 
+StatFactory.ping_on_any = function (id, optional_flags, ...)
+	local triggers = {}
+
+	for _, stat in ipairs({
+		...
+	}) do
+		triggers[stat:get_id()] = StatTrigger:new(Activations.constant(nil))
+	end
+
+	return StatDefinition:new(triggers, NoSave:new(id), optional_flags)
+end
+
 StatFactory.create_dynamic_reducer = function (id, stat_to_reduce, in_parameters, activation_function, optional_out_parameters, optional_flags, optional_default_value)
 	local out_parameters = optional_out_parameters or in_parameters
 
@@ -98,11 +110,11 @@ StatFactory.create_echo = function (id, stat_to_echo, optional_condition, option
 	}, NoSave:new(id, stat_to_echo:get_parameters()), optional_flags)
 end
 
-StatFactory.create_in_a_row = function (id, increase_on_stat, reset_on_stat)
+StatFactory.create_in_a_row = function (id, increase_on_stat, reset_on_stat, optional_flags)
 	return StatDefinition:new({
 		[increase_on_stat:get_id()] = StatTrigger:new(Activations.increment),
 		[reset_on_stat:get_id()] = StatTrigger:new(Activations.set(0))
-	}, SingleValue:new(id, 0))
+	}, SingleValue:new(id, 0), optional_flags)
 end
 
 StatFactory.create_flag_switch = function (id, set_on_stat, reset_on_stat, optional_flags, optional_start_active)

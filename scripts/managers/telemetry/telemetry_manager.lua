@@ -54,6 +54,8 @@ TelemetryManager._convert_userdata = function (self, data)
 					y = value.y,
 					z = value.z
 				}
+			elseif type(value) == "function" then
+				data[key] = nil
 			elseif type(value) == "userdata" then
 				data[key] = tostring(value)
 			elseif type(value) == "table" then

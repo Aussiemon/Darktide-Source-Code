@@ -5,10 +5,10 @@ local EVENTS = {
 }
 local SessionClient = class("SessionClient")
 
-SessionClient.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object)
+SessionClient.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object, clock_handler_client)
 	self._network_delegate = network_delegate
 	self._engine_gamesession = engine_gamesession
-	self._host_session = SessionLocalStateMachine:new(network_delegate, engine_lobby, self._engine_gamesession, gameobject_callback_object)
+	self._host_session = SessionLocalStateMachine:new(network_delegate, engine_lobby, self._engine_gamesession, gameobject_callback_object, clock_handler_client)
 	self._remote_clients = {}
 	self._events = {}
 

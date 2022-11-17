@@ -21,6 +21,8 @@ local BtEnterHooks = {
 		local is_upwards = unit_position.z < exit_position.z
 
 		if is_upwards or smart_object_type and smart_object_type == "ledges_with_fence" then
+			Managers.state.pacing:refund_special_slot()
+
 			local damage_profile = DamageProfileTemplates.default
 
 			Attack.execute(unit, damage_profile, "instakill", true)

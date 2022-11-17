@@ -3,11 +3,12 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
+local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local BtBeastOfNurgleMovementAction = class("BtBeastOfNurgleMovementAction", "BtNode")
-BtBeastOfNurgleMovementAction.TIME_TO_FIRST_EVALUATE = 0.2
-BtBeastOfNurgleMovementAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.25
+BtBeastOfNurgleMovementAction.TIME_TO_FIRST_EVALUATE = 0.1
+BtBeastOfNurgleMovementAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.15
 local DEFAULT_MIN_MOVE_DURATION = 0.5
 
 BtBeastOfNurgleMovementAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -16,6 +17,7 @@ BtBeastOfNurgleMovementAction.enter = function (self, unit, breed, blackboard, s
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
+	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local nav_world = navigation_extension:nav_world()
 	scratchpad.nav_world = nav_world
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -31,7 +33,7 @@ BtBeastOfNurgleMovementAction.enter = function (self, unit, breed, blackboard, s
 	if action_data.randomized_direction_degree_range then
 		local randomized_move_to_directions = {}
 
-		self:_calculate_randomized_move_to_directions(action_data, randomized_move_to_directions)
+		self:_calculate_randomized_move_to_directions(unit, action_data, scratchpad, randomized_move_to_directions)
 
 		scratchpad.randomized_move_to_directions = randomized_move_to_directions
 	end
@@ -58,6 +60,9 @@ BtBeastOfNurgleMovementAction.enter = function (self, unit, breed, blackboard, s
 	self:_move_to_target(unit, t, scratchpad, action_data, navigation_extension, target_position)
 
 	scratchpad.min_move_duration = t + DEFAULT_MIN_MOVE_DURATION
+	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
+	scratchpad.pushed_enemies = {}
+	scratchpad.push_nearby_players_frequency = action_data.push_nearby_players_frequency
 end
 
 BtBeastOfNurgleMovementAction.init_values = function (self, blackboard)
@@ -84,6 +89,8 @@ BtBeastOfNurgleMovementAction.leave = function (self, unit, breed, blackboard, s
 	slot_system:do_slot_search(unit, true)
 end
 
+local DISTANCE_SQ_CHANGE_TO_MOVE = 1
+
 BtBeastOfNurgleMovementAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
@@ -95,14 +102,8 @@ BtBeastOfNurgleMovementAction.run = function (self, unit, breed, blackboard, scr
 	if not is_anim_driven then
 		local distance_to_destination_sq = Vector3.distance_squared(destination, target_position)
 
-		if scratchpad.move_to_cooldown <= t and (scratchpad.max_distance_to_target_sq < distance_to_destination_sq or not perception_component.has_line_of_sight) then
+		if scratchpad.move_to_cooldown <= t and (DISTANCE_SQ_CHANGE_TO_MOVE < distance_to_destination_sq or not perception_component.has_line_of_sight) then
 			self:_move_to_target(unit, t, scratchpad, action_data, navigation_extension, target_position)
-		end
-
-		local target_distance = perception_component.target_distance
-
-		if target_distance <= action_data.wanted_distance and perception_component.has_line_of_sight and scratchpad.min_move_duration < t then
-			return "done"
 		end
 	end
 
@@ -114,9 +115,19 @@ BtBeastOfNurgleMovementAction.run = function (self, unit, breed, blackboard, scr
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
 
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
+
 		scratchpad.time_to_next_evaluate = t + BtBeastOfNurgleMovementAction.CONSECUTIVE_EVALUATE_INTERVAL
 
 		return "running", true
+	end
+
+	if not is_anim_driven then
+		local target_distance = perception_component.target_distance
+
+		if target_distance <= action_data.wanted_distance and perception_component.has_line_of_sight and scratchpad.min_move_duration < t then
+			return action_data.done_on_arrival and "done" or "running"
+		end
 	end
 
 	if action_data.liquid_area_template then
@@ -127,6 +138,18 @@ BtBeastOfNurgleMovementAction.run = function (self, unit, breed, blackboard, scr
 
 	if move_state ~= "moving" then
 		self:_start_move_anim(unit, breed, t, scratchpad, action_data)
+	else
+		scratchpad.push_nearby_players_frequency = scratchpad.push_nearby_players_frequency - dt
+
+		if scratchpad.push_nearby_players_frequency <= 0 then
+			table.clear(scratchpad.pushed_enemies)
+
+			scratchpad.push_nearby_players_frequency = action_data.push_nearby_players_frequency
+		end
+
+		local optional_only_ahead_targets = true
+
+		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit, optional_only_ahead_targets)
 	end
 
 	if is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
@@ -237,6 +260,11 @@ BtBeastOfNurgleMovementAction._move_to_target = function (self, unit, t, scratch
 		local randomized_rotation = Quaternion.look(randomized_direction)
 		local wanted_rotation = Quaternion.multiply(to_unit_rotation, randomized_rotation)
 		local wanted_direction = Quaternion.forward(wanted_rotation)
+
+		if move_direction_index == 1 then
+			wanted_direction = Vector3.flat(Vector3.normalize(POSITION_LOOKUP[unit] - target_position))
+		end
+
 		local min_distance_to_target = action_data.min_distance_to_target
 		local max_distance_to_target = action_data.max_distance_to_target
 		local wanted_position = target_position_on_navmesh + wanted_direction * math.random_range(min_distance_to_target, max_distance_to_target)
@@ -271,7 +299,7 @@ BtBeastOfNurgleMovementAction._move_to_target = function (self, unit, t, scratch
 	end
 end
 
-BtBeastOfNurgleMovementAction._calculate_randomized_move_to_directions = function (self, action_data, randomized_directions)
+BtBeastOfNurgleMovementAction._calculate_randomized_move_to_directions = function (self, unit, action_data, scratchpad, randomized_directions)
 	local degree_range = action_data.randomized_direction_degree_range
 	local degree_per_direction = action_data.degree_per_direction
 	local num_directions = degree_range / degree_per_direction

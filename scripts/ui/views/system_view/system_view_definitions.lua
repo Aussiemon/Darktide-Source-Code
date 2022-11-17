@@ -43,7 +43,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0
+			1
 		}
 	},
 	grid_start = {
@@ -71,7 +71,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1
+			10
 		}
 	},
 	button = {
@@ -134,37 +134,22 @@ local scenegraph_definition = {
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			pass_type = "texture",
 			style = {
-				vertical_alignment = "bottom",
-				size = {
-					nil,
-					60
+				horizontal_alignemt = "center",
+				scale_to_material = true,
+				vertical_alignemnt = "center",
+				size_addition = {
+					40,
+					40
 				},
 				offset = {
-					0,
-					0,
-					2
+					-20,
+					-20,
+					0
 				},
-				color = {
-					160,
-					0,
-					0,
-					0
-				}
-			}
-		}
-	}, "screen"),
-	bottom_panel = UIWidget.create_definition({
-		{
-			pass_type = "rect",
-			style = {
-				color = {
-					160,
-					0,
-					0,
-					0
-				}
+				color = Color.terminal_grid_background_gradient(255, true)
 			}
 		}
 	}, "screen"),
@@ -175,11 +160,11 @@ local widget_definitions = {
 			offset = {
 				0,
 				0,
-				1
+				2
 			},
 			style = {
 				color = {
-					80,
+					40,
 					0,
 					0,
 					0

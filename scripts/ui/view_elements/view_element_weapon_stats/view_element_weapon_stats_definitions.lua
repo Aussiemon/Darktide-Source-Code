@@ -27,12 +27,13 @@ local widget_definitions = {
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "center",
 				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
 					18,
 					16
-				}
+				},
+				color = Color.terminal_grid_background(255, true)
 			}
 		}
 	}, "grid_background"),

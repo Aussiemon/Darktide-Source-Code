@@ -1,5 +1,6 @@
 local DummySessionReport = {
 	fetch_session_report = function (account_id)
+		account_id = account_id or math.uuid()
 		local session_report = {
 			sessionId = "7aef2764-1c91-5aee-92bc-82285fa9653a",
 			mission = {
@@ -91,11 +92,11 @@ local DummySessionReport = {
 										rewardType = "xp",
 										amount = 1337,
 										details = {
-											fromTotalBonus = 100,
+											fromTotalBonus = 0,
 											fromSideMissionBonus = 250,
 											total = 1337,
 											fromCircumstance = 735,
-											fromSideMission = 50
+											fromSideMission = 0
 										}
 									}
 								}
@@ -103,7 +104,7 @@ local DummySessionReport = {
 							{
 								kind = "levelUp",
 								target = "character",
-								level = 4,
+								level = 9,
 								rewards = {
 									{
 										gearId = "ef2ae1dc-09ca-49e4-9722-1899c15ab326",
@@ -123,31 +124,13 @@ local DummySessionReport = {
 							{
 								kind = "levelUp",
 								target = "character",
-								level = 5,
-								rewards = {
-									{
-										gearId = "ef2ae1df-09ca-49e4-9722-1899c15ab326",
-										masterId = "content/items/characters/player/human/gear_head/astra_upperbody_a_04_helmet",
-										rewardType = "item"
-									}
-								}
-							},
-							{
-								kind = "levelUp",
-								target = "character",
-								level = 8,
-								rewards = {
-									{
-										gearId = "eed3b4df-ac17-4cb4-8858-94b4cf1c450e",
-										masterId = "content/items/2d/insignias/sigil_01",
-										rewardType = "gear"
-									}
-								}
-							},
-							{
-								kind = "levelUp",
-								target = "character",
 								level = 10,
+								rewards = {}
+							},
+							{
+								kind = "levelUp",
+								target = "account",
+								level = 5,
 								rewards = {}
 							},
 							{
@@ -195,6 +178,7 @@ local DummySessionReport = {
 										gearId = "80157266-b9c3-4668-8460-5e679adacb30",
 										source = "weaponDrop",
 										overrides = {
+											itemLevel = 9000,
 											rarity = 3
 										}
 									}
@@ -204,7 +188,7 @@ local DummySessionReport = {
 								kind = "weaponDrop",
 								rewards = {
 									{
-										masterId = "content/items/weapons/player/melee/powermaul_2h_p1_m3",
+										masterId = "content/items/gadgets/defensive_gadget_2",
 										rewardType = "gear",
 										gearId = "80157266-b9c3-4668-8460-5e679adacb30",
 										source = "weaponDrop",
@@ -257,6 +241,8 @@ local DummySessionReport = {
 local xp_tables = {
 	character = {
 		0,
+		100,
+		200,
 		500,
 		1085,
 		1755,

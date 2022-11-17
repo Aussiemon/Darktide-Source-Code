@@ -9,11 +9,12 @@ XAsyncManager.in_progress = function (self)
 	return not table.is_empty(self._async_blocks)
 end
 
-XAsyncManager.wrap = function (self, async_block, release_function)
+XAsyncManager.wrap = function (self, async_block, release_function, debug_name)
 	local p = Promise:new()
 	self._async_blocks[async_block] = {
 		promise = p,
-		release_function = release_function
+		release_function = release_function,
+		debug_name = debug_name
 	}
 
 	return p
@@ -22,8 +23,13 @@ end
 XAsyncManager.release = function (self, async_block)
 	local promise = self._async_blocks[async_block].promise
 	local release_function = self._async_blocks[async_block].release_function
+	local debug_name = self._async_blocks[async_block].debug_name
 
 	if promise and promise:is_pending() then
+		if debug_name then
+			Log.error("XAsyncManager", "Aborted async_block with debug_name %s", debug_name)
+		end
+
 		promise:reject({
 			HRESULT.E_ABORT
 		})
@@ -51,6 +57,10 @@ XAsyncManager.update = function (self, dt)
 		if hr == HRESULT.S_OK then
 			data.promise:resolve(async_block)
 		elseif hr ~= HRESULT.E_PENDING then
+			if data.debug_name then
+				Log.error("XAsyncManager", "Rejecting async_block with debug_name %s, error code 0x%x", data.debug_name, tostring(hr))
+			end
+
 			data.promise:reject({
 				hr
 			})
@@ -61,6 +71,10 @@ end
 XAsyncManager.destroy = function (self)
 	for async_block, data in pairs(self._async_blocks) do
 		if data.promise:is_pending() then
+			if data.debug_name then
+				Log.error("XAsyncManager", "Aborted async_block with debug_name %s", data.debug_name)
+			end
+
 			data.promise:reject({
 				HRESULT.E_ABORT
 			})

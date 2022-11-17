@@ -123,6 +123,22 @@ local mission_templates = {
 			none = 1
 		}
 	},
+	trigger_volumes = {
+		mission_name = "loc_mission_name_placeholder",
+		wwise_state = "zone_1",
+		zone_id = "placeholder",
+		game_mode_name = "coop_complete_objective",
+		mechanism_name = "adventure",
+		is_dev_mission = true,
+		level = "content/levels/debug/trigger_volumes/world",
+		health_station = {
+			charges_to_distribute = 3
+		},
+		hazard_prop_settings = {
+			explosion = 1,
+			none = 1
+		}
+	},
 	player_interactables = {
 		mission_name = "loc_mission_name_placeholder",
 		zone_id = "placeholder",
@@ -310,6 +326,15 @@ local mission_templates = {
 		level = "content/levels/debug/sound/world",
 		pickup_settings = {}
 	},
+	sound_performance = {
+		mechanism_name = "adventure",
+		game_mode_name = "default",
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		is_dev_mission = true,
+		level = "content/levels/debug/sound_performance/world",
+		pickup_settings = {}
+	},
 	station_inside_sound = {
 		mechanism_name = "adventure",
 		game_mode_name = "default",
@@ -317,14 +342,6 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/sound/station_inside_sound/world"
-	},
-	start_trench = {
-		mechanism_name = "adventure",
-		game_mode_name = "default",
-		mission_name = "loc_mission_name_placeholder",
-		zone_id = "transit",
-		is_dev_mission = true,
-		level = "content/levels/transit/start_trench/world"
 	},
 	vo = {
 		mission_name = "loc_mission_name_placeholder",
@@ -399,21 +416,6 @@ local mission_templates = {
 		level = "content/levels/debug/audio_tech_test/audio_tech_test",
 		dialogue_settings = {
 			on_start_dialogue_modifier = "audio_tech_test_modifier"
-		}
-	},
-	tg_test1 = {
-		mission_name = "loc_mission_name_placeholder",
-		is_dev_mission = true,
-		zone_id = "placeholder",
-		game_mode_name = "default",
-		mechanism_name = "adventure",
-		level = "content/levels/training_grounds/missions/mission_tg_test1",
-		pickup_settings = {},
-		terror_event_templates = {
-			"terror_events_training_ground_test"
-		},
-		health_station = {
-			charges_to_distribute = 1
 		}
 	},
 	test_single_level_base = {
@@ -596,6 +598,26 @@ local mission_templates = {
 		},
 		terror_event_templates = {
 			"terror_events_cooling_arena"
+		}
+	},
+	ship_port_arena = {
+		mission_name = "loc_mission_name_arena_dust_ship_port",
+		zone_id = "placeholder",
+		game_mode_name = "default",
+		mechanism_name = "adventure",
+		is_dev_mission = true,
+		level = "content/levels/debug/arenas/ship_port_arena/world",
+		pickup_settings = {},
+		health_station = {
+			charges_to_distribute = 4
+		},
+		hazard_prop_settings = {
+			explosion = 1,
+			fire = 1,
+			none = 0
+		},
+		terror_event_templates = {
+			"terror_events_ship_port_arena"
 		}
 	}
 }

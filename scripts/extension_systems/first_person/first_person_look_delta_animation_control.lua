@@ -48,6 +48,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		is_shooting = shooting_status_component.shooting or t <= shooting_status_component.shooting_end_time + SHOOTING_GRACE_DURATION
 	end
 
+	local lerp = true
 	local settings, yaw_delta, pitch_delta = nil
 
 	if is_shooting and action_settings and not action_settings.ignore_shooting_look_delta_anim_control then
@@ -68,14 +69,16 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 	else
 		local previous_rotation, previous_rotation_pitch_only = nil
 		local weapon_lock_view_component = self._weapon_lock_view_component
+		local weapon_lock_view_component_state = weapon_lock_view_component.state
 
-		if weapon_lock_view_component.is_active then
+		if weapon_lock_view_component_state == "weapon_lock" or weapon_lock_view_component_state == "weapon_lock_no_lerp" then
 			settings = look_delta_template.inspect
 			local yaw = weapon_lock_view_component.yaw
 			local pitch = weapon_lock_view_component.pitch
 			local roll = 0
 			previous_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
 			previous_rotation_pitch_only = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), pitch, roll)
+			lerp = weapon_lock_view_component_state ~= "weapon_lock_no_lerp"
 		elseif self._character_state_component.state_name == "minigame" then
 			settings = look_delta_template.inspect
 			local is_level_unit = true
@@ -111,8 +114,8 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 	end
 
 	local wanted_look_delta_x, wanted_look_delta_y, lerp_constant_x, lerp_constant_y = LookDelta.look_delta_values(settings, yaw_delta, pitch_delta)
-	local look_delta_x = math.lerp(self._look_delta_x, wanted_look_delta_x, lerp_constant_x * 60 * dt)
-	local look_delta_y = math.lerp(self._look_delta_y, wanted_look_delta_y, lerp_constant_y * 60 * dt)
+	local look_delta_x = lerp and math.lerp(self._look_delta_x, wanted_look_delta_x, lerp_constant_x * 60 * dt) or wanted_look_delta_x
+	local look_delta_y = lerp and math.lerp(self._look_delta_y, wanted_look_delta_y, lerp_constant_y * 60 * dt) or wanted_look_delta_y
 	local world_look_delta_y = Vector3.dot(Vector3.normalize(Vector3.flat(Quaternion.forward(rotation))), Quaternion.up(rotation))
 	local clamp_look_delta = not settings.no_look_delta_clamp
 

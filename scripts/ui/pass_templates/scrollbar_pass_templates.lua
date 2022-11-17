@@ -367,5 +367,65 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 })
 
 ScrollbarPassTemplates.metal_scrollbar.default_width = 8
+ScrollbarPassTemplates.terminal_scrollbar = table.clone(scrollbar_base)
+
+table.append(ScrollbarPassTemplates.terminal_scrollbar, {
+	{
+		style_id = "track_background",
+		pass_type = "texture",
+		value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
+		style = {
+			color = Color.black(255, true)
+		},
+		visibility_function = scrollbar_visibility_function
+	},
+	{
+		style_id = "track_frame",
+		pass_type = "texture",
+		value = "content/ui/materials/scrollbars/scrollbar_frame_default",
+		style = {
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = Color.terminal_frame(255, true)
+		},
+		visibility_function = scrollbar_visibility_function
+	},
+	{
+		pass_type = "texture",
+		value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
+		style_id = "thumb",
+		style = {
+			offset = {
+				0,
+				0,
+				2
+			},
+			idle_color = Color.terminal_text_body(255, true),
+			highlight_color = Color.ui_brown_super_light(255, true),
+			size = {
+				nil,
+				100
+			}
+		},
+		visibility_function = scrollbar_visibility_function,
+		change_function = function (content, style)
+			local axis = content.axis or 2
+			local parent_style = style.parent
+			local hotspot_style = parent_style.hotspot
+			local axis_offset = hotspot_style.offset[axis]
+			local axis_length = hotspot_style.size[axis]
+			style.size[axis] = axis_length
+			style.offset[axis] = axis_offset
+			local hover_progress = content.hotspot.anim_hover_progress
+
+			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
+		end
+	}
+}, scrollbar_base)
+
+ScrollbarPassTemplates.terminal_scrollbar.default_width = 8
 
 return ScrollbarPassTemplates

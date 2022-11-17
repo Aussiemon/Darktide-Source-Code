@@ -30,7 +30,7 @@ ActionMeleeExplosive.fixed_update = function (self, dt, t, time_in_action)
 	local will_explode = not not exploding_time
 
 	if will_explode and exploding_time < t then
-		self:_explode()
+		self:_explode(t)
 	end
 
 	local have_exploded = self._have_exploded
@@ -55,7 +55,7 @@ ActionMeleeExplosive.finish = function (self, reason, data, t, time_in_action)
 	self._have_added_buff = nil
 end
 
-ActionMeleeExplosive._explode = function (self)
+ActionMeleeExplosive._explode = function (self, t)
 	local action_settings = self._action_settings
 	local explosion_template = action_settings.explosion_template
 	local explode_position, explode_direction = self:_find_explosion_position_and_direction()
@@ -76,6 +76,7 @@ ActionMeleeExplosive._explode = function (self)
 		local inventory_slot_component = self._inventory_slot_component
 		local new_ammunition = math.max(inventory_slot_component.current_ammunition_clip - ammunition_usage, 0)
 		inventory_slot_component.current_ammunition_clip = new_ammunition
+		inventory_slot_component.last_ammunition_usage = t
 	end
 
 	self._exploding_time = nil

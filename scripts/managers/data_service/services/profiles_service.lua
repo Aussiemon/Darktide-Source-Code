@@ -27,7 +27,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 	local selected_character_id_promise = backend_interface.account:get_selected_character()
 
 	return Promise.all(characters_promise, characters_progression_promise, gear_list_promise, selected_character_id_promise):next(function (results)
-		local characters, characters_progression, gear_list, selected_character_id = unpack(results)
+		local characters, characters_progression, gear_list, selected_character_id = unpack(results, 1, 4)
 
 		if not characters or #characters == 0 then
 			return Promise.resolved({
@@ -65,10 +65,18 @@ local function _fetch_backend_profile(backend_interface, character_id)
 	local gear_list_promise = backend_interface.gear:fetch()
 
 	return Promise.all(character_promise, character_progression_promise, gear_list_promise):next(function (results)
-		local character, character_progression, gear_list = unpack(results)
+		local character, character_progression, gear_list = unpack(results, 1, 3)
 		local profile = ProfileUtils.character_to_profile(character, gear_list, character_progression)
 
 		return Promise.resolved(profile)
+	end)
+end
+
+local function _new_character_to_profile(backend_interface, character)
+	return backend_interface.gear:fetch():next(function (gear_list)
+		local profile = ProfileUtils.character_to_profile(character, gear_list, nil)
+
+		return profile
 	end)
 end
 
@@ -81,6 +89,14 @@ ProfilesService.fetch_all_profiles = function (self)
 		Managers.error:report_error(BackendError:new(error))
 
 		return _handle_fetch_all_profiles_error()
+	end)
+end
+
+ProfilesService.new_character_to_profile = function (self, character)
+	return _new_character_to_profile(self._backend_interface, character):catch(function (error)
+		Managers.error:report_error(BackendError:new(error))
+
+		return Promise.rejected({})
 	end)
 end
 

@@ -32,7 +32,6 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 	state_machine:add_transition("RemoteCreateSessionState", "in_session", RemoteIngameState)
 	state_machine:add_transition("RemoteCreateSessionState", "disconnected", RemoteLoadFailState)
 	state_machine:add_transition("RemoteIngameState", "disconnected", RemoteLoadFailState)
-	state_machine:add_transition("RemoteEndLevelState", "disconnected", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("RemoteLoadFailState", "disconnected", StateMachine.IGNORE_EVENT)
 	state_machine:set_initial_state(RemoteDetermineSpawnGroupState)
 

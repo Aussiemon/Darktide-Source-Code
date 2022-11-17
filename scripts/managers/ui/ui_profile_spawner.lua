@@ -62,7 +62,7 @@ UIProfileSpawner._node = function (self, node_name)
 	end
 end
 
-UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, state_machine, animation_event, force_highest_mip)
+UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
 	if self._loading_profile_data then
 		self._loading_profile_data.loader:destroy()
 
@@ -82,14 +82,17 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, st
 	end
 
 	self._loading_profile_data = {
+		disable_hair_state_machine = false,
 		profile = profile,
 		loader = character_profile_loader,
 		reference_name = reference_name,
 		position = position and Vector3.to_array(position),
 		rotation = rotation and QuaternionBox(rotation),
+		scale = scale and Vector3.to_array(scale),
 		loading_items = loading_items,
 		state_machine = state_machine,
 		animation_event = animation_event,
+		face_animation_event = face_animation_event,
 		force_highest_mip = force_highest_mip
 	}
 end
@@ -105,6 +108,39 @@ UIProfileSpawner._apply_pending_animation_data = function (self)
 		local animation_event = self._pending_animation_event
 
 		self:assign_animation_event(animation_event)
+	end
+
+	if self._pending_face_animation_event then
+		local face_animation_event = self._pending_face_animation_event
+
+		self:assign_face_animation_event(face_animation_event)
+	end
+
+	if self._pending_animation_variable_data then
+		local index = self._pending_animation_variable_data.index
+		local value = self._pending_animation_variable_data.value
+
+		self:assign_animation_variable(index, value)
+	end
+end
+
+UIProfileSpawner.assign_animation_variable = function (self, index, value)
+	local character_spawn_data = self._character_spawn_data
+
+	if character_spawn_data then
+		local unit_3p = character_spawn_data.unit_3p
+		local variable_id = Unit.animation_find_variable(unit_3p, index)
+
+		if variable_id then
+			Unit.animation_set_variable(unit_3p, variable_id, value)
+		end
+
+		self._pending_animation_variable_data = nil
+	else
+		self._pending_animation_variable_data = {
+			index = index,
+			value = value
+		}
 	end
 end
 
@@ -124,7 +160,30 @@ UIProfileSpawner.assign_animation_event = function (self, animation_event)
 	end
 end
 
-UIProfileSpawner.assign_state_machine = function (self, state_machine, optional_start_event)
+UIProfileSpawner.assign_face_animation_event = function (self, face_animation_event)
+	local character_spawn_data = self._character_spawn_data
+
+	if character_spawn_data then
+		if face_animation_event then
+			local slots = self._character_spawn_data.slots
+			local face_unit = slots.slot_body_face.unit_3p
+
+			if Unit.has_animation_event(face_unit, "no_anim") then
+				Unit.animation_event(face_unit, "no_anim")
+			end
+
+			if Unit.has_animation_event(face_unit, face_animation_event) then
+				Unit.animation_event(face_unit, face_animation_event)
+			end
+
+			self._pending_face_animation_event = nil
+		end
+	else
+		self._pending_face_animation_event = face_animation_event
+	end
+end
+
+UIProfileSpawner.assign_state_machine = function (self, state_machine, optional_animation_event, optional_face_animation_event)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
@@ -139,8 +198,12 @@ UIProfileSpawner.assign_state_machine = function (self, state_machine, optional_
 		self._pending_state_machine = state_machine
 	end
 
-	if optional_start_event then
-		self:assign_animation_event(optional_start_event)
+	if optional_animation_event then
+		self:assign_animation_event(optional_animation_event)
+	end
+
+	if optional_face_animation_event then
+		self:assign_face_animation_event(optional_face_animation_event)
 	end
 end
 
@@ -252,12 +315,14 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 
 			local position = loading_profile_data.position and Vector3.from_array(loading_profile_data.position)
 			local rotation = loading_profile_data.rotation and QuaternionBox.unbox(loading_profile_data.rotation)
+			local scale = loading_profile_data.scale and Vector3.from_array(loading_profile_data.scale)
 			local state_machine = loading_profile_data.state_machine
 			local animation_event = loading_profile_data.animation_event
+			local face_animation_event = loading_profile_data.face_animation_event
 			local force_highest_mip = loading_profile_data.force_highest_mip
 			local profile = loading_profile_data.profile
 
-			self:_spawn_character_profile(profile, loader, position, rotation, state_machine, animation_event, force_highest_mip)
+			self:_spawn_character_profile(profile, loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
 
 			self._loading_profile_data = nil
 		end
@@ -305,10 +370,12 @@ UIProfileSpawner.set_position = function (self, position)
 end
 
 UIProfileSpawner._handle_input = function (self, input_service, dt)
-	local handled = not self._is_controller_rotating and self:_mouse_rotation_input(input_service, dt)
+	if not self._rotation_input_disabled then
+		local handled = not self._is_controller_rotating and self:_mouse_rotation_input(input_service, dt)
 
-	if not handled then
-		self:_controller_rotation_input(input_service, dt)
+		if not handled then
+			self:_controller_rotation_input(input_service, dt)
+		end
 	end
 end
 
@@ -390,6 +457,10 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 		unit_spawner:remove_pending_units()
 	end
 
+	equipped_items[slot_id] = item
+	loading_items[slot_id] = nil
+	local parent_item_unit = nil
+
 	if slot and item then
 		local gender = profile.gender
 		local deform_overrides = {}
@@ -412,6 +483,7 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 
 			if parent_slot_unit_3p then
 				parent_unit_3p = parent_slot_unit_3p
+				parent_item_unit = parent_unit_3p
 				local apply_to_parent = item.material_override_apply_to_parent
 
 				if apply_to_parent then
@@ -431,17 +503,22 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 		if slot_dependency_items then
 			equipment_component:equip_slot_dependencies(slots, slot_equip_order, slot_dependency_items, deform_overrides, breed_name, unit_3p, nil)
 		end
-	end
 
-	equipped_items[slot_id] = item
-	loading_items[slot_id] = nil
+		if parent_item_unit then
+			Unit.set_unit_visibility(parent_item_unit, false, true)
+		end
+
+		local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
+
+		Unit.force_stream_meshes(unit_3p, complete_callback, true)
+	end
 end
 
 UIProfileSpawner.ignore_slot = function (self, slot_id)
 	self._ignored_slots[slot_id] = true
 end
 
-UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, state_machine, animation_event, force_highest_mip)
+UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
 	local loadout = profile.loadout
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
@@ -451,7 +528,18 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local base_unit = optional_base_unit or breed_settings.base_unit
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
-	local unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, position, rotation)
+	local unit_3p = nil
+
+	if scale then
+		local pose = Matrix4x4.from_quaternion_position(rotation, position)
+
+		Matrix4x4.set_scale(pose, scale)
+
+		unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, pose)
+	else
+		unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, position, rotation)
+	end
+
 	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, true)
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local gear_slots = {}
@@ -465,7 +553,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	local slot_options = {
 		slot_primary = {
-			skip_link_children = true
+			skip_link_children = false
 		},
 		slot_secondary = {
 			skip_link_children = true
@@ -530,8 +618,20 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		Unit.animation_event(unit_3p, animation_event)
 	end
 
+	if face_animation_event then
+		local face_unit = slots.slot_body_face.unit_3p
+
+		if Unit.has_animation_event(face_unit, "no_anim") then
+			Unit.animation_event(face_unit, "no_anim")
+		end
+
+		if Unit.has_animation_event(face_unit, face_animation_event) then
+			Unit.animation_event(face_unit, face_animation_event)
+		end
+	end
+
 	local spawn_data = {
-		streaming_complete = true,
+		streaming_complete = false,
 		slots = slots,
 		archetype_name = archetype_name,
 		breed_name = breed_name,
@@ -544,12 +644,25 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		unit_3p = unit_3p
 	}
 	self._character_spawn_data = spawn_data
-	local wield_slot_id = self._request_wield_slot_id or "slot_unarmed"
+	local wield_slot_id = self._request_wield_slot_id
+
+	if not wield_slot_id or self._ignored_slots[wield_slot_id] then
+		wield_slot_id = "slot_unarmed"
+	end
 
 	self:wield_slot(wield_slot_id)
 
-	if force_highest_mip then
-		-- Nothing
+	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
+
+	Unit.force_stream_meshes(unit_3p, complete_callback, true)
+	self:cb_on_unit_3p_streaming_complete(unit_3p)
+end
+
+UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, unit_3p)
+	local character_spawn_data = self._character_spawn_data
+
+	if character_spawn_data and character_spawn_data.streaming_complete then
+		self:_update_items_visibility()
 	end
 end
 
@@ -558,7 +671,15 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p)
 
 	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then
 		character_spawn_data.streaming_complete = true
+		local slots = character_spawn_data.slots
+		local hair_unit = slots.slot_body_hair.unit_3p
+
+		if hair_unit then
+			Unit.disable_animation_state_machine(hair_unit)
+		end
 	end
+
+	self:_update_items_visibility()
 end
 
 UIProfileSpawner.wield_slot = function (self, slot_id)
@@ -635,6 +756,10 @@ end
 
 UIProfileSpawner._set_character_rotation = function (self, angle)
 	self._rotation_angle = angle
+end
+
+UIProfileSpawner.disable_rotation_input = function (self)
+	self._rotation_input_disabled = true
 end
 
 local mouse_pos_temp = {}

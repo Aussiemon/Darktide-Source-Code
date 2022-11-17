@@ -1108,6 +1108,274 @@ templates.chaos_newly_infected[zone_ids.tank_foundry] = {
 	foundry_9,
 	foundry_10
 }
+local dust_1 = table.clone(default_5)
+dust_1.variation = variations.default_5
+dust_1.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_05"
+	}
+}
+dust_1.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05"
+	}
+}
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_2 = table.clone(default_7)
+dust_2.variation = variations.default_7
+dust_2.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_2.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05"
+	}
+}
+dust_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_3 = table.clone(default_9)
+dust_3.variation = variations.default_9
+dust_3.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_3.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_3.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_4 = table.clone(default_11)
+dust_4.variation = variations.default_11
+dust_4.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_4.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_4.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_5 = table.clone(default_15)
+dust_5.variation = variations.default_15
+dust_5.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_5.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_5.slots.slot_upperbody_decal = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_decal",
+		"content/items/characters/minions/generic_items/empty_minion_item"
+	}
+}
+dust_5.slots.zone_decal.items = {
+	"content/items/characters/minions/decal_material_overrides/decal_dust_01",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_02",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_03",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_05"
+}
+dust_5.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_6 = table.clone(default_24)
+dust_6.variation = variations.default_24
+dust_6.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_var_dust_05"
+	}
+}
+dust_6.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05"
+	}
+}
+dust_6.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_7 = table.clone(default_26)
+dust_7.variation = variations.default_26
+dust_7.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_7.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05"
+	}
+}
+dust_7.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_8 = table.clone(default_28)
+dust_8.variation = variations.default_28
+dust_8.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_8.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_8.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_9 = table.clone(default_30)
+dust_9.variation = variations.default_30
+dust_9.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_9.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_9.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+local dust_10 = table.clone(default_34)
+dust_10.variation = variations.default_34
+dust_10.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_dust_05"
+	}
+}
+dust_10.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_var_dust_04",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05"
+	}
+}
+dust_10.slots.slot_upperbody_decal = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_f_decal",
+		"content/items/characters/minions/generic_items/empty_minion_item"
+	}
+}
+dust_10.slots.zone_decal.items = {
+	"content/items/characters/minions/decal_material_overrides/decal_dust_01",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_02",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_03",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
+	"content/items/characters/minions/decal_material_overrides/decal_dust_05"
+}
+dust_10.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_01"
+}
+templates.chaos_newly_infected[zone_ids.dust] = {
+	dust_1,
+	dust_2,
+	dust_3,
+	dust_4,
+	dust_5,
+	dust_6,
+	dust_7,
+	dust_8,
+	dust_9,
+	dust_10
+}
 local watertown_1 = table.clone(default_1)
 watertown_1.variation = variations.default_1
 watertown_1.slots.slot_lowerbody = {
@@ -2032,6 +2300,245 @@ templates.chaos_newly_infected[zone_ids.watertown] = {
 	watertown_26,
 	watertown_27,
 	watertown_28
+}
+local throneside_1 = table.clone(default_1)
+throneside_1.variation = variations.default_1
+local throneside_2 = table.clone(default_2)
+throneside_2.variation = variations.default_2
+local throneside_3 = table.clone(default_3)
+throneside_3.variation = variations.default_3
+local throneside_4 = table.clone(default_4)
+throneside_4.variation = variations.default_4
+local throneside_5 = table.clone(default_5)
+throneside_5.variation = variations.default_5
+throneside_5.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_04"
+	}
+}
+throneside_5.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_04"
+	}
+}
+local throneside_6 = table.clone(default_5)
+throneside_6.variation = variations.default_5
+throneside_5.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_04"
+	}
+}
+throneside_5.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_04"
+	}
+}
+local throneside_7 = table.clone(default_8)
+throneside_7.variation = variations.default_8
+local throneside_8 = table.clone(default_9)
+throneside_8.variation = variations.default_9
+local throneside_9 = table.clone(default_10)
+throneside_9.variation = variations.default_10
+local throneside_10 = table.clone(default_11)
+throneside_10.variation = variations.default_11
+local throneside_11 = table.clone(default_14)
+throneside_11.variation = variations.default_14
+local throneside_12 = table.clone(default_15)
+throneside_12.variation = variations.default_15
+local throneside_13 = table.clone(default_16)
+throneside_13.variation = variations.default_16
+local throneside_14 = table.clone(default_17)
+throneside_14.variation = variations.default_17
+throneside_14.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_02"
+	}
+}
+throneside_14.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_03"
+	}
+}
+throneside_14.slots.slot_hair = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_wig_a"
+	}
+}
+local throneside_15 = table.clone(default_17)
+throneside_15.variation = variations.default_17
+throneside_14.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_02"
+	}
+}
+throneside_15.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_03"
+	}
+}
+throneside_15.slots.slot_hair = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_wig_a"
+	}
+}
+local throneside_16 = table.clone(default_21)
+local throneside_17 = table.clone(default_22)
+throneside_17.variation = variations.default_22
+local throneside_18 = table.clone(default_23)
+throneside_18.variation = variations.default_23
+local throneside_19 = table.clone(default_25)
+throneside_19.variation = variations.default_25
+local throneside_20 = table.clone(default_26)
+throneside_20.variation = variations.default_26
+throneside_20.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_04"
+	}
+}
+throneside_20.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_04"
+	}
+}
+local throneside_21 = table.clone(default_26)
+throneside_21.variation = variations.default_26
+throneside_21.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_a_ts_var_04"
+	}
+}
+throneside_21.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_03",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_ts_var_04"
+	}
+}
+local throneside_22 = table.clone(default_28)
+throneside_22.variation = variations.default_28
+local throneside_23 = table.clone(default_29)
+throneside_23.variation = variations.default_29
+local throneside_24 = table.clone(default_30)
+throneside_24.variation = variations.default_30
+local throneside_25 = table.clone(default_33)
+throneside_25.variation = variations.default_33
+local throneside_26 = table.clone(default_36)
+throneside_26.variation = variations.default_36
+throneside_26.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_02"
+	}
+}
+throneside_26.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_03"
+	}
+}
+throneside_26.slots.slot_hair = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_wig_a"
+	}
+}
+local throneside_27 = table.clone(default_36)
+throneside_27.variation = variations.default_36
+throneside_27.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_02"
+	}
+}
+throneside_27.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_03"
+	}
+}
+throneside_27.slots.slot_hair = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_wig_a"
+	}
+}
+local throneside_28 = table.clone(default_36)
+throneside_28.variation = variations.default_36
+throneside_28.slots.slot_lowerbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_ts_var_02"
+	}
+}
+throneside_28.slots.slot_upperbody = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_01",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_02",
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_fullbody_a_ts_var_03"
+	}
+}
+throneside_28.slots.slot_hair = {
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_wig_a"
+	}
+}
+templates.chaos_newly_infected[zone_ids.throneside] = {
+	throneside_1,
+	throneside_2,
+	throneside_3,
+	throneside_4,
+	throneside_5,
+	throneside_6,
+	throneside_7,
+	throneside_8,
+	throneside_9,
+	throneside_10,
+	throneside_11,
+	throneside_12,
+	throneside_13,
+	throneside_14,
+	throneside_15,
+	throneside_16,
+	throneside_17,
+	throneside_18,
+	throneside_19,
+	throneside_20,
+	throneside_21,
+	throneside_22,
+	throneside_23,
+	throneside_24,
+	throneside_25,
+	throneside_26,
+	throneside_27,
+	throneside_28
 }
 local training_grounds_1 = table.clone(default_1)
 training_grounds_1.variation = variations.default_1

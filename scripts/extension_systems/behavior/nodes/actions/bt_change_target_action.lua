@@ -119,7 +119,12 @@ BtChangeTargetAction._start_change_target_anim = function (self, unit, breed, t,
 	end
 
 	local behavior_component = scratchpad.behavior_component
-	behavior_component.move_state = "moving"
+
+	if not action_data.dont_set_moving_move_state then
+		behavior_component.move_state = "moving"
+	else
+		behavior_component.move_state = "idle"
+	end
 end
 
 return BtChangeTargetAction

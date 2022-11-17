@@ -47,7 +47,6 @@ local weapon_action_data = {
 		place_pickup = _require_weapon_action("action_place_pickup"),
 		place_force_field = _require_weapon_action("action_place_force_field"),
 		push = _require_weapon_action("action_push"),
-		quick_unwield = _require_weapon_action("action_quick_unwield"),
 		ranged_load_special = _require_weapon_action("action_ranged_load_special"),
 		ranged_wield = _require_weapon_action("action_ranged_wield"),
 		recall = _require_weapon_action("action_recall"),
@@ -190,19 +189,17 @@ weapon_action_data.action_kind_condition_funcs = {
 	unwield = function (action_settings, condition_func_params, used_input)
 		local visual_loadout_extension = condition_func_params.visual_loadout_extension
 		local inventory_read_component = condition_func_params.inventory_read_component
-		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component)
+		local weapon_extention = condition_func_params.weapon_extention
+		local ability_extension = condition_func_params.ability_extension
+		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component, visual_loadout_extension, weapon_extention, ability_extension)
 
 		if not visual_loadout_extension:can_wield(slot_to_wield) then
 			return false
 		end
 
-		local weapon_extention = condition_func_params.weapon_extention
-
 		if not weapon_extention:can_wield(slot_to_wield) then
 			return false
 		end
-
-		local ability_extension = condition_func_params.ability_extension
 
 		if not ability_extension:can_wield(slot_to_wield) then
 			return false
@@ -329,16 +326,24 @@ weapon_action_data.action_kind_condition_funcs = {
 		return not is_dodging
 	end,
 	overload_target_finder = function (action_settings, condition_func_params, used_input)
-		local ability_extension = condition_func_params.ability_extension
+		local can_use = true
 		local ability_type = action_settings.ability_type
-		local can_use = ability_extension:can_use_ability(ability_type)
+
+		if ability_type then
+			local ability_extension = condition_func_params.ability_extension
+			can_use = ability_extension:can_use_ability(ability_type)
+		end
 
 		return can_use
 	end,
 	chain_lightning = function (action_settings, condition_func_params, used_input)
-		local ability_extension = condition_func_params.ability_extension
+		local can_use = true
 		local ability_type = action_settings.ability_type
-		local can_use = ability_extension:can_use_ability(ability_type)
+
+		if ability_type then
+			local ability_extension = condition_func_params.ability_extension
+			can_use = ability_extension:can_use_ability(ability_type)
+		end
 
 		return can_use
 	end,
@@ -361,6 +366,27 @@ weapon_action_data.action_kind_total_time_funcs = {
 		return total_time
 	end
 }
+local DEFAULT_NO_AMMO_DELAY_TIME = 1
+
+local function _delay_from_last_action(condition_func_params, action_params, remaining_time, t)
+	local weapon_action_component = condition_func_params.weapon_action_component
+	local weapon = action_params.weapon
+	local weapon_template = weapon and weapon.weapon_template
+	local no_ammo_delay = weapon_template and weapon_template.no_ammo_delay or DEFAULT_NO_AMMO_DELAY_TIME
+	local end_t = weapon_action_component.end_t
+
+	return t >= end_t + no_ammo_delay
+end
+
+local function _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
+	local weapon = action_params.weapon
+	local weapon_template = weapon and weapon.weapon_template
+	local inventory_slot_component = weapon.inventory_slot_component
+	local no_ammo_delay = weapon_template and weapon_template.no_ammo_delay or DEFAULT_NO_AMMO_DELAY_TIME
+	local end_t = inventory_slot_component.last_ammunition_usage + no_ammo_delay
+
+	return t >= end_t
+end
 
 local function _no_ammo(condition_func_params, action_params, remaining_time)
 	local player_unit = action_params.player_unit
@@ -411,6 +437,13 @@ weapon_action_data.conditional_state_functions = {
 
 		return no_ammo and no_sprinting
 	end,
+	no_ammo_with_delay = function (condition_func_params, action_params, remaining_time, t)
+		local delay_from_from_last_ammunition_usage = _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
+		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
+		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
+
+		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting
+	end,
 	no_ammo_and_started_reload = function (condition_func_params, action_params, remaining_time)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
@@ -425,6 +458,14 @@ weapon_action_data.conditional_state_functions = {
 
 		return no_ammo and no_sprinting and no_alternate_fire
 	end,
+	no_ammo_no_alternate_fire_with_delay = function (condition_func_params, action_params, remaining_time, t)
+		local delay_from_from_last_ammunition_usage = _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
+		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
+		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
+		local no_alternate_fire = not _in_alternate_fire(condition_func_params, action_params, remaining_time)
+
+		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting and no_alternate_fire
+	end,
 	no_ammo_and_started_reload_no_alternate_fire = function (condition_func_params, action_params, remaining_time)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
@@ -438,6 +479,13 @@ weapon_action_data.conditional_state_functions = {
 		local in_alternate_fire = _in_alternate_fire(condition_func_params, action_params, remaining_time)
 
 		return no_ammo and in_alternate_fire
+	end,
+	no_ammo_alternate_fire_with_delay = function (condition_func_params, action_params, remaining_time, t)
+		local delay_from_from_last_ammunition_usage = _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
+		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
+		local in_alternate_fire = _in_alternate_fire(condition_func_params, action_params, remaining_time)
+
+		return delay_from_from_last_ammunition_usage and no_ammo and in_alternate_fire
 	end,
 	no_ammo_and_started_reload_alternate_fire = function (condition_func_params, action_params, remaining_time)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
@@ -472,7 +520,8 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 		has_blocked = true
 	},
 	chain_lightning = {
-		stop_time_reached = true
+		stop_time_reached = true,
+		charge_depleated = true
 	},
 	charge = {
 		fully_charged = true
@@ -482,10 +531,12 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	},
 	flamer_gas = {
 		reserve_empty = true,
+		charge_depleated = true,
 		clip_empty = true
 	},
 	overload_charge = {
-		fully_charged = true
+		fully_charged = true,
+		overheating = true
 	},
 	overload_charge_position_finder = {
 		fully_charged = true

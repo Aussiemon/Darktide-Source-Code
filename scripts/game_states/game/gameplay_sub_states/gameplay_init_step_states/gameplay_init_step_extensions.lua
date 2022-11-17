@@ -74,6 +74,9 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 		cinematic_scene_system = {
 			mission = mission
 		},
+		cutscene_character_system = {
+			level_seed = level_seed
+		},
 		darkness_system = {
 			mission = mission
 		},

@@ -69,19 +69,10 @@ for name, _ in pairs(PlayerCharacterStates) do
 	CHARACTER_STATES[#CHARACTER_STATES + 1] = name
 end
 
-Managers.backend.interfaces.master_data:refresh_network_lookup()
-
 local PLAYER_ITEMS = {
-	"not_equipped"
+	network_type = "player_item_name",
+	use_network_lookup = "player_item_names"
 }
-
-for k, item_name, _ in pairs(NetworkLookup.player_item_names) do
-	if type(k) == "number" then
-		PLAYER_ITEMS[k + 1] = item_name
-	end
-end
-
-PLAYER_ITEMS.network_type = "player_item_name"
 local WEAPON_TEMPLATES = {
 	"none"
 }
@@ -380,6 +371,7 @@ local PlayerComponentConfig = {
 	},
 	movement_state = {
 		is_crouching_transition_start_t = "fixed_frame_offset_small",
+		can_crouch = "bool",
 		is_crouching = "bool",
 		can_jump = "bool",
 		is_dodging = "bool",
@@ -426,6 +418,9 @@ local PlayerComponentConfig = {
 			"jog",
 			"sprint"
 		}
+	},
+	walking_character_state = {
+		previous_state_allowed_slide = "bool"
 	},
 	sprint_character_state = {
 		cooldown = "fixed_frame_offset",
@@ -481,7 +476,7 @@ local PlayerComponentConfig = {
 		parent_node = {
 			"none",
 			"j_leftweaponattach",
-			"j_tongue_mouth",
+			"j_tongue_attach",
 			"j_spine",
 			"root_point"
 		},
@@ -644,7 +639,12 @@ local PlayerComponentConfig = {
 	weapon_lock_view = {
 		yaw = "weapon_view_lock",
 		pitch = "weapon_view_lock",
-		is_active = "bool"
+		state = {
+			"in_active",
+			"weapon_lock",
+			"weapon_lock_no_lerp",
+			"force_look"
+		}
 	},
 	weapon_action = {
 		sprint_ready_time = "fixed_frame_offset",

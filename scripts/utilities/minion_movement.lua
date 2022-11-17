@@ -70,6 +70,8 @@ MinionMovement.apply_animation_wanted_movement_speed = function (unit, navigatio
 	local wanted_movement_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt)
 
 	navigation_extension:set_max_speed(wanted_movement_speed)
+
+	return wanted_movement_speed
 end
 
 MinionMovement.get_animation_wanted_movement_speed = function (unit, dt, optional_max_speed)
@@ -303,6 +305,10 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 	local done = false
 
 	if stagger_component.controlled_stagger and not scratchpad.stagger_duration then
+		if scratchpad.is_anim_driven then
+			MinionMovement.set_anim_driven(scratchpad, false)
+		end
+
 		local unit_forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 		local stagger_direction = stagger_component.direction:unbox()
 		local is_left_stagger = Vector3.cross(unit_forward, stagger_direction).z > 0
@@ -507,6 +513,10 @@ local GROUND_NORMAL_ABOVE = 1
 local GROUND_NORMAL_BELOW = 3
 
 MinionMovement.update_ground_normal_rotation = function (unit, scratchpad, optional_direction)
+	if scratchpad.is_anim_driven then
+		return
+	end
+
 	local nav_world = scratchpad.nav_world
 	local self_position = POSITION_LOOKUP[unit]
 	local self_rotation = Unit.local_rotation(unit, 1)
@@ -537,6 +547,35 @@ MinionMovement.update_ground_normal_rotation = function (unit, scratchpad, optio
 
 			locomotion_extension:set_wanted_rotation(wanted_rotation)
 		end
+	end
+end
+
+MinionMovement.rotate_towards_target_unit = function (unit, scratchpad)
+	local perception_component = scratchpad.perception_component
+	local target_unit = perception_component.target_unit
+
+	if not ALIVE[target_unit] then
+		return
+	end
+
+	local flat_rotation = nil
+
+	if perception_component.has_line_of_sight then
+		flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
+	else
+		local last_los_position = scratchpad.perception_extension:last_los_position(target_unit)
+
+		if last_los_position then
+			local position = POSITION_LOOKUP[unit]
+			local to_last_los_position = Vector3.normalize(Vector3.flat(last_los_position - position))
+			flat_rotation = Quaternion.look(to_last_los_position)
+		end
+	end
+
+	if flat_rotation then
+		local locomotion_extension = scratchpad.locomotion_extension
+
+		locomotion_extension:set_wanted_rotation(flat_rotation)
 	end
 end
 

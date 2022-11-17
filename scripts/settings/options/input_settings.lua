@@ -63,7 +63,12 @@ local function construct_interface_settings_boolean(template)
 	local entry = {
 		default_value = template.default_value,
 		display_name = template.display_name,
-		on_value_changed = template.on_value_changed
+		on_value_changed = template.on_value_changed,
+		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules,
+		id = template.id
 	}
 	local id = template.id
 	local save_location = template.save_location
@@ -129,7 +134,12 @@ local function construct_interface_settings_value_slider(template)
 		step_size_value = step_size_value,
 		value_get_function = value_get_function,
 		on_value_changed_function = on_value_changed_function,
-		apply_on_drag = template.apply_on_drag
+		apply_on_drag = template.apply_on_drag,
+		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
+		id = template.id,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -167,7 +177,12 @@ local function construct_interface_settings_dropdown(template)
 		display_name = template.display_name,
 		get_function = value_get_function,
 		options = options,
-		on_activated = on_activated
+		on_activated = on_activated,
+		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
+		id = template.id,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 
 	return params
@@ -204,9 +219,52 @@ local settings_definitions = {
 		widget_type = "boolean"
 	},
 	{
+		group_name = "mouse_settings",
+		display_name = "loc_settings_menu_group_mouse_settings",
+		widget_type = "group_header",
+		validation_function = function ()
+			return Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		step_size_value = 0.1,
+		display_name = "loc_input_setting_mouse_sensitivity",
+		num_decimals = 1,
+		max_value = 2,
+		min_value = 0.1,
+		widget_type = "value_slider",
+		id = "mouse_look_scale",
+		save_location = "input_settings",
+		validation_function = function ()
+			return Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_input_setting_invert_mouse",
+		id = "mouse_invert_look_y",
+		widget_type = "boolean",
+		validation_function = function ()
+			return Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		display_name = "loc_input_com_wheel_delay",
+		num_decimals = 1,
+		id = "com_wheel_delay",
+		max_value = 1,
+		min_value = 0,
+		widget_type = "value_slider"
+	},
+	{
 		group_name = "controller_settings",
 		display_name = "loc_settings_menu_group_controller_settings",
-		widget_type = "group_header"
+		widget_type = "group_header",
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
+		end
 	},
 	{
 		step_size_value = 0.1,
@@ -219,6 +277,9 @@ local settings_definitions = {
 		save_location = "input_settings",
 		on_value_changed = function (value)
 			ParameterResolver.set_dev_parameter("controller_look_scale", value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
@@ -233,6 +294,9 @@ local settings_definitions = {
 		save_location = "input_settings",
 		on_value_changed = function (value)
 			ParameterResolver.set_dev_parameter("controller_look_dead_zone", value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
@@ -242,6 +306,9 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			ParameterResolver.set_dev_parameter("controller_invert_look_y", value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
@@ -251,6 +318,9 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			ParameterResolver.set_dev_parameter("controller_enable_acceleration", value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
@@ -261,6 +331,9 @@ local settings_definitions = {
 		options = Managers.input:get_input_layout_names(),
 		on_value_changed = function (value)
 			Managers.input:change_input_layout(value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
 		end
 	}
 }

@@ -75,15 +75,15 @@ local scenegraph_definition = {
 	},
 	wallet_pivot = {
 		vertical_alignment = "top",
-		parent = "corner_top_right",
+		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
 			0,
 			0
 		},
 		position = {
-			-60,
-			132,
+			-20,
+			50,
 			1
 		}
 	},
@@ -200,19 +200,6 @@ local widget_definitions = {
 			}
 		}
 	}, "screen"),
-	corner_top_left = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/character_01_upper"
-		}
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/store_credits_upper_right",
-			pass_type = "texture",
-			style = {}
-		}
-	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",

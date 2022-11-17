@@ -640,6 +640,100 @@ local gameplay_vo_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_a__enemy_kill_berserker_01",
+			"loc_ogryn_a__enemy_kill_berserker_02",
+			"loc_ogryn_a__enemy_kill_berserker_03",
+			"loc_ogryn_a__enemy_kill_berserker_04",
+			"loc_ogryn_a__enemy_kill_berserker_05",
+			"loc_ogryn_a__enemy_kill_berserker_06",
+			"loc_ogryn_a__enemy_kill_berserker_07",
+			"loc_ogryn_a__enemy_kill_berserker_08",
+			"loc_ogryn_a__enemy_kill_berserker_09",
+			"loc_ogryn_a__enemy_kill_berserker_10"
+		},
+		sound_events_duration = {
+			1.000688,
+			1.101792,
+			1.169188,
+			1.171313,
+			2.412146,
+			1.075875,
+			2.001125,
+			1.556646,
+			1.849229,
+			0.913417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 14,
+		sound_events = {
+			"loc_ogryn_a__enemy_kill_monster_01",
+			"loc_ogryn_a__enemy_kill_monster_02",
+			"loc_ogryn_a__enemy_kill_monster_03",
+			"loc_ogryn_a__enemy_kill_monster_04",
+			"loc_ogryn_a__enemy_kill_monster_05",
+			"loc_ogryn_a__enemy_kill_monster_06",
+			"loc_ogryn_a__enemy_kill_monster_07",
+			"loc_ogryn_a__enemy_kill_monster_08",
+			"loc_ogryn_a__enemy_kill_monster_09",
+			"loc_ogryn_a__enemy_kill_monster_10",
+			"loc_ogryn_a__kill_enemy_specials_generic_01",
+			"loc_ogryn_a__kill_enemy_specials_generic_02",
+			"loc_ogryn_a__kill_enemy_specials_generic_04",
+			"loc_ogryn_a__kill_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			1.359938,
+			3.702958,
+			1.522542,
+			2.500854,
+			2.641813,
+			1.749813,
+			1.561542,
+			1.433479,
+			2.319417,
+			2.691083,
+			1.241938,
+			1.423167,
+			1.645583,
+			1.425917
+		},
+		sound_event_weights = {
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857,
+			0.07142857
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_tox_flamer = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -1042,18 +1136,6 @@ local gameplay_vo_ogryn_a = {
 			1.681979,
 			1.873604
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	friendly_fire_from_psyker_to_ogryn = {
@@ -1082,18 +1164,6 @@ local gameplay_vo_ogryn_a = {
 			3.412271,
 			2.9045,
 			3.052667
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1124,18 +1194,6 @@ local gameplay_vo_ogryn_a = {
 			1.420167,
 			1.586125
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	friendly_fire_from_zealot_to_ogryn = {
@@ -1164,18 +1222,6 @@ local gameplay_vo_ogryn_a = {
 			1.705667,
 			2.642229,
 			2.972354
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1799,17 +1845,43 @@ local gameplay_vo_ogryn_a = {
 			2.293458,
 			1.523938
 		},
+		randomize_indexes = {}
+	},
+	look_at_healthstation_personal = {
+		randomize_indexes_n = 0,
+		sound_events_n = 9,
+		sound_events = {
+			"loc_ogryn_a__look_at_healthstation_01",
+			"loc_ogryn_a__look_at_healthstation_02",
+			"loc_ogryn_a__look_at_healthstation_03",
+			"loc_ogryn_a__look_at_healthstation_04",
+			"loc_ogryn_a__look_at_healthstation_05",
+			"loc_ogryn_a__look_at_healthstation_06",
+			"loc_ogryn_a__look_at_healthstation_07",
+			"loc_ogryn_a__look_at_healthstation_08",
+			"loc_ogryn_a__look_at_healthstation_09"
+		},
+		sound_events_duration = {
+			0.581792,
+			3.048042,
+			0.965688,
+			1.151771,
+			1.156458,
+			1.757104,
+			1.702917,
+			1.536625,
+			2.293458
+		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111
 		},
 		randomize_indexes = {}
 	},
@@ -1858,13 +1930,6 @@ local gameplay_vo_ogryn_a = {
 			3.252917,
 			3.724844,
 			4.048698
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3716,6 +3781,47 @@ local gameplay_vo_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	seen_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_a__seen_enemy_berserker_01",
+			"loc_ogryn_a__seen_enemy_berserker_02",
+			"loc_ogryn_a__seen_enemy_berserker_03",
+			"loc_ogryn_a__seen_enemy_berserker_04",
+			"loc_ogryn_a__seen_enemy_berserker_05",
+			"loc_ogryn_a__seen_enemy_berserker_06",
+			"loc_ogryn_a__seen_enemy_berserker_07",
+			"loc_ogryn_a__seen_enemy_berserker_08",
+			"loc_ogryn_a__seen_enemy_berserker_09",
+			"loc_ogryn_a__seen_enemy_berserker_10"
+		},
+		sound_events_duration = {
+			0.679313,
+			0.973604,
+			0.919271,
+			1.353896,
+			1.187792,
+			1.250271,
+			1.300688,
+			1.371958,
+			1.157417,
+			2.639833
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	seen_enemy_renegade_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -3730,6 +3836,29 @@ local gameplay_vo_ogryn_a = {
 			1.924073,
 			2.024323,
 			1.825198
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_a__seen_enemy_specials_generic_01",
+			"loc_ogryn_a__seen_enemy_specials_generic_02",
+			"loc_ogryn_a__seen_enemy_specials_generic_03",
+			"loc_ogryn_a__seen_enemy_specials_generic_04"
+		},
+		sound_events_duration = {
+			1.040292,
+			1.41025,
+			1.489708,
+			1.356604
 		},
 		sound_event_weights = {
 			0.25,

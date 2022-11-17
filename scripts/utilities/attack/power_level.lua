@@ -38,10 +38,18 @@ local PowerLevel = {
 
 		return scaled_power_level
 	end,
-	scale_by_charge_level = function (power_level, charge_level)
-		local scaled_power_level = charge_level and charge_level * power_level or power_level
+	scale_by_charge_level = function (power_level, charge_level, charge_level_scaler)
+		if not charge_level then
+			return power_level
+		end
 
-		return scaled_power_level
+		if charge_level_scaler then
+			local power_level_scaler = math.lerp(charge_level_scaler.min or 0, charge_level_scaler.max or 1, charge_level)
+
+			return power_level * power_level_scaler
+		end
+
+		return charge_level * power_level
 	end
 }
 

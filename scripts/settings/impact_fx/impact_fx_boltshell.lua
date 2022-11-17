@@ -157,6 +157,49 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		shove = {
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
 			}
 		}
 	},
@@ -266,6 +309,34 @@ local armored = {
 				only_1p = true
 			}
 		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				only_1p = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				only_1p = true
+			}
+		},
 		dead = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
@@ -339,6 +410,47 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
 			}
 		}
 	},
@@ -403,13 +515,72 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
 				only_1p = true
 			}
+		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				only_1p = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				only_1p = true
+			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_damage_full",
+				only_1p = true
+			}
 		}
 	},
 	vfx = {
+		weakspot_died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/surfaces/impact_super_armor"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/surfaces/impact_super_armor"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
 		weakspot_damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/surfaces/impact_super_armor"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
 				}
 			}
 		},
@@ -418,12 +589,70 @@ local super_armor = {
 				effects = {
 					"content/fx/particles/impacts/surfaces/impact_super_armor"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		damage_reduced = {
+			{
+				effects = {
+					"content/fx/particles/impacts/surfaces/impact_super_armor"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
 					"content/fx/particles/impacts/surfaces/impact_super_armor"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
 				}
 			}
 		}
@@ -570,10 +799,63 @@ local disgustingly_resilient = {
 				}
 			}
 		},
+		damage_reduced = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_ranged_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
 		damage_negated = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_ranged_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
 				}
 			}
 		}
@@ -650,6 +932,11 @@ local player = {
 				effects = {
 					"content/fx/particles/impacts/surfaces/impact_super_armor"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/bolter/bolter_impact"
+				}
 			}
 		}
 	},
@@ -669,7 +956,12 @@ local default_surface_fx = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+				"content/fx/particles/impacts/surfaces/impact_concrete_03"
+			}
+		},
+		{
+			effects = {
+				"content/fx/particles/weapons/rifles/bolter/bolter_impact"
 			}
 		}
 	}
@@ -679,12 +971,12 @@ local surface_decal = {
 		[hit_types.stop] = {
 			extents = {
 				min = {
-					x = 0.25,
-					y = 0.25
+					x = 0.5,
+					y = 0.5
 				},
 				max = {
-					x = 0.25,
-					y = 0.25
+					x = 0.6,
+					y = 0.6
 				}
 			},
 			units = {
@@ -696,12 +988,12 @@ local surface_decal = {
 		[hit_types.penetration_entry] = {
 			extents = {
 				min = {
-					x = 0.25,
-					y = 0.25
+					x = 0.5,
+					y = 0.5
 				},
 				max = {
-					x = 0.25,
-					y = 0.25
+					x = 0.6,
+					y = 0.6
 				}
 			},
 			units = {
@@ -713,12 +1005,12 @@ local surface_decal = {
 		[hit_types.penetration_exit] = {
 			extents = {
 				min = {
-					x = 0.25,
-					y = 0.25
+					x = 0.5,
+					y = 0.5
 				},
 				max = {
-					x = 0.25,
-					y = 0.25
+					x = 0.6,
+					y = 0.6
 				}
 			},
 			units = {

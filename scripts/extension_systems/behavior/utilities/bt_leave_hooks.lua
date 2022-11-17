@@ -112,9 +112,9 @@ local BtLeaveHooks = {
 		local cooldown = cooldowns.consume
 		behavior_component.consume_cooldown = t + cooldown
 	end,
-	beast_of_nurgle_reset_change_target_flag = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+	beast_of_nurgle_reset_alerted = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
-		behavior_component.wants_to_play_change_target = false
+		behavior_component.wants_to_play_alerted = false
 	end,
 	beast_of_nurgle_force_spit_out = function (unit, breed, blackboard, scratchpad, action_data, t, args, reason)
 		if reason == "failed" then

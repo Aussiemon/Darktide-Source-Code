@@ -50,8 +50,8 @@ local breed_data = {
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 8,
-	reduced_hit_mass = 4,
+	hit_mass = 4,
+	reduced_hit_mass = 1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -107,10 +107,10 @@ local breed_data = {
 		max_distance_modifier_duration = 40,
 		max_distance_modifier_percentage = 0.8,
 		suppressed_max_distance_from_combat_vector = 60,
-		max_distance_from_target = 50,
+		max_distance_from_target = 35,
 		max_distance_from_target_z_below = -10,
-		search_radius = 30,
-		max_distance_from_combat_vector = 60,
+		search_radius = 40,
+		max_distance_from_combat_vector = 35,
 		suppressed_max_distance_from_target = 100,
 		max_distance_from_target_z = 10,
 		suppressed_search_radius = 50,
@@ -133,8 +133,10 @@ local breed_data = {
 		}
 	},
 	suppress_config = {
+		disable_cover_threshold = 35,
+		above_threshold_decay_multiplier = 2,
 		threshold = 27.5,
-		max_value = 30,
+		max_value = 40,
 		decay_speeds = {
 			melee = 0.05,
 			far = 0.5,
@@ -165,9 +167,10 @@ local breed_data = {
 	},
 	line_of_sight_data = {
 		{
-			id = "eyes",
 			to_node = "enemy_aim_target_03",
 			from_node = "j_head",
+			id = "eyes",
+			from_offsets = Vector3Box(0, 0, 0.1),
 			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
 		},
 		{

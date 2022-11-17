@@ -700,6 +700,29 @@ local on_demand_vo_psyker_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_female_a__smart_tag_vo_enemy_berserker_01",
+			"loc_psyker_female_a__smart_tag_vo_enemy_berserker_02",
+			"loc_psyker_female_a__smart_tag_vo_enemy_berserker_03",
+			"loc_psyker_female_a__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			1.148396,
+			0.874188,
+			1.050417,
+			1.013417
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

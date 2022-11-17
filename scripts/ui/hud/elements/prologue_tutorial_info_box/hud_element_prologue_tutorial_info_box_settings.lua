@@ -26,12 +26,16 @@ local hud_element_prologue_tutorial_info_box_settings = {
 		65,
 		5
 	},
+	info_box_input_description_size = {
+		400,
+		50
+	},
 	tracker_background_size = {
 		400,
 		40
 	},
 	tracker_entry_size = {
-		600,
+		800,
 		55
 	},
 	tracker_entry_colors = {
@@ -60,19 +64,39 @@ local hud_element_prologue_tutorial_info_box_settings = {
 		font_size = 20,
 		text_vertical_alignment = "center",
 		text_horizontal_alignment = "left",
+		vertical_alignment = "top",
 		drop_shadow = true,
 		line_spacing = 1.2,
 		font_type = "proxima_nova_bold",
 		size = {
 			400,
-			200
+			50
 		},
 		offset = {
 			35,
-			65,
+			80,
 			5
 		},
 		text_color = Color.terminal_text_body(255, true)
+	},
+	input_description_text_style = {
+		font_size = 23,
+		text_vertical_alignment = "top",
+		text_horizontal_alignment = "left",
+		vertical_alignment = "top",
+		drop_shadow = true,
+		line_spacing = 1.2,
+		font_type = "proxima_nova_bold",
+		size = {
+			400,
+			50
+		},
+		offset = {
+			35,
+			20,
+			4
+		},
+		text_color = Color.terminal_text_header(255, true)
 	},
 	counter_text_style = {
 		drop_shadow = false,
@@ -95,6 +119,10 @@ local hud_element_prologue_tutorial_info_box_settings = {
 			520,
 			50
 		}
+	},
+	devices = {
+		"keyboard",
+		"mouse"
 	},
 	events = {
 		{

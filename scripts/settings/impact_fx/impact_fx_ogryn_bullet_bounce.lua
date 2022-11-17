@@ -353,7 +353,7 @@ local default_surface_fx = {
 		{
 			group = "surface_material",
 			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/melee_hits_blunt_shield",
+			event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
 			normal_rotation = true
 		}
 	},
@@ -366,6 +366,7 @@ local default_surface_fx = {
 		}
 	}
 }
+local surface_decal = {}
 
 return {
 	armor = {
@@ -382,5 +383,6 @@ return {
 		[hit_types.stop] = default_surface_fx,
 		[hit_types.penetration_entry] = default_surface_fx,
 		[hit_types.penetration_exit] = nil
-	}
+	},
+	surface_decal = surface_decal
 }

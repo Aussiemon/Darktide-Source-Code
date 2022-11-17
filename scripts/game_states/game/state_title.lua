@@ -26,16 +26,18 @@ local function _create_player(account_id, selected_profile)
 		local telemetry_game_session = Managers.telemetry_events._session.game
 		local slot = 0
 		local_player = Managers.player:add_human_player(HumanPlayer, nil, Network.peer_id(), local_player_id, selected_profile, slot, account_id, "player1", telemetry_game_session)
+
+		Managers.telemetry_events:local_player_spawned(local_player)
 	end
 
 	return local_player
 end
 
-StateTitle._check_start_requirements = function (self)
+StateTitle._check_start_requirements = function (self, is_booting)
 	local can_continue = true
 
 	if HAS_STEAM and not Steam.connected() then
-		local err = SteamOfflineError:new()
+		local err = SteamOfflineError:new(is_booting)
 
 		Managers.error:report_error(err)
 
@@ -55,7 +57,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 	self._queue_changed = false
 	self._state = STATES.idle
 
-	if not self:_check_start_requirements() then
+	if self._is_booting and not self:_check_start_requirements(true) then
 		return
 	end
 
@@ -70,7 +72,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 			local raw_input_device = nil
 
 			if IS_XBS then
-				-- Nothing
+				raw_input_device = not GameParameters.testify and raw_input_device
 			end
 
 			self:_signin_profile(raw_input_device)
@@ -132,13 +134,13 @@ StateTitle.is_loading = function (self)
 
 		return true, self._queue_changed, "loc_state_title_authenticating_queue", true, queue_loc_table
 	elseif state == states.account_signin then
-		return true, false, Managers.account:signin_state()
+		return true, false, "loc_title_screen_signing_in"
 	elseif state == states.signing_in then
-		return true, false, "loc_state_title_authenticating_backend"
+		return true, false, "loc_title_screen_signing_in"
 	elseif state == states.loading_packages then
-		return true, false, "loc_state_title_loading_packages"
+		return true, false, "loc_title_screen_signing_in"
 	elseif state == states.authenticating_eos then
-		return true, false, "loc_state_title_authenticating_eos"
+		return true, false, "loc_title_screen_signing_in"
 	end
 
 	return false
@@ -153,91 +155,113 @@ StateTitle._legal_verification = function (self)
 	}
 
 	Promise.all(unpack(legal_promises)):next(function (results)
-		local eula_status, privacy_policy_status = unpack(results)
+		local eula_status, privacy_policy_status = unpack(results, 1, 2)
 
 		if not privacy_policy_status then
+			local options = {}
+
+			if IS_XBS then
+				options[#options + 1] = {
+					text = "loc_privacy_policy_privacy_url",
+					template_type = "text",
+					margin_bottom = 20
+				}
+			else
+				options[#options + 1] = {
+					text = "loc_privacy_policy_read_privacy_policy",
+					template_type = "url_button",
+					margin_bottom = 20,
+					callback = function ()
+						Application.open_url_in_browser(Localize("loc_privacy_policy_privacy_url"))
+					end
+				}
+			end
+
+			options[#options + 1] = {
+				text = "loc_privacy_policy_accept_button_label",
+				close_on_pressed = true,
+				callback = function ()
+					Managers.backend.interfaces.account:set_data("legal", {
+						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1
+					}):next(function ()
+						self:_legal_verification()
+					end)
+				end
+			}
+			options[#options + 1] = {
+				close_on_pressed = true,
+				hotkey = "back",
+				text = PLATFORM == "win32" and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
+				callback = function ()
+					if PLATFORM == "win32" then
+						Application.quit()
+					else
+						self:_reset_state()
+					end
+				end
+			}
 			local context = {
 				title_text = "loc_privacy_policy_title",
 				description_text = "loc_privacy_policy_information_01b",
-				options = {
-					{
-						text = "loc_privacy_policy_read_privacy_policy",
-						template_type = "url_button",
-						margin_bottom = 20,
-						callback = function ()
-							Application.open_url_in_browser(Localize("loc_popup_link_eac_error"))
-						end
-					},
-					{
-						text = "loc_privacy_policy_accept_button_label",
-						close_on_pressed = true,
-						callback = function ()
-							Managers.backend.interfaces.account:set_data("legal", {
-								privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1
-							}):next(function ()
-								self:_legal_verification()
-							end)
-						end
-					},
-					{
-						text = "loc_privacy_policy_decline_button_label",
-						close_on_pressed = true,
-						hotkey = "back",
-						callback = function ()
-							if PLATFORM == "win32" then
-								Application.quit()
-							else
-								self:_reset_state()
-							end
-						end
-					}
-				}
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
 		elseif not eula_status and (not HAS_STEAM or not Steam.connected()) then
+			local options = {}
+
+			if IS_XBS then
+				options[#options + 1] = {
+					text = "loc_privacy_policy_eula_url",
+					template_type = "text",
+					margin_bottom = 20
+				}
+			else
+				options[#options + 1] = {
+					text = "loc_privacy_policy_read_eula",
+					template_type = "url_button",
+					margin_bottom = 20,
+					callback = function ()
+						Application.open_url_in_browser(Localize("loc_privacy_policy_eula_url"))
+					end
+				}
+			end
+
+			options[#options + 1] = {
+				text = "loc_privacy_policy_accept_eula_button_label",
+				close_on_pressed = true,
+				callback = function ()
+					Managers.backend.interfaces.account:set_data("legal", {
+						eula = eula_status and eula_status + 1 or 1
+					}):next(function ()
+						self:_legal_verification()
+					end)
+				end
+			}
+			options[#options + 1] = {
+				close_on_pressed = true,
+				hotkey = "back",
+				text = PLATFORM == "win32" and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
+				callback = function ()
+					if PLATFORM == "win32" then
+						Application.quit()
+					else
+						self:_reset_state()
+					end
+				end
+			}
 			local context = {
 				title_text = "loc_eula_title",
 				description_text = "loc_privacy_policy_information_01c",
-				options = {
-					{
-						text = "loc_privacy_policy_read_eula",
-						template_type = "url_button",
-						margin_bottom = 20,
-						callback = function ()
-							Application.open_url_in_browser(Localize("loc_popup_link_eac_error"))
-						end
-					},
-					{
-						text = "loc_eula_accept_button_label",
-						close_on_pressed = true,
-						callback = function ()
-							Managers.backend.interfaces.account:set_data("legal", {
-								eula = eula_status and eula_status + 1 or 1
-							}):next(function ()
-								self:_legal_verification()
-							end)
-						end
-					},
-					{
-						text = "loc_eula_decline_button_label",
-						close_on_pressed = true,
-						hotkey = "back",
-						callback = function ()
-							if PLATFORM == "win32" then
-								Application.quit()
-							else
-								self:_reset_state()
-							end
-						end
-					}
-				}
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
 		else
 			self:_set_state(STATES.done)
 		end
+	end):catch(function (error)
+		self:_on_error()
 	end)
 end
 
@@ -300,6 +324,8 @@ StateTitle.update = function (self, main_dt, main_t)
 		local error_state, error_state_params = Managers.account:wanted_transition()
 
 		if error_state then
+			error_state_params.is_booting = self._is_booting
+
 			return error_state, error_state_params
 		end
 	end
@@ -376,20 +402,39 @@ StateTitle.on_exit = function (self)
 	local view_name = "title_view"
 	local ui_manager = Managers.ui
 
-	if ui_manager and ui_manager:view_active(view_name) then
-		local force_close = Managers.account:leaving_game()
+	if ui_manager then
+		local leaving_game = Managers.account:leaving_game()
 
-		ui_manager:close_view(view_name, force_close)
+		if leaving_game then
+			local active_views = ui_manager:active_views()
+			local force_close = true
+
+			while not table.is_empty(active_views) do
+				local view_name = active_views[1]
+
+				ui_manager:close_view(view_name, force_close)
+			end
+		elseif ui_manager:view_active(view_name) then
+			ui_manager:close_view(view_name)
+		end
 	end
+
+	Managers.event:unregister(self, "event_state_title_continue")
 end
 
 StateTitle._signin = function (self)
+	if not self:_check_start_requirements(false) then
+		return
+	end
+
 	self:_set_state(STATES.signing_in)
 
 	if self._is_booting then
 		self._signin_loader = SigninLoader:new()
 
 		self._signin_loader:start_loading()
+
+		self._is_booting = false
 	end
 
 	local has_eac = false

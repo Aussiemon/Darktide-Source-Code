@@ -2,6 +2,25 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Threat = require("scripts/utilities/threat")
 local MinionSuppressionExtension = class("MinionSuppressionExtension")
 
+MinionSuppressionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, nil_or_game_object_id)
+	local is_server = extension_init_context.is_server
+	local blackboard = BLACKBOARDS[unit]
+	self._blackboard = blackboard
+	local breed = extension_init_data.breed
+	self._breed = breed
+	self._perception_extension = ScriptUnit.extension(unit, "perception_system")
+	self._cover_user_extension = ScriptUnit.has_extension(unit, "cover_system")
+
+	self:_init_blackboard_components(blackboard, breed)
+
+	local suppress_config = breed.suppress_config
+	self._suppress_config = suppress_config
+	self._threat_factor = suppress_config.threat_factor
+	self._enabled = true
+	self._unit = unit
+	self._game_object_id = nil_or_game_object_id
+end
+
 MinionSuppressionExtension._init_blackboard_components = function (self, blackboard, breed)
 	local suppress_config = breed.suppress_config
 	self._max_suppress_value = suppress_config.max_value
@@ -9,6 +28,8 @@ MinionSuppressionExtension._init_blackboard_components = function (self, blackbo
 	self._flinch_threshold = suppress_config.flinch_threshold or 0
 	self._suppression_types_allowed = suppress_config.suppression_types_allowed
 	self._suppress_decay_speeds = suppress_config.decay_speeds
+	self._disable_cover_threshold = suppress_config.disable_cover_threshold
+	self._disable_cover_cooldown = 0
 	self._suppressed_immunity_t = 0
 	self._suppressed_immunity_duration = suppress_config.immunity_duration or {
 		0,
@@ -21,29 +42,17 @@ MinionSuppressionExtension._init_blackboard_components = function (self, blackbo
 	suppression_component.direction:store(0, 0, 0)
 
 	self._suppression_component = suppression_component
+
+	if self._cover_user_extension then
+		local cover_component = Blackboard.write_component(blackboard, "cover")
+		self._cover_component = cover_component
+	end
+
 	local behavior_component = blackboard.behavior
 	self._behavior_component = behavior_component
 	self._next_suppress_decay_t = 0
 	self._attack_delay = 0
 	self._is_suppressed = false
-end
-
-MinionSuppressionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, nil_or_game_object_id)
-	local is_server = extension_init_context.is_server
-	local blackboard = BLACKBOARDS[unit]
-	self._blackboard = blackboard
-	local breed = extension_init_data.breed
-	self._breed = breed
-	self._perception_extension = ScriptUnit.extension(unit, "perception_system")
-
-	self:_init_blackboard_components(blackboard, breed)
-
-	local suppress_config = breed.suppress_config
-	self._suppress_config = suppress_config
-	self._threat_factor = suppress_config.threat_factor
-	self._enabled = true
-	self._unit = unit
-	self._game_object_id = nil_or_game_object_id
 end
 
 MinionSuppressionExtension.set_enabled = function (self, enabled)
@@ -73,8 +82,16 @@ local FLINCH_FREQUENCY_RANGE = {
 	0.4,
 	0.6
 }
+local DEFAULT_DISABLE_COVER_TIME_RANGE = {
+	6,
+	10
+}
+local DEFAULT_DISABLE_COVER_COOLDOWN_RANGE = {
+	2,
+	4
+}
 
-MinionSuppressionExtension.add_suppress_value = function (self, value, type, attack_delay, direction, attacking_unit)
+MinionSuppressionExtension.add_suppress_value = function (self, value, suppression_type, attack_delay, direction, attacking_unit)
 	if not self._enabled then
 		return
 	end
@@ -87,7 +104,7 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, type, att
 
 	local suppression_types_allowed = self._suppression_types_allowed
 
-	if suppression_types_allowed and not suppression_types_allowed[type] then
+	if suppression_types_allowed and not suppression_types_allowed[suppression_type] then
 		return
 	end
 
@@ -143,6 +160,25 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, type, att
 
 		Threat.add_flat_threat(self._unit, attacking_unit, threat)
 	end
+
+	if self._cover_user_extension then
+		local disable_cover_threshold = self._disable_cover_threshold
+
+		if type(disable_cover_threshold) == "table" then
+			disable_cover_threshold = disable_cover_threshold[combat_range]
+		end
+
+		if disable_cover_threshold and disable_cover_threshold <= new_value and self._disable_cover_cooldown < t then
+			local disable_t = math.random_range(DEFAULT_DISABLE_COVER_TIME_RANGE[1], DEFAULT_DISABLE_COVER_TIME_RANGE[2])
+
+			self._cover_user_extension:release_cover_slot(disable_t)
+
+			local disable_cooldown = math.random_range(DEFAULT_DISABLE_COVER_COOLDOWN_RANGE[1], DEFAULT_DISABLE_COVER_COOLDOWN_RANGE[2])
+			self._disable_cover_cooldown = t + disable_cooldown
+		end
+	end
+
+	self._last_suppressing_unit = attacking_unit
 end
 
 local DEFAULT_FLINCH_ANIM_EVENTS = {
@@ -186,7 +222,8 @@ MinionSuppressionExtension._update_suppression = function (self, unit, blackboar
 
 	if current_suppress_value > 0 and self._next_suppress_decay_t < t then
 		local suppression_config = self._suppress_config
-		local decay_amount = suppression_config.decay_amount or 1
+		local decay_multiplier = was_suppressed and suppression_config.above_threshold_decay_multiplier or 1
+		local decay_amount = (suppression_config.decay_amount or 1) * decay_multiplier
 		suppression_component.suppress_value = math.max(suppression_component.suppress_value - decay_amount, 0)
 		local combat_range = self._behavior_component.combat_range
 		local decay = self._suppress_decay_speeds[combat_range] or DEFAULT_SUPPRESS_DECAY
@@ -223,14 +260,6 @@ MinionSuppressionExtension._get_threshold_and_max_value = function (self)
 end
 
 MinionSuppressionExtension.handle_unit_suppression = function (self, is_suppressed)
-	local unit = self._unit
-
-	Managers.event:trigger("event_unit_suppression", unit, is_suppressed)
-
-	local suppressed_unit_id = self._game_object_id
-
-	Managers.state.game_session:send_rpc_clients("rpc_server_reported_unit_suppression", suppressed_unit_id, is_suppressed)
-
 	self._is_suppressed = is_suppressed
 end
 
@@ -240,6 +269,10 @@ end
 
 MinionSuppressionExtension.attack_delay = function (self)
 	return self._attack_delay
+end
+
+MinionSuppressionExtension.last_suppressing_unit = function (self)
+	return self._last_suppressing_unit
 end
 
 return MinionSuppressionExtension

@@ -281,7 +281,7 @@ local weapon_template = {
 				looping_shoot_sfx_alias = "ranged_shooting",
 				fx_hand = "right"
 			},
-			damage_profile = DamageProfileTemplates.psyker_protectorate_smite_fast,
+			damage_profile = DamageProfileTemplates.psyker_protectorate_chain_lighting_fast,
 			damage_type = damage_types.electrocution,
 			chain_settings = {
 				max_targets = 2,
@@ -395,7 +395,7 @@ local weapon_template = {
 				looping_shoot_sfx_alias = "ranged_braced_shooting",
 				fx_hand = "both"
 			},
-			damage_profile = DamageProfileTemplates.psyker_protectorate_smite,
+			damage_profile = DamageProfileTemplates.psyker_protectorate_chain_lighting,
 			damage_type = damage_types.electrocution,
 			chain_settings = {
 				max_targets = 3,
@@ -519,6 +519,12 @@ local weapon_template = {
 		_charge = "fx_right",
 		_both = "fx_both",
 		_right = "fx_right"
+	},
+	chain_settings = {
+		right_fx_source_name = "_right",
+		left_fx_source_name = "_left",
+		right_fx_source_name_is_base_unit = false,
+		left_fx_source_name_is_base_unit = false
 	},
 	dodge_template = "default",
 	sprint_template = "default",

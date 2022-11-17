@@ -10,7 +10,6 @@ local function _open_voting_view(voting_id)
 			{
 				text = "loc_accept_mission_voting_title_accept_button",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				callback = function ()
 					Managers.voting:cast_vote(voting_id, "yes")
 

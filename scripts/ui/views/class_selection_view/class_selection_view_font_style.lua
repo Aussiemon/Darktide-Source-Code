@@ -1,22 +1,31 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
-local main_title_style = table.clone(UIFontSettings.grid_title)
+local main_title_style = table.clone(UIFontSettings.header_1)
 main_title_style.text_horizontal_alignment = "center"
 main_title_style.text_vertical_alignment = "top"
-main_title_style.font_size = 36
 local domain_title_style = table.clone(UIFontSettings.grid_title)
 domain_title_style.text_horizontal_alignment = "center"
 domain_title_style.text_vertical_alignment = "top"
 domain_title_style.font_size = 48
+domain_title_style.size_addition = {
+	-40,
+	0
+}
+domain_title_style.horizontal_alignment = "center"
 local domain_description_style = table.clone(UIFontSettings.body)
-domain_description_style.text_horizontal_alignment = "left"
+domain_description_style.text_horizontal_alignment = "center"
 domain_description_style.text_vertical_alignment = "top"
 domain_description_style.color = Color.white(255, true)
 domain_description_style.offset = {
 	0,
-	120,
+	90,
 	1
 }
+domain_description_style.size_addition = {
+	-40,
+	0
+}
+domain_description_style.horizontal_alignment = "center"
 local select_style = table.clone(UIFontSettings.symbol)
 select_style.text_horizontal_alignment = "center"
 select_style.text_vertical_alignment = "center"
@@ -32,7 +41,7 @@ class_domain_title_style.offset = {
 	0,
 	1
 }
-class_domain_title_style.material = class_domain_title_style.disabled_material
+class_domain_title_style.text_color = class_domain_title_style.disabled_color
 local class_title_style = table.clone(UIFontSettings.grid_title)
 class_title_style.text_horizontal_alignment = "center"
 class_title_style.text_vertical_alignment = "bottom"

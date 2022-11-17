@@ -400,7 +400,20 @@ TerrorEventNodes.spawn_by_breed_name = {
 			attack_selection_template_name_or_nil = MinionAttackSelection.match_template_by_tag(attack_selection_templates, attack_selection_template_tag)
 		end
 
-		BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, event.spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, nil, nil, max_health_modifier)
+		local group_system = Managers.state.extension:system("group_system")
+		local group_id = group_system:generate_group_id()
+
+		BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, event.spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, nil, group_id, max_health_modifier)
+
+		local group = group_system:group_from_id(group_id)
+		local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]
+
+		if horde_group_sound_event_names and not node.passive then
+			local start_event = horde_group_sound_event_names.start
+			local stop_event = horde_group_sound_event_names.stop
+			group.group_start_sound_event = start_event
+			group.group_stop_sound_event = stop_event
+		end
 
 		if delay_until_all_spawned ~= false then
 			event.scratchpad.wait_for_spawners = spawners
@@ -425,7 +438,8 @@ TerrorEventNodes.try_inject_special_minion = {
 		local breed_tags = node.breed_tags
 		local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
 		local points = node.points * difficulty_scale
-		local breed_pool = BreedQueries.match_minions_by_tags(breed_tags)
+		local wanted_sub_faction = Managers.state.pacing:current_faction()
+		local breed_pool = BreedQueries.match_minions_by_tags(breed_tags, nil, wanted_sub_faction)
 		local breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
 		local breed_name = breed.name
 

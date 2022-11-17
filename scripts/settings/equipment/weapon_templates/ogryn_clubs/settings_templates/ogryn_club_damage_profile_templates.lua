@@ -4,6 +4,7 @@ local DamageProfileSettings = require("scripts/settings/damage/damage_profile_se
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local GibbingPower = GibbingSettings.gibbing_power
 local GibbingTypes = GibbingSettings.gibbing_types
 local damage_types = DamageSettings.damage_types
@@ -151,6 +152,7 @@ damage_templates.ogryn_club_light_tank = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_club,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
@@ -207,7 +209,8 @@ damage_templates.ogryn_club_light_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.ogryn_club_heavy_tank = {
 	ragdoll_push_force = 800,
@@ -218,6 +221,7 @@ damage_templates.ogryn_club_heavy_tank = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.ogryn_club,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
@@ -274,7 +278,8 @@ damage_templates.ogryn_club_heavy_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.ogryn_club_light_smiter = {
 	ragdoll_push_force = 500,
@@ -284,6 +289,7 @@ damage_templates.ogryn_club_light_smiter = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_club,
 	armor_damage_modifier = smiter_light_default_am,
 	targets = {
 		{
@@ -375,13 +381,14 @@ damage_templates.ogryn_club_light_smiter = {
 	}
 }
 damage_templates.ogryn_club_heavy_smiter = {
-	ragdoll_only = true,
 	ragdoll_push_force = 1000,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.ogryn_club,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
@@ -633,6 +640,7 @@ damage_templates.ogryn_club_light_linesman = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_club,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -770,6 +778,7 @@ damage_templates.club_uppercut = {
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.5,

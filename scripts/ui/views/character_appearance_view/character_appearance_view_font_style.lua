@@ -7,15 +7,29 @@ header_text_style.offset = {
 	0,
 	1
 }
-local header_final_text_style = table.clone(UIFontSettings.header_3)
+header_text_style.text_color = Color.terminal_frame_selected(255, true)
+local header_final_title_style = table.clone(UIFontSettings.body)
+header_final_title_style.text_horizontal_alignment = "left"
+header_final_title_style.horizontal_alignment = "left"
+header_final_title_style.text_vertical_alignment = "top"
+header_final_title_style.offset = {
+	0,
+	0,
+	1
+}
+header_final_title_style.font_size = 24
+header_final_title_style.text_color = Color.terminal_text_header(255, true)
+local header_final_text_style = table.clone(UIFontSettings.body)
 header_final_text_style.text_horizontal_alignment = "left"
 header_final_text_style.horizontal_alignment = "left"
 header_final_text_style.text_vertical_alignment = "top"
 header_final_text_style.offset = {
 	0,
-	-110,
+	0,
 	1
 }
+header_final_text_style.font_size = 36
+header_final_text_style.text_color = Color.terminal_text_body(255, true)
 local header_choice_text_style = table.clone(UIFontSettings.header_2)
 header_choice_text_style.text_horizontal_alignment = "center"
 header_choice_text_style.text_vertical_alignment = "top"
@@ -32,8 +46,7 @@ option_title_style.offset = {
 	0,
 	1
 }
-option_title_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
-option_title_style.text_color = Color.white(255, true)
+option_title_style.text_color = Color.terminal_text_header(255, true)
 local name_style = table.clone(UIFontSettings.header_2)
 name_style.text_horizontal_alignment = "left"
 name_style.text_vertical_alignment = "top"
@@ -58,8 +71,10 @@ description_style.offset = {
 	0,
 	1
 }
+description_style.text_color = Color.terminal_text_body(255, true)
+description_style.font_size = 20
 local list_description_style = table.clone(UIFontSettings.body)
-list_description_style.text_horizontal_alignment = "left"
+list_description_style.text_horizontal_alignment = "center"
 list_description_style.text_vertical_alignment = "center"
 list_description_style.vertical_alignment = "top"
 list_description_style.offset = {
@@ -68,6 +83,7 @@ list_description_style.offset = {
 	1
 }
 list_description_style.font_size = 20
+list_description_style.text_color = Color.terminal_text_body(255, true)
 local overlay_text_style = table.clone(UIFontSettings.header_2)
 overlay_text_style.text_vertical_alignment = "center"
 overlay_text_style.text_horizontal_alignment = "center"
@@ -85,6 +101,7 @@ effect_title_style.offset = {
 	1
 }
 effect_title_style.font_size = 20
+effect_title_style.text_color = Color.terminal_text_header(255, true)
 local effect_description_style = table.clone(UIFontSettings.body)
 effect_description_style.text_horizontal_alignment = "left"
 effect_description_style.text_vertical_alignment = "center"
@@ -106,13 +123,16 @@ effect_description_not_selected_style.text_color = Color.ui_hud_red_light(255, t
 effect_description_not_selected_style.font_size = 18
 local button_font_style = table.clone(UIFontSettings.button_2)
 button_font_style.offset = {
-	30,
+	60,
 	0,
 	3
 }
 button_font_style.text_horizontal_alignment = "left"
 button_font_style.text_vertical_alignment = "center"
-button_font_style.hover_text_color = Color.ui_brown_super_light(255, true)
+button_font_style.hover_color = Color.terminal_text_header_selected(255, true)
+button_font_style.text_color = Color.terminal_text_body(255, true)
+button_font_style.default_color = Color.terminal_text_body(255, true)
+button_font_style.selected_color = Color.terminal_text_header_selected(255, true)
 local category_button_font_style = table.clone(UIFontSettings.button_2)
 category_button_font_style.offset = {
 	30,
@@ -121,7 +141,10 @@ category_button_font_style.offset = {
 }
 category_button_font_style.text_horizontal_alignment = "left"
 category_button_font_style.text_vertical_alignment = "center"
-category_button_font_style.hover_text_color = Color.ui_brown_super_light(255, true)
+category_button_font_style.hover_color = Color.terminal_text_header_selected(255, true)
+category_button_font_style.text_color = Color.terminal_text_body(255, true)
+category_button_font_style.default_color = Color.terminal_text_body(255, true)
+category_button_font_style.selected_color = Color.terminal_text_header_selected(255, true)
 local entry_no_icon_style = {
 	label = table.clone(UIFontSettings.header_3)
 }
@@ -208,7 +231,8 @@ reward_description_style.offset = {
 	0,
 	1
 }
-reward_description_style.text_color = Color.white(255, true)
+reward_description_style.text_color = Color.terminal_text_body(255, true)
+reward_description_style.font_size = 20
 local reward_description_no_icon_style = table.clone(UIFontSettings.body)
 reward_description_no_icon_style.text_horizontal_alignment = "left"
 reward_description_no_icon_style.text_vertical_alignment = "center"
@@ -217,7 +241,8 @@ reward_description_no_icon_style.offset = {
 	0,
 	1
 }
-reward_description_no_icon_style.text_color = Color.white(255, true)
+reward_description_no_icon_style.text_color = Color.terminal_text_body(255, true)
+reward_description_no_icon_style.font_size = 20
 local error_style = table.clone(UIFontSettings.body)
 error_style.text_horizontal_alignment = "left"
 error_style.text_vertical_alignment = "bottom"
@@ -228,6 +253,7 @@ return {
 	header_choice_text_style = header_choice_text_style,
 	header_text_style = header_text_style,
 	header_final_text_style = header_final_text_style,
+	header_final_title_style = header_final_title_style,
 	option_title_style = option_title_style,
 	description_style = description_style,
 	list_description_style = list_description_style,

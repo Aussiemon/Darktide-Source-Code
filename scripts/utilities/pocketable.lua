@@ -37,7 +37,7 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 			local spawned_unit = _drop_pickup(item_name, position, rotation)
 			local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
 
-			if pickup_animation_system then
+			if spawned_unit and pickup_animation_system then
 				pickup_animation_system:start_animation_from_unit(spawned_unit, player_unit)
 			end
 		end
@@ -57,6 +57,11 @@ function _drop_pickup(item_name, spawn_pos, spawn_rot)
 	local item = item_definitions[item_name]
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local swap_pickup_name = weapon_template and weapon_template.swap_pickup_name
+
+	if not swap_pickup_name then
+		return nil
+	end
+
 	local pickup_system = Managers.state.extension:system("pickup_system")
 	local disable_time = 0.5
 	local spawned_unit, _ = pickup_system:spawn_pickup(swap_pickup_name, spawn_pos, spawn_rot, nil, nil, disable_time)

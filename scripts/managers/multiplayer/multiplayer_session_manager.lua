@@ -107,11 +107,11 @@ MultiplayerSessionManager.boot_singleplayer_session = function (self)
 	return new_session
 end
 
-MultiplayerSessionManager.party_immaterium_hot_join_hub_server = function (self, hub_session_id)
+MultiplayerSessionManager.party_immaterium_hot_join_hub_server = function (self)
 	self:clear_session_boot()
 
 	local new_session = MultiplayerSession:new()
-	self._session_boot = PartyImmateriumHubSessionBoot:new(new_session, hub_session_id or Managers.party_immaterium:current_hub_server_session_id())
+	self._session_boot = PartyImmateriumHubSessionBoot:new(new_session, Managers.party_immaterium:consume_matched_hub_server_session_id())
 
 	return new_session
 end
@@ -280,6 +280,8 @@ MultiplayerSessionManager.update = function (self, dt)
 				Managers.connection:set_connection_client(connection_object, session_object)
 
 				self._session = session_object
+
+				connection_object:boot_complete()
 
 				if connection_object:has_reserved() then
 					connection_object:ready_to_join()

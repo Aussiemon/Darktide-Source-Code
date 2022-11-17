@@ -4,19 +4,20 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PushSettings = require("scripts/settings/damage/push_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local WeaponTraitsBespokePowermaul2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_2h_p1")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -31,16 +32,14 @@ local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
+local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local stagger_duration_modifier_trait_templates = WeaponTraitTemplates[template_types.stagger_duration_modifier]
 local wounds_shapes = WoundsSettings.shapes
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy),
+	action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy),
 	actions = {
 		action_unwield = {
 			continue_sprinting = true,
@@ -85,12 +84,13 @@ local weapon_template = {
 			}
 		},
 		action_melee_start_left = {
-			anim_end_event = "attack_finished",
-			chain_anim_event = "attack_swing_charge_left_diagonal_pose",
+			chain_anim_event_3p = "attack_swing_charge_left_down",
+			chain_anim_event = "attack_swing_charge_left_down_pose",
 			start_input = "start_attack",
 			kind = "windup",
+			anim_end_event = "attack_finished",
 			allowed_during_sprint = true,
-			anim_event = "attack_swing_charge_left_diagonal",
+			anim_event = "attack_swing_charge_left_down",
 			stop_input = "attack_cancel",
 			total_time = 3,
 			action_movement_curve = {
@@ -229,6 +229,10 @@ local weapon_template = {
 					chain_time = 0.53,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.55
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -250,7 +254,10 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
 			damage_type = damage_types.blunt,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			herding_template = HerdingTemplates.thunder_hammer_left_light,
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
@@ -336,6 +343,10 @@ local weapon_template = {
 					chain_time = 0.68,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.68
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -354,10 +365,13 @@ local weapon_template = {
 					0
 				}
 			},
-			damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
+			damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_smiter,
 			damage_type = damage_types.blunt,
-			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_smiter_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
@@ -500,19 +514,23 @@ local weapon_template = {
 				},
 				start_attack = {
 					action_name = "action_melee_start_left_2",
-					chain_time = 0.75
+					chain_time = 0.55
 				},
 				block = {
 					chain_time = 0.5,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.5
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 			end,
 			weapon_box = {
-				0.2,
+				0.3,
 				0.15,
 				1
 			},
@@ -527,7 +545,10 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
 			damage_type = damage_types.blunt,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_activate,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			herding_template = HerdingTemplates.thunder_hammer_right_down_light,
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
@@ -605,13 +626,17 @@ local weapon_template = {
 					chain_time = 0.75
 				},
 				start_attack = {
-					action_name = "action_melee_start_left",
-					chain_time = 0.68
+					action_name = "action_melee_start_left_2",
+					chain_time = 0.58
 				},
 				block = {
-					chain_time = 0.68,
+					chain_time = 0.58,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.58
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -633,7 +658,10 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
 			damage_type = damage_types.blunt,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
@@ -642,9 +670,12 @@ local weapon_template = {
 			aim_assist_ramp_template = AimAssistTemplates.tank_swing_heavy
 		},
 		action_melee_start_left_2 = {
-			anim_event = "attack_swing_charge_left_diagonal_pose",
+			chain_anim_event_3p = "attack_swing_charge_left_down",
+			chain_anim_event = "attack_swing_charge_left_down_pose",
 			anim_end_event = "attack_finished",
 			kind = "windup",
+			anim_event_3p = "attack_swing_charge_left_down",
+			anim_event = "attack_swing_charge_left_down",
 			stop_input = "attack_cancel",
 			total_time = 3,
 			action_movement_curve = {
@@ -776,12 +807,16 @@ local weapon_template = {
 				},
 				start_attack = {
 					action_name = "action_melee_start_right_2",
-					chain_time = 0.63
+					chain_time = 0.53
 				},
 				block = {
 					chain_time = 0.52,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.55
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -802,8 +837,11 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
 			damage_type = damage_types.blunt,
-			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
@@ -952,6 +990,10 @@ local weapon_template = {
 					chain_time = 0.52,
 					action_name = "action_block",
 					chain_until = 0.2
+				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.6
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -972,8 +1014,11 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
 			damage_type = damage_types.blunt,
-			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			herding_template = HerdingTemplates.thunder_hammer_right_light,
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
@@ -1042,7 +1087,7 @@ local weapon_template = {
 			stagger_duration_modifier_template = "default",
 			attack_direction_override = "up",
 			range_mod = 1.25,
-			weapon_handling_template = "time_scale_1_2",
+			weapon_handling_template = "time_scale_1_1",
 			first_person_hit_anim = "hit_left_shake",
 			damage_window_end = 0.3,
 			special_active_hit_stop_anim = "attack_hit_power",
@@ -1093,14 +1138,14 @@ local weapon_template = {
 				},
 				special_action = {
 					action_name = "action_weapon_special",
-					chain_time = 0.8
+					chain_time = 0.5
 				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 			end,
 			weapon_box = {
-				0.2,
+				0.3,
 				0.15,
 				1
 			},
@@ -1112,10 +1157,13 @@ local weapon_template = {
 					0
 				}
 			},
-			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
+			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
 			damage_type = damage_types.blunt,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
+			damage_type_special_active = {
+				damage_types.blunt_powermaul_active,
+				default = damage_types.blunt
+			},
 			time_scale_stat_buffs = {
 				buff_stat_buffs.attack_speed,
 				buff_stat_buffs.melee_attack_speed
@@ -1165,6 +1213,10 @@ local weapon_template = {
 					action_name = "action_melee_start_left",
 					chain_time = 0.4
 				},
+				special_action = {
+					action_name = "action_weapon_special",
+					chain_time = 0.4
+				},
 				block = {
 					action_name = "action_block",
 					chain_time = 0.45
@@ -1180,7 +1232,7 @@ local weapon_template = {
 		action_weapon_special = {
 			kind = "activate_special",
 			start_input = "special_action",
-			activation_time = 1.3,
+			activation_time = 0.3,
 			allowed_during_sprint = true,
 			anim_event = "activate",
 			skip_3p_anims = false,
@@ -1224,11 +1276,11 @@ local weapon_template = {
 				},
 				start_attack = {
 					action_name = "action_melee_start_left",
-					chain_time = 1.4
+					chain_time = 0.75
 				},
 				block = {
 					action_name = "action_block",
-					chain_time = 1.4
+					chain_time = 0.75
 				}
 			}
 		},
@@ -1276,12 +1328,15 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.allow_sprinting_with_special = true
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.powermaul_2h
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.tank
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 4.8
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
+	active_on_abort = true,
 	disorientation_type = "ogryn_powermaul_disorientation",
 	active_duration = 4,
 	explosion_template = ExplosionTemplates.powermaul_activated_impact
@@ -1309,7 +1364,7 @@ weapon_template.overclocks = {
 	}
 }
 weapon_template.base_stats = {
-	thunderhammer_p1_m1_dps_stat = {
+	powermaul_2h_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1328,38 +1383,15 @@ weapon_template.base_stats = {
 			action_left_light = {
 				damage_trait_templates.thunderhammer_dps_stat
 			},
+			action_right_light = {
+				damage_trait_templates.thunderhammer_dps_stat
+			},
 			action_left_light_pushfollow = {
 				damage_trait_templates.thunderhammer_dps_stat
 			}
 		}
 	},
-	thunderhammer_p1_m1_armor_pierce_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_armor_pierce_stat",
-		display_name = "loc_stats_display_ap_stat",
-		is_stat_trait = true,
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			},
-			action_left_heavy = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			},
-			action_right_down_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			},
-			action_right_heavy = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			},
-			action_left_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			},
-			action_left_light_pushfollow = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
-			}
-		}
-	},
-	thunderhammer_p1_m1_control_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_control_stat",
+	powermaul_2h_control_stat = {
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
 		damage = {
@@ -1376,6 +1408,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.thunderhammer_control_stat
 			},
 			action_left_light = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_right_light = {
 				damage_trait_templates.thunderhammer_control_stat
 			},
 			action_left_light_pushfollow = {
@@ -1398,6 +1433,9 @@ weapon_template.base_stats = {
 			action_left_light = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
+			action_right_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
 			action_left_light_pushfollow = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
@@ -1418,38 +1456,169 @@ weapon_template.base_stats = {
 			action_left_light = {
 				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
 			},
+			action_right_light = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
 			action_left_light_pushfollow = {
 				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
 			}
 		}
 	},
-	thunderhammer_p1_m1_first_target_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_first_target_stat",
-		display_name = "loc_stats_display_first_target_stat",
+	powermaul_2h_armor_pierce_stat = {
+		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			},
 			action_right_down_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			},
 			action_left_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
+			},
+			action_right_light = {
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			},
 			action_left_light_pushfollow = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat
 			}
 		}
 	},
-	thunderhammer_p1_m1_defence_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_defence_stat",
+	ogryn_powermaul_power_output_stat = {
+		display_name = "loc_stats_display_power_output",
+		is_stat_trait = true,
+		explosion = {
+			action_left_down_light = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_left_heavy = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_right_down_light = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_right_heavy = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_left_light = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_right_light = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			},
+			action_left_light_pushfollow = {
+				overrides = {
+					powermaul_activated_impact = {
+						explosion_trait_templates.default_explosion_size_stat
+					}
+				}
+			}
+		},
+		damage = {
+			action_left_down_light = {
+				overrides = {
+					ogryn_powermaul_light_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_light_linesman_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_left_heavy = {
+				overrides = {
+					ogryn_powermaul_heavy_tank_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_heavy_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_right_down_light = {
+				overrides = {
+					ogryn_powermaul_light_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_light_linesman_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_right_heavy = {
+				overrides = {
+					ogryn_powermaul_heavy_tank_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_heavy_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_left_light = {
+				overrides = {
+					ogryn_powermaul_light_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_light_linesman_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_left_light_pushfollow = {
+				overrides = {
+					ogryn_powermaul_light_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_light_linesman_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_right_light = {
+				overrides = {
+					ogryn_powermaul_light_smiter_active = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					ogryn_powermaul_light_linesman_active = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			}
+		}
+	},
+	powermaul_2h_defence_stat = {
 		display_name = "loc_stats_display_defense_stat",
 		is_stat_trait = true,
 		stamina = {
@@ -1472,6 +1641,10 @@ table.append(weapon_template.traits, melee_common_traits)
 local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
 
 table.append(weapon_template.traits, melee_activated_traits)
+
+local weapon_traits_bespoke_powermaul_2h_p1 = table.keys(WeaponTraitsBespokePowermaul2hP1)
+
+table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_2h_p1)
 
 weapon_template.perks = {
 	thunderhammer_p1_m1_dps_perk = {
@@ -1607,7 +1780,7 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_crowd_control"
+		display_name = "loc_weapon_keyword_power_weapon"
 	},
 	{
 		display_name = "loc_weapon_keyword_heavy_charge"

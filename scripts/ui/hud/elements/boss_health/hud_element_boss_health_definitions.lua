@@ -18,7 +18,7 @@ local toughness_bar_size = HudElementBossToughnessSettings.size
 local toughness_bar_size_small = HudElementBossToughnessSettings.size_small
 local toughness_bar_position = {
 	0,
-	-13 - (health_bar_size_y + 5),
+	-13 - (health_bar_size_y + 6),
 	0
 }
 local name_text_size = HudElementBossNameSettings.size
@@ -31,7 +31,7 @@ local name_text_style = table.clone(HudElementBossNameSettings.style)
 name_text_style.offset = {
 	0,
 	15,
-	0
+	2
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -68,7 +68,7 @@ local widget_definitions = {}
 local single_target_widget_definitions = {
 	health = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -77,7 +77,7 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					3
+					4
 				},
 				size = health_bar_size,
 				color = {
@@ -89,7 +89,7 @@ local single_target_widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -98,7 +98,7 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					2
+					3
 				},
 				size = health_bar_size,
 				color = {
@@ -119,14 +119,14 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					1
+					2
 				},
 				size = health_bar_size,
 				color = UIHudSettings.color_tint_8
 			}
 		},
 		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_single",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
@@ -134,33 +134,19 @@ local single_target_widget_definitions = {
 				horizontal_alignment = "center",
 				offset = {
 					0,
-					0,
-					0
-				},
-				size = {
-					748,
-					130
-				},
-				color = UIHudSettings.color_tint_0
-			}
-		},
-		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_single_gauge",
-			style_id = "gauge",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					0,
-					-2,
+					-13,
 					1
 				},
 				size = {
-					666,
-					10
+					health_bar_size[1] + 4,
+					health_bar_size[2] + 4
 				},
-				color = UIHudSettings.color_tint_main_2
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
 			}
 		},
 		{
@@ -173,7 +159,7 @@ local single_target_widget_definitions = {
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -182,14 +168,14 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3
+					4
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_6
+				color = UIHudSettings.color_tint_secondary_1
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -198,7 +184,7 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					2
+					3
 				},
 				size = toughness_bar_size,
 				color = {
@@ -219,7 +205,7 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					1
+					2
 				},
 				size = toughness_bar_size,
 				color = UIHudSettings.color_tint_3
@@ -231,14 +217,22 @@ local single_target_widget_definitions = {
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "left",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					0
+					1
 				},
-				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_0
+				size = {
+					toughness_bar_size[1] + 4,
+					toughness_bar_size[2] + 4
+				},
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
 			}
 		}
 	}, "toughness_bar")
@@ -246,7 +240,7 @@ local single_target_widget_definitions = {
 local left_double_target_widget_definitions = {
 	health = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -255,7 +249,7 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					3
+					4
 				},
 				size = health_bar_size_small,
 				color = {
@@ -267,7 +261,7 @@ local left_double_target_widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -276,7 +270,7 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					2
+					3
 				},
 				size = health_bar_size_small,
 				color = {
@@ -297,48 +291,34 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					1
+					2
 				},
 				size = health_bar_size_small,
 				color = UIHudSettings.color_tint_8
 			}
 		},
 		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_double",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
-					-(health_bar_size_small[1] + small_bar_spacing) * 0.5,
-					-13,
-					0
-				},
-				size = {
-					312,
-					16
-				},
-				color = UIHudSettings.color_tint_0
-			}
-		},
-		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_double_gauge",
-			style_id = "gauge",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					-(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					-2,
+					-13,
 					1
 				},
 				size = {
-					333 - small_bar_spacing * 0.5,
-					10
+					health_bar_size_small[1] + 4,
+					health_bar_size_small[2] + 4
 				},
-				color = UIHudSettings.color_tint_main_2
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
 			}
 		},
 		{
@@ -350,14 +330,14 @@ local left_double_target_widget_definitions = {
 				offset = {
 					-(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					15,
-					2
+					3
 				}
 			})
 		}
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -366,14 +346,14 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3
+					4
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_6
+				color = UIHudSettings.color_tint_secondary_1
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -382,7 +362,7 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					2
+					3
 				},
 				size = toughness_bar_size_small,
 				color = {
@@ -403,7 +383,7 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					1
+					2
 				},
 				size = toughness_bar_size_small,
 				color = UIHudSettings.color_tint_3
@@ -417,12 +397,20 @@ local left_double_target_widget_definitions = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
 				offset = {
+					-2,
+					0,
+					1
+				},
+				size = {
+					toughness_bar_size_small[1] + 4,
+					toughness_bar_size_small[2] + 4
+				},
+				color = {
+					255,
 					0,
 					0,
 					0
-				},
-				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_0
+				}
 			}
 		}
 	}, "toughness_bar")
@@ -430,7 +418,7 @@ local left_double_target_widget_definitions = {
 local right_double_target_widget_definitions = {
 	health = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -439,7 +427,7 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					3
+					4
 				},
 				size = health_bar_size_small,
 				color = {
@@ -451,7 +439,7 @@ local right_double_target_widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_health_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -460,7 +448,7 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					2
+					3
 				},
 				size = health_bar_size_small,
 				color = {
@@ -481,14 +469,14 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					1
+					2
 				},
 				size = health_bar_size_small,
 				color = UIHudSettings.color_tint_8
 			}
 		},
 		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_double",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
@@ -497,32 +485,18 @@ local right_double_target_widget_definitions = {
 				offset = {
 					(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					-13,
-					0
-				},
-				size = {
-					312,
-					16
-				},
-				color = UIHudSettings.color_tint_0
-			}
-		},
-		{
-			value = "content/ui/materials/hud/backgrounds/boss_health_double_gauge",
-			style_id = "gauge",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					(health_bar_size_small[1] + small_bar_spacing) * 0.5,
-					-2,
 					1
 				},
 				size = {
-					333 - small_bar_spacing * 0.5,
-					10
+					health_bar_size_small[1] + 4,
+					health_bar_size_small[2] + 4
 				},
-				color = UIHudSettings.color_tint_main_2
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
 			}
 		},
 		{
@@ -534,14 +508,14 @@ local right_double_target_widget_definitions = {
 				offset = {
 					(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					15,
-					2
+					3
 				}
 			})
 		}
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "bar",
 			pass_type = "texture_uv",
 			style = {
@@ -553,11 +527,11 @@ local right_double_target_widget_definitions = {
 					3
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_6
+				color = UIHudSettings.color_tint_secondary_1
 			}
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/boss_toughness_fill",
 			style_id = "ghost",
 			pass_type = "texture_uv",
 			style = {
@@ -601,12 +575,20 @@ local right_double_target_widget_definitions = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
 				offset = {
-					toughness_bar_size_small[1] + small_bar_spacing,
+					toughness_bar_size_small[1] + small_bar_spacing - 2,
+					0,
+					1
+				},
+				size = {
+					toughness_bar_size_small[1] + 4,
+					toughness_bar_size_small[2] + 4
+				},
+				color = {
+					255,
+					0,
 					0,
 					0
-				},
-				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_0
+				}
 			}
 		}
 	}, "toughness_bar")

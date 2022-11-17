@@ -110,11 +110,6 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 		}
 	}
 }
-templates.weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting = {
-	weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking = {
 	weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking = {
 		{

@@ -35,6 +35,11 @@ FrameRateManager.request_full_frame_rate = function (self, reason)
 		local fps = DEDICATED_SERVER and INVERTED_FIXED_TIME_STEP or 0
 
 		Log.info("FrameRateManager", "Reason %q requested. Setting frame rate to %d", reason, fps)
+
+		if not DEDICATED_SERVER and not Application.render_caps("reflex_supported") then
+			fps = Application.render_config("settings", "nv_framerate_cap")
+		end
+
 		Application.set_time_step_policy("throttle", fps)
 	else
 		self._num_reasons = self._num_reasons + 1

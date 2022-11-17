@@ -161,6 +161,10 @@ ConstantMissionLobbyStatus.draw = function (self, dt, t, ui_renderer, render_set
 		return
 	end
 
+	if Managers.ui:view_active("blank_view") then
+		return
+	end
+
 	ConstantMissionLobbyStatus.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 end
 

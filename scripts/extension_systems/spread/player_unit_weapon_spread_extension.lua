@@ -1,5 +1,6 @@
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
+local Spread = require("scripts/utilities/spread")
 local PlayerUnitWeaponSpreadExtension = class("PlayerUnitWeaponSpreadExtension")
 local DEFAULT_MIN_RATIO = 0.25
 local DEFAULT_RANDOM_RATIO = 0.75
@@ -144,29 +145,6 @@ PlayerUnitWeaponSpreadExtension._player_event_decay = function (self, decay, t)
 	return is_in_player_event, decay_settings
 end
 
-PlayerUnitWeaponSpreadExtension._max_pitch_rotation = function (self, roll_rotation, pitch, yaw)
-	local x = yaw * math.cos(roll_rotation)
-	local y = pitch * math.sin(roll_rotation)
-	local length = Vector3.length(Vector3(x, y, 0))
-
-	if length == 0 then
-		return 0
-	end
-
-	local max_pitch_rotation = pitch * yaw / length
-
-	return math.degrees_to_radians(max_pitch_rotation)
-end
-
-PlayerUnitWeaponSpreadExtension._combine_spread_rotations = function (self, roll, pitch, current_rotation)
-	local roll_rotation = Quaternion(Vector3.forward(), roll)
-	local pitch_rotation = Quaternion(Vector3.right(), pitch)
-	local combined_rotation = Quaternion.multiply(current_rotation, roll_rotation)
-	combined_rotation = Quaternion.multiply(combined_rotation, pitch_rotation)
-
-	return combined_rotation
-end
-
 local PI_2 = math.pi * 2
 local EMPTY_TABLE = {}
 
@@ -229,41 +207,9 @@ PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rota
 end
 
 PlayerUnitWeaponSpreadExtension.target_style_spread = function (self, current_rotation, num_shots_fired, num_shots_in_attack, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random, roll_offset)
-	if bullseye and num_shots_fired == 1 then
-		return current_rotation
-	end
-
 	local seed = self._spread_control_component.seed
-	local random_value = nil
-	local current_shot = bullseye and num_shots_fired - 1 or num_shots_fired
-	local max_shots = bullseye and num_shots_in_attack - 1 or num_shots_in_attack
-	local shot_roll_current_angle = num_spread_circles * current_shot / max_shots
-	local shot_roll_spread_modifier = num_spread_circles / max_shots
-	seed, random_value = math.next_random(seed)
-	local random_roll = nil
-
-	if scatter_range then
-		random_roll = 1 - scatter_range + scatter_range * random_value * 2
-	elseif no_random then
-		random_roll = 1
-	else
-		random_roll = 0.9 + 0.2 * random_value
-	end
-
-	local roll = (roll_offset or 0) + random_roll * shot_roll_spread_modifier * 2 + shot_roll_current_angle - shot_roll_spread_modifier
-	local rolled_rotation = roll * PI_2
-	local max_pitch_rotation = self:_max_pitch_rotation(rolled_rotation, spread_pitch, spread_yaw)
-	local shots_per_layer = max_shots / num_spread_circles
-	local current_layer_of_shot = math.ceil(current_shot / shots_per_layer)
-	seed, random_value = math.next_random(seed)
-	local random_pitch_scale = math.sqrt(0.25 + 0.5 * random_value)
-
-	if no_random then
-		random_pitch_scale = 1
-	end
-
-	local pitch_rotation = random_pitch_scale * max_pitch_rotation * current_layer_of_shot / num_spread_circles
-	local final_rotation = self:_combine_spread_rotations(rolled_rotation, pitch_rotation, current_rotation)
+	local final_rotation = nil
+	final_rotation, seed = Spread.target_style_spread(current_rotation, num_shots_fired, num_shots_in_attack, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random, roll_offset, seed)
 	self._spread_control_component.seed = seed
 
 	return final_rotation

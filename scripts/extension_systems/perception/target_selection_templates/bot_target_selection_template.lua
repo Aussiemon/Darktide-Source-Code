@@ -2,9 +2,8 @@ local BotTargetSelection = require("scripts/utilities/bot_target_selection")
 local Breed = require("scripts/utilities/breed")
 local target_selection_template = {}
 local _calculate_score, _calculate_common_score, _calculate_melee_score, _calculate_ranged_score, _is_valid_target, _get_debug_info = nil
-local IN_PROXIMITY_DISTANCE_SQ = 25
 
-target_selection_template.bot_default = function (unit, unit_position, side, perception_component, behavior_component, breed, target_units, t, threat_units, bot_group, enemies_in_proximity, target_selection_debug_info_or_nil)
+target_selection_template.bot_default = function (unit, unit_position, side, perception_component, behavior_component, breed, target_units, t, threat_units, bot_group, target_selection_debug_info_or_nil)
 	local melee_gestalt = behavior_component.melee_gestalt
 	local ranged_gestalt = behavior_component.ranged_gestalt
 	local best_melee_score = -math.huge
@@ -36,7 +35,6 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 	local new_target_enemy_type = "none"
 
 	if should_fully_reevaluate then
-		local proximity_i = 1
 		local num_target_units = #target_units
 
 		for i = 1, num_target_units do
@@ -48,12 +46,6 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 			if is_valid_target then
 				local target_position = POSITION_LOOKUP[target_unit]
 				local target_distance_sq = vector3_distance_squared(unit_position, target_position)
-
-				if target_distance_sq <= IN_PROXIMITY_DISTANCE_SQ then
-					enemies_in_proximity[proximity_i] = target_unit
-					proximity_i = proximity_i + 1
-				end
-
 				local melee_score, ranged_score, is_urgent_target, is_priority_target, is_opportunity_target = _calculate_score(unit, target_unit, target_breed, target_distance_sq, melee_gestalt, ranged_gestalt, t, bot_group, current_target_enemy, target_ally, threat_units, debug_info_or_nil)
 
 				if best_melee_score < melee_score then
@@ -87,10 +79,6 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 			end
 		end
 
-		for i = proximity_i, #enemies_in_proximity do
-			enemies_in_proximity[i] = nil
-		end
-
 		if best_melee_target or best_ranged_target then
 			if best_ranged_score < best_melee_score then
 				new_target_enemy = best_melee_target
@@ -114,21 +102,6 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 		new_target_enemy_type = ranged_score < melee_score and "melee" or "ranged"
 		new_target_enemy = current_target_enemy
 		new_target_enemy_distance_sq = target_distance_sq
-	end
-
-	if not should_fully_reevaluate then
-		local num_enemies_in_proximity = #enemies_in_proximity
-
-		for i = num_enemies_in_proximity, 1, -1 do
-			local proximity_enemy = enemies_in_proximity[i]
-			local target_breed_or_nil = HEALTH_ALIVE[proximity_enemy] and ScriptUnit.extension(proximity_enemy, "unit_data_system"):breed()
-
-			if target_breed_or_nil == nil or not _is_valid_target(proximity_enemy, target_breed_or_nil, aggroed_minion_target_units) then
-				enemies_in_proximity[i] = enemies_in_proximity[num_enemies_in_proximity]
-				enemies_in_proximity[num_enemies_in_proximity] = nil
-				num_enemies_in_proximity = num_enemies_in_proximity - 1
-			end
-		end
 	end
 
 	if perception_component.target_enemy or new_target_enemy then

@@ -6,7 +6,8 @@ local group_name_display_names = {
 	input_group_movement = "loc_keybind_category_movement"
 }
 local services = {
-	"Ingame"
+	"Ingame",
+	"View"
 }
 local devices = {
 	"keyboard",
@@ -44,6 +45,7 @@ if IS_XBS or IS_WINDOWS then
 						group_name = group_name,
 						devices = devices,
 						sort_order = sort_order,
+						cancel_keys = cancel_keys,
 						on_activated = function (new_value, old_value)
 							for i = 1, #cancel_keys do
 								local cancel_key = cancel_keys[i]

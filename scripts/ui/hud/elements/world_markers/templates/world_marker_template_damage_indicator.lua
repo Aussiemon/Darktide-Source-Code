@@ -10,24 +10,38 @@ local size = {
 }
 template.size = size
 template.name = "damage_indicator"
-template.unit_node = "j_head"
+template.unit_node = "root_point"
 template.position_offset = {
 	0,
 	0,
-	0.9
+	0
 }
 template.check_line_of_sight = true
 template.max_distance = 200
 template.screen_clamp = false
-template.remove_on_death_duration = 1
+template.remove_on_death_duration = 2
 template.damage_number_settings = {
-	expand_duration = 0.4,
-	expand_bonus_scale = 20,
-	visibility_delay = 10.5,
-	max_float_y = 200,
-	start_y_offset = 40,
-	duration = 1,
-	fade_delay = 0.35
+	first_hit_size_scale = 1.2,
+	crit_hit_size_scale = 1.5,
+	visibility_delay = 5,
+	expand_bonus_scale = 30,
+	default_color = "white",
+	has_taken_damage_timer_y_offset = 34,
+	weakspot_color = "orange",
+	fade_delay = 0.35,
+	add_numbers_together_timer = 0.5,
+	shrink_duration = 1,
+	duration = 3,
+	x_offset_between_numbers = 38,
+	expand_duration = 0.2,
+	crit_color = "yellow",
+	hundreds_font_size = 14.4,
+	default_font_size = 17,
+	has_taken_damage_timer_remove_after_time = 5,
+	max_float_y = 100,
+	dps_font_size = 14.4,
+	x_offset = 1,
+	y_offset = 15
 }
 template.bar_settings = {
 	animate_on_health_increase = true,
@@ -70,24 +84,21 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				local damage_numbers = ui_content.damage_numbers
 				local damage_number_settings = template.damage_number_settings
 				local z_position = position[3]
-				local y_position = position[2] - damage_number_settings.start_y_offset
-				local x_position = position[1]
-				local default_font_size = ui_style.font_size
+				local y_position = position[2] + damage_number_settings.y_offset
+				local x_position = position[1] + damage_number_settings.x_offset
+				local scale = RESOLUTION_LOOKUP.scale
+				local default_font_size = damage_number_settings.default_font_size * scale
+				local dps_font_size = damage_number_settings.dps_font_size * scale
+				local hundreds_font_size = damage_number_settings.hundreds_font_size * scale
 				local font_type = ui_style.font_type
-				local text_color = ui_style.text_color
+				local default_color = Color[damage_number_settings.default_color](255, true)
+				local crit_color = Color[damage_number_settings.crit_color](255, true)
+				local weakspot_color = Color[damage_number_settings.weakspot_color](255, true)
+				local text_color = table.clone(default_color)
 				local num_damage_numbers = #damage_numbers
 
 				for i = num_damage_numbers, 1, -1 do
 					local damage_number = damage_numbers[i]
-					local wanted_y_position = nil
-
-					if not damage_number.y_position then
-						damage_number.y_position = position.y - damage_number_settings.start_y_offset
-						wanted_y_position = position.y
-					else
-						wanted_y_position = damage_number.y_position
-					end
-
 					local duration = damage_number.duration
 					local time = damage_number.time
 					local progress = math.clamp(time / duration, 0, 1)
@@ -98,7 +109,23 @@ template.create_widget_defintion = function (template, scenegraph_id)
 						damage_number.time = damage_number.time + ui_renderer.dt
 					end
 
-					local font_size = default_font_size * 0.75
+					if damage_number.last_hit_was_critical then
+						text_color[2] = crit_color[2]
+						text_color[3] = crit_color[3]
+						text_color[4] = crit_color[4]
+						damage_number.expand_duration = damage_number_settings.expand_duration
+					elseif damage_number.hit_weakspot then
+						text_color[2] = weakspot_color[2]
+						text_color[3] = weakspot_color[3]
+						text_color[4] = weakspot_color[4]
+					else
+						text_color[2] = default_color[2]
+						text_color[3] = default_color[3]
+						text_color[4] = default_color[4]
+					end
+
+					local value = damage_number.value
+					local font_size = value <= 99 and default_font_size or hundreds_font_size
 					local expand_duration = damage_number.expand_duration
 
 					if expand_duration then
@@ -109,22 +136,66 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 						if expand_progress >= 1 then
 							damage_number.expand_duration = nil
+							damage_number.shrink_start_t = duration - damage_number_settings.shrink_duration
 						else
 							damage_number.expand_time = expand_time + ui_renderer.dt
 						end
+					elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+						local diff = time - damage_number.shrink_start_t
+						local percentage = diff / damage_number_settings.shrink_duration
+						local scale = 1 - percentage
+						font_size = font_size * scale
+						text_color[1] = text_color[1] * scale
 					end
 
-					local value = damage_number.value
 					local text = value
 					local size = ui_style.size
 					local current_order = num_damage_numbers - i
+
+					if current_order == 0 then
+						local scale_size = damage_number.last_hit_was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+						font_size = font_size * scale_size
+					end
+
 					position[3] = z_position + current_order
-					position[2] = wanted_y_position - damage_number_settings.max_float_y * progress
-					position[1] = x_position + (current_order - 5 * math.floor(current_order / 5)) * 15
+					position[2] = y_position
+					position[1] = x_position + current_order * damage_number_settings.x_offset_between_numbers
 
-					UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, text_color)
+					UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, text_color, {})
+				end
 
-					damage_number.y_position = wanted_y_position
+				local damage_has_started = ui_content.damage_has_started
+
+				if damage_has_started then
+					if not ui_content.damage_has_started_timer then
+						ui_content.damage_has_started_timer = ui_renderer.dt
+					elseif not ui_content.dead then
+						ui_content.damage_has_started_timer = ui_content.damage_has_started_timer + ui_renderer.dt
+					end
+
+					if ui_content.dead and ui_content.damage_has_started_timer > 0.09 then
+						local damage_has_started_position = Vector3(x_position, y_position - damage_number_settings.has_taken_damage_timer_y_offset, z_position)
+						local dps = ui_content.damage_has_started_timer > 1 and ui_content.damage_taken / ui_content.damage_has_started_timer or ui_content.damage_taken
+						local text = string.format("%d DPS", dps)
+						dps_font_size = dps_font_size * damage_number_settings.first_hit_size_scale
+
+						UIRenderer.draw_text(ui_renderer, text, dps_font_size, font_type, damage_has_started_position, size, ui_style.text_color, {})
+					end
+
+					if not ui_content.dead and ui_content.last_hit_zone_name then
+						local hit_zone_name = ui_content.last_hit_zone_name
+						local breed = ui_content.breed
+						local armor_type = breed.armor_type
+
+						if breed.hitzone_armor_override and breed.hitzone_armor_override[hit_zone_name] then
+							armor_type = breed.hitzone_armor_override[hit_zone_name]
+						end
+
+						local armor_type_text = Localize("loc_glossary_armour_type_" .. armor_type)
+						local armor_type_position = Vector3(x_position, y_position - damage_number_settings.has_taken_damage_timer_y_offset, z_position)
+
+						UIRenderer.draw_text(ui_renderer, armor_type_text, dps_font_size, font_type, armor_type_position, size, ui_style.text_color, {})
+					end
 				end
 
 				ui_style.font_size = default_font_size
@@ -264,6 +335,8 @@ template.on_enter = function (widget, marker, template)
 	content.breed = breed
 end
 
+local HEAD_NODE = "j_head"
+
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)
 	local content = widget.content
 	local style = widget.style
@@ -280,6 +353,37 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		damage_taken = max_health
 	end
 
+	if health_extension then
+		content.last_hit_zone_name = health_extension:last_hit_zone_name()
+		local breed = content.breed
+		local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
+
+		if hit_zone_weakspot_types and hit_zone_weakspot_types[content.last_hit_zone_name] then
+			content.hit_weakspot = true
+		else
+			content.hit_weakspot = false
+		end
+
+		content.last_hit_was_critical = health_extension:last_hit_was_critical()
+	end
+
+	if ALIVE[unit] and damage_taken > 0 then
+		local root_position = Unit.world_position(unit, 1)
+
+		if not marker.world_position then
+			local node = Unit.node(unit, HEAD_NODE)
+			local head_position = Unit.world_position(unit, node)
+			head_position.z = head_position.z + 0.5
+			marker.world_position = Vector3Box(head_position)
+		else
+			local position = marker.world_position:unbox()
+			position.x = root_position.x
+			position.y = root_position.y
+
+			marker.world_position:store(position)
+		end
+	end
+
 	local old_damage_taken = content.damage_taken
 	local damage_number_settings = template.damage_number_settings
 
@@ -292,12 +396,13 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			local damage_diff = math.ceil(damage_taken - old_damage_taken)
 			local latest_damage_number = damage_numbers[#damage_numbers]
 			local should_add = true
+			local last_hit_was_critical = health_extension and health_extension:last_hit_was_critical()
 
-			if latest_damage_number and t - latest_damage_number.start_time < 0.25 then
+			if latest_damage_number and t - latest_damage_number.start_time < damage_number_settings.add_numbers_together_timer then
 				should_add = false
 			end
 
-			if should_add then
+			if content.add_on_next_number or last_hit_was_critical or should_add then
 				local damage_number = {
 					expand_time = 0,
 					time = 0,
@@ -306,16 +411,51 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					value = damage_diff,
 					expand_duration = damage_number_settings.expand_duration
 				}
+				local breed = content.breed
+				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
+
+				if hit_zone_weakspot_types and hit_zone_weakspot_types[content.last_hit_zone_name] then
+					damage_number.hit_weakspot = true
+				else
+					damage_number.hit_weakspot = false
+				end
+
+				damage_number.last_hit_was_critical = last_hit_was_critical
 				damage_numbers[#damage_numbers + 1] = damage_number
+
+				if content.add_on_next_number then
+					content.add_on_next_number = nil
+				end
+
+				if last_hit_was_critical then
+					content.add_on_next_number = true
+				end
 			else
 				latest_damage_number.value = math.clamp(latest_damage_number.value + damage_diff, 0, max_health)
 				latest_damage_number.time = 0
 				latest_damage_number.y_position = nil
 				latest_damage_number.start_time = t
+				local breed = content.breed
+				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
+
+				if hit_zone_weakspot_types and hit_zone_weakspot_types[content.last_hit_zone_name] then
+					latest_damage_number.hit_weakspot = true
+				else
+					latest_damage_number.hit_weakspot = false
+				end
+
+				latest_damage_number.last_hit_was_critical = last_hit_was_critical
 			end
 		end
+
+		if not content.damage_has_started then
+			content.damage_has_started = true
+		end
+
+		content.last_damage_taken_time = t
 	end
 
+	content.t = t
 	local bar_logic = marker.bar_logic
 
 	bar_logic:update(dt, t, health_percent)
@@ -364,6 +504,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	if not HEALTH_ALIVE[unit] then
 		if not content.remove_timer then
 			content.remove_timer = template.remove_on_death_duration
+			content.dead = true
 		else
 			content.remove_timer = content.remove_timer - dt
 
@@ -373,35 +514,31 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		end
 	end
 
-	local draw = marker.draw
+	local alpha_multiplier = line_of_sight_progress
+	content.line_of_sight_progress = line_of_sight_progress
+	local visibility_delay = content.visibility_delay
 
-	if draw then
-		local alpha_multiplier = line_of_sight_progress
-		content.line_of_sight_progress = line_of_sight_progress
-		local visibility_delay = content.visibility_delay
+	if visibility_delay then
+		visibility_delay = visibility_delay - dt
+		content.visibility_delay = visibility_delay >= 0 and visibility_delay or nil
 
-		if visibility_delay then
-			visibility_delay = visibility_delay - dt
-			content.visibility_delay = visibility_delay >= 0 and visibility_delay or nil
-
-			if not content.visibility_delay then
-				content.fade_delay = damage_number_settings.fade_delay
-			end
+		if not content.visibility_delay then
+			content.fade_delay = damage_number_settings.fade_delay
 		end
-
-		local fade_delay = content.fade_delay
-
-		if fade_delay then
-			fade_delay = fade_delay - dt
-			content.fade_delay = fade_delay >= 0 and fade_delay or nil
-			local progress = math.clamp(fade_delay / damage_number_settings.fade_delay, 0, 1)
-			alpha_multiplier = alpha_multiplier * progress
-		elseif not visibility_delay then
-			alpha_multiplier = 0
-		end
-
-		widget.alpha_multiplier = alpha_multiplier
 	end
+
+	local fade_delay = content.fade_delay
+
+	if fade_delay then
+		fade_delay = fade_delay - dt
+		content.fade_delay = fade_delay >= 0 and fade_delay or nil
+		local progress = math.clamp(fade_delay / damage_number_settings.fade_delay, 0, 1)
+		alpha_multiplier = alpha_multiplier * progress
+	elseif not visibility_delay then
+		alpha_multiplier = 0
+	end
+
+	widget.alpha_multiplier = alpha_multiplier
 end
 
 return template

@@ -20,9 +20,6 @@ EACServerManager.init = function (self)
 		return
 	end
 
-	EOS.set_server(true)
-	_info("EOS.set_server(true)")
-
 	self._state = EAC_STATES.ready
 end
 

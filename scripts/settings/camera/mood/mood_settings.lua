@@ -1,6 +1,6 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "coruption_taken", "coruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
+local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "coruption_taken", "coruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "ogryn_bonebreaker_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
 local status = table.enum("active", "inactive", "removing")
 mood_settings.mood_types = types
 mood_settings.status = status
@@ -171,6 +171,12 @@ mood_settings.moods = {
 		blend_out_time = 0.1
 	},
 	[types.zealot_maniac_combat_ability] = {
+		shading_environment = "content/shading_environments/moods/zealot_combat_ability_mood",
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
+	},
+	[types.ogryn_bonebreaker_combat_ability] = {
 		shading_environment = "content/shading_environments/moods/zealot_combat_ability_mood",
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,

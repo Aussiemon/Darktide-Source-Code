@@ -642,36 +642,39 @@ local on_demand_vo_veteran_female_b = {
 	},
 	smart_tag_vo_enemy_daemonhost_witch_not_alerted = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_veteran_female_b__seen_enemy_daemonhost_01",
+			"loc_veteran_female_b__seen_enemy_daemonhost_02",
 			"loc_veteran_female_b__seen_enemy_daemonhost_03",
 			"loc_veteran_female_b__seen_enemy_daemonhost_04",
 			"loc_veteran_female_b__seen_enemy_daemonhost_05",
 			"loc_veteran_female_b__seen_enemy_daemonhost_06",
-			"loc_veteran_female_b__seen_enemy_daemonhost_07",
 			"loc_veteran_female_b__seen_enemy_daemonhost_08",
+			"loc_veteran_female_b__seen_enemy_daemonhost_09",
 			"loc_veteran_female_b__seen_enemy_daemonhost_10"
 		},
 		sound_events_duration = {
 			0.725521,
+			1.00225,
 			1.289042,
 			1.141063,
 			2.043125,
 			1.7045,
-			2.051667,
 			1.055688,
+			1.334583,
 			1.260583
 		},
 		sound_event_weights = {
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111
 		},
 		randomize_indexes = {}
 	},
@@ -712,6 +715,29 @@ local on_demand_vo_veteran_female_b = {
 			1.12425,
 			1.243604,
 			1.007438
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_b__smart_tag_vo_enemy_berserker_01",
+			"loc_veteran_female_b__smart_tag_vo_enemy_berserker_02",
+			"loc_veteran_female_b__smart_tag_vo_enemy_berserker_03",
+			"loc_veteran_female_b__smart_tag_vo_enemy_berserker_04"
+		},
+		sound_events_duration = {
+			0.635917,
+			0.586896,
+			0.756104,
+			0.744021
 		},
 		sound_event_weights = {
 			0.25,

@@ -11,12 +11,12 @@ local HumanInputHandler = require("scripts/managers/player/player_game_states/hu
 local InputHandlerSettings = require("scripts/managers/player/player_game_states/input_handler_settings")
 local LedgeHangingPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/ledge_hanging_player_orientation")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
-local MissionBoardOrientation = require("scripts/extension_systems/mission_board/mission_board_orientation")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SmoothForceViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/smooth_force_view_player_orientation")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local WeaponLockViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/weapon_lock_view_player_orientation")
+local WeaponForceViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/weapon_force_view_player_orientation")
 local unit_alive = Unit.alive
 local HumanGameplay = class("HumanGameplay")
 
@@ -140,18 +140,14 @@ HumanGameplay._create_player_orientation_classes = function (self, player)
 	self._forced_player_orientation = ForcedPlayerOrientation:new(player, orientation)
 	self._ledge_hanging_player_orientation = LedgeHangingPlayerOrientation:new(player, orientation)
 	self._weapon_lock_view_player_orientation = WeaponLockViewPlayerOrientation:new(player, orientation)
+	self._weapon_force_view_player_orientation = WeaponForceViewPlayerOrientation:new(player, orientation)
 	self._smooth_force_view_player_orientation = SmoothForceViewPlayerOrientation:new(player, orientation)
 
 	if not self._dead_player_orientation then
 		self._dead_player_orientation = DeadPlayerOrientation:new(player, orientation)
 	end
 
-	self._mission_board_orientation = MissionBoardOrientation:new({
-		pitch = 0,
-		yaw = 0,
-		roll = 0
-	})
-	self._communication_wheel_orientation = CommunicationWheelPlayerOrientation:new(orientation)
+	self._communication_wheel_orientation = CommunicationWheelPlayerOrientation:new(player, orientation)
 end
 
 HumanGameplay._destroy_player_orientation_classes = function (self, all)
@@ -164,7 +160,6 @@ HumanGameplay._destroy_player_orientation_classes = function (self, all)
 		self._dead_player_orientation:destroy()
 	end
 
-	self._mission_board_orientation:destroy()
 	self._communication_wheel_orientation:destroy()
 end
 
@@ -312,10 +307,6 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 
 	if player_orientation_class then
 		player_orientation_class:pre_update(main_t, main_dt, input, sensitivity_modifier, rotation_contraints)
-
-		if self._mission_board_orientation and self._mission_board_orientation ~= player_orientation_class then
-			self._mission_board_orientation:player_orientation(player:get_orientation())
-		end
 	end
 end
 
@@ -324,17 +315,24 @@ HumanGameplay._player_orientation_class = function (self)
 		return self._dead_player_orientation
 	end
 
+	local weapon_lock_view_component_state = self._weapon_lock_view_component.state
+	local ui_using_camera_orientation = false
+
+	if Managers.ui then
+		ui_using_camera_orientation = Managers.ui:communication_wheel_wants_camera_control()
+	end
+
 	if self._force_look_rotation_component.use_force_look_rotation then
 		return self._forced_player_orientation
 	elseif PlayerUnitStatus.is_ledge_hanging(self._character_state_component) then
 		return self._ledge_hanging_player_orientation
-	elseif self._weapon_lock_view_component.is_active then
+	elseif weapon_lock_view_component_state == "weapon_lock" or weapon_lock_view_component_state == "weapon_lock_no_lerp" then
 		return self._weapon_lock_view_player_orientation
-	elseif PlayerUnitStatus.is_in_mission_board(self._character_state_component, self._interacting_character_state_component) then
-		return self._mission_board_orientation
+	elseif weapon_lock_view_component_state == "force_look" then
+		return self._weapon_force_view_player_orientation
 	elseif SweepStickyness.is_sticking_to_unit(self._action_sweep_component) then
 		return self._smooth_force_view_player_orientation
-	elseif Managers.ui and Managers.ui:communication_wheel_active() then
+	elseif ui_using_camera_orientation then
 		return self._communication_wheel_orientation
 	else
 		return self._default_player_orientation
@@ -423,13 +421,36 @@ HumanGameplay._update_spectating = function (self, camera_follow_unit_or_nil)
 		return
 	end
 
+	local own_player = self._player
+	local spectating_own_player = current_spectated_player_or_nil == own_player
+	local spectating_requires_update = false
+
 	if following_player_or_nil ~= current_spectated_player_or_nil then
+		spectating_requires_update = true
+	elseif spectating_own_player then
+		local unit_data_ext = ScriptUnit.extension(camera_follow_unit_or_nil, "unit_data_system")
+		spectating_requires_update = not PlayerUnitStatus.is_hogtied(unit_data_ext:read_component("character_state"))
+	end
+
+	if spectating_requires_update then
 		if current_spectated_player_or_nil then
 			self:_stop_spectating()
 		end
 
-		if following_player_or_nil and following_player_or_nil ~= self._player then
-			self:_start_spectating(following_player_or_nil)
+		if following_player_or_nil then
+			local can_spectate = true
+
+			if following_player_or_nil == own_player then
+				local unit_data_ext = ScriptUnit.extension(camera_follow_unit_or_nil, "unit_data_system")
+
+				if not PlayerUnitStatus.is_hogtied(unit_data_ext:read_component("character_state")) then
+					can_spectate = false
+				end
+			end
+
+			if can_spectate then
+				self:_start_spectating(following_player_or_nil)
+			end
 		end
 	end
 end
@@ -439,8 +460,9 @@ HumanGameplay._handle_huds = function (self, camera_follow_unit_or_nil)
 	local own_player_unit_or_nil = own_player.player_unit
 	local spectated_player_or_nil = self._spectated_player
 	local spectated_player_unit_or_nil = spectated_player_or_nil and spectated_player_or_nil.player_unit
+	local spectating_ourself = spectated_player_or_nil and spectated_player_or_nil == own_player
 	local following_own_unit = own_player_unit_or_nil and camera_follow_unit_or_nil == own_player_unit_or_nil
-	local should_have_own_hud = following_own_unit or Managers.state.cinematic:active()
+	local should_have_own_hud = following_own_unit and not spectating_ourself or Managers.state.cinematic:active()
 	local following_spectated_player_unit = spectated_player_unit_or_nil and camera_follow_unit_or_nil == spectated_player_unit_or_nil
 
 	if self._has_own_hud and not should_have_own_hud then

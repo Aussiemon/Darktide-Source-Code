@@ -7,6 +7,7 @@ DoorControlPanelExtension.init = function (self, extension_init_context, unit, e
 	self._state = STATES.inactive
 	self._door_extension = nil
 	self._animation_extension = nil
+	self._light_active = nil
 end
 
 DoorControlPanelExtension.setup_from_component = function (self, start_active)
@@ -101,13 +102,25 @@ DoorControlPanelExtension.toggle_door_state = function (self, interactor_unit)
 end
 
 DoorControlPanelExtension._activate_lightbulbs = function (self, val)
-	local color = Vector3(0, 255, 0)
+	if self._light_active == val then
+		return
+	end
 
-	if not val then
+	local color = nil
+
+	if val then
+		color = Vector3(0, 255, 0)
+
+		Unit.flow_event(self._unit, "lua_lightbulb_on")
+	else
 		color = Vector3(255, 0, 0)
+
+		Unit.flow_event(self._unit, "lua_lightbulb_off")
 	end
 
 	Unit.set_vector3_for_material(self._unit, "basic_il_red", "emissive_color", color)
+
+	self._light_active = val
 end
 
 DoorControlPanelExtension._play_anim = function (self, anim_event)

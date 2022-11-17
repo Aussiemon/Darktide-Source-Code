@@ -35,8 +35,8 @@ local function _create_task(task_name, stat, specifiers)
 end
 
 _create_task("KillBosses", SessionStats.definitions.kill_boss)
-_create_task("BlockDamage", SessionStats.definitions.blocked_damage)
-_create_task("KillMinions", SessionStats.definitions.kill_minion, {
+_create_task("BlockDamage", SessionStats.definitions.contract_team_blocked_damage)
+_create_task("KillMinions", SessionStats.definitions.contract_team_kills, {
 	enemyType = "name",
 	weaponType = "type"
 })

@@ -27,40 +27,43 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			-1
+			0
 		}
 	}
 }
 local ammo_text_style = {
+	line_spacing = 0.9,
 	font_size = 48,
-	font_type = "rexlia",
 	drop_shadow = false,
+	font_type = "machine_medium",
 	text_color = UIHudSettings.color_tint_main_1,
 	offset = {
 		-64,
 		0,
-		2
+		6
 	},
 	default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
 	focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused,
 	text_horizontal_alignment = "right",
 	text_vertical_alignment = "top",
-	vertical_alignment = "right",
-	drop_shadow = false
+	vertical_alignment = "center",
+	drop_shadow = false,
+	clip_ammo = true
 }
 local ammo_spare_text_style = table.clone(ammo_text_style)
 ammo_spare_text_style.offset = {
-	-34,
-	-6,
-	3
+	0,
+	0,
+	7
 }
 ammo_spare_text_style.text_horizontal_alignment = "right"
-ammo_spare_text_style.text_vertical_alignment = "bottom"
-ammo_spare_text_style.vertical_alignment = "right"
-ammo_spare_text_style.text_color = UIHudSettings.color_tint_main_1
+ammo_spare_text_style.text_vertical_alignment = "top"
+ammo_spare_text_style.vertical_alignment = "center"
+ammo_spare_text_style.text_color = UIHudSettings.color_tint_main_3
 ammo_spare_text_style.default_text_color = ammo_text_style.text_color
 ammo_spare_text_style.default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default_small
 ammo_spare_text_style.focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused_small
+ammo_spare_text_style.clip_ammo = false
 local input_text_style = table.clone(UIFontSettings.hud_body)
 input_text_style.horizontal_alignment = "left"
 input_text_style.vertical_alignment = "center"
@@ -68,9 +71,9 @@ input_text_style.text_horizontal_alignment = "left"
 input_text_style.text_vertical_alignment = "center"
 input_text_style.font_size = 20
 input_text_style.offset = {
-	size[1] + 10,
+	10,
 	0,
-	2
+	8
 }
 input_text_style.drop_shadow = false
 input_text_style.text_color = UIHudSettings.color_tint_main_1
@@ -92,16 +95,18 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/hud/icons/weapon_icon_container",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = icon_size,
 				default_size = icon_size,
 				offset = {
 					0,
 					0,
-					2
+					4
 				},
 				color = UIHudSettings.color_tint_main_2,
+				default_color = Color.terminal_corner_hover(nil, true),
+				highlight_color = Color.terminal_icon(nil, true),
 				material_values = {}
 			}
 		}
@@ -191,7 +196,7 @@ local widget_definitions = {
 				offset = {
 					20,
 					0,
-					0
+					10
 				},
 				color = UIHudSettings.color_tint_main_2
 			}
@@ -199,86 +204,28 @@ local widget_definitions = {
 	}, "background"),
 	background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
-				color = color_copy({}, UIHudSettings.color_tint_main_4, 150)
+				color = Color.terminal_background_gradient(255, true)
 			}
 		},
 		{
-			value = "content/ui/materials/buttons/background_selected",
-			style_id = "background_glow",
-			pass_type = "texture",
+			style_id = "line",
+			pass_type = "rect",
 			style = {
-				offset = {
-					0,
-					0,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_main_1, 255)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "shadow_frame",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					0,
-					0,
-					0
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/hud/backgrounds/weapon_frame",
-			style_id = "frame",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
-				size_addition = {
-					5,
-					0
+				color = Color.terminal_icon(nil, true),
+				default_color = Color.terminal_corner(nil, true),
+				highlight_color = Color.terminal_corner_hover(nil, true),
+				size = {
+					4
 				},
-				color = UIHudSettings.color_tint_main_2,
 				offset = {
 					0,
 					0,
 					2
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/inner_shadow_medium",
-			style_id = "ammo_refill_frame",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "right",
-				size_addition = {
-					-4,
-					-4
-				},
-				color = color_copy({}, UIHudSettings.color_tint_main_1, 0),
-				offset = {
-					-2,
-					0,
-					1
 				}
 			}
 		}

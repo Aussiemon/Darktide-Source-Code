@@ -64,6 +64,12 @@ BtBeastOfNurgleConsumeMinionAction.leave = function (self, unit, breed, blackboa
 end
 
 BtBeastOfNurgleConsumeMinionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
+	local target_unit = scratchpad.target_unit
+
+	if not ALIVE[target_unit] or not HEALTH_ALIVE[target_unit] then
+		scratchpad.state = "invalid_target_unit"
+	end
+
 	local state = scratchpad.state
 
 	if state == "tongue_out" then
@@ -95,6 +101,7 @@ BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, scratchpa
 	local broadphase_config = scratchpad.broadphase_config
 	local broadphase_relation = broadphase_config.relation
 	local radius = broadphase_config.radius
+	local valid_breeds = broadphase_config.valid_breeds
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 	local side_system = Managers.state.extension:system("side_system")
@@ -126,12 +133,8 @@ BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, scratchpa
 					local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
 
-					if Breed.is_minion(breed) then
-						local tags = breed.tags
-
-						if tags and tags.horde then
-							return hit_unit
-						end
+					if Breed.is_minion(breed) and valid_breeds[breed.name] then
+						return hit_unit
 					end
 				end
 			end
@@ -166,13 +169,6 @@ end
 
 BtBeastOfNurgleConsumeMinionAction._start_tongue_in = function (self, unit, scratchpad, action_data, t)
 	local target_unit = scratchpad.target_unit
-
-	if not ALIVE[target_unit] or not HEALTH_ALIVE[target_unit] then
-		scratchpad.state = "invalid_target_unit"
-
-		return
-	end
-
 	local target_behavior_extension = ScriptUnit.extension(target_unit, "behavior_system")
 	local target_brain = target_behavior_extension:brain()
 
@@ -214,16 +210,20 @@ BtBeastOfNurgleConsumeMinionAction._update_tongue_in = function (self, unit, scr
 
 		scratchpad.consume_t = nil
 	end
+
+	if scratchpad.heal_t and scratchpad.heal_t < t then
+		self:_heal(unit, action_data)
+
+		scratchpad.heal_t = nil
+	end
 end
 
 BtBeastOfNurgleConsumeMinionAction._start_consuming = function (self, unit, scratchpad, action_data, t)
-	if ALIVE[unit] then
-		World.unlink_unit(scratchpad.world, scratchpad.target_unit, true)
+	local target_unit = scratchpad.target_unit
+	local reset_scene_graph = true
 
-		local minion_spawn_manager = Managers.state.minion_spawn
-
-		minion_spawn_manager:despawn(scratchpad.target_unit)
-	end
+	World.unlink_unit(scratchpad.world, target_unit, reset_scene_graph)
+	Managers.state.minion_spawn:despawn(target_unit)
 
 	scratchpad.state = "consuming"
 end
@@ -234,15 +234,9 @@ BtBeastOfNurgleConsumeMinionAction._update_consuming = function (self, unit, scr
 
 		return
 	end
-
-	if scratchpad.heal_t and scratchpad.heal_t < t then
-		self:_heal(unit, scratchpad, action_data)
-
-		scratchpad.heal_t = nil
-	end
 end
 
-BtBeastOfNurgleConsumeMinionAction._heal = function (self, unit, scratchpad, action_data)
+BtBeastOfNurgleConsumeMinionAction._heal = function (self, unit, action_data)
 	local heal_amount = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_amount)
 	local heal_type = nil
 

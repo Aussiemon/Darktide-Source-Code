@@ -29,7 +29,8 @@ local effect_template = {
 			from_unit = attachment_unit,
 			from_node = source_node_index,
 			radius = CultistFlamerSettings.radius,
-			range = CultistFlamerSettings.range
+			range = CultistFlamerSettings.range,
+			set_muzzle_as_control_point_1 = CultistFlamerSettings.set_muzzle_as_control_point_1
 		}
 
 		_switch_state(nil, state, template_data, template_context)

@@ -108,7 +108,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.25,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		instant_aggro_chance = 0,
 		hesitate_anim_events = {
 			"alerted",
@@ -430,15 +430,15 @@ local action_data = {
 		}
 	},
 	shoot_spray_n_pray = {
-		inventory_slot = "slot_ranged_weapon",
-		utility_weight = 6,
+		utility_weight = 10,
 		vo_event = "start_shooting",
 		suppressive_fire_spread_multiplier = 4,
+		rotation_speed = 2,
 		out_of_aim_anim_event = "out_of_aim",
 		suppressive_fire = true,
 		attack_intensity_type = "elite_ranged",
-		rotation_speed = 2,
 		clear_shot_line_of_sight_id = "gun",
+		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
 		considerations = UtilityConsiderations.shoot_spray_n_pray,
 		aim_anim_events = {
@@ -454,6 +454,9 @@ local action_data = {
 			fwd = "hip_fire",
 			left = "aim_turn_left",
 			right = "aim_turn_right"
+		},
+		cooldown_anim_events = {
+			"out_of_aim"
 		},
 		shoot_turn_anims = {
 			bwd = "aim_standing_bwd",

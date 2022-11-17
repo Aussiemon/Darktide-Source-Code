@@ -458,9 +458,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 	if HEALTH_ALIVE[marker_unit] then
 		local health_extension = ScriptUnit.extension(marker_unit, "health_system")
-		local damaged_max_health = health_extension:damaged_max_health()
-		local max_health = health_extension:max_health()
-		health_max_percentage = damaged_max_health / max_health
+		health_max_percentage = health_extension:current_health_percent()
 	end
 
 	content.progress_bar_fraction = health_max_percentage

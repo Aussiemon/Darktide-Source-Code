@@ -8,7 +8,7 @@ local StateMachine = require("scripts/foundation/utilities/state_machine")
 local SessionLocalStateMachine = class("SessionLocalStateMachine")
 SessionLocalStateMachine.TIMEOUT = 15
 
-SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object)
+SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object, clock_handler_client)
 	local shared_state = {
 		has_joined_session = false,
 		engine_lobby = engine_lobby,
@@ -16,6 +16,7 @@ SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, 
 		network_delegate = network_delegate,
 		timeout = SessionLocalStateMachine.TIMEOUT,
 		gameobject_callback_object = gameobject_callback_object,
+		clock_handler_client = clock_handler_client,
 		event_list = {}
 	}
 	self._shared_state = shared_state

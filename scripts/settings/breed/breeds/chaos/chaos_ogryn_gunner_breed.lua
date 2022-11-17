@@ -27,29 +27,35 @@ local breed_data = {
 	use_bone_lod = true,
 	sub_faction_name = "chaos",
 	unit_template_name = "minion",
-	spawn_anim_state = "to_gunner",
-	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
-	game_object_type = "minion_elite_ranged",
+	spawn_inventory_slot = "slot_ranged_weapon",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
+	half_extent_right = 0.5,
+	smite_stagger_immunity = true,
+	half_extent_forward = 0.5,
+	accumulative_stagger_multiplier = 0.25,
 	use_avoidance = true,
-	spawn_inventory_slot = "slot_ranged_weapon",
-	challenge_rating = 10,
+	game_object_type = "minion_elite_ranged",
+	challenge_rating = 8,
 	bone_lod_radius = 1.7,
 	use_wounds = true,
+	explosion_radius = 0.25,
 	display_name = "loc_breed_display_name_chaos_ogryn_gunner",
 	run_speed = 6.2,
 	health_type_override = "health_medium",
+	spawn_anim_state = "to_gunner",
 	faction_name = "chaos",
-	base_height = 1.7,
+	base_height = 2.5,
+	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
 	ignore_attack_delay = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 3,
 	player_locomotion_constrain_radius = 0.9,
-	stagger_reduction_ranged = 25,
+	stagger_reduction_ranged = 35,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
+	explosion_power_multiplier = 2,
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	hit_mass = 100,
 	reduced_hit_mass = 5,
@@ -79,9 +85,9 @@ local breed_data = {
 		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 3,
+		[stagger_types.light] = 1.5,
+		[stagger_types.medium] = 3,
+		[stagger_types.heavy] = 4,
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 1,
 		[stagger_types.killshot] = 2,
@@ -106,7 +112,7 @@ local breed_data = {
 	combat_range_data = BreedCombatRanges.chaos_ogryn_gunner,
 	combat_vector_config = {
 		choose_closest_to_target = true,
-		default_combat_range = "close",
+		default_combat_range = "far",
 		valid_combat_ranges = {
 			far = true,
 			close = true
@@ -121,8 +127,8 @@ local breed_data = {
 			close = 0.3
 		},
 		immunity_duration = {
-			2.75,
-			3.25
+			3.75,
+			4.25
 		}
 	},
 	attack_intensity_cooldowns = {
@@ -139,8 +145,8 @@ local breed_data = {
 			0.8
 		},
 		elite_ranged = {
-			0.2,
-			0.5
+			0.1,
+			0.3
 		}
 	},
 	line_of_sight_data = {
@@ -167,7 +173,7 @@ local breed_data = {
 		threat_decay_per_second = 5
 	},
 	aim_config = {
-		lerp_speed = 5,
+		lerp_speed = 2,
 		target = "head_aim_target",
 		distance = 50,
 		lean_variable_name = "lean",
@@ -269,6 +275,14 @@ local breed_data = {
 				"c_hips",
 				"c_spine"
 			}
+		},
+		{
+			create_on_startup = true,
+			destroy_on_death = true,
+			name = hit_zone_names.right_shoulderguard,
+			actors = {
+				"c_rightshoulderguard"
+			}
 		}
 	},
 	hit_zone_ragdoll_actors = {
@@ -302,6 +316,12 @@ local breed_data = {
 			"j_lefthand"
 		},
 		[hit_zone_names.upper_right_arm] = {
+			"j_rightarm",
+			"j_rightshoulder",
+			"j_rightforearm",
+			"j_righthand"
+		},
+		[hit_zone_names.right_shoulderguard] = {
 			"j_rightarm",
 			"j_rightshoulder",
 			"j_rightforearm",
@@ -368,6 +388,13 @@ local breed_data = {
 			j_head = 0.1,
 			j_neck = 0.1
 		},
+		[hit_zone_names.right_shoulderguard] = {
+			j_rightshoulder = 1,
+			j_spine1 = 0.4,
+			j_spine = 0.4,
+			j_head = 0.1,
+			j_neck = 0.1
+		},
 		[hit_zone_names.lower_right_arm] = {
 			j_rightshoulder = 1,
 			j_spine1 = 0.4,
@@ -420,6 +447,12 @@ local breed_data = {
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
+	},
+	hitzone_armor_override = {
+		[hit_zone_names.right_shoulderguard] = armor_types.super_armor,
+		[hit_zone_names.torso] = armor_types.armored,
+		[hit_zone_names.lower_left_arm] = armor_types.super_armor,
+		[hit_zone_names.lower_right_arm] = armor_types.super_armor
 	},
 	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller
 }

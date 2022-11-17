@@ -637,6 +637,82 @@ local gameplay_vo_veteran_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_b__enemy_kill_berserker_01",
+			"loc_veteran_male_b__enemy_kill_berserker_02",
+			"loc_veteran_male_b__enemy_kill_berserker_03",
+			"loc_veteran_male_b__enemy_kill_berserker_04",
+			"loc_veteran_male_b__enemy_kill_berserker_05",
+			"loc_veteran_male_b__enemy_kill_berserker_06",
+			"loc_veteran_male_b__enemy_kill_berserker_07",
+			"loc_veteran_male_b__enemy_kill_berserker_08",
+			"loc_veteran_male_b__enemy_kill_berserker_09",
+			"loc_veteran_male_b__enemy_kill_berserker_10"
+		},
+		sound_events_duration = {
+			1.460188,
+			1.976688,
+			1.658375,
+			1.609104,
+			1.473979,
+			1.440333,
+			1.180688,
+			1.737479,
+			1.780125,
+			2.185208
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_veteran_male_b__enemy_kill_monster_01",
+			"loc_veteran_male_b__enemy_kill_monster_02",
+			"loc_veteran_male_b__enemy_kill_monster_03",
+			"loc_veteran_male_b__enemy_kill_monster_04",
+			"loc_veteran_male_b__enemy_kill_monster_05",
+			"loc_veteran_male_b__enemy_kill_monster_06",
+			"loc_veteran_male_b__enemy_kill_monster_07",
+			"loc_veteran_male_b__enemy_kill_monster_09"
+		},
+		sound_events_duration = {
+			2.715104,
+			1.1975,
+			1.842896,
+			2.333417,
+			1.622333,
+			1.905938,
+			1.820833,
+			1.909354
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_tox_flamer = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -1096,18 +1172,6 @@ local gameplay_vo_veteran_male_b = {
 			2.401854,
 			2.111896,
 			2.741833
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1760,17 +1824,40 @@ local gameplay_vo_veteran_male_b = {
 			1.374125,
 			3.354813
 		},
+		randomize_indexes = {}
+	},
+	look_at_healthstation_personal = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_veteran_male_b__look_at_healthstation_01",
+			"loc_veteran_male_b__look_at_healthstation_02",
+			"loc_veteran_male_b__look_at_healthstation_03",
+			"loc_veteran_male_b__look_at_healthstation_04",
+			"loc_veteran_male_b__look_at_healthstation_05",
+			"loc_veteran_male_b__look_at_healthstation_06",
+			"loc_veteran_male_b__look_at_healthstation_07",
+			"loc_veteran_male_b__look_at_healthstation_09"
+		},
+		sound_events_duration = {
+			0.800417,
+			1.323229,
+			1.222792,
+			1.168604,
+			1.110292,
+			3.123542,
+			3.566146,
+			1.374125
+		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
 		},
 		randomize_indexes = {}
 	},
@@ -1819,13 +1906,6 @@ local gameplay_vo_veteran_male_b = {
 			2.688646,
 			3.185021,
 			3.443396
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -1964,13 +2044,12 @@ local gameplay_vo_veteran_male_b = {
 	},
 	player_tip_armor_hit_generic = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_veteran_male_b__player_tip_armor_hit_generic_01",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_02",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_03",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_04",
-			"loc_veteran_male_b__player_tip_armor_hit_generic_05",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_06",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_07",
 			"loc_veteran_male_b__player_tip_armor_hit_generic_08",
@@ -1982,7 +2061,6 @@ local gameplay_vo_veteran_male_b = {
 			2.898292,
 			2.149813,
 			1.304979,
-			2.304313,
 			1.611667,
 			3.212271,
 			1.571583,
@@ -3027,11 +3105,8 @@ local gameplay_vo_veteran_male_b = {
 	},
 	seen_enemy_berserker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 7,
 		sound_events = {
-			"loc_veteran_male_b__seen_enemy_berserker_01",
-			"loc_veteran_male_b__seen_enemy_berserker_02",
-			"loc_veteran_male_b__seen_enemy_berserker_03",
 			"loc_veteran_male_b__seen_enemy_berserker_04",
 			"loc_veteran_male_b__seen_enemy_berserker_05",
 			"loc_veteran_male_b__seen_enemy_berserker_06",
@@ -3041,9 +3116,6 @@ local gameplay_vo_veteran_male_b = {
 			"loc_veteran_male_b__seen_enemy_berserker_10"
 		},
 		sound_events_duration = {
-			0.919083,
-			1.018708,
-			1.560875,
 			0.758479,
 			0.840458,
 			1.662313,
@@ -3447,6 +3519,38 @@ local gameplay_vo_veteran_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	seen_enemy_renegade_berserker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_veteran_male_b__seen_enemy_berserker_04",
+			"loc_veteran_male_b__seen_enemy_berserker_05",
+			"loc_veteran_male_b__seen_enemy_berserker_06",
+			"loc_veteran_male_b__seen_enemy_berserker_07",
+			"loc_veteran_male_b__seen_enemy_berserker_08",
+			"loc_veteran_male_b__seen_enemy_berserker_09",
+			"loc_veteran_male_b__seen_enemy_berserker_10"
+		},
+		sound_events_duration = {
+			0.758479,
+			0.840458,
+			1.662313,
+			1.415271,
+			1.63475,
+			1.725354,
+			1.803396
+		},
+		sound_event_weights = {
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
+		},
+		randomize_indexes = {}
+	},
 	seen_enemy_renegade_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 9,
@@ -3482,6 +3586,32 @@ local gameplay_vo_veteran_male_b = {
 			0.1111111,
 			0.1111111,
 			0.1111111
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_b__seen_enemy_specials_generic_01",
+			"loc_veteran_male_b__seen_enemy_specials_generic_02",
+			"loc_veteran_male_b__seen_enemy_specials_generic_03",
+			"loc_veteran_male_b__seen_enemy_specials_generic_04",
+			"loc_veteran_male_b__seen_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			1.478688,
+			1.344333,
+			3.271625,
+			1.394792,
+			1.605042
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},

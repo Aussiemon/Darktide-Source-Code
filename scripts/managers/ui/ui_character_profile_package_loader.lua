@@ -106,7 +106,8 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "cb_on_slot_item_package_loaded", slot_id, item_name, package_name, complete_callback)
 			local prioritize = true
-			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize)
+			local use_resident_loading = true
+			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize, use_resident_loading)
 		end
 
 		self._slots_package_ids[slot_id] = package_ids

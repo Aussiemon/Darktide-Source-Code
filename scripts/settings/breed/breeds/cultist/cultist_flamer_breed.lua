@@ -46,6 +46,7 @@ local breed_data = {
 	challenge_rating = 1,
 	hit_mass = 2,
 	bone_lod_radius = 1.2,
+	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
 	power_level_type = {

@@ -23,7 +23,8 @@ local RPCS = {
 	"rpc_play_dialogue_event",
 	"rpc_dialogue_system_joined",
 	"rpc_player_select_voice_server",
-	"rpc_player_select_voice"
+	"rpc_player_select_voice",
+	"rpc_set_dynamic_smart_tag"
 }
 local extensions = {
 	"DialogueActorExtension"
@@ -164,6 +165,10 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 		self._event_queue = DialogueEventQueue:new(self._unit_extension_data, self._dialogues, self._tagquery_database)
 		self._query_queue = DialogueQueryQueue:new()
 		self._reject_queries_until = 0
+		self._missions_data = {}
+		self._missions = {}
+		self._time_since_mission_fetch = 0
+		self._missions_board_promise = nil
 	end
 
 	if not self._is_rule_db_enabled then
@@ -173,6 +178,7 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	self._dialog_sequence_events = {}
 	self._next_player_level_check = 0
 	self._next_local_events_queue_process = 0
+	self._next_audible_check = 0
 
 	if self._is_server then
 		local event_manager = Managers.event
@@ -248,6 +254,10 @@ DialogueSystem.on_add_extension = function (self, world, unit, extension_name, e
 
 	ScriptUnit.set_extension(unit, "dialogue_system", new_extension)
 
+	if Managers.state.extension then
+		self:_update_lowest_player_level()
+	end
+
 	return new_extension
 end
 
@@ -308,13 +318,12 @@ DialogueSystem._cleanup_extension = function (self, unit, extension_name)
 
 	local currently_playing_dialogue = extension:get_currently_playing_dialogue()
 
-	extension:cleanup()
-
 	if self._playing_dialogues[currently_playing_dialogue] then
-		self._playing_dialogues[currently_playing_dialogue] = nil
-
+		self._dialogue_system_wwise:stop_if_playing(currently_playing_dialogue.currently_playing_event_id)
 		self:_remove_stopped_dialogue(currently_playing_dialogue)
 	end
+
+	extension:cleanup()
 
 	self._playing_units[unit] = nil
 	self._unit_extension_data[unit] = nil
@@ -367,11 +376,10 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 					extension:set_currently_playing_dialogue(nil)
 					self:_remove_stopped_dialogue(currently_playing_dialogue)
 
-					currently_playing_dialogue.currently_playing_id = nil
+					currently_playing_dialogue.currently_playing_event_id = nil
 					currently_playing_dialogue.currently_playing_unit = nil
 					currently_playing_dialogue.used_query = nil
 					currently_playing_dialogue.concurrent_wwise_event_id = nil
-					self._playing_dialogues[currently_playing_dialogue] = nil
 					self._playing_units[unit] = nil
 
 					if not self._is_server then
@@ -483,12 +491,24 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 								currently_playing_dialogue.currently_playing_event_id = extension:play_event(self._dialog_sequence_events[1])
 							end
 						end
+
+						if currently_playing_dialogue.subtitle_distance then
+							currently_playing_dialogue.is_audible = self:is_dialogue_audible(unit, currently_playing_dialogue, t)
+						end
 					end
 
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
 				end
+
+				if not DEDICATED_SERVER then
+					self._dialogue_system_subtitle:update()
+				end
 			end
 		until true
+	end
+
+	if #table.keys(self._playing_units) == 0 then
+		table.clear(self._playing_dialogues_array)
 	end
 end
 
@@ -550,7 +570,7 @@ DialogueSystem.register_extension_update = function (self, unit, extension_name,
 	self._unit_extension_data[unit] = extension
 end
 
-local LOCAL_VO_EVENTS_PROCESS_INTERVAL = 1
+local LOCAL_VO_EVENTS_PROCESS_INTERVAL = 0.1
 
 DialogueSystem.update = function (self, context, dt, t)
 	if GameParameters.testify then
@@ -690,6 +710,27 @@ DialogueSystem.random_player = function (self)
 	return nil
 end
 
+DialogueSystem.force_stop_all = function (self)
+	if self._is_server then
+		return
+	end
+
+	for unit, extension in pairs(self._playing_units) do
+		local currently_playing_dialogue = extension:get_currently_playing_dialogue()
+
+		if currently_playing_dialogue then
+			self._playing_dialogues[currently_playing_dialogue] = nil
+
+			extension:stop_currently_playing_vo()
+			self:play_wwise_event(extension, "stop_vox_static_loop")
+		end
+
+		self._playing_units[unit] = nil
+	end
+
+	self._vo_rule_queue = {}
+end
+
 DialogueSystem._update_story_lines = function (self, t)
 	local next_story_line_update_t = self._next_story_line_update_t
 	local is_story_ticker = DialogueSettings.story_ticker_enabled
@@ -697,7 +738,9 @@ DialogueSystem._update_story_lines = function (self, t)
 	if is_story_ticker and next_story_line_update_t < t then
 		self._next_story_line_update_t = t + DialogueSettings.story_tick_time
 
-		Vo.player_vo_event_by_concept("story_talk")
+		if self.global_context.team_threat_level == "low" then
+			Vo.player_vo_event_by_concept("story_talk")
+		end
 	end
 
 	local is_short_story_ticker = DialogueSettings.short_story_ticker_enabled
@@ -706,7 +749,9 @@ DialogueSystem._update_story_lines = function (self, t)
 	if is_short_story_ticker and next_short_story_line_update_t < t then
 		self._next_short_story_line_update_t = t + DialogueSettings.short_story_tick_time
 
-		Vo.player_vo_event_by_concept("short_story_talk")
+		if self.global_context.team_threat_level == "low" then
+			Vo.player_vo_event_by_concept("short_story_talk")
+		end
 	end
 
 	local is_vox_stories = DialogueSettings.npc_story_ticker_enabled
@@ -777,13 +822,12 @@ DialogueSystem._process_local_playing_dialogues = function (self, dt, t)
 
 				if currently_playing_dialogue.dialogue_timer then
 					local wwise_playing = self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
-					is_still_playing = wwise_playing and currently_playing_dialogue.dialogue_timer - dt >= 0
+					is_still_playing = wwise_playing
 				end
 
 				if not is_still_playing then
 					self:_remove_stopped_dialogue(currently_playing_dialogue)
 
-					self._playing_dialogues[currently_playing_dialogue] = nil
 					self._playing_units[unit] = nil
 
 					extension:set_currently_playing_dialogue(nil)
@@ -791,6 +835,8 @@ DialogueSystem._process_local_playing_dialogues = function (self, dt, t)
 				else
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
 				end
+
+				self._dialogue_system_subtitle:update()
 			end
 		until true
 	end
@@ -837,6 +883,7 @@ DialogueSystem.append_faction_event = function (self, source_unit, event_name, e
 			end
 
 			self:append_event_to_queue(registered_unit, event_name, event_data, identifier)
+			registered_extension:set_is_disabled_override(false)
 		until true
 	end
 end
@@ -996,7 +1043,7 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		return
 	end
 
-	if dialogue.currently_playing_id then
+	if dialogue.currently_playing_event_id then
 		return
 	end
 
@@ -1012,6 +1059,13 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 
 	if sound_event then
 		extension:set_last_query_sound_event(sound_event)
+	end
+
+	local speaker_name = extension:get_context().voice_template
+	dialogue.speaker_name = speaker_name
+
+	if speaker_name == "tech_priest_a" and dialogue.wwise_route == 1 then
+		dialogue.wwise_route = 21
 	end
 
 	if not DEDICATED_SERVER then
@@ -1041,6 +1095,22 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 			if concurrent_wwise_event then
 				dialogue.concurrent_wwise_event_id = self:play_wwise_event(extension, concurrent_wwise_event)
 			end
+
+			local class_name = extension._context.class_name
+			local breed_dialogue_setting = DialogueBreedSettings[class_name]
+
+			if breed_dialogue_setting then
+				local subtitle_distance = breed_dialogue_setting.subtitle_distance
+
+				if subtitle_distance then
+					dialogue.subtitle_distance = subtitle_distance
+					dialogue.is_audible = self:is_dialogue_audible(dialogue_actor_unit, dialogue)
+				else
+					dialogue.is_audible = true
+				end
+			else
+				dialogue.is_audible = true
+			end
 		end
 
 		local animation_event = "start_talking"
@@ -1050,14 +1120,11 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 
 	self._playing_units[dialogue_actor_unit] = extension
 	dialogue.currently_playing_unit = dialogue_actor_unit
-	local speaker_name = extension:get_context().voice_template
-	dialogue.speaker_name = speaker_name
 	dialogue.dialogue_timer = sound_event_duration
 	dialogue.currently_playing_subtitle = subtitles_event
 
 	extension:set_currently_playing_dialogue(dialogue)
 
-	dialogue.wwise_route = rule.wwise_route
 	local dialogue_category = dialogue.category
 	local category_setting = DialogueCategoryConfig[dialogue_category]
 	self._playing_dialogues[dialogue] = category_setting
@@ -1067,6 +1134,8 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	if self._dialog_sequence_events[1] ~= nil and self._dialog_sequence_events[1].type == "vorbis_external" or not is_sequence then
 		self._dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
 	end
+
+	dialogue.wwise_route = rule.wwise_route
 end
 
 DialogueSystem._create_sequence_events_table = function (self, pre_wwise_event, wwise_route, sound_event, post_wwise_event)
@@ -1118,10 +1187,59 @@ DialogueSystem.rpc_interrupt_dialogue_event = function (self, channel_id, go_id,
 	end
 
 	local extension = self._unit_extension_data[unit]
-	local dialogue = extension:get_currently_playing_dialogue()
 
-	if dialogue then
-		self:_interrupt_dialogue_event_implementation(unit, dialogue)
+	if extension then
+		local dialogue = extension:get_currently_playing_dialogue()
+
+		if dialogue then
+			self:_interrupt_dialogue_event_implementation(unit, dialogue)
+		end
+	end
+end
+
+DialogueSystem.rpc_set_dynamic_smart_tag = function (self, channel_id, go_id, smart_tag)
+	local enemy_unit = Managers.state.unit_spawner:unit(go_id)
+
+	if not enemy_unit then
+		return
+	end
+
+	local extension = self._unit_extension_data[enemy_unit]
+
+	if extension then
+		extension:set_dynamic_smart_tag(smart_tag)
+	end
+end
+
+local AUDIBLE_CHECK_FREQUENCY = 0.1
+
+DialogueSystem.is_dialogue_audible = function (self, unit, dialogue, t)
+	if not DEDICATED_SERVER then
+		if t and t < self._next_audible_check then
+			return dialogue.is_audible
+		else
+			self._next_audible_check = self._next_audible_check + AUDIBLE_CHECK_FREQUENCY
+			local speaker_pos = Unit.world_position(unit, 1)
+			local player = Managers.player:local_player(1)
+			local player_unit = player.player_unit
+
+			if player_unit then
+				local player_pos = Unit.world_position(player_unit, 1)
+				local distance = Vector3.distance(speaker_pos, player_pos)
+				local max_distance = dialogue.subtitle_distance
+				local re_enable_distance = max_distance - 2
+
+				if distance < re_enable_distance then
+					return true
+				elseif max_distance < distance then
+					return false
+				else
+					return dialogue.is_audible
+				end
+			else
+				return false
+			end
+		end
 	end
 end
 
@@ -1130,6 +1248,7 @@ DialogueSystem._remove_stopped_dialogue = function (self, dialogue)
 
 	table.remove(self._playing_dialogues_array, index)
 
+	dialogue.currently_playing_event_id = nil
 	self._playing_dialogues[dialogue] = nil
 
 	self._dialogue_system_subtitle:remove_localized_dialogue(dialogue)
@@ -1146,7 +1265,7 @@ DialogueSystem._interrupt_dialogue_event_implementation = function (self, unit, 
 
 	self:_remove_stopped_dialogue(dialogue)
 
-	dialogue.currently_playing_id = nil
+	dialogue.currently_playing_event_id = nil
 	local extension = self._unit_extension_data[unit]
 
 	extension:set_currently_playing_dialogue(nil)
@@ -1220,17 +1339,43 @@ DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query
 
 		local will_play = self:_can_query_play(query, dialogue_actor_unit, interrupt_dialogue_list)
 
-		if dialogue.currently_playing_id then
+		if dialogue.currently_playing_event_id then
 			will_play = false
 		end
 
 		if will_play then
 			if not table.is_empty(interrupt_dialogue_list) then
-				self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
+				if dialogue.category == "vox_prio_0" then
+					local wait_time = 0
 
-				self._reject_queries_until = 0
+					for playing_dialogue, _ in pairs(interrupt_dialogue_list) do
+						if playing_dialogue.category == "conversations_prio_1" then
+							local dialogue_length = playing_dialogue.dialogue_timer
 
-				return
+							if wait_time < dialogue_length then
+								wait_time = dialogue_length + 0.3
+							end
+						end
+					end
+
+					if wait_time > 0 then
+						self:_queue_query(t + wait_time, query)
+
+						return
+					else
+						self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
+
+						self._reject_queries_until = 0
+
+						return
+					end
+				else
+					self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
+
+					self._reject_queries_until = 0
+
+					return
+				end
 			end
 
 			if t < self._reject_queries_until then
@@ -1363,7 +1508,7 @@ DialogueSystem._execute_accepted_query = function (self, t, query, dialogue_acto
 	local query_context = query.query_context
 
 	if query_context.identifier and query_context.identifier ~= "" then
-		self.dialogue_state_handler:add_playing_dialogue(query_context.identifier, dialogue.currently_playing_id, t, dialogue.dialogue_timer)
+		self.dialogue_state_handler:add_playing_dialogue(query_context.identifier, dialogue.currently_playing_event_id, t, dialogue.dialogue_timer)
 	end
 
 	self:_execute_dialogue_event(extension, query, dialogue, dialogue_actor_unit)
@@ -1386,6 +1531,7 @@ DialogueSystem._can_query_play = function (self, query, dialogue_actor_unit, INT
 	local dialogue_category = dialogue.category
 	local category_setting = DialogueCategoryConfig[dialogue_category]
 	local playable_during_category = category_setting.playable_during_category
+	local interrupt_self = category_setting.interrupt_self
 	local playing_dialogues = self._playing_dialogues
 	local will_play = true
 
@@ -1399,7 +1545,7 @@ DialogueSystem._can_query_play = function (self, query, dialogue_actor_unit, INT
 			break
 		end
 
-		if playing_dialogue.currently_playing_unit == dialogue_actor_unit then
+		if playing_dialogue.currently_playing_unit == dialogue_actor_unit and not interrupt_self then
 			will_play = false
 
 			break
@@ -1460,6 +1606,31 @@ end
 
 DialogueSystem.dialogue_system_subtitle = function (self)
 	return self._dialogue_system_subtitle
+end
+
+DialogueSystem.mission_board = function (self)
+	if self._is_server then
+		if self._missions_board_promise then
+			return nil, nil
+		end
+
+		local t = Managers.time:time("main")
+
+		if t - self._time_since_mission_fetch < 10 then
+			return self._missions_data, self._missions
+		end
+
+		self._missions_board_promise = Managers.data_service.mission_board:fetch()
+
+		self._missions_board_promise:next(function (data)
+			self._missions_data = data
+			self._missions = data.missions
+			self._missions_board_promise = nil
+			self._time_since_mission_fetch = t
+		end)
+
+		return self._missions_data, self._missions
+	end
 end
 
 return DialogueSystem

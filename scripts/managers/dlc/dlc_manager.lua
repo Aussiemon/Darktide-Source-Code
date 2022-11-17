@@ -1,7 +1,10 @@
 local DLCDurable = require("scripts/managers/dlc/dlc_durable")
 local DLCSettings = require("scripts/managers/dlc/dlc_settings")
+local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local DLCManager = class("DLCManager")
+local EVALUATE_CONSUMABLES_TIMER = 30
 local DEBUG = true
 
 local function dprint(...)
@@ -17,6 +20,7 @@ DLCManager.init = function (self)
 	self._reward_queue = {}
 	self._pending_dlcs = {}
 	self._pending_dlc_lookup = {}
+	self._initialized = false
 end
 
 DLCManager.initialize = function (self)
@@ -25,13 +29,14 @@ DLCManager.initialize = function (self)
 			return
 		end
 
+		self._evaluate_consumables_timer = 0
+
 		XboxDLC.enumerate_dlcs()
-		self:evaluate_consumables()
-
-		self._state = "idle"
-
-		Managers.event:register(self, "event_loading_finished", "evaluate_consumables")
+	else
+		self._check_steam_dlc = true
 	end
+
+	self._state = "idle"
 
 	table.clear(self._durable_dlcs)
 
@@ -44,16 +49,89 @@ DLCManager.initialize = function (self)
 		local class = CLASSES[class_name]
 		self._durable_dlcs[name] = class:new(durable_dlc_data)
 	end
+
+	self._initialized = true
 end
 
 DLCManager.destroy = function (self)
-	Managers.event:unregister(self, "event_loading_finished")
+	return
 end
 
 DLCManager.evaluate_consumables = function (self)
-	local success_cb = callback(self, "cb_get_entitlements")
+	self._evaluate_consumables = true
+end
 
-	XboxLiveUtils.get_entitlements():next(success_cb)
+DLCManager._ui_in_blocked_state = function (self)
+	if Managers.ui:has_active_view() then
+		local active_views = Managers.ui:active_views()
+		local top_view = active_views[#active_views]
+
+		return top_view ~= "main_menu_view"
+	end
+
+	return false
+end
+
+DLCManager._try_check_steam_dlc = function (self, t)
+	if not self._initialized then
+		return
+	end
+
+	if not self._check_steam_dlc then
+		return
+	end
+
+	if IS_XBS or IS_GDK then
+		self._check_steam_dlc = false
+
+		return
+	end
+
+	if self:_ui_in_blocked_state() then
+		return
+	end
+
+	self._check_steam_dlc = false
+	local cb_query_backend_result = callback(self, "cb_query_backend_result")
+
+	Managers.backend.interfaces.external_payment:reconcile_dlc():next(cb_query_backend_result)
+end
+
+DLCManager._try_evaluate_consumables = function (self, t)
+	if not self._initialized then
+		return
+	end
+
+	if not IS_XBS and not IS_GDK then
+		self._evaluate_consumables = false
+
+		return
+	end
+
+	if not self._evaluate_consumables then
+		return
+	end
+
+	if self:_ui_in_blocked_state() then
+		return
+	end
+
+	local mechanism_name = Managers.mechanism:mechanism_name()
+
+	if mechanism_name ~= "hub" then
+		self._evaluate_consumables = false
+
+		return
+	end
+
+	if self._evaluate_consumables_timer < t then
+		local success_cb = callback(self, "cb_get_entitlements")
+
+		XboxLiveUtils.get_entitlements():next(success_cb)
+
+		self._evaluate_consumables_timer = t + EVALUATE_CONSUMABLES_TIMER
+		self._evaluate_consumables = false
+	end
 end
 
 local TEMP_STORE_IDS = {}
@@ -151,6 +229,8 @@ DLCManager.cb_query_backend_result = function (self, data)
 		local result_data = results[i]
 		reward_queue[#reward_queue + 1] = result_data
 	end
+
+	self._rewards_dirty = true
 end
 
 DLCManager.is_dlc_unlocked = function (self, dlc_name)
@@ -218,7 +298,9 @@ DLCManager._handle_dangling_pending_dlcs = function (self)
 	for store_id, instances in pairs(self._pending_dlcs) do
 		for i = 1, instances do
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = string.format("%s: %s", "Failed granting", self._pending_dlc_lookup[store_id])
+				text = Localize("loc_failed_to_redeem_dlc", true, {
+					dlc_name = self._pending_dlc_lookup[store_id]
+				})
 			})
 		end
 	end
@@ -241,14 +323,22 @@ DLCStates.none = function ()
 end
 
 DLCStates.idle = function (dlc_manager, dt, t)
-	if table.size(dlc_manager._reward_queue) > 0 then
+	if dlc_manager._rewards_dirty then
 		dlc_manager:_change_state("present_rewards")
+
+		return
 	end
 
-	local dlc_status = XboxDLC.state()
+	if IS_XBS or IS_GDK then
+		local dlc_status = XboxDLC.state()
 
-	if dlc_status == XboxDLCState.PACKAGE_INSTALLED then
-		dlc_manager:_change_state("check_durable_licenses")
+		if dlc_status == XboxDLCState.PACKAGE_INSTALLED then
+			dlc_manager:_change_state("check_durable_licenses")
+		else
+			dlc_manager:_try_evaluate_consumables(t)
+		end
+	else
+		dlc_manager:_try_check_steam_dlc(t)
 	end
 end
 
@@ -302,11 +392,11 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 	for i = 1, #dlc_manager._reward_queue do
 		local reward_data = dlc_manager._reward_queue[i]
-		local store_id = reward_data.storeId
+		local store_id = reward_data.platformId
 		local rewards = reward_data.rewards
 
-		for i = 1, #rewards do
-			local reward = rewards[1]
+		for j = 1, #rewards do
+			local reward = rewards[j]
 
 			if reward.rewardType == "currency" then
 				Managers.event:trigger("event_add_notification_message", "currency", {
@@ -314,11 +404,18 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 					amount = reward.amount
 				})
 			elseif reward.rewardType == "item" then
-				local gear_id = reward.gear_id
-				local item = MasterItems.get_item(gear_id)
-				local item_type = item.item_type
+				local gear_id = reward.gearId
+				local master_id = reward.masterId
 
-				ItemUtils.mark_item_id_as_new(gear_id, item_type)
+				if gear_id and master_id then
+					local item = MasterItems.get_item(master_id)
+
+					if item then
+						local item_type = item.item_type
+
+						ItemUtils.mark_item_id_as_new(gear_id, item_type)
+					end
+				end
 			end
 		end
 
@@ -327,6 +424,9 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 	dlc_manager:_handle_dangling_pending_dlcs()
 	table.clear(dlc_manager._reward_queue)
+
+	dlc_manager._rewards_dirty = nil
+
 	dlc_manager:_change_state("idle")
 end
 

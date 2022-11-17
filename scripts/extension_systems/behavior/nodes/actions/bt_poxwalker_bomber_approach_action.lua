@@ -3,9 +3,11 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
+local breed_types = BreedSettings.types
 local BtPoxwalkerBomberApproachAction = class("BtPoxwalkerBomberApproachAction", "BtNode")
 
 BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -30,6 +32,21 @@ BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard,
 	scratchpad.move_to_cooldown = 0
 
 	self:_update_move_to(t, scratchpad, action_data, scratchpad.perception_component.target_unit)
+end
+
+BtPoxwalkerBomberApproachAction.init_values = function (self, blackboard)
+	local death_component = Blackboard.write_component(blackboard, "death")
+
+	death_component.attack_direction:store(0, 0, 0)
+
+	death_component.hit_zone_name = ""
+	death_component.is_dead = false
+	death_component.hit_during_death = false
+	death_component.damage_profile_name = ""
+	death_component.herding_template_name = ""
+	death_component.killing_damage_type = ""
+	death_component.force_instant_ragdoll = false
+	death_component.staggered_during_lunge = false
 end
 
 BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -109,13 +126,16 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 		if state == "walking" or state == "running" then
 			local enter_lunge_distance = action_data.enter_lunge_distance
 			local path_distance = scratchpad.navigation_extension:remaining_distance_from_progress_to_end_of_path()
+			local nav_smart_object_component = blackboard.nav_smart_object
+			local smart_object_id = nav_smart_object_component.id
+			local smart_object_is_next = smart_object_id ~= -1
 
-			if path_distance <= enter_lunge_distance then
+			if not smart_object_is_next and path_distance <= enter_lunge_distance then
 				if scratchpad.stagger_duration then
 					scratchpad.animation_extension:anim_event("stagger_finished")
 				end
 
-				self:_start_lunge(unit, scratchpad, action_data, t)
+				self:_start_lunge(unit, scratchpad, action_data, target_unit, t)
 			end
 		end
 
@@ -351,7 +371,9 @@ BtPoxwalkerBomberApproachAction._update_move_to = function (self, t, scratchpad,
 	end
 end
 
-BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, scratchpad, action_data, t)
+local AOE_THREAT_SIZE = 7
+
+BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, scratchpad, action_data, target_unit, t)
 	local lunge_anim_event = action_data.lunge_anim_event
 
 	scratchpad.animation_extension:anim_event(lunge_anim_event)
@@ -359,6 +381,19 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, scratchpad,
 	scratchpad.state = "lunging"
 	scratchpad.lunge_duration = t + action_data.lunge_duration
 	scratchpad.move_during_lunge_duration = t + action_data.move_during_lunge_duration
+	local group_extension = ScriptUnit.extension(target_unit, "group_system")
+	local bot_group = group_extension:bot_group()
+	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local should_create_aoe_threat = unit_data_extension:breed().breed_type == breed_types.player
+
+	if should_create_aoe_threat then
+		local shape = "sphere"
+		local rotation = Unit.local_rotation(unit, 1)
+		local fwd = Quaternion.forward(rotation)
+		local position = POSITION_LOOKUP[unit] + fwd * 2
+
+		bot_group:aoe_threat_created(position, shape, AOE_THREAT_SIZE, rotation, action_data.lunge_duration)
+	end
 end
 
 BtPoxwalkerBomberApproachAction._update_lunge = function (self, unit, scratchpad, action_data, dt, t, blackboard, breed)

@@ -39,8 +39,8 @@ local COMBAT = {
 	"BtRandomUtilityNode",
 	{
 		"BtMeleeAttackAction",
-		name = "melee_attack",
-		action_data = action_data.melee_attack
+		name = "bayonet_melee_attack",
+		action_data = action_data.bayonet_melee_attack
 	},
 	{
 		"BtShootAction",
@@ -49,15 +49,9 @@ local COMBAT = {
 		action_data = action_data.shoot_spray_n_pray
 	},
 	{
-		"BtRangedFollowTargetAction",
-		name = "ranged_follow",
-		condition = "dont_have_clear_shot",
-		action_data = action_data.ranged_follow
-	},
-	{
 		"BtMoveToCombatVectorAction",
-		name = "escape_to_combat_vector",
-		action_data = action_data.escape_to_combat_vector
+		name = "move_to_combat_vector",
+		action_data = action_data.move_to_combat_vector
 	},
 	condition = "is_aggroed",
 	name = "combat"

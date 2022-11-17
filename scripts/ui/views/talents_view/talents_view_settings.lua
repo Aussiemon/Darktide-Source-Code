@@ -2,8 +2,9 @@ local talents_view_settings = {
 	equip_button_text_equip = "loc_talents_button_equip",
 	grid_num_columns = 11,
 	grid_num_rows = 5,
+	equip_button_action_equip = "talent_equip",
 	equip_button_text_unequip = "loc_talents_button_unequip",
-	equip_button_action = "confirm_pressed",
+	equip_button_action_unequip = "talent_unequip",
 	grid_gamepad_start_cell = {
 		1,
 		3
@@ -46,7 +47,7 @@ local talents_view_settings = {
 			blueprint = "talent_group_passive",
 			label = "loc_talents_category_passive",
 			even_talents_offset_x = -23,
-			odd_talents_offset_x = 33,
+			odd_talents_offset_x = 32,
 			non_selectable_group = true,
 			positions = {
 				{
@@ -69,6 +70,7 @@ local talents_view_settings = {
 		},
 		tier_1 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					1,
@@ -86,6 +88,7 @@ local talents_view_settings = {
 		},
 		tier_2 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					3,
@@ -103,6 +106,7 @@ local talents_view_settings = {
 		},
 		tier_3 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					5,
@@ -120,6 +124,7 @@ local talents_view_settings = {
 		},
 		tier_4 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					7,
@@ -137,6 +142,7 @@ local talents_view_settings = {
 		},
 		tier_5 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					9,
@@ -154,6 +160,7 @@ local talents_view_settings = {
 		},
 		tier_6 = {
 			blueprint = "talent_group_tier",
+			blueprint_locked = "talent_group_tier_locked",
 			positions = {
 				{
 					11,

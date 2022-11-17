@@ -10,7 +10,10 @@ local action_handler_settings = {
 		"block",
 		"push",
 		"vent_overheat",
-		"vent_warp_charge"
+		"vent_warp_charge",
+		"throw_grenade",
+		"throw",
+		"aim_projectile"
 	},
 	sprint_requires_press_to_interrupt = {
 		"reload_state",

@@ -1,5 +1,5 @@
 local ailment_settings = {}
-local effects = table.enum("burning_fast", "burning_slow", "burning", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "warpfire")
+local effects = table.enum("burning_fast", "burning_slow", "burning", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "warpfire", "stun")
 ailment_settings.effects = effects
 ailment_settings.effect_templates = {
 	[effects.burning_fast] = {
@@ -186,7 +186,7 @@ ailment_settings.effect_templates = {
 	},
 	[effects.electrocution] = {
 		duration = 0.95,
-		offset_time = 0.45,
+		offset_time = 0.15,
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
@@ -194,6 +194,20 @@ ailment_settings.effect_templates = {
 			},
 			{
 				resource = "content/fx/textures/ramps/thunder_ramp",
+				slot = "effect_gradient"
+			}
+		}
+	},
+	[effects.stun] = {
+		duration = 1.95,
+		offset_time = 0.2,
+		material_textures = {
+			{
+				resource = "content/textures/ailment_masks/freeze_mask_01",
+				slot = "effect_mask"
+			},
+			{
+				resource = "content/fx/textures/ramps/metal_impact_ramp_01",
 				slot = "effect_gradient"
 			}
 		}

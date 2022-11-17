@@ -178,7 +178,7 @@ PointOfInterestSystem._update_lookat = function (self, t)
 					local tag = target_extension:tag()
 
 					if dialogue_target_filter == "none" and faction_event then
-						Vo.look_at_event(dialogue_extension, tag, observer_to_target_length)
+						Vo.look_at_event(dialogue_extension, tag, observer_to_target_length, target_unit)
 					elseif dialogue_target_filter == "faction" then
 						local faction_breed_name = target_extension:faction_breed_name()
 

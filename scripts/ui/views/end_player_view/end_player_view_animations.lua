@@ -338,6 +338,8 @@ local function _create_progress_bar_animation(animation_table, start_time, end_t
 		end_time = end_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params.current_value = 0
+
+			parent:play_sound(UISoundEvents.end_screen_summary_xp_bar_start)
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local content = widget.content
@@ -346,12 +348,14 @@ local function _create_progress_bar_animation(animation_table, start_time, end_t
 			local value = _math_floor(target_value * eased_progress)
 
 			parent:update_xp_bar(value)
+			parent:set_sound_parameter(UISoundEvents.end_screen_summary_xp_bar_progress, eased_progress)
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params._value_text_name = nil
 			local target_value = widget.content.total_xp_gained
 
 			parent:update_xp_bar(target_value)
+			parent:play_sound(UISoundEvents.end_screen_summary_xp_bar_stop)
 		end
 	}
 end
@@ -374,6 +378,9 @@ local function _create_consolidate_wallet_animation(animation_table, retract_sta
 		name = "update_belated_wallet",
 		start_time = update_start_time,
 		end_time = end_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_currency_summation)
+		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local eased_progress = _math_ease_sine(progress)
 
@@ -396,12 +403,12 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 			local pass_style = widget_style[style_name]
 			local pass_color = pass_style.text_color or pass_style.color
 			pass_params.pass_color = pass_color
-			pass_params.start_color = widget_style.start_color
+			pass_params.start_color = pass_style.start_color or widget_style.start_color
 
 			if pass_style.text_color and not pass_style.material then
-				pass_params.target_color = widget_style.in_focus_text_color
+				pass_params.target_color = pass_style.in_focus_text_color or widget_style.in_focus_text_color
 			else
-				pass_params.target_color = widget_style.in_focus_color
+				pass_params.target_color = pass_style.in_focus_color or widget_style.in_focus_color
 			end
 
 			if not params.pass_params then
@@ -435,20 +442,54 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 	passes_to_dim[#passes_to_dim + 1] = style_name
 end
 
+local function _create_fade_in_level_up_label_animation(animation_table, start_time)
+	_create_fade_in_pass_animation(animation_table, "level_up_label", start_time)
+	_create_fade_in_pass_animation(animation_table, "level_up_label_divider", start_time + 0.05)
+end
+
 local function _create_show_reward_item_animation(animation_table, start_time)
 	_create_fade_in_pass_animation(animation_table, "item_display_name", start_time)
 	_create_fade_in_pass_animation(animation_table, "item_icon", start_time + _text_fade_in_time)
 	_create_fade_in_pass_animation(animation_table, "item_sub_display_name", start_time + 2 * _text_fade_in_time)
 end
 
+local function _create_show_unlocked_weapon_animation(animation_table, start_time)
+	_create_fade_in_level_up_label_animation(animation_table, start_time)
+
+	start_time = start_time + _text_fade_in_time
+
+	_create_fade_in_pass_animation(animation_table, "item_icon_background", start_time)
+	_create_fade_in_pass_animation(animation_table, "item_icon_frame", start_time)
+
+	start_time = start_time + _text_fade_in_time * 0.5
+
+	_create_fade_in_pass_animation(animation_table, "item_icon", start_time)
+
+	start_time = start_time + _text_fade_in_time
+
+	_create_fade_in_pass_animation(animation_table, "item_display_name", start_time)
+
+	start_time = start_time + _text_fade_in_time
+
+	_create_fade_in_pass_animation(animation_table, "weapon_unlocked_text", start_time)
+end
+
 local function _create_show_talents_animation(animation_table, start_time)
-	_create_fade_in_pass_animation(animation_table, "unlocked_talents_label", start_time)
+	_create_fade_in_level_up_label_animation(animation_table, start_time)
 
 	for i = 1, 3 do
-		local alignment = i == 1 and "left" or i == 2 and "center" or "right"
+		start_time = start_time + _text_fade_in_time * 0.5
 
-		_create_fade_in_pass_animation(animation_table, "talent_icon_" .. alignment, start_time + 2 * _text_fade_in_time)
+		_create_fade_in_pass_animation(animation_table, "talent_icon_background_" .. i, start_time)
+
+		start_time = start_time + _text_fade_in_time
+
+		_create_fade_in_pass_animation(animation_table, "talent_icon_" .. i, start_time)
 	end
+
+	start_time = start_time + _text_fade_in_time
+
+	_create_fade_in_pass_animation(animation_table, "talents_unlocked_text", start_time)
 end
 
 local function _create_dim_out_animation(animation_table, show_content_animation_table)
@@ -465,9 +506,12 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 			local widget_style = widget.style
 			local icon_backgrounds = {}
 			local icon_colors = {}
+			local custom_icon_colors = {}
 			local text_colors = {}
+			local custom_text_colors = {}
 			local gradiented_text_color = {}
 			local text_color_index = 0
+			local icon_color_index = 0
 
 			for i = 1, #passes_to_dim do
 				local value_id = passes_to_dim[i]
@@ -484,9 +528,15 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 					gradiented_text_color[#gradiented_text_color + 1] = pass_style.text_color
 				elseif pass_style.text_color then
 					text_color_index = text_color_index + 1
-					text_colors[text_color_index] = pass_style.text_color
+					local text_color = pass_style.text_color
+					text_colors[text_color_index] = text_color
+					custom_text_colors[2 * text_color_index - 1] = pass_style.in_focus_text_color
+					custom_text_colors[2 * text_color_index] = pass_style.dimmed_out_text_color
 				else
-					icon_colors[#icon_colors + 1] = pass_style.color or pass_style.text_color
+					icon_color_index = icon_color_index + 1
+					icon_colors[icon_color_index] = pass_style.color
+					custom_icon_colors[2 * icon_color_index - 1] = pass_style.in_focus_color
+					custom_icon_colors[2 * icon_color_index] = pass_style.dimmed_out_color
 				end
 			end
 
@@ -500,8 +550,10 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 			end
 
 			params.text_colors = text_colors
+			params.custom_text_colors = custom_text_colors
 			params.gradiented_text_color = gradiented_text_color
 			params.icon_colors = icon_colors
+			params.custom_icon_colors = custom_icon_colors
 			params.icon_backgrounds = icon_backgrounds
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
@@ -515,11 +567,14 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 			local bg_target_color = widget_style.start_color
 			local eased_progress = _math_ease_sine(progress)
 			local text_colors = params.text_colors
+			local custom_text_colors = params.custom_text_colors
 
 			for i = 1, #text_colors do
 				local ignore_alpha = true
+				local start_color = custom_text_colors[2 * i - 1] or in_focus_text_color
+				local target_color = custom_text_colors[2 * i] or dimmed_out_text_color
 
-				color_utils_color_lerp(in_focus_text_color, dimmed_out_text_color, eased_progress, text_colors[i], ignore_alpha)
+				color_utils_color_lerp(start_color, target_color, eased_progress, text_colors[i], ignore_alpha)
 			end
 
 			local gradiented_text_color = params.gradiented_text_color
@@ -531,10 +586,14 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 			end
 
 			local icon_colors = params.icon_colors
+			local custom_icon_colors = params.custom_icon_colors
 			local num_icons = #icon_colors
 
 			for i = 1, num_icons do
-				color_utils_color_lerp(in_focus_color, dimmed_out_color, eased_progress, icon_colors[i])
+				local start_color = custom_icon_colors[2 * i - 1] or in_focus_color
+				local target_color = custom_icon_colors[2 * i] or dimmed_out_color
+
+				color_utils_color_lerp(start_color, target_color, eased_progress, icon_colors[i])
 			end
 
 			local icon_backgrounds = params.icon_backgrounds
@@ -558,55 +617,33 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 	}
 end
 
-local function _create_compress_content_animation(animation_table, include_talents)
+local function _create_compress_content_animation(animation_table)
 	animation_table[#animation_table + 1] = {
 		name = "compress_icons",
 		start_time = 0,
 		end_time = ViewSettings.animation_times.card_compress_content_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local widget_style = widget.style
-			local item_icon_style = widget_style.item_icon
-			local item_sub_display_name = widget_style.item_sub_display_name
-			local unlocked_talents_label = widget_style.unlocked_talents_label
-			local talent_icon_left_style = widget_style.talent_icon_left
-			local talent_icon_center_style = widget_style.talent_icon_center
-			local talent_icon_right_style = widget_style.talent_icon_right
-			local styles_to_compress, original_icon_sizes = nil
-
-			if include_talents then
-				styles_to_compress = {
-					item_icon_style,
-					talent_icon_left_style,
-					talent_icon_center_style,
-					talent_icon_right_style
-				}
-				original_icon_sizes = {
-					item_icon_style.size[1],
-					item_icon_style.size[2],
-					talent_icon_left_style.size[1],
-					talent_icon_left_style.size[2],
-					talent_icon_center_style.size[1],
-					talent_icon_center_style.size[2],
-					talent_icon_right_style.size[1],
-					talent_icon_right_style.size[2]
-				}
-			else
-				styles_to_compress = {
-					item_icon_style
-				}
-				original_icon_sizes = {
-					item_icon_style.size[1],
-					item_icon_style.size[2]
-				}
-			end
-
+			local styles_to_compress = {}
+			local original_icon_sizes = {}
 			local styles_to_move = {}
-			local index = 0
+			local compress_index = 0
+			local move_index = 0
 
-			for style_id, style in pairs(widget.style) do
-				if type(style) == "table" and style.offset_compressed then
-					index = index + 1
-					styles_to_move[index] = style
+			for style_id, style in pairs(widget_style) do
+				if type(style) == "table" then
+					if style.can_compress then
+						compress_index = compress_index + 1
+						local size = style.size
+						styles_to_compress[compress_index] = style
+						original_icon_sizes[compress_index * 2 - 1] = size[1]
+						original_icon_sizes[compress_index * 2] = size[2]
+					end
+
+					if style.offset_compressed then
+						move_index = move_index + 1
+						styles_to_move[move_index] = style
+					end
 				end
 			end
 
@@ -624,8 +661,8 @@ local function _create_compress_content_animation(animation_table, include_talen
 			for i = 1, #styles_to_compress do
 				local style = styles_to_compress[i]
 				local icon_size = style.size
-				local icon_start_width = original_icon_sizes[(i - 1) * 2 + 1]
-				local icon_start_height = original_icon_sizes[(i - 1) * 2 + 2]
+				local icon_start_width = original_icon_sizes[i * 2 - 1]
+				local icon_start_height = original_icon_sizes[i * 2]
 				local icon_target_width = math_floor(icon_start_width / 2)
 				local icon_target_height = math_floor(icon_start_height / 2)
 				icon_size[1] = math_lerp(icon_start_width, icon_target_width, eased_progress)
@@ -665,47 +702,42 @@ animations.salary_card_dim_out_content = {}
 
 _create_icon_animation(animations.salary_card_show_content, {
 	"credits",
-	0.25,
-	"plasteel",
-	4.25,
-	"diamantine",
-	5.25
+	0.25
 })
 _create_count_up_animation(animations.salary_card_show_content, "credits", "credits", 0.25, 2)
 _create_count_up_animation(animations.salary_card_show_content, "side_mission_credits", "credits", 2.25, 3)
 _create_count_up_animation(animations.salary_card_show_content, "circumstance_credits", "credits", 3.25, 4)
-_create_count_up_animation(animations.salary_card_show_content, "plasteel", "plasteel", 4.25, 5)
-_create_count_up_animation(animations.salary_card_show_content, "diamantine", "diamantine", 5.25, 6)
-_create_count_up_animation(animations.salary_card_show_content, "diamantine", "diamantine", 5.25, 6)
 _create_consolidate_wallet_animation(animations.salary_card_show_content, 6, 6.25, 7.25)
 _create_dim_out_animation(animations.salary_card_dim_out_content, animations.salary_card_show_content)
 
 animations.level_up_show_content = {}
 animations.level_up_dim_out_content = {}
 
-_create_show_reward_item_animation(animations.level_up_show_content, 0.25)
+_create_show_reward_item_animation(animations.level_up_show_content, 0.25 + _text_fade_in_time)
 _create_dim_out_animation(animations.level_up_dim_out_content, animations.level_up_show_content)
 
-animations.level_up_show_content_with_talents = {}
-animations.level_up_dim_out_content_with_talents = {}
+animations.unlocked_weapon_show_content = {}
+animations.unlocked_weapon_dim_out_content = {}
 
-_create_show_reward_item_animation(animations.level_up_show_content_with_talents, 0.25)
-_create_show_talents_animation(animations.level_up_show_content_with_talents, 0.65)
-_create_compress_content_animation(animations.level_up_dim_out_content_with_talents, true)
-_create_dim_out_animation(animations.level_up_dim_out_content_with_talents, animations.level_up_show_content_with_talents)
-
-animations.item_reward_show_content = {}
-animations.item_reward_dim_out_content = {}
-
-_create_show_reward_item_animation(animations.item_reward_show_content, 0.25)
-_create_compress_content_animation(animations.item_reward_dim_out_content)
-_create_dim_out_animation(animations.item_reward_dim_out_content, animations.item_reward_show_content)
+_create_show_unlocked_weapon_animation(animations.unlocked_weapon_show_content, 0.25)
+_create_compress_content_animation(animations.unlocked_weapon_dim_out_content)
+_create_dim_out_animation(animations.unlocked_weapon_dim_out_content, animations.unlocked_weapon_show_content)
 
 animations.unlocked_talents_show_content = {}
 animations.unlocked_talents_dim_out_content = {}
 
 _create_show_talents_animation(animations.unlocked_talents_show_content, 0.25)
+_create_compress_content_animation(animations.unlocked_talents_dim_out_content)
 _create_dim_out_animation(animations.unlocked_talents_dim_out_content, animations.unlocked_talents_show_content)
+
+animations.item_reward_show_content = {}
+animations.item_reward_dim_out_content = {}
+
+_create_show_reward_item_animation(animations.item_reward_show_content, 0.25)
+_create_fade_in_pass_animation(animations.item_reward_show_content, "item_level", 0.25 + 3 * _text_fade_in_time)
+_create_fade_in_pass_animation(animations.item_reward_show_content, "added_to_inventory_text", 0.25 + 4 * _text_fade_in_time)
+_create_compress_content_animation(animations.item_reward_dim_out_content)
+_create_dim_out_animation(animations.item_reward_dim_out_content, animations.item_reward_show_content)
 
 animations.test = {
 	{

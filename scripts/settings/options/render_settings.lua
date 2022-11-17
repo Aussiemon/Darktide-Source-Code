@@ -51,10 +51,10 @@ local brightness_options = {
 			{
 				apply_on_drag = true,
 				step_size_value = 0.01,
-				min_value = -0.5,
+				min_value = -1,
 				num_decimals = 2,
 				focusable = true,
-				max_value = 0.5,
+				max_value = 1,
 				default_value = 0,
 				widget_type = "value_slider",
 				apply_on_startup = true,
@@ -97,16 +97,260 @@ local RENDER_TEMPLATES = {
 		require_restart = false,
 		require_apply = true,
 		display_name = "loc_vsync",
+		tooltip_text = "loc_vsync_mouseover",
 		id = "vsync",
 		value_type = "boolean",
 		default_value = false
 	},
 	{
+		save_location = "master_render_settings",
+		display_name = "loc_setting_brightness",
+		id = "brightness",
+		tooltip_text = "loc_setting_brightness_mouseover",
+		widget_type = "button",
+		supported_platforms = {
+			win32 = true,
+			xbs = true
+		},
+		pressed_function = function (parent, widget, template)
+			Managers.ui:open_view("custom_settings_view", nil, nil, nil, nil, {
+				pages = template.pages
+			})
+		end,
+		pages = brightness_options
+	},
+	{
+		group_name = "performance",
+		display_name = "loc_settings_menu_group_performance",
+		widget_type = "group_header"
+	},
+	{
+		default_value = "off",
+		display_name = "loc_setting_nvidia_dlss",
+		id = "dlss_master",
+		tooltip_text = "loc_setting_nvidia_dlss_mouseover",
+		save_location = "master_render_settings",
+		validation_function = function ()
+			return Application.render_caps("dlss_supported")
+		end,
+		options = {
+			{
+				id = "off",
+				display_name = "loc_settings_menu_off",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					master_render_settings = {
+						dlss_g = 0,
+						dlss = 0
+					}
+				}
+			},
+			{
+				id = "on",
+				display_name = "loc_settings_menu_on",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					master_render_settings = {
+						dlss_g = 1,
+						nv_reflex_low_latency = 1,
+						dlss = 1
+					}
+				}
+			}
+		}
+	},
+	{
+		id = "dlss",
+		display_name = "loc_setting_dlss",
 		require_apply = true,
-		display_name = "loc_setting_nv_reflex",
-		id = "nv_reflex_low_latency",
+		default_value = 0,
+		apply_on_startup = true,
+		indentation_level = 1,
+		tooltip_text = "loc_setting_dlss_mouseover",
+		save_location = "master_render_settings",
+		validation_function = function ()
+			return Application.render_caps("dlss_supported")
+		end,
+		options = {
+			{
+				id = 0,
+				display_name = "loc_settings_menu_off",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_enabled = false
+					}
+				}
+			},
+			{
+				id = 1,
+				display_name = "loc_setting_dlss_quality_auto",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "auto",
+						dlss_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						fsr2 = 0
+					}
+				}
+			},
+			{
+				id = 2,
+				display_name = "loc_setting_dlss_quality_ultra_performance",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "ultra_performance",
+						dlss_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						fsr2 = 0
+					}
+				}
+			},
+			{
+				id = 3,
+				display_name = "loc_setting_dlss_quality_max_performance",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "performance",
+						dlss_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						fsr2 = 0
+					}
+				}
+			},
+			{
+				id = 4,
+				display_name = "loc_setting_dlss_quality_balanced",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "balanced",
+						dlss_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						fsr2 = 0
+					}
+				}
+			},
+			{
+				id = 5,
+				display_name = "loc_setting_dlss_quality_max_quality",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "quality",
+						dlss_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						fsr2 = 0
+					}
+				}
+			}
+		},
+		disable_rules = {
+			{
+				id = "anti_aliasing_solution",
+				reason = "loc_disable_rule_dlss_aa",
+				disable_value = 0,
+				validation_function = function (value)
+					return value > 0
+				end
+			}
+		}
+	},
+	{
+		id = "dlss_g",
+		display_name = "loc_setting_dlss_g",
+		indentation_level = 1,
+		require_apply = true,
 		default_value = 0,
 		save_location = "master_render_settings",
+		validation_function = function ()
+			return Application.render_caps("dlss_g_supported")
+		end,
+		options = {
+			{
+				id = 0,
+				display_name = "loc_rt_setting_off",
+				require_apply = false,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_g_enabled = false
+					}
+				}
+			},
+			{
+				id = 1,
+				display_name = "loc_rt_setting_on",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_g_enabled = true
+					},
+					master_render_settings = {
+						vsync = false,
+						nv_reflex_low_latency = 1
+					}
+				}
+			}
+		},
+		disable_rules = {
+			{
+				id = "vsync",
+				reason = "loc_disable_rule_dlss_g_vsync",
+				disable_value = false,
+				validation_function = function (value)
+					return value == 1
+				end
+			},
+			{
+				id = "nv_reflex_low_latency",
+				reason = "loc_disable_rule_dlss_g_reflex",
+				disable_value = 1,
+				validation_function = function (value)
+					return value == 1
+				end
+			}
+		}
+	},
+	{
+		id = "nv_reflex_low_latency",
+		indentation_level = 1,
+		display_name = "loc_setting_nv_reflex",
+		default_value = 1,
+		apply_on_startup = true,
+		require_apply = true,
+		tooltip_text = "loc_setting_nv_reflex_mouseover",
+		save_location = "master_render_settings",
+		validation_function = function ()
+			return Application.render_caps("reflex_supported")
+		end,
 		options = {
 			{
 				id = 0,
@@ -147,10 +391,11 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		require_apply = true,
-		display_name = "loc_setting_nv_reflex_framerate_cap",
-		id = "nv_reflex_framerate_cap",
 		default_value = 0,
+		require_apply = true,
+		display_name = "loc_setting_framerate_cap",
+		id = "nv_reflex_framerate_cap",
+		tooltip_text = "loc_setting_framerate_cap_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -200,35 +445,12 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		save_location = "master_render_settings",
-		display_name = "loc_setting_brightness",
-		id = "brightness",
-		widget_type = "button",
-		supported_platforms = {
-			win32 = true,
-			xbs = true
-		},
-		pressed_function = function (parent, widget, template)
-			Managers.ui:open_view("custom_settings_view", nil, nil, nil, nil, {
-				pages = template.pages
-			})
-		end,
-		pages = brightness_options
-	},
-	{
-		group_name = "upscaling",
-		display_name = "loc_settings_menu_group_upscaling",
-		widget_type = "group_header"
-	},
-	{
-		require_apply = true,
-		display_name = "loc_setting_dlss",
-		id = "dlss",
 		default_value = 0,
+		require_apply = true,
+		display_name = "loc_setting_fsr2",
+		id = "fsr2",
+		tooltip_text = "loc_setting_fsr2_mouseover",
 		save_location = "master_render_settings",
-		validation_function = function ()
-			return Application.render_caps("dlss_supported")
-		end,
 		options = {
 			{
 				id = 0,
@@ -237,112 +459,86 @@ local RENDER_TEMPLATES = {
 				require_restart = false,
 				values = {
 					render_settings = {
-						upscaling_enabled = false,
-						upscaling_mode = "none"
+						fsr2_enabled = false
 					}
 				}
 			},
 			{
 				id = 1,
-				display_name = "loc_setting_dlss_quality_auto",
+				display_name = "loc_setting_dlss_quality_ultra_performance",
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 0,
-						fsr = 0
-					},
 					render_settings = {
-						upscaling_enabled = true,
-						upscaling_quality = "auto",
-						sharpen_enabled = false,
-						upscaling_mode = "dlss"
+						upscaling_quality = "ultra_performance",
+						fsr2_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						dlss = 0
 					}
 				}
 			},
 			{
 				id = 2,
-				display_name = "loc_setting_dlss_quality_ultra_performance",
+				display_name = "loc_setting_dlss_quality_max_performance",
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 0,
-						fsr = 0
-					},
 					render_settings = {
-						upscaling_enabled = true,
-						upscaling_quality = "ultra_performance",
-						sharpen_enabled = false,
-						upscaling_mode = "dlss"
+						upscaling_quality = "performance",
+						fsr2_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						dlss = 0
 					}
 				}
 			},
 			{
 				id = 3,
-				display_name = "loc_setting_dlss_quality_max_performance",
+				display_name = "loc_setting_dlss_quality_balanced",
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 0,
-						fsr = 0
-					},
 					render_settings = {
-						upscaling_enabled = true,
-						upscaling_quality = "performance",
-						sharpen_enabled = false,
-						upscaling_mode = "dlss"
+						upscaling_quality = "balanced",
+						fsr2_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						dlss = 0
 					}
 				}
 			},
 			{
 				id = 4,
-				display_name = "loc_setting_dlss_quality_balanced",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 0,
-						fsr = 0
-					},
-					render_settings = {
-						upscaling_enabled = true,
-						upscaling_quality = "balanced",
-						sharpen_enabled = false,
-						upscaling_mode = "dlss"
-					}
-				}
-			},
-			{
-				id = 5,
 				display_name = "loc_setting_dlss_quality_max_quality",
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 0,
-						fsr = 0
-					},
 					render_settings = {
 						upscaling_quality = "quality",
-						upscaling_enabled = true,
-						upscaling_mode = "dlss"
+						fsr2_enabled = true
+					},
+					master_render_settings = {
+						anti_aliasing_solution = 0,
+						fsr = 0,
+						dlss = 0
 					}
 				}
 			}
 		}
 	},
 	{
-		require_apply = true,
+		default_value = 0,
 		display_name = "loc_setting_fsr",
 		id = "fsr",
-		default_value = 0,
+		require_apply = true,
+		tooltip_text = "loc_setting_fsr_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -363,14 +559,13 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 2,
-						dlss = 0
-					},
 					render_settings = {
 						fsr_enabled = true,
 						fsr_quality = 1
+					},
+					master_render_settings = {
+						dlss = 0,
+						anti_aliasing_solution = 2
 					}
 				}
 			},
@@ -380,14 +575,13 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 2,
-						dlss = 0
-					},
 					render_settings = {
 						fsr_enabled = true,
 						fsr_quality = 2
+					},
+					master_render_settings = {
+						dlss = 0,
+						anti_aliasing_solution = 2
 					}
 				}
 			},
@@ -397,14 +591,13 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 2,
-						dlss = 0
-					},
 					render_settings = {
 						fsr_enabled = true,
 						fsr_quality = 3
+					},
+					master_render_settings = {
+						dlss = 0,
+						anti_aliasing_solution = 2
 					}
 				}
 			},
@@ -414,16 +607,25 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						graphics_quality = "custom",
-						anti_aliasing_solution = 2,
-						dlss = 0
-					},
 					render_settings = {
 						fsr_enabled = true,
 						fsr_quality = 4
+					},
+					master_render_settings = {
+						dlss = 0,
+						anti_aliasing_solution = 2
 					}
 				}
+			}
+		},
+		disable_rules = {
+			{
+				id = "anti_aliasing_solution",
+				reason = "loc_disable_rule_fsr_aa",
+				disable_value = 2,
+				validation_function = function (value)
+					return value > 0
+				end
 			}
 		}
 	},
@@ -433,15 +635,17 @@ local RENDER_TEMPLATES = {
 		display_name = "loc_setting_sharpen_enabled",
 		require_apply = false,
 		require_restart = false,
+		tooltip_text = "loc_setting_sharpen_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		}
 	},
 	{
-		id = "anti_aliasing_solution",
-		display_name = "loc_setting_anti_ailiasing",
 		require_apply = true,
+		display_name = "loc_setting_anti_ailiasing",
+		id = "anti_aliasing_solution",
+		tooltip_text = "loc_setting_anti_ailiasing_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -450,12 +654,12 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						fsr = 0
-					},
 					render_settings = {
 						taa_enabled = false,
 						fxaa_enabled = false
+					},
+					master_render_settings = {
+						fsr = 0
 					}
 				}
 			},
@@ -465,13 +669,13 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						fsr = 0,
-						dlss = 0
-					},
 					render_settings = {
 						taa_enabled = false,
 						fxaa_enabled = true
+					},
+					master_render_settings = {
+						fsr = 0,
+						dlss = 0
 					}
 				}
 			},
@@ -481,12 +685,13 @@ local RENDER_TEMPLATES = {
 				require_apply = true,
 				require_restart = false,
 				values = {
-					master_render_settings = {
-						dlss = 0
-					},
 					render_settings = {
 						taa_enabled = true,
 						fxaa_enabled = false
+					},
+					master_render_settings = {
+						fsr2 = 0,
+						dlss = 0
 					}
 				}
 			}
@@ -494,7 +699,7 @@ local RENDER_TEMPLATES = {
 	},
 	{
 		group_name = "ray_tracing",
-		display_name = "loc_settings_menu_ray_tracing_preset",
+		display_name = "loc_ray_tracing",
 		widget_type = "group_header",
 		validation_function = function ()
 			return Application.render_caps("dxr")
@@ -504,6 +709,7 @@ local RENDER_TEMPLATES = {
 		apply_on_startup = true,
 		display_name = "loc_setting_ray_tracing_quality",
 		id = "ray_tracing_quality",
+		tooltip_text = "loc_setting_ray_tracing_quality_mouseover",
 		save_location = "master_render_settings",
 		default_value = DefaultGameParameters.default_ray_tracing_quality_quality,
 		options = {
@@ -518,7 +724,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						rt_reflections_quality = "off",
-						rtxgi_quality = "static_high"
+						rtxgi_quality = "off"
 					}
 				}
 			},
@@ -532,8 +738,8 @@ local RENDER_TEMPLATES = {
 						dxr = true
 					},
 					master_render_settings = {
-						rt_reflections_quality = "off",
-						rtxgi_quality = "dynamic_low"
+						rt_reflections_quality = "low",
+						rtxgi_quality = "off"
 					}
 				}
 			},
@@ -547,8 +753,8 @@ local RENDER_TEMPLATES = {
 						dxr = true
 					},
 					master_render_settings = {
-						rt_reflections_quality = "on",
-						rtxgi_quality = "dynamic_low"
+						rt_reflections_quality = "low",
+						rtxgi_quality = "high"
 					}
 				}
 			},
@@ -563,13 +769,9 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						rt_reflections_quality = "high",
-						rtxgi_quality = "dynamic_high"
+						rtxgi_quality = "high"
 					}
 				}
-			},
-			{
-				id = "custom",
-				display_name = "loc_setting_ray_tracing_quality_option_custom"
 			}
 		},
 		validation_function = function ()
@@ -577,50 +779,9 @@ local RENDER_TEMPLATES = {
 		end
 	},
 	{
-		group_name = "ray_tracing",
-		display_name = "loc_ray_tracing",
-		widget_type = "group_header",
-		validation_function = function ()
-			return Application.render_caps("dxr")
-		end
-	},
-	{
-		value_type = "boolean",
-		id = "dxr",
-		display_name = "loc_dxr",
-		require_restart = false,
-		require_apply = true,
-		save_location = "render_settings",
-		apply_values_on_edited = {
-			ray_tracing_quality = "custom"
-		},
-		apply_values_on_value = {
-			["true"] = {
-				master_render_settings = {
-					rt_reflections_quality = "on",
-					rtxgi_quality = "dynamic_low"
-				},
-				render_settings = {
-					dxr = true
-				}
-			},
-			["false"] = {
-				master_render_settings = {
-					rt_reflections_quality = "off",
-					rtxgi_quality = "static_high"
-				},
-				render_settings = {
-					dxr = false
-				}
-			}
-		},
-		validation_function = function ()
-			return Application.render_caps("dxr")
-		end
-	},
-	{
-		id = "rt_reflections_quality",
 		display_name = "loc_rt_reflections_quality",
+		id = "rt_reflections_quality",
+		tooltip_text = "loc_rt_reflections_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -628,38 +789,30 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
-						rt_transparent_reflections_enabled = false,
-						rt_particle_reflections_enabled = false,
-						rt_reflections_enabled = false,
 						rt_checkerboard_reflections = false,
+						rt_reflections_enabled = false,
 						world_space_motion_vectors = false
 					}
 				}
 			},
 			{
-				id = "on",
-				display_name = "loc_settings_menu_on",
+				id = "low",
+				display_name = "loc_settings_menu_low",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					master_render_settings = {
-						ssr_quality = "off"
+						ssr_quality = "high"
 					},
 					render_settings = {
-						rt_transparent_reflections_enabled = false,
-						rt_particle_reflections_enabled = false,
-						rt_reflections_enabled = true,
+						rt_mixed_reflections = true,
 						dxr = true,
+						world_space_motion_vectors = true,
+						rt_reflections_enabled = true,
 						rt_checkerboard_reflections = true,
-						world_space_motion_vectors = true
+						ssr_enabled = true
 					}
 				}
 			},
@@ -668,41 +821,15 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					master_render_settings = {
 						ssr_quality = "off"
 					},
 					render_settings = {
-						rt_transparent_reflections_enabled = true,
-						rt_particle_reflections_enabled = true,
-						rt_reflections_enabled = true,
+						rt_mixed_reflections = false,
 						dxr = true,
+						rt_reflections_enabled = true,
 						rt_checkerboard_reflections = true,
-						world_space_motion_vectors = true
-					}
-				}
-			},
-			{
-				id = "extreme",
-				display_name = "loc_settings_menu_extreme",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
-				values = {
-					master_render_settings = {
-						ssr_quality = "off"
-					},
-					render_settings = {
-						rt_transparent_reflections_enabled = true,
-						rt_particle_reflections_enabled = true,
-						rt_reflections_enabled = true,
-						dxr = true,
-						rt_checkerboard_reflections = false,
 						world_space_motion_vectors = true
 					}
 				}
@@ -710,53 +837,67 @@ local RENDER_TEMPLATES = {
 		},
 		validation_function = function ()
 			return Application.render_caps("dxr")
-		end
+		end,
+		disable_rules = {
+			{
+				id = "ssr_quality",
+				reason = "loc_disable_rule_rt_reflections_ssr",
+				disable_value = "off",
+				validation_function = function (value)
+					return value == "high"
+				end
+			},
+			{
+				id = "ssr_quality",
+				reason = "loc_disable_rule_rt_reflections_ssr",
+				disable_value = "high",
+				validation_function = function (value)
+					return value == "low"
+				end
+			}
+		}
 	},
 	{
-		id = "rtxgi_quality",
+		default_value = "off",
 		display_name = "loc_rtxgi_quality",
+		id = "rtxgi_quality",
+		tooltip_text = "loc_rtxgi_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
-				id = "static_low",
-				display_name = "loc_settings_menu_static_low",
+				id = "off",
+				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
+					master_render_settings = {
+						gi_quality = "high"
+					},
 					render_settings = {
 						baked_ddgi = true,
-						rtxgi_enabled = false,
+						rtxgi_enabled = false
+					}
+				}
+			},
+			{
+				id = "low",
+				display_name = "loc_settings_menu_low",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						baked_ddgi = false,
+						rtxgi_enabled = true,
+						dxr = true,
 						rtxgi_scale = 0.5
 					}
 				}
 			},
 			{
-				id = "static_high",
-				display_name = "loc_settings_menu_static_high",
+				id = "high",
+				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						baked_ddgi = true,
-						rtxgi_enabled = false,
-						rtxgi_scale = 1
-					}
-				}
-			},
-			{
-				id = "dynamic_low",
-				display_name = "loc_settings_menu_dynamic_low",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						baked_ddgi = false,
@@ -765,23 +906,16 @@ local RENDER_TEMPLATES = {
 						rtxgi_scale = 1
 					}
 				}
-			},
+			}
+		},
+		disable_rules = {
 			{
-				id = "dynamic_high",
-				display_name = "loc_settings_menu_dynamic_high",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						baked_ddgi = false,
-						rtxgi_enabled = true,
-						dxr = true,
-						rtxgi_scale = 1
-					}
-				}
+				id = "gi_quality",
+				reason = "loc_disable_rule_rtxgi_gi",
+				disable_value = "high",
+				validation_function = function (value)
+					return value == "high" or value == "low"
+				end
 			}
 		},
 		validation_function = function ()
@@ -797,6 +931,7 @@ local RENDER_TEMPLATES = {
 		apply_on_startup = true,
 		display_name = "loc_setting_graphics_quality",
 		id = "graphics_quality",
+		tooltip_text = "loc_setting_graphics_quality_mouseover",
 		save_location = "master_render_settings",
 		default_value = DefaultGameParameters.default_graphics_quality,
 		options = {
@@ -813,22 +948,18 @@ local RENDER_TEMPLATES = {
 						decal_lifetime = 10
 					},
 					master_render_settings = {
+						ssr_quality = "off",
 						lens_flare_quality = "off",
-						mesh_quality = "low",
 						dof_quality = "off",
-						texture_quality = "low",
 						volumetric_fog_quality = "low",
-						particle_quality = "low",
 						light_quality = "low",
-						ambient_occlusion_quality = "low",
-						ssr_quality = "off"
+						ambient_occlusion_quality = "low"
 					},
 					render_settings = {
 						lens_quality_enabled = false,
-						ui_bloom_enabled = false,
+						skin_material_enabled = false,
 						sharpen_enabled = false,
 						lod_scatter_density = 0.25,
-						skin_material_enabled = false,
 						motion_blur_enabled = false,
 						rough_transparency_enabled = false,
 						bloom_enabled = true
@@ -848,22 +979,18 @@ local RENDER_TEMPLATES = {
 						decal_lifetime = 20
 					},
 					master_render_settings = {
+						ssr_quality = "medium",
 						lens_flare_quality = "sun_light_only",
-						mesh_quality = "medium",
-						dof_quality = "on",
-						texture_quality = "medium",
+						dof_quality = "medium",
 						volumetric_fog_quality = "medium",
-						particle_quality = "medium",
 						light_quality = "medium",
-						ambient_occlusion_quality = "medium",
-						ssr_quality = "on"
+						ambient_occlusion_quality = "medium"
 					},
 					render_settings = {
 						lens_quality_enabled = true,
-						ui_bloom_enabled = true,
+						skin_material_enabled = false,
 						sharpen_enabled = true,
 						lod_scatter_density = 0.5,
-						skin_material_enabled = false,
 						motion_blur_enabled = true,
 						rough_transparency_enabled = true,
 						bloom_enabled = true
@@ -883,22 +1010,18 @@ local RENDER_TEMPLATES = {
 						decal_lifetime = 40
 					},
 					master_render_settings = {
+						ssr_quality = "high",
 						lens_flare_quality = "all_lights",
-						mesh_quality = "high",
 						dof_quality = "high",
-						texture_quality = "high",
 						volumetric_fog_quality = "high",
-						particle_quality = "high",
 						light_quality = "high",
-						ambient_occlusion_quality = "high",
-						ssr_quality = "high"
+						ambient_occlusion_quality = "high"
 					},
 					render_settings = {
 						lens_quality_enabled = true,
-						ui_bloom_enabled = true,
+						skin_material_enabled = true,
 						sharpen_enabled = true,
 						lod_scatter_density = 1,
-						skin_material_enabled = true,
 						motion_blur_enabled = true,
 						rough_transparency_enabled = true,
 						bloom_enabled = true
@@ -912,165 +1035,14 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		group_name = "graphics",
-		display_name = "loc_settings_menu_group_graphics",
+		group_name = "render_settings",
+		display_name = "loc_settings_menu_group_graphics_advanced",
 		widget_type = "group_header"
 	},
 	{
-		id = "texture_quality",
-		display_name = "loc_setting_texture_quality",
-		save_location = "master_render_settings",
-		options = {
-			{
-				id = "low",
-				display_name = "loc_settings_menu_low",
-				require_apply = true,
-				require_restart = true,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					texture_settings = {
-						["content/texture_categories/character_nm"] = 2,
-						["content/texture_categories/weapon_bc"] = 2,
-						["content/texture_categories/weapon_bca"] = 2,
-						["content/texture_categories/environment_bc"] = 2,
-						["content/texture_categories/character_mask"] = 2,
-						["content/texture_categories/character_orm"] = 2,
-						["content/texture_categories/character_bc"] = 2,
-						["content/texture_categories/environment_hm"] = 2,
-						["content/texture_categories/character_mask2"] = 2,
-						["content/texture_categories/environment_orm"] = 2,
-						["content/texture_categories/character_bcm"] = 2,
-						["content/texture_categories/character_bca"] = 2,
-						["content/texture_categories/weapon_nm"] = 2,
-						["content/texture_categories/environment_bca"] = 2,
-						["content/texture_categories/environment_nm"] = 2,
-						["content/texture_categories/character_hm"] = 2,
-						["content/texture_categories/weapon_hm"] = 2,
-						["content/texture_categories/weapon_mask"] = 2,
-						["content/texture_categories/weapon_orm"] = 2
-					}
-				}
-			},
-			{
-				id = "medium",
-				display_name = "loc_settings_menu_medium",
-				require_apply = true,
-				require_restart = true,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					texture_settings = {
-						["content/texture_categories/character_nm"] = 1,
-						["content/texture_categories/weapon_bc"] = 1,
-						["content/texture_categories/weapon_bca"] = 1,
-						["content/texture_categories/environment_bc"] = 1,
-						["content/texture_categories/character_mask"] = 1,
-						["content/texture_categories/character_orm"] = 2,
-						["content/texture_categories/character_bc"] = 1,
-						["content/texture_categories/environment_hm"] = 1,
-						["content/texture_categories/character_mask2"] = 1,
-						["content/texture_categories/environment_orm"] = 2,
-						["content/texture_categories/character_bcm"] = 1,
-						["content/texture_categories/character_bca"] = 1,
-						["content/texture_categories/weapon_nm"] = 1,
-						["content/texture_categories/environment_bca"] = 1,
-						["content/texture_categories/environment_nm"] = 1,
-						["content/texture_categories/character_hm"] = 1,
-						["content/texture_categories/weapon_hm"] = 1,
-						["content/texture_categories/weapon_mask"] = 1,
-						["content/texture_categories/weapon_orm"] = 2
-					}
-				}
-			},
-			{
-				id = "high",
-				display_name = "loc_settings_menu_high",
-				require_apply = true,
-				require_restart = true,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					texture_settings = {
-						["content/texture_categories/character_nm"] = 0,
-						["content/texture_categories/weapon_bc"] = 0,
-						["content/texture_categories/weapon_bca"] = 0,
-						["content/texture_categories/environment_bc"] = 0,
-						["content/texture_categories/character_mask"] = 0,
-						["content/texture_categories/character_orm"] = 0,
-						["content/texture_categories/character_bc"] = 0,
-						["content/texture_categories/environment_hm"] = 0,
-						["content/texture_categories/character_mask2"] = 0,
-						["content/texture_categories/environment_orm"] = 0,
-						["content/texture_categories/character_bcm"] = 0,
-						["content/texture_categories/character_bca"] = 0,
-						["content/texture_categories/weapon_nm"] = 0,
-						["content/texture_categories/environment_bca"] = 0,
-						["content/texture_categories/environment_nm"] = 0,
-						["content/texture_categories/character_hm"] = 0,
-						["content/texture_categories/weapon_hm"] = 0,
-						["content/texture_categories/weapon_mask"] = 0,
-						["content/texture_categories/weapon_orm"] = 0
-					}
-				}
-			}
-		}
-	},
-	{
-		id = "mesh_quality",
-		display_name = "loc_setting_lod_object_multiplier",
-		save_location = "master_render_settings",
-		options = {
-			{
-				id = "low",
-				display_name = "loc_settings_menu_low",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						lod_object_multiplier = 1
-					}
-				}
-			},
-			{
-				id = "medium",
-				display_name = "loc_settings_menu_medium",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						lod_object_multiplier = 1
-					}
-				}
-			},
-			{
-				id = "high",
-				display_name = "loc_settings_menu_high",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						lod_object_multiplier = 1
-					}
-				}
-			}
-		}
-	},
-	{
-		id = "ambient_occlusion_quality",
 		display_name = "loc_setting_ambient_occlusion_quality",
+		id = "ambient_occlusion_quality",
+		tooltip_text = "loc_setting_ambient_occlusion_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -1100,7 +1072,7 @@ local RENDER_TEMPLATES = {
 				values = {
 					render_settings = {
 						cacao_downsampled = false,
-						cacao_quality = 4,
+						cacao_quality = 2,
 						ao_enabled = true
 					}
 				}
@@ -1116,7 +1088,7 @@ local RENDER_TEMPLATES = {
 				values = {
 					render_settings = {
 						cacao_downsampled = false,
-						cacao_quality = 4,
+						cacao_quality = 3,
 						ao_enabled = true
 					}
 				}
@@ -1140,8 +1112,9 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "light_quality",
 		display_name = "loc_setting_light_quality",
+		id = "light_quality",
+		tooltip_text = "loc_setting_light_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -1157,8 +1130,8 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_map_filter_quality = "low",
 						sun_shadows = false,
 						local_lights_max_dynamic_shadow_distance = 50,
-						local_lights_max_static_shadow_distance = 100,
 						local_lights_max_non_shadow_casting_distance = 0,
+						local_lights_max_static_shadow_distance = 100,
 						local_lights_shadows_enabled = true,
 						sun_shadow_map_filter_quality = "low",
 						static_sun_shadows = true,
@@ -1173,10 +1146,6 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_atlas_size = {
 							512,
 							512
-						},
-						cached_local_lights_shadow_atlas_size = {
-							1024,
-							1024
 						}
 					}
 				}
@@ -1194,8 +1163,8 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_map_filter_quality = "low",
 						sun_shadows = true,
 						local_lights_max_dynamic_shadow_distance = 50,
-						local_lights_max_static_shadow_distance = 100,
 						local_lights_max_non_shadow_casting_distance = 0,
+						local_lights_max_static_shadow_distance = 100,
 						local_lights_shadows_enabled = true,
 						sun_shadow_map_filter_quality = "medium",
 						static_sun_shadows = true,
@@ -1210,10 +1179,6 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_atlas_size = {
 							1024,
 							1024
-						},
-						cached_local_lights_shadow_atlas_size = {
-							2048,
-							2048
 						}
 					}
 				}
@@ -1231,8 +1196,8 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_map_filter_quality = "high",
 						sun_shadows = true,
 						local_lights_max_dynamic_shadow_distance = 50,
-						local_lights_max_static_shadow_distance = 100,
 						local_lights_max_non_shadow_casting_distance = 0,
+						local_lights_max_static_shadow_distance = 100,
 						local_lights_shadows_enabled = true,
 						sun_shadow_map_filter_quality = "high",
 						static_sun_shadows = true,
@@ -1247,10 +1212,6 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_atlas_size = {
 							2048,
 							2048
-						},
-						cached_local_lights_shadow_atlas_size = {
-							8192,
-							8192
 						}
 					}
 				}
@@ -1268,8 +1229,8 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_map_filter_quality = "high",
 						sun_shadows = true,
 						local_lights_max_dynamic_shadow_distance = 50,
-						local_lights_max_static_shadow_distance = 100,
 						local_lights_max_non_shadow_casting_distance = 0,
+						local_lights_max_static_shadow_distance = 100,
 						local_lights_shadows_enabled = true,
 						sun_shadow_map_filter_quality = "high",
 						static_sun_shadows = true,
@@ -1284,10 +1245,6 @@ local RENDER_TEMPLATES = {
 						local_lights_shadow_atlas_size = {
 							4096,
 							4096
-						},
-						cached_local_lights_shadow_atlas_size = {
-							8192,
-							8192
 						}
 					}
 				}
@@ -1295,34 +1252,11 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "volumetric_fog_quality",
 		display_name = "loc_setting_volumetric_fog_quality",
+		id = "volumetric_fog_quality",
+		tooltip_text = "loc_setting_volumetric_fog_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
-			{
-				id = "off",
-				display_name = "loc_settings_menu_off",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						volumetric_extrapolation_volumetric_shadows = false,
-						volumetric_extrapolation_high_quality = false,
-						volumetric_volumes_enabled = false,
-						volumetric_reprojection_amount = 1,
-						light_shafts_enabled = false,
-						volumetric_lighting_local_lights = false,
-						volumetric_data_size = {
-							64,
-							48,
-							96
-						}
-					}
-				}
-			},
 			{
 				id = "low",
 				display_name = "loc_settings_menu_low",
@@ -1422,65 +1356,9 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "particle_quality",
-		display_name = "loc_setting_particle_quality",
-		save_location = "master_render_settings",
-		options = {
-			{
-				id = "low",
-				display_name = "loc_settings_menu_low",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						particles_simulation_lod = 1,
-						particles_capacity_multiplier = 1
-					}
-				}
-			},
-			{
-				id = "medium",
-				display_name = "loc_settings_menu_medium",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						particles_simulation_lod = 1,
-						particles_capacity_multiplier = 1
-					}
-				}
-			},
-			{
-				id = "high",
-				display_name = "loc_settings_menu_high",
-				require_apply = true,
-				require_restart = false,
-				apply_values_on_edited = {
-					graphics_quality = "custom"
-				},
-				values = {
-					render_settings = {
-						particles_simulation_lod = 0,
-						particles_capacity_multiplier = 1
-					}
-				}
-			}
-		}
-	},
-	{
-		group_name = "render_settings",
-		display_name = "loc_settings_menu_group_graphics_advanced",
-		widget_type = "group_header"
-	},
-	{
-		id = "dof_quality",
 		display_name = "loc_setting_dof_quality",
+		id = "dof_quality",
+		tooltip_text = "loc_setting_dof_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -1499,8 +1377,8 @@ local RENDER_TEMPLATES = {
 				}
 			},
 			{
-				id = "on",
-				display_name = "loc_settings_menu_on",
+				id = "medium",
+				display_name = "loc_settings_menu_medium",
 				require_apply = false,
 				require_restart = false,
 				apply_values_on_edited = {
@@ -1531,22 +1409,50 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
+		display_name = "loc_setting_gi_quality",
+		id = "gi_quality",
+		tooltip_text = "loc_setting_gi_quality_mouseover",
+		save_location = "master_render_settings",
+		options = {
+			{
+				id = "low",
+				display_name = "loc_settings_menu_low",
+				require_apply = false,
+				require_restart = false,
+				apply_values_on_edited = {
+					graphics_quality = "custom"
+				},
+				values = {
+					render_settings = {
+						baked_ddgi = true,
+						rtxgi_scale = 0.5
+					}
+				}
+			},
+			{
+				id = "high",
+				display_name = "loc_settings_menu_high",
+				require_apply = false,
+				require_restart = false,
+				apply_values_on_edited = {
+					graphics_quality = "custom"
+				},
+				values = {
+					render_settings = {
+						baked_ddgi = true,
+						rtxgi_scale = 1
+					}
+				}
+			}
+		}
+	},
+	{
 		id = "bloom_enabled",
 		value_type = "boolean",
 		display_name = "loc_setting_bloom_enabled",
 		require_apply = false,
 		require_restart = false,
-		save_location = "render_settings",
-		apply_values_on_edited = {
-			graphics_quality = "custom"
-		}
-	},
-	{
-		id = "ui_bloom_enabled",
-		value_type = "boolean",
-		display_name = "loc_setting_ui_bloom_enabled",
-		require_apply = false,
-		require_restart = false,
+		tooltip_text = "loc_setting_bloom_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
@@ -1556,31 +1462,35 @@ local RENDER_TEMPLATES = {
 		id = "skin_material_enabled",
 		value_type = "boolean",
 		display_name = "loc_setting_skin_material_enabled",
-		require_apply = false,
+		require_apply = true,
 		require_restart = false,
+		tooltip_text = "loc_setting_skin_material_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		}
 	},
 	{
-		id = "motion_blur_enabled",
 		value_type = "boolean",
+		id = "motion_blur_enabled",
 		display_name = "loc_setting_motion_blur_enabled",
-		require_apply = false,
 		require_restart = false,
+		require_apply = false,
+		tooltip_text = "loc_setting_motion_blur_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		},
+		default_value = IS_XBS and true,
 		supported_platforms = {
 			win32 = true,
 			xbs = true
 		}
 	},
 	{
-		id = "ssr_quality",
 		display_name = "loc_setting_ssr_quality",
+		id = "ssr_quality",
+		tooltip_text = "loc_setting_ssr_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -1599,8 +1509,8 @@ local RENDER_TEMPLATES = {
 				}
 			},
 			{
-				id = "on",
-				display_name = "loc_settings_menu_on",
+				id = "medium",
+				display_name = "loc_settings_menu_medium",
 				require_apply = true,
 				require_restart = false,
 				apply_values_on_edited = {
@@ -1633,41 +1543,65 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "lens_quality_enabled",
 		value_type = "boolean",
 		display_name = "loc_setting_lens_quality_enabled",
-		require_apply = false,
+		id = "lens_quality_enabled",
 		require_restart = false,
+		require_apply = false,
+		tooltip_text = "loc_setting_lens_quality_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
+		},
+		disable_rules = {
+			{
+				id = "lens_quality_color_fringe_enabled",
+				reason = "loc_disable_rule_lens_quality_fringe",
+				disable_value = false,
+				validation_function = function (value)
+					return value == false
+				end
+			},
+			{
+				id = "lens_quality_distortion_enabled",
+				reason = "loc_disable_rule_lens_quality_distortion",
+				disable_value = false,
+				validation_function = function (value)
+					return value == false
+				end
+			}
 		}
 	},
 	{
+		require_restart = false,
+		indentation_level = 1,
+		display_name = "loc_setting_lens_quality_color_fringe_enabled",
 		id = "lens_quality_color_fringe_enabled",
 		value_type = "boolean",
-		display_name = "loc_setting_lens_quality_color_fringe_enabled",
 		require_apply = false,
-		require_restart = false,
+		tooltip_text = "loc_setting_lens_quality_color_fringe_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		}
 	},
 	{
+		require_restart = false,
+		indentation_level = 1,
+		display_name = "loc_setting_lens_quality_distortion_enabled",
 		id = "lens_quality_distortion_enabled",
 		value_type = "boolean",
-		display_name = "loc_setting_lens_quality_distortion_enabled",
 		require_apply = false,
-		require_restart = false,
+		tooltip_text = "loc_setting_lens_quality_distortion_enabled_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		}
 	},
 	{
-		id = "lens_flare_quality",
 		display_name = "loc_setting_lens_flare_quality",
+		id = "lens_flare_quality",
+		tooltip_text = "loc_setting_lens_flare_quality_mouseover",
 		save_location = "master_render_settings",
 		options = {
 			{
@@ -1718,30 +1652,32 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		require_restart = false,
+		value_type = "number",
 		id = "lod_scatter_density",
 		display_name = "loc_setting_lod_scatter_density",
 		num_decimals = 2,
 		max = 1,
-		value_type = "number",
+		require_restart = false,
 		min = 0,
 		step_size = 0.01,
 		require_apply = false,
+		tooltip_text = "loc_setting_lod_scatter_density_mouseover",
 		save_location = "render_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		}
 	},
 	{
-		require_restart = false,
+		value_type = "number",
 		id = "max_ragdolls",
 		display_name = "loc_setting_lod_max_ragdolls",
 		num_decimals = 0,
 		max = 50,
-		value_type = "number",
+		require_restart = false,
 		min = 3,
 		step_size = 1,
 		require_apply = false,
+		tooltip_text = "loc_setting_lod_max_ragdolls_mouseover",
 		save_location = "performance_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
@@ -1749,15 +1685,16 @@ local RENDER_TEMPLATES = {
 		default_value = DefaultGameParameters.default_max_ragdolls
 	},
 	{
-		require_restart = false,
+		value_type = "number",
 		id = "max_impact_decals",
 		display_name = "loc_setting_max_impact_decals",
 		num_decimals = 0,
 		max = 100,
-		value_type = "number",
+		require_restart = false,
 		min = 5,
 		step_size = 1,
 		require_apply = false,
+		tooltip_text = "loc_setting_max_impact_decals_mouseover",
 		save_location = "performance_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
@@ -1765,15 +1702,16 @@ local RENDER_TEMPLATES = {
 		default_value = DefaultGameParameters.default_max_impact_decals
 	},
 	{
-		require_restart = false,
+		value_type = "number",
 		id = "max_blood_decals",
 		display_name = "loc_setting_max_blood_decals",
 		num_decimals = 0,
 		max = 100,
-		value_type = "number",
+		require_restart = false,
 		min = 5,
 		step_size = 1,
 		require_apply = false,
+		tooltip_text = "loc_setting_max_blood_decals_mouseover",
 		save_location = "performance_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
@@ -1781,20 +1719,56 @@ local RENDER_TEMPLATES = {
 		default_value = DefaultGameParameters.default_max_blood_decals
 	},
 	{
-		require_restart = false,
+		value_type = "number",
 		id = "decal_lifetime",
 		display_name = "loc_setting_decal_lifetime",
 		num_decimals = 0,
 		max = 60,
-		value_type = "number",
+		require_restart = false,
 		min = 10,
 		step_size = 1,
 		require_apply = false,
+		tooltip_text = "loc_setting_decal_lifetime_mouseover",
 		save_location = "performance_settings",
 		apply_values_on_edited = {
 			graphics_quality = "custom"
 		},
 		default_value = DefaultGameParameters.default_decal_lifetime
+	},
+	{
+		group_name = "gore",
+		display_name = "loc_settings_menu_group_gore",
+		widget_type = "group_header"
+	},
+	{
+		id = "blood_decals_enabled",
+		value_type = "boolean",
+		display_name = "loc_blood_decals_enabled",
+		tooltip_text = "loc_blood_decals_enabled_mouseover",
+		require_apply = false,
+		require_restart = false,
+		default_value = true,
+		save_location = "gore_settings"
+	},
+	{
+		id = "gibbing_enabled",
+		value_type = "boolean",
+		display_name = "loc_gibbing_enabled",
+		tooltip_text = "loc_gibbing_enabled_mouseover",
+		require_apply = false,
+		require_restart = false,
+		default_value = true,
+		save_location = "gore_settings"
+	},
+	{
+		id = "minion_wounds_enabled",
+		value_type = "boolean",
+		display_name = "loc_minion_wounds_enabled",
+		tooltip_text = "loc_minion_wounds_enabled_mouseover",
+		require_apply = false,
+		require_restart = false,
+		default_value = true,
+		save_location = "gore_settings"
 	}
 }
 local default_supported_platforms = {
@@ -1831,6 +1805,8 @@ local function create_render_settings_entry(template)
 	local entry = nil
 	local id = template.id
 	local display_name = template.display_name
+	local indentation_level = template.indentation_level
+	local tooltip_text = template.tooltip_text
 	local value_type = template.value_type
 	local default_value = template.default_value
 	local default_value_type = value_type or default_value ~= nil and type(default_value) or nil
@@ -1968,6 +1944,20 @@ local function create_render_settings_entry(template)
 					end
 				end
 
+				if option == nil then
+					if default_value then
+						for i = 1, #options do
+							if options[i].id == default_value then
+								option = options[i]
+
+								break
+							end
+						end
+					else
+						option = options[1]
+					end
+				end
+
 				local apply_values_on_edited = option.apply_values_on_edited
 
 				if apply_values_on_edited then
@@ -1998,6 +1988,10 @@ local function create_render_settings_entry(template)
 				end
 			end,
 			get_function = function ()
+				if template.get_function then
+					return template:get_function()
+				end
+
 				local old_value = get_user_setting(save_location, id)
 
 				if old_value == nil then
@@ -2020,7 +2014,7 @@ local function create_render_settings_entry(template)
 			local apply_values_on_edited = template.apply_values_on_edited
 
 			if apply_values_on_edited then
-				apply_values(apply_values_on_edited)
+				on_setting_edited_function(apply_values_on_edited)
 			end
 
 			local current_value = get_user_setting(save_location, id) or default_value
@@ -2040,6 +2034,10 @@ local function create_render_settings_entry(template)
 		end
 
 		local function get_function()
+			if template.get_function then
+				return template:get_function()
+			end
+
 			return get_user_setting(save_location, id) or default_value
 		end
 
@@ -2051,7 +2049,8 @@ local function create_render_settings_entry(template)
 			step_size_value = template.step_size,
 			num_decimals = template.num_decimals,
 			value_get_function = get_function,
-			on_value_changed_function = change_function
+			on_value_changed_function = change_function,
+			disable_rules = template.disable_rules
 		}
 		entry = OptionsUtilities.create_value_slider_template(slider_params)
 	elseif default_value_type == "boolean" then
@@ -2072,7 +2071,11 @@ local function create_render_settings_entry(template)
 					on_setting_edited_function(apply_values_on_edited)
 				end
 
-				local current_value = get_user_setting(save_location, id) or default_value
+				local current_value = get_user_setting(save_location, id)
+
+				if current_value == nil then
+					current_value = default_value
+				end
 
 				if not _is_same(current_value, new_value) then
 					dirty = true
@@ -2088,6 +2091,10 @@ local function create_render_settings_entry(template)
 				end
 			end,
 			get_function = function ()
+				if template.get_function then
+					return template:get_function()
+				end
+
 				local old_value = get_user_setting(save_location, id)
 
 				if old_value == nil then
@@ -2104,6 +2111,10 @@ local function create_render_settings_entry(template)
 	entry.apply_on_startup = template.apply_on_startup
 	entry.validation_function = template.validation_function
 	entry.default_value = template.default_value
+	entry.indentation_level = indentation_level
+	entry.tooltip_text = tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.id = template.id
 
 	return entry
 end
@@ -2170,20 +2181,33 @@ local function generate_resolution_options()
 	end
 end
 
+local function _vfov_to_hfov(vfov)
+	local width = RESOLUTION_LOOKUP.width
+	local height = RESOLUTION_LOOKUP.height
+	local aspect_ratio = width / height
+	local hfov = math.round(2 * math.deg(math.atan(math.tan(math.rad(vfov) / 2) * aspect_ratio)))
+
+	return hfov
+end
+
+local _fov_format_params = {}
 local min_value = IS_XBS and DefaultGameParameters.min_console_vertical_fov or DefaultGameParameters.min_vertical_fov
 local max_value = IS_XBS and DefaultGameParameters.max_console_vertical_fov or DefaultGameParameters.max_vertical_fov
 local default_value = DefaultGameParameters.vertical_fov
 new_settings[#new_settings + 1] = {
-	apply_on_drag = false,
 	display_name = "loc_settings_gameplay_fov",
-	num_decimals = 0,
 	focusable = true,
-	widget_type = "slider",
+	num_decimals = 0,
+	widget_type = "value_slider",
+	step_size_value = 1,
+	apply_on_drag = false,
 	apply_on_startup = false,
+	mark_default_value = true,
+	id = "gameplay_fov",
+	tooltip_text = "loc_settings_gameplay_fov_mouseover",
 	default_value = default_value,
 	min_value = min_value,
 	max_value = max_value,
-	step_size_fraction = 1 / (max_value - min_value),
 	on_activated = function (value, data)
 		Application.set_user_setting("render_settings", "vertical_fov", value)
 		Application.save_user_settings()
@@ -2196,10 +2220,25 @@ new_settings[#new_settings + 1] = {
 			camera_manager:set_fov_multiplier(fov_multiplier)
 		end
 	end,
-	get_function = function (data)
+	get_function = function (template)
 		local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or DefaultGameParameters.vertical_fov
 
-		return vertical_fov, math.normalize_01(vertical_fov, data.min_value, data.max_value)
+		return vertical_fov
+	end,
+	explode_function = function (normalized_value, template)
+		local value_range = template.max_value - template.min_value
+		local exploded_value = template.min_value + normalized_value * value_range
+		local step_size = template.step_size_value or 1
+		exploded_value = math.round(exploded_value / step_size) * step_size
+
+		return exploded_value
+	end,
+	format_value_function = function (vfov)
+		local format_params = _fov_format_params
+		format_params.hfov = _vfov_to_hfov(vfov)
+		format_params.vfov = vfov
+
+		return Localize("loc_settings_gameplay_fov_presentation_format", true, format_params)
 	end
 }
 local resolution_options = generate_resolution_options()
@@ -2208,6 +2247,8 @@ local resolution_undefiend_return_value = {
 }
 new_settings[#new_settings + 1] = {
 	display_name = "loc_setting_resolution",
+	id = "resolution",
+	tooltip_text = "loc_setting_resolution_mouseover",
 	options = resolution_options,
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
@@ -2224,6 +2265,7 @@ new_settings[#new_settings + 1] = {
 		}
 
 		Application.set_user_setting("adapter_index", adapter_index - 1)
+		Application.set_user_setting("fullscreen_output", output_screen - 1)
 		Application.set_user_setting("screen_resolution", resolution)
 		Application.save_user_settings()
 		apply_user_settings()
@@ -2241,15 +2283,34 @@ new_settings[#new_settings + 1] = {
 			end
 		end
 
+		if #resolution_options > 0 then
+			return 1
+		end
+
 		return resolution_undefiend_return_value
 	end
 }
 local screen_mode_setting = {
-	default_value = "window",
+	tooltip_text = "loc_setting_screen_mode_mouseover",
 	display_name = "loc_setting_screen_mode",
 	id = "screen_mode",
+	default_value = "window",
+	apply_on_startup = true,
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
+	end,
+	get_function = function (data)
+		local screen_mode = Application.user_setting("screen_mode")
+		local fullscreen = Application.user_setting("fullscreen")
+		local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
+
+		if borderless_fullscreen then
+			screen_mode = "borderless_fullscreen"
+		elseif fullscreen then
+			screen_mode = "fullscreen"
+		end
+
+		return screen_mode or data.default_value
 	end,
 	options = {
 		{

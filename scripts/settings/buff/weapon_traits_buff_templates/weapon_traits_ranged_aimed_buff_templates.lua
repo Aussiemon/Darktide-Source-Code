@@ -78,6 +78,7 @@ local templates = {
 		predicted = false,
 		duration = 3,
 		class_name = "proc_buff",
+		allow_proc_while_active = true,
 		proc_events = {
 			[buff_proc_events.on_hit] = 1
 		},
@@ -362,6 +363,7 @@ local templates = {
 		predicted = false,
 		duration = 3,
 		class_name = "proc_buff",
+		allow_proc_while_active = true,
 		proc_events = {
 			[buff_proc_events.on_hit] = 1
 		},

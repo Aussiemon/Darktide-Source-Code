@@ -103,11 +103,9 @@ visibility_groups[11] = {
 	end
 }
 visibility_groups[12] = {
-	name = "training_grounds",
+	name = "onboarding",
 	validation_function = function (hud)
-		local mechaninsm_manager = Managers.mechanism
-
-		return mechaninsm_manager:mechanism_name() == "training_grounds"
+		return hud:is_onboarding()
 	end
 }
 

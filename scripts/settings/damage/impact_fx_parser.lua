@@ -18,8 +18,6 @@ local function _include_impact_fx_configs(target_table, types, path)
 		if exists then
 			local fx_config = require(full_path)
 			target_table[damage_type_or_surface_material] = fx_config
-		elseif rawget(_G, "EditorApi") == nil then
-			Log.warning("ImpactFxParser", "Tried to parse %q, but the file does not exist!", full_path)
 		end
 	end
 end
@@ -166,6 +164,13 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 
 		table.append(fx_table.vfx, table.clone(damage_fx.vfx or EMPTY_TABLE))
 		table.append(fx_table.vfx, table.clone(material_fx.vfx or EMPTY_TABLE))
+	end
+
+	if damage_fx.unit or material_fx.unit then
+		fx_table.unit = {}
+
+		table.append(fx_table.unit, table.clone(damage_fx.unit or EMPTY_TABLE))
+		table.append(fx_table.unit, table.clone(material_fx.unit or EMPTY_TABLE))
 	end
 
 	fx_table.sfx = sfx

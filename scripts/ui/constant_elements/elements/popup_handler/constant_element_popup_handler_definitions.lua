@@ -104,7 +104,12 @@ local popup_type_style = {
 			0,
 			0
 		},
-		terminal_background_color = Color.red(255, true),
+		terminal_background_color = {
+			255,
+			100,
+			6,
+			6
+		},
 		title_text_color = {
 			255,
 			162,
@@ -126,7 +131,7 @@ local popup_type_style = {
 		},
 		icon_color = Color.blue(127.5, true),
 		background_color = Color.terminal_grid_background(50, true),
-		terminal_background_color = Color.white(255, true),
+		terminal_background_color = Color.terminal_grid_background(255, true),
 		title_text_color = Color.terminal_text_header(255, true),
 		description_text_color = Color.terminal_text_body(255, true)
 	}
@@ -139,11 +144,8 @@ local widget_definitions = {
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "center",
+				scale_to_material = true,
 				horizontal_alignment = "center",
-				size_addition = {
-					0,
-					0
-				},
 				offset = {
 					0,
 					0,
@@ -166,7 +168,8 @@ local widget_definitions = {
 						1,
 						1
 					}
-				}
+				},
+				color = Color.terminal_grid_background(255, true)
 			}
 		},
 		{
@@ -176,7 +179,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
-				color = Color.terminal_grid_background(255, true),
+				color = Color.terminal_background(255, true),
 				size_addition = {
 					0,
 					0
@@ -377,10 +380,14 @@ local animations = {
 				widgets.top_icon.content.texture = popup_type_style[popup_type].icon
 				widgets.top_icon.style.texture.color = popup_type_style[popup_type].icon_color
 				widgets.top_icon.style.texture.size = popup_type_style[popup_type].icon_size
-				local button_widgets = parent._button_widgets
+				local content_widgets = parent._content_widgets
 
-				for i = 1, #button_widgets do
-					button_widgets[i].alpha_multiplier = alpha_multiplier
+				for i = 1, #content_widgets do
+					if content_widgets[i].style.text and not content_widgets[i].content.hotspot then
+						content_widgets[i].style.text.text_color = popup_type_style[popup_type].description_text_color
+					end
+
+					content_widgets[i].alpha_multiplier = alpha_multiplier
 				end
 			end
 		},
@@ -414,10 +421,10 @@ local animations = {
 				widgets.title_text.alpha_multiplier = anim_progress
 				widgets.description_text.alpha_multiplier = anim_progress
 				widgets.top_icon.alpha_multiplier = anim_progress
-				local button_widgets = parent._button_widgets
+				local content_widgets = parent._content_widgets
 
-				for i = 1, #button_widgets do
-					button_widgets[i].alpha_multiplier = anim_progress
+				for i = 1, #content_widgets do
+					content_widgets[i].alpha_multiplier = anim_progress
 				end
 			end
 		}
@@ -432,10 +439,10 @@ local animations = {
 				widgets.title_text.alpha_multiplier = anim_progress
 				widgets.description_text.alpha_multiplier = anim_progress
 				widgets.top_icon.alpha_multiplier = anim_progress
-				local button_widgets = parent._button_widgets
+				local content_widgets = parent._content_widgets
 
-				for i = 1, #button_widgets do
-					button_widgets[i].alpha_multiplier = anim_progress
+				for i = 1, #content_widgets do
+					content_widgets[i].alpha_multiplier = anim_progress
 				end
 			end
 		},

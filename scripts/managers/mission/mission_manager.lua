@@ -1,5 +1,6 @@
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local MissionTypes = require("scripts/settings/mission/mission_types")
 local MissionSettings = require("scripts/settings/mission/mission_settings")
 local mission_zone_ids = MissionSettings.mission_zone_ids
 local mission_game_mode_names = MissionSettings.mission_game_mode_names
@@ -72,16 +73,9 @@ end
 
 MissionManager.main_objective_type = function (self)
 	local mission = self._mission
-	local mission_objectives = mission.objectives
-	local mission_objective_template = MissionObjectiveTemplates[mission_objectives]
+	local mission_type = MissionTypes[mission.mission_type]
 
-	if not mission_objective_template then
-		return "default"
-	end
-
-	local main_objective_type = mission_objective_template.main_objective_type
-
-	return main_objective_type
+	return mission_type and mission_type.id or -1
 end
 
 return MissionManager

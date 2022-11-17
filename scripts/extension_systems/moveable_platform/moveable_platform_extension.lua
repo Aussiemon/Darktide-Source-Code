@@ -22,9 +22,12 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._interactables = {}
 	self._require_all_players_onboard = false
 	self._units_locked = false
+	self._teleport_node_index = 1
 	local initial_position = Unit.local_position(unit, 1)
 	self._previous_update_position = Vector3Box(initial_position)
-	self._current_velocity = Vector3Box()
+	self._movement_this_render_frame = Vector3.zero()
+	self._movement_since_last_fixed_update = Vector3.zero()
+	self._last_fixed_frame_position = Vector3Box(Vector3.zero())
 	self._story_speed_forward = 1
 	self._story_speed_backward = 1
 	self._end_sound_time = 0
@@ -252,19 +255,19 @@ MoveablePlatformExtension._enable_wall_collision = function (self, actor_id, act
 	Actor.set_collision_filter(actor, filter)
 end
 
-local bot_teleport_location_node_names = {
+local teleport_location_node_names = {
 	"bot_teleport_location_01",
 	"bot_teleport_location_02",
 	"bot_teleport_location_03"
 }
-local num_bot_teleport_location_node_names = #bot_teleport_location_node_names
+local num_teleport_location_node_names = #teleport_location_node_names
 
 MoveablePlatformExtension._force_teleport_bots = function (self, bot_player_units_to_teleport)
 	local moveable_platform_unit = self._unit
 	local index = 1
 
 	for bot_player_unit, _ in pairs(bot_player_units_to_teleport) do
-		local current_node_name = bot_teleport_location_node_names[index]
+		local current_node_name = teleport_location_node_names[index]
 		local has_node = Unit.has_node(moveable_platform_unit, current_node_name)
 
 		if has_node then
@@ -279,7 +282,7 @@ MoveablePlatformExtension._force_teleport_bots = function (self, bot_player_unit
 			bot_player_units_to_teleport[bot_player_unit] = nil
 		end
 
-		index = index % num_bot_teleport_location_node_names + 1
+		index = index % num_teleport_location_node_names + 1
 	end
 end
 
@@ -321,6 +324,7 @@ MoveablePlatformExtension.update = function (self, unit, dt, t)
 			local story_states = self._network_story_manager.NETWORK_STORY_STATES
 			local story_state = self._network_story_manager:get_story_state(self._story_name, self._level)
 
+			self:_check_passengers_outside()
 			self:_check_for_end_flow_events()
 
 			if story_state == story_states.pause_at_end then
@@ -333,6 +337,7 @@ MoveablePlatformExtension.update = function (self, unit, dt, t)
 			local story_states = self._network_story_manager.NETWORK_STORY_STATES
 			local story_state = self._network_story_manager:get_story_state(self._story_name, self._level)
 
+			self:_check_passengers_outside()
 			self:_check_for_end_flow_events()
 
 			if story_state == story_states.pause_at_start then
@@ -386,6 +391,7 @@ MoveablePlatformExtension.fixed_update = function (self, unit, dt, t)
 	self._all_players_inside = self:_get_passengers_onboard_info()
 
 	self:_set_flow_all_players_onboard(self._all_players_inside)
+	self._last_fixed_frame_position:store(Unit.local_position(unit, 1))
 end
 
 MoveablePlatformExtension.post_update = function (self, unit, dt, t)
@@ -436,10 +442,19 @@ MoveablePlatformExtension._update_velocity = function (self, unit, dt)
 	local previous_position = self._previous_update_position:unbox()
 	local current_position = Unit.local_position(unit, 1)
 	local delta_pos = current_position - previous_position
-	local velocity = delta_pos / dt
 
-	self._current_velocity:store(velocity)
 	self._previous_update_position:store(current_position)
+
+	self._movement_since_last_fixed_update = current_position - self._last_fixed_frame_position:unbox()
+	self._movement_this_render_frame = delta_pos
+end
+
+MoveablePlatformExtension.movement_this_render_frame = function (self)
+	return self._movement_this_render_frame
+end
+
+MoveablePlatformExtension.movement_since_last_fixed_update = function (self)
+	return self._movement_since_last_fixed_update
 end
 
 MoveablePlatformExtension._send_player_overlap_request = function (self, actor_id)
@@ -547,6 +562,36 @@ MoveablePlatformExtension._check_hostile_onboard = function (self)
 	end
 end
 
+MoveablePlatformExtension._teleport_player_onboard = function (self, unit)
+	local moveable_platform_unit = self._unit
+	local node_index = self._teleport_node_index
+	local node_name = teleport_location_node_names[node_index]
+	local node = Unit.node(moveable_platform_unit, node_name)
+	local node_position = Unit.world_position(moveable_platform_unit, node)
+	local player = Managers.player:player_by_unit(unit)
+
+	if player then
+		PlayerMovement.teleport(player, node_position)
+	end
+
+	self._teleport_node_index = node_index % num_teleport_location_node_names + 1
+end
+
+MoveablePlatformExtension._check_passengers_outside = function (self)
+	local bounding_box, half_size = Unit.box(self._unit)
+
+	for passenger_unit, _ in pairs(self._passenger_units) do
+		if ALIVE[passenger_unit] then
+			local unit_position = Unit.world_position(passenger_unit, 1)
+
+			if not math.point_is_inside_oobb(unit_position, bounding_box, half_size * 1.1) then
+				self:_teleport_player_onboard(passenger_unit)
+				Log.warning("MoveablePlatformExtension", "Player considered otuside of elevator, teleported back")
+			end
+		end
+	end
+end
+
 MoveablePlatformExtension._unlock_units_on_platform = function (self)
 	for _, wall in pairs(self._walls) do
 		self:_enable_wall_collision(wall.actor_id, false)
@@ -564,13 +609,7 @@ MoveablePlatformExtension.add_passenger = function (self, unit, place_on_platfor
 		self:_set_platform_as_parent(unit)
 
 		if place_on_platform then
-			local moveable_platform_unit = self._unit
-			local node_name = bot_teleport_location_node_names[1]
-			local node = Unit.node(moveable_platform_unit, node_name)
-			local node_position = Unit.world_position(moveable_platform_unit, node)
-			local player = Managers.player:player_by_unit(unit)
-
-			PlayerMovement.teleport(player, node_position)
+			self:_teleport_player_onboard(unit)
 		end
 	end
 end

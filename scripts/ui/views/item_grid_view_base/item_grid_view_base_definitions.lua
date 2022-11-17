@@ -54,7 +54,7 @@ local scenegraph_definition = {
 		size = grid_size,
 		position = {
 			100,
-			120,
+			40,
 			1
 		}
 	},
@@ -82,7 +82,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140,
-			120,
+			40,
+			3
+		}
+	},
+	weapon_compare_stats_pivot = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-1140 + grid_size[1] - 50,
+			40,
 			3
 		}
 	},

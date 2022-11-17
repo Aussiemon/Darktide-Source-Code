@@ -309,7 +309,7 @@ BtChaosHoundApproachAction._ray_cast = function (self, physics_world, from, to)
 end
 
 BtChaosHoundApproachAction._set_pounce_cooldown = function (self, unit, breed, scratchpad, target_unit, blackboard, t)
-	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce)
+	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce_fail)
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
 	pounce_component.pounce_cooldown = t + cooldown
 

@@ -25,12 +25,13 @@ end
 local mission_lobby_ready_voting_template = {
 	name = "mission_lobby_ready",
 	can_change_vote = true,
+	force_timeout_option = true,
 	abort_on_member_left = false,
 	rpc_start_voting = "rpc_start_voting_mission_lobby_ready",
+	abort_on_member_joined = false,
 	duration = 60,
 	voting_impl = "network",
 	evaluate_delay = 10,
-	abort_on_member_joined = false,
 	options = {
 		OPTIONS.yes,
 		OPTIONS.no
@@ -43,13 +44,23 @@ local mission_lobby_ready_voting_template = {
 		"mission_data"
 	},
 	pack_params = function (params)
-		local mission_data_string = cjson.encode(params.mission_data)
+		local mission_data = params.mission_data
+		local mission_name = mission_data.mission_name
+		local mission_name_id = NetworkLookup.missions[mission_name]
+		local circumstance_name = mission_data.circumstance_name
+		local circumstance_name_id = NetworkLookup.circumstance_templates[circumstance_name]
 
-		return mission_data_string
+		return mission_name_id, circumstance_name_id
 	end,
-	unpack_params = function (mission_data_string)
+	unpack_params = function (mission_name_id, circumstance_name_id)
+		local mission_name = NetworkLookup.missions[mission_name_id]
+		local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
+
 		return {
-			mission_data = cjson.decode(mission_data_string)
+			mission_data = {
+				mission_name = mission_name,
+				circumstance_name = circumstance_name
+			}
 		}
 	end,
 	evaluate = function (votes)

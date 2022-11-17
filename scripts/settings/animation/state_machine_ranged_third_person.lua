@@ -3,6 +3,9 @@ local state_machine_settings = {
 	["content/characters/player/human/third_person/animations/lasgun_rifle"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/human/third_person/animations/lasgun_rifle_elysian"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/human/third_person/animations/lasgun_rifle_krieg"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
@@ -40,6 +43,9 @@ local state_machine_settings = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/third_person/animations/shotgun_rifle"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/ogryn/third_person/animations/heavy_stubber"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	}
 }

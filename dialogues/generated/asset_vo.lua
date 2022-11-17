@@ -507,11 +507,6 @@ return function ()
 				"asset_unnatural_dark_b",
 				OP.TIMESET
 			}
-		},
-		on_post_rule_execution = {
-			reject_events = {
-				duration = 0.2
-			}
 		}
 	})
 	define_rule({

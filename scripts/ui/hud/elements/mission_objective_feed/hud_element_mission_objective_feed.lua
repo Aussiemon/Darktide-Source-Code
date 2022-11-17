@@ -3,6 +3,8 @@ local HudElementMissionObjective = require("scripts/ui/hud/elements/mission_obje
 local HudElementMissionObjectiveFeedSettings = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local HudElementMissionObjectiveFeed = class("HudElementMissionObjectiveFeed", "HudElementBase")
 
 HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -15,6 +17,7 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 	self._scan_delay = HudElementMissionObjectiveFeedSettings.scan_delay
 	self._scan_delay_duration = 0
 	self._objectives_counter = 0
+	self._event_objectives_to_add = {}
 
 	self:_set_background_visibility(false)
 	self:_register_events()
@@ -29,7 +32,7 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 	if self._scan_delay_duration > 0 then
 		self._scan_delay_duration = self._scan_delay_duration - dt
 	else
-		self:_mission_objectives_scan()
+		self:_mission_objectives_scan(ui_renderer)
 
 		self._scan_delay_duration = self._scan_delay
 	end
@@ -68,7 +71,17 @@ HudElementMissionObjectiveFeed._set_background_visibility = function (self, visi
 	self._widgets_by_name.background.content.visible = visible
 end
 
-HudElementMissionObjectiveFeed._mission_objectives_scan = function (self)
+HudElementMissionObjectiveFeed._mission_objectives_scan = function (self, ui_renderer)
+	local event_objectives_to_add = self._event_objectives_to_add
+
+	for i = #event_objectives_to_add, 1, -1 do
+		local objective_data = table.remove(event_objectives_to_add, i)
+		local objective = objective_data.objective
+		local locally_added = objective_data.locally_added
+
+		self:_add_objective(objective, ui_renderer, locally_added)
+	end
+
 	local hud_objectives = self._hud_objectives
 	local active_objectives = self._mission_objective_system:get_active_objectives()
 
@@ -81,6 +94,7 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self)
 			if not locally_added and not hud_objective:is_synchronized_with_objective(active_objective) then
 				hud_objective:synchronize_objective(active_objective)
 				self:_synchronize_widget_with_hud_objective(objective_name)
+				self:_align_objective_widgets()
 			end
 
 			hud_objective:update_markers()
@@ -93,12 +107,19 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self)
 		local hud_objective_exists = hud_objectives[objective_name] ~= nil
 
 		if not hud_objective_exists and objective:use_hud() then
-			self:_add_objective(objective)
+			self:_add_objective(objective, ui_renderer)
 		end
 	end
 end
 
-HudElementMissionObjectiveFeed._add_objective = function (self, objective, locally_added)
+HudElementMissionObjectiveFeed.event_add_objective = function (self, objective, locally_added)
+	self._event_objectives_to_add[#self._event_objectives_to_add + 1] = {
+		objective = objective,
+		locally_added = locally_added
+	}
+end
+
+HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_renderer, locally_added)
 	local objective_name = objective:name()
 	local new_hud_objective = HudElementMissionObjective:new(objective)
 	self._hud_objectives[objective_name] = new_hud_objective
@@ -107,6 +128,30 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, local
 	self._objective_widgets_by_name[objective_name] = widget
 
 	self:_synchronize_widget_with_hud_objective(objective_name)
+
+	local content = widget.content
+	local header_text = new_hud_objective:header()
+	local header_height = 0
+	local header_size = HudElementMissionObjectiveFeedSettings.header_size
+	local style = widget.style
+	local header_text_style = style.header_text
+
+	if header_text_style then
+		local text_font_data = UIFonts.data_by_type(header_text_style.font_type)
+		local text_font = text_font_data.path
+		local text_size = {
+			header_text_style.size[1],
+			1000
+		}
+		local text_options = UIFonts.get_font_options_by_style(header_text_style)
+		local _, text_height = UIRenderer.text_size(ui_renderer, header_text, header_text_style.font_type, header_text_style.font_size, text_size, text_options)
+		header_height = text_height
+	end
+
+	local widget_height = math.max(header_size[2], header_height)
+	content.size[2] = widget_height
+
+	self:_align_objective_widgets()
 end
 
 HudElementMissionObjectiveFeed._remove_objective = function (self, objective_name)
@@ -120,6 +165,19 @@ HudElementMissionObjectiveFeed._remove_objective = function (self, objective_nam
 		self._objectives_counter = self._objectives_counter - 1
 
 		self:_align_objective_widgets()
+	else
+		local event_objectives_to_add = self._event_objectives_to_add
+
+		for i = 1, #event_objectives_to_add do
+			local objective_data = event_objectives_to_add[i]
+			local objective = objective_data.objective
+
+			if objective:name() == objective_name then
+				table.remove(event_objectives_to_add, i)
+
+				return
+			end
+		end
 	end
 end
 
@@ -169,8 +227,6 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 			ColorUtilities.color_copy(color, pass_style.text_color)
 		end
 	end
-
-	self:_align_objective_widgets()
 end
 
 HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_objective)
@@ -179,18 +235,18 @@ HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_object
 	local style = widget.style
 	local bar_style = style.bar
 	local progression = hud_objective:has_second_progression() and hud_objective:second_progression() or hud_objective:progression()
-	local bar_default_size = bar_style.default_size
-	bar_style.size[1] = bar_default_size[1] * progression
+	local default_length = bar_style.default_length
+	bar_style.size[1] = default_length * progression
 end
 
 HudElementMissionObjectiveFeed._get_objectives_height = function (self, widget, ui_renderer)
-	local header_size = HudElementMissionObjectiveFeedSettings.header_size
 	local content = widget.content
 	local style = widget.style
+	local widget_height = widget.content.size[2]
 	local show_bar = content.show_bar
 	local bar_height = show_bar and style.bar.size[2] or 0
 
-	return header_size[2] + bar_height * 2
+	return widget_height + bar_height * 2
 end
 
 HudElementMissionObjectiveFeed._align_objective_widgets = function (self)

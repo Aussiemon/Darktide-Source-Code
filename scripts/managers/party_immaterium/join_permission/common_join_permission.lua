@@ -1,10 +1,11 @@
 local Promise = require("scripts/foundation/utilities/promise")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local CommonJoinPermission = {
-	test_play_mutliplayer_permission = function (account_id, platform, platform_user_id, context_suffix)
+	test_play_mutliplayer_permission = function (account_id, platform, platform_user_id, context)
+		local context_suffix = context and "_" .. context or ""
 		local privileges_manager = PrivilegesManager:new()
 		local blocked_check = Managers.data_service.social:is_account_blocked(account_id):catch(function (error)
-			Log.error("CommonJoinPermission", "could not check if player was blocked, error=" .. table.tostring(error, 4))
+			Log.error("CommonJoinPermission", "could not check if player was blocked, error=%s", table.tostring(error, 4))
 
 			return Promise.resolved()
 		end):next(function (is_blocked)
@@ -21,7 +22,7 @@ local CommonJoinPermission = {
 				if error.message == "OK" then
 					return Promise.rejected("CROSS_PLAY_DISABLED" .. context_suffix)
 				else
-					Log.error("CommonJoinPermission", "unkown privileges error for cross-play " .. table.tostring(error, 3))
+					Log.error("CommonJoinPermission", "unkown privileges error for cross-play %s", table.tostring(error, 3))
 
 					return Promise.resolved()
 				end

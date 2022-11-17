@@ -38,7 +38,8 @@ local target_selection_template = {
 		local current_target_unit = perception_component.target_unit
 		local position = POSITION_LOOKUP[unit]
 		local best_score, best_target_unit, closest_distance_sq, closest_z_distance = nil
-		local detection_radius_sq = breed.detection_radius^2
+		local detection_radius = MinionTargetSelection.detection_radius(breed)
+		local detection_radius_sq = detection_radius^2
 		local vector3_distance_squared = Vector3.distance_squared
 
 		if target_units[current_target_unit] then

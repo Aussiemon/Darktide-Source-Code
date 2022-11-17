@@ -134,7 +134,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.1,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
@@ -615,7 +615,7 @@ local action_data = {
 		vo_event = "ranged_idle",
 		move_distance = 3.35,
 		suppressive_fire = true,
-		attack_intensity_type = "ranged",
+		attack_intensity_type = "ranged_close",
 		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
 		start_move_anim_events = {
@@ -674,7 +674,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 2
+			ranged_close = 2
 		},
 		shoot_template = BreedShootTemplates.renegade_assault_default
 	},
@@ -738,7 +738,7 @@ local action_data = {
 		move_to_fail_cooldown = 1,
 		strafe_shoot_ranged_position_fallback = true,
 		suppressive_fire = true,
-		attack_intensity_type = "ranged",
+		attack_intensity_type = "ranged_close",
 		move_to_cooldown = 0.25,
 		inventory_slot = "slot_ranged_weapon",
 		min_distance_to_target = 6,
@@ -755,7 +755,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 2
+			ranged_close = 2
 		},
 		cooldown_anim_events = {
 			"idle",
@@ -1025,7 +1025,7 @@ local action_data = {
 				equip_sword = 0.2833333333333333
 			},
 			switch_anim_durations = {
-				equip_sword = 0.5833333333333334
+				equip_sword = 0.5
 			}
 		},
 		slot_ranged_weapon = {
@@ -1036,7 +1036,7 @@ local action_data = {
 				equip_gun = 0.2
 			},
 			switch_anim_durations = {
-				equip_gun = 0.8333333333333334
+				equip_gun = 0.4
 			}
 		}
 	},

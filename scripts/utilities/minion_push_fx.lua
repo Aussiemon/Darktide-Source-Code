@@ -26,4 +26,21 @@ local MinionPushFx = {
 	end
 }
 
+MinionPushFx.play_sfx_for_clients_except = function (pushed_unit, template, player_exception)
+	local sfx = template.sfx
+
+	if type(sfx) == "table" then
+		local pushed_unit_data_extension = ScriptUnit.extension(pushed_unit, "unit_data_system")
+		local breed = pushed_unit_data_extension:breed()
+		local armor_type = Armor.armor_type(pushed_unit, breed)
+		sfx = sfx[armor_type]
+	end
+
+	local event_id = NetworkLookup.sound_events[sfx]
+	local pushed_unit_position = POSITION_LOOKUP[pushed_unit]
+	local channel_id_exception = player_exception:channel_id()
+
+	Managers.state.game_session:send_rpc_clients_except("rpc_trigger_wwise_event", channel_id_exception, event_id, pushed_unit_position)
+end
+
 return MinionPushFx

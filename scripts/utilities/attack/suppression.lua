@@ -64,6 +64,10 @@ end
 local BROADPHASE_RESULTS = {}
 local NO_LERP_VALUES = {}
 local DEFAULT_RELATION = "enemy"
+local DEFAULT_COVER_DISABLE_RANGE = {
+	3,
+	8
+}
 
 Suppression.apply_area_minion_suppression = function (attacking_unit, suppression_settings, from_position, optional_relation, optional_include_self, optional_lerp_values)
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -111,15 +115,25 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 
 			if Breed.is_minion(breed) then
 				local suppression_amount = suppression_value
+				local to_position = POSITION_LOOKUP[hit_unit]
+				local distance_from_source = Vector3.distance(from_position, to_position)
 
 				if apply_suppression_falloff then
-					local to_position = POSITION_LOOKUP[hit_unit]
-					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, to_position)
+					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, to_position, distance_from_source)
 				end
 
 				local suppression_type = "default"
 
 				_apply_suppression_minion(hit_unit, suppression_amount, suppression_type, suppression_attack_delay, attacking_unit, from_position, instant_aggro)
+
+				local cover_extension = ScriptUnit.has_extension(hit_unit, "cover_system")
+				local disable_cover_radius = suppression_settings.disable_cover_radius or broadphase_radius * 0.5
+
+				if cover_extension and distance_from_source < disable_cover_radius then
+					local disable_cover_range = suppression_settings.disable_cover_time_range or DEFAULT_COVER_DISABLE_RANGE
+
+					cover_extension:release_cover_slot(math.random_range(disable_cover_range[1], disable_cover_range[2]))
+				end
 			end
 		end
 	end
@@ -162,7 +176,8 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 				local suppression_amount = suppression_value
 
 				if apply_suppression_falloff then
-					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, hit_unit_position)
+					local distance_from_source = Vector3.distance(from_position, hit_unit_position)
+					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, hit_unit_position, distance_from_source)
 				end
 
 				local afro_hit_position = math.closest_point_on_sphere(hit_unit_position, afro_radius, from_position)
@@ -296,9 +311,8 @@ function _apply_suppression_minion(suppressed_unit, suppression_value, suppressi
 	end
 end
 
-function _apply_suppression_falloff(suppression_value, distance, from_position, to_position)
+function _apply_suppression_falloff(suppression_value, distance, from_position, to_position, distance_from_source)
 	local distance_sq = distance * distance
-	local distance_from_source = Vector3.distance(from_position, to_position)
 	local distance_from_source_sq = distance_from_source * distance_from_source
 	local inverse_radius = math.clamp(1 - distance_from_source_sq / distance_sq, 0, 1)
 	local inverse_radius_sq = inverse_radius * inverse_radius

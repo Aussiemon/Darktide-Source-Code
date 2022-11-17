@@ -62,7 +62,7 @@ hitscan_templates.bfg_spray_lasgun_beam = {
 	}
 }
 hitscan_templates.snp_lasgun_beam = {
-	range = 50,
+	range = 75,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.light_lasgun_snp
@@ -70,18 +70,60 @@ hitscan_templates.snp_lasgun_beam = {
 	}
 }
 hitscan_templates.snp_heavy_lasgun_beam = {
-	range = 50,
+	range = 75,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.light_lasgun_snp
 		}
 	}
 }
-hitscan_templates.lasgun_p2_m1_beam = {
+hitscan_templates.lasgun_p2_m1_beam_charged = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.lasgun_p2_m1_killshot
+			damage_profile = DamageProfileTemplates.lasgun_p2_m1_charge_killshot
+		}
+	}
+}
+hitscan_templates.lasgun_p2_m2_beam_charged = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.lasgun_p2_m2_charge_killshot
+		}
+	}
+}
+hitscan_templates.lasgun_p2_m3_beam_charged = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.lasgun_p2_m3_charge_killshot
+		}
+	}
+}
+hitscan_templates.lasgun_spraynpray_p3_m1 = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_lasgun_snp
+		}
+	}
+}
+hitscan_templates.lasgun_spraynpray_p3_m2 = {
+	power_level = 500,
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.light_lasgun_snp
+		}
+	}
+}
+hitscan_templates.lasgun_spraynpray_p3_m3 = {
+	power_level = 900,
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.heavy_lasgun_snp
 		}
 	}
 }

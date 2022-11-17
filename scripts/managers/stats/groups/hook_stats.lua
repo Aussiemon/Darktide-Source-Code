@@ -11,8 +11,10 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_mission", {
 	"team_kills",
 	"team_downs",
 	"team_deaths",
+	"side_objective_count",
 	"side_objective_complete",
 	"side_objective_name",
+	"is_flash",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_objective", {
@@ -40,6 +42,7 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_blocked_damage", {
 	"weapon_template_name",
 	"player_class"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_team_blocked_damage"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_kill", {
 	"breed_name",
 	"weapon_template_name",
@@ -62,7 +65,10 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_boss_kill", {
 	"time_since_first_damage",
 	"action"
 }))
-Factory.add_to_group(HookStats, Factory.create_hook("hook_team_kill"))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_team_kill", {
+	"breed_name",
+	"weapon_attack_type"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_toughness_regenerated", {
 	"reason",
 	"player_class"
@@ -109,8 +115,7 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_share_item", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_collect_material", {
-	"type",
-	"player_class"
+	"type"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_death", {
 	"player_class"

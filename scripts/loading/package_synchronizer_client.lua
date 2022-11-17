@@ -17,7 +17,8 @@ local RPCS = {
 	"rpc_player_profile_packages_changed",
 	"rpc_reevaluate_all_profile_packages",
 	"rpc_package_synchronizer_set_mission_name",
-	"rpc_set_alias_version"
+	"rpc_set_alias_version",
+	"rpc_cache_player_profile"
 }
 local PACKAGE_MANAGER_REFERENCE = "PackageSynchronizer"
 PackageSynchronizerClient.DEBUG_TAG = "Package Sync Client"
@@ -37,6 +38,7 @@ PackageSynchronizerClient.init = function (self, peer_id, is_host, network_deleg
 	self.NO_LOOKUP = 0
 	self._pending_peers = {}
 	self._player_alias_versions = {}
+	self._player_profile_cache = {}
 	self._unload_delayer = {}
 	self._mission_name = nil
 
@@ -76,11 +78,14 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 	local players = Managers.player:players_at_peer(peer_id)
 	local packages = {}
+	self._player_profile_cache[peer_id] = {}
 
 	for local_player_id, player in pairs(players) do
 		local profile = player:profile()
 		local profile_packages = self:resolve_profile_packages(profile)
 		packages[local_player_id] = profile_packages
+		local profile_clone = table.clone_instance(profile)
+		self._player_profile_cache[peer_id][local_player_id] = profile_clone
 	end
 
 	local data = {
@@ -105,6 +110,7 @@ PackageSynchronizerClient.remove_peer = function (self, peer_id)
 	self._packages[peer_id] = nil
 	self._pending_peers[peer_id] = nil
 	self._player_alias_versions[peer_id] = nil
+	self._player_profile_cache[peer_id] = nil
 end
 
 PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
@@ -121,6 +127,8 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 		local profile_packages = self:resolve_profile_packages(profile)
 		local peer_packages = data.peer_packages
 		peer_packages[local_player_id] = profile_packages
+		local profile_clone = table.clone_instance(profile)
+		self._player_profile_cache[peer_id][local_player_id] = profile_clone
 	end
 end
 
@@ -143,6 +151,12 @@ PackageSynchronizerClient.remove_bot = function (self, peer_id, local_player_id)
 
 	if player_alias_versions then
 		player_alias_versions[local_player_id] = nil
+	end
+
+	local chached_player_profiles = self._player_profile_cache[peer_id]
+
+	if chached_player_profiles then
+		chached_player_profiles[local_player_id] = nil
 	end
 end
 
@@ -504,6 +518,12 @@ PackageSynchronizerClient.reevaluate_all_profiles_packages = function (self)
 	end
 end
 
+PackageSynchronizerClient.chached_profile = function (self, peer_id, local_player_id)
+	local player_profile_cache = self._player_profile_cache
+
+	return player_profile_cache[peer_id][local_player_id]
+end
+
 PackageSynchronizerClient.player_profile_packages_changed = function (self, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local profile = player:profile()
@@ -689,8 +709,13 @@ PackageSynchronizerClient.rpc_set_alias_version = function (self, channel_id, pe
 end
 
 PackageSynchronizerClient.rpc_player_profile_packages_changed = function (self, channel_id, peer_id, local_player_id, alias_version)
-	self:player_profile_packages_changed(peer_id, local_player_id)
 	self:_set_player_alias_version(peer_id, local_player_id, alias_version)
+
+	local data = self._packages[peer_id]
+
+	if data then
+		self:player_profile_packages_changed(peer_id, local_player_id)
+	end
 end
 
 PackageSynchronizerClient._set_player_alias_version = function (self, peer_id, local_player_id, alias_version)
@@ -711,6 +736,18 @@ PackageSynchronizerClient.rpc_package_synchronizer_set_mission_name = function (
 	local mission_name = NetworkLookup.missions[mission_name_id]
 
 	self:set_mission_name(mission_name)
+end
+
+PackageSynchronizerClient.rpc_cache_player_profile = function (self, channel_id, peer_id, local_player_id)
+	local data = self._packages[peer_id]
+
+	if data then
+		local player_profile_cache = self._player_profile_cache
+		local player = Managers.player:player(peer_id, local_player_id)
+		local profile = player:profile()
+		local profile_clone = table.clone_instance(profile)
+		player_profile_cache[peer_id][local_player_id] = profile_clone
+	end
 end
 
 PackageSynchronizerClient.destroy = function (self)

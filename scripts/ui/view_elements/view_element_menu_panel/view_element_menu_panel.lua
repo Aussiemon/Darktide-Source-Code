@@ -1,8 +1,7 @@
 local Definitions = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_definitions")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local InputUtils = require("scripts/managers/input/input_utils")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementMenuPanelSettings = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_settings")
@@ -43,6 +42,12 @@ end
 
 ViewElementMenuPanel.set_is_handling_navigation_input = function (self, is_enabled)
 	self._is_handling_navigation_input = is_enabled
+
+	self:_update_input_texts()
+end
+
+ViewElementMenuPanel._on_navigation_input_changed = function (self)
+	self:_update_input_texts()
 end
 
 ViewElementMenuPanel.set_selected_panel_index = function (self, index)
@@ -61,7 +66,9 @@ ViewElementMenuPanel.set_selected_panel_index = function (self, index)
 	end
 
 	if self._selected_index == nil and focus_widget then
-		focus_widget.content.hotspot.anim_select_progress = 1
+		local hotspot = focus_widget.content.hotspot
+		hotspot.anim_select_progress = 1
+		hotspot._is_selected = true
 	end
 
 	self._selected_index = index
@@ -122,10 +129,6 @@ ViewElementMenuPanel.add_entry = function (self, text, onclick_callback, update_
 		end
 	end
 
-	if type(update_function) == "string" then
-		update_function = self:_convert_update_argument_to_function(update_function)
-	end
-
 	self._content[#self._content + 1] = {
 		text = Utf8.upper(text),
 		callback = onclick_callback,
@@ -141,15 +144,7 @@ ViewElementMenuPanel.ui_renderer = function (self)
 	return self._parent._ui_renderer
 end
 
-ViewElementMenuPanel._convert_update_argument_to_function = function (self, text_arg)
-	local result = loadstring("return function(content, style, dt) " .. text_arg .. " end")
-
-	return result()
-end
-
 ViewElementMenuPanel._setup_content_widgets = function (self, content, scenegraph_id, callback_name)
-	local definitions = self._definitions
-	local widget_definitions = {}
 	local widgets = {}
 	local alignment_list = {}
 	local amount = #content
@@ -250,6 +245,7 @@ ViewElementMenuPanel.update = function (self, dt, t, input_service)
 			local x = -grid_length * 0.5
 
 			self:_set_scenegraph_position("grid_content_pivot", x)
+			self:_update_input_text_positions(grid_length)
 		end
 
 		grid:update(dt, t, input_service:null_service())
@@ -319,6 +315,30 @@ ViewElementMenuPanel._select_next_tab = function (self, direction)
 
 		self:set_selected_panel_index(index)
 	end
+end
+
+ViewElementMenuPanel._update_input_texts = function (self)
+	local using_gamepad = not self._using_cursor_navigation
+	local is_visible = using_gamepad and self._is_handling_navigation_input
+	local service = "View"
+	local left_alias_key = Managers.ui:get_input_alias_key("navigate_primary_left_pressed", service)
+	local right_alias_key = Managers.ui:get_input_alias_key("navigate_primary_right_pressed", service)
+	local widgets_by_name = self._widgets_by_name
+	local left_widget = widgets_by_name.input_text_left
+	left_widget.content.text = InputUtils.input_text_for_current_input_device(service, left_alias_key)
+	left_widget.style.text.visible = is_visible
+	local right_widget = widgets_by_name.input_text_right
+	right_widget.content.text = InputUtils.input_text_for_current_input_device(service, right_alias_key)
+	right_widget.style.text.visible = is_visible
+end
+
+ViewElementMenuPanel._update_input_text_positions = function (self, grid_length)
+	local widgets_by_name = self._widgets_by_name
+	local left_widget = widgets_by_name.input_text_left
+	local left_input_text_style = left_widget.style.text
+	left_widget.offset[1] = -left_input_text_style.size[1]
+	local right_widget = widgets_by_name.input_text_right
+	right_widget.offset[1] = grid_length
 end
 
 return ViewElementMenuPanel

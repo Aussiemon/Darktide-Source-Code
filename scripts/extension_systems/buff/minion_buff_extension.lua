@@ -4,6 +4,7 @@ local Ailment = require("scripts/utilities/ailment")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffExtensionBase = require("scripts/extension_systems/buff/buff_extension_base")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionBuffExtension = class("MinionBuffExtension", "BuffExtensionBase")
 MinionBuffExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
@@ -71,6 +72,13 @@ MinionBuffExtension._on_remove_buff = function (self, buff_instance)
 
 		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
 	end
+end
+
+MinionBuffExtension._post_on_remove_buff = function (self, buff_instance)
+	local t = FixedFrame.get_latest_fixed_time()
+
+	self:_update_proc_events(t)
+	self:_update_stat_buffs_and_keywords(t, true)
 end
 
 MinionBuffExtension.add_proc_event = function (self, event, params)

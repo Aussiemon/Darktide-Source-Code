@@ -70,9 +70,8 @@ Testify.update = function (self, dt, t)
 end
 
 Testify.make_request = function (self, request_name, ...)
-	local request_parameters = {
-		...
-	}
+	local request_parameters, num_parameters = table.pack(...)
+	request_parameters.length = num_parameters
 
 	self:_print("Requesting %s", request_name)
 
@@ -83,9 +82,8 @@ Testify.make_request = function (self, request_name, ...)
 end
 
 Testify.make_request_to_runner = function (self, request_name, ...)
-	local request_parameters = {
-		...
-	}
+	local request_parameters, num_parameters = table.pack(...)
+	request_parameters.length = num_parameters
 
 	self:_print("Requesting %s to the Testify Runner", request_name)
 
@@ -93,7 +91,7 @@ Testify.make_request_to_runner = function (self, request_name, ...)
 	self._responses[request_name] = nil
 	local request = {
 		name = request_name,
-		parameter = request_parameters
+		parameters = request_parameters
 	}
 
 	Testify:_signal(SIGNALS.request, cjson.encode(request))
@@ -109,51 +107,31 @@ Testify._wait_for_response = function (self, request_name)
 
 		local response = self._responses[request_name]
 
-		if response ~= nil then
-			return unpack(response)
+		if response then
+			local response_length = response.length
+
+			return unpack(response, 1, response_length)
 		end
 	end
-end
-
-Testify._merge_arguments = function (self, args, ...)
-	local arguments = {
-		unpack(args)
-	}
-	local args2 = {
-		...
-	}
-	local args_length = #args
-
-	if args_length == 0 then
-		args_length = 1
-		arguments[1] = "don't use me pls"
-	end
-
-	local i = 1
-
-	for _, value in pairs(args2) do
-		local j = args_length + i
-		arguments[j] = value
-		i = i + 1
-	end
-
-	return arguments
 end
 
 Testify.poll_requests_through_handler = function (self, callback_table, ...)
 	local RETRY = Testify.RETRY
 
 	for request, callback in pairs(callback_table) do
-		local args = Testify:poll_request(request)
+		local args, num_args = Testify:poll_request(request)
 
 		if args then
-			local arguments = Testify:_merge_arguments(args, ...)
-			local ret = {
-				callback(unpack(arguments))
-			}
+			if num_args == 0 then
+				args = {}
+				num_args = 1
+			end
 
-			if ret[1] ~= RETRY then
-				Testify:respond_to_request(request, ret)
+			local merged_args, num_merged_args = table.merge_varargs(args, num_args, ...)
+			local responses, num_responses = table.pack(callback(unpack(merged_args, 1, num_merged_args)))
+
+			if responses[1] ~= RETRY then
+				Testify:respond_to_request(request, responses, num_responses)
 			end
 
 			return
@@ -162,25 +140,28 @@ Testify.poll_requests_through_handler = function (self, callback_table, ...)
 end
 
 Testify.poll_request = function (self, request_name)
-	return self._requests[request_name]
+	local request_arguments = self._requests[request_name]
+
+	if request_arguments then
+		local num_request_arguments = request_arguments.length
+
+		return request_arguments, num_request_arguments
+	end
 end
 
-Testify.respond_to_request = function (self, request_name, response_value)
+Testify.respond_to_request = function (self, request_name, responses, num_responses)
+	responses.length = num_responses
+
 	self:_print("Responding to %s", request_name)
 
 	self._requests[request_name] = nil
-	self._responses[request_name] = response_value
+	self._responses[request_name] = responses
 end
 
-Testify.respond_to_runner_request = function (self, request_name, response_value)
-	local value = {
-		response_value
-	}
-
-	self:_print("Responding to %s", request_name)
-
-	self._requests[request_name] = nil
-	self._responses[request_name] = value
+Testify.respond_to_runner_request = function (self, request_name, responses, num_responses)
+	self:respond_to_request(request_name, {
+		responses
+	}, num_responses)
 end
 
 Testify.print_test_case_marker = function (self)
@@ -229,9 +210,8 @@ Testify._print = function (self, ...)
 end
 
 Testify.make_request_on_client = function (self, peer_id, request_name, wait_for_response, ...)
-	local request_parameters = {
-		...
-	}
+	wait_for_response = wait_for_response == true or false
+	local request_parameters, num_parameters = table.pack(...)
 
 	self:_print("Requesting %s on peer %s", request_name, peer_id)
 
@@ -243,38 +223,38 @@ Testify.make_request_on_client = function (self, peer_id, request_name, wait_for
 		-- Nothing
 	end
 
-	RPC.rpc_testify_make_request(channel_id, peer_id, request_name, request_parameters)
+	RPC.rpc_testify_make_request(channel_id, peer_id, request_name, wait_for_response, request_parameters, num_parameters)
 
 	if wait_for_response then
 		return self:_wait_for_response(request_name)
 	end
 end
 
-Testify.rpc_testify_make_request = function (self, channel_id, peer_id, request_name, request_parameters)
+Testify.rpc_testify_make_request = function (self, channel_id, peer_id, request_name, wait_for_response, request_parameters, num_parameters)
 	self:_print("Request received from server %s", request_name)
 
 	local parameters = cjson.decode(request_parameters)
 
 	Testify:run_case(function (dt, t)
-		self:make_request(request_name, unpack(parameters))
+		self:make_request(request_name, unpack(parameters, 1, num_parameters))
 
-		local response = {
-			self:_wait_for_response(request_name)
-		}
+		local responses, num_responses = table.pack(self:_wait_for_response(request_name))
 
-		self:_print("Responding to the server for request %s on channel %s", request_name, channel_id)
+		if wait_for_response then
+			self:_print("Responding to the server for request %s on channel %s", request_name, channel_id)
 
-		response = cjson.encode(response)
+			responses = cjson.encode(responses)
 
-		RPC.rpc_testify_wait_for_response(channel_id, request_name, response)
+			RPC.rpc_testify_wait_for_response(channel_id, request_name, responses, num_responses)
+		end
 	end)
 end
 
-Testify.rpc_testify_wait_for_response = function (self, channel_id, request_name, request_value)
-	local value = cjson.decode(request_value)
+Testify.rpc_testify_wait_for_response = function (self, channel_id, request_name, responses, num_responses)
+	responses = cjson.decode(responses)
 
 	self:_print("Request %s response received from the peer on channel %s", request_name, channel_id)
-	self:respond_to_request(request_name, value)
+	self:respond_to_request(request_name, responses, num_responses)
 end
 
 Testify.server_rpcs = function (self)

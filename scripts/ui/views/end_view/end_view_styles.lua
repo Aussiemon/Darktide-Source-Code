@@ -108,21 +108,8 @@ mission_header_title_style_victory.offset = {
 	10,
 	0
 }
-mission_header_title_style_victory.text_color = Color.white(255, true)
-mission_header_title_style_victory.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
-mission_header_victory_style.divider = {}
-local mission_header_divider_style_victory = mission_header_victory_style.divider
-mission_header_divider_style_victory.size = {
-	512,
-	2
-}
-mission_header_divider_style_victory.horizontal_alignment = "center"
-mission_header_divider_style_victory.offset = {
-	0,
-	50,
-	0
-}
-mission_header_divider_style_victory.color = Color.ui_brown_light(255, true)
+mission_header_title_style_victory.text_color = Color.terminal_text_header(255, true)
+mission_header_title_style_victory.scale_to_material = true
 mission_header_victory_style.mission_sub_header = table.clone(UIFontSettings.body_small)
 local mission_sub_header_victory_style = mission_header_victory_style.mission_sub_header
 mission_sub_header_victory_style.text_horizontal_alignment = "center"
@@ -132,16 +119,23 @@ mission_sub_header_victory_style.offset = {
 	55,
 	0
 }
-mission_sub_header_victory_style.text_color = Color.ui_grey_medium(255, true)
+mission_sub_header_victory_style.text_color = Color.terminal_text_body(255, true)
+mission_sub_header_victory_style.stats_font_size = 26
+mission_sub_header_victory_style.stats_text_color = Color.terminal_text_header(255, true)
 end_view_styles.mission_header_defeat = table.clone(mission_header_victory_style)
 local mission_header_defeat_style = end_view_styles.mission_header_defeat
 local mission_header_title_style_defeat = mission_header_defeat_style.mission_header
-mission_header_title_style_defeat.material = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds"
-local mission_header_divider_style_defeat = mission_header_defeat_style.divider
-mission_header_divider_style_defeat.color = Color.ui_red_medium(255, true)
-mission_header_defeat_style.mission_sub_header = table.clone(mission_header_title_style_defeat)
+mission_header_title_style_defeat.text_color = Color.ui_red_medium(255, true)
+mission_header_defeat_style.mission_sub_header = table.clone(UIFontSettings.header_1)
 local mission_sub_header_defeat_style = mission_header_defeat_style.mission_sub_header
-mission_sub_header_defeat_style.offset[2] = 62
+mission_sub_header_defeat_style.offset = {
+	0,
+	62,
+	0
+}
+mission_sub_header_defeat_style.text_horizontal_alignment = "center"
+mission_sub_header_defeat_style.text_vertical_alignment = "center"
+mission_sub_header_defeat_style.material = "content/ui/materials/font_gradients/slug_font_gradient_blood"
 end_view_styles.player_panel_victory = {}
 local player_panel_victory_style = end_view_styles.player_panel_victory
 player_panel_victory_style.character_portrait = {
@@ -189,10 +183,10 @@ local character_name_style_victory = player_panel_victory_style.character_name
 character_name_style_victory.text_horizontal_alignment = "center"
 character_name_style_victory.offset = {
 	0,
-	115,
+	105,
 	0
 }
-character_name_style_victory.own_player_text_color = Color.ui_brown_light(255, true)
+character_name_style_victory.own_player_text_color = Color.terminal_text_header(255, true)
 player_panel_victory_style.character_title = table.clone(UIFontSettings.body_small)
 local character_title_style_victory = player_panel_victory_style.character_title
 character_title_style_victory.text_horizontal_alignment = "center"

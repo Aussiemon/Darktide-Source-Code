@@ -31,14 +31,14 @@ damage_templates.default_autopistol_assault = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_65,
+				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_65,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_0_65
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
@@ -96,7 +96,7 @@ damage_templates.default_autopistol_assault = {
 		2
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.autogun,
+	wounds_template = WoundsTemplates.autopistol,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.ballistic,
@@ -122,6 +122,7 @@ damage_templates.default_autopistol_assault = {
 		200,
 		250
 	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -143,14 +144,14 @@ damage_templates.default_autopistol_snp = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_65,
+				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_65,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_0_65
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
@@ -208,7 +209,7 @@ damage_templates.default_autopistol_snp = {
 		2
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.autogun,
+	wounds_template = WoundsTemplates.autopistol,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.ballistic,
@@ -234,6 +235,7 @@ damage_templates.default_autopistol_snp = {
 		200,
 		250
 	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

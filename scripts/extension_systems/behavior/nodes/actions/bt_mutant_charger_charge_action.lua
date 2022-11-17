@@ -323,6 +323,19 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	end
 
 	local rotation = Quaternion.look(direction_to_target)
+	local threat_distance = action_data.aoe_bot_threat_distance
+	local should_trigger_aoe_threat = has_started_charge and not scratchpad.triggered_aoe_threat and distance_to_extrapolated_position < threat_distance
+
+	if should_trigger_aoe_threat then
+		local group_extension = ScriptUnit.extension(target_unit, "group_system")
+		local bot_group = group_extension:bot_group()
+		local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+
+		bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, Unit.local_rotation(unit, 1), action_data.aoe_bot_threat_duration)
+
+		scratchpad.aoe_bot_threat_timing = nil
+		scratchpad.triggered_aoe_threat = true
+	end
 
 	if is_close and has_started_charge then
 		local is_dodging, dodge_type = Dodge.is_dodging(target_unit)

@@ -220,8 +220,9 @@ weapon_template.actions = {
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_muzzle_flash_01",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_rippergun_01",
 			shoot_sfx_alias = "ranged_single_shot",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_muzzle_flash_01",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo"
 		},
@@ -295,8 +296,9 @@ weapon_template.actions = {
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_muzzle_flash_01",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_rippergun_01",
 			shoot_sfx_alias = "ranged_single_shot",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_muzzle_flash_01",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo"
 		},
@@ -497,7 +499,7 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3,
 		action_movement_curve = {
@@ -550,8 +552,9 @@ weapon_template.actions = {
 				chain_time = 3
 			},
 			stab = {
+				chain_time = 0.65,
 				action_name = "action_stab",
-				chain_time = 0.65
+				chain_until = 0.2
 			}
 		},
 		time_scale_stat_buffs = {
@@ -562,13 +565,13 @@ weapon_template.actions = {
 		damage_window_start = 0.36666666666666664,
 		hit_armor_anim = "hit_stop",
 		start_input = "stab",
-		range_mod = 1.15,
+		hold_combo = false,
 		kind = "sweep",
 		first_person_hit_anim = "hit_stop",
 		increase_combo = false,
 		allow_conditional_chain = true,
 		first_person_hit_stop_anim = "hit_stop",
-		hold_combo = false,
+		range_mod = 1.15,
 		allowed_during_sprint = true,
 		damage_window_end = 0.43333333333333335,
 		uninterruptible = true,
@@ -616,7 +619,8 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload"
+				action_name = "action_reload",
+				chain_time = 0.6
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
@@ -629,6 +633,11 @@ weapon_template.actions = {
 			stab = {
 				action_name = "action_stab",
 				chain_time = 1.15
+			}
+		},
+		conditional_state_to_action_input = {
+			started_reload = {
+				input_name = "reload"
 			}
 		},
 		weapon_box = {
@@ -680,7 +689,7 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo_no_alternate_fire",
+		conditional_state = "no_ammo_no_alternate_fire_with_delay",
 		input_name = "reload"
 	},
 	{
@@ -688,17 +697,19 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "brace_reload"
 	},
 	{
-		conditional_state = "no_ammo_alternate_fire",
+		conditional_state = "no_ammo_alternate_fire_with_delay",
 		input_name = "brace_reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.5
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
-	_muzzle = "fx_01",
-	_special_active = "rp_bayonet_01"
+	_eject = "fx_eject",
+	_special_active = "rp_bayonet_01",
+	_muzzle = "fx_01"
 }
 weapon_template.crosshair_type = "shotgun"
 weapon_template.hit_marker_type = "center"

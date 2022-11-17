@@ -18,6 +18,7 @@ ViewElementBase.init = function (self, parent, draw_layer, start_scale, definiti
 
 	self._ui_sequence_animator = self:_create_sequence_animator(definitions)
 	self._visible = true
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 end
 
 ViewElementBase._create_scenegraph = function (self, definitions, start_scale)

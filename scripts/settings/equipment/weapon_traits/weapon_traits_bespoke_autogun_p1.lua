@@ -9,25 +9,25 @@ end
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage = {
-	weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage = {
+	weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.05
+				[stat_buffs.damage_near] = 0.01
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.075
+				[stat_buffs.damage_near] = 0.015
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.09
+				[stat_buffs.damage_near] = 0.02
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.1
+				[stat_buffs.damage_near] = 0.025
 			}
 		}
 	}
@@ -241,22 +241,22 @@ templates.weapon_trait_bespoke_autogun_p1_increased_sprint_speed = {
 	weapon_trait_bespoke_autogun_p1_increased_sprint_speed = {
 		{
 			stat_buffs = {
+				[stat_buffs.sprint_movement_speed] = 1.03
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.sprint_movement_speed] = 1.05
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.1
+				[stat_buffs.sprint_movement_speed] = 1.07
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.15
+				[stat_buffs.sprint_movement_speed] = 1.09
 			}
 		}
 	}

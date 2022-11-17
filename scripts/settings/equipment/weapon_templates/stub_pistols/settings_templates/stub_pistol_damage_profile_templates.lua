@@ -136,7 +136,7 @@ damage_templates.default_stub_pistol_bfg = {
 		}
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.stubgun,
+	wounds_template = WoundsTemplates.stubrevolver,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.ballistic,
@@ -155,11 +155,12 @@ damage_templates.default_stub_pistol_bfg = {
 				[armor_types.resistant] = 0.25
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_medium
 }
 damage_templates.default_stub_pistol_killshot = {
 	suppression_value = 0.6,
-	ragdoll_push_force = 150,
+	ragdoll_push_force = 300,
 	stagger_category = "killshot",
 	cleave_distribution = medium_cleave,
 	ranges = {
@@ -225,10 +226,13 @@ damage_templates.default_stub_pistol_killshot = {
 		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
-		impact = 60,
 		attack = {
 			180,
 			240
+		},
+		impact = {
+			5,
+			15
 		}
 	},
 	damage_type = damage_types.auto_bullet,
@@ -247,15 +251,16 @@ damage_templates.default_stub_pistol_killshot = {
 				[armor_types.armored] = 0.6
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_medium
 }
 damage_templates.heavy_stub_pistol_bfg = {
 	suppression_value = 0.6,
-	ragdoll_push_force = 150,
+	ragdoll_push_force = 450,
 	stagger_category = "killshot",
 	cleave_distribution = big_cleave,
 	ranges = {
-		max = 22,
+		max = 30,
 		min = 15
 	},
 	armor_damage_modifier_ranged = {
@@ -317,10 +322,13 @@ damage_templates.heavy_stub_pistol_bfg = {
 		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
-		impact = 150,
 		attack = {
 			300,
 			400
+		},
+		impact = {
+			15,
+			25
 		}
 	},
 	damage_type = damage_types.auto_bullet,
@@ -339,7 +347,8 @@ damage_templates.heavy_stub_pistol_bfg = {
 				[armor_types.armored] = 0.6
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_medium
 }
 
 return {

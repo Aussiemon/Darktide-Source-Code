@@ -203,13 +203,6 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 
 	local buff_instance = self._buffs_by_index[local_index]
 	buff_instance = buff_instance or self._component_buffs[component_index]
-
-	if not buff_instance then
-		Log.error("PlayerUnitBuffExtension", "No buff found when trying to remove it, local_index: %s, component_index: %s", local_index, component_index)
-
-		return
-	end
-
 	local template = buff_instance:template()
 
 	if template.predicted then
@@ -402,7 +395,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 
 		if on_screen_effect then
 			local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
-			local stop_type = "destroy"
+			local stop_type = player_effects.stop_type or "destroy"
 
 			table.insert(active_vfx, {
 				particle_id = on_screen_effect_id,

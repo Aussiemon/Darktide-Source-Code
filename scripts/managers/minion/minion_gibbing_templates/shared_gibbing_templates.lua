@@ -2,6 +2,14 @@ local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local GibbingThresholds = GibbingSettings.gibbing_thresholds
 local SharedGibbingTemplates = {
 	gib_push_overrides = {
+		straight_up = {
+			ignore_attack_direction = false,
+			custom_push_vector = {
+				0,
+				0,
+				1
+			}
+		},
 		up_heavy = {
 			custom_push_vector = {
 				0,
@@ -75,7 +83,7 @@ SharedGibbingTemplates.head = {
 		gib_spawn_node = "",
 		gib_flesh_unit = "",
 		gib_unit = "",
-		push_override = SharedGibbingTemplates.gib_push_overrides.up_heavy,
+		push_override = SharedGibbingTemplates.gib_push_overrides.straight_up,
 		attach_inventory_slots_to_gib = {},
 		vfx = {
 			node_name = "",
@@ -189,7 +197,7 @@ SharedGibbingTemplates.torso = {
 		gib_spawn_node = "",
 		gib_flesh_unit = "",
 		gib_unit = "",
-		push_override = SharedGibbingTemplates.gib_push_overrides.up_medium,
+		push_override = SharedGibbingTemplates.gib_push_overrides.up_heavy,
 		attach_inventory_slots_to_gib = {},
 		vfx = {
 			node_name = "",

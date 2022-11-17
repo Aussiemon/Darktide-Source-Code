@@ -1,4 +1,26 @@
 local conversations_disabled_veteran_male_a = {
+	bonding_conversation_cadia_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_a__bonding_conversation_cadia_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.776708
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_cadia_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_a__bonding_conversation_cadia_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.961417
+		},
+		randomize_indexes = {}
+	},
 	combat_pause_limited_psyker_c_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

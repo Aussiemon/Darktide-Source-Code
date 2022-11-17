@@ -110,7 +110,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local breed_weights = precision_target_settings.breed_weights or EMPTY_TABLE
 	local smart_tagging = precision_target_settings.smart_tagging
 	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
-	local hit_dot_check = precision_target_settings.hit_dot_check or 0.7
+	local hit_dot_check = precision_target_settings.hit_dot_check or 0.98
 	local hits, num_hits = PhysicsWorld.raycast(physics_world, ray_origin, forward, max_range, "all", "collision_filter", collision_filter, "rewind_ms", rewind_ms)
 	local best_score = -math.huge
 	local math_abs = math.abs
@@ -170,8 +170,8 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 				local half_width, half_height, target_weight = nil
 
 				if breed then
-					local world_extents_right = object_right * 0.3
-					local world_extents_forward = object_forward * 0.3
+					local world_extents_right = object_right * (breed.half_extent_right or 0.3)
+					local world_extents_forward = object_forward * (breed.half_extent_forward or 0.3)
 					half_width = math_max(math_abs(Vector3_dot(right, world_extents_right + world_extents_forward)), math_abs(Vector3_dot(right, world_extents_right - world_extents_forward)))
 					half_height = Breed.height(hit_unit, breed) * 0.5
 					local breed_name = breed.name
@@ -198,12 +198,18 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 					if breed then
 						visible_target, aim_position = self:_target_visibility_and_aim_position(breed, hit_unit, ray_origin, target_node_name)
 					else
-						visible_target, aim_position = self:_target_visibility_and_aim_position_non_breed(hit_unit, ray_origin, hit_actor, hits, i)
+						aim_position = hit_unit_center_pos
+						visible_target = true
 					end
+
+					local hit_direction = Vector3.normalize(hit_unit_center_pos - ray_origin)
+					local hit_dot = Vector3_dot(forward, hit_direction)
+					local within_dot = hit_dot_check < hit_dot
+					local in_front_check = hit_dot > 0.7
 
 					if not visible_target then
 						-- Nothing
-					elseif direct_hit then
+					elseif direct_hit and in_front_check then
 						best_unit = hit_unit
 						best_unit_distance = distance
 						best_unit_aim_position = aim_position
@@ -221,16 +227,11 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 						local y_offset = math_max((angle_y_diff - angle_height) / angle_width, epsilon) / math_log(angle_width)
 						local utility = 1 / (x_offset * y_offset) * target_weight
 
-						if best_score < utility then
-							local hit_direction = Vector3.normalize(hit_unit_center_pos - ray_origin)
-							local hit_dot = Vector3_dot(forward, hit_direction)
-
-							if hit_dot_check < hit_dot then
-								best_unit = hit_unit
-								best_unit_distance = distance
-								best_unit_aim_position = aim_position
-								best_score = utility
-							end
+						if best_score < utility and within_dot then
+							best_unit = hit_unit
+							best_unit_distance = distance
+							best_unit_aim_position = aim_position
+							best_score = utility
 						end
 					end
 				end
@@ -357,24 +358,6 @@ PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function
 	end
 
 	return visible_target, target_position
-end
-
-PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position_non_breed = function (self, target_unit, own_position, target_actor, hits, current_index)
-	local owner_unit = self._unit
-	local Unit_get_data = Unit.get_data
-
-	for ii = current_index - 1, 1, -1 do
-		local hit = hits[ii]
-		local hit_actor = hit[INDEX_ACTOR]
-		local hit_unit = Actor.unit(hit_actor)
-		local ignore_raycast = Unit_get_data(hit_unit, "ignored_by_interaction_raycast")
-
-		if not ignore_raycast and hit_unit ~= owner_unit then
-			return false, nil
-		end
-	end
-
-	return true, Actor.world_bounds(target_actor)
 end
 
 PlayerUnitSmartTargetingExtension.targeting_data = function (self)

@@ -96,13 +96,14 @@ WeaponSystem._update_units_to_destroy = function (self, t)
 	end
 end
 
-WeaponSystem.rpc_player_blocked_attack = function (self, channel_id, unit_id, attacking_unit_id, hit_world_position, block_broken, weapon_template_id)
+WeaponSystem.rpc_player_blocked_attack = function (self, channel_id, unit_id, attacking_unit_id, hit_world_position, block_broken, weapon_template_id, attack_type_id)
 	local player_unit = Managers.state.unit_spawner:unit(unit_id)
 	local attacking_unit = Managers.state.unit_spawner:unit(attacking_unit_id)
 	local weapon_template_name = NetworkLookup.weapon_templates[weapon_template_id]
 	local weapon_template = WeaponTemplates[weapon_template_name]
+	local attack_type = NetworkLookup.attack_types[attack_type_id]
 
-	Block.player_blocked_attack(player_unit, attacking_unit, hit_world_position, block_broken, weapon_template)
+	Block.player_blocked_attack(player_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
 end
 
 return WeaponSystem

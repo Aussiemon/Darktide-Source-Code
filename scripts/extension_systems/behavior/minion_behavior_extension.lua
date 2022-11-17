@@ -99,6 +99,7 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local target_side_names = side:relation_side_names(relation)
+	local valid_breeds = broadphase_config.valid_breeds
 	local from = POSITION_LOOKUP[unit]
 	local angle = broadphase_config.angle
 	local radius = broadphase_config.radius
@@ -114,14 +115,22 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 
 			if hit_unit ~= unit then
 				local to = POSITION_LOOKUP[hit_unit]
-				local direction = Vector3.normalize(to - from)
-				local length_sq = Vector3.length_squared(direction)
+				local direction, length = Vector3.direction_length(to - from)
 
-				if length_sq ~= 0 then
+				if length > 0.001 then
 					local angle_to_target = Vector3.angle(direction, forward)
 
 					if angle_to_target < angle then
-						num_units = num_units + 1
+						if valid_breeds then
+							local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
+							local breed = unit_data_extension:breed()
+
+							if valid_breeds[breed.name] then
+								num_units = num_units + 1
+							end
+						else
+							num_units = num_units + 1
+						end
 					end
 				end
 			end

@@ -1,5 +1,6 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
+local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
 local Action = require("scripts/utilities/weapon/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
@@ -17,7 +18,7 @@ local Stamina = require("scripts/utilities/attack/stamina")
 local buff_keywords = BuffSettings.keywords
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local PlayerCharacterStateSprinting = class("PlayerCharacterStateSprinting", "PlayerCharacterStateBase")
-local _sideways_speed_function, _forward_speed_function, _abort_sprint = nil
+local _sideways_speed_function, _forward_speed_function, _abort_sprint, _check_input = nil
 
 PlayerCharacterStateSprinting.init = function (self, ...)
 	PlayerCharacterStateSprinting.super.init(self, ...)
@@ -71,6 +72,18 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 	end
 
 	self._previous_velocity_move_speed = nil
+
+	if self._is_server then
+		local specialization = self._unit_data_extension:specialization()
+		local specialization_stamina_template = specialization.stamina
+		local current_stamina, _ = Stamina.current_and_max_value(unit, self._stamina_component, specialization_stamina_template)
+
+		if current_stamina > 0 then
+			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local _, local_index = buff_extension:add_externally_controlled_buff("sprint_with_stamina_buff")
+			self._stamina_buff_id = local_index
+		end
+	end
 end
 
 PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
@@ -83,6 +96,14 @@ PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
 	end
 
 	Stamina.set_regeneration_paused(self._stamina_component, false)
+
+	if self._is_server and self._stamina_buff_id then
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		buff_extension:remove_externally_controlled_buff(self._stamina_buff_id)
+
+		self._stamina_buff_id = nil
+	end
 end
 
 local WALK_MOVE_ANIM_THRESHOLD = 0.8
@@ -102,10 +123,12 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local sprint_input = Sprint.sprint_input(input_extension, true)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
-	local has_any_queued_input = self._action_input_extension:has_any_queued_input() and not buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
-	local wants_sprint = sprint_input and not has_any_queued_input
+	local has_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
+	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
+	local has_input = _check_input(self._action_input_extension, weapon_template, has_sprinting_buff)
+	local wants_sprint = sprint_input and not has_input
 	local sprint_character_state_component = self._sprint_character_state_component
-	local move_direction, move_speed, new_x, new_y, wants_to_stop = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
+	local move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
 	local old_y = locomotion_steering.local_move_y
 	local decreasing_speed = new_y < old_y
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
@@ -131,6 +154,13 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	end
 
 	sprint_character_state_component.wants_sprint_camera = wants_sprint_camera
+
+	if self._is_server and remaining_stamina == 0 and self._stamina_buff_id then
+		buff_extension:remove_externally_controlled_buff(self._stamina_buff_id)
+
+		self._stamina_buff_id = nil
+	end
+
 	local animation_ext = self._animation_extension
 
 	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
@@ -147,10 +177,10 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local sprint_momentum = math.max((move_speed - run_move_speed) / (sprint_move_speed - run_move_speed), 0)
 	local wants_slide = self._movement_state_component.is_crouching
 
-	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, actual_move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_any_queued_input)
+	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, actual_move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input)
 end
 
-PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_any_queued_input)
+PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -228,15 +258,20 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
 
 	if wants_to_stop then
-		if has_any_queued_input then
-			self._sprint_character_state_component.cooldown = t + weapon_template.sprint_ready_up_time
+		if has_input then
+			local sprint_ready_up_time = weapon_template and weapon_template.sprint_ready_up_time or 0
+			self._sprint_character_state_component.cooldown = t + sprint_ready_up_time
 		end
 
 		return "walking"
 	end
 
-	local _, action_setting = Action.current_action(self._weapon_action_component, weapon_template)
-	local abort_sprint = _abort_sprint(action_setting)
+	local buff_extension = self._buff_extension
+	local has_allow_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
+	local _, weapon_action_setting = Action.current_action(self._weapon_action_component, weapon_template)
+	local combat_ability_template = AbilityTemplate.current_ability_template(self._combat_ability_action_component)
+	local _, combat_ability_action_setings = Action.current_action(self._combat_ability_action_component, combat_ability_template)
+	local abort_sprint = _abort_sprint(weapon_action_setting, has_allow_sprinting_buff) or _abort_sprint(combat_ability_action_setings, has_allow_sprinting_buff)
 
 	if abort_sprint then
 		return "walking"
@@ -315,7 +350,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local move_direction = Quaternion.rotate(flat_unit_rotation, local_move_direction)
 	local wants_to_stop = wanted_y <= 0
 
-	return move_direction, move_speed, new_x, new_y, wants_to_stop
+	return move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina
 end
 
 PlayerCharacterStateSprinting._check_bump_sound = function (self, locomotion, locomotion_steering, specialization_sprint_template, constants)
@@ -340,6 +375,24 @@ PlayerCharacterStateSprinting._check_bump_sound = function (self, locomotion, lo
 	end
 
 	self._previous_velocity_move_speed = current_velocity_move_speed
+end
+
+local ALLOWED_INPUTS_IN_SPRINT = {
+	combat_ability = true,
+	wield = true
+}
+
+function _check_input(action_input_extension, weapon_template, has_hip_fire_buff)
+	local peek = action_input_extension:peek_next_input("weapon_action")
+	local is_allowed = peek and ALLOWED_INPUTS_IN_SPRINT[peek]
+	local is_hipfire_input = peek and weapon_template and weapon_template.hipfire_inputs and weapon_template.hipfire_inputs[peek]
+	local is_hipfire_allowed_in_sprint = is_hipfire_input and has_hip_fire_buff
+
+	if is_allowed or is_hipfire_allowed_in_sprint then
+		return false
+	end
+
+	return peek ~= nil
 end
 
 function _sideways_speed_function(speed, wanted_speed, acceleration, deceleration, dt)
@@ -389,21 +442,23 @@ for i = 1, #ActionHandlerSettings.abort_sprint do
 	_abort_sprint_table[action_kind] = true
 end
 
-function _abort_sprint(action_settings)
+function _abort_sprint(action_settings, has_allow_sprint_buff)
 	if not action_settings then
 		return false
 	end
 
+	local action_buff_keywords = action_settings.buff_keywords
+	local buff_allows_sprint = has_allow_sprint_buff and action_buff_keywords and table.contains(action_buff_keywords, buff_keywords.allow_hipfire_during_sprint)
 	local action_settings_abort_sprint = action_settings.abort_sprint
 
 	if action_settings_abort_sprint ~= nil then
-		return action_settings_abort_sprint
+		return action_settings_abort_sprint and not buff_allows_sprint
 	end
 
 	local action_kind = action_settings.kind
 	local action_kind_abort_sprint = _abort_sprint_table[action_kind]
 
-	return action_kind_abort_sprint
+	return action_kind_abort_sprint and not buff_allows_sprint
 end
 
 return PlayerCharacterStateSprinting

@@ -2251,6 +2251,45 @@ local conversations_core_zealot_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	conversation_beast_of_nurgle_weakpoint_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_a_01",
+			[2.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_a_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.326615,
+			[2.0] = 3.518719
+		},
+		randomize_indexes = {}
+	},
+	conversation_beast_of_nurgle_weakpoint_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_b_01",
+			[2.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.908271,
+			[2.0] = 2.654875
+		},
+		randomize_indexes = {}
+	},
+	conversation_beast_of_nurgle_weakpoint_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_c_01",
+			[2.0] = "loc_zealot_male_c__conversation_beast_of_nurgle_weakpoint_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.361167,
+			[2.0] = 3.760594
+		},
+		randomize_indexes = {}
+	},
 	conversation_explicator_one_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -2466,8 +2505,8 @@ local conversations_core_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__conversation_plague_ogryn_weakpoint_01_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 4.221302,
+			[2.0] = 3.006167
 		},
 		randomize_indexes = {}
 	},
@@ -2479,8 +2518,8 @@ local conversations_core_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__conversation_plague_ogryn_weakpoint_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 2.355406,
+			[2.0] = 3.628135
 		},
 		randomize_indexes = {}
 	},
@@ -2492,8 +2531,8 @@ local conversations_core_zealot_male_c = {
 			[2.0] = "loc_zealot_male_c__conversation_plague_ogryn_weakpoint_03_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 4.405594,
+			[2.0] = 3.236542
 		},
 		randomize_indexes = {}
 	},
@@ -5219,6 +5258,19 @@ local conversations_core_zealot_male_c = {
 		sound_events_duration = {
 			[1.0] = 6.397302,
 			[2.0] = 4.230094
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_c__lore_the_emperor_two_c_01",
+			[2.0] = "loc_zealot_male_c__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.472635,
+			[2.0] = 4.489583
 		},
 		randomize_indexes = {}
 	},

@@ -107,65 +107,6 @@ local widget_definitions = {
 			end
 		},
 		{
-			style_id = "left_edge",
-			pass_type = "texture",
-			value = "content/ui/materials/icons/talents/hud/combat_frame_outer",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					-42,
-					0,
-					3
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
-				size = {
-					28,
-					80
-				}
-			},
-			visibility_function = function (content, style)
-				local duration_progress = content.duration_progress
-
-				return duration_progress == 1
-			end
-		},
-		{
-			style_id = "right_edge",
-			pass_type = "rotated_texture",
-			value = "content/ui/materials/icons/talents/hud/combat_frame_outer",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				angle = math.pi,
-				offset = {
-					42,
-					0,
-					3
-				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
-				size = {
-					28,
-					80
-				}
-			},
-			visibility_function = function (content, style)
-				local duration_progress = content.duration_progress
-
-				return duration_progress == 1
-			end
-		},
-		{
 			value = "content/ui/materials/icons/talents/hud/combat_frame_inner",
 			style_id = "frame",
 			pass_type = "texture",

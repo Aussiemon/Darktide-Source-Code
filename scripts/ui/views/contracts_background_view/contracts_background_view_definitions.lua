@@ -31,9 +31,10 @@ local button_options_definitions = {
 	},
 	{
 		blur_background = false,
-		display_name = "loc_contract_view_option_mark_store",
+		display_name = "loc_mark_vendor_view_title_temporary",
 		callback = function (self)
 			local tab_bar_params = {
+				hide_tabs = true,
 				layer = 10,
 				tabs_params = {
 					{
@@ -57,9 +58,40 @@ local button_options_definitions = {
 
 									return false
 								end
+							},
+							{
+								input_action = "hotkey_item_compare",
+								display_name = "loc_item_toggle_equipped_compare",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_toggle_item_compare",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+
+										return view_instance and view_instance._previewed_item ~= nil
+									end
+
+									return false
+								end
 							}
 						}
-					},
+					}
+				}
+			}
+
+			self:_setup_tab_bar(tab_bar_params)
+		end
+	},
+	{
+		blur_background = false,
+		display_name = "loc_mark_vendor_view_title_standard",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
 					{
 						view = "marks_goods_vendor_view",
 						view_function = "show_items",

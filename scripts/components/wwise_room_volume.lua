@@ -9,11 +9,15 @@ WwiseRoomVolume.init = function (self, unit)
 		return false
 	end
 
-	if Managers then
-		Managers.state.rooms_and_portals:register_room(self)
+	local rooms_and_portals_manager = Managers and Managers.state and Managers.state.rooms_and_portals
+
+	if rooms_and_portals_manager then
+		rooms_and_portals_manager:register_room(self)
+
+		return true
 	end
 
-	return true
+	return false
 end
 
 WwiseRoomVolume.editor_init = function (self, unit)
@@ -43,8 +47,10 @@ WwiseRoomVolume.disable = function (self, unit)
 end
 
 WwiseRoomVolume.destroy = function (self, unit)
-	if Managers then
-		Managers.state.rooms_and_portals:remove_room(self)
+	local rooms_and_portals_manager = Managers and Managers.state and Managers.state.rooms_and_portals
+
+	if rooms_and_portals_manager then
+		rooms_and_portals_manager:remove_room(self)
 	end
 end
 

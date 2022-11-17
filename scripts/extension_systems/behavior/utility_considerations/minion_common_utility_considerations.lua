@@ -217,14 +217,14 @@ local considerations = {
 		distance_to_combat_vector = {
 			component_field = "distance",
 			blackboard_component = "combat_vector",
-			max_value = 5,
+			max_value = 20,
 			spline = {
 				0,
 				0,
-				0.5,
+				0.1,
 				0,
 				0.75,
-				1,
+				0.75,
 				1,
 				1
 			}
@@ -458,7 +458,7 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 60,
+			max_value = 40,
 			spline = {
 				0,
 				0,
@@ -466,10 +466,34 @@ local considerations = {
 				0,
 				0.5,
 				1,
-				0.900001,
-				1,
+				0.7500001,
+				0.5,
 				1,
 				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
+	},
+	shoot_spray_n_pray_cultist = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 30,
+			spline = {
+				0,
+				0,
+				0.1,
+				0,
+				0.51,
+				1,
+				0.981,
+				1,
+				1,
+				0.1
 			}
 		},
 		has_line_of_sight = {
@@ -482,18 +506,18 @@ local considerations = {
 		distance_to_target = {
 			component_field = "target_distance",
 			blackboard_component = "perception",
-			max_value = 12,
+			max_value = 30,
 			spline = {
 				0,
 				0,
-				0.5,
+				0.1,
 				0,
 				0.51,
 				1,
-				0.900001,
+				0.981,
 				1,
 				1,
-				1
+				0.1
 			}
 		},
 		has_line_of_sight = {
@@ -567,6 +591,12 @@ local considerations = {
 				1,
 				1
 			}
+		},
+		is_not_suppressed = {
+			component_field = "is_suppressed",
+			blackboard_component = "suppression",
+			invert = true,
+			is_condition = true
 		}
 	},
 	has_cover = {
@@ -613,6 +643,56 @@ local considerations = {
 			component_field = "target_distance_z",
 			blackboard_component = "perception",
 			max_value = 3.75,
+			spline = {
+				0,
+				1,
+				0.5,
+				0,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
+	},
+	melee_attack_bayonet = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 5.8,
+			spline = {
+				0,
+				1,
+				0.589,
+				1,
+				0.60002,
+				0,
+				1,
+				0
+			}
+		},
+		target_speed_away = {
+			component_field = "target_speed_away",
+			blackboard_component = "perception",
+			max_value = 4,
+			spline = {
+				0,
+				1,
+				0.1,
+				1,
+				0.1001,
+				0,
+				1,
+				0
+			}
+		},
+		distance_to_target_z = {
+			component_field = "target_distance_z",
+			blackboard_component = "perception",
+			max_value = 4.25,
 			spline = {
 				0,
 				1,

@@ -74,7 +74,7 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 		return "catapulted"
 	end
 
-	local stun_state_input = unit_data_extension:write_component("stun_state_input")
+	local stun_state_input = unit_data_extension:read_component("stun_state_input")
 	local disorientation_type = stun_state_input.disorientation_type
 
 	if disorientation_type ~= "none" then

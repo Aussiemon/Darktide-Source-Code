@@ -84,6 +84,17 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 	local state = scratchpad.state
 
+	if state == "charging" or state == "navigating" then
+		local target_unit = scratchpad.perception_component.target_unit
+		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+		local character_state_component = target_unit_data_extension:read_component("character_state")
+		local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+
+		if is_ledge_hanging then
+			return "done"
+		end
+	end
+
 	if state == "buildup" then
 		self:_update_charge_buildup(unit, scratchpad, action_data, t, dt)
 	elseif state == "charging" then
@@ -189,7 +200,7 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 	local close_distance = action_data.close_distance
 
 	if distance_to_target < close_distance then
-		if not scratchpad.target_dodged_during_attack then
+		if not scratchpad.target_dodged_during_attack and not action_data.ignore_dodge then
 			local is_target_dodging = Dodge.is_dodging(target_unit, attack_types.melee)
 
 			if is_target_dodging then
@@ -338,14 +349,14 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 		local power_level = action_data.power_level
 		local unit_position = POSITION_LOOKUP[unit]
 		local target_position = POSITION_LOOKUP[hit_target]
-		local direction = Vector3.normalize(target_position - unit_position)
+		local direction, ray_length = Vector3.direction_length(target_position, unit_position)
 
-		if Vector3.length_squared(direction) == 0 then
+		if ray_length < 0.001 then
 			local current_rotation = Unit.local_rotation(unit, 1)
 			direction = Quaternion.forward(current_rotation)
 		end
 
-		local head_node = Unit.node(unit, "j_head")
+		local head_node = Unit.node(hit_target, "j_head")
 		local hit_world_position = Unit.world_position(hit_target, head_node)
 		local damage, result, damage_efficiency = Attack.execute(hit_target, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_type", attack_types.melee, "attack_direction", direction, "hit_world_position", hit_world_position, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)
 
@@ -436,7 +447,7 @@ BtChargeAction._hit_target = function (self, unit, hit_unit, scratchpad, action_
 	if type(attack_anim_duration) == "table" then
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
-		attack_anim_duration = attack_anim_duration[wielded_slot_name]
+		attack_anim_duration = attack_anim_duration[wielded_slot_name] or attack_anim_duration.default
 	end
 
 	scratchpad.attack_duration_t = t + attack_anim_duration

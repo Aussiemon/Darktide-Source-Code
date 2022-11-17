@@ -15,7 +15,7 @@ local archetype_talents = {
 	specialization = "ogryn_2",
 	talents = {
 		ogryn_2_combat_ability = {
-			description = "loc_ability_ogryn_combat_ability_description",
+			description = "loc_ability_ogryn_charge_description",
 			name = "F-Ability - Charge forward, knocking enemies back. Grants movement speed and attack speed afterwards",
 			display_name = "loc_ability_ogryn_charge",
 			large_icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_combat",
@@ -48,7 +48,7 @@ local archetype_talents = {
 			name = "G-Ability - Ogryn Grenade Box",
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 			display_name = "loc_ability_ogryn_grenade_box",
-			icon = "content/ui/textures/icons/talents/menu/talent_default",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tactical",
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.ogryn_grenade_box
@@ -72,7 +72,7 @@ local archetype_talents = {
 			name = "Passive - Uninterruptible while reviving",
 			display_name = "loc_talent_bonebreaker_revive_uninterruptible",
 			hud_icon = "content/ui/materials/icons/abilities/default",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_2",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_4",
 			format_values = {},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_passive_revive",
@@ -98,7 +98,7 @@ local archetype_talents = {
 			description = "loc_talent_ogryn_2_base_4_description",
 			name = "Aura - Increased melee damage",
 			display_name = "loc_talent_ogryn_2_base_4",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_4",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_aura",
 			format_values = {
 				damage = talent_settings.coherency.melee_damage * 100
 			},
@@ -111,9 +111,9 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_coherency_toughness_increase_desc",
 			name = "Increase the toughness you regenerate from coherency",
 			display_name = "loc_talent_bonebreaker_coherency_toughness_increase",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_1_1",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_2",
 			format_values = {
-				toughness_multiplier = talent_settings.toughness_1.toughness_multiplier * 100
+				toughness_multiplier = talent_settings.toughness_1.toughness_bonus * 100
 			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_increased_coherency_regen",
@@ -164,7 +164,7 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_grenade_super_armor_explosion_desc",
 			name = "Your direct grenade hits on super armored enemies creates a large explosion",
 			display_name = "loc_talent_bonebreaker_grenade_super_armor_explosion",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_2",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_4_3",
 			format_values = {},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_direct_grenade_hits_on_supers_explode",
@@ -175,7 +175,7 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_bleed_on_multiple_hit_desc",
 			name = "Heavy melee attacks apply bleed to enemies hit",
 			display_name = "loc_talent_bonebreaker_bleed_on_multiple_hit",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_3",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_3_b",
 			format_values = {},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_heavy_attacks_bleed",
@@ -186,7 +186,7 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_bigger_coherency_radius_desc",
 			name = "Increased coherency radius",
 			display_name = "loc_talent_bonebreaker_bigger_coherency_radius",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_3",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_1_b",
 			format_values = {
 				radius = talent_settings.coop_1.coherency_aura_size_increase * 100
 			},
@@ -199,7 +199,7 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_bull_rush_movement_speed_desc",
 			name = "Allies in coherency gain movement speed when you use your Charge",
 			display_name = "loc_talent_bonebreaker_bull_rush_movement_speed",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_2",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_1_3",
 			format_values = {
 				movement_speed = (talent_settings.coop_2.movement_speed - 1) * 100,
 				time = talent_settings.coop_2.duration
@@ -210,39 +210,39 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_3_name_3 = {
-			description = "loc_talent_bonebreaker_share_damage_of_ally_desc",
-			name = "Half of the damage taken by the closest ally in coherency, is redirected towards you",
-			display_name = "loc_talent_bonebreaker_share_damage_of_ally",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_3",
-			format_values = {
-				health = 25,
-				damage_taken = (1 - talent_settings.coop_3.damage_taken_multiplier) * 100
-			},
-			passive = {
-				buff_template_name = "ogryn_bonebreaker_take_ally_damage",
-				identifier = "coop"
-			}
-		},
-		ogryn_2_tier_4_name_1 = {
 			description = "loc_talent_bonebreaker_cooldown_on_elite_kills_desc",
 			name = "Cooldown on your or allied elite kills",
 			display_name = "loc_talent_bonebreaker_cooldown_on_elite_kills",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_4_1",
 			format_values = {
-				cooldown = talent_settings.defensive_1.cooldown * 100
+				cooldown = talent_settings.coop_3.cooldown * 100
 			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence",
 				identifier = "coop"
 			}
 		},
+		ogryn_2_tier_4_name_1 = {
+			description = "loc_talent_bonebreaker_damage_reduction_per_bleed_desc",
+			name = "Take reduced damage per nearby bleeding enemy",
+			display_name = "loc_talent_bonebreaker_damage_reduction_per_bleed",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_2",
+			format_values = {
+				damage_reduction = (1 - talent_settings.defensive_1.max) * 100 / talent_settings.defensive_1.max_stacks,
+				max_stacks = talent_settings.defensive_1.max_stacks
+			},
+			passive = {
+				buff_template_name = "ogryn_bonebreaker_reduce_damage_taken_per_bleed",
+				identifier = "defensive"
+			}
+		},
 		ogryn_2_tier_4_name_2 = {
 			description = "loc_talent_bonebreaker_tanky_with_downed_allies_desc",
 			name = "Reduce damage taken for each ally knocked down or disabled",
 			display_name = "loc_talent_bonebreaker_tanky_with_downed_allies",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_4_3",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_2",
 			format_values = {
-				damage_taken = (1 - talent_settings.defensive_2.damage_taken_multiplier) / 3 * 100
+				damage_taken = (1 - talent_settings.defensive_2.max) / 3 * 100
 			},
 			coherency = {
 				buff_template_name = "ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies",
@@ -253,9 +253,9 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_toughness_gain_increase_on_low_health_desc",
 			name = "Increased toughness replenishment by 100% when below 25% health",
 			display_name = "loc_talent_bonebreaker_toughness_gain_increase_on_low_health",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_4_2",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_3",
 			format_values = {
-				toughness_multiplier = (talent_settings.defensive_3.toughness_replenish_multiplier - 1) * 100,
+				toughness_multiplier = talent_settings.defensive_3.toughness_replenish_multiplier * 100,
 				health = talent_settings.defensive_3.increased_toughness_health_threshold * 100
 			},
 			passive = {
@@ -267,7 +267,7 @@ local archetype_talents = {
 			description = "loc_talent_bonebreaker_revenge_damage_desc",
 			name = "WORK IN PROGRESS - Increases your damage against any enemy that damages you, for a few seconds",
 			display_name = "loc_talent_bonebreaker_revenge_damage",
-			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_5_1",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_1",
 			format_values = {
 				damage = talent_settings.offensive_2_1.damage * 100,
 				time = talent_settings.offensive_2_1.time

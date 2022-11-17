@@ -96,7 +96,14 @@ ActionScanConfirm._check_line_of_sight = function (self)
 	local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
 
 	if current_scan_mission_zone then
-		local line_of_sight = Scanning.check_line_of_sight_to_unit(self._physics_world, first_person_component, scanning_unit, scan_settings)
+		local physics_world = self._physics_world
+		local line_of_sight_unit = Scanning.check_direct_line_of_sight(physics_world, first_person_component, scan_settings.distance.near)
+
+		if scanning_unit == line_of_sight_unit then
+			return true
+		end
+
+		local line_of_sight = Scanning.check_line_of_sight_to_unit(physics_world, first_person_component, scanning_unit, scan_settings)
 
 		return line_of_sight
 	end

@@ -7,12 +7,18 @@ local bottom_panel_size = UIWorkspaceSettings.bottom_panel.size
 local visible_area_width = UIWorkspaceSettings.screen.size[1]
 local visible_area_height = UIWorkspaceSettings.screen.size[2] - (top_panel_size[2] + bottom_panel_size[2])
 local archetype_header_height = 50
+local main_panel_width = 1270
+local main_panel_height = 698
 local grid_width = 1210
-local details_panel_width = 462
+local details_panel_size = ViewStyles.details_panel.size
+local grid_offset_x = math.floor((main_panel_width - grid_width) / 2)
+local grid_offset_y = 45
+local main_panel_offset_y = 205 - grid_offset_y
+local details_panel_offset_y = main_panel_offset_y + 21
 local scenegraph = {
 	screen = UIWorkspaceSettings.screen,
 	visible_area = {
-		vertical_alignment = "top",
+		vertical_alignment = "center",
 		parent = "screen",
 		horizontal_alignment = "center",
 		size = {
@@ -21,7 +27,7 @@ local scenegraph = {
 		},
 		position = {
 			0,
-			top_panel_size[2],
+			20,
 			1
 		}
 	},
@@ -35,21 +41,46 @@ local scenegraph = {
 		},
 		position = {
 			100,
-			80,
+			85,
 			5
 		}
 	},
-	details_panel = {
-		vertical_alignment = "center",
+	main_panel = {
+		vertical_alignment = "top",
 		parent = "visible_area",
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		size = {
-			details_panel_width,
-			615
+			main_panel_width,
+			main_panel_height
 		},
 		position = {
+			70,
+			main_panel_offset_y,
+			1
+		}
+	},
+	grid_area = {
+		vertical_alignment = "top",
+		parent = "main_panel",
+		horizontal_alignment = "left",
+		size = {
+			grid_width,
+			550
+		},
+		position = {
+			grid_offset_x,
+			grid_offset_y,
+			2
+		}
+	},
+	details_panel = {
+		vertical_alignment = "top",
+		parent = "visible_area",
+		horizontal_alignment = "right",
+		size = details_panel_size,
+		position = {
 			-94,
-			0,
+			details_panel_offset_y,
 			5
 		}
 	},
@@ -58,7 +89,7 @@ local scenegraph = {
 		parent = "details_panel",
 		horizontal_alignment = "left",
 		size = {
-			details_panel_width,
+			details_panel_size[1],
 			22
 		},
 		position = {
@@ -72,7 +103,7 @@ local scenegraph = {
 		parent = "details_panel",
 		horizontal_alignment = "left",
 		size = {
-			details_panel_width,
+			details_panel_size[1],
 			110
 		},
 		position = {
@@ -94,20 +125,6 @@ local scenegraph = {
 			-20,
 			1
 		}
-	},
-	grid_area = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "left",
-		size = {
-			grid_width,
-			550
-		},
-		position = {
-			100,
-			200,
-			5
-		}
 	}
 }
 local widget_definitions = {
@@ -118,6 +135,20 @@ local widget_definitions = {
 			pass_type = "text"
 		}
 	}, "archetype_header", nil, nil, ViewStyles.archetype_header),
+	main_panel = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/frames/talents/main",
+			value_id = "main",
+			pass_type = "texture",
+			style_id = "main"
+		},
+		{
+			value = "content/ui/materials/frames/talents/level_bar_fill",
+			value_id = "level_bar_fill",
+			pass_type = "texture",
+			style_id = "level_bar_fill"
+		}
+	}, "main_panel", nil, nil, ViewStyles.main_panel),
 	highlight_ring = UIWidget.create_definition({
 		{
 			style_id = "frame",
@@ -142,13 +173,13 @@ local widget_definitions = {
 			style_id = "background"
 		},
 		{
-			value = "content/ui/materials/frames/talent_info_upper",
+			value = "content/ui/materials/frames/talents/talent_info_upper",
 			value_id = "frame_upper",
 			pass_type = "texture",
 			style_id = "frame_upper"
 		},
 		{
-			value = "content/ui/materials/frames/talent_info_lower",
+			value = "content/ui/materials/frames/talents/talent_info_lower",
 			value_id = "frame_lower",
 			pass_type = "texture",
 			style_id = "frame_lower"
@@ -167,10 +198,22 @@ local widget_definitions = {
 			style_id = "talent_icon"
 		},
 		{
+			value = "content/ui/materials/icons/talents/menu/talent_terminal_frame",
+			value_id = "talent_icon_frame",
+			pass_type = "texture",
+			style_id = "talent_icon_frame"
+		},
+		{
 			value = "content/ui/materials/base/ui_default_base",
 			value_id = "large_icon",
 			pass_type = "texture",
 			style_id = "large_icon"
+		},
+		{
+			value = "content/ui/materials/icons/talents/menu/combat_talent_terminal_frame",
+			value_id = "large_icon_frame",
+			pass_type = "texture",
+			style_id = "large_icon_frame"
 		},
 		{
 			style_id = "talent_description",

@@ -1,4 +1,15 @@
 local conversations_disabled_veteran_female_c = {
+	combat_pause_limited_veteran_c_06_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__combat_pause_limited_veteran_c_06_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.899365
+		},
+		randomize_indexes = {}
+	},
 	lore_brunt_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

@@ -2,6 +2,7 @@ local TerrorEventQueries = {}
 
 local function _count_num_alive_minions_in_spawners(spawner_queue_id)
 	local num_alive_minions = 0
+	local HEALTH_ALIVE = HEALTH_ALIVE
 
 	for script, queue_ids in pairs(spawner_queue_id) do
 		for i = 1, #queue_ids do

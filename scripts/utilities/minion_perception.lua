@@ -20,6 +20,13 @@ MinionPerception.attempt_aggro = function (perception_extension)
 	perception_extension:aggro()
 end
 
+MinionPerception.aggro_state = function (enemy_unit)
+	local perception_extension = ScriptUnit.has_extension(enemy_unit)
+	local aggro_state = perception_extension and perception_extension:aggro_state()
+
+	return aggro_state
+end
+
 MinionPerception.set_target_lock = function (unit, perception_component, should_lock)
 	perception_component.lock_target = should_lock
 
@@ -77,11 +84,17 @@ MinionPerception.switched_multi_target_unit = function (scratchpad, t, multi_tar
 	end
 end
 
-MinionPerception.line_of_sight_positions = function (unit, target_unit, from_node, to_node)
+MinionPerception.line_of_sight_positions = function (unit, target_unit, from_node, to_node, from_offsets_or_nil)
 	local los_node = Unit.node(unit, from_node)
 	local los_to_node = Unit.node(target_unit, to_node)
 	local los_from_position = Unit.world_position(unit, los_node)
 	local los_to_position = Unit.world_position(target_unit, los_to_node)
+
+	if from_offsets_or_nil then
+		local right = Quaternion.right(Unit.local_rotation(unit, 1))
+		local from_offset = from_offsets_or_nil:unbox()
+		los_from_position = los_from_position + Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z)
+	end
 
 	return los_from_position, los_to_position
 end

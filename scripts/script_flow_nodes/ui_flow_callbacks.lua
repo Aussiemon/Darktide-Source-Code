@@ -22,6 +22,10 @@ UIFlowCallbacks.clear_return_value = function ()
 	table.clear(flow_return_table)
 end
 
+UIFlowCallbacks.player_voice = function (params)
+	return
+end
+
 UIFlowCallbacks.player_fx = function (params)
 	return
 end

@@ -212,63 +212,63 @@ local templates = {
 		fx_source_name = "j_lefthand",
 		materials = {
 			default = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			concrete = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_solid = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_sheet = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_metal",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_catwalk = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_metal",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			wood = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			glass = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_sand = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_gravel = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_soil = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_trash = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			vegetation = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			flesh = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			water = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_mud = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			}
 		}
@@ -280,63 +280,63 @@ local templates = {
 		fx_source_name = "j_righthand",
 		materials = {
 			default = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			concrete = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_solid = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_default",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_sheet = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_metal",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			metal_catwalk = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_metal",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			wood = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			glass = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_sand = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_gravel = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_soil = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_trash = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			vegetation = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			flesh = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			water = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			},
 			dirt_mud = {
-				sfx = "wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_wet",
+				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
 			}
 		}

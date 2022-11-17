@@ -1,25 +1,54 @@
 local hud_element_player_weapon_handler_settings = {
+	icon_shrink_scale = 0.25,
 	wield_anim_speed = 8,
-	scan_delay = 1,
+	scan_delay = 0,
 	size = {
-		300,
+		200,
 		80
 	},
 	size_small = {
-		250,
-		60
+		150,
+		50
+	},
+	weapon_size = {
+		456,
+		80
+	},
+	weapon_size_small = {
+		150,
+		50
 	},
 	icon_size = {
-		150,
-		60
+		84,
+		84
 	},
 	weapon_icon_size = {
-		240,
-		60
+		256,
+		96
 	},
 	weapon_spacing = {
 		0,
 		10
+	},
+	ammo_offsets_icon = {
+		default = {
+			15,
+			0
+		},
+		small = {
+			5,
+			0
+		}
+	},
+	ammo_offsets_weapon = {
+		default = {
+			20,
+			0
+		},
+		small = {
+			10,
+			0
+		}
 	},
 	screen_offset = {
 		-50,

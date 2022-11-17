@@ -3,6 +3,7 @@ local cultist_flamer_settings = {
 	min_range = 3,
 	radius = 0.2,
 	range = 20,
+	set_muzzle_as_control_point_1 = true,
 	inventory_slot = "slot_ranged_weapon",
 	fx_source_name = "muzzle",
 	states = STATES,

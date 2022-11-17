@@ -19,13 +19,13 @@ local archetype_specialization = {
 	health = 200,
 	knocked_down_health = 1000,
 	toughness = ArchetypeToughnessTemplates.zealot,
-	dodge = ArchetypeDodgeTemplates.default,
+	dodge = ArchetypeDodgeTemplates.zealot,
 	sprint = ArchetypeSprintTemplates.default,
 	stamina = ArchetypeStaminaTemplates.zealot,
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	unique_weapons = {
 		{
-			item = "content/items/weapons/player/melee/thunderhammer_2h_p1_m1",
+			item = "content/items/weapons/player/melee/chainsword_2h_p1_m1",
 			display_name = "loc_class_selection_unique_weapon_zealot_melee_1"
 		},
 		{

@@ -70,6 +70,7 @@ netgunner.blocked = nil
 local cultist_flamer = table.clone(ranged_base)
 cultist_flamer.slot = nil
 cultist_flamer.blocked = nil
+local renegade_flamer = table.clone(cultist_flamer)
 local grenadier = table.clone(ranged_base)
 grenadier.throw_grenade = {
 	anim_event = "string",
@@ -108,9 +109,10 @@ local templates = {
 	netgunner = netgunner,
 	ranged_base = ranged_base,
 	ranged_cover_user = ranged_cover_user,
+	ranged_patroller = ranged_patroller,
+	renegade_flamer = renegade_flamer,
 	riflemen = riflemen,
-	sniper = sniper,
-	ranged_patroller = ranged_patroller
+	sniper = sniper
 }
 
 return templates

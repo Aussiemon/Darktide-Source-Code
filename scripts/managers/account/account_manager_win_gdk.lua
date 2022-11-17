@@ -27,6 +27,8 @@ AccountManagerWinGDK.reset = function (self)
 	self._signin_callback = nil
 	self._popup_id = nil
 	self._leave_game = nil
+	self._network_fatal_error = nil
+	self._network_connectivity = nil
 	self._wanted_state = nil
 	self._wanted_state_params = nil
 	self._wanted_state = nil
@@ -38,11 +40,19 @@ AccountManagerWinGDK.reset = function (self)
 	self._gamertag = nil
 	self._mute_list = {}
 	self._block_list = {}
+	self._restriction_listeners = {}
 end
 
 AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 	local success_cb = callback(self, "_cb_user_signed_in")
 	local fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", "loc_user_signin_failed_desc")
+
+	if not self:verify_connection() then
+		fail_cb()
+
+		return
+	end
+
 	local async_task = nil
 	local users = XUser.users()
 
@@ -52,7 +62,7 @@ AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 		async_task = XUser.add_user_async(XUserAddOptions.AddDefaultUserAllowingUI)
 	end
 
-	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb)
+	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 
 	self._signin_state = SIGNIN_STATES.signin_profile
 	self._signin_callback = signin_callback
@@ -206,7 +216,12 @@ AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callbac
 	return false
 end
 
-AccountManagerWinGDK.verify_user_restriction = function (self, xuid, restriction)
+AccountManagerWinGDK.verify_user_restriction = function (self, xuid, restriction, optional_callback)
+	if optional_callback then
+		self._restriction_listeners[xuid] = self._restriction_listeners[xuid] or {}
+		self._restriction_listeners[xuid][restriction] = optional_callback
+	end
+
 	self._xbox_privileges:verify_user_restriction(xuid, restriction or XblPermission.CommunicateUsingVoice)
 end
 
@@ -218,16 +233,53 @@ AccountManagerWinGDK.user_restriction_verified = function (self, xuid, restricti
 	return self._xbox_privileges:user_restriction_verified(xuid, restriction)
 end
 
-AccountManagerWinGDK.do_re_signin = function (self)
-	return false
-end
+AccountManagerWinGDK.user_restriction_updated = function (self, xuid, restriction)
+	local listener = self._restriction_listeners[xuid]
 
-AccountManagerWinGDK.user_detached = function (self)
-	return false
+	if not listener then
+		return
+	end
+
+	local restriction_listener = listener[restriction]
+
+	if not restriction_listener then
+		return
+	end
+
+	listener[restriction] = nil
+
+	restriction_listener()
 end
 
 AccountManagerWinGDK.update = function (self, dt, t)
-	return
+	if not self._user_id or self._network_fatal_error then
+		return
+	end
+
+	self:verify_connection()
+end
+
+KILL = false
+
+AccountManagerWinGDK.verify_connection = function (self)
+	local network_connectivity = KILL and 2 or XboxLive.get_network_connectivity()
+
+	if network_connectivity ~= NetworkConnectivity.ACTIVE and not self._network_fatal_error then
+		self:_show_fatal_error("loc_popup_header_error", "loc_signed_in_multiplayer_privilege_fail_desc")
+
+		self._network_fatal_error = true
+		self._network_connectivity = network_connectivity
+	end
+
+	return self._network_fatal_error == nil
+end
+
+AccountManagerWinGDK.user_detached = function (self)
+	return self._popup_id or self._network_fatal_error or self._leave_game
+end
+
+AccountManagerWinGDK.do_re_signin = function (self)
+	return false
 end
 
 AccountManagerWinGDK.destroy = function (self)
@@ -302,6 +354,12 @@ AccountManagerWinGDK._cb_sanbox_id_fetched = function (self, async_block)
 end
 
 AccountManagerWinGDK._setup_friends_list = function (self)
+	if not self._user_id then
+		self:_show_fatal_error("loc_popup_header_error", "loc_friends_list_failed_desc")
+
+		return
+	end
+
 	local success, error_code = XSocialManager.add_local_user(self._user_id)
 
 	if success then
@@ -374,8 +432,6 @@ AccountManagerWinGDK._return_to_title_screen = function (self)
 	self._leave_game = true
 	self._wanted_state = CLASSES.StateError
 	self._wanted_state_params = {}
-
-	Managers.backend:logout()
 end
 
 return AccountManagerWinGDK

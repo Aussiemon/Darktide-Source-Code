@@ -205,7 +205,7 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", clamped_toughness_damage)
 
 		if max_toughness <= clamped_toughness_damage then
-			local regenerate_full_delay = toughness_template.regenerate_full_delay
+			local regenerate_full_delay = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.regenerate_full_delay)
 
 			if regenerate_full_delay and not self._regenerate_full_delay then
 				self._regenerate_full_delay = t + regenerate_full_delay
@@ -215,7 +215,7 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 
 			if depleted_settings then
 				local unit = self._unit
-				local stagger_duration = depleted_settings.stagger_duration
+				local stagger_duration = Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.stagger_duration)
 
 				if stagger_duration then
 					local stagger_type = depleted_settings.stagger_type
@@ -245,7 +245,7 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 					fx_system:trigger_vfx(vfx, position, nil)
 				end
 
-				local max_health_loss_percent = depleted_settings.max_health_loss_percent
+				local max_health_loss_percent = Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.max_health_loss_percent)
 
 				if max_health_loss_percent then
 					local health_extension = self._health_extension
@@ -318,6 +318,12 @@ end
 
 MinionToughnessExtension.toughness_templates = function (self)
 	return self._toughness_template, nil
+end
+
+MinionToughnessExtension.is_stagger_immune = function (self)
+	local toughness_template = self._toughness_template
+
+	return toughness_template.stagger_immune_while_active and self._toughness_damage < self._max_toughness
 end
 
 return MinionToughnessExtension

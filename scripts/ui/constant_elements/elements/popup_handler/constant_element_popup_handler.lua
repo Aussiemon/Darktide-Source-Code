@@ -10,6 +10,7 @@ local WorldRenderUtils = require("scripts/utilities/world_render")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local TextUtilities = require("scripts/utilities/ui/text")
 local InputDevice = require("scripts/managers/input/input_device")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local BLUR_TIME = 0.3
 local ConstantElementPopupHandler = class("ConstantElementPopupHandler", "ConstantElementBase")
 ConstantElementPopupHandler.INPUT_DIR_UP = 1
@@ -20,7 +21,7 @@ ConstantElementPopupHandler.INPUT_DIR_RIGHT = 4
 ConstantElementPopupHandler.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementPopupHandler.super.init(self, parent, draw_layer, start_scale, Definitions)
 
-	self._button_widgets = {}
+	self._content_widgets = {}
 	self._total_buttons_height = 0
 end
 
@@ -118,7 +119,7 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	local options = data.options
 
 	if options then
-		self:_create_popup_buttons(options, ui_renderer)
+		self:_create_popup_content(options, ui_renderer)
 	else
 		self._total_buttons_height = 0
 	end
@@ -133,7 +134,7 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 
 	self:_play_sound(enter_popup_sound)
 
-	if #self._button_widgets > 0 and not self._using_cursor_navigation then
+	if #self._content_widgets > 0 and not self._using_cursor_navigation then
 		self:_select_button_index(1)
 	end
 
@@ -186,15 +187,15 @@ ConstantElementPopupHandler.trigger_widget_callback = function (self, widget)
 	self:_cb_on_button_pressed(widget)
 end
 
-ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_renderer)
-	local button_widgets = self._button_widgets
+ConstantElementPopupHandler._create_popup_content = function (self, options, ui_renderer)
+	local content_widgets = self._content_widgets
 
-	for i = 1, #button_widgets do
-		local widget = button_widgets[i]
+	for i = 1, #content_widgets do
+		local widget = content_widgets[i]
 
 		self:_unregister_widget_name(widget.name)
 
-		button_widgets[i] = nil
+		content_widgets[i] = nil
 	end
 
 	local total_buttons_height = 0
@@ -209,40 +210,74 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 
 	for i = 1, num_options do
 		local option = options[i]
-		local template_type = option.template_type or "terminal_button_small"
-		local widget_name = "button_" .. i
-		local pass_template = ButtonPassTemplates[template_type]
-		local button_size = pass_template.size_function and pass_template.size_function(self, option, ui_renderer) or pass_template.size
-		local widget_definitions = UIWidget.create_definition(ButtonPassTemplates[template_type], "button_pivot", nil, button_size)
-		local widget = self:_create_widget(widget_name, widget_definitions)
-		button_widgets[i] = widget
-		local content = widget.content
-		local hotkey = option.hotkey
-		local text = nil
-		text = hotkey and TextUtilities.localize_with_button_hint(hotkey, option.text, option.text_params) or Localize(option.text, option.text_params ~= nil, option.text_params)
-		options_missing_hotkeys = not hotkey or options_missing_hotkeys
-		content.text = text
-		content.hotkey = option.hotkey
-		content.callback = option.callback
-		content.close_on_pressed = option.close_on_pressed
-		content.stop_exit_sound = option.stop_exit_sound
-		local hotspot = content.hotspot
-		hotspot.pressed_callback = callback(self, "_cb_on_button_pressed", widget)
-		local on_pressed_sound = option.on_pressed_sound
+		local widget_name = "popup_widget_" .. i
+		local widget, content, text_length, button_size = nil
 
-		if on_pressed_sound then
-			hotspot.on_pressed_sound = on_pressed_sound
-		end
+		if option.template_type == "text" then
+			local text_style = table.clone(UIFontSettings.body)
+			text_style.text_horizontal_alignment = "center"
+			text_style.text_vertical_alignment = "top"
+			local text = Localize(option.text)
+			local text_options = UIFonts.get_font_options_by_style(text_style)
+			local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, {
+				ConstantElementPopupHandlerSettings.text_max_width,
+				math.huge
+			}, text_options)
+			local pass = {
+				{
+					style_id = "text",
+					value_id = "text",
+					pass_type = "text",
+					value = text,
+					style = text_style
+				}
+			}
+			button_size = {
+				ConstantElementPopupHandlerSettings.text_max_width,
+				text_height
+			}
+			local widget_definitions = UIWidget.create_definition(pass, "button_pivot", nil, button_size)
+			widget = self:_create_widget(widget_name, widget_definitions)
+			content_widgets[i] = widget
+			text_length = button_size[1]
+			content = widget.content
+		else
+			local template_type = option.template_type or "terminal_button_small"
+			local pass_template = ButtonPassTemplates[template_type]
+			button_size = pass_template.size_function and pass_template.size_function(self, option, ui_renderer) or pass_template.size
+			local widget_definitions = UIWidget.create_definition(ButtonPassTemplates[template_type], "button_pivot", nil, button_size)
+			widget = self:_create_widget(widget_name, widget_definitions)
+			content_widgets[i] = widget
+			widget.type = template_type
+			content = widget.content
+			local hotkey = option.hotkey
+			local text = nil
+			text = Localize(option.text, option.text_params ~= nil, option.text_params)
+			options_missing_hotkeys = not hotkey or options_missing_hotkeys
+			content.text = text
+			content.hotkey = option.hotkey
+			content.callback = option.callback
+			content.close_on_pressed = option.close_on_pressed
+			content.stop_exit_sound = option.stop_exit_sound
+			local hotspot = content.hotspot
+			hotspot.pressed_callback = callback(self, "_cb_on_button_pressed", widget)
+			local on_pressed_sound = option.on_pressed_sound
 
-		local text_style = widget.style.text
-		local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
-		local text_length = min_button_width
-		content.size[1] = text_length
+			if on_pressed_sound then
+				hotspot.on_pressed_sound = on_pressed_sound
+			end
 
-		if pass_template.init then
-			pass_template.init(self, widget, ui_renderer, {
-				text = text
-			})
+			local text_style = widget.style.text
+			local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
+			text_length = min_button_width
+			content.size[1] = text_length
+
+			if pass_template.init then
+				pass_template.init(self, widget, ui_renderer, {
+					text = text,
+					complete_function = callback(self, "_cb_on_button_pressed", widget)
+				})
+			end
 		end
 
 		local change_row = max_row_length < total_row_length + text_length and widgets_on_row > 0
@@ -253,8 +288,8 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 			local end_index = start_index + widgets_on_row
 
 			for j = start_index, end_index do
-				local button_length = button_widgets[j].content.size[1]
-				button_widgets[j].offset[1] = start_offset
+				local button_length = content_widgets[j].content.size[1]
+				content_widgets[j].offset[1] = start_offset
 				start_offset = start_offset + button_length
 			end
 
@@ -277,7 +312,7 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 		content.row = current_row
 		content.column = current_column
 		local margin_bottom = option.margin_bottom or 0
-		total_buttons_height = total_buttons_height + button_size[2] + margin_bottom
+		total_buttons_height = total_buttons_height + widget.content.size[2] + margin_bottom
 
 		if i == num_options then
 			local start_offset = -(total_row_length * 0.5)
@@ -285,8 +320,8 @@ ConstantElementPopupHandler._create_popup_buttons = function (self, options, ui_
 			local end_index = num_options
 
 			for j = start_index, end_index do
-				local button_length = button_widgets[j].content.size[1]
-				button_widgets[j].offset[1] = start_offset
+				local button_length = content_widgets[j].content.size[1]
+				content_widgets[j].offset[1] = start_offset
 				start_offset = start_offset + button_length
 			end
 		else
@@ -388,9 +423,9 @@ ConstantElementPopupHandler._get_text_width = function (self, text, text_style, 
 end
 
 ConstantElementPopupHandler._find_closest_neighbour_button_index = function (self, starting_index, direction)
-	local button_widgets = self._button_widgets
-	local num_widgets = #button_widgets
-	local current_widget = button_widgets[starting_index]
+	local content_widgets = self._content_widgets
+	local num_widgets = #content_widgets
+	local current_widget = content_widgets[starting_index]
 	local current_offset = current_widget.offset
 	local current_content = current_widget.content
 	local current_size = current_widget.size or current_content.size
@@ -424,7 +459,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 
 	if direction == self.INPUT_DIR_UP then
 		for i = starting_index, 1, -1 do
-			local widget = button_widgets[i]
+			local widget = content_widgets[i]
 			local content = widget.content
 
 			if closest_widget and content.row < closest_widget.content.row then
@@ -439,7 +474,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 		end
 	elseif direction == self.INPUT_DIR_DOWN then
 		for i = math.min(starting_index + 1, num_widgets), num_widgets do
-			local widget = button_widgets[i]
+			local widget = content_widgets[i]
 			local content = widget.content
 
 			if closest_widget and closest_widget.content.row < content.row then
@@ -456,7 +491,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 		local next_index = starting_index - 1
 
 		if next_index > 0 then
-			local widget = button_widgets[next_index]
+			local widget = content_widgets[next_index]
 			local content = widget.content
 
 			if content.row == current_row then
@@ -467,7 +502,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 		local next_index = starting_index + 1
 
 		if num_widgets >= next_index then
-			local widget = button_widgets[next_index]
+			local widget = content_widgets[next_index]
 			local content = widget.content
 
 			if content.row == current_row then
@@ -486,11 +521,14 @@ ConstantElementPopupHandler._select_button_index = function (self, index)
 		return
 	end
 
-	local button_widgets = self._button_widgets
+	local content_widgets = self._content_widgets
 
-	for i = 1, #button_widgets do
-		local widget = button_widgets[i]
-		widget.content.hotspot.is_selected = i == index
+	for i = 1, #content_widgets do
+		local widget = content_widgets[i]
+
+		if widget.content.hotspot then
+			widget.content.hotspot.is_selected = i == index
+		end
 	end
 
 	self._selected_button_index = index
@@ -498,7 +536,7 @@ end
 
 ConstantElementPopupHandler._update_button_input = function (self, input_service)
 	local input_handled = false
-	local button_widgets = self._button_widgets
+	local content_widgets = self._content_widgets
 	local current_selected_button_index = self._selected_button_index
 	local gamepad_active = InputDevice.gamepad_active
 
@@ -529,8 +567,8 @@ ConstantElementPopupHandler._update_button_input = function (self, input_service
 	end
 
 	if not input_handled then
-		for i = 1, #button_widgets do
-			local widget = button_widgets[i]
+		for i = 1, #content_widgets do
+			local widget = content_widgets[i]
 			local content = widget.content
 			local hotkey = content.hotkey
 
@@ -574,14 +612,14 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 
 	if self._on_exit_anim_id and self:_is_animation_completed(self._on_exit_anim_id) then
 		self._on_exit_anim_id = nil
-		local button_widgets = self._button_widgets
+		local content_widgets = self._content_widgets
 
-		for i = 1, #button_widgets do
-			local widget = button_widgets[i]
+		for i = 1, #content_widgets do
+			local widget = content_widgets[i]
 
 			self:_unregister_widget_name(widget.name)
 
-			button_widgets[i] = nil
+			content_widgets[i] = nil
 		end
 
 		self._total_buttons_height = 0
@@ -673,7 +711,7 @@ ConstantElementPopupHandler.using_cursor_navigation = function (self)
 end
 
 ConstantElementPopupHandler._on_navigation_input_changed = function (self)
-	if self._handling_popups and #self._button_widgets > 0 then
+	if self._handling_popups and #self._content_widgets > 0 then
 		if self._using_cursor_navigation then
 			if self._selected_button_index then
 				self:_select_button_index(nil)
@@ -704,12 +742,22 @@ ConstantElementPopupHandler._draw_widgets = function (self, dt, t, input_service
 
 	ConstantElementPopupHandler.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
-	local button_widgets = self._button_widgets
+	local content_widgets = self._content_widgets
 
-	for i = 1, #button_widgets do
-		local widget = button_widgets[i]
+	for i = 1, #content_widgets do
+		local widget = content_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
+
+		local widget_type = widget.type
+
+		if widget_type then
+			local pass_template = ButtonPassTemplates[widget_type]
+
+			if pass_template.update then
+				pass_template.update(self, widget, ui_renderer, dt)
+			end
+		end
 	end
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
@@ -788,6 +836,10 @@ ConstantElementPopupHandler._set_background_blur = function (self, fraction)
 	local viewport_name = class_name .. "_ui_background_world_viewport"
 
 	WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, max_value * fraction)
+end
+
+ConstantElementPopupHandler.widgets_by_name = function (self)
+	return self._widgets_by_name
 end
 
 return ConstantElementPopupHandler

@@ -6,12 +6,14 @@ local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local SignInError = require("scripts/managers/error/errors/sign_in_error")
+local ServiceUnavailableError = require("scripts/managers/error/errors/service_unavailable_error")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local AccountService = class("AccountService")
 
 AccountService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
 	self._get_achievements_promise = Promise.resolved()
+	self._has_completed_onboarding = nil
 end
 
 local function _init_network_client(account_id)
@@ -28,12 +30,8 @@ AccountService.signin = function (self)
 
 		_init_network_client(account_id)
 		Managers.backend.interfaces.external_payment:update_account_store_status():next(function ()
-			return Managers.backend.interfaces.external_payment:reconcile_dlc()
+			return Managers.backend.interfaces.external_payment:reconcile_pending_txns()
 		end):catch(function (error)
-			if XboxLiveUtilities.available() then
-				Log.error("AccountService", "Failure possibly due to different accounts logged in to ms store and the xbox app. This will need a proper error message to the user, see https://docs.microsoft.com/en-us/gaming/gdk/_content/gc/commerce/pc-specific-considerations/xstore-handling-mismatched-store-accounts")
-			end
-
 			Log.error("AccountService", "Failed setting up platform commerce: %s", table.tostring(error, 10))
 		end)
 
@@ -46,28 +44,31 @@ AccountService.signin = function (self)
 
 		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise)
 	end):next(function (results)
-		local status, _, _, auth_data, immaterium_connection_info = unpack(results)
+		local status, _, _, auth_data, immaterium_connection_info = unpack(results, 1, 5)
 
 		if status then
 			local profiles_promise = Managers.data_service.profiles:fetch_all_profiles()
 			local has_created_first_character_promise = self:_has_created_first_character()
+			local has_completed_onboarding_promise = Managers.backend.interfaces.account:get_has_completed_onboarding()
 			local auth_data_promise = Promise.resolved(auth_data)
 			local immaterium_connect_promise = Managers.grpc:connect_to_immaterium(immaterium_connection_info)
 
-			return Promise.all(profiles_promise, has_created_first_character_promise, auth_data_promise, immaterium_connect_promise)
+			return Promise.all(profiles_promise, has_created_first_character_promise, has_completed_onboarding_promise, auth_data_promise, immaterium_connect_promise)
 		else
 			return Promise.rejected({
 				description = "VERSION_ERROR"
 			})
 		end
 	end):next(function (results)
-		local profile_data, has_created_first_character, auth_data, immaterium_connect_error = unpack(results)
+		local profile_data, has_created_first_character, has_completed_onboarding, auth_data, immaterium_connect_error = unpack(results, 1, 5)
 
 		if immaterium_connect_error then
 			return Promise.rejected({
 				description = "IMMATERIUM_CONNECT_ERROR"
 			})
 		end
+
+		self._has_completed_onboarding = has_completed_onboarding == true or has_completed_onboarding == "true"
 
 		return Promise.resolved({
 			profiles = profile_data.profiles,
@@ -76,11 +77,13 @@ AccountService.signin = function (self)
 			account_id = auth_data.sub,
 			gear = profile_data.gear
 		})
-	end):catch(function (error)
-		if error.description == "VERSION_ERROR" then
-			Managers.error:report_error(GameVersionError:new(error))
+	end):catch(function (error_data)
+		if error_data.description == "VERSION_ERROR" then
+			Managers.error:report_error(GameVersionError:new(error_data))
+		elseif error_data.code == 503 then
+			Managers.error:report_error(ServiceUnavailableError:new(error_data))
 		else
-			Managers.error:report_error(SignInError:new(error))
+			Managers.error:report_error(SignInError:new(error_data))
 		end
 	end)
 end
@@ -101,6 +104,24 @@ end
 
 AccountService.set_selected_character_id = function (self, character_id)
 	return Managers.backend.interfaces.account:set_selected_character(character_id):catch(function (error)
+		Managers.error:report_error(BackendError:new(error))
+
+		return Promise.rejected({})
+	end)
+end
+
+AccountService.has_completed_onboarding = function (self)
+	return self._has_completed_onboarding
+end
+
+AccountService.set_has_completed_onboarding = function (self)
+	if self._has_completed_onboarding then
+		return
+	end
+
+	self._has_completed_onboarding = true
+
+	return Managers.backend.interfaces.account:set_has_completed_onboarding("true"):catch(function (error)
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})

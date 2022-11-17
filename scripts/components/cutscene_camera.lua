@@ -95,7 +95,8 @@ CutsceneCamera.component_data = {
 			"Path of Trust 08 Part 01",
 			"Path of Trust 08 Corridor 01",
 			"Path of Trust 08 Part 02",
-			"Path of Trust 09 Office"
+			"Path of Trust 09 Office",
+			"Traitor Captain Intro"
 		},
 		options_values = {
 			"none",
@@ -139,7 +140,8 @@ CutsceneCamera.component_data = {
 			"path_of_trust_08_part_01",
 			"path_of_trust_08_corridor_01",
 			"path_of_trust_08_part_02",
-			"path_of_trust_09_office"
+			"path_of_trust_09_office",
+			"traitor_captain_intro"
 		}
 	}
 }

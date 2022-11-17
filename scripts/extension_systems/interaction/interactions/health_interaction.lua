@@ -17,20 +17,20 @@ HealthInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 end
 
 HealthInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
-	local health_ext = ScriptUnit.extension(interactor_unit, "health_system")
-	local damage_taken = health_ext:damage_taken()
+	local health_extension = ScriptUnit.extension(interactor_unit, "health_system")
+	local damage_taken = health_extension:damage_taken()
 	local is_damaged = damage_taken > 0
 
 	return is_damaged and HealthInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 end
 
 HealthInteraction._heal = function (self, interactor_unit, target_unit)
-	local health_ext = ScriptUnit.extension(interactor_unit, "health_system")
+	local health_extension = ScriptUnit.extension(interactor_unit, "health_system")
 	local pickup_name = Unit.get_data(target_unit, "pickup_type")
 	local pickup_data = Pickups.by_name[pickup_name]
-	local damaged_max_health = health_ext:damaged_max_health()
-	local damage_taken = health_ext:damage_taken()
-	local pickup_health_amount = pickup_data.health_amount_func(damaged_max_health, pickup_data)
+	local max_health = health_extension:max_health()
+	local damage_taken = health_extension:damage_taken()
+	local pickup_health_amount = pickup_data.health_amount_func(max_health, pickup_data)
 	local new_health = math.min(pickup_health_amount, damage_taken)
 	local heal_type = DamageSettings.heal_types.medkit
 	local health_added = Health.add(interactor_unit, new_health, heal_type)

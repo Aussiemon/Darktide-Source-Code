@@ -77,24 +77,25 @@ if IS_XBS then
 	end
 end
 
-if not DONE_UNIT_API_FIX then
-	DONE_UNIT_API_FIX = true
+if IS_WINDOWS and BUILD ~= "dev" and BUILD ~= "debug" then
+	local function scrub_library(lib)
+		rawset(_G, lib, nil)
 
-	local function wrap_function(func)
-		return function (unit, output)
-			local out, out_n = func(unit, output)
-
-			if type(out) == "number" then
-				out_n = out
-				out = out_n
-			end
-
-			return out, out_n
-		end
+		package.loaded[lib] = nil
+		package.preload[lib] = nil
 	end
 
-	Unit.animation_get_animation = wrap_function(Unit.animation_get_animation)
-	Unit.animation_get_seeds = wrap_function(Unit.animation_get_seeds)
-	Unit.animation_get_state = wrap_function(Unit.animation_get_state)
-	Unit.animation_get_time = wrap_function(Unit.animation_get_time)
+	scrub_library("ffi")
+	scrub_library("io")
+
+	os = {
+		clock = os.clock,
+		date = os.date,
+		difftime = os.difftime,
+		time = os.time,
+		getenv = os.getenv
+	}
+	package.loadlib = nil
+	package.loaders[3] = nil
+	package.loaders[4] = nil
 end

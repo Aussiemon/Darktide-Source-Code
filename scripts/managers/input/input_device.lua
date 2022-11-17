@@ -17,12 +17,16 @@ InputDevice.init = function (self, raw_device, device_type, slot)
 	InputDevice.last_pressed_device = InputDevice.last_pressed_device or self
 	InputDevice.last_pressed_of_type[device_type] = InputDevice.last_pressed_of_type[device_type] or self
 
-	if raw_device.device_id then
+	if self._active and raw_device.device_id then
 		self._device_id = raw_device.device_id()
 	end
-end
 
-INPUT_BUFFER = {}
+	if IS_XBS and device_type == "xbox_controller" and not InputDevice.gamepad_active then
+		InputDevice.last_pressed_device = self
+		InputDevice.last_pressed_of_type[device_type] = self
+		InputDevice.gamepad_active = self._is_gamepad
+	end
+end
 
 InputDevice.update = function (self, dt, t)
 	local old_state = self._active
@@ -40,6 +44,14 @@ InputDevice.update = function (self, dt, t)
 	elseif old_state and not self._active then
 		Managers.event:trigger("device_deactivated", self)
 	end
+end
+
+InputDevice.can_rumble = function (self)
+	if self.device_type == "xbox_controller" or self.device_type == "ps4_controller" then
+		return true
+	end
+
+	return false
 end
 
 local VALID_AXES = {
@@ -76,6 +88,8 @@ InputDevice._verify_device = function (self)
 	if not default_device_id then
 		return true
 	else
+		self._device_id = self._raw_device.device_id()
+
 		return default_device_id == self._device_id
 	end
 end

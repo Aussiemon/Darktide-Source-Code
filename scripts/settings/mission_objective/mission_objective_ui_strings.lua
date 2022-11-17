@@ -1,5 +1,5 @@
 local mission_objective_ui_strings = {
-	"",
+	"empty_objective_string",
 	"loc_objective_debug_locate_scanner_header",
 	"loc_objective_debug_locate_scanner_desc",
 	"loc_objective_follow_servo_skull",

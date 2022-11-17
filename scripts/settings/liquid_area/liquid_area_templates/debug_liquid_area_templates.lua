@@ -2,7 +2,6 @@ local debug_templates = {
 	debug_paint = {
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
 		sfx_name_stop = "wwise/events/weapon/stop_aoe_liquid_fire_green_loop",
-		nav_cost_map_volume_uses_broadphase_radius = true,
 		sfx_source_z_offset = 1,
 		additional_unit_vfx = "content/fx/particles/enemies/cultist_flamer/ground_flame_light",
 		max_liquid = 1,

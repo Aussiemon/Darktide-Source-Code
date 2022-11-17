@@ -21,8 +21,7 @@ local action_data = {
 		}
 	},
 	death = {
-		5,
-		instant_ragdoll_chance = 0,
+		instant_ragdoll_chance = 0.5,
 		remove_linked_decals = true,
 		death_animations = {
 			[hit_zone_names.head] = {
@@ -31,8 +30,7 @@ local action_data = {
 			},
 			[hit_zone_names.torso] = {
 				"death_strike_chest_front",
-				"death_strike_chest_back",
-				"death_burn"
+				"death_strike_chest_back"
 			},
 			[hit_zone_names.upper_left_arm] = {
 				"death_arm_left"
@@ -60,15 +58,14 @@ local action_data = {
 			}
 		},
 		ragdoll_timings = {
-			death_leg_left = 0.8333333333333334,
-			death_leg_right = 0.6666666666666666,
-			death_strike_chest_front = 1.6666666666666667,
 			death_decapitate = 2.1333333333333333,
-			death_strike_chest_back = 2.7666666666666666,
-			death_burn = 6.333333333333333,
-			death_shot_head_left = 3.066666666666667,
+			death_strike_chest_front = 1.6666666666666667,
 			death_arm_left = 6,
-			death_arm_right = 3.8666666666666667
+			death_arm_right = 3.8666666666666667,
+			death_strike_chest_back = 2.7666666666666666,
+			death_leg_right = 0.6666666666666666,
+			death_shot_head_left = 3.066666666666667,
+			death_leg_left = 0.8333333333333334
 		}
 	},
 	combat_idle = {
@@ -78,7 +75,7 @@ local action_data = {
 		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	alerted = {
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		vo_event = "assault",
 		moving_alerted_anim_events = {
 			bwd = "alerted_bwd",
@@ -365,10 +362,10 @@ local action_data = {
 		}
 	},
 	shield_push = {
-		weapon_reach = 3.6,
+		weapon_reach = 4,
 		ignore_dodge = true,
 		utility_weight = 20,
-		rotation_speed = 6,
+		rotation_speed = 10,
 		considerations = UtilityConsiderations.shield_push,
 		attack_anim_events = {
 			"shield_push"

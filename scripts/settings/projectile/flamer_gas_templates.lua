@@ -22,7 +22,7 @@ local flamer_gas_templates = {
 	},
 	warp_fire_burst = {
 		suppression_radius = 5,
-		dot_buff_name = "warp_fire_assault",
+		dot_buff_name = "warp_fire",
 		suppression_cone_dot = 0.75,
 		damage = {
 			impact = {
@@ -32,7 +32,7 @@ local flamer_gas_templates = {
 	},
 	warp_fire_auto = {
 		suppression_radius = 6,
-		dot_buff_name = "warp_fire_assault",
+		dot_buff_name = "warp_fire",
 		suppression_cone_dot = 0.75,
 		damage = {
 			impact = {

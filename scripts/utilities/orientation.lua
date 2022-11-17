@@ -33,7 +33,19 @@ end
 
 function _mouse_input(input, mouse_scale)
 	local mouse_input_raw = input:get("look_raw")
-	local mouse_input = Vector3(mouse_input_raw.x * mouse_scale, -mouse_input_raw.y * mouse_scale, 0)
+	local mouse_sensitivity = 1
+	local look_orientation = -1
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		mouse_sensitivity = account_data.input_settings.mouse_look_scale
+		look_orientation = account_data.input_settings.mouse_invert_look_y and 1 or -1
+	end
+
+	local vector_x = mouse_input_raw.x * mouse_scale * mouse_sensitivity
+	local vector_y = look_orientation * mouse_input_raw.y * mouse_scale * mouse_sensitivity
+	local mouse_input = Vector3(vector_x, vector_y, 0)
 
 	return mouse_input
 end

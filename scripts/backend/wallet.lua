@@ -2,6 +2,14 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local Promise = require("scripts/foundation/utilities/promise")
 local Wallet = class("Wallet")
 
+Wallet.get_currency_configuration = function (self)
+	return Managers.backend:title_request("/store/currencies", {
+		method = "GET"
+	}):next(function (data)
+		return data.body
+	end)
+end
+
 Wallet._decorate_wallets = function (self, wallets)
 	local wallets = {
 		wallets = wallets,

@@ -4,6 +4,8 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local StickyEffects = class("StickyEffects")
+local STICKYNESS_SFX_LOOP_ALIAS = "melee_sticky_loop"
+local STICKYNESS_VFX_LOOP_ALIAS = "melee_sticky_loop"
 local _sticky_armor_type = nil
 local STICKY_FX_SOURCE_NAME = "_sticky"
 
@@ -85,7 +87,7 @@ StickyEffects._start_stickyness = function (self, t)
 
 	if sticky_armor_type and self._sticky_armor_type ~= sticky_armor_type then
 		local visual_loadout_extension = self._visual_loadout_extension
-		local sfx_loop_alias = hit_stickyness_settings.stickyness_sfx_loop_alias
+		local sfx_loop_alias = STICKYNESS_SFX_LOOP_ALIAS
 
 		if sfx_loop_alias then
 			local is_husk = self._is_husk
@@ -123,7 +125,7 @@ StickyEffects._start_stickyness = function (self, t)
 			end
 		end
 
-		local vfx_loop_alias = hit_stickyness_settings.stickyness_vfx_loop_alias
+		local vfx_loop_alias = STICKYNESS_VFX_LOOP_ALIAS
 
 		if vfx_loop_alias then
 			local world = self._world

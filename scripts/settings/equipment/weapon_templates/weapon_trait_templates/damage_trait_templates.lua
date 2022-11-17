@@ -133,6 +133,56 @@ local damage_trait_templates = {
 			0.05
 		}
 	},
+	thumper_shotgun_power_stat = {
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.berserker,
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		},
+		{
+			"power_distribution",
+			"impact",
+			{
+				max = 0.95,
+				min = 0.1
+			}
+		}
+	},
 	default_power_stat = {
 		{
 			"armor_damage_modifier_ranged",
@@ -1078,6 +1128,68 @@ local damage_trait_templates = {
 			0.05
 		}
 	},
+	forcestaff_p2_m1_braced_dps_stat = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			5,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
 	ogryn_combatblade_p1_m1_cleave_stat = {
 		{
 			"cleave_distribution",
@@ -1111,6 +1223,171 @@ local damage_trait_templates = {
 			"power_distribution",
 			"attack",
 			0.05
+		}
+	},
+	forcestaff_p2_m1_dps_stat = {
+		{
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	forcestaff_p3_m1_dps_stat = {
+		{
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			5,
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	forcestaff_p3_m1_crit_stat = {
+		{
+			"crit_mod",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.armored,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.berserker,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"crit_mod",
+			"attack",
+			armor_types.void_shield,
+			{
+				max = 1,
+				min = 0
+			}
+		}
+	},
+	forcestaff_p4_m1_dps_stat = {
+		{
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"attack",
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	},
 	ogryn_club_first_target_perk = {
@@ -2564,8 +2841,8 @@ local damage_trait_templates = {
 			"attack",
 			armor_types.armored,
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
@@ -2573,12 +2850,89 @@ local damage_trait_templates = {
 			"impact",
 			armor_types.armored,
 			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"impact",
+			armor_types.super_armor,
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"armor_damage_modifier",
+			"attack",
+			armor_types.resistant,
+			{
 				max = 0.75,
 				min = 0.25
 			}
 		},
 		{
 			"armor_damage_modifier",
+			"impact",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
 			"attack",
 			armor_types.super_armor,
 			{
@@ -2587,8 +2941,9 @@ local damage_trait_templates = {
 			}
 		},
 		{
-			"armor_damage_modifier",
-			"impact",
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
 			armor_types.super_armor,
 			{
 				max = 0.75,
@@ -2636,7 +2991,7 @@ local damage_trait_templates = {
 		{
 			"armor_damage_modifier",
 			"attack",
-			armor_types.super_armor,
+			armor_types.resistant,
 			{
 				max = 0.75,
 				min = 0.25
@@ -2645,6 +3000,66 @@ local damage_trait_templates = {
 		{
 			"armor_damage_modifier",
 			"impact",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
 			armor_types.super_armor,
 			{
 				max = 0.75,
@@ -2654,6 +3069,32 @@ local damage_trait_templates = {
 	},
 	ogryn_thumper_p1_m2_explosion_damage_stat = {
 		{
+			"power_distribution_ranged",
+			"attack",
+			"far",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"power_distribution_ranged",
+			"attack",
+			"near",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"power_distribution",
+			"attack",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
 			"armor_damage_modifier",
 			"attack",
 			armor_types.unarmored,
@@ -2665,34 +3106,7 @@ local damage_trait_templates = {
 		{
 			"armor_damage_modifier",
 			"attack",
-			armor_types.armored,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier",
-			"attack",
-			armor_types.resistant,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier",
-			"attack",
 			armor_types.player,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier",
-			"attack",
-			armor_types.super_armor,
 			{
 				max = 0.75,
 				min = 0.25
@@ -2717,15 +3131,6 @@ local damage_trait_templates = {
 			}
 		},
 		{
-			"armor_damage_modifier",
-			"attack",
-			armor_types.prop_armor,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
 			"armor_damage_modifier_ranged",
 			"near",
 			"attack",
@@ -2740,86 +3145,6 @@ local damage_trait_templates = {
 			"far",
 			"attack",
 			armor_types.unarmored,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.armored,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.armored,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.resistant,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.resistant,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.player,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.player,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.super_armor,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.super_armor,
 			{
 				max = 0.75,
 				min = 0.25
@@ -2860,26 +3185,6 @@ local damage_trait_templates = {
 			"far",
 			"attack",
 			armor_types.void_shield,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.prop_armor,
-			{
-				max = 0.75,
-				min = 0.25
-			}
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.prop_armor,
 			{
 				max = 0.75,
 				min = 0.25

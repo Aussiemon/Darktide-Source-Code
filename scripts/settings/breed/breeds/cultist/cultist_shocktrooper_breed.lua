@@ -44,7 +44,7 @@ local breed_data = {
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_shocktrooper",
 	ignore_attack_delay = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	stagger_reduction = 0,
+	stagger_reduction = 5,
 	player_locomotion_constrain_radius = 0.7,
 	stagger_reduction_ranged = 15,
 	can_patrol = true,
@@ -76,9 +76,9 @@ local breed_data = {
 		[stagger_types.killshot] = 1
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.2,
-		[stagger_types.medium] = 0.2,
-		[stagger_types.heavy] = 1.75,
+		[stagger_types.light] = 0.65,
+		[stagger_types.medium] = 0.85,
+		[stagger_types.heavy] = 2,
 		[stagger_types.explosion] = 1.75,
 		[stagger_types.light_ranged] = 0.2,
 		[stagger_types.killshot] = 0.2,
@@ -86,8 +86,8 @@ local breed_data = {
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
-		[stagger_types.medium] = 15,
-		[stagger_types.heavy] = 30,
+		[stagger_types.medium] = 10,
+		[stagger_types.heavy] = 20,
 		[stagger_types.explosion] = 50,
 		[stagger_types.killshot] = 10,
 		[stagger_types.light_ranged] = 15,
@@ -105,7 +105,7 @@ local breed_data = {
 	shoot_offset_anim_event = {
 		standing = "offset_shotgun_standing_shoot_01"
 	},
-	combat_range_data = BreedCombatRanges.renegade_shocktrooper,
+	combat_range_data = BreedCombatRanges.cultist_shocktrooper,
 	combat_vector_config = {
 		choose_closest_to_target = true,
 		choose_furthest_away = false,
@@ -117,7 +117,7 @@ local breed_data = {
 		}
 	},
 	suppress_config = {
-		threshold = 12,
+		threshold = 20,
 		max_value = 15,
 		decay_speeds = {
 			melee = 0.05,
@@ -134,19 +134,11 @@ local breed_data = {
 			0.3,
 			0.5
 		},
-		ranged = {
-			0.4,
-			1
-		},
 		moving_melee = {
 			1.7,
 			2.8
 		},
-		grenade = {
-			8.7,
-			12.8
-		},
-		elite_ranged = {
+		elite_shotgun = {
 			0.1,
 			0.4
 		}
@@ -418,24 +410,9 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
 		always_show_killing_blow = true,
-		thresholds = {
-			[damage_types.blunt] = 0.45,
-			[damage_types.blunt_heavy] = 0.35,
-			[damage_types.blunt_thunder] = 0.35,
-			[damage_types.plasma] = 0.25,
-			[damage_types.rippergun_pellet] = 0.25,
-			[damage_types.auto_bullet] = 0.35,
-			[damage_types.pellet] = 0.25,
-			[damage_types.laser] = 0.65,
-			[damage_types.boltshell] = 0.35,
-			[damage_types.power_sword] = 0.4,
-			[damage_types.sawing_stuck] = 0.1,
-			[damage_types.sawing] = 0.05,
-			[damage_types.slashing_force_stuck] = 0.4,
-			[damage_types.combat_blade] = 0.4
-		}
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot

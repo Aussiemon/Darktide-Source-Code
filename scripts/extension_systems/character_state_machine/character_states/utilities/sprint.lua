@@ -1,5 +1,7 @@
+local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
@@ -10,56 +12,78 @@ local TAU = math.pi * 2
 local INPUT_ALIGNED_WITH_MOVENESS = TAU / 7
 local ENOUGH_MOVE_IN_FORWARD_DIRECTION = 0.7
 local VELOCITY_ALIGNED_WITH_ORIENTATION = TAU / 7
-local throwing_action_kinds = {
-	throw_grenade = true,
-	throw = true
-}
-local aiming_projectile_kinds = {
-	aim_projectile = true
-}
 
-Sprint.check = function (t, unit, movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, alternate_fire_component, weapon_template, player_character_constants)
+Sprint.check = function (t, unit, movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, combat_ability_action_component, alternate_fire_component, weapon_template, player_character_constants)
+	local current_weapon_action_name, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
+	local combat_ability_template = AbilityTemplate.current_ability_template(combat_ability_action_component)
+	local _, combat_ability_action_setings = Action.current_action(combat_ability_action_component, combat_ability_template)
+	local weapon_action_requires_press = Sprint.requires_press_to_interrupt(weapon_action_setting)
+	local combat_ability_requires_press = Sprint.requires_press_to_interrupt(combat_ability_action_setings)
+	local requires_press = weapon_action_requires_press or combat_ability_requires_press
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
-	local current_action_name, action_setting = Action.current_action(weapon_action_component, weapon_template)
-	local action_requires_press = Sprint.requires_press_to_interrupt(action_setting)
-	local action_prevents_sprint = Sprint.prevent_sprint(action_setting)
-	local has_sprint_input = Sprint.sprint_input(input_source, is_sprinting, action_requires_press)
-	local wants_sprint = not action_prevents_sprint and has_sprint_input
-	local move = input_source:get("move")
-	local has_enough_forward_move = ENOUGH_MOVE_IN_FORWARD_DIRECTION < move.y
-	local valid_input_direction = false
-	local moving_in_forward_direction = false
+	local has_sprint_input = Sprint.sprint_input(input_source, is_sprinting, requires_press)
 
-	if has_enough_forward_move then
-		local yaw, _, roll = input_source:get_orientation()
-		local flat_rotation = Quaternion.from_yaw_pitch_roll(yaw, 0, roll)
-		local world_move = Quaternion.rotate(flat_rotation, move)
-		local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
-		local input_angle = Vector3.angle(flat_velocity, world_move, true)
-		valid_input_direction = input_angle < INPUT_ALIGNED_WITH_MOVENESS
-		local orientation_forward = Quaternion.forward(flat_rotation)
-		local vel_to_orientation_angle = Vector3.angle(flat_velocity, orientation_forward, true)
-		moving_in_forward_direction = vel_to_orientation_angle < VELOCITY_ALIGNED_WITH_ORIENTATION
+	if not has_sprint_input then
+		return false
+	end
+
+	if t < sprint_character_state_component.cooldown then
+		return false
 	end
 
 	local sprint_ready_time = weapon_action_component.sprint_ready_time
-	local allowed_by_weapon_action = true
 
-	if current_action_name ~= "none" and t < sprint_ready_time then
-		allowed_by_weapon_action = false
+	if current_weapon_action_name ~= "none" and t < sprint_ready_time then
+		return false
 	end
 
-	local is_throwing_projectile = action_setting and throwing_action_kinds[action_setting.kind]
-	local is_aiming_projectile = action_setting and aiming_projectile_kinds[action_setting.kind]
-	local is_aiming = alternate_fire_component.is_active or is_aiming_projectile
-	local is_crouching = movement_state_component.is_crouching
+	local weapon_action_prevents_sprint = Sprint.prevent_sprint(weapon_action_setting)
+	local combat_ability_prevents_sprint = Sprint.prevent_sprint(combat_ability_action_setings)
+	local prevents_sprint = weapon_action_prevents_sprint or combat_ability_prevents_sprint
+
+	if prevents_sprint then
+		return false
+	end
+
+	if alternate_fire_component.is_active then
+		return false
+	end
+
+	if movement_state_component.is_crouching and (input_source:get("hold_to_crouch") or not Crouch.can_exit(unit)) then
+		return false
+	end
+
 	local action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	local action_input = action_input_extension:peek_next_input("weapon_action")
-	local has_no_action_input = action_input == nil
-	local sprint_cooldown_finished = sprint_character_state_component.cooldown < t
-	local can_sprint = wants_sprint and valid_input_direction and moving_in_forward_direction and allowed_by_weapon_action and not is_crouching and not is_aiming and not is_throwing_projectile and has_no_action_input and sprint_cooldown_finished
 
-	return can_sprint
+	if action_input then
+		return false
+	end
+
+	local move = input_source:get("move")
+
+	if move.y < ENOUGH_MOVE_IN_FORWARD_DIRECTION then
+		return false
+	end
+
+	local yaw, _, roll = input_source:get_orientation()
+	local flat_rotation = Quaternion.from_yaw_pitch_roll(yaw, 0, roll)
+	local world_move = Quaternion.rotate(flat_rotation, move)
+	local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
+	local input_angle = Vector3.angle(flat_velocity, world_move, true)
+
+	if INPUT_ALIGNED_WITH_MOVENESS < input_angle then
+		return false
+	end
+
+	local orientation_forward = Quaternion.forward(flat_rotation)
+	local vel_to_orientation_angle = Vector3.angle(flat_velocity, orientation_forward, true)
+
+	if VELOCITY_ALIGNED_WITH_ORIENTATION < vel_to_orientation_angle then
+		return false
+	end
+
+	return true
 end
 
 Sprint.sprint_input = function (input_source, is_sprinting, sprint_requires_press_to_interrupt)

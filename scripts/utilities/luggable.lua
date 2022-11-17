@@ -39,6 +39,17 @@ Luggable.enable_physics = function (first_person_component, locomotion_component
 	local look_position = first_person_component.position
 	local look_rotation = first_person_component.rotation
 	local look_direction = Quaternion.forward(look_rotation)
+	local player_position = locomotion_component.position
+	local position = nil
+	local projectile_locomotion_extension = ScriptUnit.has_extension(existing_unit, "locomotion_system")
+
+	if projectile_locomotion_extension then
+		local radius = projectile_locomotion_extension:radius()
+		position = player_position + Vector3.up() * radius * 1.1
+	else
+		position = Vector3.lerp(player_position, look_position, 0.7)
+	end
+
 	local locomotion_extension = ScriptUnit.extension(existing_unit, "locomotion_system")
 	local projectile_locomotion_template = locomotion_extension:locomotion_template()
 	local throw_configuration = projectile_locomotion_template.throw_parameters.drop
@@ -50,19 +61,23 @@ Luggable.enable_physics = function (first_person_component, locomotion_component
 	local new_velocity = player_velocity_contribution + throw_velocity
 	local angular_velocity = Vector3.zero()
 
-	locomotion_extension:switch_to_engine(look_position, look_rotation, new_velocity, angular_velocity)
+	locomotion_extension:switch_to_engine(position, look_rotation, new_velocity, angular_velocity)
 end
 
 Luggable.equip_to_player_unit = function (player_unit, luggable_unit, t)
 	local locomotion_extension = ScriptUnit.extension(luggable_unit, "locomotion_system")
-
-	locomotion_extension:switch_to_carried(player_unit)
-
 	local item_definitions = MasterItems.get_cached()
 	local pickup_name = Unit.get_data(luggable_unit, "pickup_type")
 	local pickup_data = Pickups.by_name[pickup_name]
 	local inventory_item = item_definitions[pickup_data.inventory_item]
 
+	if not inventory_item then
+		Log.error("Luggable", "[equip_to_player_unit] missing item '%s'", pickup_data.inventory_item)
+
+		return
+	end
+
+	locomotion_extension:switch_to_carried(player_unit)
 	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, SLOT_LUGGABLE, luggable_unit, t)
 	PlayerUnitVisualLoadout.wield_slot(SLOT_LUGGABLE, player_unit, t)
 end

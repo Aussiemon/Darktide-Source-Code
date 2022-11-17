@@ -93,10 +93,10 @@ PlayerCharacterStateLadderTopEntering.on_exit = function (self, unit, t, next_st
 
 	ForceTranslation.stop(self._locomotion_force_translation_component)
 
-	if self._is_server and next_state and next_state == "ladder_climbing" then
+	if next_state and next_state == "ladder_climbing" then
 		local leave_position = ladder_character_state_component.end_position
 
-		PlayerMovement.teleport(self._player, leave_position)
+		PlayerMovement.teleport_fixed_update(unit, leave_position)
 	end
 end
 

@@ -61,7 +61,7 @@ PlayerUnitSpecializationExtension.update = function (self, unit, dt, t)
 end
 
 PlayerUnitSpecializationExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
-	WarpCharge.update(dt, t, self._warp_charge_component, self._player, self._unit, self._first_person_unit, self._is_local_unit, self._world)
+	WarpCharge.update(dt, t, self._warp_charge_component, self._player, self._unit, self._first_person_unit, self._is_local_unit, self._wwise_world)
 end
 
 PlayerUnitSpecializationExtension.destroy = function (self)

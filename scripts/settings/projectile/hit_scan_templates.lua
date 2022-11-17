@@ -30,30 +30,6 @@ hit_scan_templates.lasgun_assault = {
 		}
 	}
 }
-hit_scan_templates.lasgun_spraynpray_p3_m1 = {
-	range = 50,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.default_lasgun_snp
-		}
-	}
-}
-hit_scan_templates.lasgun_spraynpray_p3_m2 = {
-	range = 50,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.light_lasgun_snp
-		}
-	}
-}
-hit_scan_templates.lasgun_spraynpray_p3_m3 = {
-	range = 50,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.heavy_lasgun_snp
-		}
-	}
-}
 hit_scan_templates.lasgun_spraynpray_light = {
 	range = 50,
 	damage = {
@@ -315,13 +291,13 @@ hit_scan_templates.default_plasma_killshot = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.075,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }
@@ -344,13 +320,13 @@ hit_scan_templates.medium_charged_plasma = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.2,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }
@@ -359,6 +335,14 @@ hit_scan_templates.cultist_flamer = {
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.cultist_flamer_impact
+		}
+	}
+}
+hit_scan_templates.renegade_flamer = {
+	range = 50,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.renegade_flamer_impact
 		}
 	}
 }

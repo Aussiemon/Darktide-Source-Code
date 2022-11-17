@@ -677,6 +677,8 @@ UIWidgetGrid.select_first_index = function (self, use_is_focused)
 	local new_selection_index = self._first_interactable_widget_index
 
 	self:select_grid_index(new_selection_index, 0, true, use_is_focused)
+
+	return new_selection_index
 end
 
 UIWidgetGrid.select_last_index = function (self, use_is_focused)
@@ -711,11 +713,16 @@ UIWidgetGrid.widget_by_index = function (self, index)
 	end
 end
 
-UIWidgetGrid.focus_grid_index = function (self, index, scrollbar_animation_progress, instant_scroll)
-	self:select_grid_index(index, scrollbar_animation_progress, instant_scroll, not self._use_select_on_focused)
+UIWidgetGrid.focus_grid_index = function (self, index, scrollbar_animation_progress, is_instant)
+	self:select_grid_index(index, scrollbar_animation_progress, is_instant, not self._use_select_on_focused)
 end
 
-UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_progress, instant_scroll, use_is_focused)
+UIWidgetGrid.focused_grid_index = function (self)
+	return self._focused_grid_index
+end
+
+UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_progress, is_instant, use_is_focused)
+	local focus_only = use_is_focused and not self._use_select_on_focused and not self._use_is_focused_for_navigation
 	local widgets = self._widgets
 
 	if widgets then
@@ -728,11 +735,20 @@ UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_prog
 
 				if use_is_focused then
 					hotspot.is_focused = is_selected
+
+					if is_instant then
+						hotspot.anim_focus_progress = is_selected and 1 or 0
+					end
 				else
 					hotspot.is_selected = is_selected
+
+					if is_instant then
+						hotspot.anim_select_progress = is_selected and 1 or 0
+					end
 				end
 
-				if is_selected then
+				if is_selected and not focus_only then
+					hotspot._is_selected = hotspot._is_selected or is_instant
 					local selected_callback = hotspot.selected_callback
 
 					if selected_callback then
@@ -743,19 +759,21 @@ UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_prog
 		end
 	end
 
-	if self._selected_grid_index ~= index then
+	if focus_only then
+		self._focused_grid_index = index
+	elseif self._selected_grid_index ~= index then
 		self._previous_grid_index = self._selected_grid_index
 		self._selected_grid_index = index
 		self._ui_animations.scrollbar = nil
 	end
 
 	if self._scrollbar_active and scrollbar_animation_progress then
-		self:set_scrollbar_progress(scrollbar_animation_progress, not instant_scroll)
+		self:set_scrollbar_progress(scrollbar_animation_progress, not is_instant)
 	end
 end
 
 UIWidgetGrid.get_scrollbar_percentage_by_index = function (self, index, start_from_bottom)
-	if self._scrollbar_active then
+	if self._scrollbar_active and index then
 		local scroll_progress = nil
 
 		if start_from_bottom then

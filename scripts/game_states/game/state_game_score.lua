@@ -30,6 +30,10 @@ StateGameScore.on_enter = function (self, parent, params, creation_context)
 		self:_present_end_of_round_view()
 	end
 
+	if not DEDICATED_SERVER and GameParameters.prod_like_backend then
+		Managers.party_immaterium:latched_hub_server_matchmaking()
+	end
+
 	Managers.presence:set_presence("end_of_round")
 end
 

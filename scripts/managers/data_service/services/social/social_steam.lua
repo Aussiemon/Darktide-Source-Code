@@ -77,6 +77,10 @@ SocialSteam.fetch_blocked_list_ids_forced = function (self)
 	return promise
 end
 
+SocialSteam.update_recent_players = function (self, account_id)
+	return
+end
+
 implements(SocialSteam, PlatformSocialInterface)
 
 return SocialSteam

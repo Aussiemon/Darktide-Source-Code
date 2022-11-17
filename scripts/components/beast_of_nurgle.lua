@@ -140,7 +140,7 @@ end
 BeastOfNurgle._init_spline = function (self, unit)
 	self._target_joint = Unit.node(unit, "j_gut")
 	self._target_bind_joint = Unit.node(unit, "j_gut_bind")
-	self._bezier_mesuring_segments = 20
+	self._bezier_mesuring_segments = 5
 	self._spline_joints = {}
 
 	for i, name in pairs(SPLINE_JOINT_NAMES) do
@@ -167,6 +167,7 @@ BeastOfNurgle._init_spline = function (self, unit)
 	self._bezier = Bezier
 	self._segment_length = self._length / self._spline_segments
 	self._spline_transforms = {}
+	self._spline_joint_transforms = {}
 
 	self:_set_default_spline(unit)
 
@@ -207,7 +208,11 @@ BeastOfNurgle._update_spline = function (self, unit, dt)
 	local new_target_up = nil
 
 	if gut_hit then
-		new_target_up = Vector3.lerp(self._target_up:unbox(), gut_normal, dt * 15)
+		if self._target_up and Vector3.is_valid(self._target_up:unbox()) then
+			new_target_up = Vector3.lerp(self._target_up:unbox(), gut_normal, dt * 15)
+		else
+			new_target_up = gut_normal
+		end
 	else
 		new_target_up = Vector3.lerp(self._target_up:unbox(), target_up, dt * 15)
 	end
@@ -232,15 +237,15 @@ BeastOfNurgle._update_spline = function (self, unit, dt)
 	local moving_away = last_tail_to_spline_dist < tail_to_spline_dist
 	local moving_back = tail_to_spline_dist < last_tail_to_spline_dist
 	local last_tail_transform = self._spline_transforms[2]:unbox()
-	local length = self:_get_bezier_arc_length(last_tail_transform, spline_tm3, 1, 1)
-	local middle_tm = self:_get_bezier_transform(last_tail_transform, spline_tm3, 0.5, 1, 1)
+	local p1, c1, c2, p2, up1, up2 = self:_get_spline_components(last_tail_transform, spline_tm3)
+	local length = self._bezier.length(self._bezier_mesuring_segments, p1, c1, c2, p2)
+	local middle_tm = self:_get_bezier_transform(p1, c1, c2, p2, up1, up2, 0.5)
 	local tangent_start = Vector3.lerp(spline_translation3, Matrix4x4.translation(middle_tm), length / self._segment_length - 1)
 	local tangent = Vector3.normalize(target_translation - tangent_start)
 	local tail_rotation = Quaternion.multiply(Quaternion.look(new_target_up, tangent), Quaternion.from_euler_angles_xyz(-90, 0, 180))
 	self._tail_transform = Matrix4x4.from_quaternion_position(tail_rotation, tail_translation)
 	self._spline_transforms[1] = Matrix4x4Box(self._target_transform)
 	self._spline_transforms[2] = Matrix4x4Box(self._tail_transform)
-	self._spline_transforms[3] = Matrix4x4Box(spline_tm3)
 	local push_backwards = nil
 
 	if moving_away then
@@ -292,7 +297,8 @@ BeastOfNurgle._update_joints = function (self, unit, dt)
 	local current_spline_i = 1
 	local tm1 = self._target_transform
 	local tm2 = self._tail_transform
-	local current_bezier_length = self:_get_bezier_arc_length(tm1, tm2, 1, 1)
+	local p1, c1, c2, p2, up1, up2 = self:_get_spline_components(tm1, tm2)
+	local current_bezier_length = self._bezier.length(self._bezier_mesuring_segments, p1, c1, c2, p2)
 	local spline_length = current_bezier_length
 	local joint_separation = self._length / #self._spline_joints
 	local spline_blend = nil
@@ -303,41 +309,45 @@ BeastOfNurgle._update_joints = function (self, unit, dt)
 		spline_blend = Unit.local_position(unit, self._blend_joint)[1]
 	end
 
-	local spline_joint_transforms = {}
+	local anim_offset, joint_length, beyond_entire_spline = nil
 
 	if spline_blend > 0.001 then
 		for i, j in pairs(self._spline_joints) do
-			local anim_position = Unit.local_position(unit, self._anim_joints[i])
-			local joint_length = joint_separation * i - anim_position[2]
-			local beyond_spline_length = nil
-
-			while spline_length < joint_length do
-				current_spline_i = current_spline_i + 1
-
-				if current_spline_i < #self._spline_transforms then
-					tm1 = self._spline_transforms[current_spline_i]:unbox()
-					tm2 = self._spline_transforms[current_spline_i + 1]:unbox()
-					current_bezier_length = self:_get_bezier_arc_length(tm1, tm2, 1, 0.5)
-					spline_length = spline_length + current_bezier_length
-					beyond_spline_length = false
-				else
-					tm1 = self._spline_transforms[#self._spline_transforms]:unbox()
-					spline_length = joint_length
-					beyond_spline_length = true
-				end
+			if self._in_level_editor then
+				anim_offset = self:get_data(unit, "anim_offset")
+			else
+				anim_offset = Unit.local_position(unit, self._anim_joints[i])[2]
 			end
 
-			if beyond_spline_length then
-				spline_joint_transforms[i] = Matrix4x4.copy(tm1)
+			joint_length = joint_separation * i - anim_offset
 
-				Matrix4x4.set_translation(spline_joint_transforms[i], Matrix4x4.translation(tm1) - Matrix4x4.forward(tm1) * (joint_length - spline_length))
+			if joint_length <= 0 then
+				self._spline_joint_transforms[i] = Matrix4x4.copy(tm1)
 			else
-				local t = (joint_length - (spline_length - current_bezier_length)) / current_bezier_length
+				beyond_entire_spline = false
 
-				if current_spline_i == 1 then
-					spline_joint_transforms[i] = self:_get_bezier_transform(tm1, tm2, t, 1, 0.5)
+				while spline_length < joint_length and not beyond_entire_spline do
+					current_spline_i = current_spline_i + 1
+
+					if current_spline_i < #self._spline_transforms then
+						tm1 = self._spline_transforms[current_spline_i]:unbox()
+						tm2 = self._spline_transforms[current_spline_i + 1]:unbox()
+						p1, c1, c2, p2, up1, up2 = self:_get_spline_components(tm1, tm2)
+						current_bezier_length = self._bezier.length(self._bezier_mesuring_segments, p1, c1, c2, p2)
+						spline_length = spline_length + current_bezier_length
+					else
+						tm1 = self._spline_transforms[#self._spline_transforms]:unbox()
+						beyond_entire_spline = true
+					end
+				end
+
+				if beyond_entire_spline then
+					self._spline_joint_transforms[i] = Matrix4x4.copy(tm1)
+
+					Matrix4x4.set_translation(self._spline_joint_transforms[i], p2 - Vector3.normalize(c2 - p2) * (joint_length - spline_length))
 				else
-					spline_joint_transforms[i] = self:_get_bezier_transform(tm1, tm2, t, 1, 1)
+					local t = (joint_length - (spline_length - current_bezier_length)) / current_bezier_length
+					self._spline_joint_transforms[i] = self:_get_bezier_transform(p1, c1, c2, p2, up1, up2, t)
 				end
 			end
 		end
@@ -350,7 +360,7 @@ BeastOfNurgle._update_joints = function (self, unit, dt)
 		for i, j in pairs(self._spline_joints) do
 			unsplined_p = last_unsplined_p + unsplined_p_offset
 			last_unsplined_p = unsplined_p
-			spline_joint_transforms[i] = Matrix4x4.from_quaternion_position(unsplined_q, unsplined_p)
+			self._spline_joint_transforms[i] = Matrix4x4.from_quaternion_position(unsplined_q, unsplined_p)
 		end
 	end
 
@@ -364,104 +374,91 @@ BeastOfNurgle._update_joints = function (self, unit, dt)
 			unsplined_p = last_unsplined_p + unsplined_p_offset
 			last_unsplined_p = unsplined_p
 			unsplined_tm = Matrix4x4.from_quaternion_position(unsplined_q, unsplined_p)
-			spline_joint_transforms[i] = Matrix4x4.lerp(unsplined_tm, spline_joint_transforms[i], spline_blend)
+			self._spline_joint_transforms[i] = Matrix4x4.lerp(unsplined_tm, self._spline_joint_transforms[i], spline_blend)
 		end
 	end
+
+	local spline_tm, t, new_pose = nil
 
 	if self._in_level_editor then
 		local inv_root_tm = Matrix4x4.inverse(Unit.world_pose(unit, 1))
 
 		for i, j in pairs(self._spline_joints) do
-			local spline_tm = Unit.world_pose(unit, j)
-			local t = math.min(math.max(25 * dt - 15 * dt * i / #self._spline_joints, 0), 1)
-			local new_pose = Matrix4x4.lerp(spline_tm, spline_joint_transforms[i], t)
+			spline_tm = Unit.world_pose(unit, j)
+			t = math.min(math.max(25 * dt - 15 * dt * i / #self._spline_joints, 0), 1)
+			new_pose = Matrix4x4.lerp(spline_tm, self._spline_joint_transforms[i], t)
 
 			Unit.set_local_pose(unit, j, Matrix4x4.multiply(new_pose, inv_root_tm))
 		end
 	else
 		for i, j in pairs(self._spline_joints) do
-			local spline_tm = Unit.world_pose(unit, j)
-			local t = math.min(math.max(25 * dt - 15 * dt * i / #self._spline_joints, 0), 1)
-			local new_pose = Matrix4x4.lerp(spline_tm, spline_joint_transforms[i], t)
+			spline_tm = Unit.world_pose(unit, j)
+			t = math.min(math.max(25 * dt - 15 * dt * i / #self._spline_joints, 0), 1)
+			new_pose = Matrix4x4.lerp(spline_tm, self._spline_joint_transforms[i], t)
 
 			Unit.set_local_pose(unit, j, new_pose)
 		end
 	end
 
+	local anim_position, anim_rotation, anim_scale, bind_tm = nil
+
 	for i = 1, #self._bind_joints do
-		local anim_position = Unit.local_position(unit, self._anim_joints[i])
+		anim_position = Unit.local_position(unit, self._anim_joints[i])
 
 		Vector3.set_y(anim_position, anim_position[2] * (1 - spline_blend))
 
-		local anim_rotation = Unit.local_rotation(unit, self._anim_joints[i])
-		local anim_scale = Unit.local_scale(unit, self._anim_joints[i])
-		local bind_tm = Matrix4x4.from_quaternion_position_scale(anim_rotation, anim_position, anim_scale)
+		anim_rotation = Unit.local_rotation(unit, self._anim_joints[i])
+		anim_scale = Unit.local_scale(unit, self._anim_joints[i])
+		bind_tm = Matrix4x4.from_quaternion_position_scale(anim_rotation, anim_position, anim_scale)
 
 		Unit.set_local_pose(unit, self._bind_joints[i], bind_tm)
 	end
 end
 
-BeastOfNurgle._get_bezier_arc_length = function (self, tm1, tm2, w1, w2)
-	local p1 = Matrix4x4.translation(tm1)
-	local p2 = Matrix4x4.translation(tm2)
-	local distanced_weight = self._control_weight * Vector3.distance(p1, p2) / self._segment_length
-	local c1 = p1 - self:_get_curve_control(tm1, distanced_weight * w1)
-	local c2 = p2 + self:_get_curve_control(tm2, distanced_weight * w2)
-
-	return self._bezier.length(self._bezier_mesuring_segments, p1, c1, c2, p2)
-end
-
-BeastOfNurgle._get_bezier_transform = function (self, tm1, tm2, t, w1, w2)
-	local p1 = Matrix4x4.translation(tm1)
-	local p2 = Matrix4x4.translation(tm2)
-	local distanced_weight = self._control_weight * Vector3.distance(p1, p2) / self._segment_length
-	local c1 = p1 - self:_get_curve_control(tm1, distanced_weight * w1)
-	local c2 = p2 + self:_get_curve_control(tm2, distanced_weight * w2)
+BeastOfNurgle._get_bezier_transform = function (self, p1, c1, c2, p2, up1, up2, t)
 	local result_translation = self._bezier.calc_point(t, p1, c1, c2, p2)
 	local tangent = self._bezier.calc_tangent(t, p1, c1, c2, p2)
-	local up = Vector3.lerp(Matrix4x4.up(tm1), Matrix4x4.up(tm2), t)
+	local up = Vector3.lerp(up1, up2, t)
 	local result_rotation = Quaternion.look(-tangent, up)
 
 	return Matrix4x4.from_quaternion_position(result_rotation, result_translation)
 end
 
-BeastOfNurgle._get_curve_control = function (self, tm, control_weight)
-	local w = control_weight or self._control_weight
-	local rotation = Matrix4x4.rotation(tm)
-	local unit_forward = Quaternion.forward(rotation)
+BeastOfNurgle._get_spline_components = function (self, tm1, tm2)
+	local p1 = Matrix4x4.translation(tm1)
+	local p2 = Matrix4x4.translation(tm2)
+	local distanced_weight = self._control_weight * Vector3.distance(p1, p2) / self._segment_length
+	local c1 = p1 - Matrix4x4.forward(tm1) * distanced_weight
+	local c2 = p2 + Matrix4x4.forward(tm2) * distanced_weight
+	local up1 = Matrix4x4.up(tm1)
+	local up2 = Matrix4x4.up(tm2)
 
-	return unit_forward * self._segment_length * w
+	return p1, c1, c2, p2, up1, up2
 end
 
 BeastOfNurgle._editor_debug_draw = function (self, unit)
 	if self._should_debug_draw then
 		self._drawer:reset()
-		self._drawer:sphere(Matrix4x4.translation(self._spline_transforms[1]:unbox()), 0.1, Color.red())
 
-		local last_tm = self._spline_transforms[1]:unbox()
+		for i = 1, #self._spline_transforms - 1 do
+			tm1 = self._spline_transforms[i]:unbox()
+			tm2 = self._spline_transforms[i + 1]:unbox()
+			p1, c1, c2, p2 = self:_get_spline_components(tm1, tm2)
 
-		for i = 2, #self._spline_transforms do
-			local spline_tm = self._spline_transforms[i]:unbox()
-
-			if i == 2 then
-				self:_draw_tm(last_tm, spline_tm, 0.5, 2, Color.red())
-			else
-				self:_draw_tm(last_tm, spline_tm, 1, 1, Color.red())
-			end
-
-			last_tm = spline_tm
+			Bezier.draw(10, self._drawer, 0.1, Color.red(), p1, c1, c2, p2)
+			self._drawer:sphere(p2, 0.3, Color.red())
 		end
 
 		local blue = Color.blue()
 
 		for i, j in pairs(self._spline_joints) do
-			self._drawer:sphere(Unit.world_position(unit, j), 0.15 - 0.1 * i / #self._spline_joints, blue)
+			self._drawer:sphere(Unit.world_position(unit, j), 0.15 - 0.075 * i / #self._spline_joints, blue)
 		end
 
 		local white = Color.white()
 
 		for i, j in pairs(self._bind_joints) do
-			self._drawer:sphere(Unit.world_position(unit, j), 0.2 - 0.1 * i / #self._bind_joints, white)
+			self._drawer:sphere(Unit.world_position(unit, j), 0.1 - 0.05 * i / #self._bind_joints, white)
 		end
 
 		self._drawer:update(self._world)
@@ -469,17 +466,6 @@ BeastOfNurgle._editor_debug_draw = function (self, unit)
 		self._drawer:reset()
 		self._drawer:update(self._world)
 	end
-end
-
-BeastOfNurgle._draw_tm = function (self, tm1, tm2, w1, w2, color)
-	local distanced_weight = self._control_weight * Vector3.distance(Matrix4x4.translation(tm1), Matrix4x4.translation(tm2)) / self._segment_length
-	local p1 = Matrix4x4.translation(tm1)
-	local p2 = Matrix4x4.translation(tm2)
-	local c1 = p1 - self:_get_curve_control(tm1, distanced_weight * w1)
-	local c2 = p2 + self:_get_curve_control(tm2, distanced_weight * w2)
-
-	Bezier.draw(10, self._drawer, 0.1, color, p1, c1, c2, p2)
-	self._drawer:sphere(p2, 0.1, color)
 end
 
 BeastOfNurgle.component_data = {
@@ -488,7 +474,7 @@ BeastOfNurgle.component_data = {
 		min = 0,
 		step = 0.1,
 		decimals = 3,
-		value = 0.4,
+		value = 0.5,
 		ui_name = "Spline Tangent Weight",
 		max = 1
 	},
@@ -518,6 +504,15 @@ BeastOfNurgle.component_data = {
 		value = 1,
 		ui_name = "Spline Blend",
 		max = 1
+	},
+	anim_offset = {
+		ui_type = "slider",
+		min = -10,
+		step = 0.1,
+		decimals = 3,
+		value = 0,
+		ui_name = "Animated Offset",
+		max = 10
 	},
 	spline_length = {
 		ui_type = "slider",

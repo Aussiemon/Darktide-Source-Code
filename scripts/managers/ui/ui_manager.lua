@@ -15,6 +15,8 @@ local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
 local Views = require("scripts/ui/views/views")
 local InputDevice = require("scripts/managers/input/input_device")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local ItemUtils = require("scripts/utilities/items")
 local UIManager = class("UIManager")
 UIManager.DEBUG_TAG = "UI Manager"
 local DEBUG_RELOAD = false
@@ -124,26 +126,10 @@ UIManager._setup_icon_renderers = function (self)
 		portrait_height = 192,
 		timer_name = "ui"
 	}
-	local hud_weapons_render_settings = {
-		viewport_layer = 900,
-		world_layer = 800,
-		world_name = "weapon_hud_world",
-		weapon_width = 240,
-		viewport_type = "default_with_alpha",
-		weapon_height = 60,
-		target_resolution_height = 256,
-		target_resolution_width = 512,
-		viewport_name = "weapon_hud_viewport",
-		level_name = "content/levels/ui/weapon_icon_hud/weapon_icon_hud",
-		shading_environment = "content/shading_environments/ui/weapon_icons",
-		test = true,
-		timer_name = "ui"
-	}
 	back_buffer_render_handlers.portraits = PortraitUI:new(portrait_render_settings)
 	back_buffer_render_handlers.appearance = PortraitUI:new(appearance_render_settings)
 	back_buffer_render_handlers.cosmetics = PortraitUI:new(cosmetics_render_settings)
 	back_buffer_render_handlers.weapons = WeaponIconUI:new()
-	back_buffer_render_handlers.hud_weapons = WeaponIconUI:new(hud_weapons_render_settings)
 	back_buffer_render_handlers.icon = ItemIconLoaderUI:new()
 	self._back_buffer_render_handlers = back_buffer_render_handlers
 end
@@ -390,24 +376,6 @@ UIManager._update_view_hotkeys = function (self)
 	local hotkey_settings = self._update_hotkeys
 	local hotkeys = hotkey_settings.hotkeys
 	local hotkey_lookup = hotkey_settings.lookup
-
-	if input_service:get("toggle_rtx") and Application.render_caps("dxr") then
-		local current_dxr = Application.render_config("settings", "dxr")
-		local dxr_val = true
-
-		if current_dxr or current_dxr == "true" then
-			dxr_val = false
-		end
-
-		Application.set_user_setting("render_settings", "dxr", dxr_val)
-		Application.set_user_setting("render_settings", "rt_reflections_enabled", dxr_val)
-		Application.set_user_setting("render_settings", "rtxgi_enabled", dxr_val)
-		Application.set_user_setting("render_settings", "baked_ddgi", not dxr_val)
-		Application.save_user_settings()
-		Application.apply_user_settings()
-		Renderer.bake_static_shadows()
-	end
-
 	local num_views = #views
 
 	if num_views > 0 then
@@ -486,8 +454,8 @@ UIManager.close_view = function (self, view_name, force_close)
 	self._view_handler:close_view(view_name, force_close)
 end
 
-UIManager.close_all_views = function (self, closing_duration)
-	self._view_handler:close_all_views(closing_duration)
+UIManager.close_all_views = function (self, force_close, optional_excepted_views)
+	self._view_handler:close_all_views(force_close, optional_excepted_views)
 end
 
 UIManager.view_active = function (self, view_name)
@@ -642,6 +610,12 @@ UIManager.communication_wheel_active = function (self)
 	return hud and hud:communication_wheel_active()
 end
 
+UIManager.communication_wheel_wants_camera_control = function (self)
+	local hud = self._hud
+
+	return hud and hud:communication_wheel_wants_camera_control()
+end
+
 UIManager.wwise_music_state = function (self, wwise_state_group_name)
 	return self._view_handler:wwise_music_state(wwise_state_group_name)
 end
@@ -730,12 +704,29 @@ UIManager.set_2d_sound_parameter = function (self, parameter_id, value)
 	WwiseWorld.set_global_parameter(wwise_world, parameter_id, value)
 end
 
+local resolution_modified_key = "modified"
+
+UIManager._handle_resolution_modified = function (self)
+	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
+
+	if resolution_modified then
+		local back_buffer_render_handlers = self._back_buffer_render_handlers
+		local portraits_instance = back_buffer_render_handlers.portraits
+
+		if portraits_instance and portraits_instance.update_all then
+			portraits_instance:update_all()
+		end
+	end
+end
+
 UIManager.update = function (self, dt, t)
 	if self._update_hotkeys then
 		self:_update_view_hotkeys()
 
 		self._update_hotkeys = nil
 	end
+
+	self:_handle_resolution_modified()
 
 	local allow_view_input = self._ui_constant_elements and not self._ui_constant_elements:using_input()
 
@@ -1019,7 +1010,9 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		progression_info = string.format("Level: %s", current_level)
 	end
 
-	local presence_info, difficulty_info = nil
+	local presence = Managers.presence:presence()
+	local presence_info = string.format("Presence: %s", presence)
+	local difficulty_info = nil
 	local difficulty_manager = Managers.state.difficulty
 
 	if difficulty_manager then
@@ -1056,6 +1049,9 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		end
 	end
 
+	local cinematic_active = Managers.state and Managers.state.cinematic and Managers.state.cinematic:active() and "active" or "inactive"
+	local cutscene_view_active = Managers.ui and Managers.ui:view_active("cutscene_view") and "active" or "inactive"
+	local cinematic_loading = Managers.state and Managers.state.cinematic and Managers.state.cinematic:is_loading_cinematic_levels() and "active" or "inactive"
 	local text_order = {
 		"show_build_info",
 		"show_backend_url",
@@ -1087,7 +1083,8 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		"show_difficulty",
 		"show_circumstances",
 		"show_selected_unit_info",
-		"show_vo_story_stage_info"
+		"show_vo_story_stage_info",
+		"show_cinematic_active"
 	}
 	local texts = {
 		show_build_info = "Build: " .. (BUILD or "n/a"),
@@ -1120,7 +1117,8 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		show_difficulty = difficulty_info,
 		show_circumstances = circumstance_info,
 		show_selected_unit_info = selected_unit_info,
-		show_vo_story_stage_info = vo_story_stage_info
+		show_vo_story_stage_info = vo_story_stage_info,
+		show_cinematic_active = "Cinematic: " .. cinematic_active .. " | Cutscene View: " .. cutscene_view_active .. " | Loading: " .. cinematic_loading
 	}
 	local position = Vector3(w * inverse_scale - box_size[1] - 10, h * inverse_scale - box_size[2] - 300, draw_layer)
 
@@ -1255,7 +1253,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 	local levels = settings.levels
 	local packages_to_load_data = {}
 
-	if package then
+	if package_name then
 		local package_reference_name = reference_name .. #packages_to_load_data
 		packages_to_load_data[#packages_to_load_data + 1] = {
 			package_name = package_name,
@@ -1359,8 +1357,14 @@ end
 
 UIManager.unload_view = function (self, view_name, reference_name, frame_delay_count)
 	reference_name = "UIManager_" .. reference_name
-	local view_loading_data = self._views_loading_data[view_name][reference_name]
-	local packages_load_data = view_loading_data.packages_load_data
+	local view_loading_data = self._views_loading_data[view_name]
+
+	if not view_loading_data then
+		return
+	end
+
+	local loading_data = view_loading_data[reference_name]
+	local packages_load_data = loading_data.packages_load_data
 
 	for i = 1, #packages_load_data do
 		local package_data = packages_load_data[i]
@@ -1464,7 +1468,7 @@ UIManager.event_show_ui_popup = function (self, data, callback)
 
 	if num_active_popups > 0 then
 		for i = 1, num_active_popups do
-			if priority_order < active_popups[i].priority_order then
+			if active_popups[i].priority_order < priority_order then
 				start_index = i
 
 				break
@@ -1533,10 +1537,10 @@ UIManager.event_player_profile_updated = function (self, peer_id, local_player_i
 	instance:profile_updated(profile)
 end
 
-UIManager.load_appearance_portrait = function (self, profile, cb, render_context)
+UIManager.load_appearance_portrait = function (self, profile, cb, render_context, prioritized)
 	local instance = self._back_buffer_render_handlers.appearance
 
-	return instance:load_profile_portrait(profile, cb, render_context)
+	return instance:load_profile_portrait(profile, cb, render_context, prioritized)
 end
 
 UIManager.unload_appearance_portrait = function (self, id)
@@ -1545,34 +1549,16 @@ UIManager.unload_appearance_portrait = function (self, id)
 	instance:unload_profile_portrait(id)
 end
 
+UIManager.update_player_appearance = function (self, profile, prioritized)
+	local instance = self._back_buffer_render_handlers.appearance
+
+	instance:profile_updated(profile, prioritized)
+end
+
 UIManager.event_player_appearance_updated = function (self, profile)
 	local instance = self._back_buffer_render_handlers.appearance
 
 	instance:profile_updated(profile)
-end
-
-UIManager.load_hud_icon = function (self, item, cb, render_context)
-	local slots = item.slots or {}
-
-	if table.find(slots, "slot_primary") or table.find(slots, "slot_secondary") then
-		local instance = self._back_buffer_render_handlers.hud_weapons
-
-		return instance:load_weapon_icon(item, cb, render_context)
-	end
-end
-
-UIManager.unload_hud_icon = function (self, id)
-	local instance = self._back_buffer_render_handlers.hud_weapons
-
-	if instance:has_request(id) then
-		instance:unload_weapon_icon(id)
-	end
-end
-
-UIManager.hud_icon_updated = function (self, peer_id, local_player_id, item)
-	local instance = self._back_buffer_render_handlers.hud_weapons
-
-	instance:weapon_icon_updated(item)
 end
 
 UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile)
@@ -1593,6 +1579,16 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		local instance = self._back_buffer_render_handlers.weapons
 
 		return instance:load_weapon_icon(item, cb, render_context)
+	elseif item_type == "WEAPON_SKIN" then
+		local visual_item = ItemUtils.weapon_skin_preview_item(item)
+		local instance = self._back_buffer_render_handlers.weapons
+
+		return instance:load_weapon_icon(visual_item, cb, render_context)
+	elseif item_type == "WEAPON_TRINKET" then
+		local instance = self._back_buffer_render_handlers.weapons
+		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
+
+		return instance:load_weapon_icon(visual_item, cb, render_context)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		local instance = self._back_buffer_render_handlers.cosmetics
 		local dummy_profile = dummy_profile
@@ -1600,10 +1596,67 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		if not dummy_profile then
 			local player = Managers.player:local_player(1)
 			local profile = player:profile()
-			dummy_profile = table.clone_instance(profile)
+			local item_gender, item_breed, item_archetype = nil
+
+			if item.genders and not table.is_empty(item.genders) then
+				for i = 1, #item.genders do
+					local gender = item.genders[i]
+
+					if gender == profile.gender then
+						item_gender = profile.gender
+
+						break
+					end
+				end
+			else
+				item_gender = profile.gender
+			end
+
+			if item.breeds and not table.is_empty(item.breeds) then
+				for i = 1, #item.breeds do
+					local breed = item.breeds[i]
+
+					if breed == profile.breed then
+						item_breed = profile.breed
+
+						break
+					end
+				end
+			else
+				item_breed = profile.breed
+			end
+
+			if item.archetypes and not table.is_empty(item.archetypes) then
+				for i = 1, #item.archetypes do
+					local archetype = item.archetypes[i]
+
+					if archetype == profile.archetype.name then
+						item_archetype = profile.archetype
+
+						break
+					end
+				end
+			else
+				item_archetype = profile.archetype.name
+			end
+
+			local compatible_profile = item_gender and item_breed and item_archetype
+
+			if compatible_profile then
+				dummy_profile = table.clone_instance(profile)
+			else
+				local breed = item_breed or item.breeds and item.breeds[1] or "human"
+				local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
+				local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+				dummy_profile = {
+					loadout = {},
+					archetype = archetype,
+					breed = breed,
+					gender = gender
+				}
+			end
 		end
 
-		local specialization_name = dummy_profile.specialization
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed
@@ -1642,23 +1695,6 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		local required_specialization_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_specializations[specialization_name]
-
-		if required_specialization_item_names_per_slot then
-			local required_items = required_specialization_item_names_per_slot[first_slot_name]
-
-			if required_items then
-				for slot_name, slot_item_name in pairs(required_items) do
-					local item_definition = MasterItems.get_item(slot_item_name)
-
-					if item_definition then
-						local slot_item = table.clone(item_definition)
-						dummy_profile.loadout[slot_name] = slot_item
-					end
-				end
-			end
-		end
-
 		local slots_to_hide = UISettings.item_preview_hide_slots_per_slot[first_slot_name]
 
 		if slots_to_hide then
@@ -1670,7 +1706,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile.character_id = gear_id
+		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 		local prop_item_key = item.prop_item
 		local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
 
@@ -1681,7 +1717,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		end
 
 		return instance:load_profile_portrait(dummy_profile, cb, render_context)
-	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") then
+	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") or table.find(slots, "slot_animation_emote_1") or table.find(slots, "slot_animation_emote_2") or table.find(slots, "slot_animation_emote_3") or table.find(slots, "slot_animation_emote_4") or table.find(slots, "slot_animation_emote_5") then
 		local instance = self._back_buffer_render_handlers.icon
 
 		return instance:load_icon(item, cb, render_context, dummy_profile)
@@ -1737,7 +1773,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile.character_id = gear_id
+		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 
 		return instance:load_profile_portrait(dummy_profile, cb, render_context)
 	end
@@ -1757,10 +1793,10 @@ UIManager.unload_item_icon = function (self, id)
 	end
 end
 
-UIManager.item_icon_updated = function (self, peer_id, local_player_id, item)
+UIManager.item_icon_updated = function (self, item)
 	local item_type = item.item_type
 
-	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
+	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" or item_type == "WEAPON_TRINKET" or item_type == "WEAPON_SKIN" then
 		local instance = self._back_buffer_render_handlers.weapons
 
 		instance:weapon_icon_updated(item)
@@ -1796,6 +1832,10 @@ end
 
 UIManager.ui_constant_elements = function (self)
 	return self._ui_constant_elements
+end
+
+UIManager.get_hud = function (self)
+	return self._hud
 end
 
 return UIManager

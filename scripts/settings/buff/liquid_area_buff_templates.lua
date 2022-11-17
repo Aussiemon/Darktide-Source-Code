@@ -10,6 +10,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER = 0.25
+local BOT_POWER_LEVEL_MULTIPLIER = 0.25
 
 local function _scaled_damage_interval_function(template_data, template_context, template)
 	local unit = template_context.unit
@@ -31,6 +32,13 @@ local function _scaled_damage_interval_function(template_data, template_context,
 
 		if is_knocked_down then
 			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+		end
+
+		local player = Managers.state.player_unit_spawn:owner(unit)
+		local is_bot = player and not player:is_human_controlled()
+
+		if is_bot then
+			power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
 		end
 	end
 
@@ -342,15 +350,66 @@ local templates = {
 				}
 			}
 		}
+	},
+	renegade_flamer_in_fire_liquid = {
+		interval = 0.25,
+		max_stacks = 1,
+		class_name = "interval_buff",
+		keywords = {
+			buff_keywords.burning
+		},
+		forbidden_keywords = {
+			buff_keywords.renegade_flamer_liquid_immunity
+		},
+		power_level = {
+			default = {
+				400,
+				400,
+				400,
+				400,
+				400
+			},
+			player = MinionDifficultySettings.power_level.renegade_flamer_fire
+		},
+		damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
+		damage_type = damage_types.burning,
+		interval_func = _scaled_damage_interval_function,
+		minion_effects = {
+			ailment_effect = ailment_effects.burning,
+			node_effects = {
+				{
+					node_name = "j_spine",
+					vfx = {
+						material_emission = true,
+						particle_effect = "content/fx/particles/enemies/buff_burning",
+						orphaned_policy = "destroy",
+						stop_type = "stop"
+					},
+					sfx = {
+						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
+					}
+				}
+			}
+		}
 	}
 }
-local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 2
+local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 4
+local BOT_POWER_LEVEL_MULTIPLIER = 0.25
 local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.15
 
 local function _beast_of_nurgle_in_slime_interval_function(template_data, template_context, template)
 	local unit = template_context.unit
 
 	if not HEALTH_ALIVE[unit] then
+		return
+	end
+
+	local side_system = Managers.state.extension:system("side_system")
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local is_ally = optional_owner_unit and side_system:is_ally(unit, optional_owner_unit)
+
+	if is_ally then
 		return
 	end
 
@@ -361,8 +420,15 @@ local function _beast_of_nurgle_in_slime_interval_function(template_data, templa
 	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
 
 	if template_context.is_player then
+		local player = Managers.state.player_unit_spawn:owner(unit)
+		local is_human_controlled = player:is_human_controlled()
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local character_state_component = unit_data_extension:read_component("character_state")
+
+		if character_state_component.state_name == "consumed" then
+			return
+		end
+
 		local is_sliding_or_dodging = character_state_component.state_name == "sliding" or character_state_component.state_name == "dodging"
 
 		if is_sliding_or_dodging then
@@ -377,13 +443,16 @@ local function _beast_of_nurgle_in_slime_interval_function(template_data, templa
 		if is_knocked_down then
 			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
 		end
+
+		if not is_human_controlled then
+			power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
+		end
 	end
 
 	if template.power_level_random then
 		power_level = power_level * 0.5 + math.random() * power_level
 	end
 
-	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
 	local damage_template = template.damage_template
 	local damage_type = template.damage_type
@@ -403,16 +472,16 @@ templates.beast_of_nurgle_in_slime = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.5,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.6
+		[buff_stat_buffs.movement_speed] = 0.6,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	power_level = {
 		default = {
+			3,
 			6,
-			12,
-			30,
+			15,
 			20,
-			35
+			25
 		}
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
@@ -435,6 +504,11 @@ cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 templates.cultist_flamer_leaving_liquid_fire_spread_increase = cultist_flamer_leaving_liquid_fire_spread_increase
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_priority = 1
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud"
+local renegade_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.cultist_flamer_leaving_liquid_fire_spread_increase)
+renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
+	buff_keywords.renegade_flamer_liquid_immunity
+}
+templates.renegade_flamer_leaving_liquid_fire_spread_increase = renegade_flamer_leaving_liquid_fire_spread_increase
 local renegade_grenadier_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_priority = 1
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud"

@@ -294,6 +294,7 @@ PlayerCharacterStateNetted._on_drag_completed = function (self, t)
 
 	local locomotion_steering_component = self._locomotion_steering_component
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
+	locomotion_steering_component.calculate_fall_velocity = true
 	local disabled_character_state_component = self._disabled_character_state_component
 	disabled_character_state_component.has_reached_drag_position = true
 	self._frames_with_no_movement = 0

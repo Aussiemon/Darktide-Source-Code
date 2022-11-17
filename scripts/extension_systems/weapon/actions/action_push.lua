@@ -83,7 +83,7 @@ ActionPush._push = function (self, t)
 	end
 
 	Stamina.drain(self._player_unit, push_cost, t)
-	self:_pay_warp_charge_cost(t)
+	self:_pay_warp_charge_cost(t, 1)
 
 	if action_settings.activate_special then
 		self:_set_weapon_special(true, t)
@@ -118,19 +118,19 @@ ActionPush._play_push_particles = function (self, t)
 	end
 
 	local effect_name = fx.vfx_effect
-	local effect_to_play = effect_name
 
-	if not effect_to_play then
+	if not effect_name then
 		return
 	end
 
 	local spawner_name = fx.fx_source
 	local fx_extension = self._fx_extension
 	local link = true
-	local orphaned_policy = "destroy"
+	local orphaned_policy = "stop"
 	local position_offset = fx.fx_position_offset and fx.fx_position_offset:unbox()
 	local rotation_offset = fx.fx_rotation_offset and fx.fx_rotation_offset:unbox()
-	local particle_id = fx_extension:spawn_unit_particles(effect_to_play, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+
+	fx_extension:spawn_unit_particles(effect_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
 end
 
 return ActionPush

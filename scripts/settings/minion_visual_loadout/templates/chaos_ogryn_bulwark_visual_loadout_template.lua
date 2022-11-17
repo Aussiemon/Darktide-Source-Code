@@ -243,6 +243,68 @@ templates.chaos_ogryn_bulwark[zone_ids.tank_foundry] = {
 	foundry_11,
 	foundry_12
 }
+local dust_1 = table.clone(default_1)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_2 = table.clone(default_2)
+dust_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_3 = table.clone(default_3)
+dust_3.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_4 = table.clone(default_4)
+dust_4.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_5 = table.clone(default_5)
+dust_5.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_6 = table.clone(default_6)
+dust_6.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_7 = table.clone(default_7)
+dust_7.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_8 = table.clone(default_8)
+dust_8.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_9 = table.clone(default_9)
+dust_9.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_10 = table.clone(default_10)
+dust_10.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_11 = table.clone(default_11)
+dust_11.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_12 = table.clone(default_12)
+dust_12.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.chaos_ogryn_bulwark[zone_ids.dust] = {
+	dust_1,
+	dust_2,
+	dust_3,
+	dust_4,
+	dust_5,
+	dust_6,
+	dust_7,
+	dust_8,
+	dust_9,
+	dust_10,
+	dust_11,
+	dust_12
+}
 local watertown_1 = table.clone(default_1)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

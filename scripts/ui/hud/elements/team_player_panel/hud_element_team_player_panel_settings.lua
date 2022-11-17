@@ -22,8 +22,8 @@ local hud_element_team_player_panel_settings = {
 		alpha_fade_duration = 0.6
 	},
 	size = {
-		230,
-		10
+		180,
+		8
 	},
 	icon_size = {
 		72,
@@ -54,14 +54,15 @@ local hud_element_team_player_panel_settings = {
 		200
 	},
 	feature_list = {
-		coherency = false,
+		respawn_timer = true,
 		name = true,
 		pocketable = true,
 		voip = true,
-		portrait = true,
+		toughness = true,
 		ammo = true,
 		toughness_hit_indicator = true,
-		respawn_timer = true,
+		portrait = true,
+		coherency = true,
 		player_color = true,
 		status_icon = true,
 		health = true,

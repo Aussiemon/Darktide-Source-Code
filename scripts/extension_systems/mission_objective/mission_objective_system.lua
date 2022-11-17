@@ -145,6 +145,11 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 				if not objective:is_updated_externally() then
 					objective:update(dt)
 					objective:update_progression()
+
+					if GameParameters.testify then
+						Testify:poll_requests_through_handler(MissionObjectiveTestify, self, objective_name)
+					end
+
 					self:_propagate_objective_progression(objective, peer_id)
 
 					if objective:max_progression_achieved() and not objective:evaluate_at_level_end() then
@@ -153,6 +158,10 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 				end
 			end
 		end
+	end
+
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(MissionObjectiveSystemTestify, self)
 	end
 end
 
@@ -432,20 +441,16 @@ MissionObjectiveSystem.is_objective_complete = function (self, objective_name, p
 end
 
 MissionObjectiveSystem._override_ui_string = function (self, objective_name, new_ui_header, new_ui_description)
-	local objective_template = self._objective_definitions[objective_name]
+	if new_ui_header then
+		local is_header = true
 
-	if objective_template then
-		if new_ui_header then
-			objective_template.header = new_ui_header
-			local is_header = true
+		self:_change_active_objective_ui_string(is_header, new_ui_header, objective_name)
+	end
 
-			self:_change_active_objective_ui_string(is_header, new_ui_header, objective_name)
-		elseif new_ui_description then
-			objective_template.description = new_ui_description
-			local is_header = false
+	if new_ui_description then
+		local is_header = false
 
-			self:_change_active_objective_ui_string(is_header, new_ui_description, objective_name)
-		end
+		self:_change_active_objective_ui_string(is_header, new_ui_description, objective_name)
 	end
 
 	if self._is_server then
@@ -478,7 +483,7 @@ MissionObjectiveSystem._change_active_objective_ui_string = function (self, is_h
 	if active_objective then
 		local localized_new_ui_string = nil
 
-		if new_ui_string and new_ui_string ~= "" then
+		if new_ui_string and new_ui_string ~= "empty_objective_string" then
 			localized_new_ui_string = Managers.localization:localize(new_ui_string)
 		end
 
@@ -502,6 +507,34 @@ MissionObjectiveSystem.set_objective_show_counter = function (self, objective_na
 
 		self:send_rpc_to_objective_list(nil, "rpc_mission_objective_show_counter", objective_name_id, show)
 	end
+end
+
+MissionObjectiveSystem.on_player_unit_spawn = function (self, player, unit, is_respawn)
+	local active_objective = self:get_active_objective("side_mission_grimoire")
+
+	if not active_objective then
+		return
+	end
+
+	local synchronizer_unit = self:get_objective_synchronizer_unit("side_mission_grimoire")
+	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+
+	synchronizer_extension:grant_grimoire(unit)
+end
+
+MissionObjectiveSystem.store_grimoire = function (self)
+	local active_objective = self:get_active_objective("side_mission_grimoire")
+
+	if not active_objective then
+		Log.error("objective", "trying to store a grimore with no active grimoire objective")
+
+		return
+	end
+
+	local synchronizer_unit = self:get_objective_synchronizer_unit("side_mission_grimoire")
+	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+
+	synchronizer_extension:store_grimoire()
 end
 
 MissionObjectiveSystem.get_objective_event_music = function (self)

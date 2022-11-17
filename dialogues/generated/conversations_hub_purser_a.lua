@@ -146,14 +146,58 @@ local conversations_hub_purser_a = {
 		},
 		randomize_indexes = {}
 	},
-	npc_first_interaction_purser = {
+	npc_first_interaction_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__npc_first_interaction_01"
+			[1.0] = "loc_purser_a__npc_first_interaction_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 27.5166
+			[1.0] = 7.071451
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_purser_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__npc_first_interaction_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.948549
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_purser_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__npc_first_interaction_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 7.36
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_purser_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__npc_first_interaction_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.332834
+		},
+		randomize_indexes = {}
+	},
+	npc_first_interaction_purser_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__npc_first_interaction_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.803787
 		},
 		randomize_indexes = {}
 	},

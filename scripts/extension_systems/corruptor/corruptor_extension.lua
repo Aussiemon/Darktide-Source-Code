@@ -13,7 +13,6 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._is_server = extension_init_context.is_server
 	self._current_state = STATES.dormant
 	self._use_trigger = false
-	self._objective_name = "default"
 	self._global_effect_id = nil
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
@@ -36,10 +35,26 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._unit_level_index = unit_level_index
 end
 
+local HEALTH_DIFFICULTY_SCALING = {
+	0.4,
+	0.6,
+	0.75,
+	1,
+	1
+}
+
 CorruptorExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
-	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
+	self._mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+
+	if self._is_server then
+		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
+		local max_health = self._health_extension:max_health()
+		local diff = max_health - max_health * health_scale
+
+		self._health_extension:add_damage(diff, nil, nil, nil, nil, nil, unit)
+	end
 end
 
 CorruptorExtension.hot_join_sync = function (self, unit, sender, channel_id)
@@ -134,15 +149,18 @@ end
 
 CorruptorExtension.activate_segment_units = function (self)
 	local target_extension = self._mission_objective_target_extension
-	self._objective_name = target_extension:objective_name()
-
-	target_extension:set_ui_target_type("demolition")
-
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(self._objective_name)
+	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(target_extension:objective_name())
 	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 	synchronizer_extension:activate_units()
+end
+
+CorruptorExtension.set_to_demolition_target = function (self)
+	local target_extension = self._mission_objective_target_extension
+
+	target_extension:objective_name()
+	target_extension:set_ui_target_type("demolition")
 end
 
 CorruptorExtension.update = function (self, unit, dt, t)
@@ -347,6 +365,10 @@ CorruptorExtension.set_eye_activated = function (self, activated)
 	end
 
 	self._eye_is_active = activated
+
+	if activated then
+		self:set_to_demolition_target()
+	end
 end
 
 CorruptorExtension.set_eye_hidden = function (self, hidden)

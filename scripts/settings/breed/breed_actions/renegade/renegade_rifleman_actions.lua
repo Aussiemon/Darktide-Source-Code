@@ -162,7 +162,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.1,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
@@ -416,6 +416,54 @@ local action_data = {
 		speed = 4.2,
 		move_anim_events = "move_fwd",
 		considerations = UtilityConsiderations.move_to_combat_vector,
+		idle_anim_events = {
+			"idle",
+			"idle_2",
+			"idle_3"
+		},
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right"
+		},
+		start_move_anim_data = {
+			move_start_fwd = {},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			move_start_right = 0,
+			move_start_fwd = 0,
+			move_start_bwd = 0,
+			move_start_left = 0
+		},
+		start_rotation_durations = {
+			move_start_right = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_bwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666
+		}
+	},
+	move_to_combat_vector_far = {
+		degree_per_direction = 10,
+		utility_weight = 3,
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		randomized_direction_degree_range = 120,
+		speed = 4.2,
+		move_anim_events = "move_fwd",
+		considerations = UtilityConsiderations.move_to_combat_vector_special,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
@@ -712,7 +760,7 @@ local action_data = {
 			low = {
 				left = Vector3Box(-0.770176, -0.433462, 0.893286),
 				right = Vector3Box(0.675663, -0.477724, 0.9158),
-				up = Vector3Box(0.00311852, -0.440826, 1.32431)
+				up = Vector3Box(0.00311852, -0.440826, 1.38431)
 			}
 		}
 	},
@@ -756,13 +804,13 @@ local action_data = {
 			bayonet_attack_sweep = 0.6896551724137931,
 			bayonet_attack_sweep_02 = 1.4,
 			bayonet_attack_stab = 0.4888888888888889,
-			bayonet_attack_stab_02 = 1.0114942528735633
+			bayonet_attack_stab_02 = 1.2222222222222223
 		},
 		attack_anim_durations = {
 			bayonet_attack_sweep = 2.0689655172413794,
 			bayonet_attack_sweep_02 = 2.8333333333333335,
-			bayonet_attack_stab = 1.4942528735632183,
-			bayonet_attack_stab_02 = 1.839080459770115
+			bayonet_attack_stab = 1.4444444444444444,
+			bayonet_attack_stab_02 = 2.2222222222222223
 		},
 		attack_intensities = {
 			ranged = 1,

@@ -120,6 +120,7 @@ local widget_definitions = {
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
 				vertical_alignment = "center",
+				scale_to_material = true,
 				horizontal_alignment = "center",
 				size = {
 					background_size[1],
@@ -129,12 +130,7 @@ local widget_definitions = {
 					60,
 					20
 				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
+				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,

@@ -121,7 +121,7 @@ local action_data = {
 	alerted = {
 		hesitate_chance = 1,
 		instant_aggro_chance = 0,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		hesitate_anim_events = {
 			"alerted",
 			"hesitate_1"
@@ -269,7 +269,7 @@ local action_data = {
 		move_anim_events = "move_fwd",
 		move_to_cooldown = 0.25,
 		speed = 4.2,
-		considerations = UtilityConsiderations.move_to_combat_vector,
+		considerations = UtilityConsiderations.move_to_combat_vector_special,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
@@ -399,18 +399,18 @@ local action_data = {
 		}
 	},
 	shoot_spray_n_pray = {
-		inventory_slot = "slot_ranged_weapon",
-		utility_weight = 2,
+		utility_weight = 10,
 		vo_event = "start_shooting",
 		friendly_fire_callout_vo_event = "friendly_fire",
+		rotation_speed = 2,
 		cooldown_vo_event = "reloading",
 		out_of_aim_anim_event = "out_of_aim",
 		suppressive_fire = true,
 		attack_intensity_type = "elite_ranged",
-		rotation_speed = 2,
 		clear_shot_line_of_sight_id = "gun",
+		inventory_slot = "slot_ranged_weapon",
 		fx_source_name = "muzzle",
-		considerations = UtilityConsiderations.shoot_spray_n_pray,
+		considerations = UtilityConsiderations.shoot_spray_n_pray_cultist,
 		aim_anim_events = {
 			"aim_standing"
 		},
@@ -424,6 +424,9 @@ local action_data = {
 			fwd = "hip_fire",
 			left = "aim_turn_left",
 			right = "aim_turn_right"
+		},
+		cooldown_anim_events = {
+			"out_of_aim"
 		},
 		shoot_turn_anims = {
 			bwd = "aim_standing_bwd",
@@ -458,7 +461,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 5,
+			ranged = 2,
 			elite_ranged = 5
 		},
 		shoot_template = BreedShootTemplates.cultist_gunner_shoot_spray_n_pray,
@@ -590,8 +593,37 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.chaos_ogryn_gunner_melee,
 		damage_type = damage_types.minion_melee_blunt
 	},
+	bayonet_melee_attack = {
+		weapon_reach = 3.5,
+		utility_weight = 20,
+		considerations = UtilityConsiderations.melee_attack_bayonet,
+		attack_anim_events = {
+			"attack_bayonet_01",
+			"attack_bayonet_02",
+			"attack_bayonet_04",
+			"attack_bayonet_05"
+		},
+		attack_anim_damage_timings = {
+			attack_bayonet_01 = 0.5747126436781609,
+			attack_bayonet_02 = 0.7586206896551724,
+			attack_bayonet_04 = 1.2222222222222223,
+			attack_bayonet_05 = 1.3333333333333333
+		},
+		attack_anim_durations = {
+			attack_bayonet_01 = 1.4444444444444444,
+			attack_bayonet_02 = 2.0689655172413794,
+			attack_bayonet_04 = 2.2222222222222223,
+			attack_bayonet_05 = 2.6
+		},
+		attack_intensities = {
+			ranged = 1,
+			melee = 0.75
+		},
+		damage_profile = DamageProfileTemplates.melee_roamer_default,
+		damage_type = damage_types.minion_melee_sharp
+	},
 	blocked = {
-		blocked_duration = 2.6666666666666665,
+		blocked_duration = 1.6666666666666667,
 		blocked_anims = {
 			"blocked"
 		}

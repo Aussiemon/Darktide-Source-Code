@@ -103,7 +103,7 @@ ActionAvailability.increases_action_combo = function (action_settings)
 		return action_settings.increase_combo
 	end
 
-	return action_settings.incraese_combo or combo_increase_actions[action_settings.kind]
+	return combo_increase_actions[action_settings.kind]
 end
 
 local combo_hold_actions = {}

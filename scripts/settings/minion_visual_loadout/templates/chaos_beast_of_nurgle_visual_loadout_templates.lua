@@ -29,6 +29,13 @@ foundry_1.slots.envrionmental_override.items = {
 templates.chaos_beast_of_nurgle[zone_ids.tank_foundry] = {
 	foundry_1
 }
+local dust_1 = table.clone(basic_chaos_beast_of_nurgle_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.chaos_beast_of_nurgle[zone_ids.dust] = {
+	dust_1
+}
 local watertown_1 = table.clone(basic_chaos_beast_of_nurgle_template)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

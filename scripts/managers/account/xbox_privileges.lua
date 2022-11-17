@@ -201,7 +201,7 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 		return
 	end
 
-	Managers.xasync:wrap(async_block, XUser.release_async_block):next(function (async_block)
+	Managers.xasync:wrap(async_block, XboxLivePrivacy.release_block):next(function (async_block)
 		local result, error_code = XboxLivePrivacy.check_user_permission_result(async_block)
 
 		if error_code then
@@ -222,6 +222,7 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 		end
 
 		Managers.chat:player_mute_status_changed()
+		Managers.account:user_restriction_updated(xuid, restriction)
 	end)
 end
 

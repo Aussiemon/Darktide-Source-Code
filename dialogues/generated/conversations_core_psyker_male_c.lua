@@ -722,17 +722,6 @@ local conversations_core_psyker_male_c = {
 		},
 		randomize_indexes = {}
 	},
-	combat_pause_limited_veteran_c_06_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_psyker_male_c__combat_pause_limited_veteran_c_06_b_01"
-		},
-		sound_events_duration = {
-			[1.0] = 4.301469
-		},
-		randomize_indexes = {}
-	},
 	combat_pause_limited_veteran_c_10_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -5078,6 +5067,19 @@ local conversations_core_psyker_male_c = {
 		sound_events_duration = {
 			[1.0] = 4.210219,
 			[2.0] = 5.147656
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__lore_the_emperor_two_c_01",
+			[2.0] = "loc_psyker_male_c__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.658417,
+			[2.0] = 4.339708
 		},
 		randomize_indexes = {}
 	},

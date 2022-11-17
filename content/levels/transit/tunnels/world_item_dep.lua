@@ -1,6 +1,6 @@
 local item_dependencies = {
-	player_items = {},
 	minion_items = {},
+	player_items = {},
 	weapon_items = {}
 }
 

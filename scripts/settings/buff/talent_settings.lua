@@ -7,44 +7,49 @@ local talent_settings = {
 	},
 	veteran_2 = {
 		combat_ability = {
-			duration = 4,
+			spread_modifier = -0.38,
 			ranged_damage = 0.5,
-			outline_highlight_offset_total_max_time = 0.6,
-			outline_duration = 12,
-			cooldown = 18,
+			sway_modifier = 0.4,
+			recoil_modifier = -0.24,
+			cooldown = 25,
 			fov_multiplier = 0.85,
 			push_speed_modifier = -0.5,
+			toughness = 0.6,
 			outline_angle = 0.5,
+			ranged_weakspot_damage = 0.25,
+			duration = 5,
+			outline_highlight_offset_total_max_time = 0.6,
+			outline_duration = 5,
+			on_hit_proc_chance = 1,
+			ranged_impact_modifier = 1,
+			max_charges = 1,
 			movement_speed = 1,
 			outline_highlight_offset = 0.15,
 			outline_distance = 50,
-			max_stacks = 1,
-			on_hit_proc_chance = 1,
-			ranged_impact_modifier = 1,
-			max_charges = 1
+			max_stacks = 1
 		},
 		grenade = {
 			max_charges = 4
 		},
 		coherency = {
-			ammo_replenishment_percent = 0.02
+			ammo_replenishment_percent = 0.01
 		},
 		passive_1 = {
 			weakspot_damage = 0.15
 		},
 		passive_2 = {
-			ammo_reserve_capacity = 0.75
+			ammo_reserve_capacity = 0.4
 		},
 		toughness_1 = {
-			toughness = 0.05,
+			toughness = 0.025,
 			duration = 10,
-			instant_toughness = 0.5
+			instant_toughness = 0.25
 		},
 		toughness_2 = {
-			toughness = 0.2
+			toughness = 0.1
 		},
 		toughness_3 = {
-			toughness = 0.0075,
+			toughness = 0.005,
 			time = 0.1,
 			range = DamageSettings.in_melee_range
 		},
@@ -68,7 +73,7 @@ local talent_settings = {
 			threat_weight_multiplier = 0.1
 		},
 		coop_1 = {
-			outline_short_duration = 6
+			outline_short_duration = 5
 		},
 		coop_2 = {
 			proc_chance = 0.08
@@ -78,25 +83,25 @@ local talent_settings = {
 			range = 5
 		},
 		offensive_2_1 = {
-			stacks = 1
+			stacks = 2
 		},
 		offensive_2_2 = {
-			shot_stamina_percent = 0.05,
-			critical_strike_chance = 0.25,
+			spread_modifier = -0.19,
 			stamina = 0.1,
-			sway_modifier = 0.05
+			critical_strike_chance = 0.25,
+			recoil_modifier = -0.12,
+			shot_stamina_percent = 0.05,
+			sway_modifier = 0.4
 		},
 		offensive_2_3 = {
-			reload_speed = 0.5
+			reload_speed = 0.3
 		},
-		combat_ability_1 = {
-			rending = 0.75
+		combat_ability_1 = {},
+		combat_ability_2 = {
+			weakspot_damage = 0.25
 		},
-		combat_ability_2 = {},
 		combat_ability_3 = {
-			spread_modifier = -0.95,
-			sway_modifier = 0.05,
-			recoil_modifier = -0.75
+			damage_vs_ogryn_and_monsters = 0.5
 		}
 	},
 	veteran_3 = {
@@ -311,14 +316,14 @@ local talent_settings = {
 			damage_taken_multiplier = 0.75
 		},
 		toughness_1 = {
-			toughness_multiplier = 1
+			toughness_bonus = 1
 		},
 		toughness_2 = {
-			toughness = 0.15,
+			toughness = 0.2,
 			on_sweep_finish_proc_chance = 1
 		},
 		toughness_3 = {
-			toughness = 0.15,
+			toughness = 0.2,
 			on_sweep_finish_proc_chance = 1
 		},
 		offensive_1 = {
@@ -337,16 +342,21 @@ local talent_settings = {
 			movement_speed = 1.25
 		},
 		coop_3 = {
-			damage_taken_multiplier = 0.5
-		},
-		defensive_1 = {
+			damage_taken_multiplier = 0.5,
 			cooldown = 0.1
 		},
+		defensive_1 = {
+			max_stacks = 5,
+			min = 1,
+			time = 1,
+			max = 0.5
+		},
 		defensive_2 = {
-			damage_taken_multiplier = 0.25
+			max = 0.25,
+			min = 1
 		},
 		defensive_3 = {
-			toughness_replenish_multiplier = 2,
+			toughness_replenish_multiplier = 1,
 			sprinting_cost_multiplier = 0.8,
 			increased_toughness_health_threshold = 0.25
 		},
@@ -365,12 +375,12 @@ local talent_settings = {
 		offensive_2_3 = {
 			max_targets = 10,
 			on_hit_proc_chance = 1,
-			melee_damage = 0.1,
+			melee_damage = 0.05,
 			on_sweep_finish_proc_chance = 1
 		},
 		combat_ability_1 = {
 			cooldown = 30,
-			stacks = 1,
+			stacks = 2,
 			max_charges = 1
 		},
 		combat_ability_2 = {
@@ -387,11 +397,11 @@ local talent_settings = {
 	},
 	zealot_2 = {
 		combat_ability = {
-			has_target_distance = 15,
+			has_target_distance = 21,
 			radius = 3,
-			distance = 10,
+			distance = 7,
 			melee_damage = 0.25,
-			cooldown = 25,
+			cooldown = 30,
 			duration = 3,
 			melee_critical_strike_chance = 1,
 			max_stacks = 1,
@@ -403,7 +413,7 @@ local talent_settings = {
 		},
 		coherency = {
 			max_stacks = 1,
-			toughness_damage_taken_multiplier = 0.9
+			toughness_damage_taken_multiplier = 0.925
 		},
 		passive_1 = {
 			max_stacks = 3,
@@ -419,22 +429,29 @@ local talent_settings = {
 			melee_attack_speed = 0.1
 		},
 		toughness_1 = {
-			toughness_melee_replenish = 1
+			toughness_melee_replenish = 0.5
 		},
 		toughness_2 = {
-			toughness_damage_taken_multiplier = 0.67,
+			toughness_damage_taken_multiplier = 0.5,
 			duration = 3
 		},
 		toughness_3 = {
-			toughness = 0.0075,
+			num_ticks_to_trigger = 5,
+			range = 4,
 			time = 0.1,
-			range = DamageSettings.in_melee_range
+			toughness = 0.025,
+			num_enemies = 4
 		},
 		offensive_1 = {
-			melee_critical_strike_chance = 0.1
+			melee_critical_strike_chance = 0.1,
+			duration = 3
 		},
 		offensive_2 = {
-			damage = 0.2
+			duration = 5,
+			damage = 0.2,
+			impact_modifier = 0.1,
+			max_stacks = 3,
+			min_hits = 3
 		},
 		offensive_3 = {
 			attack_speed = 0.1,
@@ -443,19 +460,21 @@ local talent_settings = {
 			second_health_threshold = 0.2
 		},
 		coop_1 = {
-			crit_chance = 0.015
+			power_level_modifier = 0.2,
+			duration = 5,
+			crit_chance = 0.02
 		},
 		coop_2 = {
 			max_stacks = 1,
-			toughness_damage_taken_multiplier = 0.8
+			toughness_damage_taken_multiplier = 0.85
 		},
 		coop_3 = {
-			toughness = 0.15
+			toughness = 0.2
 		},
 		defensive_1 = {
 			on_damage_taken_proc_chance = 1,
 			cooldown_duration = 90,
-			leech = 0.03,
+			leech = 0.02,
 			on_hit_proc_chance = 1,
 			melee_multiplier = 3,
 			duration = 5,
@@ -467,17 +486,17 @@ local talent_settings = {
 			active_duration = 2
 		},
 		defensive_3 = {
-			recuperate_percentage = 0.3,
+			recuperate_percentage = 0.25,
 			duration = 5,
 			on_damage_taken_proc_chance = 1
 		},
 		offensive_2_1 = {
-			damage = 0.2
+			damage = 0.25
 		},
 		offensive_2_2 = {
 			on_hit_proc_chance = 1,
 			max_stacks = 5,
-			melee_damage = 0.05,
+			melee_damage = 0.04,
 			max_stacks_cap = 5,
 			duration = 5
 		},
@@ -485,7 +504,7 @@ local talent_settings = {
 			max_stacks = 6
 		},
 		combat_ability_1 = {
-			time = 1
+			time = 1.5
 		},
 		combat_ability_2 = {
 			attack_speed = 0.2,
@@ -493,7 +512,6 @@ local talent_settings = {
 			active_duration = 5
 		},
 		combat_ability_3 = {
-			cooldown = 25,
 			max_charges = 2
 		}
 	},
@@ -501,14 +519,14 @@ local talent_settings = {
 		combat_ability = {
 			static_power_level = 500,
 			radius = 5,
-			toughness_restored = 1,
+			min_close_radius = 2,
 			min_radius = 3,
 			cooldown = 45,
 			close_radius = 2,
-			min_close_radius = 2,
-			power_level = 500,
-			toughness_bonus = 400,
 			duration = 5,
+			toughness_restored = 1,
+			toughness_bonus_flat = 400,
+			power_level = 500,
 			max_charges = 1,
 			explosion_area_suppression = {
 				suppression_falloff = true,
@@ -623,13 +641,15 @@ local talent_settings = {
 			damage_vs_elites = 0.1
 		},
 		passive_1 = {
-			soul_duration = 20,
+			soul_duration = 25,
 			damage = 0.18,
 			base_max_souls = 4,
 			on_combat_ability_proc_chance = 1,
 			on_hit_proc_chance = 1
 		},
 		passive_2 = {
+			warp_charge_percent = 0.1,
+			on_hit_proc_chance = 0.1,
 			warp_charge_amount = 0.9
 		},
 		toughness_1 = {
@@ -637,13 +657,13 @@ local talent_settings = {
 			max_stacks_cap = 1,
 			max_stacks = 1,
 			duration = 5,
-			percent_toughness = 0.1
+			percent_toughness = 0.06
 		},
 		toughness_2 = {
-			percent_toughness = 0.15
+			percent_toughness = 0.1
 		},
 		toughness_3 = {
-			multiplier = 0.75
+			multiplier = 0.5
 		},
 		offensive_1_1 = {
 			damage_min = 0.05,
@@ -654,10 +674,11 @@ local talent_settings = {
 			warp_charge_capacity = 0.64
 		},
 		offensive_1_3 = {
+			num_stacks = 2,
 			distance = 3
 		},
 		coop_1 = {
-			on_kill_proc_chance = 0.05
+			on_kill_proc_chance = 0.04
 		},
 		coop_2 = {
 			percent = 0.15
@@ -667,7 +688,7 @@ local talent_settings = {
 			duration = 5
 		},
 		defensive_1 = {
-			warp_charge_cost_multiplier = 0.5
+			warp_charge_cost_multiplier = 0.25
 		},
 		defensive_2 = {
 			min_toughness_damage_multiplier = 0.9,
@@ -680,7 +701,8 @@ local talent_settings = {
 			max_souls_talent = 6
 		},
 		offensive_2_2 = {
-			distance = 15
+			distance = 15,
+			num_stacks = 4
 		},
 		offensive_2_3 = {
 			cooldown = 15,

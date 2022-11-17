@@ -19,7 +19,7 @@ ViewElementInputLegend.init = function (self, parent, draw_layer, start_scale)
 	self._entries = {}
 end
 
-ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides)
+ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides, use_mouse_hold)
 	local id = "entry_" .. self._entry_index
 	local scenegraph_id = "entry_pivot"
 	local pass_template = ButtonPassTemplates.input_legend_button
@@ -43,12 +43,17 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 		input_action = input_action,
 		visibility_function = visibility_function,
 		on_pressed_callback = on_pressed_callback,
-		side = side_optional
+		side = side_optional,
+		use_mouse_hold = use_mouse_hold
 	}
 	local content = widget.content
 
-	content.hotspot.pressed_callback = function ()
-		on_pressed_callback(id)
+	if on_pressed_callback then
+		content.hotspot.pressed_callback = function ()
+			if not self._input_handled then
+				on_pressed_callback(id)
+			end
+		end
 	end
 
 	self:_update_widget_text(entry)
@@ -101,6 +106,8 @@ ViewElementInputLegend.remove_all_entries = function (self)
 end
 
 ViewElementInputLegend.update = function (self, dt, t, input_service)
+	self._input_handled = false
+
 	self:_handle_input(dt, t, input_service)
 
 	return ViewElementInputLegend.super.update(self, dt, t, input_service)
@@ -108,23 +115,29 @@ end
 
 ViewElementInputLegend._handle_input = function (self, dt, t, input_service)
 	local entries = self._entries
+	local input_handled = false
 
 	if entries then
 		for i = 1, #entries do
 			local entry = entries[i]
 			local input_action = entry.input_action
 
-			if input_action and input_service:get(input_action) and entry.is_visible then
+			if input_action and input_service:get(input_action) and entry.is_visible or entry.use_mouse_hold and entry.is_visible and entry.widget.content.hotspot.is_held then
 				local on_pressed_callback = entry.on_pressed_callback
 
 				if on_pressed_callback then
 					local id = entry.id
+					input_handled = true
 
 					on_pressed_callback(id)
+
+					break
 				end
 			end
 		end
 	end
+
+	self._input_handled = input_handled
 end
 
 ViewElementInputLegend._on_navigation_input_changed = function (self)
@@ -142,7 +155,7 @@ end
 ViewElementInputLegend.set_display_name = function (self, entry_id, display_name, suffix)
 	local entry = self:_get_entry_by_id(entry_id)
 
-	if entry then
+	if entry and display_name ~= entry.display_name then
 		entry.display_name = display_name
 		entry.suffix = suffix
 
@@ -236,7 +249,8 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 			local visibility_function = entry.visibility_function
 
 			if visibility_function then
-				entry.is_visible = visibility_function(self._parent)
+				local id = entry.id
+				entry.is_visible = visibility_function(self._parent, id)
 			end
 		end
 

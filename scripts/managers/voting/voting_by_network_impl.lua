@@ -464,8 +464,8 @@ VotingByNetworkImpl.rpc_start_voting_accept_mission = function (self, channel_id
 	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, backend_mission_id, mission_initiator_peer, mission_data_string)
 end
 
-VotingByNetworkImpl.rpc_start_voting_mission_lobby_ready = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, mission_data)
-	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, mission_data)
+VotingByNetworkImpl.rpc_start_voting_mission_lobby_ready = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, mission_name_id, circumstance_name_id)
+	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, mission_name_id, circumstance_name_id)
 end
 
 VotingByNetworkImpl.rpc_start_voting_kick_player = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, kick_peer_id)

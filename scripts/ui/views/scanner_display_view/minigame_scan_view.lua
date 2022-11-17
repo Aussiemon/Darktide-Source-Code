@@ -35,6 +35,18 @@ MinigameScanView.init = function (self, context)
 	self._first_person_component = unit_data_extension:read_component("first_person")
 end
 
+local system_name = "dialogue_system"
+
+MinigameScanView.dialogue_system = function (self)
+	local state_managers = Managers.state
+
+	if state_managers then
+		local extension_manager = state_managers.extension
+
+		return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
+	end
+end
+
 MinigameScanView.destroy = function (self)
 	return
 end

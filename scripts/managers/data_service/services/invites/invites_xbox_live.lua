@@ -37,19 +37,16 @@ InvitesXboxLive.get_invite = function (self)
 end
 
 InvitesXboxLive.send_invite = function (self, xuid, invite_address)
-	local num_users = XUser.num_users()
-
-	if num_users > 0 then
-		local users = XUser.users()
-		local user_id = users[1].id
-		local async_block, error = XboxLiveMPA.send_invites(user_id, {
+	if not Managers.account:user_detached() then
+		local user_id = Managers.account:user_id()
+		local async_block, error_code = XboxLiveMPA.send_invites(user_id, {
 			xuid
 		}, true, invite_address)
 
 		if async_block then
-			Managers.xasync:wrap(async_block):catch(_error_report)
+			Managers.xasync:wrap(async_block, XboxLiveMPA.release_block):catch(_error_report)
 		else
-			_error_report(error)
+			_error_report(error_code)
 		end
 	end
 end

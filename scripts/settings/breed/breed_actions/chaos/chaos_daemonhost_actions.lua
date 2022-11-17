@@ -111,7 +111,7 @@ local action_data = {
 			},
 			durations = {
 				to_alerted = 2.3333333333333335,
-				to_alerted_2 = 3
+				to_alerted_2 = 2.2222222222222223
 			},
 			on_finished_anim_events = {
 				"alerted_1"
@@ -135,6 +135,7 @@ local action_data = {
 				}
 			},
 			[STAGES.agitated] = {
+				reset_suppression = true,
 				anim_events = {
 					"alerted_0"
 				},
@@ -201,6 +202,8 @@ local action_data = {
 				}
 			},
 			[STAGES.waking_up] = {
+				trigger_health_bar = true,
+				set_aggro_target = true,
 				rotate_towards_target = true,
 				damaged_health_percent = 0.95,
 				anim_events = {
@@ -208,7 +211,7 @@ local action_data = {
 					damaged = "alerted_3_short"
 				},
 				durations = {
-					alerted_3 = 4.066666666666666,
+					alerted_3 = 3.111111111111111,
 					alerted_3_short = 1.4666666666666666
 				},
 				suppression = {
@@ -253,7 +256,7 @@ local action_data = {
 			},
 			suppression = {
 				suppressed = 100,
-				factor = 8,
+				factor = 6,
 				max = 40
 			},
 			flashlight = {
@@ -270,6 +273,7 @@ local action_data = {
 			look_at_angle = math.degrees_to_radians(10)
 		},
 		on_enter_buff_names = {
+			"renegade_flamer_liquid_immunity",
 			"cultist_flamer_liquid_immunity",
 			"renegade_grenadier_liquid_immunity"
 		}
@@ -413,13 +417,14 @@ local action_data = {
 		}
 	},
 	melee_attack = {
-		ignore_animation_movement_speed = true,
+		ignore_backstab_sfx = true,
 		utility_weight = 1,
 		ignore_blocked = true,
+		ignore_animation_movement_speed = true,
+		weapon_reach = 3,
 		attack_type = "sweep",
 		collision_filter = "filter_minion_melee_friendly_fire",
 		moving_attack = true,
-		weapon_reach = 3,
 		move_speed = 5,
 		sweep_node = "j_lefthandmiddle1",
 		hit_zone_name = "center_mass",
@@ -490,14 +495,15 @@ local action_data = {
 		}
 	},
 	combo_attack = {
+		ignore_backstab_sfx = true,
 		ignore_animation_movement_speed = true,
-		ignore_blocked = true,
 		utility_weight = 10,
-		range = 4.5,
+		ignore_blocked = true,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee_friendly_fire",
 		height = 3,
 		moving_attack = true,
+		range = 4.5,
 		move_speed_variable_lerp_speed = 4,
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		move_speed = 5,

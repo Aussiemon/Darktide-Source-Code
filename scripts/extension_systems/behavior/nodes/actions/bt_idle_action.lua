@@ -22,6 +22,7 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local perception_component = blackboard.perception
 	scratchpad.perception_component = perception_component
+	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local vo_event = action_data.vo_event
 
 	if vo_event and perception_component.aggro_state == "passive" then
@@ -34,11 +35,8 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 end
 
 BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	local perception_component = scratchpad.perception_component
-	local target_unit = scratchpad.perception_component.target_unit
-
-	if perception_component.has_line_of_sight and action_data.rotate_towards_target and ALIVE[target_unit] then
-		self:_rotate_towards_target_unit(unit, scratchpad, target_unit)
+	if not action_data.ignore_rotate_towards_target then
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 	end
 
 	local idle_exit_t = scratchpad.idle_exit_t
@@ -48,13 +46,6 @@ BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 	end
 
 	return "running"
-end
-
-BtIdleAction._rotate_towards_target_unit = function (self, unit, scratchpad, target_unit)
-	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
-	local locomotion_extension = scratchpad.locomotion_extension
-
-	locomotion_extension:set_wanted_rotation(flat_rotation)
 end
 
 return BtIdleAction

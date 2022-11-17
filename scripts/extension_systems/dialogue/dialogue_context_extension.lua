@@ -58,20 +58,20 @@ DialogueContextExtension._update_player_unit_status = function (self)
 
 		if character_state_component then
 			target_context.is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
-			target_context.is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
-			target_context.is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
-			target_context.is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
-			target_context.is_catapulted = PlayerUnitStatus.is_catapulted(character_state_component)
+			target_context.is_ledge_hanging = tostring(PlayerUnitStatus.is_ledge_hanging(character_state_component))
+			target_context.is_knocked_down = tostring(PlayerUnitStatus.is_knocked_down(character_state_component))
+			target_context.is_hogtied = tostring(PlayerUnitStatus.is_hogtied(character_state_component))
+			target_context.is_catapulted = tostring(PlayerUnitStatus.is_catapulted(character_state_component))
 		end
 
 		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
 
 		if disabled_character_state_component then
-			target_context.is_pounced_down = PlayerUnitStatus.is_pounced(disabled_character_state_component)
-			target_context.is_netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
-			target_context.is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
-			target_context.is_mutant_charged = PlayerUnitStatus.is_mutant_charged(disabled_character_state_component)
-			target_context.is_consumed = PlayerUnitStatus.is_consumed(disabled_character_state_component)
+			target_context.is_pounced_down = tostring(PlayerUnitStatus.is_pounced(disabled_character_state_component))
+			target_context.is_netted = tostring(PlayerUnitStatus.is_netted(disabled_character_state_component))
+			target_context.is_warp_grabbed = tostring(PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component))
+			target_context.is_mutant_charged = tostring(PlayerUnitStatus.is_mutant_charged(disabled_character_state_component))
+			target_context.is_consumed = tostring(PlayerUnitStatus.is_consumed(disabled_character_state_component))
 		end
 	end
 end
@@ -124,6 +124,10 @@ DialogueContextExtension.increase_timed_counter = function (self, key, value)
 	else
 		timed_counter.delta = timed_counter.delta + 1
 	end
+end
+
+DialogueContextExtension.get_timed_counter = function (self, key)
+	return self._timed_counters[key]
 end
 
 return DialogueContextExtension

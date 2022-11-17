@@ -56,6 +56,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._header = mission_objective_data.header and Localize(mission_objective_data.header) or ""
 	self._description = mission_objective_data.description and Localize(mission_objective_data.description) or ""
 	self._music_objective = mission_objective_data.use_music_event or MUSIC_OBJECTIVE_NONE
+	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = not mission_objective_data.hidden or true
 	self._progress_bar = mission_objective_data.progress_bar or false
@@ -98,7 +99,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	if self._music_objective ~= MUSIC_OBJECTIVE_NONE then
 		local event = "objective_start_" .. self._objective_type
 
-		if MissionSoundEvents[event] then
+		if MissionSoundEvents[event] and not mission_objective_data.music_ignore_start_event then
 			self._mission_objective_system:sound_event(MissionSoundEvents[event])
 		end
 	end

@@ -4,6 +4,7 @@ local SplashPageDefinitions = require("scripts/ui/views/splash_view/splash_view_
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local device_list = {
 	Keyboard,
 	Mouse,
@@ -16,6 +17,7 @@ SplashView.init = function (self, settings, context)
 
 	self._current_time = 0
 	self._time_between_pages = SplashPageDefinitions.time_between_pages
+	self._show_skip = false
 	self._total_duration = SplashPageDefinitions.duration
 	self._page_definitions = table.clone(SplashPageDefinitions.pages)
 	self._pass_draw = false
@@ -25,6 +27,21 @@ end
 
 SplashView.on_enter = function (self)
 	SplashView.super.on_enter(self)
+	self:_setup_input_legend()
+end
+
+SplashView._setup_input_legend = function (self)
+	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 100)
+	local legend_inputs = SplashPageDefinitions.legend_inputs
+
+	for i = 1, #legend_inputs do
+		local legend_input = legend_inputs[i]
+		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
+
+		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, function ()
+			return legend_input.visibility_function(self)
+		end, on_pressed_callback, legend_input.alignment)
+	end
 end
 
 SplashView.is_done = function (self)
@@ -127,6 +144,8 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 					if not entry.initialized then
 						entry.initialized = true
+						self._two_step_skip = page.two_step_skip or false
+						self._show_skip = false
 					end
 
 					if entry_type ~= "video" then
@@ -154,13 +173,15 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 						UIRenderer.draw_texture(ui_renderer, value, temp_position, size, color)
 					elseif entry_type == "video" and not self._splash_video_view_opened and not Managers.ui:is_view_closing("splash_video_view") then
 						local context = {
-							can_exit = false,
-							pass_input = true,
 							pass_draw = true,
+							pass_input = true,
 							debug_preview = true,
+							can_exit = false,
 							video_name = entry.video_name,
 							sound_name = entry.sound_name,
-							exit_sound_name = entry.exit_sound_name
+							exit_sound_name = entry.exit_sound_name,
+							size = entry.size,
+							position = entry.position
 						}
 						local view_name = "splash_video_view"
 
@@ -175,12 +196,16 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 				total_page_duration = total_page_duration + page_duration
 
 				for k = 1, i do
-					for j = 1, #page_definitions[k] do
-						local entry = page_definitions[k][j]
+					local page = page_definitions[k]
+
+					for j = 1, #page do
+						local entry = page[j]
 						local entry_type = entry.type
 
 						if entry.initialized then
 							entry.initialized = nil
+							self._two_step_skip = false
+							self._show_skip = false
 
 							if entry_type == "video" and self._splash_video_view_opened then
 								local view_name = "splash_video_view"
@@ -222,7 +247,7 @@ SplashView.on_skip_pressed = function (self)
 	self:_on_skip_pressed()
 end
 
-SplashView.update = function (self, dt, t)
+SplashView.update = function (self, dt, t, input_service)
 	if IS_XBS then
 		local input_device_list = InputUtils.input_device_list
 		local xbox_controllers = input_device_list.xbox_controller
@@ -230,7 +255,11 @@ SplashView.update = function (self, dt, t)
 		for i = 1, #xbox_controllers do
 			local xbox_controller = xbox_controllers[i]
 
-			if xbox_controller.active() and xbox_controller.any_pressed() then
+			if self._two_step_skip then
+				if xbox_controller.active() and xbox_controller.any_pressed() and not self._show_skip then
+					self._show_skip = true
+				end
+			elseif xbox_controller.active() and xbox_controller.any_pressed() then
 				self:_on_skip_pressed()
 			end
 		end
@@ -238,7 +267,11 @@ SplashView.update = function (self, dt, t)
 		for i = 1, #device_list do
 			local device = device_list[i]
 
-			if device and device.active and device.any_pressed() then
+			if self._two_step_skip then
+				if device and device.active and device.any_pressed() and not self._show_skip then
+					self._show_skip = true
+				end
+			elseif device and device.active and device.any_pressed() then
 				self:_on_skip_pressed()
 			end
 		end
@@ -252,7 +285,7 @@ SplashView.update = function (self, dt, t)
 		end
 	end
 
-	SplashView.super.update(self, dt, t)
+	SplashView.super.update(self, dt, t, input_service)
 end
 
 SplashView.on_exit = function (self)
@@ -262,6 +295,12 @@ SplashView.on_exit = function (self)
 		Managers.ui:close_view(view_name)
 
 		self._splash_video_view_opened = false
+	end
+
+	if self._input_legend_element then
+		self._input_legend_element = nil
+
+		self:_remove_element("input_legend")
 	end
 
 	SplashView.super.on_exit(self)

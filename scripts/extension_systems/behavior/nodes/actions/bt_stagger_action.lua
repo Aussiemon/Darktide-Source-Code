@@ -16,7 +16,8 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	scratchpad.current_triggered_stagger = num_triggered_staggers
 	local spawn_component = blackboard.spawn
 	scratchpad.physics_world = spawn_component.physics_world
-	local was_already_in_stagger = num_triggered_staggers > 1
+	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	local was_already_in_stagger = num_triggered_staggers > 1 and behavior_component.move_state == "stagger"
 
 	if not was_already_in_stagger then
 		local overlap_radius = DEFAULT_IN_AIR_MOVER_CHECK_RADIUS
@@ -34,7 +35,6 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 		scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
 	end
 
-	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	behavior_component.move_state = "stagger"
 	scratchpad.behavior_component = behavior_component
 	local stagger_type = stagger_component.type

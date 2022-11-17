@@ -1,6 +1,7 @@
 local PartyConstants = require("scripts/settings/network/party_constants")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local PlayerInfo = require("scripts/managers/data_service/services/social/player_info")
+local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
 local Promise = require("scripts/foundation/utilities/promise")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local PartyState = PartyConstants.State
@@ -23,7 +24,7 @@ SocialService.init = function (self, backend_interfaces)
 		local InvitesDummy = require("scripts/managers/data_service/services/invites/invites_dummy")
 		self._invites = InvitesDummy:new()
 	else
-		local platform = Managers.presence:presence_entry_myself():platform()
+		local platform = PresenceEntryMyself.get_platform()
 		self._platform = platform
 
 		if platform == Platforms.steam then
@@ -65,6 +66,8 @@ SocialService.init = function (self, backend_interfaces)
 	self._max_blocked_accounts = 0
 	self._blocked_players_list = {}
 	self._cb_presence_account_id_change = callback(self, "cb_presence_account_id_change")
+
+	Managers.event:register(self, "party_immaterium_other_members_updated", "_party_immaterium_other_members_updated")
 end
 
 SocialService.destroy = function (self)
@@ -76,6 +79,8 @@ SocialService.destroy = function (self)
 
 	self._invites = nil
 	self._backend_interfaces = nil
+
+	Managers.event:unregister(self, "party_immaterium_other_members_updated")
 end
 
 SocialService.update = function (self, dt, t)
@@ -94,9 +99,9 @@ SocialService.platform_display_name = function (self)
 	local platform = self._platform
 
 	if platform == Platforms.steam then
-		return "Steam"
+		return Localize("loc_platform_name_steam")
 	elseif platform == Platforms.xbox then
-		return "Xbox Live"
+		return Localize("loc_platform_name_xbox_live")
 	end
 
 	return ""
@@ -135,12 +140,10 @@ SocialService.fetch_party_members = function (self)
 		for unique_id_1, player_1 in pairs(temp_team_members) do
 			for unique_id_2, player_2 in pairs(temp_team_members) do
 				if unique_id_2 ~= unique_id_1 then
-					local player_1_profile = player_1:profile()
-					local player_2_profile = player_2:profile()
-					local player_1_character_id = player_1_profile and player_1_profile.character_id
-					local player_2_character_id = player_2_profile and player_2_profile.character_id
+					local player_1_account_id = player_1:account_id()
+					local player_2_account_id = player_2:account_id()
 
-					if player_1_character_id == player_2_character_id then
+					if player_1_account_id == player_2_account_id then
 						temp_team_members[unique_id_2] = nil
 					end
 				end
@@ -435,12 +438,6 @@ SocialService.can_join_party = function (self, player_info)
 		end
 	end
 
-	if self:is_in_mission() then
-		local reason = "loc_social_party_join_rejection_reason_you_are_in_mission"
-
-		return false, reason
-	end
-
 	local player_activity = player_info:player_activity_id()
 
 	if player_activity == "matchmaking" then
@@ -449,10 +446,30 @@ SocialService.can_join_party = function (self, player_info)
 		return false, reason
 	end
 
-	if self:is_in_matchmaking() then
-		local reason = "loc_social_party_join_rejection_reason_you_are_in_matchmaking"
+	local local_player_can_join, fail_reason = self:local_player_can_join_party()
+
+	if not local_player_can_join then
+		local reason = "unknown_reason"
+
+		if fail_reason == "in_mission" then
+			reason = "loc_social_party_join_rejection_reason_you_are_in_mission"
+		elseif fail_reason == "in_matchmaking" then
+			reason = "loc_social_party_join_rejection_reason_you_are_in_matchmaking"
+		end
 
 		return false, reason
+	end
+
+	return true
+end
+
+SocialService.local_player_can_join_party = function (self)
+	if self:is_in_mission() then
+		return false, "in_mission"
+	end
+
+	if self:is_in_matchmaking() then
+		return false, "in_matchmaking"
 	end
 
 	return true
@@ -513,7 +530,7 @@ SocialService.send_party_invite = function (self, invitee_player_info)
 
 	if player_online_status == OnlineStatus.online then
 		Managers.party_immaterium:invite_to_party(invitee_player_info:account_id()):catch(function (error)
-			_warning("invite_to_party failed with " .. table.tostring(error, 3))
+			_warning("invite_to_party failed with %s", table.tostring(error, 3))
 		end)
 	elseif player_online_status == OnlineStatus.platform_online then
 		local party_id = Managers.party_immaterium:party_id()
@@ -524,7 +541,7 @@ SocialService.send_party_invite = function (self, invitee_player_info)
 			Managers.party_immaterium:get_invite_code_for_platform_invite(platform, platform_user_id):next(function (invite_code)
 				self._invites:send_invite(platform_user_id, invite_code)
 			end):catch(function (error)
-				_warning("invite_platform_user_to_party failed with " .. table.tostring(error, 3))
+				_warning("invite_platform_user_to_party failed with %s", table.tostring(error, 3))
 			end)
 		end
 	end
@@ -1021,6 +1038,18 @@ SocialService.cb_presence_account_id_change = function (self, updated_player_inf
 	end
 
 	self._friends_list_has_changed = true
+end
+
+SocialService.update_recent_players = function (self, account_id)
+	self._platform_social:update_recent_players(account_id)
+end
+
+SocialService._party_immaterium_other_members_updated = function (self, other_immaterium_members)
+	for _, member in ipairs(other_immaterium_members) do
+		local account_id = member:account_id()
+
+		self:update_recent_players(account_id)
+	end
 end
 
 return SocialService

@@ -44,6 +44,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	local template_context = {
 		stack_count = 1,
 		world = context.world,
+		physics_world = context.physics_world,
 		wwise_world = context.wwise_world,
 		unit = context.unit,
 		player = context.player,
@@ -120,16 +121,14 @@ Buff._calculate_template_override_data = function (self, template_context)
 	local item_slot_name = template_context.item_slot_name
 
 	if item_slot_name then
-		self:_calculate_weapon_trait_override_data(override_data, item_slot_name, template_context.parent_buff_template)
+		self:_calculate_override_data(override_data, item_slot_name, template_context.parent_buff_template)
 	end
 
 	return override_data
 end
 
-local function _add_trait_overrides(trait_name, rarity, template_name, override_data, parent_buff_template_or_nil)
-	local trait = WeaponTraitTemplates[trait_name]
-
-	for buff_name, rarity_data in pairs(trait) do
+local function _add_overrides(overrides, rarity, template_name, override_data, parent_buff_template_or_nil)
+	for buff_name, rarity_data in pairs(overrides) do
 		local should_merge_overrides = buff_name == template_name or parent_buff_template_or_nil and parent_buff_template_or_nil == buff_name or false
 		local current_rarity_data = nil
 
@@ -147,7 +146,29 @@ local function _add_trait_overrides(trait_name, rarity, template_name, override_
 	end
 end
 
-Buff._calculate_weapon_trait_override_data = function (self, override_data, item_slot_name, parent_buff_template_or_nil)
+local function _add_overrides_from_item(traits, item_definitions, template_name, override_data, parent_buff_template_or_nil)
+	local num_traits = #traits
+
+	for i = 1, num_traits do
+		local data = traits[i]
+		local item_id = data.id
+		local rarity = data.rarity or 1
+		local item = item_definitions[item_id]
+
+		if item then
+			local trait_name = item.trait
+			local trait = WeaponTraitTemplates[trait_name]
+
+			if trait then
+				_add_overrides(trait, rarity, template_name, override_data, parent_buff_template_or_nil)
+			end
+		else
+			Log.warning("Buff", "Could not find item for trait %s when appplying buff %s", item_id, template_name)
+		end
+	end
+end
+
+Buff._calculate_override_data = function (self, override_data, item_slot_name, parent_buff_template_or_nil)
 	local template = self._template
 	local template_name = template.name
 	local player = self._player
@@ -156,24 +177,15 @@ Buff._calculate_weapon_trait_override_data = function (self, override_data, item
 	local use_override = debug_weapon_modifiers and not not debug_weapon_modifiers.traits
 
 	if not use_override then
-		local equiped_item = profile.visual_loadout[item_slot_name]
-		local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
+		local equiped_item = profile.loadout[item_slot_name]
 		local item_definitions = MasterItems.get_cached()
+		local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
 
-		for i = 1, #traits do
-			local trait = traits[i]
-			local trait_item_id = trait.id
-			local rarity = trait.rarity or 1
-			local trait_item = item_definitions[trait_item_id]
+		_add_overrides_from_item(traits, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
-			if trait_item then
-				local trait_name = trait_item.trait
+		local perks = equiped_item and equiped_item.perks or EMPTY_TABLE
 
-				_add_trait_overrides(trait_name, rarity, template_name, override_data, parent_buff_template_or_nil)
-			else
-				Log.warning("Buff", "Could not find item for trait %s when appplying buff %s", trait_item_id, template_name)
-			end
-		end
+		_add_overrides_from_item(perks, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 	else
 		local traits = debug_weapon_modifiers and debug_weapon_modifiers.traits or EMPTY_TABLE
 
@@ -181,8 +193,11 @@ Buff._calculate_weapon_trait_override_data = function (self, override_data, item
 			local trait_data = traits[i]
 			local trait_name = trait_data.name
 			local rarity = trait_data.rarity
+			local trait = WeaponTraitTemplates[trait_name]
 
-			_add_trait_overrides(trait_name, rarity, template_name, override_data, parent_buff_template_or_nil)
+			if trait then
+				_add_overrides(trait, rarity, template_name, override_data, parent_buff_template_or_nil)
+			end
 		end
 	end
 
@@ -283,6 +298,13 @@ Buff.is_negative = function (self)
 end
 
 Buff.inactive = function (self)
+	local template = self._template
+	local conditional_stat_buffs_func = template.conditional_stat_buffs_func
+
+	if conditional_stat_buffs_func and not conditional_stat_buffs_func(self._template_data, self._template_context) then
+		return true
+	end
+
 	return false
 end
 
@@ -299,6 +321,10 @@ Buff.is_predicted = function (self)
 	local is_predicted = template.predicted
 
 	return is_predicted
+end
+
+Buff.force_predicted_proc = function (self)
+	return false
 end
 
 Buff.stack_count = function (self)
@@ -325,6 +351,10 @@ Buff.visual_stack_count = function (self)
 		local resource = self._specialization_resource_component.current_resource
 
 		return resource
+	end
+
+	if template.visual_stack_count then
+		return template.visual_stack_count(self._template_data, self._template_context)
 	end
 
 	return self:stat_buff_stacking_count()
@@ -437,6 +467,12 @@ Buff.set_start_time = function (self, start_time)
 	if self._active_start_time then
 		self._active_start_time = start_time
 	end
+
+	local template = self._template
+
+	if template.duration then
+		self._finished = false
+	end
 end
 
 Buff.buff_lerp_value = function (self)
@@ -445,6 +481,10 @@ end
 
 Buff.item_slot_name = function (self)
 	return self._template_context.item_slot_name
+end
+
+Buff.parent_buff_template = function (self)
+	return self._template_context.parent_buff_template
 end
 
 Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
@@ -506,14 +546,15 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 			local template_override_data = self._template_override_data
 			local lerped_stat_buffs_overrides = template_override_data and template_override_data.lerped_stat_buffs
 			lerped_stat_buffs = lerped_stat_buffs_overrides or lerped_stat_buffs
-			local lerp_t = template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context)
+			local lerp_t = template.lerp_t_func and template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context) or self._template_context.buff_lerp_value
 
 			table.clear(self._lerped_stat_buffs)
 
-			for key, values in pairs(lerped_stat_buffs) do
-				local min = values.min
-				local max = values.max
-				local lerped_value = math.lerp(min, max, lerp_t)
+			for key, data in pairs(lerped_stat_buffs) do
+				local min = data.min
+				local max = data.max
+				local lerp_func = data.lerp_value_func or math.lerp
+				local lerped_value = lerp_func(min, max, lerp_t)
 				self._lerped_stat_buffs[key] = lerped_value
 			end
 
@@ -570,6 +611,10 @@ Buff.progressbar = function (self)
 	end
 
 	return nil
+end
+
+Buff.template_context = function (self)
+	return self._template_context
 end
 
 return Buff

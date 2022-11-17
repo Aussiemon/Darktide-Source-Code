@@ -1,9 +1,15 @@
 local cinematic_scene_templates = {
 	outro_fail = {
-		randomize_weapon = true,
+		is_skippable = false,
+		use_transition_ui = true,
 		local_player_only = false,
-		include_bots = true,
+		instant_black_screen_during_cutscene_loading = false,
 		music = "defeat",
+		hide_players = true,
+		set_random_weapon_event = false,
+		randomize_equipped_weapon = true,
+		include_bots = true,
+		mission_outro = false,
 		ignored_slots = {
 			"slot_unarmed",
 			"slot_primary",
@@ -13,6 +19,15 @@ local cinematic_scene_templates = {
 			"slot_support_ability",
 			"slot_combat_ability",
 			"slot_grenade_ability"
+		},
+		available_inventory_animation_events = {
+			"cin_ready",
+			"unready_idle",
+			"ready"
+		},
+		available_weapon_animation_events = {
+			"hero_walk_01",
+			"hero_walk_02"
 		}
 	}
 }

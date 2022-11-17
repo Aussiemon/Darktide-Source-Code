@@ -167,4 +167,24 @@ LoadingManager.spawn_group_id = function (self)
 	return nil
 end
 
+local function instant_easing_function()
+	return 1
+end
+
+LoadingManager.show_instant_black_screen = function (self)
+	local local_player = Managers.player:local_player(1)
+
+	Managers.event:trigger("event_cutscene_fade_in", local_player, 0.1, instant_easing_function)
+
+	self.black_screen = true
+end
+
+LoadingManager.hide_instant_black_screen = function (self)
+	local local_player = Managers.player:local_player(1)
+
+	Managers.event:trigger("event_cutscene_fade_out", local_player, 0.1, instant_easing_function)
+
+	self.black_screen = false
+end
+
 return LoadingManager

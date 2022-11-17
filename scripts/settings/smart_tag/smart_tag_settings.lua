@@ -22,14 +22,17 @@ local groups = {
 }
 local replies = {
 	ok = {
+		description = "loc_reply_smart_tag_ok",
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 		voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_yes
 	},
 	dibs = {
+		description = "loc_reply_smart_tag_dibs",
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 		voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_need_that
 	},
 	follow_you = {
+		description = "loc_reply_smart_tag_follow",
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 		voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_follow_you
 	}

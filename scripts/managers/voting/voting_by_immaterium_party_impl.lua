@@ -153,7 +153,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 			local abort_reason = "disappeared"
 			self._current_vote_state = "finished"
 
-			_info("Party Vote Aborted: " .. abort_reason)
+			_info("Party Vote Aborted: %s", abort_reason)
 			template.on_aborted(current_vote.id, template, current_vote.params, abort_reason)
 		end
 
@@ -170,7 +170,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 					local option = v.state:lower()
 
 					template.on_vote_casted(vote_id, template, k, option)
-					_info("Party Member Voted: " .. option)
+					_info("Party Member Voted: %s", option)
 
 					self._casted_votes[k] = true
 				end
@@ -182,7 +182,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 				self._current_vote_state = "finished"
 
 				if result == "approved" or result == "rejected" then
-					_info("Party Vote Completed: " .. result)
+					_info("Party Vote Completed: %s", result)
 					template.on_completed(vote_id, template, current_vote, result)
 
 					if DEDICATED_SERVER then
@@ -195,7 +195,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 						Managers.telemetry_events:vote_completed(template.name, result, votes)
 					end
 				else
-					_info("Party Vote Aborted: " .. result .. ":" .. abort_reason)
+					_info("Party Vote Aborted: %s:%s", result, abort_reason)
 					template.on_aborted(vote_id, template, current_vote.params, abort_reason)
 				end
 			end

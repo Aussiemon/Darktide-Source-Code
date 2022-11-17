@@ -26,6 +26,22 @@ local burninating_trait_templates = {
 			"stack_application_rate",
 			0.1
 		}
+	},
+	forcestaff_p2_m1_burninating_stat = {
+		{
+			"max_stacks",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"stack_application_rate",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
 	}
 }
 

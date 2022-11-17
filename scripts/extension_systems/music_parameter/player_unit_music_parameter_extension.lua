@@ -18,10 +18,13 @@ PlayerUnitMusicParameterExtension.init = function (self, extension_init_context,
 	self._health_percent = 0
 	self._intensity_percent = 0
 	self._tension_percent = 0
-	self._num_aggroed_minions_near = 0
 	self._locked_in_melee = false
 	self._update_horde_near_time = 0
 	self._horde_update_interval = 1
+	self._num_aggroed_minions_near = 0
+	self._next_aggroed_check = 0.123456
+	self._next_last_man_standing_check = 0.45678
+	self._max_aggro_count = WwiseGameSyncSettings.minion_aggro_intensity_settings.num_threshold_high
 	local is_server = extension_init_context.is_server
 
 	if not is_server then
@@ -103,6 +106,7 @@ PlayerUnitMusicParameterExtension._update_aggroed_minions_near = function (self,
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 	local unit_position = POSITION_LOOKUP[unit]
+	local max_count = self._max_aggro_count
 	local num_results = broadphase:query(unit_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
 	for i = 1, num_results do
@@ -111,6 +115,10 @@ PlayerUnitMusicParameterExtension._update_aggroed_minions_near = function (self,
 
 		if is_aggroed then
 			num_aggroed_minions_near = num_aggroed_minions_near + 1
+
+			if max_count <= num_aggroed_minions_near then
+				break
+			end
 		end
 	end
 
@@ -136,7 +144,7 @@ PlayerUnitMusicParameterExtension._shortest_horde_distance = function (self, pos
 end
 
 PlayerUnitMusicParameterExtension._update_horde_near = function (self, t)
-	if self._update_horde_near_time <= t then
+	if self._update_horde_near_time < t then
 		local ambush_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.ambush_horde)
 		local ambush_horde_near = self:_shortest_horde_distance(ambush_horde_positions) <= WwiseGameSyncSettings.ambush_horde_trigger_distance
 		local vector_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.far_vector_horde)
@@ -196,15 +204,25 @@ PlayerUnitMusicParameterExtension._update_last_man_standing = function (self)
 	self._last_man_standing = last_man_standing
 end
 
-PlayerUnitMusicParameterExtension.fixed_update = function (self, unit, dt, t)
+PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 	local game_session = self._game_session
 	local game_object_id = self._music_parameters_game_object_id
 	local attack_intensity_extension = self._attack_intensity_extension
 
 	self:_update_boss_near(unit)
 	self:_update_horde_near(t)
-	self:_update_last_man_standing()
-	self:_update_aggroed_minions_near(unit)
+
+	if self._next_last_man_standing_check < t then
+		self:_update_last_man_standing()
+
+		self._next_last_man_standing_check = t + 1
+	end
+
+	if self._next_aggroed_check < t then
+		self:_update_aggroed_minions_near(unit)
+
+		self._next_aggroed_check = t + 1
+	end
 
 	local health_percent = self._health_extension:current_health_percent()
 	local intensity_percent = attack_intensity_extension:total_intensity_percent()

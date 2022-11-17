@@ -130,7 +130,7 @@ ItemPreviewer.preview = function (self, resource, return_data)
 				if item_data.animation_event and item_data.animation_event ~= "" and Unit.has_animation_event(root_unit, item_data.animation_event) then
 					Unit.animation_event(root_unit, item_data.animation_event)
 				end
-			elseif item_data.item_type == "WEAPON_SKIN" then
+			elseif item_data.item_type == "WEAPON_SKIN" or item_data.item_type == "MATERIAL_OVERRIDES" then
 				local skin_data = item_data
 
 				if item_data.preview_item and item_data.preview_item ~= "" then

@@ -135,7 +135,7 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = "JUMP",
+			value = "",
 			style = action_text_style
 		}
 	}, "text_box"),
@@ -144,7 +144,7 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = "Press the new button for this action.",
+			value = "",
 			style = description_text_style
 		}
 	}, "description_text"),
@@ -153,7 +153,7 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = "[E]",
+			value = "",
 			style = value_text_style
 		}
 	}, "value_background")

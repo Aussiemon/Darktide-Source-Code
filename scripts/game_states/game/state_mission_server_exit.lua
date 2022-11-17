@@ -16,8 +16,6 @@ StateMissionServerExit.on_enter = function (self, parent, params, creation_conte
 		self._timeout = 0
 	end
 
-	self._requested_hub_session = false
-
 	Managers.presence:set_presence("end_of_round")
 end
 
@@ -40,14 +38,8 @@ StateMissionServerExit.update = function (self, dt)
 		end
 	end
 
-	if not DEDICATED_SERVER and GameParameters.prod_like_backend and not self._requested_hub_session then
-		self._requested_hub_session = true
-
-		Managers.party_immaterium:latched_hub_server_matchmaking():next(function (hub_session_id)
-			self._multiplayer_session = Managers.multiplayer_session:party_immaterium_hot_join_hub_server(hub_session_id)
-		end):catch(function (error)
-			self._multiplayer_session = Managers.multiplayer_session:party_immaterium_hot_join_hub_server()
-		end)
+	if not DEDICATED_SERVER and GameParameters.prod_like_backend and not self._multiplayer_session then
+		self._multiplayer_session = Managers.multiplayer_session:party_immaterium_hot_join_hub_server()
 	end
 
 	context.network_transmit_function()

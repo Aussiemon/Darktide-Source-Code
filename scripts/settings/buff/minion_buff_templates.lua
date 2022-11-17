@@ -59,6 +59,55 @@ local templates = {
 			buff_keywords.cultist_flamer_liquid_immunity
 		}
 	},
+	renegade_flamer_hit_by_flame = {
+		interval = 0.5,
+		predicted = false,
+		refresh_duration_on_stack = true,
+		max_stacks = 1,
+		duration = 1,
+		class_name = "interval_buff",
+		keywords = {
+			buff_keywords.burning
+		},
+		interval_func = function (template_data, template_context)
+			local unit = template_context.unit
+
+			if HEALTH_ALIVE[unit] then
+				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
+				local power_level_table = MinionDifficultySettings.power_level.renegade_flamer_on_hit_fire
+				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+			end
+		end,
+		minion_effects = {
+			ailment_effect = ailment_effects.burning,
+			node_effects = {
+				{
+					node_name = "j_spine",
+					vfx = {
+						material_emission = true,
+						particle_effect = "content/fx/particles/enemies/buff_burning",
+						orphaned_policy = "destroy",
+						stop_type = "stop"
+					},
+					sfx = {
+						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
+					}
+				}
+			}
+		}
+	},
+	renegade_flamer_liquid_immunity = {
+		unique_buff_id = "renegade_flamer_liquid_immunity",
+		class_name = "buff",
+		unique_buff_priority = 1,
+		keywords = {
+			buff_keywords.renegade_flamer_liquid_immunity
+		}
+	},
 	renegade_grenadier_liquid_immunity = {
 		unique_buff_id = "renegade_grenadier_liquid_immunity",
 		class_name = "buff",
@@ -143,7 +192,7 @@ templates.chaos_beast_of_nurgle_hit_by_vomit = {
 	refresh_duration_on_stack = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 3,
-	duration = 8,
+	duration = 10,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.beast_of_nurgle_vomit
@@ -152,13 +201,14 @@ templates.chaos_beast_of_nurgle_hit_by_vomit = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.6,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.8
+		[buff_stat_buffs.movement_speed] = 0.85,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_hit",
-		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_loop",
 		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		stop_type = "stop",
 		wwise_state = {
 			group = "swamped",
 			on_state = "on",

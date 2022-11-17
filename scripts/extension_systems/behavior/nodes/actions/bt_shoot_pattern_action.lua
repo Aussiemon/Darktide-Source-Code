@@ -167,10 +167,11 @@ BtShootPatternAction._shoot = function (self, unit, scratchpad, action_data)
 	local controlled_aim_position = scratchpad.controlled_aim_position:unbox()
 	local shoot_template = action_data.shoot_template
 	local fx_source_name = action_data.fx_source_name
-	local target_unit = scratchpad.perception_component.target_unit
+	local perception_component = scratchpad.perception_component
+	local target_unit = perception_component.target_unit
 	local world = scratchpad.world
 	local physics_world = scratchpad.physics_world
-	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, controlled_aim_position, shoot_template)
+	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, controlled_aim_position, shoot_template, nil, perception_component)
 
 	MinionAttack.trigger_shoot_sfx_and_vfx(unit, scratchpad, action_data, end_position)
 

@@ -27,8 +27,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						25,
-						30
+						27,
+						32
 					}
 				}
 			}
@@ -38,7 +38,7 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						32,
+						34,
 						38
 					}
 				}
@@ -49,8 +49,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						35,
-						42
+						40,
+						44
 					}
 				}
 			}
@@ -84,8 +84,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						25,
-						30
+						27,
+						32
 					}
 				}
 			}
@@ -95,7 +95,7 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						32,
+						34,
 						38
 					}
 				}
@@ -106,8 +106,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						35,
-						42
+						40,
+						44
 					}
 				}
 			}
@@ -233,8 +233,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						46,
-						58
+						30,
+						38
 					}
 				}
 			}
@@ -244,8 +244,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						58,
-						69
+						38,
+						42
 					}
 				}
 			}
@@ -255,8 +255,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						69,
-						75
+						42,
+						45
 					}
 				}
 			}
@@ -266,8 +266,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						75,
-						87
+						45,
+						50
 					}
 				}
 			}
@@ -277,8 +277,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						89,
-						97
+						50,
+						52
 					}
 				}
 			}
@@ -972,7 +972,7 @@ local horde_compositions = {
 			}
 		}
 	},
-	melee_terror_trickle = {
+	renegade_melee_terror_trickle = {
 		{
 			breeds = {
 				{
@@ -1110,7 +1110,7 @@ local horde_compositions = {
 			}
 		}
 	},
-	close_terror_trickle = {
+	renegade_close_terror_trickle = {
 		{
 			breeds = {
 				{
@@ -1156,7 +1156,7 @@ local horde_compositions = {
 			}
 		}
 	},
-	close_terror_trickle_elite = {
+	renegade_close_terror_trickle_elite = {
 		{
 			breeds = {
 				{
@@ -1230,7 +1230,7 @@ local horde_compositions = {
 			}
 		}
 	},
-	melee_terror_trickle_elite = {
+	renegade_melee_terror_trickle_elite = {
 		{
 			breeds = {
 				{
@@ -1299,6 +1299,52 @@ local horde_compositions = {
 					amount = {
 						1,
 						2
+					}
+				}
+			}
+		}
+	},
+	renegade_melee_low_terror_trickle = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						3,
+						4
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
 					}
 				}
 			}

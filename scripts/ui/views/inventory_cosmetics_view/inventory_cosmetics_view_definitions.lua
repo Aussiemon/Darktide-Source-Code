@@ -301,11 +301,11 @@ local widget_definitions = {
 	}, "display_name_divider"),
 	equip_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "equip_button", {
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
-		hotspot = {
-			on_pressed_sound = UISoundEvents.apparel_equip
-		}
+		hotspot = {}
 	})
 }
+local menu_zoom_out = "loc_inventory_menu_zoom_out"
+local menu_zoom_in = "loc_inventory_menu_zoom_in"
 local legend_inputs = {
 	{
 		input_action = "back",
@@ -314,22 +314,16 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		display_name = "loc_inventory_menu_zoom_out",
+		display_name = "loc_inventory_menu_zoom_in",
 		input_action = "hotkey_menu_special_1",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_camera_zoom_toggled",
-		visibility_function = function (parent)
-			local selected_slot = parent._selected_slot
+		visibility_function = function (parent, id)
+			local display_name = parent._camera_zoomed_in and menu_zoom_out or menu_zoom_in
 
-			if selected_slot then
-				local selected_slot_name = selected_slot.name
+			parent._input_legend_element:set_display_name(id, display_name)
 
-				if selected_slot_name == "slot_gear_head" or selected_slot_name == "slot_gear_upperbody" or selected_slot_name == "slot_gear_lowerbody" or selected_slot_name == "slot_gear_extra_cosmetic" then
-					return true
-				end
-			end
-
-			return false
+			return true
 		end
 	}
 }

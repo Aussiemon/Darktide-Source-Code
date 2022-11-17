@@ -156,7 +156,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 		local pellet_rotation = weapon_spread_extension:target_style_spread(rotation, num_pellets_fired, num_pellets_total, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random_roll, roll_offset)
 		local direction = Quaternion.forward(pellet_rotation)
 		local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_distance)
-		local hits = HitScan.raycast(self._physics_world, position, direction, max_distance, nil, "filter_player_character_shooting", rewind_ms)
+		local hits = HitScan.raycast(self._physics_world, position, direction, max_distance, nil, "filter_player_character_shooting_raycast", rewind_ms)
 
 		if hits then
 			local pellet_hit = self:_save_pellet_hits(hits, position, direction, max_distance, charge_level)
@@ -289,7 +289,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	local impact_config = damage_config.impact
 	local penetration_config = damage_config.penetration
 	local damage_profile = damage_config.impact.damage_profile
-	local damage_type = fire_config.damage_type
+	local damage_type = damage_config.impact.damage_type or fire_config.damage_type
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit)
 	local is_critical_strike = self._critical_strike_component.is_active
 	local saved_pellet_hits = self._saved_pellet_hits
@@ -587,6 +587,16 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 		end
 	end
 
+	local buff_name = damage_config.impact.buff_to_add
+
+	if buff_name then
+		local num_hits_per_unit = self._num_hits_per_unit
+
+		for hit_unit, number_of_hits in pairs(num_hits_per_unit) do
+			self:_add_shotshell_buff(hit_unit, player_unit, damage_config, weapon_item, number_of_hits, t)
+		end
+	end
+
 	for unit, num_hits in pairs(self._suppressed_hits_per_unit) do
 		local hit_positions_added = self._suppressed_hit_positions_per_unit[unit]
 		local average_hit_position = hit_positions_added / num_hits
@@ -605,6 +615,30 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	self._shot_result.killing_blow = killing_blow
 
 	return number_of_units_hit
+end
+
+ActionShootPellets._add_shotshell_buff = function (self, hit_unit, player_unit, damage_config, weapon_item, number_of_hit_pellets, t)
+	local impact = damage_config.impact
+	local buff_name = impact and impact.buff_to_add
+	local max_stacks = impact and impact.max_stacks or 31
+	local max_stack_per_attack = impact and impact.max_stack_per_attack or 31
+	local stacks_per_pellet = impact and impact.stacks_per_pellet or 1
+	local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+
+	if self._is_server and buff_name and buff_extension then
+		local number_of_stacks_to_add = math.min(max_stack_per_attack, math.round(number_of_hit_pellets * stacks_per_pellet))
+
+		for i = 1, number_of_stacks_to_add do
+			local current_stacks = buff_extension:current_stacks(buff_name)
+			local start_time_with_offset = t + math.random() * 0.3
+
+			if current_stacks < max_stacks then
+				buff_extension:add_internally_controlled_buff(buff_name, start_time_with_offset, "owner_unit", player_unit, "source_item", weapon_item)
+			elseif current_stacks == max_stacks then
+				buff_extension:refresh_duration_of_stacking_buff(buff_name, start_time_with_offset)
+			end
+		end
+	end
 end
 
 ActionShootPellets._can_play_impact_fx = function (self, hit_unit, num_impact_fx, max_hits_per_unit)
@@ -691,7 +725,7 @@ ActionShootPellets._scale_power_level_with_num_hits = function (self, shotshell_
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 		local breed_armor_type = Armor.armor_type(hit_unit, breed_or_nil)
-		local min_num_hits = breed_armor_type and shotshell_template.min_num_hits[breed_armor_type] or 0
+		local min_num_hits = shotshell_template.min_num_hits and breed_armor_type and shotshell_template.min_num_hits[breed_armor_type] or 0
 		local adjusted_num_unit_hits = math.max(min_num_hits, num_unit_hits)
 		local unit_power_level = power_level * adjusted_num_unit_hits / max_hits
 

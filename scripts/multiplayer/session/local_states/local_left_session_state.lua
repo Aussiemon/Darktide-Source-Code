@@ -14,7 +14,7 @@ LocalLeftSessionState.enter = function (self, reason)
 	}
 
 	if shared_state.has_joined_session then
-		local world = Application.main_world()
+		local world = Managers.world:world("level_world")
 		local physics_world = World.physics_world(world)
 
 		PhysicsWorld.fetch_queries(physics_world)

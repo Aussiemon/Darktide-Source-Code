@@ -43,31 +43,31 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
@@ -193,31 +193,31 @@ local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
@@ -334,31 +334,31 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_weapon_impact_plasma_husk",
+				event = "wwise/events/weapon/play_bullet_hits_plasmagun_gen_husk",
 				only_3p = true
 			}
 		},
@@ -490,10 +490,6 @@ local player = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_plasma",
-				hit_direction_interface = true
-			},
-			{
 				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated_husk",
 				only_3p = true
 			}
@@ -505,10 +501,6 @@ local player = {
 			}
 		},
 		shield_blocked = {
-			{
-				event = "wwise/events/player/play_bullet_hits_laser_damage_negated",
-				hit_direction_interface = true
-			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated_husk",
 				only_3p = true

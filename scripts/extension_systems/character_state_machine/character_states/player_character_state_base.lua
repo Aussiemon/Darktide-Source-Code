@@ -26,6 +26,7 @@ PlayerCharacterStateBase.init = function (self, character_state_init_context, na
 	self._lunge_character_state_component = character_state_init_context.lunge_character_state_component
 	self._stunned_character_state_component = character_state_init_context.stunned_character_state_component
 	self._weapon_action_component = character_state_init_context.weapon_action_component
+	self._combat_ability_action_component = character_state_init_context.combat_ability_action_component
 	self._sprint_character_state_component = character_state_init_context.sprint_character_state_component
 	self._inventory_component = character_state_init_context.inventory_component
 	self._character_state_component = character_state_init_context.character_state_component
@@ -90,7 +91,12 @@ PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y,
 	local drag_scale = nil
 
 	if use_drag then
-		drag_scale = math.max(predicted_speed / air_move_speed, 1)
+		if air_move_speed == 0 then
+			drag_scale = 1
+		else
+			drag_scale = math.max(predicted_speed / air_move_speed, 1)
+		end
+
 		local air_drag_angle = constants.air_drag_angle
 		local angle_scale = math.min(move_angle, air_drag_angle) / air_drag_angle
 		drag_scale = drag_scale * angle_scale
@@ -105,19 +111,24 @@ PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y,
 end
 
 PlayerCharacterStateBase._is_colliding_with_gameplay_collision_box = function (self, unit, collision_filter, capsule_radius, vertical_offset, use_world_up)
-	local physics_world = self._physics_world
-	local locomotion_component = self._locomotion_component
-	local locomotion_position = locomotion_component.position
-	local position = locomotion_position
-	local unit_rotation = Unit.world_rotation(unit, 1)
-	local rotation = Quaternion.look(Vector3.up(unit_rotation))
+	local position = self._locomotion_component.position
+	local rotation = nil
 
 	if use_world_up then
 		rotation = Quaternion.look(Vector3.up())
+	else
+		local unit_rotation = Unit.world_rotation(unit, 1)
+		rotation = Quaternion.look(Vector3.up(unit_rotation))
 	end
 
-	local mover = Unit.mover(unit)
-	local radius = capsule_radius or Mover.radius(mover)
+	local radius = nil
+
+	if capsule_radius then
+		radius = capsule_radius
+	else
+		local mover = Unit.mover(unit)
+		radius = Mover.radius(mover)
+	end
 
 	if vertical_offset then
 		local offset = Vector3(0, 0, vertical_offset)
@@ -128,7 +139,7 @@ PlayerCharacterStateBase._is_colliding_with_gameplay_collision_box = function (s
 	local min_capsule_height = radius * 1.01
 	local capsule_half_height = math.max(player_height * 0.5, min_capsule_height)
 	local size = Vector3(radius, capsule_half_height, radius)
-	local actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", collision_filter)
+	local actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", collision_filter)
 	local collided_actor = actors and actors[1]
 	local colliding = false
 	local collided_unit = nil
@@ -167,8 +178,7 @@ PlayerCharacterStateBase._should_climb_ladder = function (self, unit, t)
 	local bottom_node = Unit.node(ladder_unit, LADDER_BOTTOM_NODE)
 	local ladder_bottom_pos = Unit.world_position(ladder_unit, bottom_node)
 	local locomotion_component = self._locomotion_component
-	local locomotion_position = locomotion_component.position
-	local position = locomotion_position
+	local position = locomotion_component.position
 	local rotation = self._first_person_component.rotation
 	local player_forward_direction = Quaternion.forward(rotation)
 	local player_flat_forward_direction = Vector3.normalize(Vector3.flat(player_forward_direction))
@@ -201,12 +211,12 @@ PlayerCharacterStateBase._should_climb_ladder = function (self, unit, t)
 
 	if z_diff < Z_DIFF_EPSILON then
 		climb_state = ENTER_TOP_CLIMB_STATE
-	end
+	else
+		local is_looking_down = Vector3.dot(player_forward_direction, Vector3.down()) > 0.95
 
-	local is_looking_down = Vector3.dot(player_forward_direction, Vector3.down()) > 0.95
-
-	if climb_state ~= ENTER_TOP_CLIMB_STATE and is_looking_down and Mover.collides_down(Unit.mover(unit)) then
-		return false
+		if is_looking_down and Mover.collides_down(Unit.mover(unit)) then
+			return false
+		end
 	end
 
 	return true, ladder_unit, climb_state
@@ -248,15 +258,13 @@ end
 PlayerCharacterStateBase._update_move_method = function (self, movement_state_component, velocity_current, moving_backwards, wants_move, stopped, anim_extension, previous_frame_state)
 	local EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM = 0.0025000000000000005
 	local old_method = movement_state_component.method
-	local velocity = Vector3.length_squared(velocity_current)
 	local move_vector = self._input_extension:get("move")
-	local move = Vector3.length_squared(move_vector)
 	local move_method = nil
 
-	if (velocity < EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM or move == 0) and (old_method == "idle" or not wants_move) then
+	if (old_method == "idle" or not wants_move) and (Vector3.length_squared(velocity_current) < EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM or Vector3.length_squared(move_vector) == 0) then
 		move_method = "idle"
 	elseif stopped then
-		local velocity_flat_direction = Vector3.flat(Vector3.normalize(velocity_current))
+		local velocity_flat_direction = Vector3.normalize(Vector3.flat(velocity_current))
 		local unit_direction = Quaternion.forward(self._locomotion_component.rotation)
 		local dot = Vector3.dot(velocity_flat_direction, unit_direction)
 

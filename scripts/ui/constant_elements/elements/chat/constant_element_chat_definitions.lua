@@ -101,7 +101,9 @@ local widget_definitions = {
 			}
 		}
 	}, "chat_window"),
-	input_field = UIWidget.create_definition(TextInputPassTemplates.chat_input_field, "input_field"),
+	input_field = UIWidget.create_definition(TextInputPassTemplates.chat_input_field, "input_field", {
+		close_on_backspace = true
+	}),
 	chat_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.simple_scrollbar, "chat_scrollbar"),
 	chat_window_mask = UIWidget.create_definition({
 		{
@@ -195,12 +197,12 @@ local animations = {
 			start_time = 0,
 			end_time = ChatSettings.fade_time,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				local active = params.activate_input_field
 				local input_field_widget = widgets.input_field
-				input_field_widget.content.visible = true
+				local input_field_content = input_field_widget.content
+				local active = input_field_content.is_writing
+				input_field_content.visible = true
 				params.input_field_source = input_field_widget.alpha_multiplier or 0
 				params.input_field_target = active and 1 or 0
-				input_field_widget.content.is_writing = params.activate_input_field
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local eased_progress = math.easeCubic(progress)
@@ -211,7 +213,6 @@ local animations = {
 				local input_field = widgets.input_field
 				local input_field_content = input_field.content
 				input_field_content.visible = params.input_field_target > 0
-				input_field_content.is_writing = params.activate_input_field
 			end
 		}
 	}

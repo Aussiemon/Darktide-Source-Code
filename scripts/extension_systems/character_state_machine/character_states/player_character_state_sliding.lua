@@ -85,7 +85,8 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 
 	self._animation_extension:anim_event_1p("slide_out")
 
-	self._movement_state_component.is_dodging = false
+	local movement_state_component = self._movement_state_component
+	movement_state_component.is_dodging = false
 
 	if self._character_state_component.previous_state_name == "dodging" then
 		local specialization_dodge_template = self._specialization_dodge_template
@@ -94,6 +95,10 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	end
 
 	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
+
+	if next_state == "walking" and movement_state_component.is_crouching then
+		self._first_person_extension:set_wanted_player_height("crouch", 0.3)
+	end
 
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()

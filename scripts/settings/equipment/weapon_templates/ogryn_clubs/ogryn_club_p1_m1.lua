@@ -4,14 +4,16 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeOgrynClubP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p1")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local armor_types = ArmorSettings.types
@@ -19,6 +21,7 @@ local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local buff_stat_buffs = BuffSettings.stat_buffs
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
+local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
@@ -27,8 +30,8 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local stagger_duration_modifier_trait_templates = WeaponTraitTemplates[template_types.stagger_duration_modifier]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 }
 local hit_zone_priority = {
 	[hit_zone_names.head] = 2,
@@ -140,7 +143,7 @@ weapon_template.actions = {
 	},
 	action_left_light = {
 		damage_window_start = 0.43333333333333335,
-		hit_armor_anim = "attack_hit",
+		hit_armor_anim = "attack_hit_shield",
 		stagger_duration_modifier_template = "default",
 		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_shake",
@@ -223,29 +226,30 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0.15
+				0
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank,
 		damage_type = damage_types.shovel_heavy,
-		herding_template = HerdingTemplates.linesman_left_heavy
+		herding_template = HerdingTemplates.linesman_left_heavy,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_left_heavy = {
-		damage_window_start = 0.4,
-		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1_75",
-		first_person_hit_anim = "hit_left_shake",
+		damage_window_start = 0.23333333333333334,
+		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1",
+		first_person_hit_anim = "hit_down_shake",
 		range_mod = 1.25,
-		first_person_hit_stop_anim = "hit_left_shake",
+		first_person_hit_stop_anim = "hit_down_shake",
 		stagger_duration_modifier_template = "default",
 		allowed_during_sprint = true,
-		damage_window_end = 0.5333333333333333,
+		damage_window_end = 0.3333333333333333,
 		kind = "sweep",
 		attack_direction_override = "down",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_down",
-		total_time = 3,
+		total_time = 1.72,
 		action_movement_curve = {
 			{
 				modifier = 1.3,
@@ -274,19 +278,19 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.3
+				chain_time = 0.17
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85
+				chain_time = 0.5
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.7
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.7
+				chain_time = 0.4
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -308,7 +312,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_heavy_smiter,
 		damage_type = damage_types.shovel_heavy,
-		herding_template = HerdingTemplates.smiter_down
+		herding_template = HerdingTemplates.smiter_down,
+		wounds_shape = wounds_shapes.vertical_slash_coarse
 	},
 	action_melee_start_right = {
 		allowed_during_sprint = true,
@@ -368,7 +373,7 @@ weapon_template.actions = {
 	},
 	action_right_light = {
 		damage_window_start = 0.5,
-		hit_armor_anim = "attack_hit",
+		hit_armor_anim = "attack_hit_shield",
 		stagger_duration_modifier_template = "default",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
@@ -455,24 +460,25 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank,
 		damage_type = damage_types.shovel_heavy,
-		herding_template = HerdingTemplates.linesman_right_heavy
+		herding_template = HerdingTemplates.linesman_right_heavy,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_right_heavy = {
-		damage_window_start = 0.4666666666666667,
-		hit_armor_anim = "attack_hit",
-		stagger_duration_modifier_template = "default",
-		weapon_handling_template = "time_scale_1_5",
+		damage_window_start = 0.3,
+		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_anim = "hit_right_shake",
-		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
+		stagger_duration_modifier_template = "default",
 		range_mod = 1.25,
-		damage_window_end = 0.6,
+		kind = "sweep",
+		damage_window_end = 0.4,
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_right",
 		hit_stop_anim = "attack_hit",
-		total_time = 3,
+		total_time = 2,
 		action_movement_curve = {
 			{
 				modifier = 1.3,
@@ -492,17 +498,6 @@ weapon_template.actions = {
 			},
 			start_modifier = 1.5
 		},
-		powered_weapon_intensity = {
-			{
-				intensity = 1,
-				t = 0.8
-			},
-			{
-				intensity = 0,
-				t = 0.8
-			},
-			start_intensity = 1
-		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -515,15 +510,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.85
+				chain_time = 0.56
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.7
+				chain_time = 0.46
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.7
+				chain_time = 0.46
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -545,7 +540,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_heavy_tank,
 		damage_type = damage_types.shovel_heavy,
-		herding_template = HerdingTemplates.linesman_right_heavy
+		herding_template = HerdingTemplates.linesman_right_heavy,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
@@ -604,20 +600,20 @@ weapon_template.actions = {
 	},
 	action_left_light_2 = {
 		damage_window_start = 0.4666666666666667,
-		hit_armor_anim = "attack_hit",
+		hit_armor_anim = "attack_hit_shield",
 		stagger_duration_modifier_template = "default",
-		first_person_hit_anim = "hit_left_shake",
+		first_person_hit_anim = "hit_left_down_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_1_2",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		damage_window_end = 0.5666666666666667,
+		damage_window_end = 0.6,
 		attack_direction_override = "left",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_left_diagonal",
 		hit_stop_anim = "attack_hit",
-		total_time = 1.25,
+		total_time = 1,
 		action_movement_curve = {
 			{
 				modifier = 1,
@@ -661,15 +657,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85
+				chain_time = 0.7
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -691,22 +687,25 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_smiter,
 		damage_type = damage_types.shovel_heavy,
-		herding_template = HerdingTemplates.linesman_left_heavy
+		herding_template = HerdingTemplates.linesman_left_heavy,
+		wounds_shape = wounds_shapes.left_45_slash_coarse
 	},
 	action_special_uppercut = {
 		damage_window_start = 0.3333333333333333,
 		hit_armor_anim = "attack_hit",
 		start_input = "special_action",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_0_9",
-		attack_direction_override = "push",
-		anim_event_3p = "attack_special_uppercut",
-		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
-		damage_window_end = 0.4,
-		stagger_duration_modifier_template = "default",
-		anim_end_event = "attack_finished",
+		first_person_hit_anim = "hit_up_shake",
 		uninterruptible = true,
+		range_mod = 1.25,
+		stagger_duration_modifier_template = "default",
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "attack_hit",
+		attack_direction_override = "push",
+		damage_window_end = 0.4,
+		anim_end_event = "attack_finished",
+		weapon_handling_template = "time_scale_0_9",
+		anim_event_3p = "attack_special_uppercut",
 		anim_event = "attack_swing_punch",
 		total_time = 1,
 		action_movement_curve = {
@@ -719,15 +718,15 @@ weapon_template.actions = {
 				t = 0.2
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.2,
 				t = 0.25
 			},
 			{
-				modifier = 1.4,
+				modifier = 1,
 				t = 0.4
 			},
 			{
-				modifier = 1,
+				modifier = 0.8,
 				t = 0.5
 			},
 			{
@@ -781,9 +780,11 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
-		}
+		},
+		wounds_shape = wounds_shapes.default
 	},
 	action_block = {
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
@@ -841,15 +842,15 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		damage_window_start = 0.4,
-		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1_3",
+		damage_window_start = 0.36666666666666664,
+		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		stagger_duration_modifier_template = "default",
 		range_mod = 1.25,
 		kind = "sweep",
-		damage_window_end = 0.5333333333333333,
+		damage_window_end = 0.4666666666666667,
 		attack_direction_override = "left",
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right",
@@ -890,15 +891,15 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.65
+				chain_time = 0.5
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.95
+				chain_time = 0.75
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.95
+				chain_time = 0.75
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -911,7 +912,7 @@ weapon_template.actions = {
 			1.15
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_left",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/push_follow_up",
 			anchor_point_offset = {
 				0,
 				0,
@@ -920,7 +921,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank_followup,
 		damage_type = damage_types.blunt,
-		herding_template = HerdingTemplates.linesman_right_heavy_inverted
+		herding_template = HerdingTemplates.linesman_right_heavy_inverted,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_push = {
 		push_radius = 3,
@@ -964,6 +966,10 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.5
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.5
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -999,6 +1005,8 @@ weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8
 weapon_template.has_first_person_dodge_events = true
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
@@ -1016,7 +1024,7 @@ weapon_template.sprint_template = "ogryn"
 weapon_template.stamina_template = "tank"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "ogryn_club_p1_m1"
-weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_club
 weapon_template.base_stats = {
 	ogryn_club_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1172,6 +1180,10 @@ local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
 
 table.append(weapon_template.traits, melee_common_traits)
 
+local bespoke_ogryn_club_p1 = table.keys(WeaponTraitsBespokeOgrynClubP1)
+
+table.append(weapon_template.traits, bespoke_ogryn_club_p1)
+
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_crowd_control"
@@ -1200,159 +1212,7 @@ weapon_template.displayed_attacks = {
 	},
 	special = {
 		display_name = "loc_weapon_special_fist_attack",
-		type = "melee"
-	}
-}
-weapon_template.perks = {
-	ogryn_club_p1_m1_dps_perk = {
-		description = "loc_trait_description_ogryn_club_p1_m1_dps_perk",
-		display_name = "loc_trait_display_ogryn_club_p1_m1_dps_perk",
-		damage = {
-			action_left_light = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_light = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_left_light_2 = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_dps_perk
-			}
-		}
-	},
-	ogryn_club_p1_m1_armor_pierce_perk = {
-		description = "loc_trait_description_ogryn_club_p1_m1_armor_pierce_perk",
-		display_name = "loc_trait_display_ogryn_club_p1_m1_armor_pierce_perk",
-		damage = {
-			action_left_light = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_light = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_left_light_2 = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_armor_pierce_perk
-			}
-		}
-	},
-	ogryn_club_p1_m1_finesse_perk = {
-		description = "loc_trait_description_ogryn_club_p1_m1_finesse_perk",
-		display_name = "loc_trait_display_ogryn_club_p1_m1_finesse_perk",
-		damage = {
-			action_left_light = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_light = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_left_light_2 = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_finesse_perk
-			}
-		},
-		weapon_handling = {
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_light_2 = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_special_uppercut = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_perk
-			}
-		}
-	},
-	ogryn_club_p1_m1_first_target_perk = {
-		description = "loc_trait_description_ogryn_club_p1_m1_first_target_perk",
-		display_name = "loc_trait_display_ogryn_club_p1_m1_first_target_perk",
-		damage = {
-			action_left_light = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_right_light = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_left_light_2 = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.ogryn_club_first_target_perk
-			}
-		}
-	},
-	ogryn_club_p1_m1_mobility_perk = {
-		description = "loc_trait_description_ogryn_club_p1_m1_mobility_perk",
-		display_name = "loc_trait_display_ogryn_club_p1_m1_mobility_perk",
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_perk
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_perk
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
-			}
-		}
+		type = "melee_hand"
 	}
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee

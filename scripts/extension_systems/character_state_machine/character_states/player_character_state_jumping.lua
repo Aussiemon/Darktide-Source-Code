@@ -5,6 +5,7 @@ local HealthStateTransitions = require("scripts/extension_systems/character_stat
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local Stamina = require("scripts/utilities/attack/stamina")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local VCE = "jump_vce"
 local PlayerCharacterStateJumping = class("PlayerCharacterStateJumping", "PlayerCharacterStateBase")
@@ -14,6 +15,7 @@ PlayerCharacterStateJumping.init = function (self, ...)
 
 	local unit_data_ext = ScriptUnit.extension(self._unit, "unit_data_system")
 	self._sprint_character_state_component = unit_data_ext:write_component("sprint_character_state")
+	self._stamina_component = unit_data_ext:write_component("stamina")
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
@@ -61,6 +63,12 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 			local speed_mod = speed == 0 and 0 or 5 / math.max(speed, 5)
 			jump_velocity = Vector3(velocity_current.x * speed_mod, velocity_current.y * speed_mod, jump_speed)
 		end
+	end
+
+	if previous_state == "sprinting" then
+		local amount = 1
+
+		Stamina.drain(unit, amount, t)
 	end
 
 	locomotion_steering.velocity_wanted = jump_velocity
@@ -163,7 +171,7 @@ PlayerCharacterStateJumping._check_transition = function (self, unit, t, next_st
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 		local sprint_character_state_component = self._sprint_character_state_component
 
-		if Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+		if Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
 			if sprint_character_state_component.is_sprint_jumping then
 				next_state_params.disable_sprint_start_slowdown = true
 			end

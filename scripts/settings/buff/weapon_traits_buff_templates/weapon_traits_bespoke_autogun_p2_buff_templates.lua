@@ -1,0 +1,18 @@
+local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local keywords = BuffSettings.keywords
+local stat_buffs = BuffSettings.stat_buffs
+local proc_events = BuffSettings.proc_events
+local templates = {
+	weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill),
+	weapon_trait_bespoke_autogun_p2_count_as_dodge_vs_ranged_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.count_as_dodge_vs_ranged_on_close_kill),
+	weapon_trait_bespoke_autogun_p2_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill),
+	weapon_trait_bespoke_autogun_p2_increase_close_damage_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.increase_close_damage_on_close_kill)
+}
+templates.weapon_trait_bespoke_autogun_p2_increase_close_damage_on_close_kill.active_duration = 1.75
+templates.weapon_trait_bespoke_autogun_p2_reload_speed_on_slide = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_slide)
+templates.weapon_trait_bespoke_autogun_p2_increased_sprint_speed = table.clone(BaseWeaponTraitBuffTemplates.increased_sprint_speed)
+
+return templates

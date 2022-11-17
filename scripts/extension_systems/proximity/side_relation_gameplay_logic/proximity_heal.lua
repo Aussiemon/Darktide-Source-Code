@@ -79,8 +79,8 @@ ProximityHeal.update = function (self, dt, t)
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
 		if health_extension then
-			local damaged_max_health = health_extension:damaged_max_health()
-			local heal_amount = damaged_max_health * heal_percentage * heal_amount_modifier
+			local max_health = health_extension:max_health()
+			local heal_amount = max_health * heal_percentage * heal_amount_modifier
 			local health_added = Health.add(unit, heal_amount, heal_type)
 			amount_healed_this_tick = amount_healed_this_tick + health_added
 
@@ -91,7 +91,7 @@ ProximityHeal.update = function (self, dt, t)
 				local extra_heal_percentage = heal_percentage * heal_modifier - heal_percentage
 
 				if extra_heal_percentage > 0 then
-					local extra_heal_amount = damaged_max_health * extra_heal_percentage
+					local extra_heal_amount = max_health * extra_heal_percentage
 					local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
 				end
 			end

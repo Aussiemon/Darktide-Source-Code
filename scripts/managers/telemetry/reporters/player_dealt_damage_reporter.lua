@@ -29,7 +29,8 @@ local function extract_data(entry)
 		attack_type = entry.attack_type,
 		weapon = entry.weapon,
 		damage_profile = entry.damage_profile,
-		damage = entry.damage
+		damage = entry.damage,
+		actual_damage = entry.actual_damage
 	}
 end
 
@@ -42,6 +43,7 @@ PlayerDealtDamageReporter.register_event = function (self, player, data)
 		for _, entry in pairs(entries) do
 			if compare_entry(entry, data) then
 				entry.damage = entry.damage + data.damage
+				entry.actual_damage = entry.actual_damage + data.actual_damage
 				entry.observations = entry.observations + 1
 
 				return

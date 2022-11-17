@@ -141,6 +141,12 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/pilot_a",
 		player_voice = false
 	},
+	purser_a = {
+		full_name = "loc_npc_full_name_purser_a",
+		short_name = "loc_npc_short_name_purser_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	explicator_a = {
 		full_name = "loc_npc_full_name_explicator_a",
 		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/explicator_a_small",
@@ -166,6 +172,12 @@ local dialogue_speaker_voice_settings = {
 	interrogator_a = {
 		full_name = "loc_npc_full_name_interrogator_a",
 		short_name = "loc_npc_short_name_interrogator_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	shipmistress_a = {
+		full_name = "loc_npc_full_name_shipmistress_a",
+		short_name = "loc_npc_short_name_shipmistress_a",
 		subtitles_enabled = true,
 		player_voice = false
 	},
@@ -211,9 +223,15 @@ local dialogue_speaker_voice_settings = {
 		subtitles_enabled = true,
 		player_voice = false
 	},
-	credit_store_servitor_a = {
+	credit_store_servitor_b = {
 		full_name = "loc_npc_full_name_credit_store_servitor_a",
 		short_name = "loc_npc_short_name_credit_store_servitor_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	credit_store_servitor_c = {
+		full_name = "loc_npc_full_name_credit_store_servitor_c",
+		short_name = "loc_npc_short_name_credit_store_servitor_c",
 		subtitles_enabled = true,
 		player_voice = false
 	},
@@ -382,6 +400,56 @@ local dialogue_speaker_voice_settings = {
 	enemy_captain_brute_a = {
 		full_name = "loc_npc_full_name_enemy_captain_brute_a",
 		short_name = "loc_npc_short_name_enemy_captain_brute_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	crowd_a = {
+		short_name = "loc_npc_short_name_crowd_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	servitor_female_a = {
+		short_name = "loc_npc_short_name_servitor_female_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	servitor_male_a = {
+		short_name = "loc_npc_short_name_servitor_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	medicae_servitor_a = {
+		short_name = "loc_npc_short_name_medicae_servitor_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_a = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_female_a = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_female_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_b = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_b",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_f = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_f",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_initiate_a = {
+		short_name = "loc_npc_short_name_mourningstar_initiate_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	barber_a = {
+		short_name = "loc_npc_short_name_barber-chirurgeon_a",
 		subtitles_enabled = true,
 		player_voice = false
 	}

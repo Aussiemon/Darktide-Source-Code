@@ -49,10 +49,9 @@ local COMBAT = {
 		action_data = action_data.shoot_spray_n_pray
 	},
 	{
-		"BtRangedFollowTargetAction",
-		name = "ranged_follow",
-		condition = "dont_have_clear_shot",
-		action_data = action_data.ranged_follow
+		"BtMoveToCombatVectorAction",
+		name = "move_to_combat_vector",
+		action_data = action_data.move_to_combat_vector
 	},
 	{
 		"BtMoveToCombatVectorAction",

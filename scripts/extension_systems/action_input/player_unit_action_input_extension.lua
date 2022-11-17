@@ -8,6 +8,12 @@ PlayerUnitActionInputExtension.init = function (self, extension_init_context, un
 	self._disabled = extension_init_data.is_social_hub
 end
 
+PlayerUnitActionInputExtension.on_reload = function (self, ...)
+	for id, action_input_parser in pairs(self._action_input_parsers) do
+		action_input_parser:on_reload(...)
+	end
+end
+
 PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
 	local weapon_extension = ScriptUnit.extension(unit, "weapon_system")

@@ -1,8 +1,10 @@
 local InputUtils = require("scripts/managers/input/input_utils")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local BaseView = class("BaseView")
 
 BaseView.init = function (self, definitions, settings)
@@ -21,6 +23,10 @@ BaseView.init = function (self, definitions, settings)
 	self.view_name = view_name
 	local on_load_callback = callback(self, "_on_view_load_complete", true)
 	self._should_unload = Managers.ui:load_view(view_name, self.__class_name, on_load_callback)
+end
+
+BaseView.dialogue_system = function (self)
+	return nil
 end
 
 BaseView._register_event = function (self, event_name, function_name)
@@ -153,12 +159,12 @@ BaseView._is_animation_active = function (self, animation_id)
 	return self._ui_sequence_animator:is_animation_active(animation_id)
 end
 
-BaseView._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed)
+BaseView._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed, delay)
 	speed = speed or 1
 	widgets = widgets or self._widgets_by_name
 	local scenegraph_definition = self._definitions.scenegraph_definition
 	local ui_sequence_animator = self._ui_sequence_animator
-	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed, callback)
+	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed, callback, delay)
 
 	return animation_id
 end
@@ -269,7 +275,7 @@ BaseView.trigger_resolution_update = function (self)
 	self._update_scenegraph = nil
 end
 
-BaseView._set_scenegraph_position = function (self, id, x, y, z)
+BaseView._set_scenegraph_position = function (self, id, x, y, z, horizontal_alignment, vertical_alignment)
 	local ui_scenegraph = self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local position = scenegraph.position
@@ -286,6 +292,8 @@ BaseView._set_scenegraph_position = function (self, id, x, y, z)
 		position[3] = z
 	end
 
+	scenegraph.horizontal_alignment = horizontal_alignment or scenegraph.horizontal_alignment
+	scenegraph.vertical_alignment = vertical_alignment or scenegraph.vertical_alignment
 	self._update_scenegraph = true
 end
 
@@ -481,6 +489,14 @@ BaseView._text_size = function (self, text, font_type, font_size, optional_size,
 	local ui_renderer = self._ui_renderer
 
 	return UIRenderer.text_size(ui_renderer, text, font_type, font_size, optional_size, options)
+end
+
+BaseView._text_size_for_style = function (self, text, text_style, optional_size)
+	optional_size = optional_size or text_style.size
+	local text_options = UIFonts.get_font_options_by_style(text_style)
+	local ui_renderer = self._ui_renderer
+
+	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, optional_size, text_options)
 end
 
 BaseView._play_sound = function (self, event_name)

@@ -139,7 +139,7 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.1,
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
@@ -681,7 +681,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 2
+			ranged = 0.5
 		},
 		shoot_template = BreedShootTemplates.cultist_assault_default
 	},
@@ -763,7 +763,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 1.25
+			ranged = 0.5
 		},
 		cooldown_anim_events = {
 			"idle",
@@ -834,7 +834,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 1
+			ranged = 0.5
 		},
 		cooldown_anim_events = {
 			"idle",
@@ -1101,7 +1101,7 @@ local action_data = {
 				equip_sword = 0.2833333333333333
 			},
 			switch_anim_durations = {
-				equip_sword = 0.5833333333333334
+				equip_sword = 0.5
 			}
 		},
 		slot_ranged_weapon = {
@@ -1112,7 +1112,7 @@ local action_data = {
 				equip_gun = 0.2
 			},
 			switch_anim_durations = {
-				equip_gun = 0.8333333333333334
+				equip_gun = 0.4
 			}
 		}
 	},
@@ -1249,7 +1249,7 @@ local action_data = {
 			aim_crouching = "crouching"
 		},
 		attack_intensities = {
-			ranged = 1
+			ranged = 0.5
 		},
 		idle_anim_events = {
 			"idle",
@@ -1293,7 +1293,7 @@ local action_data = {
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
-			ranged = 1.25
+			ranged = 0.5
 		},
 		shoot_template = BreedShootTemplates.cultist_assault_default,
 		stagger_type_reduction = {

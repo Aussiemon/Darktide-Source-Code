@@ -30,6 +30,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	local xy_extents = math.min(max_liquid + EXTRA_XY_EXTENTS, MAX_XY_EXTENTS)
 	self._grid = HexGrid:new(nav_mesh_position, xy_extents, Z_EXTENTS, cell_size, Z_CELL_SIZE)
 	self._cell_radius = cell_size / 2
+	self._ignore_bot_threat = template.ignore_bot_threat
 	self._liquid_paint_id = extension_init_data.optional_liquid_paint_id
 	local t = Managers.time:time("gameplay")
 	self._time_to_remove = t + template.life_time
@@ -79,7 +80,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	if nav_cost_map_name then
 		self._nav_cost_map_cost = template.nav_cost_map_cost
 		self._nav_cost_map_id = Managers.state.nav_mesh:nav_cost_map_id(nav_cost_map_name)
-		self._nav_cost_map_volume_uses_broadphase_radius = template.nav_cost_map_volume_uses_broadphase_radius
+		self._nav_cost_map_volume_uses_cells = template.nav_cost_map_volume_uses_cells
 	end
 
 	local bot_players = Managers.player:bot_players()
@@ -260,18 +261,9 @@ LiquidAreaExtension._set_filled = function (self, real_index)
 	self._num_filled_liquid = self._num_filled_liquid + 1
 	local nav_cost_map_id = self._nav_cost_map_id
 
-	if nav_cost_map_id and not self._nav_cost_map_volume_uses_broadphase_radius then
+	if nav_cost_map_id and self._nav_cost_map_volume_uses_cells then
 		local nav_cost_map_volume_id = Managers.state.nav_mesh:add_nav_cost_map_sphere_volume(position, self._cell_radius, self._nav_cost_map_cost, nav_cost_map_id)
 		liquid.nav_cost_map_volume_id = nav_cost_map_volume_id
-	end
-
-	if self._bot_group then
-		local shape = "sphere"
-		local size = self._cell_radius
-		local rotation = Quaternion.identity()
-		local duration = 1
-
-		self._bot_group:aoe_threat_created(position, shape, size, rotation, duration)
 	end
 
 	local flow_angle = liquid.angle
@@ -354,19 +346,19 @@ LiquidAreaExtension.destroy = function (self)
 	if nav_cost_map_id then
 		local nav_mesh_manager = Managers.state.nav_mesh
 
-		if self._nav_cost_map_volume_uses_broadphase_radius then
-			local existing_broadphase_nav_cost_volume_id = self._broadphase_nav_cost_map_volume_id
-
-			if existing_broadphase_nav_cost_volume_id then
-				nav_mesh_manager:remove_nav_cost_map_volume(existing_broadphase_nav_cost_volume_id, nav_cost_map_id)
-			end
-		else
+		if self._nav_cost_map_volume_uses_cells then
 			for _, liquid in pairs(self._flow) do
 				local volume_id = liquid.nav_cost_map_volume_id
 
 				if volume_id then
 					nav_mesh_manager:remove_nav_cost_map_volume(volume_id, nav_cost_map_id)
 				end
+			end
+		else
+			local existing_broadphase_nav_cost_volume_id = self._broadphase_nav_cost_map_volume_id
+
+			if existing_broadphase_nav_cost_volume_id then
+				nav_mesh_manager:remove_nav_cost_map_volume(existing_broadphase_nav_cost_volume_id, nav_cost_map_id)
 			end
 		end
 	end
@@ -406,6 +398,16 @@ LiquidAreaExtension.update = function (self, unit, dt, t, context, listener_posi
 		self:_calculate_broadphase_size()
 
 		self._recalculate_broadphase_size = false
+
+		if self._flow_done and self._bot_group and not self._ignore_bot_threat then
+			local shape = "sphere"
+			local size = self._broadphase_radius
+			local rotation = Quaternion.identity()
+			local duration = self._broadphase_radius * 0.5
+			local position = POSITION_LOOKUP[unit]
+
+			self._bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+		end
 	end
 
 	self:_update_collision_detection(t)
@@ -668,7 +670,7 @@ LiquidAreaExtension._calculate_broadphase_size = function (self)
 	self._broadphase_radius = math.sqrt(max_distance_sq)
 	local nav_cost_map_id = self._nav_cost_map_id
 
-	if nav_cost_map_id and self._nav_cost_map_volume_uses_broadphase_radius then
+	if nav_cost_map_id and not self._nav_cost_map_volume_uses_cells then
 		local nav_mesh_manager = Managers.state.nav_mesh
 		local existing_broadphase_nav_cost_map_volume_id = self._broadphase_nav_cost_map_volume_id
 

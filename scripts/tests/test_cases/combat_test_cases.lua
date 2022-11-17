@@ -3,65 +3,65 @@ CombatTestCases = {}
 local base_talents = {
 	veteran_1 = {},
 	veteran_2 = {
-		"veteran_2_combat",
-		"veteran_2_frag_grenade",
-		"veteran_2_base_1",
-		"veteran_2_base_2",
-		"veteran_2_base_3"
+		veteran_2_base_3 = true,
+		veteran_2_base_2 = true,
+		veteran_2_base_1 = true,
+		veteran_2_combat = true,
+		veteran_2_frag_grenade = true
 	},
 	veteran_3 = {
-		"veteran_3_grenade",
-		"veteran_3_combat",
-		"veteran_3_base_1",
-		"veteran_3_base_2",
-		"veteran_3_base_3",
-		"veteran_3_base_4"
+		veteran_3_base_3 = true,
+		veteran_3_base_2 = true,
+		veteran_3_combat = true,
+		veteran_3_base_1 = true,
+		veteran_3_grenade = true,
+		veteran_3_base_4 = true
 	},
 	ogryn_1 = {
-		"ogryn_1_combat",
-		"ogryn_1_grenade",
-		"ogryn_1_base_1",
-		"ogryn_1_base_2",
-		"ogryn_1_base_3",
-		"ogryn_1_base_4"
+		ogryn_1_grenade = true,
+		ogryn_1_base_1 = true,
+		ogryn_1_base_2 = true,
+		ogryn_1_combat = true,
+		ogryn_1_base_3 = true,
+		ogryn_1_base_4 = true
 	},
 	ogryn_2 = {
-		"ogryn_2_combat_ability",
-		"ogryn_2_charge_buff",
-		"ogryn_2_grenade",
-		"ogryn_2_base_1",
-		"ogryn_2_base_2",
-		"ogryn_2_base_3",
-		"ogryn_2_base_4"
+		ogryn_2_grenade = true,
+		ogryn_2_combat_ability = true,
+		ogryn_2_base_1 = true,
+		ogryn_2_base_3 = true,
+		ogryn_2_base_2 = true,
+		ogryn_2_base_4 = true,
+		ogryn_2_charge_buff = true
 	},
 	ogryn_3 = {},
 	zealot_1 = {
-		"zealot_1_combat",
-		"zealot_1_base_1",
-		"zealot_1_base_2",
-		"zealot_1_base_3"
+		zealot_1_base_1 = true,
+		zealot_1_base_2 = true,
+		zealot_1_base_3 = true,
+		zealot_1_combat = true
 	},
 	zealot_2 = {
-		"zealot_2_combat",
-		"zealot_2_shock_grenade",
-		"zealot_2_base_1",
-		"zealot_2_base_2",
-		"zealot_2_base_3",
-		"zealot_2_base_4"
+		zealot_2_base_3 = true,
+		zealot_2_base_2 = true,
+		zealot_2_base_4 = true,
+		zealot_2_shock_grenade = true,
+		zealot_2_combat = true,
+		zealot_2_base_1 = true
 	},
 	zealot_3 = {},
 	psyker_1 = {
-		"psyker_1_combat",
-		"psyker_1_base_1",
-		"psyker_1_base_2",
-		"psyker_1_base_3"
+		psyker_1_combat = true,
+		psyker_1_base_2 = true,
+		psyker_1_base_1 = true,
+		psyker_1_base_3 = true
 	},
 	psyker_2 = {
-		"psyker_2_combat",
-		"psyker_2_smite",
-		"psyker_2_base_1",
-		"psyker_2_base_2",
-		"psyker_2_base_3"
+		psyker_2_combat = true,
+		psyker_2_base_2 = true,
+		psyker_2_base_1 = true,
+		psyker_2_smite = true,
+		psyker_2_base_3 = true
 	},
 	psyker_3 = {}
 }
@@ -102,9 +102,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 			condition = num_peers <= 4,
 			message = "The number of peers has been set to " .. num_peers .. ". You can't have more than 4 peers!"
 		}
-
-		Testify:make_request("num_peers_assert", assert_data)
-
 		local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
 
 		if output then
@@ -171,8 +168,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 		while not Testify:make_request("end_conditions_met") and main_path_point < total_main_path_distance do
 			assert_data.condition = Testify:make_request("players_are_alive")
-
-			Testify:make_request("player_died_assert", assert_data)
 
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
 				Testify:make_request("memory_usage", memory_usage_measurement_count)
@@ -509,15 +504,32 @@ CombatTestCases.gib_all_minions = function (case_settings)
 		local breeds = Testify:make_request("all_breeds")
 		local breed_side = 2
 		local player_current_position = Testify:make_request("player_current_position")
-		local distance = 8
-		local minion_spawn_position = {
-			x = player_current_position.x + distance,
-			y = player_current_position.y + distance,
-			z = player_current_position.z + 0.1
-		}
+		local num_edges = 36
+		local angle_offset = 2 * math.pi / num_edges
+		local distance = 10
+		local spawn_positions = {}
+
+		for i = 1, num_edges do
+			local angle = angle_offset * i
+			local spawn_position_offset = {
+				z = 0.2,
+				x = math.cos(angle) * distance,
+				y = math.sin(angle) * distance
+			}
+			spawn_positions[i] = {
+				x = player_current_position.x + spawn_position_offset.x,
+				y = player_current_position.y + spawn_position_offset.y,
+				z = player_current_position.z + spawn_position_offset.z
+			}
+		end
+
+		local spawn_index = 1
 
 		local function _run_gib(minion_data, hit_zone_name, gibbing_type, gib_settings)
 			local breed_name = minion_data.breed_name
+			spawn_index = num_edges < spawn_index and 1 or spawn_index
+			minion_data.spawn_position = spawn_positions[spawn_index]
+			spawn_index = spawn_index + 1
 			local minion_unit = Testify:make_request("spawn_minion", minion_data)
 			local is_minion_alive = nil
 			local minion_time_of_spawn = os.clock()
@@ -564,8 +576,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 					local minion_data = {
 						breed = breed,
 						breed_name = breed_name,
-						breed_side = breed_side,
-						spawn_position = minion_spawn_position
+						breed_side = breed_side
 					}
 
 					for hit_zone_name, data in pairs(gib_template) do
@@ -588,6 +599,8 @@ CombatTestCases.gib_all_minions = function (case_settings)
 				end
 			end
 		end
+
+		TestifySnippets.wait(2)
 
 		if string.value_or_nil(result) == nil then
 			result = "Success"

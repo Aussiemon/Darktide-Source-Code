@@ -120,6 +120,7 @@ Assist.reset = function (self)
 	self._assisted_state_input_component.in_progress = false
 	self._assisted_state_input_component.success = false
 	self._assisted_state_input_component.force_assist = false
+	self._force_assist_timer = 0
 end
 
 Assist.in_progress = function (self)
@@ -144,12 +145,12 @@ Assist._synchronize_interaction_duration = function (self)
 end
 
 Assist._update_force_assist = function (self, dt)
-	if self._self_assist_timer <= FORCE_ASSIST_TIME then
-		self._self_assist_timer = self._self_assist_timer + dt
+	if self._force_assist_timer <= FORCE_ASSIST_TIME then
+		self._force_assist_timer = self._force_assist_timer + dt
 
 		return false
 	else
-		self._self_assist_timer = 0
+		self._force_assist_timer = 0
 		self._assisted_state_input_component.force_assist = false
 
 		return true

@@ -8,7 +8,7 @@ local hud_element_mission_objective_feed_settings = {
 		40
 	},
 	events = {
-		event_add_mission_objective = "_add_objective",
+		event_add_mission_objective = "event_add_objective",
 		event_remove_mission_objective = "_remove_objective"
 	},
 	colors_by_mission_type = {

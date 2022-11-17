@@ -7,6 +7,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local WeaponTraitsBespokeStubrevolverP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")
@@ -19,6 +20,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
@@ -322,7 +324,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -364,7 +366,7 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
@@ -391,7 +393,7 @@ weapon_template.actions = {
 		}
 	},
 	action_start_reload = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1_1",
@@ -475,7 +477,7 @@ weapon_template.actions = {
 		anim_end_event = "reload_cancel",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1",
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		allowed_during_sprint = true,
 		abort_sprint = true,
 		uninterruptible = false,
@@ -680,9 +682,8 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.push_psyker_outer,
 		outer_damage_type = damage_types.physical,
 		fx = {
-			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push",
-			fx_source = "head",
-			fx_position_offset = Vector3Box(0, 2, 0)
+			fx_source = "fx_left_hand",
+			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push"
 		}
 	},
 	action_pistol_whip = {
@@ -765,7 +766,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.punch,
+		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.weapon_special_push
 	},
 	action_pistol_whip_followup = {
@@ -855,7 +856,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.punch,
+		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.weapon_special_push
 	},
 	action_inspect = {
@@ -885,10 +886,11 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.45
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
@@ -1040,6 +1042,9 @@ weapon_template.toughness_template = "assault"
 weapon_template.can_use_while_vaulting = true
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.hipfire_inputs = {
+	shoot_pressed = true
+}
 weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 
@@ -1076,10 +1081,6 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee_hand"
 	}
-}
-weapon_template.displayed_attack_ranges = {
-	max = 0,
-	min = 0
 }
 
 return weapon_template

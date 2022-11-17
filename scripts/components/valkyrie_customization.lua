@@ -143,6 +143,10 @@ ValkyrieCustomization.fx_takeoff = function (self)
 	Unit.flow_event(self._body_unit, "fx_takeoff")
 end
 
+ValkyrieCustomization.fx_takeoff_intro = function (self)
+	Unit.flow_event(self._body_unit, "fx_takeoff_intro")
+end
+
 ValkyrieCustomization.fx_lift = function (self)
 	Unit.flow_event(self._body_unit, "fx_lift")
 end
@@ -176,7 +180,7 @@ ValkyrieCustomization.component_data = {
 		ui_type = "resource",
 		preview = true,
 		category = "Parts",
-		value = "",
+		value = "content/environment/artsets/imperial/global/props/machinery/valkyrie/valkyrie_01",
 		ui_name = "Body",
 		filter = "unit"
 	},
@@ -280,7 +284,7 @@ ValkyrieCustomization.component_data = {
 		ui_type = "resource",
 		preview = true,
 		category = "Parts",
-		value = "",
+		value = "content/environment/artsets/imperial/global/props/machinery/valkyrie/valkyrie_wingflaps_01",
 		ui_name = "Wingflaps",
 		filter = "unit"
 	},
@@ -424,6 +428,10 @@ ValkyrieCustomization.component_data = {
 	},
 	inputs = {
 		fx_takeoff = {
+			accessibility = "public",
+			type = "event"
+		},
+		fx_takeoff_intro = {
 			accessibility = "public",
 			type = "event"
 		},

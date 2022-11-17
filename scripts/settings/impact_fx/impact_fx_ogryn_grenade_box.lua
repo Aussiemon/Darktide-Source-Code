@@ -690,8 +690,15 @@ local default_surface_fx = {
 			event = "wwise/events/weapon/play_ogryn_grenade_crate_surface_impact",
 			normal_rotation = true
 		}
+	},
+	unit = {
+		{
+			flow_event = "impact",
+			unit_name = "content/weapons/player/ranged/grenade_frag_ogryn/wpn_grenade_frag_ogryn_02"
+		}
 	}
 }
+local surface_decal = {}
 
 return {
 	surface = {
@@ -708,5 +715,6 @@ return {
 		[armor_types.super_armor] = super_armor,
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
-	}
+	},
+	surface_decal = surface_decal
 }

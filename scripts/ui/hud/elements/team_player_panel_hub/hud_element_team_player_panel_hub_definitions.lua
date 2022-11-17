@@ -171,55 +171,20 @@ local widget_definitions = {
 	}, "panel_background"),
 	panel_background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_team_panels",
 			style_id = "background",
 			pass_type = "texture",
 			style = {
 				horizontal_alignment = "left",
-				color = color_copy({}, UIHudSettings.color_tint_0, 100)
-			}
-		},
-		{
-			value = "content/ui/materials/buttons/background_selected",
-			style_id = "background_glow",
-			pass_type = "texture",
-			style = {
+				color = Color.terminal_background_gradient(178.5, true),
 				offset = {
-					0,
-					0,
-					1
-				},
-				color = color_copy({}, UIHudSettings.color_tint_main_1, 255)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "shadow_frame",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					0,
+					100,
 					0,
 					0
 				}
 			}
 		}
-	}, "panel_background")
-}
-local visor_effect_widget_definitions = {
+	}, "panel_background"),
 	player_icon = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/base/ui_portrait_frame_base",
@@ -231,15 +196,13 @@ local visor_effect_widget_definitions = {
 					rows = 1,
 					columns = 1,
 					grid_index = 1
-				},
-				color = UIHudSettings.color_tint_5
+				}
 			}
 		}
 	}, "player_icon")
 }
 
 return {
-	visor_effect_widget_definitions = visor_effect_widget_definitions,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition
 }

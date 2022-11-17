@@ -2132,6 +2132,24 @@ local color_definitions = {
 		16,
 		21
 	},
+	ui_hud_overcharge_low = {
+		255,
+		251,
+		195,
+		86
+	},
+	ui_hud_overcharge_medium = {
+		255,
+		245,
+		121,
+		21
+	},
+	ui_hud_overcharge_high = {
+		255,
+		246,
+		69,
+		69
+	},
 	ui_hud_yellow_super_light = {
 		255,
 		218,
@@ -2185,6 +2203,66 @@ local color_definitions = {
 		198,
 		52,
 		53
+	},
+	item_rarity_dark_1 = {
+		255,
+		95,
+		95,
+		95
+	},
+	item_rarity_dark_2 = {
+		255,
+		42,
+		99,
+		48
+	},
+	item_rarity_dark_3 = {
+		255,
+		49,
+		86,
+		129
+	},
+	item_rarity_dark_4 = {
+		255,
+		83,
+		55,
+		114
+	},
+	item_rarity_dark_5 = {
+		255,
+		128,
+		84,
+		30
+	},
+	item_rarity_dark_6 = {
+		255,
+		119,
+		31,
+		31
+	},
+	ui_achievement_icon = {
+		255,
+		83,
+		46,
+		46
+	},
+	ui_achievement_icon_hover = {
+		255,
+		100,
+		60,
+		60
+	},
+	ui_achievement_icon_completed = {
+		255,
+		242,
+		228,
+		157
+	},
+	ui_achievement_icon_completed_hover = {
+		255,
+		255,
+		245,
+		163
 	},
 	ui_veteran = {
 		255,
@@ -2283,7 +2361,7 @@ local color_definitions = {
 		64
 	},
 	terminal_background_gradient = {
-		100,
+		255,
 		101,
 		133,
 		96
@@ -2295,10 +2373,10 @@ local color_definitions = {
 		64
 	},
 	terminal_grid_background = {
-		80,
-		43,
-		58,
-		43
+		255,
+		90,
+		115,
+		83
 	},
 	terminal_grid_background_gradient = {
 		100,
@@ -2325,7 +2403,7 @@ local color_definitions = {
 		103
 	},
 	terminal_frame_selected = {
-		255,
+		150,
 		167,
 		129,
 		64
@@ -2366,6 +2444,12 @@ local color_definitions = {
 		229,
 		207
 	},
+	terminal_text_header_disabled = {
+		255,
+		64,
+		64,
+		64
+	},
 	terminal_text_header_selected = {
 		255,
 		255,
@@ -2377,6 +2461,12 @@ local color_definitions = {
 		169,
 		191,
 		153
+	},
+	terminal_text_body_dark = {
+		255,
+		88,
+		99,
+		80
 	},
 	terminal_text_body_sub_header = {
 		255,

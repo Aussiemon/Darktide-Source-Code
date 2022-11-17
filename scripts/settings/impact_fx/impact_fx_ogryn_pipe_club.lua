@@ -48,7 +48,7 @@ local unarmored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			},
 			{
@@ -205,7 +205,7 @@ local armored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			},
 			{
@@ -362,7 +362,7 @@ local super_armor = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			},
 			{
@@ -531,7 +531,7 @@ local disgustingly_resilient = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			},
 			{

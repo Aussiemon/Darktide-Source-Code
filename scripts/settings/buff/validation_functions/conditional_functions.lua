@@ -1,25 +1,27 @@
 local Action = require("scripts/utilities/weapon/action")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ConditionalFunctions = {}
+local slot_configuration = PlayerCharacterConstants.slot_configuration
+local ConditionalFunctions = {
+	is_item_slot_wielded = function (template_data, template_context)
+		local item_slot_name = template_context.item_slot_name
 
-ConditionalFunctions.is_item_slot_wielded = function (template_data, template_context)
-	local item_slot_name = template_context.item_slot_name
+		if not item_slot_name then
+			return true
+		end
 
-	if not item_slot_name then
-		return true
+		if not template_data.inventory_component then
+			local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+			template_data.inventory_component = unit_data_extension:read_component("inventory")
+		end
+
+		local wielded_slot = template_data.inventory_component.wielded_slot
+		local is_wielded = item_slot_name == wielded_slot
+
+		return is_wielded
 	end
-
-	if not template_data.inventory_component then
-		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
-		template_data.inventory_component = unit_data_extension:read_component("inventory")
-	end
-
-	local wielded_slot = template_data.inventory_component.wielded_slot
-	local is_wielded = item_slot_name == wielded_slot
-
-	return is_wielded
-end
+}
 
 ConditionalFunctions.is_item_slot_not_wielded = function (template_data, template_context)
 	return not ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
@@ -49,6 +51,23 @@ ConditionalFunctions.is_reloading = function (template_data, template_context)
 	local in_reload_action = action_kind and reloading_states[action_kind]
 
 	return in_reload_action
+end
+
+ConditionalFunctions.has_empty_clip = function (template_data, template_context)
+	local unit = template_context.unit
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local inventory_component = unit_data_extension:read_component("inventory")
+	local wielded_slot = inventory_component.wielded_slot
+	local slot_type = slot_configuration[wielded_slot].slot_type
+
+	if slot_type == "weapon" then
+		local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
+		local current_ammunition_clip = slot_inventory_component.current_ammunition_clip
+
+		return current_ammunition_clip <= 0 and not ConditionalFunctions.is_reloading(template_data, template_context)
+	end
+
+	return false
 end
 
 ConditionalFunctions.is_alternative_fire = function (template_data, template_context)

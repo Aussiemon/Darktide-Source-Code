@@ -1,4 +1,5 @@
 local BloodSettings = require("scripts/settings/blood/blood_settings")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local blood_ball_settings = BloodSettings.blood_ball
 local damage_type_speed = BloodSettings.blood_ball.damage_type_speed
 local BloodManager = class("BloodManager")
@@ -90,6 +91,12 @@ BloodManager.queue_blood_ball = function (self, position, direction, blood_ball_
 		return
 	end
 
+	local blood_decals_enabled = self:_blood_decals_enabled()
+
+	if not blood_decals_enabled then
+		return
+	end
+
 	if not Vector3.is_valid(position) then
 		return
 	end
@@ -132,6 +139,12 @@ BloodManager.play_screen_space_blood = function (self, fx_extension)
 end
 
 BloodManager.blood_ball_collision = function (self, unit, position, normal, velocity, blood_type, remove_blood_ball)
+	local blood_decals_enabled = self:_blood_decals_enabled()
+
+	if not blood_decals_enabled then
+		return
+	end
+
 	local dot_value = Vector3.dot(normal, Vector3.normalize(velocity))
 	local tangent = Vector3.normalize(Vector3.normalize(velocity) - dot_value * normal)
 	local tangent_rotation = Quaternion.look(tangent, normal)
@@ -226,6 +239,16 @@ BloodManager.rpc_add_weapon_blood = function (self, channel_id, game_object_id, 
 		weapon_blood[slot_name] = math.min((weapon_blood[slot_name] or 0) + amount_scalar, blood_amounts.full)
 		self._weapon_blood[player_unit] = weapon_blood
 	end
+end
+
+BloodManager._blood_decals_enabled = function (self)
+	local blood_decals_enabled_locally = Application.user_setting("gore_settings", "blood_decals_enabled")
+
+	if blood_decals_enabled_locally == nil then
+		blood_decals_enabled_locally = DefaultGameParameters.blood_decals_enabled
+	end
+
+	return blood_decals_enabled_locally
 end
 
 return BloodManager

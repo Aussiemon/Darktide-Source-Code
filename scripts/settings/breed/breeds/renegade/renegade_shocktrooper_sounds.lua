@@ -11,7 +11,7 @@ local sounds = {
 	vce_death_gassed = "wwise/events/minions/play_enemy_traitor_scout_shocktrooper_death_long_gassed_vce",
 	swing = "wwise/events/weapon/play_minion_swing_1h_sword",
 	footstep = "wwise/events/minions/play_footstep_boots_medium_enemy",
-	run_foley = "wwise/events/minions/play_enemy_guard_shocktrooper_movement_foley"
+	run_foley = "wwise/events/minions/play_shared_foley_traitor_guard_heavy_run_type_2"
 }
 
 table.add_missing(sounds, RenegadeCommonSounds)

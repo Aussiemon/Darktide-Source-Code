@@ -6,6 +6,7 @@ local function _info(...)
 end
 
 local StateLoading = class("StateLoading")
+local STATES = table.enum("waiting_for_network", "waiting_for_despawn", "loading")
 
 StateLoading.init = function (self)
 	self._creation_context = nil
@@ -27,12 +28,20 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	self:_setup_loading_data(params)
 	Managers.event:trigger("event_loading_started")
 
-	if Managers.multiplayer_session:is_ready() then
-		self._state = "loading"
+	self._wait_for_despawn = params.wait_for_despawn
 
-		self:_start_loading()
+	if Managers.multiplayer_session:is_ready() then
+		if self._wait_for_despawn then
+			self._state = STATES.waiting_for_despawn
+
+			Log.info("StateLoading", "waiting_for_despawn")
+		else
+			self._state = STATES.loading
+
+			self:_start_loading()
+		end
 	else
-		self._state = "waiting_for_network"
+		self._state = STATES.waiting_for_network
 	end
 
 	self._failed_clients = {}
@@ -130,11 +139,17 @@ StateLoading.update = function (self, main_dt, main_t)
 
 	local new_state, params = nil
 
-	if self._state == "waiting_for_network" then
+	if self._state == STATES.waiting_for_network then
 		if Managers.multiplayer_session:is_ready() then
-			self._state = "loading"
+			if self._wait_for_despawn then
+				self._state = STATES.waiting_for_despawn
 
-			self:_start_loading()
+				Log.info("StateLoading", "waiting_for_despawn")
+			else
+				self._state = STATES.loading
+
+				self:_start_loading()
+			end
 		elseif Managers.multiplayer_session:is_stranded() then
 			new_state, params = Managers.multiplayer_session:error_transition()
 
@@ -146,7 +161,19 @@ StateLoading.update = function (self, main_dt, main_t)
 				new_state, params = nil
 			end
 		end
-	elseif self._state == "loading" then
+	elseif self._state == STATES.waiting_for_despawn then
+		local despawning = Managers.world_level_despawn:despawning()
+		local despawn_done = not despawning
+
+		if despawn_done then
+			self._state = STATES.loading
+
+			self:_start_loading()
+			Log.info("StateLoading", "despawn_done")
+		else
+			Log.info("StateLoading", "waiting for despawn")
+		end
+	elseif self._state == STATES.loading then
 		new_state, params = Managers.mechanism:wanted_transition()
 
 		if new_state == StateLoading then

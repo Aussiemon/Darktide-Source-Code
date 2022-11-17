@@ -1,5 +1,5 @@
 local buff_settings = {
-	keywords = table.enum("allow_backstabbing", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "block_gives_warp_charge", "burning", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "count_as_dodge_vs_all", "count_as_dodge_vs_melee", "count_as_dodge_vs_ranged", "critical_hit_second_projectile", "critical_hit_infinite_hit_mass", "cultist_flamer_liquid_immunity", "damage_immune", "deterministic_recoil", "electrocuted", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "health_segment_breaking_reduce_damage_taken", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "invisible", "knock_down_on_slide", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption", "no_coherency_stickiness_limit", "ogryn_improved_lunge", "psychic_fortress", "ranged_alternate_fire_interrupt_immune", "ranged_counts_as_weakspot", "ranged_push_immune", "reduced_ammo_consumption", "renegade_grenadier_liquid_immunity", "resist_death", "shock_grenade_shock", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "stun_immune", "suppression_immune", "uninterruptible", "unperceivable", "use_reduced_hit_mass", "veteran_ranger_combat_ability", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "zealot_toughness", "zero_slide_friction")
+	keywords = table.enum("allow_backstabbing", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "block_gives_warp_charge", "burning", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "count_as_dodge_vs_all", "count_as_dodge_vs_melee", "count_as_dodge_vs_ranged", "critical_hit_second_projectile", "critical_hit_infinite_hit_mass", "cultist_flamer_liquid_immunity", "renegade_flamer_liquid_immunity", "damage_immune", "deterministic_recoil", "electrocuted", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "health_segment_breaking_reduce_damage_taken", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "invisible", "knock_down_on_slide", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption", "no_coherency_stickiness_limit", "ogryn_improved_lunge", "psychic_fortress", "ranged_alternate_fire_interrupt_immune", "ranged_counts_as_weakspot", "ranged_push_immune", "reduced_ammo_consumption", "renegade_grenadier_liquid_immunity", "resist_death", "shock_grenade_shock", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "sticky_projectiles", "stun_immune", "suppression_immune", "uninterruptible", "unperceivable", "use_reduced_hit_mass", "veteran_ranger_combat_ability", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "zealot_toughness", "zero_slide_friction")
 }
 local group_keywords = table.enum("allow_action_during_sprint")
 local group_to_keywords = {
@@ -80,7 +80,7 @@ buff_settings.proc_event_validation = {
 		hit_weakspot = "bool",
 		charge_level = "number",
 		damage_efficiency = "string",
-		result = "string",
+		melee_attack_strength = "string",
 		attack_instigator_unit = "unit",
 		attack_type = "string",
 		target_index = "number",
@@ -95,7 +95,7 @@ buff_settings.proc_event_validation = {
 		damage = "number",
 		tags = "table",
 		alternative_fire = "bool",
-		melee_attack_strength = "string",
+		attack_result = "string",
 		is_critical_strike = "bool",
 		attack_direction = "Vector3"
 	},
@@ -185,9 +185,10 @@ buff_settings.proc_event_validation = {
 		weapon_template = "table"
 	},
 	on_sweep_start = {
-		is_heavy = "bool",
+		is_weapon_special_active = "bool",
 		is_chain_action = "bool",
-		combo_count = "number"
+		combo_count = "number",
+		is_heavy = "bool"
 	},
 	on_sweep_finish = {
 		num_hit_units = "number",
@@ -223,6 +224,12 @@ buff_settings.proc_event_validation = {
 	on_alternative_fire_start = {
 		unit = "unit"
 	},
+	on_chain_lightning_start = {
+		unit = "unit"
+	},
+	on_chain_lightning_finished = {
+		unit = "unit"
+	},
 	on_warp_charge_changed = {
 		percentage_change = "number"
 	}
@@ -232,83 +239,86 @@ buff_settings.proc_events = table.enum(unpack(proc_event_names))
 buff_settings.stat_buff_types = {
 	ranged_weakspot_damage = "additive_multiplier",
 	ranged_critical_strike_damage = "additive_multiplier",
-	damage_far = "additive_multiplier",
-	rending_multiplier = "additive_multiplier",
-	consumed_hit_mass_modifier = "multiplicative_multiplier",
+	sprint_movement_speed = "multiplicative_multiplier",
 	damage_taken_multiplier = "multiplicative_multiplier",
+	consumed_hit_mass_modifier = "multiplicative_multiplier",
+	rending_multiplier = "additive_multiplier",
 	stagger_duration_multiplier = "multiplicative_multiplier",
-	ranged_damage = "additive_multiplier",
-	push_speed_modifier = "additive_multiplier",
-	charge_level_modifier = "additive_multiplier",
-	overheat_over_time_amount = "multiplicative_multiplier",
-	outer_push_angle_modifier = "additive_multiplier",
-	melee_weakspot_damage_vs_bleeding = "additive_multiplier",
-	melee_impact_modifier = "additive_multiplier",
+	damage_far = "additive_multiplier",
 	movement_speed = "multiplicative_multiplier",
+	dodge_linger_time_modifier = "additive_multiplier",
+	push_speed_modifier = "additive_multiplier",
+	toughness_bonus_flat = "value",
+	overheat_over_time_amount = "multiplicative_multiplier",
+	overheat_immediate_amount = "multiplicative_multiplier",
+	outer_push_angle_modifier = "additive_multiplier",
+	melee_impact_modifier = "additive_multiplier",
 	minion_accuracy_modifier = "multiplicative_multiplier",
 	clip_size_modifier = "additive_multiplier",
-	permanent_damage_converter = "value",
 	max_health_multiplier = "multiplicative_multiplier",
-	finesse_modifier_bonus = "additive_multiplier",
+	melee_weakspot_damage_vs_bleeding = "additive_multiplier",
 	damage_vs_unaggroed = "additive_multiplier",
-	damage_vs_suppressed = "additive_multiplier",
-	sprinting_cost_multiplier = "multiplicative_multiplier",
+	finesse_modifier_bonus = "additive_multiplier",
+	stagger_burning_reduction_modifier = "multiplicative_multiplier",
 	opt_in_stagger_duration_multiplier = "multiplicative_multiplier",
-	ammo_usage = "multiplicative_multiplier",
+	charge_level_modifier = "additive_multiplier",
 	ranged_weakspot_damage_vs_staggered = "additive_multiplier",
-	dodge_linger_time_modifier = "additive_multiplier",
 	damage_vs_horde = "additive_multiplier",
+	extra_max_amount_of_grenades = "value",
 	elusiveness_modifier = "multiplicative_multiplier",
 	charge_up_time = "additive_multiplier",
+	damage_vs_ogryn_and_monsters = "additive_multiplier",
 	ammo_reserve_capacity = "additive_multiplier",
-	extra_max_amount_of_wounds = "value",
 	force_staff_single_target_damage = "additive_multiplier",
 	overheat_amount = "multiplicative_multiplier",
-	overheat_immediate_amount = "multiplicative_multiplier",
+	damage_vs_suppressed = "additive_multiplier",
 	critical_strike_weakspot_damage = "additive_multiplier",
 	power_level_modifier = "additive_multiplier",
 	critical_strike_rending_multiplier = "additive_multiplier",
+	ranged_damage = "additive_multiplier",
 	melee_damage = "additive_multiplier",
-	block_angle_modifier = "additive_multiplier",
-	toughness_replenish_multiplier = "multiplicative_multiplier",
-	stamina_modifier = "value",
+	toughness_replenish_multiplier = "additive_multiplier",
+	sprinting_cost_multiplier = "multiplicative_multiplier",
 	melee_attack_speed = "additive_multiplier",
 	coherency_radius_modifier = "additive_multiplier",
 	reload_speed = "additive_multiplier",
-	sway_modifier = "multiplicative_multiplier",
+	damage_vs_ogryn = "additive_multiplier",
 	ranged_impact_modifier = "additive_multiplier",
+	super_armor_damage = "additive_multiplier",
+	sway_modifier = "multiplicative_multiplier",
+	permanent_damage_converter = "value",
 	toughness_coherency_regen_rate_modifier = "value",
 	toughness_damage_taken_modifier = "additive_multiplier",
+	ranged_attack_speed = "additive_multiplier",
 	toughness_damage_taken_multiplier = "multiplicative_multiplier",
+	increased_suppression = "additive_multiplier",
 	toughness_melee_replenish = "additive_multiplier",
 	toughness_regen_delay_modifier = "additive_multiplier",
-	ranged_attack_speed = "additive_multiplier",
 	toughness_regen_rate_multiplier = "multiplicative_multiplier",
-	increased_suppression = "additive_multiplier",
-	sprint_movement_speed = "multiplicative_multiplier",
+	block_angle_modifier = "additive_multiplier",
 	unarmored_damage = "additive_multiplier",
 	vent_overheat_speed = "multiplicative_multiplier",
-	vent_warp_charge_multiplier = "multiplicative_multiplier",
-	vent_warp_charge_speed = "multiplicative_multiplier",
-	warp_charge_amount_smite = "multiplicative_multiplier",
 	power_level = "value",
-	warp_charge_over_time_amount = "multiplicative_multiplier",
+	vent_warp_charge_multiplier = "multiplicative_multiplier",
 	toughness_damage = "additive_multiplier",
-	warp_damage = "additive_multiplier",
+	vent_warp_charge_speed = "multiplicative_multiplier",
 	sprint_dodge_reduce_angle_threshold_rad = "max_value",
-	warp_damage_taken_multiplier = "multiplicative_multiplier",
+	warp_charge_amount_smite = "multiplicative_multiplier",
 	stagger_weakspot_reduction_modifier = "multiplicative_multiplier",
-	weakspot_damage = "additive_multiplier",
-	weapon_action_movespeed_reduction_multiplier = "multiplicative_multiplier",
-	weapon_special_max_activations = "value",
+	warp_charge_over_time_amount = "multiplicative_multiplier",
+	warp_damage = "additive_multiplier",
+	warp_damage_taken_multiplier = "multiplicative_multiplier",
 	warp_charge_amount = "multiplicative_multiplier",
 	smite_same_target_discount = "multiplicative_multiplier",
-	extra_max_amount_of_grenades = "value",
+	weakspot_damage = "additive_multiplier",
+	weapon_action_movespeed_reduction_multiplier = "multiplicative_multiplier",
 	static_movement_reduction_multiplier = "multiplicative_multiplier",
 	block_cost_modifier = "additive_multiplier",
+	weapon_special_max_activations = "value",
 	melee_heavy_damage = "additive_multiplier",
 	melee_critical_strike_chance = "value",
 	alternate_fire_movement_speed_reduction_modifier = "multiplicative_multiplier",
+	melee_weakspot_damage_vs_staggered = "additive_multiplier",
 	stagger_count_damage = "additive_multiplier",
 	warp_charge_dissipation_multiplier = "multiplicative_multiplier",
 	revive_speed_modifier = "additive_multiplier",
@@ -323,7 +333,7 @@ buff_settings.stat_buff_types = {
 	flanking_damage = "additive_multiplier",
 	toughness = "value",
 	ability_cooldown_flat_reduction = "value",
-	melee_weakspot_damage_vs_staggered = "additive_multiplier",
+	ammo_usage = "multiplicative_multiplier",
 	shout_damage = "additive_multiplier",
 	damage_vs_stunned = "additive_multiplier",
 	block_cost_ranged_modifier = "additive_multiplier",
@@ -354,7 +364,7 @@ buff_settings.stat_buff_types = {
 	ability_cooldown_modifier = "additive_multiplier",
 	melee_power_level_modifier = "additive_multiplier",
 	weakspot_damage_taken = "additive_multiplier",
-	toughness_bonus = "value",
+	toughness_bonus = "additive_multiplier",
 	toughness_regen_delay_multiplier = "multiplicative_multiplier",
 	damage_vs_staggered = "additive_multiplier",
 	revive_duration_multiplier = "multiplicative_multiplier",
@@ -385,13 +395,13 @@ buff_settings.stat_buff_types = {
 	block_cost_multiplier = "multiplicative_multiplier",
 	armored_damage = "additive_multiplier",
 	vent_warp_charge_damage_multiplier = "multiplicative_multiplier",
-	damage_vs_ogryn = "additive_multiplier",
+	stamina_modifier = "value",
 	backstab_damage = "additive_multiplier",
 	inner_push_angle_modifier = "additive_multiplier",
 	coherency_stickiness_time_value = "value",
 	leech = "value",
 	toughness_regen_rate_modifier = "additive_multiplier",
-	super_armor_damage = "additive_multiplier",
+	extra_max_amount_of_wounds = "value",
 	shout_impact_modifier = "additive_multiplier",
 	damage_vs_specials = "additive_multiplier"
 }
@@ -424,11 +434,17 @@ local breed_names = {
 	"renegade_netgunner",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
-	"renegade_sniper"
+	"renegade_sniper",
+	"renegade_flamer",
+	"renegade_berzerker"
 }
 
 for i = 1, #breed_names do
 	buff_settings.stat_buff_types["damage_vs_" .. breed_names[i]] = "additive_multiplier"
+end
+
+for i = 1, #breed_names do
+	buff_settings.stat_buff_types["damage_taken_by_" .. breed_names[i] .. "_multiplier"] = "multiplicative_multiplier"
 end
 
 local stat_buff_names = table.keys(buff_settings.stat_buff_types)

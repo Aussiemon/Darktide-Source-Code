@@ -1,9 +1,9 @@
 require("scripts/foundation/utilities/color")
 
 local ui_settings = {
-	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
-	double_click_threshold = 0.1,
 	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
+	double_click_threshold = 0.2,
+	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
 	item_icon_size = {
 		128,
 		128
@@ -43,17 +43,18 @@ local ui_settings = {
 		}
 	},
 	menu_navigation = {
-		view_speed_multiplier_frame_decrease = 0.025,
-		view_min_fast_speed_multiplier = 0.1,
-		view_min_speed_multiplier = 0.5,
-		view_cooldown = 0,
-		gamepad_view_fast_cooldown = 0.1,
-		view_speed_multiplier_decrease = 1.3,
-		gamepad_view_cooldown = 0.2,
 		view_fast_cooldown = 0,
+		gamepad_view_fast_cooldown = 0.1,
+		view_min_speed_multiplier = 0.5,
+		view_speed_multiplier_decrease = 1.3,
+		view_cooldown = 0.15,
+		view_speed_multiplier_frame_decrease = 0.025,
+		button_navigation_cooldown = 0.25,
+		gamepad_view_cooldown = 0.2,
+		view_min_fast_speed_multiplier = 0.1,
 		view_analog_deadzone = 0.5
 	},
-	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN"),
+	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
 	item_type_group_lookup = {
 		GEAR_LOWERBODY = "outfits",
 		BOON = "boons",
@@ -66,9 +67,10 @@ local ui_settings = {
 		GEAR_HEAD = "outfits",
 		GADGET = "devices",
 		PORTRAIT_FRAME = "nameplates",
-		WEAPON_SKIN = "weapons",
+		WEAPON_SKIN = "weapon_skin",
 		DEVICE = "devices",
 		CHARACTER_INSIGNIA = "nameplates",
+		WEAPON_TRINKET = "weapon_trinket",
 		GEAR_UPPERBODY = "outfits"
 	},
 	item_variant_localization_lookup = {
@@ -108,56 +110,42 @@ local ui_settings = {
 		SKIN_COLOR = "loc_item_type_skin_color",
 		GEAR_HEAD = "loc_item_type_gear_head",
 		GADGET = "loc_item_type_gadget",
+		WEAPON_TRINKET = "loc_item_type_trinket",
 		WEAPON_SKIN = "loc_item_type_weapon_skin",
 		FACE_TATTOO = "loc_item_type_face_tattoo",
 		CHARACTER_INSIGNIA = "loc_item_type_character_insignia",
 		LUGGABLE = "loc_item_type_luggable"
 	},
 	item_type_texture_lookup = {
-		GEAR_LOWERBODY = "content/ui/textures/icons/item_types/beveled/outfits",
-		BODY_TATTOO = "content/ui/textures/icons/item_types/beveled/body_tattoos",
-		GEAR_HEAD = "content/ui/textures/icons/item_types/beveled/outfits",
-		END_OF_ROUND = "content/ui/textures/icons/item_types/beveled/poses",
-		PORTRAIT_FRAME = "content/ui/textures/icons/item_types/beveled/nameplates",
-		WEAPON_RANGED = "content/ui/textures/icons/item_types/beveled/ranged_weapons",
-		WEAPON_MELEE = "content/ui/textures/icons/item_types/beveled/melee_weapons",
-		HAIR = "content/ui/textures/icons/item_types/beveled/hair_styles",
-		GEAR_EXTRA_COSMETIC = "content/ui/textures/icons/item_types/beveled/outfits",
-		SKIN_COLOR = "content/ui/textures/icons/item_types/beveled/outfits",
-		DEVICE = "content/ui/textures/icons/item_types/beveled/devices",
-		FACE_HAIR = "content/ui/textures/icons/item_types/beveled/facial_hair_styles",
-		GEAR_UPPERBODY = "content/ui/textures/icons/item_types/beveled/outfits",
-		HAIR_COLOR = "content/ui/textures/icons/item_types/beveled/hair_styles",
-		EYE_COLOR = "content/ui/textures/icons/item_types/beveled/eye_colors",
-		SET = "content/ui/textures/icons/item_types/beveled/outfits",
-		FACE_SCAR = "content/ui/textures/icons/item_types/beveled/scars",
-		FACE = "content/ui/textures/icons/item_types/beveled/face_types",
-		GADGET = "content/ui/textures/icons/item_types/beveled/devices",
-		WEAPON_SKIN = "content/ui/textures/icons/item_types/beveled/weapons",
-		FACE_TATTOO = "content/ui/textures/icons/item_types/beveled/face_tattoos",
-		CHARACTER_INSIGNIA = "content/ui/textures/icons/item_types/beveled/nameplates"
+		GEAR_LOWERBODY = "content/ui/textures/icons/item_types/lower_bodies",
+		BODY_TATTOO = "content/ui/textures/icons/item_types/body_tattoos",
+		GEAR_HEAD = "content/ui/textures/icons/item_types/headgears",
+		END_OF_ROUND = "content/ui/textures/icons/item_types/poses",
+		PORTRAIT_FRAME = "content/ui/textures/icons/item_types/nameplates",
+		WEAPON_RANGED = "content/ui/textures/icons/item_types/ranged_weapons",
+		WEAPON_MELEE = "content/ui/textures/icons/item_types/melee_weapons",
+		HAIR = "content/ui/textures/icons/item_types/hair_styles",
+		GEAR_EXTRA_COSMETIC = "content/ui/textures/icons/item_types/outfits",
+		SKIN_COLOR = "content/ui/textures/icons/item_types/outfits",
+		WEAPON_TRINKET = "content/ui/textures/icons/item_types/weapon_trinkets",
+		DEVICE = "content/ui/textures/icons/item_types/devices",
+		FACE_HAIR = "content/ui/textures/icons/item_types/facial_hair_styles",
+		GEAR_UPPERBODY = "content/ui/textures/icons/item_types/upper_bodies",
+		HAIR_COLOR = "content/ui/textures/icons/item_types/hair_styles",
+		EYE_COLOR = "content/ui/textures/icons/item_types/eye_colors",
+		SET = "content/ui/textures/icons/item_types/outfits",
+		FACE_SCAR = "content/ui/textures/icons/item_types/scars",
+		FACE = "content/ui/textures/icons/item_types/face_types",
+		GADGET = "content/ui/textures/icons/item_types/devices",
+		WEAPON_SKIN = "content/ui/textures/icons/item_types/weapons",
+		FACE_TATTOO = "content/ui/textures/icons/item_types/face_tattoos",
+		CHARACTER_INSIGNIA = "content/ui/textures/icons/item_types/nameplates"
 	},
 	item_pattern_localization_lookup = {
 		lucius = "loc_item_pattern_lucius",
 		mars = "loc_item_pattern_mars",
 		cadia = "loc_item_pattern_cadia",
 		graia = "loc_item_pattern_graia"
-	},
-	item_rarity_localization_lookup = {
-		"loc_item_weapon_rarity_1",
-		"loc_item_weapon_rarity_2",
-		"loc_item_weapon_rarity_3",
-		"loc_item_weapon_rarity_4",
-		"loc_item_weapon_rarity_5",
-		"loc_item_weapon_rarity_6"
-	},
-	item_rarity_color_lookup = {
-		Color.item_rarity_1(255, true),
-		Color.item_rarity_2(255, true),
-		Color.item_rarity_3(255, true),
-		Color.item_rarity_4(255, true),
-		Color.item_rarity_5(255, true),
-		Color.item_rarity_6(255, true)
 	},
 	item_trait_frame_texture_lookup = {
 		"content/ui/textures/icons/traits/trait_icon_frame_01_large",
@@ -271,15 +259,15 @@ local ui_settings = {
 		melee_common = ""
 	},
 	contracts_icons_by_type = {
-		default = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		CompleteMissionsByName = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		CompleteMissionsNoDeath = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		CollectPickup = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		CollectResource = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		KillMinions = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		BlockDamage = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		CompleteMissions = "content/ui/materials/icons/contracts/contracts_type_icon_01",
-		KillBosses = "content/ui/materials/icons/contracts/contracts_type_icon_01"
+		default = "content/ui/textures/icons/contracts/contracts_type_03",
+		CompleteMissionsByName = "content/ui/textures/icons/contracts/contracts_type_07",
+		CompleteMissionsNoDeath = "content/ui/textures/icons/contracts/contracts_type_05",
+		CollectPickup = "content/ui/textures/icons/contracts/contracts_type_04",
+		CollectResource = "content/ui/textures/icons/contracts/contracts_type_04",
+		KillMinions = "content/ui/textures/icons/contracts/contracts_type_02",
+		BlockDamage = "content/ui/textures/icons/contracts/contracts_type_01",
+		CompleteMissions = "content/ui/textures/icons/contracts/contracts_type_07",
+		KillBosses = "content/ui/textures/icons/contracts/contracts_type_02"
 	},
 	digital_clock_numbers = {
 		[0] = "",
@@ -357,7 +345,6 @@ local ui_settings = {
 	item_preview_hide_slots_per_slot = {
 		slot_gear_head = {
 			"slot_body_legs",
-			"slot_body_torso",
 			"slot_body_face_tattoo",
 			"slot_body_face_scar",
 			"slot_body_face_hair",
@@ -427,6 +414,12 @@ local ui_settings = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso"
+				},
+				slot_animation_end_of_round = {
+					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
+					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
+					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
+					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso"
 				}
 			},
 			female = {
@@ -449,6 +442,12 @@ local ui_settings = {
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso"
 				},
 				slot_gear_extra_cosmetic = {
+					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
+					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
+					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
+					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso"
+				},
+				slot_animation_end_of_round = {
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
@@ -477,6 +476,12 @@ local ui_settings = {
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso"
 				},
 				slot_gear_extra_cosmetic = {
+					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
+					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
+					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
+					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso"
+				},
+				slot_animation_end_of_round = {
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
 					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
@@ -534,6 +539,10 @@ local ui_settings = {
 			slot_gear_extra_cosmetic = {
 				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_01_set_01",
 				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_01_set_01"
+			},
+			slot_animation_end_of_round = {
+				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_01_set_01",
+				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_01_set_01"
 			}
 		},
 		veteran_3 = {
@@ -542,6 +551,10 @@ local ui_settings = {
 				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01"
 			},
 			slot_gear_extra_cosmetic = {
+				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_03_lvl_01_set_01",
+				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01"
+			},
+			slot_animation_end_of_round = {
 				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_03_lvl_01_set_01",
 				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01"
 			}

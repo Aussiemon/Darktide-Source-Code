@@ -13,7 +13,7 @@ table.make_unique(overrides)
 local burninating_adm = {
 	[armor_types.unarmored] = 1.5,
 	[armor_types.armored] = 2,
-	[armor_types.resistant] = 3,
+	[armor_types.resistant] = 1.5,
 	[armor_types.player] = 0.125,
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.1,
@@ -24,7 +24,7 @@ local burninating_adm = {
 local burninating_barrel_adm = {
 	[armor_types.unarmored] = 2,
 	[armor_types.armored] = 1.75,
-	[armor_types.resistant] = 3,
+	[armor_types.resistant] = 1.5,
 	[armor_types.player] = 0.5,
 	[armor_types.berserker] = 2,
 	[armor_types.super_armor] = 0.1,
@@ -190,6 +190,30 @@ damage_templates.cultist_flamer_liquid_fire_burning = {
 		}
 	}
 }
+damage_templates.renegade_flamer_liquid_fire_burning = {
+	disorientation_type = "burninating",
+	toughness_multiplier = 3,
+	ignore_shield = true,
+	stagger_category = "melee",
+	ogryn_disorientation_type = "burninating",
+	armor_damage_modifier = {
+		attack = DamageProfileSettings.flat_one_armor_mod,
+		impact = DamageProfileSettings.flat_one_armor_mod
+	},
+	power_distribution = {
+		attack = 20,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
 damage_templates.burning = {
 	disorientation_type = "burninating",
 	toughness_multiplier = 3,
@@ -247,7 +271,7 @@ damage_templates.warpfire = {
 		impact = burninating_adm
 	},
 	power_distribution = {
-		attack = 15,
+		attack = 250,
 		impact = 0
 	},
 	cleave_distribution = {

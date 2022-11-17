@@ -9,13 +9,13 @@ table.make_unique(overrides)
 
 explosion_templates.plasma_rifle = {
 	damage_falloff = true,
-	radius = 1.5,
-	min_radius = 1,
+	radius = 3,
+	min_radius = 2,
 	scalable_radius = true,
-	close_radius = 0.8,
+	close_radius = 1.25,
 	collision_filter = "filter_player_character_explosion",
 	static_power_level = 500,
-	min_close_radius = 0.75,
+	min_close_radius = 1.15,
 	close_damage_profile = DamageProfileTemplates.default_plasma_demolition,
 	close_damage_type = damage_types.laser,
 	damage_profile = DamageProfileTemplates.light_plasma_demolition,
@@ -40,28 +40,22 @@ explosion_templates.plasma_rifle = {
 				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium"
 			}
 		}
-	},
-	sfx = {
-		"wwise/events/weapon/play_weapon_impact_plasma"
 	}
 }
 explosion_templates.plasma_rifle_exit = {
 	damage_falloff = true,
-	radius = 1.5,
-	min_radius = 0.5,
+	radius = 2.5,
+	min_radius = 1.5,
 	scalable_radius = true,
 	close_radius = 0.5,
 	collision_filter = "filter_player_character_explosion",
 	static_power_level = 500,
 	min_close_radius = 0.1,
-	close_damage_profile = DamageProfileTemplates.light_plasma_demolition,
+	close_damage_profile = DamageProfileTemplates.close_light_plasma_demolition,
 	close_damage_type = damage_types.plasma,
 	damage_profile = DamageProfileTemplates.light_plasma_demolition,
 	damage_type = damage_types.plasma,
-	scalable_vfx = {},
-	sfx = {
-		"wwise/events/weapon/play_weapon_impact_plasma"
-	}
+	scalable_vfx = {}
 }
 
 return {

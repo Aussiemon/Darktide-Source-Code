@@ -53,13 +53,20 @@ WorldLevelDespawnManager.flush = function (self)
 	local World_destroy_theme = World.destroy_theme
 	local world_name = self._world_name
 
-	for i = 1, #themes do
-		World_destroy_theme(world, themes[i])
+	if themes then
+		for i = 1, #themes do
+			World_destroy_theme(world, themes[i])
+		end
 	end
 
-	World.destroy_level(world, level)
-	self:_check_orphaned_units()
-	Managers.world:destroy_world(world_name)
+	if world and level then
+		World.destroy_level(world, level)
+		self:_check_orphaned_units()
+	end
+
+	if world_name then
+		Managers.world:destroy_world(world_name)
+	end
 
 	self._state = STATES.idle
 end
@@ -84,6 +91,7 @@ WorldLevelDespawnManager.update = function (self, dt, t)
 			World_destroy_theme(world, themes[i])
 		end
 
+		self._themes = nil
 		self._state = STATES.despawn_level
 	elseif state == STATES.despawn_level then
 		Log.info("WorldLevelDespawnManager", "despawning level")
@@ -94,6 +102,8 @@ WorldLevelDespawnManager.update = function (self, dt, t)
 		World.destroy_level(world, level)
 		self:_check_orphaned_units()
 
+		self._level = nil
+		self._world = nil
 		self._state = STATES.despawn_world
 	elseif state == STATES.despawn_world then
 		Log.info("WorldLevelDespawnManager", "despawning world")
@@ -102,6 +112,7 @@ WorldLevelDespawnManager.update = function (self, dt, t)
 
 		Managers.world:destroy_world(world_name)
 
+		self._world_name = nil
 		self._state = STATES.idle
 		local total_time = Managers.time:time("main") - self._start_time
 
@@ -109,6 +120,10 @@ WorldLevelDespawnManager.update = function (self, dt, t)
 	elseif state == STATES.idle then
 		-- Nothing
 	end
+end
+
+WorldLevelDespawnManager.despawning = function (self)
+	return self._state ~= STATES.idle
 end
 
 WorldLevelDespawnManager._init_timeslice_despawn_units = function (self, level)

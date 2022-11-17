@@ -112,7 +112,7 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 		local player_info = friends[i]
 		local is_blocked = player_info:is_blocked()
 		local is_online = SocialConstants.OnlineStatus.online == player_info:online_status()
-		local is_friend = SocialConstants.FriendStatus.friend == player_info:friend_status()
+		local is_friend = player_info:is_friend()
 
 		if not is_blocked and is_online and is_friend then
 			num_friends = num_friends + 1
@@ -230,8 +230,9 @@ MainMenuView._on_character_widget_selected = function (self, index)
 		end
 
 		local scroll_progress = self._character_list_grid:get_scrollbar_percentage_by_index(index)
+		local is_using_gampepad = not self._using_cursor_navigation
 
-		self._character_list_grid:focus_grid_index(index, scroll_progress, true)
+		self._character_list_grid:select_grid_index(index, scroll_progress, true, is_using_gampepad)
 		self:_play_sound(UISoundEvents.main_menu_select_character)
 	end
 end
@@ -362,8 +363,10 @@ MainMenuView.update = function (self, dt, t, input_service)
 		self._news_list = self:_reset_news_list()
 	end
 
-	if self._character_list_grid then
-		self._character_list_grid:update(dt, t, input_service)
+	local character_list_grid = self._character_list_grid
+
+	if character_list_grid then
+		character_list_grid:update(dt, t, input_service)
 	end
 
 	if GameParameters.testify then
@@ -401,18 +404,24 @@ MainMenuView._on_navigation_input_changed = function (self)
 
 	local is_mouse = self._using_cursor_navigation
 	local create_input_action = "hotkey_menu_special_1"
+	local character_list_grid = self._character_list_grid
 
 	if is_mouse then
-		self._widgets_by_name.create_button.content.text = Localize("loc_main_menu_create_button")
+		self._widgets_by_name.create_button.content.text = Utf8.upper(Localize("loc_main_menu_create_button"))
+
+		if character_list_grid then
+			character_list_grid:focus_grid_index(nil)
+		end
 	else
-		self._widgets_by_name.create_button.content.text = TextUtils.localize_with_button_hint(create_input_action, "loc_main_menu_create_button", nil, nil, Localize("loc_input_legend_text_template"))
+		self._widgets_by_name.create_button.content.text = Utf8.upper(TextUtils.localize_with_button_hint(create_input_action, "loc_main_menu_create_button"))
+
+		if character_list_grid then
+			local selected_index = self._selected_character_list_index
+			local scroll_progress = character_list_grid:get_scrollbar_percentage_by_index(selected_index)
+
+			character_list_grid:focus_grid_index(selected_index, scroll_progress, true)
+		end
 	end
-
-	local create_text_value = self._widgets_by_name.create_button.content.text
-	local create_text_style = self._widgets_by_name.create_button.style.text
-	local create_text_width, create_text_height = UIRenderer.text_size(self._ui_renderer, create_text_value, create_text_style.font_type, create_text_style.font_size)
-
-	self:_set_scenegraph_size("create_button", create_text_width + 5, create_text_height + 5)
 end
 
 MainMenuView._handle_input = function (self, input_service)
@@ -480,9 +489,10 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 		type = "warning",
 		options = {
 			{
-				text = "loc_main_menu_delete_character_popup_confirm",
+				template_type = "terminal_button_hold_small",
 				stop_exit_sound = true,
 				close_on_pressed = true,
+				text = "loc_main_menu_delete_character_popup_confirm",
 				on_pressed_sound = UISoundEvents.delete_character_confirm,
 				callback = callback(function ()
 					local character_id = profile.character_id
@@ -558,7 +568,7 @@ MainMenuView._sync_character_slots = function (self)
 
 	local grid = UIWidgetGrid:new(char_list, char_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
 		0,
-		10
+		0
 	})
 	local scrollbar_widget = self._widgets_by_name.character_grid_scrollbar
 	local grid_content_scenegraph_id = "character_grid_content_pivot"
@@ -695,6 +705,7 @@ MainMenuView._set_player_profile_information = function (self, profile, widget)
 	local character_title = ProfileUtils.character_title(profile)
 	widget.content.character_name = character_name
 	widget.content.character_title = string.format("%s %s", character_title, character_level)
+	widget.content.archetype_icon = profile.archetype.archetype_icon_large
 
 	self:_request_player_icon(profile, widget)
 
@@ -747,6 +758,10 @@ end
 
 MainMenuView._unload_portrait_icon = function (self, widget)
 	if widget.content.icon_load_id then
+		local ui_renderer = self._character_list_renderer
+
+		UIWidget.set_visible(widget, ui_renderer, false)
+
 		local icon_load_id = widget.content.icon_load_id
 		local frame_load_id = widget.content.frame_load_id
 		local insignia_load_id = widget.content.insignia_load_id

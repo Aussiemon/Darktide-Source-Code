@@ -306,6 +306,14 @@ ConnectionManager.connecting_peers = function (self)
 	end
 end
 
+ConnectionManager.has_connecting_peers = function (self)
+	if self:is_host() then
+		return self._connection_host:has_connecting_peers()
+	else
+		return false
+	end
+end
+
 ConnectionManager.host = function (self)
 	if self:is_host() then
 		return self._connection_host:host()

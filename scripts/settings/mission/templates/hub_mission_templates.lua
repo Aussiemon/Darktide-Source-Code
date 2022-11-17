@@ -17,6 +17,49 @@ local mission_templates = {
 		cinematics = {
 			cutscene_9 = {
 				"cs_09"
+			},
+			traitor_captain_intro = {
+				"traitor_captain_intro"
+			},
+			path_of_trust_01 = {
+				"path_of_trust_01_part_01",
+				"path_of_trust_01_corridor_01",
+				"path_of_trust_01_part_02"
+			},
+			path_of_trust_02 = {
+				"path_of_trust_02_part_01",
+				"path_of_trust_02_barracks",
+				"path_of_trust_02_part_02"
+			},
+			path_of_trust_03 = {
+				"path_of_trust_03_part_01",
+				"path_of_trust_03_part_02"
+			},
+			path_of_trust_04 = {
+				"path_of_trust_04_part_01",
+				"path_of_trust_04_corridor_02",
+				"path_of_trust_04_part_02"
+			},
+			path_of_trust_05 = {
+				"path_of_trust_05_part_01",
+				"path_of_trust_05_bar",
+				"path_of_trust_05_part_02"
+			},
+			path_of_trust_06 = {
+				"path_of_trust_06_hangar"
+			},
+			path_of_trust_07 = {
+				"path_of_trust_07_part_01",
+				"path_of_trust_07_barracks",
+				"path_of_trust_07_part_02"
+			},
+			path_of_trust_08 = {
+				"path_of_trust_08_part_01",
+				"path_of_trust_08_corridor_01",
+				"path_of_trust_08_part_02"
+			},
+			path_of_trust_09 = {
+				"path_of_trust_09_office"
 			}
 		},
 		testify_flags = {

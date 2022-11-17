@@ -41,9 +41,9 @@ local footstep_intervals_templates = {
 		sprinting = 0.37
 	},
 	ogryn_club = {
-		crouch_walking = 0.61,
-		walking = 0.6,
-		sprinting = 0.4
+		crouch_walking = 0.8,
+		walking = 0.61,
+		sprinting = 0.5
 	},
 	ogryn_combat_blade = {
 		crouch_walking = 0.75,
@@ -98,6 +98,11 @@ local footstep_intervals_templates = {
 	unarmed_ogryn = {
 		crouch_walking = 0.61,
 		walking = 0.37,
+		sprinting = 0.54
+	},
+	slabshield = {
+		crouch_walking = 0.85,
+		walking = 0.65,
 		sprinting = 0.54
 	}
 }

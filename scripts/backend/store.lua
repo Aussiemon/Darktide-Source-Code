@@ -171,19 +171,19 @@ Store.get_ogryn_credits_store = function (self, t, character_id)
 end
 
 Store.get_veteran_marks_store = function (self, t, character_id)
-	return self:_get_storefront(t, "marks_store_veteran", nil, character_id, true)
+	return self:_get_storefront(t, "marks_store_veteran", character_id, character_id, true)
 end
 
 Store.get_zealot_marks_store = function (self, t, character_id)
-	return self:_get_storefront(t, "marks_store_zealot", nil, character_id, true)
+	return self:_get_storefront(t, "marks_store_zealot", character_id, character_id, true)
 end
 
 Store.get_psyker_marks_store = function (self, t, character_id)
-	return self:_get_storefront(t, "marks_store_psyker", nil, character_id, true)
+	return self:_get_storefront(t, "marks_store_psyker", character_id, character_id, true)
 end
 
 Store.get_ogryn_marks_store = function (self, t, character_id)
-	return self:_get_storefront(t, "marks_store_ogryn", nil, character_id, true)
+	return self:_get_storefront(t, "marks_store_ogryn", character_id, character_id, true)
 end
 
 Store.get_debug_store = function (self, t, character_id)

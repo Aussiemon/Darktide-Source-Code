@@ -55,9 +55,9 @@ InventoryWeaponDetailsView._setup_weapon_stats = function (self)
 		local reference_name = "weapon_stats"
 		local layer = 30
 		local title_height = 70
-		local edge_padding = 4
+		local edge_padding = 12
 		local grid_width = 530
-		local grid_height = 840
+		local grid_height = 920
 		local grid_size = {
 			grid_width - edge_padding,
 			grid_height

@@ -78,6 +78,98 @@ shotshell_templates.shotgun_killshot = {
 		}
 	}
 }
+shotshell_templates.shotgun_p1_m2_assault = {
+	spread_yaw = 1.5,
+	range = 100,
+	pellets_per_frame = 6,
+	spread_pitch = 1.5,
+	num_pellets = 6,
+	bullseye = true,
+	num_spread_circles = 2,
+	min_num_hits = {
+		[armor_types.unarmored] = 4,
+		[armor_types.armored] = 4,
+		[armor_types.resistant] = 6,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 5,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 8
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p1_m2_assault
+		}
+	}
+}
+shotshell_templates.shotgun_p1_m3_assault = {
+	spread_yaw = 3.5,
+	range = 100,
+	pellets_per_frame = 6,
+	spread_pitch = 3.5,
+	num_pellets = 18,
+	bullseye = true,
+	num_spread_circles = 2,
+	min_num_hits = {
+		[armor_types.unarmored] = 4,
+		[armor_types.armored] = 4,
+		[armor_types.resistant] = 6,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 5,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 8
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p1_m3_assault
+		}
+	}
+}
+shotshell_templates.shotgun_p1_m2_killshot = {
+	spread_yaw = 0.5,
+	range = 100,
+	pellets_per_frame = 6,
+	spread_pitch = 0.5,
+	num_pellets = 6,
+	bullseye = true,
+	num_spread_circles = 2,
+	min_num_hits = {
+		[armor_types.unarmored] = 5,
+		[armor_types.armored] = 6,
+		[armor_types.resistant] = 15,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 5,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 5
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p1_m2_killshot
+		}
+	}
+}
+shotshell_templates.shotgun_p1_m3_killshot = {
+	spread_yaw = 1.5,
+	range = 100,
+	pellets_per_frame = 6,
+	spread_pitch = 1.5,
+	num_pellets = 18,
+	bullseye = true,
+	num_spread_circles = 2,
+	min_num_hits = {
+		[armor_types.unarmored] = 5,
+		[armor_types.armored] = 6,
+		[armor_types.resistant] = 15,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 5,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 5
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p1_m3_killshot
+		}
+	}
+}
 shotshell_templates.rippergun_assault = {
 	spread_yaw = 6,
 	range = 75,

@@ -175,6 +175,30 @@ damage_profile_settings.base_crit_mod = {
 		[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
 	}
 }
+damage_profile_settings.axe_crit_mod = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.no_damage,
+		[armor_types.armored] = damage_lerp_values.lerp_0_3,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_3,
+		[armor_types.player] = damage_lerp_values.no_damage,
+		[armor_types.berserker] = damage_lerp_values.no_damage,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
+		[armor_types.void_shield] = damage_lerp_values.no_damage,
+		[armor_types.prop_armor] = damage_lerp_values.no_damage
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.no_damage,
+		[armor_types.armored] = damage_lerp_values.no_damage,
+		[armor_types.resistant] = damage_lerp_values.no_damage,
+		[armor_types.player] = damage_lerp_values.no_damage,
+		[armor_types.berserker] = damage_lerp_values.no_damage,
+		[armor_types.super_armor] = damage_lerp_values.no_damage,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
+		[armor_types.void_shield] = damage_lerp_values.no_damage,
+		[armor_types.prop_armor] = damage_lerp_values.no_damage
+	}
+}
 damage_profile_settings.no_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.no_damage,
@@ -235,12 +259,12 @@ damage_profile_settings.no_cleave = {
 }
 damage_profile_settings.single_cleave = {
 	attack = {
-		0.75,
-		1
+		0.5,
+		1.5
 	},
 	impact = {
-		0.75,
-		1
+		0.5,
+		1.5
 	}
 }
 damage_profile_settings.double_cleave = {

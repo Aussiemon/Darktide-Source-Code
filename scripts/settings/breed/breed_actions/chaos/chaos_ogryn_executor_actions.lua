@@ -81,7 +81,7 @@ local action_data = {
 		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	alerted = {
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		vo_event = "alerted_idle",
 		moving_alerted_anim_events = {
 			bwd = "alerted_bwd",
@@ -244,6 +244,7 @@ local action_data = {
 		}
 	},
 	melee_attack = {
+		aoe_threat_timing = 0.4,
 		utility_weight = 5,
 		max_z_diff = 3,
 		ignore_blocked = true,
@@ -421,10 +422,11 @@ local action_data = {
 		damage_type = damage_types.minion_ogryn_punch
 	},
 	moving_melee_attack = {
-		utility_weight = 1,
+		aoe_threat_timing = 0.4,
 		ignore_blocked = true,
 		vo_event = "assault",
 		move_speed_variable_name = "moving_attack_fwd_speed",
+		utility_weight = 1,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 4,
 		weapon_reach = 4,

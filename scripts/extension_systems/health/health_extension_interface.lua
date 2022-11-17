@@ -1,11 +1,8 @@
 local HealthExtensionInterface = {
 	"add_damage",
 	"add_heal",
-	"current_damaged_health",
 	"current_health",
-	"current_damaged_health_percent",
 	"current_health_percent",
-	"damaged_max_health",
 	"max_health",
 	"damage_taken",
 	"total_damage_taken",

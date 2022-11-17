@@ -62,12 +62,14 @@ local function _update_component_values(components, game_session, game_object_id
 		local type = field[3]
 		local network_type = field[5]
 		local lookup = field[6]
+		local use_network_lookup = field[8]
 		local component = components[component_name]
 
 		if type == "Vector3" or type == "Quaternion" then
 			component[field_name]:store(authoritative_value)
 		elseif type == "string" then
-			component[field_name] = lookup[authoritative_value]
+			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+			component[field_name] = string_lookup[authoritative_value]
 		elseif type == "number" then
 			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				component[field_name] = (authoritative_value + frame_index) * fixed_time_step
@@ -145,9 +147,8 @@ end
 
 PlayerHuskDataExtension.breed_name = function (self)
 	local breed = self._breed
-	local breed_name = breed.name
 
-	return breed_name
+	return breed.name
 end
 
 PlayerHuskDataExtension.archetype = function (self)
@@ -156,9 +157,8 @@ end
 
 PlayerHuskDataExtension.archetype_name = function (self)
 	local archetype = self._archetype
-	local archetype_name = archetype.name
 
-	return archetype_name
+	return archetype.name
 end
 
 PlayerHuskDataExtension.specialization = function (self)
@@ -184,7 +184,7 @@ end
 PlayerHuskDataExtension.read_component = function (self, component_name)
 	local read_component = self._read_components[component_name]
 
-	return self._read_components[component_name]
+	return read_component
 end
 
 PlayerHuskDataExtension.write_component = function (self, component_name)

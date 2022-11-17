@@ -33,6 +33,18 @@ ScannerDisplayView.init = function (self, settings, context)
 	end
 end
 
+local system_name = "dialogue_system"
+
+ScannerDisplayView.dialogue_system = function (self)
+	local state_managers = Managers.state
+
+	if state_managers then
+		local extension_manager = state_managers.extension
+
+		return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
+	end
+end
+
 ScannerDisplayView.on_enter = function (self)
 	ScannerDisplayView.super.on_enter(self)
 	self:_setup_offscreen_gui()

@@ -1,25 +1,28 @@
+local AlternateFire = require("scripts/utilities/alternate_fire")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
 local DEFAULT_SWAY_LERP_SPEED = 10
 local _update_move, _update_aim_offset, _update_lunge_hit_mass = nil
 local FirstPersonAnimationVariables = {
 	update = function (dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
-		_update_move(dt, t, first_person_unit, unit_data_extension, lerp_values)
-		_update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
+		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
+		_update_move(dt, t, first_person_unit, unit_data_extension, alternate_fire_component, lerp_values)
+		_update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, alternate_fire_component, lerp_values)
 		_update_lunge_hit_mass(first_person_unit, unit_data_extension)
 	end
 }
 
-function _update_move(dt, t, first_person_unit, unit_data_extension, lerp_values)
+function _update_move(dt, t, first_person_unit, unit_data_extension, alternate_fire_component, lerp_values)
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local locomotion_component = unit_data_extension:read_component("locomotion")
-	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	local rotation = first_person_component.rotation
 	local velocity_current = Vector3.flat(locomotion_component.velocity_current)
 	local velocity_normalized = Vector3.normalize(velocity_current)
 	local rotation_right = Quaternion.right(rotation)
 	local rotation_right_normalized = Vector3.normalize(rotation_right)
-	local move_x = Vector3.dot(velocity_normalized, rotation_right_normalized)
+	local move_x_raw = Vector3.dot(velocity_normalized, rotation_right_normalized)
+	local move_x = move_x_raw
 	local rotation_forward = Vector3.flat(Quaternion.forward(rotation))
 	local rotation_forward_normalized = Vector3.normalize(rotation_forward)
 	local move_z = Vector3.dot(velocity_normalized, rotation_forward_normalized)
@@ -32,12 +35,20 @@ function _update_move(dt, t, first_person_unit, unit_data_extension, lerp_values
 		move_z = math.clamp(math.lerp(lerp_values.move_z or 0, move_z, math.easeOutCubic(0.5 * dt)), -1, 1)
 	end
 
+	move_x_raw = math.clamp(math.lerp(lerp_values.move_x_raw or 0, move_x_raw, math.easeOutCubic(1.7 * dt)), -1, 1)
+	lerp_values.move_x_raw = move_x_raw
 	lerp_values.move_z = move_z
 	lerp_values.move_x = move_x
 	local move_x_variable = Unit.animation_find_variable(first_person_unit, "move_x")
 
 	if move_x_variable then
 		Unit.animation_set_variable(first_person_unit, move_x_variable, move_x)
+	end
+
+	local move_x_raw_variable = Unit.animation_find_variable(first_person_unit, "move_x_raw")
+
+	if move_x_raw_variable then
+		Unit.animation_set_variable(first_person_unit, move_x_raw_variable, move_x_raw)
 	end
 
 	local move_z_variable = Unit.animation_find_variable(first_person_unit, "move_z")
@@ -50,11 +61,13 @@ function _update_move(dt, t, first_person_unit, unit_data_extension, lerp_values
 	local move_speed_variable = Unit.animation_find_variable(first_person_unit, "move_speed")
 
 	if move_speed_variable then
-		Unit.animation_set_variable(first_person_unit, move_speed_variable, move_speed)
+		Unit.animation_set_variable(first_person_unit, move_speed_variable, math.min(move_speed, 19.99999))
 	end
 end
 
-function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
+local deg_65_in_rad = math.degrees_to_radians(65)
+
+function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, alternate_fire_component, lerp_values)
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local rotation = first_person_component.rotation
 	local pitch = Quaternion.pitch(rotation)
@@ -102,8 +115,26 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 		aim_offset_x = aim_offset_x + recoil_yaw_offset
 	end
 
-	aim_offset_x = math.clamp(aim_offset_x, -1, 1)
-	aim_offset_y = math.clamp(aim_offset_y, -1, 1)
+	local fov_mod = 1
+	local local_player = Managers.player:local_player(1)
+
+	if local_player then
+		local base_tweak_fov = deg_65_in_rad
+
+		if alternate_fire_component.is_active then
+			local vertical_fov = AlternateFire.camera_variables(weapon_extension:weapon_template())
+
+			if vertical_fov then
+				base_tweak_fov = vertical_fov
+			end
+		end
+
+		local current_fov = Managers.state.camera:fov(local_player.viewport_name)
+		fov_mod = base_tweak_fov / current_fov
+	end
+
+	aim_offset_x = math.clamp(aim_offset_x * fov_mod, -1, 1)
+	aim_offset_y = math.clamp(aim_offset_y * fov_mod, -1, 1)
 	local aim_offset_x_variable = Unit.animation_find_variable(first_person_unit, "aim_offset_x")
 
 	if aim_offset_x_variable then

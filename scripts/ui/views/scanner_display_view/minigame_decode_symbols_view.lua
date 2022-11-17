@@ -12,6 +12,18 @@ MinigameDecodeSymbolsView.destroy = function (self)
 	self._timer_start = nil
 end
 
+local system_name = "dialogue_system"
+
+MinigameDecodeSymbolsView.dialogue_system = function (self)
+	local state_managers = Managers.state
+
+	if state_managers then
+		local extension_manager = state_managers.extension
+
+		return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
+	end
+end
+
 MinigameDecodeSymbolsView.update = function (self, dt, t, widgets_by_name)
 	local minigame_extension = self._minigame_extension
 	local minigame = minigame_extension:minigame(MinigameSettings.types.decode_symbols)

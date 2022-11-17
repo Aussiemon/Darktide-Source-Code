@@ -151,15 +151,9 @@ LuggableSynchronizerExtension._check_reset_timer = function (self, dt)
 		timer = math.max(0, timer)
 
 		if timer == 0 then
-			local respawn_at_spawner = false
+			local respawn_at_spawner = true
 
 			self:_despawn_luggable(luggable_unit, respawn_at_spawner)
-
-			local spawner = self:_get_free_spawner()
-
-			self:spawn_luggable(spawner)
-
-			self._luggable_reset_timers[luggable_unit] = nil
 		else
 			self._luggable_reset_timers[luggable_unit] = timer
 		end
@@ -343,10 +337,14 @@ LuggableSynchronizerExtension._despawn_luggable = function (self, luggable_unit_
 
 	pickup_extension:unspawn_item(luggable_unit_to_del)
 
-	local spawner_unit_to_use = self:_get_free_spawner()
-
 	if respawn_at_spawner then
-		self._spawner_respawn_timers[spawner_unit_to_use] = self._luggable_respawn_timer
+		if self._spawner_respawn_timers[spawner_unit] then
+			Log.error("LuggableSynchronizerExtension", "Spawner is already occupied")
+
+			spawner_unit = self:_get_free_spawner()
+		end
+
+		self._spawner_respawn_timers[spawner_unit] = self._luggable_respawn_timer
 	end
 end
 
@@ -364,6 +362,16 @@ LuggableSynchronizerExtension._register_spawned_luggable = function (self, lugga
 	local mission_objective_system = self._mission_objective_system
 
 	mission_objective_system:register_objective_unit(objective_name, luggable_unit, objective_stage)
+end
+
+LuggableSynchronizerExtension.add_marker_on_luggable = function (self, spawner_unit)
+	local luggable_unit = self._spawner_to_luggable[spawner_unit]
+
+	if luggable_unit then
+		local luggable_objective_target_ext = ScriptUnit.extension(luggable_unit, "mission_objective_target_system")
+
+		luggable_objective_target_ext:add_unit_marker()
+	end
 end
 
 local free_units = {}

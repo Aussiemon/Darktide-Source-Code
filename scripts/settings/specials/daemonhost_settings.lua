@@ -9,9 +9,9 @@ local STAGES = {
 	death_leave = 8
 }
 local DEFAULT_LIGHT_COLOR = {
+	191,
 	255,
-	50,
-	118
+	0
 }
 local daemonhost_settings = {
 	stages = STAGES,
@@ -137,11 +137,21 @@ local daemonhost_settings = {
 				distance_multiplier = 1
 			}
 		},
-		on_screen_effect = {
+		screen_effect_distortion = {
 			particle_effect = "content/fx/particles/screenspace/screen_daemonhost_distortion",
 			scalar_multiplier = 0.1,
 			distance_max = 20,
 			distance_min = 5
+		},
+		screen_effect_frost = {
+			particle_effect = "content/fx/particles/screenspace/player_screen_deamonhost_frost",
+			passive_distance_max = 9,
+			lerp_speed = 1,
+			passive_distance_min = 4,
+			scalar_multiplier = 1,
+			waking_up_lerp_speed = 3,
+			distance_max = 23,
+			distance_min = 8
 		},
 		fog_effect = {
 			particle_effect = "content/fx/particles/enemies/daemonhost/daemonhost_ambient_fog"
@@ -162,16 +172,24 @@ local daemonhost_settings = {
 			{
 				flat = 1,
 				tick = 1,
-				distance = 7,
+				distance = 7.5,
 				threat = 1000
 			}
 		},
 		not_passive = {
 			{
-				flat = 75,
-				tick = 8,
+				flat = 100,
+				sprint_flat_bonus = 100,
+				distance = 3.5,
+				threat = 250,
+				tick = 8
+			},
+			{
+				flat = 80,
+				sprint_flat_bonus = 100,
 				distance = 7,
-				threat = 250
+				threat = 250,
+				tick = 10
 			},
 			{
 				flat = 50,

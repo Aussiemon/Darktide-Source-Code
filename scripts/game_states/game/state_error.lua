@@ -7,6 +7,7 @@ StateError.on_enter = function (self, parent, params, creation_context)
 	self:_cleanup()
 
 	self._continue = false
+	self._params = params
 	local player_game_state_mapping = {}
 	local game_state_context = {}
 
@@ -18,6 +19,9 @@ StateError.on_enter = function (self, parent, params, creation_context)
 end
 
 StateError._cleanup = function (self)
+	Managers.ui:close_all_views(true, {
+		"loading_view"
+	})
 	Managers.multiplayer_session:reset("reset_from_state_error")
 	Managers.mechanism:leave_mechanism()
 
@@ -33,8 +37,10 @@ StateError._cleanup = function (self)
 		end
 	end
 
+	Managers.backend:logout()
+
 	if GameParameters.prod_like_backend then
-		Managers.party_immaterium:leave_party()
+		Managers.party_immaterium:reset()
 	end
 end
 
@@ -46,7 +52,7 @@ StateError.update = function (self, main_dt, main_t)
 	Managers.player:state_update(main_dt, main_t)
 
 	if self._continue then
-		return StateTitle, {}
+		return StateTitle, self._params
 	end
 end
 

@@ -1,5 +1,7 @@
 local combat_ranges = {
 	name = "renegade_rifleman",
+	calculate_target_velocity_dot = true,
+	target_velocity_dot_reset = 2,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -34,6 +36,7 @@ local combat_ranges = {
 				sticky_time = 4,
 				distance_operator = "lesser",
 				max_z_distance = 1.5,
+				target_velocity_dot_duration_inverted = 2,
 				activate_slot_system = true,
 				switch_anim_state = "to_bayonet",
 				require_line_of_sight = true,
@@ -59,16 +62,17 @@ local combat_ranges = {
 				switch_combat_range = "far"
 			},
 			{
-				locked_in_melee_distance = 6,
-				distance_operator = "greater",
+				locked_in_melee_distance = 7,
+				target_velocity_dot_duration = 3,
 				distance = 7,
+				distance_operator = "greater",
+				switch_combat_range = "close",
+				sticky_time = 3,
 				switch_anim_state = "to_riflemen",
 				z_distance = 1.9,
-				switch_combat_range = "close",
-				sticky_time = 2,
 				target_weapon_type_distance = {
 					ranged = 3,
-					melee = 6
+					melee = 7
 				}
 			}
 		}

@@ -2,18 +2,20 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local BotPerceptionExtension = class("BotPerceptionExtension")
+local IN_PROXIMITY_DISTANCE = 5
+local MAX_PROXIMITY_ENEMIES = 10
 
 BotPerceptionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_init_blackboard_components(blackboard)
 
-	self._proximity_target_update_timer = -math.huge
-	self._aggro_target_update_timer = -math.huge
 	self._seen_by_player_units = {}
 	self._unit = unit
 	self._player = extension_init_data.player
+	self._enemies_in_proximity_update_timer = -math.huge
 	self._enemies_in_proximity = {}
+	self._num_enemies_in_proximity = 0
 	local breed = extension_init_data.breed
 	self._breed = breed
 	local threat_config = breed.threat_config
@@ -73,7 +75,7 @@ BotPerceptionExtension.on_reload = function (self)
 end
 
 BotPerceptionExtension.enemies_in_proximity = function (self)
-	return self._enemies_in_proximity
+	return self._enemies_in_proximity, self._num_enemies_in_proximity
 end
 
 local broadphase_results = {}
@@ -140,11 +142,55 @@ BotPerceptionExtension._update_target_enemy = function (self, self_unit, self_po
 		self:_decay_threat(self_unit, dt)
 	end
 
+	local enemy_side_names = side:relation_side_names("enemy")
+	local aggroed_units = side.aggroed_minion_target_units
+
+	if self._enemies_in_proximity_update_timer < t then
+		local broadphase = self._broadphase_system.broadphase
+		local search_position = POSITION_LOOKUP[self_unit]
+		local num_enemies_in_proximity = broadphase:query(search_position, IN_PROXIMITY_DISTANCE, enemies_in_proximity, enemy_side_names)
+		local write_index = 0
+
+		for read_index = 1, num_enemies_in_proximity do
+			local enemy_unit = enemies_in_proximity[read_index]
+			local data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
+			local breed = data_extension and data_extension:breed()
+
+			if breed and not breed.not_bot_target and aggroed_units[enemy_unit] then
+				write_index = write_index + 1
+				enemies_in_proximity[write_index] = enemies_in_proximity[read_index]
+
+				if MAX_PROXIMITY_ENEMIES <= write_index then
+					break
+				end
+			end
+		end
+
+		for i = write_index + 1, num_enemies_in_proximity do
+			enemies_in_proximity[i] = nil
+		end
+
+		self._num_enemies_in_proximity = write_index
+		self._enemies_in_proximity_update_timer = t + 0.5 + 0.5 * math.random()
+	end
+
+	local num_enemies_in_proximity = self._num_enemies_in_proximity
+
+	for i = num_enemies_in_proximity, 1, -1 do
+		local enemy_unit = enemies_in_proximity[i]
+
+		if not aggroed_units[enemy_unit] then
+			table.swap_delete(enemies_in_proximity, i)
+
+			self._num_enemies_in_proximity = self._num_enemies_in_proximity - 1
+		end
+	end
+
 	local breed = self._breed
 	local target_units = side.ai_target_units
 	local template = self._target_selection_template
 
-	template(self_unit, self_position, side, perception_component, behavior_component, breed, target_units, t, self._threat_units, bot_group, enemies_in_proximity, self._target_selection_debug_info)
+	template(self_unit, self_position, side, perception_component, behavior_component, breed, target_units, t, self._threat_units, bot_group, self._target_selection_debug_info)
 end
 
 BotPerceptionExtension._decay_threat = function (self, unit, dt)
@@ -262,8 +308,9 @@ end
 
 local ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_SELF_SQ = 12
 local ALLOWED_AID_MIN_RANGE_MONSTER_ALLY_BASE = 3.5
-local ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE = 3
+local ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE = 1
 local ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_ALLY_MODIFIER = 1.4
+local MIN_ALLY_HEALTH_TO_CONSIDER_MONSTERS = 0.5
 
 BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self_position, perception_component, side, t)
 	local can_heal_other = false
@@ -282,6 +329,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 		return closest_ally, closest_real_distance, closest_in_need_type, closest_ally_look_at
 	end
 
+	local liquid_area_system = Managers.state.extension:system("liquid_area_system")
 	local Vector3_distance = Vector3.distance
 	local Vector3_distance_squared = Vector3.distance_squared
 	local target_enemy = perception_component.target_enemy
@@ -297,8 +345,9 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 			local player_position = POSITION_LOOKUP[player_unit]
 			local is_bot = not player:is_human_controlled()
 			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, t)
+			local is_position_in_liquid = liquid_area_system:is_position_in_liquid(player_position)
 
-			if in_need_type or not is_bot then
+			if (in_need_type or not is_bot) and not is_position_in_liquid then
 				local allowed_follow_path, allowed_aid_path = self:_ally_path_allowed(self_position, self_segment_index, player_unit, player_position, player_segment_index, t)
 
 				if allowed_follow_path then
@@ -307,6 +356,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 					elseif in_need_type then
 						local alive_monsters = side:alive_units_by_tag("enemy", "monster")
 						local num_alive_monsters = alive_monsters.size
+						local player_health = ScriptUnit.extension(player_unit, "health_system"):current_health_percent()
 
 						for j = 1, num_alive_monsters do
 							local monster_unit = alive_monsters[j]
@@ -323,20 +373,22 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 								break
 							end
 
-							local is_target_ally_and_needs_aid = perception_component.target_ally == player_unit and perception_component.target_ally_needs_aid
-							local monster_to_target_range = is_target_ally_and_needs_aid and ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE or ALLOWED_AID_MIN_RANGE_MONSTER_ALLY_BASE
+							if MIN_ALLY_HEALTH_TO_CONSIDER_MONSTERS < player_health then
+								local is_target_ally_and_needs_aid = perception_component.target_ally == player_unit and perception_component.target_ally_needs_aid
+								local monster_to_target_range = is_target_ally_and_needs_aid and ALLOWED_AID_MIN_RANGE_MONSTER_CURRENT_ALLY_BASE or ALLOWED_AID_MIN_RANGE_MONSTER_ALLY_BASE
 
-							if monster_target == player_unit then
-								monster_to_target_range = monster_to_target_range + ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_ALLY_MODIFIER
-							end
+								if monster_target == player_unit then
+									monster_to_target_range = monster_to_target_range + ALLOWED_AID_MIN_RANGE_MONSTER_TARGETING_ALLY_MODIFIER
+								end
 
-							local player_to_monster_distance = Vector3_distance(player_position, monster_position)
+								local player_to_monster_distance = Vector3_distance(player_position, monster_position)
 
-							if player_to_monster_distance < monster_to_target_range then
-								utility = 0
-								in_need_type = nil
+								if player_to_monster_distance < monster_to_target_range then
+									utility = 0
+									in_need_type = nil
 
-								break
+									break
+								end
 							end
 						end
 					end
@@ -401,9 +453,16 @@ BotPerceptionExtension._calculate_ally_need_type = function (self, self_position
 	local ally_unit_data_extension = ScriptUnit.extension(ally_unit, "unit_data_system")
 	local ally_character_state_component = ally_unit_data_extension:read_component("character_state")
 	local ally_disabled_character_state_component = ally_unit_data_extension:read_component("disabled_character_state")
+	local assisted_state_input_component = ally_unit_data_extension:read_component("assisted_state_input")
+	local interactee_component = ally_unit_data_extension:read_component("interactee")
+	local being_assisted = assisted_state_input_component.in_progress
 	local in_need_type = nil
 	local look_at_ally = false
 	local utility = 0
+
+	if being_assisted and interactee_component.interactor_unit ~= self._unit then
+		return in_need_type, look_at_ally, utility
+	end
 
 	if PlayerUnitStatus.is_knocked_down(ally_character_state_component) then
 		utility = KNOCKED_DOWN_UTILITY

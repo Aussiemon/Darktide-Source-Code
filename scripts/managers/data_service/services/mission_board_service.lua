@@ -16,7 +16,7 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 	happening_promise = self._backend_interface.mission_happenings:fetch_current()
 
 	local function format_missions_data(result)
-		local missions_data, happening_data = unpack(result)
+		local missions_data, happening_data = unpack(result, 1, 2)
 		local t = Managers.time:time("main")
 		local server_time = Managers.backend:get_server_time(t)
 		local mission_data_expiry = tonumber(missions_data.refreshAt)

@@ -9,6 +9,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
+local RaritySettings = require("scripts/settings/item/rarity_settings")
 local unit_alive = Unit.alive
 local ItemUtils = {}
 
@@ -235,6 +236,70 @@ ItemUtils.character_level = function (item)
 	return character_level
 end
 
+local find_link_attachment_item_slot_path = nil
+
+function find_link_attachment_item_slot_path(target_table, slot_id, item, link_item, optional_path)
+	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
+	local path = optional_path or nil
+
+	for k, t in pairs(target_table) do
+		if type(t) == "table" then
+			if k == slot_id then
+				if not t.item or t.item ~= unused_trinket_name then
+					path = path and path .. "." .. k or k
+
+					if link_item then
+						t.item = item
+					end
+
+					return path, t.item
+				else
+					return nil
+				end
+			else
+				local previous_path = path
+				path = path and path .. "." .. k or k
+				local alternative_path, path_item = find_link_attachment_item_slot_path(t, slot_id, item, link_item, path)
+
+				if alternative_path then
+					return alternative_path, path_item
+				else
+					path = previous_path
+				end
+			end
+		end
+	end
+end
+
+local trinket_slot_order = {
+	"slot_trinket_1",
+	"slot_trinket_2"
+}
+
+ItemUtils.weapon_trinket_preview_item = function (item, optional_preview_item)
+	local preview_item_name = optional_preview_item or "content/items/weapons/player/trinkets/preview_trinket"
+	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
+	local visual_item = nil
+
+	if preview_item then
+		visual_item = table.clone_instance(preview_item)
+	end
+
+	if visual_item then
+		visual_item.gear_id = item.gear_id
+
+		for i = 1, #trinket_slot_order do
+			local slot_id = trinket_slot_order[i]
+
+			if find_link_attachment_item_slot_path(visual_item, slot_id, item, true) then
+				break
+			end
+		end
+	end
+
+	return visual_item
+end
+
 ItemUtils.weapon_skin_preview_item = function (item)
 	local preview_item_name = item.preview_item
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
@@ -253,9 +318,10 @@ ItemUtils.weapon_skin_preview_item = function (item)
 end
 
 ItemUtils.item_level = function (item)
-	local power = item.itemLevel or 0
+	local item_level = item.itemLevel
+	local power = item_level or 0
 
-	return " " .. tostring(power)
+	return " " .. tostring(power), item_level ~= nil
 end
 
 ItemUtils.is_weapon_template_ranged = function (item)
@@ -285,7 +351,7 @@ end
 
 ItemUtils.type_texture = function (item)
 	local item_type = item.item_type
-	local item_type_texture_path = UISettings.item_type_texture_lookup[item_type] or "content/ui/textures/icons/item_types/beveled/weapons"
+	local item_type_texture_path = UISettings.item_type_texture_lookup[item_type] or "content/ui/textures/icons/item_types/weapons"
 
 	return item_type_texture_path
 end
@@ -307,11 +373,21 @@ ItemUtils.pattern_display_name = function (item)
 end
 
 ItemUtils.rarity_display_name = function (item)
-	local rarity = item.rarity
-	local rarity_localization_key = UISettings.item_rarity_localization_lookup[rarity]
-	local rarity_display_name_localized = rarity_localization_key and Localize(rarity_localization_key) or "<undefined item_rarity>"
+	local rarity_settings = RaritySettings[item.rarity]
+	local loc_key = rarity_settings and rarity_settings.display_name
 
-	return rarity_display_name_localized
+	return loc_key and Localize(loc_key) or "<undefined item_rarity>"
+end
+
+ItemUtils.rarity_color = function (item)
+	local rarity_settings = RaritySettings[item.rarity]
+
+	return rarity_settings and rarity_settings.color or {
+		255,
+		255,
+		0,
+		0
+	}
 end
 
 ItemUtils.keywords_text = function (item)
@@ -338,18 +414,6 @@ ItemUtils.perk_item_by_id = function (perk_id)
 	return MasterItems.get_item(perk_id)
 end
 
-ItemUtils.rarity_color = function (item)
-	local rarity = item.rarity
-	local rarity_color = rarity and UISettings.item_rarity_color_lookup[rarity] or {
-		255,
-		255,
-		0,
-		0
-	}
-
-	return rarity_color
-end
-
 local temp_item_rank_localization_context = {
 	rank = 0
 }
@@ -364,58 +428,54 @@ end
 
 ItemUtils.equip_weapon_skin = function (weapon_item, skin_item)
 	local weapon_gear_id = weapon_item.gear_id
-	local skin_gear_id = skin_item.gear_id
+	local skin_gear_id = skin_item and skin_item.gear_id
 	local attach_point = "slot_weapon_skin"
 
-	Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point, skin_gear_id)
+	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point, skin_gear_id)
 end
 
-ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item)
+ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
 	local weapon_gear_id = weapon_item.gear_id
-	local trinket_gear_id = trinket_item.gear_id
-	local link_attachment_item_to_slot = nil
-	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
+	local trinket_gear_id = trinket_item and trinket_item.gear_id
+	local attach_point = optional_path
 
-	function link_attachment_item_to_slot(target_table, slot_id, item, optional_path)
-		local path = optional_path or nil
+	if not attach_point then
+		local link_attachment_item_to_slot = nil
+		local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
 
-		for k, t in pairs(target_table) do
-			if type(t) == "table" then
-				local correct_path = k == slot_id
+		function link_attachment_item_to_slot(target_table, slot_id, item, optional_path)
+			local path = optional_path or nil
 
-				if correct_path and t.item ~= unused_trinket_name then
-					t.item = item
-					path = path and path .. "." .. k or k
+			for k, t in pairs(target_table) do
+				if type(t) == "table" then
+					local correct_path = k == slot_id
 
-					return path
-				else
-					local previous_path = path
-					path = path and path .. "." .. k or k
-					local alternative_path = link_attachment_item_to_slot(t, slot_id, item, path)
+					if correct_path and (not t.item or t.item ~= unused_trinket_name) then
+						t.item = item
+						path = path and path .. "." .. k or k
 
-					if alternative_path then
-						return alternative_path
+						return path
 					else
-						path = previous_path
+						local previous_path = path
+						path = path and path .. "." .. k or k
+						local alternative_path = link_attachment_item_to_slot(t, slot_id, item, path)
+
+						if alternative_path then
+							return alternative_path
+						else
+							path = previous_path
+						end
 					end
 				end
 			end
 		end
+
+		local master_item = weapon_item.__master_item
+		attach_point = link_attachment_item_to_slot(master_item, "slot_trinket_1", trinket_item)
+		attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
 	end
 
-	local master_item = weapon_item.__master_item
-	local attach_point = link_attachment_item_to_slot(master_item, "trinket_slot_1", trinket_item)
-
-	if not attach_point then
-		attach_point = link_attachment_item_to_slot(master_item, "trinket_slot_2", trinket_item)
-
-		if not attach_point then
-			attach_point = link_attachment_item_to_slot(master_item, "slot_trinket_1", trinket_item)
-			attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
-		end
-	end
-
-	Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point, trinket_gear_id)
+	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
 end
 
 ItemUtils.equip_slot_items = function (items)
@@ -460,6 +520,48 @@ ItemUtils.equip_slot_items = function (items)
 	end
 end
 
+ItemUtils.equip_slot_master_items = function (items)
+	local peer_id = Network.peer_id()
+	local local_player_id = 1
+	local player_manager = Managers.player
+	local player = player_manager:player(peer_id, local_player_id)
+	local player_unit = player.player_unit
+	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+	local profile = player:profile()
+	local archetype = profile.archetype
+	local breed_name = archetype.breed
+	local character_id = player:character_id()
+
+	if items then
+		local item_master_ids_by_slots = {}
+
+		for slot_name, item in pairs(items) do
+			local breeds = item and item.breeds
+			local breed_valid = not breeds or table.contains(breeds, breed_name)
+			local slots = item and item.slots
+			local slot_valid = not slots or table.contains(slots, slot_name)
+
+			if breed_valid and slot_valid then
+				item_master_ids_by_slots[slot_name] = item.name
+			end
+		end
+
+		Managers.backend.interfaces.characters:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
+			Log.debug("ItemUtils", "Master items equipped in loadout slots")
+
+			if is_server then
+				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+			else
+				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+			end
+		end):catch(function (errors)
+			Log.error("ItemUtils", "Failed equipping master items in loadout slots", errors)
+		end)
+	end
+end
+
 ItemUtils.equip_item_in_slot = function (slot_name, item)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
@@ -496,6 +598,16 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 	end
 end
 
+ItemUtils.slot_name = function (item)
+	return item.slots and item.slots[1]
+end
+
+ItemUtils.item_slot = function (item)
+	local slot_name = ItemUtils.slot_name(item)
+
+	return slot_name and ItemSlotSettings[slot_name]
+end
+
 ItemUtils.sort_items_by_name_low_first = function (a, b)
 	if b.display_name == a.display_name then
 		return (a.rarity or 0) < (b.rarity or 0)
@@ -528,12 +640,20 @@ ItemUtils.sort_items_by_rarity_high_first = function (a, b)
 	return (a.rarity or 0) > (b.rarity or 0)
 end
 
-local function _get_lerp_value(range, lerp_value)
-	local min = range.min
-	local max = range.max
-	local value = math.lerp(min, max, lerp_value)
+ItemUtils.sort_items_by_item_level_low_first = function (a, b)
+	if (b.itemLevel or 0) == (a.itemLevel or 0) then
+		return ItemUtils.sort_items_by_name_high_first(a, b)
+	end
 
-	return value
+	return (a.itemLevel or 0) < (b.itemLevel or 0)
+end
+
+ItemUtils.sort_items_by_item_level_high_first = function (a, b)
+	if (b.itemLevel or 0) == (a.itemLevel or 0) then
+		return ItemUtils.sort_items_by_name_high_first(a, b)
+	end
+
+	return (a.itemLevel or 0) > (b.itemLevel or 0)
 end
 
 local function _get_lerp_stepped_value(range, lerp_value)
@@ -548,7 +668,9 @@ end
 
 local description_values = {}
 
-ItemUtils.perk_description = function (item, rarity)
+ItemUtils.perk_description = function (item, rarity, lerp_value)
+	table.clear(description_values)
+
 	local description = item.description
 	local trait = item.trait
 
@@ -556,11 +678,7 @@ ItemUtils.perk_description = function (item, rarity)
 		return Localize(description)
 	end
 
-	local trait_template = WeaponTraitTemplates[trait]
-
-	if item.description_values then
-		table.clear(description_values)
-
+	if item.description_values and next(item.description_values) then
 		for i = 1, #item.description_values do
 			local data = item.description_values[i]
 			local description_rarity = tonumber(data.rarity)
@@ -601,41 +719,42 @@ ItemUtils.perk_description = function (item, rarity)
 		end
 	end
 
-	local loc_context = {}
 	local is_meta_buff = buff_template.meta_buff
-	local buff_template_stat_buffs = buff_template.stat_buffs or buff_template.meta_stat_buffs or buff_template.conditional_stat_buffs
+	local buff_template_stat_buffs = buff_template.stat_buffs or buff_template.meta_stat_buffs or buff_template.lerped_stat_buffs or buff_template.conditional_stat_buffs
 
 	if buff_template_stat_buffs then
-		for buff_name, value in pairs(buff_template_stat_buffs) do
-			if class_name == "limit_range_buff" then
-				value = _get_lerp_value(value, lerp_value)
+		for stat_buff_name, value in pairs(buff_template_stat_buffs) do
+			if buff_template.lerped_stat_buffs then
+				local min = value.min
+				local max = value.max
+				local lerp_value_func = value.lerp_value_func or math.lerp
+				value = lerp_value_func(min, max, lerp_value)
 			elseif is_meta_buff and type(value) == "table" then
-				value = _get_lerp_value(value, lerp_value)
+				value = buff_template.lerp_function(value, lerp_value)
 			elseif class_name == "stepped_range_buff" then
 				value = _get_lerp_stepped_value(value, lerp_value)
 			end
 
-			local show_as = localization_info[buff_name]
+			local show_as = localization_info[stat_buff_name]
 
 			if show_as and show_as == "percentage" then
-				value = math.round(value * 100)
+				value = tostring(math.round(value * 100)) .. "%"
 			end
 
-			loc_context[buff_name] = value
+			description_values[stat_buff_name] = value
 		end
 	end
 
-	local no_cache = true
-	loc_context.duration = buff_template.duration
-	local final_description = Localize(description, no_cache, loc_context)
+	description_values.duration = buff_template.duration
+	local final_description = Localize(description, true, description_values)
 
-	Log.info("ItemUtils", "perk_description %s", table.tostring(loc_context))
+	Log.debug("ItemUtils", "perk_description %s", table.tostring(description_values))
 
 	return final_description
 end
 
-ItemUtils.trait_description = function (item, trait_rarity)
-	return ItemUtils.perk_description(item, trait_rarity)
+ItemUtils.trait_description = function (item, rarity, lerp_value)
+	return ItemUtils.perk_description(item, rarity, lerp_value)
 end
 
 return ItemUtils

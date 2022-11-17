@@ -48,6 +48,7 @@ local template_groups = {
 		"autogun_p1_m3",
 		"autogun_p2_m1",
 		"autogun_p2_m2",
+		"autogun_p2_m3",
 		"autogun_p3_m1",
 		"autogun_p3_m2",
 		"autogun_p3_m3"
@@ -55,7 +56,8 @@ local template_groups = {
 	{
 		"autopistols",
 		"autopistol_p1_m1",
-		"autopistol_p2_m1"
+		"autopistol_p1_m2",
+		"autopistol_p1_m3"
 	},
 	{
 		"bolters",
@@ -65,12 +67,18 @@ local template_groups = {
 	},
 	{
 		"chain_swords",
+		"chainsword_p1_m1",
+		"chainsword_p1_m2",
+		"chainsword_p1_m3",
 		"chainsword_2h_p1_m1",
-		"chainsword_p1_m1"
+		"chainsword_2h_p1_m2",
+		"chainsword_2h_p1_m3"
 	},
 	{
 		"chain_axes",
-		"chainaxe_p1_m1"
+		"chainaxe_p1_m1",
+		"chainaxe_p1_m2",
+		"chainaxe_p1_m3"
 	},
 	{
 		"combat_abilities",
@@ -84,8 +92,11 @@ local template_groups = {
 		"combataxe_p1_m2",
 		"combataxe_p1_m3",
 		"combataxe_p2_m1",
+		"combataxe_p2_m2",
+		"combataxe_p2_m3",
 		"combataxe_p3_m1",
-		"combataxe_p3_m2"
+		"combataxe_p3_m2",
+		"combataxe_p3_m3"
 	},
 	{
 		"combat_blades",
@@ -95,7 +106,9 @@ local template_groups = {
 	},
 	{
 		"combat_knives",
-		"combatknife_p1_m1"
+		"combatknife_p1_m1",
+		"combatknife_p1_m2",
+		"combatknife_p1_m3"
 	},
 	{
 		"combat_swords",
@@ -103,7 +116,11 @@ local template_groups = {
 		"combatsword_p1_m2",
 		"combatsword_p1_m3",
 		"combatsword_p2_m1",
-		"combatsword_p3_m1"
+		"combatsword_p2_m2",
+		"combatsword_p2_m3",
+		"combatsword_p3_m1",
+		"combatsword_p3_m2",
+		"combatsword_p3_m3"
 	},
 	{
 		"devices",
@@ -121,7 +138,9 @@ local template_groups = {
 		"forcestaff_p1_m2",
 		"forcestaff_p1_m3",
 		"forcestaff_p2_m1",
-		"forcestaff_p3_m1"
+		"forcestaff_p2_m2",
+		"forcestaff_p3_m1",
+		"forcestaff_p4_m1"
 	},
 	{
 		"force_swords",
@@ -162,7 +181,9 @@ local template_groups = {
 	},
 	{
 		"laspistols",
-		"laspistol_p1_m1"
+		"laspistol_p1_m1",
+		"laspistol_p1_m2",
+		"laspistol_p1_m3"
 	},
 	{
 		"luggables",
@@ -172,11 +193,17 @@ local template_groups = {
 	{
 		"ogryn_clubs",
 		"ogryn_club_p1_m1",
-		"ogryn_club_p2_m1"
+		"ogryn_club_p1_m2",
+		"ogryn_club_p1_m3",
+		"ogryn_club_p2_m1",
+		"ogryn_club_p2_m2",
+		"ogryn_club_p2_m3"
 	},
 	{
 		"ogryn_power_mauls",
-		"ogryn_powermaul_p1_m1"
+		"ogryn_powermaul_p1_m1",
+		"ogryn_powermaul_p1_m2",
+		"ogryn_powermaul_p1_m3"
 	},
 	{
 		"ogryn_powermaul_slabshield",
@@ -184,7 +211,9 @@ local template_groups = {
 	},
 	{
 		"ogryn_heavystubbers",
-		"ogryn_heavystubber_p1_m1"
+		"ogryn_heavystubber_p1_m1",
+		"ogryn_heavystubber_p1_m2",
+		"ogryn_heavystubber_p1_m3"
 	},
 	{
 		"plasma_rifles",
@@ -201,15 +230,21 @@ local template_groups = {
 	},
 	{
 		"power_mauls",
-		"powermaul_p1_m1"
+		"powermaul_p1_m1",
+		"powermaul_p1_m2",
+		"powermaul_p1_m3"
 	},
 	{
 		"power_mauls_2h",
-		"powermaul_2h_p1_m1"
+		"powermaul_2h_p1_m1",
+		"powermaul_2h_p1_m2",
+		"powermaul_2h_p1_m3"
 	},
 	{
 		"power_swords",
-		"powersword_p1_m1"
+		"powersword_p1_m1",
+		"powersword_p1_m2",
+		"powersword_p1_m3"
 	},
 	{
 		"ripperguns",
@@ -224,17 +259,22 @@ local template_groups = {
 	{
 		"thumpers",
 		"ogryn_thumper_p1_m1",
-		"ogryn_thumper_p1_m2"
+		"ogryn_thumper_p1_m2",
+		"ogryn_thumper_p1_m3"
 	},
 	{
 		"shotguns",
 		"shotgun_p1_m1",
+		"shotgun_p1_m2",
+		"shotgun_p1_m3",
 		"shotgun_p2_m1",
 		"shotgun_p3_m1"
 	},
 	{
 		"stub_pistols",
-		"stubrevolver_p1_m1"
+		"stubrevolver_p1_m1",
+		"stubrevolver_p1_m2",
+		"stubrevolver_p1_m3"
 	},
 	{
 		"stub_rifles",
@@ -242,7 +282,9 @@ local template_groups = {
 	},
 	{
 		"thunder_hammers",
-		"thunderhammer_2h_p1_m1"
+		"thunderhammer_2h_p1_m1",
+		"thunderhammer_2h_p1_m2",
+		"thunderhammer_2h_p1_m3"
 	},
 	{
 		"debug",
@@ -259,7 +301,13 @@ local template_names = {
 	"unarmed_hub_zealot",
 	"unarmed",
 	"unarmed_training_grounds",
-	"bot_lasgun_killshot"
+	"bot_lasgun_killshot",
+	"bot_autogun_killshot",
+	"bot_laspistol_killshot",
+	"bot_zola_laspistol",
+	"bot_combatsword_linesman_p1",
+	"bot_combatsword_linesman_p2",
+	"bot_combataxe_linesman"
 }
 
 _require_weapon_templates(path_prefix, template_groups, template_names)

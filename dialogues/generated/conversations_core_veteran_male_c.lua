@@ -51,39 +51,6 @@ local conversations_core_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
-	bonding_conversation_cadia_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_a_01"
-		},
-		sound_events_duration = {
-			[1.0] = 2.654448
-		},
-		randomize_indexes = {}
-	},
-	bonding_conversation_cadia_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_c_01"
-		},
-		sound_events_duration = {
-			[1.0] = 2.611771
-		},
-		randomize_indexes = {}
-	},
-	bonding_conversation_cadia_e = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_c__bonding_conversation_cadia_e_01"
-		},
-		sound_events_duration = {
-			[1.0] = 1.885365
-		},
-		randomize_indexes = {}
-	},
 	bonding_conversation_killing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -697,17 +664,6 @@ local conversations_core_veteran_male_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 2.670427
-		},
-		randomize_indexes = {}
-	},
-	combat_pause_limited_veteran_c_06_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_c__combat_pause_limited_veteran_c_06_a_01"
-		},
-		sound_events_duration = {
-			[1.0] = 2.772375
 		},
 		randomize_indexes = {}
 	},
@@ -5363,6 +5319,19 @@ local conversations_core_veteran_male_c = {
 		sound_events_duration = {
 			[1.0] = 2.992073,
 			[2.0] = 2.821448
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__lore_the_emperor_two_c_01",
+			[2.0] = "loc_veteran_male_c__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.501115,
+			[2.0] = 3.985406
 		},
 		randomize_indexes = {}
 	},
