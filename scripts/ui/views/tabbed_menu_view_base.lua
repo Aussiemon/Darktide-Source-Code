@@ -112,7 +112,9 @@ TabbedMenuViewBase.cb_on_close_pressed = function (self)
 end
 
 TabbedMenuViewBase.cb_switch_tab = function (self, index)
-	self._next_tab_index = index
+	if self._can_navigate then
+		self._next_tab_index = index
+	end
 end
 
 TabbedMenuViewBase.event_register_camera = function (self, camera_unit)
@@ -212,7 +214,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 	self._tab_bar_views = tab_bar_views
 
-	self:set_can_navigate(use_tab_bar)
+	self:set_can_navigate(#tab_bar_views > 1 and not tab_bar_params.hide_tabs)
 
 	self._next_tab_index = #tab_bar_views > 0 and 1 or nil
 end
@@ -260,7 +262,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 	local current_view = self._active_view
 	local ui_manager = Managers.ui
 
-	if view ~= current_view and self._can_navigate or not current_view then
+	if view ~= current_view or not current_view then
 		self:_close_active_view()
 
 		self._active_view = view
@@ -270,6 +272,11 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 				parent = self
 			}
 			local additional_context = tab_params.context
+			local context_function = tab_params.context_function
+
+			if context_function then
+				additional_context = context_function()
+			end
 
 			if additional_context then
 				table.merge(context, additional_context)

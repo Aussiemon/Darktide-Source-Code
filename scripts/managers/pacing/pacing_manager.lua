@@ -7,7 +7,7 @@ local RoamerPacing = require("scripts/managers/pacing/roamer_pacing/roamer_pacin
 local SpecialsPacing = require("scripts/managers/pacing/specials_pacing/specials_pacing")
 local PacingManager = class("PacingManager")
 
-PacingManager.init = function (self, world, nav_world, level_name, level_seed)
+PacingManager.init = function (self, world, nav_world, level_name, level_seed, pacing_control)
 	self._tension = 0
 	self._total_challenge_rating = 0
 	self._num_aggroed_minions = 0
@@ -19,7 +19,7 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed)
 	self._world = world
 	local template = PacingTemplates.default
 	self._template = template
-	self._roamer_pacing = RoamerPacing:new(nav_world, level_name, level_seed)
+	self._roamer_pacing = RoamerPacing:new(nav_world, level_name, level_seed, pacing_control)
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
 	self._monster_pacing = MonsterPacing:new(nav_world)
@@ -30,6 +30,7 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed)
 	self._player_combat_states = {}
 	self._current_combat_state = "low"
 	self._disabled = false
+	self._backend_pacing_control = pacing_control
 end
 
 PacingManager.on_gameplay_post_init = function (self, level_name)
@@ -45,10 +46,12 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	self:_change_state(0, starting_state)
 
 	self._max_tension = Managers.state.difficulty:get_table_entry_by_resistance(template.max_tension)
+	self._ramp_up_frequency_settings = Managers.state.difficulty:get_table_entry_by_resistance(template.ramp_up_frequency_modifiers)
+	self._ramp_up_frequency_modifiers = {}
 	local challenge_rating_thresholds = {}
 
-	for spawn_type, resistance_table in pairs(template.challenge_rating_thresholds) do
-		challenge_rating_thresholds[spawn_type] = Managers.state.difficulty:get_table_entry_by_resistance(resistance_table)
+	for spawn_type, challenge_table in pairs(template.challenge_rating_thresholds) do
+		challenge_rating_thresholds[spawn_type] = Managers.state.difficulty:get_table_entry_by_challenge(challenge_table)
 	end
 
 	self._challenge_rating_thresholds = challenge_rating_thresholds
@@ -128,6 +131,7 @@ PacingManager.update = function (self, dt, t)
 		self._horde_pacing:update(dt, t, side_id, target_side_id)
 		self._specials_pacing:update(dt, t, side_id, target_side_id)
 		self._monster_pacing:update(dt, t, side_id, target_side_id)
+		self:_update_ramp_up_frequency(dt, target_side_id)
 	end
 
 	local switch_state_conditions = self._switch_state_conditions
@@ -225,6 +229,10 @@ end
 
 PacingManager.set_enabled = function (self, enabled)
 	self._disabled = not enabled
+end
+
+PacingManager.set_in_safe_zone = function (self, in_safe_zone)
+	self._in_safe_zone = in_safe_zone
 end
 
 PacingManager._event_intro_cinematic_started = function (self, cinematic_name)
@@ -383,6 +391,50 @@ PacingManager._update_player_combat_state = function (self, dt, side_id)
 	end
 end
 
+PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
+	local state = self._state
+	local ramp_up_frequency_settings = self._ramp_up_frequency_settings
+	local ramp_up_frequency_modifiers = self._ramp_up_frequency_modifiers
+	local ramp_modifiers = ramp_up_frequency_settings.ramp_modifiers
+	local ramp_up_states = ramp_up_frequency_settings.ramp_up_states
+
+	if not ramp_up_states[state] or self._in_safe_zone then
+		if self._current_ramp_up_duration then
+			for spawn_type, max_modifier in pairs(ramp_modifiers) do
+				ramp_up_frequency_modifiers[spawn_type] = 1
+			end
+		end
+
+		self._current_ramp_up_duration = nil
+
+		return
+	end
+
+	local ramp_duration = ramp_up_frequency_settings.ramp_duration
+
+	if not self._current_ramp_up_duration then
+		self._current_ramp_up_duration = ramp_duration
+	else
+		local travel_change_pause_time = ramp_up_frequency_settings.travel_change_pause_time
+		local time_since_forward_travel_changed = Managers.state.main_path:time_since_forward_travel_changed(target_side_id)
+
+		if time_since_forward_travel_changed < travel_change_pause_time then
+			self._current_ramp_up_duration = math.max(self._current_ramp_up_duration - dt, 0)
+		end
+	end
+
+	local ramp_up_percentage = math.min(1 - self._current_ramp_up_duration / ramp_duration, 1)
+
+	for spawn_type, max_modifier in pairs(ramp_modifiers) do
+		local diff = math.abs(1 - max_modifier)
+		ramp_up_frequency_modifiers[spawn_type] = 1 + diff * ramp_up_percentage
+	end
+end
+
+PacingManager._get_ramp_up_frequency_modifier = function (self, spawn_type)
+	return self._ramp_up_frequency_modifiers[spawn_type] or 1
+end
+
 PacingManager.player_unit_combat_state = function (self, player_unit)
 	return self._player_combat_states[player_unit]
 end
@@ -410,6 +462,13 @@ PacingManager.add_aggroed_minion = function (self, unit)
 		aggroed_minions[unit] = true
 
 		self._side_system:add_aggroed_minion(unit)
+
+		if self._in_safe_zone then
+			self:pause_spawn_type("specials", false)
+			self:pause_spawn_type("hordes", false)
+			self:pause_spawn_type("trickle_hordes", false)
+			self:set_in_safe_zone(false)
+		end
 	end
 end
 
@@ -454,6 +513,12 @@ PacingManager.add_trickle_horde = function (self, template)
 end
 
 PacingManager.add_pacing_modifiers = function (self, modify_settings)
+	local modify_resistance = modify_settings.modify_resistance
+
+	if modify_resistance then
+		Managers.state.difficulty:modify_resistance(modify_resistance)
+	end
+
 	local horde_timer_modifier = modify_settings.horde_timer_modifier
 
 	if horde_timer_modifier then
@@ -491,6 +556,13 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	if override_faction then
 		self._roamer_pacing:override_faction(override_faction)
 	end
+
+	local num_encampments_override = modify_settings.num_encampments_override
+	local encampments_override_chance = modify_settings.encampments_override_chance
+
+	if num_encampments_override and encampments_override_chance then
+		self._roamer_pacing:num_encampments_override(num_encampments_override, encampments_override_chance)
+	end
 end
 
 PacingManager.aggro_roamer_zone_range = function (self, target_unit, range)
@@ -525,12 +597,20 @@ PacingManager.try_inject_special = function (self, breed_name, optional_prefered
 	self._specials_pacing:try_inject_special(breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
 end
 
+PacingManager.refund_special_slot = function (self)
+	return self._specials_pacing:refund_special_slot()
+end
+
 PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._specials_pacing:freeze(enabled)
 end
 
 PacingManager.roamer_traverse_logic = function (self)
 	return self._roamer_pacing:traverse_logic()
+end
+
+PacingManager.get_backend_pacing_control_flag = function (self, flag)
+	return self._backend_pacing_control and self._backend_pacing_control[flag]
 end
 
 return PacingManager

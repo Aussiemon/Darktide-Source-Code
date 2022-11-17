@@ -16,6 +16,7 @@ local templates = {
 	shade_invisibility = {
 		unique_buff_id = "psyker_invisibility_test",
 		duration = 5,
+		allow_proc_while_active = true,
 		class_name = "proc_buff",
 		keywords = {
 			keywords.invisible
@@ -49,6 +50,7 @@ local templates = {
 	},
 	shade_invisibility_no_damage_bonus = {
 		unique_buff_id = "psyker_invisibility_test",
+		allow_proc_while_active = true,
 		duration = 5,
 		class_name = "proc_buff",
 		keywords = {

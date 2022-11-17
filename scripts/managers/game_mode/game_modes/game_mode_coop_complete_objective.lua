@@ -72,6 +72,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 		elseif completion_conditions_met then
 			self:_gamemode_complete("won")
 			self:_change_state("outro_cinematic")
+			Managers.state.minion_spawn:despawn_all_minions()
 			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_win)
 			_log("[evaluate_end_conditions] Triggering cutscene %q", CINEMATIC_NAMES.outro_win)
 		end
@@ -96,6 +97,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 
 			self:_gamemode_complete("lost")
 			self:_change_state("outro_cinematic")
+			Managers.state.minion_spawn:despawn_all_minions()
 			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_fail)
 			_log("[evaluate_end_conditions] Grace timer reached end")
 			_log("[evaluate_end_conditions] Triggering cutscene %q", CINEMATIC_NAMES.outro_fail)
@@ -143,18 +145,19 @@ GameModeCoopCompleteObjective._fetch_session_report = function (self)
 	_log("fetch_session_report, session_id: %s", session_id)
 end
 
-GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_players, alive_players, ignore_bots)
+GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_players, alive_players, include_bots)
 	for i = 1, num_alive_players do
 		local player = alive_players[i]
 		local player_unit = player.player_unit
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 
 		if unit_data_extension then
+			local is_human = player:is_human_controlled()
+			local count_player = is_human or include_bots and not is_human
 			local character_state_component = unit_data_extension:read_component("character_state")
-			local requires_help = PlayerUnitStatus.requires_help(character_state_component)
-			local is_bot = not ignore_bots and not player:is_human_controlled()
+			local is_disabled = HEALTH_ALIVE[player_unit] and PlayerUnitStatus.is_disabled_for_mission_failure(character_state_component)
 
-			if not is_bot and not requires_help and HEALTH_ALIVE[player_unit] then
+			if count_player and not is_disabled and HEALTH_ALIVE[player_unit] then
 				return false
 			end
 		end
@@ -163,14 +166,21 @@ GameModeCoopCompleteObjective._all_players_disabled = function (self, num_alive_
 	return true
 end
 
-GameModeCoopCompleteObjective._all_players_dead = function (self, num_alive_players, alive_players, ignore_bots)
+GameModeCoopCompleteObjective._all_players_dead = function (self, num_alive_players, alive_players, include_bots)
 	for i = 1, num_alive_players do
 		local player = alive_players[i]
 		local player_unit = player.player_unit
-		local is_bot = not ignore_bots and not player:is_human_controlled()
+		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 
-		if not is_bot and HEALTH_ALIVE[player_unit] then
-			return false
+		if unit_data_extension then
+			local is_human = player:is_human_controlled()
+			local count_player = is_human or include_bots and not is_human
+			local character_state_component = unit_data_extension:read_component("character_state")
+			local is_dead = not HEALTH_ALIVE[player_unit] or PlayerUnitStatus.is_dead_for_mission_failure(character_state_component)
+
+			if count_player and not is_dead then
+				return false
+			end
 		end
 	end
 
@@ -205,6 +215,8 @@ end
 
 GameModeCoopCompleteObjective.in_safe_volume = function (self, volume_unit)
 	if not self._pacing_enabled then
+		_log("[in_safe_volume] %s", volume_unit and "Entered safe volume" or "Exited safe volume")
+
 		if volume_unit then
 			self:_restrict_spawning(true)
 		else
@@ -217,6 +229,7 @@ GameModeCoopCompleteObjective._restrict_spawning = function (self, enabled)
 	Managers.state.pacing:pause_spawn_type("specials", enabled, "safe_zone")
 	Managers.state.pacing:pause_spawn_type("hordes", enabled, "safe_zone")
 	Managers.state.pacing:pause_spawn_type("trickle_hordes", enabled, "safe_zone")
+	Managers.state.pacing:set_in_safe_zone(enabled)
 end
 
 GameModeCoopCompleteObjective._set_pacing = function (self, enabled)
@@ -233,7 +246,7 @@ GameModeCoopCompleteObjective.fail = function (self)
 	self._failed = true
 end
 
-GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, is_respawn)
+GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, unit, is_respawn)
 	GameModeCoopCompleteObjective.super.on_player_unit_spawn(self, player)
 
 	if self._is_server then
@@ -243,6 +256,12 @@ GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, is_
 			self:_apply_respawn_penalties(player)
 		elseif self._settings.persistent_player_data_settings then
 			self:_apply_persistent_player_data(player)
+		end
+
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		if mission_objective_system then
+			mission_objective_system:on_player_unit_spawn(player, unit, is_respawn)
 		end
 	end
 end
@@ -283,10 +302,32 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local character_state_component = unit_data_extension:read_component("character_state")
 	local character_state_name = character_state_component.state_name
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+	local weapon_slot_data = {}
+
+	for slot_name, config in pairs(weapon_slot_configuration) do
+		local wieldable_component = unit_data_extension:read_component(slot_name)
+		local max_ammo_reserve = wieldable_component.max_ammunition_reserve
+		local max_ammo_clip = wieldable_component.max_ammunition_clip
+		local data = {}
+
+		if max_ammo_reserve > 0 then
+			data.ammo_reserve_percent = wieldable_component.current_ammunition_reserve / max_ammo_reserve
+		end
+
+		if max_ammo_clip > 0 then
+			data.ammo_clip_percent = wieldable_component.current_ammunition_clip / max_ammo_clip
+		end
+
+		weapon_slot_data[slot_name] = data
+	end
+
 	local data = {
 		damage_percent = damage_percent,
 		permanent_damage_percent = permanent_damage_percent,
-		character_state_name = character_state_name
+		character_state_name = character_state_name,
+		weapon_slot_data = weapon_slot_data
 	}
 
 	if player:is_human_controlled() then
@@ -317,20 +358,58 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 			selected_data.damage_percent = math.min(selected_data.damage_percent, 0.95)
 			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, 0.95)
 
-			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous self: %s", account_id, table.tostring(selected_data))
+			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous self: %s", account_id, table.tostring(selected_data, 3))
 		elseif #bot_data > 0 then
 			selected_data = table.remove(bot_data, #bot_data)
 			local settings = self._settings.persistent_player_data_settings
 			selected_data.damage_percent = math.min(selected_data.damage_percent, settings.max_damage_percent)
 			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, settings.max_permanent_damage_percent)
 
-			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous bot: %s", account_id, table.tostring(selected_data))
+			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous bot: %s", account_id, table.tostring(selected_data, 3))
 		end
 
 		if selected_data then
-			local health_extension = ScriptUnit.extension(player.player_unit, "health_system")
+			local player_unit = player.player_unit
+			local health_extension = ScriptUnit.extension(player_unit, "health_system")
 
 			health_extension:apply_persistent_data(selected_data.damage_percent, selected_data.permanent_damage_percent)
+
+			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
+			for slot_name, data in pairs(selected_data.weapon_slot_data) do
+				local wieldable_component = unit_data_extension:write_component(slot_name)
+				local max_ammo_reserve = wieldable_component.max_ammunition_reserve
+				local max_ammo_clip = wieldable_component.max_ammunition_clip
+
+				if max_ammo_reserve > 0 and data.ammo_reserve_percent then
+					wieldable_component.current_ammunition_reserve = math.round(max_ammo_reserve * data.ammo_reserve_percent)
+				end
+
+				if max_ammo_clip > 0 and data.ammo_clip_percent then
+					wieldable_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
+				end
+			end
+		else
+			local player_unit = player.player_unit
+			local settings = self._settings.spawn
+			local ammo_percentage = settings.ammo_percentage or 1
+			local health_percentage = settings.health_percentage or 0
+			local grenade_percentage = settings.grenade_percentage or 1
+			local weapon_extension = ScriptUnit.has_extension(player_unit, "weapon_system")
+			local health_extension = ScriptUnit.has_extension(player_unit, "health_system")
+			local ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
+
+			if weapon_extension then
+				weapon_extension:on_player_unit_spawn(ammo_percentage)
+			end
+
+			if health_extension then
+				health_extension:on_player_unit_spawn(health_percentage)
+			end
+
+			if ability_extension then
+				ability_extension:on_player_unit_spawn(grenade_percentage)
+			end
 		end
 	end
 end

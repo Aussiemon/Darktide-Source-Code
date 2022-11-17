@@ -31,8 +31,22 @@ IntervalBuff.update = function (self, dt, t, portable_random)
 
 		interval_func(self._template_data, self._template_context, template)
 
+		if self._finished and template.interval_stack_removal then
+			self._should_remove_stack = true
+		end
+
 		self._next_interval_t = t + _next_interval_t(template, self._template_context)
 	end
+end
+
+IntervalBuff.finished = function (self)
+	local template = self._template
+
+	if not template.interval_stack_removal then
+		return self._finished
+	end
+
+	return false
 end
 
 return IntervalBuff

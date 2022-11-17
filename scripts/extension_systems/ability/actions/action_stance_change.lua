@@ -20,6 +20,8 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 end
 
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionStanceChange.super.start(self, action_settings, t, time_scale, action_start_params)
+
 	local stop_reload = action_settings.stop_reload
 	local stop_current_action = action_settings.stop_current_action
 	local anim = action_settings.anim

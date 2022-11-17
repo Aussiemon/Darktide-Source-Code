@@ -1,12 +1,5 @@
+local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
 local HoloSight = class("HoloSight")
-local SHOW_DELAY = 0.1
-local HIDE_DELAY = 0.1
-local HIP_RING = 1.2
-local HIP_DOT = 1.8
-local ADS_RING = 3
-local ADS_DOT = 7
-local DIFF_RING = ADS_RING - HIP_RING
-local DIFF_DOT = ADS_DOT - HIP_DOT
 
 HoloSight.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
@@ -19,27 +12,34 @@ HoloSight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._slot = slot
 	self._hip_at_t = nil
 	self._alternate_fire_at_t = nil
-end
-
-HoloSight.fixed_update = function (self, unit, dt, t, frame)
-	return
+	local holo_sight_template = weapon_template.holo_sight_template
+	self._holo_sight_template = holo_sight_template or HoloSightTemplates.default
 end
 
 HoloSight.update = function (self, unit, dt, t)
 	local is_aiming_down_sights = self._alternate_fire_component.is_active
-	local unit_1p = self._slot.parent_unit_1p
 	local first_person_extension = self._first_person_extension
 
 	if first_person_extension:is_in_first_person_mode() then
+		local unit_1p = self._slot.parent_unit_1p
+		local holo_sight_template = self._holo_sight_template
+		local show_delay = holo_sight_template.show_delay
+		local hide_delay = holo_sight_template.hide_delay
+		local ads_ring = holo_sight_template.ads_ring
+		local ads_dot = holo_sight_template.ads_dot
+		local hip_ring = holo_sight_template.hip_ring
+		local hip_dot = holo_sight_template.hip_dot
+		local diff_ring = holo_sight_template.diff_ring
+		local diff_dot = holo_sight_template.diff_dot
 		local hip_at_t = self._hip_at_t
 		local alternate_fire_at_t = self._alternate_fire_at_t
 		local was_in_third_person = self._was_in_third_person
 		local was_aiming_down_sights = self._was_aiming_down_sights
 
 		if (was_aiming_down_sights or was_in_third_person) and not is_aiming_down_sights and not hip_at_t then
-			hip_at_t = t + SHOW_DELAY
+			hip_at_t = t + show_delay
 		elseif (not was_aiming_down_sights or was_in_third_person) and is_aiming_down_sights then
-			alternate_fire_at_t = alternate_fire_at_t or t + HIDE_DELAY
+			alternate_fire_at_t = alternate_fire_at_t or t + hide_delay
 		end
 
 		if was_in_third_person then
@@ -48,9 +48,9 @@ HoloSight.update = function (self, unit, dt, t)
 		end
 
 		if hip_at_t then
-			local progress = math.ease_exp(1 - math.clamp((hip_at_t - t) / SHOW_DELAY, 0, 1))
-			local ring = ADS_RING - DIFF_RING * progress
-			local dot = ADS_DOT - DIFF_DOT * progress
+			local progress = math.ease_exp(1 - math.clamp((hip_at_t - t) / show_delay, 0, 1))
+			local ring = ads_ring - diff_ring * progress
+			local dot = ads_dot - diff_dot * progress
 
 			Unit.set_vector2_for_materials(unit_1p, "optic_layers", Vector2(ring, dot), true)
 
@@ -58,9 +58,9 @@ HoloSight.update = function (self, unit, dt, t)
 				hip_at_t = nil
 			end
 		elseif alternate_fire_at_t then
-			local progress = math.easeInCubic(1 - math.clamp((alternate_fire_at_t - t) / HIDE_DELAY, 0, 1))
-			local ring = HIP_RING + DIFF_RING * progress
-			local dot = HIP_DOT + DIFF_DOT * progress
+			local progress = math.easeInCubic(1 - math.clamp((alternate_fire_at_t - t) / hide_delay, 0, 1))
+			local ring = hip_ring + diff_ring * progress
+			local dot = hip_dot + diff_dot * progress
 
 			Unit.set_vector2_for_materials(unit_1p, "optic_layers", Vector2(ring, dot), true)
 

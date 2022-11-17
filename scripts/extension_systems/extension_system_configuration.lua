@@ -33,6 +33,7 @@ _system_require("decoder_device", "decoder_device_system")
 _system_require("destructible", "destructible_system")
 _system_require("dialogue", "dialogue_context_system")
 _system_require("dialogue", "dialogue_system")
+_system_require("dissolve", "minion_dissolve_extension")
 _system_require("door", "door_system")
 _system_require("door_control_panel", "door_control_panel_system")
 _system_require("event_synchronizer", "event_synchronizer_system")
@@ -56,7 +57,6 @@ _system_require("luggable", "luggable_extension")
 _system_require("luggable_socket", "luggable_socket_system")
 _system_require("minigame", "minigame_system")
 _system_require("minion_spawner", "minion_spawner_system")
-_system_require("mission_board", "mission_board_system")
 _system_require("mission_objective", "mission_objective_system")
 _system_require("mission_objective_target", "mission_objective_target_system")
 _system_require("mission_objective_zone", "mission_objective_zone_system")
@@ -95,7 +95,7 @@ _system_require("specialization", "specialization_system")
 _system_require("spline_group", "spline_group_system")
 _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
-_system_require("training_grounds", "training_grounds_scenario_system")
+_system_require("scripted_scenario", "scripted_scenario_system")
 _system_require("trigger", "trigger_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
@@ -496,7 +496,7 @@ local systems = {
 		"music_parameter_system",
 		"ExtensionSystemBase",
 		false,
-		true,
+		false,
 		false,
 		true,
 		false,
@@ -799,8 +799,7 @@ local systems = {
 		false,
 		{
 			"PlayerUnitCameraExtension",
-			"PlayerHuskCameraExtension",
-			"MissionBoardCameraExtension"
+			"PlayerHuskCameraExtension"
 		}
 	},
 	{
@@ -813,19 +812,6 @@ local systems = {
 		false,
 		{
 			"PlayerVisibilityExtension"
-		}
-	},
-	{
-		"mission_board_system",
-		"MissionBoardSystem",
-		true,
-		false,
-		false,
-		true,
-		false,
-		{
-			"MissionBoardExtension",
-			"MissionBoardVisibilityExtension"
 		}
 	},
 	{
@@ -1100,6 +1086,18 @@ local systems = {
 		false
 	},
 	{
+		"dissolve_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		false,
+		false,
+		{
+			"MinionDissolveExtension"
+		}
+	},
+	{
 		"shading_environment_system",
 		"ShadingEnvironmentSystem",
 		false,
@@ -1290,8 +1288,8 @@ local systems = {
 		}
 	},
 	{
-		"training_grounds_scenario_system",
-		"TrainingGroundsScenarioSystem",
+		"scripted_scenario_system",
+		"ScriptedScenarioSystem",
 		false,
 		true,
 		false,

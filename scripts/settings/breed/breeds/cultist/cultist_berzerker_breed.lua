@@ -47,13 +47,13 @@ local breed_data = {
 	slot_template = "cultist_berzerker",
 	base_unit = "content/characters/enemy/chaos_cultist_melee_elite/third_person/base",
 	challenge_rating = 4,
-	hit_mass = 5,
+	hit_mass = 4,
 	bone_lod_radius = 1.1,
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
-		far = true,
 		minion = true,
+		melee = true,
 		elite = true
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,

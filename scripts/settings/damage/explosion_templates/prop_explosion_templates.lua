@@ -33,7 +33,7 @@ local explosion_templates = {
 		close_damage_profile = DamageProfileTemplates.barrel_explosion_close,
 		damage_profile = DamageProfileTemplates.barrel_explosion,
 		vfx = {
-			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
+			"content/fx/particles/destructibles/explosive_barrel_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_barrel_flame",

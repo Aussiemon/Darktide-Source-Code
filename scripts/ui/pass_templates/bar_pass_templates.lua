@@ -329,7 +329,7 @@ BarPassTemplates.character_menu_experience_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local bar_length = content.bar_length or 0
-			style.offset[1] = bar_length * progress - 10
+			style.offset[1] = bar_length * progress - 8
 			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
 			style.color[1] = 255 * alpha_multiplier
 		end

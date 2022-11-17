@@ -180,6 +180,12 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_remove_mood(t, mood_types.zealot_maniac_combat_ability)
 	end
 
+	if lunging_mood == mood_types.ogryn_bonebreaker_combat_ability then
+		self:_add_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
+	elseif lunging_mood ~= mood_types.ogryn_bonebreaker_combat_ability then
+		self:_remove_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
+	end
+
 	if is_in_veteran_ranger_stance then
 		self:_add_mood(t, mood_types.veteran_ranger_combat_ability)
 	elseif not is_in_veteran_ranger_stance then

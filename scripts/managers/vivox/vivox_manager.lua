@@ -2,6 +2,23 @@ local ChatManagerInterface = require("scripts/foundation/managers/chat/chat_mana
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local VivoxManager = class("VivoxManager")
+local SOUND_SETTING_OPTIONS_VOICE_CHAT = table.enum("muted", "voice_activated", "push_to_talk")
+
+local function _sound_setting_option_voice_chat()
+	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat then
+		local option = Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat
+
+		if option == 0 then
+			return SOUND_SETTING_OPTIONS_VOICE_CHAT.muted
+		elseif option == 1 then
+			return SOUND_SETTING_OPTIONS_VOICE_CHAT.voice_activated
+		elseif option == 2 then
+			return SOUND_SETTING_OPTIONS_VOICE_CHAT.push_to_talk
+		end
+	end
+
+	return SOUND_SETTING_OPTIONS_VOICE_CHAT.muted
+end
 
 VivoxManager.init = function (self)
 	self._initialized = false
@@ -12,6 +29,8 @@ VivoxManager.init = function (self)
 	self._join_queue = {}
 	self._channel_tags = {}
 	self._channel_host_peer_id = {}
+	self._input_service = Managers.input:get_input_service("Ingame")
+	self._time_since_mute_local_mic = nil
 	self._delayed_participants_added = {}
 
 	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
@@ -199,12 +218,37 @@ VivoxManager.mic_volume_changed = function (self)
 end
 
 VivoxManager.send_channel_message = function (self, channel_handle, message_body)
+	Managers.telemetry_events:chat_message_sent(message_body)
 	Vivox.send_session_message(channel_handle, message_body)
 end
 
 VivoxManager.update = function (self, dt, t)
 	if self._privileges_manager then
 		self._privileges_manager:update(dt, t)
+	end
+
+	if self._time_since_mute_local_mic ~= nil then
+		self._time_since_mute_local_mic = self._time_since_mute_local_mic + dt
+
+		if self._time_since_mute_local_mic >= 0.5 then
+			Vivox.get_local_audio_info()
+
+			self._time_since_mute_local_mic = nil
+		end
+	end
+
+	local muted_setting = _sound_setting_option_voice_chat()
+
+	if muted_setting == SOUND_SETTING_OPTIONS_VOICE_CHAT.push_to_talk then
+		local should_mute = true
+
+		if self._input_service and self._input_service:get("voip_push_to_talk") then
+			should_mute = false
+		end
+
+		if self._local_audio_info and self._local_audio_info.is_mic_muted ~= should_mute then
+			self:mute_local_mic(should_mute)
+		end
 	end
 
 	if not self._last_update then
@@ -239,9 +283,9 @@ VivoxManager.update = function (self, dt, t)
 
 			for i, participant in ipairs(participants) do
 				if participant.player_info then
-					local displayname = participant.player_info:user_display_name()
+					local displayname = self:_displayname_in_channel(participant, channel_handle)
 
-					if displayname and displayname ~= "" and displayname ~= "N/A" then
+					if displayname then
 						participant.displayname = displayname
 						participant.displayname_set = true
 
@@ -260,6 +304,30 @@ VivoxManager.update = function (self, dt, t)
 			end
 		end
 	end
+end
+
+VivoxManager._displayname_in_channel = function (self, participant, channel_handle)
+	if not participant.player_info then
+		return nil
+	end
+
+	local tag = self:tag_from_session_handle(channel_handle)
+
+	if tag == ChatManagerConstants.ChannelTag.HUB or ChatManagerConstants.ChannelTag.MISSION then
+		local displayname = participant.player_info:character_name()
+
+		if displayname and displayname ~= "" and displayname ~= "N/A" then
+			return displayname
+		end
+	else
+		local displayname = participant.player_info:user_display_name()
+
+		if displayname and displayname ~= "" and displayname ~= "N/A" then
+			return displayname
+		end
+	end
+
+	return nil
 end
 
 local function login_state_enum(vx_login_state_change_state)
@@ -325,11 +393,21 @@ local function connection_state_enum(vx_connection_state)
 end
 
 VivoxManager.is_mic_muted = function (self)
-	return self._local_audio_info and self._local_audio_info.is_mic_muted
+	return self:is_connected() and self._local_audio_info and self._local_audio_info.is_mic_muted
 end
 
 VivoxManager.mute_local_mic = function (self, mute)
+	if not self:is_connected() then
+		return
+	end
+
 	Vivox.mute_local_mic(mute)
+
+	if self._local_audio_info then
+		self._local_audio_info.is_mic_muted = mute
+	end
+
+	self._time_since_mute_local_mic = 0
 end
 
 VivoxManager.channel_text_mute_participant = function (self, channel_handle, participant_uri, mute)
@@ -363,15 +441,13 @@ VivoxManager._handle_event = function (self, message)
 
 			Vivox.get_local_audio_info()
 
-			local mute = true
+			local muted_setting = _sound_setting_option_voice_chat()
 
-			if PLATFORM == "xbs" then
-				mute = false
-			elseif Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat then
-				mute = Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat == 0
+			if muted_setting == SOUND_SETTING_OPTIONS_VOICE_CHAT.voice_activated then
+				self:mute_local_mic(false)
+			else
+				self:mute_local_mic(true)
 			end
-
-			self:mute_local_mic(mute)
 		end
 	elseif message.event == Vivox.EventType_CONNECTION_STATE_CHANGE then
 		local state = connection_state_enum(message.state)
@@ -417,6 +493,7 @@ VivoxManager._handle_event = function (self, message)
 		end
 
 		if state == ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			Vivox.get_local_audio_info()
 			_update_local_render_volume(message.session_handle)
 		end
 	elseif message.event == Vivox.EventType_MESSAGE then
@@ -428,9 +505,9 @@ VivoxManager._handle_event = function (self, message)
 
 		if participant.is_mute_status_set == true then
 			if participant.displayname_set ~= true and participant.player_info then
-				local displayname = participant.player_info:user_display_name()
+				local displayname = self:_displayname_in_channel(participant, message.session_handle)
 
-				if displayname and displayname ~= "" and displayname ~= "N/A" then
+				if displayname then
 					participant.displayname = displayname
 					participant.displayname_set = true
 				end
@@ -521,9 +598,15 @@ VivoxManager._handle_response = function (self, message)
 		end
 	elseif message.response == Vivox.ResponseType_ACCOUNT_ANONYMOUS_LOGIN then
 		self._account_handle = message.account_handle
-	elseif message.response == Vivox.ResponseType_MUTED_LOCAL_MIC then
-		Vivox.get_local_audio_info()
 	elseif message.response == Vivox.ResponseType_GET_LOCAL_AUDIO_INFO then
+		if self._local_audio_info and self._local_audio_info.is_mic_muted ~= message.is_mic_muted then
+			local assumed_muted = self._local_audio_info.is_mic_muted and "muted" or "unmuted"
+			local got_muted = message.is_mic_muted and "muted" or "unmuted"
+
+			Log.warning("VivoxManager", "Assumed our local mic was %s but local audio info says it was %s.", assumed_muted, got_muted)
+			self:mute_local_mic(message.is_mic_muted)
+		end
+
 		self._local_audio_info = {
 			is_mic_muted = message.is_mic_muted,
 			is_speaker_muted = message.is_speaker_muted,
@@ -598,9 +681,9 @@ VivoxManager._update_mute_status_for_participants = function (self, channel_hand
 
 		if participant and participant.is_current_user then
 			participant.player_info = player_info
-			local displayname = player_info:user_display_name()
+			local displayname = self:_displayname_in_channel(participant, channel_handle)
 
-			if displayname ~= "" and displayname ~= "N/A" then
+			if displayname then
 				participant.displayname = displayname
 				participant.displayname_set = true
 			end
@@ -612,9 +695,10 @@ VivoxManager._update_mute_status_for_participants = function (self, channel_hand
 				Managers.event:trigger("chat_manager_participant_added", channel_handle, participant)
 			end
 		elseif participant then
+			participant.player_info = player_info
 			local text_mute = player_info:is_text_muted()
 			local voice_mute = player_info:is_voice_muted()
-			local displayname = player_info:user_display_name()
+			local displayname = self:_displayname_in_channel(participant, channel_handle)
 
 			if IS_GDK or IS_XBS then
 				local platform = player_info:platform()
@@ -643,12 +727,11 @@ VivoxManager._update_mute_status_for_participants = function (self, channel_hand
 				self:channel_voip_mute_participant(channel_handle, participant.participant_uri, voice_mute)
 			end
 
-			if displayname ~= "" and displayname ~= "N/A" then
+			if displayname then
 				participant.displayname = displayname
 				participant.displayname_set = true
 			end
 
-			participant.player_info = player_info
 			participant.is_mute_status_set = true
 		end
 	end

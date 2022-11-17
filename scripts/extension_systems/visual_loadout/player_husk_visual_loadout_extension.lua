@@ -81,18 +81,13 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 	local world = extension_init_context.world
 	local unit_spawner = Managers.state.unit_spawner
 	local extension_manager = Managers.state.extension
-	local optional_item_streaming_settings = nil
-	local package_synchronizer_client = extension_init_data.package_synchronizer_client
-
-	if package_synchronizer_client then
-		optional_item_streaming_settings = {
-			package_synchronizer_client = package_synchronizer_client,
-			player = self._player
-		}
-	end
-
+	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
+	local item_streaming_settings = {
+		package_synchronizer_client = self._package_synchronizer_client,
+		player = self._player
+	}
 	self._item_definitions = MasterItems.get_cached()
-	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, optional_item_streaming_settings)
+	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, item_streaming_settings)
 	self._equipment_component = equipment_component
 	local equipment = equipment_component.initialize_equipment(slot_configuration)
 	self._equipment = equipment
@@ -126,7 +121,8 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 		wwise_world = extension_init_context.wwise_world,
 		visual_loadout_extension = self,
 		unit_data_extension = ScriptUnit.extension(unit, "unit_data_system"),
-		fx_extension = fx_extension
+		fx_extension = fx_extension,
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
 	}
 	self._mission = extension_init_data.mission
 	self._archetype_property = extension_init_data.archetype.name
@@ -139,6 +135,10 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 			wieldable_slot_scripts[slot_name] = {}
 		end
 	end
+end
+
+PlayerHuskVisualLoadoutExtension.extensions_ready = function (self, world, unit)
+	WieldableSlotScripts.extensions_ready(self._wieldable_slot_scripts)
 end
 
 PlayerHuskVisualLoadoutExtension.destroy = function (self)
@@ -320,7 +320,11 @@ end
 PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name, item, optional_existing_unit_3p)
 	local equipment = self._equipment
 	local slot = equipment[slot_name]
-	local profile = self._player:profile()
+	local player = self._player
+	local peer_id = player:peer_id()
+	local local_player_id = player:local_player_id()
+	local package_synchronizer_client = self._package_synchronizer_client
+	local profile = package_synchronizer_client:chached_profile(peer_id, local_player_id)
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
@@ -366,12 +370,17 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
 end
 
-PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id)
+PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id, item_id)
 	local slot_name = NetworkLookup.player_inventory_slot_names[slot_id]
-	local profile = self._player:profile()
+	local player = self._player
+	local peer_id = player:peer_id()
+	local local_player_id = player:local_player_id()
+	local package_synchronizer_client = self._package_synchronizer_client
+	local profile = package_synchronizer_client:chached_profile(peer_id, local_player_id)
 	local visual_loadout = profile.visual_loadout
 	local item = visual_loadout[slot_name]
 	local optional_existing_unit_3p = nil
+	local item_name = NetworkLookup.player_item_names[item_id]
 
 	self:_equip_item_to_slot(slot_name, item, optional_existing_unit_3p)
 end
@@ -401,9 +410,6 @@ PlayerHuskVisualLoadoutExtension.rpc_player_unequip_item_from_slot = function (s
 	equipment_component:unequip_item(slot)
 
 	if slot.wieldable then
-		_unregister_fx_sources(self._fx_extension, self._fx_sources[slot_name])
-
-		self._fx_sources[slot_name] = nil
 		local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
 		if slot_scripts then
@@ -411,11 +417,18 @@ PlayerHuskVisualLoadoutExtension.rpc_player_unequip_item_from_slot = function (s
 			table.clear(slot_scripts)
 		end
 
+		_unregister_fx_sources(self._fx_extension, self._fx_sources[slot_name])
+
+		self._fx_sources[slot_name] = nil
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 		local template_name = weapon_template.name
 		local decal_unit_ids = ImpactFxResourceDependencies.impact_decal_units(template_name, weapon_template)
 
 		Managers.state.decal:unregister_decal_unit_ids(decal_unit_ids)
+
+		if self._slot_configuration[slot_name].slot_type == "weapon" then
+			self._fx_extension:destroy_particle_group()
+		end
 	end
 
 	self:_update_item_visibility(self._is_in_first_person_mode)

@@ -10,7 +10,6 @@ local WwiseStateGroupObjectiveProgression = require("scripts/managers/wwise_game
 local WwiseStateGroupOptions = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_options")
 local WwiseStateGroupZone = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_zone")
 local WwiseGameSyncManager = class("WwiseGameSyncManager")
-local WWISE_STATE_RULES = WwiseGameSyncSettings.wwise_state_rules
 local WWISE_STATE_GROUP_SETTINGS = {
 	music_game_state = WwiseStateGroupGame,
 	music_zone = WwiseStateGroupZone,
@@ -53,6 +52,8 @@ WwiseGameSyncManager.on_gameplay_post_init = function (self, level)
 end
 
 WwiseGameSyncManager.on_gameplay_shutdown = function (self)
+	WwiseWorld.trigger_resource_event(self._wwise_world, "wwise/events/world/stop_all_mission_sounds")
+
 	for _, group in pairs(self._wwise_state_groups) do
 		group:on_gameplay_shutdown()
 	end
@@ -106,25 +107,10 @@ WwiseGameSyncManager._set_state = function (self, group_name, new_state)
 	local current_state = self._wwise_state_group_states[group_name]
 
 	if current_state ~= new_state then
-		if not self:_valid_transition(current_state, new_state) then
-			return
-		end
-
 		self._wwise_state_group_states[group_name] = new_state
 
 		Wwise.set_state(group_name, new_state)
 	end
-end
-
-WwiseGameSyncManager._valid_transition = function (self, current_state, new_state)
-	local is_valid = true
-	local state_rules = WWISE_STATE_RULES[current_state]
-
-	if state_rules and state_rules.next_states then
-		is_valid = state_rules.next_states[new_state]
-	end
-
-	return is_valid
 end
 
 return WwiseGameSyncManager

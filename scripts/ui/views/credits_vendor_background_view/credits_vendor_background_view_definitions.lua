@@ -8,12 +8,12 @@ local scenegraph_definition = {
 local widget_definitions = {}
 local input_legend_params = {}
 local intro_texts = {
-	description_text = "loc_credits_vendor_view_intro_description_temp",
+	description_text = "loc_credits_vendor_view_intro_description",
 	title_text = "loc_credits_vendor_view_intro_title"
 }
 local button_options_definitions = {
 	{
-		display_name = "loc_credits_vendor_view_option_buy_temp",
+		display_name = "loc_credits_vendor_view_option_buy",
 		callback = function (self)
 			local tab_bar_params = {
 				hide_tabs = true,
@@ -29,6 +29,23 @@ local button_options_definitions = {
 								display_name = "loc_weapon_inventory_inspect_button",
 								alignment = "right_alignment",
 								on_pressed_callback = "cb_on_inspect_pressed",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+
+										return view_instance and view_instance._previewed_item ~= nil
+									end
+
+									return false
+								end
+							},
+							{
+								input_action = "hotkey_item_compare",
+								display_name = "loc_item_toggle_equipped_compare",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_toggle_item_compare",
 								visibility_function = function (parent)
 									local active_view = parent._active_view
 

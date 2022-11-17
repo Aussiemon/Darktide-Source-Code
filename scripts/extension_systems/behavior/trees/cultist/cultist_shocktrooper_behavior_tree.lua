@@ -53,7 +53,7 @@ local CLOSE_COMBAT = {
 			name = "step_shoot",
 			condition = "should_step_shoot",
 			condition_args = {
-				attack_type = "ranged"
+				attack_type = "elite_shotgun"
 			},
 			action_data = action_data.step_shoot
 		},
@@ -67,15 +67,15 @@ local CLOSE_COMBAT = {
 			name = "ranged_follow_no_los",
 			action_data = action_data.ranged_follow_no_los
 		},
+		{
+			"BtMeleeAttackAction",
+			name = "bayonet_melee_attack",
+			action_data = action_data.bayonet_melee_attack
+		},
 		name = "close_combat_utility"
 	},
-	name = "close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed",
+	name = "combat"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
@@ -170,13 +170,6 @@ local behavior_tree = {
 		condition = "is_blocked",
 		action_data = action_data.blocked
 	},
-	{
-		"BtSwitchWeaponAction",
-		name = "switch_weapon",
-		condition = "should_switch_weapon",
-		action_data = action_data.switch_weapon
-	},
-	MELEE_COMBAT,
 	SUPPRESSED,
 	FAR_COMBAT,
 	CLOSE_COMBAT,

@@ -9,6 +9,7 @@ local Interacting = require("scripts/extension_systems/character_state_machine/c
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Action = require("scripts/utilities/weapon/action")
 local PlayerCharacterStateWalking = class("PlayerCharacterStateWalking", "PlayerCharacterStateBase")
 
 PlayerCharacterStateWalking.init = function (self, character_state_init_context, ...)
@@ -17,6 +18,9 @@ PlayerCharacterStateWalking.init = function (self, character_state_init_context,
 	local unit_data = character_state_init_context.unit_data
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
+	local walking_character_state_component = unit_data:write_component("walking_character_state")
+	walking_character_state_component.previous_state_allowed_slide = false
+	self._walking_character_state_component = walking_character_state_component
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
 end
@@ -30,6 +34,12 @@ PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_sta
 	local first_person = self._first_person_component
 
 	AcceleratedLocalSpaceMovement.refresh_local_move_variables(self._constants.move_speed, locomotion_steering, locomotion, first_person)
+
+	if previous_state == "sprinting" or previous_state == "dodging" or previous_state == "falling" or previous_state == "ledge_vaulting" then
+		self._walking_character_state_component.previous_state_allowed_slide = true
+	else
+		self._walking_character_state_component.previous_state_allowed_slide = false
+	end
 
 	if previous_state == "sliding" then
 		local wants_move = AcceleratedLocalSpaceMovement.wants_move(self._input_extension)
@@ -130,21 +140,28 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 
 	local movement_state_component = self._movement_state_component
 	local weapon_action_component = self._weapon_action_component
-	local anim_extension = self._animation_extension
-	local is_crouching = movement_state_component.is_crouching
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
-	if Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+	if Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+		if movement_state_component.is_crouching then
+			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+		end
+
 		return "sprinting"
 	end
 
-	if wants_slide then
+	local slide_allowed = false
+
+	if self._walking_character_state_component.previous_state_allowed_slide then
+		slide_allowed = t < self._character_state_component.entered_t + 0.5
+	end
+
+	if slide_allowed and wants_slide then
 		next_state_params.friction_function = "sprint"
 
 		return "sliding"
 	end
 
-	local jump_input = movement_state_component.can_jump and input_source:get("jump")
 	local specialization_dodge_template = self._specialization_dodge_template
 	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, specialization_dodge_template, input_source)
 
@@ -153,6 +170,10 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 
 		return "dodging"
 	end
+
+	local current_weapon_action_name, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
+	local action_prevents_jump = weapon_action_setting and weapon_action_setting.action_prevents_jump
+	local jump_input = not action_prevents_jump and movement_state_component.can_jump and input_source:get("jump")
 
 	if jump_input then
 		local can_vault, ledge = LedgeVaulting.can_enter(self._ledge_finder_extension, self._ledge_vault_tweak_values, self._unit_data_extension, self._input_extension, self._visual_loadout_extension)
@@ -164,9 +185,11 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 		end
 	end
 
+	local is_crouching = movement_state_component.is_crouching
+
 	if jump_input and (not is_crouching or Crouch.can_exit(unit)) then
 		if is_crouching then
-			Crouch.exit(unit, self._first_person_extension, anim_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 		end
 
 		return "jumping"

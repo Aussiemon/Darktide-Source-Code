@@ -52,7 +52,6 @@ local SoundEvents = require("scripts/settings/sound/sound_events")
 local SoundEvents2d = require("scripts/settings/sound/2d_sound_events")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local TimedExplosivesSettings = require("scripts/settings/timed_explosives/timed_explosives_settings")
-local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local VfxNames = require("scripts/settings/fx/vfx_names")
 local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
@@ -226,29 +225,30 @@ NetworkLookup.player_character_particle_variable_names = {
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
 local player_character_sounds = {
-	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/player/play_toughness_break"] = true,
+	["wwise/events/player/play_backstab_indicator_melee"] = true,
 	["wwise/events/player/play_backstab_indicator_traitor_guard"] = true,
-	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
-	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/play_backstab_indicator_poxwalker"] = true,
+	["wwise/events/ui/play_hud_heal_2d"] = true,
+	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
 	["wwise/events/player/play_player_vomit_enter"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
-	["wwise/events/player/play_backstab_indicator_melee"] = true,
 	["wwise/events/player/play_player_get_hit_fire"] = true,
+	["wwise/events/player/play_player_get_hit_light_2d"] = true,
 	["wwise/events/player/play_backstab_indicator_newly_infected"] = true,
-	["wwise/events/player/play_foley_fall_wind_2D"] = true,
+	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
 	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
 	["wwise/events/player/play_player_get_hit_sharp"] = true,
-	["wwise/events/player/play_player_get_hit_light_2d"] = true,
+	["wwise/events/player/play_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
-	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
+	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
 	["wwise/events/player/play_vault"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
 	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
+	["wwise/events/ui/play_hud_health_station_2d"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/ui/play_hud_coherency_on"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
@@ -337,9 +337,6 @@ NetworkLookup.sound_switch_values = table.append({
 }, MaterialQuery.surface_materials)
 NetworkLookup.surface_hit_types = _create_lookup({}, SurfaceMaterialSettings.hit_types)
 NetworkLookup.timed_explosives = _create_lookup({}, TimedExplosivesSettings)
-NetworkLookup.trigger_action_targets = _create_lookup({}, TriggerSettings.action_targets)
-NetworkLookup.trigger_machine_targets = _create_lookup({}, TriggerSettings.machine_targets)
-NetworkLookup.trigger_only_once = _create_lookup({}, TriggerSettings.only_once)
 NetworkLookup.vfx = _create_lookup({}, VfxNames)
 local voting_options = {}
 local voting_results = {}
@@ -426,7 +423,9 @@ local DynamicLookup = {
 }
 
 NetworkLookup._create_dynamic_lookup = function (name, hashtable)
-	local lookup = {}
+	local lookup = {
+		"not_equipped"
+	}
 
 	_create_lookup(lookup, hashtable)
 	_init(name, lookup)

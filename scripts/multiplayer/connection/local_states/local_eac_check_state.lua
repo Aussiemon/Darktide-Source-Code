@@ -2,6 +2,7 @@ local RPCS = {
 	"rpc_request_eac_approval_reply"
 }
 local LocalEacCheckState = class("LocalEacCheckState")
+local STATES = table.enum("start_eac_session", "wait_for_server_reply")
 
 LocalEacCheckState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
@@ -11,10 +12,13 @@ LocalEacCheckState.init = function (self, state_machine, shared_state)
 	local has_eac = false
 
 	if has_eac then
-		Managers.eac_client:begin_session()
+		self._state = STATES.start_eac_session
+	else
+		RPC.rpc_request_eac_approval(shared_state.channel_id)
+
+		self._state = STATES.wait_for_server_reply
 	end
 
-	RPC.rpc_request_eac_approval(shared_state.channel_id)
 	shared_state.event_delegate:register_connection_channel_events(self, shared_state.channel_id, unpack(RPCS))
 end
 
@@ -40,19 +44,34 @@ LocalEacCheckState.update = function (self, dt)
 		}
 	end
 
-	local state, reason = Network.channel_state(shared_state.channel_id)
+	local channel_state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if channel_state == "disconnected" then
 		return "disconnected", {
 			engine_reason = reason
 		}
 	end
 
-	if not self._host_responded then
-		return
-	end
+	local state = self._state
 
-	return "eac approved"
+	if state == STATES.start_eac_session then
+		local user_id = Managers.eac_client:user_id()
+
+		if user_id then
+			Managers.eac_client:begin_session()
+			RPC.rpc_request_eac_approval(shared_state.channel_id)
+
+			self._state = STATES.wait_for_server_reply
+
+			Log.info("LocalEacCheckState", "begin_session")
+		else
+			Log.info("LocalEacCheckState", "Waiting for EAC user_id")
+		end
+	elseif state == STATES.wait_for_server_reply and self._host_responded then
+		Log.info("LocalEacCheckState", "Eac approved")
+
+		return "eac approved"
+	end
 end
 
 LocalEacCheckState.rpc_request_eac_approval_reply = function (self, channel_id, success)

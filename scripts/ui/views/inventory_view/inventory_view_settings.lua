@@ -2,6 +2,10 @@ local grid_size = {
 	620,
 	350
 }
+grid_size = {
+	620,
+	640
+}
 local grid_width = grid_size[1]
 local grid_height = grid_size[2]
 local grid_blur_edge_size = {

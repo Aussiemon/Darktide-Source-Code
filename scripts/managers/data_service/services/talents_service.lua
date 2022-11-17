@@ -17,7 +17,7 @@ local function _set_backend_response_success(player, extra_data)
 
 		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 	elseif connection_manager:is_client() then
-		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+		connection_manager:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 	end
 
 	return extra_data
@@ -68,6 +68,47 @@ TalentsService.release_icons = function (self, load_id)
 	if load_id then
 		Managers.package:release(load_id)
 	end
+end
+
+TalentsService.mark_unlocked_group_as_new = function (self, character_id, talent_group_id)
+	local save_manager = Managers.save
+	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	if not character_save_data then
+		return
+	end
+
+	if not character_save_data.new_unlocked_talent_groups then
+		character_save_data.new_unlocked_talent_groups = {}
+	end
+
+	character_save_data.new_unlocked_talent_groups[talent_group_id] = true
+
+	save_manager:queue_save()
+end
+
+TalentsService.unmark_unlocked_group_as_new = function (self, character_id, talent_group_id)
+	local save_manager = Managers.save
+	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	if not character_save_data or not character_save_data.new_unlocked_talent_groups then
+		return
+	end
+
+	character_save_data.new_unlocked_talent_groups[talent_group_id] = nil
+
+	save_manager:queue_save()
+end
+
+TalentsService.is_group_marked_as_new = function (self, character_id, talent_group_id)
+	local save_manager = Managers.save
+	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	if not character_save_data or not character_save_data.new_unlocked_talent_groups then
+		return false
+	end
+
+	return character_save_data.new_unlocked_talent_groups[talent_group_id]
 end
 
 return TalentsService

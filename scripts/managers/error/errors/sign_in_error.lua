@@ -23,10 +23,12 @@ SignInError.loc_title = function (self)
 end
 
 SignInError.loc_description = function (self)
-	if PLATFORM == "win32" then
-		return "loc_popup_description_signin_error_win"
-	else
+	local is_xbox_live = IS_XBS or IS_GDK
+
+	if is_xbox_live then
 		return "loc_popup_description_signin_error_console"
+	else
+		return "loc_popup_description_signin_error_win"
 	end
 end
 

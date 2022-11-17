@@ -68,8 +68,9 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 		return
 	end
 
+	local ramp_up_timer_modifier = Managers.state.pacing:_get_ramp_up_frequency_modifier("hordes")
 	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
-	self._horde_timer = self._horde_timer + dt + traveled_this_frame
+	self._horde_timer = self._horde_timer + dt * ramp_up_timer_modifier + traveled_this_frame
 
 	if self._next_horde_pre_stinger_at and self._next_horde_pre_stinger_at <= self._horde_timer then
 		self:_trigger_pre_stinger(template, target_side_id)

@@ -60,7 +60,7 @@ SmartTagExtension._set_tag_on_spawn = function (self)
 		local target_location = nil
 		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-		smart_tag_system:set_tag(tag_template, tagger_unit, target_unit, target_location)
+		smart_tag_system:set_tag(tag_template.name, tagger_unit, target_unit, target_location)
 	end
 end
 
@@ -81,12 +81,19 @@ SmartTagExtension._setup_display_name = function (self, unit)
 end
 
 SmartTagExtension.can_tag = function (self, tagger_unit)
-	local tag_template = self:contextual_tag_template(tagger_unit)
+	local template_name = self:_contextual_tag_template_name(tagger_unit)
 
-	return tag_template ~= nil
+	return template_name ~= nil
 end
 
 SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
+	local template_name = self:_contextual_tag_template_name(tagger_unit)
+	local template = template_name and SmartTagSettings.templates[template_name]
+
+	return template
+end
+
+SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 	local target_type = self._target_type
 
 	if not target_type then
@@ -198,8 +205,7 @@ SmartTagExtension.display_name = function (self, tagger_unit)
 		return self._display_name
 	end
 
-	local template_name = self:contextual_tag_template(tagger_unit)
-	local template = template_name and SmartTagSettings.templates[template_name]
+	local template = self:contextual_tag_template(tagger_unit)
 
 	return template and template.display_name or "n/a"
 end

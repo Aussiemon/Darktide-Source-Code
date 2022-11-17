@@ -58,11 +58,9 @@ MoveablePlatformSystem.update_level_props_broadphase = function (self)
 
 		if units_nearby and not in_update_list then
 			self:enable_update_function("MoveablePlatformExtension", "update", unit, extension)
-			self:enable_update_function("MoveablePlatformExtension", "post_update", unit, extension)
 			self:enable_update_function("MoveablePlatformExtension", "fixed_update", unit, extension)
 		elseif not units_nearby and in_update_list then
 			self:disable_update_function("MoveablePlatformExtension", "update", unit, extension)
-			self:disable_update_function("MoveablePlatformExtension", "post_update", unit, extension)
 			self:disable_update_function("MoveablePlatformExtension", "fixed_update", unit, extension)
 		end
 	end

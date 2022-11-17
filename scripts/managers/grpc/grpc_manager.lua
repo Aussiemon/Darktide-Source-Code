@@ -19,7 +19,7 @@ end
 GRPCManager.connect_to_immaterium = function (self, immaterium_details)
 	self._enabled = true
 
-	_info("Connecting to grpc address " .. immaterium_details.address)
+	_info("Connecting to grpc address %s", immaterium_details.address)
 	gRPC.init(immaterium_details.address, immaterium_details.pemCerts)
 
 	return self:ping_with_auth()
@@ -55,7 +55,7 @@ GRPCManager.delay_with_jitter_and_backoff = function (self, id)
 	local jitter = math.random() * jitter_margin
 	retry_in_sec = retry_in_sec + jitter
 
-	_info("Will retry gRPC request id=" .. id .. " in " .. tostring(retry_in_sec) .. " secs, count=" .. tostring(count) .. " jitter=" .. tostring(jitter))
+	_info("Will retry gRPC request id=%s in %s secs, count=%s jitter=%s", id, tostring(retry_in_sec), tostring(count), tostring(jitter))
 
 	return Promise.delay(retry_in_sec)
 end
@@ -65,7 +65,7 @@ GRPCManager.update = function (self, dt, t)
 		local channel_state = gRPC.channel_state()
 
 		if self._channel_state ~= channel_state then
-			_info("gRPC channel state changed to " .. channel_state .. " from " .. self._channel_state)
+			_info("gRPC channel state changed to %s from %s", channel_state, self._channel_state)
 
 			if channel_state == "TRANSIENT_FAILURE" then
 				_info("Disconnected from Immaterium")
@@ -89,7 +89,7 @@ GRPCManager.update = function (self, dt, t)
 
 					self._async_promises[id] = nil
 				else
-					_info("warning, id=" .. id .. " does not have a promise, response=" .. table.tostring(response, 3))
+					_info("warning, id=%s does not have a promise, response=%s", id, table.tostring(response, 3))
 				end
 			end
 		end
@@ -167,6 +167,30 @@ end
 
 GRPCManager.get_latest_presence_from_stream = function (self, operation_id)
 	local presence = gRPC.get_latest_presence_from_stream(operation_id)
+
+	return presence
+end
+
+GRPCManager.get_batched_presence_stream = function (self)
+	local promise = Promise:new()
+	local id = gRPC.get_batched_presence_stream()
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.request_presence_from_batched_stream = function (self, operation_id, platform, platform_user_id)
+	local request_id = gRPC.request_presence_from_batched_stream(operation_id, platform, platform_user_id)
+
+	return request_id
+end
+
+GRPCManager.abort_presence_from_batched_stream = function (self, operation_id, request_id)
+	gRPC.abort_presence_from_batched_stream(operation_id, request_id)
+end
+
+GRPCManager.get_latest_presence_from_batched_stream = function (self, operation_id, request_id)
+	local presence = gRPC.get_latest_presence_from_batched_stream(operation_id, request_id)
 
 	return presence
 end
@@ -313,7 +337,7 @@ end
 
 GRPCManager.start_stay_in_party_vote = function (self)
 	return self:allocate_party_id():next(function (response)
-		Log.info("Allocated new party_id " .. response.allocated_party_id)
+		Log.info("Allocated new party_id %s", response.allocated_party_id)
 
 		return Managers.voting:start_voting("stay_in_party", {
 			allocated_party_id = response.allocated_party_id

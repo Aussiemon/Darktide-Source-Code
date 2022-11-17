@@ -103,11 +103,11 @@ local weapon_sprint_templates = {
 	},
 	ninja_l = {
 		sprint_sideway_acceleration = 7,
-		sprint_forward_deceleration = 1.45,
+		sprint_forward_deceleration = 2.45,
 		sprint_sideway_deceleration = 7,
 		sprint_forward_acceleration = {
-			lerp_perfect = 0.4,
-			lerp_basic = 0.15
+			lerp_perfect = 1,
+			lerp_basic = 0.5
 		},
 		sprint_speed_mod = {
 			lerp_perfect = 1,

@@ -19,6 +19,8 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 	score = score + targeted_by_monster_weight
 	local disabled_weight = MinionTargetSelection.disabled_weight(target_selection_weights, target_unit, target_breed)
 	score = score + disabled_weight
+	local ledge_hanging_weight = MinionTargetSelection.ledge_hanging_weight(target_selection_weights, target_unit_data_extension, target_breed)
+	score = score + ledge_hanging_weight
 	local weight_multiplier = MinionTargetSelection.weight_multiplier(target_unit)
 	score = score * weight_multiplier
 

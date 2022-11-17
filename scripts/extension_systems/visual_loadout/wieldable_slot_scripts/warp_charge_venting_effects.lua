@@ -1,5 +1,4 @@
 local Action = require("scripts/utilities/weapon/action")
-local WieldableSlotScriptsUtilities = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/utilities/wieldable_slot_scripts_utilities")
 local WarpChargeVentingEffects = class("WarpChargeVentingEffects")
 local _start_vfx, _stop_vfx = nil
 
@@ -140,9 +139,19 @@ end
 
 function _start_vfx(world, fx_extension, existing_particle_id, effect_name, source_name, in_first_person)
 	if not existing_particle_id and effect_name and source_name then
-		local new_particle_id = WieldableSlotScriptsUtilities.spawn_particle(world, fx_extension, effect_name, source_name, in_first_person)
+		local particle_id = World.create_particles(world, effect_name, Vector3.zero())
+		local pose = Matrix4x4.identity()
+		local node_unit_1p, node_1p, node_unit_3p, node_3p = fx_extension:vfx_spawner_unit_and_node(source_name)
+		local node_unit = in_first_person and node_unit_1p or node_unit_3p
+		local node = in_first_person and node_1p or node_3p
 
-		return new_particle_id
+		World.link_particles(world, particle_id, node_unit, node, pose, "stop")
+
+		if in_first_person then
+			World.set_particles_use_custom_fov(world, particle_id, true)
+		end
+
+		return particle_id
 	else
 		return existing_particle_id
 	end
@@ -150,7 +159,7 @@ end
 
 function _stop_vfx(world, existing_particle_id)
 	if existing_particle_id then
-		WieldableSlotScriptsUtilities.destory_particle(world, existing_particle_id)
+		World.destroy_particles(world, existing_particle_id)
 	end
 end
 

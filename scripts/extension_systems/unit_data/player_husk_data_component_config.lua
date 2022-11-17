@@ -27,11 +27,12 @@ local husk_data_component_config = {
 		"is_active"
 	},
 	weapon_action = {
-		"template_name",
 		"current_action_name",
 		"previous_action_name",
+		"special_active_at_start",
 		"start_t",
-		"special_active_at_start"
+		"template_name",
+		"time_scale"
 	},
 	sway = {
 		"pitch",

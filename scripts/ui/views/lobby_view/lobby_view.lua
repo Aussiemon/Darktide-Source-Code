@@ -5,7 +5,7 @@ local LobbyViewTestify = GameParameters.testify and require("scripts/ui/views/lo
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local Circumstances = require("scripts/settings/circumstance/circumstance_templates")
-local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
+local MissionTypes = require("scripts/settings/mission/mission_types")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -23,6 +23,26 @@ local Breeds = require("scripts/settings/breed/breeds")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local LobbyView = class("LobbyView", "BaseView")
+
+local function _generate_seed(player_id, mission_id)
+	if not mission_id or not player_id then
+		return 0
+	end
+
+	local seed = 1
+
+	for i = 1, 3 do
+		local num = string.byte(player_id, i) or 1
+		seed = seed * num
+	end
+
+	for i = 1, 3 do
+		local num = string.byte(mission_id, i) or 1
+		seed = seed * num
+	end
+
+	return seed
+end
 
 LobbyView.init = function (self, settings, context)
 	self._preview = context.preview
@@ -134,14 +154,15 @@ LobbyView._setup_mission_descriptions = function (self)
 		local zone_name = mission_settings.zone_id
 		local zone_info = Zones[zone_name]
 		local zone_display_name = zone_info and zone_info.name
-		local main_objective_loc_id = mission_settings.mission_type_name
+		local mission_type = MissionTypes[mission_settings.mission_type]
+		local mission_type_name = mission_type and mission_type.name
 		local circumstance_name = nil
 
 		if mission_data.circumstance_name ~= "default" then
 			circumstance_name = Circumstances[mission_data.circumstance_name].ui and self:_localize(Circumstances[mission_data.circumstance_name].ui.display_name) or mission_data.circumstance_name
 		end
 
-		local sub_title = main_objective_loc_id and self:_localize(main_objective_loc_id) or ""
+		local sub_title = mission_type_name and self:_localize(mission_type_name) or ""
 
 		if zone_display_name then
 			sub_title = sub_title .. " · " .. self:_localize(zone_display_name) or sub_title
@@ -621,13 +642,15 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local profile_size = profile.personal and profile.personal.character_height
+	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = slot.profile_spawner
 	local selected_archetype = profile.archetype
 	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, inventory_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine)
 
 	local panel_widget = slot.panel_widget
 	local panel_content = panel_widget.content
@@ -648,8 +671,9 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 		"slot_primary",
 		"slot_secondary"
 	}
-	local randomize_default_slot = math.random(1, #weapon_slots)
-	slot.default_slot = weapon_slots[randomize_default_slot]
+	local seed = _generate_seed(unique_id, self._mission_data.backend_mission_id)
+	local _, random_slot = math.next_random(seed, 1, #weapon_slots)
+	slot.default_slot = weapon_slots[random_slot]
 	panel_content.character_name = string.format("%s %s", character_level, character_name)
 	local loadout = profile.loadout
 	local frame_item = loadout and loadout.slot_portrait_frame
@@ -1177,13 +1201,15 @@ LobbyView._setup_loadout_widgets = function (self, spawn_slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local profile_size = profile.personal and profile.personal.character_height
+	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = spawn_slot.profile_spawner
 	local selected_archetype = profile.archetype
 	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, inventory_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine)
 	self:_update_presentation_wield_item(spawn_slot)
 end
 

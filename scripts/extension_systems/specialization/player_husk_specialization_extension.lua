@@ -10,6 +10,7 @@ PlayerHuskSpecializationExtension.init = function (self, extension_init_context,
 	self._unit = unit
 	local player = extension_init_data.player
 	self._player = player
+	self._local_player = Managers.player:local_player(1)
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
@@ -61,26 +62,20 @@ PlayerHuskSpecializationExtension.extensions_ready = function (self, world, unit
 	self:_update_specialization_and_talents(self._specialization_name, self._talents)
 end
 
-PlayerHuskSpecializationExtension.update = function (self, unit, dt, t)
-	return
-end
-
 PlayerHuskSpecializationExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
-	local local_player = Managers.player:local_player(1)
-	local camera_handler = local_player.camera_handler
+	local camera_handler = self._local_player.camera_handler
 	local is_observing = camera_handler and camera_handler:is_observing()
 	local player = self._player
 	local first_person_unit = self._first_person_unit
 	local is_local_unit = self._is_local_unit
 	local warp_charge_component = self._warp_charge_component
-	local world = self._world
 
 	if not is_observing and is_local_unit then
-		WarpCharge.update(dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, world)
+		WarpCharge.update(dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, self._wwise_world)
 	elseif is_observing and not is_local_unit then
 		local follow_unit = camera_handler:camera_follow_unit()
 
-		WarpCharge.update_observer(dt, t, player, unit, first_person_unit, world, follow_unit)
+		WarpCharge.update_observer(dt, t, player, unit, first_person_unit, self._wwise_world, follow_unit)
 	end
 end
 

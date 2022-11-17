@@ -247,15 +247,17 @@ end
 
 AchievementsManager._notify_achievement_reward = function (self, reward)
 	if reward.rewardType == "item" then
-		if MasterItems.item_exists(reward.name) then
-			local rewarded_master_item = MasterItems.get_item(reward.name)
+		local master_id = reward.masterId
+
+		if MasterItems.item_exists(master_id) then
+			local rewarded_master_item = MasterItems.get_item(master_id)
 			local sound_event = UISoundEvents.character_news_feed_new_item
 
 			Managers.event:trigger("event_add_notification_message", "item_granted", rewarded_master_item, nil, sound_event)
 
 			return true
 		else
-			Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", reward.name)
+			Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", master_id)
 
 			return false
 		end
@@ -265,20 +267,19 @@ AchievementsManager._notify_achievement_reward = function (self, reward)
 end
 
 AchievementsManager._unlock_achievement = function (self, achievement_definition)
-	local player_notified = false
 	local id = achievement_definition:id()
 
 	if self._platform:is_platform_achievement(id) then
-		player_notified = self._platform:unlock_achievement(id)
+		self._platform:unlock_achievement(id)
 	end
 
-	player_notified = player_notified or self:_notify_achievement_unlock(achievement_definition)
+	self:_notify_achievement_unlock(achievement_definition)
+
 	local rewards = achievement_definition:get_rewards()
 
 	if rewards then
 		for i = 1, #rewards do
-			local notified_about_reward = self:_notify_achievement_reward(rewards[i])
-			player_notified = player_notified or notified_about_reward
+			self:_notify_achievement_reward(rewards[i])
 		end
 	end
 

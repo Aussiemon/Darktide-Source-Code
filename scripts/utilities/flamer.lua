@@ -157,8 +157,9 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 
 	if parabola_particle_variables then
 		local flamer_particle_id = data.flamer_particle_id
+		local flamer_start_position = data.set_muzzle_as_control_point_1 and control_point_1 or start_position
 
-		_set_flamer_parabola(world, from_unit, from_node, flamer_particle_id, parabola_particle_variables, start_position, control_point_1, control_point_2, aim_position)
+		_set_flamer_parabola(world, from_unit, from_node, flamer_particle_id, parabola_particle_variables, flamer_start_position, control_point_1, control_point_2, aim_position)
 	end
 
 	local muzzle_source_id = data.muzzle_source_id
@@ -258,7 +259,7 @@ function _set_flamer_parabola(world, from_unit, source_node, flamer_particle_id,
 		local position = nil
 
 		if i == 1 then
-			position = control_point_1
+			position = start_position
 		elseif i == 2 then
 			position = control_point_1
 		elseif i == num_variables then

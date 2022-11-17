@@ -14,6 +14,18 @@ local herding_templates = {
 			}
 		}
 	},
+	shot_back = {
+		stagger = {
+			override = stagger_overrides.push
+		},
+		push_ragdoll = {
+			custom_vector = {
+				0,
+				1,
+				0.25
+			}
+		}
+	},
 	shotgun = {
 		stagger = {
 			override = stagger_overrides.push
@@ -63,9 +75,6 @@ local herding_templates = {
 		}
 	},
 	smiter_down = {
-		stagger = {
-			override = stagger_overrides.down
-		},
 		push_ragdoll = {
 			custom_vector = {
 				0,

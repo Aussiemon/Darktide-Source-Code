@@ -150,15 +150,15 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 
 	Managers.wwise_game_sync = WwiseGameSyncManager:new(Managers.world)
+	Managers.token = TokenManager:new()
+	Managers.save = SaveManager:new(GameParameters.save_file_name, GameParameters.cloud_save_enabled)
+	Managers.input = InputManager:new()
 
 	if not DEDICATED_SERVER then
 		Managers.chat = VivoxManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
 	end
 
-	Managers.token = TokenManager:new()
-	Managers.save = SaveManager:new(GameParameters.save_file_name, GameParameters.cloud_save_enabled)
-	Managers.input = InputManager:new()
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
 	local language = Managers.localization:language()
 	Managers.backend = BackendManager:new(function ()
@@ -171,12 +171,8 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	Managers.steam = SteamManager:new()
 	Managers.grpc = GRPCManager:new()
 	Managers.ping = PingManager:new()
-	local disable_ui = DEDICATED_SERVER
-
-	if not disable_ui then
-		Managers.font = UIFontManager:new()
-		Managers.ui = UIManager:new()
-	end
+	Managers.frame_rate = FrameRateManager:new()
+	Managers.data_service = DataServiceManager:new()
 
 	Managers.input:init_all_devices()
 
@@ -196,11 +192,9 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	Managers.connection = ConnectionManager:new(_connection_options(is_dedicated_hub_server, is_dedicated_mission_server), event_delegate, approve_channel_delegate)
 	Managers.multiplayer_session = MultiplayerSessionManager:new()
 	Managers.world_level_despawn = WorldLevelDespawnManager:new()
-	Managers.loading = LoadingManager:new()
 	Managers.profile_synchronization = ProfileSynchronizationManager:new()
 	Managers.package_synchronization = PackageSynchronizationManager:new()
 	Managers.bot = BotManager:new()
-	Managers.frame_rate = FrameRateManager:new()
 
 	if not DEDICATED_SERVER then
 		local connection_manager = Managers.connection
@@ -209,12 +203,10 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 		if GameParameters.prod_like_backend then
 			Managers.presence = PresenceManager:new()
-			Managers.data_service = DataServiceManager:new()
 			Managers.party_immaterium = PartyImmateriumManager:new()
 		end
 	else
 		Managers.presence = PresenceManagerDummy:new()
-		Managers.data_service = DataServiceManager:new()
 	end
 
 	Managers.stats = StatsManager:new()
@@ -231,6 +223,14 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 		Managers.xasync = XAsyncManager:new()
 	end
 
+	local disable_ui = DEDICATED_SERVER
+
+	if not disable_ui then
+		Managers.font = UIFontManager:new()
+		Managers.ui = UIManager:new()
+	end
+
+	Managers.loading = LoadingManager:new()
 	Managers.narrative = NarrativeManager:new()
 
 	if not DEDICATED_SERVER then

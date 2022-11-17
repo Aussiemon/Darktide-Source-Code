@@ -186,4 +186,10 @@ ViewElementKeybindPopup.set_action_text = function (self, action)
 	action_text.content.text = action
 end
 
+ViewElementKeybindPopup.set_description_text = function (self, description)
+	local widgets_by_name = self._widgets_by_name
+	local description_text = widgets_by_name.description_text
+	description_text.content.text = description
+end
+
 return ViewElementKeybindPopup

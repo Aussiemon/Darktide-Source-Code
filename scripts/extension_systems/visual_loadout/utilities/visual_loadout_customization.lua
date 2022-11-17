@@ -6,6 +6,13 @@ local _sort_order_enum = {
 	FACE_HAIR = 2,
 	HAIR = 3
 }
+local _apply_material_override = nil
+local Unit = Unit
+local Unit_set_scalar_for_materials = Unit.set_scalar_for_materials
+local Unit_set_vector2_for_materials = Unit.set_vector2_for_materials
+local Unit_set_vector3_for_materials = Unit.set_vector3_for_materials
+local Unit_set_vector4_for_materials = Unit.set_vector4_for_materials
+local Unit_set_texture_for_materials = Unit.set_texture_for_materials
 
 VisualLoadoutCustomization.apply_material_override = function (unit, parent_unit, apply_to_parent, material_override, in_editor)
 	if material_override and material_override ~= "" then
@@ -23,37 +30,9 @@ VisualLoadoutCustomization.apply_material_override = function (unit, parent_unit
 
 		if material_override_data then
 			if apply_to_parent then
-				VisualLoadoutCustomization._apply_material_override(parent_unit, material_override_data)
+				_apply_material_override(parent_unit, material_override_data)
 			else
-				VisualLoadoutCustomization._apply_material_override(unit, material_override_data)
-			end
-		end
-	end
-end
-
-VisualLoadoutCustomization._apply_material_override = function (unit, material_override_data)
-	if material_override_data.property_overrides ~= nil then
-		for property_name, property_override_data in pairs(material_override_data.property_overrides) do
-			if property_override_data ~= nil then
-				if type(property_override_data) == "number" then
-					Unit.set_scalar_for_materials(unit, property_name, property_override_data, true)
-				elseif #property_override_data == 1 then
-					Unit.set_scalar_for_materials(unit, property_name, property_override_data[1], true)
-				elseif #property_override_data == 2 then
-					Unit.set_vector2_for_materials(unit, property_name, Vector2(property_override_data[1], property_override_data[2]), true)
-				elseif #property_override_data == 3 then
-					Unit.set_vector3_for_materials(unit, property_name, Vector3(property_override_data[1], property_override_data[2], property_override_data[3]), true)
-				elseif #property_override_data == 4 then
-					Unit.set_vector4_for_materials(unit, property_name, Color(property_override_data[1], property_override_data[2], property_override_data[3], property_override_data[4]), true)
-				end
-			end
-		end
-	end
-
-	if material_override_data.texture_overrides ~= nil then
-		for texture_slot, texture_override_data in pairs(material_override_data.texture_overrides) do
-			if texture_override_data ~= nil then
-				Unit.set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
+				_apply_material_override(unit, material_override_data)
 			end
 		end
 	end
@@ -103,8 +82,13 @@ VisualLoadoutCustomization.spawn_item_attachments = function (item_data, overrid
 	if item_unit and attachments then
 		attachment_units_bind_poses = optional_extract_attachment_units_bind_poses and {} or nil
 		attachment_units = {}
+		local attachment_names = table.keys(attachments)
 
-		for _, attachment_slot_data in pairs(attachments) do
+		table.sort(attachment_names)
+
+		for i = 1, #attachment_names do
+			local name = attachment_names[i]
+			local attachment_slot_data = attachments[name]
 			attachment_units, attachment_units_bind_poses = _attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, item_unit, attachment_units, attachment_units_bind_poses, optional_mission_template)
 		end
 	end
@@ -162,6 +146,10 @@ VisualLoadoutCustomization.generate_attachment_overrides_lookup = function (item
 	local override_lookup = {}
 	local attachments = item_data.attachments
 	local override_attachments = override_item_data.attachments
+
+	if not attachments or not override_attachments then
+		return _empty_overrides_table
+	end
 
 	for attachment_name, attachment_slot_data in pairs(attachments) do
 		local override_slot_data = override_attachments[attachment_name]
@@ -275,7 +263,23 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		return nil
 	end
 
+	local backpack_offset = item_data.backpack_offset
+
+	if backpack_offset then
+		local backpack_offset_node_index = Unit.has_node(parent_unit, "j_backpackoffset") and Unit.node(parent_unit, "j_backpackoffset")
+
+		if backpack_offset_node_index then
+			local backpack_offset_v3 = Vector3(0, backpack_offset, 0)
+
+			Unit.set_local_position(parent_unit, backpack_offset_node_index, backpack_offset_v3)
+		end
+	end
+
 	local bind_pose = Unit.local_pose(spawned_unit, 1)
+
+	if is_first_person and (show_in_1p or only_show_in_1p) then
+		Unit.set_unit_objects_visibility(spawned_unit, false, true, VisibilityContexts.RAYTRACING_CONTEXT)
+	end
 
 	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, not settings.skip_link_children and true)
 
@@ -309,10 +313,6 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 	local override_item = override_lookup[attachment_slot_data]
 	item = override_item or item
 
-	if not item then
-		return attached_units, attached_units_bind_poses_or_nil
-	end
-
 	if type(item) == "string" then
 		if settings.in_editor then
 			if settings.item_manager and ToolsMasterItems then
@@ -323,6 +323,10 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 		else
 			item = settings.item_definitions[item]
 		end
+	end
+
+	if not item then
+		return attached_units, attached_units_bind_poses_or_nil
 	end
 
 	local attachment_unit, bind_pose = _spawn_attachment(item, settings, parent_unit, optional_mission_template)
@@ -371,6 +375,34 @@ function _attach_hierarchy_children(children, override_lookup, settings, parent_
 	end
 
 	return attached_units, attached_units_bind_poses_or_nil
+end
+
+function _apply_material_override(unit, material_override_data)
+	if material_override_data.property_overrides ~= nil then
+		for property_name, property_override_data in pairs(material_override_data.property_overrides) do
+			if type(property_override_data) == "number" then
+				Unit_set_scalar_for_materials(unit, property_name, property_override_data, true)
+			else
+				local property_override_data_num = #property_override_data
+
+				if property_override_data_num == 1 then
+					Unit_set_scalar_for_materials(unit, property_name, property_override_data[1], true)
+				elseif property_override_data_num == 2 then
+					Unit_set_vector2_for_materials(unit, property_name, Vector2(property_override_data[1], property_override_data[2]), true)
+				elseif property_override_data_num == 3 then
+					Unit_set_vector3_for_materials(unit, property_name, Vector3(property_override_data[1], property_override_data[2], property_override_data[3]), true)
+				elseif property_override_data_num == 4 then
+					Unit_set_vector4_for_materials(unit, property_name, Color(property_override_data[1], property_override_data[2], property_override_data[3], property_override_data[4]), true)
+				end
+			end
+		end
+	end
+
+	if material_override_data.texture_overrides ~= nil then
+		for texture_slot, texture_override_data in pairs(material_override_data.texture_overrides) do
+			Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
+		end
+	end
 end
 
 return VisualLoadoutCustomization

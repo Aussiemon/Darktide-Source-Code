@@ -138,7 +138,7 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.02
+					[stat_buffs.power_level_modifier] = 0.02
 				}
 			}
 		}

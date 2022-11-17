@@ -48,7 +48,7 @@ local scenegraph_definition = {
 		}
 	},
 	domain = {
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
@@ -57,12 +57,12 @@ local scenegraph_definition = {
 		},
 		position = {
 			160,
-			430,
+			-235,
 			2
 		}
 	},
 	domain_options = {
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		parent = "domain",
 		horizontal_alignment = "center",
 		size = {
@@ -71,12 +71,12 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-120,
+			-365,
 			2
 		}
 	},
 	domain_info = {
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		parent = "domain",
 		horizontal_alignment = "center",
 		size = {
@@ -85,12 +85,12 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			40,
+			0,
 			2
 		}
 	},
 	class_option = {
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
@@ -99,7 +99,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			220,
-			165,
+			-165,
 			2
 		}
 	},
@@ -142,31 +142,25 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	class_switch_info_button = {
+	details_button = {
+		vertical_alignment = "bottom",
+		parent = "domain",
+		horizontal_alignment = "center",
+		size = ButtonPassTemplates.default_button.size,
+		position = {
+			0,
+			125,
+			2
+		}
+	},
+	continue_button = {
 		vertical_alignment = "bottom",
 		parent = "class",
 		horizontal_alignment = "center",
-		size = {
-			ClassSelectionViewSettings.class_size[1],
-			40
-		},
+		size = ButtonPassTemplates.default_button.size,
 		position = {
 			0,
-			60,
-			3
-		}
-	},
-	choose_button = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			374,
-			76
-		},
-		position = {
-			0,
-			-95,
+			125,
 			2
 		}
 	},
@@ -199,15 +193,15 @@ local scenegraph_definition = {
 		}
 	},
 	class_details_scrollbar = {
-		vertical_alignment = "top",
+		vertical_alignment = "center",
 		parent = "class",
 		horizontal_alignment = "right",
 		size = {
 			10,
-			ClassSelectionViewSettings.class_size[2]
+			ClassSelectionViewSettings.class_size[2] - 10
 		},
 		position = {
-			-1,
+			-15,
 			0,
 			50
 		}
@@ -354,35 +348,9 @@ local widget_definitions = {
 			value_id = "text",
 			pass_type = "text",
 			style = ClassSelectionViewFontStyle.main_title_style
-		},
-		{
-			value = "content/ui/materials/dividers/skull_rendered_center_02",
-			value_id = "texture",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "center",
-				size = {
-					306,
-					48
-				}
-			}
 		}
 	}, "main_title"),
 	domain_info = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/backgrounds/blurred_rectangle_02",
-			pass_type = "texture",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				color = Color.black(204, true),
-				size_addition = {
-					150,
-					150
-				}
-			}
-		},
 		{
 			value_id = "title",
 			style_id = "title",
@@ -391,19 +359,77 @@ local widget_definitions = {
 			style = ClassSelectionViewFontStyle.domain_title_style
 		},
 		{
-			value = "content/ui/materials/dividers/skull_rendered_center_01",
+			value = "content/ui/materials/dividers/skull_center_02",
 			value_id = "texture",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
 				size = {
-					140,
+					400,
 					18
 				},
 				offset = {
 					0,
-					50,
+					60,
+					1
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			value_id = "background",
+			style_id = "class_background_details",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(nil, true),
+				size_addition = {
+					15,
+					30
+				},
+				offset = {
+					0,
+					-15,
+					0
+				}
+			}
+		},
+		{
+			value_id = "top_frame",
+			style_id = "top_frame",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					-18,
+					1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					18,
 					1
 				}
 			}
@@ -418,15 +444,38 @@ local widget_definitions = {
 	}, "domain_info"),
 	class_background = UIWidget.create_definition({
 		{
+			value_id = "background",
 			style_id = "background",
-			pass_type = "rect",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
 				vertical_alignment = "top",
-				color = {
-					178.5,
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(nil, true),
+				size_addition = {
+					15,
+					30
+				},
+				offset = {
 					0,
-					0,
+					-15,
 					0
+				}
+			}
+		},
+		{
+			value_id = "class_background",
+			style_id = "class_background",
+			pass_type = "texture",
+			value = "",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.black(76.5, true),
+				size = {
+					480,
+					480
 				},
 				offset = {
 					0,
@@ -436,88 +485,21 @@ local widget_definitions = {
 			}
 		},
 		{
-			value_id = "class_background_abilities",
-			style_id = "class_background_abilities",
+			value_id = "top_frame",
+			style_id = "top_frame",
 			pass_type = "texture",
-			value = "content/ui/materials/backgrounds/info_panels/psyker",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "center",
-				color = {
-					51,
-					133,
-					66,
-					137
-				},
-				size = {
-					640,
-					512
-				},
-				offset = {
-					0,
-					0,
-					2
-				}
-			}
-		},
-		{
-			value_id = "class_background_details",
-			style_id = "class_background_details",
-			pass_type = "texture",
-			value = "content/ui/materials/backgrounds/info_panels/psyker",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "center",
-				color = {
-					51,
-					133,
-					66,
-					137
-				},
-				size = {
-					640,
-					520
-				},
-				offset = {
-					0,
-					380,
-					2
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/line_medium",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "left",
-				color = {
-					255,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					0,
-					5
-				}
-			}
-		},
-		{
 			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
-			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
 				size = {
-					640,
+					nil,
 					36
 				},
 				offset = {
 					0,
 					-18,
-					6
+					1
 				}
 			}
 		},
@@ -528,18 +510,18 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = {
-					640,
+					nil,
 					36
 				},
 				offset = {
 					0,
 					18,
-					6
+					1
 				}
 			}
 		}
 	}, "class"),
-	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "class_details_scrollbar"),
+	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "class_details_scrollbar"),
 	class_details_mask = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
@@ -554,8 +536,11 @@ local widget_definitions = {
 			}
 		}
 	}, "class_details_mask"),
-	choose_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "choose_button", {
-		text = string.upper(Localize("loc_character_backstory_selection"))
+	details_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "details_button", {
+		text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
+	}),
+	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
+		text = Utf8.upper(Localize("loc_character_creator_continue"))
 	})
 }
 local domain_option_definition = UIWidget.create_definition({
@@ -741,7 +726,7 @@ local class_option_definition = UIWidget.create_definition({
 		style = ClassSelectionViewFontStyle.class_option_title,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			style.material = hotspot.is_focused and UIFontSettings.grid_title.material or UIFontSettings.grid_title.disabled_material
+			style.text_color = hotspot.is_focused and style.default_color or style.disabled_color
 		end
 	}
 }, "class_option", nil, ClassSelectionViewSettings.class_option_icon_size)

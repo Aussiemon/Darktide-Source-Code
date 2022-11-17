@@ -23,7 +23,7 @@ local breed_terror_event_settings = {
 		point_cost = 6
 	},
 	chaos_plague_ogryn_sprayer = {
-		point_cost = 6
+		point_cost = 1000
 	},
 	chaos_poxwalker_bomber = {
 		point_cost = 6
@@ -32,7 +32,7 @@ local breed_terror_event_settings = {
 		point_cost = 1
 	},
 	renegade_assault = {
-		point_cost = 4
+		point_cost = 2.5
 	},
 	renegade_executor = {
 		point_cost = 6
@@ -53,13 +53,19 @@ local breed_terror_event_settings = {
 		point_cost = 12
 	},
 	renegade_rifleman = {
-		point_cost = 2
+		point_cost = 2.5
 	},
 	renegade_shocktrooper = {
-		point_cost = 8
+		point_cost = 6
+	},
+	renegade_flamer = {
+		point_cost = 6
 	},
 	renegade_sniper = {
 		point_cost = 8
+	},
+	renegade_berzerker = {
+		point_cost = 6
 	},
 	cultist_mutant = {
 		point_cost = 12
@@ -68,7 +74,7 @@ local breed_terror_event_settings = {
 		point_cost = 6
 	},
 	cultist_shocktrooper = {
-		point_cost = 8
+		point_cost = 6
 	},
 	cultist_gunner = {
 		point_cost = 6
@@ -77,16 +83,16 @@ local breed_terror_event_settings = {
 		point_cost = math.huge
 	},
 	cultist_melee = {
-		point_cost = 2
+		point_cost = 1.5
 	},
 	cultist_assault = {
-		point_cost = 2
+		point_cost = 2.5
 	},
 	cultist_berzerker = {
 		point_cost = 6
 	},
 	chaos_beast_of_nurgle = {
-		point_cost = math.huge
+		point_cost = 1000
 	}
 }
 

@@ -4,7 +4,10 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtRangedFollowTargetAction = class("BtRangedFollowTargetAction", "BtNode")
-BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE = 1
+BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE = {
+	0.25,
+	0.75
+}
 BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.25,
 	0.75
@@ -25,7 +28,7 @@ BtRangedFollowTargetAction.enter = function (self, unit, breed, blackboard, scra
 	navigation_extension:set_enabled(true, run_speed)
 
 	scratchpad.is_assaulting = action_data.is_assaulting
-	scratchpad.time_to_next_evaluate = t + BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE
+	scratchpad.time_to_next_evaluate = t + math.random_range(BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE[1], BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE[2])
 
 	MinionMovement.init_find_ranged_position(scratchpad, action_data)
 
@@ -66,6 +69,8 @@ BtRangedFollowTargetAction.run = function (self, unit, breed, blackboard, scratc
 		if should_start_idle then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
+
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 
 		if should_evaluate then
 			scratchpad.time_to_next_evaluate = t + math.random_range(BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL[2])

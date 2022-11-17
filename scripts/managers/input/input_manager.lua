@@ -3,6 +3,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
 local InputService = require("scripts/managers/input/input_service")
 local InputUtils = require("scripts/managers/input/input_utils")
+local RumbleSettings = require("scripts/settings/input/rumble_settings")
 local DefaultSettings = {}
 
 table.insert(DefaultSettings, require("scripts/settings/input/default_debug_input_settings"))
@@ -22,6 +23,7 @@ table.insert(AdvancedSettings, require("scripts/settings/input/default_view_inpu
 local InputManager = class("InputManager")
 InputManager.DEBUG_TAG = "Input Manager"
 InputManager.SELECTION_LOGIC = table.enum("fixed", "latest", "combined")
+InputManager.MAX_RUMBLES = 10
 
 local function _log(str, ...)
 	Log.info(InputManager.DEBUG_TAG, str, ...)
@@ -47,6 +49,9 @@ InputManager.init = function (self)
 	self._key_watch_result = nil
 	self._key_watch_devices = {}
 	self._key_watch = false
+	self._active_rumbles = {}
+	self._rumble_device = nil
+	self._rumble_id = 1
 	self._selection = {
 		logic = InputManager.SELECTION_LOGIC.latest,
 		controller_type = "keyboard",
@@ -123,6 +128,14 @@ InputManager._select_fixed = function (self)
 	local device = self:_find_active_device(self._selection.controller_type, self._selection.slot)
 
 	if device then
+		if device:can_rumble() then
+			if device ~= self._rumble_device then
+				InputManager:stop_all_rumbles()
+			end
+
+			self._rumble_device = device
+		end
+
 		table.clear(used_devices)
 
 		local extra_device = nil
@@ -147,6 +160,14 @@ InputManager._select_latest = function (self)
 	local latest = InputDevice.last_pressed_device
 
 	if latest then
+		if latest:can_rumble() then
+			if latest ~= self._rumble_device then
+				InputManager:stop_all_rumbles()
+			end
+
+			self._rumble_device = latest
+		end
+
 		local used_devices = self._used_input_devices
 
 		if table.array_contains(used_devices, latest) then
@@ -563,6 +584,7 @@ end
 InputManager.destroy = function (self)
 	local event_manager = Managers.event
 
+	self:stop_all_rumbles()
 	event_manager:unregister(self, "device_activated")
 	event_manager:unregister(self, "device_deactivated")
 end
@@ -594,6 +616,98 @@ InputManager.get_input_layout_names = function (self)
 	end
 
 	return layout_names
+end
+
+InputManager._free_rumble_slot = function (self)
+	local raw_device = self._rumble_device:raw_device()
+
+	for i = 1, InputManager.MAX_RUMBLES do
+		local rumble = self._active_rumbles[i]
+
+		if not rumble then
+			return i
+		else
+			local playing = false
+
+			for motor_id, id in pairs(rumble.ids) do
+				if raw_device.is_rumble_effect_playing(motor_id - 1, id) then
+					playing = true
+				end
+			end
+
+			if not playing then
+				return i
+			end
+		end
+	end
+end
+
+InputManager.start_rumble_effect = function (self, name)
+	if not self._rumble_device then
+		return 0
+	end
+
+	local raw_device = self._rumble_device:raw_device()
+	local free_slot = self:_free_rumble_slot()
+
+	if not free_slot then
+		return 0
+	end
+
+	local effect_data = RumbleSettings[name]
+	local effect_instance = {
+		ids = {},
+		rumble_id = self._rumble_id
+	}
+
+	for _, motor_id in pairs(effect_data.motors) do
+		local params = effect_data.params[motor_id + 1]
+		local new_id = raw_device.rumble_effect(motor_id, params)
+		effect_instance.ids[motor_id + 1] = new_id
+	end
+
+	self._rumble_id = self._rumble_id + 1
+	self._active_rumbles[free_slot] = effect_instance
+
+	return effect_instance.rumble_id
+end
+
+InputManager.stop_rumble_effect = function (self, id)
+	if not self._rumble_device then
+		return
+	end
+
+	local raw_device = self._rumble_device:raw_device()
+
+	for i = 1, self.MAX_RUMBLES do
+		local effect_instance = self._active_rumbles[i]
+
+		if effect_instance and effect_instance.rumble_id == id then
+			for motor_id, internal_id in pairs(effect_instance.ids) do
+				raw_device.stop_rumble_effect(motor_id - 1, internal_id)
+			end
+
+			return
+		end
+	end
+end
+
+InputManager.stop_all_rumbles = function (self)
+	if not self._rumble_device then
+		return
+	end
+
+	local raw_device = self._rumble_device:raw_device()
+
+	for i = 1, self.MAX_RUMBLES do
+		local effect_instance = self._active_rumbles[i]
+
+		if effect_instance then
+			for motor_id, internal_id in pairs(effect_instance.ids) do
+				raw_device.stop_rumble_effect(motor_id - 1, internal_id)
+			end
+		end
+	end
 end
 
 return InputManager

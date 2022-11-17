@@ -28,9 +28,6 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 	local overload_module_class_name = action_settings.overload_module_class_name
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
 	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, inventory_slot_component)
-	self._target_anim_event = action_settings.target_anim_event or "nil"
-	self._target_missing_anim_event = action_settings.target_missing_anim_event or "nil"
-	self._next_allowed_stagger_t = 0
 end
 
 ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -38,6 +35,8 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 
 	self._had_target = nil
 	self._attack_target = action_settings.attack_target
+	self._has_attacked_target = nil
+	self._time_on_target = 0
 	self._target_locked = action_settings.target_locked
 	self._target_charge = action_settings.target_charge
 
@@ -48,7 +47,6 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 		self._targeting_module:start(t)
 		self._overload_module:start(t)
 		self._charge_module:reset(t, charge_duration)
-		self._animation_extension:anim_event_1p(self._target_anim_event)
 	end
 
 	if self._target_locked then
@@ -69,23 +67,38 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 	local target_unit = self._targeting_component.target_unit_1
 
 	if target_unit and target_unit ~= previously_targeted_unit then
+		self._time_on_target = 0
+
 		if self._target_charge and self._target_locked then
 			self._charge_module:reset(t, self._charge_duration)
 		end
+	end
 
-		if self._is_server and self._attack_target and self._next_allowed_stagger_t <= t then
-			local player_unit = self._player_unit
-			local direction = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[player_unit]))
-			local action_settings = self._action_settings
-			local attack_settings = action_settings.attack_settings
-			local damage_profile = attack_settings.damage_profile
-			local hit_zone_name = "head"
+	if target_unit and self._is_server then
+		local action_settings = self._action_settings
+		local time_to_attack = action_settings.attack_target_time or 0
+		local should_attack = not self._has_attacked_target
 
-			Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "attacking_unit", player_unit, "item", self._weapon.item)
+		if should_attack and self._attack_target and time_to_attack < self._time_on_target then
+			local target_unit_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+			local breed = target_unit_unit_data_extension:breed()
 
-			local attack_cd = action_settings.attack_target_cooldown or 0
-			self._next_allowed_stagger_t = t + attack_cd
+			if not breed.smite_stagger_immunity then
+				local player_unit = self._player_unit
+				local direction = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[player_unit]))
+				local attack_settings = action_settings.attack_settings
+				local damage_profile = attack_settings.damage_profile
+				local hit_zone_name = "head"
+
+				Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "attacking_unit", player_unit, "item", self._weapon.item)
+			end
+
+			self._has_attacked_target = true
 		end
+	end
+
+	if target_unit then
+		self._time_on_target = self._time_on_target + dt
 	end
 
 	if target_unit or self._target_charge and not self._target_locked then
@@ -129,8 +142,6 @@ ActionSmiteTargeting._calculate_charge_duration_of_target_health = function (sel
 end
 
 ActionSmiteTargeting.finish = function (self, reason, data, t, time_in_action, action_settings, chaining_action_params)
-	self._animation_extension:anim_event_1p(self._target_missing_anim_event)
-
 	self._should_fade_kill = false
 
 	ActionSmiteTargeting.super.finish(self, reason, data, t, time_in_action, chaining_action_params)

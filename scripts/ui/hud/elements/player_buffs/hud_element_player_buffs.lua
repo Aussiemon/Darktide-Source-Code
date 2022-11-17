@@ -17,6 +17,14 @@ HudElementPlayerBuffs.init = function (self, parent, draw_layer, start_scale, de
 	self:_update_buff_alignments(true)
 end
 
+HudElementPlayerBuffs.event_player_buff_proc_start = function (self, player, buff_instance)
+	self:event_player_buff_added(player, buff_instance)
+end
+
+HudElementPlayerBuffs.event_player_buff_proc_stop = function (self, player, buff_instance)
+	self:event_player_buff_removed(player, buff_instance)
+end
+
 HudElementPlayerBuffs.event_player_buff_added = function (self, player, buff_instance)
 	if not self._player or self._player ~= player then
 		return
@@ -60,7 +68,7 @@ HudElementPlayerBuffs._sync_current_active_buffs = function (self, buffs)
 		local add_buff = buff:show_in_hud()
 
 		for j = num_active_buffs, 1, -1 do
-			local buff_data = num_active_buffs[j]
+			local buff_data = active_buffs_data[j]
 
 			if buff_data.buff_instance == buff then
 				add_buff = false

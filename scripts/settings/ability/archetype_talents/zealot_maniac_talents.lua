@@ -33,7 +33,7 @@ local archetype_talents = {
 			name = "G-Ability - Shock Grenade",
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 			display_name = "loc_ability_shock_grenade",
-			icon = "content/ui/textures/icons/talents/menu/talent_default",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tactical",
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.zealot_maniac_shock_grenade
@@ -43,7 +43,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_martyrdom_desc",
 			name = "Passive - Gain one stack per 15% health missing, up to 3 stacks. Each stack increase damage dealt by 5%",
 			display_name = "loc_talent_maniac_martyrdom",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_1",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_3",
 			format_values = {
 				damage = talent_settings.passive_1.damage_per_step * 100,
 				health = talent_settings.passive_1.health_step * 100,
@@ -72,7 +72,7 @@ local archetype_talents = {
 			description = "loc_talent_zealot_2_base_3_description",
 			name = "Aura - Reduced toughness damage taken",
 			display_name = "loc_talent_zealot_2_base_3",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_3",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_aura",
 			format_values = {
 				damage_reduction = math_round((1 - talent_settings.coherency.toughness_damage_taken_multiplier) * 100)
 			},
@@ -99,7 +99,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_toughness_on_melee_kill_desc",
 			name = "Increase toughness gained from melee kills by 50%",
 			display_name = "loc_talent_maniac_toughness_on_melee_kill",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_1_1",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_2",
 			format_values = {
 				toughness = talent_settings.toughness_1.toughness_melee_replenish * 100
 			},
@@ -112,7 +112,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_toughness_melee_effectiveness_desc",
 			name = "Critical strikes reduce toughness damage taken by 33% for 3 seconds",
 			display_name = "loc_talent_maniac_toughness_melee_effectiveness",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_1_2",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_3",
 			format_values = {
 				toughness_damage_reduction = math_round((1 - talent_settings.toughness_2.toughness_damage_taken_multiplier) * 100),
 				time = talent_settings.toughness_2.duration
@@ -126,9 +126,9 @@ local archetype_talents = {
 			description = "loc_talent_maniac_toughness_regen_in_melee_desc",
 			name = "Regenerate toughness while in melee",
 			display_name = "loc_talent_maniac_toughness_regen_in_melee",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_2",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_1",
 			format_values = {
-				toughness = talent_settings.toughness_3.toughness * 1000,
+				toughness = talent_settings.toughness_3.toughness * 200,
 				range = talent_settings.toughness_3.range
 			},
 			passive = {
@@ -137,28 +137,32 @@ local archetype_talents = {
 			}
 		},
 		zealot_2_tier_2_name_1 = {
-			description = "loc_talent_maniac_melee_crit_chance_desc",
-			name = "Increased melee critical strike chance",
-			display_name = "loc_talent_maniac_melee_crit_chance",
+			description = "loc_talent_maniac_bleed_melee_crit_chance_desc",
+			name = "Crits apply bleed. Hitting a bleeding target increases crit for X seconds",
+			display_name = "loc_talent_maniac_bleed_melee_crit_chance",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_2_1",
 			format_values = {
-				crit_chance = talent_settings.offensive_1.melee_critical_strike_chance * 100
+				crit_chance = talent_settings.offensive_1.melee_critical_strike_chance * 100,
+				duration = talent_settings.offensive_1.duration
 			},
 			passive = {
-				buff_template_name = "zelaot_maniac_melee_critical_strike_chance_increased",
+				buff_template_name = "zealot_maniac_bleeding_crits",
 				identifier = "offensive"
 			}
 		},
 		zealot_2_tier_2_name_2 = {
-			description = "loc_talent_maniac_damage_vs_shocked_desc",
-			name = "Increased damage vs shocked/stunned enemies",
-			display_name = "loc_talent_maniac_damage_vs_shocked",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_2_2",
+			description = "loc_talent_maniac_multi_hits_increase_impact_desc",
+			name = "Attacks that hit more than 3 enemies adds a stacking buff that grants X% more impact. Y max stacks. At max stacks gain uninterruptible. Lasts Z seconds",
+			display_name = "loc_talent_maniac_multi_hits_increase_impact",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_2_2_b",
 			format_values = {
-				damage = talent_settings.offensive_2.damage * 100
+				min_hits = talent_settings.offensive_2.min_hits,
+				time = talent_settings.offensive_2.duration,
+				impact_modifier = talent_settings.offensive_2.impact_modifier * 100,
+				max_stacks = talent_settings.offensive_2.max_stacks
 			},
 			passive = {
-				buff_template_name = "zealot_maniac_increased_damage_vs_shocked",
+				buff_template_name = "zealot_maniac_multi_hits_increase_impact",
 				identifier = "offensive"
 			}
 		},
@@ -178,27 +182,24 @@ local archetype_talents = {
 			}
 		},
 		zealot_2_tier_3_name_1 = {
-			description = "loc_talent_maniac_crit_for_allies_per_martyrdom_desc",
-			name = "Your coherency aura now grants 1.5% crit chance per stack of Martyrdom",
-			display_name = "loc_talent_maniac_crit_for_allies_per_martyrdom",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_1",
+			description = "loc_talent_maniac_power_for_allies_on_martyrdom_desc",
+			name = "Whenever you gain a martyrdom stack, grant allies in coherency a power bonus for X seconds",
+			display_name = "loc_talent_maniac_power_for_allies_on_martyrdom",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_1_2",
 			format_values = {
-				chance = talent_settings.coop_1.crit_chance * 100
-			},
-			coherency = {
-				buff_template_name = "zealot_maniac_coherency_crit_aura",
-				identifier = "maniac_crit_aura"
+				power_level_modifier = talent_settings.coop_1.power_level_modifier * 100,
+				time = talent_settings.coop_1.duration
 			},
 			special_rule = {
 				identifier = "coop",
-				special_rule_name = special_rules.zealot_maniac_crit_aura
+				special_rule_name = special_rules.zealot_maniac_martyrdom_grants_ally_power_bonus
 			}
 		},
 		zealot_2_tier_3_name_2 = {
 			description = "loc_talent_maniac_aura_efficiency_desc",
 			name = "Increase the efficiency of your aura to 20%",
 			display_name = "loc_talent_maniac_aura_efficiency",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_2",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_2",
 			format_values = {
 				damage_reduction = math_round((1 - talent_settings.coop_2.toughness_damage_taken_multiplier) * 100)
 			},
@@ -211,7 +212,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_ability_grants_toughness_to_allies_desc",
 			name = "When you use your Combat Ability, allies in coherency gain 15% toughness",
 			display_name = "loc_talent_maniac_ability_grants_toughness_to_allies",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_3",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_3",
 			format_values = {
 				toughness = talent_settings.coop_3.toughness * 100
 			},
@@ -224,7 +225,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_heal_during_resist_death_desc",
 			name = "When Resist Death ends you gain health based on the damage you dealt during Resist Death. Melee damage dealt heals for twice the amount.",
 			display_name = "loc_talent_maniac_heal_during_resist_death",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_1",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_6_1",
 			format_values = {
 				multiplier = talent_settings.defensive_1.leech * 100
 			},
@@ -237,12 +238,12 @@ local archetype_talents = {
 			description = "loc_talent_maniac_movement_speed_on_damaged_desc",
 			name = "Taking damage grants a short burst of movement speed",
 			display_name = "loc_talent_maniac_movement_speed_on_damaged",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_2",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_3",
 			format_values = {
 				movement_speed = (talent_settings.defensive_2.movement_speed - 1) * 100,
 				time = talent_settings.defensive_2.active_duration
 			},
-			coherency = {
+			passive = {
 				buff_template_name = "zealot_maniac_movement_enhanced",
 				identifier = "toughness_damage_resistance"
 			}
@@ -251,7 +252,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_heal_damage_taken_desc",
 			name = "Recuperate a portion of all damage taken",
 			display_name = "loc_talent_maniac_heal_damage_taken",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_3",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_3_b",
 			format_values = {
 				damage_reduction = talent_settings.defensive_3.recuperate_percentage * 100,
 				time = talent_settings.defensive_3.duration
@@ -265,7 +266,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_ranged_damage_increased_to_close_desc",
 			name = "Increased ranged damage to close enemies",
 			display_name = "loc_talent_maniac_ranged_damage_increased_to_close",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_1",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_1_b",
 			format_values = {
 				damage = talent_settings.offensive_2_1.damage * 100
 			},
@@ -278,7 +279,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_increased_damage_stacks_on_hit_desc",
 			name = "Hitting a target increases melee damage for a short duration, stacking up to five times",
 			display_name = "loc_talent_maniac_increased_damage_stacks_on_hit",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_2",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_1",
 			format_values = {
 				damage = talent_settings.offensive_2_2.melee_damage * 100,
 				time = talent_settings.offensive_2_2.duration,
@@ -293,7 +294,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_increased_martyrdom_stacks_desc",
 			name = "Increased Martyrdom max stacks to 6",
 			display_name = "loc_talent_maniac_increased_martyrdom_stacks",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_3",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_2_2",
 			format_values = {
 				max_stack = talent_settings.offensive_2_3.max_stacks
 			},
@@ -306,7 +307,7 @@ local archetype_talents = {
 			description = "loc_talent_maniac_cooldown_on_melee_crits_desc",
 			name = "Melee critical strike hits reduce the cooldown of chastise the wicked",
 			display_name = "loc_talent_maniac_cooldown_on_melee_crits",
-			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_6_1",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_2",
 			format_values = {
 				time = talent_settings.combat_ability_1.time
 			},
@@ -331,12 +332,11 @@ local archetype_talents = {
 		},
 		zealot_2_tier_6_name_3 = {
 			description = "loc_talent_maniac_dash_has_more_charges_desc",
-			name = "Increases charges of your dash ability to 2, and reduces its cooldown to 15",
+			name = "Increases charges of your dash ability to 2",
 			display_name = "loc_talent_maniac_dash_has_more_charges",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_6_3",
 			format_values = {
-				max_charges = talent_settings.combat_ability_3.max_charges,
-				cooldown = talent_settings.combat_ability_3.cooldown
+				max_charges = talent_settings.combat_ability_3.max_charges
 			},
 			player_ability = {
 				ability_type = "combat_ability",

@@ -27,6 +27,13 @@ PlayerUnitCameraExtension.fixed_update = function (self, unit, dt, t)
 	self:_evaluate_camera_tree()
 end
 
+local NODE_IGNORE_SCALED_TRANSFORM_OFFSETS = {
+	consumed = true
+}
+local NODE_OBJECT_NAMES = {
+	consumed = "j_hips"
+}
+
 PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 	local wants_first_person_camera = self._first_person_extension:wants_first_person_camera()
 	local character_state_component = self._character_state_component
@@ -48,7 +55,6 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 		local sprint_overtime = sprint_character_state_component.sprint_overtime
 		local have_sprint_over_time = sprint_overtime and sprint_overtime > 0
 		local is_lunging = self._lunge_character_state_component.is_lunging
-		local is_scanning = self._scanning_component.is_active
 
 		if is_assisted then
 			node = "first_person_assisted"
@@ -78,8 +84,10 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 
 		if is_ledge_hanging then
 			node = "ledge_hanging"
-		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged or is_consumed then
+		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged then
 			node = "pounced"
+		elseif is_consumed then
+			node = "consumed"
 		elseif is_disabled and requires_help then
 			node = "disabled"
 		else
@@ -94,10 +102,34 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 	camera_tree_component.node = node
 	self._tree = tree
 	self._node = node
+	local object_name = NODE_OBJECT_NAMES[node]
+	local object = nil
+
+	if object_name then
+		object = Unit.node(self._unit, object_name)
+	end
+
+	self._object = object
+	local ignore_offset = NODE_IGNORE_SCALED_TRANSFORM_OFFSETS[node]
+
+	if self._ignore_offset ~= ignore_offset then
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(self._unit)
+
+		if player:is_human_controlled() then
+			local viewport_name = player.viewport_name
+
+			if viewport_name then
+				Managers.state.camera:set_variable(viewport_name, "ignore_offset", ignore_offset)
+			end
+		end
+	end
+
+	self._ignore_offset = ignore_offset
 end
 
 PlayerUnitCameraExtension.camera_tree_node = function (self)
-	return self._tree, self._node
+	return self._tree, self._node, self._object, self._ignore_offset
 end
 
 PlayerUnitCameraExtension.trigger_camera_shake = function (self, event_name, optional_will_be_predicted)

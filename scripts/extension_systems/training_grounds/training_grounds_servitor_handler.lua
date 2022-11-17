@@ -28,7 +28,7 @@ local function get_relative_position_rotation(target_unit, relative_position, ro
 	return position, target_unit_rotation
 end
 
-TrainingGroundsServitorHandler.init = function (self, training_grounds_scenario_system)
+TrainingGroundsServitorHandler.init = function (self, scripted_scenario_system)
 	self._unit = nil
 	self._move_to_pos = Vector3Box()
 	self._movement_state = MOVEMENT_STATES.still
@@ -37,7 +37,7 @@ TrainingGroundsServitorHandler.init = function (self, training_grounds_scenario_
 		lookat_pos = Vector3Box()
 	}
 	self._stop_at_arrival = true
-	self._training_grounds_scenario_system = training_grounds_scenario_system
+	self._scripted_scenario_system = scripted_scenario_system
 	self._velocity = Vector3Box()
 	self._speed = 3
 	self._idle_speed = 0.5

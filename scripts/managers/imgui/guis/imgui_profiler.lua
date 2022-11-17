@@ -194,15 +194,15 @@ ImguiProfiler._draw_filtered_scopes = function (self)
 	local fixed_frame_index = CURRENT_FIXED_FRAME_INDEX
 
 	if FILTERED_SCOPES_INDEX >= 1 then
-		local is_open = Imgui.tree_node("root", true)
+		if Imgui.tree_node("root", true) then
+			for i = 1, math.max(FILTERED_SCOPES_INDEX - 1, 1) do
+				local filtered_scope = FILTERED_SCOPES[i]
 
-		for i = 1, math.max(FILTERED_SCOPES_INDEX - 1, 1) do
-			local filtered_scope = FILTERED_SCOPES[i]
+				self:_draw_lookup_table(filtered_scope, false)
+			end
 
-			self:_draw_lookup_table(filtered_scope, false)
+			Imgui.tree_pop()
 		end
-
-		Imgui.tree_pop()
 	else
 		Imgui.text_colored(string.format("No scope includes the text %q", self._filter), 255, 128, 128, 255)
 	end

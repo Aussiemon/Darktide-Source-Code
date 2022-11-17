@@ -563,10 +563,6 @@ ProjectileUnitLocomotionExtension.current_speed = function (self)
 	return self._speed
 end
 
-ProjectileUnitLocomotionExtension.recent_hits = function (self)
-	return self._integration_data.hits
-end
-
 ProjectileUnitLocomotionExtension.sticking_to_unit = function (self)
 	local sticking_to_unit = self._sticking_to_unit
 	local sticking_to_actor_index = self._sticking_to_actor_index or 1

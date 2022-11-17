@@ -11,7 +11,7 @@ RootCamera.init = function (self, root_node)
 end
 
 RootCamera.set_root_unit = function (self, unit, object, preserve_yaw)
-	object = self._object_name and Unit.node(unit, self._object_name) or object or 1
+	object = object or self._object_name and Unit.node(unit, self._object_name) or 1
 
 	BaseCamera.set_root_unit(self, unit, object)
 

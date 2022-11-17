@@ -355,18 +355,28 @@ PlayerCharacterStateHubJog._update_mini_emotes = function (self, input_extension
 	return
 end
 
+local emotes = {
+	emote_4 = "slot_animation_emote_4",
+	emote_5 = "slot_animation_emote_5",
+	emote_1 = "slot_animation_emote_1",
+	emote_2 = "slot_animation_emote_2",
+	emote_3 = "slot_animation_emote_3"
+}
+
 PlayerCharacterStateHubJog._update_emotes = function (self, input_extension)
-	if input_extension:get("emote_1") then
-		local unit = self._unit
-		local player = Managers.state.player_unit_spawn:owner(unit)
-		local profile = player:profile()
-		local loadout = profile.loadout
-		local emote_item = loadout.slot_animation_emote_1
+	for emote_key, emote_slot_id in pairs(emotes) do
+		if input_extension:get(emote_key) then
+			local unit = self._unit
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local profile = player:profile()
+			local loadout = profile.loadout
+			local emote_item = loadout[emote_slot_id]
 
-		if emote_item then
-			local anim_event = emote_item.animation_event
+			if emote_item then
+				local anim_event = emote_item.animation_event
 
-			self._animation_extension:anim_event(anim_event)
+				self._animation_extension:anim_event(anim_event)
+			end
 		end
 	end
 end

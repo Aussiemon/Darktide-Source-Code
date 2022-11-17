@@ -8,12 +8,14 @@ local armor_types = ArmorSettings.types
 local medium_cleave = DamageProfileSettings.medium_cleave
 local damage_templates = {}
 local overrides = {}
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 damage_templates.ogryn_grenade_impact = {
 	shield_override_stagger_strength = 120,
+	gibbing_power = 0,
 	suppression_value = 4,
 	ignore_shield = true,
 	ragdoll_push_force = 750,
@@ -82,7 +84,6 @@ damage_templates.ogryn_grenade_impact = {
 		attack = 30,
 		impact = 15
 	},
-	gibbing_power = GibbingPower.light,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10
@@ -298,33 +299,39 @@ damage_templates.thumper_grenade_impact = {
 	},
 	armor_damage_modifier = {
 		attack = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 0.75,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0.75,
-			[armor_types.prop_armor] = 1
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_75,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.prop_armor] = damage_lerp_values.lerp_1
 		},
 		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.prop_armor] = damage_lerp_values.lerp_1
 		}
 	},
 	power_distribution = {
-		attack = 200,
-		impact = 10
+		attack = {
+			200,
+			400
+		},
+		impact = {
+			8,
+			16
+		}
 	},
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = GibbingTypes.crushing,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10
@@ -357,6 +364,10 @@ overrides.frag_grenade_impact = {
 			150
 		},
 		{
+			"gibbing_power",
+			0
+		},
+		{
 			"ignore_stagger_reduction",
 			false
 		},
@@ -366,6 +377,10 @@ overrides.frag_grenade_impact = {
 		},
 		{
 			"shield_override_stagger_strength",
+			0
+		},
+		{
+			"gibbing_power",
 			0
 		}
 	}
@@ -388,6 +403,10 @@ overrides.fire_grenade_impact = {
 			150
 		},
 		{
+			"gibbing_power",
+			0
+		},
+		{
 			"ignore_stagger_reduction",
 			false
 		},
@@ -397,6 +416,10 @@ overrides.fire_grenade_impact = {
 		},
 		{
 			"shield_override_stagger_strength",
+			0
+		},
+		{
+			"gibbing_power",
 			0
 		}
 	}

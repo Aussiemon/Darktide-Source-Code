@@ -33,6 +33,16 @@ InputUtils.replaced_strings.oem_minus = "oem_minus (_ -)"
 InputUtils.replaced_strings["numpad plus"] = "numpad +"
 InputUtils.replaced_strings["num minus"] = "num -"
 InputUtils.replaced_strings.oem_comma = "oem_comma (< ,)"
+InputUtils.replaced_strings.oem_colon = "oem_1 (: ;)"
+InputUtils.replaced_strings.oem_plus = "oem_plus (+ =)"
+InputUtils.replaced_strings.oem_2 = "oem_2 (? /)"
+InputUtils.replaced_strings.oem_3 = "oem_3 (~ `)"
+InputUtils.replaced_strings.oem_4 = "oem_4 ({ [)"
+InputUtils.replaced_strings.oem_5 = "oem_5 (| )"
+InputUtils.replaced_strings.oem_6 = "oem_6 (} ])"
+InputUtils.replaced_strings.oem_7 = "oem_7 (\" ')"
+InputUtils.replaced_strings.oem_6 = "oem_8 (?!)"
+InputUtils.replaced_strings.oem_6 = "oem_102 (> <)"
 
 InputUtils.axis_index = function (global_name, raw_device, device_type)
 	local k = InputUtils.local_key_name(global_name, device_type)

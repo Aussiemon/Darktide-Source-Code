@@ -4,7 +4,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -30,14 +30,16 @@ local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 local wounds_shapes = WoundsSettings.shapes
-local combat_sword_action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs)
+local combat_sword_action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
 combat_sword_action_inputs.parry = {
 	buffer_time = 0
 }
-local combat_sword_action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 combat_sword_action_input_hierarchy.parry = "base"
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
+weapon_template.action_inputs.block.buffer_time = 0.1
+weapon_template.action_inputs.block_release.buffer_time = 0.35
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
@@ -314,7 +316,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.24
+				chain_time = 0.4
 			},
 			block = {
 				chain_time = 0.4,
@@ -474,7 +476,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.5
+				chain_time = 0.55
 			},
 			block = {
 				action_name = "action_block",
@@ -716,7 +718,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.55
+				chain_time = 0.75
 			},
 			block = {
 				action_name = "action_block",
@@ -749,10 +751,11 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.vertical_slash
 	},
 	action_block = {
-		anim_event = "parry_pose",
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
+		anim_event = "parry_pose",
 		stop_input = "block_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -982,7 +985,7 @@ weapon_template.actions = {
 				-0.05
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_combatsword_linesman,
+		damage_profile = DamageProfileTemplates.light_combatsword_smiter,
 		damage_type = damage_types.metal_slashing_light,
 		wounds_shape = wounds_shapes.horizontal_slash,
 		time_scale_stat_buffs = {
@@ -1032,6 +1035,10 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.3
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.35
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1067,6 +1074,8 @@ weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",

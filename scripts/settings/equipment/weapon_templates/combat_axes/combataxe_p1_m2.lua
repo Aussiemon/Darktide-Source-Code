@@ -4,7 +4,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -34,9 +34,11 @@ local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
+weapon_template.action_inputs.block.buffer_time = 0.1
+weapon_template.action_inputs.block_release.buffer_time = 0.35
 local combat_axe_sweep_box = {
 	0.15,
 	0.15,
@@ -269,7 +271,7 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
 		range_mod = 1.25,
-		attack_direction_override = "down",
+		attack_direction_override = "push",
 		damage_window_end = 0.3333333333333333,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down",
@@ -313,7 +315,8 @@ weapon_template.actions = {
 				chain_time = 0.63
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.4
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -491,7 +494,7 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.vertical_slash
 	},
 	action_right_heavy = {
-		damage_window_start = 0.13333333333333333,
+		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		weapon_handling_template = "time_scale_0_9",
@@ -499,8 +502,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		num_frames_before_process = 0,
-		attack_direction_override = "down",
-		damage_window_end = 0.26666666666666666,
+		attack_direction_override = "push",
+		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down",
 		anim_event = "heavy_attack_right_down",
@@ -545,7 +548,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.3
+				chain_time = 0.4
 			}
 		},
 		hit_zone_priority = hit_zone_priority,
@@ -907,6 +910,10 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.4
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.35
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1007,6 +1014,8 @@ weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
@@ -1103,53 +1112,30 @@ weapon_template.base_stats = {
 			}
 		}
 	},
-	combataxe_p1_m1_finesse_stat = {
-		display_name = "loc_stats_display_finesse_stat",
+	combataxe_cleave_targets_stat = {
+		display_name = "loc_stats_display_cleave_targets_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_diagonal_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_left_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_special_stab = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_finesse_stat
-			}
-		},
-		weapon_handling = {
-			action_left_down_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_diagonal_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_special_stab = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_stat
+				damage_trait_templates.combatsword_cleave_targets_stat
 			}
 		}
 	},
@@ -1366,7 +1352,7 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_smiter"
 	},
 	{
-		display_name = "loc_weapon_keyword_versatile"
+		display_name = "loc_weapon_keyword_armor_piercing"
 	}
 }
 weapon_template.displayed_attacks = {

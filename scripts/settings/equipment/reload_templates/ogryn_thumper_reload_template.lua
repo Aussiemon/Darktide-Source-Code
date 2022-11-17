@@ -9,11 +9,11 @@ local reload_template = {
 		anim_1p = "reload_start",
 		time = 2.333,
 		state_transitions = {
-			eject_mag = 2,
-			fit_new_mag = 0.55
+			eject_mag = 1.45,
+			fit_new_mag = 0.5
 		},
 		functionality = {
-			refill_ammunition = 1.4,
+			refill_ammunition = 1.45,
 			remove_ammunition = 0.5
 		}
 	},

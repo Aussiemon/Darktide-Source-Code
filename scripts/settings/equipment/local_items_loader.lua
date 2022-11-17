@@ -1,9 +1,26 @@
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local Promise = require("scripts/foundation/utilities/promise")
 local LocalLoader = class("LocalLoader")
+local strip_tags = Application.get_strip_tags_table()
 
-local function _should_include_item(item)
-	return item.workflow_state == "BLOCKOUT" or item.workflow_state == "PROTOTYPE" or item.workflow_state == "FUNCTIONAL" or item.workflow_state == "SHIPPABLE" or item.workflow_state == "RELEASABLE"
+local function _should_include_item(item, item_name)
+	local feature_flag_on = false
+	local accepted_workflow = item.workflow_state == "RELEASABLE"
+	local is_fallback_item = item.is_fallback_item == true
+
+	if table.size(item.feature_flags) == 0 then
+		feature_flag_on = true
+	else
+		for _, feature_flag in pairs(item.feature_flags) do
+			if strip_tags[feature_flag] == true then
+				feature_flag_on = true
+
+				break
+			end
+		end
+	end
+
+	return is_fallback_item or feature_flag_on and accepted_workflow
 end
 
 LocalLoader.QUERY_TIMEOUT_SECONDS = 60
@@ -76,7 +93,9 @@ LocalLoader.get_items_from_metadata_db = function ()
 				item = cjson.decode(v)
 			end
 
-			if _should_include_item(item) then
+			table.set_readonly(item)
+
+			if _should_include_item(item, k) then
 				count = count + 1
 				merged_items[k] = item
 			end

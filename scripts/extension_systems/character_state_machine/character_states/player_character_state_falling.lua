@@ -98,13 +98,26 @@ PlayerCharacterStateFalling.on_exit = function (self, unit, t, next_state)
 		animation_ext:anim_event("land_still")
 	end
 
-	animation_ext:anim_event("to_onground")
+	local movement_state_component = self._movement_state_component
+	local was_crouching = movement_state_component.is_crouching
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t)
+
+	if was_crouching and is_crouching then
+		animation_ext:anim_event("to_crouch")
+	elseif not is_crouching then
+		animation_ext:anim_event("to_onground")
+	end
 
 	local sprint_character_state_component = self._sprint_character_state_component
 	sprint_character_state_component.wants_sprint_camera = false
 	sprint_character_state_component.is_sprint_jumping = false
 
 	animation_ext:anim_event_1p("landing")
+
+	if next_state == "sliding" then
+		Crouch.enter(unit, self._first_person_extension, animation_ext, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+	end
+
 	Fall.trigger_impact_sound(unit, fx_extension, constants, locomotion_component, inair_state_component)
 	Fall.set_fall_height(locomotion_component, inair_state_component)
 
@@ -271,10 +284,10 @@ PlayerCharacterStateFalling._check_transition = function (self, unit, t, next_st
 	local inair_state = self._inair_state_component
 
 	if inair_state.on_ground then
-		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t)
+		local wants_crouch = Crouch.crouch_input(input_source, self._movement_state_component.is_crouching, false)
 		local locomotion_component = self._locomotion_component
 		local flat_speed_sq = Vector3.length_squared(Vector3.flat(locomotion_component.velocity_current))
-		local wants_slide = is_crouching and self._constants.slide_move_speed_threshold_sq < flat_speed_sq
+		local wants_slide = wants_crouch and self._constants.slide_move_speed_threshold_sq < flat_speed_sq
 		local sprint_character_state_component = self._sprint_character_state_component
 		local is_sprint_jumping = sprint_character_state_component.is_sprint_jumping
 		local weapon_action_component = self._weapon_action_component
@@ -286,7 +299,7 @@ PlayerCharacterStateFalling._check_transition = function (self, unit, t, next_st
 			end
 
 			return "sliding"
-		elseif Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+		elseif Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
 			if is_sprint_jumping then
 				next_state_params.disable_sprint_start_slowdown = true
 			end

@@ -39,31 +39,8 @@ local function _debug_warning(function_name, format, ...)
 	Log.exception("SocialMenuRosterView", message_format, ...)
 end
 
-local function _sort_by_name(a, b)
-	return a:user_display_name() < b:user_display_name()
-end
-
-local function sort_by_last_played_together(a, b)
-	local a_time = a:last_time_played_with()
-	local b_time = b:last_time_played_with()
-
-	if a_time == b_time then
-		return _sort_by_name(a, b)
-	end
-
-	if not a_time then
-		return false
-	end
-
-	if not b_time then
-		return true
-	end
-
-	return b_time < a_time
-end
-
 local function _default_group_selection_function(player_info)
-	local online_status = player_info:online_status()
+	local online_status = player_info:online_status(true)
 
 	if online_status == OnlineStatus.online or online_status == OnlineStatus.reconnecting then
 		return 1
@@ -76,7 +53,7 @@ end
 
 local function _group_by_invite(player_info)
 	local friend_status = player_info:friend_status()
-	local online_status = player_info:online_status()
+	local online_status = player_info:online_status(true)
 
 	if friend_status == FriendStatus.invite then
 		if online_status == OnlineStatus.online then
@@ -97,6 +74,10 @@ local function _group_by_invite(player_info)
 	else
 		return 7
 	end
+end
+
+local function _sort_by_name(a, b)
+	return a:user_display_name(true) < b:user_display_name(true)
 end
 
 local function _sort_by_default_group_selection(a, b)
@@ -1605,9 +1586,8 @@ SocialMenuRosterView._show_confirmation_popup = function (self, player_info, com
 			description_text_params = {},
 			options = {
 				{
-					text = "loc_social_menu_confirmation_popup_confirm_button",
 					close_on_pressed = true,
-					hotkey = "confirm_pressed"
+					text = "loc_social_menu_confirmation_popup_confirm_button"
 				},
 				{
 					text = "loc_social_menu_confirmation_popup_decline_button",

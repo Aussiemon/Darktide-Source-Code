@@ -376,4 +376,10 @@ MechanismManager.singleplay_type = function (self)
 	return mechanism and mechanism.singleplay_type and mechanism:singleplay_type()
 end
 
+MechanismManager.backend_mission_id = function (self)
+	local backend_mission_id = self._mechanism and self._mechanism._mechanism_data and self._mechanism._mechanism_data.backend_mission_id
+
+	return backend_mission_id
+end
+
 return MechanismManager

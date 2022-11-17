@@ -1,21 +1,23 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtMoveToCombatVectorAction = class("BtMoveToCombatVectorAction", "BtNode")
 BtMoveToCombatVectorAction.TIME_TO_FIRST_EVALUATE = {
-	2,
-	2.75
+	0.5,
+	0.75
 }
 BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL = {
-	1,
-	1.5
+	0.5,
+	0.8
 }
 
 BtMoveToCombatVectorAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local combat_vector_component = blackboard.combat_vector
@@ -44,6 +46,8 @@ BtMoveToCombatVectorAction.leave = function (self, unit, breed, blackboard, scra
 	scratchpad.navigation_extension:set_enabled(false)
 end
 
+local DEFAULT_ATTACK_INTENSITY_TYPE = "ranged"
+local DEFAULT_ELITE_ATTACK_INTENSITY_TYPE = "elite_ranged"
 local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
 
 BtMoveToCombatVectorAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -65,19 +69,14 @@ BtMoveToCombatVectorAction.run = function (self, unit, breed, blackboard, scratc
 	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
+	local target_unit = scratchpad.perception_component.target_unit
 
 	if should_start_idle or should_be_idling then
 		if should_start_idle then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
 
-		local target_unit = scratchpad.perception_component.target_unit
-
-		if ALIVE[target_unit] then
-			local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
-
-			scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
-		end
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 
 		if should_evaluate then
 			scratchpad.time_to_next_evaluate = t + math.random_range(BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL[2])
@@ -112,7 +111,15 @@ BtMoveToCombatVectorAction.run = function (self, unit, breed, blackboard, scratc
 		scratchpad.time_to_next_evaluate = t + math.random_range(BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL[2])
 	end
 
-	return "running", should_evaluate
+	local is_elite = breed.tags.elite
+	local attack_intensity_type = action_data.attack_intensity_type or is_elite and DEFAULT_ELITE_ATTACK_INTENSITY_TYPE or DEFAULT_ATTACK_INTENSITY_TYPE
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, attack_intensity_type, target_unit)
+
+	if attack_allowed then
+		return "running", should_evaluate
+	else
+		return "running"
+	end
 end
 
 BtMoveToCombatVectorAction._move_to_combat_vector = function (self, scratchpad, combat_vector_component, navigation_extension)

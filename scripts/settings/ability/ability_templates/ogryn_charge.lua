@@ -37,7 +37,10 @@ local ability_template = {
 			}
 		}
 	},
-	fx_sources = {}
+	fx_sources = {},
+	equiped_ability_effect_scripts = {
+		"LungeEffects"
+	}
 }
 
 return ability_template

@@ -189,11 +189,17 @@ PlayerManagerTestify.wait_for_bots_to_reach_position = function (wait_for_bots_p
 	end
 end
 
-PlayerManagerTestify.wait_for_item_equipped = function (data, _)
+PlayerManagerTestify.wait_for_item_equipped = function (data, time)
+	local TIMEOUT = 1
+
+	if TIMEOUT < os.clock() - time then
+		return
+	end
+
 	local inventory_component = ScriptUnit.extension(data.player.player_unit, "unit_data_system"):read_component("inventory")
 	local current_item = inventory_component[data.slot]
 
-	if data.weapon.name ~= current_item then
+	if data.item.name ~= current_item then
 		return Testify.RETRY
 	end
 end

@@ -14,6 +14,8 @@ local effect_template = {
 		template_data.effect_unit = effect_unit
 		local stomach_unit = World.spawn_unit_ex(world, STOMACH_UNIT)
 		template_data.stomach_unit = stomach_unit
+
+		Unit.set_unit_visibility(unit, false)
 	end,
 	update = function (template_data, template_context, dt, t)
 		local player = Managers.player:local_player(1)
@@ -48,6 +50,10 @@ local effect_template = {
 		local stomach_unit = template_data.stomach_unit
 
 		World.destroy_unit(world, stomach_unit)
+
+		local unit = template_data.unit
+
+		Unit.set_unit_visibility(unit, true)
 	end
 }
 

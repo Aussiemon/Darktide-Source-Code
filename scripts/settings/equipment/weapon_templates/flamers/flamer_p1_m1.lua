@@ -1,10 +1,12 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local FlamerGasTemplates = require("scripts/settings/projectile/flamer_gas_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
+local WeaponTraitsBespokeFlamerP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_flamer_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -13,6 +15,7 @@ local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
@@ -62,7 +65,7 @@ local weapon_template = {
 			}
 		},
 		shoot_braced_release = {
-			buffer_time = 0.26,
+			buffer_time = 0.41,
 			input_sequence = {
 				{
 					value = false,
@@ -120,7 +123,7 @@ weapon_template.action_input_hierarchy = {
 			shoot_braced_release = "previous",
 			wield = "base",
 			brace_release = "base",
-			special_action = "base",
+			special_action = "previous",
 			reload = "base"
 		}
 	}
@@ -137,10 +140,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
-		kind = "wield",
+		wield_reload_anim_event = "equip_reload",
 		allowed_during_sprint = true,
+		wield_anim_event = "equip",
 		uninterruptible = true,
-		anim_event = "equip",
+		kind = "ranged_wield",
 		total_time = 1.7,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -157,6 +161,10 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
+			reload = {
+				action_name = "action_reload",
+				chain_time = 0.8
+			},
 			brace_pressed = {
 				action_name = "action_brace",
 				chain_time = 1.35
@@ -168,16 +176,18 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot = {
-		ammunition_usage = 1,
-		weapon_handling_template = "flamer_burst",
-		first_shot_only_sound_reflection = true,
 		kind = "flamer_gas_burst",
-		sprint_ready_up_time = 0.25,
-		abort_sprint = true,
 		start_input = "shoot_pressed",
-		allowed_during_sprint = true,
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "flamer_burst",
+		sprint_ready_up_time = 0.25,
 		ignore_shooting_look_delta_anim_control = true,
+		allowed_during_sprint = true,
+		ammunition_usage = 1,
+		first_shot_only_sound_reflection = true,
+		sensitivity_modifier = 0.5,
+		abort_sprint = true,
+		anim_event = "attack_shoot_start",
 		total_time = 0.75,
 		action_movement_curve = {
 			{
@@ -204,9 +214,9 @@ weapon_template.actions = {
 			looping_3d_sound_effect = "wwise/events/weapon/play_flamethrower_fire_loop_3d",
 			duration = 0.3,
 			stream_effect = {
-				speed = 23,
-				name = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_code_control",
-				name_3p = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_code_control_3p"
+				speed = 35,
+				name = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control_burst",
+				name_3p = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control_3p"
 			}
 		},
 		fire_configuration = {
@@ -232,7 +242,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "push",
-				chain_time = 0.8
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -242,13 +252,15 @@ weapon_template.actions = {
 	action_shoot_braced = {
 		kind = "flamer_gas",
 		start_input = "shoot_braced",
-		first_shot_only_sound_reflection = true,
+		ignore_shooting_look_delta_anim_control = true,
 		weapon_handling_template = "flamer_auto",
 		sprint_ready_up_time = 0,
-		ammunition_usage = 1,
+		minimum_hold_time = 0.4,
+		first_shot_only_sound_reflection = true,
 		anim_end_event = "attack_finished",
 		allowed_during_sprint = true,
-		ignore_shooting_look_delta_anim_control = true,
+		ammunition_usage = 1,
+		action_prevents_jump = true,
 		anim_event = "attack_shoot",
 		stop_input = "shoot_braced_release",
 		total_time = math.huge,
@@ -258,7 +270,7 @@ weapon_template.actions = {
 				t = 0.35
 			},
 			{
-				modifier = 0.1,
+				modifier = 0.2,
 				t = 0.55
 			},
 			{
@@ -269,7 +281,7 @@ weapon_template.actions = {
 				modifier = 0.5,
 				t = 5
 			},
-			start_modifier = 0.1
+			start_modifier = 0.5
 		},
 		fx = {
 			pre_shoot_sfx_alias = "ranged_pre_shoot",
@@ -279,9 +291,9 @@ weapon_template.actions = {
 			pre_shoot_abort_sfx_alias = "ranged_abort",
 			looping_3d_sound_effect = "wwise/events/weapon/play_flamethrower_fire_loop_3d",
 			stream_effect = {
-				speed = 15,
-				name = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_code_control",
-				name_3p = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_code_control_3p"
+				speed = 25,
+				name = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control",
+				name_3p = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control_3p"
 			}
 		},
 		fire_configuration = {
@@ -293,7 +305,7 @@ weapon_template.actions = {
 				input_name = "reload"
 			},
 			reserve_empty = {
-				input_name = "brace_release"
+				input_name = "shoot_braced_release"
 			}
 		},
 		allowed_chain_actions = {
@@ -315,7 +327,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "push",
-				chain_time = 0.8
+				chain_time = 0.4
 			}
 		},
 		action_keywords = {
@@ -324,6 +336,7 @@ weapon_template.actions = {
 		}
 	},
 	action_brace = {
+		action_prevents_jump = true,
 		start_input = "brace_pressed",
 		kind = "aim",
 		total_time = 1.35,
@@ -340,7 +353,7 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload",
-				chain_time = 0.5
+				chain_time = 0.2
 			},
 			shoot_braced = {
 				action_name = "action_shoot_braced",
@@ -348,7 +361,7 @@ weapon_template.actions = {
 			},
 			brace_release = {
 				action_name = "action_unbrace",
-				chain_time = 0
+				chain_time = 0.5
 			},
 			special_action = {
 				action_name = "push",
@@ -362,7 +375,7 @@ weapon_template.actions = {
 	action_unbrace = {
 		kind = "unaim",
 		start_input = "brace_release",
-		total_time = 0.35,
+		total_time = 0.5,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -379,19 +392,34 @@ weapon_template.actions = {
 			},
 			brace_pressed = {
 				action_name = "action_brace",
-				chain_time = 1
+				chain_time = 0.45
+			},
+			special_action = {
+				action_name = "push",
+				chain_time = 0.25
 			}
 		}
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 4,
+		action_movement_curve = {
+			{
+				modifier = 0.75,
+				t = 0.5
+			},
+			{
+				modifier = 0.95,
+				t = 2
+			},
+			start_modifier = 1
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -402,6 +430,9 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.reload_speed
 		}
 	},
 	push = {
@@ -447,6 +478,10 @@ weapon_template.actions = {
 			},
 			brace_pressed = {
 				action_name = "action_brace",
+				chain_time = 0.6
+			},
+			brace_release = {
+				action_name = "action_unbrace",
 				chain_time = 0.4
 			},
 			reload = {
@@ -461,9 +496,9 @@ weapon_template.actions = {
 		inner_push_rad = math.pi * 0.1,
 		outer_push_rad = math.pi * 0.2,
 		inner_damage_profile = DamageProfileTemplates.weapon_special_push,
-		inner_damage_type = damage_types.blunt_heavy,
+		inner_damage_type = damage_types.weapon_butt,
 		outer_damage_profile = DamageProfileTemplates.weapon_special_push_outer,
-		outer_damage_type = damage_types.blunt_heavy
+		outer_damage_type = damage_types.weapon_butt
 	},
 	action_inspect = {
 		skip_3p_anims = true,
@@ -489,10 +524,11 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.4
 weapon_template.uses_ammunition = true
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -514,15 +550,15 @@ weapon_template.alternate_fire_settings = {
 	look_delta_template = "lasgun_brace_light",
 	movement_speed_modifier = {
 		{
-			modifier = 0.175,
+			modifier = 0.85,
 			t = 0.05
 		},
 		{
-			modifier = 0.25,
+			modifier = 0.75,
 			t = 0.075
 		},
 		{
-			modifier = 0.29,
+			modifier = 0.6,
 			t = 0.25
 		},
 		{
@@ -640,6 +676,14 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
+
+table.append(weapon_template.traits, ranged_common_traits)
+
+local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeFlamerP1)
+
+table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)
+
 weapon_template.perks = {
 	flamer_p1_m1_ammo_perk = {
 		description = "loc_trait_description_flamer_p1_m1_ammo_perk",
@@ -713,7 +757,7 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_crowd_control"
+		display_name = "loc_weapon_keyword_spray_n_pray"
 	},
 	{
 		display_name = "loc_weapon_keyword_close_combat"
@@ -739,9 +783,5 @@ weapon_template.displayed_attack_ranges = {
 	max = 20,
 	min = 5
 }
-weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
 
 return weapon_template

@@ -17,6 +17,7 @@ local Sprint = require("scripts/extension_systems/character_state_machine/charac
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local attack_types = AttackSettings.attack_types
+local attack_results = AttackSettings.attack_results
 local proc_events = BuffSettings.proc_events
 local dodge_types = DodgeSettings.dodge_types
 local surface_hit_types = SurfaceMaterialSettings.hit_types
@@ -26,10 +27,11 @@ local INDEX_DISTANCE = 2
 local INDEX_NORMAL = 3
 local INDEX_ACTOR = 4
 local DEFAULT_TEST_AGAINST = "both"
-local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting"
+local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting_raycast"
 local MAX_HITS = 256
 local HIT_UNITS = {}
 local SUPPRESSED_UNITS = {}
+local _block_position, _fetch_damage_type = nil
 
 HitScan.raycast = function (physics_world, position, direction, max_distance, optional_test_against, optional_collision_filter, optional_rewind_ms, optional_is_local_unit, optional_player, optional_is_server)
 	local hits = PhysicsWorld.raycast(physics_world, position, direction, max_distance, "all", "types", optional_test_against or DEFAULT_TEST_AGAINST, "max_hits", MAX_HITS, "collision_filter", optional_collision_filter or DEFAULT_COLLISION_FILTER, "rewind_ms", optional_rewind_ms or 0)
@@ -61,7 +63,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local impact_config = damage_config.impact
 	local penetration_config = damage_config.penetration
 	local damage_profile = damage_config.impact.damage_profile
-	local damage_type = fire_configuration.damage_type
+	local damage_type = _fetch_damage_type(fire_configuration, optional_is_critical_strike, charge_level)
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, attacker_unit)
 	local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, optional_is_critical_strike, attacker_unit)
 	local target_index = 0
@@ -89,6 +91,8 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			local hit_distance = hit.distance or hit[INDEX_DISTANCE]
 			local hit_actor = hit.actor or hit[INDEX_ACTOR]
 			local hit_unit = Actor.unit(hit_actor)
+			local explosion_arming_distance = damage_config.explosion_arming_distance or 0
+			local can_explode = hit_distance >= explosion_arming_distance
 
 			if HIT_UNITS[hit_unit] then
 				break
@@ -192,6 +196,11 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 					local previous_hit_weakspot = hit_weakspot
 					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
+
+					if attack_result == attack_results.blocked then
+						hit_position = _block_position(hit_unit, hit_position, direction)
+					end
+
 					hit_weakspot = previous_hit_weakspot or hit_weakspot
 					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
 					local breed_is_minion = Breed.is_minion(target_breed_or_nil)
@@ -241,7 +250,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					stop = true
 				end
 
-				if not exit_position and penetration_config.stop_explosion_template and is_server then
+				if can_explode and not exit_position and penetration_config.stop_explosion_template and is_server then
 					local attack_type = AttackSettings.attack_types.explosion
 
 					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
@@ -249,7 +258,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					exploded = true
 				end
 			else
-				if penetrated and penetration_config.stop_explosion_template and is_server then
+				if can_explode and penetrated and penetration_config.stop_explosion_template and is_server then
 					local attack_type = AttackSettings.attack_types.explosion
 
 					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
@@ -262,10 +271,10 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
 			end
 
-			if (stop or penetrated) and impact_config.explosion_template and is_server then
+			if can_explode and (stop or penetrated) and impact_config.explosion_template and is_server then
 				local attack_type = AttackSettings.attack_types.explosion
 
-				Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, impact_config.explosion_template, power_level, charge_level, attack_type, nil, optional_weapon_item, optional_origin_slot)
+				Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, impact_config.explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 				exploded = true
 			end
@@ -296,6 +305,44 @@ HitScan.inside_faded_player = function (breed_or_nil, hit_distance)
 	end
 
 	return true
+end
+
+function _block_position(hit_unit, hit_position, attack_direction)
+	local hit_unit_weapon_extension = ScriptUnit.has_extension(hit_unit, "weapon_system")
+
+	if not hit_unit_weapon_extension then
+		return hit_position
+	end
+
+	if not hit_unit_weapon_extension.get_shield_block_position then
+		return hit_position
+	end
+
+	local moved_position = hit_unit_weapon_extension:get_shield_block_position(hit_position, attack_direction)
+
+	return moved_position
+end
+
+function _fetch_damage_type(fire_configuration, is_critical_strike, charge_level)
+	local damage_type_to_use = is_critical_strike and fire_configuration.damage_type_critical_strike or fire_configuration.damage_type
+	local is_charge_dependant = damage_type_to_use and type(damage_type_to_use) == "table"
+
+	if is_charge_dependant then
+		local damage_type_table = damage_type_to_use
+		damage_type_to_use = nil
+
+		for i = 1, #damage_type_table do
+			local entry = damage_type_table[i]
+			local required_charge = entry.charge_level
+			local damage_type = entry.damage_type
+
+			if required_charge <= charge_level then
+				damage_type_to_use = damage_type
+			end
+		end
+	end
+
+	return damage_type_to_use
 end
 
 return HitScan

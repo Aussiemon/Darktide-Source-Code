@@ -253,11 +253,16 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.default
 	},
 	open_door = {
-		rotation_duration = 0.1,
-		stagger_immune = true
+		stagger_immune = true,
+		open_door_time = 2.5,
+		rotation_duration = 0.1
 	},
 	exit_spawner = {
 		run_anim_event = "move_fwd"
+	},
+	teleport = {
+		min_wait_time = 6,
+		max_wait_time = 8
 	}
 }
 

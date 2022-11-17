@@ -9,6 +9,9 @@ local gib_units = {
 }
 local name = "cultist_berzerker"
 local size = GibbingSettings.character_size.medium
+local gib_push_base_value = 25
+local gib_push_head = gib_push_base_value * 0.0025
+local gib_push_limb = gib_push_base_value * 0.025
 local head_sever = table.clone(SharedGibbingTemplates.head)
 head_sever.gib_settings.gib_unit = gib_units.head
 head_sever.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_head_gib"
@@ -20,6 +23,10 @@ head_sever.gib_settings.attach_inventory_slots_to_gib = {
 head_sever.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 head_sever.gib_settings.sfx = SharedGibbingTemplates.sfx.dismember_head_off
 head_sever.gib_settings.sfx.node_name = "g_head_gib"
+head_sever.gib_settings.override_push_force = {
+	gib_push_head,
+	gib_push_head * 1.25
+}
 head_sever.stump_settings.stump_unit = "content/characters/enemy/chaos_cultist_melee_elite/gibbing/head_gib_cap"
 head_sever.stump_settings.stump_attach_node = "j_spine1"
 head_sever.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
@@ -42,6 +49,10 @@ head_warp.gibbing_threshold = GibbingThresholds.light
 local limb_segment = table.clone(SharedGibbingTemplates.limb_segment)
 limb_segment.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 limb_segment.gib_settings.sfx = SharedGibbingTemplates.sfx.dismember_limb_off
+limb_segment.gib_settings.override_push_force = {
+	gib_push_limb,
+	gib_push_limb * 1.25
+}
 limb_segment.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_segment.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_segment.gibbing_threshold = SharedGibbingTemplates.limb_segment.gibbing_threshold + size
@@ -51,6 +62,10 @@ limb_segment.material_overrides = {
 local limb_full = table.clone(SharedGibbingTemplates.limb_full)
 limb_full.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 limb_full.gib_settings.sfx = SharedGibbingTemplates.sfx.dismember_limb_off
+limb_full.gib_settings.override_push_force = {
+	gib_push_limb,
+	gib_push_limb * 1.25
+}
 limb_full.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_full.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_full.gibbing_threshold = SharedGibbingTemplates.limb_full.gibbing_threshold + size
@@ -229,10 +244,15 @@ torso_sever.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_cultis
 torso_sever.gib_settings.gib_spawn_node = "j_hips"
 torso_sever.gib_settings.gib_actor = "rp_upper_torso_gib_full"
 torso_sever.gib_settings.attach_inventory_slots_to_gib = {
-	"slot_upperbody"
+	""
 }
 torso_sever.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 torso_sever.gib_settings.sfx = nil
+torso_sever.gib_settings.override_push_force = {
+	gib_push_base_value,
+	gib_push_base_value * 1.25
+}
+torso_sever.gib_settings.push_override = SharedGibbingTemplates.gib_push_overrides.straight_up
 torso_sever.stump_settings.stump_unit = "content/characters/enemy/chaos_cultist_melee_elite/gibbing/upper_torso_gib_cap"
 torso_sever.stump_settings.stump_attach_node = "j_hips"
 torso_sever.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
@@ -254,6 +274,9 @@ torso_full.extra_hit_zone_gibs = {
 	"upper_right_arm",
 	"upper_left_arm"
 }
+local torso_remove = table.clone(torso_full)
+torso_remove.gib_settings = nil
+torso_remove.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_splatter
 local torso_warp = table.clone(torso_sever)
 torso_warp.gib_settings.vfx = SharedGibbingTemplates.vfx.warp_gib
 torso_warp.gib_settings.vfx.node_name = nil
@@ -394,13 +417,15 @@ local gibbing_template = {
 	torso = {
 		default = torso_sever,
 		ballistic = {
-			torso_full,
-			center_mass_upper
+			torso_remove
 		},
 		explosion = torso_sever,
-		plasma = torso_full,
+		boltshell = torso_remove,
+		plasma = torso_remove,
 		sawing = torso_sever,
-		warp = torso_warp
+		warp = {
+			center_mass_upper_warp
+		}
 	},
 	center_mass = {
 		ballistic = {
@@ -413,6 +438,7 @@ local gibbing_template = {
 			center_mass_left,
 			center_mass_right
 		},
+		boltshell = center_mass_lower,
 		warp = {
 			center_mass_full_warp,
 			center_mass_upper_warp,

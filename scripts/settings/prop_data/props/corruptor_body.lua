@@ -36,7 +36,8 @@ local prop_data = {
 	},
 	hitzone_damage_multiplier = {
 		melee = {
-			[hit_zone_names.head] = 3
+			[hit_zone_names.head] = 5,
+			[hit_zone_names.center_mass] = 5
 		}
 	},
 	tags = {

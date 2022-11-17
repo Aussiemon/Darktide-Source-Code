@@ -45,8 +45,9 @@ GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local mission_giver_vo = shared_state.mission_giver_vo
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
+	local pacing_control = shared_state.pacing_control
 
-	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
+	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_frame_time, time_query_handle)
 end
 
 GameplayInitStepManagers.update = function (self, main_dt, main_t)
@@ -57,7 +58,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 	return GameplayInitStepPresence, next_step_params
 end
 
-GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_frame_time, time_query_handle)
+GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_frame_time, time_query_handle)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
@@ -79,7 +80,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 		Managers.state.minion_spawn = MinionSpawnManager:new(level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
 		Managers.state.voice_over_spawn = VoiceOverSpawnManager:new(is_server, mission_giver_vo)
 		Managers.state.horde = HordeManager:new(nav_world, physics_world)
-		Managers.state.pacing = PacingManager:new(world, nav_world, level_name, level_seed)
+		Managers.state.pacing = PacingManager:new(world, nav_world, level_name, level_seed, pacing_control)
 	end
 
 	Managers.player:set_network(is_server, network_event_delegate)

@@ -1,12 +1,16 @@
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local SteamOfflineError = class("SteamOfflineError")
 
-SteamOfflineError.init = function (self)
-	return
+SteamOfflineError.init = function (self, is_booting)
+	self._is_booting = is_booting
 end
 
 SteamOfflineError.level = function (self)
-	return Managers.error.ERROR_LEVEL.fatal
+	if self._is_booting then
+		return Managers.error.ERROR_LEVEL.fatal
+	else
+		return Managers.error.ERROR_LEVEL.error
+	end
 end
 
 SteamOfflineError.log_message = function (self)
@@ -22,7 +26,16 @@ SteamOfflineError.loc_description = function (self)
 end
 
 SteamOfflineError.options = function (self)
-	return
+	if not self._is_booting then
+		return {
+			{
+				text = "loc_popup_button_quit_game",
+				callback = function ()
+					Application.quit()
+				end
+			}
+		}
+	end
 end
 
 implements(SteamOfflineError, ErrorInterface)

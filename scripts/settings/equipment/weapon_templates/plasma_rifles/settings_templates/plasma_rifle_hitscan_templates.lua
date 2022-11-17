@@ -29,13 +29,13 @@ hitscan_templates.default_plasma_rifle_killshot = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.05,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }
@@ -51,7 +51,7 @@ hitscan_templates.default_plasma_rifle_bfg = {
 		},
 		penetration = {
 			target_index_increase = 2,
-			depth = 0.5,
+			depth = 1.25,
 			destroy_on_exit = false,
 			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
 		}
@@ -60,13 +60,13 @@ hitscan_templates.default_plasma_rifle_bfg = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.1,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }
@@ -89,13 +89,13 @@ hitscan_templates.default_plasma_rifle_demolition = {
 		{
 			against = "statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_statics"
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
 			test = "sphere",
 			radius = 0.1,
-			collision_filter = "filter_player_character_shooting_dynamics"
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }

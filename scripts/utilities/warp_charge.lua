@@ -22,6 +22,17 @@ local function _set_current_percentage(warp_charge_component, new_percentage, bu
 	warp_charge_component.current_percentage = new_percentage
 end
 
+WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
+	local state = warp_charge_component.state
+	local current_percentage = warp_charge_component.current_percentage
+
+	if not prevent_explosion and current_percentage >= 1 then
+		state = "exploding"
+	end
+
+	warp_charge_component.state = state
+end
+
 WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component, charge_template, owner_unit, warp_charge_modifier, prevent_explosion)
 	local buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
@@ -84,7 +95,7 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 	warp_charge_component.last_charge_at_t = t
 end
 
-WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, world, follow_unit)
+WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, wwise_world, follow_unit)
 	local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 
 	if not specialization_warp_charge_template then
@@ -110,13 +121,10 @@ WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, w
 		Unit.animation_set_variable(unit, warp_charge_variable_3p, current_percentage)
 	end
 
-	local wwise_world = Managers.world:wwise_world(world)
-	local parameter = "psyker_overload_global"
-
-	WwiseWorld.set_global_parameter(wwise_world, parameter, current_percentage)
+	WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", current_percentage)
 end
 
-WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, world)
+WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, wwise_world)
 	local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 
 	if not specialization_warp_charge_template then
@@ -148,10 +156,7 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	end
 
 	if is_local_unit then
-		local wwise_world = Managers.world:wwise_world(world)
-		local parameter = "psyker_overload_global"
-
-		WwiseWorld.set_global_parameter(wwise_world, parameter, current_percentage)
+		WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", current_percentage)
 	end
 
 	if current_percentage <= 0 or not idle or waiting_for_decay then
@@ -219,7 +224,11 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 
 	local player_unit = player.player_unit
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
+	local current_percentage = warp_charge_component.current_percentage
+	local starting_percentage = warp_charge_component.starting_percentage
+	local min_vent_time_fraction = specialization_warp_charge_template.min_vent_time_fraction
 	local base_vent_duration = specialization_warp_charge_template.vent_duration
+	base_vent_duration = base_vent_duration * min_vent_time_fraction + base_vent_duration * (1 - min_vent_time_fraction) * starting_percentage
 	local base_vent_interval = specialization_warp_charge_template.vent_interval
 	local base_ramping_interval_modifier = specialization_warp_charge_template.ramping_interval_modifier
 	local new_ramping_modifier = warp_charge_component.ramping_modifier * base_ramping_interval_modifier
@@ -229,8 +238,6 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 	local stat_buffs = buff_extension:stat_buffs()
 	local vent_duration = base_vent_duration * vent_duration_modifier * new_ramping_modifier / stat_buffs.vent_warp_charge_speed
 	local vent_interval = base_vent_interval * vent_interval_modifier * new_ramping_modifier / stat_buffs.vent_warp_charge_speed
-	local current_percentage = warp_charge_component.current_percentage
-	local starting_percentage = warp_charge_component.starting_percentage
 	local multiplier = stat_buffs.vent_warp_charge_multiplier
 	local next_remove_t, new_percentage = SharedFunctions.update_venting(t, current_percentage, starting_percentage, vent_interval, vent_duration, multiplier)
 

@@ -127,28 +127,42 @@ local default_ingame_input_settings = {
 			description = "loc_ingame_smart_tag",
 			sort_order = 15
 		},
+		com_wheel = {
+			"mouse_middle",
+			"ps4_controller_l1",
+			"xbox_controller_left_shoulder",
+			group = "input_group_combat",
+			description = "loc_ingame_com_wheel",
+			sort_order = 16
+		},
 		tactical_overlay = {
 			"keyboard_tab",
 			"ps4_controller_touch",
 			"xbox_controller_back",
 			group = "input_group_combat",
 			description = "loc_ingame_tactical_overlay",
-			sort_order = 16
+			sort_order = 17
 		},
 		weapon_inspect = {
 			"keyboard_x",
 			"xbox_controller_d_right",
 			group = "input_group_combat",
 			description = "loc_ingame_weapon_inspect",
-			sort_order = 17
+			sort_order = 18
 		},
 		spectate_next = {
-			"keyboard_m",
+			"mouse_left",
 			"ps4_controller_cross",
 			"xbox_controller_a",
 			group = "input_group_combat",
 			description = "loc_ingame_spectate_next",
-			sort_order = 18
+			sort_order = 19
+		},
+		voip_push_to_talk = {
+			"keyboard_v",
+			group = "input_group_combat",
+			description = "loc_ingame_voip_push_to_talk",
+			sort_order = 20
 		},
 		keyboard_move_forward = {
 			"keyboard_w",
@@ -402,6 +416,14 @@ local default_ingame_input_settings = {
 		smart_tag_pressed = {
 			key_alias = "smart_tag",
 			type = "pressed"
+		},
+		com_wheel = {
+			key_alias = "com_wheel",
+			type = "held"
+		},
+		voip_push_to_talk = {
+			key_alias = "voip_push_to_talk",
+			type = "held"
 		},
 		look_raw = {
 			key_alias = "look_raw",

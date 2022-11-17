@@ -1,9 +1,10 @@
 local MissionBoardViewSettings = {
-	resource_renderer_enabled = true,
-	mission_time_grace_period = 1,
-	resource_renderer_name = "mission_board_view_scanlines_ui_renderer",
 	resource_renderer_material = "content/ui/materials/mission_board/render_target_scanlines",
+	quickplay_vo_profile = "pilot_a",
 	fetch_retry_cooldown = 5,
+	default_danger = 1,
+	resource_renderer_name = "mission_board_view_scanlines_ui_renderer",
+	resource_renderer_enabled = false,
 	color_background = {
 		200,
 		0,
@@ -20,99 +21,101 @@ local MissionBoardViewSettings = {
 	},
 	color_accent = Color.golden_rod(nil, true),
 	color_disabled = {
-		50,
-		161,
-		175,
-		158
+		30,
+		78,
+		87,
+		80
 	},
 	color_gray = {
 		200,
-		161,
-		175,
+		135,
+		153,
+		131
+	},
+	color_cursor = Color.golden_rod(nil, true),
+	color_dark_opacity = {
+		75,
+		0,
+		0,
+		0
+	},
+	color_green_faded = {
+		128,
+		169,
+		211,
 		158
 	},
+	color_text_title = Color.terminal_text_header(nil, true),
+	color_text_body = Color.terminal_text_body(nil, true),
 	mission_positions = {
 		{
-			234.736,
-			835.341,
+			886,
+			454,
 			index = 1
 		},
 		{
-			1118.371,
-			365.955,
+			844,
+			672,
 			index = 2
 		},
 		{
-			1197.436,
-			720.065,
+			1055,
+			503,
 			index = 3
 		},
 		{
-			844.629,
-			741.424,
+			211,
+			267,
 			index = 4
 		},
 		{
-			853.249,
-			96.558,
+			402,
+			309,
 			index = 5
 		},
 		{
-			177.226,
-			598.332,
+			1022,
+			716,
 			index = 6
 		},
 		{
-			899.525,
-			391.039,
+			319,
+			779,
 			index = 7
 		},
 		{
-			1016.314,
-			576.887,
+			807,
+			208,
 			index = 8
 		},
 		{
-			1030.706,
-			169.407,
+			504,
+			697,
 			index = 9
 		},
 		{
-			618.534,
-			842.57,
+			990,
+			264,
 			index = 10
 		},
 		{
-			615.872,
-			138.585,
+			575,
+			169,
 			index = 11
 		},
 		{
-			270.279,
-			317.813,
+			673,
+			787,
 			index = 12
-		},
-		{
-			1046.255,
-			851.528,
-			index = 13
-		},
-		{
-			406.033,
-			750.475,
-			index = 14
-		},
-		{
-			380.706,
-			529.623,
-			index = 15
 		}
 	},
 	flash_mission_position = {
-		704.213501,
-		552.210754,
-		index = 0,
-		length = 0
+		520,
+		480
+	},
+	quickplay_mission_position = {
+		120,
+		550
 	},
 	fluff_frames = {
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_01",
@@ -124,6 +127,27 @@ local MissionBoardViewSettings = {
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_07",
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_08"
 	},
+	gamepad_cursor_settings = {
+		snap_selection_speed_threshold = 10,
+		stickiness_radius = 25,
+		widget_drag_coefficient = 0.45,
+		bounds_min_y = 50,
+		cursor_friction_coefficient = 0.002,
+		average_speeed_smoothing = 0.5,
+		snap_input_length_threshold = 0.05,
+		snap_movement_rate = 0.005,
+		stickiness_speed_threshold = 500,
+		default_size_y = 135,
+		bounds_max_x = 1250,
+		size_resize_rate = 0.001,
+		bounds_max_y = 950,
+		cursor_acceleration = 8000,
+		default_size_x = 115,
+		arrow_rotate_rate = 0.001,
+		snap_delay = 0.1,
+		bounds_min_x = 50,
+		cursor_minimum_speed = 0.1
+	},
 	world_spawner_settings = {
 		viewport_name = "mission_board_viewport",
 		level_name = "content/levels/ui/mission_board/mission_board",
@@ -133,6 +157,24 @@ local MissionBoardViewSettings = {
 		world_timer_name = "ui",
 		world_layer = 1,
 		world_name = "mission_board"
+	},
+	game_settings = {
+		{
+			description = "loc_mission_board_toggle_solo_play_description",
+			display_name = "loc_mission_board_toggle_solo_play",
+			setting_name = "solo_play",
+			value_get = function ()
+				return true
+			end
+		},
+		{
+			description = "loc_mission_board_disable_bots_description",
+			display_name = "loc_mission_board_disable_bots",
+			setting_name = "solo_play_disable_bots",
+			value_get = function ()
+				return true
+			end
+		}
 	}
 }
 

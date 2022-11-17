@@ -56,8 +56,10 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local target_unit = perception_component.target_unit
 	local valid_combat_ranges = self._valid_aim_combat_ranges
 	local behavior_component = self._behavior_component
+	local aim_config = self._aim_config
+	local dont_have_target = not aim_config.ignore_require_target and not ALIVE[target_unit]
 
-	if not ALIVE[target_unit] or self._require_line_of_sight and not perception_component.has_line_of_sight or valid_combat_ranges and not valid_combat_ranges[behavior_component.combat_range] then
+	if dont_have_target or self._require_line_of_sight and not perception_component.has_line_of_sight or valid_combat_ranges and not valid_combat_ranges[behavior_component.combat_range] then
 		local perception_extension = self._perception_extension
 		local last_los_position = perception_extension:last_los_position(target_unit)
 		local fallback_target, fallback_direction = nil
@@ -93,9 +95,13 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 
 	if aim_component.controlled_aiming then
 		target_position = aim_component.controlled_aim_position:unbox()
-	else
-		local target_node = Unit.node(target_unit, self._aim_config.target_node)
+	elseif ALIVE[target_unit] then
+		local target_node = Unit.node(target_unit, aim_config.target_node)
 		target_position = Unit.world_position(target_unit, target_node)
+	end
+
+	if not target_position then
+		return
 	end
 
 	local to_target = target_position - unit_position

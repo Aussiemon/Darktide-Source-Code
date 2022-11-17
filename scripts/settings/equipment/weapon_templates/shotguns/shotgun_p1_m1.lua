@@ -194,14 +194,16 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
+		sprint_requires_press_to_interrupt = true,
 		kind = "shoot_pellets",
 		start_input = "shoot_pressed",
-		sprint_requires_press_to_interrupt = true,
-		sprint_ready_up_time = 0.3,
-		spread_template = "default_shotgun_assault",
 		weapon_handling_template = "immediate_single_shot",
-		uninterruptible = true,
+		sprint_ready_up_time = 0.3,
+		allowed_during_sprint = true,
 		ammunition_usage = 1,
+		spread_template = "default_shotgun_assault",
+		abort_sprint = true,
+		uninterruptible = true,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -342,7 +344,8 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_start_reload"
+				action_name = "action_start_reload",
+				chain_time = 0.75
 			},
 			special_action = {
 				action_name = "action_weapon_special"
@@ -437,6 +440,10 @@ weapon_template.actions = {
 			zoom_release = {
 				action_name = "action_unzoom",
 				chain_time = 0.5
+			},
+			reload = {
+				action_name = "action_start_reload",
+				chain_time = 0.45
 			}
 		},
 		time_scale_stat_buffs = {
@@ -492,7 +499,7 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		kind = "reload_shotgun",
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		abort_sprint = true,
 		anim_event = "reload_start",
@@ -578,7 +585,7 @@ weapon_template.actions = {
 		anim_end_event = "reload_end",
 		weapon_handling_template = "time_scale_1",
 		kind = "reload_shotgun",
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "reload_middle",
 		total_time = 0.5,
@@ -671,6 +678,7 @@ weapon_template.actions = {
 		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "load_special",
+		prevent_sprint = true,
 		total_time = 1.5,
 		reload_settings = {
 			cost = 1,
@@ -754,14 +762,16 @@ weapon_template.recoil_template = "default_shotgun_assault"
 weapon_template.special_recoil_template = "shotgun_special_recoil"
 weapon_template.conditional_state_to_action_input = {
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.3
 weapon_template.ammo_template = "shotgun_p1_m1"
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.keep_weapon_special_active_on_unwield = true
+weapon_template.allow_sprinting_with_special = true
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -849,6 +859,54 @@ weapon_template.overclocks = {
 	}
 }
 weapon_template.base_stats = {
+	shotgun_p1_m1_dps_stat = {
+		display_name = "loc_stats_display_damage_stat",
+		is_stat_trait = true,
+		damage = {
+			action_shoot_hip = {
+				damage_trait_templates.shotgun_dps_stat
+			},
+			action_shoot_zoomed = {
+				damage_trait_templates.shotgun_dps_stat
+			}
+		}
+	},
+	shotgun_p1_m1_mobility_stat = {
+		display_name = "loc_stats_display_mobility_stat",
+		is_stat_trait = true,
+		dodge = {
+			base = {
+				dodge_trait_templates.default_dodge_stat
+			}
+		},
+		sprint = {
+			base = {
+				sprint_trait_templates.default_sprint_stat
+			}
+		},
+		movement_curve_modifier = {
+			base = {
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+			}
+		},
+		spread = {
+			base = {
+				spread_trait_templates.mobility_spread_stat
+			}
+		}
+	},
+	shotgun_p1_m1_power_stat = {
+		display_name = "loc_stats_display_power_stat",
+		is_stat_trait = true,
+		damage = {
+			action_shoot_hip = {
+				damage_trait_templates.default_power_stat
+			},
+			action_shoot_zoomed = {
+				damage_trait_templates.default_power_stat
+			}
+		}
+	},
 	shotgun_p1_m1_stability_stat = {
 		display_name = "loc_stats_display_stability_stat",
 		is_stat_trait = true,
@@ -877,54 +935,6 @@ weapon_template.base_stats = {
 		ammo = {
 			base = {
 				ammo_trait_templates.default_ammo_stat
-			}
-		}
-	},
-	shotgun_p1_m1_dps_stat = {
-		display_name = "loc_stats_display_damage_stat",
-		is_stat_trait = true,
-		damage = {
-			action_shoot_hip = {
-				damage_trait_templates.shotgun_dps_stat
-			},
-			action_shoot_zoomed = {
-				damage_trait_templates.shotgun_dps_stat
-			}
-		}
-	},
-	shotgun_p1_m1_power_stat = {
-		display_name = "loc_stats_display_power_stat",
-		is_stat_trait = true,
-		damage = {
-			action_shoot_hip = {
-				damage_trait_templates.default_power_stat
-			},
-			action_shoot_zoomed = {
-				damage_trait_templates.default_power_stat
-			}
-		}
-	},
-	shotgun_p1_m1_mobility_stat = {
-		display_name = "loc_stats_display_mobility_stat",
-		is_stat_trait = true,
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_stat
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
-			}
-		},
-		spread = {
-			base = {
-				spread_trait_templates.mobility_spread_stat
 			}
 		}
 	}

@@ -85,7 +85,7 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		toughness_extension = ScriptUnit.has_extension(unit, "toughness_system"),
 		boss_extension = boss_extension,
 		unit = unit,
-		localized_display_name = localized_display_name,
+		localized_display_name = " " .. localized_display_name,
 		health_bar_logic = health_bar_logic,
 		toughness_bar_logic = toughness_bar_logic
 	}
@@ -240,8 +240,10 @@ end
 HudElementBossHealth._apply_widget_bar_fractions = function (self, widget, bar_width_total, bar_fraction, ghost_fraction, max_fraction)
 	local bar_width = math.floor(bar_width_total * bar_fraction)
 	widget.style.bar.size[1] = bar_width
+	widget.style.bar.uvs[2][1] = bar_fraction
 	local ghost_width = math.max(bar_width_total * ghost_fraction - bar_width, 0)
 	widget.style.ghost.size[1] = bar_width + ghost_width
+	widget.style.ghost.uvs[2][1] = ghost_fraction
 	local max_width = bar_width_total - math.max(bar_width_total * max_fraction, 0)
 	max_width = math.max(max_width, 0)
 	widget.style.max.size[1] = max_width

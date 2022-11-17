@@ -3,7 +3,6 @@ require("scripts/extension_systems/pickups/pickup_spawner_extension")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
-local MainPathQueries = require("scripts/utilities/main_path_queries")
 local Ammo = require("scripts/utilities/ammo")
 local Health = require("scripts/utilities/health")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
@@ -15,7 +14,8 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 
 	local is_server = context.is_server
 	self._soft_cap_out_of_bounds_units = context.soft_cap_out_of_bounds_units
-	self._mission_pickup_settings = self:_fetch_settings(system_init_data.mission, context.circumstance_name)
+	self._mission_pool_adjustments = system_init_data.mission.pickup_settings
+	self._backend_pool_adjustments = context.pickup_pool_adjustments
 	self._seed = system_init_data.level_seed
 	self._is_server = is_server
 	self._material_collected = {}
@@ -32,13 +32,40 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_pool_special_spawned = {}
 end
 
-PickupSystem._fetch_settings = function (self, mission, circumstance_name)
-	local original_settings = mission.pickup_settings
+PickupSystem._fetch_settings = function (self)
+	local difficulty = Managers.state.difficulty:get_difficulty()
+	local distribution_pool = PickupSettings.distribution_pool
+	local selected_pools = {}
+	local mission_pickup_settings = self._mission_pool_adjustments
+
+	if mission_pickup_settings then
+		selected_pools = self:_get_pickup_pool_from_difficulty(distribution_pool, difficulty)
+		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_pickup_settings, difficulty)
+
+		self:_add_to_table(selected_pools, pickup_settings_adjust)
+	end
+
+	local pickup_pool_adjustments = self._backend_pool_adjustments
+
+	if pickup_pool_adjustments then
+		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(pickup_pool_adjustments, difficulty)
+
+		self:_add_to_table(selected_pools, pickup_settings_adjust)
+	end
+
+	local circumstance_name = Managers.state.circumstance:circumstance_name()
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 	local mission_overrides = circumstance_template.mission_overrides
-	local circumstance_settings = mission_overrides and mission_overrides.pickup_settings or nil
 
-	return circumstance_settings or original_settings
+	if mission_overrides and mission_overrides.pickup_settings then
+		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_overrides.pickup_settings, difficulty)
+
+		self:_add_to_table(selected_pools, pickup_settings_adjust)
+	end
+
+	self:_remove_table_negative(selected_pools)
+
+	return selected_pools
 end
 
 PickupSystem.extensions_ready = function (self, world, unit)
@@ -67,6 +94,10 @@ PickupSystem.delete_units = function (self)
 end
 
 PickupSystem.on_gameplay_post_init = function (self, level)
+	for unit, extension in pairs(self._unit_to_extension_map) do
+		extension:on_gameplay_post_init(level)
+	end
+
 	if self._is_server then
 		self:_populate_pickups()
 	end
@@ -116,10 +147,24 @@ local function _compare_absolute_spawner_position(a, b)
 	return percentage_a < percentage_b
 end
 
+PickupSystem._remove_table_negative = function (self, table)
+	for key, value in pairs(table) do
+		if type(value) == "table" then
+			self:_remove_table_negative(value)
+		elseif value < 0 then
+			table[key] = 0
+		end
+	end
+end
+
 PickupSystem._add_to_table = function (self, original, addition)
 	for key, value in pairs(addition) do
 		if type(value) == "table" then
-			self:_add_to_table(original[key], value)
+			if not original[key] then
+				original[key] = table.clone(value)
+			else
+				self:_add_to_table(original[key], value)
+			end
 		elseif original[key] then
 			original[key] = original[key] + addition[key]
 		else
@@ -151,7 +196,7 @@ PickupSystem._get_pickup_pool_from_difficulty = function (self, distribution_set
 end
 
 PickupSystem._populate_pickups = function (self)
-	local mission_pickup_settings = self._mission_pickup_settings
+	local mission_pickup_settings = self:_fetch_settings()
 	local num_spawners = #self._pickup_spawner_extensions
 	local pickup_spawners = self._pickup_spawner_extensions
 
@@ -161,18 +206,9 @@ PickupSystem._populate_pickups = function (self)
 		pickup_spawners[i]:spawn_guaranteed()
 	end
 
-	local difficulty_manager = Managers.state.difficulty
-	local difficulty = math.floor((difficulty_manager:get_challenge() + difficulty_manager:get_resistance()) / 2)
-
 	if mission_pickup_settings then
-		local distribution_pool = PickupSettings.distribution_pool
-		local selected_pools = self:_get_pickup_pool_from_difficulty(distribution_pool, difficulty)
-		local pickup_settings_override = self:_get_pickup_pool_from_difficulty(mission_pickup_settings, difficulty)
-
-		self:_add_to_table(selected_pools, pickup_settings_override)
-
-		if selected_pools.rubberband_pool then
-			local rubberband_pool = selected_pools.rubberband_pool
+		if mission_pickup_settings.rubberband_pool then
+			local rubberband_pool = mission_pickup_settings.rubberband_pool
 			local start_count = {}
 			local spawned = {}
 
@@ -190,10 +226,10 @@ PickupSystem._populate_pickups = function (self)
 			self._rubberband_pool = rubberband_pool
 			self._rubberband_pool_start_count = start_count
 			self._rubberband_pool_remaining = spawned
-			selected_pools.rubberband_pool = nil
+			mission_pickup_settings.rubberband_pool = nil
 		end
 
-		for distribution_type, pickup_settings in pairs(selected_pools) do
+		for distribution_type, pickup_settings in pairs(mission_pickup_settings) do
 			self:_spawn_spread_pickups(distribution_type, pickup_settings)
 		end
 	end
@@ -418,6 +454,10 @@ PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	local selected_name = pickup_options[pickup_index]
 	guaranteed_spawned_pickups[selected_name] = (guaranteed_spawned_pickups[selected_name] or 0) + 1
 
+	if selected_name == "small_metal" or selected_name == "large_metal" or selected_name == "small_platinum" or selected_name == "large_platinum" then
+		return nil
+	end
+
 	return selected_name
 end
 
@@ -434,6 +474,52 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 
 	for i = 1, num_spawners do
 		pickup_spawners[i]:register_spawn_locations(usable_spawners, distribution_type, pickup_pool)
+	end
+
+	local chest_spawners = 0
+
+	for i = 1, #usable_spawners do
+		if usable_spawners[i].chest then
+			chest_spawners = chest_spawners + 1
+		end
+	end
+
+	local chest_spawner_ratio = chest_spawners / #usable_spawners
+	local min_chest_spawner_ratio = PickupSettings.min_chest_spawner_ratio[distribution_type] or 0
+
+	if chest_spawners > 2 and chest_spawner_ratio < min_chest_spawner_ratio then
+		local pickup_count = 0
+
+		for pickup_type, value in pairs(pickup_pool) do
+			for pickup_name, amount in pairs(value) do
+				pickup_count = pickup_count + amount
+			end
+		end
+
+		local initial_usable_spawners = #usable_spawners
+		local direct_spawners_allowed = math.floor(chest_spawners * 1 / min_chest_spawner_ratio)
+		local direct_spawners = initial_usable_spawners - chest_spawners
+		local max_removable = initial_usable_spawners - pickup_count
+		local direct_spawners_to_remove = math.min(#usable_spawners - direct_spawners_allowed, direct_spawners, max_removable)
+		local removal_options = {}
+
+		for i = 1, initial_usable_spawners do
+			if not usable_spawners[i].chest then
+				removal_options[#removal_options + 1] = i
+			end
+		end
+
+		self:_shuffle(removal_options)
+
+		for i = direct_spawners_to_remove + 1, initial_usable_spawners do
+			removal_options[i] = nil
+		end
+
+		table.sort(removal_options)
+
+		for i = #removal_options, 1, -1 do
+			table.remove(usable_spawners, removal_options[i])
+		end
 	end
 
 	for pickup_type, value in pairs(pickup_pool) do
@@ -568,12 +654,6 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 						end
 					end
 				end
-
-				Log.warning("PickupSystem", "Spawned (%d) pickups outside of regular system to avoid unspawned pickups", spawn_debt - num_pickups_to_spawn)
-			end
-
-			if num_pickups_to_spawn > 0 then
-				-- Nothing
 			end
 		end
 	end
@@ -708,12 +788,7 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 	end
 
 	if Managers.stats.can_record_stats() then
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local owning_player = player_unit_spawn_manager:owner(interactor_unit)
-
-		if owning_player and owning_player:is_human_controlled() then
-			Managers.stats:record_collect_material(owning_player, type, size)
-		end
+		Managers.stats:record_collect_material(type, size)
 	end
 end
 

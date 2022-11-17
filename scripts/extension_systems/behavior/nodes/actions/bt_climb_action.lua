@@ -313,7 +313,7 @@ BtClimbAction._update_falling = function (self, unit, scratchpad, action_data, d
 	if unit_position.z + land_check_height <= exit_position.z then
 		locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
 
-		local teleport_position = Vector3(unit_position.x, unit_position.y, exit_position.z)
+		local teleport_position = Vector3(exit_position.x, exit_position.y, exit_position.z)
 
 		Unit.set_local_position(unit, 1, teleport_position)
 		locomotion_extension:set_movement_type("snap_to_navmesh")

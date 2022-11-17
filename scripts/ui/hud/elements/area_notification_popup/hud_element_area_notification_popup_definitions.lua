@@ -35,7 +35,7 @@ title_text_style.offset = {
 	2
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_1
-title_text_style.font_type = "rexlia"
+title_text_style.font_type = "machine_medium"
 local description_text_style = table.clone(UIFontSettings.header_2)
 description_text_style.horizontal_alignment = "center"
 description_text_style.vertical_alignment = "center"
@@ -51,7 +51,7 @@ description_text_style.offset = {
 	10,
 	2
 }
-description_text_style.font_type = "rexlia"
+description_text_style.font_type = "machine_medium"
 description_text_style.font_size = 30
 local widget_definitions = {
 	area_popup = UIWidget.create_definition({
@@ -78,6 +78,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				scale_to_material = true,
 				hdr = false,
 				size = {
 					650
@@ -87,7 +88,7 @@ local widget_definitions = {
 					0,
 					0
 				},
-				color = get_hud_color("color_tint_main_1", 255),
+				color = get_hud_color("color_tint_main_2", 255),
 				material_values = {
 					distortion = 1
 				}

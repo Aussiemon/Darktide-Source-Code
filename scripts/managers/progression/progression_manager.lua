@@ -7,6 +7,7 @@ local DummySessionReport = require("scripts/managers/progression/dummy_session_r
 local Progression = require("scripts/backend/progression")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 local ItemUtils = require("scripts/utilities/items")
 
 local function _info(...)
@@ -89,7 +90,7 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 
 	_info("Fetching session report for session %s...", session_id)
 	Promise.all(session_report_promise, character_xp_settings_promise, account_xp_settings_promise):next(function (results)
-		local session_report, character_xp_settings, account_xp_settings = unpack(results)
+		local session_report, character_xp_settings, account_xp_settings = unpack(results, 1, 3)
 		local eor = session_report.eor
 		self._session_report.eor = eor
 
@@ -281,7 +282,7 @@ ProgressionManager._parse_report = function (self, eor)
 		local character_id = profile.character_id
 
 		Promise.all(Managers.backend.interfaces.gear:fetch(), Managers.backend.interfaces.progression:get_progression("character", character_id)):next(function (results)
-			local gear_list, character_progression = unpack(results)
+			local gear_list, character_progression = unpack(results, 1, 2)
 			profile.current_level = character_progression.currentLevel or 1
 			self._session_report_state = SESSION_REPORT_STATES.success
 
@@ -498,6 +499,10 @@ ProgressionManager._parse_reward_cards = function (self, account_data)
 				details.fromTotalBonus = nil
 			end
 		end
+
+		if reward_card.kind == "levelUp" and reward_card.target == "character" then
+			-- Nothing
+		end
 	end
 end
 
@@ -537,7 +542,10 @@ ProgressionManager._level_up = function (self, stats, target_level)
 
 	return self._progression:level_up(stats.type, stats.id, target_level):next(function (data)
 		_info("level_up %s: %s", stats.type, table.tostring(data, 6))
-		self:_parse_rewards(stats.type, data)
+
+		local reward_card = self:_find_level_up_card(target_level, stats.type)
+
+		self:_parse_level_up_rewards(reward_card, stats.type, data)
 
 		local progression_info = data.progressionInfo
 
@@ -551,13 +559,14 @@ ProgressionManager._level_up = function (self, stats, target_level)
 	end)
 end
 
-ProgressionManager._parse_rewards = function (self, type, data)
+ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, data)
 	local rewards = self._session_report[type].rewards
 	local reward_info = data.rewardInfo
 	local reward_list = reward_info.rewards
-	local display_duration = 0.8
 
-	for i, reward in ipairs(reward_list) do
+	for _, reward in ipairs(reward_list) do
+		self:_append_reward_to_card(reward_card, reward)
+
 		local reward_type = reward.rewardType
 
 		if reward_type == "item" then
@@ -568,7 +577,6 @@ ProgressionManager._parse_rewards = function (self, type, data)
 					text = "testing testing",
 					type = reward_type,
 					reward_item_id = reward_item_id,
-					duration = display_duration,
 					level = reward_info.level
 				}
 
@@ -590,36 +598,39 @@ ProgressionManager._parse_rewards = function (self, type, data)
 			end
 		end
 	end
-
-	local level_up_to_level = reward_info.level
-
-	self:_add_level_up_reward_to_card(reward_list, level_up_to_level)
 end
 
-ProgressionManager._add_level_up_reward_to_card = function (self, reward_list, level_up_to_level)
-	local reward_cards = self._session_report.reward_cards
+ProgressionManager._find_level_up_card = function (self, target_level, experience_type)
+	experience_type = experience_type or "character"
+	local reward_cards = self._session_report.character.rewards
 
 	if not reward_cards then
 		return
 	end
 
-	for i, card in ipairs(reward_cards) do
-		repeat
-			local kind = card.kind
+	for i = 1, #reward_cards do
+		local reward_card = reward_cards[i]
+		local kind = reward_card.kind
 
-			if kind ~= "levelUp" then
-				break
+		if kind == "levelUp" then
+			local level = reward_card.level
+			local target = reward_card.target
+
+			if level == target_level and target == experience_type then
+				return reward_card
 			end
-
-			local level = card.level
-
-			if level ~= level_up_to_level then
-				break
-			end
-
-			card.rewards = reward_list
-		until true
+		end
 	end
+end
+
+ProgressionManager._append_reward_to_card = function (self, reward_card, reward)
+	if not reward_card then
+		return
+	end
+
+	local rewards = reward_card.rewards
+	rewards[#rewards + 1] = reward
+	reward_card.rewards = rewards
 end
 
 ProgressionManager._cap_xp = function (self, stats)
@@ -696,7 +707,18 @@ ProgressionManager._calculate_game_score_end = function (self)
 
 	for i = 1, #participant_reports do
 		local report = participant_reports[i]
-		local report_time = self:_calculate_report_time(report)
+		local character_id = report.characterId
+		local associated_profile = nil
+
+		for _, player in pairs(Managers.player:human_players()) do
+			if player:character_id() == character_id then
+				associated_profile = player:profile()
+
+				break
+			end
+		end
+
+		local report_time = self:_calculate_report_time(associated_profile, report)
 
 		if max_report_time < report_time then
 			max_report_time = report_time
@@ -730,7 +752,13 @@ local _card_animations = {
 	weaponDrop = EndPlayerViewAnimations.item_reward_show_content
 }
 
-ProgressionManager._calculate_report_time = function (self, participant_report)
+ProgressionManager._calculate_report_time = function (self, profile, participant_report)
+	if profile == nil then
+		Log.info("ProgressionManager", "No profile found for '%s' in session report.", table.tostring(participant_report, 3))
+
+		return 0
+	end
+
 	local report_time = 0
 	local card_animations = _card_animations
 	local reward_cards = participant_report.rewardCards
@@ -738,37 +766,35 @@ ProgressionManager._calculate_report_time = function (self, participant_report)
 	for i = 1, #reward_cards do
 		local reward_card = reward_cards[i]
 		local card_kind = reward_card.kind
-		local animation = nil
 
 		if card_kind == "levelUp" then
-			animation = self:_get_correct_level_up_animation(reward_card)
+			report_time = report_time + self:_get_level_up_card_time(profile, reward_card)
+		elseif card_animations[card_kind] ~= nil then
+			report_time = report_time + self:_get_duration_for_reward_card_animation(card_animations[card_kind])
 		else
-			animation = card_animations[card_kind]
+			Log.warning("ProgressManager", "Unknown card kind '%s'.", card_kind)
 		end
-
-		report_time = report_time + self:_get_duration_for_reward_card_animation(animation)
 	end
 
 	return report_time
 end
 
-ProgressionManager._get_correct_level_up_animation = function (self, reward_card)
+ProgressionManager._get_level_up_card_time = function (self, profile, reward_card)
 	local level = reward_card.level
-	local unlocks_talents = false
-	local item_reward = reward_card.rewards[1]
-	local has_item_reward = item_reward and item_reward.masterId
-	unlocks_talents = level % 5 == 0
-	local animation = nil
+	local total_time = 0
 
-	if has_item_reward and unlocks_talents then
-		animation = EndPlayerViewAnimations.level_up_show_content_with_talents
-	elseif has_item_reward then
-		animation = EndPlayerViewAnimations.level_up_show_content
-	elseif unlocks_talents then
-		animation = EndPlayerViewAnimations.unlocked_talents_show_content
+	for i = 1, #reward_card.rewards do
+		local reward = reward_card.rewards[i]
+		local reward_type = reward.rewardType
+
+		if reward_type == "gear" then
+			total_time = total_time + self:_get_duration_for_reward_card_animation(EndPlayerViewAnimations.level_up_show_content)
+		else
+			Log.warning("Progression", "Unknown reward type '%s' recieved from backend.", reward_type)
+		end
 	end
 
-	return animation
+	return total_time
 end
 
 local _fixed_card_time = EndPlayerViewSettings.animation_times.fixed_card_time
@@ -804,8 +830,7 @@ end
 
 ProgressionManager._fetch_dummy_session_report = function (self)
 	local player = Managers.player:player(Network.peer_id(), 1)
-	local my_account_id = player and player:account_id()
-	local session_report = DummySessionReport.fetch_session_report(my_account_id)
+	local session_report = DummySessionReport.fetch_session_report(player:account_id())
 	local character_xp = DummySessionReport.fetch_xp_table("character")
 	local account_xp = DummySessionReport.fetch_xp_table("account")
 	local inventory = DummySessionReport.fetch_inventory(session_report)
@@ -876,8 +901,7 @@ ProgressionManager.fetch_dummy_session_report = function (self)
 end
 
 ProgressionManager._use_dummy_session_report_server = function (self)
-	local account_id = math.uuid()
-	local session_report = DummySessionReport.fetch_session_report(account_id)
+	local session_report = DummySessionReport.fetch_session_report()
 	self._session_report.eor = session_report
 	self._session_report.dummy = true
 	self._session_report_state = SESSION_REPORT_STATES.success

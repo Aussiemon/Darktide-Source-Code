@@ -1,4 +1,5 @@
 Log = Log or {}
+local Log = Log
 Log.LOG_TYPE_DEBUG = {
 	tag = "DEBUG",
 	external_func = "debug",
@@ -181,18 +182,22 @@ end
 Log._error = function (category, message, ...)
 	if Crashify and GameParameters.testify then
 		Crashify.print_exception(category, Log._format_message(message, ...), __print)
-	else
-		__print_error(Log._format_log_category_message(Log.LOG_TYPE_ERROR.tag, category, message, ...))
+
+		return
 	end
+
+	__print_error(Log._format_log_category_message(Log.LOG_TYPE_ERROR.tag, category, message, ...))
 end
 
 Log._error_category = function (category, message, ...)
 	if Log.LOG_TYPE_ERROR.active_categories[category] then
 		if Crashify and GameParameters.testify then
 			Crashify.print_exception(category, Log._format_message(message, ...), __print)
-		else
-			__print_error(Log._format_log_category_message(Log.LOG_TYPE_ERROR.tag, category, message, ...))
+
+			return
 		end
+
+		__print_error(Log._format_log_category_message(Log.LOG_TYPE_ERROR.tag, category, message, ...))
 	end
 end
 

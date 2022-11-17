@@ -2,7 +2,9 @@ require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local RangedAction = require("scripts/utilities/action/ranged_action")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
 local ActionShootHitScan = class("ActionShootHitScan", "ActionShoot")
 local IMPACT_FX_DATA = {
@@ -10,7 +12,7 @@ local IMPACT_FX_DATA = {
 }
 local ALL_HITS = {}
 local INDEX_DISTANCE = 2
-local _hit_sort_function = nil
+local _hit_sort_function, _find_line_effect = nil
 
 ActionShootHitScan._shoot = function (self, position, rotation, power_level, charge_level)
 	local debug_drawer = self._debug_drawer
@@ -31,7 +33,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	local instakill = false
 	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = nil
 	local rewind_ms = self:_rewind_ms(is_local_unit, player, position, direction, max_distance)
-	power_level = hit_scan_template.power_level or power_level
+	power_level = hit_scan_template.power_level or power_level or DEFAULT_POWER_LEVEL
 	local collision_tests = hit_scan_template.collision_tests
 
 	if collision_tests then
@@ -82,7 +84,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 
 	end_position = end_position or position + direction * max_distance
 	local fx_settings = action_settings.fx
-	local line_effect = fx_settings and fx_settings.line_effect
+	local line_effect = _find_line_effect(fx_settings, charge_level)
 
 	self:_play_line_fx(line_effect, position, end_position)
 
@@ -97,6 +99,32 @@ function _hit_sort_function(entry_1, entry_2)
 	local distance_2 = entry_2.distance or entry_2[INDEX_DISTANCE]
 
 	return distance_1 < distance_2
+end
+
+function _find_line_effect(fx_settings, charge_level)
+	if not fx_settings then
+		return nil
+	end
+
+	local line_effect_to_play = fx_settings.line_effect
+	local is_charge_dependant = fx_settings.is_charge_dependant
+
+	if is_charge_dependant then
+		local line_effect_table = line_effect_to_play
+		line_effect_to_play = nil
+
+		for i = 1, #line_effect_table do
+			local entry = line_effect_table[i]
+			local required_charge = entry.charge_level
+			local line_effect = entry.line_effect
+
+			if required_charge <= charge_level then
+				line_effect_to_play = line_effect
+			end
+		end
+	end
+
+	return line_effect_to_play
 end
 
 return ActionShootHitScan

@@ -96,8 +96,8 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = false,
 		dialogue_memory_faction_name = "enemy",
-		follow_vo_interval_t = 1,
-		assault_vo_interval_t = 1,
+		follow_vo_interval_t = 2,
+		assault_vo_interval_t = 2,
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_chaos_newly_infected",
 		wwise_voices = {
@@ -234,6 +234,20 @@ local dialogue_breed_settings = {
 			"tech_priest_a"
 		}
 	},
+	interrogator = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "interrogator",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"interrogator_a"
+		}
+	},
 	confessional = {
 		trigger_seen_vo = false,
 		is_network_synced = true,
@@ -267,9 +281,9 @@ local dialogue_breed_settings = {
 			trigger_id = "random_talk",
 			mission_update_enabled = false,
 			enabled = true,
-			random_talk_tick_time_t = 66,
+			random_talk_tick_time_t = 67,
 			mission_update_tick_time = 15,
-			random_talk_start_delay_t = 130
+			random_talk_start_delay_t = 131
 		}
 	},
 	mourningstar_servitor = {
@@ -293,9 +307,9 @@ local dialogue_breed_settings = {
 			trigger_id = "random_talk",
 			mission_update_enabled = true,
 			enabled = true,
-			random_talk_tick_time_t = 66,
+			random_talk_tick_time_t = 67,
 			mission_update_tick_time = 15,
-			random_talk_start_delay_t = 130
+			random_talk_start_delay_t = 131
 		}
 	},
 	ogryn = {
@@ -492,7 +506,6 @@ local dialogue_breed_settings = {
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
 		spawn_vo_event = "spawned",
-		dynamic_smart_tag = "renegade_netgunner",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "switch_voice_enemy_traitor_netgunner",
 		wwise_voices = {
@@ -673,6 +686,23 @@ local dialogue_breed_settings = {
 			"enemy_cultist_berzerker_a"
 		}
 	},
+	renegade_berzerker = {
+		trigger_seen_vo = true,
+		is_network_synced = false,
+		trigger_heard_vo = true,
+		vo_class_name = "cultist_berzerker",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = true,
+		dialogue_memory_faction_name = "enemy",
+		follow_vo_interval_t = 2,
+		assault_vo_interval_t = 2,
+		dialogue_source_name = "cultist_berzerker",
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "switch_enemy_cultist_berzerker",
+		wwise_voices = {
+			"enemy_cultist_berzerker_a"
+		}
+	},
 	contract_vendor = {
 		trigger_seen_vo = false,
 		is_network_synced = true,
@@ -686,6 +716,29 @@ local dialogue_breed_settings = {
 		wwise_voice_switch_group = "voice_profile",
 		wwise_voices = {
 			"contract_vendor_a"
+		},
+		opinion_settings = {
+			ogryn_c = "likes_character",
+			veteran_male_b = "dislikes_character",
+			zealot_female_c = "dislikes_character",
+			psyker_male_b = "dislikes_character",
+			ogryn_a = "dislikes_character",
+			psyker_female_c = "likes_character",
+			ogryn_b = "dislikes_character",
+			zealot_male_a = "likes_character",
+			veteran_female_c = "dislikes_character",
+			zealot_male_b = "dislikes_character",
+			zealot_male_c = "dislikes_character",
+			veteran_male_c = "dislikes_character",
+			psyker_female_b = "dislikes_character",
+			psyker_female_a = "likes_character",
+			psyker_male_a = "likes_character",
+			zealot_female_a = "likes_character",
+			veteran_female_a = "likes_character",
+			zealot_female_b = "dislikes_character",
+			psyker_male_c = "likes_character",
+			veteran_male_a = "likes_character",
+			veteran_female_b = "dislikes_character"
 		}
 	},
 	credit_store_servitor = {
@@ -700,7 +753,9 @@ local dialogue_breed_settings = {
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "voice_profile",
 		wwise_voices = {
-			"credit_store_servitor_a"
+			"credit_store_servitor_a",
+			"credit_store_servitor_b",
+			"credit_store_servitor_c"
 		}
 	},
 	training_ground_psyker = {
@@ -717,6 +772,115 @@ local dialogue_breed_settings = {
 		wwise_voice_switch_group = "voice_profile",
 		wwise_voices = {
 			"training_ground_psyker_a"
+		},
+		opinion_settings = {
+			psyker_male_b = "likes_character",
+			veteran_male_b = "dislikes_character",
+			zealot_female_c = "likes_character",
+			zealot_male_c = "likes_character",
+			ogryn_a = "likes_character",
+			psyker_female_c = "likes_character",
+			ogryn_b = "dislikes_character",
+			veteran_male_c = "likes_character",
+			zealot_male_a = "dislikes_character",
+			zealot_male_b = "dislikes_character",
+			zealot_female_b = "dislikes_character",
+			veteran_female_c = "likes_character",
+			psyker_female_b = "likes_character",
+			psyker_female_a = "likes_character",
+			psyker_male_a = "likes_character",
+			zealot_female_a = "dislikes_character",
+			veteran_female_a = "dislikes_character",
+			ogryn_c = "dislikes_character",
+			psyker_male_c = "likes_character",
+			veteran_male_a = "dislikes_character",
+			veteran_female_b = "dislikes_character"
+		}
+	},
+	purser = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "purser",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		level_requirement = 0,
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"purser_a"
+		},
+		opinion_settings = {
+			ogryn_c = "dislikes_character",
+			veteran_male_b = "likes_character",
+			zealot_female_c = "dislikes_character",
+			psyker_male_b = "likes_character",
+			ogryn_a = "likes_character",
+			psyker_female_c = "likes_character",
+			ogryn_b = "likes_character",
+			zealot_male_a = "dislikes_character",
+			veteran_female_c = "dislikes_character",
+			zealot_male_b = "likes_character",
+			zealot_male_c = "dislikes_character",
+			veteran_male_c = "dislikes_character",
+			psyker_female_b = "likes_character",
+			psyker_female_a = "dislikes_character",
+			psyker_male_a = "dislikes_character",
+			zealot_female_a = "dislikes_character",
+			veteran_female_a = "dislikes_character",
+			zealot_female_b = "likes_character",
+			psyker_male_c = "likes_character",
+			veteran_male_a = "dislikes_character",
+			veteran_female_b = "likes_character"
+		}
+	},
+	medicae_servitor = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "medicae_servitor",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		subtitle_distance = 17,
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"medicae_servitor_a"
+		}
+	},
+	mourningstar_soldier = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "mourningstar_soldier",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"mourningstar_soldier_male_a",
+			"mourningstar_soldier_female_a",
+			"mourningstar_initiate_a",
+			"mourningstar_soldier_male_b",
+			"mourningstar_soldier_male_f"
+		}
+	},
+	barber = {
+		trigger_seen_vo = false,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		vo_class_name = "barber",
+		has_dialogue_extension = true,
+		vo_triggers_enemy_kill_query = false,
+		dialogue_memory_faction_name = "npc",
+		level_requirement = 0,
+		can_trigger_vo = true,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = {
+			"barber_a"
 		}
 	}
 }

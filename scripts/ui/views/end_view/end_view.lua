@@ -2,6 +2,7 @@ local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
 local Breeds = require("scripts/settings/breed/breeds")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
+local EndViewTestify = GameParameters.testify and require("scripts/ui/views/end_view/end_view_testify")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ProfileUtils = require("scripts/utilities/profile_utils")
@@ -47,6 +48,7 @@ EndView.init = function (self, settings, context)
 	self._all_voted_yes = false
 	self._num_members_in_my_party = 1
 	self._has_shown_summary_view = false
+	self._fetch_party_done = false
 
 	EndView.super.init(self, definitions, settings)
 
@@ -74,8 +76,9 @@ EndView.on_enter = function (self)
 		self._end_time = context.end_time
 		local played_mission = context.played_mission
 		local session_report = self._session_report
+		local render_scale = self._render_scale
 
-		self:_set_mission_key(played_mission, session_report)
+		self:_set_mission_key(played_mission, session_report, render_scale)
 	end
 
 	local t = Managers.time:time("main")
@@ -191,8 +194,9 @@ EndView.update = function (self, dt, t, input_service)
 
 			if context then
 				local played_mission = context.played_mission
+				local render_scale = self._render_scale
 
-				self:_set_mission_key(played_mission, session_report)
+				self:_set_mission_key(played_mission, session_report, render_scale)
 				self:_set_character_names()
 			end
 		end
@@ -229,6 +233,10 @@ EndView.update = function (self, dt, t, input_service)
 	self:_update_continue_button_time(end_time, server_time)
 	self:_update_voting_button_visibility(dt)
 
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(EndViewTestify, self)
+	end
+
 	return EndView.super.update(self, dt, t, input_service)
 end
 
@@ -238,6 +246,19 @@ EndView.draw = function (self, dt, t, input_service, layer)
 	layer = _draw_layer
 
 	EndView.super.draw(self, dt, t, input_service, layer)
+end
+
+EndView.on_resolution_modified = function (self, scale)
+	EndView.super.on_resolution_modified(self, scale)
+
+	local context = self._context
+	local session_report = self._session_report
+
+	if context and session_report then
+		local played_mission = context.played_mission
+
+		self:_set_mission_key(played_mission, session_report, scale)
+	end
 end
 
 EndView._on_navigation_input_changed = function (self)
@@ -269,7 +290,25 @@ EndView.event_state_game_score_continue = function (self)
 end
 
 EndView.event_stay_in_party_voting_started = function (self, voting_id)
+	Log.info("STAY_IN_PARTY_VOTING", "voting_id recieved: %s", voting_id)
+
+	self._stay_in_party_voting_id = voting_id
+
+	self:_set_stay_in_party_voting_init_step_done()
+end
+
+EndView._set_stay_in_party_voting_init_step_done = function (self)
+	if self._stay_in_party_voting_id and self._fetch_party_done then
+		Log.info("STAY_IN_PARTY_VOTING", "init_done")
+		self:_stay_in_party_voting_started()
+	end
+end
+
+EndView._stay_in_party_voting_started = function (self)
+	local voting_id = self._stay_in_party_voting_id
 	local all_is_same_party = self._all_in_same_party
+
+	Log.info("STAY_IN_PARTY_VOTING", "started")
 
 	if all_is_same_party and voting_id then
 		Managers.voting:cast_vote(voting_id, "no")
@@ -278,7 +317,6 @@ EndView.event_stay_in_party_voting_started = function (self, voting_id)
 		return
 	end
 
-	self._stay_in_party_voting_id = voting_id
 	self._stay_in_party_voting_active = true
 
 	self:_sync_votes()
@@ -453,6 +491,13 @@ EndView._setup_stay_in_party_vote = function (self)
 	self:_register_event("event_stay_in_party_voting_aborted")
 	self:_register_event("event_stay_in_party_vote_casted")
 
+	local party_manager = Managers.party_immaterium
+	local active_party_vote = party_manager and party_manager:active_stay_in_party_vote()
+
+	if active_party_vote then
+		self:event_stay_in_party_voting_started(active_party_vote.voting_id)
+	end
+
 	local vote_widget = self._widgets_by_name.stay_in_party_vote
 	local hotspot = vote_widget.content.hotspot
 	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
@@ -558,6 +603,11 @@ EndView._setup_spawn_slots = function (self, players)
 	self._spawn_slots = spawn_slots
 
 	self:_set_character_names()
+
+	self._fetch_party_done = true
+
+	Log.info("STAY_IN_PARTY_VOTING", "fetch_party_done")
+	self:_set_stay_in_party_voting_init_step_done()
 end
 
 EndView._get_free_slot_id = function (self)
@@ -596,12 +646,13 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local preview_profile = table.clone_instance(profile)
 	local loadout = preview_profile.loadout
-	local item_state_machine, item_animation_event, item_wield_slot = nil
+	local item_state_machine, item_animation_event, item_face_animation_event, item_wield_slot = nil
 	local end_of_round_pose_item = loadout.slot_animation_end_of_round
 
 	if end_of_round_pose_item then
 		item_state_machine = end_of_round_pose_item.state_machine
 		item_animation_event = end_of_round_pose_item.animation_event
+		item_face_animation_event = end_of_round_pose_item.face_animation_event
 		local prop_item_key = end_of_round_pose_item.prop_item
 		local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
 
@@ -624,11 +675,13 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local profile_size = profile.personal and profile.personal.character_height
+	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	slot.boxed_position = Vector3Box(spawn_position)
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
 	local profile_spawner = slot.profile_spawner
 
-	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, item_state_machine, item_animation_event)
+	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, item_face_animation_event)
 
 	if item_wield_slot then
 		profile_spawner:wield_slot(item_wield_slot)
@@ -747,7 +800,7 @@ EndView._set_character_names = function (self)
 	end
 end
 
-EndView._set_mission_key = function (self, mission_key, session_report)
+EndView._set_mission_key = function (self, mission_key, session_report, render_scale)
 	local mission_settings = Missions[mission_key]
 	local display_name = mission_settings.mission_name
 	local widget = self._widgets_by_name.title_text
@@ -757,10 +810,14 @@ EndView._set_mission_key = function (self, mission_key, session_report)
 
 	if self._round_won and team_session_report then
 		local mission_time_in_sec = team_session_report.play_time_seconds
+		local mission_sub_header_style = widget.style.mission_sub_header
+		local stats_text_color = mission_sub_header_style.stats_text_color
 		local text_params = {
 			total_kills = team_session_report.total_kills,
 			total_deaths = team_session_report.total_deaths,
-			mission_time = TextUtilities.format_time_span_long_form_localized(mission_time_in_sec)
+			mission_time = TextUtilities.format_time_span_long_form_localized(mission_time_in_sec),
+			font_size = mission_sub_header_style.stats_font_size * render_scale,
+			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4])
 		}
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
 	end
@@ -967,6 +1024,14 @@ end
 EndView._cb_set_player_insignia = function (self, widget, item)
 	local portrait_style = widget.style.character_insignia
 	portrait_style.material_values.texture_map = item.icon
+end
+
+EndView.can_skip = function (self)
+	return self._can_skip
+end
+
+EndView.skip_grace_time = function (self)
+	return self._skip_grace_time
 end
 
 return EndView

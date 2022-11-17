@@ -25,7 +25,7 @@ local archetype_specialization = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	unique_weapons = {
 		{
-			item = "content/items/weapons/player/melee/ogryn_slabshield_p1_m1",
+			item = "content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m1",
 			display_name = "loc_class_selection_unique_weapon_ogryn_melee_1"
 		},
 		{

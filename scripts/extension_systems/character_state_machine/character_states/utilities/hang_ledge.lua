@@ -3,7 +3,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local LEDGE_TRIGGER_NODE_NAME = "g_ledge_trigger"
 local HAND_HOLD_NODE_NAME = "g_hand_hold_area"
 local RESPAWN_AREA_NODE_NAME = "g_respawn_area"
-local CLOSE_NAVMESH_POSITION = 16
+local CLOSE_NAVMESH_DISTANCE_SQUARED = 16
 local HangLedge = {}
 local _is_position_in_line_of_sight = nil
 
@@ -113,10 +113,18 @@ HangLedge.calculate_pull_up_end_position = function (nav_world, hang_ledge_unit,
 
 	if new_position_on_nav then
 		local distance_squared = Vector3.distance_squared(new_position, new_position_on_nav)
-		is_close = distance_squared <= CLOSE_NAVMESH_POSITION
+		is_close = distance_squared <= CLOSE_NAVMESH_DISTANCE_SQUARED
 
 		if is_close then
-			new_position = new_position_on_nav
+			local world = Unit.world(hanging_unit)
+			local physics_world = World.physics_world(world)
+			local ray_hit, ray_position = PhysicsWorld.raycast(physics_world, Vector3.add(new_position_on_nav, Vector3.up()), Vector3.down(), 1, "closest", "collision_filter", "filter_player_mover")
+
+			if ray_hit then
+				new_position = ray_position
+			else
+				new_position = new_position_on_nav
+			end
 		end
 	end
 

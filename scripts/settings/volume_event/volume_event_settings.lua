@@ -36,7 +36,8 @@ local volume_type_events = {
 	["content/volume_types/player_trigger"] = {
 		[PLAYER] = {
 			invert_volume = false,
-			func = VolumeEventFunctions.trigger
+			func = VolumeEventFunctions.trigger,
+			filter = VolumeEventFilters.trigger
 		}
 	},
 	["content/volume_types/player_instakill"] = {
@@ -54,8 +55,8 @@ local volume_type_events = {
 	["content/volume_types/end_zone"] = {
 		[PLAYER] = {
 			invert_volume = false,
-			func = VolumeEventFunctions.trigger,
-			filter = VolumeEventFilters.players_in_end_zone
+			func = VolumeEventFunctions.end_zone,
+			filter = VolumeEventFilters.end_zone
 		}
 	}
 }

@@ -3,6 +3,7 @@ local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local Ammo = require("scripts/utilities/ammo")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -15,6 +16,7 @@ local WeaponActionMovement = require("scripts/extension_systems/weapon/weapon_ac
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local attack_types = AttackSettings.attack_types
 local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local inventory_component_data = PlayerCharacterConstants.inventory_component_data
@@ -22,6 +24,7 @@ local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
 local template_types = WeaponTweakTemplateSettings.template_types
+local _get_block_anim_event = nil
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
 
 PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -74,7 +77,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	stamina_component.last_drain_time = 0
 	self._stamina_component = stamina_component
 	local weapon_lock_view_component = unit_data:write_component("weapon_lock_view")
-	weapon_lock_view_component.is_active = false
+	weapon_lock_view_component.state = "in_active"
 	weapon_lock_view_component.pitch = 0
 	weapon_lock_view_component.yaw = 0
 	self._weapon_lock_view_component = weapon_lock_view_component
@@ -229,6 +232,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
 	self._first_person_unit = first_person_unit
+	local unit_data_ext = self._unit_data_extension
+	self._locomotion_component = unit_data_ext:read_component("locomotion")
 	local action_context = {
 		first_person_unit = first_person_unit,
 		world = self._world,
@@ -249,23 +254,33 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 		visual_loadout_extension = visual_loadout_extension,
 		smart_targeting_extension = ScriptUnit.extension(unit, "smart_targeting_system"),
 		input_extension = self._input_extension,
-		dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system")
+		dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system"),
+		weapon_action_component = self._weapon_action_component,
+		first_person_component = unit_data_ext:read_component("first_person"),
+		sprint_character_state_component = unit_data_ext:read_component("sprint_character_state"),
+		locomotion_component = self._locomotion_component,
+		inventory_component = self._inventory_component,
+		movement_state_component = unit_data_ext:read_component("movement_state"),
+		weapon_lock_view_component = self._weapon_lock_view_component,
+		critical_strike_component = self._critical_strike_component
 	}
-	local unit_data_ext = self._unit_data_extension
-	action_context.weapon_action_component = self._weapon_action_component
-	action_context.first_person_component = unit_data_ext:read_component("first_person")
-	action_context.sprint_character_state_component = unit_data_ext:read_component("sprint_character_state")
-	action_context.locomotion_component = unit_data_ext:read_component("locomotion")
-	action_context.inventory_component = self._inventory_component
-	action_context.movement_state_component = unit_data_ext:read_component("movement_state")
-	action_context.weapon_lock_view_component = self._weapon_lock_view_component
-	action_context.critical_strike_component = self._critical_strike_component
 
 	self._action_handler:set_action_context(action_context)
 	self._sway_weapon_module:extensions_ready(world, unit)
 
 	local specialization = unit_data_ext:specialization()
 	self._specialization_stamina_template = specialization.stamina
+end
+
+PlayerUnitWeaponExtension.on_player_unit_spawn = function (self, spawn_ammo_percentage)
+	local unit_data_extension = self._unit_data_extension
+
+	for slot_name, config in pairs(slot_configuration_by_type.weapon) do
+		local wieldable_component = unit_data_extension:write_component(slot_name)
+		local ammo_reserve = wieldable_component.current_ammunition_reserve
+		local respawn_ammo_reserve = math.ceil(ammo_reserve * spawn_ammo_percentage)
+		wieldable_component.current_ammunition_reserve = respawn_ammo_reserve
+	end
 end
 
 PlayerUnitWeaponExtension.on_player_unit_respawn = function (self, respawn_ammo_percentage)
@@ -304,13 +319,14 @@ PlayerUnitWeaponExtension.damage_profile_lerp_values = function (self, damage_pr
 		return NO_LERP_VALUES
 	end
 
-	local damage_profile_lerp_values = weapon.damage_profile_lerp_values
-	local lerp_values = damage_profile_lerp_values[running_action_name]
+	local weapon_damage_profile_lerp_values = weapon.damage_profile_lerp_values
+	local action_lerp_values = weapon_damage_profile_lerp_values[running_action_name]
+	local damage_profile_lerp_values = damage_profile_name_or_nil and action_lerp_values and action_lerp_values[damage_profile_name_or_nil]
 
-	return lerp_values or NO_LERP_VALUES
+	return damage_profile_lerp_values or action_lerp_values or NO_LERP_VALUES
 end
 
-PlayerUnitWeaponExtension.explosion_template_lerp_values = function (self)
+PlayerUnitWeaponExtension.explosion_template_lerp_values = function (self, explosion_template_name_or_nil)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 
 	if not weapon then
@@ -323,10 +339,11 @@ PlayerUnitWeaponExtension.explosion_template_lerp_values = function (self)
 		return NO_LERP_VALUES
 	end
 
-	local explosion_template_lerp_values = weapon.explosion_template_lerp_values
-	local lerp_values = explosion_template_lerp_values[running_action_name]
+	local weapon_explosion_template_lerp_values = weapon.explosion_template_lerp_values
+	local action_lerp_values = weapon_explosion_template_lerp_values[running_action_name]
+	local explosion_template_lerp_values = explosion_template_name_or_nil and action_lerp_values and action_lerp_values[explosion_template_name_or_nil]
 
-	return lerp_values or NO_LERP_VALUES
+	return explosion_template_lerp_values or action_lerp_values or NO_LERP_VALUES
 end
 
 PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
@@ -345,7 +362,6 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 
 		if slot_type == "weapon" then
 			self:_update_overheat(dt, t)
-			self:_update_powered_weapon_intensity(dt, t)
 		end
 	end
 
@@ -629,7 +645,27 @@ PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_r
 	end
 end
 
-PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template)
+function _get_block_anim_event(weapon_template, attack_type, event_name)
+	local block_override = weapon_template and weapon_template.block_override_anims
+
+	if not block_override then
+		return event_name
+	end
+
+	local attack_type_override = block_override[attack_type]
+
+	if attack_type_override then
+		local override_event = attack_type_override[event_name]
+
+		if override_event then
+			return override_event
+		end
+	end
+
+	return event_name
+end
+
+PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local wanted_weapon_template_name = weapon_template.name
 	local current_weapon_template_name = weapon.weapon_template.name
@@ -637,11 +673,15 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 
 	if self._block_component.is_blocking and correct_weapon_wielded then
 		if not block_broken then
-			self._animation_extension:anim_event_1p("parry_hit_reaction")
-			self._animation_extension:anim_event("parry_hit_reaction")
+			local parry_hit_reaction_event = _get_block_anim_event(weapon_template, attack_type, "parry_hit_reaction")
+
+			self._animation_extension:anim_event_1p(parry_hit_reaction_event)
+			self._animation_extension:anim_event(parry_hit_reaction_event)
 		else
-			self._animation_extension:anim_event_1p("parry_break")
-			self._animation_extension:anim_event("parry_break")
+			local parry_break_event = _get_block_anim_event(weapon_template, attack_type, "parry_break")
+
+			self._animation_extension:anim_event_1p(parry_break_event)
+			self._animation_extension:anim_event(parry_break_event)
 		end
 	end
 
@@ -663,14 +703,68 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 	local block_source = fx_sources._block
 	local fx_extension = self._fx_extension
 	local external_properties = nil
+	local is_ranged = attack_type == attack_types.ranged
+	local block_alias = is_ranged and "ranged_blocked_attack" or "melee_blocked_attack"
 	local sync_to_clients = true
 	local include_client = false
 
-	fx_extension:trigger_gear_wwise_event_with_position("melee_blocked_attack", external_properties, sound_position, sync_to_clients, include_client)
+	fx_extension:trigger_gear_wwise_event_with_position(block_alias, external_properties, sound_position, sync_to_clients, include_client)
 
 	if block_source then
-		fx_extension:spawn_gear_particle_effect_with_source("melee_blocked_attack", external_properties, block_source, true, "stop")
+		fx_extension:spawn_gear_particle_effect_with_source(block_alias, external_properties, block_source, true, "stop")
 	end
+end
+
+local MOVEMENT_PREDICTION_OFFSET = 0.2
+
+PlayerUnitWeaponExtension.get_shield_block_position = function (self, hit_world_position, attack_direction)
+	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
+	local weapon_template = weapon.weapon_template
+	local shield_block_source_name = weapon_template.shield_block_source_name
+	local first_person_unit = self._first_person_unit
+	local first_person_rotation = Unit.local_rotation(first_person_unit, 1)
+	local shield_pivot, shield_forward = nil
+
+	if shield_block_source_name then
+		local fx_sources = weapon.weapon_template.fx_sources
+		local block_node_name = fx_sources[shield_block_source_name]
+
+		if not block_node_name then
+			return hit_world_position
+		end
+
+		local slot_name = self._inventory_component.wielded_slot
+		local visual_loadout_extension = self._visual_loadout_extension
+		local _, _, node_unit_3p, node_index_3p = visual_loadout_extension:unit_and_node_from_node_name(slot_name, block_node_name)
+
+		if not node_unit_3p or not node_index_3p then
+			return hit_world_position
+		end
+
+		local shield_pose = Unit.world_pose(node_unit_3p, node_index_3p)
+		shield_pivot = Matrix4x4.translation(shield_pose)
+		local shield_rotation = Matrix4x4.rotation(shield_pose)
+		shield_forward = Quaternion.right(shield_rotation)
+	else
+		local first_person_position = Unit.local_position(first_person_unit, 1)
+		local first_person_forward = Quaternion.forward(first_person_rotation)
+		shield_pivot = first_person_position + first_person_forward
+		shield_forward = first_person_forward
+	end
+
+	local slab_shield_to_hit_position = hit_world_position - shield_pivot
+	local shield_plane_offset = Vector3.project_on_plane(slab_shield_to_hit_position, shield_forward)
+	local new_hit_position = shield_pivot + shield_plane_offset
+	local locomotion_component = self._locomotion_component
+	local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
+	local movement_offset = flat_velocity * MOVEMENT_PREDICTION_OFFSET
+	local first_person_flat_fowrard = Vector3.normalize(Vector3.cross(Vector3.up(), Quaternion.right(first_person_rotation)))
+
+	if Vector3.dot(first_person_flat_fowrard, flat_velocity) > 0 then
+		new_hit_position = new_hit_position + movement_offset
+	end
+
+	return new_hit_position
 end
 
 local temp_table = {}
@@ -894,54 +988,6 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 	end
 end
 
-local INTENSITY_DECAY_SPEED = 1
-
-PlayerUnitWeaponExtension._update_powered_weapon_intensity = function (self, dt, t)
-	local wielded_weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
-	local inventory_slot_component = wielded_weapon.inventory_slot_component
-
-	if not wielded_weapon then
-		return
-	end
-
-	local weapon_action_component = self._weapon_action_component
-	local action_settings = self._action_handler:running_action_settings("weapon_action")
-	local powered_weapon_intensity = action_settings and action_settings.powered_weapon_intensity
-	local total_intensity = nil
-
-	if powered_weapon_intensity then
-		local start_t = weapon_action_component.start_t
-		local action_t = t - start_t
-		local start_mod = powered_weapon_intensity.start_intensity
-		local p1 = start_mod
-		local p2 = 1
-		local segment_progress = 0
-
-		for i = 1, #powered_weapon_intensity do
-			local segment = powered_weapon_intensity[i]
-			local segment_t = segment.t
-
-			if action_t <= segment_t then
-				p2 = segment.intensity
-				segment_progress = segment_t == 0 and 1 or action_t / segment_t
-
-				break
-			else
-				local intensity = segment.intensity
-				p1 = intensity
-				p2 = intensity
-			end
-		end
-
-		total_intensity = math.lerp(p1, p2, segment_progress)
-	else
-		local current_intensity = inventory_slot_component.powered_weapon_intensity
-		total_intensity = math.max(current_intensity - INTENSITY_DECAY_SPEED * dt, 0)
-	end
-
-	inventory_slot_component.powered_weapon_intensity = total_intensity
-end
-
 PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local weapon_template = weapon and weapon.weapon_template
@@ -957,12 +1003,12 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	local static_speed_reduction_mod = weapon_template and weapon_template.static_speed_reduction_mod
 
 	if static_speed_reduction_mod then
-		local mod_dif = 1 - static_speed_reduction_mod
+		local mod_diff = 1 - static_speed_reduction_mod
 		local buff_extension = self._buff_extension
 		local stat_buffs = buff_extension:stat_buffs()
 		local multiplier = stat_buffs.static_movement_reduction_multiplier
-		mod_dif = mod_dif * multiplier
-		local new_static_modifier = 1 - mod_dif
+		mod_diff = mod_diff * multiplier
+		local new_static_modifier = 1 - mod_diff
 		modifier = modifier * new_static_modifier
 	end
 

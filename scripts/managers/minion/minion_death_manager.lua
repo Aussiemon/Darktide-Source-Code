@@ -64,7 +64,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
-		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil)
+		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile_name)
 		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile)
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
@@ -123,8 +123,9 @@ local extensions_to_keep = {
 	MinionBuffExtension = "buff_system",
 	AIProximityExtension = "legacy_v2_proximity_system",
 	FadeExtension = "fade_system",
+	MinionVisualLoadoutExtension = "visual_loadout_system",
 	WoundsExtension = "wounds_system",
-	MinionVisualLoadoutExtension = "visual_loadout_system"
+	MinionDissolveExtension = "dissolve_system"
 }
 
 MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_name, damage_profile_name, do_ragdoll_push, herding_template_name)
@@ -230,7 +231,7 @@ MinionDeathManager.minion_ragdoll = function (self)
 	return self._minion_ragdoll
 end
 
-function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil)
+function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile_name)
 	if attacking_unit_or_nil == nil then
 		return
 	end
@@ -242,13 +243,13 @@ function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, att
 		local unit_position = POSITION_LOOKUP[unit]
 		local distance = Vector3.distance(unit_position, attacking_unit_position)
 
-		Vo.head_shot_event(attacking_unit_or_nil, distance)
+		Vo.head_shot_event(attacking_unit_or_nil, distance, damage_profile_name)
 	end
 end
 
 local locked_in_melee_settings = AttackIntensitySettings.locked_in_melee_settings
 local MAX_TENSION_TO_ADD_DEATH_TENSION = 50
-local CHALLENGE_RATING_TENSION_MULTIPLIER = 0.5
+local CHALLENGE_RATING_TENSION_MULTIPLIER = 0.75
 
 function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile)
 	local pacing_manager = Managers.state.pacing

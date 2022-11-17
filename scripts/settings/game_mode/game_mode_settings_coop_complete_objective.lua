@@ -1,6 +1,6 @@
 local settings = {
-	bot_backfilling_allowed = true,
 	host_singleplay = false,
+	bot_backfilling_allowed = true,
 	name = "coop_complete_objective",
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
 	mission_end_grace_time_dead = 4,
@@ -37,6 +37,11 @@ local settings = {
 			}
 		}
 	},
+	spawn = {
+		grenade_percentage = 1,
+		health_percentage = 1,
+		ammo_percentage = 1
+	},
 	respawn = {
 		grenade_percentage = 0,
 		respawn_time = 20,
@@ -52,6 +57,11 @@ local settings = {
 	persistent_player_data_settings = {
 		max_permanent_damage_percent = 0.75,
 		max_damage_percent = 0.75
+	},
+	afk_check = {
+		warning_time_minutes = 5,
+		kick_time_minutes = 10,
+		ignore_disabled_players = true
 	}
 }
 

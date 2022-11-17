@@ -44,7 +44,7 @@ local breed_data = {
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_shocktrooper",
 	ignore_attack_delay = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	stagger_reduction = 0,
+	stagger_reduction = 5,
 	player_locomotion_constrain_radius = 0.7,
 	stagger_reduction_ranged = 15,
 	can_patrol = true,
@@ -76,9 +76,9 @@ local breed_data = {
 		[stagger_types.killshot] = 1
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.2,
-		[stagger_types.medium] = 0.2,
-		[stagger_types.heavy] = 1.75,
+		[stagger_types.light] = 0.65,
+		[stagger_types.medium] = 0.85,
+		[stagger_types.heavy] = 2,
 		[stagger_types.explosion] = 1.75,
 		[stagger_types.light_ranged] = 0.2,
 		[stagger_types.killshot] = 0.2,
@@ -111,6 +111,7 @@ local breed_data = {
 		choose_furthest_away = false,
 		can_flank = true,
 		default_combat_range = "close",
+		switch_location_preference_on_locked_in_melee = true,
 		valid_combat_ranges = {
 			far = true,
 			close = true
@@ -134,19 +135,11 @@ local breed_data = {
 			0.3,
 			0.5
 		},
-		ranged = {
-			0.4,
-			1
-		},
 		moving_melee = {
 			1.7,
 			2.8
 		},
-		grenade = {
-			8.7,
-			12.8
-		},
-		elite_ranged = {
+		elite_shotgun = {
 			0.1,
 			0.4
 		}

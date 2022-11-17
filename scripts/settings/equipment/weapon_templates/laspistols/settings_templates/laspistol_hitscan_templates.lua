@@ -13,6 +13,14 @@ hitscan_templates.default_laspistol_beam = {
 		}
 	}
 }
+hitscan_templates.bgf_laspistol_beam = {
+	range = 75,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_laspistol_bfg
+		}
+	}
+}
 
 return {
 	base_templates = hitscan_templates,

@@ -18,14 +18,9 @@ local MELEE_COMBAT = {
 local COMBAT = {
 	"BtRandomUtilityNode",
 	{
-		"BtMoveToCoverAction",
-		name = "move_to_cover",
-		action_data = action_data.move_to_cover
-	},
-	{
-		"BtMoveToCombatVectorAction",
-		name = "move_to_combat_vector",
-		action_data = action_data.move_to_combat_vector
+		"BtSniperMovementAction",
+		name = "movement",
+		action_data = action_data.movement
 	},
 	{
 		"BtSniperShootAction",

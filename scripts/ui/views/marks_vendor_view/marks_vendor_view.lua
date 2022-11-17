@@ -6,7 +6,10 @@ local MarksVendorView = class("MarksVendorView", "VendorViewBase")
 MarksVendorView.init = function (self, settings, context)
 	MarksVendorView.super.init(self, Definitions, settings, context)
 
-	if context and context.parent then
+	local parent = context and context.parent
+	self._parent = parent
+
+	if parent then
 		context.parent:set_is_handling_navigation_input(true)
 	end
 end
@@ -32,6 +35,17 @@ MarksVendorView.show_items = function (self)
 	self:_update_wallets():next(function ()
 		self:_fetch_store_items()
 	end)
+end
+
+MarksVendorView._on_purchase_complete = function (self, items)
+	MarksVendorView.super._on_purchase_complete(self, items)
+	self._parent:play_vo_events({
+		"credit_store_servitor_purchase_c"
+	}, "credit_store_servitor_c", nil, 1.4)
+end
+
+MarksVendorView.dialogue_system = function (self)
+	return self._parent:dialogue_system()
 end
 
 return MarksVendorView

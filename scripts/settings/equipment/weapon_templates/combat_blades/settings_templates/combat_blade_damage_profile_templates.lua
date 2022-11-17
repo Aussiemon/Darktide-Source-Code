@@ -203,7 +203,8 @@ damage_templates.combat_blade_heavy_smiter = {
 				1.4
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 overrides.combat_blade_smiter_pushfollow = {
 	parent_template_name = "combat_blade_heavy_smiter",
@@ -410,7 +411,8 @@ damage_templates.combat_blade_light_smiter = {
 				1.4
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.combat_blade_light_linesman = {
 	ragdoll_push_force = 450,
@@ -614,7 +616,8 @@ damage_templates.combat_blade_light_linesman = {
 				1.4
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.combat_blade_heavy_linesman = {
 	ragdoll_push_force = 850,
@@ -818,7 +821,8 @@ damage_templates.combat_blade_heavy_linesman = {
 				1.4
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.special_uppercut = {
 	weapon_special = true,
@@ -826,10 +830,7 @@ damage_templates.special_uppercut = {
 	ragdoll_only = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "uppercut",
-	cleave_distribution = {
-		attack = 0.01,
-		impact = 0.01
-	},
+	cleave_distribution = double_cleave,
 	damage_type = damage_types.blunt_thunder,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
@@ -964,7 +965,8 @@ damage_templates.special_uppercut = {
 				1.4
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 
 return {

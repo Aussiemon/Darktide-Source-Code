@@ -12,7 +12,12 @@ local renegade_rifleman_default = {
 	hit_scan_template = HitScanTemplates.renegade_rifleman_single_shot,
 	spread = math.degrees_to_radians(0.5),
 	damage_type = damage_types.minion_laser,
-	line_effect = LineEffects.renegade_lasbeam
+	line_effect = LineEffects.renegade_lasbeam,
+	damage_falloff = {
+		falloff_range = 20,
+		max_range = 20,
+		max_power_reduction = 0.5
+	}
 }
 local shoot_templates = {
 	renegade_rifleman_default = renegade_rifleman_default

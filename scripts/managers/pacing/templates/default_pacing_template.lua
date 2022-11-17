@@ -14,6 +14,18 @@ local function _multiplier_step(value)
 	return multiplier_step
 end
 
+local function _challenge_rating_multiplier_steps(value)
+	local multiplier_step = {
+		value * 1,
+		value * 1.25,
+		value * 1.5,
+		value * 1.75,
+		value * 2
+	}
+
+	return multiplier_step
+end
+
 local DECAY_TENSION_RATES = {
 	build_up_tension_low = _multiplier_step(1.25),
 	build_up_tension = _multiplier_step(1.5),
@@ -72,6 +84,70 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		trickle_hordes = false
 	}
 }
+local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
+	{
+		travel_change_pause_time = 5,
+		ramp_duration = 500,
+		ramp_up_states = {
+			build_up_tension = true,
+			build_up_tension_low = true
+		},
+		ramp_modifiers = {
+			hordes = 1.5,
+			specials = 1.5
+		}
+	},
+	{
+		travel_change_pause_time = 7,
+		ramp_duration = 400,
+		ramp_up_states = {
+			build_up_tension = true,
+			build_up_tension_low = true
+		},
+		ramp_modifiers = {
+			hordes = 1.5,
+			specials = 1.5
+		}
+	},
+	{
+		travel_change_pause_time = 9,
+		ramp_duration = 300,
+		ramp_up_states = {
+			build_up_tension = true,
+			build_up_tension_low = true
+		},
+		ramp_modifiers = {
+			hordes = 1.75,
+			specials = 1.75
+		}
+	},
+	{
+		travel_change_pause_time = 11,
+		ramp_duration = 200,
+		ramp_up_states = {
+			build_up_tension_high = true,
+			build_up_tension_low = true,
+			build_up_tension = true
+		},
+		ramp_modifiers = {
+			hordes = 2,
+			specials = 2
+		}
+	},
+	{
+		travel_change_pause_time = 13,
+		ramp_duration = 200,
+		ramp_up_states = {
+			build_up_tension_high = true,
+			build_up_tension_low = true,
+			build_up_tension = true
+		},
+		ramp_modifiers = {
+			hordes = 2,
+			specials = 2
+		}
+	}
+}
 local pacing_template = {
 	starting_state = "build_up_tension_low",
 	name = "default",
@@ -80,11 +156,12 @@ local pacing_template = {
 	monster_pacing_template = MonsterPacingTemplates.renegade_monsters,
 	max_tension = _multiplier_step(100),
 	challenge_rating_thresholds = {
-		specials = _multiplier_step(40),
-		hordes = _multiplier_step(22),
-		trickle_hordes = _multiplier_step(18),
-		roamers = _multiplier_step(90)
+		specials = _challenge_rating_multiplier_steps(40),
+		hordes = _challenge_rating_multiplier_steps(30),
+		trickle_hordes = _challenge_rating_multiplier_steps(20),
+		roamers = _challenge_rating_multiplier_steps(90)
 	},
+	ramp_up_frequency_modifiers = DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS,
 	state_settings = {
 		{
 			build_up_tension_low = {
@@ -101,11 +178,7 @@ local pacing_template = {
 					tension_min_threshold = 5
 				},
 				next_conditions = {
-					tension_threshold = 60,
-					duration = {
-						20,
-						30
-					}
+					tension_threshold = 60
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[1]
@@ -173,11 +246,7 @@ local pacing_template = {
 					tension_min_threshold = 6
 				},
 				next_conditions = {
-					tension_threshold = 72,
-					duration = {
-						25,
-						30
-					}
+					tension_threshold = 72
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[2]
@@ -245,11 +314,7 @@ local pacing_template = {
 					tension_min_threshold = 6.75
 				},
 				next_conditions = {
-					tension_threshold = 94.5,
-					duration = {
-						40,
-						45
-					}
+					tension_threshold = 94.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[3]
@@ -317,11 +382,7 @@ local pacing_template = {
 					tension_min_threshold = 7.5
 				},
 				next_conditions = {
-					tension_threshold = 105,
-					duration = {
-						40,
-						45
-					}
+					tension_threshold = 105
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[4]
@@ -393,11 +454,7 @@ local pacing_template = {
 					tension_min_threshold = 8.75
 				},
 				next_conditions = {
-					tension_threshold = 122.5,
-					duration = {
-						40,
-						45
-					}
+					tension_threshold = 122.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[5]

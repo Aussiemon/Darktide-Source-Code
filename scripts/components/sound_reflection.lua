@@ -116,7 +116,7 @@ local _query_material_contexts = {
 local _query_material_buffer = {}
 
 SoundReflection._get_reflection_distance = function (self, position, direction, max_distance, query_material)
-	local results = PhysicsWorld.raycast(self._physics_world, position, direction, max_distance, "all", "types", "both", "collision_filter", "filter_player_character_shooting_statics")
+	local results = PhysicsWorld.raycast(self._physics_world, position, direction, max_distance, "all", "types", "both", "collision_filter", "filter_player_character_shooting_raycast_statics")
 
 	if results then
 		for i = 1, #results do

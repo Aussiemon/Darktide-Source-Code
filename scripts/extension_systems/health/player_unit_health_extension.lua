@@ -99,29 +99,11 @@ PlayerUnitHealthExtension.is_invulnerable = function (self)
 	return self._is_invulnerable
 end
 
-PlayerUnitHealthExtension.current_damaged_health = function (self)
-	local max_health = self:max_health()
-	local damage_taken = self:damage_taken()
-
-	return math.max(0, max_health - damage_taken)
-end
-
 PlayerUnitHealthExtension.current_health = function (self)
 	local max_health = self:max_health()
 	local damage_taken = self:damage_taken()
 
-	return math.max(0, max_health - damage_taken)
-end
-
-PlayerUnitHealthExtension.current_damaged_health_percent = function (self)
-	local max_health = self:max_health()
-	local damage_taken = self:damage_taken()
-
-	if damage_taken < 0 then
-		return 0
-	end
-
-	return (max_health - damage_taken) / max_health
+	return max_health - damage_taken
 end
 
 PlayerUnitHealthExtension.current_health_percent = function (self)
@@ -163,15 +145,7 @@ PlayerUnitHealthExtension.permanent_damage_taken_percent = function (self)
 end
 
 PlayerUnitHealthExtension.total_damage_taken = function (self)
-	local damage_taken = self:damage_taken()
-
-	return damage_taken
-end
-
-PlayerUnitHealthExtension.damaged_max_health = function (self)
-	local max_health = self:max_health()
-
-	return max_health
+	return self:damage_taken()
 end
 
 PlayerUnitHealthExtension.max_health = function (self, force_knocked_down_health)
@@ -195,11 +169,16 @@ end
 PlayerUnitHealthExtension.add_damage = function (self, damage_amount, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit)
 	local current_damage = self:damage_taken()
 	local current_permanent_damage = self:permanent_damage_taken()
-	local new_damage = current_damage + damage_amount
-	local new_permanent_damage = current_permanent_damage + permanent_damage
+	local max_health = self:max_health()
+	local new_damage = math.clamp(current_damage + damage_amount, 0, max_health)
+	local new_permanent_damage = math.clamp(current_permanent_damage + permanent_damage, 0, max_health)
 
 	self:_set_damage(new_damage)
 	self:_set_permanent_damage(new_permanent_damage)
+
+	local actual_damage_dealt = math.clamp(damage_amount, 0, max_health - current_damage)
+
+	return actual_damage_dealt
 end
 
 PlayerUnitHealthExtension.add_heal = function (self, heal_amount, heal_type)
@@ -247,11 +226,18 @@ PlayerUnitHealthExtension.reduce_permanent_damage = function (self, amount)
 	self:_set_permanent_damage(new_permanent_damage)
 end
 
+PlayerUnitHealthExtension.on_player_unit_spawn = function (self, spawn_health_percentage)
+	local max_health = self:max_health()
+	local spawn_damage = math.ceil(max_health * (1 - spawn_health_percentage))
+
+	self:_set_damage(spawn_damage)
+end
+
 PlayerUnitHealthExtension.on_player_unit_respawn = function (self, respawn_health_percentage)
 	local max_health = self:max_health()
-	local respawn_health = math.ceil(max_health * respawn_health_percentage)
+	local respawn_damage = math.ceil(max_health * (1 - respawn_health_percentage))
 
-	self:_set_damage(respawn_health)
+	self:_set_damage(respawn_damage)
 end
 
 PlayerUnitHealthExtension.remove_wounds = function (self, num_wounds)

@@ -302,7 +302,7 @@ GameModeManager.is_vaulting_allowed = function (self)
 	return game_mode_settings.vaulting_allowed
 end
 
-GameModeManager.on_player_unit_spawn = function (self, player, is_respawn)
+GameModeManager.on_player_unit_spawn = function (self, player, player_unit, is_respawn)
 	if self._gameplay_modifiers.unkillable then
 		local health_extension = ScriptUnit.has_extension(player.player_unit, "health_system")
 
@@ -315,7 +315,7 @@ GameModeManager.on_player_unit_spawn = function (self, player, is_respawn)
 		health_extension:set_invulnerable(true)
 	end
 
-	self._game_mode:on_player_unit_spawn(player, is_respawn)
+	self._game_mode:on_player_unit_spawn(player, player_unit, is_respawn)
 end
 
 GameModeManager.on_player_unit_despawn = function (self, player)
@@ -355,6 +355,8 @@ GameModeManager.update = function (self, dt, t)
 		if GameParameters.testify then
 			Testify:poll_requests_through_handler(GameModeManagerTestify, self)
 		end
+	else
+		self._game_mode:client_update(dt, t)
 	end
 
 	self:_do_raycasts()
@@ -408,6 +410,23 @@ end
 
 GameModeManager.hot_join_sync = function (self, sender, channel)
 	self._game_mode:hot_join_sync(sender, channel)
+end
+
+GameModeManager.mission_outro_played = function (self)
+	local game_mode = self._game_mode
+	local state = self._game_mode:state()
+
+	if state == "done" then
+		return true
+	end
+
+	if state == "outro_cinematic" and not Managers.state.cinematic:active() then
+		return true
+	end
+
+	if game_mode.mission_outro_played then
+		return true
+	end
 end
 
 return GameModeManager

@@ -4,8 +4,7 @@ local STRING_RESOURCE_NAMES = {
 	"content/localization/ui",
 	"content/localization/subtitles",
 	"content/localization/items",
-	"content/localization/loc_network_scale_test/subtitles",
-	"content/localization/loc_network_scale_test/ui",
+	"content/localization/path_of_trust/ui",
 	"content/localization/loc_network_scale_test/items"
 }
 local ASSERT_ON_MISSING_LOC_PREFIX = false
@@ -81,6 +80,8 @@ local function _select_language()
 	return language
 end
 
+Localize = Localize or false
+
 LocalizationManager.init = function (self)
 	self._backend_localizations = {}
 	self._string_cache = Script.new_map(STRING_CACHE_EXPECTED_SIZE)
@@ -91,6 +92,13 @@ LocalizationManager.init = function (self)
 	self._status = LOCALIZATION_MANAGER_STATUS.empty
 
 	self:_set_resource_property_preference_order(language)
+	rawset(_G, "Localize", function (key, no_cache, context)
+		return self:localize(key, no_cache, context)
+	end)
+end
+
+LocalizationManager.destroy = function (self)
+	rawset(_G, "Localize", false)
 end
 
 LocalizationManager._set_resource_property_preference_order = function (self, language)
@@ -259,10 +267,6 @@ end
 
 LocalizationManager.language = function (self)
 	return self._language
-end
-
-function Localize(key, no_cache, context)
-	return Managers.localization:localize(key, no_cache, context)
 end
 
 return LocalizationManager

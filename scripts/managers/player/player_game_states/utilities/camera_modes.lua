@@ -1,3 +1,3 @@
-local CameraModes = table.enum("first_person", "observer", "mission_board", "cutscene", "cutscene_gameplay", "testify")
+local CameraModes = table.enum("first_person", "observer", "cutscene", "cutscene_gameplay", "testify")
 
 return CameraModes

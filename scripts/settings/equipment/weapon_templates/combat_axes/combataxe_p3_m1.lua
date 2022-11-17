@@ -4,7 +4,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -34,8 +34,8 @@ local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
 local combat_axe_sweep_box = {
 	0.2,
@@ -910,6 +910,10 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.4
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.45
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1005,6 +1009,8 @@ weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
@@ -1172,7 +1178,7 @@ table.append(weapon_template.traits, bespoke_combataxe_p3_traits)
 
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_fast_attack"
+		display_name = "loc_weapon_keyword_versatile"
 	},
 	{
 		display_name = "loc_weapon_keyword_crowd_control"
@@ -1199,158 +1205,6 @@ weapon_template.displayed_attacks = {
 	special = {
 		display_name = "loc_weapon_special_special_attack",
 		type = "special_attack"
-	}
-}
-weapon_template.perks = {
-	combataxe_p3_m1_dps_perk = {
-		description = "loc_trait_description_combataxe_p3_m1_dps_perk",
-		display_name = "loc_trait_display_combataxe_p3_m1_dps_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_diagonal_light = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_left_light = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_dps_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_dps_perk
-			}
-		}
-	},
-	default_armor_pierce_perk = {
-		description = "loc_trait_description_combataxe_p3_m1_armor_pierce_perk",
-		display_name = "loc_trait_display_combataxe_p3_m1_armor_pierce_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_diagonal_light = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_left_light = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_armor_pierce_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_armor_pierce_perk
-			}
-		}
-	},
-	combataxe_p3_m1_finesse_perk = {
-		description = "loc_trait_description_combataxe_p3_m1_finesse_perk",
-		display_name = "loc_trait_display_combataxe_p3_m1_finesse_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_diagonal_light = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_left_light = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_finesse_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_finesse_perk
-			}
-		},
-		weapon_handling = {
-			action_left_down_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_diagonal_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_special_uppercut = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_perk
-			}
-		}
-	},
-	combataxe_p3_m1_first_target_perk = {
-		description = "loc_trait_description_combataxe_p3_m1_first_target_perk",
-		display_name = "loc_trait_display_combataxe_p3_m1_first_target_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_right_diagonal_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_first_target_perk
-			}
-		}
-	},
-	combataxe_p3_m1_mobility_perk = {
-		description = "loc_trait_description_combataxe_p3_m1_mobility_perk",
-		display_name = "loc_trait_display_combataxe_p3_m1_mobility_perk",
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_perk
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_perk
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
-			}
-		}
 	}
 }
 

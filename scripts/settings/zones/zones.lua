@@ -1,9 +1,22 @@
 local zones = {
+	dust = {
+		name_short = "loc_zone_name_dust_short",
+		name = "loc_zone_dust",
+		map_node = "dust_01",
+		images = {
+			mission_vote = "content/ui/materials/icons/missions/zone_dust_standard",
+			default = "content/ui/materials/icons/missions/zone_dust_standard",
+			mission_board_details = "content/ui/materials/icons/zones/dust"
+		}
+	},
 	hub = {
 		name = "loc_zone_hub"
 	},
 	placeholder = {
 		name = "loc_zone_placeholder"
+	},
+	prologue = {
+		name = "loc_zone_prologue"
 	},
 	tank_foundry = {
 		name_short = "loc_zone_name_tank_foundry_short",
@@ -13,6 +26,16 @@ local zones = {
 			mission_vote = "content/ui/materials/icons/missions/zone_tank_foundry_standard",
 			default = "content/ui/materials/icons/missions/zone_tank_foundry_standard",
 			mission_board_details = "content/ui/materials/icons/zones/tank_foundry"
+		}
+	},
+	throneside = {
+		name_short = "loc_zone_name_throneside_short",
+		name = "loc_zone_throneside",
+		map_node = "throneside_01",
+		images = {
+			mission_vote = "content/ui/materials/icons/missions/zone_dust_standard",
+			default = "content/ui/materials/icons/missions/zone_dust_standard",
+			mission_board_details = "content/ui/materials/icons/zones/throneside"
 		}
 	},
 	transit = {

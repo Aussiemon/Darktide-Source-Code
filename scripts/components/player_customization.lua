@@ -137,15 +137,23 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 			end
 
 			local unit_array_size = Unit.data_table_size(unit, "attached_items") or 0
+			local i = 1
+			local array_size = 0
+			local attachment = Unit.get_data(unit, "attached_items", i)
 
-			for i = 1, unit_array_size do
-				local attachment = Unit.get_data(unit, "attached_items", i)
+			while array_size < unit_array_size do
+				if attachment ~= nil then
+					if Unit.has_lod_object(attachment, "lod") then
+						local lod = Unit.lod_object(attachment, "lod")
 
-				if Unit.has_lod_object(attachment, "lod") then
-					local lod = Unit.lod_object(attachment, "lod")
+						LODObject.set_static_select(lod, 0)
+					end
 
-					LODObject.set_static_select(lod, 0)
+					array_size = array_size + 1
 				end
+
+				i = i + 1
+				attachment = Unit.get_data(unit, "attached_items", i)
 			end
 		end
 	end
@@ -186,6 +194,14 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 
 					for j = 1, num_attachments do
 						Unit.set_data(item_unit, "attached_items", num_attachments - j + 1, attachment_units[j])
+					end
+				end
+
+				local deform_overrides = item.deform_overrides
+
+				if deform_overrides then
+					for _, deform_override in pairs(deform_overrides) do
+						VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, deform_override, false)
 					end
 				end
 

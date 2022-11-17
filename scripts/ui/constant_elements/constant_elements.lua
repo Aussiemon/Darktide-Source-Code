@@ -4,6 +4,7 @@ local elements = {
 		class_name = "ConstantElementSubtitles",
 		filename = "scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles",
 		visibility_groups = {
+			"tactical_overlay",
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",
@@ -39,6 +40,7 @@ local elements = {
 		class_name = "ConstantElementWatermark",
 		filename = "scripts/ui/constant_elements/elements/watermark/constant_element_watermark",
 		visibility_groups = {
+			"tactical_overlay",
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",
@@ -50,6 +52,7 @@ local elements = {
 		class_name = "ConstantElementBetaLabel",
 		filename = "scripts/ui/constant_elements/elements/beta_label/constant_element_beta_label",
 		visibility_groups = {
+			"tactical_overlay",
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",
@@ -70,6 +73,7 @@ local elements = {
 		class_name = "ConstantElementSoftwareCursor",
 		filename = "scripts/ui/constant_elements/elements/software_cursor/constant_element_software_cursor",
 		visibility_groups = {
+			"tactical_overlay",
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",

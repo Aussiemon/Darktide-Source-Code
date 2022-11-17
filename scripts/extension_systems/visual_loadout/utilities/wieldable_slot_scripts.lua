@@ -1,8 +1,10 @@
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_luggable_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_ads_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_belt")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device")
@@ -17,12 +19,14 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/holo_si
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_ammo_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_iron_sight")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazine_ammo")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_chain_lightning_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/skull_decoder_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/skull_decoder_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects")
@@ -43,14 +47,14 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 
 	local num_scripts = #item_wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local script_name = item_wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local script_name = item_wieldable_slot_scripts[ii]
 		local script_class = CLASSES[script_name]
 
 		if script_class then
 			local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
-			wieldable_slot_scripts[slot.name][i] = script
+			wieldable_slot_scripts[slot.name][ii] = script
 		end
 	end
 end
@@ -58,18 +62,32 @@ end
 WieldableSlotScripts.destroy = function (wieldable_slot_scripts)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		wieldable_slot_script:destroy()
+	end
+end
+
+WieldableSlotScripts.extensions_ready = function (wieldable_slot_scripts_per_slot)
+	for _, wieldable_slot_scripts in pairs(wieldable_slot_scripts_per_slot) do
+		local num_scripts = #wieldable_slot_scripts
+
+		for ii = 1, num_scripts do
+			local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+			if wieldable_slot_script.extensions_ready then
+				wieldable_slot_script:extensions_ready()
+			end
+		end
 	end
 end
 
 WieldableSlotScripts.update = function (wieldable_slot_scripts, unit, dt, t)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		if wieldable_slot_script.update then
 			wieldable_slot_script:update(unit, dt, t)
@@ -80,8 +98,8 @@ end
 WieldableSlotScripts.fixed_update = function (wieldable_slot_scripts, unit, dt, t)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		if wieldable_slot_script.fixed_update then
 			wieldable_slot_script:fixed_update(unit, dt, t)
@@ -92,8 +110,8 @@ end
 WieldableSlotScripts.post_update = function (wieldable_slot_scripts, unit, dt, t)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		if wieldable_slot_script.post_update then
 			wieldable_slot_script:post_update(unit, dt, t)
@@ -104,8 +122,8 @@ end
 WieldableSlotScripts.update_unit_position = function (wieldable_slot_scripts, unit, dt, t)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		if wieldable_slot_script.update_unit_position then
 			wieldable_slot_script:update_unit_position(unit, dt, t)
@@ -116,8 +134,8 @@ end
 WieldableSlotScripts.wield = function (wieldable_slot_scripts)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		wieldable_slot_script:wield()
 	end
@@ -126,8 +144,8 @@ end
 WieldableSlotScripts.unwield = function (wieldable_slot_scripts)
 	local num_scripts = #wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		local wieldable_slot_script = wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		wieldable_slot_script:unwield()
 	end

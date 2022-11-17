@@ -65,6 +65,102 @@ local templates = {
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
+	weapon_trait_ranged_increase_crit_chance = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.critical_strike_chance] = 0.05
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_crit_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.critical_strike_damage] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_stamina = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.stamina_modifier] = 1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_weakspot_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.weakspot_damage] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_finesse = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.finesse_modifier_bonus] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_power = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.power_level_modifier] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_damage_elites = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_elites] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_damage_hordes = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_horde] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increase_damage_specials = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_specials] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_reduce_sprint_cost = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.sprinting_cost_multiplier] = 0.8
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_ranged_increased_reload_speed = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.reload_speed] = 0.08
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
 	weapon_trait_ranged_common_equip_decrease_corruption_damage_taken_buff = {
 		predicted = false,
 		class_name = "buff",

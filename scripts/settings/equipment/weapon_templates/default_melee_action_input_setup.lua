@@ -62,8 +62,7 @@ local default_melee_action_input_setup = {
 			}
 		},
 		block = {
-			buffer_time = 0.75,
-			clear_input_queue = true,
+			buffer_time = 0.1,
 			input_sequence = {
 				{
 					value = true,
@@ -72,7 +71,7 @@ local default_melee_action_input_setup = {
 			}
 		},
 		block_release = {
-			buffer_time = 0.6,
+			buffer_time = 0.35,
 			max_queue = 1,
 			input_sequence = {
 				{
@@ -105,7 +104,6 @@ local default_melee_action_input_setup = {
 		},
 		push_follow_up_release = {
 			dont_queue = true,
-			clear_input_queue = true,
 			buffer_time = 0,
 			input_sequence = {
 				{
@@ -177,18 +175,11 @@ default_melee_action_input_setup.action_input_hierarchy = {
 	start_attack = {
 		attack_cancel = "base",
 		wield = "base",
+		heavy_attack = "base",
 		grenade_ability = "base",
 		block = "base",
 		special_action = "base",
-		light_attack = "base",
-		heavy_attack = {
-			special_action = "base",
-			wield = "base",
-			grenade_ability = "base",
-			block = "base",
-			combat_ability = "base",
-			attack_release = "base"
-		}
+		light_attack = "base"
 	},
 	block = {
 		block_release = "base",

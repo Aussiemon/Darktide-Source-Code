@@ -36,6 +36,7 @@ HealthStationExtension.setup_from_component = function (self, start_charge_amoun
 	self._pickup_spawner_extension = ScriptUnit.extension(unit, "pickup_system")
 	self._point_of_interest_extension = ScriptUnit.extension(unit, "point_of_interest_system")
 	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 
 	if battery_spawning_mode == "plugged" and not use_distribution_pool then
 		self:set_charge_amount(start_charge_amount)
@@ -45,8 +46,6 @@ HealthStationExtension.setup_from_component = function (self, start_charge_amoun
 end
 
 HealthStationExtension.hot_join_sync = function (self, charge_amount, socket_unit, battery_unit)
-	self:set_charge_amount(charge_amount)
-
 	if socket_unit then
 		self:register_socket_unit(socket_unit)
 	end
@@ -55,6 +54,7 @@ HealthStationExtension.hot_join_sync = function (self, charge_amount, socket_uni
 		self:register_battery_unit(battery_unit)
 	end
 
+	self:set_charge_amount(charge_amount)
 	self:sync_animations()
 end
 
@@ -89,6 +89,7 @@ HealthStationExtension.fixed_update = function (self, unit, dt, t)
 				if battery_spawning_mode == "plugged" or battery_spawning_mode == "plugged_with_charge" then
 					self:_teleport_battery_to_socket()
 					self:socket_luggable(self._battery_unit)
+					self:_update_indicators()
 				end
 			end
 
@@ -113,6 +114,10 @@ HealthStationExtension.stop_healing = function (self, success)
 		self:use_charge()
 	end
 
+	if self._charge_amount == 1 then
+		Unit.flow_event(self._unit, "one_charge_left")
+	end
+
 	if self._charge_amount == 0 then
 		self:play_anim("close")
 	else
@@ -129,7 +134,7 @@ HealthStationExtension.use_charge = function (self)
 		self:set_charge_amount(new_charge)
 
 		if self._charge_amount <= 0 then
-			self._point_of_interest_extension:set_tag("depleated_health_station")
+			self._point_of_interest_extension:set_tag("empty_health_station")
 		end
 	end
 
@@ -174,7 +179,7 @@ HealthStationExtension.set_charge_amount = function (self, charges)
 
 	if self._charge_amount <= 0 then
 		self:_set_block_text("loc_health_station_missing_battery")
-		point_of_interest_ext:set_tag("disabled_health_station")
+		point_of_interest_ext:set_tag("chargeable_health_station")
 	else
 		self:_set_block_text(nil)
 		point_of_interest_ext:set_tag("charged_health_station")
@@ -203,13 +208,21 @@ HealthStationExtension.health_per_charge = function (self)
 end
 
 HealthStationExtension._update_indicators = function (self)
-	local indicator_level = 0
-	local min_indicator_material = -1
-	local max_indicator_material = 0.01
-	local alpha = 1 - (HealthStationExtension.MAX_CHARGES - self._charge_amount) / HealthStationExtension.MAX_CHARGES
-	indicator_level = math.lerp(min_indicator_material, max_indicator_material, alpha)
+	if not self:battery_in_slot() then
+		Unit.set_scalar_for_materials(self._unit, "increase_color", -0.95)
+	else
+		local min_indicator_material = -1
+		local max_indicator_material = 0.01
+		local alpha = 1 - (HealthStationExtension.MAX_CHARGES - self._charge_amount) / HealthStationExtension.MAX_CHARGES
+		local indicator_level = math.lerp(min_indicator_material, max_indicator_material, alpha)
 
-	Unit.set_scalar_for_materials(self._unit, "increase_color", indicator_level)
+		Unit.set_scalar_for_materials(self._unit, "increase_color", indicator_level)
+
+		if self._charge_amount == 0 then
+			Light.set_enabled(Unit.light(self._battery_unit, 1), false)
+			Unit.set_scalar_for_materials(self._battery_unit, "emissive_multiplier", 0)
+		end
+	end
 end
 
 HealthStationExtension._spawn_socket = function (self)

@@ -44,11 +44,11 @@ SweepTrail.destroy = function (self, unit)
 	return
 end
 
-SweepTrail.set_critical_strike = function (self, unit, is_enabled)
+SweepTrail.set_critical_strike = function (self, unit, is_enabled, in_3p)
 	if self._critical_strike_trail_enabled ~= is_enabled then
 		local critical_strike_variable_name = self._critical_strike_variable_name
 		local critical_material_slot_names = self._critical_material_slot_names
-		local value = is_enabled and 1 or 0
+		local value = is_enabled and (in_3p and 0.2 or 1) or 0
 
 		for i = 1, #critical_material_slot_names do
 			local material_slot_name = critical_material_slot_names[i]

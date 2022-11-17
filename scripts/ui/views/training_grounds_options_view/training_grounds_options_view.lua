@@ -91,7 +91,7 @@ TrainingGroundsOptionsView._set_play_button_text = function (self)
 	local button_content = play_button.content
 	local settings = view_settings.play_settings[self.training_grounds_settings]
 	local input_text = get_input_text("confirm_pressed", "View")
-	local text = gamepad_active and string.format("%s %s", input_text, settings.play_button_text) or settings.play_button_text
+	local text = gamepad_active and string.format("%s %s", input_text, Utf8.upper(settings.play_button_text)) or Utf8.upper(settings.play_button_text)
 	button_content.text = text
 	button_content.hotspot.is_selected = gamepad_active
 end
@@ -99,6 +99,16 @@ end
 TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_context)
 	Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_hub_button)
 
+	local level = Managers.state.mission:mission_level()
+
+	if level then
+		Level.trigger_event(level, "training_grounds_started")
+	end
+
+	local widgets_by_name = self._widgets_by_name
+	local difficulty_stepper = widgets_by_name.difficulty_stepper
+	local challenge_level = difficulty_stepper.content.danger
+	mechanism_context.challenge_level = challenge_level
 	local mission_name = mechanism_context.mission_name
 	local Missions = require("scripts/settings/mission/mission_templates")
 	local mission_settings = Missions[mission_name]
@@ -138,13 +148,35 @@ TrainingGroundsOptionsView._setup_info = function (self)
 	header_content.sub_header = settings.sub_header_text
 	body_content.body_text = settings.body_text
 	play_button_content.text = settings.play_button_text
+	local in_matchmaking = Managers.data_service.social:is_in_matchmaking()
+
+	if in_matchmaking then
+		play_button_content.hotspot.disabled = true
+	end
+
+	widgets_by_name.difficulty_stepper.content.danger = 3
+	widgets_by_name.select_difficulty_text.content.text = Localize("loc_mission_board_select_difficulty")
+
+	if self.training_grounds_settings ~= "shooting_range" then
+		widgets_by_name.difficulty_stepper.content.visible = false
+		widgets_by_name.select_difficulty_text.content.visible = false
+	end
+
 	local rewards_claimed_content = widgets_by_name.rewards_claimed_text.content
 
 	if self.training_grounds_settings ~= "basic" then
+		if self.training_grounds_settings == "advanced" then
+			local separator_widget = self._widgets_by_name.separator
+			separator_widget.content.visible = false
+		end
+
 		widgets_by_name.rewards_header.content.visible = false
 		widgets_by_name.reward_1.content.visible = false
 		widgets_by_name.reward_2.content.visible = false
 		rewards_claimed_content.visible = false
+		local panel_size_small = view_settings.panel_size.small
+
+		self:_resize_background(panel_size_small)
 	else
 		widgets_by_name.rewards_header.content.text = Utf8.upper(Localize("loc_training_grounds_rewards_title"))
 
@@ -153,12 +185,27 @@ TrainingGroundsOptionsView._setup_info = function (self)
 			widgets_by_name.reward_2.content.visible = false
 			rewards_claimed_content.visible = true
 			rewards_claimed_content.text = Localize(view_settings.rewards_claimed_text)
+			local panel_size_small = view_settings.panel_size.small
+
+			self:_resize_background(panel_size_small)
 		else
 			rewards_claimed_content.visible = false
 
 			self:_load_reward_item_icons()
 		end
 	end
+end
+
+TrainingGroundsOptionsView._resize_background = function (self, new_size)
+	self:_set_scenegraph_size("left_panel", new_size[1], new_size[2])
+
+	local background_widget = self._widgets_by_name.background
+	local style = background_widget.style
+	style.background.size = {
+		new_size[1] - 40,
+		new_size[2] + 136
+	}
+	background_widget.dirty = true
 end
 
 TrainingGroundsOptionsView._unload_reward_item_icons = function (self)

@@ -4,7 +4,9 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local Explosion = require("scripts/utilities/attack/explosion")
+local Health = require("scripts/utilities/health")
 local Overheat = require("scripts/utilities/overheat")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_types = AttackSettings.attack_types
 local attack_results = AttackSettings.attack_results
@@ -61,7 +63,7 @@ end
 ActionOverloadExplosion.finish = function (self, reason, data, t, time_in_action)
 	ActionOverloadExplosion.super.finish(self, reason, data, t, time_in_action)
 
-	if reason == "aborted" then
+	if reason == "psyker_ability" then
 		return
 	end
 
@@ -105,7 +107,16 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 	end
 
 	if action_settings.death_on_explosion then
-		Attack.execute(self._player_unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
+		local unit = self._player_unit
+		local health_percentage = Health.current_health_percent(unit)
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+		local is_alive = health_percentage > 0 and not is_knocked_down
+
+		if is_alive then
+			Attack.execute(unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
+		end
 	end
 end
 

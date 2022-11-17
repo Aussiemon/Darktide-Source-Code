@@ -1,4 +1,5 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
 local SideColor = require("scripts/utilities/side_color")
@@ -227,6 +228,10 @@ MinionVisualLoadoutExtension.destroy = function (self)
 	if self._minion_gibbing then
 		self._minion_gibbing:delete_gibs()
 	end
+end
+
+MinionVisualLoadoutExtension.gib_from_queue = function (self, ...)
+	self._minion_gibbing:spawn_gib_from_queue(...)
 end
 
 MinionVisualLoadoutExtension._update_soft_oob = function (self, unit)
@@ -461,6 +466,21 @@ MinionVisualLoadoutExtension._attach_slot_to_gib = function (self, slot_name, gi
 		LODGroup.remove_lod_object(lod_group, item_lod_object)
 		LODGroup.add_lod_object(gib_lod_group, item_lod_object)
 
+		local attachments = slot_data.attachments
+
+		if attachments then
+			for i = 1, #attachments do
+				local attachment_unit = attachments[i]
+
+				if Unit.has_lod_object(attachment_unit, "lod") then
+					local attachment_lod_object = Unit.lod_object(attachment_unit, "lod")
+
+					LODGroup.remove_lod_object(lod_group, attachment_lod_object)
+					LODGroup.add_lod_object(gib_lod_group, attachment_lod_object)
+				end
+			end
+		end
+
 		local bv = LODGroup.compile_time_bounding_volume(gib_lod_group)
 
 		if bv then
@@ -648,12 +668,26 @@ MinionVisualLoadoutExtension.wielded_slot_name = function (self)
 	return self._wielded_slot_name
 end
 
-MinionVisualLoadoutExtension.can_gib = function (self)
-	return self._minion_gibbing ~= nil
+MinionVisualLoadoutExtension.can_gib = function (self, hit_zone)
+	local can_gib = self._minion_gibbing ~= nil
+
+	if not can_gib then
+		return false
+	end
+
+	if self:hit_zone_is_disallowed(hit_zone) then
+		return false
+	end
+
+	return true
 end
 
 MinionVisualLoadoutExtension.allow_gib_for_hit_zone = function (self, hit_zone, allowed)
 	return self._minion_gibbing:allow_gib_for_hit_zone(hit_zone, allowed)
+end
+
+MinionVisualLoadoutExtension.hit_zone_is_disallowed = function (self, hit_zone)
+	return self._minion_gibbing:hit_zone_is_disallowed(hit_zone)
 end
 
 MinionVisualLoadoutExtension.set_ailment_effect = function (self, effect_template)
@@ -669,28 +703,33 @@ MinionVisualLoadoutExtension.ailment_effect = function (self)
 end
 
 MinionVisualLoadoutExtension.slot_material_override = function (self, slot_name)
-	local slots = self._slots
-	local material_override_slots = self._material_override_slots
-	local slot_data = slots[slot_name]
-	slot_data = slot_data or material_override_slots[slot_name]
+	local slot_data = self._slots[slot_name] or self._material_override_slots[slot_name]
 	local item_data = slot_data and slot_data.item_data
-	local material_overrides = item_data and item_data.material_overrides
-	local apply_to_parent = item_data and item_data.material_override_apply_to_parent
 
-	return apply_to_parent, material_overrides
+	if not item_data then
+		return nil, nil
+	end
+
+	return item_data.material_override_apply_to_parent, item_data.material_overrides
 end
 
 MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_direction, damage_profile, optional_is_critical_strike)
+	local gibbing_enabled_locally = Application.user_setting("gore_settings", "gibbing_enabled")
+
+	if gibbing_enabled_locally == nil then
+		gibbing_enabled_locally = DefaultGameParameters.gibbing_enabled
+	end
+
 	local spawned_gibs = nil
 
-	if not DEDICATED_SERVER then
+	if not DEDICATED_SERVER and gibbing_enabled_locally then
 		spawned_gibs = self._minion_gibbing:gib(hit_zone_name_or_nil, attack_direction, damage_profile, nil, nil, optional_is_critical_strike)
 	end
 
 	local unit_is_local = self._unit_is_local
 	local is_server = self._is_server
 
-	if is_server and not unit_is_local and (spawned_gibs or DEDICATED_SERVER) then
+	if (is_server or DEDICATED_SERVER) and not unit_is_local then
 		local game_object_id = self._game_object_id
 		local hit_zone_id = hit_zone_name_or_nil and NetworkLookup.hit_zones[hit_zone_name_or_nil] or nil
 		local damage_profile_id = NetworkLookup.damage_profile_templates[damage_profile.name]

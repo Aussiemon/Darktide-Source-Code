@@ -16,6 +16,15 @@ local RPCS = {
 	"rpc_remove_buff",
 	"rpc_buff_proc_set_active_time"
 }
+local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
+local _stat_buff_lazy_mt = {
+	__index = function (self, key)
+		local val = _stat_buff_base_values[key]
+		self[key] = val
+
+		return val
+	end
+}
 
 BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
@@ -26,6 +35,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._local_portable_random = PortableRandom:new(seed)
 	self._buff_context = {
 		world = extension_init_context.world,
+		physics_world = extension_init_context.physics_world,
 		wwise_world = extension_init_context.wwise_world,
 		unit = unit,
 		player = extension_init_data.player,
@@ -40,9 +50,9 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._buff_instance_id = 0
 	self._stacking_buffs = {}
 	self._buffs_by_index = {}
-	self._stat_buffs = {
+	self._stat_buffs = setmetatable({
 		_modified_stats = {}
-	}
+	}, _stat_buff_lazy_mt)
 	self._keywords = {}
 	self._active_vfx = {}
 	self._active_wwise_node_sources = {}
@@ -59,14 +69,6 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		end
 	else
 		self._proc_events = Script.new_array(MIN_PROC_EVENTS_SIZE * PROC_EVENTS_STRIDE)
-	end
-
-	local stat_buff_types = BuffSettings.stat_buff_types
-	local stat_buff_base_values = BuffSettings.stat_buff_type_base_values
-	local current_stat_buffs = self._stat_buffs
-
-	for stat_buff_name in pairs(stat_buff_types) do
-		current_stat_buffs[stat_buff_name] = stat_buff_base_values[stat_buff_name]
 	end
 
 	if is_server then
@@ -211,8 +213,9 @@ BuffExtensionBase._update_proc_events = function (self, t)
 		for i = 1, #buffs do
 			local buff = buffs[i]
 			local is_predicted = buff:is_predicted()
+			local force_prediction = buff:force_predicted_proc()
 
-			if buff and buff.update_proc_events and (is_server or is_predicted) then
+			if buff and buff.update_proc_events and (is_server or is_predicted or force_prediction) then
 				local activated_proc = buff:update_proc_events(t, proc_events, num_proc_events, portable_random, local_portable_random)
 
 				if activated_proc and is_server and not is_predicted then
@@ -575,6 +578,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 		self:_on_remove_buff(buff_instance)
 		table.remove(buffs, instance_index)
 		buff_instance:delete()
+		self:_post_on_remove_buff(buff_instance)
 	end
 
 	self._buffs_by_index[index] = nil
@@ -585,6 +589,10 @@ BuffExtensionBase._on_add_buff = function (self, buff_instance)
 end
 
 BuffExtensionBase._on_remove_buff = function (self, buff_instance)
+	return
+end
+
+BuffExtensionBase._post_on_remove_buff = function (self, buff_instance)
 	return
 end
 
@@ -613,6 +621,24 @@ BuffExtensionBase.has_unique_buff_id = function (self, unique_buff_id)
 		local instance_buff_id = intance_template.unique_buff_id
 
 		if instance_buff_id == unique_buff_id then
+			return true
+		end
+	end
+
+	return false
+end
+
+BuffExtensionBase.has_buff_id_with_owner = function (self, buff_id, owner_unit)
+	local buffs = self._buffs
+
+	for i = 1, #buffs do
+		local buff_instance = buffs[i]
+		local intance_template = buff_instance:template()
+		local instance_buff_name = intance_template.buff_id
+		local buff_context = buff_instance:template_context()
+		local buff_owner_unit = buff_context.owner_unit
+
+		if instance_buff_name == buff_id and buff_owner_unit == owner_unit then
 			return true
 		end
 	end

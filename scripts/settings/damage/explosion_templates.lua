@@ -6,7 +6,6 @@ local function _add_template_entries(path)
 	local templates = require(path)
 
 	for name, template in pairs(templates) do
-		template.name = name
 		explosion_templates[name] = template
 	end
 end
@@ -45,6 +44,10 @@ for name, template in pairs(explosion_templates) do
 
 		template.scalable_vfx = scalable_vfx
 	end
+end
+
+for name, explosion_template in pairs(explosion_templates) do
+	explosion_template.name = name
 end
 
 return settings("ExplosionTemplates", explosion_templates)

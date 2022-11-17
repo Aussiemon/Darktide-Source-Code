@@ -132,8 +132,8 @@ local horde_pacing_template = {
 				ambush_horde = 1
 			},
 			travel_distance_required_for_horde = {
-				170,
-				210
+				150,
+				190
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,
@@ -186,8 +186,8 @@ local horde_pacing_template = {
 				ambush_horde = 1
 			},
 			travel_distance_required_for_horde = {
-				140,
-				190
+				120,
+				170
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,
@@ -223,7 +223,7 @@ local horde_pacing_template = {
 			num_trickle_hordes_active_for_cooldown = 3,
 			max_active_minions = 100,
 			trigger_heard_dialogue = true,
-			time_between_waves = 12,
+			time_between_waves = 10,
 			aggro_nearby_roamers_zone_range = 4,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 60,
@@ -240,8 +240,8 @@ local horde_pacing_template = {
 				ambush_horde = 1
 			},
 			travel_distance_required_for_horde = {
-				100,
-				150
+				80,
+				130
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,
@@ -277,7 +277,7 @@ local horde_pacing_template = {
 			num_trickle_hordes_active_for_cooldown = 3,
 			max_active_minions = 110,
 			trigger_heard_dialogue = true,
-			time_between_waves = 12,
+			time_between_waves = 10,
 			aggro_nearby_roamers_zone_range = 5,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 60,
@@ -294,8 +294,8 @@ local horde_pacing_template = {
 				ambush_horde = 1
 			},
 			travel_distance_required_for_horde = {
-				80,
-				110
+				50,
+				80
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,
@@ -331,7 +331,7 @@ local horde_pacing_template = {
 			num_trickle_hordes_active_for_cooldown = 3,
 			max_active_minions = 120,
 			trigger_heard_dialogue = true,
-			time_between_waves = 12,
+			time_between_waves = 10,
 			aggro_nearby_roamers_zone_range = 5,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 70,
@@ -348,8 +348,8 @@ local horde_pacing_template = {
 				ambush_horde = 1
 			},
 			travel_distance_required_for_horde = {
-				60,
-				100
+				40,
+				70
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,

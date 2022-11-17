@@ -24,7 +24,7 @@ Matchmaker._get_xbox_live_sandbox_id = function (self)
 	return promise
 end
 
-Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, dedicated_alias_parameter)
+Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alias_type, dedicated_alias_parameter)
 	local platform_alias_promise = nil
 	local authenticate_method = Managers.backend:get_auth_method()
 
@@ -64,9 +64,9 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 	end)
 	local platform_blocklist_promise = Managers.data_service.social:fetch_platform_block_list_ids_forced():catch(function (error)
 		if type(error) == "table" then
-			Log.error("Matchmaker", "could not get blocked platform ids, " .. table.tostring(error, 3))
+			Log.error("Matchmaker", "could not get blocked platform ids, %s", table.tostring(error, 3))
 		else
-			Log.error("Matchmaker", "could not get blocked platform ids, " .. error)
+			Log.error("Matchmaker", "could not get blocked platform ids, %s", error)
 		end
 
 		Log.warning("Matchmaker", "could not get blocked platform ids, will return empty array")
@@ -100,11 +100,11 @@ Matchmaker._get_common_queue_ticket_data = function (self, type, alias_type, ded
 		end
 
 		table.insert(dedicated_aliases, alias_type .. ":default")
-		Log.info("Matchmaker", "Resolved dedicated aliases: " .. table.tostring(dedicated_aliases, 3))
-		Log.info("Matchmaker", "Resolved latency_list: " .. table.tostring(latency_list, 3))
+		Log.info("Matchmaker", "Resolved dedicated aliases: %s", table.tostring(dedicated_aliases, 3))
+		Log.info("Matchmaker", "Resolved latency_list: %s", table.tostring(latency_list, 3))
 
 		return {
-			matchmakerType = type,
+			matchmakerType = matchmaker_type,
 			dedicatedAlias = dedicated_aliases[1],
 			dedicatedAliases = dedicated_aliases,
 			disableCrossPlay = cross_play_disabled,
@@ -127,8 +127,14 @@ Matchmaker.fetch_queue_ticket_hub = function (self)
 	end)
 end
 
-Matchmaker.fetch_queue_ticket_mission = function (self, mission_id, character_id)
-	local data_promise = self:_get_common_queue_ticket_data("mission", "mission", GameParameters.aws_matchmaking_mission_server_alias)
+Matchmaker.fetch_queue_ticket_mission = function (self, mission_id, character_id, private_session)
+	local type = "mission"
+
+	if private_session then
+		type = "mission-private-session"
+	end
+
+	local data_promise = self:_get_common_queue_ticket_data(type, "mission", GameParameters.aws_matchmaking_mission_server_alias)
 
 	return data_promise:next(function (data)
 		data.missionId = mission_id

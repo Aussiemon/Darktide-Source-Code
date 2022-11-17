@@ -363,7 +363,16 @@ InputFilters.navigate_filter_continuous = {
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
 			local using_gamepad = Managers.input:device_in_use("gamepad")
-			local cooldown = using_gamepad and menu_navigation_settings.gamepad_view_cooldown or menu_navigation_settings.view_cooldown
+			local cooldown = nil
+
+			if input_mapping_found then
+				cooldown = menu_navigation_settings.button_navigation_cooldown
+			elseif using_gamepad then
+				cooldown = menu_navigation_settings.gamepad_view_cooldown
+			else
+				cooldown = menu_navigation_settings.view_cooldown
+			end
+
 			filter_data.cooldown = cooldown * filter_data.cooldown_speed_multiplier
 
 			return true
@@ -425,7 +434,16 @@ InputFilters.navigate_filter_continuous_fast = {
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
 			local using_gamepad = Managers.input:device_in_use("gamepad")
-			local cooldown = using_gamepad and menu_navigation_settings.gamepad_view_fast_cooldown or menu_navigation_settings.view_fast_cooldown
+			local cooldown = nil
+
+			if input_mapping_found then
+				cooldown = menu_navigation_settings.button_navigation_cooldown
+			elseif using_gamepad then
+				cooldown = menu_navigation_settings.gamepad_view_fast_cooldown
+			else
+				cooldown = menu_navigation_settings.view_fast_cooldown
+			end
+
 			filter_data.cooldown = cooldown * filter_data.cooldown_speed_multiplier
 
 			return true

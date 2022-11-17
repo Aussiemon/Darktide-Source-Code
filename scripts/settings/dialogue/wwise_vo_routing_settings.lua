@@ -267,6 +267,18 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_enemy_chaos_newly_infected_assault_vo",
 		display_name = "Chaos Newly Infected Assault VO",
 		wwise_sound_source = "es_enemy_chaos_newly_infected_assault_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_guard_flamer_vo",
+		display_name = "Special Traitor Flamer VO",
+		wwise_sound_source = "es_traitor_guard_flamer_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_medicae_servitor_vo",
+		display_name = "Medicae Servitor VO",
+		wwise_sound_source = "es_medicae_servitor_vo"
 	}
 }
 

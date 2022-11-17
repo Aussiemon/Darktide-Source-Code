@@ -163,8 +163,9 @@ local CheckProcFunctions = {
 }
 local warp_damage_types = {
 	electrocution = true,
-	warp = true,
+	force_staff_bfg = true,
 	smite = true,
+	warp = true,
 	psyker_biomancer_discharge = true,
 	biomancer_soul = true,
 	force_staff_single_target = true
@@ -218,6 +219,10 @@ CheckProcFunctions.on_crit = function (params)
 	return true
 end
 
+CheckProcFunctions.on_crit_kills = function (params)
+	return params.is_critical_strike and params.attack_result == attack_results.died
+end
+
 CheckProcFunctions.on_ranged_hit = function (params)
 	return params.attack_type == attack_types.ranged
 end
@@ -232,6 +237,19 @@ end
 
 CheckProcFunctions.on_melee_crit_hit = function (params)
 	return params.is_critical_strike and params.attack_type == attack_types.melee
+end
+
+CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, template_context)
+	if not CheckProcFunctions.on_melee_hit(params) then
+		return false
+	end
+
+	local template_override_data = template_context.template_override_data
+	local buff_data = template_override_data and template_override_data.buff_data or template_data.buff_data
+	local required_num_hits = buff_data.required_num_hits
+	local target_index = params.target_index
+
+	return target_index and required_num_hits <= target_index
 end
 
 CheckProcFunctions.on_ranged_crit_hit = function (params)
@@ -279,7 +297,7 @@ end
 CheckProcFunctions.on_stagger_hit = function (params)
 	local attacked_unit = params.attacked_unit
 
-	return MinionState.is_staggered(attacked_unit)
+	return MinionState.is_minion(attacked_unit) and MinionState.is_staggered(attacked_unit)
 end
 
 CheckProcFunctions.on_staggering_hit = function (params)
@@ -319,7 +337,7 @@ end
 CheckProcFunctions.would_die = function (params, template_data, template_context)
 	local unit = template_context.unit
 	local health_extension = ScriptUnit.extension(unit, "health_system")
-	local current_health = health_extension:current_damaged_health()
+	local current_health = health_extension:current_health()
 	local is_going_to_die = current_health <= 1
 
 	return is_going_to_die

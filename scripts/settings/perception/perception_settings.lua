@@ -5,6 +5,9 @@ local perception_settings = {
 		Vector3Box(0, 0, 0),
 		Vector3Box(0.125, 0, 0),
 		Vector3Box(-0.125, 0, 0)
+	},
+	chaos_beast_of_nurgle_minion_line_of_sight_offsets = {
+		Vector3Box(0, 0, 0)
 	}
 }
 

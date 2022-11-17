@@ -49,7 +49,7 @@ local function item_change_function(content, style)
 		color = default_color
 	end
 
-	local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+	local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
 
 	ColorUtilities.color_lerp(style.color, color, progress, style.color)
 end
@@ -149,6 +149,13 @@ gear_item_slot_title_text_style.offset = {
 gear_item_slot_title_text_style.text_color = Color.terminal_text_header(255, true)
 gear_item_slot_title_text_style.default_color = Color.terminal_text_header(255, true)
 gear_item_slot_title_text_style.hover_color = Color.terminal_text_header_selected(255, true)
+local ui_item_emote_slot_title_text_style = table.clone(gear_item_slot_title_text_style)
+ui_item_emote_slot_title_text_style.offset = {
+	0,
+	-(ItemPassTemplates.gear_icon_size[2] + 5),
+	8
+}
+ui_item_emote_slot_title_text_style.font_size = 14
 local ui_item_slot_title_text_style = table.clone(UIFontSettings.header_3)
 ui_item_slot_title_text_style.text_horizontal_alignment = "center"
 ui_item_slot_title_text_style.text_vertical_alignment = "bottom"
@@ -164,17 +171,16 @@ ui_item_slot_title_text_style.offset = {
 ui_item_slot_title_text_style.text_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.default_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.hover_color = Color.ui_brown_super_light(255, true)
-local item_owned_text_style = table.clone(UIFontSettings.body_small)
-item_owned_text_style.text_horizontal_alignment = "center"
+local item_owned_text_style = table.clone(UIFontSettings.header_2)
+item_owned_text_style.text_horizontal_alignment = "right"
 item_owned_text_style.text_vertical_alignment = "bottom"
-item_owned_text_style.horizontal_alignment = "center"
+item_owned_text_style.horizontal_alignment = "right"
 item_owned_text_style.vertical_alignment = "center"
 item_owned_text_style.offset = {
-	0,
-	-15,
-	3
+	-10,
+	-5,
+	5
 }
-item_owned_text_style.text_color = Color.ui_orange_medium(255, true)
 local item_price_style = table.clone(UIFontSettings.body)
 item_price_style.text_horizontal_alignment = "right"
 item_price_style.text_vertical_alignment = "bottom"
@@ -588,6 +594,7 @@ ItemPassTemplates.ui_item = {
 		pass_type = "texture",
 		value = "content/ui/materials/icons/items/containers/item_container_square",
 		style = {
+			scale_to_material = true,
 			material_values = {},
 			offset = {
 				0,
@@ -788,6 +795,187 @@ ItemPassTemplates.ui_item_slot = {
 		pass_type = "texture",
 		value = "content/ui/materials/icons/items/containers/item_container_square",
 		style = {
+			scale_to_material = true,
+			material_values = {},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		visibility_function = function (content, style)
+			local parent_style = style.parent
+
+			return parent_style.icon.material_values.use_placeholder_texture == 0
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "inner_highlight",
+		value = "content/ui/materials/frames/inner_shadow_medium",
+		style = {
+			scale_to_material = true,
+			color = Color.terminal_frame(255, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = item_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_corner(nil, true),
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
+			offset = {
+				0,
+				0,
+				7
+			}
+		},
+		change_function = item_change_function
+	}
+}
+ItemPassTemplates.ui_item_emote_slot = {
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		style = {
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	},
+	{
+		value = "content/ui/materials/frames/cosmetic_slot_small",
+		style_id = "slot",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = {
+				255,
+				255,
+				255,
+				255
+			},
+			size = {
+				125,
+				115
+			},
+			offset = {
+				0,
+				-10.5,
+				0
+			}
+		}
+	},
+	{
+		style_id = "slot_title",
+		pass_type = "text",
+		value = "n/a",
+		value_id = "slot_title",
+		style = ui_item_emote_slot_title_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		value = "content/ui/materials/backgrounds/default_square",
+		style_id = "background",
+		pass_type = "texture",
+		style = {
+			color = Color.terminal_background_dark(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style_id = "background_gradient",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = {
+				100,
+				33,
+				35,
+				37
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/icons/generic/aquila",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			},
+			size = {
+				52,
+				20
+			}
+		},
+		visibility_function = function (content, style)
+			return not content.item
+		end
+	},
+	{
+		value_id = "icon",
+		style_id = "icon",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/items/containers/item_container_square",
+		style = {
+			scale_to_material = true,
 			material_values = {},
 			offset = {
 				0,
@@ -1191,7 +1379,7 @@ ItemPassTemplates.item = {
 			vertical_alignment = "top",
 			scale_to_material = true,
 			horizontal_alignment = "center",
-			color = Color.white(255, true),
+			color = Color.terminal_corner_hover(255, true),
 			size = {
 				[2] = weapon_item_size[2]
 			},
@@ -1461,7 +1649,8 @@ ItemPassTemplates.item = {
 				0,
 				0,
 				9
-			}
+			},
+			color = Color.terminal_corner_hover(255, true)
 		}
 	},
 	{
@@ -1936,7 +2125,7 @@ ItemPassTemplates.general_goods_item = {
 		style_id = "price_text",
 		pass_type = "text",
 		value = "n/a",
-		style = item_price_style,
+		style = {},
 		visibility_function = function (content, style)
 			return content.has_price_tag
 		end
@@ -2086,6 +2275,16 @@ ItemPassTemplates.item_icon = {
 		},
 		visibility_function = function (content, style)
 			return content.equipped
+		end
+	},
+	{
+		value_id = "owned",
+		style_id = "owned",
+		pass_type = "text",
+		value = "",
+		style = item_owned_text_style,
+		visibility_function = function (content, style)
+			return content.owned
 		end
 	}
 }
@@ -2369,11 +2568,26 @@ gadget_display_name_text_style.size = {
 gadget_display_name_text_style.text_color = Color.terminal_text_header(255, true)
 gadget_display_name_text_style.default_color = Color.terminal_text_header(255, true)
 gadget_display_name_text_style.hover_color = Color.terminal_text_header_selected(255, true)
-gadget_display_name_text_style.font_size = 24
+gadget_display_name_text_style.font_size = 20
 local gadget_empty_text_style = table.clone(gadget_display_name_text_style)
 gadget_empty_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
 gadget_empty_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
 gadget_empty_text_style.hover_color = Color.terminal_text_body(255, true)
+local gadget_lock_symbol_text_style = table.clone(gadget_display_name_text_style)
+gadget_lock_symbol_text_style.text_color = Color.terminal_frame(255, true)
+gadget_lock_symbol_text_style.default_color = Color.terminal_frame(255, true)
+gadget_lock_symbol_text_style.hover_color = Color.terminal_text_body_sub_header(255, true)
+gadget_lock_symbol_text_style.font_size = 120
+gadget_lock_symbol_text_style.drop_shadow = false
+gadget_lock_symbol_text_style.text_horizontal_alignment = "center"
+gadget_lock_symbol_text_style.text_vertical_alignment = "center"
+gadget_lock_symbol_text_style.horizontal_alignment = "center"
+gadget_lock_symbol_text_style.vertical_alignment = "center"
+gadget_lock_symbol_text_style.offset = {
+	0,
+	-40,
+	7
+}
 ItemPassTemplates.gadget_item_slot = {
 	{
 		pass_type = "hotspot",
@@ -2381,7 +2595,10 @@ ItemPassTemplates.gadget_item_slot = {
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.gadget_enter
-		}
+		},
+		visibility_function = function (content, style)
+			return content.parent.unlocked
+		end
 	},
 	{
 		value = "content/ui/materials/backgrounds/default_square",
@@ -2445,7 +2662,7 @@ ItemPassTemplates.gadget_item_slot = {
 			horizontal_alignment = "center",
 			material_values = {},
 			size = {
-				gadget_item_size[1],
+				gadget_icon_size[1],
 				gadget_icon_size[2]
 			},
 			offset = {
@@ -2465,7 +2682,7 @@ ItemPassTemplates.gadget_item_slot = {
 			}
 		},
 		visibility_function = function (content, style)
-			return content.item
+			return content.item and content.unlocked
 		end
 	},
 	{
@@ -2521,7 +2738,7 @@ ItemPassTemplates.gadget_item_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+			style.color[1] = math.max(hotspot.anim_focus_progress or 0, hotspot.anim_select_progress or 0) * 255
 		end
 	},
 	{
@@ -2542,7 +2759,7 @@ ItemPassTemplates.gadget_item_slot = {
 			}
 		},
 		visibility_function = function (content, style)
-			return not content.item
+			return not content.item and content.unlocked
 		end
 	},
 	{
@@ -2552,14 +2769,14 @@ ItemPassTemplates.gadget_item_slot = {
 		value_id = "display_name",
 		style = gadget_display_name_text_style,
 		visibility_function = function (content, style)
-			return content.item
+			return content.item and content.unlocked
 		end,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_text_color = style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
-			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
 
 			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
 		end
@@ -2569,14 +2786,49 @@ ItemPassTemplates.gadget_item_slot = {
 		value = Localize("loc_item_slot_empty"),
 		style = gadget_empty_text_style,
 		visibility_function = function (content, style)
-			return not content.item
+			return not content.item and content.unlocked
 		end,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_text_color = style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
-			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		pass_type = "text",
+		value_id = "unlock_text",
+		value = Localize("loc_item_slot_empty"),
+		style = gadget_empty_text_style,
+		visibility_function = function (content, style)
+			return not content.unlocked
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		pass_type = "text",
+		value = "",
+		style = gadget_lock_symbol_text_style,
+		visibility_function = function (content, style)
+			return not content.unlocked
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
 
 			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
 		end

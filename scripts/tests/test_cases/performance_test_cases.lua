@@ -53,8 +53,6 @@ PerformanceTestCases = {
 				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
 			}
 
-			Testify:make_request("performance_cameras_assert", assert_data)
-
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)
 				TestifySnippets.wait(3)
@@ -77,8 +75,6 @@ PerformanceTestCases = {
 				condition = not table.is_empty(cameras),
 				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
 			}
-
-			Testify:make_request("performance_cameras_assert", assert_data)
 
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)

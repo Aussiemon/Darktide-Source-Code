@@ -132,7 +132,13 @@ WeaponCustomization.spawn_item_attachments = function (self, unit, item_data, sk
 	local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item_data, skin_data)
 
 	if unit and attachments then
-		for _, attachment_slot_data in pairs(attachments) do
+		local sorted_attachments = table.keys(attachments)
+
+		table.sort(sorted_attachments)
+
+		for i = 1, #sorted_attachments do
+			local key = sorted_attachments[i]
+			local attachment_slot_data = attachments[key]
 			attachment_units = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, attachment_units)
 
 			if attachment_units then

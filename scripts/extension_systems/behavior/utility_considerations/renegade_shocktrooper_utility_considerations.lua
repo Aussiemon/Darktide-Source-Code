@@ -43,7 +43,7 @@ local considerations = {
 			max_value = 40,
 			spline = {
 				0,
-				1,
+				0,
 				0.5,
 				1,
 				0.900001,

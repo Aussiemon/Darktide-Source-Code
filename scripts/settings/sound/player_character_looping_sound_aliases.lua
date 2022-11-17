@@ -139,6 +139,7 @@ local PlayerCharacterLoopingSoundAliases = {
 		}
 	},
 	weapon_special_loop = {
+		exclude_from_unit_data_components = true,
 		has_husk_events = true,
 		start = {
 			event_alias = "play_weapon_special_loop"
@@ -177,6 +178,8 @@ local PlayerCharacterLoopingSoundAliases = {
 		}
 	},
 	equipped_item_passive_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
 		start = {
 			event_alias = "play_equipped_item_passive"
 		},

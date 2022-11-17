@@ -307,7 +307,9 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 	data.wave_timer = data.wave_timer - dt
 
 	if data.wave_timer <= 0 then
-		local composition = template.compositions[math.random(1, #template.compositions)]
+		local wanted_sub_faction = Managers.state.pacing:current_faction()
+		local faction_compositions = template.compositions[wanted_sub_faction]
+		local composition = faction_compositions[math.random(1, #faction_compositions)]
 		local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(composition)
 		local use_occluded_positions = data.use_occluded_positions
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")

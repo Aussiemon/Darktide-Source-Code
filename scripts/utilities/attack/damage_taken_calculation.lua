@@ -127,8 +127,9 @@ function _calculate_toughness_damage(damage_amount, damage_profile, attack_type,
 end
 
 function _calculate_toughness_damage_player(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
-	local toughness_extra = attacked_unit_stat_buffs.toughness + attacked_unit_stat_buffs.toughness_bonus
-	local max_toughness = toughness_template.max + toughness_extra
+	local toughness_extra = attacked_unit_stat_buffs.toughness + attacked_unit_stat_buffs.toughness_bonus_flat
+	local toughness_bonus = attacked_unit_stat_buffs.toughness_bonus or 1
+	local max_toughness = toughness_template.max * toughness_bonus + toughness_extra
 	local toughness_before_damage = max_toughness - current_toughness_damage
 
 	if max_toughness <= current_toughness_damage then
@@ -156,8 +157,8 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 
 	if melee_attack then
 		local override_max_toughness = zealot_toughness and toughness_damage
-		local real_max_toughness = toughness_template.max + toughness_extra
-		local bonus_toughness = attacked_unit_stat_buffs.toughness_bonus or 0
+		local real_max_toughness = toughness_template.max * toughness_bonus + toughness_extra
+		local bonus_toughness = attacked_unit_stat_buffs.toughness_bonus_flat or 0
 		local melee_toughness_multiplier = damage_profile.melee_toughness_multiplier or 2
 		current_toughness_damage = math.clamp(current_toughness_damage - bonus_toughness, 0, current_toughness_damage)
 		local melee_max_toughness = override_max_toughness or real_max_toughness
@@ -202,7 +203,7 @@ function _calculate_toughness_damage_minion(damage_amount, damage_profile, attac
 		return nil, damage_amount, 0, 0
 	end
 
-	local max_hit_percent = toughness_template.max_hit_percent
+	local max_hit_percent = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.max_hit_percent)
 	local clamped_damage_ammount = damage_amount
 
 	if max_hit_percent then

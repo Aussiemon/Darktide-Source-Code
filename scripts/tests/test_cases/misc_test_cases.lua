@@ -15,8 +15,7 @@ end
 
 MiscTestCases.validate_minion_visual_loadout_templates = function ()
 	Testify:run_case(function (dt, t)
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 		local item_definitions = Testify:make_request("all_items")
@@ -99,8 +98,7 @@ end
 
 MiscTestCases.ensure_no_hidden_attachments = function ()
 	Testify:run_case(function (dt, t)
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		local item_definitions = Testify:make_request("all_items")
 		local nil_attachments = {}
@@ -137,10 +135,8 @@ MiscTestCases.ensure_no_hidden_attachments = function ()
 end
 
 local _ignored_attachment_types = {
-	slot_trinket_2 = true,
-	trinket_slot_2 = true,
 	slot_trinket_1 = true,
-	trinket_slot_1 = true
+	slot_trinket_2 = true
 }
 
 local function _validate_attachment_parents_recursive(item_definitions, attachment_data, loose_children, attachment_name, parent_item_name, source_item_name)
@@ -174,8 +170,7 @@ local _ignored_item_types = {
 
 MiscTestCases.validate_attachment_parents = function ()
 	Testify:run_case(function (dt, t)
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		local item_definitions = Testify:make_request("all_items")
 		local loose_children = {}
@@ -243,8 +238,7 @@ end
 
 MiscTestCases.validate_attachment_stripping = function ()
 	Testify:run_case(function (dt, t)
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		return
 
@@ -300,8 +294,6 @@ MiscTestCases.check_logs_size = function (max_messages_per_minute)
 			condition = messages_per_minute <= max_messages_per_minute,
 			message = string.format("The number of messages in the logs per minute is %s which is bigger than the threshold %s", messages_per_minute, max_messages_per_minute)
 		}
-
-		Testify:make_request("log_size_assert", assert_data)
 	end)
 end
 
@@ -326,8 +318,7 @@ end
 
 MiscTestCases.check_unwanted_skin_attachments = function ()
 	Testify:run_case(function (dt, t)
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		return
 
@@ -440,13 +431,53 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 	end)
 end
 
+MiscTestCases.karls_awesome_vfx_test = function (particle_effect)
+	Testify:run_case(function (dt, t)
+		local particle_life_time = 10
+		local PARTICLES_TO_PLAY = {
+			"content/fx/particles/enemies/netgunner/netgunner_net_miss",
+			"content/fx/particles/enemies/plague_ogryn/plague_ogryn_body_odor",
+			"content/fx/particles/environment/foundry_molten_pool_boiling_01",
+			"content/fx/particles/environment/molten_steel_splash",
+			"content/fx/particles/environment/molten_steel_splashes_impact",
+			"content/fx/particles/environment/roofdust_tremor",
+			"content/fx/particles/environment/tank_foundry/fire_smoke_02",
+			"content/fx/particles/environment/tank_foundry/fire_smoke_03",
+			"content/fx/particles/interacts/airlock_closing",
+			"content/fx/particles/interacts/airlock_opening",
+			"content/fx/particles/liquid_area/fire_lingering_enemy",
+			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
+		}
+
+		if TestifySnippets.is_debug_stripped() then
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+			TestifySnippets.load_mission("spawn_all_enemies")
+		end
+
+		TestifySnippets.wait_for_gameplay_ready()
+		Testify:make_request("set_autoload_enabled", true)
+
+		local world = Testify:make_request("world")
+		local boxed_spawn_position = Vector3Box(0, 10, 1.8)
+
+		if particle_effect then
+			Testify:make_request("create_particles", world, particle_effect, boxed_spawn_position, particle_life_time)
+		else
+			for _, particle_name in pairs(PARTICLES_TO_PLAY) do
+				Testify:make_request("create_particles", world, particle_name, boxed_spawn_position, particle_life_time)
+			end
+		end
+
+		TestifySnippets.wait(particle_life_time)
+	end)
+end
+
 MiscTestCases.play_all_vfx = function (case_settings)
 	Testify:run_case(function (dt, t)
 		local settings = cjson.decode(case_settings or "{}")
 		local particle_life_time = settings.particle_life_time or 3
 		local PARTICLES_TO_SKIP = {
 			"content/fx/particles/debug/mesh_position_spawn_crash",
-			"content/fx/particles/destructibles/generic_dust_drop_01",
 			"content/fx/particles/enemies/netgunner/netgunner_net_miss",
 			"content/fx/particles/enemies/plague_ogryn/plague_ogryn_body_odor",
 			"content/fx/particles/environment/foundry_molten_pool_boiling_01",

@@ -46,29 +46,11 @@ PlayerHuskHealthExtension.is_invulnerable = function (self)
 	return false
 end
 
-PlayerHuskHealthExtension.current_damaged_health = function (self)
-	local max_health = self:max_health()
-	local damage_taken = self:damage_taken()
-
-	return math.max(0, max_health - damage_taken)
-end
-
 PlayerHuskHealthExtension.current_health = function (self)
 	local max_health = self:max_health()
 	local damage_taken = self:damage_taken()
 
 	return math.max(0, max_health - damage_taken)
-end
-
-PlayerHuskHealthExtension.current_damaged_health_percent = function (self)
-	local damaged_max_health = self:damaged_max_health()
-	local damage_taken = self:damage_taken()
-
-	if damaged_max_health <= 0 then
-		return 0
-	end
-
-	return math.max(0, 1 - damage_taken / damaged_max_health)
 end
 
 PlayerHuskHealthExtension.current_health_percent = function (self)
@@ -114,12 +96,6 @@ PlayerHuskHealthExtension.total_damage_taken = function (self)
 	local damage_taken = self:damage_taken()
 
 	return math.min(max_health, damage_taken)
-end
-
-PlayerHuskHealthExtension.damaged_max_health = function (self)
-	local max_health = self:max_health()
-
-	return max_health
 end
 
 PlayerHuskHealthExtension.max_health = function (self)

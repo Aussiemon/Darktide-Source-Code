@@ -72,7 +72,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			470,
+			490,
 			0,
 			0
 		}
@@ -228,6 +228,20 @@ local scenegraph_definition = {
 			2
 		}
 	},
+	appearance_background = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			20,
+			10
+		}
+	},
 	grid_2_area = {
 		vertical_alignment = "top",
 		parent = "canvas",
@@ -307,7 +321,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			10,
+			30,
 			0,
 			2
 		}
@@ -391,7 +405,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			10,
+			30,
 			0,
 			2
 		}
@@ -453,44 +467,58 @@ local scenegraph_definition = {
 		}
 	},
 	choice_detail = {
-		vertical_alignment = "bottom",
-		parent = "list_background",
+		vertical_alignment = "top",
+		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
 			800,
 			50
 		},
 		position = {
-			530,
+			0,
 			0,
 			0
 		}
 	},
-	backstory_text = {
+	backstory_pivot = {
 		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
-			440,
-			900
+			760,
+			0
 		},
 		position = {
-			-400,
-			150,
+			-100,
+			0,
+			0
+		}
+	},
+	backstory_background = {
+		vertical_alignment = "top",
+		parent = "backstory_pivot",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
 			0
 		}
 	},
 	name_input = {
 		vertical_alignment = "top",
-		parent = "backstory_text",
+		parent = "backstory_pivot",
 		horizontal_alignment = "left",
 		size = {
-			440,
+			760,
 			0
 		},
 		position = {
 			0,
-			-80,
+			0,
 			0
 		}
 	},
@@ -499,12 +527,12 @@ local scenegraph_definition = {
 		parent = "continue_pivot",
 		horizontal_alignment = "left",
 		size = {
-			440,
+			760,
 			0
 		},
 		position = {
 			0,
-			-150,
+			-120,
 			0
 		}
 	}
@@ -545,14 +573,23 @@ local widget_definitions = {
 	}, "screen"),
 	list_background = UIWidget.create_definition({
 		{
+			value_id = "background",
 			style_id = "background",
-			pass_type = "rect",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "top",
-				color = Color.black(204, true),
-				size = {
-					480
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(nil, true),
+				size_addition = {
+					35,
+					30
+				},
+				offset = {
+					0,
+					-15,
+					0
 				}
 			}
 		},
@@ -562,28 +599,17 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "",
 			style = {
-				vertical_alignment = "top",
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				color = Color.black(76.5, true),
 				size = {
 					480,
-					384
+					480
 				},
 				offset = {
 					0,
 					0,
 					1
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/line_medium",
-			pass_type = "texture",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "top",
-				color = Color.black(255, true),
-				size = {
-					480
 				}
 			}
 		},
@@ -605,6 +631,27 @@ local widget_definitions = {
 					1
 				}
 			}
+		},
+		{
+			value_id = "top_frame_extra",
+			pass_type = "texture",
+			style_id = "top_frame_extra",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					480,
+					36
+				},
+				offset = {
+					0,
+					-18,
+					1
+				}
+			},
+			visiblity_function = function (content, style)
+				return not not content.top_frame_extra
+			end
 		},
 		{
 			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
@@ -750,10 +797,13 @@ local widget_definitions = {
 				}
 			}
 		}
-	}, "page_indicator"),
-	zealot_corners = UIWidget.create_definition({
+	}, "page_indicator", {
+		visible = false
+	}),
+	corners = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/frames/screen/class_zealot_01_lower_left",
+			value_id = "left_lower",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "bottom",
@@ -771,6 +821,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
+			value_id = "right_lower",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "bottom",
@@ -789,6 +840,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
+			value_id = "left_upper",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "top",
@@ -816,252 +868,7 @@ local widget_definitions = {
 		},
 		{
 			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		}
-	}, "screen"),
-	ogryn_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true),
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		}
-	}, "screen"),
-	veteran_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true),
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		}
-	}, "screen"),
-	psyker_corners = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_psyker_01_lower_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "right",
-				size = {
-					70,
-					202
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				size = {
-					130,
-					272
-				},
-				offset = {
-					0,
-					0,
-					62
-				},
-				color = Color.white(255, true),
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
+			value_id = "right_upper",
 			pass_type = "texture_uv",
 			style = {
 				vertical_alignment = "top",
@@ -1098,20 +905,100 @@ local widget_definitions = {
 			style = CharacterAppearanceViewFontStyle.overlay_text_style
 		}
 	}, "screen"),
-	backstory_text = UIWidget.create_definition({
+	backstory_background = UIWidget.create_definition({
 		{
-			value_id = "title",
-			pass_type = "text",
-			value = Localize("loc_character_create_title_name"),
-			style = CharacterAppearanceViewFontStyle.header_final_text_style
+			value_id = "background",
+			style_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(nil, true),
+				size_addition = {
+					15,
+					30
+				},
+				offset = {
+					0,
+					-15,
+					0
+				}
+			}
 		},
 		{
-			value = "",
+			value_id = "top_frame",
+			style_id = "top_frame",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					-18,
+					1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					18,
+					1
+				}
+			}
+		}
+	}, "backstory_background"),
+	backstory_title = UIWidget.create_definition({
+		{
 			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
+			value = Localize("loc_character_create_title_name"),
+			style = CharacterAppearanceViewFontStyle.header_final_title_style
+		},
+		{
+			style_id = "baseline",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "bottom",
+				color = Color.terminal_corner(255, true),
+				size = {
+					nil,
+					2
+				},
+				offset = {
+					0,
+					15,
+					1
+				}
+			}
+		}
+	}, "backstory_pivot"),
+	backstory_text = UIWidget.create_definition({
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
 			style = CharacterAppearanceViewFontStyle.description_style
 		}
-	}, "backstory_text"),
+	}, "backstory_pivot"),
 	choice_detail = UIWidget.create_definition({
 		{
 			style_id = "choice_icon",
@@ -1153,51 +1040,67 @@ local widget_definitions = {
 				return content.available == false
 			end
 		}
-	}, "choice_detail")
-}
-local page_indicator_widget = UIWidget.create_definition({
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot"
-	},
-	{
-		value = "content/ui/materials/icons/system/page_indicator_idle",
-		style_id = "new_notification_marker",
-		pass_type = "texture",
-		style = {
-			size = {
-				20,
-				20
-			},
-			color = Color.ui_brown_light(255, true),
-			offset = {
-				0,
-				0,
-				1
-			}
-		}
-	},
-	{
-		style_id = "new_notification_ring",
-		pass_type = "texture",
-		value = "content/ui/materials/icons/system/page_indicator_active",
-		style = {
-			size = {
-				20,
-				20
-			},
-			color = Color.ui_terminal(255, true),
-			offset = {
-				0,
-				0,
-				2
+	}, "choice_detail"),
+	appearance_background = UIWidget.create_definition({
+		{
+			value_id = "background",
+			style_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(nil, true),
+				size_addition = {
+					15,
+					30
+				},
+				offset = {
+					0,
+					-15,
+					0
+				}
 			}
 		},
-		visibility_function = function (content, style)
-			return content.element_selected
-		end
-	}
-}, "page_indicator")
+		{
+			value_id = "top_frame",
+			style_id = "top_frame",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					-18,
+					1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					18,
+					1
+				}
+			}
+		}
+	}, "appearance_background")
+}
 local choice_descriptions = {
 	option_title = UIWidget.create_definition({
 		{
@@ -1261,21 +1164,26 @@ local randomize_button_definition = UIWidget.create_definition({
 		content_id = "hotspot"
 	},
 	{
-		style_id = "texture",
+		style_id = "icon",
 		pass_type = "texture",
 		value = "content/ui/materials/base/ui_default_base",
-		value_id = "texure",
+		value_id = "icon",
 		style = {
 			vertical_alignment = "center",
-			hover_color = Color.ui_brown_super_light(255, true),
-			default_color = Color.ui_brown_light(255, true),
-			color = Color.ui_brown_light(255, true),
+			hover_color = Color.terminal_frame_selected(255, true),
+			default_color = Color.terminal_text_body(255, true),
+			color = Color.terminal_text_body(255, true),
 			size = {
 				30,
 				30
 			},
 			material_values = {
 				texture_map = "content/ui/textures/icons/generic/randomize"
+			},
+			offset = {
+				20,
+				0,
+				2
 			}
 		},
 		change_function = function (content, style, _, dt)
@@ -1291,6 +1199,106 @@ local randomize_button_definition = UIWidget.create_definition({
 		end,
 		visibility_function = function (content)
 			return content.show_icon
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/masks/gradient_horizontal_sides_dynamic_02",
+		style = {
+			horizontal_alignment = "center",
+			offset = {
+				0,
+				0,
+				3
+			},
+			size_addition = {
+				-10,
+				0
+			},
+			default_color = Color.terminal_frame(nil, true),
+			hover_color = Color.terminal_frame_selected(nil, true),
+			color = Color.terminal_text_body(255, true)
+		},
+		change_function = function (content, style, _, dt)
+			local default_color = style.default_color
+			local hover_color = style.hover_color
+			local color = style.color
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
+			ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+
+			style.hdr = progress == 1
+		end,
+		visibility_function = function (content, style)
+			return content.hotspot.is_focused or content.hotspot.is_hover
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			scale_to_material = true,
+			horizontal_alignment = "center",
+			size_addition = {
+				-10,
+				0
+			},
+			default_color = Color.terminal_frame(nil, true),
+			hover_color = Color.terminal_frame_selected(nil, true),
+			color = Color.terminal_text_body(255, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = function (content, style, _, dt)
+			local default_color = style.default_color
+			local hover_color = style.hover_color
+			local color = style.color
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
+			ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+
+			style.hdr = progress == 1
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			scale_to_material = true,
+			horizontal_alignment = "center",
+			size_addition = {
+				-10,
+				0
+			},
+			default_color = Color.terminal_corner(nil, true),
+			hover_color = Color.terminal_corner_selected(nil, true),
+			color = Color.terminal_text_body(255, true),
+			offset = {
+				0,
+				0,
+				5
+			}
+		},
+		change_function = function (content, style, _, dt)
+			local default_color = style.default_color
+			local hover_color = style.hover_color
+			local color = style.color
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
+			ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+
+			style.hdr = progress == 1
 		end
 	},
 	{
@@ -1312,8 +1320,8 @@ local randomize_button_definition = UIWidget.create_definition({
 		end
 	}
 }, "name_input", nil, {
-	300,
-	40
+	360,
+	60
 })
 local error_text_definitions = UIWidget.create_definition({
 	{
@@ -1330,7 +1338,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_change_name",
 		alignment = "left_alignment",
 		visibility_function = function (parent)
-			return IS_XBS and parent._active_page_number == 8 and not parent._await_validation
+			return IS_XBS and parent._active_page_number == 8 and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1345,7 +1353,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_randomize_character_appearance",
 		visibility_function = function (parent)
-			return parent._is_character_showing and parent._active_page_number == 5 and not parent._await_validation
+			return parent._is_character_showing and parent._active_page_number == 5 and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1353,7 +1361,7 @@ local legend_inputs = {
 		display_name = "loc_rotate",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._await_validation
+			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1362,7 +1370,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._await_validation
+			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1371,7 +1379,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._await_validation
+			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	}
 }
@@ -1401,116 +1409,97 @@ local animations = {
 				end
 			end
 		}
+	}
+}
+animations.on_planet_select = {
+	{
+		name = "move_background",
+		end_time = 2,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local anim_progress = math.easeCubic(progress)
+			local progress_uv = widgets.background.style.texture.uvs
+
+			for i = 1, #params.start_uv do
+				local start_uv = params.start_uv[i]
+				local end_uv = params.end_uv[i]
+				progress_uv[i][1] = math.lerp(start_uv[1], end_uv[1], anim_progress)
+				progress_uv[i][2] = math.lerp(start_uv[2], end_uv[2], anim_progress)
+			end
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			if parent._reset_background then
+				parent._reset_background = nil
+				local page = parent._pages[parent._active_page_number]
+				widgets.background.style.texture.uvs = page.background_uv or {
+					{
+						0,
+						0
+					},
+					{
+						1,
+						1
+					}
+				}
+			end
+		end
 	},
-	on_planet_select = {
-		{
-			name = "move_background",
-			end_time = 2,
-			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local anim_progress = math.easeCubic(progress)
-				local progress_uv = {}
-
-				for i = 1, #params.start_uv do
-					local start_uv = params.start_uv[i]
-					local end_uv = params.end_uv[i]
-					progress_uv[#progress_uv + 1] = {
-						math.lerp(start_uv[1], end_uv[1], anim_progress),
-						math.lerp(start_uv[2], end_uv[2], anim_progress)
-					}
-				end
-
-				widgets.background.style.texture.uvs = progress_uv
-			end,
-			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				if parent._reset_background then
-					parent._reset_background = nil
-					local page = parent._pages[parent._active_page_number]
-					widgets.background.style.texture.uvs = page.background_uv or {
-						{
-							0,
-							0
-						},
-						{
-							1,
-							1
-						}
-					}
-				end
-			end
-		},
-		{
-			name = "move_start_planet",
-			end_time = 0.5,
-			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				return
-			end,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local anim_progress = math.easeInCubic(progress)
-				local start_position = params.start_planet_widget.content.planet_data.position
-				local end_position = params.end_planet_widget.content.planet_data.position
-				local screen_size = {
-					RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
-					RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-				}
-				local image_size = params.start_planet_widget.content.planet_data.image.size
-				local screen_max_size = math.max(screen_size[1], screen_size[2])
-				local image_max_size = math.max(image_size[1], image_size[2])
-				local angle = math.angle(end_position[1], end_position[2], start_position[1], start_position[2])
-				local total_distance = screen_max_size + image_max_size
-				local start_offset = CharacterAppearanceViewSettings.planet_offset
-				local end_offset = {}
-				end_offset[1], end_offset[2] = math.polar_to_cartesian(total_distance, angle)
-				local current_offset_x = math.lerp(start_offset[1], end_offset[1] + CharacterAppearanceViewSettings.planet_offset[1], anim_progress)
-				local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
-				local planet_offset_z = params.start_planet_widget.style.planet.offset[3]
-				params.start_planet_widget.style.planet.offset = {
-					current_offset_x,
-					current_offset_y,
-					planet_offset_z
-				}
-			end
-		},
-		{
-			name = "move_end_planet",
-			end_time = 2,
-			start_time = 1,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				params.end_planet_widget.content.visible = true
-			end,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local anim_progress = math.easeOutCubic(progress)
-				local start_position = params.start_planet_widget.content.planet_data.position
-				local end_position = params.end_planet_widget.content.planet_data.position
-				local screen_size = {
-					RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale,
-					RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-				}
-				local image_size = params.end_planet_widget.content.planet_data.image.size
-				local screen_max_size = math.max(screen_size[1], screen_size[2])
-				local image_max_size = math.max(image_size[1], image_size[2])
-				local angle = math.angle(start_position[1], start_position[2], end_position[1], end_position[2])
-				local total_distance = screen_max_size + image_max_size
-				local start_offset = {}
-				start_offset[1], start_offset[2] = math.polar_to_cartesian(total_distance, angle)
-				local end_offset = CharacterAppearanceViewSettings.planet_offset
-				local current_offset_x = math.lerp(start_offset[1], end_offset[1], anim_progress)
-				local current_offset_y = math.lerp(start_offset[2], end_offset[2], anim_progress)
-				local planet_offset_z = params.end_planet_widget.style.planet.offset[3]
-				params.end_planet_widget.style.planet.offset = {
-					current_offset_x,
-					current_offset_y,
-					planet_offset_z
-				}
-			end
-		}
+	{
+		name = "move_start_planet",
+		end_time = 0.5,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local anim_progress = math.easeInCubic(progress)
+			local start_position = params.start_planet_widget.content.planet_data.position
+			local end_position = params.end_planet_widget.content.planet_data.position
+			local screen_width = RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale
+			local screen_height = RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
+			local image_size = params.start_planet_widget.content.planet_data.image.size
+			local screen_max_size = math.max(screen_width, screen_height)
+			local image_max_size = math.max(image_size[1], image_size[2])
+			local angle = math.angle(end_position[1], end_position[2], start_position[1], start_position[2])
+			local total_distance = screen_max_size + image_max_size
+			local start_offset = CharacterAppearanceViewSettings.planet_offset
+			local end_offset_x, end_offset_y = math.polar_to_cartesian(total_distance, angle)
+			local current_offset_x = math.lerp(start_offset[1], end_offset_x + CharacterAppearanceViewSettings.planet_offset[1], anim_progress)
+			local current_offset_y = math.lerp(start_offset[2], end_offset_y, anim_progress)
+			local end_offset = params.start_planet_widget.style.planet.offset
+			end_offset[1] = current_offset_x
+			end_offset[2] = current_offset_y
+		end
+	},
+	{
+		name = "move_end_planet",
+		end_time = 2,
+		start_time = 1,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			params.end_planet_widget.content.visible = true
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local anim_progress = math.easeOutCubic(progress)
+			local start_position = params.start_planet_widget.content.planet_data.position
+			local end_position = params.end_planet_widget.content.planet_data.position
+			local screen_width = RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale
+			local screen_height = RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
+			local image_size = params.end_planet_widget.content.planet_data.image.size
+			local screen_max_size = math.max(screen_width, screen_height)
+			local image_max_size = math.max(image_size[1], image_size[2])
+			local angle = math.angle(start_position[1], start_position[2], end_position[1], end_position[2])
+			local total_distance = screen_max_size + image_max_size
+			local start_offset_x, start_offset_y = nil
+			start_offset_x, start_offset_y = math.polar_to_cartesian(total_distance, angle)
+			local end_offset = CharacterAppearanceViewSettings.planet_offset
+			local current_offset_x = math.lerp(start_offset_x, end_offset[1], anim_progress)
+			local current_offset_y = math.lerp(start_offset_y, end_offset[2], anim_progress)
+			local end_planet_offset = params.end_planet_widget.style.planet.offset
+			end_planet_offset[1] = current_offset_x
+			end_planet_offset[2] = current_offset_y
+		end
 	}
 }
 
 return {
 	legend_inputs = legend_inputs,
-	page_indicator_widget = page_indicator_widget,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	choice_descriptions_definitions = choice_descriptions,

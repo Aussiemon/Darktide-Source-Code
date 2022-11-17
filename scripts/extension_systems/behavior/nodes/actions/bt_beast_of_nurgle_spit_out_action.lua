@@ -42,6 +42,10 @@ BtBeastOfNurgleSpitOutAction.enter = function (self, unit, breed, blackboard, sc
 	scratchpad.hit_unit_disabled_state_input = disabled_state_input
 	local consumed_unit_breed_name = hit_unit_data_extension:breed().name
 	scratchpad.consumed_unit_breed_name = consumed_unit_breed_name
+	local self_flat_fwd = Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1)))
+
+	Unit.set_local_rotation(unit, 1, Quaternion.look(self_flat_fwd))
+
 	local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
 	scratchpad.hit_unit_disabled_character_state_component = disabled_character_state_component
 
@@ -248,10 +252,10 @@ local BELOW = 2
 local LATERAL = 2
 local MAX_STEPS = 20
 local MAX_TIME = 1.25
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 2.2
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 2.2
-local THROW_TELEPORT_FWD_OFFSET_HUMAN = 2.5
-local THROW_TELEPORT_FWD_OFFSET_OGRYN = 2.5
+local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
+local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
+local THROW_TELEPORT_FWD_OFFSET_HUMAN = 3.2
+local THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2
 
 BtBeastOfNurgleSpitOutAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]

@@ -10,7 +10,9 @@ local GRACE_TIME = 1.8
 local SHOOTING_ACTIONS = {
 	shoot_pellets = true,
 	shoot_hit_scan = true,
-	shoot_projectile = true
+	shoot_projectile = true,
+	flamer_gas = true,
+	flamer_gas_burst = true
 }
 
 WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, fx_sources)

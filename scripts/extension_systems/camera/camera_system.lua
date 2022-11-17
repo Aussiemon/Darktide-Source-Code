@@ -1,6 +1,5 @@
 require("scripts/extension_systems/camera/player_unit_camera_extension")
 require("scripts/extension_systems/camera/player_husk_camera_extension")
-require("scripts/extension_systems/camera/mission_board_camera_extension")
 
 local CameraSystem = class("CameraSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {

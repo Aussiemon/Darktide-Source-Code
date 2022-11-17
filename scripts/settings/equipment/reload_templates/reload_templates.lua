@@ -7,11 +7,13 @@ local function _create_reload_template_entry(path)
 end
 
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autogun_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/autogun_ak_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autopistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/basic_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/bolter_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/flamer_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_elysian_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/laspistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/ogryn_gauntlet_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/ogryn_thumper_reload_template")

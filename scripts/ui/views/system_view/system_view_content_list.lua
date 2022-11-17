@@ -10,10 +10,6 @@ local function validation_is_in_mission()
 		return true
 	end
 
-	if Managers.mechanism:singleplay_type() == SINGLEPLAY_TYPES.training_grounds then
-		return true
-	end
-
 	return false
 end
 
@@ -21,8 +17,7 @@ local function _members_in_party()
 	local num_members = 0
 
 	if GameParameters.prod_like_backend then
-		local other_members = Managers.party_immaterium:other_members()
-		num_members = #other_members
+		num_members = Managers.party_immaterium:num_other_members()
 	end
 
 	return num_members
@@ -30,26 +25,56 @@ end
 
 local main_menu_list = {
 	{
-		text = "loc_options_view_display_name",
-		type = "button",
+		text = "loc_achievements_view_display_name",
+		icon = "content/ui/materials/icons/system/escape/achievements",
+		type = "large_button",
 		trigger_function = function (parent, widget, entry)
-			Managers.ui:open_view("options_view")
+			Managers.ui:open_view("account_profile_view")
+		end
+	},
+	{
+		text = "loc_social_view_display_name",
+		required_dev_parameter = "ui_show_social_menu",
+		type = "large_button",
+		icon = "content/ui/materials/icons/system/escape/settings",
+		trigger_function = function (parent, widget, entry)
+			Managers.ui:open_view("social_menu_view")
 		end
 	},
 	{
 		type = "spacing_vertical"
 	},
 	{
-		text = "loc_social_view_display_name",
-		required_dev_parameter = "ui_show_social_menu",
+		type = "spacing_vertical"
+	},
+	{
+		type = "spacing_vertical"
+	},
+	{
+		text = "loc_credits_view_title",
+		icon = "content/ui/materials/icons/system/escape/credits",
+		type = "button",
+		trigger_function = function ()
+			local context = {
+				can_exit = true
+			}
+			local view_name = "credits_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end
+	},
+	{
+		text = "loc_options_view_display_name",
+		icon = "content/ui/materials/icons/system/escape/settings",
 		type = "button",
 		trigger_function = function (parent, widget, entry)
-			Managers.ui:open_view("social_menu_view")
+			Managers.ui:open_view("options_view")
 		end
 	},
 	{
 		text = "loc_leave_party_display_name",
 		type = "button",
+		icon = "content/ui/materials/icons/system/escape/leave_party",
 		validation_function = function ()
 			return _members_in_party() > 0
 		end,
@@ -78,16 +103,6 @@ local main_menu_list = {
 
 			Managers.event:trigger("event_show_ui_popup", context)
 		end
-	},
-	{
-		type = "spacing_vertical"
-	},
-	{
-		text = "loc_credits_view_display_name",
-		type = "button",
-		trigger_function = function (parent, widget, entry)
-			return
-		end
 	}
 }
 
@@ -97,6 +112,7 @@ if PLATFORM == "win32" then
 	}
 	main_menu_list[#main_menu_list] = {
 		text = "loc_quit_game_display_name",
+		icon = "content/ui/materials/icons/system/escape/quit",
 		type = "button",
 		trigger_function = function (parent, widget, entry)
 			local context = {
@@ -128,10 +144,34 @@ local default_list = {
 	{
 		text = "loc_character_view_display_name",
 		type = "large_button",
+		icon = "content/ui/materials/icons/system/escape/inventory",
 		trigger_function = function ()
 			local view_name = "inventory_background_view"
 
 			Managers.ui:open_view(view_name)
+		end,
+		validation_function = function ()
+			local game_mode_manager = Managers.state.game_mode
+
+			if not game_mode_manager then
+				return false
+			end
+
+			local game_mode_name = game_mode_manager:game_mode_name()
+			local is_in_hub = game_mode_name == "hub"
+			local is_in_shooting_range = game_mode_name == "shooting_range"
+			local is_prologue_hub = game_mode_name == "prologue_hub"
+			local played_basic_training = Managers.narrative:is_chapter_complete("onboarding", "play_training")
+
+			return is_in_hub or is_prologue_hub and played_basic_training or is_in_shooting_range
+		end
+	},
+	{
+		text = "loc_achievements_view_display_name",
+		type = "large_button",
+		icon = "content/ui/materials/icons/system/escape/achievements",
+		trigger_function = function (parent, widget, entry)
+			Managers.ui:open_view("account_profile_view")
 		end,
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode
@@ -148,6 +188,7 @@ local default_list = {
 	},
 	{
 		text = "loc_social_view_display_name",
+		icon = "content/ui/materials/icons/system/escape/social",
 		type = "large_button",
 		trigger_function = function ()
 			local context = {
@@ -159,7 +200,17 @@ local default_list = {
 		end
 	},
 	{
+		type = "spacing_vertical"
+	},
+	{
+		type = "spacing_vertical"
+	},
+	{
+		type = "spacing_vertical"
+	},
+	{
 		text = "loc_options_view_display_name",
+		icon = "content/ui/materials/icons/system/escape/settings",
 		type = "button",
 		trigger_function = function ()
 			local context = {
@@ -171,14 +222,9 @@ local default_list = {
 		end
 	},
 	{
-		type = "spacing_group_divder"
-	},
-	{
-		type = "spacing_group_divder"
-	},
-	{
 		text = "loc_exit_to_main_menu_display_name",
 		type = "button",
+		icon = "content/ui/materials/icons/system/escape/change_character",
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode
 
@@ -187,10 +233,13 @@ local default_list = {
 			end
 
 			local game_mode_name = game_mode_manager:game_mode_name()
-			local is_in_hub = game_mode_name == "hub"
+			local is_onboarding = game_mode_name == "prologue" or game_mode_name == "prologue_hub"
+			local is_hub = game_mode_name == "hub"
+			local is_training_grounds = game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
+			local can_exit = is_onboarding or is_hub or is_training_grounds
 			local is_in_matchmaking = Managers.data_service.social:is_in_matchmaking()
 
-			return is_in_hub, is_in_matchmaking
+			return can_exit, is_in_matchmaking
 		end,
 		trigger_function = function ()
 			local context = {
@@ -219,6 +268,7 @@ local default_list = {
 	{
 		text = "loc_leave_mission_display_name",
 		type = "button",
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		validation_function = validation_is_in_mission,
 		trigger_function = function ()
 			local context = {
@@ -245,8 +295,58 @@ local default_list = {
 		end
 	},
 	{
+		text = "loc_tg_exit_training_grounds",
+		type = "button",
+		icon = "content/ui/materials/icons/system/escape/leave_training",
+		validation_function = function ()
+			local game_mode_manager = Managers.state.game_mode
+
+			if not game_mode_manager then
+				return false
+			end
+
+			local narrative_manager = Managers.narrative
+
+			if not narrative_manager then
+				return false
+			end
+
+			if not narrative_manager:is_chapter_complete("onboarding", "play_training") then
+				return false
+			end
+
+			local game_mode_name = game_mode_manager:game_mode_name()
+
+			return game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
+		end,
+		trigger_function = function ()
+			local context = {
+				title_text = "loc_tg_exit_training_grounds",
+				description_text = "loc_popup_description_leave_mission",
+				options = {
+					{
+						text = "loc_training_grounds_choice_quit",
+						close_on_pressed = true,
+						callback = callback(function ()
+							Managers.state.game_mode:complete_game_mode()
+						end)
+					},
+					{
+						text = "loc_popup_button_leave_continue_mission",
+						template_type = "terminal_button_small",
+						close_on_pressed = true,
+						hotkey = "back"
+					}
+				}
+			}
+
+			Managers.event:trigger("event_show_ui_popup", context)
+		end
+	},
+	{
 		text = "loc_leave_party_display_name",
 		type = "button",
+		icon = "content/ui/materials/icons/system/escape/leave_party",
 		validation_function = function ()
 			if validation_is_in_mission() then
 				return false
@@ -283,6 +383,7 @@ local default_list = {
 	{
 		text = "loc_quit_game_display_name",
 		type = "button",
+		icon = "content/ui/materials/icons/system/escape/quit",
 		validation_function = function ()
 			return PLATFORM == "win32"
 		end,
@@ -311,74 +412,6 @@ local default_list = {
 		end
 	}
 }
-
-if false then
-	local debug_list = {
-		{
-			text = "DEBUG",
-			type = "button",
-			trigger_function = function ()
-				local view_name = "debug_view"
-
-				Managers.ui:open_view(view_name)
-			end
-		},
-		{
-			text = "LOADING VIEW",
-			type = "button",
-			trigger_function = function ()
-				local context = {
-					can_exit = true
-				}
-				local view_name = "loading_view"
-
-				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-			end
-		},
-		{
-			text = "TEST BUTTON",
-			type = "button",
-			trigger_function = function ()
-				Log.info("[SystemView]", "Test Button 4")
-			end
-		},
-		{
-			text = "CINEMATIC VIEW",
-			type = "button",
-			trigger_function = function ()
-				local context = {
-					video_name = "content/videos/fatshark_splash",
-					sound_name = "wwise/events/ui/play_ui_eor_character_lvl_up",
-					can_exit = true,
-					debug_preview = true
-				}
-				local view_name = "splash_video_view"
-
-				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-			end
-		},
-		{
-			text = "SPLASH",
-			type = "button",
-			trigger_function = function ()
-				local view_name = "splash_view"
-
-				Managers.ui:open_view(view_name)
-			end
-		},
-		{
-			text = "TITLE",
-			type = "button",
-			trigger_function = function ()
-				local view_name = "title_view"
-
-				Managers.ui:open_view(view_name)
-			end
-		}
-	}
-	default_list = table.append(debug_list, default_list)
-end
-
 local content_list = {
 	StateMainMenu = main_menu_list,
 	default = default_list

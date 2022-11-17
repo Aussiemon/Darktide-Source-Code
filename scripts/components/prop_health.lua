@@ -12,10 +12,10 @@ PropHealth.init = function (self, unit, is_server)
 		local invulnerable = self:get_data(unit, "invulnerable")
 		local unkillable = self:get_data(unit, "unkillable")
 		local breed_white_list = self:get_data(unit, "breed_white_list")
-		local ignored_colliders = self:get_data(unit, "ignored_colliders")
+		local ignored_collider_actor_names = self:get_data(unit, "ignored_colliders")
 		local speed_on_hit = self:get_data(unit, "speed_on_hit")
 
-		health_extension:setup_from_component(max_health, invulnerable, unkillable, breed_white_list, ignored_colliders, speed_on_hit)
+		health_extension:setup_from_component(max_health, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
 	end
 end
 

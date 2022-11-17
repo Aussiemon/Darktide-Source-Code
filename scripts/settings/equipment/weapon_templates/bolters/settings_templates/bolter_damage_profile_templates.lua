@@ -35,10 +35,10 @@ damage_templates.default_bolter_killshot = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
 				[armor_types.armored] = damage_lerp_values.lerp_0_8,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
@@ -59,11 +59,11 @@ damage_templates.default_bolter_killshot = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
 				[armor_types.armored] = damage_lerp_values.lerp_0_9,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_9
 			},
@@ -81,17 +81,24 @@ damage_templates.default_bolter_killshot = {
 		}
 	},
 	power_distribution = {
-		attack = 300,
-		impact = 50
+		attack = {
+			300,
+			600
+		},
+		impact = {
+			10,
+			20
+		}
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_type = GibbingTypes.boltshell,
 	wounds_template = WoundsTemplates.bolter,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 12
 	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.5,
@@ -106,7 +113,7 @@ damage_templates.default_bolter_killshot = {
 damage_templates.bolter_stop_explosion = {
 	suppression_value = 0.5,
 	ragdoll_push_force = 200,
-	stagger_category = "ranged",
+	stagger_category = "flamer",
 	cleave_distribution = {
 		attack = 0.1,
 		impact = 0.1
@@ -166,12 +173,12 @@ damage_templates.bolter_stop_explosion = {
 		}
 	},
 	power_distribution = {
-		attack = 25,
-		impact = 15
+		attack = 50,
+		impact = 16
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_type = GibbingTypes.boltshell,
 	wounds_template = WoundsTemplates.bolter,
 	targets = {
 		default_target = {
@@ -181,12 +188,13 @@ damage_templates.bolter_stop_explosion = {
 				[armor_types.unarmored] = 0.75
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.bolter_kill_explosion = {
 	suppression_value = 0.5,
 	ragdoll_push_force = 200,
-	stagger_category = "ranged",
+	stagger_category = "flamer",
 	cleave_distribution = {
 		attack = 0.1,
 		impact = 0.1
@@ -246,12 +254,12 @@ damage_templates.bolter_kill_explosion = {
 		}
 	},
 	power_distribution = {
-		attack = 0,
-		impact = 25
+		attack = 50,
+		impact = 16
 	},
 	damage_type = damage_types.boltshell,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_type = GibbingTypes.boltshell,
 	wounds_template = WoundsTemplates.bolter,
 	on_kill_area_suppression = {
 		distance = 8,
@@ -265,14 +273,15 @@ damage_templates.bolter_kill_explosion = {
 				[armor_types.unarmored] = 0.75
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.weapon_special_push = {
 	is_push = true,
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 30,
-		impact = 8
+		impact = 15
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -298,6 +307,8 @@ damage_templates.weapon_special_push = {
 			[armor_types.prop_armor] = 1
 		}
 	},
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	targets = {
 		default_target = {}
 	}
@@ -307,7 +318,7 @@ damage_templates.weapon_special_push_outer = {
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 10,
-		impact = 5
+		impact = 10
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -333,6 +344,8 @@ damage_templates.weapon_special_push_outer = {
 			[armor_types.prop_armor] = 1
 		}
 	},
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.default,
 	targets = {
 		default_target = {}
 	}

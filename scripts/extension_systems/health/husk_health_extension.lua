@@ -31,26 +31,10 @@ HuskHealthExtension.is_invulnerable = function (self)
 	return false
 end
 
-HuskHealthExtension.current_damaged_health = function (self)
-	local health, damage = _health_and_damage(self.game_session, self.game_object_id)
-
-	return math.max(0, health - damage)
-end
-
 HuskHealthExtension.current_health = function (self)
 	local health, damage = _health_and_damage(self.game_session, self.game_object_id)
 
 	return math.max(0, health - damage)
-end
-
-HuskHealthExtension.current_damaged_health_percent = function (self)
-	local health, damage, _ = _health_and_damage(self.game_session, self.game_object_id)
-
-	if health <= 0 then
-		return 0
-	end
-
-	return math.max(0, 1 - damage / health)
 end
 
 HuskHealthExtension.current_health_percent = function (self)
@@ -74,6 +58,10 @@ end
 HuskHealthExtension.permanent_damage_taken_percent = function (self)
 	local health, damage = _health_and_damage(self.game_session, self.game_object_id)
 
+	if health <= 0 then
+		return 0
+	end
+
 	return damage / health
 end
 
@@ -81,12 +69,6 @@ HuskHealthExtension.total_damage_taken = function (self)
 	local health, damage = _health_and_damage(self.game_session, self.game_object_id)
 
 	return math.min(health, damage)
-end
-
-HuskHealthExtension.damaged_max_health = function (self)
-	local health, _ = _health_and_damage(self.game_session, self.game_object_id)
-
-	return math.max(0, health)
 end
 
 HuskHealthExtension.max_health = function (self)

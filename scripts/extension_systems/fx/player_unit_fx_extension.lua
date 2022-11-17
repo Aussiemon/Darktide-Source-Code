@@ -38,6 +38,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	self._is_local_unit = is_local_unit
 	self._unit = unit
 	self._breed = extension_init_data.breed
+	self._player_particle_group_id = extension_init_data.player_particle_group_id
 	self._dialogue_extension = nil
 
 	if self._player.peer_id then
@@ -197,14 +198,19 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 	local base_unit_fx_sources = self._breed.base_unit_fx_sources or {}
 	local first_person_unit = first_person_extension:first_person_unit()
 	local should_add_3p_node = true
+	local parent_unit = is_in_first_person_mode and first_person_unit or unit
 
 	for spawner_name, node_name in pairs(base_unit_fx_sources) do
-		self:register_vfx_spawner(spawner_name, first_person_unit, nil, node_name, should_add_3p_node)
+		self:register_vfx_spawner(spawner_name, parent_unit, nil, node_name, should_add_3p_node)
 	end
 
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 
 	self:_update_first_person_mode_all_sources(is_in_first_person_mode)
+end
+
+PlayerUnitFxExtension._create_particles_wrapper = function (self, world, particle_name, position, rotation, scale)
+	return World.create_particles(world, particle_name, position, rotation, scale, self._player_particle_group_id)
 end
 
 PlayerUnitFxExtension.hot_join_sync = function (self, unit, peer, channel_id)
@@ -291,6 +297,12 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 			moving_sfx[i] = nil
 		end
 	end
+
+	World.destroy_particle_group(self._world, self._player_particle_group_id)
+end
+
+PlayerUnitFxExtension.destroy_particle_group = function (self)
+	World.destroy_particle_group(self._world, self._player_particle_group_id)
 end
 
 PlayerUnitFxExtension.update = function (self, unit, dt, t)
@@ -302,6 +314,14 @@ PlayerUnitFxExtension.update = function (self, unit, dt, t)
 
 		self:_update_first_person_mode_all_sources(is_in_first_person_mode)
 		self:_update_first_person_mode_looping_particles(is_in_first_person_mode)
+
+		local base_unit_fx_sources = self._breed.base_unit_fx_sources or {}
+		local first_person_unit = first_person_extension:first_person_unit()
+		local parent_unit = is_in_first_person_mode and first_person_unit or unit
+
+		for spawner_name, node_name in pairs(base_unit_fx_sources) do
+			self:move_vfx_spawner(spawner_name, parent_unit, nil, node_name)
+		end
 	end
 
 	self:_update_moving_sfx(dt, t)
@@ -335,7 +355,7 @@ PlayerUnitFxExtension._update_first_person_mode_looping_particles = function (se
 			if particle_config.screen_space then
 				if first_person_mode then
 					local particle_name = data.particle_name
-					data.id = World.create_particles(world, particle_name, Vector3(0, 0, 1))
+					data.id = self:_create_particles_wrapper(world, particle_name, Vector3(0, 0, 1))
 				else
 					local id = data.id
 
@@ -697,6 +717,10 @@ local function _register_sound_source_from_attachments(wwise_source_node_cache, 
 			return source
 		end
 	end
+
+	local fallback_source = _register_sound_source(wwise_source_node_cache, parent_unit, "root", wwise_world, source_name)
+
+	return fallback_source
 end
 
 PlayerUnitFxExtension.register_sound_source = function (self, source_name, parent_unit, attachments, node_name)
@@ -1031,13 +1055,13 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	local line = end_position - spawner_position
 	local line_length = Vector3.length(line)
 	local line_direction = Vector3.normalize(line)
+	local line_rotation = Quaternion.look(line_direction)
 	local effect_to_use = is_critical_strike and critical_effect_name or effect_name
 
 	if effect_to_use then
-		local line_rotation = Quaternion.look(line_direction)
 		local line_pose = Matrix4x4.from_quaternion_position(line_rotation, spawner_position)
 		local delta_pose = Matrix4x4.multiply(line_pose, Matrix4x4.inverse(spawner_pose))
-		local position_offset = Matrix4x4.translation(delta_pose)
+		local position_offset = link and Matrix4x4.translation(delta_pose)
 		local rotation_offset = Matrix4x4.rotation(delta_pose)
 		local particle_id = self:_spawn_unit_particles(effect_to_use, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale)
 		local variable_index = World.find_particles_variable(self._world, effect_to_use, "hit_distance")
@@ -1091,11 +1115,10 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			if line_length < new_emitter_distance + 1 or MAX_EMITTERS <= num_emitters then
 				spawn_emitters = false
 			else
-				local line_rotation = Quaternion.look(line_direction)
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
 				local chosen_effect_name = num_emitters == 0 and start_emitter_effect_name or emitter_effect_name
 
-				World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
+				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation)
 
 				emitter_distance = new_emitter_distance
 				num_emitters = num_emitters + 1
@@ -1123,7 +1146,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
 				local chosen_effect_name = num_critical_emitters == 0 and start_emitter_effect_name or emitter_effect_name
 
-				World.create_particles(self._world, chosen_effect_name, spawn_pos, line_rotation)
+				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation)
 
 				emitter_distance = new_emitter_distance
 				num_critical_emitters = num_critical_emitters + 1
@@ -1495,7 +1518,7 @@ PlayerUnitFxExtension.spawn_exclusive_particle = function (self, particle_name, 
 	local is_camera_follow_target = self._first_person_extension:is_camera_follow_target()
 
 	if is_camera_follow_target then
-		World.create_particles(self._world, particle_name, position, rotation, scale)
+		self:_create_particles_wrapper(self._world, particle_name, position, rotation, scale)
 	end
 
 	local is_server = self._is_server
@@ -1682,6 +1705,13 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments, 
 
 		return spawner
 	end
+
+	local fallback_spawner = {
+		node = 1,
+		unit = parent_unit
+	}
+
+	return fallback_spawner
 end
 
 PlayerUnitFxExtension.register_vfx_spawner = function (self, spawner_name, parent_unit, attachments, node_name, should_add_3p_node)
@@ -1825,7 +1855,7 @@ PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particl
 
 	if screen_space then
 		if self._is_in_first_person_mode then
-			particle_id = World.create_particles(self._world, particle_name, Vector3(0, 0, 1))
+			particle_id = self:_create_particles_wrapper(self._, particle_name, Vector3(0, 0, 1))
 		end
 	else
 		local orphaned_policy = "unlink"
@@ -1905,7 +1935,7 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if not is_resim then
-		local particle_id = World.create_particles(self._world, particle_name, position, rotation, scale)
+		local particle_id = self:_create_particles_wrapper(world, particle_name, position, rotation, scale)
 
 		if self._is_server then
 			if optional_variable_name then
@@ -1940,7 +1970,7 @@ PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spaw
 	end
 end
 
-PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, test)
 	local world = self._world
 	local pose = Matrix4x4.identity()
 
@@ -1972,13 +2002,17 @@ PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spa
 	local particle_id = nil
 
 	if link then
-		particle_id = World.create_particles(world, particle_name, Vector3.zero())
+		particle_id = self:_create_particles_wrapper(world, particle_name, Vector3.zero())
 
 		World.link_particles(world, particle_id, node_unit, node, pose, orphaned_policy)
 	else
 		local spawner_pose = Unit.world_pose(node_unit, node)
-		local spawn_pose = Matrix4x4.multiply(spawner_pose, pose)
-		particle_id = World.create_particles(world, particle_name, Matrix4x4.translation(spawn_pose), Matrix4x4.rotation(spawn_pose), Matrix4x4.scale(spawn_pose))
+		local spawn_pose = Matrix4x4.multiply(pose, spawner_pose)
+		particle_id = self:_create_particles_wrapper(world, particle_name, Matrix4x4.translation(spawn_pose), Matrix4x4.rotation(spawn_pose), Matrix4x4.scale(spawn_pose))
+	end
+
+	if is_first_person then
+		World.set_particles_use_custom_fov(world, particle_id, true)
 	end
 
 	return particle_id
@@ -2093,7 +2127,7 @@ PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, g
 	local id = nil
 
 	if spawner_name == "n/a" then
-		id = World.create_particles(self._world, particle_name, position_offset, rotation_offset, scale)
+		id = self:_create_particles_wrapper(self._world, particle_name, position_offset, rotation_offset, scale)
 	else
 		id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale)
 	end
@@ -2124,7 +2158,7 @@ PlayerUnitFxExtension.rpc_spawn_player_particles_with_variable = function (self,
 	local particle_id = nil
 
 	if spawner_name == "n/a" then
-		particle_id = World.create_particles(self._world, particle_name, position_offset, rotation_offset, scale)
+		particle_id = self:_create_particles_wrapper(world, particle_name, position_offset, rotation_offset, scale)
 	else
 		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale)
 	end
@@ -2144,7 +2178,7 @@ PlayerUnitFxExtension.rpc_spawn_looping_player_particles = function (self, chann
 
 	if particle_config.screen_space then
 		if self._is_in_first_person_mode then
-			particle_id = World.create_particles(self._world, particle_name, Vector3(0, 0, 1))
+			particle_id = self:_create_particles_wrapper(self._world, particle_name, Vector3(0, 0, 1))
 		end
 	else
 		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, "unlink")

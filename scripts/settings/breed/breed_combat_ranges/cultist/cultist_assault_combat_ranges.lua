@@ -1,5 +1,7 @@
 local combat_ranges = {
 	name = "cultist_assault",
+	calculate_target_velocity_dot = true,
+	target_velocity_dot_reset = 2,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -30,17 +32,18 @@ local combat_ranges = {
 		close = {
 			{
 				switch_combat_range = "melee",
-				locked_in_melee_distance = 10,
+				locked_in_melee_distance = 6,
 				distance = 4.5,
 				switch_weapon_slot = "slot_melee_weapon",
 				distance_operator = "lesser",
 				max_z_distance = 1.5,
 				sticky_time = 2,
+				target_velocity_dot_duration_inverted = 2,
 				activate_slot_system = true,
 				require_line_of_sight = true,
 				target_weapon_type_distance = {
 					ranged = 2,
-					melee = 6
+					melee = 5
 				}
 			},
 			{
@@ -62,17 +65,17 @@ local combat_ranges = {
 				switch_combat_range = "far"
 			},
 			{
+				locked_in_melee_distance = 8,
 				switch_weapon_slot = "slot_ranged_weapon",
-				sticky_time = 2,
 				distance = 7,
+				target_velocity_dot_duration = 2,
 				distance_operator = "greater",
 				switch_combat_range = "close",
-				locked_in_melee_distance = 12,
-				switch_anim_state = "to_assaulter",
+				sticky_time = 2,
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					ranged = 3,
-					melee = 9
+					melee = 7
 				}
 			}
 		}

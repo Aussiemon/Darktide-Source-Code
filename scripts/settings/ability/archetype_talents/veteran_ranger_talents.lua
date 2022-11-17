@@ -14,7 +14,8 @@ local archetype_talents = {
 			large_icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_combat",
 			format_values = {
 				duration = talent_settings.combat_ability.duration,
-				damage = talent_settings.combat_ability.ranged_damage * 100
+				damage = talent_settings.combat_ability.ranged_damage * 100,
+				weakspot_damage = talent_settings.combat_ability.ranged_weakspot_damage
 			},
 			player_ability = {
 				ability_type = "combat_ability",
@@ -26,7 +27,7 @@ local archetype_talents = {
 			name = "G-Ability - Frag Grenade",
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 			display_name = "loc_ability_frag_grenade",
-			icon = "content/ui/textures/icons/talents/menu/talent_default",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tactical",
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.veteran_ranger_frag_grenade
@@ -63,7 +64,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_elite_kills_grant_ammo_coop_desc",
 			name = "Aura - Elite kills by you or your allies in coherency replenishes ammo to you and said allies",
 			display_name = "loc_talent_ranger_elite_kills_grant_ammo_coop",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_base_3",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_aura",
 			format_values = {},
 			coherency = {
 				buff_template_name = "veteran_ranger_elites_replenish_ammo",
@@ -88,7 +89,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_toughness_on_weakspot_kill_desc",
 			name = "Medium Toughness on ranged weakspot kill",
 			display_name = "loc_talent_ranger_toughness_on_weakspot_kill",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_1",
 			format_values = {
 				toughness = talent_settings.toughness_2.toughness * 100
 			},
@@ -101,7 +102,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_toughness_regen_when_not_in_range_desc",
 			name = "Low toughness regeneration when not in melee with an enemy",
 			display_name = "loc_talent_ranger_toughness_regen_when_not_in_range",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_3",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_3",
 			format_values = {
 				toughness = talent_settings.toughness_3.toughness * 1000,
 				range = talent_settings.toughness_3.range
@@ -191,7 +192,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_reduced_toughness_during_volley_fire_desc",
 			name = "Toughness damage taken reduction during Volley Fire",
 			display_name = "loc_talent_ranger_reduced_toughness_during_volley_fire",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_1",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_1_b",
 			format_values = {
 				toughness_reduction = (1 - talent_settings.defensive_1.toughness_damage_taken_multiplier) * 100
 			},
@@ -228,7 +229,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_grenades_apply_bleed_desc",
 			name = "Frag grenades apply 1 stacks of bleed to all enemies hit.",
 			display_name = "loc_talent_ranger_grenades_apply_bleed",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_5_1",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_5_1_b",
 			format_values = {
 				stacks = talent_settings.offensive_2_1.stacks
 			},
@@ -241,7 +242,7 @@ local archetype_talents = {
 			description = "loc_talent_ranger_ads_drains_stamina_boost_desc",
 			name = "ADS Drains stamina. If you ADS while not having 0 stamina, you gain crit and sway reduction",
 			display_name = "loc_talent_ranger_ads_drains_stamina_boost",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_5_2",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_5_1",
 			format_values = {
 				crit_chance = talent_settings.offensive_2_2.critical_strike_chance * 100,
 				sway_reduction = (1 - talent_settings.offensive_2_2.sway_modifier) * 100,
@@ -266,41 +267,70 @@ local archetype_talents = {
 			}
 		},
 		veteran_2_tier_6_name_1 = {
-			description = "loc_talent_ranger_volley_fire_armor_penetration_desc",
-			name = "Gain armour penetration during Volley Fire",
-			display_name = "loc_talent_ranger_volley_fire_armor_penetration",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_1",
+			description = "loc_talent_ranger_volley_fire_improved_desc",
+			name = "Activating Volley Fire reloads your weapon and replenishes X% toughness. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			display_name = "loc_talent_ranger_volley_fire_improved",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_2",
 			format_values = {
-				armor_penetration = talent_settings.combat_ability_1.rending * 100
+				toughness = talent_settings.combat_ability.toughness * 100
 			},
-			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_ranger_ranged_stance_rending
+			special_rule = {
+				identifier = {
+					"veteran_ranger_combat_ability_refresh",
+					"veteran_ranger_combat_ability_reloads_weapon",
+					"veteran_ranger_combat_ability_replenishes_toughness"
+				},
+				special_rule_name = {
+					special_rules.veteran_ranger_combat_ability_kills_refresh,
+					special_rules.veteran_ranger_combat_ability_reloads_weapon,
+					special_rules.veteran_ranger_combat_ability_replenishes_toughness
+				}
 			}
 		},
 		veteran_2_tier_6_name_2 = {
-			description = "loc_talent_ranger_refresh_volley_fire_on_kill_desc",
-			name = "Killing a marked target refreshses the duration of combat ability",
-			display_name = "loc_talent_ranger_refresh_volley_fire_on_kill",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_3",
-			special_rule = {
-				identifier = "veteran_ranger_combat_ability",
-				special_rule_name = special_rules.veteran_ranger_combat_ability_kills_refresh
-			}
-		},
-		veteran_2_tier_6_name_3 = {
-			description = "loc_talent_ranger_volley_fire_weapon_handling_desc",
-			name = "Increased weapon handling during Volley Fire (Sway, Recoil, Spread)",
-			display_name = "loc_talent_ranger_volley_fire_weapon_handling",
-			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_2",
+			description = "loc_talent_ranger_volley_fire_headhunter_desc",
+			name = "Now outlines all ranged enemies. Gain X% weakspot damage during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			display_name = "loc_talent_ranger_volley_fire_headhunter",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_1",
 			format_values = {
-				reduced_recoil = math.abs(talent_settings.combat_ability_3.recoil_modifier) * 100,
-				reduced_sway = (1 - talent_settings.combat_ability_3.sway_modifier) * 100,
-				reduced_spread = math.abs(talent_settings.combat_ability_3.spread_modifier) * 100
+				weakspot_damage = talent_settings.combat_ability_2.weakspot_damage * 100
 			},
 			player_ability = {
 				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_ranger_ranged_stance_weapon_handling_improved
+				ability = PlayerAbilities.veteran_ranger_ranged_stance_headhunter
+			},
+			special_rule = {
+				identifier = {
+					"veteran_ranger_combat_ability_refresh",
+					"veteran_ranger_combat_ability_headhunter"
+				},
+				special_rule_name = {
+					special_rules.veteran_ranger_combat_ability_kills_refresh,
+					special_rules.veteran_ranger_combat_ability_headhunter
+				}
+			}
+		},
+		veteran_2_tier_6_name_3 = {
+			description = "loc_talent_ranger_volley_fire_big_game_hunter_desc",
+			name = "Now also outlines Ogryns and Monsters. Damage vs Marked Targets increased by X% during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			display_name = "loc_talent_ranger_volley_fire_big_game_hunter",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_3_b",
+			format_values = {
+				damage = talent_settings.combat_ability_3.damage_vs_ogryn_and_monsters * 100
+			},
+			player_ability = {
+				ability_type = "combat_ability",
+				ability = PlayerAbilities.veteran_ranger_ranged_stance_big_game_hunter
+			},
+			special_rule = {
+				identifier = {
+					"veteran_ranger_combat_ability_refresh",
+					"veteran_ranger_combat_ability_big_game_hunter"
+				},
+				special_rule_name = {
+					special_rules.veteran_ranger_combat_ability_kills_refresh,
+					special_rules.veteran_ranger_combat_ability_big_game_hunter
+				}
 			}
 		}
 	}

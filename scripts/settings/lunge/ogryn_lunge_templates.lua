@@ -17,6 +17,7 @@ local ogryn_lunge_templates = {
 		combat_ability = true,
 		disable_minion_collision = true,
 		block_input_cancel = true,
+		block_input_cancel_time_threshold = 0.5,
 		disallow_weapons = true,
 		hit_dot_check = 0.7,
 		sensitivity_modifier = 5,
@@ -76,7 +77,7 @@ local ogryn_lunge_templates = {
 			armor_types.void_shield,
 			armor_types.resistant
 		},
-		mood = MoodSettings.mood_types.zealot_maniac_combat_ability
+		mood = MoodSettings.mood_types.ogryn_bonebreaker_combat_ability
 	}
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)

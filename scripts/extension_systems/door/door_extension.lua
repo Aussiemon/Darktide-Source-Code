@@ -380,6 +380,10 @@ DoorExtension._minion_proximity_check = function (self)
 		local is_minion = Breed.is_minion(breed)
 
 		if is_minion then
+			if breed.is_boss then
+				return true
+			end
+
 			local unit_position = POSITION_LOOKUP[unit]
 			local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 			local current_velocity = locomotion_extension:current_velocity()
@@ -406,7 +410,7 @@ DoorExtension._minion_proximity_check = function (self)
 	return false
 end
 
-DoorExtension.open = function (self, state, interactor_unit)
+DoorExtension.open = function (self, state, interactor_unit, optional_closing_time)
 	if self._type == TYPES.two_states then
 		if state ~= nil and state ~= "open" then
 			state = STATES.open
@@ -423,7 +427,7 @@ DoorExtension.open = function (self, state, interactor_unit)
 
 	self:_set_server_state(new_state)
 
-	self._self_closing_timer = self._self_closing_time
+	self._self_closing_timer = optional_closing_time or self._self_closing_time
 end
 
 DoorExtension._get_open_state_from_interactor = function (self, interactor_unit)

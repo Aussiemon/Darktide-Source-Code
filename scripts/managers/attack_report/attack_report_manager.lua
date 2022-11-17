@@ -7,6 +7,15 @@ local attack_types = AttackSettings.attack_types
 local mood_types = MoodSettings.mood_types
 local AttackReportManager = class("AttackReportManager")
 local _trigger_hit_report, _trigger_damage_indicator, _play_camera_effect_shake_event = nil
+local PI = math.pi
+local DAMAGE_INDICATOR_ATTACK_RESULTS = {
+	[attack_results.damaged] = true,
+	[attack_results.toughness_absorbed] = true,
+	[attack_results.toughness_absorbed_melee] = true,
+	[attack_results.toughness_broken] = true,
+	[attack_results.friendly_fire] = true,
+	[attack_results.blocked] = true
+}
 local RING_BUFFER_SIZE = 256
 local MAX_UPDATES_PER_FRAME = 4
 local CLIENT_RPCS = {
@@ -167,15 +176,11 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 			_play_camera_effect_shake_event(attacking_unit, damage_profile)
 		end
 
-		local has_ui_kill_feed = true
+		local tags = breed_or_nil and breed_or_nil.tags
+		local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
 
-		if has_ui_kill_feed then
-			local tags = breed_or_nil and breed_or_nil.tags
-			local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
-
-			if allowed_breed and attack_result == attack_results.died then
-				Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
-			end
+		if allowed_breed and attack_result == attack_results.died then
+			Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
 		end
 	end
 
@@ -225,46 +230,54 @@ function _trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weak
 end
 
 function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_direction, attack_result, damage_profile)
+	if not DAMAGE_INDICATOR_ATTACK_RESULTS[attack_result] then
+		return
+	end
+
 	local target_unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
 	local breed_or_nil = target_unit_data_extension and target_unit_data_extension:breed()
 	local target_is_player = Breed.is_player(breed_or_nil)
 
-	if target_is_player and (attack_result == attack_results.damaged or attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee or attack_result == attack_results.toughness_broken or attack_result == attack_results.friendly_fire or attack_result == attack_results.blocked) then
-		local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
-		local first_person_component = unit_data_extension:read_component("first_person")
-		local rotation = first_person_component.rotation
-		local forward = Quaternion.forward(rotation)
-		forward.z = 0
-		local forward_dot_dir = Vector3.dot(forward, attack_direction)
-		local right_dot_dir = Vector3.dot(Quaternion.right(rotation), attack_direction)
-		local angle = math.atan2(right_dot_dir, forward_dot_dir)
-		angle = angle + math.pi
+	if not target_is_player then
+		return
+	end
 
-		if attacking_unit and attacked_unit ~= attacking_unit then
-			Managers.event:trigger("spawn_hud_damage_indicator", angle, attack_result)
-		end
+	local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
+	local first_person_component = unit_data_extension:read_component("first_person")
+	local rotation = first_person_component.rotation
+	local forward = Quaternion.forward(rotation)
+	forward.z = 0
+	local forward_dot_dir = Vector3.dot(forward, attack_direction)
+	local right_dot_dir = Vector3.dot(Quaternion.right(rotation), attack_direction)
+	local angle = math.atan2(right_dot_dir, forward_dot_dir)
+	angle = angle + PI
 
-		local have_permanent_damage = damage_profile.permanent_damage_ratio and damage_profile.permanent_damage_ratio > 0
-		local have_normal_damage = not damage_profile.permanent_damage_ratio or damage_profile.permanent_damage_ratio < 1
-		local mood_extension = ScriptUnit.has_extension(attacked_unit, "mood_system")
+	if attacking_unit and attacked_unit ~= attacking_unit then
+		Managers.event:trigger("spawn_hud_damage_indicator", angle, attack_result)
+	end
+
+	local mood_extension = ScriptUnit.has_extension(attacked_unit, "mood_system")
+
+	if mood_extension then
+		local permanent_damage_ratio = damage_profile.permanent_damage_ratio
+		local have_permanent_damage = permanent_damage_ratio and permanent_damage_ratio > 0
+		local have_normal_damage = not permanent_damage_ratio or permanent_damage_ratio < 1
 		local t = Managers.time:time("gameplay")
 		local skip_rpc = true
 
-		if mood_extension then
-			if attack_result == attack_results.damaged then
-				if have_normal_damage then
-					mood_extension:add_timed_mood(t, mood_types.damage_taken, skip_rpc)
-				end
-
-				if have_permanent_damage then
-					mood_extension:add_timed_mood(t, mood_types.coruption_taken, skip_rpc)
-				end
-			elseif attack_result == attack_results.toughness_broken then
-				mood_extension:add_timed_mood(t, "toughness_broken", skip_rpc)
-				mood_extension:add_timed_mood(t, "toughness_absorbed", skip_rpc)
-			elseif attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee then
-				mood_extension:add_timed_mood(t, "toughness_absorbed", skip_rpc)
+		if attack_result == attack_results.damaged then
+			if have_normal_damage then
+				mood_extension:add_timed_mood(t, mood_types.damage_taken, skip_rpc)
 			end
+
+			if have_permanent_damage then
+				mood_extension:add_timed_mood(t, mood_types.coruption_taken, skip_rpc)
+			end
+		elseif attack_result == attack_results.toughness_broken then
+			mood_extension:add_timed_mood(t, mood_types.toughness_broken, skip_rpc)
+			mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
+		elseif attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee then
+			mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
 		end
 	end
 end

@@ -6,8 +6,9 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerSpecializationUtils = require("scripts/utilities/player_specialization/player_specialization")
 local Promise = require("scripts/foundation/utilities/promise")
-local ScriptedScenarios = require("scripts/extension_systems/training_grounds/scripted_scenarios")
+local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
 local level_trigger_event = Level.trigger_event
 local ui_manager = nil
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
@@ -49,7 +50,7 @@ local categories = {
 	"Stagger",
 	"Sweep Spline",
 	"Time",
-	"Training Grounds",
+	"Scripted Scenarios",
 	"UI",
 	"Unit",
 	"VO",
@@ -664,6 +665,25 @@ functions.teleport_to_coordinates = {
 	vector3_input = true,
 	on_activated = DebugSingleton.teleport_to_coordinates
 }
+functions.teleport_all_luggables_to_me = {
+	name = "Teleport all event luggables to me",
+	button_text = "Gimme!",
+	category = "Level & Mission",
+	on_activated = function (new_value, old_value)
+		if not Managers.state.game_session:is_server() then
+			return
+		end
+
+		local event_synchronizer_system = Managers.state.extension:system("event_synchronizer_system")
+
+		if event_synchronizer_system then
+			local local_player = Managers.player:local_player(1)
+			local local_player_unit = local_player.player_unit
+
+			event_synchronizer_system:debug_teleport_luggables_to_unit(local_player_unit)
+		end
+	end
+}
 local mission_board_error_text = "Failed fetching missions"
 local mission_board_options = {}
 local mission_board_data = {}
@@ -814,7 +834,7 @@ local function _init_scripted_scenarios(scenario_templates)
 	end
 
 	local function start_scenario(new_value, old_value)
-		local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+		local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 		local t = Managers.time:time("gameplay")
 		local separator_idx = string.find(new_value, "%.")
 		local alias = string.sub(new_value, 1, separator_idx - 1)
@@ -823,36 +843,36 @@ local function _init_scripted_scenarios(scenario_templates)
 		scenario_system:start_scenario(alias, name, t)
 	end
 
-	functions.start_training_grounds_scenario = {
-		name = "Start training grounds scenario",
-		category = "Training Grounds",
+	functions.start_scripted_scenario = {
+		name = "Start scripted scenario",
+		category = "Scripted Scenarios",
 		options_function = options_function,
 		on_activated = start_scenario
 	}
 end
 
-local function stop_current_training_grounds_scenario()
-	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+local function stop_current_scripted_scenario()
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 	local t = FixedFrame.get_latest_fixed_time()
 
 	scenario_system:stop_scenario(t, nil, true)
 end
 
-functions.stop_training_grounds_scenario = {
-	name = "Stop current training grounds scenario",
-	category = "Training Grounds",
-	on_activated = stop_current_training_grounds_scenario
+functions.stop_scripted_scenario = {
+	name = "Stop current scripted scenario",
+	category = "Scripted Scenarios",
+	on_activated = stop_current_scripted_scenario
 }
 
 local function complete_current_step()
-	local scenario_system = Managers.state.extension:system("training_grounds_scenario_system")
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 	scenario_system:complete_current_step()
 end
 
-functions.complete_current_training_grounds_step = {
-	name = "Complete current training grounds step",
-	category = "Training Grounds",
+functions.complete_current_scripted_step = {
+	name = "Complete current scripted step",
+	category = "Scripted Scenarios",
 	on_activated = complete_current_step
 }
 
@@ -3290,16 +3310,40 @@ local function _next_level()
 	end):next(function (data)
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-14, warpins: 1 ---
+		--- BLOCK #0 1-16, warpins: 1 ---
 		local new_level = data.progressionInfo.currentLevel
 		local new_xp = data.progressionInfo.currentXp
+		local profile_archetype = profile.archetype
+		local specialization_name = profile.specialization
+		local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, new_level)
 
+		--- END OF BLOCK #0 ---
+
+		slot5 = if talent_group_id then
+		JUMP TO BLOCK #1
+		else
+		JUMP TO BLOCK #2
+		end
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #1 17-24, warpins: 1 ---
+		Managers.data_service.talents:mark_unlocked_group_as_new(character_id, talent_group_id)
+		--- END OF BLOCK #1 ---
+
+		FLOW; TARGET BLOCK #2
+
+
+
+		-- Decompilation error in this vicinity:
+		--- BLOCK #2 25-34, warpins: 2 ---
 		Log.info("DebugFunctions", "Player level bumped to: %s, Player xp bumped to %s", new_level, new_xp)
 
 		profile.current_level = new_level
 
 		return
-		--- END OF BLOCK #0 ---
+		--- END OF BLOCK #2 ---
 
 
 
@@ -3472,7 +3516,7 @@ end
 for story_name, chapters in pairs(Stories) do
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #0 424-446, warpins: 1 ---
+	--- BLOCK #0 432-454, warpins: 1 ---
 	local function _set_story(chapter_name)
 
 		-- Decompilation error in this vicinity:
@@ -3528,12 +3572,43 @@ for story_name, chapters in pairs(Stories) do
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #1 447-448, warpins: 2 ---
+	--- BLOCK #1 455-456, warpins: 2 ---
 	--- END OF BLOCK #1 ---
 
 
 
 end
+
+local function _get_story_names()
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-4, warpins: 1 ---
+	return table.keys(Stories)
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+local function _skip_story(story_name)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-7, warpins: 1 ---
+	Managers.narrative:skip_story(story_name)
+
+	return
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+functions.skip_story = {
+	name = "Skip narrative story",
+	category = "Progression",
+	on_activated = _skip_story,
+	options_function = _get_story_names
+}
 
 local function _list_narrative_event_names()
 
@@ -5228,11 +5303,11 @@ functions.force_character_state = {
 for key, config in pairs(functions) do
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #0 576-579, warpins: 1 ---
+	--- BLOCK #0 592-595, warpins: 1 ---
 	local category = config.category
 	--- END OF BLOCK #0 ---
 
-	slot132 = if category then
+	slot133 = if category then
 	JUMP TO BLOCK #1
 	else
 	JUMP TO BLOCK #2
@@ -5241,7 +5316,7 @@ for key, config in pairs(functions) do
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #1 580-580, warpins: 1 ---
+	--- BLOCK #1 596-596, warpins: 1 ---
 	--- END OF BLOCK #1 ---
 
 	FLOW; TARGET BLOCK #2
@@ -5249,7 +5324,7 @@ for key, config in pairs(functions) do
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #2 580-581, warpins: 3 ---
+	--- BLOCK #2 596-597, warpins: 3 ---
 	--- END OF BLOCK #2 ---
 
 

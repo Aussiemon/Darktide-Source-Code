@@ -301,7 +301,7 @@ local assault_flamer_armor_mod = {
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 0.75,
+			[armor_types.armored] = 1,
 			[armor_types.resistant] = 0.75,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 1.5,
@@ -333,6 +333,56 @@ local assault_flamer_armor_mod = {
 			[armor_types.disgustingly_resilient] = 0.75,
 			[armor_types.void_shield] = 0.5,
 			[armor_types.prop_armor] = 0.75
+		}
+	}
+}
+local assault_flamer_burst_armor_mod = {
+	near = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1.75,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1.5,
+			[armor_types.super_armor] = 0.25,
+			[armor_types.disgustingly_resilient] = 1.5,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1.5,
+			[armor_types.super_armor] = 0.2,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		}
+	},
+	far = {
+		attack = {
+			[armor_types.unarmored] = 0.75,
+			[armor_types.armored] = 0.75,
+			[armor_types.resistant] = 0.5,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0.7,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 0.75
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1.5,
+			[armor_types.super_armor] = 0.2,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
 		}
 	}
 }
@@ -456,13 +506,13 @@ damage_templates.default_flamer_assault_burst = {
 		max = 15,
 		min = 5
 	},
-	armor_damage_modifier_ranged = assault_flamer_armor_mod,
+	armor_damage_modifier_ranged = assault_flamer_burst_armor_mod,
 	damage_type = damage_types.burning,
 	gibbing_type = GibbingTypes.plasma,
 	power_distribution = {
 		attack = {
 			5,
-			25
+			15
 		},
 		impact = {
 			5,
@@ -471,7 +521,17 @@ damage_templates.default_flamer_assault_burst = {
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			power_distribution = {
+				attack = {
+					10,
+					20
+				},
+				impact = {
+					10,
+					15
+				}
+			}
 		}
 	}
 }

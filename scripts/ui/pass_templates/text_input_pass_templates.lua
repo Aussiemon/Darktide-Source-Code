@@ -213,7 +213,8 @@ local text_input_base = {
 				local clipboard_text = Clipboard.get()
 
 				if clipboard_text then
-					updated_input_text, caret_position = _insert_text(updated_input_text, caret_position, clipboard_text)
+					local max_length = content.max_length
+					updated_input_text, caret_position = _insert_text(updated_input_text, caret_position, clipboard_text, max_length)
 					last_input = clipboard_text
 				end
 			elseif input_service:get("select_all_text") then
@@ -231,7 +232,7 @@ local text_input_base = {
 						last_input = last_input and last_input .. keystroke or keystroke
 					elseif type(keystroke) == "number" then
 						if keystroke == Keyboard.BACKSPACE then
-							if #updated_input_text == 0 then
+							if #updated_input_text == 0 and content.close_on_backspace then
 								content.is_writing = false
 							elseif caret_position > 1 then
 								caret_position = _math_max(caret_position - 1, 1)
@@ -248,6 +249,10 @@ local text_input_base = {
 						end
 					end
 				end
+			end
+
+			if caret_position ~= content.caret_position then
+				content._blink_time = 0
 			end
 
 			content.input_text = updated_input_text
@@ -632,6 +637,148 @@ table.append(TextInputPassTemplates.simple_input_field, {
 	}
 })
 
+local _terminal_input_field_padding = 4
+local _terminal_input_text_style = table.clone(UIFontSettings.body)
+_terminal_input_text_style.text_color = Color.terminal_text_header_selected(255, true)
+_terminal_input_text_style.size_addition = {
+	-(_terminal_input_field_padding * 2),
+	-(_terminal_input_field_padding * 2)
+}
+_terminal_input_text_style.offset = {
+	_terminal_input_field_padding,
+	_terminal_input_field_padding,
+	1
+}
+_terminal_input_text_style.text_vertical_alignment = "center"
+local _terminal_input_placeholder_text_style = table.clone(_terminal_input_text_style)
+_terminal_input_placeholder_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local _terminal_input_limit_text_style = table.clone(_terminal_input_text_style)
+_terminal_input_limit_text_style.text_horizontal_alignment = "right"
+_terminal_input_limit_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+_terminal_input_limit_text_style.font_size = 18
+TextInputPassTemplates.terminal_input_field = table.clone(text_input_base)
+
+table.append(TextInputPassTemplates.terminal_input_field, {
+	{
+		style_id = "focused",
+		pass_type = "rect",
+		style = {
+			color = Color.ui_terminal(255, true),
+			size_addition = {
+				2,
+				2
+			},
+			offset = {
+				-1,
+				-1,
+				-1
+			}
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
+		end
+	},
+	{
+		style_id = "background",
+		pass_type = "rect",
+		style = {
+			color = Color.terminal_grid_background(80, true)
+		}
+	},
+	{
+		style_id = "baseline",
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "bottom",
+			color = Color.terminal_text_header(255, true),
+			size = {
+				nil,
+				2
+			}
+		}
+	},
+	{
+		value_id = "display_text",
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = _terminal_input_text_style
+	},
+	{
+		style_id = "input_caret",
+		pass_type = "rect",
+		style = {
+			color = Color.terminal_text_header(255, true),
+			offset = {
+				0,
+				_simple_input_field_padding,
+				2
+			},
+			size = {
+				2
+			},
+			size_addition = {
+				0,
+				-(_simple_input_field_padding * 2 + 4)
+			}
+		},
+		visibility_function = _input_active_visibility_function,
+		change_function = function (pass_content, style_data, animations, dt)
+			local blink_time = (pass_content._blink_time or 0) + dt
+
+			while blink_time > 1 do
+				blink_time = blink_time - 1
+			end
+
+			style_data.color[1] = blink_time < 0.5 and 255 or 0
+			pass_content._blink_time = blink_time
+		end
+	},
+	{
+		style_id = "selection",
+		pass_type = "rect",
+		style = {
+			offset = {
+				_simple_input_field_padding,
+				_simple_input_field_padding,
+				0
+			},
+			size_addition = {
+				0,
+				-(_simple_input_field_padding * 2 + 4)
+			},
+			color = Color.terminal_frame_hover(255, true)
+		},
+		visibility_function = _selection_visibility_function
+	},
+	{
+		value_id = "placeholder_text",
+		style_id = "active_placeholder",
+		pass_type = "text",
+		value = "",
+		style = _terminal_input_placeholder_text_style,
+		visibility_function = _placeholder_text_visibility_function
+	},
+	{
+		style_id = "limit_text",
+		pass_type = "text",
+		value = "",
+		value_id = "limit_text",
+		style = _terminal_input_limit_text_style,
+		change_function = function (content, style)
+			local new_input_text = content.input_text
+			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
+			local max_length = content.max_length or 0
+			content.limit_text = string.format("%d/%d", text_length, max_length)
+		end,
+		visibility_function = function (content, style)
+			return not not content.max_length
+		end
+	}
+})
+
 local input_text_style = table.clone(UIFontSettings.chat_input)
 input_text_style.offset = {
 	ChatSettings.window_margins[1],
@@ -701,15 +848,15 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		content_id = "input_caret",
 		style = input_caret_style,
 		change_function = function (pass_content, style_data, animations, dt)
-			local blink_time = (pass_content._blink_time or 0) + dt
+			local widget_content = pass_content.parent or pass_content
+			local blink_time = (widget_content._blink_time or 0) + dt
 
 			if blink_time > 1 then
-				blink_time = 0
+				blink_time = blink_time - 1
 			end
 
-			local alpha_multiplier = math.round(blink_time)
-			style_data.color[1] = alpha_multiplier * 255
-			pass_content._blink_time = blink_time
+			style_data.color[1] = blink_time < 0.5 and 255 or 0
+			widget_content._blink_time = blink_time
 		end
 	},
 	{

@@ -43,7 +43,10 @@ local function construct_audio_settings_dropdown(template)
 		default_value = template.default_value,
 		display_name = template.display_name,
 		options = template.options,
-		commit = template.commit
+		commit = template.commit,
+		indentation_level = template.indentation_level,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
 	}
 	local id = template.id
 	local save_location = template.save_location
@@ -80,6 +83,9 @@ local function construct_audio_settings_boolean(template)
 	local entry = {
 		default_value = template.default_value,
 		display_name = template.display_name,
+		indentation_level = template.indentation_level,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules,
 		commit = template.commit
 	}
 	local id = template.id
@@ -206,12 +212,12 @@ settings[#settings + 1] = music_volume_template
 local speaker_settings = {
 	display_name = "loc_setting_speaker_settings",
 	id = "speaker_settings",
-	default_value = 1,
+	default_value = 3,
 	save_location = "sound_settings",
 	options = {
 		{
 			id = 0,
-			display_name = "loc_setting_speaker_five_one",
+			display_name = "loc_setting_speaker_auto_detect",
 			values = {
 				audio_settings = {
 					speaker_settings = 0
@@ -220,7 +226,7 @@ local speaker_settings = {
 		},
 		{
 			id = 1,
-			display_name = "loc_setting_speaker_stereo",
+			display_name = "loc_setting_speaker_five_one",
 			values = {
 				audio_settings = {
 					speaker_settings = 1
@@ -229,7 +235,7 @@ local speaker_settings = {
 		},
 		{
 			id = 2,
-			display_name = "loc_setting_speaker_stereo_headphones",
+			display_name = "loc_setting_speaker_stereo",
 			values = {
 				audio_settings = {
 					speaker_settings = 2
@@ -238,10 +244,19 @@ local speaker_settings = {
 		},
 		{
 			id = 3,
-			display_name = "loc_setting_speaker_mono",
+			display_name = "loc_setting_speaker_stereo_headphones",
 			values = {
 				audio_settings = {
 					speaker_settings = 3
+				}
+			}
+		},
+		{
+			id = 4,
+			display_name = "loc_setting_speaker_mono",
+			values = {
+				audio_settings = {
+					speaker_settings = 4
 				}
 			}
 		}
@@ -253,14 +268,17 @@ local speaker_settings = {
 
 		if value == 0 then
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
-			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_5POINT1)
+			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_AUTO)
 		elseif value == 1 then
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
-			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_STEREO)
+			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_5POINT1)
 		elseif value == 2 then
-			Wwise.set_panning_rule(PANNING_RULE_HEADPHONES)
+			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_STEREO)
 		elseif value == 3 then
+			Wwise.set_panning_rule(PANNING_RULE_HEADPHONES)
+			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_STEREO)
+		elseif value == 4 then
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
 		end
@@ -345,14 +363,17 @@ local function dialogue_volume_value_get_function()
 end
 
 local dialogue_volume_slider_params = {
+	min_value = -5,
 	step_size_value = 1,
 	max_value = 5,
-	min_value = -5,
 	apply_on_drag = true,
 	display_name = dialogue_volume_display_name,
 	default_value = default_volume_default_value,
 	value_get_function = dialogue_volume_value_get_function,
-	on_value_changed_function = dialogue_volume_value_change_function
+	on_value_changed_function = dialogue_volume_value_change_function,
+	format_value_function = function (value)
+		return string.format("%d dB", value)
+	end
 }
 local dialogue_volume_template = OptionsUtilities.create_value_slider_template(dialogue_volume_slider_params)
 
@@ -481,11 +502,22 @@ local voice_chat_settings = {
 					voice_chat_preset = 1
 				}
 			}
+		},
+		{
+			id = 2,
+			display_name = "loc_setting_voice_chat_presets_mic_push_to_talk",
+			values = {
+				sound_settings = {
+					voice_chat_preset = 2
+				}
+			}
 		}
 	},
 	commit = function (value)
 		if Managers.chat then
-			Managers.chat:mute_local_mic(value == 0)
+			local mute = value == 0 or value == 2
+
+			Managers.chat:mute_local_mic(mute)
 		end
 	end
 }

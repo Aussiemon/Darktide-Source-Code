@@ -31,14 +31,19 @@ PortraitUI.update_all = function (self)
 	end
 end
 
-PortraitUI.profile_updated = function (self, profile)
+PortraitUI.profile_updated = function (self, profile, prioritized)
 	local character_id = profile.character_id
 	local data = self._profile_requests[character_id]
 
 	if data then
 		if data.spawned then
 			data.spawned = false
-			self._profile_requests_queue_order[#self._profile_requests_queue_order + 1] = character_id
+
+			if prioritized then
+				table.insert(self._profile_requests_queue_order, 1, character_id)
+			else
+				table.insert(self._profile_requests_queue_order, #self._profile_requests_queue_order + 1, character_id)
+			end
 		elseif data.spawning then
 			data.spawning = false
 			self._profile_spawner_lifetime_frame_count = nil
@@ -50,6 +55,18 @@ PortraitUI.profile_updated = function (self, profile)
 			end
 
 			table.insert(self._profile_requests_queue_order, 1, character_id)
+		else
+			for i = 1, #self._profile_requests_queue_order do
+				if self._profile_requests_queue_order[i] == character_id then
+					table.remove(self._profile_requests_queue_order, i)
+				end
+			end
+
+			if prioritized then
+				table.insert(self._profile_requests_queue_order, 1, character_id)
+			else
+				table.insert(self._profile_requests_queue_order, #self._profile_requests_queue_order + 1, character_id)
+			end
 		end
 
 		data.profile = profile
@@ -85,7 +102,7 @@ PortraitUI.has_request = function (self, id)
 	return data ~= nil
 end
 
-PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, optional_render_context)
+PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, optional_render_context, prioritized)
 	local character_id = profile.character_id
 	local id = self._id_counter_prefix .. "_" .. self._id_counter
 	self._id_counter = self._id_counter + 1
@@ -101,7 +118,12 @@ PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, op
 			character_id = character_id,
 			profile = profile
 		}
-		self._profile_requests_queue_order[#self._profile_requests_queue_order + 1] = character_id
+
+		if prioritized then
+			table.insert(self._profile_requests_queue_order, 1, character_id)
+		else
+			table.insert(self._profile_requests_queue_order, #self._profile_requests_queue_order + 1, character_id)
+		end
 	end
 
 	local data = self._profile_requests[character_id]
@@ -272,9 +294,10 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
 	local optional_state_machine = render_context and render_context.state_machine
 	local optional_animation_event = render_context and render_context.animation_event
+	local optional_face_animation_event = render_context and render_context.face_animation_event
 	local force_highest_mip = true
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, optional_state_machine, optional_animation_event, force_highest_mip)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, optional_face_animation_event, force_highest_mip)
 
 	local archetype = profile.archetype
 	local breed = archetype.breed

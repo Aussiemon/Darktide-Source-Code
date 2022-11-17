@@ -179,6 +179,10 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		if not scratchpad.is_anim_driven then
 			MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
 		end
+
+		if scratchpad.rotate_towards_target then
+			self:_rotate_towards_target_unit(unit, scratchpad, perception_component.target_unit)
+		end
 	elseif alerted_mode == ALERTED_MODES.directional_alerted then
 		if not scratchpad.started_directional_animation then
 			self:_start_alerted_direction_anim(unit, scratchpad, action_data, t)

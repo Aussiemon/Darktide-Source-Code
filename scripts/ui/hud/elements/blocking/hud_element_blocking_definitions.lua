@@ -60,7 +60,7 @@ value_text_style.vertical_alignment = "top"
 value_text_style.horizontal_alignment = "left"
 value_text_style.text_horizontal_alignment = "left"
 value_text_style.text_vertical_alignment = "top"
-value_text_style.text_color = UIHudSettings.color_tint_secondary_1
+value_text_style.text_color = UIHudSettings.color_tint_main_1
 local name_text_style = table.clone(value_text_style)
 name_text_style.offset = {
 	0,
@@ -69,7 +69,7 @@ name_text_style.offset = {
 }
 name_text_style.horizontal_alignment = "right"
 name_text_style.text_horizontal_alignment = "right"
-name_text_style.text_color = UIHudSettings.color_tint_secondary_2
+name_text_style.text_color = UIHudSettings.color_tint_main_2
 name_text_style.drop_shadow = false
 local widget_definitions = {
 	gauge = UIWidget.create_definition({
@@ -99,7 +99,7 @@ local widget_definitions = {
 					0,
 					1
 				},
-				color = UIHudSettings.color_tint_secondary_2
+				color = UIHudSettings.color_tint_main_2
 			}
 		}
 	}, "gauge")
@@ -115,7 +115,7 @@ local shield = UIWidget.create_definition({
 				0,
 				3
 			},
-			color = UIHudSettings.color_tint_secondary_1
+			color = UIHudSettings.color_tint_main_1
 		}
 	}
 }, "shield")

@@ -112,6 +112,10 @@ BtShootNetAction._start_aiming = function (self, t, scratchpad, action_data)
 	local aim_duration = action_data.aim_duration
 	scratchpad.shoot_t = t + aim_duration
 	scratchpad.internal_state = "aiming"
+
+	if action_data.aoe_bot_threat_timing then
+		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
+	end
 end
 
 BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_data)
@@ -125,6 +129,16 @@ BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_da
 	local aim_position = Unit.world_position(target_unit, target_node)
 
 	scratchpad.current_aim_position:store(aim_position)
+
+	if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
+		local group_extension = ScriptUnit.extension(target_unit, "group_system")
+		local bot_group = group_extension:bot_group()
+		local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+
+		bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, flat_rotation, action_data.aoe_bot_threat_duration)
+
+		scratchpad.aoe_bot_threat_timing = nil
+	end
 
 	if scratchpad.shoot_t < t then
 		self:_start_shooting(unit, scratchpad, action_data)
@@ -283,12 +297,9 @@ end
 BtShootNetAction._update_dragging = function (self, unit, t, scratchpad, action_data)
 	local disabled_character_state_component = scratchpad.hit_unit_disabled_character_state_component
 	local is_netted, netting_unit = PlayerUnitStatus.is_netted(disabled_character_state_component)
+	scratchpad.was_netted = scratchpad.was_netted or is_netted
 
-	if not is_netted then
-		return
-	end
-
-	if netting_unit ~= unit then
+	if netting_unit ~= unit or scratchpad.was_netted and not is_netted then
 		scratchpad.internal_state = "shot_finished"
 
 		return

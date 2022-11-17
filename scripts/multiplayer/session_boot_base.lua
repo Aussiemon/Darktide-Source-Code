@@ -49,9 +49,7 @@ SessionBootBase.event_object = function (self)
 end
 
 SessionBootBase._set_window_title = function (self, ...)
-	if PLATFORM == "win32" then
-		Window.set_title(string.format(...))
-	end
+	return
 end
 
 return SessionBootBase

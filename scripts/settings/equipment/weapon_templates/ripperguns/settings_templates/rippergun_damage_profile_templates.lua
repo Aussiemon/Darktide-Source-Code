@@ -130,9 +130,10 @@ damage_templates.default_rippergun_assault = {
 		}
 	},
 	ragdoll_push_force = {
-		200,
-		300
-	}
+		50,
+		50
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.rippergun_p1_m2_assault = {
 	ragdoll_only = true,
@@ -245,9 +246,10 @@ damage_templates.rippergun_p1_m2_assault = {
 		}
 	},
 	ragdoll_push_force = {
-		200,
-		300
-	}
+		50,
+		50
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.default_rippergun_snp = {
 	ragdoll_only = true,
@@ -360,9 +362,10 @@ damage_templates.default_rippergun_snp = {
 		}
 	},
 	ragdoll_push_force = {
-		200,
-		300
-	}
+		50,
+		50
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.rippergun_weapon_special = {
 	ragdoll_push_force = 50,
@@ -515,7 +518,8 @@ damage_templates.rippergun_weapon_special = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium
 }
 
 return {

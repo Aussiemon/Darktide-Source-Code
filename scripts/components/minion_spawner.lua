@@ -144,11 +144,13 @@ MinionSpawner.editor_update = function (self, unit)
 
 	if nav_gen_guid then
 		self._my_nav_gen_guid = nav_gen_guid
+
+		self:_editor_debug_draw(unit)
 	end
 
 	local should_debug_draw = self._should_debug_draw
 
-	if should_debug_draw ~= self._active_debug_draw then
+	if should_debug_draw ~= self._active_debug_draw and self._my_nav_gen_guid then
 		self._active_debug_draw = should_debug_draw
 
 		self:_editor_debug_draw(unit)
@@ -158,12 +160,12 @@ MinionSpawner.editor_update = function (self, unit)
 end
 
 MinionSpawner._editor_debug_draw = function (self, unit)
-	local nav_world = MinionSpawner._nav_info.nav_world
 	local drawer = self._drawer
 
 	drawer:reset()
 
 	if self._active_debug_draw then
+		local nav_world = MinionSpawner._nav_info.nav_world
 		local traverse_logic = MinionSpawner._nav_info.traverse_logic
 		local spawn_offset = self._spawn_offset:unbox()
 		local exit_offset = self._exit_offset:unbox()

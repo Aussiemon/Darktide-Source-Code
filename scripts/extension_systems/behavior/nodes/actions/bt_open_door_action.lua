@@ -54,6 +54,8 @@ BtOpenDoorAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 	end
 end
 
+local DEFAULT_DOOR_OPEN_TIME_OFFSET = 0.2
+
 BtOpenDoorAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if scratchpad.failed_to_use_smart_object then
 		return "failed"
@@ -65,9 +67,13 @@ BtOpenDoorAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 	if rotation_done_time then
 		if rotation_done_time <= t then
 			if door_unit_extension:can_open() then
-				door_unit_extension:open(nil, unit)
+				local open_door_time = action_data.open_door_time
+				local offset = action_data.open_door_time_offset
+
+				door_unit_extension:open(nil, unit, open_door_time and open_door_time + (offset or DEFAULT_DOOR_OPEN_TIME_OFFSET) or offset)
 
 				scratchpad.rotation_done_time = nil
+				scratchpad.open_door_time = t + (open_door_time or 0)
 				local behavior_component = Blackboard.write_component(blackboard, "behavior")
 				local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
@@ -82,10 +88,15 @@ BtOpenDoorAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 			locomotion_extension:set_wanted_rotation(wanted_rotation)
 		end
 	elseif door_unit_extension:can_open() then
-		door_unit_extension:open(nil, unit)
+		local open_door_time = action_data.open_door_time
+		local offset = action_data.open_door_time_offset
+
+		door_unit_extension:open(nil, unit, open_door_time and open_door_time + (offset or DEFAULT_DOOR_OPEN_TIME_OFFSET) or offset)
+
+		scratchpad.open_door_time = t + (open_door_time or 0)
 	end
 
-	if not door_unit_extension:nav_blocked() then
+	if not door_unit_extension:nav_blocked() and (not scratchpad.open_door_time or scratchpad.open_door_time <= t) then
 		return "done"
 	end
 

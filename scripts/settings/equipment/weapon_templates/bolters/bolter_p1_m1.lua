@@ -7,6 +7,7 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeBolterP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_bolter_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -235,7 +236,12 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload"
+				action_name = "action_reload",
+				chain_time = 0.45
+			},
+			special_action = {
+				action_name = "action_push",
+				chain_time = 0.45
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
@@ -258,7 +264,7 @@ weapon_template.actions = {
 		ammunition_usage = 1,
 		crosshair_type = "ironsight",
 		start_input = "zoom_shoot",
-		total_time = 0.3,
+		total_time = 1,
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -310,11 +316,12 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_reload"
+				action_name = "action_reload",
+				chain_time = 0.5
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.65
+				chain_time = 0.5
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
@@ -335,7 +342,7 @@ weapon_template.actions = {
 		crosshair_type = "none",
 		start_input = "zoom",
 		kind = "aim",
-		total_time = 0.3,
+		total_time = 0.5,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -352,7 +359,7 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.25
+				chain_time = 0.45
 			}
 		}
 	},
@@ -383,13 +390,21 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1",
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
-		total_time = 3,
+		total_time = 6,
 		action_movement_curve = {
 			{
-				modifier = 1,
-				t = 1
+				modifier = 0.6,
+				t = 0.3
+			},
+			{
+				modifier = 0.75,
+				t = 0.5
+			},
+			{
+				modifier = 0.95,
+				t = 2
 			},
 			start_modifier = 1
 		},
@@ -405,7 +420,7 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 3
+				chain_time = 5
 			},
 			special_action = {
 				chain_time = 2.5,
@@ -457,21 +472,29 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
+			shoot_pressed = {
+				action_name = "action_shoot_hip",
+				chain_time = 0.4
+			},
 			special_action = {
 				action_name = "action_push",
 				chain_time = 0.9
 			},
 			reload = {
 				action_name = "action_reload",
-				chain_time = 0.4
+				chain_time = 0.6
+			},
+			zoom = {
+				action_name = "action_zoom",
+				chain_time = 0.5
 			}
 		},
 		inner_push_rad = math.pi * 0.1,
 		outer_push_rad = math.pi * 0.2,
 		inner_damage_profile = DamageProfileTemplates.weapon_special_push,
-		inner_damage_type = damage_types.blunt_heavy,
+		inner_damage_type = damage_types.weapon_butt,
 		outer_damage_profile = DamageProfileTemplates.weapon_special_push_outer,
-		outer_damage_type = damage_types.blunt_heavy
+		outer_damage_type = damage_types.weapon_butt
 	},
 	action_inspect = {
 		skip_3p_anims = false,
@@ -552,7 +575,7 @@ weapon_template.base_stats = {
 			}
 		}
 	},
-	bolter_reload_speed_stat = {
+	bolter_p1_m1_reload_speed_stat = {
 		display_name = "loc_stats_display_reload_speed_stat",
 		is_stat_trait = true,
 		weapon_handling = {
@@ -586,7 +609,8 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.bolter
 weapon_template.spread_template = "default_bolter_spraynpray"
 weapon_template.recoil_template = "default_bolter_spraynpray"
-weapon_template.look_delta_template = "default"
+weapon_template.suppression_template = "hip_lasgun_killshot"
+weapon_template.look_delta_template = "bolter"
 weapon_template.ammo_template = "bolter_p1_m1"
 weapon_template.conditional_state_to_action_input = {
 	{
@@ -594,10 +618,11 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.55
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.2
@@ -610,15 +635,18 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "spray_n_pray"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	recoil_template = "default_bolter_killshot",
+	toughness_template = "killshot_zoomed",
 	sway_template = "default_bolter_killshot",
+	recoil_template = "default_bolter_killshot",
 	stop_anim_event = "to_unaim_ironsight",
-	crosshair_type = "none",
-	start_anim_event = "to_ironsight",
 	spread_template = "default_bolter_killshot",
+	suppression_template = "default_lasgun_killshot",
+	crosshair_type = "ironsight",
+	start_anim_event = "to_ironsight",
+	look_delta_template = "bolter",
 	camera = {
 		custom_vertical_fov = 45,
-		vertical_fov = 45,
+		vertical_fov = 55,
 		near_range = 0.025
 	},
 	movement_speed_modifier = {
@@ -672,6 +700,10 @@ table.append(weapon_template.traits, ranged_common_traits)
 local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
 
 table.append(weapon_template.traits, ranged_aimed_traits)
+
+local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeBolterP1)
+
+table.append(weapon_template.traits, bespoke_autogun_p1_traits)
 
 weapon_template.displayed_keywords = {
 	{

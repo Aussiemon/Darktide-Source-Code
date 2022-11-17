@@ -24,8 +24,9 @@ ThirdPersonLookDeltaAnimationControl.update = function (self, dt, t, game_object
 	local rotation = first_person_component.rotation
 	local settings, yaw_delta, pitch_delta, previous_rotation = nil
 	local weapon_lock_view_component = self._weapon_lock_view_component
+	local weapon_lock_view_component_state = weapon_lock_view_component.state
 
-	if weapon_lock_view_component.is_active then
+	if weapon_lock_view_component_state == "weapon_lock" or weapon_lock_view_component_state == "weapon_lock_no_delta" then
 		settings = look_delta_template.inspect
 		local yaw = weapon_lock_view_component.yaw
 		local pitch = weapon_lock_view_component.pitch

@@ -37,7 +37,7 @@ local action_data = {
 		}
 	},
 	alerted = {
-		override_aggro_distance = 6,
+		override_aggro_distance = 8,
 		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
 		moving_alerted_anim_events = {
@@ -316,13 +316,14 @@ local action_data = {
 		damage_type = damage_types.minion_melee_sharp
 	},
 	combo_attack = {
-		move_speed_variable_lerp_speed = 4,
 		utility_weight = 1,
-		move_speed_variable_name = "moving_attack_fwd_speed",
-		stagger_reduction = 50,
-		weapon_reach = 3.75,
-		moving_attack = true,
 		ignore_blocked = true,
+		stagger_reduction = 50,
+		moving_attack = true,
+		move_speed_variable_lerp_speed = 5,
+		weapon_reach = 3.75,
+		move_speed_variable_name = "moving_attack_fwd_speed",
+		ignore_dodge = true,
 		considerations = UtilityConsiderations.cultist_berzerker_combo_attack,
 		attack_anim_events = {
 			"attack_combo_01",
@@ -373,15 +374,15 @@ local action_data = {
 			attack_combo_01 = {
 				{
 					value = 4,
-					distance = 6.6
+					distance = 4.6
 				},
 				{
 					value = 3,
-					distance = 5.5
+					distance = 3.5
 				},
 				{
 					value = 2,
-					distance = 4.2
+					distance = 3.2
 				},
 				{
 					value = 1,
@@ -395,19 +396,19 @@ local action_data = {
 			attack_combo_04 = {
 				{
 					value = 4,
-					distance = 9.5
+					distance = 6.5
 				},
 				{
 					value = 3,
-					distance = 7.68
+					distance = 5.68
 				},
 				{
 					value = 2,
-					distance = 6.2
+					distance = 3.2
 				},
 				{
 					value = 1,
-					distance = 3.5
+					distance = 2.5
 				},
 				{
 					value = 0,
@@ -417,15 +418,15 @@ local action_data = {
 			attack_combo_08 = {
 				{
 					value = 4,
-					distance = 8.3
+					distance = 5.3
 				},
 				{
 					value = 3,
-					distance = 6.3
+					distance = 4.3
 				},
 				{
 					value = 2,
-					distance = 4.4
+					distance = 3.4
 				},
 				{
 					value = 1,
@@ -590,24 +591,19 @@ local action_data = {
 			},
 			medium = {
 				fwd = {
-					"stagger_fwd",
-					"stagger_fwd_2"
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
-					"stagger_bwd_2"
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
-					"stagger_left_2"
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
-					"stagger_right_2"
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_downward",
-					"stagger_downward_2"
+					"stagger_downward"
 				}
 			},
 			heavy = {

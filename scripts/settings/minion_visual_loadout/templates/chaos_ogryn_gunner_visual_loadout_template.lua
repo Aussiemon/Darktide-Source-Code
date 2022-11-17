@@ -157,6 +157,38 @@ templates.chaos_ogryn_gunner[zone_ids.tank_foundry] = {
 	foundry_5,
 	foundry_6
 }
+local dust_1 = table.clone(default_1)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_2 = table.clone(default_2)
+dust_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_3 = table.clone(default_3)
+dust_3.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_4 = table.clone(default_4)
+dust_4.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_5 = table.clone(default_5)
+dust_5.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_6 = table.clone(default_4)
+dust_6.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.chaos_ogryn_gunner[zone_ids.dust] = {
+	dust_1,
+	dust_2,
+	dust_3,
+	dust_4,
+	dust_5,
+	dust_6
+}
 local watertown_1 = table.clone(default_1)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

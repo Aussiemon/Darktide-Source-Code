@@ -23,6 +23,10 @@ ConstantElementStayInParty.init = function (self, parent, draw_layer, start_scal
 end
 
 ConstantElementStayInParty._event_voting_started = function (self, voting_id)
+	if self._active then
+		return
+	end
+
 	local all_is_same_party = self:_all_is_same_party()
 
 	if all_is_same_party then
@@ -147,6 +151,14 @@ end
 
 ConstantElementStayInParty.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	if not self._active then
+		if GameParameters.prod_like_backend then
+			local active_party_vote = Managers.party_immaterium:active_stay_in_party_vote()
+
+			if active_party_vote then
+				self:_voting_started(active_party_vote.voting_id)
+			end
+		end
+
 		return
 	end
 

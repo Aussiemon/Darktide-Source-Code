@@ -5,7 +5,7 @@ local Interface = {
 	"fetch",
 	"create",
 	"delete",
-	"equip_item_slot"
+	"equip_items_in_slots"
 }
 local Characters = class("Characters")
 
@@ -42,6 +42,24 @@ Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by
 	end)
 end
 
+Characters.equip_master_items_in_slots = function (self, character_id, item_master_ids_by_slots)
+	local body = {}
+
+	for slot_id, master_id in pairs(item_master_ids_by_slots) do
+		body[#body + 1] = {
+			masterId = master_id,
+			slotId = slot_id
+		}
+	end
+
+	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"), {
+		method = "PUT",
+		body = body
+	}):next(function (data)
+		return data.body
+	end)
+end
+
 Characters.create = function (self, new_character)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(), {
 		method = "POST",
@@ -51,7 +69,9 @@ Characters.create = function (self, new_character)
 	}):next(function (data)
 		return data.body
 	end):next(function (result)
-		if not result.characterId then
+		local character = result.character
+
+		if not character or not character.id then
 			local p = Promise:new()
 
 			p:reject(BackendUtilities.create_error(BackendError.UnknownError, "Invalid characterId"))
@@ -59,9 +79,7 @@ Characters.create = function (self, new_character)
 			return p
 		end
 
-		local character_id = result.characterId
-
-		return self:fetch(character_id)
+		return character
 	end)
 end
 

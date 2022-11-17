@@ -120,6 +120,10 @@ ViewElementGrid.disable_input = function (self, disabled)
 	self._input_disabled = disabled
 end
 
+ViewElementGrid.input_disabled = function (self)
+	return self._input_disabled
+end
+
 ViewElementGrid._setup_grid_gui = function (self)
 	local ui_manager = Managers.ui
 	local timer_name = "ui"
@@ -129,7 +133,7 @@ ViewElementGrid._setup_grid_gui = function (self)
 	local view_name = parent.view_name
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	local viewport_name = self._unique_id .. "_ui_grid_world_viewport"
-	local viewport_type = "default_with_alpha"
+	local viewport_type = "overlay"
 	local viewport_layer = 1
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
@@ -188,7 +192,7 @@ ViewElementGrid.update = function (self, dt, t, input_service)
 		if self._current_scrollbar_progress ~= current_scrollbar_progress then
 			self._current_scrollbar_progress = current_scrollbar_progress
 
-			self:_update_grid_widgets_visibility()
+			self:update_grid_widgets_visibility()
 		end
 	end
 
@@ -201,6 +205,10 @@ end
 
 ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
 	if not self._grid then
+		return
+	end
+
+	if not self._visible then
 		return
 	end
 
@@ -300,12 +308,15 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 
 	Gui.render_pass(gui, 0, base_render_pass, true, render_target)
 	Gui.render_pass(gui, 1, "to_screen", false)
+
+	local widget_visual_margin = self._widget_visual_margin
+
 	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
 
-		if widget and grid:is_widget_visible(widget) then
+		if widget and grid:is_widget_visible(widget, widget.content.extra_margin or widget_visual_margin) then
 			local hotspot = widget.content.hotspot
 
 			if hotspot then
@@ -327,6 +338,8 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 		local grid = self._grid
 		local ui_renderer = self._ui_resource_renderer
 		local num_widgets = #widgets
+		local widget_visual_margin = self._widget_visual_margin
+		local widget_icon_load_margin = self._widget_icon_load_margin
 
 		for i = 1, num_widgets do
 			local widget = widgets[i]
@@ -334,8 +347,8 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 			local template = content_blueprints[widget_type]
 			local update = template and template.update
 			local content = widget.content
-			local visible = grid:is_widget_visible(widget, self._widget_visual_margin)
-			local render_icon = grid:is_widget_visible(widget, self._widget_icon_load_margin)
+			local visible = grid:is_widget_visible(widget, content.extra_margin or widget_visual_margin)
+			local render_icon = grid:is_widget_visible(widget, widget_icon_load_margin)
 			content.visible = visible
 			content.render_icon = render_icon or visible
 
@@ -399,7 +412,7 @@ ViewElementGrid._clear_widgets = function (self, widgets)
 	end
 end
 
-ViewElementGrid._create_entry_widget_from_config = function (self, config, suffix, callback_name, secondary_callback_name)
+ViewElementGrid._create_entry_widget_from_config = function (self, config, suffix, callback_name, secondary_callback_name, double_click_callback_name)
 	local scenegraph_id = "grid_content_pivot"
 	local widget_type = config.widget_type
 	local ui_renderer = self._ui_resource_renderer
@@ -407,8 +420,9 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 	local template = self._content_blueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template_function = template.pass_template_function
-	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
-	local optional_style = template.style
+	local pass_template = pass_template_function and pass_template_function(self, config, ui_renderer) or template.pass_template
+	local optional_style_function = template.style_function
+	local optional_style = optional_style_function and optional_style_function(self, config, size) or template.style
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
 	if widget_definition then
@@ -418,7 +432,7 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 		local init = template.init
 
 		if init then
-			init(self, widget, config, callback_name, secondary_callback_name, ui_renderer)
+			init(self, widget, config, callback_name, secondary_callback_name, ui_renderer, double_click_callback_name)
 		end
 	end
 
@@ -437,6 +451,10 @@ ViewElementGrid.update_grid_height = function (self, grid_height, mask_height)
 	menu_settings.mask_size[2] = mask_height or menu_settings.mask_size[2]
 
 	self:_update_window_size()
+end
+
+ViewElementGrid.grid_height = function (self)
+	return self._menu_settings.grid_size[2]
 end
 
 ViewElementGrid._update_window_size = function (self)
@@ -476,7 +494,7 @@ ViewElementGrid._update_window_size = function (self)
 	if self._use_horizontal_scrollbar then
 		self:_set_scenegraph_size("grid_scrollbar", active_mask_size[1] - 20 - scrollbar_vertical_margin, nil)
 	else
-		self:_set_scenegraph_size("grid_scrollbar", nil, active_mask_size[2] - 20 - scrollbar_vertical_margin)
+		self:_set_scenegraph_size("grid_scrollbar", nil, active_mask_size[2] - 40 - scrollbar_vertical_margin)
 	end
 
 	self:_set_scenegraph_position("grid_background", nil, using_title and title_height or 0)
@@ -508,11 +526,11 @@ ViewElementGrid._assign_display_name = function (self, display_name)
 	self:_update_window_size()
 end
 
-ViewElementGrid.present_grid_layout = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_on_present_callback)
+ViewElementGrid.present_grid_layout = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_on_present_callback, optional_left_double_click_callback)
 	if self._drawn and self._grid then
 		self._present_grid_layout = callback(function ()
 			if not self._destroyed then
-				self:_on_present_grid_layout_changed(layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
+				self:_on_present_grid_layout_changed(layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_left_double_click_callback)
 
 				if optional_on_present_callback then
 					optional_on_present_callback()
@@ -522,7 +540,7 @@ ViewElementGrid.present_grid_layout = function (self, layout, content_blueprints
 
 		return
 	else
-		self:_on_present_grid_layout_changed(layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
+		self:_on_present_grid_layout_changed(layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_left_double_click_callback)
 
 		if optional_on_present_callback then
 			optional_on_present_callback()
@@ -530,7 +548,7 @@ ViewElementGrid.present_grid_layout = function (self, layout, content_blueprints
 	end
 end
 
-ViewElementGrid._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
+ViewElementGrid._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_left_double_click_callback)
 	self:_destroy_grid_widgets()
 	self:_assign_display_name(display_name)
 
@@ -538,16 +556,18 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	self._content_blueprints = content_blueprints
 	self._left_click_callback = left_click_callback
 	self._right_click_callback = right_click_callback
+	self._left_double_click_callback = optional_left_double_click_callback
 	local widgets = {}
 	local alignment_widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_left_pressed"
 	local right_click_callback_name = "cb_on_grid_entry_right_pressed"
+	local double_click_callback_name = optional_left_double_click_callback and "cb_on_grid_entry_double_click_pressed"
 	local previous_group_header_name = nil
 	local group_header_index = 0
 
 	for index, entry in ipairs(layout) do
 		local widget_suffix = "entry_" .. tostring(index)
-		local widget, alignment_widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name)
+		local widget, alignment_widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name, double_click_callback_name)
 		widgets[#widgets + 1] = widget
 		alignment_widgets[#alignment_widgets + 1] = alignment_widget
 
@@ -619,6 +639,21 @@ ViewElementGrid.focus_grid_index = function (self, index, scrollbar_animation_pr
 	grid:focus_grid_index(index, scrollbar_animation_progress, instant_scroll)
 end
 
+ViewElementGrid.focused_grid_index = function (self)
+	local grid = self._grid
+
+	if grid then
+		return grid:focused_grid_index()
+	end
+end
+
+ViewElementGrid.select_grid_widget = function (self, widget, scrollbar_animation_progress, instant_scroll)
+	local grid = self._grid
+	local index = grid:index_by_widget(widget)
+
+	grid:select_grid_index(index, scrollbar_animation_progress, instant_scroll)
+end
+
 ViewElementGrid.select_grid_index = function (self, index, scrollbar_animation_progress, instant_scroll)
 	local grid = self._grid
 
@@ -627,8 +662,9 @@ end
 
 ViewElementGrid.select_first_index = function (self)
 	local grid = self._grid
+	local selected_grid_index = grid:select_first_index()
 
-	grid:select_first_index()
+	return selected_grid_index
 end
 
 ViewElementGrid.selected_grid_index = function (self)
@@ -686,6 +722,7 @@ ViewElementGrid.force_update_list_size = function (self)
 		local selected_index = grid:selected_grid_index()
 
 		if selected_index then
+			grid:clear_scroll_progress()
 			self:scroll_to_grid_index(selected_index)
 		end
 	end
@@ -697,6 +734,14 @@ end
 
 ViewElementGrid.scroll_to_grid_index = function (self, index, instant_scroll)
 	local grid = self._grid
+	local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
+
+	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
+end
+
+ViewElementGrid.scroll_to_grid_widget = function (self, widget, instant_scroll)
+	local grid = self._grid
+	local index = grid:index_by_widget(widget)
 	local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
 
 	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
@@ -731,7 +776,13 @@ ViewElementGrid.cb_on_grid_entry_left_pressed = function (self, widget, element)
 	end
 end
 
-ViewElementGrid._update_grid_widgets_visibility = function (self)
+ViewElementGrid.cb_on_grid_entry_double_click_pressed = function (self, widget, element)
+	if self._left_double_click_callback then
+		self._left_double_click_callback(widget, element)
+	end
+end
+
+ViewElementGrid.update_grid_widgets_visibility = function (self)
 	local widgets = self._grid_widgets
 
 	if widgets then
@@ -768,7 +819,9 @@ ViewElementGrid._update_grid_widgets_visibility = function (self)
 				local render_icon = content.render_icon or visible
 
 				if render_icon and template.load_icon then
-					template.load_icon(self, widget, element, ui_renderer)
+					local prioritize = visible
+
+					template.load_icon(self, widget, element, ui_renderer, nil, prioritize)
 				end
 			end
 		end

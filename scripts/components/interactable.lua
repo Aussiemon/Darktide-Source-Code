@@ -125,7 +125,7 @@ Interactable.enable = function (self, unit)
 		local interactee_extension = self._interactee_extension
 
 		if not interactee_extension:used() then
-			self._interactee_extension:set_active(true)
+			interactee_extension:set_active(true)
 		end
 	end
 end
@@ -154,6 +154,14 @@ end
 
 Interactable.events.interactable_disable = function (self, unit)
 	self:disable(unit)
+end
+
+Interactable.disable_display_start_event = function (self, unit)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:disable_display_start_event(true)
+	end
 end
 
 Interactable.events.died = function (self)
@@ -285,7 +293,6 @@ Interactable.component_data = {
 			"luggable_socket",
 			"luggable",
 			"marks_vendor",
-			"mission_board",
 			"moveable_platform",
 			"pull_up",
 			"remove_net",
@@ -295,7 +302,8 @@ Interactable.component_data = {
 			"servo_skull",
 			"setup_decoding",
 			"training_ground",
-			"vendor"
+			"vendor",
+			"scripted_scenario"
 		},
 		options_values = {
 			"ammunition",
@@ -311,7 +319,6 @@ Interactable.component_data = {
 			"luggable_socket",
 			"luggable",
 			"marks_vendor",
-			"mission_board",
 			"moveable_platform",
 			"pull_up",
 			"remove_net",
@@ -321,7 +328,8 @@ Interactable.component_data = {
 			"servo_skull",
 			"setup_decoding",
 			"training_ground",
-			"vendor"
+			"vendor",
+			"scripted_scenario"
 		}
 	},
 	ui_interaction_type = {
@@ -455,6 +463,10 @@ Interactable.component_data = {
 			type = "event"
 		},
 		interactable_disable = {
+			accessibility = "public",
+			type = "event"
+		},
+		disable_display_start_event = {
 			accessibility = "public",
 			type = "event"
 		}

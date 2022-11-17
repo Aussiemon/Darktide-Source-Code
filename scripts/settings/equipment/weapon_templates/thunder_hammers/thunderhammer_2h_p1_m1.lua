@@ -4,7 +4,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -40,9 +40,11 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local stagger_duration_modifier_trait_templates = WeaponTraitTemplates[template_types.stagger_duration_modifier]
 local wounds_shapes = WoundsSettings.shapes
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
+weapon_template.action_inputs.block.buffer_time = 0.1
+weapon_template.action_inputs.block_release.buffer_time = 0.35
 local default_weapon_box = {
 	0.2,
 	0.15,
@@ -933,10 +935,11 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.tank_swing
 	},
 	action_block = {
-		anim_event = "parry_pose",
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
+		anim_event = "parry_pose",
 		stop_input = "block_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -1108,7 +1111,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.4
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_activate_special_left",
@@ -1259,11 +1262,13 @@ weapon_template.keywords = {
 }
 weapon_template.dodge_template = "support"
 weapon_template.sprint_template = "support"
-weapon_template.stamina_template = "tank"
+weapon_template.stamina_template = "thunderhammer_2h_p1_m1"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.allow_sprinting_with_special = true
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.thunderhammer
+weapon_template.damage_window_start_sweep_trail_offset = -0.25
+weapon_template.damage_window_end_sweep_trail_offset = 0.25
 weapon_template.ammo_template = "no_ammo"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.tank
 weapon_template.sprint_ready_up_time = 0.3
@@ -1326,7 +1331,6 @@ weapon_template.base_stats = {
 		}
 	},
 	thunderhammer_p1_m1_armor_pierce_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_armor_pierce_stat",
 		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1354,7 +1358,6 @@ weapon_template.base_stats = {
 		}
 	},
 	thunderhammer_p1_m1_control_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_control_stat",
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
 		damage = {
@@ -1428,7 +1431,6 @@ weapon_template.base_stats = {
 		}
 	},
 	thunderhammer_p1_m1_first_target_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_first_target_stat",
 		display_name = "loc_stats_display_first_target_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1456,7 +1458,6 @@ weapon_template.base_stats = {
 		}
 	},
 	thunderhammer_p1_m1_defence_stat = {
-		description = "loc_trait_description_thunderhammer_p1_m1_defence_stat",
 		display_name = "loc_stats_display_defense_stat",
 		is_stat_trait = true,
 		stamina = {
@@ -1484,153 +1485,6 @@ local bespoke_thunderhammer_2h_p1_traits = table.keys(WeaponTraitsBespokeThunder
 
 table.append(weapon_template.traits, bespoke_thunderhammer_2h_p1_traits)
 
-weapon_template.perks = {
-	thunderhammer_p1_m1_dps_perk = {
-		description = "loc_trait_description_thunderhammer_p1_m1_dps_perk",
-		display_name = "loc_trait_display_thunderhammer_p1_m1_dps_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_right_down_light = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_left_light = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_left_heavy_2 = {
-				damage_trait_templates.thunderhammer_dps_perk
-			},
-			action_left_light_pushfollow = {
-				damage_trait_templates.thunderhammer_dps_perk
-			}
-		}
-	},
-	thunderhammer_p1_m1_armor_pierce_perk = {
-		description = "loc_trait_description_thunderhammer_p1_m1_armor_pierce_perk",
-		display_name = "loc_trait_display_thunderhammer_p1_m1_armor_pierce_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_right_down_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_left_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_left_heavy_2 = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			},
-			action_left_light_pushfollow = {
-				damage_trait_templates.thunderhammer_armor_pierce_perk
-			}
-		}
-	},
-	thunderhammer_p1_m1_control_perk = {
-		description = "loc_trait_description_thunderhammer_p1_m1_control_perk",
-		display_name = "loc_trait_display_thunderhammer_p1_m1_control_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_right_down_light = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_left_light = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_left_heavy_2 = {
-				damage_trait_templates.thunderhammer_control_perk
-			},
-			action_left_light_pushfollow = {
-				damage_trait_templates.thunderhammer_control_perk
-			}
-		},
-		weapon_handling = {
-			action_left_down_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_down_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_heavy_2 = {
-				weapon_handling_trait_templates.default_finesse_perk
-			},
-			action_left_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_perk
-			}
-		}
-	},
-	thunderhammer_p1_m1_first_target_perk = {
-		description = "loc_trait_description_thunderhammer_p1_m1_first_target_perk",
-		display_name = "loc_trait_display_thunderhammer_p1_m1_first_target_perk",
-		damage = {
-			action_left_down_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_heavy = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_right_down_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_light = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_heavy_2 = {
-				damage_trait_templates.default_melee_first_target_perk
-			},
-			action_left_light_pushfollow = {
-				damage_trait_templates.default_melee_first_target_perk
-			}
-		}
-	},
-	thunderhammer_p1_m1_defence_perk = {
-		description = "loc_trait_description_thunderhammer_p1_m1_defence_perk",
-		display_name = "loc_trait_display_thunderhammer_p1_m1_defence_perk",
-		stamina = {
-			base = {
-				stamina_trait_templates.thunderhammer_p1_m1_defence_perk
-			}
-		},
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_perk
-			}
-		}
-	}
-}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_crowd_control"

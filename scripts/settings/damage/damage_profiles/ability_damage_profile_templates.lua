@@ -52,10 +52,10 @@ damage_templates.psyker_biomancer_shout = {
 	suppression_type = "ability",
 	stagger_duration_modifier = 1,
 	ignore_stagger_reduction = true,
-	stagger_category = "explosion",
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 20
+		impact = 17
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -126,8 +126,8 @@ damage_templates.psyker_biomancer_shout_damage = {
 }
 damage_templates.zealot_dash_impact = {
 	is_push = true,
-	stagger_override = "medium",
-	stagger_category = "melee",
+	stagger_override = "killshot",
+	stagger_category = "hatchet",
 	ignore_stagger_reduction = true,
 	power_distribution = {
 		attack = 0,

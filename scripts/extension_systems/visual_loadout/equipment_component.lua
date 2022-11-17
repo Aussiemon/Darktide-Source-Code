@@ -3,7 +3,6 @@ local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local unit_alive = Unit.alive
 local unit_set_unit_visibility = Unit.set_unit_visibility
-local unit_has_visibility_group = Unit.has_visibility_group
 local unit_set_visibility = Unit.set_visibility
 local unit_flow_event = Unit.flow_event
 local ATTACHMENT_SPAWN_STATUS = table.enum("waiting_for_load", "fully_spawned")
@@ -53,7 +52,8 @@ local function _create_slot_from_configuration(configuration, slot_options)
 		deform_overrides = nil,
 		breed_name = nil,
 		hide_unit_in_slot = configuration.hide_unit_in_slot,
-		skip_link_children = slot_options.skip_link_children or false
+		skip_link_children = slot_options.skip_link_children or false,
+		cached_nodes = {}
 	}
 
 	return slot
@@ -180,12 +180,16 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 			Unit.destroy_actor(item_unit_3p, start_target_id)
 		end
 
-		unit_set_unit_visibility(item_unit_3p, false, true)
+		local hide_unit_in_slot = slot.hide_unit_in_slot
+
+		if hide_unit_in_slot then
+			unit_set_unit_visibility(item_unit_3p, false, true)
+		end
 
 		local player_visibility = ScriptUnit.has_extension(unit_3p, "player_visibility_system")
 
 		if player_visibility then
-			player_visibility:visibility_updated()
+			player_visibility:update_visibility_snapshot()
 		end
 
 		local deform_overrides = slot.deform_overrides
@@ -194,12 +198,6 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 			for _, deform_override in pairs(deform_overrides) do
 				VisualLoadoutCustomization.apply_material_override(slot.unit_3p, unit_3p, false, deform_override, false)
 			end
-		end
-
-		local hide_unit_in_slot = slot.hide_unit_in_slot
-
-		if hide_unit_in_slot then
-			unit_set_unit_visibility(item_unit_3p, false, true)
 		end
 	end
 
@@ -474,12 +472,32 @@ local function _get_hidden_slot_names(equipment, base_unit_name, wielded_slot_na
 	return hidden_slot_names
 end
 
-local function _hide_base_unit(base_unit)
-	unit_flow_event(base_unit, "lua_hidden")
+local function _slot_flow_event_1p(slot, event_name)
+	local base_unit = slot.unit_1p
+
+	unit_flow_event(base_unit, event_name)
+
+	local attachment_units = slot.attachments_1p or {}
+
+	for i = 1, #attachment_units do
+		local attachment_unit = attachment_units[i]
+
+		unit_flow_event(attachment_unit, event_name)
+	end
 end
 
-local function _show_base_unit(base_unit)
-	unit_flow_event(base_unit, "lua_visible")
+local function _slot_flow_event_3p(slot, event_name)
+	local base_unit = slot.unit_3p
+
+	unit_flow_event(base_unit, event_name)
+
+	local attachment_units = slot.attachments_3p or {}
+
+	for i = 1, #attachment_units do
+		local attachment_unit = attachment_units[i]
+
+		unit_flow_event(attachment_unit, event_name)
+	end
 end
 
 local function _set_slot_hidden(slot, hidden_3p, hidden_1p)
@@ -489,9 +507,9 @@ local function _set_slot_hidden(slot, hidden_3p, hidden_1p)
 		slot.hidden_3p = hidden_3p
 
 		if hidden_3p then
-			_hide_base_unit(unit_3p)
+			_slot_flow_event_3p(slot, "lua_hidden")
 		else
-			_show_base_unit(unit_3p)
+			_slot_flow_event_3p(slot, "lua_visible")
 		end
 	end
 
@@ -501,9 +519,9 @@ local function _set_slot_hidden(slot, hidden_3p, hidden_1p)
 		slot.hidden_1p = hidden_1p
 
 		if hidden_1p then
-			_hide_base_unit(unit_1p)
+			_slot_flow_event_1p(slot, "lua_hidden")
 		else
-			_show_base_unit(unit_1p)
+			_slot_flow_event_1p(slot, "lua_visible")
 		end
 	end
 end
@@ -620,6 +638,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 	local base_unit_name = first_person_mode and "unit_1p" or "unit_3p"
 	local slot_names_to_hide = _get_hidden_slot_names(equipment, base_unit_name, wielded_slot, first_person_mode)
+	local slot_body_face_unit = equipment.slot_body_face.unit_3p
 
 	for slot_name, slot in pairs(equipment) do
 		local is_hidden_3p, is_hidden_1p = nil
@@ -641,32 +660,43 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 			is_hidden_1p = not first_person_mode
 		end
 
-		_set_slot_hidden(slot, is_hidden_3p, is_hidden_1p)
-	end
+		local item = slot.item
 
-	if not first_person_mode then
-		local slot_gear_head = equipment.slot_gear_head
-		local head_gear_item = slot_gear_head.item
+		if slot_body_face_unit then
+			if item and item.hide_eyebrows ~= nil then
+				local hide_eyebrows = first_person_mode or item.hide_eyebrows or false
 
-		if head_gear_item then
-			local slot_body_face_hair = equipment.slot_body_face_hair
-			local facial_hair_unit = slot_body_face_hair.unit_3p
+				unit_set_visibility(slot_body_face_unit, "eyebrows", not hide_eyebrows, true)
+			end
 
-			if facial_hair_unit then
-				if unit_has_visibility_group(facial_hair_unit, "eyebrows") then
-					local hide_eyebrows = head_gear_item.hide_eyebrows or false
+			if item and item.hide_beard ~= nil then
+				local hide_beard = first_person_mode or item.hide_beard or false
 
-					unit_set_visibility(facial_hair_unit, "eyebrows", not hide_eyebrows)
-				end
-
-				if unit_has_visibility_group(facial_hair_unit, "beard") then
-					local hide_beard = head_gear_item.hide_beard or false
-
-					unit_set_visibility(facial_hair_unit, "beard", not hide_beard)
-				end
+				unit_set_visibility(slot_body_face_unit, "beard", not hide_beard, true)
 			end
 		end
 
+		_set_slot_hidden(slot, is_hidden_3p, is_hidden_1p)
+	end
+
+	if first_person_mode then
+		local slot_gear_upperbody = equipment.slot_gear_upperbody
+		local gear_upperbody_item = slot_gear_upperbody.item
+
+		if gear_upperbody_item and slot_names_to_hide.slot_body_arms == nil then
+			local arms_unit = equipment.slot_body_arms.unit_1p
+
+			if arms_unit then
+				local mask_arms = gear_upperbody_item.mask_arms
+
+				if mask_arms == "" or mask_arms == nil then
+					mask_arms = "mask_default"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(arms_unit, unit_1p, false, mask_arms, false)
+			end
+		end
+	else
 		local slot_gear_upperbody = equipment.slot_gear_upperbody
 		local gear_upperbody_item = slot_gear_upperbody.item
 
@@ -719,35 +749,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 	end
 
 	if player_visibility then
-		player_visibility:visibility_updated()
-	end
-end
-
-EquipmentComponent.slot_flow_event_1p = function (slot, event_name)
-	local base_unit = slot.unit_1p
-
-	unit_flow_event(base_unit, event_name)
-
-	local attachment_units = slot.attachments_1p
-
-	for i = 1, #attachment_units do
-		local attachment_unit = attachment_units[i]
-
-		unit_flow_event(attachment_unit, event_name)
-	end
-end
-
-EquipmentComponent.slot_flow_event_3p = function (slot, event_name)
-	local base_unit = slot.unit_3p
-
-	unit_flow_event(base_unit, event_name)
-
-	local attachment_units = slot.attachments_3p
-
-	for i = 1, #attachment_units do
-		local attachment_unit = attachment_units[i]
-
-		unit_flow_event(attachment_unit, event_name)
+		player_visibility:update_visibility_snapshot()
 	end
 end
 

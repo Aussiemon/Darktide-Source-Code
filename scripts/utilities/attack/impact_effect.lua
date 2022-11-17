@@ -15,7 +15,7 @@ local surface_hit_types = SurfaceMaterialSettings.hit_types
 local PI = math.pi
 local EMPTY_TABLE = {}
 local MATERIAL_QUERY_DISTANCE = 0.1
-local _can_play, _impact_fx, _impact_effect_anim_from_direction, _surface_impact_fx = nil
+local _can_play, _impact_effect_anim_from_direction, _impact_effect_anim_from_direction_with_hit_zones, _impact_fx, _surface_impact_fx = nil
 local ImpactEffect = {}
 local DEFAULT_HIT_REACTS_MIN_DAMAGE = 0
 
@@ -30,6 +30,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 
 	local is_server = Managers.state.game_session:is_server()
 	local will_be_predicted = not not impact_fx_data_or_nil.will_be_predicted
+	local local_only = not not impact_fx_data_or_nil.local_only
 	local armor = Armor.armor_type(attacked_unit, breed_or_nil, hit_zone_name, attack_type)
 	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 	local hit_weakspot = Weakspot.hit_weakspot(breed_or_nil, hit_zone_name, attack_type, attacker_buff_extension)
@@ -43,7 +44,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 		local node_index = hit_actor_or_nil and Actor.node(hit_actor_or_nil)
 		local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 
-		fx_system:play_impact_fx(impact_fx, hit_position, attack_direction, source_parameters, attacking_unit_owner_unit, attacked_unit, node_index, hit_normal, will_be_predicted)
+		fx_system:play_impact_fx(impact_fx, hit_position, attack_direction, source_parameters, attacking_unit_owner_unit, attacked_unit, node_index, hit_normal, will_be_predicted, local_only)
 	end
 
 	local should_play_offset_animation = target_alive and Unit.has_animation_state_machine(attacked_unit) and not breed_or_nil.ignore_hit_reacts and damage_profile and not damage_profile.ignore_hit_reacts
@@ -64,9 +65,15 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 			direction = "left"
 		end
 
-		local anim = _impact_effect_anim_from_direction(direction, breed_or_nil, attack_result, hit_zone_name)
+		local anim = nil
 
-		if Unit.has_animation_event(attacked_unit, anim) then
+		if breed_or_nil and breed_or_nil.hit_zone_hit_reactions then
+			anim = _impact_effect_anim_from_direction_with_hit_zones(attacking_unit, attacked_unit, attacked_unit_dir, breed_or_nil, hit_position, hit_zone_name)
+		else
+			anim = _impact_effect_anim_from_direction(direction, breed_or_nil, attack_result, hit_zone_name)
+		end
+
+		if anim and Unit.has_animation_event(attacked_unit, anim) then
 			if is_server then
 				local except = nil
 
@@ -310,6 +317,23 @@ function _impact_effect_anim_from_direction(direction, breed, attack_result, hit
 	local impact_anim = impact_anim_override[direction] or impact_fx_anim[direction]
 
 	return impact_anim
+end
+
+function _impact_effect_anim_from_direction_with_hit_zones(attacking_unit, attacked_unit, unit_fwd, breed, hit_position, hit_zone_name)
+	local hit_zone_hit_reactions = breed.hit_zone_hit_reactions
+	local hit_zone_hit_reaction = hit_zone_hit_reactions[hit_zone_name]
+
+	if not hit_zone_hit_reaction then
+		return
+	end
+
+	if type(hit_zone_hit_reaction) == "table" then
+		local to_hit_position = Vector3.normalize(hit_position - POSITION_LOOKUP[attacking_unit])
+		local is_to_the_left = Vector3.cross(unit_fwd, to_hit_position).z > 0
+		hit_zone_hit_reaction = is_to_the_left and hit_zone_hit_reaction.left or hit_zone_hit_reaction.right
+	end
+
+	return hit_zone_hit_reaction
 end
 
 function _surface_impact_fx(damage_type, material_type, hit_type)

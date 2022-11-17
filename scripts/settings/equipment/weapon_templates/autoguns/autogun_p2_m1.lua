@@ -1,14 +1,31 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokeAutogunP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p2")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
+local template_types = WeaponTweakTemplateSettings.template_types
+local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
+local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
+local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
+local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
+local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
@@ -77,6 +94,15 @@ local weapon_template = {
 					inputs = wield_inputs
 				}
 			}
+		},
+		special_action = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					value = true,
+					input = "weapon_extra_pressed"
+				}
+			}
 		}
 	}
 }
@@ -85,6 +111,7 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
+	special_action = "base",
 	reload = "stay",
 	shoot = {
 		zoom = "base",
@@ -150,6 +177,10 @@ weapon_template.actions = {
 				action_name = "action_reload",
 				chain_time = 0.275
 			},
+			special_action = {
+				action_name = "action_push",
+				chain_time = 0.275
+			},
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.5
@@ -161,33 +192,34 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		weapon_handling_template = "autogun_full_auto",
 		start_input = "shoot",
 		kind = "shoot_hit_scan",
-		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.2,
+		weapon_handling_template = "autogun_p2_m1",
 		ammunition_usage = 1,
-		recoil_template = "hip_autogun_spraynpray",
-		spread_template = "default_autogun_assault",
-		uninterruptible = true,
+		sprint_requires_press_to_interrupt = true,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 1.1,
+				modifier = 0.75,
+				t = 0.1
+			},
+			{
+				modifier = 0.9,
 				t = 0.25
 			},
 			{
 				modifier = 1,
 				t = 0.4
 			},
-			start_modifier = 1.25
+			start_modifier = 0.8
 		},
 		fx = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle_02",
 			num_pre_loop_events = 1,
 			muzzle_flash_crit_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle_crit",
 			auto_fire_time_parameter_name = "wpn_fire_interval",
@@ -202,7 +234,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.snp_autogun_bullet,
+			hit_scan_template = HitScanTemplates.autogun_p2_m1_bullet,
 			damage_type = damage_types.auto_bullet
 		},
 		allowed_chain_actions = {
@@ -235,15 +267,13 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		crosshair_type = "spray_n_pray",
-		kind = "shoot_hit_scan",
-		start_input = "zoom_shoot",
-		recoil_template = "ads_autogun_spraynpray",
-		weapon_handling_template = "autogun_full_auto_support",
-		sprint_ready_up_time = 0.2,
 		minimum_hold_time = 0,
+		start_input = "zoom_shoot",
+		kind = "shoot_hit_scan",
+		sprint_ready_up_time = 0.2,
+		weapon_handling_template = "autogun_p2_m1",
+		crosshair_type = "spray_n_pray",
 		ammunition_usage = 1,
-		spread_template = "default_autogun_spraynpray",
 		uninterruptible = true,
 		stop_input = "shoot_release",
 		total_time = math.huge,
@@ -266,7 +296,7 @@ weapon_template.actions = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle_02",
 			num_pre_loop_events = 1,
 			muzzle_flash_crit_effect = "content/fx/particles/weapons/rifles/autogun/autogun_muzzle_crit",
 			auto_fire_time_parameter_name = "wpn_fire_interval",
@@ -281,7 +311,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.snp_autogun_bullet,
+			hit_scan_template = HitScanTemplates.autogun_p2_m1_bullet,
 			damage_type = damage_types.auto_bullet
 		},
 		allowed_chain_actions = {
@@ -296,6 +326,10 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload"
+			},
+			special_action = {
+				action_name = "action_push",
+				chain_time = 0.8
 			}
 		},
 		time_scale_stat_buffs = {
@@ -308,7 +342,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.5,
@@ -335,7 +369,7 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
@@ -360,7 +394,7 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3.2,
 		action_movement_curve = {
@@ -411,14 +445,95 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 2.95
+			},
+			special_action = {
+				chain_time = 2.5,
+				action_name = "action_push",
+				chain_until = 0.4
 			}
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed
 		}
 	},
+	action_push = {
+		anim_event = "attack_push",
+		push_radius = 1.5,
+		start_input = "special_action",
+		block_duration = 0.5,
+		kind = "push",
+		sprint_requires_press_to_interrupt = true,
+		anim_event_3p = "attack_left_diagonal_up",
+		range_mod = 1.15,
+		allowed_during_sprint = true,
+		damage_time = 0.15,
+		abort_sprint = true,
+		uninterruptible = true,
+		allow_conditional_chain = true,
+		total_time = 1.1,
+		action_movement_curve = {
+			{
+				modifier = 0.3,
+				t = 0.1
+			},
+			{
+				modifier = 0.5,
+				t = 0.25
+			},
+			{
+				modifier = 0.5,
+				t = 0.3
+			},
+			{
+				modifier = 1.5,
+				t = 0.35
+			},
+			{
+				modifier = 1.5,
+				t = 0.4
+			},
+			{
+				modifier = 1.05,
+				t = 0.6
+			},
+			{
+				modifier = 0.75,
+				t = 1
+			},
+			start_modifier = 0.8
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			special_action = {
+				action_name = "action_push",
+				chain_time = 0.9
+			},
+			reload = {
+				action_name = "action_reload",
+				chain_time = 0.4
+			},
+			shoot = {
+				action_name = "action_shoot_hip",
+				chain_time = 0.9
+			}
+		},
+		inner_push_rad = math.pi * 0.1,
+		outer_push_rad = math.pi * 0.2,
+		inner_damage_profile = DamageProfileTemplates.autogun_weapon_special_push,
+		inner_damage_type = damage_types.weapon_butt,
+		outer_damage_profile = DamageProfileTemplates.autogun_weapon_special_push,
+		outer_damage_type = damage_types.weapon_butt
+	},
 	action_inspect = {
-		skip_3p_anims = true,
+		skip_3p_anims = false,
 		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
@@ -438,19 +553,23 @@ weapon_template.entry_actions = {
 }
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/autogun_rifle"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/autogun_rifle"
-weapon_template.reload_template = ReloadTemplates.autogun
-weapon_template.spread_template = "default_autogun_assault"
-weapon_template.recoil_template = "hip_autogun_spraynpray"
+weapon_template.reload_template = ReloadTemplates.autogun_ak
+weapon_template.spread_template = "autogun_p2_m1_hip"
+weapon_template.recoil_template = "default_autogun_spraynpray"
+weapon_template.suppression_template = "default_autogun_assault"
+weapon_template.look_delta_template = "autogun"
+weapon_template.semi_auto_chain_factor = 0.9
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.15
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
@@ -464,13 +583,14 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "assault"
 weapon_template.hit_marker_type = "multiple"
 weapon_template.alternate_fire_settings = {
+	recoil_template = "ads_autogun_spraynpray",
+	stop_anim_event = "to_unaim_braced",
+	spread_template = "autogun_p2_m3_ads",
 	start_anim_event_3p = "to_ironsight",
 	crosshair_type = "spray_n_pray",
 	stop_anim_event_3p = "to_unaim_braced",
-	recoil_template = "ads_autogun_spraynpray",
-	stop_anim_event = "to_unaim_braced",
 	start_anim_event = "to_braced",
-	spread_template = "default_autogun_spraynpray",
+	look_delta_template = "autogun",
 	movement_speed_modifier = {
 		{
 			modifier = 0.775,
@@ -500,11 +620,101 @@ weapon_template.keywords = {
 	"p2"
 }
 weapon_template.dodge_template = "support"
-weapon_template.sprint_template = "assault"
+weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
+weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+weapon_template.base_stats = {
+	autogun_p2_m1_dps_stat = {
+		description = "loc_trait_description_autogun_p2_m1_dps_stat",
+		display_name = "loc_stats_display_damage_stat",
+		is_stat_trait = true,
+		damage = {
+			action_shoot_hip = {
+				damage_trait_templates.default_dps_stat
+			},
+			action_shoot_zoomed = {
+				damage_trait_templates.default_dps_stat
+			},
+			action_push = {
+				damage_trait_templates.default_melee_dps_stat
+			}
+		}
+	},
+	autogun_p2_m1_ammo_stat = {
+		description = "loc_trait_description_autogun_p2_m1_ammo_stat",
+		display_name = "loc_stats_display_ammo_stat",
+		is_stat_trait = true,
+		ammo = {
+			base = {
+				ammo_trait_templates.default_ammo_stat
+			}
+		}
+	},
+	autogun_p2_m1_stability_stat = {
+		description = "loc_trait_description_autogun_p2_m1_stability_stat",
+		display_name = "loc_stats_display_stability_stat",
+		is_stat_trait = true,
+		recoil = {
+			base = {
+				recoil_trait_templates.default_recoil_stat
+			},
+			alternate_fire = {
+				recoil_trait_templates.default_recoil_stat
+			}
+		},
+		spread = {
+			base = {
+				spread_trait_templates.default_spread_stat
+			}
+		}
+	},
+	autogun_p2_m1_control_stat = {
+		description = "loc_trait_description_autogun_p2_m1_dps_stat",
+		display_name = "loc_stats_display_control_stat_ranged",
+		is_stat_trait = true,
+		damage = {
+			action_shoot_hip = {
+				damage_trait_templates.autopistol_control_stat
+			},
+			action_shoot_zoomed = {
+				damage_trait_templates.autopistol_control_stat
+			}
+		}
+	},
+	autogun_p2_m1_mobility_stat = {
+		description = "loc_trait_description_autogun_p2_m1_mobility_stat",
+		display_name = "loc_stats_display_mobility_stat",
+		is_stat_trait = true,
+		dodge = {
+			base = {
+				dodge_trait_templates.default_dodge_stat
+			}
+		},
+		sprint = {
+			base = {
+				sprint_trait_templates.default_sprint_stat
+			}
+		},
+		movement_curve_modifier = {
+			base = {
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+			}
+		},
+		spread = {
+			base = {
+				spread_trait_templates.mobility_spread_stat
+			}
+		}
+	}
+}
+weapon_template.traits = {}
+local bespoke_autogun_p2_traits = table.keys(WeaponTraitsBespokeAutogunP2)
+
+table.append(weapon_template.traits, bespoke_autogun_p2_traits)
+
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_spray_n_pray"

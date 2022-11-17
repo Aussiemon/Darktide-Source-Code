@@ -16,36 +16,49 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementPlayerPanel = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel")
 local MasterItems = require("scripts/backend/master_items")
 local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_gear_head = "gear_item",
 	slot_animation_end_of_round = "gear_item",
-	slot_animation_emote_4 = "gear_item",
+	slot_animation_emote_4 = "ui_item",
 	slot_gear_extra_cosmetic = "gear_item",
-	slot_animation_emote_1 = "gear_item",
-	slot_animation_emote_5 = "gear_item",
+	slot_animation_emote_1 = "ui_item",
+	slot_animation_emote_5 = "ui_item",
 	slot_insignia = "ui_item",
 	slot_portrait_frame = "ui_item",
-	slot_animation_emote_3 = "gear_item",
+	slot_animation_emote_3 = "ui_item",
 	slot_gear_lowerbody = "gear_item",
 	slot_gear_upperbody = "gear_item",
-	slot_animation_emote_2 = "gear_item"
+	slot_animation_emote_2 = "ui_item"
 }
 local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase")
 
 InventoryCosmeticsView.init = function (self, settings, context)
 	self._context = context
+	self._selected_slot = context.debug and {
+		name = "slot_insignia"
+	} or context.selected_slot
 	self._selected_slots = context.selected_slots or {
 		context.selected_slot
 	}
+	self._initial_rotation = context.initial_rotation
+	self._disable_rotation_input = context.disable_rotation_input
+	self._animation_event_name_suffix = context.animation_event_name_suffix
+	self._animation_event_variable_data = context.animation_event_variable_data
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
+	self._current_profile_equipped_items = context.current_profile_equipped_items or {}
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
 	local player = self._preview_player
 	local profile = player:profile()
-	self._presentation_profile = table.clone_instance(profile)
+	self._presentation_profile = context.debug and {} or table.clone_instance(profile)
 	self._presentation_profile.character_id = "cosmetics_view_preview_character"
+	self._presentation_profile.loadout = context.debug and {
+		slot_insignia = UISettings.insignia_default_texture
+	} or self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items)
 	self._camera_zoomed_in = true
+	self._initialize_zoom = true
 
 	InventoryCosmeticsView.super.init(self, Definitions, settings)
 
@@ -123,7 +136,7 @@ InventoryCosmeticsView._stop_previewing = function (self)
 	end
 end
 
-InventoryCosmeticsView._spawn_profile = function (self, profile)
+InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotation, disable_rotation_input)
 	if self._profile_spawner then
 		self._profile_spawner:destroy()
 
@@ -134,9 +147,20 @@ InventoryCosmeticsView._spawn_profile = function (self, profile)
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
 	self._profile_spawner = UIProfileSpawner:new("InventoryCosmeticsView", world, camera, unit_spawner)
+
+	if disable_rotation_input then
+		self._profile_spawner:disable_rotation_input()
+	end
+
 	local camera_position = ScriptCamera.position(camera)
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
+
+	if initial_rotation then
+		local character_initial_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), initial_rotation)
+		spawn_rotation = Quaternion.multiply(character_initial_rotation, spawn_rotation)
+	end
+
 	camera_position.z = 0
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
@@ -184,12 +208,6 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	local gear_id = item.gear_id or item_name
 
 	if item then
-		if self._selected_slots then
-			local first_slot_name = slots[1]
-			local first_slot = ItemSlotSettings[first_slot_name]
-			self._selected_slot = first_slot
-		end
-
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local presentation_profile = self._presentation_profile
@@ -200,8 +218,24 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		if animation_slot then
 			local item_state_machine = item.state_machine
 			local item_animation_event = item.animation_event
+			local item_face_animation_event = item.face_animation_event
+			local animation_event_name_suffix = self._animation_event_name_suffix
+			local animation_event = item_animation_event
 
-			self._profile_spawner:assign_state_machine(item_state_machine, item_animation_event)
+			if animation_event_name_suffix then
+				animation_event = animation_event .. animation_event_name_suffix
+			end
+
+			self._profile_spawner:assign_state_machine(item_state_machine, animation_event, item_face_animation_event)
+
+			local animation_event_variable_data = self._animation_event_variable_data
+
+			if animation_event_variable_data then
+				local index = animation_event_variable_data.index
+				local value = animation_event_variable_data.value
+
+				self._profile_spawner:assign_animation_variable(index, value)
+			end
 
 			local prop_item_key = item.prop_item
 			local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
@@ -245,26 +279,34 @@ InventoryCosmeticsView._register_button_callbacks = function (self)
 	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
-InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id)
+InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, instant)
 	self._camera_zoomed_in = not self._camera_zoomed_in
-	local display_name = self._camera_zoomed_in and "loc_inventory_menu_zoom_out" or "loc_inventory_menu_zoom_in"
-
-	self._input_legend_element:set_display_name(id, display_name)
-
-	local selected_slot = self._selected_slot
-	local selected_slot_name = selected_slot and selected_slot.name
-	local func_ptr = math.easeCubic
-	local world_spawner = self._world_spawner
 
 	if self._camera_zoomed_in then
-		self:_set_camera_item_slot_focus(selected_slot_name, 1, func_ptr)
+		self:_play_sound(UISoundEvents.apparel_zoom_in)
 	else
-		world_spawner:set_camera_position_axis_offset("x", 0, 1, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", 0, 1, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", 0, 1, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("x", 0, 1, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("y", 0, 1, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("z", 0, 1, func_ptr)
+		self:_play_sound(UISoundEvents.apparel_zoom_out)
+	end
+
+	self:_trigger_zoom_logic(instant)
+end
+
+InventoryCosmeticsView._trigger_zoom_logic = function (self, instant, optional_slot_name)
+	local selected_slot = self._selected_slot
+	local selected_slot_name = optional_slot_name or selected_slot and selected_slot.name
+	local func_ptr = math.easeCubic
+	local world_spawner = self._world_spawner
+	local duration = instant and 0 or 1
+
+	if self._camera_zoomed_in then
+		self:_set_camera_item_slot_focus(selected_slot_name, duration, func_ptr)
+	else
+		world_spawner:set_camera_position_axis_offset("x", 0, duration, func_ptr)
+		world_spawner:set_camera_position_axis_offset("y", 0, duration, func_ptr)
+		world_spawner:set_camera_position_axis_offset("z", 0, duration, func_ptr)
+		world_spawner:set_camera_rotation_axis_offset("x", 0, duration, func_ptr)
+		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
+		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
 	end
 end
 
@@ -304,8 +346,11 @@ InventoryCosmeticsView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
+	if not self._has_equipped_item then
+		self:_play_sound(UISoundEvents.default_menu_exit)
+	end
+
 	InventoryCosmeticsView.super.on_exit(self)
-	Managers.event:trigger("event_equip_local_changes")
 end
 
 InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
@@ -320,7 +365,10 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 		filter[#filter + 1] = slot_name
 	end
 
-	Managers.data_service.gear:fetch_inventory_paged(character_id, 100, filter):next(function (items)
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot.name
+
+	Managers.data_service.gear:fetch_inventory(character_id, filter):next(function (items)
 		if self._destroyed then
 			return
 		end
@@ -341,18 +389,14 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 				local slots = item.slots
 
 				if slots then
-					local first_slot_name = slots[1]
-					local first_slot = ItemSlotSettings[first_slot_name]
 					local valid = true
 
-					if slots then
-						for j = 1, #slots do
-							layout[#layout + 1] = {
-								item = item,
-								slot = first_slot,
-								widget_type = WIDGET_TYPE_BY_SLOT[first_slot_name]
-							}
-						end
+					if valid then
+						layout[#layout + 1] = {
+							item = item,
+							slot = selected_slot,
+							widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name]
+						}
 					end
 				end
 			end
@@ -360,12 +404,12 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 
 		local first_selected_slot = selected_slots[1]
 		self._offer_items_layout = layout
-		local slot_display_name = first_selected_slot and first_selected_slot.display_name
+		local slot_display_name = selected_slot and selected_slot.display_name
 
 		self:_present_layout_by_slot_filter(nil, slot_display_name)
 
 		local start_index = #layout > 0 and 1
-		local equipped_item = start_index and self:equipped_item_in_slot(first_selected_slot.name)
+		local equipped_item = start_index and self:equipped_item_in_slot(selected_slot_name)
 
 		if equipped_item then
 			start_index = self:item_grid_index(equipped_item) or start_index
@@ -432,6 +476,24 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 	return false
 end
 
+InventoryCosmeticsView._on_double_click = function (self, widget, element)
+	local selected_slot = self._selected_slot
+
+	if not selected_slot then
+		return
+	end
+
+	local previewed_item = self._previewed_item
+
+	if not previewed_item then
+		return
+	end
+
+	local selected_slot_name = selected_slot.name
+
+	self:_equip_item(selected_slot_name, previewed_item)
+end
+
 InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 	if self._equip_button_disabled then
 		return
@@ -440,14 +502,30 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 	local equipped_slot_item = self:equipped_item_in_slot(slot_name)
 
 	if not equipped_slot_item or equipped_slot_item.gear_id ~= item.gear_id then
+		self._has_equipped_item = true
+
+		if item then
+			local item_type = item.item_type
+			local ITEM_TYPES = UISettings.ITEM_TYPES
+
+			if item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.END_OF_ROUND then
+				self:_play_sound(UISoundEvents.apparel_equip)
+			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
+				self:_play_sound(UISoundEvents.apparel_equip_small)
+			elseif item_type == ITEM_TYPES.PORTRAIT_FRAME or item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
+				self:_play_sound(UISoundEvents.apparel_equip_frame)
+			else
+				self:_play_sound(UISoundEvents.apparel_equip)
+			end
+		end
+
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 	end
-
-	self:_play_sound(UISoundEvents.weapons_select_weapon)
 end
 
 InventoryCosmeticsView.equipped_item_in_slot = function (self, slot_name)
-	local slot_item = self._preview_profile_equipped_items[slot_name]
+	local current_loadout = self._current_profile_equipped_items
+	local slot_item = current_loadout[slot_name]
 	local item = slot_item and self:_get_item_from_inventory(slot_item)
 
 	return item
@@ -496,7 +574,7 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
 		button_content.hotspot.disabled = disable_button
-		button_content.text = string.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
+		button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 	end
 end
 
@@ -505,19 +583,24 @@ InventoryCosmeticsView.cb_on_close_pressed = function (self)
 end
 
 InventoryCosmeticsView.update = function (self, dt, t, input_service)
-	if self._spawn_player and not self._player_spawned and self._spawn_point_unit and self._default_camera_unit then
-		local profile = self._presentation_profile
+	if self._spawn_player then
+		if not self._player_spawned and self._spawn_point_unit and self._default_camera_unit then
+			local profile = self._presentation_profile
+			local initial_rotation = self._initial_rotation
+			local disable_rotation_input = self._disable_rotation_input
 
-		self:_spawn_profile(profile)
+			self:_spawn_profile(profile, initial_rotation, disable_rotation_input)
 
-		self._player_spawned = true
-		self._spawn_player = false
-		local selected_slot = self._selected_slot
+			self._player_spawned = true
+			self._spawn_player = false
+			local selected_slot = self._selected_slot
+			local selected_slot_name = selected_slot and selected_slot.name
 
-		if selected_slot then
-			local selected_slot_name = selected_slot.name
+			self:_trigger_zoom_logic(true, selected_slot_name)
+		end
 
-			self:_set_camera_item_slot_focus(selected_slot_name, 0, math.easeCubic)
+		if self._player_spawned and not self._initialize_zoom then
+			self._initialize_zoom = false
 		end
 	end
 

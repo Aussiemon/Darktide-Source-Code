@@ -38,22 +38,8 @@ HealthExtension.is_invulnerable = function (self)
 	return self._is_invulnerable
 end
 
-HealthExtension.current_damaged_health = function (self)
-	return math.max(0, self._health - self._damage)
-end
-
 HealthExtension.current_health = function (self)
 	return math.max(0, self._health - self._damage)
-end
-
-HealthExtension.current_damaged_health_percent = function (self)
-	local damaged_max_health = self:damaged_max_health()
-
-	if damaged_max_health <= 0 then
-		return 0
-	end
-
-	return math.max(0, 1 - self._damage / damaged_max_health)
 end
 
 HealthExtension.current_health_percent = function (self)
@@ -80,10 +66,6 @@ end
 
 HealthExtension.total_damage_taken = function (self)
 	return math.min(self._health, self._damage)
-end
-
-HealthExtension.damaged_max_health = function (self)
-	return math.max(0, self._health - self._damage)
 end
 
 HealthExtension.max_health = function (self)
@@ -136,12 +118,22 @@ HealthExtension.add_heal = function (self, heal_amount, heal_type)
 	return actual_heal_amount
 end
 
-HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit)
+HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
 	self._last_damaging_unit = last_damaging_unit
+	self._last_hit_zone_name = hit_zone_name
+	self._last_hit_was_critical = last_hit_was_critical
 end
 
 HealthExtension.last_damaging_unit = function (self)
 	return self._last_damaging_unit
+end
+
+HealthExtension.last_hit_zone_name = function (self)
+	return self._last_hit_zone_name
+end
+
+HealthExtension.last_hit_was_critical = function (self)
+	return self._last_hit_was_critical
 end
 
 HealthExtension.health_depleted = function (self)

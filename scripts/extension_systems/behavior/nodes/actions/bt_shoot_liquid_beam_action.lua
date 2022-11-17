@@ -174,6 +174,10 @@ local AIM_TURN_DOT_THRESHOLD = 0.75
 local AIM_TURN_FWD_DOT_THRESHOLD = 0.9
 
 BtShootLiquidBeamAction._update_aim_turning = function (self, unit, scratchpad, action_data, aim_dot, flat_to_target, aim_rotation_anims)
+	if not aim_dot then
+		return false
+	end
+
 	local animation_extension = scratchpad.animation_extension
 	local current_aim_rotation_direction_name = scratchpad.current_aim_rotation_direction_name
 
@@ -288,6 +292,10 @@ BtShootLiquidBeamAction._start_shooting = function (self, unit, t, scratchpad, a
 	scratchpad.distance_to_from = distance_to_from
 
 	self:_set_game_object_field(scratchpad, "state", STATES.shooting)
+
+	if action_data.aoe_bot_threat_timing then
+		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
+	end
 end
 
 local AIM_DOT_THRESHOLD = 0
@@ -320,6 +328,18 @@ BtShootLiquidBeamAction._update_shooting = function (self, unit, t, dt, scratchp
 
 				scratchpad.locomotion_extension:set_wanted_rotation(wanted_rotation)
 			end
+		end
+
+		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
+			local perception_component = scratchpad.perception_component
+			local target_unit = perception_component.target_unit
+			local group_extension = ScriptUnit.extension(target_unit, "group_system")
+			local bot_group = group_extension:bot_group()
+			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+
+			bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, Quaternion.look(flat_to_target_direction), action_data.aoe_bot_threat_duration)
+
+			scratchpad.aoe_bot_threat_timing = nil
 		end
 	elseif scratchpad.next_shoot_timing and scratchpad.next_shoot_timing <= t then
 		scratchpad.shooting_liquid_beam = true
@@ -475,7 +495,7 @@ BtShootLiquidBeamAction._get_from_shoot_pos = function (self, unit, scratchpad, 
 	local from = POSITION_LOOKUP[unit]
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
-	local to = scratchpad.perception_extension:last_los_position(target_unit)
+	local to = scratchpad.perception_extension:last_los_position(target_unit) or POSITION_LOOKUP[target_unit]
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local distance = Vector3.distance(from, to)
 	local range_percentage_front = action_data.range_percentage_front

@@ -33,6 +33,7 @@ AccountManagerXboxLive.reset = function (self)
 	self._signin_callback = nil
 	self._popup_id = nil
 	self._leave_game = nil
+	self._network_fatal_error = nil
 	self._signin_state = SIGNIN_STATES.idle
 	self._wanted_state = nil
 	self._wanted_state_params = nil
@@ -42,6 +43,7 @@ AccountManagerXboxLive.reset = function (self)
 	self._user_device_association_changed = nil
 	self._mute_list = {}
 	self._block_list = {}
+	self._restriction_listeners = {}
 
 	if not self._do_re_signin then
 		self._is_guest = nil
@@ -68,7 +70,7 @@ AccountManagerXboxLive.destroy = function (self)
 end
 
 AccountManagerXboxLive.user_detached = function (self)
-	return self._popup_id or self._leave_game
+	return self._popup_id or self._leave_game or self._network_fatal_error
 end
 
 AccountManagerXboxLive.leaving_game = function (self)
@@ -96,21 +98,45 @@ AccountManagerXboxLive.get_privilege = function (self, privilege)
 end
 
 AccountManagerXboxLive.update = function (self, dt, t)
-	if not self._user_id then
+	if not self._user_id or self._network_fatal_error then
 		return
 	end
 
-	self:_handle_user_changes(dt, t)
+	self:_handle_user_changes()
+	self:verify_connection()
+end
+
+AccountManagerXboxLive.verify_connection = function (self)
+	local network_connectivity = XboxLive.get_network_connectivity()
+
+	if network_connectivity ~= NetworkConnectivity.ACTIVE and not self._network_fatal_error then
+		self:_show_fatal_error("loc_popup_header_error", "loc_signed_in_multiplayer_privilege_fail_desc")
+
+		self._network_fatal_error = true
+		self._network_connectivity = network_connectivity
+	end
+
+	return self._network_fatal_error == nil
 end
 
 AccountManagerXboxLive.show_profile_picker = function (self)
 	local success_cb = callback(self, "_cb_profile_selected")
+	local fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", "loc_user_signin_failed_desc")
 	local async_task = XUser.add_user_async(XUserAddOptions.None)
 
-	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb)
+	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 end
 
 AccountManagerXboxLive.signin_profile = function (self, signin_callback, optional_input_device)
+	local success_cb = callback(self, "_cb_user_signed_in", optional_input_device)
+	local fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", "loc_user_signin_failed_desc")
+
+	if not self:verify_connection() then
+		fail_cb()
+
+		return
+	end
+
 	if self._do_re_signin then
 		self._do_re_signin = nil
 
@@ -118,8 +144,6 @@ AccountManagerXboxLive.signin_profile = function (self, signin_callback, optiona
 
 		self._signin_state = SIGNIN_STATES.fetching_privileges
 	else
-		local success_cb = callback(self, "_cb_user_signed_in", optional_input_device)
-		local fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", "loc_user_signin_failed_desc")
 		local async_task = nil
 		local users = XUser.users()
 
@@ -129,7 +153,7 @@ AccountManagerXboxLive.signin_profile = function (self, signin_callback, optiona
 			async_task = XUser.add_user_async(XUserAddOptions.AddDefaultUserAllowingUI)
 		end
 
-		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb)
+		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 
 		self._signin_state = SIGNIN_STATES.signin_profile
 	end
@@ -236,7 +260,12 @@ AccountManagerXboxLive.verify_gdk_store_account = function (self)
 	return true
 end
 
-AccountManagerXboxLive.verify_user_restriction = function (self, xuid, restriction)
+AccountManagerXboxLive.verify_user_restriction = function (self, xuid, restriction, optional_callback)
+	if optional_callback then
+		self._restriction_listeners[xuid] = self._restriction_listeners[xuid] or {}
+		self._restriction_listeners[xuid][restriction] = optional_callback
+	end
+
 	self._xbox_privileges:verify_user_restriction(xuid, restriction)
 end
 
@@ -246,6 +275,28 @@ end
 
 AccountManagerXboxLive.user_restriction_verified = function (self, xuid, restriction)
 	return self._xbox_privileges:user_restriction_verified(xuid, restriction)
+end
+
+AccountManagerXboxLive.user_restriction_updated = function (self, xuid, restriction)
+	local listener = self._restriction_listeners[xuid]
+
+	if not listener then
+		return
+	end
+
+	local restriction_listener = listener[restriction]
+
+	if not restriction_listener then
+		return
+	end
+
+	listener[restriction] = nil
+
+	restriction_listener()
+end
+
+AccountManagerXboxLive.network_error = function (self)
+	return self._network_fatal_error
 end
 
 AccountManagerXboxLive._cb_user_signed_in = function (self, optional_input_device, async_block)
@@ -261,10 +312,11 @@ end
 
 AccountManagerXboxLive._cb_profile_selected = function (self, async_task)
 	local user_id = XUser.get_user_result(async_task)
+	local old_xuid = self._xuid
 
 	self:_set_user_data(user_id)
 
-	if self._xuid ~= xuid then
+	if self._xuid ~= old_xuid then
 		if self._social_groups_created_id then
 			XSocialManager.remove_local_user(self._social_groups_created_id)
 		end
@@ -326,7 +378,7 @@ AccountManagerXboxLive._fetch_sandbox_id = function (self)
 	local async_task, error_code = XboxLive.get_sandbox_id_async()
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XboxLive.release_async_block):next(success_cb, fail_cb)
+		Managers.xasync:wrap(async_task, XboxLive.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 
 		self._signin_state = SIGNIN_STATES.fetching_sandbox_id
 	else
@@ -399,6 +451,12 @@ AccountManagerXboxLive._cb_storage_deleted = function (self, success)
 end
 
 AccountManagerXboxLive._setup_friends_list = function (self)
+	if not self._user_id then
+		self:_show_fatal_error("loc_popup_header_error", "loc_friends_list_failed_desc")
+
+		return
+	end
+
 	local success, error_code = XSocialManager.add_local_user(self._user_id)
 
 	if success then
@@ -440,7 +498,6 @@ AccountManagerXboxLive._show_gamertag_popup = function (self)
 				{
 					text = "loc_popup_button_confirm",
 					close_on_pressed = true,
-					hotkey = "confirm_pressed",
 					callback = callback(self, "cb_signin_complete")
 				},
 				{
@@ -629,7 +686,7 @@ AccountManagerXboxLive._handle_user_device_association_change = function (self)
 			local fail_cb = callback(self, "_show_disconnect_error")
 			local async_task = XUser.from_device_async(self._active_controller.device_pointer())
 
-			Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb)
+			Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 		end
 	else
 		self:_show_disconnect_error()
@@ -648,8 +705,11 @@ AccountManagerXboxLive._cb_from_device_async = function (self, async_task)
 end
 
 AccountManagerXboxLive._show_disconnect_error = function (self)
-	local device_type = self._active_controller.type()
-	InputDevice.default_device_id[device_type] = nil
+	if self._active_controller then
+		local device_type = self._active_controller.type()
+		InputDevice.default_device_id[device_type] = nil
+	end
+
 	local context = {
 		title_text = "loc_popup_header_controller_disconnect_error",
 		description_text = "loc_popup_desc_signed_out_error",
@@ -660,13 +720,11 @@ AccountManagerXboxLive._show_disconnect_error = function (self)
 			{
 				text = "loc_retry",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				callback = callback(self, "_cb_verify_profile")
 			},
 			{
 				text = "loc_select_profile",
 				close_on_pressed = true,
-				hotkey = "hotkey_menu_special_2",
 				callback = callback(self, "_cb_open_profile_picker")
 			},
 			{
@@ -684,8 +742,11 @@ AccountManagerXboxLive._show_disconnect_error = function (self)
 end
 
 AccountManagerXboxLive._show_signed_out_error = function (self)
-	local device_type = self._active_controller.type()
-	InputDevice.default_device_id[device_type] = nil
+	if self._active_controller then
+		local device_type = self._active_controller.type()
+		InputDevice.default_device_id[device_type] = nil
+	end
+
 	local context = {
 		title_text = "loc_popup_header_signed_out_error",
 		description_text = "loc_popup_desc_signed_out_error",
@@ -696,13 +757,11 @@ AccountManagerXboxLive._show_signed_out_error = function (self)
 			{
 				text = "loc_retry",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				callback = callback(self, "_cb_verify_profile")
 			},
 			{
 				text = "loc_select_profile",
 				close_on_pressed = true,
-				hotkey = "hotkey_menu_special_2",
 				callback = callback(self, "_cb_open_profile_picker")
 			},
 			{
@@ -761,15 +820,16 @@ AccountManagerXboxLive._cb_open_profile_picker = function (self)
 	local fail_cb = callback(self, "_cb_verify_profile")
 	local async_task = XUser.add_user_async(XUserAddOptions.None)
 
-	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb)
+	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
 end
 
 AccountManagerXboxLive._cb_verify_profile_selection = function (self, async_task)
 	local user_id = XUser.get_user_result(async_task)
+	local old_xuid = self._xuid
 
 	self:_set_user_data(user_id)
 
-	if self._xuid ~= xuid then
+	if self._xuid ~= old_xuid then
 		self:_show_disconnect_error()
 	else
 		self._user_id = user_id
@@ -783,8 +843,6 @@ AccountManagerXboxLive.return_to_title_screen = function (self)
 	self._leave_game = true
 	self._wanted_state = CLASSES.StateError
 	self._wanted_state_params = {}
-
-	Managers.backend:logout()
 end
 
 return AccountManagerXboxLive

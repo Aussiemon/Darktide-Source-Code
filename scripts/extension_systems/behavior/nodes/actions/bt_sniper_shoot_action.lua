@@ -55,6 +55,7 @@ BtSniperShootAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	local fx_system = Managers.state.extension:system("fx_system")
 	scratchpad.fx_system = fx_system
 	scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+	scratchpad.hit_distance_check_timer = t + 0.5
 
 	self:_start_aiming(unit, t, scratchpad, action_data)
 end
@@ -191,6 +192,12 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 			self:_start_shooting(unit, t, scratchpad, action_data)
 
 			scratchpad.shoot_at_t = nil
+		elseif scratchpad.next_threat_timing and scratchpad.next_threat_timing < t then
+			local perception_component = scratchpad.perception_component
+
+			self:_create_bot_threat(unit, perception_component.target_unit)
+
+			scratchpad.next_threat_timing = nil
 		end
 	elseif target_is_in_sight then
 		if not target_is_in_sight_duration then
@@ -242,6 +249,7 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 
 			scratchpad.dodge_window = t + action_data.scope_reflection_timing_before_shooting + extra_timing
 			scratchpad.shoot_at_t = scratchpad.dodge_window
+			scratchpad.next_threat_timing = scratchpad.shoot_at_t - 0.4
 		end
 	elseif target_is_in_sight_duration then
 		scratchpad.target_is_in_sight_duration = 0
@@ -308,7 +316,12 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	local from = unit_position
 	local to = unit_position + Vector3.normalize(aim_position - from)
 	local max_distance = action_data.max_distance
-	local raycast_hit_target, laser_aim_position = self:_ray_cast(scratchpad, from, to, max_distance)
+	local raycast_hit_target, laser_aim_position, _, hit_distance = self:_ray_cast(scratchpad, from, to, max_distance)
+
+	if hit_distance < 2 and scratchpad.hit_distance_check_timer <= t then
+		scratchpad.should_reevaluate = true
+	end
+
 	local network_min = NetworkConstants.min_position
 	local network_max = NetworkConstants.max_position
 	laser_aim_position[1] = math.clamp(laser_aim_position[1], network_min, network_max)
@@ -331,6 +344,8 @@ BtSniperShootAction._ray_cast = function (self, scratchpad, from, to, distance)
 	local collision_filter = "filter_minion_shooting_no_friendly_fire"
 	local to_target = to - from
 	local direction = Vector3.normalize(to_target)
+	local from_offset = -direction * 0.75
+	from = from + from_offset
 	local hit, hit_position, _, _, hit_actor = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", collision_filter)
 	local target_is_in_sight = false
 
@@ -344,7 +359,9 @@ BtSniperShootAction._ray_cast = function (self, scratchpad, from, to, distance)
 		end
 	end
 
-	return target_is_in_sight, hit_position, hit
+	local hit_distance = Vector3.length(hit_position - from)
+
+	return target_is_in_sight, hit_position, hit, hit_distance
 end
 
 BtSniperShootAction._start_shooting = function (self, unit, t, scratchpad, action_data)
@@ -417,6 +434,30 @@ BtSniperShootAction._update_cooldown = function (self, unit, t, dt, scratchpad, 
 			scratchpad.should_reevaluate = target_distance <= action_data.after_shoot_reevaluate_distance
 		end
 	end
+end
+
+local BOT_THREAT_WIDTH = 3
+local BOT_THREAT_RANGE = 4
+local BOT_THREAT_HEIGHT = 2
+local BOT_THREAT_DURATION = 1.5
+
+BtSniperShootAction._create_bot_threat = function (self, unit, target_unit)
+	local target_position = POSITION_LOOKUP[target_unit]
+	local width = BOT_THREAT_WIDTH
+	local range = BOT_THREAT_RANGE
+	local height = BOT_THREAT_HEIGHT
+	local half_width = width * 0.5
+	local half_range = range * 0.5
+	local half_height = height * 0.5
+	local hit_size = Vector3(half_width, half_range, half_height)
+	local to_target_position = Vector3.normalize(target_position - POSITION_LOOKUP[unit])
+	local rotation = Quaternion.look(to_target_position)
+	local up = Quaternion.up(rotation)
+	local position = target_position + up * half_height
+	local group_extension = ScriptUnit.extension(target_unit, "group_system")
+	local bot_group = group_extension:bot_group()
+
+	bot_group:aoe_threat_created(position, "oobb", hit_size, rotation, BOT_THREAT_DURATION)
 end
 
 return BtSniperShootAction

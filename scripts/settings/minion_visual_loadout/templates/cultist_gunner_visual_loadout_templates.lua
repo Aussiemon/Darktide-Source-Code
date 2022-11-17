@@ -73,6 +73,7 @@ local templates = {
 	cultist_gunner = {
 		default = {},
 		[zone_ids.tank_foundry] = {},
+		[zone_ids.dust] = {},
 		[zone_ids.watertown] = {}
 	}
 }
@@ -82,6 +83,11 @@ foundry_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
 templates.cultist_gunner.tank_foundry[1] = foundry_1
+local dust_1 = table.clone(basic_cultist_gunner_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.cultist_gunner.dust[1] = dust_1
 local watertown_1 = table.clone(basic_cultist_gunner_template)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

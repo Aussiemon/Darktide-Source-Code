@@ -32,6 +32,7 @@ BtCombatIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 	scratchpad.time_to_next_evaluate = t + math.random_range(BtCombatIdleAction.TIME_TO_FIRST_EVALUATE[1], BtCombatIdleAction.TIME_TO_FIRST_EVALUATE[2])
 	local perception_component = blackboard.perception
 	scratchpad.perception_component = perception_component
+	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local vo_event = action_data.vo_event
 
 	if vo_event then
@@ -40,8 +41,8 @@ BtCombatIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 end
 
 BtCombatIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if action_data.rotate_towards_target then
-		self:_rotate_towards_target_unit(unit, scratchpad)
+	if not action_data.dont_rotate_towards_target then
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 	end
 
 	local should_evaluate = nil
@@ -53,13 +54,6 @@ BtCombatIdleAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 	end
 
 	return "running", should_evaluate
-end
-
-BtCombatIdleAction._rotate_towards_target_unit = function (self, unit, scratchpad)
-	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, scratchpad.perception_component.target_unit)
-	local locomotion_extension = scratchpad.locomotion_extension
-
-	locomotion_extension:set_wanted_rotation(flat_rotation)
 end
 
 return BtCombatIdleAction

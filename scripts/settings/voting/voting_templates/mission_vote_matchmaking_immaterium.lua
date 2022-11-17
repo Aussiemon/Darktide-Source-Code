@@ -41,7 +41,13 @@ local mission_vote_matchmaking_immaterium = {
 			Managers.voting:cast_vote(voting_id, "yes")
 		elseif not Managers.voting:has_voted(voting_id, Managers.party_immaterium:get_myself():unique_id()) then
 			if params.qp == "true" then
-				Managers.voting:cast_vote(voting_id, "yes")
+				local view_context = {
+					qp = params.qp,
+					voting_id = voting_id,
+					backend_mission_id = params.backend_mission_id
+				}
+
+				_open_voting_view(view_context)
 			else
 				local view_context = {
 					voting_id = voting_id,
@@ -74,7 +80,7 @@ mission_vote_matchmaking_immaterium.fetch_my_vote_params = function (template, p
 		local profile = Managers.player:local_player_backend_profile()
 		local character_id = profile and profile.character_id
 
-		return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_mission(params.backend_mission_id, character_id):next(function (response)
+		return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_mission(params.backend_mission_id, character_id, params.private_session == "true"):next(function (response)
 			return {
 				ticket = response.ticket
 			}

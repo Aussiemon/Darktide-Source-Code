@@ -363,7 +363,7 @@ ImguiManager._render_guis = function (self, dt, t, guis_to_render)
 				gui.resize = nil
 			end
 
-			local open, do_close = Imgui.begin_window(window_name)
+			local open, do_close = Imgui.begin_window(window_name, "menu_bar")
 
 			if open then
 				gui.instance:update(dt, t)

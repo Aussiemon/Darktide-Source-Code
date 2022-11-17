@@ -31,7 +31,7 @@ GameplayInitStepOutOfBounds._init_out_of_bounds_checker = function (self, world,
 
 	out_shared_state.hard_cap_out_of_bounds_units = Script.new_map(16)
 	out_shared_state.soft_cap_out_of_bounds_units = Script.new_map(16)
-	Managers.state.out_of_bounds = OutOfBoundsManager:new(world)
+	Managers.state.out_of_bounds = OutOfBoundsManager:new(world, hard_cap_extents, soft_cap_extents)
 end
 
 implements(GameplayInitStepOutOfBounds, GameplayInitStepInterface)

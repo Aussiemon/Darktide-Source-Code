@@ -22,8 +22,10 @@ local buff_classes = {
 	weapon_trait_parent_proc_buff = _require_buff_class("weapon_trait_parent_proc_buff"),
 	weapon_trait_proc_conditional_switch_buff = _require_buff_class("weapon_trait_proc_conditional_switch_buff"),
 	weapon_trait_activated_parent_proc_buff = _require_buff_class("weapon_trait_activated_parent_proc_buff"),
+	weapon_trait_target_number_parent_proc_buff = _require_buff_class("weapon_trait_target_number_parent_proc_buff"),
 	veteran_ranger_stance_buff = _require_buff_class("veteran_ranger_stance_buff"),
-	psyker_biomancer_passive_buff = _require_buff_class("psyker_biomancer_passive_buff")
+	psyker_biomancer_passive_buff = _require_buff_class("psyker_biomancer_passive_buff"),
+	zealot_maniac_passive_buff = _require_buff_class("zealot_maniac_passive_buff")
 }
 
 return buff_classes

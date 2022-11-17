@@ -157,46 +157,6 @@ local item_slot_settings = {
 			70
 		}
 	},
-	slot_animation_emote_1 = {
-		icon_angle = 0,
-		equipped_in_inventory = true,
-		display_name = "loc_inventory_title_slot_animation_emote_1",
-		store_category = "emotes",
-		slot_type = "ui",
-		ignore_character_spawning = true
-	},
-	slot_animation_emote_2 = {
-		equipped_in_inventory = true,
-		display_name = "loc_inventory_title_slot_animation_emote_2",
-		store_category = "emotes",
-		slot_type = "ui",
-		ignore_character_spawning = true,
-		icon_angle = -math.pi / 2.5
-	},
-	slot_animation_emote_3 = {
-		equipped_in_inventory = true,
-		display_name = "loc_inventory_title_slot_animation_emote_3",
-		store_category = "emotes",
-		slot_type = "ui",
-		ignore_character_spawning = true,
-		icon_angle = -math.pi / 1.25
-	},
-	slot_animation_emote_4 = {
-		equipped_in_inventory = true,
-		display_name = "loc_inventory_title_slot_animation_emote_4",
-		store_category = "emotes",
-		slot_type = "ui",
-		ignore_character_spawning = true,
-		icon_angle = math.pi / 1.25
-	},
-	slot_animation_emote_5 = {
-		equipped_in_inventory = true,
-		display_name = "loc_inventory_title_slot_animation_emote_5",
-		store_category = "emotes",
-		slot_type = "ui",
-		ignore_character_spawning = true,
-		icon_angle = math.pi / 2.5
-	},
 	slot_animation_end_of_round = {
 		equipped_in_inventory = true,
 		display_name = "loc_inventory_title_slot_animation_end_of_round",

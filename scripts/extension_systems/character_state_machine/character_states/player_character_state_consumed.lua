@@ -32,10 +32,15 @@ PlayerCharacterStateConsumed.init = function (self, character_state_init_context
 	self._entered_state_t = nil
 end
 
-local DISABLING_UNIT_LINK_NODE = "j_tongue_mouth"
+local ENTER_TELEPORT_NODE = "root_point"
+local DISABLING_UNIT_LINK_NODE = "j_tongue_attach"
 local CONSUMED_UNIT_LINK_NODE = "root_point"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
-local SET_CONSUMED_TIMING = 0.5
+local SET_CONSUMED_TIMING = {
+	human = 3.566666666666667,
+	ogryn = 3.8
+}
+local FOLLOW_CONSUMED_TARGET_CAMERA_TIMING = 0.5
 
 PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_state, params)
 	if not params.cancel_assist then
@@ -62,10 +67,12 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 		local is_server = self._is_server
 
 		if is_server then
-			local teleport_position = Unit.world_position(disabling_unit, 1)
-			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
+			local link_node = Unit.node(disabling_unit, ENTER_TELEPORT_NODE)
+			local teleport_position = Unit.world_position(disabling_unit, link_node)
+			local unit_forward = Quaternion.forward(Unit.world_rotation(disabling_unit, link_node))
+			teleport_position = teleport_position + unit_forward * 4.5
 
-			PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+			PlayerMovement.teleport_fixed_update(unit, teleport_position)
 		end
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -74,15 +81,15 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 		locomotion_extension:visual_link(disabling_unit, DISABLING_UNIT_LINK_NODE, DISABLED_UNIT_LINK_NODE)
 		FirstPersonView.exit(t, self._first_person_mode_component)
 
+		if is_server then
+			self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
+		end
+
 		local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 		local disabling_unit_rotation = Unit.world_rotation(disabling_unit, 1)
 		local force_rotation = Quaternion.look(-Quaternion.forward(disabling_unit_rotation))
 
 		ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, force_rotation, force_rotation, t, 1)
-
-		if is_server then
-			self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
-		end
 
 		self._charger_throw_smash = false
 		self._spit_out_anim_played = false
@@ -93,17 +100,19 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 		end
 
 		PlayerVoiceGrunts.trigger_voice(VCE, self._visual_loadout_extension, self._fx_extension, true)
+
+		self._follow_consumed_camera_timing = t + FOLLOW_CONSUMED_TARGET_CAMERA_TIMING
 	else
 		self._animation_extension:anim_event("revive_abort")
 	end
 
-	self._consumed_timing = t + SET_CONSUMED_TIMING
+	self._consumed_timing = t + SET_CONSUMED_TIMING[self._breed.name]
 end
 
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 2.2
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 2.2
-local THROW_TELEPORT_FWD_OFFSET_HUMAN = 2.5
-local THROW_TELEPORT_FWD_OFFSET_OGRYN = 2.5
+local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
+local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
+local THROW_TELEPORT_FWD_OFFSET_HUMAN = 3.2
+local THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2
 
 PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
@@ -127,7 +136,7 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
-		PlayerMovement.teleport(self._player, teleport_position, teleport_rotation)
+		PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
 	end
 
 	local first_person_mode_component = self._first_person_mode_component
@@ -229,23 +238,37 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 		self._spit_out_anim_played = true
 	end
 
-	if self._consumed_timing and self._consumed_timing <= t and ALIVE[self._disabled_state_input.disabling_unit] then
+	local disabling_unit = self._disabled_state_input.disabling_unit
+
+	if self._consumed_timing and self._consumed_timing <= t and ALIVE[disabling_unit] then
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 		locomotion_extension:visual_unlink()
-		locomotion_extension:visual_link(self._disabled_state_input.disabling_unit, CONSUMED_UNIT_LINK_NODE, DISABLED_UNIT_LINK_NODE)
+		locomotion_extension:visual_link(disabling_unit, CONSUMED_UNIT_LINK_NODE, DISABLED_UNIT_LINK_NODE)
 
 		local breed_name = self._breed.name
 
 		self._animation_extension:anim_event("player_" .. breed_name .. "_consumed")
 
 		if self._is_server then
+			local teleport_position = Unit.world_position(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE))
+			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)))
+
+			PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
+
 			local fx_system = Managers.state.extension:system("fx_system")
 			local effect_id = fx_system:start_template_effect(CONSUMED_EFFECT, unit)
 			self._consumed_effect_id = effect_id
 		end
 
 		self._consumed_timing = nil
+	end
+
+	local is_server = self._is_server
+
+	if is_server and ALIVE[disabling_unit] and self._consumed_timing and t < self._consumed_timing and not self._consumed_effect_id and self._follow_consumed_camera_timing and self._follow_consumed_camera_timing <= t then
+		local link_node = Unit.node(disabling_unit, DISABLING_UNIT_LINK_NODE)
+		local teleport_position = Unit.world_position(disabling_unit, link_node)
 	end
 
 	return self:_check_transition(unit, t, next_state_params)

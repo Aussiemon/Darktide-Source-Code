@@ -95,8 +95,7 @@ local template = {
 				enabled = false,
 				spawn_types = {
 					"hordes",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},
@@ -107,8 +106,7 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},
@@ -509,15 +507,7 @@ local template = {
 		event_luggable_rails_start_wave = {
 			{
 				"delay",
-				duration = 0.5
-			},
-			{
-				"start_random_terror_event",
-				start_event_name = "lm_rails_outside_guards"
-			},
-			{
-				"delay",
-				duration = 1
+				duration = 1.5
 			},
 			{
 				"spawn_by_points",
@@ -603,7 +593,7 @@ local template = {
 				max_breed_amount = 14,
 				spawner_group = "spawner_rails_guard_outside",
 				limit_spawners = 14,
-				points = 20,
+				points = 16,
 				breed_tags = {
 					{
 						"far",
@@ -626,10 +616,10 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_rails_control",
 				limit_spawners = 3,
-				points = 24,
+				points = 16,
 				breed_tags = {
 					{
-						"far",
+						"close",
 						"roamer"
 					}
 				}
@@ -656,7 +646,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 32
+				duration = 36
 			},
 			{
 				"continue_when",
@@ -669,7 +659,7 @@ local template = {
 				"continue_when",
 				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
@@ -687,13 +677,30 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_rails_west",
 				limit_spawners = 3,
-				points = 24,
+				points = 15,
 				breed_tags = {
 					{
 						"melee",
 						"roamer"
 					}
 				}
+			},
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_rails_west",
+				limit_spawners = 3,
+				points = 6,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
 			},
 			{
 				"try_inject_special_minion",
@@ -717,7 +724,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 32
+				duration = 36
 			},
 			{
 				"continue_when",
@@ -730,7 +737,7 @@ local template = {
 				"continue_when",
 				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
@@ -748,7 +755,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_rails_east",
 				limit_spawners = 3,
-				points = 24,
+				points = 15,
 				breed_tags = {
 					{
 						"melee",
@@ -757,14 +764,30 @@ local template = {
 				}
 			},
 			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_rails_west",
+				limit_spawners = 3,
+				points = 6,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
 				"try_inject_special_minion",
 				points = 12,
 				max_breed_amount = 1,
 				spawner_group = "spawner_rails_trickle",
 				breed_tags = {
 					{
-						"special",
-						"disabler"
+						"special"
 					}
 				}
 			},
@@ -778,7 +801,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 32
+				duration = 36
 			},
 			{
 				"continue_when",
@@ -791,7 +814,7 @@ local template = {
 				"continue_when",
 				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
@@ -809,7 +832,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_rails_west",
 				limit_spawners = 3,
-				points = 24,
+				points = 20,
 				breed_tags = {
 					{
 						"close",
@@ -830,6 +853,21 @@ local template = {
 				}
 			},
 			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				points = 12,
+				max_breed_amount = 1,
+				spawner_group = "spawner_rails_trickle",
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
 				"start_terror_trickle",
 				spawner_group = "spawner_rails_trickle",
 				proximity_spawners = true,
@@ -839,7 +877,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 32
+				duration = 36
 			},
 			{
 				"continue_when",
@@ -852,7 +890,7 @@ local template = {
 				"continue_when",
 				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
@@ -862,9 +900,11 @@ local template = {
 		},
 		event_luggable_rails_d = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_d",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -874,7 +914,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 24,
+				points = 15,
 				breed_tags = {
 					{
 						"far",
@@ -886,7 +926,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 12,
+				points = 10,
 				breed_tags = {
 					{
 						"far",
@@ -897,9 +937,11 @@ local template = {
 		},
 		event_luggable_rails_e = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_e",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -909,7 +951,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 24,
+				points = 15,
 				breed_tags = {
 					{
 						"far",
@@ -921,7 +963,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 12,
+				points = 10,
 				breed_tags = {
 					{
 						"far",
@@ -932,9 +974,11 @@ local template = {
 		},
 		event_luggable_rails_f = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_f",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -944,7 +988,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 24,
+				points = 15,
 				breed_tags = {
 					{
 						"far",
@@ -956,7 +1000,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_far",
 				limit_spawners = 3,
-				points = 12,
+				points = 10,
 				breed_tags = {
 					{
 						"far",
@@ -967,9 +1011,11 @@ local template = {
 		},
 		event_luggable_rails_g = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_g",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -979,7 +1025,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_close",
 				limit_spawners = 3,
-				points = 35,
+				points = 25,
 				breed_tags = {
 					{
 						"melee",
@@ -1002,9 +1048,11 @@ local template = {
 		},
 		event_luggable_rails_h = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_h",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -1014,7 +1062,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_close",
 				limit_spawners = 3,
-				points = 35,
+				points = 25,
 				breed_tags = {
 					{
 						"melee",
@@ -1037,9 +1085,11 @@ local template = {
 		},
 		event_luggable_rails_i = {
 			{
-				"debug_print",
-				text = "event_luggable_rails_h",
-				duration = 3
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
+				end
 			},
 			{
 				"play_2d_sound",
@@ -1049,7 +1099,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_rails_close",
 				limit_spawners = 3,
-				points = 35,
+				points = 25,
 				breed_tags = {
 					{
 						"melee",

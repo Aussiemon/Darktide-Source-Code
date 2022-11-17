@@ -6,6 +6,7 @@ local PackagePrioritizationTemplates = require("scripts/loading/package_prioriti
 local PlayerPackageAliases = require("scripts/settings/player/player_package_aliases")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local ability_configuration = PlayerCharacterConstants.ability_configuration
 local unit_alive = Unit.alive
 local PackageSynchronizerHost = class("PackageSynchronizerHost")
 local RPCS = {
@@ -186,30 +187,37 @@ PackageSynchronizerHost.event_updated_player_profile_synced = function (self, pe
 	self:_player_profile_changed(peer_id, local_player_id, old_profile)
 end
 
-PackageSynchronizerHost._player_profile_changed = function (self, peer_id, local_player_id, old_profile)
+PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, sync_local_player_id, old_profile)
+	local sync_states = self._sync_states
+	local my_peer_id = self._peer_id
+
+	for peer_id, data in pairs(sync_states) do
+		if data.ready and peer_id ~= my_peer_id then
+			local channel_id = data.channel_id
+
+			RPC.rpc_cache_player_profile(channel_id, sync_peer_id, sync_local_player_id)
+		end
+	end
+
 	local syncs = self._syncs
-	local player = Managers.player:player(peer_id, local_player_id)
+	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
 	local changed_profile_fields = {
 		inventory = self:_calculate_changed_inventory_items(old_profile, new_profile),
 		talents = self:_calculate_changed_talents(old_profile, new_profile)
 	}
 
-	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(peer_id), tostring(local_player_id))
+	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(sync_peer_id), tostring(sync_local_player_id))
 
-	syncs[peer_id] = syncs[peer_id] or {}
+	syncs[sync_peer_id] = syncs[sync_peer_id] or {}
 	local sync_data = {
 		handled_profile_changes = false,
 		notified_clients = false,
 		changed_profile_fields = changed_profile_fields
 	}
-	syncs[peer_id][local_player_id] = sync_data
+	syncs[sync_peer_id][sync_local_player_id] = sync_data
 
-	self:_handle_profile_changes_before_sync(peer_id, local_player_id, sync_data)
-
-	local sync_states = self._sync_states
-	local sync_peer_id = peer_id
-	local sync_local_player_id = local_player_id
+	self:_handle_profile_changes_before_sync(player, sync_data)
 
 	for peer_id, data in pairs(sync_states) do
 		local peer_states = data.peer_states
@@ -244,10 +252,10 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 				reason = "item_removed"
 			}
 		else
-			local item_name = item.name
-			local new_item_name = new_item.name
+			local item_gear_id = item.gear_id
+			local new_item_gear_id = new_item.gear_id
 
-			if item_name ~= new_item_name then
+			if item_gear_id ~= new_item_gear_id then
 				changed_loadout_items[slot_name] = {
 					reason = "item_replaced",
 					new_item = new_item
@@ -432,8 +440,7 @@ PackageSynchronizerHost.update = function (self, dt)
 	end
 end
 
-PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, peer_id, local_player_id, sync_data)
-	local player = Managers.player:player(peer_id, local_player_id)
+PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, player, sync_data)
 	local changed_profile_fields = sync_data.changed_profile_fields
 	local changed_inventory_items = changed_profile_fields.inventory
 
@@ -442,7 +449,7 @@ PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, pe
 	local changed_talents = changed_profile_fields.talents
 
 	if changed_talents then
-		self:_handle_talent_changes_before_sync(player)
+		self:_handle_talent_changes_before_sync(player, sync_data)
 	end
 end
 
@@ -480,7 +487,7 @@ PackageSynchronizerHost._handle_inventory_changes_before_sync = function (self, 
 	end
 end
 
-PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, player)
+PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, player, sync_data)
 	local player_unit = player.player_unit
 
 	if not unit_alive(player_unit) then
@@ -488,33 +495,57 @@ PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, pla
 	end
 
 	local fixed_t = FixedFrame.get_latest_fixed_time()
+	local inventory_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
+	local wielded_slot = inventory_component.wielded_slot
+	local unequipped_wielded_slot = false
+
+	for _, ability_slot_name in pairs(ability_configuration) do
+		if wielded_slot == ability_slot_name then
+			PlayerUnitVisualLoadout.wield_slot("slot_unarmed", player_unit, fixed_t)
+
+			unequipped_wielded_slot = true
+
+			break
+		end
+	end
+
 	local specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
 
 	specialization_extension:remove_gameplay_features(fixed_t)
+
+	if unequipped_wielded_slot then
+		sync_data.wield_slot_after_sync = wielded_slot
+	end
 end
 
 PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, peer_id, local_player_id, sync_data)
 	local player = Managers.player:player(peer_id, local_player_id)
-	local changed_profile_fields = sync_data.changed_profile_fields
-	local changed_inventory_items = changed_profile_fields.inventory
-
-	self:_handle_inventory_changes_after_sync(changed_inventory_items, player, sync_data)
-
-	local changed_talents = changed_profile_fields.talents
-
-	if changed_talents then
-		self:_handle_talent_changes_after_sync(changed_talents, player)
-	end
-end
-
-PackageSynchronizerHost._handle_inventory_changes_after_sync = function (self, inventory_changes, player, sync_data)
 	local player_unit = player.player_unit
 
 	if not player_unit then
 		return
 	end
 
+	local changed_profile_fields = sync_data.changed_profile_fields
+	local changed_inventory_items = changed_profile_fields.inventory
 	local fixed_t = FixedFrame.get_latest_fixed_time()
+
+	self:_handle_inventory_changes_after_sync(changed_inventory_items, player_unit, fixed_t)
+
+	local changed_talents = changed_profile_fields.talents
+
+	if changed_talents then
+		self:_handle_talent_changes_after_sync(changed_talents, player)
+	end
+
+	local wield_slot_after_sync = sync_data.wield_slot_after_sync
+
+	if wield_slot_after_sync then
+		PlayerUnitVisualLoadout.wield_slot(wield_slot_after_sync, player_unit, fixed_t)
+	end
+end
+
+PackageSynchronizerHost._handle_inventory_changes_after_sync = function (self, inventory_changes, player_unit, fixed_t)
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 	for slot_name, data in pairs(inventory_changes) do
@@ -527,12 +558,6 @@ PackageSynchronizerHost._handle_inventory_changes_after_sync = function (self, i
 				PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, item, slot_name, nil, fixed_t)
 			end
 		end
-	end
-
-	local wield_slot_after_sync = sync_data.wield_slot_after_sync
-
-	if wield_slot_after_sync then
-		PlayerUnitVisualLoadout.wield_slot(wield_slot_after_sync, player_unit, fixed_t)
 	end
 end
 

@@ -4,7 +4,7 @@ local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_back
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
+local PlayerSpecializationUtils = require("scripts/utilities/player_specialization/player_specialization")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
@@ -18,6 +18,7 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
 local Views = require("scripts/ui/views/views")
+local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
 InventoryBackgroundView.init = function (self, settings, context)
@@ -35,6 +36,10 @@ InventoryBackgroundView.on_enter = function (self)
 	local player = context and context.player or self:_player()
 	local profile = player:profile()
 	self._presentation_profile = table.clone_instance(profile)
+	local player_loadout = self._presentation_profile.loadout
+	self._preview_profile_equipped_items = player_loadout
+	self._starting_profile_equipped_items = context and context.starting_profile_equipped_items or table.clone_instance(player_loadout)
+	self._current_profile_equipped_items = context and context.current_profile_equipped_items or table.clone_instance(player_loadout)
 	local player_unit = player.player_unit
 	local unit_data = ScriptUnit.has_extension(player_unit, "unit_data_system")
 	local inventory_component = unit_data and unit_data:read_component("inventory")
@@ -48,7 +53,6 @@ InventoryBackgroundView.on_enter = function (self)
 	self._show_talents_tab = false
 	self._is_readonly = context and context.is_readonly
 	self._has_empty_talent_groups = false
-	self._preview_profile_equipped_items = {}
 
 	self:_update_equipped_items()
 	self:_register_event("event_inventory_view_equip_item", "event_inventory_view_equip_item")
@@ -177,11 +181,9 @@ end
 InventoryBackgroundView._cb_set_player_frame = function (self, item)
 	local profile = self._presentation_profile
 	local loadout = profile and profile.loadout
-	local frame_item = loadout and loadout.slot_portrait_frame
-	local frame_item_gear_id = frame_item and frame_item.gear_id
 	local icon = nil
 
-	if frame_item_gear_id == item.gear_id then
+	if item.icon then
 		icon = item.icon
 	else
 		icon = "content/ui/textures/nameplates/portrait_frames/default"
@@ -228,11 +230,9 @@ end
 InventoryBackgroundView._cb_set_player_insignia = function (self, item)
 	local profile = self._presentation_profile
 	local loadout = profile and profile.loadout
-	local frame_item = loadout.slot_insignia
-	local frame_item_gear_id = frame_item and frame_item.gear_id
 	local icon = nil
 
-	if frame_item_gear_id == item.gear_id then
+	if item.icon then
 		icon = item.icon
 		local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
 		material_values.texture_map = icon
@@ -335,6 +335,8 @@ InventoryBackgroundView._update_equipped_items = function (self)
 	if player_profile then
 		local loadout = player_profile.loadout
 		local preview_profile_equipped_items = self._preview_profile_equipped_items
+		local original_equips = self._starting_profile_equipped_items
+		local current_equips = self._current_profile_equipped_items
 
 		for slot_name, slot in pairs(ItemSlotSettings) do
 			local item = loadout[slot_name]
@@ -342,6 +344,8 @@ InventoryBackgroundView._update_equipped_items = function (self)
 
 			if item ~= equipped_item then
 				preview_profile_equipped_items[slot_name] = item
+				original_equips[slot_name] = item
+				current_equips[slot_name] = item
 			end
 		end
 
@@ -368,26 +372,33 @@ end
 
 InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, force_update)
 	local presentation_loadout = self._preview_profile_equipped_items
-	local previous_item = presentation_loadout[slot_name]
+	local current_loadout = self._current_profile_equipped_items
+	local previous_item = current_loadout[slot_name]
 	local unequip_item = not item and previous_item
 	local valid_item_change = not unequip_item and item.gear_id and (not previous_item or previous_item.gear_id ~= item.gear_id) or force_update
 
 	if unequip_item or valid_item_change then
 		presentation_loadout[slot_name] = item
+		local player_profile = self._presentation_profile
+
+		if player_profile then
+			current_loadout[slot_name] = item
+		end
 	end
 end
 
 InventoryBackgroundView._equip_local_changes = function (self)
 	local profile_loadout = self._presentation_profile.loadout
 	local preview_loadout = self._preview_profile_equipped_items
+	local original_equips = self._starting_profile_equipped_items
 	local equip_items_by_slot = {}
 	local equip_items = false
 
 	for slot_name, item in pairs(preview_loadout) do
 		local item_slot_settings = ItemSlotSettings[slot_name]
 
-		if item_slot_settings.equipped_in_inventory then
-			local previous_item = profile_loadout[slot_name]
+		if item_slot_settings and item_slot_settings.equipped_in_inventory then
+			local previous_item = original_equips[slot_name]
 			local unequip_item = not item and previous_item
 			local valid_item_change = not unequip_item and item.gear_id and (not previous_item or previous_item.gear_id ~= item.gear_id)
 			local slot_has_changes = unequip_item or valid_item_change
@@ -436,7 +447,7 @@ InventoryBackgroundView._update_has_empty_talents_groups = function (self)
 	local specialization_name = profile.specialization
 	local selected_talents = profile.talents
 	local player_level = self._player_level
-	self._has_empty_talent_groups = PlayerSpecialization.has_empty_talent_groups(profile_archetype, specialization_name, player_level, selected_talents)
+	self._has_empty_talent_groups = PlayerSpecializationUtils.has_empty_talent_groups(profile_archetype, specialization_name, player_level, selected_talents)
 end
 
 InventoryBackgroundView._setup_top_panel = function (self)
@@ -546,6 +557,42 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
 								widget_type = "item_slot",
 								slot = ItemSlotSettings.slot_secondary
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									300,
+									20
+								}
+							},
+							{
+								display_name = "loc_inventory_loadout_group_attachments",
+								widget_type = "item_sub_header",
+								item_type = UISettings.ITEM_TYPES.GADGET
+							},
+							{
+								slot_title = "loc_inventory_title_slot_attachment_1",
+								loadout_slot = true,
+								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
+								widget_type = "gadget_item_slot",
+								slot = ItemSlotSettings.slot_attachment_1,
+								required_level = PlayerProgressionUnlocks.gadget_slot_1
+							},
+							{
+								slot_title = "loc_inventory_title_slot_attachment_2",
+								loadout_slot = true,
+								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
+								widget_type = "gadget_item_slot",
+								slot = ItemSlotSettings.slot_attachment_2,
+								required_level = PlayerProgressionUnlocks.gadget_slot_2
+							},
+							{
+								slot_title = "loc_inventory_title_slot_attachment_3",
+								loadout_slot = true,
+								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
+								widget_type = "gadget_item_slot",
+								slot = ItemSlotSettings.slot_attachment_3,
+								required_level = PlayerProgressionUnlocks.gadget_slot_3
 							}
 						}
 					}
@@ -664,17 +711,18 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								}
 							},
 							{
-								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
 								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								scenegraph_id = "slot_gear_extra_cosmetic",
+								loadout_slot = true,
+								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
 								widget_type = "gear_item_slot",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								slot = ItemSlotSettings.slot_gear_extra_cosmetic,
 								navigation_grid_indices = {
 									1,
 									2
-								}
+								},
+								initial_rotation = math.pi
 							},
 							{
 								slot_title = "loc_inventory_title_slot_portrait_frame",
@@ -701,17 +749,21 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								}
 							},
 							{
-								loadout_slot = true,
 								scenegraph_id = "button_expressions",
-								display_name = "loc_inventory_title_slot_animation_end_of_round",
 								slot_title = "loc_inventory_title_slot_animation_end_of_round",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								display_name = "loc_inventory_title_slot_animation_end_of_round",
+								loadout_slot = true,
 								widget_type = "list_button_with_background",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								size = {
 									500,
 									60
 								},
-								slot = ItemSlotSettings.slot_animation_end_of_round
+								slot = ItemSlotSettings.slot_animation_end_of_round,
+								navigation_grid_indices = {
+									4,
+									2
+								}
 							}
 						}
 					}
@@ -720,7 +772,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		}
 	}
 	local player_level = self._player_level
-	local show_talents_tab = PlayerSpecialization.specialization_level_requirement() <= player_level
+	local show_talents_tab = PlayerSpecializationUtils.specialization_level_requirement() <= player_level
 
 	if self._is_readonly or not self._is_own_player then
 		show_talents_tab = show_talents_tab and profile.specialization ~= "none"
@@ -865,6 +917,7 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 				player = self._preview_player,
 				player_level = self._player_level,
 				preview_profile_equipped_items = self._preview_profile_equipped_items,
+				current_profile_equipped_items = self._current_profile_equipped_items,
 				changeable_context = additional_context_data,
 				is_readonly = self._is_readonly
 			}
@@ -1145,13 +1198,14 @@ end
 
 InventoryBackgroundView._check_profile_changes = function (self)
 	local profile = self._preview_player:profile()
-	local loadout = profile.loadout
-	local presentation_loadout = self._presentation_profile.loadout
+	local loadout = self._current_profile_equipped_items
+	local presentation_loadout = self._preview_profile_equipped_items
 
 	for slot_name, item in pairs(loadout) do
 		local item_slot_settings = ItemSlotSettings[slot_name]
+		local loadout_item = presentation_loadout[slot_name]
 
-		if item_slot_settings.equipped_in_inventory and presentation_loadout[slot_name].gear_id ~= item.gear_id then
+		if item_slot_settings.equipped_in_inventory and loadout_item.gear_id ~= item.gear_id then
 			if not self._is_own_player then
 				self._presentation_profile = table.clone_instance(profile)
 
@@ -1194,7 +1248,7 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 
-	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, inventory_state_machine)
+	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, inventory_state_machine)
 
 	local animation_duration = 0.01
 	self._spawned_profile = profile

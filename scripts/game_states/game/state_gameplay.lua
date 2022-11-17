@@ -26,6 +26,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		is_dedicated_server = Managers.connection:is_dedicated_hub_server() or Managers.connection:is_dedicated_mission_server(),
 		is_dedicated_mission_server = Managers.connection:is_dedicated_mission_server(),
 		spawn_group_id = params.spawn_group_id,
+		pacing_control = mechanism_data.pacing_control,
 		nav_world = nil,
 		nav_data = nil,
 		hard_cap_out_of_bounds_units = nil,

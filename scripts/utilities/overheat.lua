@@ -155,7 +155,8 @@ Overheat.slot_percentage = function (unit, slot_name, threshold_type)
 end
 
 Overheat.configuration = function (visual_loadout_extension, slot_name)
-	local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_name)
+	local weapon_template, slot = visual_loadout_extension:weapon_template_from_slot(slot_name)
+	local slot_item = slot and slot.item
 	local overheat_configuration = weapon_template.overheat_configuration
 
 	return overheat_configuration
@@ -163,16 +164,13 @@ end
 
 Overheat.wants_overheat_character_state = function (unit, unit_data_extension)
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	local slot_configuration = visual_loadout_extension:slot_configuration()
-	local inventory_component = unit_data_extension:read_component("inventory")
+	local slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
 
-	for slot_name, config in pairs(slot_configuration) do
-		if config.slot_type == "weapon" and PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, slot_name) then
-			local inventory_slot_component = unit_data_extension:read_component(slot_name)
+	for slot_name in pairs(slot_configuration) do
+		local inventory_slot_component = unit_data_extension:read_component(slot_name)
 
-			if inventory_slot_component.overheat_state == "exploding" then
-				return true, slot_name
-			end
+		if inventory_slot_component.overheat_state == "exploding" then
+			return true, slot_name
 		end
 	end
 

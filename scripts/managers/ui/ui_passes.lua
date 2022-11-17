@@ -101,7 +101,8 @@ UIPasses.texture = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
-		local value = ui_content[pass.value_id]
+		local value_id = pass.value_id
+		local value = ui_content[value_id]
 		local color = ui_style.color
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
@@ -978,6 +979,7 @@ UIPasses.hotspot = {
 		local is_selected = use_is_focused and ui_content.is_focused or not use_is_focused and ui_content.is_selected
 		local force_input_pressed = ui_content.force_input_pressed
 		local pressed_last_frame = ui_content._input_pressed
+		local selected_last_frame = ui_content._is_selected
 		local input_pressed, input_released, input_hold = nil
 
 		if force_input_pressed then
@@ -998,6 +1000,10 @@ UIPasses.hotspot = {
 		local is_held, on_pressed, on_released, on_double_click = nil
 		local double_click_timer = ui_content.double_click_timer or 0
 
+		if double_click_timer > 0 then
+			double_click_timer = math.max(double_click_timer - dt, 0) or 0
+		end
+
 		if (is_hover or is_selected or force_input_pressed) and not disabled then
 			if pressed_last_frame then
 				is_held = input_hold
@@ -1010,19 +1016,23 @@ UIPasses.hotspot = {
 						released_callback()
 					end
 				end
-
+			elseif input_pressed then
 				if double_click_timer > 0 then
 					on_double_click = true
-				end
+					double_click_timer = 0
+					local double_click_callback = ui_content.double_click_callback
 
-				double_click_timer = math.max(double_click_timer - dt, 0) or 0
-			elseif input_pressed then
-				on_pressed = true
-				double_click_timer = double_click_threshold
-				local pressed_callback = ui_content.pressed_callback
+					if double_click_callback then
+						double_click_callback()
+					end
+				else
+					on_pressed = true
+					double_click_timer = double_click_threshold
+					local pressed_callback = ui_content.pressed_callback
 
-				if pressed_callback then
-					pressed_callback()
+					if pressed_callback then
+						pressed_callback()
+					end
 				end
 			elseif right_input_pressed then
 				on_pressed = true
@@ -1058,7 +1068,20 @@ UIPasses.hotspot = {
 			end
 		end
 
+		if is_selected and not selected_last_frame then
+			local on_select_sound = ui_style.on_select_sound or ui_content.on_select_sound
+
+			if on_select_sound then
+				local ui_manager = Managers.ui
+
+				if ui_manager then
+					ui_manager:play_2d_sound(on_select_sound)
+				end
+			end
+		end
+
 		ui_content._input_pressed = (is_hover or is_selected) and (input_pressed or input_hold)
+		ui_content._is_selected = is_selected
 		ui_content.is_held = is_held
 		ui_content.double_click_timer = double_click_timer
 		ui_content.on_released = on_released

@@ -92,25 +92,33 @@ UIViewHandler.allow_close_hotkey_for_view = function (self, view_name)
 	return view_instance:allow_close_hotkey()
 end
 
-UIViewHandler.close_all_views = function (self)
+UIViewHandler.close_all_views = function (self, force_close, optional_excepted_views)
 	local active_views_array = self._active_views_array
 	local num_active_views = #active_views_array
 
 	for i = num_active_views, 1, -1 do
 		local view = active_views_array[i]
-		local is_view_active = self:view_active(view)
 
-		if is_view_active and not self:is_view_closing(view) then
-			self:close_view(view)
+		if not optional_excepted_views or table.index_of(optional_excepted_views, view) == -1 then
+			local is_view_active = self:view_active(view)
+
+			if is_view_active then
+				if force_close then
+					self:close_view(view, true)
+				elseif not self:is_view_closing(view) then
+					self:close_view(view, false)
+				end
+			end
 		end
 	end
 end
 
 UIViewHandler.close_view = function (self, view_name, force_close)
+	local force_close = Managers.account:leaving_game() or force_close
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
 
-	if view_data.closing then
+	if view_data.closing and not force_close then
 		Log.error("UIViewHandler", "View with name: %s has already been marked for destruction", view_name)
 
 		return

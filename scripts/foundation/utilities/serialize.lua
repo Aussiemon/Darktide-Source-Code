@@ -34,6 +34,19 @@ for _, v in ipairs({
 	lua_reserved_words[v] = true
 end
 
+local function _sort_keys(a, b)
+	local type_a = type(a)
+	local type_b = type(b)
+
+	if type_a ~= type_b then
+		return type_a < type_b
+	elseif type_a == "number" or type_a == "string" then
+		return a < b
+	else
+		return tostring(a) < tostring(b)
+	end
+end
+
 local function _save_item(value, out, indent)
 	local value_type = type(value)
 
@@ -42,10 +55,20 @@ local function _save_item(value, out, indent)
 	elseif value_type == "table" then
 		table.insert(out, "{\n")
 
-		for k, v in pairs(value) do
+		local table_keys = {}
+
+		for key, _ in pairs(value) do
+			table_keys[#table_keys + 1] = key
+		end
+
+		table.sort(table_keys, _sort_keys)
+
+		for _, k in ipairs(table_keys) do
+			local v = value[k]
+
 			table.insert(out, string.rep("\t", indent))
 
-			if not string.find(k, "^[_%a][_%w]*$") or lua_reserved_words[k] then
+			if type(k) ~= "string" or not string.find(k, "^[_%a][_%w]*$") or lua_reserved_words[k] then
 				table.insert(out, "[" .. _basic_serialize(k) .. "] = ")
 			else
 				table.insert(out, k .. " = ")

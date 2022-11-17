@@ -15,6 +15,26 @@ local function is_xbox_live()
 	return authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and XboxLive
 end
 
+local function _handle_error(error_data)
+	if error_data.error_handled then
+		return Promise.rejected(error_data)
+	end
+
+	local header = error_data.header and error_data.header .. ": " or ""
+
+	if error_data.message then
+		Log.error("ExternalPayment", header .. "%s", error_data.message)
+	elseif error_data.error_code then
+		Log.error("ExternalPayment", header .. "0x%x", tostring(error_data.error_code))
+	else
+		Log.error("ExternalPayment", header .. "%s", table.tostring(error_data))
+	end
+
+	error_data.error_handled = true
+
+	return Promise.rejected(error_data)
+end
+
 local function get_payment_platform()
 	if is_steam() then
 		return "steam"
@@ -35,7 +55,7 @@ local function get_platform_token()
 			})
 		end
 
-		return Promise.until_value_is_true(function ()
+		return Managers.xasync:wrap(async_block, XUser.release_async_block):next(function (async_block)
 			local token, error_code = XUser.get_xbs_token_async_result(async_block)
 
 			if token then
@@ -45,7 +65,7 @@ local function get_platform_token()
 			if error_code then
 				return nil, string.format("get_xbs_token_async_result returned error_code=0x%x", error_code)
 			end
-		end)
+		end):catch(_handle_error)
 	else
 		return Promise.resolved(nil)
 	end
@@ -61,7 +81,7 @@ local function get_purchase_id(access_token)
 			})
 		end
 
-		return Promise.until_value_is_true(function ()
+		return Managers.xasync:wrap(async_block, XboxLive.release_async_block):next(function (async_block)
 			local id, error_code = XboxLive.get_purchase_id_result(async_block)
 
 			if id then
@@ -77,7 +97,7 @@ local function get_purchase_id(access_token)
 					message = string.format("get_purchase_id_result returned error_code=%s", errorStr)
 				}
 			end
-		end)
+		end):catch(_handle_error)
 	else
 		return Promise.resolved(nil)
 	end
@@ -93,7 +113,7 @@ local function get_collections_id(access_token)
 			})
 		end
 
-		return Promise.until_value_is_true(function ()
+		return Managers.xasync:wrap(async_block, XboxLive.release_async_block):next(function (async_block)
 			local id, error_code = XboxLive.get_user_collection_id_result(async_block)
 
 			if id then
@@ -109,7 +129,7 @@ local function get_collections_id(access_token)
 					message = string.format("get_user_collection_id_result returned error_code=%s", errorStr)
 				}
 			end
-		end)
+		end):catch(_handle_error)
 	else
 		return Promise.resolved(nil)
 	end
@@ -236,12 +256,15 @@ ExternalPayment.reconcile_dlc = function (self, store_ids)
 				method = "POST",
 				headers = {
 					["platform-token"] = token
-				},
-				body = {
-					store_ids = store_ids
 				}
 			}):next(function (response)
 				return response.body
+			end):catch(function (error)
+				Log.error("ExternalPayment", "Failed to reconcile dlc", tostring(error))
+
+				return Promise.rejected({
+					error = error
+				})
 			end)
 		end)
 	end)
@@ -290,9 +313,19 @@ ExternalPayment.fail_txn = function (self, order_id)
 			method = "DELETE"
 		}):catch(function (error)
 			Log.error("ExternalPayment", "Failed to remove pending transaction %s", tostring(error))
+
+			return Promise.rejected({
+				error = error
+			})
 		end)
 	end)
 end
+
+local FAILED_TXN = {
+	body = {
+		state = "failed"
+	}
+}
 
 ExternalPayment._decorate_option = function (self, option, platform_entitlements)
 	option.description = {
@@ -326,16 +359,28 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 
 	option._on_micro_txn = function (self, authorized, order_id)
 		if authorized then
-			return Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
+			Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
 				self.pending_txn_promise:resolve(data)
+
+				self.pending_txn_promise = nil
+
+				return data
+			end):catch(function (data)
+				self.pending_txn_promise:resolve(FAILED_TXN)
 
 				self.pending_txn_promise = nil
 
 				return data
 			end)
 		else
-			return Managers.backend.interfaces.external_payment:fail_txn(order_id):next(function (data)
+			Managers.backend.interfaces.external_payment:fail_txn(order_id):next(function (data)
 				self.pending_txn_promise:resolve(data)
+
+				self.pending_txn_promise = nil
+
+				return data
+			end):catch(function (data)
+				self.pending_txn_promise:resolve(FAILED_TXN)
 
 				self.pending_txn_promise = nil
 
@@ -355,7 +400,9 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 			})
 		end
 
-		self.pending_txn_promise = Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
+		self.pending_txn_promise = Promise:new()
+
+		Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
 			if is_steam() then
 				Managers.steam:register_micro_txn_callback(order_id, callback(self, "_on_micro_txn"))
 			elseif is_xbox_live() then
@@ -372,9 +419,33 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 				if microsoft_product_id then
 					return show_xbox_purchase_ui(microsoft_product_id):next(function (status)
 						if status.success then
-							return Managers.backend.interfaces.external_payment:finalize_txn(order_id)
+							return Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
+								self.pending_txn_promise:resolve(data)
+
+								self.pending_txn_promise = nil
+
+								return data
+							end):catch(function (data)
+								self.pending_txn_promise:resolve(FAILED_TXN)
+
+								self.pending_txn_promise = nil
+
+								return data
+							end)
 						else
-							return Managers.backend.interfaces.external_payment:fail_txn(order_id)
+							return Managers.backend.interfaces.external_payment:fail_txn(order_id):next(function (data)
+								self.pending_txn_promise:resolve(data)
+
+								self.pending_txn_promise = nil
+
+								return data
+							end):catch(function (data)
+								self.pending_txn_promise:resolve(FAILED_TXN)
+
+								self.pending_txn_promise = nil
+
+								return data
+							end)
 						end
 					end)
 				else

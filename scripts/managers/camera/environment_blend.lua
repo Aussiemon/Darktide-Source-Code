@@ -41,49 +41,44 @@ EnvironmentBlend.blend_list = function (self, camera_pos, default_shading_enviro
 	table.clear(blend_list)
 
 	local blend_layers = self._blend_layers
-	local remaining_weight = 1
+	local solid_layer_found = false
 
 	if #blend_layers > 0 then
 		for i = #blend_layers, 1, -1 do
+			if solid_layer_found then
+				break
+			end
+
 			local layer_blends = blend_layers[i]
 
-			if layer_blends and #layer_blends > 0 and remaining_weight > 0.001 then
-				local weight_indices = {}
-				local total_layer_weight = 0
+			for ii = 1, #layer_blends do
+				local blend = layer_blends[ii]
+				local weight = blend:weight(camera_pos)
 
-				for _, blend in ipairs(layer_blends) do
-					local weight = blend:weight(camera_pos)
+				if weight > 0 then
+					local resource = blend:resource()
+					local blend_mask = blend:blend_mask()
+					blend_list[#blend_list + 1] = blend_mask
+					blend_list[#blend_list + 1] = weight
+					blend_list[#blend_list + 1] = resource
 
-					if weight > 0 then
-						local resource = blend:resource()
-						local blend_mask = blend:blend_mask()
-						blend_list[#blend_list + 1] = resource
-						local weight_index = #blend_list + 1
-						weight_indices[#weight_indices + 1] = weight_index
-						blend_list[weight_index] = weight
-						blend_list[#blend_list + 1] = blend_mask
-						total_layer_weight = total_layer_weight + weight
+					if weight >= 1 and blend_mask == ShadingEnvironmentBlendMask.ALL then
+						solid_layer_found = true
+
+						break
 					end
-				end
-
-				if remaining_weight < total_layer_weight then
-					for _, weight_index in ipairs(weight_indices) do
-						blend_list[weight_index] = blend_list[weight_index] * remaining_weight / total_layer_weight
-					end
-
-					remaining_weight = 0
-				else
-					remaining_weight = remaining_weight - total_layer_weight
 				end
 			end
 		end
 	end
 
-	if remaining_weight > 0 then
-		blend_list[#blend_list + 1] = default_shading_environment_resource
-		blend_list[#blend_list + 1] = remaining_weight
+	if not solid_layer_found then
 		blend_list[#blend_list + 1] = ShadingEnvironmentBlendMask.ALL
+		blend_list[#blend_list + 1] = 1
+		blend_list[#blend_list + 1] = default_shading_environment_resource
 	end
+
+	table.reverse(blend_list)
 
 	return blend_list
 end

@@ -24,7 +24,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 		power_level = power_level
 	})
 
-	local lerp_values = Explosion.lerp_values(attacking_unit)
+	local lerp_values = Explosion.lerp_values(attacking_unit, explosion_template.name)
 	local t = FixedFrame.get_latest_fixed_time()
 	local collision_filter = explosion_template.collision_filter
 	local radius, close_radius = _get_radii(explosion_template, charge_level, lerp_values)
@@ -51,6 +51,13 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 				local hit_zone_name_or_nil = hit_zone_or_nil and hit_zone_or_nil.name
 				local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
 				local hit_distance = Vector3.distance(source_position, hit_position)
+				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+
+				if breed_or_nil and breed_or_nil.explosion_radius then
+					hit_distance = math.max(hit_distance - breed_or_nil.explosion_radius, 0)
+				end
+
 				local close_hit = close_radius > 0 and hit_distance < close_radius
 
 				if Health.is_ragdolled(hit_unit) and not hit_units[hit_unit] then
@@ -79,8 +86,6 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 						end
 
 						local valid_target = true
-						local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
-						local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 
 						if Breed.is_prop(breed_or_nil) then
 							valid_target = close_hit
@@ -162,14 +167,14 @@ end
 
 local NO_LERP_VALUES = {}
 
-Explosion.lerp_values = function (attacking_unit)
+Explosion.lerp_values = function (attacking_unit, explosion_template_name_or_nil)
 	local weapon_extension = ScriptUnit.has_extension(attacking_unit, "weapon_system")
 
 	if not weapon_extension then
 		return NO_LERP_VALUES
 	end
 
-	local lerp_values = weapon_extension:explosion_template_lerp_values()
+	local lerp_values = weapon_extension:explosion_template_lerp_values(explosion_template_name_or_nil)
 
 	return lerp_values
 end
@@ -277,7 +282,7 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 				for j = 1, num_effects do
 					local effect_name = effects[j]
 
-					if fx_extension then
+					if fx_extension and fx_extension.spawn_particles then
 						local scale = nil
 						local radius_variable_name = vfx_data.radius_variable_name
 
@@ -296,7 +301,7 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 		for i = 1, num_vfx do
 			local effect_name = vfx[i]
 
-			if fx_extension then
+			if fx_extension and fx_extension.spawn_particles then
 				fx_extension:spawn_particles(effect_name, source_position, rotation)
 			else
 				fx_system:trigger_vfx(effect_name, source_position, rotation)

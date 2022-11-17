@@ -15,7 +15,8 @@ end
 
 LocalLevelState.update = function (self, dt)
 	local shared_state = self._shared_state
-	local done, world, level = shared_state.level_spawner:update()
+	local level_spawner = shared_state.level_spawner
+	local done, world, level = level_spawner:update()
 
 	if done then
 		shared_state.world = world

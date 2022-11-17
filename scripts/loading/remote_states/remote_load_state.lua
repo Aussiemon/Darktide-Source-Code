@@ -1,22 +1,35 @@
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local RPCS = {
 	"rpc_finished_loading_level"
 }
 local RemoteLoadState = class("RemoteLoadState")
+local HOST_TYPES_PRELOAD_CINEMATIC = {
+	[MatchmakingConstants.HOST_TYPES.mission_server] = true,
+	[MatchmakingConstants.HOST_TYPES.singleplay_backend_session] = true
+}
 
 RemoteLoadState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._ready_to_spawn = false
-	local extension_manager = Managers.state.extension
+	local host_type = Managers.connection:host_type()
 
-	if extension_manager then
-		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
-		self._preload_cinematic = not cinematic_scene_system:intro_played()
+	if HOST_TYPES_PRELOAD_CINEMATIC[host_type] then
+		local extension_manager = Managers.state.extension
+
+		if extension_manager then
+			self._preload_cinematic = not Managers.state.cinematic:intro_loading_started()
+		else
+			self._preload_cinematic = true
+		end
 	else
-		self._preload_cinematic = true
+		self._preload_cinematic = false
 	end
 
 	shared_state.network_delegate:register_connection_channel_events(self, shared_state.client_channel_id, unpack(RPCS))
-	Managers.event:register(self, "cutscene_loaded_all_clients", "_on_cutscene_loaded")
+
+	if self._preload_cinematic then
+		Managers.event:register(self, "cutscene_loaded_all_clients", "_on_cutscene_loaded")
+	end
 end
 
 RemoteLoadState.destroy = function (self)
@@ -27,19 +40,19 @@ RemoteLoadState.destroy = function (self)
 end
 
 RemoteLoadState.update = function (self, dt)
-	if self._ready_to_spawn and self._cinematic_loaded then
+	if self._ready_to_spawn and (not self._preload_cinematic or self._cinematic_loaded) then
 		return "load_done"
 	end
 end
 
 RemoteLoadState.spawn_group_ready = function (self, spawn_group)
 	if self._shared_state.spawn_group == spawn_group then
-		self._ready_to_spawn = true
-
 		Log.info("RemoteLoadState", "[spawn_group_ready] LoadingTimes: Peer(%s) Spawn Group Is Ready To Spawn", self._shared_state.client_peer_id)
 
+		self._ready_to_spawn = true
+
 		if self._preload_cinematic then
-			Managers.event:trigger("preload_cinematic")
+			Managers.event:trigger("preload_cinematic", spawn_group)
 		else
 			self._cinematic_loaded = true
 		end
@@ -53,8 +66,8 @@ RemoteLoadState.rpc_finished_loading_level = function (self, channel_id, spawn_g
 	Log.info("RemoteLoadState", "[rpc_finished_loading_level] LoadingTimes: Peer (%s) Finished Loading Level Breed and Hud Packages", shared_state.client_peer_id)
 end
 
-RemoteLoadState._on_cutscene_loaded = function (self)
-	if self._preload_cinematic then
+RemoteLoadState._on_cutscene_loaded = function (self, preload, id)
+	if preload and self._shared_state.spawn_group == id then
 		self._cinematic_loaded = true
 	end
 end

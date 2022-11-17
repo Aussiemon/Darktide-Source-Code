@@ -3,7 +3,7 @@ local AchievementUITypes = require("scripts/settings/achievements/achievement_ui
 local AchievementLocKeys = require("scripts/settings/achievements/achievement_loc_keys")
 local AchievementDefinition = class("AchievementDefinition")
 
-AchievementDefinition.init = function (self, id, ui_type, category, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids)
+AchievementDefinition.init = function (self, id, ui_type, icon, category, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids)
 	self._id = id
 	self._category = category
 	self._trigger_component = trigger_component
@@ -12,8 +12,10 @@ AchievementDefinition.init = function (self, id, ui_type, category, trigger_comp
 	self._description_id = optional_description_id or id
 	self._description_table = optional_description_table or {}
 	self._previous_ids = optional_previous_ids
-	self._description_table.target = self:get_target()
-	self._description_table.x = self:get_target()
+	self._icon = icon
+	local target = self._description_table.target or self:get_target()
+	self._description_table.target = target
+	self._description_table.x = self._description_table.x or target
 	self._score = 0
 	self._rewards = nil
 	self._allow_solo = false
@@ -72,7 +74,7 @@ AchievementDefinition.description = function (self, unlocalized)
 end
 
 AchievementDefinition.icon = function (self)
-	return "content/ui/materials/icons/achievements/default"
+	return self._icon
 end
 
 AchievementDefinition.get_related_achievements = function (self)

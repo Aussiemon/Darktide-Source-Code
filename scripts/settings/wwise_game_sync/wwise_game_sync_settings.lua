@@ -1,9 +1,9 @@
 local wwise_game_sync_settings = {
-	combat_state_horde_high_minimum_aggroed_minions = 10,
-	ambush_horde_trigger_distance = 80,
+	boss_trigger_distance = 80,
 	combat_state_horde_low_minimum_aggroed_minions = 5,
 	vector_horde_trigger_distance = 80,
-	boss_trigger_distance = 80,
+	combat_state_horde_high_minimum_aggroed_minions = 10,
+	ambush_horde_trigger_distance = 80,
 	default_group_state = "None",
 	minion_aggro_intensity_settings = {
 		num_threshold_high = 15,
@@ -77,6 +77,9 @@ local wwise_game_sync_settings = {
 			none = "None"
 		},
 		options = {
+			credit_store_menu = "credit_store_menu",
+			appearance_menu = "appearance_menu",
+			vendor_menu = "vendor_menu",
 			ingame_menu = "ingame_menu",
 			none = "None"
 		},
@@ -90,39 +93,6 @@ local wwise_game_sync_settings = {
 			high = "high",
 			low = "low",
 			none = "None"
-		}
-	},
-	wwise_state_rules = {
-		load_out = {
-			next_states = {
-				loading = true,
-				mission_briefing = true
-			}
-		},
-		load_out_ready = {
-			next_states = {
-				mission_briefing = true
-			}
-		},
-		defeat = {
-			next_states = {
-				game_score_lose = true
-			}
-		},
-		victory = {
-			next_states = {
-				game_score_win = true
-			}
-		},
-		game_score_win = {
-			next_states = {
-				loading = true
-			}
-		},
-		game_score_lose = {
-			next_states = {
-				loading = true
-			}
 		}
 	}
 }

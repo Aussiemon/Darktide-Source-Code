@@ -12,6 +12,7 @@ HudElementCutsceneFading.init = function (self, parent, draw_layer, start_scale)
 
 	self:_register_event("event_cutscene_fade_in")
 	self:_register_event("event_cutscene_fade_out")
+	self:_register_event("event_cutscene_fade_out_at")
 end
 
 HudElementCutsceneFading.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -43,6 +44,14 @@ HudElementCutsceneFading.update = function (self, dt, t, ui_renderer, render_set
 	end
 
 	self._fade_ui:update(dt, t, fade_progress ~= nil, anim_progress)
+
+	local fade_out = self._fade_out_data
+
+	if fade_out and t < fade_out.fade_out_at then
+		self:event_cutscene_fade_out(fade_out.player, fade_out.duration, fade_out.easing_function)
+
+		self._fade_out_data = nil
+	end
 end
 
 HudElementCutsceneFading.event_cutscene_fade_in = function (self, player, duration, easing_function)
@@ -65,6 +74,16 @@ HudElementCutsceneFading.event_cutscene_fade_out = function (self, player, durat
 	self._fade_time = duration
 	self._fade_easing_function = easing_function
 	self._fading_in = false
+	self._fade_out_data = nil
+end
+
+HudElementCutsceneFading.event_cutscene_fade_out_at = function (self, player, duration, easing_function, fade_out_at)
+	self._fade_out_data = {
+		player = player,
+		duration = duration,
+		easing_function = easing_function,
+		fade_out_at = fade_out_at
+	}
 end
 
 HudElementCutsceneFading.destroy = function (self, ui_renderer)

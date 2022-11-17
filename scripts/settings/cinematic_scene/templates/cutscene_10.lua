@@ -1,9 +1,15 @@
 local cinematic_scene_templates = {
 	cutscene_10 = {
-		randomize_weapon = false,
+		is_skippable = true,
+		use_transition_ui = true,
 		local_player_only = true,
-		include_bots = false,
+		instant_black_screen_during_cutscene_loading = false,
 		music = "cinematic",
+		hide_players = false,
+		set_random_weapon_event = false,
+		randomize_equipped_weapon = false,
+		include_bots = false,
+		mission_outro = false,
 		ignored_slots = {
 			"slot_unarmed",
 			"slot_primary",

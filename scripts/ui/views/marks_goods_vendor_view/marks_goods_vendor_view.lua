@@ -8,7 +8,11 @@ local MarksGoodsVendorView = class("MarksGoodsVendorView", "VendorViewBase")
 MarksGoodsVendorView.init = function (self, settings, context)
 	MarksGoodsVendorView.super.init(self, Definitions, settings, context)
 
-	if context and context.parent then
+	local parent = context and context.parent
+	self._parent = parent
+	self._debug = context and context.debug
+
+	if parent then
 		context.parent:set_is_handling_navigation_input(true)
 	end
 end
@@ -187,8 +191,18 @@ MarksGoodsVendorView._on_purchase_complete = function (self, items)
 	if first_purchased_item then
 		local item = MasterItems.get_store_item_instance(first_purchased_item)
 
-		self:_present_purchase_result(item)
+		if item then
+			self:_present_purchase_result(item)
+		end
 	end
+
+	if self._debug then
+		return
+	end
+
+	self._parent:play_vo_events({
+		"credit_store_servitor_purchase_c"
+	}, "credit_store_servitor_c", nil, 1.4)
 end
 
 MarksGoodsVendorView._is_result_presentation_active = function (self)
@@ -211,6 +225,14 @@ MarksGoodsVendorView._set_preview_widgets_visibility = function (self, visible)
 	widgets_by_name.price_text.content.visible = visible
 	widgets_by_name.purchase_button.content.visible = visible
 	widgets_by_name.price_icon.content.visible = visible
+end
+
+MarksGoodsVendorView.dialogue_system = function (self)
+	if self._debug then
+		return
+	end
+
+	return self._parent:dialogue_system()
 end
 
 return MarksGoodsVendorView

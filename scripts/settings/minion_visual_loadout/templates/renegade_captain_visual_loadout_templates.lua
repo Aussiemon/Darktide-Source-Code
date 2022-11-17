@@ -64,9 +64,6 @@ local renegade_captain_default = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_01_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_01_b",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_01_c",
-				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_02",
-				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_02",
-				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_02",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_03",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_03",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_03",
@@ -98,7 +95,12 @@ local renegade_captain_default = {
 		},
 		slot_variation_gear = {
 			items = {
-				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01"
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_03",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_04",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_05"
 			}
 		},
 		slot_fx_void_shield = {

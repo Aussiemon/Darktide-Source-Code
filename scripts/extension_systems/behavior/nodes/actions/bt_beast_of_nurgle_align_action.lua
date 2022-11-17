@@ -27,6 +27,9 @@ BtBeastOfNurgleAlignAction.enter = function (self, unit, breed, blackboard, scra
 	end
 
 	scratchpad.behavior_component.move_state = "idle"
+	local self_flat_fwd = Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1)))
+
+	Unit.set_local_rotation(unit, 1, Quaternion.look(self_flat_fwd))
 end
 
 BtBeastOfNurgleAlignAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -140,6 +143,10 @@ BtBeastOfNurgleAlignAction._set_anim_driven = function (self, unit, scratchpad, 
 end
 
 BtBeastOfNurgleAlignAction._rotate_towards_target_unit = function (self, unit, scratchpad)
+	if not ALIVE[scratchpad.perception_component.target_unit] then
+		return
+	end
+
 	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, scratchpad.perception_component.target_unit)
 	local locomotion_extension = scratchpad.locomotion_extension
 

@@ -18,7 +18,11 @@ MultiplayerSessionDisconnectError.init = function (self, error_source, error_rea
 end
 
 MultiplayerSessionDisconnectError.level = function (self)
-	return ErrorManager.ERROR_LEVEL.warning
+	if self._error_reason == "afk" then
+		return ErrorManager.ERROR_LEVEL.error
+	else
+		return ErrorManager.ERROR_LEVEL.warning
+	end
 end
 
 MultiplayerSessionDisconnectError.log_message = function (self)
@@ -30,9 +34,13 @@ MultiplayerSessionDisconnectError.loc_title = function (self)
 end
 
 MultiplayerSessionDisconnectError.loc_description = function (self)
-	return "loc_error_reason", {
-		error_reason = self._error_reason
-	}
+	if self._error_reason == "afk" then
+		return "loc_popup_description_afk_kicked"
+	else
+		return "loc_error_reason", {
+			error_reason = self._error_reason
+		}
+	end
 end
 
 MultiplayerSessionDisconnectError.options = function (self)

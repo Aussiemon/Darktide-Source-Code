@@ -129,9 +129,11 @@ ActionHandler.fixed_update = function (self, dt, t)
 		end
 
 		local action_end_time = component.end_t
+		local action_start_time = component.start_t
 		local time_since_end = t - action_end_time
+		local is_looping_action = action_end_time == action_start_time and current_action_name ~= nil and current_action_name ~= "none"
 
-		if time_since_end > 0.2 then
+		if not is_looping_action and time_since_end > 0.2 and component.combo_count > 0 then
 			component.combo_count = 0
 		end
 	end
@@ -195,6 +197,7 @@ ActionHandler._finish_action = function (self, handler_data, reason, data, t, ne
 	running_action:finish(reason, data, t, time_in_action, action_settings, next_action_params)
 
 	handler_data.running_action = nil
+	component.end_t = t
 	component.previous_action_name = component.current_action_name
 	component.current_action_name = "none"
 end
@@ -348,7 +351,7 @@ ActionHandler._anim_event = function (self, action_settings, action, is_chain, c
 end
 
 ActionHandler._update_combo_count = function (self, running_action, action_settings, component, automatic_input, reset_combo_override)
-	if reset_combo_override or not running_action and not automatic_input then
+	if reset_combo_override or not running_action and not automatic_input and not action_settings.keep_combo_on_start then
 		component.combo_count = 0
 
 		return
@@ -565,7 +568,7 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 		local wielded_slot = inventory_component.wielded_slot
 		local ammo = Ammo.current_slot_clip_amount(self._unit, wielded_slot)
 
-		if ammo <= 0 then
+		if ammo <= 0 and not action_settings.allow_even_if_out_of_ammo then
 			return false
 		end
 	end
@@ -633,7 +636,7 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 			local func = conditional_state_funcs[conditional_state]
 			local chain_action = allowed_chain_actions[conditional_action_input]
 
-			if chain_action and func(condition_func_params, action_params, remaining_time) then
+			if chain_action and func(condition_func_params, action_params, remaining_time, t) then
 				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
 
 				if chain_action_validated then
@@ -715,7 +718,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 			local conditional_state = conditional_state_config.conditional_state
 			local func = conditional_state_funcs[conditional_state]
 
-			if func(condition_func_params, action_params) then
+			if func(condition_func_params, action_params, nil, t) then
 				local conditional_action_input = conditional_state_config.input_name
 				local action, action_settings = self:_valid_action_from_action_input(actions, conditional_action_input, t, condition_func_params, used_input)
 

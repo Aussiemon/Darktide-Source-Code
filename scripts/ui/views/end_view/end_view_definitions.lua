@@ -428,12 +428,6 @@ local game_mode_condition_widget_definitions = {
 					style_id = "mission_header"
 				},
 				{
-					value = "content/ui/materials/dividers/faded_line_01",
-					value_id = "divider",
-					pass_type = "texture",
-					style_id = "divider"
-				},
-				{
 					value = "",
 					value_id = "mission_sub_header",
 					pass_type = "text",
@@ -495,12 +489,6 @@ local game_mode_condition_widget_definitions = {
 					value_id = "mission_header",
 					pass_type = "text",
 					style_id = "mission_header"
-				},
-				{
-					value = "content/ui/materials/dividers/faded_line_01",
-					value_id = "divider",
-					pass_type = "texture",
-					style_id = "divider"
 				},
 				{
 					value_id = "mission_sub_header",

@@ -27,7 +27,7 @@ DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_p
 			pool_size = blood_pool_size
 		end
 
-		EngineOptimizedManagers.decal_manager_add_setting(decal_system, pool_name, lifetime, pool_size, unpack(setting.units))
+		EngineOptimizedManagers.decal_manager_add_setting(decal_system, pool_name, lifetime, pool_size, setting.sort_order_base, unpack(setting.units))
 	end
 end
 

@@ -36,21 +36,11 @@ local husk_hud_data_component_config = {
 		"is_crouching"
 	},
 	weapon_lock_view = {
-		"is_active",
+		"state",
 		"pitch",
 		"yaw"
 	}
 }
-local slot_configuration = PlayerCharacterConstants.slot_configuration
-
-for slot_name, slot_config in pairs(slot_configuration) do
-	if slot_config.wieldable and slot_config.slot_type == "weapon" then
-		husk_hud_data_component_config[slot_name] = {
-			"powered_weapon_intensity"
-		}
-	end
-end
-
 local looping_sound_aliases = {
 	"weapon_temperature"
 }

@@ -89,7 +89,7 @@ local widget_definitions = {
 				size = {
 					0
 				},
-				color = Color.terminal_grid_background(nil, true),
+				color = Color.terminal_background(nil, true),
 				size_addition = {
 					-4,
 					0

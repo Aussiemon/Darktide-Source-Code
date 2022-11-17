@@ -41,7 +41,6 @@ ShoutEffects.update = function (self, unit, dt, t)
 end
 
 ShoutEffects._spawn_effects = function (self, unit)
-	local world = self._world
 	local effect_name = self._vfx.name
 	local position = POSITION_LOOKUP[unit] + Vector3.up()
 	local fx_extension = ScriptUnit.has_extension(unit, "fx_system")

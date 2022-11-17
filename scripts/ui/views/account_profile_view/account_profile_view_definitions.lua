@@ -156,9 +156,6 @@ local tab_bar_params = {
 	layer = 10,
 	tabs_params = {
 		{
-			view = "account_profile_overview_view"
-		},
-		{
 			view = "achievements_view"
 		}
 	}

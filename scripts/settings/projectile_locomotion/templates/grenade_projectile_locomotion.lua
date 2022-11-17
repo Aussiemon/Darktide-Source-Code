@@ -78,7 +78,7 @@ local projectile_locomotion_templates = {
 			radius = 0.07,
 			coefficient_of_restitution = 0.2,
 			drag_coefficient = 0.2,
-			collision_filter = "filter_player_character_throwing",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 0.7,
 			collision_types = "both",
@@ -87,8 +87,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.025
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	},
@@ -171,7 +170,7 @@ local projectile_locomotion_templates = {
 			radius = 0.07,
 			coefficient_of_restitution = 0.2,
 			drag_coefficient = 0.2,
-			collision_filter = "filter_player_character_throwing",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 0.7,
 			collision_types = "both",
@@ -181,8 +180,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.05
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	},
@@ -222,7 +220,7 @@ local projectile_locomotion_templates = {
 			coefficient_of_restitution = 0.12,
 			drag_coefficient = 1,
 			rotate_towards_direction = true,
-			collision_filter = "filter_player_character_throwing",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 0.7,
 			collision_types = "both",
@@ -231,8 +229,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.05
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	},
@@ -273,7 +270,7 @@ local projectile_locomotion_templates = {
 			drag_coefficient = 0.5,
 			use_generous_bouncing = true,
 			rotate_towards_direction = true,
-			collision_filter = "filter_player_character_throwing",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 2.7,
 			collision_types = "both",
@@ -282,8 +279,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.05
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	},
@@ -324,7 +320,7 @@ local projectile_locomotion_templates = {
 			drag_coefficient = 0.5,
 			use_generous_bouncing = true,
 			rotate_towards_direction = true,
-			collision_filter = "filter_player_character_throwing",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 2.7,
 			collision_types = "both",
@@ -333,8 +329,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.05
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	},
@@ -345,12 +340,12 @@ local projectile_locomotion_templates = {
 				aim_max_iterations = 40,
 				speed_inital = 30,
 				aim_time_step_multiplier = 3,
-				inherit_owner_velocity_percentage = 1.2,
+				inherit_owner_velocity_percentage = 1,
 				speed_charge_duration = 0.7,
 				offset_forward = 1,
 				locomotion_state = "manual_physics",
 				aim_max_number_of_bounces = 1,
-				rotation_charge_duration = 14,
+				rotation_charge_duration = 0,
 				speed_maximal = 60,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
 				rotation_offset_maximal = Vector3Box(0, 0, 0),
@@ -417,7 +412,8 @@ local projectile_locomotion_templates = {
 			coefficient_of_restitution = 0.05,
 			drag_coefficient = 0.2,
 			use_generous_bouncing = true,
-			collision_filter = "filter_player_character_throwing",
+			hit_zone_priority = "shield",
+			collision_filter = "filter_player_character_shooting_projectile",
 			use_actor_mass_radius = false,
 			air_density = 0.7,
 			collision_types = "both",
@@ -426,8 +422,7 @@ local projectile_locomotion_templates = {
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.05
+				material_name = "content/fx/materials/master/trajectory"
 			}
 		}
 	}

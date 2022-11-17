@@ -70,7 +70,8 @@ local breed_data = {
 		[stagger_types.light] = 0.2,
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 1.75,
-		[stagger_types.light_ranged] = 0.2
+		[stagger_types.light_ranged] = 0.2,
+		[stagger_types.killshot] = 0.5
 	},
 	impact_anim_override = {
 		damaged = {

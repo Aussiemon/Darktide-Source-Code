@@ -1,16 +1,20 @@
 local Action = require("scripts/utilities/weapon/action")
 local AimProjectile = require("scripts/utilities/aim_projectile")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
+local Recoil = require("scripts/utilities/recoil")
+local Sway = require("scripts/utilities/sway")
 local AimProjectileEffects = class("AimProjectileEffects")
 local MAX_NUMBER_OF_SPLINE = 2
 local MAX_INTEGRATION_STEPS = 100
 local MAX_POSITION_STEPS = 30
 local AIM_TRAJECTORY_EFFECT_DEFAULT_MATERIAL = "content/fx/materials/master/trajectory"
-local AIM_TRAJECTORY_EFFECT_DEFAULT_RADIUS = 0.05
+local AIM_TRAJECTORY_EFFECT_DEFAULT_RADIUS = 0.03
+local STUNNED_RECOVERY_LERP_TIME = 0.6
 local _calculate_arc_position = nil
 
 AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -18,15 +22,29 @@ AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_s
 	self._wwise_world = context.wwise_world
 	self._physics_world = context.physics_world
 	self._is_local_unit = context.is_local_unit
+
+	if not self._is_local_unit then
+		return
+	end
+
 	self._first_person_unit = context.first_person_unit
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
+	self._fx_sources = fx_sources
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+	self._character_state_component = unit_data_extension:read_component("character_state")
+	self._recoil_component = unit_data_extension:read_component("recoil")
+	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._sway_component = unit_data_extension:read_component("sway")
+	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._weapon_extension = ScriptUnit.extension(owner_unit, "weapon_system")
 	self._integration_data = ProjectileIntegrationData.allocate_integration_data()
+	self._last_non_stuned_offset_box = Vector3Box()
+	self._out_of_stunned_state_time = 1
 	self._aim_data = {}
 
 	for i = 1, MAX_INTEGRATION_STEPS do
@@ -96,7 +114,7 @@ AimProjectileEffects._trajectory_settings = function (self, t)
 	return true, _trajectory_settings
 end
 
-AimProjectileEffects.post_update = function (self, unit, dt, t)
+AimProjectileEffects.update_unit_position = function (self, unit, dt, t)
 	if not self._is_local_unit then
 		return
 	end
@@ -127,7 +145,21 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 	local look_position = Unit.world_position(first_person_unit, 1)
 	local look_rotation = Unit.world_rotation(first_person_unit, 1)
 	local time_in_action = trajectory_settings.time_in_action
-	local aim_parameters = AimProjectile.aim_parameters(look_position, rotation, look_rotation, projectile_locomotion_template, throw_type, time_in_action)
+	local start_position = look_position
+	local start_rotation = look_rotation
+
+	if trajectory_settings.use_sway_and_recoil then
+		local weapon_extension = self._weapon_extension
+		local recoil_template = weapon_extension:recoil_template()
+		local sway_template = weapon_extension:sway_template()
+		local movement_state_component = self._movement_state_component
+		local recoil_component = self._recoil_component
+		local sway_component = self._sway_component
+		start_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, start_rotation)
+		start_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, start_rotation)
+	end
+
+	local aim_parameters = AimProjectile.aim_parameters(start_position, rotation, start_rotation, projectile_locomotion_template, throw_type, time_in_action)
 	local integration_data = self._integration_data
 
 	ProjectileIntegrationData.fill_integration_data(integration_data, self._player_unit, nil, projectile_locomotion_template, radius, mass, aim_parameters.position, rotation, aim_parameters.direction, speed, momentum)
@@ -142,14 +174,41 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 	end
 
 	local aim_data, number_of_iterations_done, total_distance, arc_distances = self:_get_trajactory_data(integration_data, max_iterations, stop_on_impact, time_step_multiplier, max_number_of_bounces)
-	local local_start_offset = trajectory_settings.start_offset
 	local arc_offset = Vector3.zero()
+	local fx_source_name = trajectory_settings.arc_vfx_spawner_name
+	local fx_sources = self._fx_sources
+	local fx_spawner_name = fx_sources[fx_source_name]
+	local local_start_offset = trajectory_settings.start_offset
+	local is_stunned = PlayerUnitStatus.is_stunned(self._character_state_component)
 
-	if local_start_offset then
+	if fx_spawner_name then
+		if is_stunned then
+			arc_offset = self._last_non_stuned_offset_box:unbox()
+			self._out_of_stunned_state_time = 0
+		else
+			local fx_extension = self._fx_extension
+			local fx_pose = fx_extension:vfx_spawner_pose(fx_spawner_name)
+			local fx_position = Matrix4x4.translation(fx_pose)
+			local aim_position = aim_parameters.position
+			local offset = fx_position - aim_position
+			local out_of_stunned_state_time = math.clamp01(self._out_of_stunned_state_time + dt / STUNNED_RECOVERY_LERP_TIME)
+			self._out_of_stunned_state_time = out_of_stunned_state_time
+
+			if out_of_stunned_state_time >= 0.99 then
+				self._last_non_stuned_offset_box:store(offset)
+			else
+				local last_safe_offset = self._last_non_stuned_offset_box:unbox()
+				offset = Vector3.lerp(last_safe_offset, offset, out_of_stunned_state_time)
+			end
+
+			arc_offset = offset
+		end
+	elseif local_start_offset then
 		local first_position = aim_parameters.position
 		local start_offset = Quaternion.rotate(look_rotation, local_start_offset)
-		local gun_posistion = look_position + start_offset
-		arc_offset = gun_posistion - first_position
+		local gun_posistion = start_position + start_offset
+		local fixed_offset = gun_posistion - first_position
+		arc_offset = fixed_offset
 	end
 
 	self:_set_trajectory_positions(aim_parameters.position, aim_data, number_of_iterations_done, arc_offset, total_distance, arc_distances, dt)
@@ -201,11 +260,12 @@ AimProjectileEffects._get_trajactory_data = function (self, integration_data, ma
 
 	local current_daim_data_index = 1
 	local aim_data = self._aim_data
+	local num_iterations_to_do = max_iterations - 2 * MAX_NUMBER_OF_SPLINE
 
-	for i = 1, max_iterations - 2 * MAX_NUMBER_OF_SPLINE do
+	for i = 1, num_iterations_to_do do
 		local old_position = integration_data.position
 
-		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time, fake_t, is_server, time_step_multiplier)
+		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time, fake_t, is_server, time_step_multiplier, true)
 
 		fake_t = fake_t + fixed_frame_time * time_step_multiplier
 		local new_position = integration_data.position
@@ -291,7 +351,7 @@ AimProjectileEffects._start_trajectory_spline = function (self, trajectory_setti
 end
 
 AimProjectileEffects._stop_trajectory_spline = function (self)
-	if #self._splines > 0 then
+	if self._splines and #self._splines > 0 then
 		for i = 1, MAX_NUMBER_OF_SPLINE do
 			World.destroy_spline_object_drawer(self._world, self._splines[i])
 
@@ -380,7 +440,7 @@ AimProjectileEffects._set_trajectory_positions_spline = function (self, start_po
 end
 
 function _calculate_arc_position(position, distance, total_distance, arc_offset, use_offset)
-	local lerp = math.clamp01(1 - distance / total_distance)
+	local lerp = total_distance == 0 and 0 or math.clamp01(1 - distance / total_distance)
 	lerp = lerp * lerp
 	local final_offset = use_offset and arc_offset * lerp or Vector3.zero()
 	local arc_position = position + final_offset

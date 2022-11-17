@@ -255,7 +255,6 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 				astar_data.astar_finished = false
 
 				self._current_from_position:store(from_position)
-				self._current_to_position:store(to_position)
 
 				local update_frequency = CombatVectorSettings.combat_vector_update_frequency
 				self._next_update_at = t + update_frequency
@@ -275,6 +274,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 		local combat_vector = Vector3.flat(last_segment_position - first_segment_position)
 
 		self._combat_vector:store(combat_vector)
+		self._current_to_position:store(last_segment_position)
 		_calculate_flank_positions(self._current_from_position:unbox(), combat_vector, self._flank_positions, nav_world, traverse_logic)
 	end
 

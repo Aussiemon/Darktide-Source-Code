@@ -9,6 +9,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local RangedAction = require("scripts/utilities/action/ranged_action")
 local Suppression = require("scripts/utilities/attack/suppression")
+local Spread = require("scripts/utilities/spread")
 local proc_events = BuffSettings.proc_events
 local damage_types = DamageSettings.damage_types
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
@@ -23,11 +24,7 @@ ActionFlamerGasBurst.init = function (self, action_context, action_params, actio
 	self._action_flamer_gas_component = action_context.unit_data_extension:write_component("action_flamer_gas")
 end
 
-ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
-	ActionFlamerGasBurst.super.start(self, action_settings, t, ...)
-	table.clear(self._targets)
-	table.clear(self._dot_targets)
-
+ActionFlamerGasBurst._setup_flame_data = function (self, action_settings)
 	local fire_config = action_settings.fire_configuration
 	local flamer_gas_template = fire_config.flamer_gas_template
 	self._flamer_gas_template = flamer_gas_template
@@ -42,7 +39,18 @@ ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
 	self._action_flamer_gas_component.range = range
 end
 
+ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
+	ActionFlamerGasBurst.super.start(self, action_settings, t, ...)
+	table.clear(self._targets)
+	table.clear(self._dot_targets)
+	self:_setup_flame_data(action_settings)
+end
+
 ActionFlamerGasBurst.fixed_update = function (self, dt, t, time_in_action)
+	if not self._flamer_gas_template then
+		self:_setup_flame_data(self._action_settings)
+	end
+
 	ActionFlamerGasBurst.super.fixed_update(self, dt, t, time_in_action)
 
 	if not self._is_server then
@@ -82,9 +90,9 @@ end
 ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, charge_level, t)
 	local player_unit = self._player_unit
 
-	if self._is_server then
-		self:_acquire_targets(t)
+	self:_acquire_targets(t)
 
+	if self._is_server then
 		local damage_config = self._flamer_gas_template.damage
 		local damage_profile = damage_config.impact.damage_profile
 		local units = self:_acquire_suppressed_units(t)
@@ -119,7 +127,81 @@ ActionFlamerGasBurst._is_unit_blocking = function (self, unit, player_pos)
 	end
 end
 
+ActionFlamerGasBurst._process_hit = function (self, hit, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+	local hit_pos = hit[INDEX_POSITION]
+	local hit_actor = hit[INDEX_ACTOR]
+	local hit_normal = hit[INDEX_NORMAL]
+	local hit_unit = Actor.unit(hit_actor)
+	local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
+	local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
+
+	if targets[hit_unit] then
+		return false
+	end
+
+	if hit_afro then
+		return false
+	end
+
+	if hit_unit == player_unit then
+		return false
+	end
+
+	local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
+	local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+	local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos)
+
+	if is_unit_blocking or not health_extension and not buff_extension then
+		return true, hit_pos, hit_normal
+	end
+
+	if side_system:is_ally(player_unit, hit_unit) and not FriendlyFire.is_enabled(player_unit, hit_unit) then
+		return false
+	end
+
+	local distance = Vector3.distance(POSITION_LOOKUP[player_unit], POSITION_LOOKUP[hit_unit])
+	local distance_scalar = distance / self._range
+	local t_offset = distance_scalar * 0.5
+
+	if is_server and health_extension then
+		targets[hit_unit] = t + t_offset
+	end
+
+	if is_server and buff_extension then
+		dot_targets[hit_unit] = t + t_offset
+	end
+
+	return false
+end
+
+ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+	local bullseye = true
+	local ray_rotation = Spread.target_style_spread(rotation, i, num_rays_this_frame, 2, bullseye, spread_angle, spread_angle, nil, false, nil, math.random_seed())
+	local direction = Quaternion.forward(ray_rotation)
+	local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
+	local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting_raycast", rewind_ms)
+	local stop, stop_position, stop_normal = nil
+
+	if hits then
+		local num_hit_results = #hits
+
+		for j = 1, num_hit_results do
+			repeat
+				local hit = hits[j]
+				stop, stop_position, stop_normal = self:_process_hit(hit, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+			until true
+
+			if stop then
+				break
+			end
+		end
+	end
+
+	return stop, stop_position, stop_normal
+end
+
 ActionFlamerGasBurst._acquire_targets = function (self, t)
+	local is_server = self._is_server
 	local targets = self._targets
 	local dot_targets = self._dot_targets
 	local player_unit = self._player_unit
@@ -129,79 +211,21 @@ ActionFlamerGasBurst._acquire_targets = function (self, t)
 	local position = self._first_person_component.position
 	local rotation = self._first_person_component.rotation
 	local position_finder_component = self._action_module_position_finder_component
-	position_finder_component.position_valid = false
-	local weapon_spread_extension = self._weapon_spread_extension
+	local side_system = Managers.state.extension:system("side_system")
 	local num_rays_this_frame = 8
+	local stop, stop_position, stop_normal = self:_do_raycast(1, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
 
-	for i = 1, num_rays_this_frame do
-		local bullseye = true
-		local ray_rotation = weapon_spread_extension:target_style_spread(rotation, i, num_rays_this_frame, 2, bullseye, spread_angle, spread_angle)
-		local direction = Quaternion.forward(ray_rotation)
-		local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
-		local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting", rewind_ms)
-		local stop = false
-		local side_system = Managers.state.extension:system("side_system")
+	if stop then
+		position_finder_component.position = stop_position
+		position_finder_component.normal = stop_normal
+		position_finder_component.position_valid = true
+	else
+		position_finder_component.position_valid = false
+	end
 
-		if hits then
-			local num_hit_results = #hits
-
-			for j = 1, num_hit_results do
-				repeat
-					local hit = hits[j]
-					local hit_pos = hit[INDEX_POSITION]
-					local hit_actor = hit[INDEX_ACTOR]
-					local hit_normal = hit[INDEX_NORMAL]
-					local hit_unit = Actor.unit(hit_actor)
-					local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
-					local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
-
-					if targets[hit_unit] then
-						break
-					end
-
-					if hit_afro then
-						break
-					end
-
-					if hit_unit == player_unit then
-						break
-					end
-
-					local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
-					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
-					local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos)
-
-					if is_unit_blocking or not health_extension and not buff_extension then
-						stop = true
-
-						if i == 1 then
-							position_finder_component.position = hit_pos
-							position_finder_component.normal = hit_normal
-							position_finder_component.position_valid = true
-						end
-					else
-						if side_system:is_ally(player_unit, hit_unit) and not FriendlyFire.is_enabled(player_unit, hit_unit) then
-							break
-						end
-
-						local distance = Vector3.distance(POSITION_LOOKUP[player_unit], POSITION_LOOKUP[hit_unit])
-						local distance_scalar = distance / self._range
-						local t_offset = distance_scalar * 0.5
-
-						if health_extension then
-							targets[hit_unit] = t + t_offset
-						end
-
-						if buff_extension then
-							dot_targets[hit_unit] = t + t_offset
-						end
-					end
-				until true
-
-				if stop then
-					break
-				end
-			end
+	if is_server then
+		for i = 2, num_rays_this_frame do
+			self:_do_raycast(i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
 		end
 	end
 end
@@ -213,7 +237,8 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local player_pos = POSITION_LOOKUP[player_unit]
 	local target_pos = POSITION_LOOKUP[target_unit]
 	local target_index = 1
-	local actor, hit_position = nil
+	local actor = nil
+	local hit_position = target_pos
 	local hit_distance = Vector3.distance(target_pos, player_pos)
 	local direction = Vector3.normalize(target_pos - player_pos)
 	local hit_normal, hit_zone_name = nil

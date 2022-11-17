@@ -11,6 +11,14 @@ local hud_element_player_buffs_settings = {
 		{
 			"event_player_buff_removed",
 			"event_player_buff_removed"
+		},
+		{
+			"event_player_buff_proc_start",
+			"event_player_buff_proc_start"
+		},
+		{
+			"event_player_buff_proc_stop",
+			"event_player_buff_proc_stop"
 		}
 	},
 	positive_colors = {
@@ -32,7 +40,7 @@ local hud_element_player_buffs_settings = {
 		frame = get_hud_color("color_tint_alert_2", 255)
 	},
 	inactive_colors = {
-		icon = Color.ui_grey_medium(255, true),
+		icon = Color.ui_grey_medium(100, true),
 		frame = Color.ui_grey_medium(255, true),
 		text = Color.ui_grey_medium(255, true)
 	}

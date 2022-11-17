@@ -1,11 +1,147 @@
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
 local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local ProfileUtils = {}
+local ProfileUtils = {
+	character_names = {
+		male_names_1 = {
+			"Ackor",
+			"Barbor",
+			"Baudlarn",
+			"Brack",
+			"Candorick",
+			"Claren",
+			"Cockerill",
+			"Corot",
+			"Derlin",
+			"Dickot",
+			"Doran",
+			"Dorfan",
+			"Dorsworth",
+			"Farridge",
+			"Fascal",
+			"Foronat",
+			"Fusell",
+			"Goyan",
+			"Harken",
+			"Haveloch",
+			"Henam",
+			"Hugot",
+			"Jerican",
+			"Keating",
+			"Kradd",
+			"Lamark",
+			"Lukas",
+			"Martack",
+			"Mikel",
+			"Montov",
+			"Mussat",
+			"Narvast",
+			"Nura",
+			"Nzoni",
+			"Onceda",
+			"Rossel",
+			"Rudge",
+			"Salcan",
+			"Saldar",
+			"Scottor",
+			"Shaygor",
+			"Shiller",
+			"Skyv",
+			"Smither",
+			"Tademar",
+			"Taur",
+			"Tecker",
+			"Tuttor",
+			"Verbal",
+			"Victor",
+			"Villan",
+			"Xavier",
+			"Zapard",
+			"Zek"
+		},
+		female_names_1 = {
+			"Erith",
+			"Agda",
+			"Ambre",
+			"Amelia",
+			"Avrilia",
+			"Axella",
+			"Beretille",
+			"Blonthe",
+			"Clea",
+			"Coletta",
+			"Constanze",
+			"Dalilla",
+			"Diana",
+			"Doriana",
+			"Edithia",
+			"Eglantia",
+			"Elodine",
+			"Ephrael",
+			"Felicia",
+			"Genevieve",
+			"Greyla",
+			"Guendolys",
+			"Guenhvya",
+			"Guenievre",
+			"Heinrike",
+			"Helene",
+			"Helmia",
+			"Honorine",
+			"Ines",
+			"Iris",
+			"Isaure",
+			"Jacinta",
+			"Josea",
+			"Justine",
+			"Kelvi",
+			"Kerstin",
+			"Kinnia",
+			"Kline",
+			"Lassana",
+			"Leana",
+			"Leatha",
+			"Liari",
+			"Lorette",
+			"Lyta",
+			"Maia",
+			"Mallava",
+			"Marakanthe",
+			"Maylin",
+			"Mejara",
+			"Meliota",
+			"Melisande",
+			"Mira",
+			"Mylene",
+			"Nadia",
+			"Nalana",
+			"Natacha",
+			"Ophelia",
+			"Prothei",
+			"Rosemonde",
+			"Rosine",
+			"Ruby",
+			"Sanei",
+			"Sarine",
+			"Severa",
+			"Silvana",
+			"Undine",
+			"Unkara",
+			"Valleni",
+			"Vissia",
+			"Waynoka",
+			"Yvette",
+			"Zelie",
+			"Zellith"
+		}
+	}
+}
 
 local function profile_from_backend_data(backend_profile_data)
 	local profile_data = table.clone(backend_profile_data)
@@ -87,18 +223,30 @@ end
 
 local _combine_item = nil
 
-function _combine_item(slot_name, entry, attachments, visual_items)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
 
-			_combine_item(child_slot_name, child_entry, child_attachments, visual_items)
+			_combine_item(child_slot_name, child_entry, child_attachments, visual_items, voice_fx_presets, hide_facial_hair)
 
 			local data = visual_items[child_slot_name]
 			attachments[child_slot_name] = {
 				item = data.item,
 				children = child_attachments
 			}
+
+			if data.item.voice_fx_preset then
+				voice_fx_presets[#voice_fx_presets + 1] = data.item.voice_fx_preset
+			end
+
+			if data.item.hide_eyebrows then
+				hide_facial_hair.hide_eyebrows = hide_facial_hair.hide_eyebrows or data.item.hide_eyebrows
+			end
+
+			if data.item.hide_beard then
+				hide_facial_hair.hide_beard = hide_facial_hair.hide_beard or data.item.hide_beard
+			end
 		end
 	end
 end
@@ -149,24 +297,55 @@ local function _generate_visual_loadout(visual_items)
 
 		if not parent_slot_names then
 			local attachments = {}
+			local voice_fx_presets = {}
+			local hide_facial_hair = {
+				hide_beard = false,
+				hide_eyebrows = false
+			}
 
-			_combine_item(slot_name, entry, attachments, visual_items)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
 			local item_id = data.item_id
+			local overrides = gear.masterDataInstance.overrides
 
 			if next(attachments) then
-				local overrides = gear.masterDataInstance.overrides or {}
+				overrides = overrides or {}
 				overrides.attachments = overrides.attachments or {}
 
 				for index, attachment_data in pairs(attachments) do
 					overrides.attachments[index] = attachment_data
 				end
-
-				gear.masterDataInstance.overrides = overrides
 			end
 
+			local skin_color_slot_name = "slot_body_skin_color"
+			local skin_color_item_data = visual_items[skin_color_slot_name]
+
+			if skin_color_item_data and slot_name ~= skin_color_slot_name then
+				overrides = overrides or {}
+				overrides.attachments = overrides.attachments or {}
+				overrides.attachments[skin_color_slot_name] = {
+					item = skin_color_item_data.item
+				}
+			end
+
+			if #voice_fx_presets > 0 then
+				overrides = overrides or {}
+				overrides.voice_fx_preset = voice_fx_presets[1]
+			end
+
+			if hide_facial_hair.hide_eyebrows then
+				overrides = overrides or {}
+				overrides.hide_eyebrows = hide_facial_hair.hide_eyebrows
+			end
+
+			if hide_facial_hair.hide_beard then
+				overrides = overrides or {}
+				overrides.hide_beard = hide_facial_hair.hide_beard
+			end
+
+			gear.masterDataInstance.overrides = overrides
 			local item = MasterItems.get_item_instance(gear, item_id)
 			visual_loadout[slot_name] = item
 		end
@@ -209,14 +388,13 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 			local gear = {
 				masterDataInstance = {
 					id = item_data.id,
-					overrides = item_data.overrides
+					overrides = item_data.overrides and table.clone(item_data.overrides)
 				},
 				slots = {
 					slot_name
 				}
 			}
-			local gear_clone = table.clone(gear)
-			local item = MasterItems.get_item_instance(gear_clone, item_id)
+			local item = MasterItems.get_item_instance(gear, item_id)
 
 			if item.base_unit then
 				visual_items[slot_name] = {
@@ -231,6 +409,22 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 	local visual_loadout = _generate_visual_loadout(visual_items)
 
 	return visual_loadout
+end
+
+local function _validate_talent_items(talents, archetype_name, specialization_name)
+	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
+	local item_definitions = MasterItems.get_cached()
+
+	for talent_name, _ in pairs(talents) do
+		local talent_definition = talent_definitions[talent_name]
+		local player_ability = talent_definition and talent_definition.player_ability
+		local ability = player_ability and player_ability.ability
+		local inventory_item_name = ability and ability.inventory_item_name
+
+		if inventory_item_name and not item_definitions[inventory_item_name] then
+			talents[talent_name] = nil
+		end
+	end
 end
 
 local function convert_profile_from_lookups_to_data(profile)
@@ -253,6 +447,7 @@ local function convert_profile_from_lookups_to_data(profile)
 	end
 
 	PlayerSpecialization.add_nonselected_talents(archetype, profile.specialization, profile.current_level, talents)
+	_validate_talent_items(talents, archetype_name, profile.specialization)
 end
 
 ProfileUtils.process_backend_body = function (body)
@@ -443,12 +638,20 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	end
 
 	PlayerSpecialization.add_nonselected_talents(archetype, specialization, current_level, profile_talents)
+	_validate_talent_items(profile_talents, archetype_name, profile.specialization)
 
 	return profile
 end
 
 ProfileUtils.character_name = function (profile)
 	return profile.name or "<profile_character_name>"
+end
+
+ProfileUtils.generate_random_name = function (profile)
+	local name_list = ProfileUtils.character_names[profile.name_list_id]
+	local name = name_list and name_list[math.random(1, #name_list)] or "???"
+
+	return name
 end
 
 ProfileUtils.character_title = function (profile)

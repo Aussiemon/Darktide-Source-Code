@@ -4,8 +4,8 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtMoveToCoverAction = class("BtMoveToCoverAction", "BtNode")
 BtMoveToCoverAction.TIME_TO_FIRST_EVALUATE = {
-	2,
-	2.5
+	0.8,
+	1.5
 }
 BtMoveToCoverAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,

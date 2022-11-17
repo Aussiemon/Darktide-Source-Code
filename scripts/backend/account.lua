@@ -22,6 +22,16 @@ Account.get_has_created_first_character = function (self)
 	return self:get_data("core", "has_created_first_character")
 end
 
+Account.set_has_completed_onboarding = function (self, value)
+	return self:set_data("core", {
+		has_completed_onboarding = value
+	})
+end
+
+Account.get_has_completed_onboarding = function (self)
+	return self:get_data("core", "has_completed_onboarding")
+end
+
 Account.set_selected_character = function (self, character_id)
 	return self:set_data("core", {
 		selected_character = character_id

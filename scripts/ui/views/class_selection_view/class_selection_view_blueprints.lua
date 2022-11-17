@@ -21,6 +21,7 @@ local function _remove_live_item_icon_cb_func(widget)
 	material_values.render_target = nil
 end
 
+local max_width = ClassSelectionViewSettings.class_details_size[1] - 40
 local class_selection_view_blueprints = {
 	title = {
 		pass_definitions = {
@@ -42,7 +43,7 @@ local class_selection_view_blueprints = {
 				math.huge
 			})
 			widget.content.size = {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				title_text_height
 			}
 		end
@@ -108,8 +109,8 @@ local class_selection_view_blueprints = {
 			widget.content.description = localized_description
 			local title_style = widget.style.title
 			local description_style = widget.style.description
-			local title_width = ClassSelectionViewSettings.class_details_size[1] - title_style.offset[1]
-			local description_width = ClassSelectionViewSettings.class_details_size[1] - description_style.offset[1]
+			local title_width = max_width - title_style.offset[1]
+			local description_width = max_width - description_style.offset[1]
 			local _, title_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
 				title_width,
 				math.huge
@@ -134,7 +135,7 @@ local class_selection_view_blueprints = {
 			description_style.offset[2] = description_style.offset[2] + title_style.size[2] + offset_text
 			widget.style.texture.offset[2] = offset_icon
 			widget.content.size = {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				total_height
 			}
 		end,
@@ -150,21 +151,50 @@ local class_selection_view_blueprints = {
 				content_id = "hotspot"
 			},
 			{
-				value = "content/ui/materials/frames/line_medium_inner_shadow",
+				value = "content/ui/materials/frames/inner_shadow_medium",
 				style_id = "texture",
 				pass_type = "texture",
 				style = {
 					vertical_alignment = "center",
 					horizontal_alignment = "left",
-					color = Color.black(255, true),
+					scale_to_material = true,
+					color = Color.terminal_frame(255, true),
 					size = {
 						256,
 						128
+					},
+					size_addition = {
+						-10,
+						0
 					},
 					offset = {
 						10,
 						0,
 						3
+					}
+				}
+			},
+			{
+				value = "content/ui/materials/frames/frame_tile_2px",
+				style_id = "frame",
+				pass_type = "texture",
+				style = {
+					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "left",
+					size_addition = {
+						-10,
+						0
+					},
+					color = Color.terminal_frame(255, true),
+					offset = {
+						10,
+						0,
+						5
+					},
+					size = {
+						256,
+						128
 					}
 				}
 			},
@@ -207,14 +237,14 @@ local class_selection_view_blueprints = {
 			widget.content.title = Localize(element.display_name)
 			local title_style = widget.style.title
 			local right_margin = 10
-			local title_width = ClassSelectionViewSettings.class_details_size[1] - title_style.offset[1] - right_margin
+			local title_width = max_width - title_style.offset[1] - right_margin
 			local total_height = UISettings.weapon_icon_size[2]
 			title_style.size = {
 				title_width,
 				total_height
 			}
 			widget.content.size = {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				total_height
 			}
 		end,
@@ -261,11 +291,11 @@ local class_selection_view_blueprints = {
 			widget.content.description = element.text and Localize(element.text) or ""
 			local description_style = widget.style.description
 			local _, description_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				math.huge
 			})
 			widget.content.size = {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				description_text_height
 			}
 		end
@@ -344,11 +374,11 @@ local class_selection_view_blueprints = {
 			widget.content.class_attributes = attributes
 			local attributes_style = widget.style.class_attributes
 			local _, attributes_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				math.huge
 			})
 			widget.content.size = {
-				ClassSelectionViewSettings.class_details_size[1],
+				max_width,
 				attributes_text_height
 			}
 		end

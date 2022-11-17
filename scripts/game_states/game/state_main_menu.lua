@@ -111,8 +111,8 @@ StateMainMenu.event_create_new_character_start = function (self)
 	self:_create_new_character_start()
 end
 
-StateMainMenu.event_create_new_character_continue = function (self)
-	self:_next_character_create_view()
+StateMainMenu.event_create_new_character_continue = function (self, skip_onboarding)
+	self:_next_character_create_view(skip_onboarding)
 end
 
 StateMainMenu.event_create_new_character_back = function (self)
@@ -265,7 +265,7 @@ StateMainMenu._previous_character_create_view = function (self)
 	end
 end
 
-StateMainMenu._next_character_create_view = function (self)
+StateMainMenu._next_character_create_view = function (self, skip_onboarding)
 	local views_index = (self._current_character_create_state_views_index or 0) + 1
 	local success = self:_open_character_create_state_views(views_index)
 
@@ -273,6 +273,7 @@ StateMainMenu._next_character_create_view = function (self)
 		self._character_create:upload_profile()
 
 		self._wait_for_character_profile_upload = true
+		self._skip_onboarding_for_created_character = skip_onboarding
 	end
 end
 
@@ -288,6 +289,8 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 	self._character_create = nil
 	self._current_character_create_state_views_index = nil
 	self._wait_for_character_profile_upload = false
+	local skip_onboarding = self._skip_onboarding_for_created_character or GameParameters.skip_prologue
+	self._skip_onboarding_for_created_character = nil
 
 	if created_profile then
 		local time = Managers.time:time("character_creation_timer")
@@ -311,6 +314,12 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 		end
 
 		Promise.all(unpack(promises)):next(function (_)
+			if skip_onboarding then
+				return Managers.narrative:skip_story(Managers.narrative.STORIES.onboarding)
+			else
+				return nil
+			end
+		end):next(function (_)
 			self:_start_game_or_onboarding()
 		end):catch(function ()
 			self:_set_view_state_cb("main_menu")
@@ -370,12 +379,29 @@ local state_views = {
 StateMainMenu._close_current_state_views = function (self)
 	local current_view_state = self._current_view_state
 	local open_views = state_views[current_view_state]
+	local ui_manager = Managers.ui
+	local leaving_game = Managers.account:leaving_game()
 
 	if open_views then
 		for i = 1, #open_views do
 			local view_name = open_views[i]
 
-			Managers.ui:close_view(view_name)
+			if ui_manager:view_active(view_name) then
+				local force_close = leaving_game
+
+				ui_manager:close_view(view_name, force_close)
+			end
+		end
+	end
+
+	if leaving_game then
+		local active_views = ui_manager:active_views()
+		local force_close = true
+
+		while not table.is_empty(active_views) do
+			local view_name = active_views[1]
+
+			ui_manager:close_view(view_name, force_close)
 		end
 	end
 end
@@ -553,7 +579,6 @@ StateMainMenu._show_reconnect_popup = function (self)
 			{
 				text = "loc_popup_reconnect_to_session_reconnect_button",
 				close_on_pressed = true,
-				hotkey = "confirm_pressed",
 				callback = function ()
 					self._reconnect_popup_id = nil
 					self._reconnect_pressed = true

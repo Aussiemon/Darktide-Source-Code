@@ -114,6 +114,13 @@ BotTargetSelection.monster_weight = function (unit, target_unit, target_breed, t
 		return 0, false
 	end
 
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local _, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
+
+	if num_enemies_in_proximity and num_enemies_in_proximity > 0 then
+		return 0, false
+	end
+
 	local legacy_v2_proximity_extension = ScriptUnit.has_extension(target_unit, "legacy_v2_proximity_system")
 
 	if legacy_v2_proximity_extension then

@@ -115,7 +115,19 @@ end
 PartyImmateriumMissionSessionBoot._create_connection = function (self)
 	local event_delegate = Managers.connection:network_event_delegate()
 	local network_hash = Managers.connection.combined_hash
-	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, Network.leave_lan_lobby, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
+	local client = self._wan_client
+	local server_ip = self._server_ip
+	local server_port = self._server_port
+
+	local function cleanup(lobby)
+		local browser = LanClient.create_lobby_browser(client)
+
+		browser:disconnect(server_ip, server_port)
+		LanClient.destroy_lobby_browser(client, browser)
+		Network.leave_lan_lobby(lobby)
+	end
+
+	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, cleanup, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
 end
 
 PartyImmateriumMissionSessionBoot._start_reserve = function (self)
@@ -131,6 +143,10 @@ PartyImmateriumMissionSessionBoot._failed = function (self, reason, optional_err
 end
 
 PartyImmateriumMissionSessionBoot._fail_or_retry_non_accelerated = function (self, reason)
+	if self._wan_lobby_browser and self._server_ip and self._server_port then
+		self._wan_lobby_browser:disconnect(self._server_ip, self._server_port)
+	end
+
 	if self._accelerated then
 		self:_start_handshaking(true)
 	else

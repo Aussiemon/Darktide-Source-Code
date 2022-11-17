@@ -461,7 +461,183 @@ local disgustingly_resilient = {
 	}
 }
 local resistant = table.clone(unarmored)
-local berserker = table.clone(unarmored)
+local berserker = {
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_hit_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_weapon_hit_addon_flesh",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
+				only_1p = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_hit_impact",
+				append_husk_to_event_name = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_hit_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_weapon_hit_addon_flesh",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
+				only_1p = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_hit_impact",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				only_1p = true
+			}
+		},
+		shove = {
+			{
+				event = "wwise/events/weapon/play_player_push_unarmored",
+				append_husk_to_event_name = true
+			}
+		}
+	},
+	vfx = {
+		weakspot_died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
+		},
+		weakspot_damage = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		damage = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		damage_reduced = {
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			}
+		},
+		damage_negated = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			}
+		},
+		shove = {
+			{
+				effects = {
+					"content/fx/particles/impacts/impact_sweat_01"
+				}
+			}
+		}
+	},
+	blood_ball = {
+		weakspot_died = blood_ball,
+		died = blood_ball,
+		weakspot_damage = blood_ball,
+		damage = blood_ball
+	}
+}
 local prop_armor = table.clone(armored)
 local player = nil
 

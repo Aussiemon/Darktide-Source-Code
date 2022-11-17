@@ -81,7 +81,7 @@ end
 UIWeaponSpawner.update = function (self, dt, t, input_service)
 	local weapon_spawn_data = self._weapon_spawn_data
 
-	if weapon_spawn_data then
+	if weapon_spawn_data and weapon_spawn_data.streaming_complete then
 		self:_handle_input(input_service, dt)
 		self:_update_input_rotation(dt)
 
@@ -209,6 +209,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit)
 	local spawn_data = {
 		visible = false,
+		streaming_complete = false,
 		loader = loader,
 		rotation = rotation and QuaternionBox(rotation),
 		item = item,
@@ -216,14 +217,20 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 		item_unit_3p = item_unit_3p,
 		attachment_units_3p = attachment_units_3p
 	}
-
-	Unit.set_unit_visibility(item_unit_3p, false, true)
-
-	if force_highest_mip then
-		-- Nothing
-	end
-
 	self._weapon_spawn_data = spawn_data
+	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p)
+
+	Unit.force_stream_meshes(item_unit_3p, complete_callback, true)
+end
+
+UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p)
+	local weapon_spawn_data = self._weapon_spawn_data
+
+	if weapon_spawn_data and weapon_spawn_data.item_unit_3p == item_unit_3p then
+		weapon_spawn_data.streaming_complete = true
+
+		Unit.set_unit_visibility(item_unit_3p, true, true)
+	end
 end
 
 UIWeaponSpawner.spawned = function (self)
@@ -288,10 +295,20 @@ UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 	end
 end
 
+UIWeaponSpawner.set_forced_pressed = function (self)
+	self._forced_pressed = true
+end
+
 UIWeaponSpawner._is_pressed = function (self, input_service)
 	local input_pressed = input_service:get("left_pressed") or input_service:get("right_pressed")
 
 	if input_pressed then
+		if self._forced_pressed then
+			self._forced_pressed = nil
+
+			return true
+		end
+
 		local physics_world = World.physics_world(self._world)
 
 		if not physics_world then
@@ -329,11 +346,11 @@ UIWeaponSpawner._auto_spin_values = function (self, dt, t)
 		return 0, 0
 	end
 
-	local progress_speed = 0.2
+	local progress_speed = 0.3
 	local progress_range = 0.3
 	local progress = math.sin((start_seed + t) * progress_speed) * progress_range
 	local auto_tilt_angle = -(progress * 0.5)
-	local auto_turn_angle = -(progress * math.pi / 2)
+	local auto_turn_angle = -(progress * math.pi * 0.25)
 
 	return auto_tilt_angle, auto_turn_angle
 end

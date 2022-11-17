@@ -25,8 +25,8 @@ local template = {
 			},
 			fence = {
 				jump = {
-					anim_events = "jump_up_fence_3m",
-					anim_vertical_length = 3
+					anim_events = "jump_up_fence_2m",
+					anim_vertical_length = 2
 				}
 			}
 		},
@@ -36,21 +36,6 @@ local template = {
 				jump = {
 					anim_events = "jump_up_3m",
 					anim_vertical_length = 3
-				}
-			},
-			fence = {
-				jump = {
-					anim_events = "jump_up_fence_3m",
-					anim_vertical_length = 3
-				}
-			}
-		},
-		{
-			height_threshold = 4.5,
-			edge = {
-				jump = {
-					anim_events = "jump_up_4m",
-					anim_vertical_length = 4
 				}
 			},
 			fence = {
@@ -78,7 +63,7 @@ local template = {
 	},
 	jump_down_anim_thresholds = {
 		{
-			height_threshold = 1.5,
+			height_threshold = 1,
 			edge = {
 				jump = {
 					anim_events = "jump_down_1m",
@@ -101,10 +86,33 @@ local template = {
 			}
 		},
 		{
+			height_threshold = 2,
+			edge = {
+				jump = {
+					anim_events = "jump_down_1m",
+					anim_vertical_length = 2
+				},
+				land = {
+					anim_events = "jump_down_land_1m"
+				}
+			},
+			fence = {
+				jump = {
+					anim_vertical_length = 2,
+					anim_horizontal_length = 1.5,
+					anim_events = "jump_down_fence_2m"
+				},
+				land = {
+					anim_horizontal_length = 0,
+					anim_events = "jump_down_fence_land_2m"
+				}
+			}
+		},
+		{
 			height_threshold = 4,
 			edge = {
 				jump = {
-					anim_events = "jump_down",
+					anim_events = "jump_down_3m",
 					anim_vertical_length = 3
 				},
 				land = {
@@ -119,7 +127,7 @@ local template = {
 				},
 				land = {
 					anim_horizontal_length = 0,
-					anim_events = "jump_down_land"
+					anim_events = "jump_down_fence_land_3m"
 				}
 			}
 		},
@@ -127,7 +135,7 @@ local template = {
 			height_threshold = math.huge,
 			edge = {
 				jump = {
-					anim_events = "jump_down",
+					anim_events = "jump_down_3m",
 					anim_vertical_length = 5
 				},
 				land = {
@@ -142,7 +150,7 @@ local template = {
 				},
 				land = {
 					anim_horizontal_length = 0,
-					anim_events = "jump_down_land"
+					anim_events = "jump_down_fence_land_5m"
 				}
 			}
 		}

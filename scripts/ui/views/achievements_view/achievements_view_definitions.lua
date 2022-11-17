@@ -42,7 +42,7 @@ local categories_header_pos = {
 }
 local total_progress_pos = {
 	0,
-	-30,
+	-25,
 	1
 }
 local categories_grid_pos = categories_grid_style.position
@@ -132,40 +132,19 @@ local widget_definitions = {
 	}, "categories_header", nil, nil, ViewStyles.completed),
 	completed = UIWidget.create_definition({
 		{
-			style_id = "completed",
-			value_id = "completed",
-			pass_type = "text"
-		},
-		{
-			style_id = "total_score",
+			value = "",
 			value_id = "total_score",
-			pass_type = "text"
-		},
-		{
-			value = "content/ui/materials/bars/medium/frame",
-			style_id = "progressbar_background",
-			pass_type = "texture"
-		},
-		{
-			value = "content/ui/materials/bars/medium/fill",
-			style_id = "progressbar",
-			pass_type = "texture"
-		},
-		{
-			value = "content/ui/materials/bars/medium/end",
-			style_id = "progressbar_edge",
-			pass_type = "texture"
+			pass_type = "text",
+			style_id = "total_score"
 		}
 	}, "total_progress", nil, nil, ViewStyles.completed)
 }
 local categories_grid_settings = {
 	scrollbar_vertical_margin = 20,
 	scenegraph_id = "categories_grid",
+	use_terminal_background = true,
 	title_height = 0,
-	grid_spacing = {
-		categories_grid_size[1],
-		5
-	},
+	grid_spacing = ViewStyles.categories_grid_spacing,
 	grid_size = categories_grid_size,
 	mask_size = categories_mask_size,
 	scrollbar_width = ScrollbarPassTemplates.metal_scrollbar.default_width,
@@ -176,10 +155,12 @@ local achievements_grid_settings = {
 	scrollbar_vertical_margin = 20,
 	scenegraph_id = "achievements_grid",
 	title_formatting = "upper_case",
+	use_is_focused_for_navigation = true,
+	use_terminal_background = true,
 	title_height = 70,
 	grid_spacing = {
-		0,
-		0
+		8,
+		8
 	},
 	grid_size = achievements_grid_size,
 	mask_size = achievements_mask_size,

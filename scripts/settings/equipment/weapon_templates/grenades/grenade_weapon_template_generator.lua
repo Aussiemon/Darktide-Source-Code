@@ -340,7 +340,7 @@ local function generate_base_template()
 				end
 			},
 			action_inspect = {
-				skip_3p_anims = true,
+				skip_3p_anims = false,
 				lock_view = true,
 				start_input = "inspect_start",
 				anim_end_event = "inspect_end",
@@ -359,7 +359,7 @@ local function generate_base_template()
 		anim_state_machine_1p = "content/characters/player/human/first_person/animations/grenade_equipable",
 		spread_template = "lasgun",
 		ammo_template = "no_ammo",
-		uses_ammunition = false,
+		uses_ammunition = true,
 		uses_overheat = false,
 		sprint_ready_up_time = 0.1,
 		max_first_person_anim_movement_speed = 5.8,

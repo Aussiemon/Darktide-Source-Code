@@ -20,6 +20,7 @@ local ServoSkullActivatorInteraction = require("scripts/extension_systems/intera
 local ServoSkullInteraction = require("scripts/extension_systems/interaction/interactions/servo_skull_interaction")
 local SetupDecodingInteraction = require("scripts/extension_systems/interaction/interactions/setup_decoding_interaction")
 local ViewInteraction = require("scripts/extension_systems/interaction/interactions/view_interaction")
+local ScriptedScenarioInteraction = require("scripts/extension_systems/interaction/interactions/scripted_scenario_interaction")
 local interactions = {
 	ammunition = AmmunitionInteraction,
 	base = BaseInteraction,
@@ -48,7 +49,8 @@ local interactions = {
 	servo_skull_activator = ServoSkullActivatorInteraction,
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
-	vendor = ViewInteraction
+	vendor = ViewInteraction,
+	scripted_scenario = ScriptedScenarioInteraction
 }
 
 return settings("Interactions", interactions)

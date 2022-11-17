@@ -1,3 +1,4 @@
+local Action = require("scripts/utilities/weapon/action")
 local PlayerUnitAnimationState = require("scripts/extension_systems/animation/utilities/player_unit_animation_state")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
@@ -128,6 +129,11 @@ PlayerUnitAnimationExtension.fixed_update = function (self, unit, dt, t, frame)
 	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, unit, self._first_person_unit)
 end
 
+local ALWAYS_ROLLBACK_ACTION_KINDS = {
+	reload_shotgun = true,
+	reload_state = true
+}
+
 PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, from_frame, to_frame, simulated_components)
 	local first_person_unit = self._first_person_unit
 	local weapon_action_component = self._weapon_action_component
@@ -159,6 +165,12 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 	local character_state = self._character_state_component
 
 	if character_state.state_name ~= simulated_components.character_state.state_name or weapon_action_component.current_action_name ~= simulated_components.weapon_action.current_action_name then
+		mispredict_warrants_animation_rollback = true
+	end
+
+	local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+
+	if current_action_settings and ALWAYS_ROLLBACK_ACTION_KINDS[current_action_settings.kind] then
 		mispredict_warrants_animation_rollback = true
 	end
 

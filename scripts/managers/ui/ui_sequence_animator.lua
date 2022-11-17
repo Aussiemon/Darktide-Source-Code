@@ -8,7 +8,8 @@ UISequenceAnimator.init = function (self, ui_scenegraph, scenegraph_definition, 
 	self._animation_id = 0
 end
 
-UISequenceAnimator.start_animation = function (self, parent, animation_sequence_name, widgets, params, speed, callback)
+UISequenceAnimator.start_animation = function (self, parent, animation_sequence_name, widgets, params, speed, callback, delay)
+	delay = delay or 0
 	local animation_sequence = self._animation_definitions[animation_sequence_name]
 	local animation_id = self._animation_id + 1
 	self._animation_id = animation_id
@@ -39,8 +40,8 @@ UISequenceAnimator.start_animation = function (self, parent, animation_sequence_
 
 		local start_time_index = (i - 1) * 2 + 1
 		local end_time_index = (i - 1) * 2 + 2
-		times[start_time_index] = start_time
-		times[end_time_index] = end_time
+		times[start_time_index] = delay + start_time
+		times[end_time_index] = delay + end_time
 	end
 
 	return animation_id

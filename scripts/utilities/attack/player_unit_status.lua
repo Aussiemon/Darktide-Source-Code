@@ -6,13 +6,13 @@ local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
 local TOUGHNESS_PERCENT_LIMIT = critical_health.toughness_percent_limit
 local PlayerUnitStatus = {}
 local DISABLED_STATES = {
-	ledge_hanging = true,
+	dead = true,
 	warp_grabbed = true,
 	knocked_down = true,
 	hogtied = true,
-	consumed = true,
+	ledge_hanging = true,
 	catapulted = true,
-	dead = true,
+	consumed = true,
 	netted = true,
 	mutant_charged = true,
 	pounced = true
@@ -33,8 +33,8 @@ local REQUIRES_IMMEDIATE_HELP = {
 local REQUIRES_ALLIED_INTERACTION_HELP = {
 	netted = true,
 	knocked_down = true,
-	hogtied = true,
-	ledge_hanging = true
+	ledge_hanging = true,
+	hogtied = true
 }
 local OBJECTIVE_INTERACTION_STATES = {
 	interacting = true,
@@ -42,19 +42,31 @@ local OBJECTIVE_INTERACTION_STATES = {
 	walking = true
 }
 local VALID_END_ZONE_STATES = {
-	consumed = true,
+	dead = true,
 	walking = true,
 	ledge_vaulting = true,
 	falling = true,
 	warp_grabbed = true,
 	catapulted = true,
-	dead = true,
+	consumed = true,
 	jumping = true,
 	sprinting = true,
 	mutant_charged = true,
 	interacting = true,
 	dodging = true,
 	pounced = true
+}
+local MISSION_FAILURE_DEAD_STATES = {
+	hogtied = true,
+	dead = true
+}
+local MISSION_FAILURE_DISABLED_STATES = {
+	netted = true,
+	warp_grabbed = true,
+	ledge_hanging = true,
+	hogtied = true,
+	knocked_down = true,
+	dead = true
 }
 local KNOCKED_DOWN_STATE_NAME = "knocked_down"
 local CATAPULTED_STATE_NAME = "catapulted"
@@ -70,51 +82,56 @@ end
 
 PlayerUnitStatus.requires_help = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local requires_help = REQUIRES_HELP[state_name]
 
-	return requires_help
+	return REQUIRES_HELP[state_name]
 end
 
 PlayerUnitStatus.requires_immediate_help = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local requires_immediate_help = REQUIRES_IMMEDIATE_HELP[state_name]
 
-	return requires_immediate_help
+	return REQUIRES_IMMEDIATE_HELP[state_name]
 end
 
 PlayerUnitStatus.requires_allied_interaction_help = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local requires_allied_interaction_help = REQUIRES_ALLIED_INTERACTION_HELP[state_name]
 
-	return requires_allied_interaction_help
+	return REQUIRES_ALLIED_INTERACTION_HELP[state_name]
 end
 
 PlayerUnitStatus.end_zone_conditions_fulfilled = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local end_zone_conditions_fulfilled = VALID_END_ZONE_STATES[state_name]
 
-	return end_zone_conditions_fulfilled
+	return VALID_END_ZONE_STATES[state_name]
+end
+
+PlayerUnitStatus.is_dead_for_mission_failure = function (character_state_component)
+	local state_name = character_state_component.state_name
+
+	return MISSION_FAILURE_DEAD_STATES[state_name]
+end
+
+PlayerUnitStatus.is_disabled_for_mission_failure = function (character_state_component)
+	local state_name = character_state_component.state_name
+
+	return MISSION_FAILURE_DISABLED_STATES[state_name]
 end
 
 PlayerUnitStatus.is_knocked_down = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local is_knocked_down = state_name == KNOCKED_DOWN_STATE_NAME
 
-	return is_knocked_down
+	return state_name == KNOCKED_DOWN_STATE_NAME
 end
 
 PlayerUnitStatus.is_hogtied = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local is_hogtied = state_name == HOGTIED_STATE_NAME
 
-	return is_hogtied
+	return state_name == HOGTIED_STATE_NAME
 end
 
 PlayerUnitStatus.is_catapulted = function (character_state_component)
 	local state_name = character_state_component.state_name
-	local is_catapulted = state_name == CATAPULTED_STATE_NAME
 
-	return is_catapulted
+	return state_name == CATAPULTED_STATE_NAME
 end
 
 PlayerUnitStatus.is_pounced = function (disabled_character_state_component)

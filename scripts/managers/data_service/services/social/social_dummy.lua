@@ -1,22 +1,22 @@
 local PlatformSocialInterface = require("scripts/managers/data_service/services/social/platform_social_interface")
 local Promise = require("scripts/foundation/utilities/promise")
-local SocialSteam = class("SocialSteam")
+local SocialDummy = class("SocialDummy")
 
-SocialSteam.init = function (self)
+SocialDummy.init = function (self)
 	return
 end
 
-SocialSteam.destroy = function (self)
+SocialDummy.destroy = function (self)
 	return
 end
 
-SocialSteam.friends_list_has_changes = function (self)
+SocialDummy.friends_list_has_changes = function (self)
 	return false
 end
 
 local empty_list = {}
 
-SocialSteam.fetch_friends_list = function (self)
+SocialDummy.fetch_friends_list = function (self)
 	local promise = Promise:new()
 
 	promise:resolve(empty_list)
@@ -24,11 +24,11 @@ SocialSteam.fetch_friends_list = function (self)
 	return promise
 end
 
-SocialSteam.blocked_list_has_changes = function (self)
+SocialDummy.blocked_list_has_changes = function (self)
 	return false
 end
 
-SocialSteam.fetch_blocked_list = function (self)
+SocialDummy.fetch_blocked_list = function (self)
 	local promise = Promise:new()
 
 	promise:resolve(empty_list)
@@ -36,7 +36,7 @@ SocialSteam.fetch_blocked_list = function (self)
 	return promise
 end
 
-SocialSteam.fetch_blocked_list_ids_forced = function (self)
+SocialDummy.fetch_blocked_list_ids_forced = function (self)
 	local promise = Promise:new()
 
 	promise:resolve(empty_list)
@@ -44,6 +44,10 @@ SocialSteam.fetch_blocked_list_ids_forced = function (self)
 	return promise
 end
 
-implements(SocialSteam, PlatformSocialInterface)
+SocialDummy.update_recent_players = function (self, account_id)
+	return
+end
 
-return SocialSteam
+implements(SocialDummy, PlatformSocialInterface)
+
+return SocialDummy

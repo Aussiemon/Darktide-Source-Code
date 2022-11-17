@@ -34,6 +34,10 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 	locomotion_extension:set_movement_type("constrained_by_mover")
 	locomotion_extension:set_affected_by_gravity(true)
 
+	if action_data.aoe_bot_threat_timing then
+		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
+	end
+
 	local start_duration = action_data.start_duration or 0
 	scratchpad.start_duration = t + start_duration
 	scratchpad.state = "starting"
@@ -87,7 +91,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			leap_velocity = Vector3.normalize(leap_velocity) * action_data.start_move_speed
 			wanted_velocity = Vector3(leap_velocity.x, leap_velocity.y, 0)
 		else
-			local wanted_direction = Vector3.normalize(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[unit])
+			local wanted_direction = Vector3.flat(Vector3.normalize(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[unit]))
 			wanted_velocity = wanted_direction * action_data.start_move_speed
 			wanted_velocity = Vector3(wanted_velocity.x, wanted_velocity.y, 0)
 		end
@@ -116,6 +120,16 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			end
 		end
 
+		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
+			local group_extension = ScriptUnit.extension(target_unit, "group_system")
+			local bot_group = group_extension:bot_group()
+			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+
+			bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, Unit.local_rotation(unit, 1), action_data.aoe_bot_threat_duration)
+
+			scratchpad.aoe_bot_threat_timing = nil
+		end
+
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
 	elseif state == "telegraph_leap" then
@@ -137,9 +151,10 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			scratchpad.target_dodged_type = dodge_type
 		end
 
-		local hit_player_unit = not scratchpad.current_colliding_target and self:_check_colliding_players(unit, scratchpad, action_data)
+		local current_colliding_target = scratchpad.current_colliding_target
+		local hit_player_unit = scratchpad.init_hit_target or self:_check_colliding_players(unit, scratchpad, action_data)
 
-		if hit_player_unit then
+		if not scratchpad.current_colliding_target_check_time and (hit_player_unit and current_colliding_target ~= target_unit or hit_player_unit == target_unit) then
 			local extra_timing = 0
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 			local player = player_unit_spawn_manager:owner(hit_player_unit)
@@ -246,6 +261,8 @@ BtChaosHoundLeapAction._try_start_leap = function (self, unit, t, scratchpad, ac
 	end
 end
 
+local MAX_TIME_IN_FLIGHT = 10
+
 BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scratchpad, action_data)
 	local target_node_name = action_data.target_node_name
 	local physics_world = scratchpad.physics_world
@@ -277,8 +294,11 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 		return
 	end
 
+	angle_to_hit_target = math.min(angle_to_hit_target, 0.3)
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(self_position, est_pos, gravity, speed, angle_to_hit_target)
-	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight)
+	time_in_flight = math.min(time_in_flight, MAX_TIME_IN_FLIGHT)
+	local debug = nil
+	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight, nil, debug)
 
 	if trajectory_is_ok then
 		scratchpad.current_velocity = Vector3Box(velocity)
@@ -287,13 +307,17 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 	end
 end
 
-local MOVER_DISPLACEMENT_DURATION = 0.5
+local MOVER_DISPLACEMENT_DURATION = 0.1
 local OVERRIDE_SPEED_Z = 0
 
 BtChaosHoundLeapAction._leap = function (self, scratchpad, blackboard, action_data, t, unit)
+	local ignore_dot_check = true
+	local hit_target = self:_check_colliding_players(unit, scratchpad, action_data, ignore_dot_check)
+	scratchpad.init_hit_target = hit_target
+
 	scratchpad.navigation_extension:set_enabled(false)
 
-	local mover_displacement = Vector3(0, 0, 0.5)
+	local mover_displacement = Vector3(0, 0, 0.25)
 	local velocity = scratchpad.velocity:unbox()
 	local gravity = action_data.gravity
 	local locomotion_extension = scratchpad.locomotion_extension
@@ -396,27 +420,35 @@ BtChaosHoundLeapAction._check_wall_collision = function (self, unit, scratchpad,
 	end
 end
 
-BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchpad, action_data)
-	local pos = POSITION_LOOKUP[unit]
+BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchpad, action_data, ignore_dot_check)
+	local attacking_unit_pos = POSITION_LOOKUP[unit]
+	local direction = Quaternion.forward(Unit.world_rotation(unit, 1))
 	local physics_world = scratchpad.physics_world
 	local radius = action_data.collision_radius
 	local dodge_radius = action_data.dodge_collision_radius
-	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
+	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", attacking_unit_pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
 
 	for i = 1, actor_count do
 		repeat
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
+			local hit_unit_pos = POSITION_LOOKUP[hit_unit]
 			local is_dodging = Dodge.is_dodging(hit_unit)
 
 			if is_dodging then
-				local hit_unit_pos = POSITION_LOOKUP[hit_unit]
-				local flat_pos = Vector3(pos.x, pos.y, hit_unit_pos.z)
+				local flat_pos = Vector3(attacking_unit_pos.x, attacking_unit_pos.y, hit_unit_pos.z)
 				local distance = Vector3.distance(flat_pos, hit_unit_pos)
 
 				if dodge_radius < distance then
 					break
 				end
+			end
+
+			local to_target = Vector3.normalize(hit_unit_pos - attacking_unit_pos)
+			local dot = Vector3.dot(to_target, direction)
+
+			if dot < action_data.max_pounce_dot and not ignore_dot_check then
+				break
 			end
 
 			local target_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")

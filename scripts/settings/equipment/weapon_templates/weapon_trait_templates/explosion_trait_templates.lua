@@ -3,24 +3,31 @@ local explosion_trait_templates = {
 		{
 			"radius",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"close_radius",
+			{
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"explosion_area_suppression",
 			"distance",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"explosion_area_suppression",
 			"suppression_value",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		}
 	},
@@ -42,17 +49,10 @@ local explosion_trait_templates = {
 	},
 	default_explosion_damage_stat = {
 		{
-			"radius",
+			"static_power_level",
 			{
 				max = 1,
 				min = 0
-			}
-		},
-		{
-			"close_radius",
-			{
-				max = 0.75,
-				min = 0.25
 			}
 		}
 	},
@@ -86,6 +86,22 @@ local explosion_trait_templates = {
 		{
 			"close_radius",
 			0.05
+		}
+	},
+	forcestaff_p4_m1_explosion_size_stat = {
+		{
+			"radius",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"close_radius",
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	}
 }

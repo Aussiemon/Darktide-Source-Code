@@ -1666,6 +1666,760 @@ sway_templates.lasgun_p1_m3_killshot = {
 		sway_pattern = lasgun_p1_m3_crouch_sway_pattern
 	}
 }
+sway_templates.lasgun_p2_m1_killshot = {
+	charge_scale = {
+		max_yaw = 0.8,
+		max_pitch = 0.8
+	},
+	still = {
+		intensity = 1,
+		horizontal_speed = 0.44999999999999996,
+		visual_pitch_impact_mod = 6,
+		rotation_speed = 0.30000000000000004,
+		visual_yaw_impact_mod = 7,
+		max_sway = {
+			yaw = 4,
+			pitch = 4
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 1,
+					lerp_basic = 0.75
+				},
+				yaw = {
+					lerp_perfect = 1,
+					lerp_basic = 0.75
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				}
+			},
+			enter_alternate_fire_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 0.45
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.3,
+				lerp_basic = 1.1
+			},
+			yaw = {
+				lerp_perfect = 0.3,
+				lerp_basic = 1.1
+			}
+		},
+		immediate_sway = {
+			num_shots_clear_time = 2,
+			crouch_transition = {
+				{
+					cap = true,
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0,
+						lerp_basic = 1
+					}
+				}
+			},
+			alternate_fire_start = {
+				{
+					cap = true,
+					pitch = {
+						lerp_perfect = 0,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0,
+						lerp_basic = 1
+					}
+				}
+			},
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.3,
+						lerp_basic = 0.5
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.45
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.75
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.4
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.5
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.35
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.35
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.1,
+						lerp_basic = 0.25
+					},
+					yaw = {
+						lerp_perfect = 0.1,
+						lerp_basic = 0.25
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
+					},
+					yaw = {
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.5
+					},
+					yaw = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.5
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.1
+					},
+					yaw = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.04,
+						lerp_basic = 0.15
+					},
+					yaw = {
+						lerp_perfect = 0.04,
+						lerp_basic = 0.15
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.03,
+						lerp_basic = 0.1
+					},
+					yaw = {
+						lerp_perfect = 0.03,
+						lerp_basic = 0.1
+					}
+				}
+			}
+		},
+		sway_pattern = lasgun_p1_m3_sway_pattern
+	},
+	moving = {
+		rotation_speed = 0.30000000000000004,
+		inherits = {
+			"lasgun_p2_m1_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.4,
+				lerp_basic = 1.2
+			},
+			yaw = {
+				lerp_perfect = 0.4,
+				lerp_basic = 1.2
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2,
+					lerp_basic = 0.75
+				},
+				yaw = {
+					lerp_perfect = 2,
+					lerp_basic = 0.75
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				}
+			},
+			enter_alternate_fire_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 0.45
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		}
+	},
+	crouch_still = {
+		rotation_speed = 0.375,
+		inherits = {
+			"lasgun_p2_m1_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.225,
+				lerp_basic = 0.8
+			},
+			yaw = {
+				lerp_perfect = 0.225,
+				lerp_basic = 0.8
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			enter_alternate_fire_grace_time = 0.3,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.01
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		}
+	},
+	crouch_moving = {
+		rotation_speed = 0.48750000000000004,
+		inherits = {
+			"lasgun_p2_m1_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
+			},
+			yaw = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			enter_alternate_fire_grace_time = 0.3,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 3,
+					lerp_basic = 1.25
+				},
+				yaw = {
+					lerp_perfect = 3,
+					lerp_basic = 1.25
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		},
+		sway_pattern = lasgun_p1_m3_crouch_sway_pattern
+	}
+}
+sway_templates.lasgun_p2_m2_killshot = {
+	charge_scale = {
+		max_yaw = 0.6,
+		max_pitch = 0.6
+	},
+	still = {
+		intensity = 1,
+		horizontal_speed = 0.51,
+		visual_pitch_impact_mod = 6,
+		rotation_speed = 0.34,
+		visual_yaw_impact_mod = 7,
+		max_sway = {
+			yaw = 4,
+			pitch = 4
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 1,
+					lerp_basic = 0.75
+				},
+				yaw = {
+					lerp_perfect = 1,
+					lerp_basic = 0.75
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				}
+			},
+			enter_alternate_fire_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 0.45
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.3,
+				lerp_basic = 0.9
+			},
+			yaw = {
+				lerp_perfect = 0.3,
+				lerp_basic = 0.9
+			}
+		},
+		immediate_sway = {
+			num_shots_clear_time = 2,
+			crouch_transition = {
+				{
+					cap = true,
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.5
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.5
+					}
+				}
+			},
+			alternate_fire_start = {
+				{
+					cap = true,
+					pitch = {
+						lerp_perfect = 0,
+						lerp_basic = 1
+					},
+					yaw = {
+						lerp_perfect = 0,
+						lerp_basic = 1
+					}
+				}
+			},
+			suppression_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.3,
+						lerp_basic = 0.5
+					},
+					yaw = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.45
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.75
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.4
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.5
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.35
+					},
+					yaw = {
+						lerp_perfect = 0.25,
+						lerp_basic = 0.35
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.1,
+						lerp_basic = 0.25
+					},
+					yaw = {
+						lerp_perfect = 0.1,
+						lerp_basic = 0.25
+					}
+				}
+			},
+			damage_hit = {
+				{
+					pitch = {
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
+					},
+					yaw = {
+						lerp_perfect = 0.6,
+						lerp_basic = 1.2
+					}
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.3
+					},
+					yaw = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.3
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.1
+					},
+					yaw = {
+						lerp_perfect = 0.05,
+						lerp_basic = 0.1
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.04,
+						lerp_basic = 0.15
+					},
+					yaw = {
+						lerp_perfect = 0.04,
+						lerp_basic = 0.15
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.03,
+						lerp_basic = 0.1
+					},
+					yaw = {
+						lerp_perfect = 0.03,
+						lerp_basic = 0.1
+					}
+				}
+			}
+		},
+		sway_pattern = lasgun_p1_m3_sway_pattern
+	},
+	moving = {
+		rotation_speed = 0.34,
+		inherits = {
+			"lasgun_p2_m2_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1
+			},
+			yaw = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.25,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2,
+					lerp_basic = 0.75
+				},
+				yaw = {
+					lerp_perfect = 2,
+					lerp_basic = 0.75
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
+				}
+			},
+			enter_alternate_fire_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 0.45
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		}
+	},
+	crouch_still = {
+		rotation_speed = 0.34,
+		inherits = {
+			"lasgun_p2_m2_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.225,
+				lerp_basic = 0.7
+			},
+			yaw = {
+				lerp_perfect = 0.225,
+				lerp_basic = 0.7
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			enter_alternate_fire_grace_time = 0.3,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.01
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 3.5,
+					lerp_basic = 1.5
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		}
+	},
+	crouch_moving = {
+		rotation_speed = 0.5525,
+		inherits = {
+			"lasgun_p2_m2_killshot",
+			"still"
+		},
+		continuous_sway = {
+			pitch = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
+			},
+			yaw = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1.05
+			}
+		},
+		decay = {
+			suppression = 0.2,
+			crouch_transition_grace_time = 0.5,
+			enter_alternate_fire_grace_time = 0.3,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.5,
+					lerp_basic = 0.1
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 3,
+					lerp_basic = 1.25
+				},
+				yaw = {
+					lerp_perfect = 3,
+					lerp_basic = 1.25
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.1
+				}
+			},
+			from_shooting_grace_time = {
+				lerp_perfect = 0,
+				lerp_basic = 1
+			}
+		},
+		sway_pattern = lasgun_p1_m3_crouch_sway_pattern
+	}
+}
 sway_templates.lasgun_p3_m1_sway = {
 	still = {
 		intensity = 0.2,
@@ -1682,12 +2436,12 @@ sway_templates.lasgun_p3_m1_sway = {
 			crouch_transition_grace_time = 0.5,
 			shooting = {
 				pitch = {
-					lerp_perfect = 0.3,
-					lerp_basic = 0.1
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
 				},
 				yaw = {
-					lerp_perfect = 0.3,
-					lerp_basic = 0.1
+					lerp_perfect = 0.5,
+					lerp_basic = 0.25
 				}
 			},
 			idle = {
@@ -1721,12 +2475,12 @@ sway_templates.lasgun_p3_m1_sway = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.005,
+				lerp_perfect = 0.02,
 				lerp_basic = 0.03
 			},
 			yaw = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.03
+				lerp_perfect = 0.02,
+				lerp_basic = 0.3
 			}
 		},
 		immediate_sway = {
@@ -1823,212 +2577,30 @@ sway_templates.lasgun_p3_m1_sway = {
 			},
 			shooting = {
 				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.0001,
-					pitch = 0.0001
-				},
-				{
-					yaw = 0.001,
-					pitch = 0.001
-				},
-				{
-					yaw = 0.001,
-					pitch = 0.001
+					yaw = 0.005,
+					pitch = 0.005
 				}
 			}
 		},
 		sway_pattern = default_lasgun_sway_pattern
 	},
 	moving = {
-		rotation_speed = 0.4,
 		inherits = {
-			"lasgun_p1_m1_killshot",
+			"lasgun_p3_m1_sway",
 			"still"
-		},
-		continuous_sway = {
-			pitch = {
-				lerp_perfect = 0.1,
-				lerp_basic = 0.8
-			},
-			yaw = {
-				lerp_perfect = 0.1,
-				lerp_basic = 0.8
-			}
-		},
-		decay = {
-			suppression = 0.2,
-			crouch_transition_grace_time = 0.5,
-			shooting = {
-				pitch = {
-					lerp_perfect = 0.25,
-					lerp_basic = 0.1
-				},
-				yaw = {
-					lerp_perfect = 0.25,
-					lerp_basic = 0.1
-				}
-			},
-			idle = {
-				pitch = {
-					lerp_perfect = 2,
-					lerp_basic = 0.75
-				},
-				yaw = {
-					lerp_perfect = 2,
-					lerp_basic = 0.75
-				}
-			},
-			player_event = {
-				pitch = {
-					lerp_perfect = 0.5,
-					lerp_basic = 0.25
-				},
-				yaw = {
-					lerp_perfect = 0.5,
-					lerp_basic = 0.25
-				}
-			},
-			enter_alternate_fire_grace_time = {
-				lerp_perfect = 0,
-				lerp_basic = 0.45
-			},
-			from_shooting_grace_time = {
-				lerp_perfect = 0,
-				lerp_basic = 1
-			}
 		}
 	},
 	crouch_still = {
-		rotation_speed = 0.5,
 		inherits = {
-			"lasgun_p1_m1_killshot",
+			"lasgun_p3_m1_sway",
 			"still"
-		},
-		continuous_sway = {
-			pitch = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.5
-			},
-			yaw = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.5
-			}
-		},
-		decay = {
-			suppression = 0.2,
-			crouch_transition_grace_time = 0.5,
-			enter_alternate_fire_grace_time = 0.3,
-			shooting = {
-				pitch = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				},
-				yaw = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.01
-				}
-			},
-			idle = {
-				pitch = {
-					lerp_perfect = 3.5,
-					lerp_basic = 1.5
-				},
-				yaw = {
-					lerp_perfect = 3.5,
-					lerp_basic = 1.5
-				}
-			},
-			player_event = {
-				pitch = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				},
-				yaw = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				}
-			},
-			from_shooting_grace_time = {
-				lerp_perfect = 0,
-				lerp_basic = 1
-			}
 		}
 	},
 	crouch_moving = {
-		rotation_speed = 0.85,
 		inherits = {
-			"lasgun_p1_m1_killshot",
+			"lasgun_p3_m1_sway",
 			"still"
-		},
-		continuous_sway = {
-			pitch = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.9
-			},
-			yaw = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.9
-			}
-		},
-		decay = {
-			suppression = 0.2,
-			crouch_transition_grace_time = 0.5,
-			enter_alternate_fire_grace_time = 0.3,
-			shooting = {
-				pitch = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				},
-				yaw = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				}
-			},
-			idle = {
-				pitch = {
-					lerp_perfect = 3,
-					lerp_basic = 1.25
-				},
-				yaw = {
-					lerp_perfect = 3,
-					lerp_basic = 1.25
-				}
-			},
-			player_event = {
-				pitch = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				},
-				yaw = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
-				}
-			},
-			from_shooting_grace_time = {
-				lerp_perfect = 0,
-				lerp_basic = 1
-			}
-		},
-		sway_pattern = default_lasgun_crouch_sway_pattern
+		}
 	}
 }
 

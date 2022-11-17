@@ -101,7 +101,6 @@ PlayerCharacterStateLedgeVaulting.on_enter = function (self, unit, dt, t, previo
 			local ignore_immunity = true
 
 			Interrupt.ability_and_action(t, unit, "ledge_vaulting", reason_data, ignore_immunity)
-			PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
 		end
 
 		local first_person_unit = self._first_person_extension:first_person_unit()
@@ -146,20 +145,15 @@ PlayerCharacterStateLedgeVaulting.on_exit = function (self, unit, t, next_state)
 		if Unit.has_animation_event(first_person_unit, "vault_end") then
 			animation_extension:anim_event_1p("vault_end")
 		end
-
-		local weapon_template = WeaponTemplate.current_weapon_template(self._weapon_action_component)
-
-		if not weapon_template.can_use_while_vaulting then
-			PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
-		end
 	end
 
 	self._locomotion_steering_component.calculate_fall_velocity = true
 	local movement_state_component = self._movement_state_component
+	local wants_crouch = Crouch.crouch_input(self._input_extension, false, false)
 	local is_crouching = movement_state_component.is_crouching
 	local first_person_extension = self._first_person_extension
 
-	if is_crouching and next_state ~= "sliding" and Crouch.can_exit(unit) then
+	if next_state ~= "sliding" and not wants_crouch and Crouch.can_exit(unit) then
 		Crouch.exit(unit, first_person_extension, animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 
 		is_crouching = false
@@ -249,12 +243,12 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 		if self._inair_state_component.on_ground then
 			local movement_state_component = self._movement_state_component
 			local input_extension = self._input_extension
-			local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+			local wants_crouch = Crouch.crouch_input(input_extension, false, false)
 			local locomotion_component = self._locomotion_component
 			local velocity_current = locomotion_component.velocity_current
 			local look_rotation = self._first_person_component.rotation
 			local flat_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(look_rotation)))
-			local wants_slide = is_crouching and self._constants.slide_move_speed_threshold < Vector3.dot(velocity_current, flat_look_direction)
+			local wants_slide = wants_crouch and self._constants.slide_move_speed_threshold < Vector3.dot(velocity_current, flat_look_direction)
 
 			if wants_slide then
 				if self._ledge_vaulting_character_state_component.was_sprinting then
@@ -262,7 +256,7 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 				end
 
 				return "sliding"
-			elseif Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_extension, locomotion_component, self._weapon_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+			elseif Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_extension, locomotion_component, self._weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
 				if self._ledge_vaulting_character_state_component.was_sprinting then
 					next_state_params.disable_sprint_start_slowdown = true
 				end

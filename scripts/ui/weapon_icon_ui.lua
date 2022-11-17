@@ -41,14 +41,19 @@ WeaponIconUI.update_all = function (self)
 	end
 end
 
-WeaponIconUI.weapon_icon_updated = function (self, item)
+WeaponIconUI.weapon_icon_updated = function (self, item, prioritized)
 	local gear_id = item.gear_id
 	local data = self._icon_requests[gear_id]
 
 	if data then
 		if data.spawned then
 			data.spawned = false
-			self._icon_requests_queue_order[#self._icon_requests_queue_order + 1] = gear_id
+
+			if prioritized then
+				table.insert(self._icon_requests_queue_order, 1, gear_id)
+			else
+				table.insert(self._icon_requests_queue_order, #self._icon_requests_queue_order + 1, gear_id)
+			end
 		elseif data.spawning then
 			data.spawning = false
 			self._ui_weapon_spawner_lifetime_frame_count = nil
@@ -57,6 +62,18 @@ WeaponIconUI.weapon_icon_updated = function (self, item)
 				self._ui_weapon_spawner:destroy()
 
 				self._ui_weapon_spawner = nil
+			end
+		else
+			for i = 1, #self._icon_requests_queue_order do
+				if self._icon_requests_queue_order[i] == gear_id then
+					table.remove(self._icon_requests_queue_order, i)
+				end
+			end
+
+			if prioritized then
+				table.insert(self._icon_requests_queue_order, 1, gear_id)
+			else
+				table.insert(self._icon_requests_queue_order, #self._icon_requests_queue_order + 1, gear_id)
 			end
 		end
 
@@ -71,7 +88,7 @@ WeaponIconUI.get_icon_grid_index = function (self, id)
 	return grid_index, self._num_rows, self._num_columns
 end
 
-WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, render_context)
+WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, render_context, prioritized)
 	local id = self._id_prefix .. "_" .. self._id_counter
 	self._id_counter = self._id_counter + 1
 	local gear_id = item.gear_id or item.name
@@ -88,7 +105,12 @@ WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, render_c
 			id = id,
 			render_context = render_context
 		}
-		self._icon_requests_queue_order[#self._icon_requests_queue_order + 1] = gear_id
+
+		if prioritized then
+			table.insert(self._icon_requests_queue_order, 1, gear_id)
+		else
+			table.insert(self._icon_requests_queue_order, #self._icon_requests_queue_order + 1, gear_id)
+		end
 	end
 
 	local data = self._icon_requests[gear_id]

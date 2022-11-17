@@ -11,7 +11,7 @@ local reload_template = {
 		state_transitions = {
 			eject_mag = 2.55,
 			cock_weapon = 1.8,
-			fit_new_mag = 1.1
+			fit_new_mag = 1
 		},
 		functionality = {
 			refill_ammunition = 2.5,
@@ -22,8 +22,8 @@ local reload_template = {
 		anim_1p = "reload_middle",
 		time = 2.15,
 		state_transitions = {
-			eject_mag = 1.4,
-			cock_weapon = 0.65
+			eject_mag = 1.35,
+			cock_weapon = 0.7
 		},
 		functionality = {
 			refill_ammunition = 1.35
@@ -33,10 +33,10 @@ local reload_template = {
 		anim_1p = "reload_end",
 		time = 1.32,
 		state_transitions = {
-			eject_mag = 0.5
+			eject_mag = 0.75
 		},
 		functionality = {
-			refill_ammunition = 0.5
+			refill_ammunition = 0.75
 		}
 	}
 }

@@ -4,6 +4,7 @@ local TabbedMenuViewBase = require("scripts/ui/views/tabbed_menu_view_base")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local VendorInteractionViewBase = class("VendorInteractionViewBase", "TabbedMenuViewBase")
@@ -24,6 +25,13 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 	if definitions then
 		table.merge_recursive(self._base_definitions, definitions)
 	end
+
+	local parent = context and context.parent
+	self._parent = parent
+	self._current_vo_event = nil
+	self._current_vo_id = nil
+	self._vo_unit = nil
+	self._vo_callback = callback(self, "_cb_on_play_vo")
 
 	VendorInteractionViewBase.super.init(self, self._base_definitions, settings, context)
 
@@ -208,7 +216,9 @@ VendorInteractionViewBase._setup_option_buttons = function (self, options)
 	for i = 1, #options do
 		local option = options[i]
 		local widget = self:_create_widget("option_button_" .. i, button_definition)
-		widget.content.hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
+		local hotspot = widget.content.hotspot
+		hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
+		hotspot.disabled = option.disabled
 		local display_name = option.display_name
 		local unlocalized_name = option.unlocalized_name
 		widget.content.text = unlocalized_name and not display_name and unlocalized_name or Localize(display_name)
@@ -327,6 +337,8 @@ VendorInteractionViewBase.update = function (self, dt, t, input_service)
 		input_legend:set_display_name(entry_id, text, nil)
 	end
 
+	self:_update_vo(dt, t)
+
 	return VendorInteractionViewBase.super.update(self, dt, t, input_service)
 end
 
@@ -346,7 +358,7 @@ end
 VendorInteractionViewBase._update_wallets_presentation = function (self, wallets_data)
 	local corner_right = self._widgets_by_name.corner_top_right
 
-	if not corner_right.content.original_size then
+	if corner_right and not corner_right.content.original_size then
 		local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
 		corner_right.content.original_size = {
 			corner_width,
@@ -401,7 +413,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 		widgets[#widgets + 1] = widget
 	end
 
-	local corner_width = corner_right.content.original_size[1]
+	local corner_width = corner_right and corner_right.content.original_size[1] or 0
 	local corner_texture_size_minus_wallet = 100
 	local total_corner_width = total_width + corner_width - corner_texture_size_minus_wallet
 
@@ -414,6 +426,81 @@ end
 VendorInteractionViewBase.set_camera_position_axis_offset = function (self, axis, value, animation_duration, func_ptr)
 	if self._world_spawner then
 		self._world_spawner:set_camera_position_axis_offset(axis, value, animation_duration, func_ptr)
+	end
+end
+
+VendorInteractionViewBase._update_vo = function (self, dt, t)
+	local queued_vo_event_request = self._queued_vo_event_request
+
+	if queued_vo_event_request then
+		local delay = queued_vo_event_request.delay
+
+		if delay <= 0 then
+			local events = queued_vo_event_request.events
+			local voice_profile = queued_vo_event_request.voice_profile
+			local optional_route_key = queued_vo_event_request.optional_route_key
+			local is_opinion_vo = queued_vo_event_request.is_opinion_vo
+			local world_spawner = self._world_spawner
+			local dialogue_system = world_spawner and self:dialogue_system(world_spawner)
+
+			if dialogue_system then
+				self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+
+				self._queued_vo_event_request = nil
+			else
+				self._queued_vo_event_request = nil
+			end
+		else
+			queued_vo_event_request.delay = delay - dt
+		end
+	end
+
+	local current_vo_id = self._current_vo_id
+
+	if not current_vo_id then
+		return
+	end
+
+	local unit = self._vo_unit
+	local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+	local is_playing = dialogue_extension:is_playing(current_vo_id)
+
+	if not is_playing then
+		self._current_vo_id = nil
+		self._current_vo_event = nil
+	end
+end
+
+VendorInteractionViewBase.dialogue_system = function (self)
+	local world_spawner = self._world_spawner
+	local world = world_spawner and world_spawner:world()
+	local extension_manager = world and Managers.ui:world_extension_manager(world)
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
+
+	return dialogue_system
+end
+
+VendorInteractionViewBase._cb_on_play_vo = function (self, id, event_name)
+	self._current_vo_event = event_name
+	self._current_vo_id = id
+end
+
+VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile, optional_route_key, optional_delay, is_opinion_vo)
+	local dialogue_system = self:dialogue_system()
+
+	if optional_delay then
+		self._queued_vo_event_request = {
+			events = events,
+			voice_profile = voice_profile,
+			optional_route_key = optional_route_key,
+			delay = optional_delay,
+			is_opinion_vo = is_opinion_vo
+		}
+	else
+		local wwise_route_key = optional_route_key or 40
+		local callback = self._vo_callback
+		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
+		self._vo_unit = vo_unit
 	end
 end
 

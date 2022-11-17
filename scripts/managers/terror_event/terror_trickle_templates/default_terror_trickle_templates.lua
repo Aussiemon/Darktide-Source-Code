@@ -1,42 +1,107 @@
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local MIXED_COMPOSITIONS = {
-	HordeCompositions.melee_terror_trickle,
-	HordeCompositions.infected_terror_trickle,
-	HordeCompositions.poxwalker_terror_trickle,
-	HordeCompositions.close_terror_trickle,
-	HordeCompositions.close_terror_trickle_elite,
-	HordeCompositions.melee_terror_trickle_elite
+	renegade = {
+		HordeCompositions.renegade_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle_elite,
+		HordeCompositions.renegade_melee_terror_trickle_elite
+	},
+	cultist = {
+		HordeCompositions.cultist_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle_elite,
+		HordeCompositions.cultist_melee_terror_trickle_elite
+	}
 }
 local MELEE_COMPOSITIONS = {
-	HordeCompositions.melee_terror_trickle,
-	HordeCompositions.infected_terror_trickle,
-	HordeCompositions.poxwalker_terror_trickle,
-	HordeCompositions.melee_terror_trickle_elite
+	renegade = {
+		HordeCompositions.renegade_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.renegade_terror_trickle_elite
+	},
+	cultist = {
+		HordeCompositions.cultist_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.cultist_melee_terror_trickle_elite
+	}
 }
 local RANGED_COMPOSITIONS = {
-	HordeCompositions.close_terror_trickle,
-	HordeCompositions.close_terror_trickle,
-	HordeCompositions.close_terror_trickle_elite,
-	HordeCompositions.infected_terror_trickle
+	renegade = {
+		HordeCompositions.renegade_close_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle_elite,
+		HordeCompositions.infected_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.cultist_close_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle_elite,
+		HordeCompositions.infected_terror_trickle
+	}
 }
 local LOW_MIXED_COMPOSITIONS = {
-	HordeCompositions.melee_terror_trickle,
-	HordeCompositions.infected_terror_trickle,
-	HordeCompositions.poxwalker_terror_trickle,
-	HordeCompositions.close_terror_trickle
+	renegade = {
+		HordeCompositions.renegade_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.cultist_melee_terror_trickle,
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle
+	}
 }
 local LOW_MELEE_COMPOSITIONS = {
-	HordeCompositions.infected_terror_trickle,
-	HordeCompositions.poxwalker_terror_trickle
+	renegade = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle
+	}
+}
+local STANDARD_MELEE_COMPOSITIONS = {
+	renegade = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.renegade_melee_low_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle,
+		HordeCompositions.cultist_melee_low_terror_trickle
+	}
 }
 local LOW_RANGED_COMPOSITIONS = {
-	HordeCompositions.close_terror_trickle,
-	HordeCompositions.close_terror_trickle,
-	HordeCompositions.infected_terror_trickle
+	renegade = {
+		HordeCompositions.renegade_close_terror_trickle,
+		HordeCompositions.renegade_close_terror_trickle,
+		HordeCompositions.infected_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.cultist_close_terror_trickle,
+		HordeCompositions.cultist_close_terror_trickle,
+		HordeCompositions.infected_terror_trickle
+	}
 }
 local FLOOD_MELEE_COMPOSITIONS = {
-	HordeCompositions.infected_terror_trickle,
-	HordeCompositions.poxwalker_terror_trickle
+	renegade = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle
+	},
+	cultist = {
+		HordeCompositions.infected_terror_trickle,
+		HordeCompositions.poxwalker_terror_trickle
+	}
 }
 local terror_trickle_templates = {
 	low_mixed = {
@@ -319,7 +384,7 @@ local terror_trickle_templates = {
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 5,
+			challenge_rating_stop_threshold = 10,
 			tension_stop_threshold = 80,
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
@@ -336,7 +401,7 @@ local terror_trickle_templates = {
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 15,
+			challenge_rating_stop_threshold = 20,
 			tension_stop_threshold = 100,
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
@@ -348,12 +413,12 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				30,
-				40
+				25,
+				30
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 20,
+			challenge_rating_stop_threshold = 30,
 			tension_stop_threshold = 120,
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
@@ -365,12 +430,12 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				20,
-				30
+				12,
+				20
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 25,
+			challenge_rating_stop_threshold = 40,
 			tension_stop_threshold = 140,
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
@@ -383,7 +448,7 @@ local terror_trickle_templates = {
 			},
 			cooldown = {
 				10,
-				20
+				15
 			}
 		}
 	},
@@ -391,7 +456,7 @@ local terror_trickle_templates = {
 		{
 			challenge_rating_stop_threshold = 20,
 			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
 				1
@@ -408,7 +473,7 @@ local terror_trickle_templates = {
 		{
 			challenge_rating_stop_threshold = 20,
 			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
 				1
@@ -423,9 +488,9 @@ local terror_trickle_templates = {
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 20,
-			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			challenge_rating_stop_threshold = 30,
+			tension_stop_threshold = 80,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
 				1
@@ -435,31 +500,31 @@ local terror_trickle_templates = {
 				10
 			},
 			cooldown = {
-				25,
-				30
+				15,
+				20
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 20,
-			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			challenge_rating_stop_threshold = 40,
+			tension_stop_threshold = 80,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				2
 			},
 			time_between_waves = {
 				3,
 				6
 			},
 			cooldown = {
-				20,
-				30
+				8,
+				13
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 20,
-			tension_stop_threshold = 60,
-			compositions = LOW_MELEE_COMPOSITIONS,
+			challenge_rating_stop_threshold = 50,
+			tension_stop_threshold = 100,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
 				2
@@ -469,8 +534,8 @@ local terror_trickle_templates = {
 				6
 			},
 			cooldown = {
-				20,
-				30
+				7,
+				11
 			}
 		}
 	},
@@ -478,86 +543,86 @@ local terror_trickle_templates = {
 		{
 			challenge_rating_stop_threshold = 20,
 			tension_stop_threshold = 60,
-			compositions = MELEE_COMPOSITIONS,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
-				4,
-				5
+				1,
+				1
 			},
 			time_between_waves = {
 				6,
 				10
 			},
 			cooldown = {
-				50,
-				60
+				25,
+				30
 			}
 		},
 		{
 			challenge_rating_stop_threshold = 20,
+			tension_stop_threshold = 60,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				25,
+				30
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 30,
 			tension_stop_threshold = 80,
-			compositions = MELEE_COMPOSITIONS,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
-				4,
-				5
+				1,
+				1
 			},
 			time_between_waves = {
 				6,
 				10
 			},
 			cooldown = {
-				50,
-				60
+				15,
+				20
 			}
 		},
 		{
-			challenge_rating_stop_threshold = 20,
+			challenge_rating_stop_threshold = 40,
+			tension_stop_threshold = 80,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				2
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				8,
+				13
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 50,
 			tension_stop_threshold = 100,
-			compositions = MELEE_COMPOSITIONS,
+			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
-				4,
-				5
-			},
-			time_between_waves = {
-				6,
-				10
-			},
-			cooldown = {
-				50,
-				60
-			}
-		},
-		{
-			challenge_rating_stop_threshold = 20,
-			tension_stop_threshold = 120,
-			compositions = MELEE_COMPOSITIONS,
-			num_waves = {
-				4,
-				5
+				2,
+				2
 			},
 			time_between_waves = {
 				3,
 				6
 			},
 			cooldown = {
-				50,
-				60
-			}
-		},
-		{
-			challenge_rating_stop_threshold = 20,
-			tension_stop_threshold = 140,
-			compositions = MELEE_COMPOSITIONS,
-			num_waves = {
-				4,
-				5
-			},
-			time_between_waves = {
-				3,
-				6
-			},
-			cooldown = {
-				50,
-				60
+				7,
+				11
 			}
 		}
 	},

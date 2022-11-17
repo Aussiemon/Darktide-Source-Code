@@ -8,7 +8,8 @@ local roamer_settings = {
 		"low"
 	},
 	faction_types = {
-		"renegade"
+		"renegade",
+		"cultist"
 	},
 	encampment_types = {
 		"poxwalkers"
@@ -61,8 +62,8 @@ roamer_settings.density_settings = {
 					2
 				},
 				cultist = {
-					2,
-					2
+					3,
+					4
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -95,8 +96,8 @@ roamer_settings.density_settings = {
 					5
 				},
 				cultist = {
-					4,
-					5
+					5,
+					6
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -439,7 +440,7 @@ roamer_settings.density_settings = {
 			shared_aggro_trigger = true,
 			empty_zone_range = {
 				2,
-				3
+				2
 			},
 			zone_range = {
 				1,
@@ -485,8 +486,8 @@ roamer_settings.density_settings = {
 					5
 				},
 				cultist = {
-					3,
-					5
+					5,
+					7
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -519,8 +520,8 @@ roamer_settings.density_settings = {
 					10
 				},
 				cultist = {
-					8,
-					10
+					10,
+					12
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -580,8 +581,8 @@ roamer_settings.density_settings = {
 			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
 			empty_zone_range = {
-				2,
-				2
+				1,
+				1
 			},
 			zone_range = {
 				1,
@@ -589,12 +590,12 @@ roamer_settings.density_settings = {
 			},
 			num_roamers_range = {
 				renegade = {
-					50,
-					60
+					45,
+					55
 				},
 				cultist = {
-					50,
-					60
+					45,
+					55
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -627,8 +628,8 @@ roamer_settings.density_settings = {
 					6
 				},
 				cultist = {
-					4,
-					6
+					6,
+					8
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -661,8 +662,8 @@ roamer_settings.density_settings = {
 					11
 				},
 				cultist = {
-					9,
-					11
+					11,
+					13
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -722,8 +723,8 @@ roamer_settings.density_settings = {
 			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
 			empty_zone_range = {
-				2,
-				2
+				1,
+				1
 			},
 			zone_range = {
 				1,
@@ -731,12 +732,12 @@ roamer_settings.density_settings = {
 			},
 			num_roamers_range = {
 				renegade = {
-					60,
-					70
+					45,
+					55
 				},
 				cultist = {
-					60,
-					70
+					45,
+					55
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -785,8 +786,26 @@ roamer_settings.num_encampments = {
 roamer_settings.chance_of_encampment = 0.1
 roamer_settings.num_encampment_blocked_zones = 30
 roamer_settings.faction_zone_length = {
-	15,
-	30
+	{
+		3000,
+		3000
+	},
+	{
+		3000,
+		3000
+	},
+	{
+		20,
+		40
+	},
+	{
+		15,
+		30
+	},
+	{
+		15,
+		30
+	}
 }
 roamer_settings.ambience_sfx = {
 	poxwalkers = {
@@ -804,11 +823,11 @@ roamer_settings.aggro_sfx = {
 roamer_settings.pause_spawn_type_when_aggroed = {
 	poxwalkers = {
 		hordes = {
-			120,
 			100,
 			80,
 			60,
-			40
+			30,
+			20
 		}
 	}
 }

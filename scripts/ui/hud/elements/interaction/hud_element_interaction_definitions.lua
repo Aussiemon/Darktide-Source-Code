@@ -165,15 +165,21 @@ local widget_definitions = {
 	}, "description_box"),
 	background = UIWidget.create_definition({
 		{
+			value = "content/ui/materials/hud/backgrounds/interaction_background",
 			style_id = "background",
-			pass_type = "rect",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "bottom",
+				scale_to_material = true,
 				horizontal_alignment = "left",
 				offset = {
 					0,
 					0,
 					0
+				},
+				size_addition = {
+					0,
+					-1
 				},
 				color = get_hud_color("color_tint_main_4", 230)
 			}
@@ -192,7 +198,12 @@ local widget_definitions = {
 				size = {
 					[2] = input_box_height
 				},
-				color = get_hud_color("color_tint_main_3", 230)
+				color = {
+					180,
+					121,
+					136,
+					109
+				}
 			}
 		},
 		{
@@ -338,7 +349,7 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = string.upper(Localize("loc_interaction_start_event_text")),
+			value = Utf8.upper(Localize("loc_interaction_start_event_text")),
 			style = event_text_style
 		},
 		{

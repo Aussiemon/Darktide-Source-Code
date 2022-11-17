@@ -2,8 +2,7 @@ local TestifySnippets = require("scripts/tests/testify_snippets")
 UITestCases = {
 	change_render_settings = function ()
 		Testify:run_case(function (dt, t)
-			Testify:make_request("skip_splash_screen")
-			TestifySnippets.skip_title_screen()
+			TestifySnippets.skip_splash_and_title_screen()
 			Testify:make_request("wait_for_profile_synchronization")
 			TestifySnippets.wait(1)
 
@@ -47,8 +46,7 @@ UITestCases = {
 		Testify:run_case(function (dt, t)
 			local NUM_ARCHETYPES = 4
 
-			Testify:make_request("skip_splash_screen")
-			TestifySnippets.skip_title_screen()
+			TestifySnippets.skip_splash_and_title_screen()
 			Testify:make_request("wait_for_profile_synchronization")
 			Testify:make_request("delete_all_characters")
 			Testify:make_request("wait_for_profile_synchronization")

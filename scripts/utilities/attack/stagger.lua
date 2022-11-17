@@ -5,6 +5,7 @@ local Breed = require("scripts/utilities/breed")
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Herding = require("scripts/utilities/herding")
+local MinionState = require("scripts/utilities/minion_state")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Stagger = {}
@@ -44,8 +45,9 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system") or attacking_unit_owner_unit and ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local attacker_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs() or EMPTY_STAT_BUFFS
+	local is_burning = MinionState.is_burning(unit)
 	local stagger_reduction_override_or_nil, action_controlled_stagger = _get_action_data_overrides(unit, breed, damage_profile)
-	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield)
+	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning)
 	local accumulative_multiplier = damage_profile.accumulative_stagger_strength_multiplier or DEFAULT_ACCUMULATIVE_MULTIPLIER
 
 	if type(accumulative_multiplier) == "table" then
@@ -55,6 +57,8 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 
 	if breed.ignore_stagger_accumulation or breed.only_accumulate_stagger_on_weakspot and not hit_weakspot then
 		accumulative_multiplier = 0
+	elseif breed.accumulative_stagger_multiplier then
+		accumulative_multiplier = accumulative_multiplier * breed.accumulative_stagger_multiplier
 	end
 
 	stagger_type, duration_scale, length_scale = _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type)
@@ -99,6 +103,12 @@ Stagger.can_stagger = function (unit)
 	local _, action_data_or_nil = behavior_ext:running_action()
 
 	if action_data_or_nil and action_data_or_nil.stagger_immune then
+		return false
+	end
+
+	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+
+	if toughness_extension and toughness_extension:is_stagger_immune() then
 		return false
 	end
 

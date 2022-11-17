@@ -15,7 +15,7 @@ LiquidArea.try_create = function (position, flow_direction, nav_world, liquid_ar
 	if nav_mesh_position == nil then
 		return nil
 	elseif optional_not_on_other_liquids then
-		local is_position_in_liquid = liquid_area_system:is_position_in_liquid(position)
+		local is_position_in_liquid = liquid_area_system:is_position_in_liquid(nav_mesh_position)
 
 		if is_position_in_liquid then
 			return nil
@@ -44,7 +44,7 @@ LiquidArea.paint = function (liquid_paint_id, max_liquid_paint_distance, positio
 	if nav_mesh_position == nil then
 		return liquid_unit, created_new_liquid_unit
 	elseif optional_not_on_other_liquids then
-		local is_position_in_liquid = liquid_area_system:is_position_in_liquid(position)
+		local is_position_in_liquid = liquid_area_system:is_position_in_liquid(nav_mesh_position)
 
 		if is_position_in_liquid then
 			return liquid_unit, created_new_liquid_unit

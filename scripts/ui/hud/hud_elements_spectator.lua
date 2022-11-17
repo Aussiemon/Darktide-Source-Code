@@ -2,7 +2,6 @@ local elements = {
 	{
 		package = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup",
 		customizable_scenegraph_id = "background",
-		offscreen_target = "monitor_effect",
 		use_hud_scale = true,
 		class_name = "HudElementMissionSpeakerPopup",
 		filename = "scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup",
@@ -13,7 +12,6 @@ local elements = {
 		}
 	},
 	{
-		offscreen_target = "monitor_effect",
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {
@@ -30,7 +28,6 @@ local elements = {
 		}
 	},
 	{
-		offscreen_target = "monitor_effect",
 		class_name = "HudElementCutsceneOverlay",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {
@@ -39,7 +36,6 @@ local elements = {
 		}
 	},
 	{
-		offscreen_target = "monitor_effect",
 		class_name = "HudElementCutsceneFading",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {

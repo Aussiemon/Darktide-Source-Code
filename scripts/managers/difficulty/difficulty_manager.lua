@@ -7,7 +7,7 @@ DifficultyManager.init = function (self, is_server, resistance, challenge)
 	self._resistance = resistance
 	self._challenge = challenge
 
-	Log.info("DifficultyManager", "Difficulty set to challenge %s, resistance %s", challenge, resistance)
+	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
 end
 
 DifficultyManager.get_minion_max_health = function (self, breed_name)
@@ -54,10 +54,20 @@ end
 
 DifficultyManager.set_challenge = function (self, new_challenge)
 	self._challenge = new_challenge
+
+	Log.info("DifficultyManager", "Challenge set to %s", self._challenge)
 end
 
 DifficultyManager.set_resistance = function (self, new_resistance)
 	self._resistance = new_resistance
+
+	Log.info("DifficultyManager", "Resistance set to %s", self._resistance)
+end
+
+DifficultyManager.modify_resistance = function (self, modifier)
+	self._resistance = math.max(1, self._resistance + modifier)
+
+	Log.info("DifficultyManager", "Resistance modified to %s", self._resistance)
 end
 
 DifficultyManager.friendly_fire_enabled = function (self, target_is_player, target_is_minion)

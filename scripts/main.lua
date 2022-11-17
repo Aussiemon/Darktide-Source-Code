@@ -27,6 +27,10 @@ Main.init = function (self)
 	ParameterResolver.resolve_dev_parameters()
 	Application.set_time_step_policy("throttle", DEDICATED_SERVER and 1 / GameParameters.fixed_time_step or 30)
 
+	if type(GameParameters.window_title) == "string" and GameParameters.window_title ~= "" then
+		Window.set_title(GameParameters.window_title)
+	end
+
 	local package_manager = LEVEL_EDITOR_TEST and PackageManagerEditor:new() or PackageManager:new()
 	local localization_manager = LocalizationManager:new()
 	local params = {
@@ -89,6 +93,9 @@ Main.on_close = function (self)
 end
 
 Main.shutdown = function (self)
+	Application.force_silent_exit_policy()
+	Crashify.print_property("shutdown", true)
+
 	local owns_package_manager = true
 
 	if rawget(_G, "Managers") and Managers.package then
@@ -120,8 +127,24 @@ function on_reload(refreshed_resources)
 	Main:on_reload(refreshed_resources)
 end
 
+function on_activate(active)
+	print("LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
+
+	if active and rawget(_G, "Managers") and Managers.dlc then
+		Managers.dlc:evaluate_consumables()
+	end
+end
+
 function on_close()
 	local should_close = Main:on_close()
+
+	if should_close then
+		Application.force_silent_exit_policy()
+
+		if rawget(_G, "Crashify") then
+			Crashify.print_property("shutdown", true)
+		end
+	end
 
 	return should_close
 end

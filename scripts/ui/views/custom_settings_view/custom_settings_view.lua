@@ -149,7 +149,7 @@ CustomSettingsView._change_settings_page = function (self, next_index)
 	self._grid_widgets = widgets
 	self._current_index = next_index
 	title_widget.content.text = Localize(page_title)
-	page_number_widget.content.text = self._current_index .. " / " .. #self.pages
+	page_number_widget.content.text = #self.pages > 1 and self._current_index .. " / " .. #self.pages or ""
 	self._focused_widget_index = widget_focus_index
 
 	self:_focus_selected_widget()

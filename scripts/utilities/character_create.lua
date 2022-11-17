@@ -8,9 +8,30 @@ local Crimes = require("scripts/settings/character/crimes")
 local Personalities = require("scripts/settings/character/personalities")
 local PlayerCharacterCreatorPresets = require("scripts/settings/player_character/player_character_creator_presets")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local MasterItems = require("scripts/backend/master_items")
 local CharacterCreate = class("CharacterCreate")
+local fallback_slots_to_strip = {
+	"slot_body_face",
+	"slot_body_face_tattoo",
+	"slot_body_face_scar",
+	"slot_body_face_hair",
+	"slot_body_hair",
+	"slot_body_tattoo"
+}
+local can_use_empty_item = {
+	"slot_gear_extra_cosmetic",
+	"slot_gear_head",
+	"slot_gear_lowerbody",
+	"slot_gear_upperbody"
+}
 
-CharacterCreate.init = function (self, item_definitions, owned_gear)
+if BUILD == "release" then
+	fallback_slots_to_strip = {
+		"slot_body_face"
+	}
+end
+
+CharacterCreate.init = function (self, item_definitions, owned_gear, optional_real_profile)
 	self._archetype_random_names = {}
 	self._profile_value_versions = {
 		loadout = {}
@@ -25,23 +46,66 @@ CharacterCreate.init = function (self, item_definitions, owned_gear)
 	self._item_categories = item_categories
 	local appearance_presets = self:_setup_appearance_presets(verified_items)
 	self._appearance_presets = appearance_presets
-	self._profile = {
-		selected_voice = "ogryn_a",
-		name = "",
-		loadout = {},
-		abilities = {
-			support_ability = "grenade",
-			combat_ability = "dash"
-		},
-		lore = {
-			backstory = {}
-		}
-	}
-	self._character_height = 1
-	local randomized_archetype = self:_randomize_archetype()
 
-	self:set_archetype(randomized_archetype)
-	self:_randomize_lore_properties()
+	if optional_real_profile then
+		local archetype = optional_real_profile.archetype
+		local specialization = optional_real_profile.specialization
+		self._profile = {
+			selected_voice = "ogryn_a",
+			name = "",
+			loadout = {},
+			abilities = {
+				support_ability = "grenade",
+				combat_ability = "dash"
+			},
+			lore = {
+				backstory = {}
+			},
+			archetype = archetype,
+			specialization = specialization
+		}
+		local gender = optional_real_profile.gender
+
+		self:set_archetype(archetype)
+		self:set_gender(gender)
+		self:set_specialization(specialization)
+
+		local loadout = optional_real_profile.loadout
+
+		if loadout then
+			for slot_name, slot_settings in pairs(ItemSlotSettings) do
+				local show_in_character_create = slot_settings.show_in_character_create
+
+				if show_in_character_create then
+					if slot_settings.slot_type == "gear" then
+						self:set_item_per_slot(slot_name, nil)
+					else
+						local item = loadout[slot_name]
+
+						self:set_item_per_slot(slot_name, item)
+					end
+				end
+			end
+		end
+	else
+		self._profile = {
+			selected_voice = "ogryn_a",
+			name = "",
+			loadout = {},
+			abilities = {
+				support_ability = "grenade",
+				combat_ability = "dash"
+			},
+			lore = {
+				backstory = {}
+			}
+		}
+		self._character_height = 1
+		local randomized_archetype = self:_randomize_archetype()
+
+		self:set_archetype(randomized_archetype)
+		self:_randomize_lore_properties()
+	end
 end
 
 CharacterCreate._reset_loadout = function (self)
@@ -234,9 +298,15 @@ CharacterCreate._setup_appearance_presets = function (self, verified_items)
 					body_parts = {}
 				}
 
-				for slot_name, slot_item in pairs(preset_slots) do
-					local verified_item = verified_items[slot_item]
-					preset.body_parts[slot_name] = verified_item
+				for i = 1, #self._inventory_slots_array do
+					local slot_name = self._inventory_slots_array[i]
+					local preset_item = preset_slots[slot_name]
+
+					if preset_item and verified_items[preset_item] then
+						preset.body_parts[slot_name] = verified_items[preset_item]
+					else
+						preset.body_parts[slot_name] = {}
+					end
 				end
 
 				presets_array[#presets_array + 1] = preset
@@ -274,6 +344,20 @@ CharacterCreate._presets_options = function (self)
 	return presets
 end
 
+CharacterCreate._is_fallback_item = function (self, slot, item_name)
+	for i = 1, #fallback_slots_to_strip do
+		local fallback_slot = fallback_slots_to_strip[i]
+
+		if slot == fallback_slot then
+			local fallback_item = MasterItems.find_fallback_item_id(slot)
+
+			return fallback_item == item_name
+		end
+	end
+
+	return false
+end
+
 CharacterCreate._verify_items = function (self, source_items, owned_gear)
 	local verified_items = {}
 	local inventory_slots_array = self._inventory_slots_array
@@ -291,8 +375,9 @@ CharacterCreate._verify_items = function (self, source_items, owned_gear)
 		if slots then
 			for i = 1, #slots do
 				local slot_name = slots[i]
+				local is_fallback = self:_is_fallback_item(slot_name, item_name)
 
-				if table.contains(inventory_slots_array, slot_name) and (item.always_owned or owned_gear_by_master_id[item_name]) then
+				if table.contains(inventory_slots_array, slot_name) and (item.always_owned or owned_gear_by_master_id[item_name]) and not is_fallback then
 					verified_items[item_name] = item
 
 					break
@@ -370,10 +455,13 @@ CharacterCreate.gender = function (self)
 end
 
 CharacterCreate.randomize_presets = function (self)
-	local gender = self._profile.gender
+	local gender = self:gender()
+	local breed = self:breed()
 	local presets = self:_presets_options()
 	local preset_index = math.random(1, #presets) or 1
 	local random_preset = presets[preset_index]
+
+	self:_reset_loadout()
 
 	for slot_name, body_part in pairs(random_preset.body_parts) do
 		self:set_item_per_slot(slot_name, body_part)
@@ -446,6 +534,28 @@ end
 CharacterCreate.set_item_per_slot = function (self, slot_name, item)
 	local profile = self._profile
 	local loadout = profile.loadout
+	local can_be_empty = false
+
+	for i = 1, #can_use_empty_item do
+		local empty_slot = can_use_empty_item[i]
+
+		if slot_name == empty_slot then
+			can_be_empty = true
+
+			break
+		end
+	end
+
+	if (not item or table.is_empty(item)) and not can_be_empty then
+		local available_items = self:slot_item_options(slot_name)
+
+		if available_items then
+			item = available_items[1]
+		else
+			item = MasterItems.find_fallback_item(slot_name)
+		end
+	end
+
 	loadout[slot_name] = item
 
 	self:_increase_value_version({
@@ -607,6 +717,12 @@ end
 
 CharacterCreate.randomize_name = function (self)
 	local names = self._archetype_random_names
+	local num_names = #names
+
+	if num_names == 0 then
+		return ""
+	end
+
 	local random_name_index = math.random(1, #names)
 
 	return self._archetype_random_names[random_name_index]
@@ -710,7 +826,10 @@ CharacterCreate._generate_backend_profile = function (self)
 	local profile = self._profile
 	local new_profile = table.create_copy_instance(nil, profile)
 	new_profile.archetype = profile.archetype.name
-	new_profile.specialization = profile.specialization
+	new_profile.career = {
+		specialization = profile.specialization
+	}
+	new_profile.specialization = nil
 	local new_loadout = {}
 	new_profile.inventory = new_loadout
 	new_profile.loadout = nil
@@ -725,6 +844,7 @@ CharacterCreate._generate_backend_profile = function (self)
 	local personality_settings = Personalities[personality]
 	local character_voice = personality_settings.character_voice
 	new_profile.selected_voice = character_voice
+	new_profile.character_height = self._character_height
 	new_profile.id = Application.guid()
 
 	return new_profile
@@ -742,26 +862,8 @@ CharacterCreate.upload_profile = function (self)
 	local parsed_profile = self:_generate_backend_profile()
 	local profiles_service = Managers.data_service.profiles
 
-	profiles_service:create_profile(parsed_profile):next(function (data)
-		local character_interface = Managers.backend.interfaces.characters
-		local character_id = parsed_profile.id
-		local specialization_name = parsed_profile.specialization
-
-		return character_interface:set_specialization(character_id, specialization_name):next(function (data)
-			print("Specializtion Set")
-
-			return character_id
-		end):catch(function (err)
-			print("Specializtion NOT Set", err)
-
-			return character_id
-		end)
-	end):next(function (character_id)
-		local height = self._character_height
-
-		return profiles_service:set_character_height(character_id, height)
-	end):next(function (character_id)
-		return profiles_service:fetch_profile(character_id)
+	profiles_service:create_profile(parsed_profile):next(function (character)
+		return profiles_service:new_character_to_profile(character)
 	end):next(function (profile)
 		self._created_profile = profile
 		self._done = true

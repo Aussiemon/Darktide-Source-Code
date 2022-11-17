@@ -11,12 +11,12 @@ local function default_boltgun_sway_pattern(dt, t, sway_settings, yaw, pitch)
 	local sin_wave = math.sin(sin_angle)
 	local new_angle = t * math.pi * rotation_speed
 	local yaw_angle = math.cos(new_angle)
-	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
+	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(5 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
 	local yaw = math.degrees_to_radians(yaw)
 	local pitch = math.degrees_to_radians(pitch)
 	local intensity = sway_settings.intensity or 1
-	local aim_offset_y = pitch_angle * pitch * intensity
-	local aim_offset_x = yaw_angle * yaw * intensity
+	local aim_offset_y = pitch_angle * yaw * intensity
+	local aim_offset_x = yaw_angle * pitch * intensity
 
 	return aim_offset_x, aim_offset_y
 end
@@ -24,10 +24,10 @@ end
 sway_templates.default_bolter_killshot = {
 	still = {
 		intensity = 1,
-		horizontal_speed = 0.5,
-		visual_pitch_impact_mod = 6,
-		rotation_speed = 0.25,
-		visual_yaw_impact_mod = 15,
+		horizontal_speed = 0.2,
+		visual_pitch_impact_mod = 4,
+		rotation_speed = 0.125,
+		visual_yaw_impact_mod = 4.5,
 		max_sway = {
 			yaw = 2.5,
 			pitch = 2.5
@@ -49,8 +49,14 @@ sway_templates.default_bolter_killshot = {
 			}
 		},
 		continuous_sway = {
-			yaw = 0.2,
-			pitch = 0.3
+			pitch = {
+				lerp_perfect = 0.4,
+				lerp_basic = 1.5
+			},
+			yaw = {
+				lerp_perfect = 0.3,
+				lerp_basic = 1.2
+			}
 		},
 		immediate_sway = {
 			num_shots_clear_time = 0.6,
@@ -80,24 +86,14 @@ sway_templates.default_bolter_killshot = {
 			},
 			shooting = {
 				{
-					yaw = 0.1,
-					pitch = 0.15
-				},
-				{
-					yaw = 0.1,
-					pitch = 0.25
-				},
-				{
-					yaw = 0.125,
-					pitch = 0.275
-				},
-				{
-					yaw = 0.15,
-					pitch = 0.3
-				},
-				{
-					yaw = 0.175,
-					pitch = 0.35
+					pitch = {
+						lerp_perfect = 0.5,
+						lerp_basic = 1.9
+					},
+					yaw = {
+						lerp_perfect = 0.4,
+						lerp_basic = 2
+					}
 				}
 			}
 		},

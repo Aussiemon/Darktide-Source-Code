@@ -23,6 +23,8 @@ GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 			local network_event_delegate = connection_manager:network_event_delegate()
 
 			network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+
+			self._network_events_registered = true
 		end
 
 		self._ready_to_spawn = false
@@ -35,7 +37,7 @@ GameplayInitStepStateWaitForGroup.on_exit = function (self)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
-	if not self._is_server then
+	if self._network_events_registered then
 		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 end
@@ -65,7 +67,9 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 end
 
 GameplayInitStepStateWaitForGroup.rpc_group_loaded = function (self, channel_id, spawn_group)
-	if spawn_group == self._shared_state.spawn_group_id then
+	local expected_spawn_group = self._shared_state.spawn_group_id
+
+	if spawn_group == expected_spawn_group then
 		self._ready_to_spawn = true
 	end
 end

@@ -1,25 +1,35 @@
+local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
-local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokePowermaulP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_p1")
+local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
+local template_types = WeaponTweakTemplateSettings.template_types
 local wounds_shapes = WoundsSettings.shapes
+local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
+local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
+local stagger_duration_modifier_trait_templates = WeaponTraitTemplates[template_types.stagger_duration_modifier]
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
 local melee_sticky_disallowed_hit_zones = {}
 local hit_zone_priority = {
@@ -34,9 +44,8 @@ local hit_zone_priority = {
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 local hit_stickyness_settings_light = {
-	stickyness_vfx_loop_alias = "melee_sticky_loop",
+	buff_to_add = "chock_effect",
 	start_anim_event = "attack_hit_stick",
-	stickyness_sfx_loop_alias = "melee_sticky_loop",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
 	disallow_chain_actions = true,
@@ -44,9 +53,9 @@ local hit_stickyness_settings_light = {
 	always_sticky = true,
 	damage = {
 		instances = 5,
-		damage_profile = DamageProfileTemplates.light_chainsword_sticky_2h,
-		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.light_chainaxe_sticky_quick
+		damage_profile = DamageProfileTemplates.powermaul_weapon_special,
+		damage_type = damage_types.shock_stuck,
+		last_damage_profile = DamageProfileTemplates.powermaul_weapon_special
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	disallow_dodging = {},
@@ -191,14 +200,15 @@ weapon_template.actions = {
 	action_left_light = {
 		damage_window_start = 0.28,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		weapon_handling_template = "time_scale_0_85",
+		anim_event_3p = "attack_swing_down_left",
+		range_mod = 1,
+		stagger_duration_modifier_template = "default",
 		attack_direction_override = "push",
 		first_person_hit_stop_anim = "hit_stop",
-		anim_event_3p = "attack_swing_down_left",
+		weapon_handling_template = "time_scale_0_85",
 		allowed_during_sprint = true,
-		range_mod = 1.25,
 		damage_window_end = 0.45,
+		kind = "sweep",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_left_down",
@@ -272,7 +282,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
-		damage_type = damage_types.blunt,
+		damage_type = damage_types.blunt_shock,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -281,13 +291,14 @@ weapon_template.actions = {
 	action_left_heavy = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "left",
-		range_mod = 1.25,
-		allowed_during_sprint = true,
-		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
+		attack_direction_override = "left",
+		stagger_duration_modifier_template = "default",
+		first_person_hit_stop_anim = "attack_hit",
+		allowed_during_sprint = true,
+		range_mod = 1,
 		damage_window_end = 0.3,
+		weapon_handling_template = "time_scale_1",
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_left",
 		anim_event = "heavy_attack_left",
@@ -326,7 +337,8 @@ weapon_template.actions = {
 				chain_time = 0.7
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_special_action",
@@ -350,7 +362,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_heavy_tank,
-		damage_type = damage_types.spiked_blunt,
+		damage_type = damage_types.blunt_shock,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -421,12 +433,13 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "push",
-		range_mod = 1.25,
-		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_down_right",
+		weapon_handling_template = "time_scale_1",
+		kind = "sweep",
+		attack_direction_override = "push",
+		first_person_hit_stop_anim = "hit_stop",
+		stagger_duration_modifier_template = "default",
+		range_mod = 1,
 		damage_window_end = 0.49,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -503,7 +516,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
-		damage_type = damage_types.blunt,
+		damage_type = damage_types.blunt_shock,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -513,13 +526,14 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.15,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "right",
-		range_mod = 1.25,
-		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
+		attack_direction_override = "right",
+		stagger_duration_modifier_template = "default",
+		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1,
+		weapon_handling_template = "time_scale_1",
 		damage_window_end = 0.27,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down_right",
 		anim_event = "heavy_attack_right_diagonal_down",
 		total_time = 1,
@@ -559,7 +573,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.4
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_special_action"
@@ -571,7 +585,7 @@ weapon_template.actions = {
 		weapon_box = {
 			0.2,
 			0.15,
-			0.7
+			1.15
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/heavy_attack_right_diagonal_down",
@@ -582,7 +596,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_heavy_tank,
-		damage_type = damage_types.spiked_blunt,
+		damage_type = damage_types.blunt_shock,
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -652,17 +666,18 @@ weapon_template.actions = {
 	action_left_light_2 = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
+		stagger_duration_modifier_template = "default",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
-		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1",
 		num_frames_before_process = 0,
-		anim_event_3p = "attack_swing_down",
+		range_mod = 1,
 		damage_window_end = 0.48,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
+		anim_event_3p = "attack_swing_down",
 		anim_event = "attack_right_down",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -736,7 +751,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
-		damage_type = damage_types.blunt,
+		damage_type = damage_types.blunt_shock,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -803,15 +818,16 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit",
+		range_mod = 1.35,
 		weapon_handling_template = "time_scale_1",
 		max_num_saved_entries = 20,
-		range_mod = 1.35,
+		kind = "sweep",
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		attack_direction_override = "right",
+		stagger_duration_modifier_template = "default",
 		damage_window_end = 0.5,
-		kind = "sweep",
 		anim_end_event = "attack_finished",
+		attack_direction_override = "right",
 		anim_event_3p = "attack_swing_right",
 		anim_event = "attack_right",
 		total_time = 1.5,
@@ -879,7 +895,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_tank,
-		damage_type = damage_types.spiked_blunt,
+		damage_type = damage_types.blunt_shock,
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -938,27 +954,48 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.physical
 	},
 	action_special_action = {
-		damage_window_start = 0.2,
+		damage_window_start = 0.5,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "special_action",
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
+		stagger_duration_modifier_template = "default",
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
-		weapon_handling_template = "time_scale_0_7",
-		damage_window_end = 0.7666666666666667,
 		first_person_hit_stop_anim = "hit_stop",
-		anim_end_event = "attack_finished",
+		damage_window_end = 0.8333333333333334,
 		attack_direction_override = "up",
+		range_mod = 1.1,
+		anim_end_event = "attack_finished",
+		weapon_handling_template = "time_scale_1",
 		anim_event_3p = "attack_swing_up_left",
 		anim_event = "attack_special",
 		power_level = 30,
-		total_time = 2,
+		total_time = 2.5,
 		action_movement_curve = {
 			{
 				modifier = 1,
 				t = 0.15
+			},
+			{
+				modifier = 0.3,
+				t = 0.75
+			},
+			{
+				modifier = 0.5,
+				t = 1
+			},
+			{
+				modifier = 0.6,
+				t = 1.25
+			},
+			{
+				modifier = 0.9,
+				t = 1.5
+			},
+			{
+				modifier = 1,
+				t = 2.5
 			},
 			start_modifier = 1
 		},
@@ -973,17 +1010,9 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			start_attack = {
-				action_name = "action_melee_start_right",
-				chain_time = 1
-			},
-			push_follow_up = {
-				action_name = "action_right_light_pushfollow",
-				chain_time = 1
-			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.2
+				chain_time = 2.1
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -996,7 +1025,7 @@ weapon_template.actions = {
 			1.15
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/special_attack_uppercut",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_special_poke",
 			anchor_point_offset = {
 				0,
 				0,
@@ -1004,7 +1033,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.axe_uppercut,
-		damage_type = damage_types.axe_light,
+		damage_type = damage_types.blunt_shock,
 		stat_buff_keywords = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1036,8 +1065,11 @@ weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.damage_window_start_sweep_trail_offset = -0.45
+weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
+	_special_active = "fx_special_active",
 	_sweep = "fx_sweep"
 }
 weapon_template.crosshair_type = "dot"
@@ -1051,12 +1083,220 @@ weapon_template.dodge_template = "assault"
 weapon_template.sprint_template = "ninja_l"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
+weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.base_stats = {
+	powermaul_dps_stat = {
+		display_name = "loc_stats_display_damage_stat",
+		is_stat_trait = true,
+		damage = {
+			action_left_light = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_right_light = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_right_heavy = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_light_2 = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_right_light_pushfollow = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_special_action = {
+				damage_trait_templates.default_melee_dps_stat
+			}
+		}
+	},
+	powermaul_armor_pierce_stat = {
+		display_name = "loc_stats_display_ap_stat",
+		is_stat_trait = true,
+		damage = {
+			action_left_light = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_left_heavy = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_right_light = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_right_heavy = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_left_light_2 = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_right_light_pushfollow = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_special_action = {
+				damage_trait_templates.default_armor_pierce_stat
+			}
+		}
+	},
+	powermaul_control_stat = {
+		display_name = "loc_stats_display_control_stat_melee",
+		is_stat_trait = true,
+		damage = {
+			action_left_light = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_left_heavy = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_right_light = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_right_heavy = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_left_light_2 = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_right_light_pushfollow = {
+				damage_trait_templates.thunderhammer_control_stat
+			},
+			action_special_action = {
+				damage_trait_templates.thunderhammer_control_stat
+			}
+		},
+		weapon_handling = {
+			action_left_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_heavy = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_heavy = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_light_2 = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_light_pushfollow = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_special_action = {
+				weapon_handling_trait_templates.default_finesse_stat
+			}
+		},
+		stagger_duration_modifier = {
+			action_left_light = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_left_heavy = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_right_light = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_right_heavy = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_left_light_2 = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_right_light_pushfollow = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			},
+			action_special_action = {
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+			}
+		}
+	},
+	powermaul_finesse_stat = {
+		display_name = "loc_stats_display_finesse_stat",
+		is_stat_trait = true,
+		damage = {
+			action_left_light = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_left_heavy = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_right_light = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_right_heavy = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_left_light_2 = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_right_light_pushfollow = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_special_action = {
+				damage_trait_templates.default_melee_finesse_stat
+			}
+		},
+		weapon_handling = {
+			action_left_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_heavy = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_heavy = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_light_2 = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_light_pushfollow = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_special_action = {
+				weapon_handling_trait_templates.default_finesse_stat
+			}
+		}
+	},
+	powermaul_mobility_stat = {
+		display_name = "loc_stats_display_mobility_stat",
+		is_stat_trait = true,
+		dodge = {
+			base = {
+				dodge_trait_templates.default_dodge_stat
+			}
+		},
+		sprint = {
+			base = {
+				sprint_trait_templates.default_sprint_stat
+			}
+		},
+		movement_curve_modifier = {
+			base = {
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+			}
+		}
+	}
+}
 weapon_template.traits = {}
 local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
 
 table.append(weapon_template.traits, melee_common_traits)
 
+local weapon_traits_bespoke_powermaul_p1 = table.keys(WeaponTraitsBespokePowermaulP1)
+
+table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_p1)
+
+weapon_template.buffs = {
+	on_equip = {
+		"power_maul_chock_hit"
+	}
+}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_crowd_control"
@@ -1084,8 +1324,8 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
-		display_name = "loc_weapon_special_activate",
-		type = "activate"
+		display_name = "loc_weapon_special_special_attack",
+		type = "special_attack"
 	}
 }
 

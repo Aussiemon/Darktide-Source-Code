@@ -20,7 +20,7 @@ local BreedQueries = {
 				local breed = minion_list[i]
 				local faction = breed.sub_faction_name
 
-				if optional_prefered_sub_faction and faction ~= optional_prefered_sub_faction then
+				if not breed.can_be_used_for_all_factions and optional_prefered_sub_faction and faction ~= optional_prefered_sub_faction then
 					break
 				end
 

@@ -3,15 +3,15 @@ local warp_charge_trait_templates = {
 		{
 			"vent_duration_modifier",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 1,
+				min = 0
 			}
 		},
 		{
 			"auto_vent_duration_modifier",
 			{
-				max = 0.75,
-				min = 0.25
+				max = 0,
+				min = 0
 			}
 		}
 	},
@@ -23,6 +23,54 @@ local warp_charge_trait_templates = {
 		{
 			"auto_vent_duration_modifier",
 			0.05
+		}
+	},
+	forcestaff_p2_m1_vent_speed_stat = {
+		{
+			"vent_duration_modifier",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"auto_vent_duration_modifier",
+			{
+				max = 0,
+				min = 0
+			}
+		}
+	},
+	forcestaff_p3_m1_vent_speed_stat = {
+		{
+			"vent_duration_modifier",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"auto_vent_duration_modifier",
+			{
+				max = 0,
+				min = 0
+			}
+		}
+	},
+	forcestaff_p4_m1_vent_speed_stat = {
+		{
+			"vent_duration_modifier",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"auto_vent_duration_modifier",
+			{
+				max = 0,
+				min = 0
+			}
 		}
 	}
 }

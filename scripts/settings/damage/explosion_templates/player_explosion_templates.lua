@@ -109,7 +109,7 @@ local explosion_templates = {
 			"content/fx/particles/weapons/grenades/stumm_grenade/stumm_grenade"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_frag",
+			"wwise/events/weapon/play_explosion_grenade_shock",
 			"wwise/events/weapon/play_explosion_refl_gen"
 		}
 	},
@@ -265,11 +265,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		scalable_radius = true,
 		radius = {
-			8,
-			12
+			5,
+			10
 		},
 		close_radius = {
-			1.5,
+			2,
 			3
 		},
 		close_damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_close_instant,
@@ -281,17 +281,17 @@ local explosion_templates = {
 			instant_aggro = true,
 			distance = {
 				10,
-				30
+				20
 			},
 			suppression_value = {
-				20,
-				40
+				10,
+				20
 			}
 		},
 		scalable_vfx = {
 			{
 				radius_variable_name = "radius",
-				min_radius = 5,
+				min_radius = 4,
 				effects = {
 					"content/fx/particles/explosions/frag_grenade_01"
 				}
@@ -304,11 +304,11 @@ local explosion_templates = {
 	},
 	powermaul_activated_impact = {
 		static_power_level = 500,
-		radius = 2.6,
-		min_radius = 2,
-		close_radius = 1,
+		radius = 5,
+		min_radius = 5,
+		close_radius = 2.5,
 		collision_filter = "filter_player_character_explosion",
-		min_close_radius = 1,
+		min_close_radius = 2.5,
 		close_damage_profile = DamageProfileTemplates.powermaul_explosion,
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
@@ -318,12 +318,34 @@ local explosion_templates = {
 			instant_aggro = true,
 			distance = {
 				10,
-				30
+				15
 			},
 			suppression_value = {
 				20,
 				50
 			}
+		}
+	},
+	buff_explosion = {
+		static_power_level = 600,
+		radius = 2,
+		min_radius = 0.25,
+		damage_falloff = true,
+		collision_filter = "filter_player_character_explosion",
+		damage_profile = DamageProfileTemplates.default_grenade,
+		damage_type = damage_types.frag,
+		explosion_area_suppression = {
+			suppression_falloff = true,
+			instant_aggro = true,
+			distance = 10,
+			suppression_value = 12
+		},
+		vfx = {
+			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_flame",
+			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	}
 }

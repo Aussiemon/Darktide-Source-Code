@@ -10,7 +10,6 @@ GridPassTemplates.grid_button = {
 	{
 		value = "content/ui/materials/buttons/list_big_hover",
 		pass_type = "texture",
-		change_function = " style.color[1] = content.hotspot.anim_hover_progress*100 ",
 		style = {
 			color = {
 				255,
@@ -23,10 +22,12 @@ GridPassTemplates.grid_button = {
 				0,
 				2
 			}
-		}
+		},
+		change_function = function (content, style)
+			style.color[1] = content.hotspot.anim_hover_progress * 100
+		end
 	},
 	{
-		visibility_function = " content.focused ",
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "center",
@@ -46,10 +47,12 @@ GridPassTemplates.grid_button = {
 				15,
 				15
 			}
-		}
+		},
+		visibility_function = function (content)
+			return content.focused
+		end
 	},
 	{
-		visibility_function = " content.draw_arrow ",
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "center",
@@ -69,7 +72,10 @@ GridPassTemplates.grid_button = {
 				15,
 				15
 			}
-		}
+		},
+		visibility_function = function (content)
+			return content.draw_arrow
+		end
 	},
 	{
 		value_id = "text",
@@ -102,7 +108,6 @@ GridPassTemplates.grid_rect = {
 		style_id = "rect"
 	},
 	{
-		change_function = " style.color[1] = content.hotspot.anim_hover_progress*80 ",
 		pass_type = "rect",
 		style = {
 			color = {
@@ -116,10 +121,12 @@ GridPassTemplates.grid_rect = {
 				0,
 				1
 			}
-		}
+		},
+		change_function = function (content, style)
+			style.color[1] = content.hotspot.anim_hover_progress * 80
+		end
 	},
 	{
-		visibility_function = " content.focused ",
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
@@ -139,7 +146,10 @@ GridPassTemplates.grid_rect = {
 				0,
 				2
 			}
-		}
+		},
+		visibility_function = function (content)
+			return content.focused
+		end
 	}
 }
 GridPassTemplates.grid_texture = {
@@ -152,7 +162,6 @@ GridPassTemplates.grid_texture = {
 		style_id = "texture"
 	},
 	{
-		change_function = " style.color[1] = content.hotspot.anim_hover_progress*80 ",
 		pass_type = "rect",
 		style = {
 			color = {
@@ -166,10 +175,12 @@ GridPassTemplates.grid_texture = {
 				0,
 				1
 			}
-		}
+		},
+		change_function = function (content, style)
+			style.color[1] = content.hotspot.anim_hover_progress * 80
+		end
 	},
 	{
-		visibility_function = " content.focused ",
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
@@ -189,7 +200,10 @@ GridPassTemplates.grid_texture = {
 				0,
 				2
 			}
-		}
+		},
+		visibility_function = function (content)
+			return content.focused
+		end
 	}
 }
 GridPassTemplates.grid_divider = {

@@ -648,7 +648,7 @@ weapon_template.displayed_attacks = {
 	},
 	special = {
 		display_name = "loc_forcestaff_p1_m1_attack_special",
-		type = "ninja_fencer"
+		type = "melee_hand"
 	}
 }
 

@@ -30,6 +30,13 @@ AuthoritativePlayerUnitAnimationExtension.game_object_initialized = function (se
 	self._game_object_id = object_id
 end
 
+AuthoritativePlayerUnitAnimationExtension.hot_join_sync = function (self, unit, sender, channel)
+	local anim_states = Unit.animation_get_state(unit)
+	local seeds = Unit.animation_get_seeds(unit)
+
+	RPC.rpc_sync_anim_state(channel, self._game_object_id, false, anim_states, seeds)
+end
+
 AuthoritativePlayerUnitAnimationExtension.anim_event = function (self, event_name)
 	local unit = self._unit
 	local event_index = Unit.animation_event(unit, event_name)

@@ -101,10 +101,14 @@ local DEFAULT_DEFENSE_META_DATA = {
 BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, t)
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_enemy
+
+	if not HEALTH_ALIVE[target_unit] then
+		return true
+	end
+
 	local perception_extension = scratchpad.perception_extension
-	local enemies_in_proximity = perception_extension:enemies_in_proximity()
-	scratchpad.enemies_in_proximity = enemies_in_proximity
-	scratchpad.num_enemies_in_proximity = #enemies_in_proximity
+	local _, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
+	scratchpad.num_enemies_in_proximity = num_enemies_in_proximity
 	local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local target_breed = target_unit_data_extension and target_unit_data_extension:breed()
 	local aim_position = self:_aim_position(target_unit, target_breed)
@@ -635,6 +639,7 @@ end
 local START_CHALLENGE_VALUE = 10
 local MAX_CHALLENGE_VALUE = 30
 local ALREADY_ENGAGED_STICKINESS = 3
+local IN_PROXIMITY_DISTANCE_SQ = 25
 
 BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_position, target_breed, scratchpad, action_data, already_engaged, aim_position, follow_position)
 	local challenge_rating = 0
@@ -691,21 +696,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 			return false
 		end
 
-		local target_in_proximity = false
-		local enemies_in_proximity = scratchpad.enemies_in_proximity
-		local num_enemies_in_proximity = scratchpad.num_enemies_in_proximity
-
-		for i = 1, num_enemies_in_proximity do
-			local enemy_unit = enemies_in_proximity[i]
-
-			if enemy_unit == target_unit then
-				target_in_proximity = true
-
-				break
-			end
-		end
-
-		if not target_in_proximity then
+		if IN_PROXIMITY_DISTANCE_SQ < Vector3.distance_squared(POSITION_LOOKUP[self_unit], target_position) then
 			return false
 		end
 	end

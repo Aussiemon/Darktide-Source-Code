@@ -8,6 +8,10 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Vo = require("scripts/utilities/vo")
 local BtShootAction = class("BtShootAction", "BtNode")
+local SHOOT_NOT_ALLOWED_REEVALUATE_RANGE = {
+	0.25,
+	0.75
+}
 local DEFAULT_NOT_ALLOWED_COOLDOWN = 0.5
 
 BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -53,7 +57,7 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 			animation_extension:anim_event(idle_anim_event)
 		end
 
-		scratchpad.should_reevaluate = true
+		scratchpad.should_reevaluate_in_t = t + math.random_range(SHOOT_NOT_ALLOWED_REEVALUATE_RANGE[1], SHOOT_NOT_ALLOWED_REEVALUATE_RANGE[2])
 	end
 
 	scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
@@ -133,7 +137,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
 
-	if has_line_of_sight and action_data.can_strafe_shoot and state == "shooting" then
+	if has_line_of_sight and action_data.can_strafe_shoot and state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or scratchpad.next_try_to_strafe_shoot <= t) then
 		self:_try_start_strafe_shooting(unit, t, scratchpad, action_data, breed)
 	end
 
@@ -146,13 +150,18 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 	elseif state == "strafe_shooting" then
 		self:_update_strafe_shooting(unit, t, scratchpad, action_data)
 	elseif state == "cooldown" then
-		local done = self:_update_cooldown(unit, t, scratchpad, action_data)
+		local done = self:_update_cooldown(unit, t, scratchpad, action_data, breed)
 
 		if action_data.exit_after_cooldown and done then
 			return "done"
 		elseif done then
 			return "running", true
 		end
+	end
+
+	if scratchpad.should_reevaluate_in_t and scratchpad.should_reevaluate_in_t <= t then
+		scratchpad.should_reevaluate = true
+		scratchpad.should_reevaluate_in_t = nil
 	end
 
 	return "running", scratchpad.should_reevaluate
@@ -275,7 +284,7 @@ BtShootAction._update_aiming = function (self, unit, t, scratchpad, action_data)
 	if time_left_to_start_shooting == 0 and not scratchpad.rotation_duration then
 		local perception_component = scratchpad.perception_component
 		local target_unit = perception_component.target_unit
-		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
+		local attack_allowed = action_data.skip_attack_intensity_during_aim or AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
 		if attack_allowed then
 			if scratchpad.is_anim_rotation_driven then
@@ -323,7 +332,7 @@ BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_dat
 		self:_update_aim_turning(unit, scratchpad, aim_dot, flat_to_target, aim_rotation_anims)
 	end
 
-	if aim_dot < 0 then
+	if not aim_dot or aim_dot < 0 then
 		return false
 	end
 
@@ -359,6 +368,10 @@ end
 
 local MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION = 3
 local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
+local TRY_TO_STRAFE_SHOOT_COOLDOWN = {
+	3,
+	6
+}
 
 BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, action_data, breed)
 	local combat_vector_component = scratchpad.combat_vector_component
@@ -370,8 +383,9 @@ BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, 
 	local distance = Vector3.distance(self_position, combat_vector_position)
 	local target_unit = perception_component.target_unit
 	local target_position = POSITION_LOOKUP[perception_component.target_unit]
+	local target_to_combat_vector_distance = Vector3.distance(combat_vector_position, target_position)
 
-	if distance < action_data.strafe_shoot_distance or target_distance < Vector3.distance(combat_vector_position, target_position) then
+	if distance < action_data.strafe_shoot_distance or target_distance < target_to_combat_vector_distance then
 		local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
 
 		if ranged_position and action_data.strafe_shoot_distance < Vector3.distance(ranged_position, self_position) then
@@ -405,6 +419,7 @@ BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, 
 
 	scratchpad.state = "trying_to_strafe_shoot"
 	scratchpad.trying_to_start_strafe_shooting_duration = t + MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION
+	scratchpad.next_try_to_strafe_shoot = t + math.random_range(TRY_TO_STRAFE_SHOOT_COOLDOWN[1], TRY_TO_STRAFE_SHOOT_COOLDOWN[2])
 end
 
 BtShootAction._update_trying_to_strafe_shoot = function (self, unit, t, scratchpad, action_data)
@@ -611,7 +626,7 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 	end
 end
 
-BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_data)
+BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_data, breed)
 	local target_unit = scratchpad.perception_component.target_unit
 
 	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
@@ -625,6 +640,12 @@ BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_dat
 
 		if attack_allowed then
 			self:_start_aiming(unit, t, scratchpad, action_data)
+
+			local vo_event = action_data.vo_event
+
+			if vo_event then
+				Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
+			end
 		end
 
 		return true

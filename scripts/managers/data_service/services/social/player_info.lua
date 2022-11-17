@@ -65,10 +65,17 @@ PlayerInfo.account_id = function (self)
 	return self._account_id or presence and presence:account_id() ~= "" and presence:account_id()
 end
 
-PlayerInfo.user_display_name = function (self)
+PlayerInfo.user_display_name = function (self, use_stale)
+	local name = self._user_display_name
+
+	if use_stale and name then
+		return name
+	end
+
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
-	local name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
+	name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
+	self._user_display_name = name
 
 	return name
 end
@@ -80,8 +87,13 @@ PlayerInfo.platform_icon = function (self)
 	return presence and presence:platform_icon() or platform_social and platform_social:platform_icon() or nil
 end
 
-PlayerInfo.online_status = function (self)
+PlayerInfo.online_status = function (self, use_stale)
 	local online_status = self._online_status
+
+	if use_stale and online_status then
+		return online_status
+	end
+
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
 

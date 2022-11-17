@@ -42,6 +42,15 @@ VendorViewBase.character_level = function (self)
 	return profile_level
 end
 
+VendorViewBase.equipped_item_in_slot = function (self, slot_name)
+	local player = self:_player()
+	local profile = player:profile()
+	local loadout = profile.loadout
+	local slot_item = loadout[slot_name]
+
+	return slot_item
+end
+
 VendorViewBase._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.purchase_button.content.hotspot.pressed_callback = callback(self, "_cb_on_purchase_pressed")
@@ -302,7 +311,7 @@ end
 
 VendorViewBase._update_grid_height = function (self, use_tab_menu)
 	local grid_height_difference = 130
-	local item_grid_position_y = use_tab_menu and 120 + grid_height_difference or 120
+	local item_grid_position_y = use_tab_menu and 40 + grid_height_difference or 40
 
 	self:_set_scenegraph_position("item_grid_pivot", nil, item_grid_position_y)
 
@@ -350,12 +359,37 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 
 		if category == "item_instance" then
 			local item = MasterItems.get_store_item_instance(offer.description)
-			layout[#layout + 1] = {
-				widget_type = "store_item",
-				item = item,
-				offer = offer,
-				offer_id = offer_id
-			}
+
+			if item then
+				local item_type = item.item_type
+
+				if item_type == "WEAPON_SKIN" then
+					local preview_item_name = item.preview_item
+					local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
+
+					if preview_item then
+						local visual_item = table.clone_instance(preview_item)
+						visual_item.gear_id = item.gear_id
+						visual_item.slot_weapon_skin = item
+						layout[#layout + 1] = {
+							widget_type = "store_item",
+							item = visual_item,
+							real_item = item,
+							offer = offer,
+							offer_id = offer_id
+						}
+					else
+						Log.error("VendorViewBase", "Cannot find preview item (%s) for weapon skin (%s)", preview_item, item.name)
+					end
+				else
+					layout[#layout + 1] = {
+						widget_type = "store_item",
+						item = item,
+						offer = offer,
+						offer_id = offer_id
+					}
+				end
+			end
 		end
 	end
 
@@ -441,12 +475,15 @@ end
 VendorViewBase._on_purchase_complete = function (self, items)
 	for i, item_data in ipairs(items) do
 		local item = MasterItems.get_store_item_instance(item_data)
-		local gear_id = item.gear_id
-		local item_type = item.item_type
 
-		ItemUtils.mark_item_id_as_new(gear_id, item_type)
-		Managers.event:trigger("event_vendor_view_purchased_item")
-		self:_update_wallets()
+		if item then
+			local gear_id = item.gear_id
+			local item_type = item.item_type
+
+			ItemUtils.mark_item_id_as_new(gear_id, item_type)
+			Managers.event:trigger("event_vendor_view_purchased_item")
+			self:_update_wallets()
+		end
 	end
 end
 
@@ -470,7 +507,9 @@ VendorViewBase._update_wallets_presentation = function (self, wallets_data)
 		for i = 1, #wallets_data.wallets do
 			local currency = wallets_data.wallets[i].balance
 			local type = currency.type
-			local amount = currency.amount or 0
+			local wallet = wallets_data:by_type(type)
+			local balance = wallet and wallet.balance
+			local amount = balance and balance.amount or 0
 			self._current_balance[type] = amount
 		end
 	end

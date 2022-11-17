@@ -18,7 +18,7 @@ damage_templates.default_grenade = {
 	gibbing_power = 0,
 	stagger_category = "explosion",
 	suppression_value = 10,
-	ragdoll_push_force = 600,
+	ragdoll_push_force = 850,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
 		attack = 0.15,
@@ -27,50 +27,50 @@ damage_templates.default_grenade = {
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
-				[armor_types.unarmored] = 1,
-				[armor_types.armored] = 0.25,
-				[armor_types.resistant] = 0.75,
-				[armor_types.player] = 1,
-				[armor_types.berserker] = 0.5,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_25,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_1
 			},
 			impact = {
-				[armor_types.unarmored] = 1,
-				[armor_types.armored] = 1,
-				[armor_types.resistant] = 3,
-				[armor_types.player] = 1,
-				[armor_types.berserker] = 2,
-				[armor_types.super_armor] = 2,
-				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_1
 			}
 		},
 		far = {
 			attack = {
-				[armor_types.unarmored] = 0,
-				[armor_types.armored] = 0,
-				[armor_types.resistant] = 0,
-				[armor_types.player] = 0,
-				[armor_types.berserker] = 0,
-				[armor_types.super_armor] = 0,
-				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_1,
+				[armor_types.player] = damage_lerp_values.lerp_0_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_1,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_0_1
 			},
 			impact = {
-				[armor_types.unarmored] = 0.2,
-				[armor_types.armored] = 0.2,
-				[armor_types.resistant] = 1,
-				[armor_types.player] = 0.2,
-				[armor_types.berserker] = 0.2,
-				[armor_types.super_armor] = 0.2,
-				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_2,
+				[armor_types.armored] = damage_lerp_values.lerp_0_2,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.player] = damage_lerp_values.lerp_0_2,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_2,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_2,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_2,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_0_2
 			}
 		}
 	},
@@ -114,15 +114,15 @@ damage_templates.close_grenade = {
 			[armor_types.prop_armor] = 1
 		},
 		impact = {
-			[armor_types.unarmored] = 2,
-			[armor_types.armored] = 2,
-			[armor_types.resistant] = 10,
-			[armor_types.player] = 2,
-			[armor_types.berserker] = 2,
-			[armor_types.super_armor] = 5,
-			[armor_types.disgustingly_resilient] = 2,
-			[armor_types.void_shield] = 2,
-			[armor_types.prop_armor] = 2
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
 		}
 	},
 	power_distribution = {
@@ -562,32 +562,79 @@ ogryn_thumper_p1_m2_close.power_distribution.attack = 250
 damage_templates.ogryn_thumper_p1_m2_close = ogryn_thumper_p1_m2_close
 local ogryn_thumper_p1_m2_default_instant = table.clone(damage_templates.default_grenade)
 ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
-	0.3,
-	0.7
+	0.25,
+	0.5
+}
+ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.near.attack[armor_types.super_armor] = {
+	0,
+	0.2
 }
 ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.far.attack[armor_types.armored] = {
 	0,
 	0.1
 }
+ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.far.attack[armor_types.super_armor] = {
+	0,
+	0.1
+}
 ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.near.impact[armor_types.armored] = {
-	2,
-	4
+	0.5,
+	1.5
+}
+ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.near.impact[armor_types.super_armor] = {
+	0.5,
+	1.5
 }
 ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.far.impact[armor_types.armored] = {
 	0.2,
 	0.4
 }
+ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.far.impact[armor_types.super_armor] = {
+	0.2,
+	0.4
+}
+ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.attack.far = {
+	10,
+	20
+}
+ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.attack.near = {
+	100,
+	200
+}
+ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.impact.far = {
+	25,
+	75
+}
+ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.impact.near = {
+	0,
+	10
+}
 damage_templates.ogryn_thumper_p1_m2_default_instant = ogryn_thumper_p1_m2_default_instant
 local ogryn_thumper_p1_m2_close_instant = table.clone(damage_templates.close_grenade)
 ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.attack[armor_types.armored] = {
-	0.3,
-	0.7
+	0.25,
+	0.75
+}
+ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.attack[armor_types.super_armor] = {
+	0,
+	0.2
 }
 ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.impact[armor_types.armored] = {
-	1,
-	1
+	0.5,
+	1.5
 }
-ogryn_thumper_p1_m2_close_instant.power_distribution.attack = 250
+ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.impact[armor_types.super_armor] = {
+	0.5,
+	1.5
+}
+ogryn_thumper_p1_m2_close_instant.power_distribution.attack = {
+	250,
+	500
+}
+ogryn_thumper_p1_m2_close_instant.power_distribution.impact = {
+	25,
+	75
+}
 damage_templates.ogryn_thumper_p1_m2_close_instant = ogryn_thumper_p1_m2_close_instant
 local ogryn_grenade = table.clone(damage_templates.default_grenade)
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {

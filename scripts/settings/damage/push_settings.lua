@@ -81,6 +81,10 @@ local push_settings = {
 			speed = 5.5,
 			max_speed_override = 4
 		},
+		renegade_flamer_push = {
+			speed = 5.5,
+			max_speed_override = 4
+		},
 		shocktrooper_frag = {
 			speed = 12,
 			max_speed_override = 6,
@@ -91,24 +95,33 @@ local push_settings = {
 			max_speed_override = 8
 		},
 		plague_ogryn_charge = {
-			speed = 14,
-			max_speed_override = 8,
+			speed = 12,
+			max_speed_override = 9,
 			push_through_block = true
 		},
 		plague_ogryn_light = {
 			speed = 5.5,
-			max_speed_override = 4,
+			max_speed_override = 5,
 			push_through_block = true
 		},
 		plague_ogryn_medium = {
-			speed = 7,
-			max_speed_override = 4,
+			speed = 9,
+			max_speed_override = 9,
 			push_through_block = true
 		},
 		ranged_light = {
 			speed = 1,
 			max_speed_override = 2,
 			dont_trigger_on_toughness = true
+		},
+		ranged_light_auto = {
+			speed = 0.25,
+			max_speed_override = 6,
+			dont_trigger_on_toughness = true
+		},
+		beast_of_nurgle_move_push = {
+			speed = 8,
+			max_speed_override = 7
 		}
 	}
 }

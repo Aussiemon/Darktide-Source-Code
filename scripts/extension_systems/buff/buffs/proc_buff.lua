@@ -57,6 +57,16 @@ ProcBuff.destroy = function (self)
 	ProcBuff.super.destroy(self)
 end
 
+ProcBuff.show_in_hud = function (self)
+	local template = self._template
+
+	if template.always_show_in_hud then
+		return true
+	end
+
+	return self:is_active() and template.hud_icon
+end
+
 ProcBuff.active_start_time = function (self)
 	return self._active_start_time
 end
@@ -72,6 +82,10 @@ ProcBuff.is_active = function (self)
 end
 
 ProcBuff._is_active = function (self, t)
+	if self._template.duration then
+		return true
+	end
+
 	local active_duration = self:_active_duration()
 	local active_start_time = self._active_start_time
 	local is_active = t < active_start_time + active_duration
@@ -88,6 +102,35 @@ ProcBuff._active_duration = function (self)
 	end
 
 	return active_duration
+end
+
+ProcBuff.duration_progress = function (self)
+	local template = self._template
+
+	if template.duration then
+		return self._duration_progress
+	end
+
+	local has_cooldown = template.cooldown_duration
+	local t = Managers.time:time("gameplay")
+
+	if has_cooldown and self:_is_cooling_down(t) then
+		return self:_cooldown_progress(t)
+	elseif not has_cooldown and not self:_is_active(t) then
+		return 0.001
+	end
+
+	return 1 - self:activate_percentage(t)
+end
+
+ProcBuff.inactive = function (self)
+	local template = self._template
+
+	if template.always_show_in_hud then
+		return false
+	end
+
+	return not self:is_active()
 end
 
 ProcBuff.activate_percentage = function (self, t)
@@ -116,6 +159,14 @@ ProcBuff._is_cooling_down = function (self, t)
 	local is_cooling_down = t < active_start_time + active_duration + active_cooldown
 
 	return is_cooling_down
+end
+
+ProcBuff._cooldown_progress = function (self, t)
+	local active_cooldown = self:_cooldown_duration()
+	local active_start_time = self._active_start_time
+	local time_lapsed = t - active_start_time
+
+	return time_lapsed / active_cooldown
 end
 
 ProcBuff._can_activate = function (self, t)
@@ -164,6 +215,12 @@ ProcBuff.update = function (self, dt, t, portable_random)
 
 		self:_start_proc_fx()
 		self:_start_proc_active_fx()
+
+		if not template.always_show_in_hud and not template.duration then
+			local player = self._player
+
+			Managers.event:trigger("event_player_buff_proc_start", player, self)
+		end
 	elseif has_activated and not is_active then
 		self._has_activated = false
 
@@ -173,6 +230,12 @@ ProcBuff.update = function (self, dt, t, portable_random)
 
 		if proc_end_func then
 			proc_end_func(template_data, template_context)
+		end
+
+		if not template.always_show_in_hud and not template.duration then
+			local player = self._player
+
+			Managers.event:trigger("event_player_buff_proc_stop", player, self)
 		end
 	end
 end
@@ -249,19 +312,20 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 		local is_predicted_buff = template.predicted
 		local template_data = self._template_data
 		local template_context = self._template_context
+		local conditional_proc_func = template.conditional_proc_func
+		local condition_ok = proc_chance and (not conditional_proc_func or conditional_proc_func(template_data, template_context, t))
 
-		if proc_chance and self:_can_activate(t) then
+		if proc_chance and condition_ok and self:_can_activate(t) then
 			local portable_random_to_use = (is_local_proc_event or not is_predicted_buff) and local_portable_random or portable_random
 			local will_proc = proc_chance == 1
 			local random_value = will_proc and 0 or portable_random_to_use:next_random()
 
 			if random_value < proc_chance then
-				local check_proc_func = template.check_proc_func
+				local specific_proc_check = template.specific_check_proc_funcs and template.specific_check_proc_funcs[proc_event_name]
+				local check_proc_func = specific_proc_check or template.check_proc_func
 				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context, t)
-				local conditional_proc_func = template.conditional_proc_func
-				local condition_ok = not conditional_proc_func or conditional_proc_func(template_data, template_context, t)
 
-				if is_check_ok and condition_ok then
+				if is_check_ok then
 					local proc_func = template.proc_func
 
 					if proc_func then
@@ -414,6 +478,12 @@ ProcBuff._stop_proc_active_fx = function (self, t)
 			end
 		end
 	end
+end
+
+ProcBuff.force_predicted_proc = function (self)
+	local template = self._template
+
+	return template.force_predicted_proc
 end
 
 return ProcBuff

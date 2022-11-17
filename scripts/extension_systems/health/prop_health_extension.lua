@@ -9,31 +9,27 @@ PropHealthExtension.init = function (self, extension_init_context, unit)
 	self._is_dead = false
 	self._unkillable = false
 	self._invulnerable = false
-	self._breed_white_list = nil
-	self._ignored_colliders = nil
 	self._speed_on_hit = 5
+	self._breed_white_list = nil
+	self._ignored_colliders = {}
 end
 
-PropHealthExtension.setup_from_component = function (self, max_health, invulnerable, unkillable, breed_white_list, ignored_collider_actor_ids, speed_on_hit)
+PropHealthExtension.setup_from_component = function (self, max_health, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
 	self._max_health = max_health
 	self._health = max_health
 	self._invulnerable = invulnerable
 	self._unkillable = unkillable
+	self._speed_on_hit = speed_on_hit
 	self._breed_white_list = breed_white_list
 
-	if ignored_collider_actor_ids then
-		local num_ids = #ignored_collider_actor_ids
-		local ignored_colliders = Script.new_array(num_ids)
+	if ignored_collider_actor_names then
 		local unit = self._unit
 
-		for i = 1, num_ids do
-			ignored_colliders[i] = Unit.actor(unit, ignored_collider_actor_ids[i])
+		for ii = 1, #ignored_collider_actor_names do
+			local actor = Unit.actor(unit, ignored_collider_actor_names[ii])
+			self._ignored_colliders[actor] = true
 		end
-
-		self._ignored_colliders = ignored_colliders
 	end
-
-	self._speed_on_hit = speed_on_hit
 end
 
 PropHealthExtension.set_dead = function (self)
@@ -48,25 +44,23 @@ PropHealthExtension.set_dead = function (self)
 end
 
 local function _add_force_on_parts(actor, mass, speed, attack_direction)
-	local random_x = math.random() * 2 - 1
-	local random_y = math.random() * 2 - 1
-	local random_z = math.random() * 2 - 1
-	local random_direction = Vector3(random_x, random_y, random_z)
-	random_direction = Vector3.normalize(random_direction)
-	local direction = attack_direction or random_direction
+	local direction = attack_direction
+
+	if not direction then
+		local random_x = math.random() * 2 - 1
+		local random_y = math.random() * 2 - 1
+		local random_z = math.random() * 2 - 1
+		local random_direction = Vector3(random_x, random_y, random_z)
+		random_direction = Vector3.normalize(random_direction)
+		direction = random_direction
+	end
 
 	Actor.add_impulse(actor, direction * mass * speed)
 end
 
 PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit)
-	local ignored_colliders = self._ignored_colliders
-
-	if ignored_colliders then
-		for i = 1, #ignored_colliders do
-			if hit_actor == ignored_colliders[i] then
-				return
-			end
-		end
+	if self._ignored_colliders[hit_actor] then
+		return
 	end
 
 	if self:_can_receive_damage(attacking_unit) then
@@ -103,19 +97,15 @@ PropHealthExtension.max_health = function (self)
 	return self._max_health
 end
 
-PropHealthExtension.current_damaged_health = function (self)
-	return self:current_health()
-end
-
 PropHealthExtension.current_health = function (self)
 	return self._health
 end
 
-PropHealthExtension.current_damaged_health_percent = function (self)
-	return self:current_health_percent()
-end
-
 PropHealthExtension.current_health_percent = function (self)
+	if self._max_health <= 0 then
+		return 0
+	end
+
 	return 1 - self._health / self._max_health
 end
 
@@ -133,10 +123,6 @@ end
 
 PropHealthExtension.total_damage_taken = function (self)
 	return 0
-end
-
-PropHealthExtension.damaged_max_health = function (self)
-	return self:max_health()
 end
 
 PropHealthExtension.health_depleted = function (self)
@@ -172,6 +158,10 @@ PropHealthExtension.max_wounds = function (self)
 end
 
 PropHealthExtension._can_receive_damage = function (self, attacking_unit)
+	if attacking_unit == self._unit then
+		return true
+	end
+
 	if self._is_dead or self._invulnerable then
 		return false
 	end

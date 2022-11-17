@@ -295,24 +295,20 @@ local function _is_valid_target(unit, side_extension)
 		return false
 	end
 
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local is_player_unit = side_extension.is_player_unit
 
-	if buff_extension and (buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable)) then
-		return false
-	end
+	if is_player_unit then
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+		if buff_extension and (buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable)) then
+			return false
+		end
 
-	if unit_data_extension then
-		local breed_or_nil = unit_data_extension:breed()
-		local is_player = Breed.is_player(breed_or_nil)
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
 
-		if is_player then
-			local character_state_component = unit_data_extension:read_component("character_state")
-
-			if PlayerUnitStatus.is_hogtied(character_state_component) then
-				return false
-			end
+		if PlayerUnitStatus.is_hogtied(character_state_component) then
+			return false
 		end
 	end
 

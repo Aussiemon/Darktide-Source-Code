@@ -2,6 +2,7 @@ local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templa
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -414,7 +415,7 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3.3,
 		action_movement_curve = {
@@ -519,7 +520,7 @@ weapon_template.actions = {
 		}
 	},
 	action_inspect = {
-		skip_3p_anims = true,
+		skip_3p_anims = false,
 		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
@@ -541,10 +542,10 @@ weapon_template.allow_sprinting_with_special = true
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/autogun_rifle"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/autogun_rifle"
 weapon_template.reload_template = ReloadTemplates.autogun
-weapon_template.spread_template = "default_autogun_assault"
+weapon_template.spread_template = "autogun_assault_p1_m1"
 weapon_template.recoil_template = "default_autogun_assault"
 weapon_template.suppression_template = "default_autogun_assault"
-weapon_template.look_delta_template = "default"
+weapon_template.look_delta_template = "autogun"
 weapon_template.semi_auto_chain_factor = 0.9
 weapon_template.ammo_template = "autogun_p1_m1"
 weapon_template.conditional_state_to_action_input = {
@@ -553,13 +554,15 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.25
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.keep_weapon_special_active_on_unwield = true
+weapon_template.flashlight_template = FlashlightTemplates.default
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -576,9 +579,10 @@ weapon_template.alternate_fire_settings = {
 	start_anim_event_3p = "to_ironsight",
 	spread_template = "default_autogun_alternate_fire_killshot",
 	suppression_template = "fullauto_autogun_killshot",
-	crosshair_type = "none",
+	crosshair_type = "ironsight",
 	stop_anim_event_3p = "to_unaim_ironsight",
 	start_anim_event = "to_ironsight",
+	look_delta_template = "default_aiming",
 	camera = {
 		custom_vertical_fov = 40,
 		vertical_fov = 54,
@@ -831,10 +835,6 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
 	}
-}
-weapon_template.displayed_attack_ranges = {
-	max = 100,
-	min = 10
 }
 
 return weapon_template

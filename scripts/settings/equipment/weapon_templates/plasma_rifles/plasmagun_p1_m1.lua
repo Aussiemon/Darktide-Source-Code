@@ -9,6 +9,7 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsBespokePlasmagunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_plasmagun_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitsRangedOverheat = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -91,8 +92,12 @@ local weapon_template = {
 				}
 			}
 		},
+		vent_override = {
+			clear_input_queue = true,
+			buffer_time = 0
+		},
 		vent_release = {
-			buffer_time = 0.1,
+			buffer_time = 1.51,
 			input_sequence = {
 				{
 					value = false,
@@ -116,12 +121,14 @@ local weapon_template = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	wield = "stay",
 	reload = "base",
+	wield = "stay",
 	shoot_charge = {
 		wield = "base",
 		charged_enough = "base",
 		grenade_ability = "base",
+		vent = "base",
+		vent_override = "base",
 		reload = "base",
 		combat_ability = "base",
 		shoot_cancel = "base"
@@ -135,6 +142,12 @@ weapon_template.action_input_hierarchy = {
 		combat_ability = "base"
 	},
 	vent = {
+		wield = "base",
+		vent_release = "base",
+		combat_ability = "base",
+		grenade_ability = "base"
+	},
+	vent_override = {
 		wield = "base",
 		vent_release = "base",
 		combat_ability = "base",
@@ -176,13 +189,16 @@ weapon_template.actions = {
 		}
 	},
 	action_charge_direct = {
-		charge_template = "plasmagun_p1_m1_charge_direct",
+		overload_module_class_name = "overheat",
+		hold_combo = true,
 		start_input = "shoot_charge",
 		kind = "overload_charge",
 		sprint_ready_up_time = 0.4,
-		allowed_during_sprint = true,
+		prevent_sprint = true,
 		anim_end_event = "attack_charge_cancel",
-		overload_module_class_name = "overheat",
+		allowed_during_sprint = false,
+		charge_template = "plasmagun_p1_m1_charge_direct",
+		abort_sprint = true,
 		anim_event = "attack_charge",
 		stop_input = "shoot_cancel",
 		total_time = math.huge,
@@ -213,6 +229,9 @@ weapon_template.actions = {
 			sfx_source_name = "_overheat"
 		},
 		running_action_state_to_action_input = {
+			overheating = {
+				input_name = "vent_override"
+			},
 			fully_charged = {
 				input_name = "charged_enough"
 			}
@@ -240,6 +259,9 @@ weapon_template.actions = {
 			},
 			vent = {
 				action_name = "action_vent"
+			},
+			vent_override = {
+				action_name = "action_vent_override"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -311,7 +333,7 @@ weapon_template.actions = {
 			},
 			shoot_charge = {
 				action_name = "action_charge_direct",
-				chain_time = 0.5
+				chain_time = 0.45
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -390,14 +412,17 @@ weapon_template.actions = {
 	},
 	action_charge = {
 		start_input = "brace",
-		allowed_during_sprint = true,
+		prevent_sprint = true,
+		hold_combo = true,
+		overload_module_class_name = "overheat",
 		kind = "overload_charge",
 		sprint_ready_up_time = 0.25,
-		overload_module_class_name = "overheat",
-		recoil_template = "default_plasma_rifle_demolitions",
 		anim_end_event = "attack_charge_cancel",
+		allowed_during_sprint = false,
+		recoil_template = "default_plasma_rifle_demolitions",
 		charge_template = "plasmagun_p1_m1_charge",
 		spread_template = "default_plasma_rifle_demolitions",
+		abort_sprint = true,
 		anim_event = "heavy_charge",
 		stop_input = "brace_release",
 		total_time = math.huge,
@@ -477,13 +502,14 @@ weapon_template.actions = {
 		}
 	},
 	action_vent = {
-		prevent_sprint = true,
+		allowed_during_sprint = true,
 		start_input = "vent",
 		anim_end_event = "vent_end",
 		kind = "vent_overheat",
-		uninterruptible = true,
+		minimum_hold_time = 1,
+		prevent_sprint = true,
 		abort_sprint = true,
-		allowed_during_sprint = true,
+		uninterruptible = true,
 		anim_event = "vent",
 		stop_input = "vent_release",
 		total_time = math.huge,
@@ -528,13 +554,70 @@ weapon_template.actions = {
 			}
 		}
 	},
+	action_vent_override = {
+		prevent_sprint = true,
+		anim_end_event = "vent_end",
+		kind = "vent_overheat",
+		anim_event_3p = "vent",
+		allowed_during_sprint = true,
+		minimum_hold_time = 1,
+		abort_sprint = true,
+		uninterruptible = true,
+		anim_event = "vent_override",
+		stop_input = "vent_release",
+		total_time = math.huge,
+		action_movement_curve = {
+			{
+				modifier = 0.4,
+				t = 0.1
+			},
+			{
+				modifier = 0.4,
+				t = 0.15
+			},
+			{
+				modifier = 0.6,
+				t = 0.2
+			},
+			{
+				modifier = 0.4,
+				t = 1
+			},
+			start_modifier = 1
+		},
+		venting_fx = {
+			looping_vfx_alias = "plasma_venting",
+			looping_sound_alias = "ranged_plasma_venting"
+		},
+		running_action_state_to_action_input = {
+			fully_vented = {
+				input_name = "vent_release"
+			}
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 0.15
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.5
+			}
+		}
+	},
 	action_reload = {
 		kind = "reload_state",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 9.4,
 		allowed_chain_actions = {
@@ -553,10 +636,11 @@ weapon_template.actions = {
 		}
 	},
 	action_overheat_explode = {
-		death_on_explosion = true,
+		anim_event = "charge_explode",
 		anim_end_event = "charge_explode_finished",
 		kind = "overload_explosion",
-		anim_event = "charge_explode",
+		first_person_shake_anim = "shake_medium",
+		death_on_explosion = true,
 		total_time = 3,
 		timeline_anims = {
 			[0.933] = {
@@ -615,7 +699,7 @@ weapon_template.base_stats = {
 		}
 	},
 	plasmagun_charge_cost_stat = {
-		display_name = "loc_stats_display_warp_resist_stat",
+		display_name = "loc_stats_display_heat_management",
 		is_stat_trait = true,
 		charge = {
 			action_charge_direct = {
@@ -674,10 +758,11 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo",
+		conditional_state = "no_ammo_with_delay",
 		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.45
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = true
 weapon_template.sprint_ready_up_time = 0.1
@@ -688,11 +773,10 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "charge_up"
+weapon_template.crosshair_type = "bfg"
 weapon_template.hit_marker_type = "center"
 weapon_template.overheat_configuration = {
 	vent_duration = 4,
-	explode_at_high_overheat = true,
 	low_threshold_decay_rate_modifier = 0.5,
 	vent_interval = 0.8,
 	auto_vent_delay = 1,
@@ -759,7 +843,7 @@ weapon_template.keywords = {
 	"plasma_rifle",
 	"p1"
 }
-weapon_template.can_use_while_vaulting = true
+weapon_template.can_use_while_vaulting = false
 weapon_template.dodge_template = "plasma_rifle"
 weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "default"
@@ -774,5 +858,9 @@ table.append(weapon_template.traits, ranged_common_traits)
 local ranged_overheat_traits = table.keys(WeaponTraitsRangedOverheat)
 
 table.append(weapon_template.traits, ranged_overheat_traits)
+
+local bespoke_plasmagun_p1_traits = table.keys(WeaponTraitsBespokePlasmagunP1)
+
+table.append(weapon_template.traits, bespoke_plasmagun_p1_traits)
 
 return weapon_template

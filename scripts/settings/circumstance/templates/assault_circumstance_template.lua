@@ -10,11 +10,180 @@ local circumstance_templates = {
 			},
 			health_station = {
 				charges_to_distribute = 0
+			},
+			pickup_settings = {
+				rubberband_pool = {
+					ammo = {
+						small_clip = {
+							4,
+							4,
+							3,
+							3,
+							2
+						},
+						large_clip = {
+							3,
+							3,
+							3,
+							2,
+							2
+						},
+						ammo_cache_pocketable = {
+							2,
+							2,
+							2,
+							2,
+							2
+						}
+					},
+					grenade = {
+						small_grenade = {
+							3,
+							3,
+							3,
+							3,
+							3
+						}
+					},
+					health = {
+						medical_crate_pocketable = {
+							-2,
+							-2,
+							-2,
+							-2,
+							-2
+						}
+					}
+				},
+				mid_event = {
+					ammo = {
+						small_clip = {
+							2,
+							2,
+							2,
+							2,
+							2
+						},
+						large_clip = {
+							1,
+							1,
+							1,
+							1,
+							1
+						}
+					},
+					health = {
+						medical_crate_pocketable = {
+							-2,
+							-2,
+							-2,
+							-2,
+							-2
+						}
+					}
+				},
+				end_event = {
+					ammo = {
+						small_clip = {
+							2,
+							2,
+							2,
+							2,
+							2
+						},
+						large_clip = {
+							1,
+							1,
+							1,
+							1,
+							1
+						}
+					},
+					health = {
+						medical_crate_pocketable = {
+							-2,
+							-2,
+							-2,
+							-2,
+							-2
+						}
+					}
+				},
+				primary = {
+					ammo = {
+						small_clip = {
+							3,
+							3,
+							3,
+							3,
+							3
+						},
+						large_clip = {
+							1,
+							1,
+							1,
+							1,
+							1
+						}
+					},
+					grenade = {
+						small_grenade = {
+							4,
+							4,
+							4,
+							4,
+							4
+						}
+					},
+					health = {
+						medical_crate_pocketable = {
+							-2,
+							-2,
+							-2,
+							-2,
+							-2
+						}
+					}
+				},
+				secondary = {
+					ammo = {
+						small_clip = {
+							3,
+							3,
+							3,
+							3,
+							3
+						},
+						large_clip = {
+							2,
+							2,
+							2,
+							2,
+							2
+						},
+						ammo_cache_pocketable = {
+							2,
+							2,
+							2,
+							2,
+							2
+						}
+					},
+					grenade = {
+						small_grenade = {
+							3,
+							3,
+							3,
+							3,
+							3
+						}
+					}
+				}
 			}
 		},
 		mutators = {
 			"mutator_more_hordes",
-			"mutator_more_monsters"
+			"mutator_more_specials"
 		},
 		ui = {
 			description = "loc_circumstance_assault_description",

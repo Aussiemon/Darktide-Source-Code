@@ -19,6 +19,9 @@ stagger_settings.stagger_categories = {
 		stagger_types.killshot,
 		stagger_types.medium
 	},
+	hatchet = {
+		stagger_types.killshot
+	},
 	uppercut = {
 		stagger_types.light,
 		stagger_types.medium

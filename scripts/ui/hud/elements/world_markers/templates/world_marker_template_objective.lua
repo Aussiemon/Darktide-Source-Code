@@ -47,12 +47,7 @@ local template_visual_definitions = {
 			icon = UIHudSettings.color_tint_main_1,
 			text = UIHudSettings.color_tint_main_1,
 			indicator = Color.ui_hud_green_super_light(255, true),
-			background = {
-				200,
-				0,
-				0,
-				0
-			},
+			background = Color.terminal_background(200, true),
 			demolition_marker_1 = {
 				0,
 				0,

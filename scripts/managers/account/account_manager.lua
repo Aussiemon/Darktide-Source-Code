@@ -27,7 +27,9 @@ local interface = {
 	"verify_gdk_store_account",
 	"verify_user_restriction",
 	"user_has_restriction",
-	"user_restriction_verified"
+	"user_restriction_verified",
+	"verify_connection",
+	"user_restriction_updated"
 }
 local NullAccountManager = class("NullAccountManager")
 
@@ -137,6 +139,14 @@ end
 
 NullAccountManager.user_restriction_verified = function (self)
 	return true
+end
+
+NullAccountManager.verify_connection = function (self)
+	return true
+end
+
+NullAccountManager.user_restriction_updated = function (self)
+	return
 end
 
 local AccountManager = {

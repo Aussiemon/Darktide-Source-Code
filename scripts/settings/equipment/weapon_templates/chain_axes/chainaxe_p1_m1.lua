@@ -2,20 +2,21 @@ local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_set
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local ChainSpeedTemplates = require("scripts/settings/equipment/chain_speed_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local DefaultMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/default_melee_action_input_setup")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeChainaxeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainaxe_p1")
-local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
@@ -33,9 +34,10 @@ local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weap
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local wounds_shapes = WoundsSettings.shapes
 local weapon_template = {
-	action_inputs = table.clone(DefaultMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(DefaultMeleeActionInputSetup.action_input_hierarchy)
+	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
+	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
+weapon_template.action_inputs.start_attack.buffer_time = 0.5
 local chain_axe_sweep_box = {
 	0.15,
 	0.15,
@@ -55,11 +57,9 @@ local hit_zone_priority = {
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 local hit_stickyness_settings_heavy = {
-	stickyness_vfx_loop_alias = "melee_sticky_loop",
-	stickyness_sfx_loop_alias = "melee_sticky_loop",
 	start_anim_event = "attack_hit_stick",
-	sensitivity_modifier = 0.7,
 	stop_anim_event = "yank_out",
+	sensitivity_modifier = 0.7,
 	disallow_chain_actions = true,
 	duration = 0.3,
 	always_sticky = true,
@@ -97,15 +97,13 @@ local hit_stickyness_settings_heavy = {
 	}
 }
 local hit_stickyness_settings_heavy_special = {
-	stickyness_vfx_loop_alias = "melee_sticky_loop",
 	start_anim_event = "attack_hit_stick",
-	stickyness_sfx_loop_alias = "melee_sticky_loop",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.1,
 	disallow_chain_actions = true,
 	duration = 1,
 	damage = {
-		instances = 2,
+		instances = 3,
 		damage_profile = DamageProfileTemplates.heavy_chainaxe_active_sticky,
 		damage_type = damage_types.sawing_stuck,
 		last_damage_profile = DamageProfileTemplates.heavy_chainaxe_active_sticky_last
@@ -138,9 +136,7 @@ local hit_stickyness_settings_heavy_special = {
 	}
 }
 local hit_stickyness_settings_light = {
-	stickyness_vfx_loop_alias = "melee_sticky_loop",
 	start_anim_event = "attack_hit_stick",
-	stickyness_sfx_loop_alias = "melee_sticky_loop",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
 	disallow_chain_actions = true,
@@ -179,16 +175,14 @@ local hit_stickyness_settings_light = {
 	}
 }
 local hit_stickyness_settings_light_special = {
-	stickyness_vfx_loop_alias = "melee_sticky_loop",
 	start_anim_event = "attack_hit_stick",
-	stickyness_sfx_loop_alias = "melee_sticky_loop",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.1,
 	disallow_chain_actions = true,
 	duration = 1,
 	always_sticky = true,
 	damage = {
-		instances = 2,
+		instances = 3,
 		damage_profile = DamageProfileTemplates.light_chainaxe_active_sticky,
 		damage_type = damage_types.sawing_stuck,
 		last_damage_profile = DamageProfileTemplates.light_chainaxe_active_sticky_last
@@ -274,7 +268,7 @@ weapon_template.actions = {
 		start_input = "start_attack",
 		kind = "windup",
 		allowed_during_sprint = true,
-		anim_event = "heavy_charge_left",
+		anim_event = "heavy_charge_left_diagonal_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -403,7 +397,7 @@ weapon_template.actions = {
 				intensity = 0.2,
 				t = 1
 			},
-			start_intensity = 0.85
+			start_intensity = 0
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -511,7 +505,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85
+				chain_time = 0.65
 			},
 			block = {
 				chain_time = 0.45,
@@ -604,7 +598,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.55
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -682,7 +676,7 @@ weapon_template.actions = {
 				intensity = 0.2,
 				t = 1
 			},
-			start_intensity = 0.85
+			start_intensity = 0
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -829,11 +823,11 @@ weapon_template.actions = {
 	},
 	action_melee_start_left_2 = {
 		chain_anim_event_3p = "attack_swing_charge_left",
-		chain_anim_event = "heavy_charge_left",
+		chain_anim_event = "heavy_charge_left_diagonal_down",
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_left",
-		anim_event = "heavy_charge_left",
+		anim_event = "heavy_charge_left_diagonal_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -960,7 +954,7 @@ weapon_template.actions = {
 				intensity = 0.2,
 				t = 1
 			},
-			start_intensity = 0.85
+			start_intensity = 0
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1078,7 +1072,7 @@ weapon_template.actions = {
 				intensity = 0.8,
 				t = 2.5
 			},
-			start_intensity = 0.3
+			start_intensity = 0
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1174,7 +1168,7 @@ weapon_template.actions = {
 				intensity = 0.2,
 				t = 1
 			},
-			start_intensity = 0.85
+			start_intensity = 0
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1205,7 +1199,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_right_down",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_right_down",
 			anchor_point_offset = {
 				-0.1,
 				0,
@@ -1297,7 +1291,7 @@ weapon_template.actions = {
 		end,
 		weapon_box = chain_axe_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/heavy_attack_right_diagonal_down",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right_diagonal_down",
 			anchor_point_offset = {
 				0,
 				0,
@@ -1357,6 +1351,10 @@ weapon_template.actions = {
 			start_modifier = 1
 		},
 		powered_weapon_intensity = {
+			{
+				intensity = 0,
+				t = 0.1
+			},
 			start_intensity = 0
 		},
 		allowed_chain_actions = {
@@ -1380,16 +1378,16 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.28,
 		hit_armor_anim = "attack_hit_shield",
-		range_mod = 1.35,
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
 		max_num_saved_entries = 20,
 		anim_event_3p = "attack_swing_heavy_right",
 		num_frames_before_process = 0,
-		weapon_handling_template = "time_scale_1",
+		first_person_hit_anim = "hit_left_shake",
 		damage_window_end = 0.4,
-		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
+		range_mod = 1.35,
+		attack_direction_override = "right",
 		uninterruptible = true,
 		anim_event = "heavy_attack_right",
 		hit_stop_anim = "hit_stop",
@@ -1458,6 +1456,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
 		spline_settings = {
@@ -1470,6 +1469,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.chainaxe_tank,
 		damage_type = damage_types.sawing,
+		damage_profile_special_active = DamageProfileTemplates.light_chainaxe_active,
+		damage_type_special_active = damage_types.sawing_stuck,
 		herding_template = HerdingTemplates.linesman_right_heavy,
 		wounds_shape_special_active = wounds_shapes.default,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
@@ -1569,24 +1570,14 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/power_sword"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/chain_axe"
 weapon_template.weapon_box = chain_axe_sweep_box
-weapon_template.chain_speed_settings = {
-	time_until_max_throttle = 0.3,
-	time_until_min_throttle = 2.1,
-	intensity_epsilon = 0.01,
-	animation = {
-		max = 100,
-		min = 1
-	},
-	sound = {
-		max = 1,
-		min = 0
-	}
-}
+weapon_template.chain_speed_template = ChainSpeedTemplates.chainaxe
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.damage_window_start_sweep_trail_offset = -0.2
+weapon_template.damage_window_end_sweep_trail_offset = 0.2
 weapon_template.ammo_template = "no_ammo"
 weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumHits"
@@ -1705,66 +1696,115 @@ weapon_template.base_stats = {
 			base = {
 				stamina_trait_templates.thunderhammer_p1_m1_defence_stat
 			}
-		},
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat
-			}
 		}
 	},
-	chainaxe_finesse_stat = {
-		display_name = "loc_stats_display_finesse_stat",
+	chainaxe_sawing_stat = {
+		display_name = "loc_stats_display_first_saw_damage",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					light_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky_last_quick = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					heavy_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_right_diagonal_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					light_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky_last_quick = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					heavy_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_left_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					light_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky_last_quick = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_right_down_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					light_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_sticky_last_quick = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_right_heavy_2 = {
-				damage_trait_templates.default_melee_finesse_stat
+				overrides = {
+					heavy_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			},
 			action_right_light_pushfollow = {
-				damage_trait_templates.default_melee_finesse_stat
-			}
-		},
-		weapon_handling = {
-			action_left_down_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_diagonal_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_down_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_heavy_2 = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_stat
+				overrides = {
+					light_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
 			}
 		}
 	},

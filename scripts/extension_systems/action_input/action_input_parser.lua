@@ -46,6 +46,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	local action_input_type = config_data.action_input_type
 	local templates = config_data.templates
 	local action_extension = config_data.action_extension
+	self._config_data = config_data
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
 	self._action_component_name = action_component_name
 	self._action_component = action_component
@@ -57,6 +58,34 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	self._hierarchy_position = hierarchy_position_ring_buffer
 	self._ring_buffer_index = 1
 	self._debug_index = debug_index
+	self._input_queue_first_entry_became_first_entry_t = 0
+	self._fixed_frame_offset_start_t_min = NetworkConstants.fixed_frame_offset_start_t_5bit.min
+
+	self:_format_and_initialize_action_inputs(action_input_type, templates, sequences_ring_buffer, action_input_queue_ring_buffer, hierarchy_position_ring_buffer)
+
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	self._player = player_unit_spawn_manager:owner(unit)
+	local bot_action_input_request_queue = Script.new_array(BOT_REQUEST_RING_BUFFER_MAX)
+	self._bot_action_input_request_queue = bot_action_input_request_queue
+	self._global_bot_request_id = 0
+	self._num_bot_action_input_requests = 0
+	self._bot_action_input_current_buffer_index = 0
+	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
+	local NO_RAW_INPUT = self._NO_RAW_INPUT
+
+	for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
+		local entry = {}
+
+		_reset_bot_request_entry(entry, NO_ACTION_INPUT, NO_RAW_INPUT)
+
+		bot_action_input_request_queue[i] = entry
+	end
+
+	self._last_fixed_frame = 0
+	self._last_action_auto_completed = false
+end
+
+ActionInputParser._format_and_initialize_action_inputs = function (self, action_input_type, templates, sequences_ring_buffer, action_input_queue_ring_buffer, hierarchy_position_ring_buffer)
 	self._ACTION_INPUT_SEQUENCE_CONFIGS, self._ACTION_INPUT_NETWORK_LOOKUP, self._ACTION_INPUT_HIERARCHY, self._RAW_INPUTS_NETWORK_LOOKUP, self._MAX_ACTION_INPUT_SEQUENCES, self._MAX_ACTION_INPUT_QUEUE, self._MAX_HIERARCHY_DEPTH, self._NO_ACTION_INPUT, self._NO_RAW_INPUT = ActionInputFormatter.format(action_input_type, templates, raw_inputs)
 	local NO_RAW_INPUT = self._NO_RAW_INPUT
 	local NO_ACTION_INPUT = self._NO_ACTION_INPUT
@@ -100,27 +129,12 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 
 		hierarchy_position_ring_buffer[i] = hierarchy_position
 	end
+end
 
-	self._input_queue_first_entry_became_first_entry_t = 0
-	self._fixed_frame_offset_start_t_min = NetworkConstants.fixed_frame_offset_start_t_5bit.min
-	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-	self._player = player_unit_spawn_manager:owner(unit)
-	local bot_action_input_request_queue = Script.new_array(BOT_REQUEST_RING_BUFFER_MAX)
-	self._bot_action_input_request_queue = bot_action_input_request_queue
-	self._global_bot_request_id = 0
-	self._num_bot_action_input_requests = 0
-	self._bot_action_input_current_buffer_index = 0
+ActionInputParser.on_reload = function (self)
+	local c = self._config_data
 
-	for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
-		local entry = {}
-
-		_reset_bot_request_entry(entry, NO_ACTION_INPUT, NO_RAW_INPUT)
-
-		bot_action_input_request_queue[i] = entry
-	end
-
-	self._last_fixed_frame = 0
-	self._last_action_auto_completed = false
+	self:_format_and_initialize_action_inputs(c.action_input_type, c.templates, self._sequences, self._action_input_queue, self._hierarchy_position)
 end
 
 ActionInputParser.peek_next_input = function (self)
@@ -904,11 +918,12 @@ end
 
 ActionInputParser._queue_action_input = function (self, action_input_queue, sequence_config, t, raw_input, hierarchy_position, base_hierarchy)
 	local action_input_name = sequence_config.action_input_name
+
+	self:_clear_action_input_queue_from_matching_hierarchy_position(action_input_queue, action_input_name, hierarchy_position, base_hierarchy)
+
 	local max_queue = sequence_config.max_queue
 
-	if sequence_config.clear_input_queue then
-		self:_clear_action_input_queue_from_matching_hierarchy_position(action_input_queue, action_input_name, hierarchy_position, base_hierarchy)
-	elseif max_queue then
+	if max_queue then
 		self:_manipulate_queue_by_max_queue(action_input_queue, action_input_name, max_queue)
 	end
 

@@ -82,12 +82,16 @@ Gear.set_traits = function (self, item_id, traits)
 end
 
 Gear.attach_item_as_override = function (self, item_id, attach_point, gear_id)
-	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/gear/"):path(item_id):path("/overrides/"):path(attach_point), {
+	local string_path = {
 		method = "PUT",
-		body = {
-			itemRef = gear_id
-		}
-	}):next(function (data)
+		body = {}
+	}
+
+	if gear_id then
+		string_path.body.itemRef = gear_id
+	end
+
+	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/gear/"):path(item_id):path("/overrides/"):path(attach_point), string_path):next(function (data)
 		return nil
 	end)
 end

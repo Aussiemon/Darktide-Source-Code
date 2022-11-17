@@ -1,6 +1,7 @@
 local UI_POPUP_INFO_DURATION = 10
 local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ItemUtils = require("scripts/utilities/items")
 
 local function _get_interaction_units_by_type(interaction_type)
 	local units = {}
@@ -109,6 +110,10 @@ local function _is_on_story_chapter(story_name, chapter_name)
 	return false
 end
 
+local function _is_story_complete(story_name)
+	return Managers.narrative:is_story_complete(story_name)
+end
+
 local function _complete_current_story_chapter(story_name)
 	Managers.narrative:complete_current_chapter(story_name)
 end
@@ -203,21 +208,22 @@ local templates = {
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "training_reward")
 		end,
 		on_activation = function (self)
-			local context = {
-				title_text = "loc_training_grounds_new_recruit_rewards_header",
-				description_text = "loc_training_grounds_new_recruit_rewards_zola_quote",
-				options = {
-					{
-						text = "loc_popup_button_confirm",
-						close_on_pressed = true,
-						callback = callback(function ()
-							Managers.narrative:complete_current_chapter("onboarding", "training_reward")
-						end)
-					}
-				}
+			local player = Managers.player:local_player(1)
+			local profile = player:profile()
+			local loadout = profile.loadout
+			local new_items = {
+				primary_item = loadout.slot_primary,
+				secondary_item = loadout.slot_secondary
 			}
 
-			Managers.event:trigger("event_show_ui_popup", context)
+			for _, item in pairs(new_items) do
+				local gear_id = item.gear_id
+				local item_type = item.item_type
+
+				ItemUtils.mark_item_id_as_new(gear_id, item_type)
+			end
+
+			Managers.narrative:complete_current_chapter("onboarding", "training_reward")
 		end,
 		on_deactivation = function (self)
 			return
@@ -255,6 +261,11 @@ local templates = {
 			local close_callback = callback(close_callback_function)
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+		end,
+		close_condition = function (self)
+			local input_service = Managers.input:get_input_service("View")
+
+			return input_service:get("hotkey_inventory")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -302,6 +313,67 @@ local templates = {
 		sync_on_events = {
 			"event_onboarding_step_visit_chapel"
 		}
+	},
+	{
+		name = "Training Ground Objective - Chapel Video",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and Managers.state.mission and Managers.narrative:can_complete_event("onboarding_step_chapel_video_viewed")
+		end,
+		on_activation = function (self)
+			local ui_manager = Managers.ui
+			local view_name = "video_view"
+
+			if ui_manager:view_active(view_name) then
+				local force_close = true
+
+				ui_manager:close_view(view_name, force_close)
+			end
+
+			local function close_callback_function()
+				Managers.narrative:complete_event("onboarding_step_chapel_video_viewed")
+
+				local level = Managers.state.mission and Managers.state.mission:mission_level()
+
+				if level then
+					Level.trigger_event(level, "event_onboarding_step_chapel_video_viewed")
+				end
+
+				local function instant_easing_function()
+					return 1
+				end
+
+				local time = 0.1
+				local local_player = Managers.player:local_player(1)
+				local fade_out_at = Managers.time:time("main") + time
+
+				Managers.event:trigger("event_cutscene_fade_in", local_player, time, instant_easing_function)
+				Managers.event:trigger("event_cutscene_fade_out_at", local_player, time, instant_easing_function, fade_out_at)
+			end
+
+			local template_name = "cs06"
+			local close_callback = callback(close_callback_function)
+			local context = {
+				allow_skip_input = true,
+				template = template_name,
+				close_callback = close_callback
+			}
+
+			ui_manager:open_view(view_name, nil, true, true, nil, context)
+		end,
+		on_deactivation = function (self)
+			local ui_manager = Managers.ui
+			local view_name = "video_view"
+
+			if ui_manager:view_active(view_name) and not ui_manager:is_view_closing(view_name) then
+				local force_close = true
+
+				ui_manager:close_view(view_name, force_close)
+			end
+		end,
+		sync_on_events = {}
 	},
 	{
 		name = "Mission Terminal Objective - Access MT",
@@ -398,6 +470,9 @@ local templates = {
 
 			objective:destroy()
 		end,
+		close_condition = function (self)
+			return Managers.ui:view_active("contracts_background_view")
+		end,
 		sync_on_events = {}
 	},
 	{
@@ -461,6 +536,9 @@ local templates = {
 
 			objective:destroy()
 		end,
+		close_condition = function (self)
+			return Managers.ui:view_active("credits_view")
+		end,
 		sync_on_events = {}
 	},
 	{
@@ -498,7 +576,7 @@ local templates = {
 			"GameplayStateRun"
 		},
 		validation_func = function (self)
-			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_2"))
+			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_3"))
 		end,
 		on_activation = function (self)
 			local player = _get_player()
@@ -518,6 +596,9 @@ local templates = {
 			local player = _get_player()
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
+		end,
+		close_condition = function (self)
+			return Managers.ui:view_active("mission_board_view")
 		end,
 		sync_on_events = {}
 	},
@@ -547,12 +628,110 @@ local templates = {
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
 		end,
+		close_condition = function (self)
+			local input_service = Managers.input:get_input_service("View")
+
+			return input_service:get("hotkey_inventory")
+		end,
 		on_deactivation = function (self)
 			local player = _get_player()
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
 		sync_on_events = {}
+	},
+	{
+		name = "Level 8 / 15 / 23 Unlocks Popup - New Device Slot",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_3"))
+		end,
+		on_activation = function (self)
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_device_slot_01"
+			local no_cache = true
+			local param = {
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
+			}
+			local localized_text = Localize(localization_key, no_cache, param)
+			local duration = UI_POPUP_INFO_DURATION
+
+			local function close_callback_function()
+				_complete_current_story_chapter("level_unlock_popups")
+			end
+
+			local close_callback = callback(close_callback_function)
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+		end,
+		close_condition = function (self)
+			local input_service = Managers.input:get_input_service("View")
+
+			return input_service:get("hotkey_inventory")
+		end,
+		on_deactivation = function (self)
+			local player = _get_player()
+
+			Managers.event:trigger("event_player_hide_onboarding_message", player)
+		end,
+		sync_on_events = {}
+	},
+	{
+		name = "Reach next progression step",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not Managers.narrative:is_story_complete("path_of_trust")
+		end,
+		on_activation = function (self)
+			if self.objective then
+				local objective = self.objective
+				local objective_name = objective:name()
+
+				Managers.event:trigger("event_remove_mission_objective", objective_name)
+
+				self.objective = nil
+
+				objective:destroy()
+			end
+
+			local ignore_requirement = true
+			local current_chapter = Managers.narrative:current_chapter("path_of_trust", ignore_requirement)
+
+			if current_chapter then
+				local chapter_data = current_chapter.data
+				local objective_name = self.name
+				local localization_key = chapter_data.localization_key
+				local level = chapter_data.level_to_reach
+				local text = Localize(localization_key, true, {
+					level = level or 0
+				})
+				local objective = _create_objective(objective_name, localization_key)
+				self.objective = objective
+
+				Managers.event:trigger("event_add_mission_objective", objective)
+			end
+		end,
+		on_deactivation = function (self)
+			if not self.objective then
+				return
+			end
+
+			local objective = self.objective
+			local objective_name = objective:name()
+
+			Managers.event:trigger("event_remove_mission_objective", objective_name)
+
+			self.objective = nil
+
+			objective:destroy()
+		end,
+		sync_on_events = {
+			"event_on_path_of_trust_updated"
+		}
 	}
 }
 

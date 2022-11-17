@@ -24,7 +24,7 @@ ObjectPenetration.test_for_penetration = function (physics_world, entry_position
 	-- Decompilation error in this vicinity:
 	--- BLOCK #2 4-25, warpins: 1 ---
 	local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
-	step_hit = PhysicsWorld.raycast(physics_world, cast_pos, direction, STEP_DISTANCE, "any", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
+	step_hit = PhysicsWorld.raycast(physics_world, cast_pos, direction, STEP_DISTANCE, "any", "types", "statics", "collision_filter", "filter_player_character_shooting_raycast_statics")
 	steps_taken = steps_taken + 1
 
 	--- END OF BLOCK #2 ---
@@ -86,7 +86,7 @@ ObjectPenetration.test_for_penetration = function (physics_world, entry_position
 	-- Decompilation error in this vicinity:
 	--- BLOCK #7 35-53, warpins: 1 ---
 	local cast_pos = entry_position + direction * STEP_DISTANCE * steps_taken
-	local hit, position, _, normal, hit_actor = PhysicsWorld.raycast(physics_world, cast_pos, -direction, STEP_DISTANCE * steps_taken, "closest", "types", "statics", "collision_filter", "filter_player_character_shooting_statics")
+	local hit, position, _, normal, hit_actor = PhysicsWorld.raycast(physics_world, cast_pos, -direction, STEP_DISTANCE * steps_taken, "closest", "types", "statics", "collision_filter", "filter_player_character_shooting_raycast_statics")
 	--- END OF BLOCK #7 ---
 
 	slot10 = if hit then

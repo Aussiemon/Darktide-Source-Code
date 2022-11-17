@@ -112,8 +112,6 @@ local default_surface_fx = {
 }
 local surface_decal = {}
 
-ImpactFxHelper.create_missing_surface_decals(surface_decal)
-
 return {
 	armor = {
 		[armor_types.armored] = armored,

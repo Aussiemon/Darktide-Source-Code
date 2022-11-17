@@ -578,6 +578,128 @@ templates.renegade_melee[zone_ids.tank_foundry] = {
 	foundry_23,
 	foundry_24
 }
+local dust_1 = table.clone(basic_renegade_melee_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_2 = table.clone(default_2)
+dust_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_3 = table.clone(default_3)
+dust_3.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_4 = table.clone(default_4)
+dust_4.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_5 = table.clone(default_5)
+dust_5.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_6 = table.clone(default_6)
+dust_6.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_7 = table.clone(default_7)
+dust_7.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_8 = table.clone(default_8)
+dust_8.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_9 = table.clone(default_9)
+dust_9.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_10 = table.clone(default_10)
+dust_10.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_11 = table.clone(default_11)
+dust_11.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_12 = table.clone(default_12)
+dust_12.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_13 = table.clone(default_13)
+dust_13.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_14 = table.clone(default_14)
+dust_14.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_15 = table.clone(default_15)
+dust_15.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_16 = table.clone(default_16)
+dust_16.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_17 = table.clone(default_17)
+dust_17.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_18 = table.clone(default_18)
+dust_18.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_19 = table.clone(default_19)
+dust_19.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_20 = table.clone(default_20)
+dust_20.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_21 = table.clone(default_21)
+dust_21.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_22 = table.clone(default_22)
+dust_22.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_23 = table.clone(default_23)
+dust_23.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_24 = table.clone(default_24)
+dust_24.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.renegade_melee[zone_ids.dust] = {
+	dust_1,
+	dust_2,
+	dust_3,
+	dust_4,
+	dust_5,
+	dust_6,
+	dust_7,
+	dust_8,
+	dust_9,
+	dust_10,
+	dust_11,
+	dust_12,
+	dust_13,
+	dust_14,
+	dust_15,
+	dust_16,
+	dust_17,
+	dust_18,
+	dust_19,
+	dust_20,
+	dust_21,
+	dust_22,
+	dust_23,
+	dust_24
+}
 local watertown_1 = table.clone(basic_renegade_melee_template)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

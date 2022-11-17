@@ -143,7 +143,8 @@ MinionPerceptionExtension.immediate_line_of_sight_check = function (self, target
 	local first_line_of_sight_data = self._line_of_sight_data[1]
 	local from_node = optional_from_node_name or first_line_of_sight_data.from_node
 	local to_node = optional_to_node_name or first_line_of_sight_data.to_node
-	local los_from_position, los_to_position = MinionPerception.line_of_sight_positions(self._unit, target_unit, from_node, to_node)
+	local from_offsets = first_line_of_sight_data.from_offsets
+	local los_from_position, los_to_position = MinionPerception.line_of_sight_positions(self._unit, target_unit, from_node, to_node, from_offsets)
 	local vector = los_to_position - los_from_position
 	local distance = Vector3.length(vector)
 	local direction = Vector3.normalize(vector)
@@ -433,6 +434,14 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 		local los_node = Unit.node(unit, from_node)
 		local los_to_node = Unit.node(target_unit, to_node)
 		local los_from_position = Unit.world_position(unit, los_node)
+		local from_offsets = data.from_offsets
+
+		if from_offsets then
+			local right = Quaternion.right(Unit.local_rotation(unit, 1))
+			local from_offset = from_offsets:unbox()
+			los_from_position = los_from_position + Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z)
+		end
+
 		local los_to_position = Unit.world_position(target_unit, los_to_node)
 		local to_los_position = los_to_position - los_from_position
 		local right_vector = Vector3.normalize(Vector3.cross(to_los_position, up))
@@ -536,6 +545,13 @@ MinionPerceptionExtension.threat = function (self, threat_unit)
 	local threat_units = self._threat_units
 
 	return threat_units[threat_unit]
+end
+
+MinionPerceptionExtension.aggro_state = function (self)
+	local perception_component = self._perception_component
+	local aggro_state = perception_component.aggro_state
+
+	return aggro_state
 end
 
 local DEFAULT_THREAT_MULTIPLIER = 1

@@ -9,6 +9,7 @@ local character_appearance_view_settings = {
 	shading_environment = "content/shading_environments/ui/character_create",
 	character_spacing_width = 1.6,
 	back_row_additional_spacing_depth = 1.2,
+	icons_visual_margin = 1000,
 	timer_name = "ui",
 	debug_character_count = 4,
 	viewport_name = "ui_character_create_viewport",
@@ -37,7 +38,7 @@ local character_appearance_view_settings = {
 	},
 	area_grid_size = {
 		480,
-		650
+		670
 	},
 	ignored_slots = {
 		"slot_primary",
@@ -77,6 +78,9 @@ local character_appearance_view_settings = {
 				head = "character_customization_idle_head"
 			}
 		}
+	},
+	vo_event_vendor_purchase = {
+		"barber_purchase"
 	}
 }
 

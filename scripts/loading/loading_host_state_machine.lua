@@ -52,10 +52,23 @@ LoadingHostStateMachine.destroy = function (self)
 end
 
 LoadingHostStateMachine._cleanup_level = function (self, shared_state)
+	local themes = shared_state.themes
 	local level = shared_state.level
 	local world = shared_state.world
 
-	if level then
+	if #themes > 0 then
+		for _, theme in ipairs(themes) do
+			World.destroy_theme(world, theme)
+		end
+
+		shared_state.themes = {}
+	end
+
+	if shared_state.level_spawner then
+		shared_state.level_spawner:destroy()
+
+		shared_state.level_spawner = nil
+	elseif level then
 		local level_name = shared_state.level_name
 
 		ScriptWorld.destroy_level(world, level_name)

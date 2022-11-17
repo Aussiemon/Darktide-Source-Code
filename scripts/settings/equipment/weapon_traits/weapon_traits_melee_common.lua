@@ -64,22 +64,22 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_armored_dam
 	weapon_trait_melee_common_wield_increased_armored_damage_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.1
+				[buff_stat_buffs.armored_damage] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.15
+				[buff_stat_buffs.armored_damage] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.2
+				[buff_stat_buffs.armored_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.25
+				[buff_stat_buffs.armored_damage] = 0.25
 			}
 		}
 	}
@@ -88,22 +88,22 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_resistant_d
 	weapon_trait_melee_common_wield_increased_resistant_damage_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.1
+				[buff_stat_buffs.resistant_damage] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.15
+				[buff_stat_buffs.resistant_damage] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.2
+				[buff_stat_buffs.resistant_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.25
+				[buff_stat_buffs.resistant_damage] = 0.25
 			}
 		}
 	}
@@ -112,22 +112,22 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_berserker_d
 	weapon_trait_melee_common_wield_increased_berserker_damage_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.1
+				[buff_stat_buffs.berserker_damage] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.15
+				[buff_stat_buffs.berserker_damage] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.2
+				[buff_stat_buffs.berserker_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.25
+				[buff_stat_buffs.berserker_damage] = 0.25
 			}
 		}
 	}
@@ -136,22 +136,22 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_super_armor
 	weapon_trait_melee_common_wield_increased_super_armor_damage_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.1
+				[buff_stat_buffs.super_armor_damage] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.15
+				[buff_stat_buffs.super_armor_damage] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.2
+				[buff_stat_buffs.super_armor_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.25
+				[buff_stat_buffs.super_armor_damage] = 0.25
 			}
 		}
 	}
@@ -160,22 +160,358 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_disgustingl
 	weapon_trait_melee_common_wield_increased_disgustingly_resilient_damage_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.1
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.15
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.2
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.unarmored_damage] = 0.25
+				[buff_stat_buffs.disgustingly_resilient_damage] = 0.25
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_crit_chance = {
+	weapon_trait_increase_crit_chance = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_chance] = 0.05
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_crit_damage = {
+	weapon_trait_increase_crit_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.critical_strike_damage] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_stamina = {
+	weapon_trait_increase_stamina = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.stamina_modifier] = 1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_weakspot_damage = {
+	weapon_trait_increase_weakspot_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.weakspot_damage] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_attack_speed = {
+	weapon_trait_increase_attack_speed = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.attack_speed] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.attack_speed] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.attack_speed] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.attack_speed] = 0.05
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_damage = {
+	weapon_trait_increase_damage = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_finesse = {
+	weapon_trait_increase_finesse = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.finesse_modifier_bonus] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_power = {
+	weapon_trait_increase_power = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.01
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.02
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.power_level_modifier] = 0.04
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_impact = {
+	weapon_trait_increase_impact = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.impact_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.impact_modifier] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.impact_modifier] = 0.07
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.impact_modifier] = 0.08
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_reduced_block_cost = {
+	weapon_trait_reduced_block_cost = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.block_cost_multiplier] = 0.95
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.block_cost_multiplier] = 0.9
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.block_cost_multiplier] = 0.85
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.block_cost_multiplier] = 0.8
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_damage_elites = {
+	weapon_trait_increase_damage_elites = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_elites] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_damage_hordes = {
+	weapon_trait_increase_damage_hordes = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_horde] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_increase_damage_specials = {
+	weapon_trait_increase_damage_specials = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.6
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.damage_vs_specials] = 0.1
+			}
+		}
+	}
+}
+weapon_traits_melee_common.weapon_trait_reduce_sprint_cost = {
+	weapon_trait_reduce_sprint_cost = {
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.94
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.91
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.88
+			}
+		},
+		{
+			stat_buffs = {
+				[buff_stat_buffs.sprinting_cost_multiplier] = 0.85
 			}
 		}
 	}

@@ -14,20 +14,17 @@ local Crouch = {
 		end
 
 		return wants_crouch
+	end,
+	can_crouch = function (unit, first_person_extension, animation_extension, weapon_extensio, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
+		return movement_state_component.can_crouch
 	end
 }
 
 Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
 	local is_crouching = movement_state_component.is_crouching
-	local wants_crouch = nil
-
-	if input_source:get("hold_to_crouch") then
-		wants_crouch = input_source:get("crouching")
-	elseif input_source:get("crouch") then
-		wants_crouch = not is_crouching
-	else
-		wants_crouch = is_crouching
-	end
+	local has_crouch_input = Crouch.crouch_input(input_source, is_crouching, false)
+	local can_crouch = Crouch.can_crouch(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
+	local wants_crouch = has_crouch_input and can_crouch
 
 	if wants_crouch and not is_crouching then
 		Crouch.enter(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)

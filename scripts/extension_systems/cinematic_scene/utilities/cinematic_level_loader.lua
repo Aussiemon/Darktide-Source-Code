@@ -134,7 +134,9 @@ CinematicLevelLoader._is_loading_done = function (self)
 end
 
 CinematicLevelLoader.is_loading = function (self)
-	return not self:_is_loading_done()
+	if not self:_is_loading_done() then
+		return self._cinematic_name
+	end
 end
 
 CinematicLevelLoader.check_loading = function (self, cinematic_name)

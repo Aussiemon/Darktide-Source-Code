@@ -321,6 +321,74 @@ local material_overrides = {
 				0.6
 			}
 		}
+	},
+	hair_color_hive_scum_red_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_hive_scum_red_01"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.7,
+				0.14,
+				0.08
+			}
+		}
+	},
+	hair_color_hive_scum_purple_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_hive_scum_purple_01"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.7,
+				0.04,
+				0.2
+			}
+		}
+	},
+	hair_color_hive_scum_blue_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_hive_scum_blue_01"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.1,
+				0.4,
+				0.8
+			}
+		}
+	},
+	hair_color_hive_scum_green_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_hive_scum_green_01"
+			}
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04
+			},
+			hair_rgb = {
+				0.05,
+				0.75,
+				0.3
+			}
+		}
 	}
 }
 

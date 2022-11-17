@@ -20,7 +20,8 @@ ChargeActionModule.reset = function (self, t, charge_duration_override)
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local charge_duration = charge_duration_override or charge_template.charge_duration
 	charge_duration = charge_duration * stat_buffs.charge_up_time
-	local charge_complete_time = t + charge_duration
+	local charge_delay = charge_template.charge_delay or 0
+	local charge_complete_time = t + charge_duration + charge_delay
 	local charge_level = 0
 	action_module_charge_component.charge_complete_time = charge_complete_time
 	action_module_charge_component.charge_level = charge_level
@@ -33,11 +34,13 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local charge_duration = charge_duration_override or charge_template.charge_duration
 	charge_duration = charge_duration * stat_buffs.charge_up_time
-	local min_charge = charge_template.min_charge or 0
+	local charge_delay = charge_template.charge_delay or 0
 	local charge_complete_time = action_module_charge_component.charge_complete_time
 	local max_charge = action_module_charge_component.max_charge
-	local time_charged = charge_duration - math.max(0, charge_complete_time - t)
-	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * time_charged / charge_duration, min_charge, 1), max_charge)
+	local time_charged = math.max(0, charge_duration - math.max(0, charge_complete_time + charge_delay - t))
+	local min_charge = time_charged > 0 and charge_template.min_charge or 0
+	local charge_time_percentage = time_charged / charge_duration
+	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * charge_time_percentage, min_charge, 1), max_charge)
 	action_module_charge_component.charge_level = charge_level
 	local charge_variable = Unit.animation_find_variable(first_person_unit, "charge")
 
@@ -46,14 +49,24 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	end
 end
 
-ChargeActionModule.finish = function (self, reason, data, t, force_reset)
-	local new_action_kind = nil
+local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
+	unwield = true,
+	unaim = true,
+	reload_shotgun = true,
+	reload_state = true
+}
 
-	if data then
-		new_action_kind = data.new_action_kind
+ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore_reset, reset_action_kinds)
+	if ignore_reset then
+		return
 	end
 
-	if force_reset or reason == "hold_input_released" or reason == "stunned" or (new_action_kind == "unaim" or new_action_kind == "unwield") and reason == "new_interrupting_action" then
+	local new_action_kind = data and data.new_action_kind
+	reset_action_kinds = reset_action_kinds or DEFAULT_RESET_CHARGE_ACTION_KINDS
+	local action_kind_reset = reason == "new_interrupting_action" and new_action_kind and reset_action_kinds[new_action_kind]
+	local reason_reset = reason == "hold_input_released" or reason == "stunned"
+
+	if force_reset or action_kind_reset or reason_reset then
 		local action_module_charge_component = self._action_module_charge_component
 		action_module_charge_component.charge_complete_time = 0
 		action_module_charge_component.charge_level = 0

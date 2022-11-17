@@ -53,7 +53,7 @@ local CLOSE_COMBAT = {
 			name = "step_shoot",
 			condition = "should_step_shoot",
 			condition_args = {
-				attack_type = "elite_ranged"
+				attack_type = "elite_shotgun"
 			},
 			action_data = action_data.step_shoot
 		},

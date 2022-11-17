@@ -2,6 +2,7 @@ require("scripts/ui/hud/elements/player_panel_base/hud_element_player_panel_base
 
 local definition_path = "scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_definitions"
 local HudElementPersonalPlayerPanel = require("scripts/ui/hud/elements/personal_player_panel/hud_element_personal_player_panel")
+local HudElementPersonalPlayerPanelHub = require("scripts/ui/hud/elements/personal_player_panel_hub/hud_element_personal_player_panel_hub")
 local HudElementTeamPlayerPanelHub = require("scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub")
 local HudElementTeamPlayerPanel = require("scripts/ui/hud/elements/team_player_panel/hud_element_team_player_panel")
 local HudElementTeamPanelHandlerSettings = require("scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_settings")
@@ -103,7 +104,7 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 
 		if not player_panel_by_unique_id[unique_id] then
 			temp_new_unique_ids[#temp_new_unique_ids + 1] = unique_id
-		else
+		elseif player_panel_by_unique_id[unique_id].player == player then
 			player_panel_by_unique_id[unique_id].synced = true
 		end
 	end
@@ -174,23 +175,29 @@ HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, 
 	local scenegraph_id = fixed_scenegraph_id or self:_get_available_scenegraph()
 	local draw_layer = self._draw_layer
 	local parent = self._parent
+	local is_my_player = self._my_player == player
 	local data = {
 		synced = true,
 		unique_id = unique_id,
 		player = player,
+		is_my_player = is_my_player,
+		local_player = self._my_player,
 		scenegraph_id = scenegraph_id,
 		using_fixed_scenegraph_id = fixed_scenegraph_id ~= nil
 	}
-	local is_my_player = self._my_player == player
 	local panel = nil
 	local host_type = Managers.connection:host_type()
 	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
 	local is_in_hub = host_type == "hub_server" or game_mode_name == "hub"
 
-	if is_my_player then
+	if is_in_hub then
+		if is_my_player then
+			panel = HudElementPersonalPlayerPanelHub:new(parent, draw_layer, scale, data)
+		else
+			panel = HudElementTeamPlayerPanelHub:new(parent, draw_layer, scale, data)
+		end
+	elseif is_my_player then
 		panel = HudElementPersonalPlayerPanel:new(parent, draw_layer, scale, data)
-	elseif is_in_hub then
-		panel = HudElementTeamPlayerPanelHub:new(parent, draw_layer, scale, data)
 	else
 		panel = HudElementTeamPlayerPanel:new(parent, draw_layer, scale, data)
 	end
@@ -221,7 +228,6 @@ HudElementTeamPanelHandler._remove_panel = function (self, unique_id, ui_rendere
 	local panel = panel_data.panel
 
 	panel:destroy(ui_renderer)
-	self._parent:destroy_offscreen_widgets(self.__class_name, panel)
 
 	self._unique_id_by_scenegraph[scenegraph_id] = nil
 	self._player_panel_by_unique_id[unique_id] = nil
@@ -377,42 +383,6 @@ HudElementTeamPanelHandler.draw = function (self, dt, t, ui_renderer, render_set
 		local panel = data.panel
 
 		panel:draw(dt, t, ui_renderer, render_settings, input_service)
-	end
-end
-
-HudElementTeamPanelHandler.visor_effect_set_visible = function (self, visible, ui_renderer, use_retained_mode)
-	local player_panels_array = self._player_panels_array
-	local num_player_panels = #player_panels_array
-
-	for i = 1, num_player_panels do
-		local data = player_panels_array[i]
-		local panel = data.panel
-
-		panel:visor_effect_set_visible(visible, ui_renderer, use_retained_mode)
-	end
-end
-
-HudElementTeamPanelHandler.visor_effect_draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	local player_panels_array = self._player_panels_array
-	local num_player_panels = #player_panels_array
-
-	for i = 1, num_player_panels do
-		local data = player_panels_array[i]
-		local panel = data.panel
-
-		panel:visor_effect_draw(dt, t, ui_renderer, render_settings, input_service)
-	end
-end
-
-HudElementTeamPanelHandler.visor_effect_destroy = function (self, ui_renderer)
-	local player_panels_array = self._player_panels_array
-	local num_player_panels = #player_panels_array
-
-	for i = 1, num_player_panels do
-		local data = player_panels_array[i]
-		local panel = data.panel
-
-		panel:visor_effect_destroy(ui_renderer)
 	end
 end
 

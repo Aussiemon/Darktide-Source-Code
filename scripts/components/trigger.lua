@@ -18,18 +18,15 @@ Trigger.init = function (self, unit)
 		local action_player_side = self:get_data(unit, "action_player_side")
 		local volume_type = self:get_data(unit, "volume_type")
 		local target_extension_name = self:get_data(unit, "target_extension_name")
-		local component_guid = self.guid
-		local action_parameters = {
-			action_target = NetworkLookup.trigger_action_targets[action_target],
+		local parameters = {
+			action_target = action_target,
 			action_location_name_full = action_location_name_full,
 			action_location_name_short = action_location_name_short,
 			action_player_side = action_player_side,
-			action_machine_target = NetworkLookup.trigger_machine_targets[action_on_machine],
-			component_guid = component_guid
+			action_machine_target = action_on_machine
 		}
-		local only_once_parm = NetworkLookup.trigger_only_once[only_once]
 
-		trigger_extension:setup_from_component(component_guid, trigger_condition, condition_evaluates_bots, trigger_action, action_parameters, only_once_parm, start_active, volume_type, target_extension_name)
+		trigger_extension:setup_from_component(trigger_condition, condition_evaluates_bots, trigger_action, parameters, only_once, start_active, volume_type, target_extension_name)
 
 		self._trigger_extension = trigger_extension
 	end
@@ -55,7 +52,7 @@ Trigger.activate = function (self)
 	local trigger_extension = self._trigger_extension
 
 	if trigger_extension then
-		trigger_extension:activate(true)
+		trigger_extension:set_active(true)
 	end
 end
 
@@ -63,7 +60,7 @@ Trigger.deactivate = function (self)
 	local trigger_extension = self._trigger_extension
 
 	if trigger_extension then
-		trigger_extension:activate(false)
+		trigger_extension:set_active(false)
 	end
 end
 
@@ -94,7 +91,7 @@ Trigger.component_data = {
 	action_on_machine = {
 		value = "server_and_client",
 		ui_type = "combo_box",
-		ui_name = "Where to Activate:",
+		ui_name = "Where to Activate",
 		options_keys = {
 			"server",
 			"client",
@@ -114,7 +111,7 @@ Trigger.component_data = {
 	condition_evaluates_bots = {
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Condition Evaluates Bots"
+		ui_name = "Include Bots in Condition"
 	},
 	trigger_condition = {
 		value = "at_least_one_player_inside",
@@ -125,7 +122,7 @@ Trigger.component_data = {
 			"all_players_inside",
 			"all_required_players_in_end_zone",
 			"at_least_one_player_inside",
-			"invalid_on_player_exit",
+			"only_enter",
 			"luggable_inside"
 		},
 		options_values = {
@@ -186,7 +183,8 @@ Trigger.component_data = {
 			"content/volume_types/player_trigger",
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
-			"content/volume_types/end_zone"
+			"content/volume_types/end_zone",
+			"content/volume_types/safe_volume"
 		},
 		options_values = {
 			"content/volume_types/minion_instakill_no_cost",
@@ -195,13 +193,14 @@ Trigger.component_data = {
 			"content/volume_types/player_trigger",
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
-			"content/volume_types/end_zone"
+			"content/volume_types/end_zone",
+			"content/volume_types/safe_volume"
 		}
 	},
 	target_extension_name = {
 		value = "PlayerVolumeEventExtension",
 		ui_type = "combo_box",
-		ui_name = "Target extension name",
+		ui_name = "Target Extension Name",
 		options_keys = {
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",

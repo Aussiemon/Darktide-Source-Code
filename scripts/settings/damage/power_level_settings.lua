@@ -158,6 +158,17 @@ local power_level_settings = {
 		[armor_types.void_shield] = 0.5,
 		[armor_types.prop_armor] = 0.5
 	},
+	ninjafencer_finesse_boost_amount = {
+		[armor_types.unarmored] = 0.75,
+		[armor_types.armored] = 0.75,
+		[armor_types.resistant] = 0.75,
+		[armor_types.player] = 0.75,
+		[armor_types.berserker] = 0.75,
+		[armor_types.super_armor] = 0.75,
+		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.void_shield] = 0.75,
+		[armor_types.prop_armor] = 0.75
+	},
 	smiter_finesse_boost_amount = {
 		[armor_types.unarmored] = 0.1,
 		[armor_types.armored] = 0.5,

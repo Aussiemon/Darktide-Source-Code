@@ -79,11 +79,6 @@ ForceWeaponBlockEffects._update_block_effects = function (self, dt)
 	local world = self._world
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local block_vfx_name = action_settings and action_settings.block_vfx_name
-	local first_person_unit = self._first_person_unit
-	local rotation = Unit.local_rotation(first_person_unit, 1)
-	local position = Unit.local_position(first_person_unit, 1)
-	local forward = Quaternion.forward(rotation)
-	local target_position = position + forward
 
 	if not block_vfx_name then
 		self:_destroy_effects()
@@ -92,24 +87,24 @@ ForceWeaponBlockEffects._update_block_effects = function (self, dt)
 	end
 
 	if block_vfx_name and not self._block_effect_id then
-		local effect_id = World.create_particles(world, block_vfx_name, target_position)
+		local effect_id = World.create_particles(world, block_vfx_name, Vector3.zero())
+		local vfx_unit, vfx_node = self._fx_extension:vfx_spawner_unit_and_node("fx_left_hand")
+
+		World.link_particles(world, effect_id, vfx_unit, vfx_node, Matrix4x4.identity(), "stop")
+
 		self._block_effect_id = effect_id
 	elseif not block_vfx_name and self._block_effect_id then
 		self:_destroy_effects()
 	end
-
-	if self._block_effect_id then
-		World.move_particles(world, self._block_effect_id, target_position)
-	end
 end
 
 ForceWeaponBlockEffects._destroy_effects = function (self)
-	local effect_id = self._block_effect_id
+	local block_effect_id = self._block_effect_id
 
-	if effect_id then
+	if block_effect_id then
 		local world = self._world
 
-		World.destroy_particles(world, effect_id)
+		World.destroy_particles(world, block_effect_id)
 
 		self._block_effect_id = nil
 	end

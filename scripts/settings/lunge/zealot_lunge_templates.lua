@@ -12,13 +12,16 @@ local zealot_lunge_templates = {
 		on_screen_effect_delay = 0.13,
 		is_dodging = true,
 		restore_toughness = true,
-		sensitivity_modifier = 0.1,
+		move_back_cancel = true,
 		add_buff_delay = 0.13,
 		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash",
-		add_buff = "no_toughness_damage_buff",
-		combat_ability = true,
+		move_back_cancel_time_threshold = 0.4,
+		sensitivity_modifier = 0.1,
 		disable_minion_collision = true,
-		block_input_cancel = false,
+		add_buff = "no_toughness_damage_buff",
+		block_input_cancel = true,
+		combat_ability = true,
+		block_input_cancel_time_threshold = 0.4,
 		add_delayed_buff = "zealot_maniac_dash_buff",
 		hit_dot_check = 0.7,
 		stop_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_exit",
@@ -38,23 +41,23 @@ local zealot_lunge_templates = {
 				time_in_lunge = 0.15
 			},
 			{
-				speed = 12,
+				speed = 11,
 				time_in_lunge = 0.2
 			},
 			{
-				speed = 16,
+				speed = 12,
 				time_in_lunge = 0.25
 			},
 			{
-				speed = 16,
+				speed = 12,
 				time_in_lunge = 0.35
 			},
 			{
-				speed = 14,
+				speed = 11,
 				time_in_lunge = 0.5
 			},
 			{
-				speed = 12,
+				speed = 10,
 				time_in_lunge = 0.55
 			}
 		},

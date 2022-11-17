@@ -19,25 +19,29 @@ local default_view_input_settings = {
 			"keyboard_esc",
 			"xbox_controller_start",
 			"ps4_controller_options",
-			description = "loc_alias_view_close_view"
+			description = "loc_alias_view_close_view",
+			bindable = false
 		},
 		back = {
 			"keyboard_esc",
 			"xbox_controller_b",
 			"ps4_controller_circle",
-			description = "loc_alias_view_back"
+			description = "loc_alias_view_back",
+			bindable = false
 		},
 		next = {
 			"keyboard_space",
 			"xbox_controller_x",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_next"
+			description = "loc_alias_view_next",
+			bindable = false
 		},
 		hotkey_system = {
 			"keyboard_esc",
 			"xbox_controller_start",
 			"ps4_controller_options",
 			description = "loc_alias_view_hotkey_system",
+			bindable = false,
 			group = "input_group_hotkeys"
 		},
 		hotkey_inventory = {
@@ -45,181 +49,269 @@ local default_view_input_settings = {
 			"xbox_controller_back",
 			"ps4_controller_touch",
 			description = "loc_alias_view_hotkey_inventory",
+			bindable = false,
 			group = "input_group_hotkeys"
 		},
 		hotkey_loadout = {
 			"keyboard_l",
 			"xbox_controller_y",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_hotkey_loadout"
+			description = "loc_alias_view_hotkey_loadout",
+			bindable = false
 		},
 		hotkey_item_discard = {
 			"keyboard_x",
 			"xbox_controller_right_thumb",
 			"ps4_controller_d_down",
-			description = "loc_alias_view_hotkey_item_discard"
+			description = "loc_alias_view_hotkey_item_discard",
+			bindable = false
 		},
 		hotkey_character_delete = {
 			"keyboard_x",
 			"xbox_controller_y",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_hotkey_character_delete"
+			description = "loc_alias_view_hotkey_character_delete",
+			bindable = false
 		},
 		hotkey_item_inspect = {
 			"keyboard_v",
 			"xbox_controller_x",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_hotkey_item_inspect"
+			description = "loc_alias_view_hotkey_item_inspect",
+			bindable = false
+		},
+		hotkey_item_compare = {
+			"keyboard_g",
+			"xbox_controller_d_right",
+			"ps4_controller_d_right",
+			description = "loc_alias_view_hotkey_item_compare",
+			bindable = false
+		},
+		hotkey_start_game = {
+			"keyboard_enter",
+			"xbox_controller_x",
+			"ps4_controller_square",
+			description = "loc_mission_board_toggle_solo_play",
+			bindable = false
 		},
 		hotkey_item_sort = {
 			"keyboard_o",
 			"xbox_controller_left_thumb",
-			"ps4_controller_left",
-			description = ""
+			"ps4_controller_l3",
+			description = "",
+			bindable = false
 		},
 		hotkey_item_customize = {
 			"keyboard_c",
 			"xbox_controller_y",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_hotkey_item_customize"
+			description = "loc_alias_view_hotkey_item_customize",
+			bindable = false
 		},
 		hotkey_menu_special_1 = {
 			"keyboard_e",
 			"xbox_controller_x",
 			"ps4_controller_square",
-			description = "loc_alias_view_hotkey_menu_special_1"
+			description = "loc_alias_view_hotkey_menu_special_1",
+			bindable = false
 		},
 		hotkey_menu_special_2 = {
 			"keyboard_q",
 			"xbox_controller_y",
 			"ps4_controller_triangle",
-			description = "loc_alias_view_hotkey_menu_special_2"
+			description = "loc_alias_view_hotkey_menu_special_2",
+			bindable = false
 		},
 		confirm = {
 			"keyboard_enter",
 			"xbox_controller_a",
 			"ps4_controller_cross",
-			description = "loc_alias_view_confirm"
+			description = "loc_alias_view_confirm",
+			bindable = false
 		},
 		secondary_action = {
 			"mouse_right",
 			"xbox_controller_x",
 			"ps4_controller_square",
-			description = "loc_alias_view_secondary_action"
+			description = "loc_alias_view_secondary_action",
+			bindable = false
 		},
 		left = {
 			"mouse_left",
-			description = "loc_alias_view_left"
+			description = "loc_alias_view_left",
+			bindable = false
 		},
 		right = {
 			"mouse_right",
-			description = "loc_alias_view_right"
+			description = "loc_alias_view_right",
+			bindable = false
 		},
 		navigate_up = {
 			"keyboard_up",
 			"xbox_controller_d_up",
-			description = "loc_alias_view_navigate_up"
+			description = "loc_alias_view_navigate_up",
+			bindable = false
 		},
 		navigate_down = {
 			"keyboard_down",
 			"xbox_controller_d_down",
-			description = "loc_alias_view_navigate_down"
+			description = "loc_alias_view_navigate_down",
+			bindable = false
 		},
 		navigate_left = {
 			"keyboard_left",
 			"xbox_controller_d_left",
-			description = "loc_alias_view_navigate_left"
+			description = "loc_alias_view_navigate_left",
+			bindable = false
 		},
 		navigate_right = {
 			"keyboard_right",
 			"xbox_controller_d_right",
-			description = "loc_alias_view_navigate_right"
+			description = "loc_alias_view_navigate_right",
+			bindable = false
 		},
 		navigate_controller = {
 			"xbox_controller_left",
 			"ps4_controller_left",
-			description = "loc_alias_view_navigate_controller"
+			description = "loc_alias_view_navigate_controller",
+			bindable = false
 		},
 		navigate_controller_right = {
 			"xbox_controller_right",
 			"ps4_controller_right",
-			description = "loc_alias_view_navigate_controller_right"
+			description = "loc_alias_view_navigate_controller_right",
+			bindable = false
 		},
 		cycle_list_primary = {
 			"keyboard_tab",
 			"xbox_controller_left_thumb",
 			"ps4_controller_l3",
-			description = "loc_alias_view_cycle_list_primary"
+			description = "loc_alias_view_cycle_list_primary",
+			bindable = false
 		},
 		cycle_list_secondary = {
 			"xbox_controller_right_thumb",
 			"ps4_controller_r3",
-			description = "loc_alias_view_cycle_list_secondary"
+			description = "loc_alias_view_cycle_list_secondary",
+			bindable = false
 		},
 		send_chat_message = {
 			"keyboard_enter",
 			"keyboard_numpad enter",
 			description = "loc_alias_view_open_chat",
+			bindable = false,
 			group = "input_group_interface"
 		},
 		cycle_chat_channel = {
 			"keyboard_tab",
 			description = "loc_alias_view_open_chat",
+			bindable = false,
+			group = "input_group_interface"
+		},
+		show_chat = {
+			"keyboard_enter",
+			description = "loc_alias_view_show_chat",
+			bindable = true,
 			group = "input_group_interface"
 		},
 		navigate_primary_left = {
 			"keyboard_z",
 			"xbox_controller_left_shoulder",
 			"ps4_controller_l1",
-			description = "loc_alias_view_navigate_primary_left"
+			description = "loc_alias_view_navigate_primary_left",
+			bindable = false
 		},
 		navigate_primary_right = {
 			"keyboard_c",
 			"xbox_controller_right_shoulder",
 			"ps4_controller_r1",
-			description = "loc_alias_view_navigate_primary_right"
+			description = "loc_alias_view_navigate_primary_right",
+			bindable = false
 		},
 		navigate_secondary_up = {
 			"keyboard_w",
-			description = "loc_alias_view_navigate_secondary_up"
+			description = "loc_alias_view_navigate_secondary_up",
+			bindable = false
 		},
 		navigate_secondary_down = {
 			"keyboard_s",
-			description = "loc_alias_view_navigate_secondary_down"
+			description = "loc_alias_view_navigate_secondary_down",
+			bindable = false
 		},
 		navigate_secondary_left = {
 			"keyboard_a",
 			"xbox_controller_left_trigger",
 			"ps4_controller_l2",
-			description = "loc_alias_view_navigate_secondary_left"
+			description = "loc_alias_view_navigate_secondary_left",
+			bindable = false
 		},
 		navigate_secondary_right = {
 			"keyboard_d",
 			"xbox_controller_right_trigger",
 			"ps4_controller_r2",
-			description = "loc_alias_view_navigate_secondary_right"
+			description = "loc_alias_view_navigate_secondary_right",
+			bindable = false
 		},
 		scroll_axis = {
 			"mouse_wheel",
 			"xbox_controller_right",
 			"ps4_controller_right",
-			description = "loc_alias_view_navigate_controller_right"
+			description = "loc_alias_view_navigate_controller_right",
+			bindable = false
+		},
+		skip_cinematic = {
+			"keyboard_esc",
+			"xbox_controller_start",
+			"ps4_controller_options",
+			description = "",
+			bindable = false
 		},
 		select_text = {
 			"keyboard_left shift",
 			"keyboard_right shift",
-			description = ""
+			description = "",
+			bindable = false
 		},
 		navigate_text_modifier = {
 			"keyboard_left ctrl",
 			"keyboard_right ctrl",
-			description = ""
+			description = "",
+			bindable = false
+		},
+		credits_pause = {
+			"keyboard_left alt",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			description = "",
+			bindable = false
 		},
 		title_screen_start = {
 			"keyboard_space",
 			"xbox_controller_a",
 			"ps4_controller_cross",
-			description = ""
+			description = "",
+			bindable = false
+		},
+		talent_equip = {
+			"mouse_left",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = "",
+			bindable = false
+		},
+		talent_unequip = {
+			"mouse_right",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = "",
+			bindable = false
+		},
+		cancel_matchmaking = {
+			"keyboard_f10",
+			"xbox_controller_left_trigger+xbox_controller_right_trigger",
+			"xbox_controller_right_trigger+xbox_controller_left_trigger",
+			description = "",
+			bindable = false
 		}
 	},
 	settings = {
@@ -255,6 +347,10 @@ local default_view_input_settings = {
 			key_alias = "hotkey_item_discard",
 			type = "held"
 		},
+		hotkey_item_compare = {
+			key_alias = "hotkey_item_compare",
+			type = "pressed"
+		},
 		hotkey_item_inspect = {
 			key_alias = "hotkey_item_inspect",
 			type = "pressed"
@@ -281,6 +377,10 @@ local default_view_input_settings = {
 		},
 		title_screen_start = {
 			key_alias = "title_screen_start",
+			type = "pressed"
+		},
+		hotkey_start_game = {
+			key_alias = "hotkey_start_game",
 			type = "pressed"
 		},
 		confirm_pressed = {
@@ -337,6 +437,10 @@ local default_view_input_settings = {
 		},
 		cycle_chat_channel = {
 			key_alias = "cycle_chat_channel",
+			type = "pressed"
+		},
+		show_chat = {
+			key_alias = "show_chat",
 			type = "pressed"
 		},
 		cursor = {
@@ -517,6 +621,26 @@ local default_view_input_settings = {
 		},
 		toggle_rtx = {
 			raw = "keyboard_left shift+keyboard_0",
+			type = "pressed"
+		},
+		skip_cinematic = {
+			key_alias = "skip_cinematic",
+			type = "held"
+		},
+		credits_pause = {
+			key_alias = "credits_pause",
+			type = "held"
+		},
+		talent_equip = {
+			key_alias = "talent_equip",
+			type = "pressed"
+		},
+		talent_unequip = {
+			key_alias = "talent_unequip",
+			type = "pressed"
+		},
+		cancel_matchmaking = {
+			key_alias = "cancel_matchmaking",
 			type = "pressed"
 		}
 	}

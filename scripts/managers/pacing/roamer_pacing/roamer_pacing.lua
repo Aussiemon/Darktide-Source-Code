@@ -11,7 +11,7 @@ local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slo
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RoamerPacing = class("RoamerPacing")
 
-RoamerPacing.init = function (self, nav_world, level_path, seed)
+RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	self._nav_world = nav_world
 	self._original_seed = seed
 	self._seed = seed
@@ -35,6 +35,27 @@ RoamerPacing.init = function (self, nav_world, level_path, seed)
 	self._roamer_pack_probabilities = roamer_pack_probabilities
 	self._faction_travel_distances = {}
 	self._density_type_travel_distances = {}
+	local backend_controlled_cultists = pacing_control and pacing_control.activate_cultists
+	local should_disable_cultists = not backend_controlled_cultists
+
+	if should_disable_cultists then
+		for i = #RoamerSettings.faction_types, 1, -1 do
+			local faction_type = RoamerSettings.faction_types[i]
+
+			if faction_type == "cultist" then
+				table.remove(RoamerSettings.faction_types, i)
+				Log.info("RoamerPacing", "Disabled Cultists through backend control pacing flag")
+
+				break
+			end
+		end
+	else
+		Log.info("RoamerPacing", "Enabled Cultists through backend control pacing flag")
+	end
+
+	local faction_index = self:_random(1, #RoamerSettings.faction_types)
+	local current_faction = RoamerSettings.faction_types[faction_index]
+	self._current_faction = current_faction
 end
 
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
@@ -170,15 +191,16 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local density_setting = density_settings[density_type]
 	local density_zone_range = density_setting.zone_range
 	local density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
-	local faction_zone_length = self:_random(RoamerSettings.faction_zone_length[1], RoamerSettings.faction_zone_length[2])
+	local faction_zone_length_table = Managers.state.difficulty:get_table_entry_by_challenge(RoamerSettings.faction_zone_length)
+	local faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
 	local faction_index = self:_random(1, #RoamerSettings.faction_types)
-	local current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
+	local current_faction = self._override_faction or self._current_faction
 	self._current_faction = current_faction
 	self._current_density_type = density_type
 	local empty_zone_count = 0
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
-	local num_encampments_to_spawn = self:_random(RoamerSettings.num_encampments[1], RoamerSettings.num_encampments[2])
+	local num_encampments_to_spawn = self._num_encampments_override or self:_random(RoamerSettings.num_encampments[1], RoamerSettings.num_encampments[2])
 	local num_encampments = 0
 	local num_encampment_blocked_zones = 0
 	local chosen_packs, pack_pick = nil
@@ -220,10 +242,10 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 				zones[#zones + 1] = zone
 				faction_zone_length = faction_zone_length - 1
 
-				if faction_zone_length == 0 then
+				if faction_zone_length <= 0 and density_type == "none" then
 					faction_index = faction_index % #RoamerSettings.faction_types + 1
 					current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
-					faction_zone_length = self:_random(RoamerSettings.faction_zone_length[1], RoamerSettings.faction_zone_length[2])
+					faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
 				end
 
 				density_zone_count = density_zone_count - 1
@@ -231,7 +253,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 
 				if density_zone_count == 0 then
 					local new_density_type = nil
-					local has_randomized_encampment = self:_random() <= RoamerSettings.chance_of_encampment
+					local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or RoamerSettings.chance_of_encampment)
 					local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment
 
 					if should_spawn_encampment then
@@ -963,6 +985,11 @@ end
 
 RoamerPacing.override_faction = function (self, faction)
 	self._override_faction = faction
+end
+
+RoamerPacing.num_encampments_override = function (self, value, chance)
+	self._num_encampments_override = value
+	self._override_chance_of_encampment = chance
 end
 
 RoamerPacing.current_faction = function (self)

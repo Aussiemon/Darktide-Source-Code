@@ -43,7 +43,6 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._channels = {}
 	self._connected_channels = {}
 	self._num_connected_channels = 0
-	self._activate_input_field = false
 	self._is_cursor_pushed = false
 	self._is_always_visible = ChatSettings.is_always_visible
 	self._input_caret = ""
@@ -86,9 +85,8 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 
 	local input_widget = self._input_field_widget
 	local is_input_field_active = input_widget.content.is_writing
-	local activate_input_field = self._activate_input_field
 	local target_state, target_alpha, target_background_alpha_full = nil
-	local time_since_last_update = (activate_input_field or is_input_field_active) and 0 or self._time_since_last_update
+	local time_since_last_update = is_input_field_active and 0 or self._time_since_last_update
 
 	if is_visible then
 		self._time_since_last_update = time_since_last_update + dt
@@ -97,11 +95,11 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 	local inactivity_timeout = ChatSettings.inactivity_timeout
 	local idle_timeout = ChatSettings.idle_timeout
 
-	if inactivity_timeout <= time_since_last_update and inactivity_timeout >= 0 and not activate_input_field or not is_visible then
+	if inactivity_timeout <= time_since_last_update and inactivity_timeout >= 0 and not is_input_field_active or not is_visible then
 		target_alpha = 0
 		target_background_alpha_full = 0
 		target_state = STATE_HIDDEN
-	elseif idle_timeout <= time_since_last_update and idle_timeout >= 0 and not activate_input_field then
+	elseif idle_timeout <= time_since_last_update and idle_timeout >= 0 and not is_input_field_active then
 		target_alpha = ChatSettings.idle_text_alpha / 255
 		target_background_alpha_full = ChatSettings.idle_background_alpha
 		target_state = STATE_IDLE
@@ -111,27 +109,16 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 		target_state = STATE_ACTIVE
 	end
 
-	if not self:_is_animation_active(self._chat_window_animation_id) and not self:_is_animation_active(self._input_field_animation_id) then
-		if target_state ~= self._active_state or target_alpha ~= self._alpha then
-			local params = {
-				target_state = target_state,
-				target_alpha = target_alpha,
-				target_background_alpha = target_background_alpha_full,
-				activate_input_field = activate_input_field,
-				message_widgets = self._message_widgets
-			}
-			local speed = target_state == STATE_HIDDEN and is_visible and ChatSettings.inactive_fade_speed or 1
-			self._chat_window_animation_id = self:_start_animation("fade_chat_window", self._widgets_by_name, params, nil, speed)
-			self._input_field_animation_id = self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
-		elseif is_input_field_active ~= activate_input_field then
-			local params = {
-				target_alpha = target_alpha,
-				activate_input_field = activate_input_field
-			}
-			local speed = 5
-
-			self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
-		end
+	if not self:_is_animation_active(self._chat_window_animation_id) and not self:_is_animation_active(self._input_field_animation_id) and (target_state ~= self._active_state or target_alpha ~= self._alpha) then
+		local params = {
+			target_state = target_state,
+			target_alpha = target_alpha,
+			target_background_alpha = target_background_alpha_full,
+			message_widgets = self._message_widgets
+		}
+		local speed = target_state == STATE_HIDDEN and is_visible and ChatSettings.inactive_fade_speed or 1
+		self._chat_window_animation_id = self:_start_animation("fade_chat_window", self._widgets_by_name, params, nil, speed)
+		self._input_field_animation_id = self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
 	end
 end
 
@@ -152,17 +139,15 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 
 	if need_to_update_scenegraph and active_state ~= STATE_HIDDEN then
 		local fade_out_params = {
-			target_alpha = 0,
 			target_background_alpha = 0,
+			target_alpha = 0,
 			target_state = active_state,
-			activate_input_field = self._activate_input_field,
 			message_widgets = self._message_widgets
 		}
 		local fade_in_params = {
 			target_state = active_state,
 			target_alpha = active_state == STATE_IDLE and ChatSettings.idle_text_alpha / 255 or 1,
 			target_background_alpha = active_state == STATE_IDLE and ChatSettings.idle_background_alpha or ChatSettings.background_color[1],
-			activate_input_field = self._activate_input_field,
 			message_widgets = self._message_widgets
 		}
 
@@ -268,12 +253,15 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 		if channel_tag and channel_tag ~= ChatManagerConstants.ChannelTag.HUB and self._connected_channels[channel_tag] then
 			local channel_name = self:_channel_name(channel_tag, true)
 			local display_name = participant.displayname
-			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
-				channel_name = channel_name,
-				display_name = display_name
-			})
 
-			self:_add_notification(message)
+			if display_name then
+				local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
+					channel_name = channel_name,
+					display_name = display_name
+				})
+
+				self:_add_notification(message)
+			end
 		end
 	end
 end
@@ -333,12 +321,17 @@ ConstantElementChat._setup_input = function (self)
 end
 
 ConstantElementChat._setup_input_labels = function (self)
-	local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
-	local active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
-		input = change_channel_input
-	})
-	local input_widget = self._input_field_widget
-	input_widget.content.active_placeholder_text = active_placeholder_text
+	if self._num_connected_channels > 1 then
+		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
+		local active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
+			input = change_channel_input
+		})
+		local input_widget = self._input_field_widget
+		input_widget.content.active_placeholder_text = active_placeholder_text
+	else
+		local input_widget = self._input_field_widget
+		input_widget.content.active_placeholder_text = ""
+	end
 end
 
 ConstantElementChat._get_localized_input_text = function (self, action)
@@ -360,11 +353,11 @@ ConstantElementChat._handle_input = function (self, input_service, ui_renderer)
 
 	if is_input_field_active then
 		self:_handle_active_chat_input(input_service, ui_renderer)
-	elseif input_service:get("send_chat_message") and self._num_connected_channels > 0 then
+	elseif input_service:get("show_chat") and self._num_connected_channels > 0 then
 		input_widget.content.input_text = ""
 		input_widget.content.caret_position = 1
+		input_widget.content.is_writing = true
 		self._selected_channel = self:_next_connected_channel()
-		self._activate_input_field = true
 
 		self:_cancel_animations_if_necessary()
 		self:_enable_mouse_cursor(true)
@@ -403,7 +396,6 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 		self._input_caret_position = nil
 		input_widget.content.input_text = ""
 		input_widget.content.is_writing = false
-		self._activate_input_field = false
 		self._selected_channel = nil
 
 		self:_enable_mouse_cursor(false)
@@ -480,7 +472,6 @@ ConstantElementChat._update_input_field_selected_channel = function (self, ui_re
 	text_style.size = text_style.size or {}
 	text_style.size_addition[1] = -(offset + field_margin_right)
 	style.active_placeholder.offset[1] = offset
-	local is_caret_visible = self._activate_input_field and true
 end
 
 ConstantElementChat._update_message_widgets_sizes = function (self, ui_renderer)
@@ -519,7 +510,7 @@ ConstantElementChat._update_scrollbar = function (self, render_settings)
 	scrollbar_content.scroll_length = total_scroll_length
 	scrollbar_content.area_length = chat_window_height
 	scrollbar_content.scroll_amount = 1 / (total_num_messages * 3)
-	local is_scrollbar_active = scrollbar_content.drag_active
+	local is_scrollbar_active = scrollbar_content.drag_active or scroll_value
 
 	if self._has_scrolled_back_in_history then
 		if scroll_value and scroll_value == 1 or not is_scrollbar_active and scrollbar_content.value == 1 then
@@ -538,7 +529,7 @@ ConstantElementChat._update_scrollbar = function (self, render_settings)
 
 			self._scroll_length_from_top = scroll_length_from_top
 		end
-	elseif is_scrollbar_active or scroll_value then
+	elseif is_scrollbar_active then
 		self._scroll_length_from_top = total_scroll_length * scrollbar_content.value
 		self._total_height_last_frame = total_chat_height
 		self._has_scrolled_back_in_history = true
@@ -731,6 +722,8 @@ ConstantElementChat._on_connect_to_channel = function (self, channel_handle)
 
 			self:_add_notification(add_channel_message)
 		end
+
+		self:_setup_input_labels()
 	end
 end
 
@@ -751,6 +744,8 @@ ConstantElementChat._on_disconnect_from_channel = function (self, channel_handle
 			self:_add_notification(remove_channel_message)
 		end
 	end
+
+	self:_setup_input_labels()
 end
 
 ConstantElementChat._channel_name = function (self, channel_tag, colorize)

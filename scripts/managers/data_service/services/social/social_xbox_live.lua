@@ -1,5 +1,6 @@
 local PlatformSocialInterface = require("scripts/managers/data_service/services/social/platform_social_interface")
 local FriendXboxLive = require("scripts/managers/data_service/services/social/friend_xbox_live")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local SocialXboxLive = class("SocialXboxLive")
@@ -9,6 +10,7 @@ SocialXboxLive.init = function (self)
 	self._num_blocked = 0
 	self._friends_promise = nil
 	self._blocked_promise = nil
+	self._updated_recent_players = {}
 end
 
 SocialXboxLive.destroy = function (self)
@@ -134,6 +136,28 @@ end
 
 SocialXboxLive.fetch_blocked_list_ids_forced = function (self)
 	return XboxLiveUtils.get_block_list()
+end
+
+SocialXboxLive.update_recent_players = function (self, account_id)
+	if self._updated_recent_players[account_id] then
+		return
+	end
+
+	self._updated_recent_players[account_id] = true
+	local _, promise = Managers.presence:get_presence(account_id)
+
+	promise:next(function (presence)
+		if presence and presence:platform() == "xbox" then
+			local xuid = presence:platform_user_id()
+
+			if xuid then
+				Log.info("SocialXboxLive", "[XboxLive] Updating recent player (account_id: %s, xuid: %s)", account_id, xuid)
+				XboxLiveUtils.update_recent_player_teammate(xuid)
+			end
+		end
+	end):catch(function (err)
+		Log.info("SocialXboxLive", "[XboxLive] Couldn't update recent player, presence error: %s", table.tostring(err))
+	end)
 end
 
 implements(SocialXboxLive, PlatformSocialInterface)

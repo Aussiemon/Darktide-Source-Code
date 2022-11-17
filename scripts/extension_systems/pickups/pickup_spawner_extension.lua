@@ -11,6 +11,7 @@ PickupSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._seed = nil
 	self._percentage_through_level = 0
 	self._pickup_system = Managers.state.extension:system("pickup_system")
+	self._chest_extension = nil
 
 	if self._is_server then
 		self._seed = math.random_seed()
@@ -77,6 +78,10 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	components[num_components + 1] = data
 end
 
+PickupSpawnerExtension.on_gameplay_post_init = function (self, level)
+	self._chest_extension = ScriptUnit.has_extension(self._unit, "chest_system")
+end
+
 PickupSpawnerExtension.calculate_percentage_through_level = function (self)
 	local unit_position = POSITION_LOOKUP[self._unit]
 	local _, _, percentage, _, _ = MainPathQueries.closest_position(unit_position)
@@ -135,7 +140,7 @@ PickupSpawnerExtension._fetch_next_item = function (self, component_index)
 end
 
 PickupSpawnerExtension._check_reserve = function (self, component_index, pickup_name)
-	local chest_extension = ScriptUnit.has_extension(self._unit, "chest_system")
+	local chest_extension = self._chest_extension
 	local component = self._components[component_index]
 
 	if chest_extension then
@@ -166,7 +171,8 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 						if spawnable_pickup == pickup_name then
 							node_list[#node_list + 1] = {
 								extension = self,
-								index = i
+								index = i,
+								chest = not not self._chest_extension
 							}
 						end
 					end
@@ -174,7 +180,8 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 			else
 				node_list[#node_list + 1] = {
 					extension = self,
-					index = i
+					index = i,
+					chest = not not self._chest_extension
 				}
 			end
 		end
@@ -190,15 +197,18 @@ PickupSpawnerExtension.spawn_guaranteed = function (self)
 
 		if component.distribution_type == DISTRIBUTION_TYPES.guaranteed then
 			local pickup_name = self._pickup_system:get_guaranteed_pickup(component.spawnable_pickups)
-			local check_reserve = true
 
-			self:spawn_specific_item(i, pickup_name, check_reserve)
+			if pickup_name then
+				local check_reserve = true
+
+				self:spawn_specific_item(i, pickup_name, check_reserve)
+			end
 		end
 	end
 end
 
 PickupSpawnerExtension.request_rubberband_pickup = function (self, component_index)
-	local chest_extension = ScriptUnit.extension(self._unit, "chest_system")
+	local chest_extension = self._chest_extension
 	local component = self._components[component_index]
 	local pickup_name = self._pickup_system:get_rubberband_pickup(component.distribution_type, self._percentage_through_level, component.spawnable_pickups)
 

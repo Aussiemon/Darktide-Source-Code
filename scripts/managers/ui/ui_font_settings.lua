@@ -3,7 +3,7 @@ require("scripts/foundation/utilities/color")
 local ui_font_settings = {
 	header_1 = {
 		font_size = 55,
-		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
+		material = "content/ui/materials/font_gradients/slug_font_gradient_gold",
 		text_vertical_alignment = "center",
 		font_type = "machine_medium",
 		text_horizontal_alignment = "left",
@@ -25,9 +25,9 @@ local ui_font_settings = {
 	header_3 = {
 		font_size = 26,
 		font_type = "proxima_nova_bold",
-		text_color = Color.ui_brown_light(255, true),
-		default_color = Color.ui_brown_light(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
+		text_color = Color.terminal_text_header(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
 		disabled_color = Color.ui_grey_light(255, true)
 	},
 	header_4 = {
@@ -68,18 +68,18 @@ local ui_font_settings = {
 		}
 	},
 	grid_title = {
-		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
-		disabled_material = "content/ui/materials/font_gradients/slug_font_gradient_header_toggled",
 		font_size = 26,
 		text_vertical_alignment = "center",
-		font_type = "itc_novarese_bold",
+		font_type = "proxima_nova_bold",
 		text_horizontal_alignment = "center",
 		offset = {
 			0,
 			0,
 			3
 		},
-		text_color = Color.white(255, true)
+		text_color = Color.terminal_text_header(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		disabled_color = Color.terminal_text_header_disabled(255, true)
 	},
 	item_info_big = {
 		font_size = 36,
@@ -111,23 +111,19 @@ local ui_font_settings = {
 	},
 	terminal_header_2 = {
 		font_size = 36,
-		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
-		disabled_material = "content/ui/materials/font_gradients/slug_font_gradient_header_toggled",
 		font_type = "proxima_nova_bold",
 		text_color = Color.white(255, true),
 		default_color = Color.white(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
 		disabled_color = Color.ui_grey_light(255, true)
 	},
 	terminal_header_3 = {
 		font_size = 30,
-		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
-		disabled_material = "content/ui/materials/font_gradients/slug_font_gradient_header_toggled",
 		font_type = "proxima_nova_bold",
-		text_color = Color.white(255, true),
-		default_color = Color.white(255, true),
-		hover_color = Color.ui_brown_super_light(255, true),
-		disabled_color = Color.ui_grey_light(255, true)
+		text_color = Color.terminal_text_header(255, true),
+		default_color = Color.terminal_text_header(255, true),
+		hover_color = Color.terminal_text_header_selected(255, true),
+		disabled_color = Color.ui_grey_medium(255, true)
 	},
 	body = {
 		line_spacing = 1.2,
@@ -140,7 +136,7 @@ local ui_font_settings = {
 		font_size = 18,
 		line_spacing = 1.2,
 		font_type = "proxima_nova_bold",
-		text_color = Color.ui_grey_light(255, true)
+		text_color = Color.terminal_text_body(255, true)
 	},
 	symbol = {
 		line_spacing = 1.2,
@@ -169,7 +165,7 @@ local ui_font_settings = {
 		font_type = "proxima_nova_bold",
 		default_color = Color.terminal_text_header(255, true),
 		text_color = Color.terminal_text_header(255, true),
-		hover_color = Color.terminal_text_header_selected(255, true),
+		hover_color = Color.white(255, true),
 		disabled_color = {
 			255,
 			60,
@@ -413,6 +409,20 @@ local ui_font_settings = {
 			0,
 			0,
 			2
+		}
+	},
+	talent_group_level = {
+		font_size = 20,
+		drop_shadow = true,
+		text_vertical_alignment = "center",
+		font_type = "proxima_nova_bold",
+		text_horizontal_alignment = "center",
+		text_color = Color.terminal_text_header(255, true),
+		locked_color = {
+			255,
+			169,
+			79,
+			79
 		}
 	}
 }

@@ -61,6 +61,8 @@ AimProjectileAdsEffects._trajectory_settings = function (self, t)
 	local mass, radius = ProjectileIntegrationData.mass_radius(projectile_locomotion_template, nil)
 	_trajectory_settings.mass = mass
 	_trajectory_settings.radius = radius
+	_trajectory_settings.use_sway_and_recoil = projectile_aim_effect_settings.use_sway_and_recoil
+	_trajectory_settings.arc_vfx_spawner_name = projectile_aim_effect_settings.arc_vfx_spawner_name
 
 	if projectile_aim_effect_settings.arc_start_offset then
 		_trajectory_settings.start_offset = projectile_aim_effect_settings.arc_start_offset:unbox()

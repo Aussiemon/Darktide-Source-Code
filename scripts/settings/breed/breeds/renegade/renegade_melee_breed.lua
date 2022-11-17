@@ -69,7 +69,8 @@ local breed_data = {
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 1.75,
 		[stagger_types.explosion] = 3.5,
-		[stagger_types.light_ranged] = 0.2
+		[stagger_types.light_ranged] = 0.2,
+		[stagger_types.killshot] = 0.5
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_melee,
 	sounds = require("scripts/settings/breed/breeds/renegade/renegade_melee_sounds"),
@@ -276,50 +277,50 @@ local breed_data = {
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_rightshoulder = 0.15,
-			j_leftshoulder = 0.15,
-			j_spine = 0.3,
+			j_rightshoulder = 0.05,
+			j_leftshoulder = 0.05,
+			j_spine = 0.2,
 			j_spine1 = 0.1,
-			j_head = 0.5,
-			j_neck = 0.5
+			j_head = 0.3,
+			j_neck = 0.3
 		},
 		[hit_zone_names.torso] = {
 			j_rightshoulder = 0,
 			j_leftshoulder = 0,
-			j_spine = 0.2,
+			j_spine = 0.3,
 			j_spine1 = 0.7,
 			j_head = 0,
 			j_neck = 0
 		},
 		[hit_zone_names.upper_left_arm] = {
-			j_leftuparm = 0.8,
-			j_leftshoulder = 0.4,
+			j_leftuparm = 0.6,
+			j_leftshoulder = 0.3,
 			j_spine = 0,
 			j_spine1 = 0.1,
 			j_head = 0,
 			j_neck = 0
 		},
 		[hit_zone_names.lower_left_arm] = {
-			j_leftuparm = 0.8,
-			j_leftshoulder = 0.4,
+			j_leftuparm = 0.6,
+			j_leftshoulder = 0.3,
 			j_spine = 0,
 			j_spine1 = 0.1,
 			j_head = 0,
 			j_neck = 0
 		},
 		[hit_zone_names.upper_right_arm] = {
-			j_rightshoulder = 0.4,
+			j_rightshoulder = 0.3,
 			j_spine1 = 0.1,
 			j_spine = 0,
-			j_rightuparm = 0.8,
+			j_rightuparm = 0.6,
 			j_head = 0,
 			j_neck = 0
 		},
 		[hit_zone_names.lower_right_arm] = {
-			j_rightshoulder = 0.4,
+			j_rightshoulder = 0.3,
 			j_spine1 = 0.1,
 			j_spine = 0,
-			j_rightuparm = 0.8,
+			j_rightuparm = 0.6,
 			j_head = 0,
 			j_neck = 0
 		},

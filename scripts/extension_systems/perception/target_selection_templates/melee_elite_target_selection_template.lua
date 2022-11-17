@@ -30,13 +30,14 @@ end
 
 local DEFAULT_STICKINESS_DISTANCE = 1
 local target_selection_template = {}
-local EXTRA_SHOOT_DISTANCE_SQ = 144
+local EXTRA_SHOOT_DISTANCE_SQ = 225
 
 target_selection_template.melee_elite = function (unit, side, perception_component, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
 	local current_target_unit = perception_component.target_unit
 	local position = POSITION_LOOKUP[unit]
 	local best_score, best_target_unit, closest_distance_sq, closest_z_distance = nil
-	local detection_radius_sq = breed.detection_radius^2
+	local detection_radius = MinionTargetSelection.detection_radius(breed)
+	local detection_radius_sq = detection_radius^2
 	local vector3_distance_squared = Vector3.distance_squared
 
 	if target_units[current_target_unit] then

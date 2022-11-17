@@ -21,7 +21,7 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	scratchpad.pounce_target = pounce_target
 	local override_velocity_z = 0
 
-	locomotion_extension:set_affected_by_gravity(true, override_velocity_z)
+	locomotion_extension:set_affected_by_gravity(false, override_velocity_z)
 
 	scratchpad.start_position_boxed = Vector3Box(POSITION_LOOKUP[unit])
 	scratchpad.lerp_position_duration = t + action_data.lerp_position_time
@@ -40,7 +40,7 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	scratchpad.disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	scratchpad.disabled_state_input_component = disabled_state_input
 
-	self:_damage_target(scratchpad, unit, action_data)
+	self:_damage_target(scratchpad, unit, action_data, action_data.impact_power_level)
 
 	local explosion_template = action_data.enter_explosion_template
 
@@ -117,7 +117,7 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 	end
 
 	if scratchpad.next_damage_t < t then
-		self:_damage_target(scratchpad, unit, action_data)
+		self:_damage_target(scratchpad, unit, action_data, action_data.power_level)
 
 		scratchpad.next_damage_t = t + action_data.damage_frequency
 	end
@@ -141,6 +141,8 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 		end
 	end
 
+	scratchpad.locomotion_extension:set_wanted_velocity(Vector3(0, 0, 0))
+
 	if self:_target_incapacitated(scratchpad) then
 		return "done"
 	end
@@ -157,11 +159,11 @@ BtChaosHoundTargetPouncedAction._target_incapacitated = function (self, scratchp
 	return target_state == "dead" or target_state == "knocked_down"
 end
 
-BtChaosHoundTargetPouncedAction._damage_target = function (self, scratchpad, unit, action_data)
+BtChaosHoundTargetPouncedAction._damage_target = function (self, scratchpad, unit, action_data, power_level_table)
 	local pounce_target = scratchpad.pounce_target
 	local damage_profile = action_data.damage_profile
 	local damage_type = action_data.damage_type
-	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(action_data.power_level)
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
 	local attack_type = AttackSettings.attack_types.melee
 	local jaw_node = Unit.node(unit, action_data.hit_position_node)
 	local hit_position = Unit.world_position(unit, jaw_node)

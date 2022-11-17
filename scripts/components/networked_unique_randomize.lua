@@ -42,6 +42,9 @@ NetworkedUniqueRandomize.get_next = function (self)
 		if index == 0 then
 			if self._queue_loop then
 				self:reset()
+
+				result = self._rand_table[self._pointer]
+				self._pointer = self._pointer - 1
 			end
 		else
 			result = self._rand_table[index]

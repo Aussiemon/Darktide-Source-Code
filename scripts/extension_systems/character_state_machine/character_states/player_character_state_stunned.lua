@@ -126,7 +126,7 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	else
 		local action_input, raw_input = self._action_input_extension:peek_next_input("weapon_action")
 		local is_wield_input = action_input and action_input == WIELD_ACTION_INPUT
-		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, self._inventory_component)
+		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, self._inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
 		local wanted_weapon_template_or_nil = wanted_slot_name_or_nil and self._visual_loadout_extension:weapon_template_from_slot(wanted_slot_name_or_nil)
 		local weapon_keywords = wanted_weapon_template_or_nil and wanted_weapon_template_or_nil.keywords or NO_KEYWORDS
 		local wants_melee_weapon = wanted_weapon_template_or_nil and table.array_contains(weapon_keywords, "melee")
@@ -168,6 +168,23 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	return self:_check_transition(unit, t, next_state_params, switched_to_melee_while_interrupted)
 end
 
+PlayerCharacterStateStunned._play_end_animation = function (self)
+	local disorientation_template = disorientation_templates[self._stunned_character_state_component.disorientation_type]
+	local stun_settings = disorientation_template.stun
+	local stunned_character_state_component = self._stunned_character_state_component
+	stunned_character_state_component.exit_event_played = true
+	local end_anim = stun_settings.end_anim
+	local end_anim_3p = stun_settings.end_anim_3p or end_anim
+
+	if end_anim then
+		self._animation_extension:anim_event_1p(end_anim)
+	end
+
+	if end_anim_3p then
+		self._animation_extension:anim_event(end_anim_3p)
+	end
+end
+
 PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_state_params, switched_to_melee_while_interrupted)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
@@ -195,17 +212,11 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 	local disorientation_template = disorientation_templates[self._stunned_character_state_component.disorientation_type]
 	local stun_settings = disorientation_template.stun
 
-	if not switched_to_melee_while_interrupted and not stunned_character_state_component.exit_event_played and t > stunned_character_state_component.start_time + stun_settings.stun_duration - 0.5 then
-		stunned_character_state_component.exit_event_played = true
-		local end_anim = stun_settings.end_anim
-		local end_anim_3p = stun_settings.end_anim_3p or end_anim
+	if not switched_to_melee_while_interrupted then
+		local end_stun_early_time = stun_settings.end_stun_early_time or 0.5
 
-		if end_anim then
-			self._animation_extension:anim_event_1p(end_anim)
-		end
-
-		if end_anim_3p then
-			self._animation_extension:anim_event(end_anim_3p)
+		if not stunned_character_state_component.exit_event_played and t > stunned_character_state_component.start_time + stun_settings.stun_duration - end_stun_early_time then
+			self:_play_end_animation()
 		end
 	end
 
@@ -223,6 +234,10 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 
 	if wanted_ability_transition then
 		table.merge(next_state_params, ability_transition_params)
+
+		if not stunned_character_state_component.exit_event_played then
+			self:_play_end_animation()
+		end
 
 		return wanted_ability_transition
 	end

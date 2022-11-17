@@ -5,6 +5,5 @@ return {
 	testify_camera = "testify_camera",
 	world = "world",
 	cinematic_gameplay = "cinematic_gameplay",
-	mission_board = "mission_board",
 	third_person_hub = "player_third_person_hub"
 }

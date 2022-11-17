@@ -90,7 +90,7 @@ SmartTagSystem.update = function (self, context, dt, t, ...)
 
 		local reason_id = REMOVE_TAG_REASONS_LOOKUP[reason]
 
-		Managers.connection:send_rpc_clients("rpc_remove_smart_tag", tag_id, reason_id)
+		Managers.state.game_session:send_rpc_clients("rpc_remove_smart_tag", tag_id, reason_id)
 	end
 end
 
@@ -175,10 +175,10 @@ end
 
 SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit)
 	local target_extension = self._unit_extension_data[target_unit]
-	local template_name = target_extension:contextual_tag_template(tagger_unit)
+	local template = target_extension:contextual_tag_template(tagger_unit)
 
-	if template_name then
-		self:set_tag(template_name, tagger_unit, target_unit, nil)
+	if template then
+		self:set_tag(template.name, tagger_unit, target_unit, nil)
 	end
 end
 

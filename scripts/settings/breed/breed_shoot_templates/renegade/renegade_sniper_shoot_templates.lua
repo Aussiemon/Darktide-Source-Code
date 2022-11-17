@@ -10,7 +10,12 @@ local renegade_sniper_default = {
 	collision_filter = "filter_minion_shooting",
 	hit_scan_template = HitScanTemplates.sniper_bullet,
 	damage_type = damage_types.minion_laser,
-	line_effect = LineEffects.renegade_sniper_lasbeam
+	line_effect = LineEffects.renegade_sniper_lasbeam,
+	damage_falloff = {
+		falloff_range = 20,
+		max_range = 60,
+		max_power_reduction = 0.5
+	}
 }
 local shoot_templates = {
 	renegade_sniper_default = renegade_sniper_default

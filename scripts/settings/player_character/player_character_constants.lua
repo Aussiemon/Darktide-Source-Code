@@ -450,12 +450,12 @@ local constants = {
 		slot_primary = "slot_secondary"
 	},
 	scroll_wield_order = {
-		"slot_primary",
 		"slot_secondary",
-		"slot_pocketable",
-		slot_primary = 1,
-		slot_secondary = 2,
-		slot_pocketable = 3
+		"slot_primary",
+		"slot_grenade_ability",
+		slot_primary = 2,
+		slot_secondary = 1,
+		slot_grenade_ability = 3
 	},
 	previously_wielded_slot_types = {
 		weapon = true,
@@ -514,6 +514,10 @@ local constants = {
 				default_value = 0,
 				network_type = "ammunition"
 			},
+			last_ammunition_usage = {
+				default_value = 0,
+				network_type = "fixed_frame_offset_start_t_6bit"
+			},
 			reload_state = {
 				default_value = "none",
 				network_type = RELOAD_STATES
@@ -554,10 +558,6 @@ local constants = {
 			special_active_start_t = {
 				default_value = 0,
 				network_type = "fixed_frame_offset_start_t_6bit"
-			},
-			powered_weapon_intensity = {
-				default_value = 0,
-				network_type = "powered_weapon_intensity"
 			}
 		},
 		luggable = {

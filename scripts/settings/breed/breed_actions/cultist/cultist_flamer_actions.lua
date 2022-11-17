@@ -228,8 +228,10 @@ local action_data = {
 		attack_finished_grace_period = 0.3,
 		attack_intensity_type = "ranged",
 		on_hit_buff = "cultist_flamer_hit_by_flame",
+		aoe_bot_threat_duration = 2,
 		vo_event = "start_shooting",
 		push_minions_side_relation = "allied",
+		aoe_bot_threat_timing = 0.05,
 		exit_after_cooldown = true,
 		push_minions_power_level = 200,
 		push_minions_radius = 1.25,
@@ -264,7 +266,8 @@ local action_data = {
 			ranged = 20,
 			killshot = 20
 		},
-		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion
+		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion,
+		aoe_bot_threat_size = Vector3Box(1.5, 4, 2)
 	},
 	melee_attack = {
 		weapon_reach = 4,

@@ -128,11 +128,11 @@ local line_effects = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_plasma_flyby",
 		vfx_width = 0.06,
 		keep_aligned = true,
-		vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam",
+		vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_orange",
 		emitters = {
 			vfx = {
-				default = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger",
-				start = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger"
+				default = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger_orange",
+				start = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger_orange"
 			},
 			interval = {
 				distance = 5,

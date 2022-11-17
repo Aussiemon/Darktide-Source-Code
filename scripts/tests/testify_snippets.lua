@@ -14,8 +14,7 @@ local TestifySnippets = {
 
 TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function ()
 	if not DEDICATED_SERVER then
-		Testify:make_request("skip_splash_screen")
-		TestifySnippets.skip_title_screen()
+		TestifySnippets.skip_splash_and_title_screen()
 
 		local is_any_character_created = Testify:make_request("is_any_character_created")
 
@@ -28,7 +27,8 @@ TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function
 	end
 end
 
-TestifySnippets.skip_title_screen = function ()
+TestifySnippets.skip_splash_and_title_screen = function ()
+	Testify:make_request("skip_splash_screen")
 	Testify:make_request("skip_title_screen")
 	Testify:make_request("skip_privacy_policy_popup_if_displayed")
 end
@@ -359,7 +359,7 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 	local data = {
 		player = player,
 		slot = slot_name,
-		weapon = weapon
+		item = weapon
 	}
 	local trait_params = {
 		player = player,
@@ -436,14 +436,22 @@ TestifySnippets.is_debug_stripped = function ()
 	return is_debug_stripped
 end
 
-TestifySnippets.first_peer = function ()
+TestifySnippets.peers_sorted = function ()
 	local peers = Testify:peers()
+
+	table.sort(peers)
+
+	return peers
+end
+
+TestifySnippets.first_peer = function ()
+	local peers = TestifySnippets.peers_sorted()
 
 	return peers[1]
 end
 
 TestifySnippets.peers_except_first = function ()
-	local peers = Testify:peers()
+	local peers = TestifySnippets.peers_sorted()
 
 	table.remove(peers, 1)
 

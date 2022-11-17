@@ -44,6 +44,10 @@ PresenceManagerDummy.presence_entry_myself = function (self)
 	return self._myself
 end
 
+PresenceManagerDummy.get_requested_platform_username = function (self)
+	return nil
+end
+
 implements(PresenceManagerDummy, PresenceManagerInterface)
 
 return PresenceManagerDummy

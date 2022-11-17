@@ -83,8 +83,9 @@ LoadingHost.update = function (self, dt)
 		end
 
 		local profile_sync_host = Managers.profile_synchronization:synchronizer_host()
+		local package_sync_host = self._package_synchronizer_host
 		local profiles_loaded = profile_loading_enabled and profile_sync_host:profiles_synced(self._spawn_peers)
-		local packages_loaded = profile_loading_enabled and self._package_synchronizer_host:peers_synced(self._spawn_peers)
+		local packages_loaded = profile_loading_enabled and package_sync_host:peers_synced(self._spawn_peers)
 		local all_loaded = levels_loaded and profiles_loaded and packages_loaded
 
 		if all_loaded then
@@ -120,6 +121,17 @@ LoadingHost.remove = function (self, client_channel_id)
 
 		if spawn_peer_index then
 			table.remove(self._spawn_peers, spawn_peer_index)
+		end
+
+		if table.size(self._spawn_peers) == 1 then
+			local _, remaining_peer_id = next(self._spawn_peers)
+
+			if DEDICATED_SERVER and remaining_peer_id == Network.peer_id() then
+				self._spawn_queue:retire_group(self._spawn_group)
+
+				self._spawn_group = nil
+				self._spawn_peers = nil
+			end
 		end
 	end
 end

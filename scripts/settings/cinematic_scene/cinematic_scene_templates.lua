@@ -23,6 +23,16 @@ _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/c
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/intro_abc_template")
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/outro_fail_template")
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/outro_win_template")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_01")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_02")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_03")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_04")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_05")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_06")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_07")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_08")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_09")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/traitor_captain_intro")
 
 for name, cinematic_scene_data in pairs(cinematic_scene_templates) do
 	cinematic_scene_data.name = name

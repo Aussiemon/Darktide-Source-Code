@@ -162,6 +162,27 @@ ImguiWidgetUtilities.filter_array = function (source_table, result_table, filter
 	end
 end
 
+ImguiWidgetUtilities.filter_array_defaults = function (source_table, result_table, current_values, defaults)
+	local filter = {}
+
+	for param, data in pairs(defaults) do
+		local current = current_values[param]
+		local default = defaults[param].value
+
+		if current_values[param] ~= defaults[param].value then
+			filter[data.name or param] = true
+		end
+	end
+
+	for ii = 1, #source_table do
+		local widget_name = source_table[ii]
+
+		if filter[widget_name] then
+			result_table[#result_table + 1] = source_table[ii]
+		end
+	end
+end
+
 ImguiWidgetUtilities.create_unique_label = function (optional_name)
 	local name = optional_name or ""
 	local id = tostring(math.random())

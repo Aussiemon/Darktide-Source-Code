@@ -1,4 +1,28 @@
 local material_overrides = {
+	eyes_default_small_pupil_01 = {
+		property_overrides = {
+			eye_blindness = {
+				0
+			},
+			hsv_eye = {
+				0,
+				0,
+				0
+			},
+			pupil_size = {
+				0.5
+			},
+			eye_emissive = {
+				0
+			},
+			iris_brightness = {
+				1
+			},
+			scalera_brightness = {
+				1
+			}
+		}
+	},
 	eyes_blue_01 = {
 		property_overrides = {
 			eye_blindness = {
@@ -427,7 +451,7 @@ local material_overrides = {
 				1
 			},
 			scalera_brightness = {
-				1
+				0
 			}
 		}
 	},
@@ -819,30 +843,6 @@ local material_overrides = {
 		property_overrides = {
 			eye_blindness = {
 				1
-			},
-			hsv_eye = {
-				0,
-				1.262,
-				0.8
-			},
-			pupil_size = {
-				0
-			},
-			eye_emissive = {
-				0.5
-			},
-			iris_brightness = {
-				1
-			},
-			scalera_brightness = {
-				1
-			}
-		}
-	},
-	eyes_psyker_01_blind_left = {
-		property_overrides = {
-			eye_blindness = {
-				2
 			},
 			hsv_eye = {
 				0,

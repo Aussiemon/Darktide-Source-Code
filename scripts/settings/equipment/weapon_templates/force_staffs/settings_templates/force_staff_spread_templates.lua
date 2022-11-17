@@ -11,14 +11,14 @@ spread_templates.default_force_staff_killshot = {
 	},
 	still = {
 		max_spread = {
-			yaw = 2,
-			pitch = 1
+			yaw = 4,
+			pitch = 4
 		},
 		decay = {
 			from_shooting_grace_time = 0.1,
 			shooting = {
-				yaw = 1,
-				pitch = 1
+				yaw = 0.1,
+				pitch = 0.1
 			},
 			idle = {
 				yaw = 4,
@@ -26,8 +26,14 @@ spread_templates.default_force_staff_killshot = {
 			}
 		},
 		continuous_spread = {
-			min_yaw = 0.01,
-			min_pitch = 0.01
+			min_yaw = 1,
+			min_pitch = 1
+		},
+		randomized_spread = {
+			random_ratio = 0.2,
+			first_shot_min_ratio = 0.1,
+			first_shot_random_ratio = 0.2,
+			min_ratio = 0.1
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.8,
@@ -45,8 +51,8 @@ spread_templates.default_force_staff_killshot = {
 			},
 			shooting = {
 				{
-					yaw = 0,
-					pitch = 0
+					yaw = 1.5,
+					pitch = 1.5
 				}
 			}
 		}

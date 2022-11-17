@@ -23,7 +23,7 @@ local scenegraph_definition = {
 }
 local input_text_style_left = table.clone(UIFontSettings.body)
 input_text_style_left.text_horizontal_alignment = "right"
-input_text_style_left.text_vertical_alignment = "center"
+input_text_style_left.text_vertical_alignment = "top"
 input_text_style_left.vertical_alignment = "center"
 input_text_style_left.horizontal_alignment = "right"
 input_text_style_left.size = {

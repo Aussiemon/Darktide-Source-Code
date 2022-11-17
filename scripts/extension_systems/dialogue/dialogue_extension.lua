@@ -52,9 +52,11 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._random_talk_tick_time_t = 60
 	self._random_talk_trigger_id = nil
 	self._mission_update_enabled = false
-	self._mission_update_tick_time = 15
+	self._next_mission_fetch_t = 0
+	self._next_mission_play_vo_t = 0
 	self._missions = {}
 	self._missions_data = {}
+	self._dynamic_smart_tag = nil
 	self._is_a_player = false
 	self._use_local_player_vo_profile = false
 	self._stop_vce_event = nil
@@ -68,10 +70,11 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 		is_pounced_down = false,
 		story_stage = "none",
 		is_catapulted = false,
-		is_consumed = false,
+		is_disabled_override = false,
 		is_local_player = false,
 		is_knocked_down = false,
 		voice_fx_preset = 0,
+		is_consumed = false,
 		class_name = "none",
 		is_mutant_charged = false,
 		voice_template = "none",
@@ -162,6 +165,10 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 			if profile then
 				self._context.player_level = profile.current_level
 				self._profile = profile
+
+				if not player:is_human_controlled() then
+					self._context.player_level = self._dialogue_system.global_context.team_lowest_player_level
+				end
 			end
 		end
 
@@ -203,7 +210,6 @@ DialogueExtension._setup_random_talk_settings = function (self, random_talk_sett
 	self._random_talk_tick_time_t = random_talk_settings.random_talk_tick_time_t
 	self._random_talk_trigger_id = random_talk_settings.trigger_id
 	self._mission_update_enabled = random_talk_settings.mission_update_enabled
-	self._mission_update_tick_time = random_talk_settings.mission_update_tick_time
 end
 
 DialogueExtension.setup_from_component = function (self, vo_class, vo_proile_name, use_local_player_voice_profile, dialogue_faction_name, enabled)
@@ -247,8 +253,8 @@ DialogueExtension.cleanup = function (self)
 	if self._currently_playing_dialogue then
 		self._dialogue_system:_remove_stopped_dialogue(self._currently_playing_dialogue)
 
-		if self._currently_playing_dialogue.currently_playing_id then
-			self._dialogue_system_wwise:stop_if_playing(self._currently_playing_dialogue.currently_playing_id)
+		if self._currently_playing_dialogue.currently_playing_event_id then
+			self._dialogue_system_wwise:stop_if_playing(self._currently_playing_dialogue.currently_playing_event_id)
 		end
 	end
 
@@ -314,6 +320,7 @@ DialogueExtension.physics_async_update = function (self, context, dt, t)
 
 		if not self._is_incapacitated and is_incapacitated then
 			self._incapacitate_time = t
+			self._context.is_disabled_override = false
 		end
 
 		self._is_incapacitated = is_incapacitated
@@ -325,48 +332,8 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 		return
 	end
 
-	if self._mission_update_enabled == true then
-		local next_mission_update_t = self._mission_update_tick_time
-
-		if next_mission_update_t < t then
-			self._mission_update_tick_time = t + DialogueSettings.mission_update_tick_time
-			local mission_board_update = Managers.data_service.mission_board:fetch()
-
-			mission_board_update:next(function (data)
-				self._missions_data = data
-				self._missions = data.missions
-			end)
-
-			local missions = self._missions
-			local i = 1
-			local num_missions = #missions
-
-			while i <= num_missions do
-				local mission_data = missions[i]
-				local mission_update_tick = DialogueSettings.mission_update_tick_time
-				local start_time = mission_data.start_game_time
-
-				if start_time and mission_update_tick >= start_time - t and start_time - t >= 0 then
-					local mission_name = mission_data.map
-					local circumstance = mission_data.circumstance or "default"
-					local unit = self._unit
-					local event_name = "mission_update_vo"
-					local is_circumstance = "false"
-					is_circumstance = circumstance == "default" and "false" or "true"
-
-					table.clear(self._trigger_event_data_payload)
-
-					local event_data = self:get_event_data_payload()
-					event_data.mission = mission_name
-					event_data.is_circumstance = is_circumstance
-					event_data.trigger_id = "mission_update"
-
-					self:trigger_dialogue_event(event_name, event_data)
-				end
-
-				i = i + 1
-			end
-		end
+	if self._dialogue_system:is_server() and self._mission_update_enabled == true then
+		self:_update_mission_update_vo()
 	end
 
 	local next_random_talk_line_update_t = self._next_random_talk_line_update_t
@@ -381,6 +348,66 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 		event_data.trigger_id = self._random_talk_trigger_id
 
 		self:trigger_dialogue_event(event_name, event_data)
+	end
+end
+
+DialogueExtension._update_mission_update_vo = function (self)
+	local t = Managers.time:time("main")
+
+	if self._next_mission_fetch_t <= t then
+		local missions_data, missions = self._dialogue_system:mission_board()
+
+		if not missions_data or not missions_data.expiry_game_time then
+			return
+		end
+
+		self._missions_data = missions_data
+		self._missions = missions
+		self._next_mission_fetch_t = missions_data.expiry_game_time + math.random()
+		self._missions_board_promise = nil
+		self._next_mission_play_vo_t = 0
+	end
+
+	if self._next_mission_play_vo_t <= t then
+		local missions = self._missions
+
+		for i = 1, #missions do
+			local mission_data = missions[i]
+			local start_time = mission_data.start_game_time
+			local active_time = t - start_time
+
+			if active_time <= 1 then
+				if active_time >= -1 then
+					local mission_name = mission_data.map
+					local circumstance = mission_data.circumstance or "default"
+					local event_name = "mission_update_vo"
+					local is_circumstance = nil
+
+					if circumstance == "default" then
+						is_circumstance = "false"
+					else
+						is_circumstance = "true"
+					end
+
+					table.clear(self._trigger_event_data_payload)
+
+					local event_data = self:get_event_data_payload()
+					event_data.mission = mission_name
+					event_data.is_circumstance = is_circumstance
+					event_data.trigger_id = "mission_update"
+
+					self:trigger_dialogue_event(event_name, event_data)
+				else
+					self._next_mission_play_vo_t = start_time
+
+					break
+				end
+			end
+		end
+
+		if self._next_mission_play_vo_t <= 0 then
+			self._next_mission_play_vo_t = self._next_mission_fetch_t
+		end
 	end
 end
 
@@ -585,6 +612,14 @@ DialogueExtension.get_dialogue_event = function (self, dialogue_name, dialogue_i
 	end
 end
 
+DialogueExtension.has_dialogue = function (self, dialogue_name)
+	if self._vo_choice[dialogue_name] then
+		return true
+	else
+		return false
+	end
+end
+
 DialogueExtension.play_event = function (self, event)
 	local type = event.type
 
@@ -677,6 +712,7 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		dialogue.dialogue_timer = sound_event_duration
 		dialogue.currently_playing_subtitle = subtitles_event
 		dialogue.wwise_route = wwise_route_key
+		dialogue.is_audible = true
 		local dialogue_category = dialogue.category
 		local category_setting = DialogueCategoryConfig[dialogue_category]
 		dialogue_system._playing_dialogues[dialogue] = category_setting
@@ -754,7 +790,15 @@ DialogueExtension.evaluate_rules = function (self, rules, seed)
 end
 
 DialogueExtension.is_dialogue_disabled = function (self)
-	return self._context.is_disabled
+	if self._context.is_disabled_override == true then
+		return false
+	else
+		return self._context.is_disabled
+	end
+end
+
+DialogueExtension.set_is_disabled_override = function (self, is_disabled_override)
+	self._context.is_disabled_override = is_disabled_override
 end
 
 DialogueExtension.get_is_incapacitated = function (self)
@@ -912,6 +956,14 @@ end
 
 DialogueExtension.set_story_stage = function (self, story_stage)
 	self._context.story_stage = story_stage
+end
+
+DialogueExtension.set_dynamic_smart_tag = function (self, smart_tag)
+	self._dynamic_smart_tag = smart_tag
+end
+
+DialogueExtension.get_dynamic_smart_tag = function (self)
+	return self._dynamic_smart_tag
 end
 
 return DialogueExtension

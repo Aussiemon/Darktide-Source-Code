@@ -51,12 +51,12 @@ local cutting_am = {
 local power_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_8,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_75,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_1
 	},
@@ -75,10 +75,20 @@ local power_am = {
 damage_templates.light_sword = {
 	finesse_ability_damage_multiplier = 2,
 	stagger_category = "melee",
-	cleave_distribution = light_cleave,
+	cleave_distribution = {
+		attack = {
+			1.5,
+			3.25
+		},
+		impact = {
+			1.5,
+			3.25
+		}
+	},
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.always,
+	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = cutting_am,
@@ -91,8 +101,8 @@ damage_templates.light_sword = {
 			},
 			power_distribution = {
 				attack = {
-					40,
-					80
+					60,
+					120
 				},
 				impact = {
 					5,
@@ -104,8 +114,8 @@ damage_templates.light_sword = {
 			armor_damage_modifier = cutting_am,
 			power_distribution = {
 				attack = {
-					30,
-					50
+					40,
+					80
 				},
 				impact = {
 					4,
@@ -147,8 +157,9 @@ damage_templates.light_sword_smiter = {
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.always,
+	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = cutting_am,
@@ -184,8 +195,8 @@ damage_templates.light_sword_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					125,
+					250
 				},
 				impact = {
 					5,
@@ -210,20 +221,55 @@ damage_templates.light_sword_smiter = {
 	}
 }
 damage_templates.light_powersword = {
-	weapon_special = true,
 	finesse_ability_damage_multiplier = 2,
+	weapon_special = true,
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = math.huge,
 		impact = math.huge
 	},
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.sawing,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = power_am,
 	targets = {
+		{
+			armor_damage_modifier = power_am,
+			boost_curve_multiplier_finesse = {
+				0.4,
+				1
+			},
+			power_distribution = {
+				attack = {
+					150,
+					300
+				},
+				impact = {
+					7,
+					9
+				}
+			}
+		},
+		{
+			armor_damage_modifier = power_am,
+			boost_curve_multiplier_finesse = {
+				0.4,
+				1
+			},
+			power_distribution = {
+				attack = {
+					100,
+					200
+				},
+				impact = {
+					7,
+					9
+				}
+			}
+		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
@@ -243,44 +289,10 @@ damage_templates.light_powersword = {
 		},
 		{
 			armor_damage_modifier = power_am,
-			boost_curve_multiplier_finesse = {
-				0.4,
-				1
-			},
 			power_distribution = {
 				attack = {
 					60,
-					100
-				},
-				impact = {
-					7,
-					9
-				}
-			}
-		},
-		{
-			armor_damage_modifier = power_am,
-			boost_curve_multiplier_finesse = {
-				0.4,
-				1
-			},
-			power_distribution = {
-				attack = {
-					60,
-					100
-				},
-				impact = {
-					7,
-					9
-				}
-			}
-		},
-		{
-			armor_damage_modifier = power_am,
-			power_distribution = {
-				attack = {
-					35,
-					75
+					120
 				},
 				impact = {
 					5,
@@ -292,8 +304,8 @@ damage_templates.light_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					30,
-					70
+					40,
+					80
 				},
 				impact = {
 					5,
@@ -349,20 +361,25 @@ overrides.light_powersword_active = {
 		{
 			"wounds_template",
 			WoundsTemplates.power_sword_active
+		},
+		{
+			"ignore_stagger_reduction",
+			true
 		}
 	}
 }
 damage_templates.light_powersword_smiter = {
-	weapon_special = true,
 	finesse_ability_damage_multiplier = 2,
+	weapon_special = true,
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = math.huge,
 		impact = math.huge
 	},
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.sawing,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = power_am,
@@ -393,7 +410,7 @@ damage_templates.light_powersword_smiter = {
 			power_distribution = {
 				attack = {
 					60,
-					100
+					120
 				},
 				impact = {
 					7,
@@ -410,7 +427,7 @@ damage_templates.light_powersword_smiter = {
 			power_distribution = {
 				attack = {
 					60,
-					100
+					120
 				},
 				impact = {
 					7,
@@ -422,8 +439,8 @@ damage_templates.light_powersword_smiter = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					35,
-					75
+					60,
+					120
 				},
 				impact = {
 					5,
@@ -435,8 +452,8 @@ damage_templates.light_powersword_smiter = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					30,
-					70
+					60,
+					120
 				},
 				impact = {
 					5,
@@ -448,8 +465,8 @@ damage_templates.light_powersword_smiter = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					25,
-					65
+					60,
+					120
 				},
 				impact = {
 					5,
@@ -496,19 +513,20 @@ overrides.light_powersword_active_smiter = {
 	}
 }
 damage_templates.heavy_powersword = {
-	ignore_gib_push = true,
 	finesse_ability_damage_multiplier = 2,
+	ragdoll_only = true,
 	weapon_special = true,
-	ragdoll_push_force = 250,
+	ragdoll_push_force = 100,
+	gibbing_power = 10,
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = math.huge,
 		impact = math.huge
 	},
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = power_am,
 	targets = {
@@ -520,12 +538,12 @@ damage_templates.heavy_powersword = {
 			},
 			power_distribution = {
 				attack = {
-					150,
-					250
+					200,
+					400
 				},
 				impact = {
-					13,
-					18
+					6,
+					8
 				}
 			}
 		},
@@ -538,11 +556,11 @@ damage_templates.heavy_powersword = {
 			power_distribution = {
 				attack = {
 					130,
-					170
+					260
 				},
 				impact = {
-					13,
-					18
+					6,
+					8
 				}
 			}
 		},
@@ -555,11 +573,11 @@ damage_templates.heavy_powersword = {
 			power_distribution = {
 				attack = {
 					130,
-					170
+					260
 				},
 				impact = {
-					13,
-					18
+					6,
+					8
 				}
 			}
 		},
@@ -567,12 +585,12 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					35,
-					75
+					130,
+					260
 				},
 				impact = {
-					5,
-					7
+					6,
+					8
 				}
 			}
 		},
@@ -580,12 +598,12 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					30,
-					70
+					130,
+					260
 				},
 				impact = {
-					5,
-					7
+					6,
+					8
 				}
 			}
 		},
@@ -593,12 +611,12 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					25,
-					65
+					130,
+					260
 				},
 				impact = {
-					5,
-					7
+					6,
+					8
 				}
 			}
 		},
@@ -606,12 +624,12 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					20,
-					60
+					130,
+					260
 				},
 				impact = {
-					5,
-					7
+					6,
+					8
 				}
 			}
 		},
@@ -619,12 +637,12 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					10,
-					50
+					130,
+					260
 				},
 				impact = {
-					4,
-					6
+					6,
+					8
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -634,6 +652,10 @@ damage_templates.heavy_powersword = {
 overrides.heavy_powersword_active = {
 	parent_template_name = "heavy_powersword",
 	overrides = {
+		{
+			"ignore_stagger_reduction",
+			true
+		},
 		{
 			"wounds_template",
 			WoundsTemplates.power_sword_active
@@ -665,14 +687,14 @@ local heavy_sword_am = {
 	}
 }
 damage_templates.heavy_sword = {
-	ignore_gib_push = true,
 	finesse_ability_damage_multiplier = 2,
-	ragdoll_push_force = 750,
+	ragdoll_push_force = 150,
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_medium,
 	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.sawing,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
 	armor_damage_modifier = cutting_am,
@@ -685,8 +707,8 @@ damage_templates.heavy_sword = {
 			},
 			power_distribution = {
 				attack = {
-					80,
-					140
+					100,
+					200
 				},
 				impact = {
 					8,
@@ -698,8 +720,8 @@ damage_templates.heavy_sword = {
 			armor_damage_modifier = heavy_sword_am,
 			power_distribution = {
 				attack = {
-					40,
-					80
+					60,
+					120
 				},
 				impact = {
 					6,

@@ -1,4 +1,3 @@
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local VolumeEventSettings = require("scripts/settings/volume_event/volume_event_settings")
 local volume_type_events = VolumeEventSettings.volume_type_events
 local VolumeEventSystem = class("VolumeEventSystem", "ExtensionSystemBase")
@@ -159,7 +158,7 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 			self:_update_traversal_cost(extension_name, volume_name, traversal_cost)
 		end
 
-		local data = {
+		local volume_data = {
 			params = params,
 			connected_units = connected_units
 		}
@@ -170,7 +169,7 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 
 		for i = 1, #volume_levels do
 			local level = volume_levels[i]
-			local volume_id = VolumeEvent.register_volume(engine_volume_event_system, level, volume_name, extension_name, invert_volume, data, on_enter, on_exit, filter)
+			local volume_id = VolumeEvent.register_volume(engine_volume_event_system, level, volume_name, extension_name, invert_volume, volume_data, on_enter, on_exit, filter)
 
 			table.insert(volume.volume_ids, volume_id)
 		end
@@ -188,11 +187,11 @@ VolumeEventSystem.register_unit_volume = function (self, unit, volume_name, exte
 	local filter = event_settings.filter
 	local invert_volume = event_settings.invert_volume
 	local params = event_settings.params
-	local data = {
+	local volume_data = {
 		params = params,
 		connected_units = unit
 	}
-	local volume_id = VolumeEvent.register_volume(engine_volume_event_system, unit, volume_name, extension_name, invert_volume, data, on_enter, on_exit, filter)
+	local volume_id = VolumeEvent.register_volume(engine_volume_event_system, unit, volume_name, extension_name, invert_volume, volume_data, on_enter, on_exit, filter)
 
 	return volume_id
 end
@@ -371,38 +370,8 @@ VolumeEventSystem.disconnect_unit_from_volume = function (self, volume_name, uni
 	table.remove(connected_units, unit_index)
 end
 
-local units_to_test = {}
-
-VolumeEventSystem.end_zone_conditions_fulfilled = function (self, volume_id)
-	table.clear(units_to_test)
-
-	local num_units_to_test = 0
-	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-	local alive_players = player_unit_spawn_manager:alive_players()
-	local num_alive_players = #alive_players
-
-	for i = 1, num_alive_players do
-		local player = alive_players[i]
-		local player_unit = player.player_unit
-		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
-
-		if unit_data_extension then
-			local character_state_component = unit_data_extension:read_component("character_state")
-			local can_complete_mission = PlayerUnitStatus.end_zone_conditions_fulfilled(character_state_component)
-			local is_human = player:is_human_controlled()
-
-			if is_human and can_complete_mission then
-				num_units_to_test = num_units_to_test + 1
-				units_to_test[num_units_to_test] = player_unit
-			end
-		end
-	end
-
-	if num_units_to_test ~= 0 then
-		return VolumeEvent.has_all_units_inside(self._engine_volume_event_system, volume_id, unpack(units_to_test))
-	end
-
-	return false
+VolumeEventSystem.engine_volume_event_system = function (self)
+	return self._engine_volume_event_system
 end
 
 return VolumeEventSystem

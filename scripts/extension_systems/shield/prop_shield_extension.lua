@@ -27,7 +27,7 @@ PropShieldExtension.is_blocking = function (self)
 end
 
 PropShieldExtension.can_block_from_position = function (self, attacking_unit_position)
-	return true
+	return false
 end
 
 PropShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)

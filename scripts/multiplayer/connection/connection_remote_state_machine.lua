@@ -1,3 +1,4 @@
+local RemoteAwaitConnectionBootedState = require("scripts/multiplayer/connection/remote_states/remote_await_connection_booted_state")
 local RemoteConnectedState = require("scripts/multiplayer/connection/remote_states/remote_connected_state")
 local RemoteDataSyncState = require("scripts/multiplayer/connection/remote_states/remote_data_sync_state")
 local RemoteDisconnectedState = require("scripts/multiplayer/connection/remote_states/remote_disconnected_state")
@@ -58,10 +59,13 @@ ConnectionRemoteStateMachine.init = function (self, event_delegate, engine_lobby
 	local state_machine = StateMachine:new("ConnectionRemoteStateMachine", parent, shared_state)
 	self._state_machine = state_machine
 
-	state_machine:add_transition("RemoteVersionCheckState", "versions matched", RemoteMasterItemsCheckState)
+	state_machine:add_transition("RemoteVersionCheckState", "versions matched", RemoteAwaitConnectionBootedState)
 	state_machine:add_transition("RemoteVersionCheckState", "versions mismatched", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteVersionCheckState", "timeout", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteVersionCheckState", "disconnected", RemoteDisconnectedState)
+	state_machine:add_transition("RemoteAwaitConnectionBootedState", "done", RemoteMasterItemsCheckState)
+	state_machine:add_transition("RemoteAwaitConnectionBootedState", "timeout", RemoteDisconnectedState)
+	state_machine:add_transition("RemoteAwaitConnectionBootedState", "disconnected", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "version replied", RemoteRequestHostTypeState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "missing version", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteMasterItemsCheckState", "timeout", RemoteDisconnectedState)
@@ -96,6 +100,7 @@ ConnectionRemoteStateMachine.init = function (self, event_delegate, engine_lobby
 	state_machine:add_transition("RemoteDataSyncState", "timeout", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteDataSyncState", "disconnected", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteStateSyncState", "state sync done", RemoteConnectedState)
+	state_machine:add_transition("RemoteStateSyncState", "timeout", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteStateSyncState", "disconnected", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteConnectedState", "eac mismatch", RemoteDisconnectedState)
 	state_machine:add_transition("RemoteConnectedState", "disconnected", RemoteDisconnectedState)

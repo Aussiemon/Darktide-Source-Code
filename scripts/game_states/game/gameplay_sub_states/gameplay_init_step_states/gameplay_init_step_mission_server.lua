@@ -1,5 +1,5 @@
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
-local GameplayInitStepClientWaitForCinematicsLoaded = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_client_wait_for_cinematics_loaded")
+local GameplayInitStepLastChecks = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_last_checks")
 local GameplayInitStepMissionServer = class("GameplayInitStepMissionServer")
 
 GameplayInitStepMissionServer.on_enter = function (self, parent, params)
@@ -16,7 +16,7 @@ GameplayInitStepMissionServer.update = function (self, main_dt, main_t)
 		shared_state = self._shared_state
 	}
 
-	return GameplayInitStepClientWaitForCinematicsLoaded, next_step_params
+	return GameplayInitStepLastChecks, next_step_params
 end
 
 implements(GameplayInitStepMissionServer, GameplayInitStepInterface)

@@ -163,4 +163,26 @@ dialogue_context_settings.number_of_armor_hits = {
 	trigger_function = dialogue_context_settings.number_of_armor_hits_callback
 }
 
+dialogue_context_settings.friendly_fire_hits_callback = function (dialogue_context_extension, timed_counter, t)
+	if not timed_counter.has_triggered then
+		timed_counter.has_triggered = true
+	elseif timed_counter.time_lived - timed_counter.last_triggered_time < timed_counter.trigger_period then
+		return
+	end
+
+	timed_counter.last_triggered_time = timed_counter.time_lived
+end
+
+dialogue_context_settings.friendly_fire_hits = {
+	count = 0,
+	has_triggered = false,
+	time_lived = 0,
+	delta = 0,
+	last_triggered_time = 0,
+	trigger_period = 2,
+	time_to_live = 2,
+	trigger_when_higher = 999,
+	trigger_function = dialogue_context_settings.friendly_fire_hits_callback
+}
+
 return settings("dialogue_context_settings", dialogue_context_settings)

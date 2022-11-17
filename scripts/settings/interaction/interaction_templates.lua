@@ -300,6 +300,14 @@ local interaction_templates = {
 		ui_interaction_type = "pickup",
 		duration = 0,
 		interaction_class_name = "equip_auspex"
+	},
+	scripted_scenario = {
+		action_text = "loc_action_interaction_view",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic",
+		ui_interaction_type = "point_of_interest",
+		description = "loc_character_view_display_name",
+		duration = 0,
+		interaction_class_name = "scripted_scenario"
 	}
 }
 

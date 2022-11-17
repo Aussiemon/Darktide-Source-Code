@@ -60,13 +60,13 @@ Weapon._init_traits = function (self, weapon_template, item, override_trait_lerp
 	local overclocks = weapon_progression_debug and weapon_progression_debug.overclocks or item.overclocks or EMPTY_TABLE
 	local perks = item.perks or EMPTY_TABLE
 	local traits = item.traits or EMPTY_TABLE
-	local debug_perks = weapon_progression_debug and weapon_progression_debug.perks or EMPTY_TABLE
-	local debug_traits = weapon_progression_debug and weapon_progression_debug.traits
 	local lerp_values = WeaponTweakTemplates.calculate_lerp_values(weapon_template, base_stats, overclocks, perks, EMPTY_TABLE, override_trait_lerp_value_or_nil)
 	local weapon_tweak_templates = WeaponTweakTemplates.create(lerp_values, weapon_template, override_tweak_template_lerp_value_or_nil)
 	local damage_profile_lerp_values = lerp_values[template_types.damage]
 	local explosion_template_lerp_values = lerp_values[template_types.explosion]
 	local buffs = WeaponTweakTemplates.extract_buffs(weapon_template)
+	local debug_traits = weapon_progression_debug and weapon_progression_debug.traits
+	local debug_perks = weapon_progression_debug and weapon_progression_debug.perks
 
 	WeaponTweakTemplates.extract_trait_buffs(weapon_template, buffs, traits, debug_traits)
 	WeaponTweakTemplates.extract_trait_buffs(weapon_template, buffs, perks, debug_perks)

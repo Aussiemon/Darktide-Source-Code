@@ -1,10 +1,11 @@
 local Crashify = require("scripts/settings/crashify/crashify")
 local settings = {
-	enabled = GameParameters.testify or Crashify.branch ~= "default",
+	enabled = GameParameters.testify or BACKEND_ENV == "staging" or BACKEND_ENV == "prod",
 	source = {
 		id = "bishop",
 		platform = PLATFORM,
 		environment = BUILD,
+		backend_environment = BACKEND_ENV,
 		version = {
 			engine_revision = string.value_or_nil(BUILD_IDENTIFIER),
 			content_revision = string.value_or_nil(APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION)

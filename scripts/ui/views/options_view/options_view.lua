@@ -9,7 +9,10 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
+local CATEGORIES_GRID = 1
+local SETTINGS_GRID = 2
 local OptionsView = class("OptionsView", "BaseView")
 
 OptionsView.init = function (self, settings)
@@ -25,12 +28,53 @@ end
 OptionsView.on_enter = function (self)
 	OptionsView.super.on_enter(self)
 
-	self._using_cursor_navigation = true
+	self._default_category = nil
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
+	self._options_templates = OptionsTemplates
+	self._validation_mapping = self:_map_validations(self._options_templates)
 
-	self:_setup_settings_config(OptionsTemplates)
-	self:_setup_category_config(OptionsTemplates)
+	self:_setup_settings_config(self._options_templates)
+	self:_setup_category_config(self._options_templates)
 	self:_setup_input_legend()
 	self:_enable_settings_overlay(false)
+	self:_update_grid_navigation_selection()
+end
+
+OptionsView._map_validations = function (self, config)
+	local config_categories = config.categories
+	local categories = {}
+
+	for i = 1, #config_categories do
+		local category_config = config_categories[i]
+		local validation_result = category_config.validation_function and category_config.validation_function()
+
+		if validation_result == nil then
+			validation_result = true
+		end
+
+		categories[category_config.display_name] = {
+			validation_function = category_config.validation_function,
+			validation_result = validation_result,
+			settings = {}
+		}
+	end
+
+	local config_settings = config.settings
+
+	for _, setting in ipairs(config_settings) do
+		local validation_result = setting.validation_function and setting.validation_function()
+
+		if validation_result == nil then
+			validation_result = true
+		end
+
+		categories[setting.category].settings[setting.display_name] = {
+			validation_function = setting.validation_function,
+			validation_result = validation_result
+		}
+	end
+
+	return categories
 end
 
 OptionsView.on_exit = function (self)
@@ -42,7 +86,9 @@ OptionsView.on_exit = function (self)
 		self:_remove_element("input_legend")
 	end
 
-	OptionsView.super.on_exit(self)
+	if self._popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._popup_id)
+	end
 
 	if self._ui_offscreen_renderer then
 		self._ui_offscreen_renderer = nil
@@ -59,35 +105,73 @@ OptionsView.on_exit = function (self)
 		self._offscreen_viewport_name = nil
 		self._offscreen_world = nil
 	end
+
+	OptionsView.super.on_exit(self)
 end
 
-OptionsView.cb_on_close_pressed = function (self)
-	local view_name = "options_view"
+OptionsView.cb_on_back_pressed = function (self)
+	local selected_navigation_column = self._selected_navigation_column_index
+	local selected_settings_widget = self._selected_settings_widget
 
-	Managers.ui:close_view(view_name)
+	if selected_settings_widget then
+		self._close_selected_setting = true
+	elseif selected_navigation_column == SETTINGS_GRID then
+		self:_change_navigation_column(selected_navigation_column - 1)
+	else
+		local view_name = "options_view"
+
+		Managers.ui:close_view(view_name)
+	end
 end
 
 OptionsView.cb_reset_category_to_default = function (self)
 	local selected_category = self._selected_category
 	local reset_functions_by_category = self._reset_functions_by_category
 	local reset_function = reset_functions_by_category[selected_category]
+	local context = {
+		title_text = "loc_popup_header_settings_reset_default",
+		description_text = "loc_popup_description_settings_reset_default",
+		type = "warning",
+		options = {
+			{
+				text = "loc_popup_button_settings_reset_default",
+				close_on_pressed = true,
+				callback = callback(function ()
+					if reset_function then
+						reset_function()
+					else
+						local settings_category_default_values = self._settings_category_default_values
+						local settings_default_values = selected_category and settings_category_default_values[selected_category]
 
-	if reset_function then
-		reset_function()
-	else
-		local settings_category_default_values = self._settings_category_default_values
-		local settings_default_values = selected_category and settings_category_default_values[selected_category]
+						if settings_default_values then
+							for setting, default_value in pairs(settings_default_values) do
+								local on_activated = setting.on_activated
 
-		if settings_default_values then
-			for setting, default_value in pairs(settings_default_values) do
-				local on_activated = setting.on_activated
+								if on_activated then
+									on_activated(default_value, setting)
+								end
+							end
+						end
+					end
 
-				if on_activated then
-					on_activated(default_value, setting)
+					self._popup_id = nil
+				end)
+			},
+			{
+				text = "loc_popup_button_cancel_settings_reset_default",
+				template_type = "terminal_button_small",
+				close_on_pressed = true,
+				hotkey = "back",
+				callback = function ()
+					self._popup_id = nil
 				end
-			end
-		end
-	end
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context, function (id)
+		self._popup_id = id
+	end)
 end
 
 OptionsView._setup_input_legend = function (self)
@@ -245,6 +329,11 @@ OptionsView._draw_grid = function (self, grid, widgets, interaction_widget, dt, 
 
 				if hotspot then
 					hotspot.force_disabled = not is_grid_hovered
+					local is_active = hotspot.is_focused or hotspot.is_hover
+
+					if is_active and widget.content.entry and (widget.content.entry.tooltip_text or widget.content.entry.disabled_by and not table.is_empty(widget.content.entry.disabled_by)) then
+						self:_set_tooltip_data(widget)
+					end
 				end
 
 				UIWidget.draw(widget, ui_renderer)
@@ -277,13 +366,14 @@ end
 
 OptionsView.update = function (self, dt, t, input_service, view_data)
 	local drawing_view = view_data.drawing_view
+	local using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
 	if self:_handling_keybinding() then
-		input_service = input_service:null_service()
-
-		if not drawing_view then
+		if not drawing_view or not using_cursor_navigation then
 			self:close_keybind_popup(true)
 		end
+
+		input_service = input_service:null_service()
 	end
 
 	self:_handle_keybind_rebind(dt, t, input_service)
@@ -306,20 +396,57 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 		self._grid_length = grid_length
 	end
 
-	local grid_input_service = input_service
+	local category_grid_is_focused = self._selected_navigation_column_index == CATEGORIES_GRID
+	local category_grid_input_service = category_grid_is_focused and input_service or input_service:null_service()
 
-	if self:_handling_keybinding() or self._selected_settings_widget then
-		grid_input_service = input_service:null_service()
-	end
-
-	self._category_content_grid:update(dt, t, grid_input_service)
+	self._category_content_grid:update(dt, t, category_grid_input_service)
 	self:_update_category_content_widgets(dt, t)
 
 	local settings_content_grid = self._settings_content_grid
 
 	if settings_content_grid then
-		settings_content_grid:update(dt, t, grid_input_service)
+		local settings_grid_input_service = not category_grid_is_focused and not self._selected_settings_widget and input_service or input_service:null_service()
+
+		settings_content_grid:update(dt, t, settings_grid_input_service)
 		self:_update_settings_content_widgets(dt, t, input_service)
+	end
+
+	if self._validation_mapping then
+		local needs_reset = false
+		local reset_all = false
+
+		for category_name, category_data in pairs(self._validation_mapping) do
+			local valid = category_data.validation_function and category_data.validation_function()
+
+			if valid ~= nil and valid ~= category_data.validation_result then
+				category_data.validation_result = valid
+				needs_reset = true
+
+				if reset_all == false then
+					reset_all = valid == false and self._selected_category == category_name
+				end
+			end
+
+			if category_data.settings then
+				for _, settings_data in pairs(category_data.settings) do
+					local valid = settings_data.validation_function and settings_data.validation_function()
+
+					if valid ~= nil and valid ~= settings_data.validation_result then
+						settings_data.validation_result = valid
+						needs_reset = true
+					end
+				end
+			end
+		end
+
+		if needs_reset then
+			self:_reset_options_view(reset_all)
+		end
+	end
+
+	if self._tooltip_data and self._tooltip_data.widget and not self._tooltip_data.widget.content.hotspot.is_hover then
+		self._tooltip_data = {}
+		self._widgets_by_name.tooltip.content.visible = false
 	end
 
 	return OptionsView.super.update(self, dt, t, input_service)
@@ -341,6 +468,35 @@ end
 
 OptionsView._on_navigation_input_changed = function (self)
 	OptionsView.super._on_navigation_input_changed(self)
+
+	if self._settings_content_widgets then
+		self:_update_grid_navigation_selection()
+	end
+end
+
+OptionsView._reset_options_view = function (self, reset_all)
+	if reset_all then
+		self._selected_category = nil
+		self._selected_settings_widget = nil
+		self._selected_navigation_row_index = nil
+		self._selected_navigation_column_index = nil
+	end
+
+	self._selected_category_widget = nil
+
+	self:_setup_settings_config(self._options_templates)
+	self:_setup_category_config(self._options_templates)
+
+	if self._category_content_widgets then
+		self._selected_category = self._selected_category or self._options_templates.categories[1].display_name
+
+		for i = 1, #self._category_content_widgets do
+			local widget = self._category_content_widgets[i]
+			widget.content.hotspot.is_focused = widget.content.entry.display_name == self._selected_category
+			widget.content.hotspot.is_selected = widget.content.entry.display_name == self._selected_category
+		end
+	end
+
 	self:_update_grid_navigation_selection()
 end
 
@@ -371,10 +527,8 @@ OptionsView.settings_scroll_amount = function (self)
 	return 0
 end
 
-OptionsView.set_exlusive_focus_on_grid_widget = function (self, widget_name)
-	local force_disabled = not widget_name
-
-	self:_set_exlusive_focus_on_grid_widget(widget_name, force_disabled)
+OptionsView.set_exclusive_focus_on_grid_widget = function (self, widget_name)
+	self:_set_exclusive_focus_on_grid_widget(widget_name)
 end
 
 OptionsView._handle_input = function (self, input_service)
@@ -385,8 +539,8 @@ OptionsView._handle_input = function (self, input_service)
 
 		if input_service:get("left_pressed") or input_service:get("confirm_pressed") or input_service:get("back") then
 			close_selected_setting = true
-
-			self:_update_grid_navigation_selection()
+		else
+			self._navigation_column_changed_this_frame = false
 		end
 
 		self._close_selected_setting = close_selected_setting
@@ -399,21 +553,37 @@ OptionsView._handle_input = function (self, input_service)
 				self:_change_navigation_column(selected_navigation_column - 1)
 			elseif input_service:get("navigate_right_continuous") then
 				self:_change_navigation_column(selected_navigation_column + 1)
+			elseif not input_service:get("confirm_pressed") and not input_service:get("back") then
+				self._navigation_column_changed_this_frame = false
 			end
+		elseif not input_service:get("confirm_pressed") and not input_service:get("back") then
+			self._navigation_column_changed_this_frame = false
 		end
 	end
 end
 
 OptionsView._update_grid_navigation_selection = function (self)
+	local selected_column_index = self._selected_navigation_column_index
+	local selected_row_index = self._selected_navigation_row_index
+
 	if self._using_cursor_navigation then
-		if self._selected_navigation_row_index or self._selected_navigation_column_index then
+		if selected_row_index or selected_column_index then
 			self:_set_selected_navigation_widget(nil)
 		end
-	elseif not self._selected_navigation_row_index and not self._selected_navigation_column_index then
-		if not self._selected_settings_widget then
+	else
+		local navigation_widgets = self._navigation_widgets[selected_column_index]
+		local selected_widget = navigation_widgets and navigation_widgets[selected_row_index] or self._selected_settings_widget
+
+		if selected_widget then
+			local selected_grid = self._navigation_grids[selected_column_index]
+
+			if not selected_grid or not selected_grid:selected_grid_index() then
+				self:_set_selected_navigation_widget(selected_widget)
+			end
+		elseif navigation_widgets or self._settings_content_widgets then
 			self:_set_default_navigation_widget()
-		else
-			self:_set_selected_navigation_widget(self._selected_settings_widget)
+		elseif self._default_category then
+			self:present_category_widgets(self._default_category)
 		end
 	end
 end
@@ -421,11 +591,21 @@ end
 OptionsView.present_category_widgets = function (self, category)
 	self._selected_category = category
 	local settings_category_widgets = self._settings_category_widgets
-	local widgets = settings_category_widgets[category]
+	local grid_data = settings_category_widgets[category]
 
-	if widgets then
+	if grid_data then
+		local widgets = {}
+		local alignment_widgets = {}
+
+		for i = 1, #grid_data do
+			local widget = grid_data[i].widget
+			local alignment_widget = grid_data[i].alignment_widget
+			widgets[#widgets + 1] = widget
+			alignment_widgets[#alignment_widgets + 1] = alignment_widget
+		end
+
 		self._settings_content_widgets = widgets
-		self._settings_alignment_list = widgets
+		self._settings_alignment_list = alignment_widgets
 		local scrollbar_widget_id = "settings_scrollbar"
 		local grid_scenegraph_id = "settings_grid_background"
 		local grid_pivot_scenegraph_id = "settings_grid_content_pivot"
@@ -434,49 +614,64 @@ OptionsView.present_category_widgets = function (self, category)
 
 		self:_setup_content_grid_scrollbar(self._settings_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)
 
-		self._navigation_widgets = {
-			self._category_content_widgets,
-			self._settings_content_widgets
-		}
-		self._navigation_grids = {
-			self._category_content_grid,
-			self._settings_content_grid
-		}
+		self._navigation_widgets[SETTINGS_GRID] = widgets
+		self._navigation_grids[SETTINGS_GRID] = self._settings_content_grid
 
 		self:_update_grid_navigation_selection()
 	end
 end
 
 OptionsView._setup_category_config = function (self, config)
+	if self._category_content_widgets then
+		for i = 1, #self._category_content_widgets do
+			local widget = self._category_content_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._category_content_widgets = {}
+	end
+
 	local config_categories = config.categories
 	local entries = {}
 	local reset_functions_by_category = {}
+	local categories_by_display_name = {}
 
 	for i = 1, #config_categories do
 		local category_config = config_categories[i]
 		local category_display_name = category_config.display_name
 		local category_icon = category_config.icon
 		local category_reset_function = category_config.reset_function
-		entries[#entries + 1] = {
-			widget_type = "settings_button",
-			display_name = category_display_name,
-			icon = category_icon,
-			pressed_function = function (parent, widget, entry)
-				self._category_content_grid:select_widget(widget)
+		local valid = self._validation_mapping[category_display_name].validation_result
 
-				local widget_name = widget.name
+		if valid then
+			entries[#entries + 1] = {
+				widget_type = "settings_button",
+				display_name = category_display_name,
+				icon = category_icon,
+				pressed_function = function (parent, widget, entry)
+					self._category_content_grid:select_widget(widget)
 
-				self:present_category_widgets(category_display_name)
-			end,
-			select_function = function (parent, widget, entry)
-				local widget_name = widget.name
+					local widget_name = widget.name
 
-				self:present_category_widgets(category_display_name)
-			end
-		}
-		reset_functions_by_category[category_display_name] = category_reset_function
+					self:present_category_widgets(category_display_name)
+
+					local selected_navigation_column = self._selected_navigation_column_index
+
+					if selected_navigation_column then
+						self:_change_navigation_column(selected_navigation_column + 1)
+					end
+				end,
+				select_function = function (parent, widget, entry)
+					self:present_category_widgets(category_display_name)
+				end
+			}
+			categories_by_display_name[category_display_name] = config_categories
+			reset_functions_by_category[category_display_name] = category_reset_function
+		end
 	end
 
+	self._default_category = config_categories[1].display_name
 	local scenegraph_id = "grid_content_pivot"
 	local callback_name = "cb_on_category_pressed"
 	self._category_content_widgets, self._category_alignment_list = self:_setup_content_widgets(entries, scenegraph_id, callback_name)
@@ -489,6 +684,7 @@ OptionsView._setup_category_config = function (self, config)
 	self:_setup_content_grid_scrollbar(self._category_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)
 
 	self._reset_functions_by_category = reset_functions_by_category
+	self._categories_by_display_name = categories_by_display_name
 	self._navigation_widgets = {
 		self._category_content_widgets
 	}
@@ -498,13 +694,26 @@ OptionsView._setup_category_config = function (self, config)
 end
 
 OptionsView._setup_settings_config = function (self, config)
+	if self._settings_category_widgets then
+		for _, settings_data in pairs(self._settings_category_widgets) do
+			for i = 1, #settings_data do
+				local widget = settings_data[i].widget
+
+				self:_unregister_widget_name(widget.name)
+			end
+		end
+
+		self._settings_category_widgets = {}
+	end
+
 	local config_settings = config.settings
 	local category_widgets = {}
 	local settings_default_values = {}
+	local aligment_list = {}
 	local callback_name = "cb_on_settings_pressed"
 
 	for setting_index, setting in ipairs(config_settings) do
-		local valid = not setting.validation_function or setting.validation_function()
+		local valid = self._validation_mapping[setting.category].settings[setting.display_name].validation_result
 
 		if valid and not setting.hidden then
 			local category = setting.category or "Uncategorized"
@@ -525,7 +734,10 @@ OptionsView._setup_settings_config = function (self, config)
 
 			local widget_suffix = "setting_" .. tostring(setting_index)
 			local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name)
-			category_widgets[category][#widgets + 1] = widget
+			category_widgets[category][#widgets + 1] = {
+				widget = widget,
+				alignment_widget = alignment_widget
+			}
 		end
 	end
 
@@ -537,12 +749,16 @@ OptionsView._update_category_content_widgets = function (self, dt, t)
 	local category_content_widgets = self._category_content_widgets
 
 	if category_content_widgets then
+		local is_focused_grid = self._selected_navigation_column_index == CATEGORIES_GRID
 		local selected_category_widget = self._selected_category_widget
 
 		for i = 1, #category_content_widgets do
 			local widget = category_content_widgets[i]
+			local hotspot = widget.content.hotspot
 
-			if widget.content.hotspot.is_focused then
+			if hotspot.is_focused then
+				hotspot.is_selected = true
+
 				if widget ~= selected_category_widget then
 					self._selected_category_widget = widget
 					local entry = widget.content.entry
@@ -551,10 +767,58 @@ OptionsView._update_category_content_widgets = function (self, dt, t)
 						entry.select_function(self, widget, entry)
 					end
 				end
-
-				break
+			elseif is_focused_grid then
+				hotspot.is_selected = false
 			end
 		end
+	end
+end
+
+OptionsView._set_tooltip_data = function (self, widget)
+	local current_widget = self._tooltip_data and self._tooltip_data.widget
+	local localized_text = nil
+	local tooltip_text = widget.content.entry.tooltip_text
+	local disabled_by_list = widget.content.entry.disabled_by
+
+	if tooltip_text then
+		localized_text = Localize(tooltip_text)
+	end
+
+	if disabled_by_list then
+		localized_text = localized_text and string.format("%s\n", localized_text)
+
+		for _, text in pairs(disabled_by_list) do
+			localized_text = localized_text and string.format("%s\n%s", localized_text, Localize(text)) or Localize(text)
+		end
+	end
+
+	local starting_point = self:_scenegraph_world_position("settings_grid_start")
+	local current_y = self._widgets_by_name.tooltip.offset[2]
+	local scroll_addition = self._settings_content_grid:length_scrolled()
+	local new_y = starting_point[2] + widget.offset[2] - scroll_addition
+
+	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
+		self._tooltip_data = {
+			widget = widget,
+			text = localized_text
+		}
+		self._widgets_by_name.tooltip.content.text = localized_text
+		local text_style = self._widgets_by_name.tooltip.style.text
+		local x_pos = starting_point[1] + widget.offset[1]
+		local width = widget.content.size[1] * 0.5
+		local text_options = UIFonts.get_font_options_by_style(text_style)
+		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
+			width,
+			0
+		}, text_options)
+		local height = text_height
+		self._widgets_by_name.tooltip.content.size = {
+			width,
+			height
+		}
+		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
+		self._widgets_by_name.tooltip.offset[2] = new_y - height
+		self._widgets_by_name.tooltip.content.visible = true
 	end
 end
 
@@ -570,6 +834,7 @@ OptionsView._update_settings_content_widgets = function (self, dt, t, input_serv
 		end
 
 		local handle_input = false
+		local selected_settings_widget = self._selected_settings_widget
 
 		for i = 1, #settings_content_widgets do
 			local widget = settings_content_widgets[i]
@@ -578,25 +843,15 @@ OptionsView._update_settings_content_widgets = function (self, dt, t, input_serv
 			local update = template and template.update
 
 			if update then
-				local allowing_other_input = update(self, widget, input_service, dt, t)
-				local is_selected_widget = widget == self._selected_settings_widget
-
-				if is_selected_widget then
-					handle_input = allowing_other_input
-				end
+				update(self, widget, input_service, dt, t)
 			end
 		end
 
-		if handle_input and self._selected_settings_widget and self._close_selected_setting then
-			self._selected_settings_widget.offset[3] = 0
-
-			self:_set_selected_grid_widget(self._settings_content_widgets, nil)
-			self:_set_exlusive_focus_on_grid_widget(nil)
+		if selected_settings_widget and self._close_selected_setting then
+			self:_set_exclusive_focus_on_grid_widget(nil)
+			self:_update_grid_navigation_selection()
 
 			self._close_selected_setting = nil
-
-			self:_enable_settings_overlay(false)
-			self:set_can_exit(true, true)
 		end
 	end
 end
@@ -638,12 +893,18 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	local widget = nil
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config) or template.size
+	local indentation_level = config.indentation_level or 0
+	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
+	local new_size = {
+		size[1] - indentation_spacing,
+		size[2]
+	}
 	local pass_template_function = template.pass_template_function
-	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
-	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
+	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
+	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, new_size)
+	local name = "widget_" .. suffix
 
 	if widget_definition then
-		local name = "widget_" .. suffix
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
 		local init = template.init
@@ -654,7 +915,11 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	end
 
 	if widget then
-		return widget, widget
+		return widget, {
+			horizontal_alignment = "right",
+			size = size,
+			name = name
+		}
 	else
 		return nil, {
 			size = size
@@ -700,9 +965,18 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 		local layer = 100
 		local reference_name = "keybind_popup"
 		self._keybind_popup = self:_add_element(ViewElementKeybindPopup, reference_name, layer)
-		local display_name = self:_localize(entry.display_name or "n/a")
+		local display_name = self:_localize(entry.display_name or "loc_settings_option_unavailable")
 
 		self._keybind_popup:set_action_text(display_name)
+
+		if entry.cancel_keys then
+			local input_text = entry.cancel_keys[1]
+			local description_text = Localize("loc_setting_keybinding_press_new_button", true, {
+				cancel_input = InputUtils.key_axis_locale(input_text)
+			})
+
+			self._keybind_popup:set_description_text(description_text)
+		end
 
 		local value = entry.get_function()
 		local devices = entry.devices
@@ -753,7 +1027,7 @@ OptionsView.cb_on_category_pressed = function (self, widget, entry)
 end
 
 OptionsView.cb_on_settings_pressed = function (self, widget, entry)
-	if not self._can_close or self._selected_settings_widget then
+	if not self._can_close or self._selected_settings_widget or self._navigation_column_changed_this_frame then
 		return
 	end
 
@@ -765,13 +1039,8 @@ OptionsView.cb_on_settings_pressed = function (self, widget, entry)
 
 	if not entry.ignore_focus then
 		local widget_name = widget.name
-		local selected_widget = self:_set_exlusive_focus_on_grid_widget(widget_name)
-
-		self:_enable_settings_overlay(true)
-
-		if selected_widget then
-			selected_widget.offset[3] = 90
-		end
+		local selected_widget = self:_set_exclusive_focus_on_grid_widget(widget_name)
+		selected_widget.offset[3] = selected_widget and 90 or 0
 	end
 end
 
@@ -781,7 +1050,7 @@ OptionsView._enable_settings_overlay = function (self, enable)
 	settings_overlay_widget.content.visible = enable
 end
 
-OptionsView._set_exlusive_focus_on_grid_widget = function (self, widget_name, force_disabled)
+OptionsView._set_exclusive_focus_on_grid_widget = function (self, widget_name)
 	local widgets = self._settings_content_widgets
 	local selected_widget = nil
 
@@ -802,6 +1071,10 @@ OptionsView._set_exlusive_focus_on_grid_widget = function (self, widget_name, fo
 	end
 
 	self._selected_settings_widget = selected_widget
+	local has_exclusive_focus = selected_widget ~= nil and not self._using_cursor_navigation
+
+	self:_enable_settings_overlay(has_exclusive_focus)
+	self:set_can_exit(not has_exclusive_focus, not has_exclusive_focus)
 
 	return selected_widget
 end
@@ -811,10 +1084,11 @@ OptionsView._change_navigation_column = function (self, column_index)
 	local num_columns = #navigation_widgets
 	local success = false
 
-	if column_index < 1 or num_columns < column_index then
+	if column_index < 1 or num_columns < column_index or self._navigation_column_changed_this_frame then
 		return success
 	else
 		success = true
+		self._navigation_column_changed_this_frame = true
 	end
 
 	local widgets = navigation_widgets[column_index]
@@ -879,7 +1153,7 @@ OptionsView._set_selected_navigation_widget = function (self, widget)
 		local selected_grid = column_index == selected_column
 		local navigation_grid = navigation_grids[column_index]
 
-		navigation_grid:select_grid_index(selected_grid and selected_row or nil, nil, nil, column_index == 1)
+		navigation_grid:select_grid_index(selected_grid and selected_row or nil, nil, nil, column_index == CATEGORIES_GRID)
 	end
 
 	self._selected_navigation_row_index = selected_row

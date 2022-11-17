@@ -107,10 +107,6 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 	end
 end
 
-WeaponTraitParentProcBuff.parent_buff_template = function (self)
-	return self._template.name
-end
-
 WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_children_to_add)
 	local buff_extension = self._buff_extension
 	local child_buff_template = self._child_buff_template

@@ -38,13 +38,16 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	local weapon_lock_view_component = self._weapon_lock_view_component
 
 	if weapon_lock_view_component and action_settings.lock_view then
-		weapon_lock_view_component.is_active = true
+		weapon_lock_view_component.state = "weapon_lock"
 		local yaw, pitch, _ = self._input_extension:get_orientation()
 		weapon_lock_view_component.yaw = yaw
 		weapon_lock_view_component.pitch = pitch
 	end
 
-	self._critical_strike_component.is_active = false
+	if not action_settings.keep_critical_strike then
+		self._critical_strike_component.is_active = false
+	end
+
 	local aim_assist_ramp_template = action_settings.aim_assist_ramp_template
 
 	AimAssist.increase_ramp_multiplier(t, self._aim_assist_ramp_component, aim_assist_ramp_template)
@@ -60,6 +63,10 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 
 	if use_ability_charge then
 		self:_use_ability_charge()
+	end
+
+	if action_settings.delay_explosion_to_finish then
+		self._prevent_explosion = true
 	end
 end
 
@@ -80,13 +87,21 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 		local weapon_lock_view_component = self._weapon_lock_view_component
 
 		if weapon_lock_view_component and action_settings.lock_view then
-			weapon_lock_view_component.is_active = false
+			weapon_lock_view_component.state = "in_active"
 		end
 	end
 
-	local critical_strike_component = self._critical_strike_component
-	critical_strike_component.is_active = false
-	critical_strike_component.num_critical_shots = 0
+	if not action_settings.keep_critical_strike then
+		local critical_strike_component = self._critical_strike_component
+		critical_strike_component.is_active = false
+		critical_strike_component.num_critical_shots = 0
+	end
+
+	if action_settings.delay_explosion_to_finish then
+		local warp_charge_component = self._warp_charge_component
+
+		WarpCharge.check_and_set_state(t, warp_charge_component)
+	end
 end
 
 ActionWeaponBase._check_for_critical_strike = function (self)

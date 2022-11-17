@@ -173,21 +173,18 @@ local scenegraph_definition = {
 local character_name_style = table.clone(UIFontSettings.header_2)
 character_name_style.text_horizontal_alignment = "left"
 character_name_style.text_vertical_alignment = "top"
-character_name_style.text_color = Color.ui_brown_super_light(255, true)
-character_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
 local character_title_style = table.clone(UIFontSettings.body_small)
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "top"
+character_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local character_level_style = table.clone(UIFontSettings.body_small)
 character_level_style.text_horizontal_alignment = "center"
 character_level_style.text_vertical_alignment = "center"
-character_level_style.text_color = Color.ui_brown_super_light(255, true)
-character_level_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
+character_level_style.text_color = Color.terminal_text_header(255, true)
 local character_level_next_style = table.clone(UIFontSettings.body_small)
 character_level_next_style.text_horizontal_alignment = "center"
 character_level_next_style.text_vertical_alignment = "center"
-character_level_next_style.text_color = Color.ui_brown_super_light(255, true)
-character_level_next_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header_highlighted"
+character_level_next_style.text_color = Color.terminal_text_header(255, true)
 local widget_definitions = {
 	character_portrait = UIWidget.create_definition({
 		{
@@ -283,9 +280,12 @@ local legend_inputs = {
 	},
 	{
 		input_action = "hotkey_menu_special_1",
-		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		display_name = "loc_inventory_menu_swap_weapon",
-		alignment = "right_alignment"
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_weapon_swap_pressed",
+		visibility_function = function (parent)
+			return parent._active_view ~= "talents_view"
+		end
 	}
 }
 

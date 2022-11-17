@@ -4,6 +4,7 @@ local ConstantElementSubtitlesSettings = require("scripts/ui/constant_elements/e
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local Views = require("scripts/ui/views/views")
 local debug_subtitles = {
 	{
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 1 This is a placeholder subtitle line 1",
@@ -183,18 +184,31 @@ ConstantElementSubtitles._get_active_dialogue_system = function (self)
 			local view = ui_manager:view_instance(view_name)
 
 			if view and view.dialogue_system then
+				local state_managers = Managers.state
+
+				if state_managers then
+					local extension_manager = state_managers.extension
+					local system_name = "dialogue_system"
+					local world_dialogue_system = extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
+					local view_dialogue_system = view:dialogue_system()
+
+					if world_dialogue_system and world_dialogue_system ~= view_dialogue_system then
+						world_dialogue_system:force_stop_all()
+					end
+				end
+
 				return view:dialogue_system()
 			end
 		end
-	else
-		local state_managers = Managers.state
+	end
 
-		if state_managers then
-			local extension_manager = state_managers.extension
-			local system_name = "dialogue_system"
+	local state_managers = Managers.state
 
-			return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
-		end
+	if state_managers then
+		local extension_manager = state_managers.extension
+		local system_name = "dialogue_system"
+
+		return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
 	end
 end
 
@@ -214,8 +228,8 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 	end
 
 	local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
-	local is_dialogue_playing = dialogue_system_subtitle:is_localized_dialogue_playing()
-	local playing_dialogues_array = is_dialogue_playing and dialogue_system_subtitle:playing_localized_dialogues_array()
+	local is_dialogue_playing = dialogue_system_subtitle:is_audible_localized_dialogue_playing()
+	local playing_dialogues_array = is_dialogue_playing and dialogue_system_subtitle:playing_audible_localized_dialogues_array()
 	local currently_playing = playing_dialogues_array and playing_dialogues_array[#playing_dialogues_array]
 
 	if currently_playing then

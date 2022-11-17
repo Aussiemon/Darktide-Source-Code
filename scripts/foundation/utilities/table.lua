@@ -251,6 +251,18 @@ table.contains = function (t, element)
 	return false
 end
 
+table.has_intersection = function (t1, t2)
+	for _, v1 in pairs(t1) do
+		for _, v2 in pairs(t2) do
+			if v1 == v2 then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 table.find = function (t, element)
 	for key, value in pairs(t) do
 		if value == element then
@@ -585,6 +597,18 @@ table.keys = function (t, output)
 	return result
 end
 
+table.values = function (t, output)
+	local n = 0
+	local result = output or {}
+
+	for _, value in pairs(t) do
+		n = n + 1
+		result[n] = value
+	end
+
+	return result
+end
+
 table.append_varargs = function (t, ...)
 	local num_varargs = select("#", ...)
 	local t_size = #t
@@ -594,6 +618,25 @@ table.append_varargs = function (t, ...)
 	end
 
 	return t
+end
+
+table.merge_varargs = function (args, num_args, ...)
+	local merged = {
+		unpack(args, 1, num_args)
+	}
+	local num_varargs = select("#", ...)
+
+	for i = 1, num_varargs do
+		merged[num_args + i] = select(i, ...)
+	end
+
+	return merged, num_args + num_varargs
+end
+
+table.pack = function (...)
+	return {
+		...
+	}, select("#", ...)
 end
 
 table.array_to_table = function (array, array_n, out_table)

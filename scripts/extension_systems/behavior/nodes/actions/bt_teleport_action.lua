@@ -14,7 +14,9 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 		local entrance_position = nav_smart_object_component.entrance_position:unbox()
 		local exit_position = nav_smart_object_component.exit_position:unbox()
 		local distance = Vector3.distance(entrance_position, exit_position)
-		local wait_duration = math.clamp(distance * WAIT_TIME_PER_DISTANCE, MIN_WAIT_TIME, MAX_WAIT_TIME)
+		local min_wait_time = action_data and action_data.min_wait_time or MIN_WAIT_TIME
+		local max_wait_time = action_data and action_data.max_wait_time or MAX_WAIT_TIME
+		local wait_duration = math.clamp(distance * WAIT_TIME_PER_DISTANCE, min_wait_time, max_wait_time)
 		scratchpad.wait_time = t + wait_duration
 
 		navigation_extension:set_nav_bot_position(exit_position)

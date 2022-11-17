@@ -184,6 +184,29 @@ PlayerSpecialization.talent_from_name = function (talent_name)
 	return talent_id, talent
 end
 
+PlayerSpecialization.talent_group_unlocked_by_level = function (archetype, specialization_name, player_level, mark_unlocked_group_as_new)
+	local specialization = archetype.specializations[specialization_name]
+	local talent_groups = specialization.talent_groups
+
+	for i = 1, #talent_groups do
+		local group = talent_groups[i]
+
+		if group.required_level == player_level and not group.non_selectable_group then
+			return i
+		end
+	end
+
+	return nil
+end
+
+PlayerSpecialization.talent_group_from_id = function (archetype, specialization_name, group_id)
+	local specialization = archetype.specializations[specialization_name]
+	local talent_groups = specialization.talent_groups
+	local talent_group = talent_groups[group_id]
+
+	return talent_group
+end
+
 PlayerSpecialization.has_empty_talent_groups = function (archetype, specialization_name, player_level, selected_talents)
 	local specialization = archetype.specializations[specialization_name]
 	local talent_groups = specialization.talent_groups

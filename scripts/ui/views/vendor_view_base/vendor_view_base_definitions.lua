@@ -22,14 +22,14 @@ local scenegraph_definition = {
 	purchase_button = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		size = {
 			374,
 			76
 		},
 		position = {
-			-162,
-			-120,
+			857,
+			-90,
 			1
 		}
 	},

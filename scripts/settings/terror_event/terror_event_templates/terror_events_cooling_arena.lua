@@ -38,8 +38,7 @@ local template = {
 				enabled = false,
 				spawn_types = {
 					"hordes",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},
@@ -50,8 +49,7 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},

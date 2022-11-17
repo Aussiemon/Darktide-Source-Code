@@ -107,18 +107,15 @@ local action_data = {
 		considerations = UtilityConsiderations.chaos_ogryn_gunner_melee,
 		attack_anim_events = {
 			"attack_push_kick_01",
-			"attack_push_punch_01",
-			"attack_push_01"
+			"attack_push_punch_01"
 		},
 		attack_anim_damage_timings = {
 			attack_push_punch_01 = 0.5679012345679012,
-			attack_push_kick_01 = 0.7654320987654321,
-			attack_push_01 = 0.691358024691358
+			attack_push_kick_01 = 0.7654320987654321
 		},
 		attack_anim_durations = {
 			attack_push_punch_01 = 1.9753086419753085,
-			attack_push_kick_01 = 2.4691358024691357,
-			attack_push_01 = 1.728395061728395
+			attack_push_kick_01 = 2.4691358024691357
 		},
 		attack_intensities = {
 			ranged = 2,
@@ -126,6 +123,26 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.chaos_ogryn_gunner_melee,
 		damage_type = damage_types.minion_ogryn_kick
+	},
+	melee_attack_push = {
+		weapon_reach = 4,
+		utility_weight = 1,
+		considerations = UtilityConsiderations.chaos_ogryn_gunner_melee,
+		attack_anim_events = {
+			"attack_push_01"
+		},
+		attack_anim_damage_timings = {
+			attack_push_01 = 0.691358024691358
+		},
+		attack_anim_durations = {
+			attack_push_01 = 1.728395061728395
+		},
+		attack_intensities = {
+			ranged = 2,
+			melee = 0.5
+		},
+		damage_profile = DamageProfileTemplates.chaos_ogryn_gunner_melee,
+		damage_type = damage_types.minion_melee_blunt
 	},
 	climb = {
 		stagger_immune = true,
@@ -198,12 +215,12 @@ local action_data = {
 		idle_anim_events = "idle",
 		speed = 4.2,
 		degree_per_direction = 10,
-		range = "close",
+		range = "far",
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
 		move_to_cooldown = 0.25,
 		min_distance_to_target = 10,
-		considerations = UtilityConsiderations.move_to_combat_vector,
+		considerations = UtilityConsiderations.move_to_combat_vector_special,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
@@ -292,13 +309,13 @@ local action_data = {
 		}
 	},
 	shoot = {
-		rotation_speed = 2,
 		can_strafe_shoot = true,
 		randomized_direction_degree_range = 210,
 		degree_per_direction = 10,
 		move_to_cooldown = 0.25,
 		strafe_end_anim_event = "hip_fire",
 		out_of_aim_anim_event = "out_of_aim",
+		not_allowed_cooldown = 0.5,
 		move_to_fail_cooldown = 1,
 		attack_intensity_type = "elite_ranged",
 		reposition_if_not_clear_shot = true,
@@ -306,11 +323,12 @@ local action_data = {
 		max_distance_to_target = 10,
 		utility_weight = 15,
 		vo_event = "start_shooting",
-		strafe_shoot_distance = 3,
+		strafe_shoot_distance = 4,
 		min_clear_shot_combat_vector_distance = 8,
-		exit_after_cooldown = true,
-		strafe_shoot_ranged_position_fallback = true,
+		exit_after_cooldown = false,
+		skip_attack_intensity_during_aim = true,
 		suppressive_fire = true,
+		rotation_speed = 2,
 		clear_shot_line_of_sight_id = "gun",
 		min_distance_to_target = 4,
 		fx_source_name = "muzzle",
@@ -363,7 +381,7 @@ local action_data = {
 		},
 		attack_intensities = {
 			ranged = 12,
-			elite_ranged = 12
+			elite_ranged = 8
 		},
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,

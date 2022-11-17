@@ -4,6 +4,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Health = require("scripts/utilities/health")
 local HudElementPlayerHealthSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_health_settings")
@@ -14,8 +15,10 @@ local Vo = require("scripts/utilities/vo")
 local attack_results = AttackSettings.attack_results
 local proc_events = BuffSettings.proc_events
 local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
+	ranged_close = 16,
 	ranged = math.huge,
-	elite_ranged = math.huge
+	elite_ranged = math.huge,
+	elite_shotgun = math.huge
 }
 local Damage = {}
 local _trigger_player_hurt_vo = nil
@@ -88,7 +91,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 
 		actual_damage_dealt = health_extension:add_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
 
-		if is_player then
+		if is_player and not damage_profile.skip_on_hit_proc then
 			local side = ScriptUnit.extension(unit, "side_system").side
 			local player_units = side.valid_player_units
 
@@ -118,26 +121,22 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	if (is_minion or is_prop) and attacking_unit_owner_unit and health_extension.set_last_damaging_unit then
-		health_extension:set_last_damaging_unit(attacking_unit_owner_unit)
+		health_extension:set_last_damaging_unit(attacking_unit_owner_unit, hit_zone_name, is_critical_strike)
 	end
 
 	local absorbed_attack = damage == 0 and permanent_damage == 0
 	local current_health_percent = health_extension:current_health_percent()
 
-	if is_player and not is_ally then
-		if not absorbed_attack then
-			local is_critical = current_health_percent <= HudElementPlayerHealthSettings.critical_health_threshold
+	if is_player and not is_ally and not absorbed_attack then
+		local is_critical = current_health_percent <= HudElementPlayerHealthSettings.critical_health_threshold
 
-			if is_critical then
-				Vo.health_critical_event(unit)
-			elseif permanent_damage < damage then
-				_trigger_player_hurt_vo(unit, damage)
-			end
-
-			Managers.state.pacing:add_damage_tension("damaged", damage, unit)
-		else
-			Managers.state.pacing:add_damage_tension("absorbed_damage", damage, unit)
+		if is_critical then
+			Vo.health_critical_event(unit)
+		elseif permanent_damage < damage then
+			_trigger_player_hurt_vo(unit, damage)
 		end
+
+		Managers.state.pacing:add_damage_tension("damaged", damage, unit)
 	end
 
 	if is_minion and breed_or_nil and breed_or_nil.tags.monster and not is_ally then
@@ -172,7 +171,9 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 			local should_die = ignores_knockdown or is_knocked_down or num_wounds <= 1
 
 			if should_die then
-				PlayerDeath.die(unit, nil, attacking_unit_owner_unit)
+				local reason = "damage"
+
+				PlayerDeath.die(unit, nil, attacking_unit_owner_unit, reason)
 
 				local should_add_died_tension = ignores_knockdown or num_wounds <= 1
 

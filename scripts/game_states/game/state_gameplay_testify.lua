@@ -328,7 +328,6 @@ local StateGameplayTestify = {
 		local memory_usage = Memory.usage()
 
 		Managers.telemetry_events:memory_usage(mission_name, index, memory_usage)
-		Testify:respond_to_request("memory_usage")
 	end,
 	play_cutscene = function (cutscene_name)
 		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)
@@ -343,7 +342,6 @@ local StateGameplayTestify = {
 		local lua_trace_stats = lua_trace_data.stats
 
 		Managers.telemetry_events:lua_trace_stats(mission_name, index, lua_trace_stats)
-		Testify:respond_to_request("send_lua_trace_statistics_to_telemetry")
 	end,
 	show_players = function ()
 		Log.info("StateGameplayTestify", "Showing players")
@@ -382,7 +380,11 @@ local StateGameplayTestify = {
 
 		local mission_name = Managers.state.mission:mission_name()
 
-		Managers.telemetry_events:camera_performance_measurements(mission_name, camera, performance_measurements)
+		if camera then
+			Managers.telemetry_events:camera_performance_measurements(mission_name, camera, performance_measurements)
+		else
+			Managers.telemetry_events:performance_measurements(mission_name, performance_measurements)
+		end
 	end,
 	take_a_screenshot = function (screenshot_settings, state_gameplay)
 		local type = "file_system"

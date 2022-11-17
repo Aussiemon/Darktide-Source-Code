@@ -42,6 +42,31 @@ scenarios.attack_chains = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "attack_chains_heavy")
+	},
+	cleanup = {
+		TrainingGroundsSteps.cleanup_ragdolls,
+		TrainingGroundsSteps.hide_prompt,
+		TrainingGroundsSteps.dynamic.remove_unique_buff("tg_player_nerfed_damage"),
+		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable")
+	}
+}
+scenarios.attack_chains_heavy = {
+	steps = {
+		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
+		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_nerfed_damage"),
+		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed),
+		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
+		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.ogryn_knife),
+		TrainingGroundsSteps.condition_else,
+		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combat_sword_3),
+		TrainingGroundsSteps.condition_end,
+		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.chain_attack_heavy_prompt,
+		TrainingGroundsSteps.attack_chains_kill_infected_loop_heavy,
+		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
+		TrainingGroundsSteps.hide_prompt,
+		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "weapon_special")
 	},
 	cleanup = {
@@ -56,14 +81,16 @@ scenarios.weapon_special = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
+		TrainingGroundsSteps.weapon_special_prompt_ogrynknife,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.ogryn_knife),
 		TrainingGroundsSteps.condition_elseif.archetype_is("psyker"),
+		TrainingGroundsSteps.weapon_special_prompt_forcesword,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.force_sword),
 		TrainingGroundsSteps.condition_else,
+		TrainingGroundsSteps.weapon_special_prompt_chainsword,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.chainsaw),
 		TrainingGroundsSteps.condition_end,
 		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
-		TrainingGroundsSteps.weapon_special_prompt,
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.use_weapon_special_ogryn,
 		TrainingGroundsSteps.condition_else,
@@ -183,6 +210,7 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.combat_ability_prompt_psyker,
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", true, true),
+		TrainingGroundsSteps.dynamic.trigger_vo_event("combat_ability_psyker_1"),
 		TrainingGroundsSteps.combat_ability_loop_psyker,
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.combat_ability_biomancer_remove,
@@ -284,6 +312,7 @@ scenarios.toughness = {
 		TrainingGroundsSteps.toughness_spawn_bot,
 		TrainingGroundsSteps.dynamic.delay(3),
 		TrainingGroundsSteps.toughness_remove_bot,
+		TrainingGroundsSteps.dynamic.trigger_vo_event("training_end"),
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
@@ -322,6 +351,7 @@ scenarios.advanced_training = {
 scenarios.armor_types = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
+		TrainingGroundsSteps.dynamic.trigger_vo_event("armor"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.ogryn_knife),
@@ -380,6 +410,7 @@ scenarios.healing_self_and_others = {
 		TrainingGroundsSteps.healing_self_and_others_spawn_bot,
 		TrainingGroundsSteps.spawn_med_and_ammo_kits,
 		TrainingGroundsSteps.wait_for_full_health_and_ammo,
+		TrainingGroundsSteps.wait_for_full_ammo,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
@@ -519,6 +550,7 @@ scenarios.incoming_suppression = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.incoming_suppression_loop_3,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
+		TrainingGroundsSteps.dynamic.trigger_vo_event("training_end_advanced"),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "end_of_training_grounds")
@@ -542,7 +574,6 @@ scenarios.end_of_training_grounds = {
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.lasgun),
 		TrainingGroundsSteps.condition_end,
 		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.trigger_vo_event("training_end"),
 		TrainingGroundsSteps.end_of_tg_prompt,
 		TrainingGroundsSteps.end_of_tg_loop,
 		TrainingGroundsSteps.trigger_training_complete

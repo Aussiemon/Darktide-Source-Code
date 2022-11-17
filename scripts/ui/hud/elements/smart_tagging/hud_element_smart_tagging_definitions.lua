@@ -176,7 +176,6 @@ local button_pass_template = {
 		end
 	},
 	{
-		change_function = " style.color[1] = math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress)*255 ",
 		pass_type = "rect",
 		style = {
 			color = {
@@ -190,7 +189,10 @@ local button_pass_template = {
 				0,
 				1
 			}
-		}
+		},
+		change_function = function (content, style)
+			style.color[1] = math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 255
+		end
 	},
 	{
 		value_id = "text",

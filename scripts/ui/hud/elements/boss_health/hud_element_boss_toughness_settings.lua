@@ -12,7 +12,7 @@ local hud_element_boss_toughness_settings = {
 	},
 	size_small = {
 		305,
-		6
+		5
 	}
 }
 

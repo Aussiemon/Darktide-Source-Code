@@ -88,6 +88,7 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 					player = my_player,
 					slot_id = slot_id,
 					item = item,
+					ammo_template = weapon_template.ammo_template,
 					icon = weapon_template.hud_icon,
 					inventory_component = inventory_component,
 					ability_extension = ability_extension,
@@ -234,8 +235,9 @@ HudElementPlayerWeaponHandler.update = function (self, dt, t, ui_renderer, rende
 				data.wield_progress = wield_progress
 			end
 
-			local size = HudElementPlayerWeaponHandlerSettings.size
-			local size_small = HudElementPlayerWeaponHandlerSettings.size_small
+			local is_weapon = weapon:is_weapon()
+			local size = is_weapon and HudElementPlayerWeaponHandlerSettings.weapon_size or HudElementPlayerWeaponHandlerSettings.size
+			local size_small = is_weapon and HudElementPlayerWeaponHandlerSettings.weapon_size_small or HudElementPlayerWeaponHandlerSettings.size_small
 			local width_difference = size[1] - size_small[1]
 			local height_difference = size[2] - size_small[2]
 			local extra_width = width_difference * wield_progress
@@ -245,7 +247,7 @@ HudElementPlayerWeaponHandler.update = function (self, dt, t, ui_renderer, rende
 
 			weapon:set_size(width, height)
 			weapon:set_height_offset(-height_offset)
-			weapon:set_wield_anim_progress(wield_progress)
+			weapon:set_wield_anim_progress(wield_progress, ui_renderer)
 
 			height_offset = height_offset + height + weapon_spacing[2]
 		end

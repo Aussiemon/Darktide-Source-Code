@@ -6,7 +6,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 
 local function create_definitions(settings)
 	local use_horizontal_scrollbar = settings.use_horizontal_scrollbar
-	local scrollbar_pass_templates = settings.scrollbar_pass_templates or ScrollbarPassTemplates.default_scrollbar
+	local scrollbar_pass_templates = settings.scrollbar_pass_templates or ScrollbarPassTemplates.terminal_scrollbar
 	local scrollbar_width = settings.scrollbar_width
 	local scrollbar_vertical_margin = settings.scrollbar_vertical_margin or 0
 	local grid_size = settings.grid_size
@@ -291,7 +291,7 @@ local function create_definitions(settings)
 						-4,
 						0
 					},
-					color = Color.ui_terminal(70, true),
+					color = Color.terminal_grid_background(100, true),
 					offset = {
 						0,
 						0,
@@ -308,12 +308,7 @@ local function create_definitions(settings)
 						-4,
 						0
 					},
-					color = {
-						100,
-						0,
-						0,
-						0
-					}
+					color = Color.terminal_background(nil, true)
 				}
 			}
 		}, "grid_title_background"),
@@ -323,12 +318,13 @@ local function create_definitions(settings)
 				pass_type = "texture",
 				style = {
 					vertical_alignment = "center",
-					horizontal_alignment = "center",
 					scale_to_material = true,
+					horizontal_alignment = "center",
 					size_addition = {
 						18,
 						24
-					}
+					},
+					color = Color.terminal_grid_background(nil, true)
 				}
 			},
 			terminal_background_icon and {

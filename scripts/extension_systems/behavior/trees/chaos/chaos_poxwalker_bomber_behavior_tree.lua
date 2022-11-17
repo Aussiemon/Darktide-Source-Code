@@ -27,8 +27,9 @@ local behavior_tree = {
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
+			name = "teleport",
 			condition = "at_teleport_smart_object",
-			name = "teleport"
+			action_data = action_data.teleport
 		},
 		{
 			"BtClimbAction",

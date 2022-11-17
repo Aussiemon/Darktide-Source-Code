@@ -20,9 +20,10 @@ local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.veteran_2
 local templates = {
 	veteran_ranger_ranged_stance = {
-		class_name = "proc_buff",
 		buff_id = "veteran_ranger_combat_ability",
 		predicted = false,
+		allow_proc_while_active = true,
+		class_name = "proc_buff",
 		refresh_duration_on_stack = true,
 		duration = talent_settings.combat_ability.duration,
 		max_stacks = talent_settings.combat_ability.max_stacks,
@@ -41,7 +42,10 @@ local templates = {
 			[stat_buffs.ranged_weakspot_damage] = talent_settings.combat_ability.ranged_weakspot_damage,
 			[stat_buffs.ranged_impact_modifier] = talent_settings.combat_ability.ranged_impact_modifier,
 			[stat_buffs.ranged_damage] = talent_settings.combat_ability.ranged_damage,
-			[stat_buffs.fov_multiplier] = talent_settings.combat_ability.fov_multiplier
+			[stat_buffs.fov_multiplier] = talent_settings.combat_ability.fov_multiplier,
+			[stat_buffs.spread_modifier] = talent_settings.combat_ability.spread_modifier,
+			[stat_buffs.recoil_modifier] = talent_settings.combat_ability.recoil_modifier,
+			[stat_buffs.sway_modifier] = talent_settings.combat_ability.sway_modifier
 		},
 		conditional_stat_buffs = {
 			[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.defensive_1.toughness_damage_taken_multiplier
@@ -70,6 +74,8 @@ local templates = {
 			template_data.outlines_for_coherency = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_outlines_for_coherency)
 			template_data.refresh_on_kill = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_kills_refresh)
 			template_data.toughness_damage_reduction = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_toughness_damage_reduction)
+			template_data.headhunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_headhunter)
+			template_data.big_game_hunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_big_game_hunter)
 			local reload_weapon = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
 
 			if reload_weapon then
@@ -79,6 +85,14 @@ local templates = {
 				local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
 
 				Ammo.transfer_from_reserve_to_clip(inventory_slot_component, missing_ammo_in_clip)
+			end
+
+			local replenish_toughness = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_replenishes_toughness)
+
+			if replenish_toughness then
+				local toughness_replenish_percent = talent_settings.combat_ability.toughness
+
+				Toughness.replenish_percentage(unit, toughness_replenish_percent, false, "combat_ability_1")
 			end
 
 			template_data.first_update = true
@@ -99,7 +113,7 @@ local templates = {
 		refresh_func = function (template_data, template_context, t)
 			template_data.first_update = true
 		end,
-		proc_func = function (params, template_data, template_context)
+		proc_func = function (params, template_data, template_context, t)
 			if not template_data.refresh_on_kill then
 				return
 			end
@@ -111,20 +125,37 @@ local templates = {
 			end
 
 			local tags = params.tags
+			local is_special_or_elite = tags.elite or tags.special
 
-			if not tags or tags.ogryn then
-				return
+			if not is_special_or_elite then
+				local has_headhunter_talent = template_data.headhunter
+				local has_bgh_talent = template_data.big_game_hunter
+
+				if not has_bgh_talent and not has_headhunter_talent then
+					return
+				end
+
+				local is_ogryn_or_monster = tags and (tags.ogryn or tags.monster)
+
+				if has_bgh_talent and not is_ogryn_or_monster then
+					return
+				end
+
+				local enemy_unit = params.attacked_unit
+				local enemy_unit_data_extension = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
+				local breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+				local is_volley_fire_target = breed and breed.volley_fire_target
+
+				if has_headhunter_talent and not is_volley_fire_target then
+					return
+				end
 			end
 
-			if not tags.elite and not tags.special then
-				return
-			end
-
-			local t = FixedFrame.get_latest_fixed_time()
 			local unit = template_context.unit
 			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local buff_name = template_context.template.name
 
-			buff_extension:add_internally_controlled_buff("veteran_ranger_ranged_stance", t)
+			buff_extension:add_internally_controlled_buff(buff_name, t)
 		end,
 		update_func = function (template_data, template_context, dt, t)
 			if template_data.first_update then
@@ -132,7 +163,7 @@ local templates = {
 				local outline_buff = "veteran_ranger_ranged_stance_outline_units"
 				local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-				buff_extension:add_internally_controlled_buff(outline_buff, t)
+				buff_extension:add_internally_controlled_buff(outline_buff, t, "owner_unit", unit)
 
 				if template_context.is_server and template_data.outlines_for_coherency then
 					local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
@@ -145,7 +176,7 @@ local templates = {
 						if not is_local_unit then
 							local coherency_buff_extension = ScriptUnit.extension(coherency_unit, "buff_system")
 
-							coherency_buff_extension:add_internally_controlled_buff(outline_buff_short, t)
+							coherency_buff_extension:add_internally_controlled_buff(outline_buff_short, t, "owner_unit", unit)
 						end
 					end
 				end
@@ -192,8 +223,12 @@ local function _start_outline(template_data, template_context)
 	for enemy_unit, _ in pairs(enemy_units) do
 		local enemy_unit_data_extension = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
 		local breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+		local is_special_or_elite = breed and breed.tags and (breed.tags.elite or breed.tags.special)
+		local is_ogryn_or_monster = breed and breed.tags and (breed.tags.ogryn or breed.tags.monster)
+		local is_volley_fire_target = breed and breed.volley_fire_target
+		local should_get_outlined = template_data.headhunter and is_volley_fire_target and not is_ogryn_or_monster or template_data.big_game_hunter and is_ogryn_or_monster or is_special_or_elite and not is_ogryn_or_monster
 
-		if breed and breed.volley_fire_target then
+		if should_get_outlined then
 			local special_position = POSITION_LOOKUP[enemy_unit]
 			local from_player = special_position - player_position
 			local from_player_flatten = Vector3.normalize(Vector3.flat(from_player))
@@ -286,6 +321,18 @@ templates.veteran_ranger_ranged_stance_outline_units = {
 			return
 		end
 
+		local unit = template_context.unit
+		local is_owner_unit = template_context.owner_unit == unit
+
+		if is_owner_unit then
+			local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
+
+			if specialization_extension then
+				template_data.headhunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_headhunter)
+				template_data.big_game_hunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_big_game_hunter)
+			end
+		end
+
 		_start_outline(template_data, template_context)
 	end,
 	refresh_func = function (template_data, template_context, t)
@@ -342,7 +389,9 @@ templates.veteran_ranger_toughness_on_elite_kill = {
 	end
 }
 templates.veteran_ranger_toughness_on_elite_kill_buff = {
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_1_1",
 	predicted = false,
+	hud_priority = 3,
 	class_name = "buff",
 	duration = talent_settings.toughness_1.duration,
 	update_func = function (template_data, template_context, dt, t)
@@ -663,6 +712,8 @@ templates.veteran_ranger_ads_stamina_boost = {
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings.offensive_2_2.critical_strike_chance,
+		[stat_buffs.spread_modifier] = talent_settings.offensive_2_2.spread_modifier,
+		[stat_buffs.recoil_modifier] = talent_settings.offensive_2_2.recoil_modifier,
 		[stat_buffs.sway_modifier] = talent_settings.offensive_2_2.sway_modifier
 	},
 	start_func = function (template_data, template_context)
@@ -770,5 +821,9 @@ templates.veteran_ranger_ranged_stance_weapon_handling_improved = table.clone(te
 templates.veteran_ranger_ranged_stance_weapon_handling_improved.stat_buffs[stat_buffs.spread_modifier] = talent_settings.combat_ability_3.spread_modifier
 templates.veteran_ranger_ranged_stance_weapon_handling_improved.stat_buffs[stat_buffs.recoil_modifier] = talent_settings.combat_ability_3.recoil_modifier
 templates.veteran_ranger_ranged_stance_weapon_handling_improved.stat_buffs[stat_buffs.sway_modifier] = talent_settings.combat_ability_3.sway_modifier
+templates.veteran_ranger_ranged_stance_headhunter = table.clone(templates.veteran_ranger_ranged_stance)
+templates.veteran_ranger_ranged_stance_headhunter.stat_buffs[stat_buffs.ranged_weakspot_damage] = talent_settings.combat_ability_2.weakspot_damage
+templates.veteran_ranger_ranged_stance_big_game_hunter = table.clone(templates.veteran_ranger_ranged_stance)
+templates.veteran_ranger_ranged_stance_big_game_hunter.stat_buffs[stat_buffs.damage_vs_ogryn_and_monsters] = talent_settings.combat_ability_3.damage_vs_ogryn_and_monsters
 
 return templates

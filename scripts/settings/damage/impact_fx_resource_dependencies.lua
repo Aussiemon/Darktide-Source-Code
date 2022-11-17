@@ -52,6 +52,10 @@ function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map, path)
 			_fetch_impact_fx_lookups_recursive(value, impact_fx_map, (path or "") .. "." .. key)
 		elseif key == "damage_type" then
 			impact_fx_map[value] = impact_fx_lookup[value]
+		elseif key == "inner_damage_type" then
+			impact_fx_map[value] = impact_fx_lookup[value]
+		elseif key == "outer_damage_type" then
+			impact_fx_map[value] = impact_fx_lookup[value]
 		end
 	end
 end

@@ -28,8 +28,7 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},
@@ -64,12 +63,39 @@ local template = {
 				"stop_terror_trickle"
 			}
 		},
-		event_ascender_trickle_a = {
+		event_pacing_on_no_hordes = {
 			{
-				"debug_print",
-				text = "event_ascender_trickle_a",
-				duration = 3
+				"set_pacing_enabled",
+				enabled = true
 			},
+			{
+				"control_pacing_spawns",
+				enabled = true,
+				spawn_types = {
+					"roamers",
+					"monsters",
+					"specials"
+				}
+			},
+			{
+				"stop_terror_trickle"
+			}
+		},
+		event_pacing_enable_hordes = {
+			{
+				"set_pacing_enabled",
+				enabled = true
+			},
+			{
+				"control_pacing_spawns",
+				enabled = true,
+				spawn_types = {
+					"hordes",
+					"trickle_hordes"
+				}
+			}
+		},
+		event_ascender_trickle_a = {
 			{
 				"play_2d_sound",
 				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
@@ -101,17 +127,16 @@ local template = {
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
-				points = 6,
+				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"special"
 					}
 				}
 			},
 			{
 				"delay",
-				duration = 6
+				duration = 8
 			},
 			{
 				"start_terror_trickle",
@@ -139,16 +164,79 @@ local template = {
 				end
 			},
 			{
+				"play_2d_sound",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_ascender_trickle_b",
+				limit_spawners = 3,
+				points = 20,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_ascender_trickle_b",
+				limit_spawners = 3,
+				points = 8,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
+					}
+				}
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_ascender_trickle_a",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 6
+			},
+			{
+				"start_terror_trickle",
+				delay = 2,
+				spawner_group = "spawner_ascender_trickle_b",
+				template_name = "standard_melee"
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_ascender_trickle_c",
+				limit_spawners = 3,
+				points = 16,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"continue_when",
+				duration = 50,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 4
+				end
+			},
+			{
 				"start_random_terror_event",
 				start_event_name = "km_enforcer_wave_1"
 			}
 		},
 		event_ascender_trickle_b = {
-			{
-				"debug_print",
-				text = "event_ascender_trickle_b",
-				duration = 3
-			},
 			{
 				"play_2d_sound",
 				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
@@ -191,18 +279,18 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
+				spawner_group = "spawner_ascender_trickle_c",
 				max_breed_amount = 1,
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"disabler"
+						"special"
 					}
 				}
 			},
 			{
 				"delay",
-				duration = 6
+				duration = 8
 			},
 			{
 				"start_terror_trickle",
@@ -217,13 +305,70 @@ local template = {
 				points = 16,
 				breed_tags = {
 					{
-						"far"
+						"far",
+						"roamer"
 					}
 				}
 			},
 			{
 				"continue_when",
 				duration = 50,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 4
+				end
+			},
+			{
+				"play_2d_sound",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_ascender_trickle_c",
+				limit_spawners = 3,
+				points = 30,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_ascender_trickle_b",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 6
+			},
+			{
+				"start_terror_trickle",
+				delay = 2,
+				spawner_group = "spawner_ascender_trickle_a",
+				template_name = "standard_melee"
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_ascender_trickle_b",
+				limit_spawners = 3,
+				points = 16,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"continue_when",
+				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
 				end
@@ -315,11 +460,6 @@ local template = {
 		},
 		km_enforcer_kill_target_wave = {
 			{
-				"debug_print",
-				text = "event_reactor_cooling_a",
-				duration = 3
-			},
-			{
 				"play_2d_sound",
 				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
@@ -354,12 +494,12 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
+				spawner_group = "spawner_enforcer_command_right",
 				max_breed_amount = 1,
-				points = 6,
+				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"special"
 					}
 				}
 			},
@@ -379,7 +519,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_enforcer_command_left",
 				limit_spawners = 3,
-				points = 16,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
@@ -406,12 +546,12 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
+				spawner_group = "spawner_enforcer_command_middle",
 				max_breed_amount = 1,
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"disabler"
+						"special"
 					}
 				}
 			},
@@ -431,7 +571,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_enforcer_command_right",
 				limit_spawners = 3,
-				points = 16,
+				points = 14,
 				breed_tags = {
 					{
 						"close",
@@ -442,6 +582,61 @@ local template = {
 			{
 				"delay",
 				duration = 40
+			},
+			{
+				"continue_when",
+				duration = 40,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 3
+				end
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_enforcer_command_middle",
+				limit_spawners = 3,
+				points = 12,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_enforcer_command_right",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_enforcer_command_middle",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
 			},
 			{
 				"continue_when",

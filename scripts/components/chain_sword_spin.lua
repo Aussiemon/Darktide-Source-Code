@@ -1,4 +1,5 @@
 local ChainSwordSpin = component("ChainSwordSpin")
+local DEFAULT_MIN_SPEED = 1
 
 ChainSwordSpin.init = function (self, unit)
 	if not Unit.has_animation_state_machine(unit) then
@@ -13,11 +14,8 @@ ChainSwordSpin.init = function (self, unit)
 end
 
 ChainSwordSpin._set_speed = function (self, speed)
+	speed = speed or DEFAULT_MIN_SPEED
 	self._speed = speed
-
-	if not self._speed then
-		self._speed = 0
-	end
 
 	if self._speed >= 0 then
 		Unit.animation_event(self._unit, "forward")

@@ -50,7 +50,7 @@ local breed_data = {
 	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 20,
+	hit_mass = 10,
 	reduced_hit_mass = 4,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -143,8 +143,8 @@ local breed_data = {
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
-		1.08,
-		1.1
+		1.1,
+		1.12
 	},
 	fade = {
 		max_distance = 0.7,

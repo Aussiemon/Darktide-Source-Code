@@ -68,7 +68,7 @@ PlayerHuskLocomotionExtension._get_aim_direction = function (self, session, id)
 	return aim_direction
 end
 
-PlayerHuskLocomotionExtension.update = function (self, unit, dt, t)
+PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 	local session = self._game_session
 	local id = self._game_object_id
 	local parent_unit = nil
@@ -115,6 +115,11 @@ PlayerHuskLocomotionExtension.update = function (self, unit, dt, t)
 
 	if parent_unit then
 		final_rotation, final_position = PlayerMovement.calculate_absolute_rotation_position(parent_unit, lerp_rotation, lerp_position)
+		local moveable_platform_extension = ScriptUnit.has_extension(parent_unit, "moveable_platform_system")
+
+		if moveable_platform_extension then
+			final_position = final_position + moveable_platform_extension:movement_this_render_frame()
+		end
 	else
 		final_position = lerp_position
 		final_rotation = lerp_rotation
@@ -160,10 +165,14 @@ PlayerHuskLocomotionExtension.update = function (self, unit, dt, t)
 	if locomotion_steering_component.move_method == "script_driven_hub" then
 		local current_active_stop = locomotion_steering_component.hub_active_stopping and 1 or 0
 		local active_stop_anim_var_id = Unit.animation_find_variable(unit, self._active_stop_anim_var)
-		local old_anim_var_value = Unit.animation_get_variable(unit, active_stop_anim_var_id)
-		local active_stop = math.clamp(math.lerp(old_anim_var_value, current_active_stop, dt * 20), 0, 1)
 
-		Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
+		if active_stop_anim_var_id then
+			local old_anim_var_value = Unit.animation_get_variable(unit, active_stop_anim_var_id)
+			local active_stop = math.clamp(math.lerp(old_anim_var_value, current_active_stop, dt * 20), 0, 1)
+
+			Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
+		end
+
 		self._movement_direction_animation_control:update(dt, t)
 	end
 end

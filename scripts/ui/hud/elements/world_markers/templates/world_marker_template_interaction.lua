@@ -7,24 +7,24 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local USE_HDR = true
 local template = {}
 local size = {
-	100,
-	100
+	128,
+	128
 }
 local ping_size = {
-	100,
-	100
+	128,
+	128
 }
 local arrow_size = {
-	100,
-	100
+	128,
+	128
 }
 local icon_size = {
 	64,
 	64
 }
 local background_size = {
-	100,
-	100
+	128,
+	128
 }
 local line_size = {
 	250,
@@ -54,6 +54,14 @@ template.icon_min_size = {
 template.icon_max_size = {
 	icon_size[1],
 	icon_size[2]
+}
+template.background_min_size = {
+	background_size[1] * scale_fraction,
+	background_size[2] * scale_fraction
+}
+template.background_max_size = {
+	background_size[1],
+	background_size[2]
 }
 template.ping_min_size = {
 	ping_size[1] * scale_fraction,
@@ -98,7 +106,7 @@ template.fade_settings = {
 local template_visual_definitions = {
 	default = {
 		colors = {
-			background = Color.black(200, true),
+			background = Color.terminal_background(200, true),
 			ring = {
 				255,
 				226,
@@ -106,7 +114,7 @@ local template_visual_definitions = {
 				126
 			},
 			line = Color.ui_interaction_default(255, true),
-			ping = Color.ui_interaction_default(255, true),
+			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_interaction_default(255, true),
 			icon = Color.ui_hud_green_super_light(255, true)
 		},
@@ -128,7 +136,7 @@ local template_visual_definitions = {
 			}
 		},
 		colors = {
-			background = Color.black(200, true),
+			background = Color.terminal_background(200, true),
 			ring = {
 				255,
 				226,
@@ -136,12 +144,12 @@ local template_visual_definitions = {
 				126
 			},
 			line = Color.ui_interaction_pickup(255, true),
-			ping = Color.ui_hud_green_super_light(255, true),
+			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
 			icon = Color.ui_hud_green_super_light(255, true)
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/pickup_tag",
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
 			background = "content/ui/materials/hud/interactions/frames/mission_back",
 			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
@@ -165,10 +173,18 @@ local template_visual_definitions = {
 			icon_max_size = {
 				icon_size[1] * scale_fraction * 2,
 				icon_size[2] * scale_fraction * 2
+			},
+			background_min_size = {
+				background_size[1] * 1,
+				background_size[2] * 1
+			},
+			background_max_size = {
+				background_size[1] * 1.25,
+				background_size[2] * 1.25
 			}
 		},
 		colors = {
-			background = Color.black(200, true),
+			background = Color.terminal_background(200, true),
 			ring = {
 				255,
 				226,
@@ -176,7 +192,7 @@ local template_visual_definitions = {
 				126
 			},
 			line = Color.ui_interaction_point_of_interest(255, true),
-			ping = Color.ui_hud_green_super_light(255, true),
+			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
 			icon = Color.ui_hud_green_super_light(255, true)
 		},
@@ -202,7 +218,7 @@ local template_visual_definitions = {
 			}
 		},
 		colors = {
-			background = Color.black(200, true),
+			background = Color.terminal_background(200, true),
 			ring = {
 				255,
 				226,
@@ -210,7 +226,7 @@ local template_visual_definitions = {
 				126
 			},
 			line = Color.ui_interaction_default(255, true),
-			ping = Color.ui_hud_green_super_light(255, true),
+			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
 			icon = Color.ui_hud_green_super_light(255, true)
 		},
@@ -224,10 +240,10 @@ local template_visual_definitions = {
 	},
 	mission = {
 		colors = {
-			background = Color.ui_interaction_mission(77, true),
+			background = Color.ui_interaction_mission(200, true),
 			ring = Color.ui_interaction_mission(255, true),
 			line = Color.ui_interaction_mission(255, true),
-			ping = Color.ui_hud_green_super_light(255, true),
+			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
 			icon = Color.ui_hud_green_super_light(255, true)
 		},
@@ -294,6 +310,11 @@ template.create_widget_defintion = function (self, scenegraph_id)
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				size = background_size,
+				offset = {
+					0,
+					0,
+					1
+				},
 				color = {
 					150,
 					80,
@@ -342,7 +363,7 @@ template.create_widget_defintion = function (self, scenegraph_id)
 				offset = {
 					0,
 					0,
-					1
+					0
 				},
 				color = {
 					255,
@@ -367,7 +388,7 @@ template.create_widget_defintion = function (self, scenegraph_id)
 				offset = {
 					0,
 					0,
-					1
+					3
 				},
 				color = {
 					255,
@@ -392,7 +413,7 @@ template.create_widget_defintion = function (self, scenegraph_id)
 				offset = {
 					0,
 					0,
-					1
+					2
 				},
 				color = {
 					255,
@@ -516,12 +537,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	ping_pivot[2] = ping_size[2] * 0.5
 	local icon_max_size = self.icon_max_size
 	local icon_min_size = self.icon_min_size
+	local background_max_size = self.background_max_size
+	local background_min_size = self.background_min_size
 	local icon_size = style.icon.size
 	icon_size[1] = (icon_min_size[1] + (icon_max_size[1] - icon_min_size[1]) * scale_progress) * global_scale
 	icon_size[2] = (icon_min_size[2] + (icon_max_size[2] - icon_min_size[2]) * scale_progress) * global_scale
 	local background_size = style.background.size
-	background_size[1] = (default_size[1] + (max_size[1] - default_size[1]) * scale_progress) * global_scale
-	background_size[2] = (default_size[2] + (max_size[2] - default_size[2]) * scale_progress) * global_scale
+	background_size[1] = (background_min_size[1] + (background_max_size[1] - background_min_size[1]) * scale_progress) * global_scale
+	background_size[2] = (background_min_size[2] + (background_max_size[2] - background_min_size[2]) * scale_progress) * global_scale
 	local animating = scale_progress ~= content.scale_progress
 	content.line_of_sight_progress = line_of_sight_progress
 	content.scale_progress = scale_progress

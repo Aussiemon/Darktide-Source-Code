@@ -21,7 +21,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.unarmored_damage] = 0.5
+			[buff_stat_buffs.unarmored_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -29,7 +29,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.armored_damage] = 0.5
+			[buff_stat_buffs.armored_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -37,7 +37,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.resistant_damage] = 0.5
+			[buff_stat_buffs.resistant_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -45,7 +45,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.berserker_damage] = 0.5
+			[buff_stat_buffs.berserker_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -53,7 +53,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.super_armor_damage] = 0.5
+			[buff_stat_buffs.super_armor_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -61,7 +61,7 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.disgustingly_resilient_damage] = 0.5
+			[buff_stat_buffs.disgustingly_resilient_damage] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -130,6 +130,118 @@ local templates = {
 		class_name = "buff",
 		conditional_stat_buffs = {
 			[buff_stat_buffs.critical_strike_chance] = 1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_crit_chance = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.critical_strike_chance] = 0.05
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_crit_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.critical_strike_damage] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_stamina = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.stamina_modifier] = 1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_weakspot_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.weakspot_damage] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_attack_speed = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.attack_speed] = 0.05
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_damage = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_finesse = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.finesse_modifier_bonus] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_power = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.power_level_modifier] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_impact = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.impact_modifier] = 0.04
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_reduced_block_cost = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.block_cost_multiplier] = 0.8
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_damage_elites = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_elites] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_damage_hordes = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_horde] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_increase_damage_specials = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.damage_vs_specials] = 0.1
+		},
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	},
+	weapon_trait_reduce_sprint_cost = {
+		predicted = false,
+		class_name = "buff",
+		conditional_stat_buffs = {
+			[buff_stat_buffs.sprinting_cost_multiplier] = 0.8
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
@@ -1016,6 +1128,7 @@ local templates = {
 		predicted = false,
 		duration = 3,
 		class_name = "proc_buff",
+		allow_proc_while_active = true,
 		proc_events = {
 			[buff_proc_events.on_hit] = 1
 		},

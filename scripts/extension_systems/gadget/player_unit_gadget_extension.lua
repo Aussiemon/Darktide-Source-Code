@@ -68,7 +68,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 			local data = perks[i]
 			local master_item_id = data.id
 			local lerp_value = data.value
-			local buff_data = self:_add_gadget_buff(master_item_id, lerp_value)
+			local buff_data = self:_add_gadget_buff(master_item_id, lerp_value, slot_name)
 
 			if buff_data then
 				gadget_buffs[#gadget_buffs + 1] = buff_data
@@ -83,7 +83,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 			local data = traits[i]
 			local master_item_id = data.id
 			local lerp_value = data.value
-			local buff_data = self:_add_gadget_buff(master_item_id, lerp_value)
+			local buff_data = self:_add_gadget_buff(master_item_id, lerp_value, slot_name)
 
 			if buff_data then
 				gadget_buffs[#gadget_buffs + 1] = buff_data
@@ -98,7 +98,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 	table.dump(self._gadget_buff_indexes, "_gadget_buff_indexes", 3)
 end
 
-PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, lerp_value)
+PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, lerp_value, slot_name)
 	local t = FixedFrame.get_latest_fixed_time()
 	local item_exists = MasterItems.item_exists(master_item_id)
 
@@ -132,7 +132,7 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 		Log.info("PlayerUnitGadgetExtension", "Added gadget meta trait name:%s lerp_value:%s", trait_name, lerp_value)
 	else
 		local buff_extension = self._buff_extension
-		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(trait_name, t, "buff_lerp_value", lerp_value)
+		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(trait_name, t, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)
 
 		if not client_tried_adding_rpc_buff then
 			buff_data = {

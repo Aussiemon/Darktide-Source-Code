@@ -54,7 +54,8 @@ CinematicPlayerSpawner.component_data = {
 			"Path of Trust 06",
 			"Path of Trust 07",
 			"Path of Trust 08",
-			"Path of Trust 09"
+			"Path of Trust 09",
+			"Traitor Captain Intro"
 		},
 		options_values = {
 			"none",
@@ -79,7 +80,8 @@ CinematicPlayerSpawner.component_data = {
 			"path_of_trust_06",
 			"path_of_trust_07",
 			"path_of_trust_08",
-			"path_of_trust_09"
+			"path_of_trust_09",
+			"traitor_captain_intro"
 		}
 	}
 }

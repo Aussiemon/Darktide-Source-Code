@@ -282,7 +282,8 @@ damage_templates.thunderhammer_light = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_light_active = {
 	weapon_special = true,
@@ -370,7 +371,8 @@ damage_templates.thunderhammer_light_active = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 overrides.thunderhammer_pushfollow_active = {
 	parent_template_name = "thunderhammer_light_active",
@@ -520,7 +522,8 @@ damage_templates.thunderhammer_heavy = {
 			armor_damage_modifier = hammer_tank_heavy_am,
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_heavy_active = {
 	shield_override_stagger_strength = 500,
@@ -626,7 +629,8 @@ damage_templates.thunderhammer_heavy_active = {
 			armor_damage_modifier = hammer_tank_heavy_am,
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 
 return {

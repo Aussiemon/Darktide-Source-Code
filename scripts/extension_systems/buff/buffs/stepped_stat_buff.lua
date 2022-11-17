@@ -28,9 +28,6 @@ SteppedStatBuff.update_stat_buffs = function (self, current_stat_buffs, t)
 end
 
 SteppedStatBuff.stat_buff_stacking_count = function (self)
-	local stack_count = self:stack_count()
-	local max_stacks = self:max_stacks() or 1
-	local stack_offset = self._template.stack_offset or 0
 	local stack_count = self.super.stat_buff_stacking_count(self)
 	local template_data = self._template_data
 	local template_context = self._template_context
@@ -45,8 +42,8 @@ SteppedStatBuff.stat_buff_stacking_count = function (self)
 	end
 
 	min = min or 0
-	max = max or template.max_stacks
-	local step = math.clamp(stack_count + stack_offset + bonus_step, min, max)
+	max = max or self:max_stacks()
+	local step = math.clamp(stack_count + bonus_step, min, max)
 
 	return step
 end

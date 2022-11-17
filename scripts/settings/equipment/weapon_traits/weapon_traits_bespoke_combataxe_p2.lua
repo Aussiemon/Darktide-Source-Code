@@ -89,5 +89,85 @@ templates.weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_ki
 		}
 	}
 }
+templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
+	weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
+		{
+			conditional_stat_buffs = {
+				{
+					[stat_buffs.power_level_modifier] = 0.1
+				},
+				{
+					[stat_buffs.power_level_modifier] = -0.1
+				}
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				{
+					[stat_buffs.power_level_modifier] = 0.15
+				},
+				{
+					[stat_buffs.power_level_modifier] = -0.15
+				}
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				{
+					[stat_buffs.power_level_modifier] = 0.2
+				},
+				{
+					[stat_buffs.power_level_modifier] = -0.2
+				}
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				{
+					[stat_buffs.power_level_modifier] = 0.25
+				},
+				{
+					[stat_buffs.power_level_modifier] = -0.25
+				}
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
+	weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
+		{
+			lerped_stat_buffs = {
+				[stat_buffs.power_level_modifier] = {
+					max = 0.02,
+					min = 0
+				}
+			}
+		},
+		{
+			lerped_stat_buffs = {
+				[stat_buffs.power_level_modifier] = {
+					max = 0.03,
+					min = 0
+				}
+			}
+		},
+		{
+			lerped_stat_buffs = {
+				[stat_buffs.power_level_modifier] = {
+					max = 0.04,
+					min = 0
+				}
+			}
+		},
+		{
+			lerped_stat_buffs = {
+				[stat_buffs.power_level_modifier] = {
+					max = 0.05,
+					min = 0
+				}
+			}
+		}
+	}
+}
 
 return templates

@@ -6,6 +6,10 @@ local circumstance_templates = {
 			description = "loc_circumstance_darkness_description",
 			icon = "content/ui/materials/icons/circumstances/darkness_01",
 			display_name = "loc_circumstance_darkness_title"
+		},
+		mutators = {
+			"mutator_more_witches",
+			"mutator_more_encampments"
 		}
 	}
 }

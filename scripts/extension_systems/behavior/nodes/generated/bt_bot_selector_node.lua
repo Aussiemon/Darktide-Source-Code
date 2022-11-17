@@ -60,28 +60,30 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local perception_component = blackboard.perception
 			local force_aid = perception_component.force_aid
 			local perception_extension = ScriptUnit.extension(unit, "perception_system")
-			local enemies_in_proximity = perception_extension:enemies_in_proximity()
-			local num_proximite_enemies = #enemies_in_proximity
+			local enemies_in_proximity, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies do
+			for i = 1, num_enemies_in_proximity do
 				local enemy_unit = enemies_in_proximity[i]
-				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-				local enemy_breed = enemy_unit_data_extension:breed()
 				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-				local enemy_perception_component = enemy_blackboard.perception
 
-				if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
-					enemy_found = true
+				if enemy_blackboard then
+					local enemy_unit_data_extension = ALIVE[enemy_unit] and ScriptUnit.extension(enemy_unit, "unit_data_system")
+					local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+					local enemy_perception_component = enemy_blackboard.perception
 
-					break
+					if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
+						enemy_found = true
+
+						break
+					end
 				end
 			end
 
 			local condition_result = enemy_found
 			sub_condition_result_01 = condition_result
 
-			if ally_health > 0.3 and sub_condition_result_01 then
+			if ally_health > 0.5 and sub_condition_result_01 then
 				condition_result = false
 			else
 				local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
@@ -144,28 +146,30 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local perception_component = blackboard.perception
 			local force_aid = perception_component.force_aid
 			local perception_extension = ScriptUnit.extension(unit, "perception_system")
-			local enemies_in_proximity = perception_extension:enemies_in_proximity()
-			local num_proximite_enemies = #enemies_in_proximity
+			local enemies_in_proximity, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies do
+			for i = 1, num_enemies_in_proximity do
 				local enemy_unit = enemies_in_proximity[i]
-				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-				local enemy_breed = enemy_unit_data_extension:breed()
 				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-				local enemy_perception_component = enemy_blackboard.perception
 
-				if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
-					enemy_found = true
+				if enemy_blackboard then
+					local enemy_unit_data_extension = ALIVE[enemy_unit] and ScriptUnit.extension(enemy_unit, "unit_data_system")
+					local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+					local enemy_perception_component = enemy_blackboard.perception
 
-					break
+					if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
+						enemy_found = true
+
+						break
+					end
 				end
 			end
 
 			local condition_result = enemy_found
 			sub_condition_result_01 = condition_result
 
-			if ally_health > 0.3 and sub_condition_result_01 then
+			if ally_health > 0.75 and sub_condition_result_01 then
 				condition_result = false
 			else
 				local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
@@ -227,21 +231,23 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 			local perception_component = blackboard.perception
 			local force_aid = perception_component.force_aid
 			local perception_extension = ScriptUnit.extension(unit, "perception_system")
-			local enemies_in_proximity = perception_extension:enemies_in_proximity()
-			local num_proximite_enemies = #enemies_in_proximity
+			local enemies_in_proximity, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
 			local enemy_found = false
 
-			for i = 1, num_proximite_enemies do
+			for i = 1, num_enemies_in_proximity do
 				local enemy_unit = enemies_in_proximity[i]
-				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-				local enemy_breed = enemy_unit_data_extension:breed()
 				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-				local enemy_perception_component = enemy_blackboard.perception
 
-				if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
-					enemy_found = true
+				if enemy_blackboard then
+					local enemy_unit_data_extension = ALIVE[enemy_unit] and ScriptUnit.extension(enemy_unit, "unit_data_system")
+					local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+					local enemy_perception_component = enemy_blackboard.perception
 
-					break
+					if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
+						enemy_found = true
+
+						break
+					end
 				end
 			end
 
@@ -462,8 +468,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local self_position = POSITION_LOOKUP[unit]
 					local can_activate = false
 					local perception_extension = ScriptUnit.extension(unit, "perception_system")
-					local enemies_in_proximity = perception_extension:enemies_in_proximity()
-					local num_proximite_enemies = #enemies_in_proximity
+					local enemies_in_proximity, num_proximite_enemies = perception_extension:enemies_in_proximity()
 					local total_challenge_rating = 0
 
 					for i = 1, num_proximite_enemies do
@@ -562,8 +567,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local self_position = POSITION_LOOKUP[unit]
 					local can_activate = false
 					local perception_extension = ScriptUnit.extension(unit, "perception_system")
-					local enemies_in_proximity = perception_extension:enemies_in_proximity()
-					local num_proximite_enemies = #enemies_in_proximity
+					local enemies_in_proximity, num_proximite_enemies = perception_extension:enemies_in_proximity()
 					local total_challenge_rating = 0
 
 					for i = 1, num_proximite_enemies do

@@ -2,6 +2,8 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ActionExplosion = class("ActionExplosion", "ActionWeaponBase")
 
 ActionExplosion.init = function (self, action_context, action_params, action_settings)
@@ -43,7 +45,7 @@ ActionExplosion._explode = function (self, charge_level)
 	local attack_type = AttackSettings.attack_types.explosion
 	local explosion_template = action_settings.explosion_template
 	local position = position_component.position
-	local power_level = action_settings.power_level
+	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	local ignore_cover = true
 	local is_critical_strike = self._critical_strike_component.is_active
 

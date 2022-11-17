@@ -33,10 +33,13 @@ local personalities = {
 		description = "loc_veteran_male_c__intro_01",
 		gender = "male",
 		display_name = "loc_personality_name_male_veteran_3",
-		character_voice = "veteran_male_c",
 		archetype = "veteran",
-		breed = "human",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_male_c",
+		character_voice = "veteran_male_c",
+		breed = "human",
+		home_planets = {
+			"option_7"
+		},
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
@@ -78,10 +81,13 @@ local personalities = {
 		description = "loc_veteran_female_c__intro_01",
 		gender = "female",
 		display_name = "loc_personality_name_female_veteran_3",
-		character_voice = "veteran_female_c",
 		archetype = "veteran",
-		breed = "human",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_female_c",
+		character_voice = "veteran_female_c",
+		breed = "human",
+		home_planets = {
+			"option_7"
+		},
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",

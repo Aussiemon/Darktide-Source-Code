@@ -74,6 +74,10 @@ ViewElementTabMenu.set_selected_index = function (self, index)
 	self._selected_index = index
 end
 
+ViewElementTabMenu.selected_index = function (self, index)
+	return self._selected_index
+end
+
 ViewElementTabMenu._update_widget_size = function (self, widget, ui_renderer)
 	local content = widget.content
 	local style = widget.style
@@ -217,9 +221,14 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 		end
 
 		widgets_by_name.input_text_right.offset[1] = left_size_offset
+		self._total_width = total_width
 	end
 
 	ViewElementTabMenu.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+end
+
+ViewElementTabMenu.get_total_width = function (self)
+	return self._total_width or 0
 end
 
 ViewElementTabMenu._get_input_text = function (self, input_action)

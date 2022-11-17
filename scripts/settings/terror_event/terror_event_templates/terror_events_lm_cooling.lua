@@ -25,10 +25,14 @@ local template = {
 		},
 		lm_cooling_reactor_2 = {
 			"event_reactor_cooling_b",
+			1,
+			"event_reactor_cooling_c",
 			1
 		},
 		lm_cooling_reactor_3 = {
-			"event_reactor_cooling_c",
+			"event_reactor_cooling_d",
+			1,
+			"event_reactor_cooling_e",
 			1
 		}
 	},
@@ -46,8 +50,7 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-					"monsters"
+					"trickle_hordes"
 				}
 			}
 		},
@@ -73,6 +76,21 @@ local template = {
 					"trickle_hordes",
 					"specials",
 					"monsters"
+				}
+			}
+		},
+		event_pacing_on_specials_only = {
+			{
+				"set_pacing_enabled",
+				enabled = true
+			},
+			{
+				"control_pacing_spawns",
+				enabled = false,
+				spawn_types = {
+					"hordes",
+					"roamers",
+					"trickle_hordes"
 				}
 			}
 		},
@@ -159,7 +177,7 @@ local template = {
 				spawner_group = "spawner_cooling_hacking_far",
 				limit_spawners = 3,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				points = 20,
+				points = 18,
 				breed_tags = {
 					{
 						"close",
@@ -171,7 +189,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_hacking_far",
 				limit_spawners = 3,
-				points = 12,
+				points = 10,
 				breed_tags = {
 					{
 						"far",
@@ -225,7 +243,7 @@ local template = {
 				spawner_group = "spawner_cooling_hacking_far",
 				limit_spawners = 3,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				points = 20,
+				points = 18,
 				breed_tags = {
 					{
 						"close",
@@ -237,7 +255,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_hacking_far",
 				limit_spawners = 3,
-				points = 12,
+				points = 10,
 				breed_tags = {
 					{
 						"far",
@@ -303,19 +321,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_hacking_close",
 				limit_spawners = 3,
-				points = 10,
-				breed_tags = {
-					{
-						"melee",
-						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_cooling_hacking_close",
-				limit_spawners = 3,
-				points = 10,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -368,19 +374,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_hacking_close",
 				limit_spawners = 3,
-				points = 10,
-				breed_tags = {
-					{
-						"melee",
-						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_cooling_hacking_close",
-				limit_spawners = 3,
-				points = 10,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -432,13 +426,12 @@ local template = {
 		},
 		event_reactor_cooling_a = {
 			{
-				"debug_print",
-				text = "event_reactor_cooling_a",
-				duration = 3
-			},
-			{
 				"play_2d_sound",
 				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+			},
+			{
+				"delay",
+				duration = 3
 			},
 			{
 				"spawn_by_points",
@@ -466,7 +459,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 12
+				duration = 18
 			},
 			{
 				"try_inject_special_minion",
@@ -475,14 +468,13 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"disabler"
+						"special"
 					}
 				}
 			},
 			{
 				"delay",
-				duration = 12
+				duration = 18
 			},
 			{
 				"continue_when",
@@ -515,7 +507,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 12
+				duration = 18
 			},
 			{
 				"try_inject_special_minion",
@@ -524,14 +516,13 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"special"
 					}
 				}
 			},
 			{
 				"delay",
-				duration = 12
+				duration = 18
 			},
 			{
 				"continue_when",
@@ -553,19 +544,11 @@ local template = {
 		},
 		event_reactor_cooling_b = {
 			{
-				"debug_print",
-				text = "event_reactor_cooling_b",
-				duration = 3
-			},
-			{
-				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
-			},
-			{
 				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_cooling_reactor_1",
 				limit_spawners = 3,
-				points = 10,
+				points = 7,
 				breed_tags = {
 					{
 						"melee",
@@ -587,47 +570,70 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 7
+				duration = 9
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_reactor_1",
 				limit_spawners = 3,
-				points = 8,
+				points = 10,
 				breed_tags = {
 					{
-						"far",
+						"melee",
 						"roamer"
-					}
-				}
-			},
-			{
-				"try_inject_special_minion",
-				spawner_group = "spawner_cooling_reactor_1",
-				points = 6,
-				breed_tags = {
-					{
-						"special",
-						"scrambler"
 					}
 				}
 			}
 		},
 		event_reactor_cooling_c = {
 			{
-				"debug_print",
-				text = "event_reactor_cooling_c",
-				duration = 3
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_cooling_reactor_1",
+				limit_spawners = 3,
+				points = 7,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
+					}
+				}
 			},
 			{
-				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+				"try_inject_special_minion",
+				spawner_group = "spawner_cooling_reactor_1",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 9
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_reactor_1",
 				limit_spawners = 3,
 				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			}
+		},
+		event_reactor_cooling_d = {
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_cooling_reactor_1",
+				limit_spawners = 3,
+				points = 7,
 				breed_tags = {
 					{
 						"melee",
@@ -649,28 +655,59 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 7
+				duration = 9
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_reactor_1",
 				limit_spawners = 3,
-				points = 8,
+				points = 10,
 				breed_tags = {
 					{
-						"far",
+						"melee",
 						"roamer"
+					}
+				}
+			}
+		},
+		event_reactor_cooling_e = {
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_cooling_reactor_1",
+				limit_spawners = 3,
+				points = 7,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
 					}
 				}
 			},
 			{
 				"try_inject_special_minion",
 				spawner_group = "spawner_cooling_reactor_1",
-				points = 6,
+				max_breed_amount = 1,
+				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 9
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_cooling_reactor_1",
+				limit_spawners = 3,
+				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
 					}
 				}
 			}
@@ -689,7 +726,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_cooling_reactor_1",
 				limit_spawners = 3,
-				points = 24,
+				points = 30,
 				breed_tags = {
 					{
 						"melee",
@@ -712,6 +749,17 @@ local template = {
 			{
 				"delay",
 				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_cooling_reactor_1",
+				points = 6,
+				breed_tags = {
+					{
+						"special",
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",

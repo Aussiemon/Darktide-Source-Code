@@ -10,8 +10,8 @@ local archetype_toughness_templates = {
 		max = 200,
 		template_type = template_types.player,
 		regeneration_speed = {
-			still = 2.5,
-			moving = 2.5
+			still = 5,
+			moving = 5
 		},
 		state_damage_modifiers = {
 			sliding = 0.5,
@@ -64,8 +64,8 @@ local archetype_toughness_templates = {
 		max = 100,
 		template_type = template_types.player,
 		regeneration_speed = {
-			still = 2.5,
-			moving = 2.5
+			still = 5,
+			moving = 5
 		},
 		state_damage_modifiers = {
 			sliding = 1,

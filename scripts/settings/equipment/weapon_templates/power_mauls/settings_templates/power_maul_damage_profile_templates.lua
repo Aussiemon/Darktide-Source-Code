@@ -4,6 +4,7 @@ local DamageProfileSettings = require("scripts/settings/damage/damage_profile_se
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local GibbingPower = GibbingSettings.gibbing_power
 local GibbingTypes = GibbingSettings.gibbing_types
 local damage_types = DamageSettings.damage_types
@@ -154,17 +155,19 @@ local tank_heavy_active_am = {
 	}
 }
 damage_templates.powermaul_light_smiter = {
-	ragdoll_only = true,
 	ragdoll_push_force = 100,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.spiked_blunt,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.power_maul,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 	stagger_duration_modifier = {
 		0.1,
-		0.5
+		2.5
 	},
 	armor_damage_modifier = smiter_light_default_am,
 	targets = {
@@ -177,7 +180,7 @@ damage_templates.powermaul_light_smiter = {
 				},
 				impact = {
 					5,
-					9
+					11
 				}
 			},
 			finesse_boost = {
@@ -216,6 +219,87 @@ damage_templates.powermaul_light_smiter = {
 		}
 	}
 }
+overrides.powermaul_weapon_special = {
+	parent_template_name = "powermaul_light_smiter",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky"
+		},
+		{
+			"stagger_override",
+			"sticky"
+		},
+		{
+			"shield_stagger_category",
+			"melee"
+		},
+		{
+			"damage_type",
+			damage_types.sawing_stuck
+		},
+		{
+			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"ignore_stagger_reduction",
+			false
+		},
+		{
+			"ignore_shield",
+			true
+		},
+		{
+			"gibbing_power",
+			GibbingPower.always
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.default
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.power_maul
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				11,
+				35
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				2,
+				7
+			}
+		},
+		{
+			"weapon_special",
+			true
+		},
+		{
+			"skip_on_hit_proc",
+			true
+		}
+	}
+}
 damage_templates.powermaul_light_linesman = {
 	ragdoll_push_force = 200,
 	ragdoll_only = true,
@@ -225,6 +309,7 @@ damage_templates.powermaul_light_linesman = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.power_maul,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
@@ -278,7 +363,8 @@ damage_templates.powermaul_light_linesman = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.powermaul_heavy_tank = {
 	ragdoll_push_force = 300,
@@ -289,6 +375,7 @@ damage_templates.powermaul_heavy_tank = {
 	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.power_maul,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
@@ -362,7 +449,8 @@ damage_templates.powermaul_heavy_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.powermaul_light_tank = {
 	ragdoll_push_force = 150,
@@ -373,6 +461,7 @@ damage_templates.powermaul_light_tank = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.power_maul,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
@@ -446,7 +535,8 @@ damage_templates.powermaul_light_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 
 return {

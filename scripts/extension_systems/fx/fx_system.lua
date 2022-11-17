@@ -52,12 +52,26 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 		wwise_world = self._wwise_world,
 		game_session = game_session
 	}
+	self._latest_player_particle_group_id = 0
+	self.unit_to_particle_group_lookup = Script.new_map(256)
+	self._spawned_impact_fx_units = Script.new_map(8)
 
 	if is_server then
 		self._next_global_effect_id = 0
 	else
 		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
+end
+
+FxSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
+	if extension_name == "PlayerUnitFxExtension" then
+		local player_particle_group_id = self._latest_player_particle_group_id + 1
+		self._latest_player_particle_group_id = player_particle_group_id
+		extension_init_data.player_particle_group_id = player_particle_group_id
+		self.unit_to_particle_group_lookup[unit] = player_particle_group_id
+	end
+
+	return FxSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
 end
 
 FxSystem.on_remove_extension = function (self, unit, extension_name)
@@ -71,6 +85,10 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 
 			self:_stop_template_effect(template_effect, template)
 		end
+	end
+
+	if extension_name == "PlayerUnitFxExtension" then
+		self.unit_to_particle_group_lookup[unit] = nil
 	end
 
 	FxSystem.super.on_remove_extension(self, unit, extension_name)
@@ -246,11 +264,12 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 	table.swap_delete(running_template_effects, index_to_remove)
 end
 
-FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted)
+FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
 	local world = self._world
 	local t = World.time(world)
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
 
-	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal)
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, impact_fx, position, direction, source_parameters, provoking_unit, particle_group_id_or_nil, optional_target_unit, optional_node_index, optional_hit_normal)
 
 	if self._is_server then
 		local impact_fx_name = impact_fx.name
@@ -262,14 +281,17 @@ FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source
 		end
 
 		local optional_target_unit_id = optional_target_unit and Managers.state.unit_spawner:game_object_id(optional_target_unit)
+		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
 
-		if optional_will_be_predicted then
-			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
-			local except = predicting_player:channel_id()
+		if not local_only_or_nil then
+			if optional_will_be_predicted then
+				local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
+				local except = predicting_player:channel_id()
 
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal)
-		else
-			Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal)
+				Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_id)
+			else
+				Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_id)
+			end
 		end
 	end
 end
@@ -284,14 +306,15 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 
 		local damage_type_id = NetworkLookup.damage_types[damage_type]
 		local hit_type_id = NetworkLookup.surface_hit_types[hit_type]
+		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
 
 		if optional_will_be_predicted then
 			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
 			local except = predicting_player:channel_id()
 
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_surface_impact_fx", except, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id)
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_surface_impact_fx", except, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
 		else
-			Managers.state.game_session:send_rpc_clients("rpc_play_surface_impact_fx", hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id)
+			Managers.state.game_session:send_rpc_clients("rpc_play_surface_impact_fx", hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
 		end
 	end
 
@@ -308,8 +331,9 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 
 	local world = self._world
 	local t = World.time(world)
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
 
-	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, hit_unit, hit_actor, optional_hit_normal)
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, particle_group_id_or_nil, hit_unit, hit_actor, optional_hit_normal)
 end
 
 FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_positions, hit_normals, source_parameters, provoking_unit, damage_type, hit_type, optional_will_be_predicted)
@@ -322,14 +346,15 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 
 		local damage_type_id = NetworkLookup.damage_types[damage_type]
 		local hit_type_id = NetworkLookup.surface_hit_types[hit_type]
+		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
 
 		if optional_will_be_predicted then
 			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
 			local except = predicting_player:channel_id()
 
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_shotshell_surface_impact_fx", except, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_shotshell_surface_impact_fx", except, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
 		else
-			Managers.state.game_session:send_rpc_clients("rpc_play_shotshell_surface_impact_fx", fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+			Managers.state.game_session:send_rpc_clients("rpc_play_shotshell_surface_impact_fx", fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
 		end
 	end
 
@@ -347,7 +372,9 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 	local world = self._world
 	local wwise_world = self._wwise_world
 	local unit_to_extension_map = self._unit_to_extension_map
+	local spawned_impact_fx_units = self._spawned_impact_fx_units
 	local t = World.time(world)
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
 
 	for ii = 1, #surface_impact_fxs, 7 do
 		local surface_impact_fx = surface_impact_fxs[ii]
@@ -358,7 +385,7 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 		local hit_actor = surface_impact_fxs[ii + 5]
 		local only_decal = surface_impact_fxs[ii + 6]
 
-		_play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, hit_unit, hit_actor, hit_normal, only_decal)
+		_play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, particle_group_id_or_nil, hit_unit, hit_actor, hit_normal, only_decal)
 	end
 end
 
@@ -449,6 +476,22 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 	end
 end
 
+FxSystem.delete_impact_fx_unit = function (self, unit)
+	if self._spawned_impact_fx_units[unit] then
+		World.destroy_unit(self._world, unit)
+
+		self._spawned_impact_fx_units[unit] = nil
+	end
+end
+
+FxSystem.delete_units = function (self)
+	for unit, _ in pairs(self._spawned_impact_fx_units) do
+		World.destroy_unit(self._world, unit)
+	end
+
+	table.clear(self._spawned_impact_fx_units)
+end
+
 FxSystem.trigger_flow_event = function (self, unit, event_name)
 	Unit.flow_event(unit, event_name)
 
@@ -478,10 +521,15 @@ end
 
 local SOURCE_PARAMETERS = {}
 
-FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal)
+FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_group)
 	local impact_fx_name = NetworkLookup.impact_fx_names[impact_fx_name_id]
 	local impact_fx = impact_fx_templates[impact_fx_name]
 	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+
+	if provoking_unit_has_particle_group and not provoking_unit then
+		return
+	end
+
 	local optional_target_unit = optional_target_unit_id and Managers.state.unit_spawner:unit(optional_target_unit_id)
 	local optional_will_be_predicted = false
 	direction = Vector3.normalize(direction)
@@ -490,8 +538,13 @@ FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, pos
 	self:play_impact_fx(impact_fx, position, direction, SOURCE_PARAMETERS, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted)
 end
 
-FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id)
+FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_group)
 	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+
+	if provoking_unit_has_particle_group and not provoking_unit then
+		return
+	end
+
 	local damage_type = NetworkLookup.damage_types[damage_type_id]
 	local hit_type = NetworkLookup.surface_hit_types[hit_type_id]
 	local optional_will_be_predicted = false
@@ -500,8 +553,13 @@ FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, 
 	self:play_surface_impact_fx(hit_position, hit_direction, SOURCE_PARAMETERS, provoking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
 end
 
-FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id)
+FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_group)
 	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+
+	if provoking_unit_has_particle_group and not provoking_unit then
+		return
+	end
+
 	local damage_type = NetworkLookup.damage_types[damage_type_id]
 	local hit_type = NetworkLookup.surface_hit_types[hit_type_id]
 	local optional_will_be_predicted = false
@@ -563,7 +621,7 @@ FxSystem.rpc_projectile_trigger_fx = function (self, channel_id, unit_id, event_
 	end
 end
 
-function _create_impact_vfx(world, vfx, position, direction, normal)
+function _create_impact_vfx(world, vfx, position, direction, normal, optional_particle_group_id)
 	local num_vfx = #vfx
 
 	if num_vfx > 0 then
@@ -591,7 +649,7 @@ function _create_impact_vfx(world, vfx, position, direction, normal)
 				rotation = direction_rotation
 			end
 
-			World.create_particles(world, effect_name, position, rotation)
+			World.create_particles(world, effect_name, position, rotation, nil, optional_particle_group_id)
 		end
 	end
 end
@@ -698,7 +756,7 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, decal_extents, hit_actor, hit_unit, t)
 end
 
-function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
+function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, impact_fx, position, direction, source_parameters, provoking_unit, optional_particle_group_id, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
 	local impact_fx_name = impact_fx.name
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = optional_target_unit and player_unit_spawn_manager:owner(optional_target_unit)
@@ -765,7 +823,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx")
 
 			if vfx then
-				_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal)
+				_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 
@@ -773,7 +831,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_1p")
 
 			if vfx_1p then
-				_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal)
+				_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 
@@ -781,7 +839,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_3p")
 
 			if vfx_3p then
-				_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal)
+				_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 	end
@@ -817,11 +875,31 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 	if blood_ball then
 		local num_blood_ball = #blood_ball
 
-		for i = 1, num_blood_ball do
-			local blood_ball_unit = blood_ball[i]
+		for ii = 1, num_blood_ball do
+			local blood_ball_unit = blood_ball[ii]
 			local impact_fx_damage_type = impact_fx.damage_type
 
 			Managers.state.blood:queue_blood_ball(position, direction, blood_ball_unit, impact_fx_damage_type)
+		end
+	end
+
+	local unit = impact_fx.unit
+
+	if unit then
+		local num_unit = #unit
+
+		for ii = 1, num_unit do
+			local unit_settings = unit[ii]
+			local unit_name = unit_settings.unit_name
+			local flow_event = unit_settings.flow_event
+			local random_rotation = Quaternion.from_yaw_pitch_roll(math.random() * PI, math.random() * PI, math.random() * PI)
+			local fx_unit = World.spawn_unit_ex(world, unit_name, nil, position, random_rotation)
+
+			if flow_event then
+				Unit.flow_event(fx_unit, flow_event)
+			end
+
+			spawned_impact_fx_units[fx_unit] = true
 		end
 	end
 end

@@ -5,6 +5,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local MissionTypes = require("scripts/settings/mission/mission_types")
 local ZoneSettings = require("scripts/settings/zones/zones")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/mission_voting_view_blueprints")
@@ -27,10 +28,18 @@ local MissionVotingView = class("MissionVotingView", "BaseView")
 
 MissionVotingView.init = function (self, settings, context)
 	if context then
-		self._voting_id = context.voting_id
-		self._mission_data = context.mission_data
+		if context.qp then
+			self._voting_id = context.voting_id
+			self._backend_mission_id = context.backend_mission_id
+			self._is_quickplay = true
+		else
+			self._voting_id = context.voting_id
+			self._mission_data = context.mission_data
+			self._is_quickplay = false
+		end
 	end
 
+	self._mission_icons_widgets = {}
 	self._selcted_button_index = 1
 	self._gamepad_active = InputDevice.gamepad_active
 
@@ -46,7 +55,14 @@ MissionVotingView.on_enter = function (self)
 	self:_setup_button_widgets()
 	self:_setup_details_page_static_widgets()
 	self:_create_offscreen_renderer()
-	self:_populate_data(self._mission_data)
+
+	if self._is_quickplay then
+		self:_populate_quickplay_data()
+	else
+		self:_populate_data(self._mission_data)
+	end
+
+	self:_set_button_callbacks()
 	self:toggle_details(false)
 
 	if self._gamepad_active then
@@ -63,7 +79,10 @@ end
 
 MissionVotingView.update = function (self, dt, t, input_service)
 	self:_update_timer_bar(dt)
-	self._details_list_grid:update(dt, t, input_service)
+
+	if not self._is_quickplay then
+		self._details_list_grid:update(dt, t, input_service)
+	end
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(MissionVotingViewTestify, self)
@@ -73,7 +92,7 @@ MissionVotingView.update = function (self, dt, t, input_service)
 		self:cb_on_decline_mission_pressed()
 	end
 
-	if input_service:get("next") then
+	if input_service:get("next") and not self._is_quickplay then
 		self:cb_on_toggle_details_pressed()
 	end
 
@@ -121,7 +140,10 @@ end
 
 MissionVotingView.on_resolution_modified = function (self)
 	MissionVotingView.super.on_resolution_modified(self)
-	self._details_list_grid:on_resolution_modified()
+
+	if not self._is_quickplay then
+		self._details_list_grid:on_resolution_modified()
+	end
 end
 
 MissionVotingView.cb_on_accept_mission_pressed = function (self)
@@ -225,6 +247,15 @@ MissionVotingView._draw_widgets = function (self, dt, t, input_service, ui_rende
 
 		UIWidget.draw(widget, ui_renderer)
 	end
+
+	local icons_widgets = self._mission_icons_widgets
+	local num_icons = #icons_widgets
+
+	for i = 1, num_icons do
+		local widget = icons_widgets[i]
+
+		UIWidget.draw(widget, ui_renderer)
+	end
 end
 
 MissionVotingView._create_offscreen_renderer = function (self)
@@ -269,7 +300,7 @@ MissionVotingView._setup_main_page_widgets = function (self)
 	}
 	self._mission_info_widgets = {}
 
-	self:_setup_mission_info_icons(self._mission_data, definitions.widget_definitions)
+	self:_setup_mission_info_icons(self._mission_data)
 	self:_create_widgets(definitions, self._mission_info_widgets, self._widgets_by_name)
 end
 
@@ -321,7 +352,9 @@ MissionVotingView._set_button_selected = function (self, index)
 		local hotspot = button.content.hotspot
 		local is_selected = index and i == index and true or false
 		hotspot.is_selected = is_selected
-		local button_text = Localize(MissionDetailsBlueprints.button_strings.selectable_buttons[i])
+		local content = button.content
+		local text = MissionDetailsBlueprints.button_strings.selectable_buttons[content.name]
+		local button_text = Localize(text)
 		local input_text = get_input_text("confirm_pressed", "View")
 		local new_text = is_selected and string.format("%s %s", input_text, button_text) or button_text
 		button.content.text = new_text
@@ -378,6 +411,50 @@ local function calculate_danger_level(mission_data)
 	return danger, dangel_level_text
 end
 
+local function calculate_quickplay_danger_level(backend_mission_id)
+	local challenge = tonumber(string.sub(backend_mission_id, -1))
+	local dangel_level_text = DangerSettings.by_index[challenge].display_name
+
+	return challenge, dangel_level_text
+end
+
+MissionVotingView._populate_quickplay_data = function (self)
+	local quickplay_settings = MissionDetailsBlueprints.quickplay_data
+	local zone_image_widget = self._widgets_by_name.zone_image
+	zone_image_widget.content.texture = "content/ui/materials/missions/quickplay"
+	local details_button = self._widgets_by_name.toggle_details_button
+	details_button.content.hotspot.disabled = true
+	local mission_info_widget = self._widgets_by_name.mission_info
+	local mission_info_widget_content = mission_info_widget.content
+	mission_info_widget_content.mission_title = Utf8.upper(Localize(quickplay_settings.mission_title))
+	zone_image_widget.style.texture.uvs = {
+		{
+			0,
+			0.25
+		},
+		{
+			1,
+			1
+		}
+	}
+	local mission_type_widget = self._widgets_by_name.mission_type
+	local mission_type_widget_content = mission_type_widget.content
+	mission_type_widget_content.mission_type = Localize(quickplay_settings.mission_type)
+	local mission_rewards_text = self._widgets_by_name.rewards_text
+	mission_rewards_text.content.visible = false
+	local danger_level_widget = self._widgets_by_name.mission_danger_info
+	local danger_level, danger_level_text = calculate_quickplay_danger_level(self._backend_mission_id)
+
+	self:_set_difficulty_icons(danger_level_widget.style, danger_level)
+
+	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
+
+	self:_set_scenegraph_position("mission_difficulty_left", 20, nil, nil, "center")
+
+	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
+	accept_confirmation_widget.visible = false
+end
+
 MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_template = MissionTemplates[mission_data.map]
 	local zone_settings = ZoneSettings[mission_template.zone_id]
@@ -391,8 +468,8 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_info_widget = self._widgets_by_name.mission_info
 	local mission_info_widget_content = mission_info_widget.content
 	local mission_title = mission_template.mission_name and Utf8.upper(Localize(mission_template.mission_name)) or "n/a"
-	local zone_name = Localize(zone_settings.name)
 	mission_info_widget_content.mission_title = mission_title
+	local zone_name = Localize(zone_settings.name)
 	local mission_type_widget = self._widgets_by_name.mission_type
 	mission_type_widget.content.mission_type = zone_name
 
@@ -404,17 +481,21 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	self:_set_difficulty_icons(danger_level_widget.style, danger_level)
 
 	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
+	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
+	accept_confirmation_widget.visible = false
+end
+
+MissionVotingView._set_button_callbacks = function (self)
 	local accept_button_widget = self._widgets_by_name.accept_button
 	accept_button_widget.content.hotspot.pressed_callback = callback(self, "cb_on_accept_mission_pressed")
 	local decline_button_widget = self._widgets_by_name.decline_button
 	decline_button_widget.content.hotspot.pressed_callback = callback(self, "cb_on_decline_mission_pressed")
 	local toggle_details_button_widget = self._widgets_by_name.toggle_details_button
 	toggle_details_button_widget.content.hotspot.pressed_callback = callback(self, "cb_on_toggle_details_pressed")
-	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
-	accept_confirmation_widget.visible = false
 end
 
-MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, icon, x_offset)
+MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, icon, x_offset, color)
+	local icon_color = color and color or Color.white(255, true)
 	local icon_definition = UIWidget.create_definition({
 		{
 			value_id = "texture",
@@ -424,6 +505,7 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				color = icon_color,
 				size = {
 					37.199999999999996,
 					37.199999999999996
@@ -440,37 +522,102 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 	return icon_definition
 end
 
-MissionVotingView._setup_mission_info_icons = function (self, mission_data, mission_info_widgets)
-	local mission_template = MissionTemplates[mission_data.map]
-	local has_flash_mission = not not mission_data.flags.flash
-	local has_side_mission = not not mission_data.flags.sideMission
-	local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
-	local indx = 0
+MissionVotingView._setup_mission_info_icons = function (self, mission_data)
+	table.clear(self._mission_icons_widgets)
+
 	local offset_x = 42.199999999999996
-	local mission_type_icon_def = self:_create_mission_icons_info("mission_icons_pivot", mission_template.mission_type_icon, indx * offset_x)
-	mission_info_widgets["mission_icon_" .. indx] = mission_type_icon_def
+	local mission_icon_settings = {}
 
-	if has_flash_mission then
-		indx = indx + 1
-		local flash_mission_icon_def = self:_create_mission_icons_info("mission_icons_pivot", MissionDetailsBlueprints.icons.flash, indx * offset_x)
-		mission_info_widgets["mission_icon_" .. indx] = flash_mission_icon_def
+	if self._is_quickplay then
+		mission_icon_settings[#mission_icon_settings + 1] = {
+			icon = MissionDetailsBlueprints.quickplay_data.icon,
+			color = {
+				255,
+				169,
+				191,
+				153
+			}
+		}
+	else
+		local mission_template = MissionTemplates[mission_data.map]
+
+		if not mission_template then
+			return
+		end
+
+		local has_flash_mission = not not mission_data.flags.flash
+		local has_side_mission = not not mission_data.sideMission
+		local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
+		local mission_type = MissionTypes[mission_template.mission_type]
+		mission_icon_settings[#mission_icon_settings + 1] = {
+			icon = mission_type.icon,
+			color = {
+				255,
+				169,
+				191,
+				153
+			}
+		}
+
+		if has_flash_mission then
+			mission_icon_settings[#mission_icon_settings + 1] = {
+				icon = MissionDetailsBlueprints.icons.flash,
+				color = {
+					255,
+					169,
+					191,
+					153
+				}
+			}
+		end
+
+		if has_side_mission then
+			local side_missions = MissionObjectiveTemplates.side_mission.objectives
+			local side_mission_template = side_missions[mission_data.sideMission]
+
+			if side_mission_template then
+				mission_icon_settings[#mission_icon_settings + 1] = {
+					icon = side_mission_template.icon,
+					color = {
+						255,
+						169,
+						191,
+						153
+					}
+				}
+			end
+		end
+
+		if has_circumstance then
+			local circumstance = mission_data.circumstance
+			local circumstance_template = CircumstanceTemplates[circumstance]
+
+			if circumstance_template then
+				local circumstance_ui_settings = circumstance_template.ui
+				mission_icon_settings[#mission_icon_settings + 1] = {
+					icon = circumstance_ui_settings.icon,
+					color = Color.golden_rod(255, true)
+				}
+			end
+		end
 	end
 
-	if has_side_mission then
-		indx = indx + 1
-		local side_missions = MissionObjectiveTemplates.side_mission.objectives
-		local side_mission_template = side_missions[mission_data.side_mission]
-		local side_mission_icon_def = self:_create_mission_icons_info("mission_icons_pivot", side_mission_template.icon, indx * offset_x)
-		mission_info_widgets["mission_icon_" .. indx] = side_mission_icon_def
+	local num_icons = #mission_icon_settings
+
+	if num_icons ~= 1 then
+		local half_icons = math.floor(num_icons / 2)
+		local even_offset = -(half_icons * offset_x) + 18.599999999999998
+		local odd_offset = -(half_icons * offset_x)
+		local offset = num_icons % 2 == 0 and even_offset or odd_offset
+
+		self:_set_scenegraph_position("mission_icons_pivot", math.floor(offset) - 10)
 	end
 
-	if has_circumstance then
-		indx = indx + 1
-		local circumstance = mission_data.circumstance
-		local circumstance_template = CircumstanceTemplates[circumstance]
-		local circumstance_ui_settings = circumstance_template.ui
-		local side_mission_icon_def = self:_create_mission_icons_info("mission_icons_pivot", circumstance_ui_settings.icon, indx * offset_x)
-		mission_info_widgets["mission_icon_" .. indx] = side_mission_icon_def
+	for i = 1, num_icons do
+		local settings = mission_icon_settings[i]
+		local settings_color = settings.color and settings.color or nil
+		local mission_icon_def = self:_create_mission_icons_info("mission_icons_pivot", settings.icon, (i - 1) * offset_x, settings_color)
+		self._mission_icons_widgets[#self._mission_icons_widgets + 1] = UIWidget.init("mission_icon_" .. i, mission_icon_def)
 	end
 end
 
@@ -496,28 +643,11 @@ MissionVotingView._set_salary = function (self, mission_data)
 end
 
 MissionVotingView._set_rewards_info = function (self, mission_data)
-	local has_side_mission = mission_data.flags and mission_data.flags.side and true or false
 	local main_mission_rewards_widget = self._widgets_by_name.reward_main_mission
-	local side_mission_rewards_widget = self._widgets_by_name.reward_side_mission
-	side_mission_rewards_widget.content.visible = has_side_mission
 	local base_xp = math.floor(mission_data.xp)
 	local base_salary = math.floor(mission_data.credits)
 	local rewards_string = " %d\t %d"
 	main_mission_rewards_widget.content.reward_main_mission_text = string.format(rewards_string, base_salary, base_xp)
-	local side_mission_rewards = mission_data.extraRewards and mission_data.extraRewards.sideMission
-
-	if side_mission_rewards then
-		local credits = math.floor(side_mission_rewards.credits)
-		local xp = math.floor(side_mission_rewards.xp)
-		local reward_type_text = string.format(rewards_string, credits, xp)
-		local temp_colored_text = "{#color(169, 169, 169)} %s {#reset()}"
-		side_mission_rewards_widget.content.reward_side_mission_text = string.format(temp_colored_text, reward_type_text)
-	end
-
-	if has_side_mission then
-		self:_set_scenegraph_position("reward_main_mission", nil, -5)
-		self:_set_scenegraph_position("reward_side_mission", nil, 35)
-	end
 end
 
 MissionVotingView._horizontally_layout_salary_passes = function (self, salary_widget)
@@ -649,6 +779,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 	local body_y_offset = zone_image_y_offset + zone_image_height - 110
 	local _, zone_image_bottom_fade_height = self:_scenegraph_size("zone_image_bottom_fade")
 	local _, circumstance_icon_height = self:_scenegraph_size("circumstance_icon")
+	local _, zone_image_panel_height = self:_scenegraph_size("zone_image_panel")
 	self._main_page_heights = {
 		outer_panel_height = outer_panel_height,
 		inner_panel_height = inner_panel_height,
@@ -657,6 +788,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 		mission_info_panel_height = mission_info_panel_height,
 		outer_panel_y_offset = outer_panel_y_offset,
 		body_y_offset = body_y_offset,
+		zone_image_panel_height = zone_image_panel_height,
 		zone_image_bottom_fade_height = zone_image_bottom_fade_height,
 		circumstance_icon_height = circumstance_icon_height
 	}
@@ -675,6 +807,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 	end
 
 	self._details_page_heights = {
+		zone_image_panel_height = 0,
 		zone_image_height = 0,
 		circumstance_icon_height = 0,
 		zone_image_bottom_fade_height = 0,

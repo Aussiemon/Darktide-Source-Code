@@ -3,6 +3,7 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Breed = require("scripts/utilities/breed")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Health = require("scripts/utilities/health")
@@ -107,6 +108,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local is_critical_strike = self._is_critical_strike
 	local weapon_item_or_nil = self._weapon_item_or_nil
 	local origin_slot_or_nil = self._origin_item_slot
+	local charge_level = self._charge_level or 1
 	local damage_settings = projectile_template.damage
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
 	local _, position = locomotion_extension:previous_and_current_positions()
@@ -177,7 +179,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 				end
 
 				table.clear(_explosion_attack_result_table)
-				Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
+				Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
 			end
 
 			local critical_strike_fuse_settings = is_critical_strike and damage_settings.critical_strike and damage_settings.critical_strike.fuse
@@ -220,6 +222,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 	local impact_damage_settings = damage_settings and damage_settings.impact
 	local sticks_to_armor_types = projectile_template.sticks_to_armor_types
 	local sticks_to_breeds = projectile_template.sticks_to_breeds
+	local sticks_to_tags = projectile_template.sticks_to_tags
+	local sticks_to_func = projectile_template.sticks_to_func
 	local weapon_item_or_nil = self._weapon_item_or_nil
 	local origin_slot_or_nil = self._origin_item_slot
 	local locomotion_extension = self._locomotion_extension
@@ -239,19 +243,24 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 		local have_unit_been_hit = hit_units[hit_unit]
 		local is_not_self = hit_unit ~= owner_unit
 		local hit_mass_stop = false
+		local do_impact_explosion = not not impact_explosion_template
+		local charge_level = self._charge_level or 1
+		local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
+		local is_ragdolled = Health.is_ragdolled(hit_unit)
+		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 
 		if not have_unit_been_hit and is_not_self then
-			local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
 			local hit_zone_name = HitZone.get_name(hit_unit, hit_actor)
 			local hit_hard_target = false
 			hit_units[hit_unit] = true
 
-			if Health.is_ragdolled(hit_unit) then
+			if is_ragdolled then
 				MinionDeath.attack_ragdoll(hit_unit, direction, impact_damage_profile, impact_damage_type, hit_zone_name, hit_position, owner_unit, hit_actor, nil)
 
 				impact_result = "continue_straight"
 			elseif impact_damage_profile and health_extension then
-				local charge_level = self._charge_level or 1
+				local impact_charge_level = charge_level
 				local speed_to_charge_settings = impact_damage_settings.speed_to_charge_settings
 
 				if speed_to_charge_settings then
@@ -259,7 +268,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 					local charge_min = speed_to_charge_settings.charge_min or 0
 					local charge_max = speed_to_charge_settings.charge_max or 1
 					local charge_speed_lerp = math.clamp01(current_speed / max_speed)
-					charge_level = charge_level * math.lerp(charge_min, charge_max, charge_speed_lerp)
+					impact_charge_level = charge_level * math.lerp(charge_min, charge_max, charge_speed_lerp)
 				end
 
 				if impact_damage_settings.delete_on_hit_mass then
@@ -267,10 +276,11 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 					hit_mass_stop = HitMass.stopped_attack(hit_unit, hit_zone_name, hit_mass_budget_attack, hit_mass_budget_impact, IMPACT_CONFIG)
 					self._hit_mass_budget_attack = hit_mass_budget_attack
 					self._hit_mass_budget_impact = hit_mass_budget_impact
+					do_impact_explosion = false
 					impact_result = "continue_straight"
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 
 				ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, AttackSettings.attack_types.ranged, damage_efficiency, impact_damage_profile)
 
@@ -285,17 +295,27 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 				hit_hard_target = true
 			end
 
-			local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
-			local breed = unit_data_extension and unit_data_extension:breed()
 			local sticking_to_unit, _ = locomotion_extension:sticking_to_unit()
-			local can_projectile_stick = not sticking_to_unit and sticks_to_armor_types or sticks_to_breeds
+			local stick_to_func_ok = not sticks_to_func or sticks_to_func(projectile_unit, hit_unit, hit_zone_name)
+			local can_projectile_stick = not sticking_to_unit and (sticks_to_armor_types or sticks_to_breeds or sticks_to_tags) and stick_to_func_ok
 
 			if can_projectile_stick and HEALTH_ALIVE[hit_unit] and unit_data_extension then
-				local armor_type = Armor.armor_type(hit_unit, breed, hit_zone_name)
+				local armor_type = Armor.armor_type(hit_unit, breed_or_nil, hit_zone_name)
 				local stick_to_armor = sticks_to_armor_types and sticks_to_armor_types[armor_type]
-				local stick_to_breed = sticks_to_breeds and sticks_to_breeds[breed.name]
+				local stick_to_breed = sticks_to_breeds and sticks_to_breeds[breed_or_nil.name]
+				local stick_to_tag = false
 
-				if stick_to_armor or stick_to_breed then
+				if sticks_to_tags and breed_or_nil.tags then
+					for tag, _ in pairs(breed_or_nil.tags) do
+						if sticks_to_tags[tag] then
+							stick_to_tag = true
+
+							break
+						end
+					end
+				end
+
+				if stick_to_armor or stick_to_breed or stick_to_tag then
 					local hit_actor_index = Actor.node(hit_actor)
 
 					locomotion_extension:switch_to_sticky(hit_unit, hit_actor_index, hit_position, rotation)
@@ -313,10 +333,10 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 			if hit_hard_target and impact_damage_settings.delete_on_impact or hit_mass_stop then
 				mark_for_deletion = true
+				do_impact_explosion = not not impact_explosion_template
 			end
 
 			local physics_world = self._physics_world
-			local do_impact_explosion = impact_explosion_template
 			local fuse_damage_settings = damage_settings and damage_settings.fuse
 
 			if fuse_damage_settings then
@@ -337,7 +357,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 			if do_impact_explosion then
 				table.clear(_explosion_attack_result_table)
-				Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
+				Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
 
 				mark_for_deletion = true
 				local player = Managers.state.player_unit_spawn:owner(owner_unit)
@@ -353,8 +373,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 			if buff_extension and buff_extension:has_keyword(buff_keywords.cluster_explode_on_super_armored) then
 				local hit_zone_is_shield = hit_zone_name == "shield"
-				local hitzone_armor_override = breed and breed.hitzone_armor_override and breed.hitzone_armor_override[hit_zone_name]
-				local is_super_armored_hit = breed and breed.armor_type and breed.armor_type == armor_types.super_armor or hitzone_armor_override == armor_types.super_armor
+				local hitzone_armor_override = breed_or_nil and breed_or_nil.hitzone_armor_override and breed_or_nil.hitzone_armor_override[hit_zone_name]
+				local is_super_armored_hit = breed_or_nil and breed_or_nil.armor_type and breed_or_nil.armor_type == armor_types.super_armor or hitzone_armor_override == armor_types.super_armor
 				local super_armored_settings = (is_super_armored_hit or hit_zone_is_shield) and damage_settings.super_armored and damage_settings.super_armored.impact.cluster
 
 				if super_armored_settings and not self.has_cluster_impacted then
@@ -376,6 +396,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 			if not health_extension then
 				ImpactEffect.play_surface_effect(physics_world, owner_unit, hit_position, hit_normal, hit_direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
 			end
+		elseif have_unit_been_hit and (health_extension or is_ragdolled) then
+			impact_result = "continue_straight"
 		end
 	end
 
@@ -499,7 +521,7 @@ ProjectileDamageExtension._handle_explosion_achivements = function (self, player
 			end
 		end
 
-		if count >= 5 then
+		if count >= 3 then
 			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "veteran_2_unbounced_grenade_kills_event")
 		end
 	end

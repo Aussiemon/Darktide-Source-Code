@@ -28,9 +28,6 @@ CameraHandler.init = function (self, player, world)
 	self._world = world
 	self._wwise_player_state = "none"
 	self._wwise_suppression_state = "none"
-	local mission_board_system = Managers.state.extension:system("mission_board_system")
-	self._mission_board_system = mission_board_system
-	self._mission_board_extension = mission_board_system:mission_board_extension()
 	self._mood_handler = MoodHandler:new(world, player)
 	self._is_hogtied = nil
 	self._is_being_rescued = nil
@@ -45,10 +42,10 @@ CameraHandler.on_reload = function (self, refreshed_resources)
 
 	if unit then
 		local camera_extension = ScriptUnit.extension(unit, "camera_system")
-		local wanted_tree, wanted_camera_node = camera_extension:camera_tree_node()
+		local wanted_tree, wanted_camera_node, wanted_object = camera_extension:camera_tree_node()
 		local camera_manager = Managers.state.camera
 
-		camera_manager:set_node_tree_root_unit(viewport_name, wanted_tree, unit, nil, true)
+		camera_manager:set_node_tree_root_unit(viewport_name, wanted_tree, unit, wanted_object, true)
 		camera_manager:set_camera_node(viewport_name, wanted_tree, wanted_camera_node)
 	end
 end
@@ -74,11 +71,8 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	self._is_hogtied = is_hogtied
 	local was_being_rescued = self._is_being_rescued
 	self._is_being_rescued = is_being_rescued
-	local cinematic_manager = Managers.state.cinematic
 
-	if cinematic_manager:active() then
-		new_unit, self._mode = cinematic_manager:active_camera()
-	elseif is_hogtied and not was_being_rescued and is_being_rescued then
+	if is_hogtied and not was_being_rescued and is_being_rescued then
 		new_unit = player.player_unit
 		self._mode = CameraModes.observer
 	elseif not was_hogtied and is_hogtied then
@@ -97,16 +91,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		self._mode = CameraModes.observer
 	end
 
-	if self._mode == CameraModes.first_person then
-		local mission_board_system = self._mission_board_system
-		local mission_board_open = mission_board_system:is_open()
-
-		if mission_board_open then
-			self._mode = CameraModes.mission_board
-			new_unit = mission_board_system:mission_board_unit()
-		end
-	end
-
 	local weather_system = Managers.state.extension:system("weather_system")
 
 	weather_system:update_weather(new_unit)
@@ -115,16 +99,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 
 	if switched_target then
 		self:_switch_follow_target(new_unit)
-
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local is_player_unit = player_unit_spawn_manager:is_player_unit(new_unit)
-		local new_player_unit = self._mode ~= CameraModes.mission_board and is_player_unit
-
-		if new_player_unit then
-			Managers.wwise_game_sync:set_followed_player_unit(new_unit)
-		else
-			Managers.wwise_game_sync:set_followed_player_unit(nil)
-		end
 	end
 
 	self:_update_follow(switched_target)
@@ -171,25 +145,35 @@ CameraHandler._switch_follow_target = function (self, new_unit)
 		end
 	end
 
-	if self._mode == CameraModes.mission_board then
-		local viewport_name = self._viewport_name
-		local mission_board_extension = self._mission_board_extension
-		local camera_manager = Managers.state.camera
-
-		camera_manager:set_variable(viewport_name, "camera_goto_height", mission_board_extension:camera_goto_height())
-		camera_manager:set_variable(viewport_name, "camera_goto_radius", mission_board_extension:camera_goto_radius())
-		camera_manager:set_variable(viewport_name, "camera_goto_right", mission_board_extension:camera_goto_right())
-	end
-
 	self._camera_follow_unit = new_unit
 	local is_player_unit = player_unit_spawn_manager:is_player_unit(new_unit)
 
 	if new_unit and is_player_unit then
 		ScriptUnit.extension(new_unit, "first_person_system"):set_camera_follow_target(true, self._first_person_spectating_mode)
 	end
+
+	if is_player_unit then
+		Managers.wwise_game_sync:set_followed_player_unit(new_unit)
+	else
+		Managers.wwise_game_sync:set_followed_player_unit(nil)
+	end
 end
 
 CameraHandler.post_update = function (self, dt, t, player_orientation)
+	local cinematic_manager = Managers.state.cinematic
+
+	if cinematic_manager:active() then
+		local old_unit = self._camera_follow_unit
+		local new_unit = nil
+		new_unit, self._mode = cinematic_manager:active_camera()
+
+		if new_unit ~= old_unit then
+			self:_switch_follow_target(new_unit)
+			self:_update_follow(true)
+			self:_update_wwise_state(new_unit)
+		end
+	end
+
 	self:_post_update(dt, t, player_orientation)
 end
 
@@ -224,48 +208,6 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 				camera_manager:set_variable(viewport_name, "fov_multiplier", fov_multiplier)
 			end
 		end
-
-		if self._mode == CameraModes.mission_board then
-			local mission_board_orientation = player_orientation
-			local mission_board_extension = self._mission_board_extension
-			local mission_board_zooming = mission_board_extension:is_zooming()
-
-			if mission_board_zooming and not self._mission_board_zooming then
-				local new_rotation = mission_board_extension:camera_zoom_rotation()
-				local yaw = 0
-				local pitch = 0
-				local roll = 0
-
-				if mission_board_orientation and mission_board_orientation.orientation then
-					yaw, pitch, roll = mission_board_orientation:orientation()
-				end
-
-				local current_rotation = QuaternionBox(Quaternion.from_yaw_pitch_roll(yaw, pitch, roll))
-
-				camera_manager:set_variable(viewport_name, "start_rotation_variable", current_rotation)
-				camera_manager:set_variable(viewport_name, "end_rotation_variable", new_rotation)
-
-				self._mission_board_zooming = true
-			elseif not mission_board_zooming and self._mission_board_zooming then
-				camera_manager:set_variable(viewport_name, "start_rotation_variable", nil)
-				camera_manager:set_variable(viewport_name, "end_rotation_variable", nil)
-
-				if mission_board_orientation and mission_board_orientation.player_orientation then
-					local new_rotation = mission_board_extension:camera_zoom_rotation():unbox()
-					local yaw = Quaternion.yaw(new_rotation)
-					local pitch = Quaternion.pitch(new_rotation)
-					local roll = Quaternion.roll(new_rotation)
-
-					mission_board_orientation:player_orientation({
-						yaw = yaw,
-						pitch = pitch,
-						roll = roll
-					})
-				end
-
-				self._mission_board_zooming = false
-			end
-		end
 	end
 
 	camera_manager:post_update(dt, t, viewport_name)
@@ -283,7 +225,10 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 		local current_camera_node = camera_manager:current_camera_node(viewport_name)
 
 		if follow_unit_available then
-			camera_manager:set_node_tree_root_unit(viewport_name, DEFAULT_CAMERA_TREE, follow_unit)
+			local camera_ext = ScriptUnit.extension(follow_unit, "camera_system")
+			local _, _, wanted_object = camera_ext:camera_tree_node()
+
+			camera_manager:set_node_tree_root_unit(viewport_name, DEFAULT_CAMERA_TREE, follow_unit, wanted_object)
 
 			if current_camera_node ~= DEFAULT_CAMERA_NODE then
 				camera_manager:set_camera_node(viewport_name, DEFAULT_CAMERA_TREE, DEFAULT_CAMERA_NODE)
@@ -311,7 +256,7 @@ end
 
 CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	local mode = self._mode
-	local wanted_tree, wanted_camera_node = nil
+	local wanted_tree, wanted_camera_node, wanted_object = nil
 
 	if mode == CameraModes.cutscene then
 		wanted_camera_node = CINEMATIC_CAMERA_NODE
@@ -324,7 +269,7 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 		wanted_tree = TESTIFY_CAMERA_TREE
 	else
 		local camera_ext = ScriptUnit.extension(unit, "camera_system")
-		wanted_tree, wanted_camera_node = camera_ext:camera_tree_node()
+		wanted_tree, wanted_camera_node, wanted_object = camera_ext:camera_tree_node()
 	end
 
 	local camera_manager = Managers.state.camera
@@ -332,7 +277,7 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	local current_camera_node = camera_manager:current_camera_node(viewport_name)
 
 	if wanted_tree ~= self._current_camera_tree or follow_unit_switch then
-		camera_manager:set_node_tree_root_unit(viewport_name, wanted_tree, unit, nil, true)
+		camera_manager:set_node_tree_root_unit(viewport_name, wanted_tree, unit, wanted_object, true)
 	end
 
 	if wanted_camera_node ~= current_camera_node then

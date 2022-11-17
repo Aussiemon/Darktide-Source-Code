@@ -3,37 +3,23 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
-	title_background = {
+	loading_image = {
 		vertical_alignment = "center",
 		parent = "screen",
 		horizontal_alignment = "center",
 		size = {
-			470,
-			64
+			1920,
+			1080
 		},
 		position = {
 			0,
-			-100,
-			0
-		}
-	},
-	title_divider_bottom = {
-		vertical_alignment = "bottom",
-		parent = "title_background",
-		horizontal_alignment = "center",
-		size = {
-			306,
-			48
-		},
-		position = {
 			0,
-			50,
-			2
+			1
 		}
 	},
 	hint_text = {
-		vertical_alignment = "center",
-		parent = "title_background",
+		vertical_alignment = "bottom",
+		parent = "screen",
 		horizontal_alignment = "center",
 		size = {
 			1800,
@@ -41,7 +27,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
+			-270,
+			4
+		}
+	},
+	title_divider_bottom = {
+		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "center",
+		size = {
+			306,
+			48
+		},
+		position = {
 			0,
+			-210,
 			3
 		}
 	},
@@ -56,7 +56,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			50,
-			4
+			5
 		}
 	},
 	hint_input_icon = {
@@ -70,21 +70,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			5
-		}
-	},
-	logo = {
-		vertical_alignment = "center",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			2500,
-			2500
-		},
-		position = {
-			0,
-			0,
-			0
+			6
 		}
 	}
 }
@@ -95,12 +81,29 @@ local input_text_font_setting_name = "body"
 local input_text_font_settings = UIFontSettings[input_text_font_setting_name]
 local input_text_font_color = input_text_font_settings.text_color
 local widget_definitions = {
-	background = UIWidget.create_definition({
+	screen = UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			value = "content/ui/materials/loading/loading_screen_background"
+			pass_type = "rect",
+			style = {
+				color = {
+					255,
+					0,
+					0,
+					0
+				}
+			}
 		}
 	}, "screen"),
+	background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/loading/loading_screen_background",
+			pass_type = "texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center"
+			}
+		}
+	}, "loading_image"),
 	title_divider_bottom = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/dividers/skull_rendered_center_02",
@@ -110,20 +113,6 @@ local widget_definitions = {
 			}
 		}
 	}, "title_divider_bottom"),
-	logo = UIWidget.create_definition({
-		{
-			value = "content/ui/vector_textures/symbols/aquila",
-			pass_type = "slug_icon",
-			style = {
-				color = {
-					120,
-					0,
-					0,
-					0
-				}
-			}
-		}
-	}, "logo"),
 	overlay = UIWidget.create_definition({
 		{
 			pass_type = "rect",

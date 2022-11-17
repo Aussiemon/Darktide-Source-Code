@@ -8,6 +8,6 @@ weapon_template.actions.action_wield.total_time = 0.7
 weapon_template.actions.action_wield.anim_event = "to_grenade_box"
 weapon_template.actions.action_aim.allowed_chain_actions.aim_released.chain_time = 0.9
 weapon_template.actions.action_aim_underhand.allowed_chain_actions.short_hand_throw.chain_time = 0.9
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/flame_grenade"
+weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/ogryn_grenade"
 
 return weapon_template

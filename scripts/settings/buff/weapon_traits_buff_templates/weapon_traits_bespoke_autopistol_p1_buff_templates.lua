@@ -46,30 +46,8 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_ranged_close_kill
 }
-templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent = {
-	class_name = "weapon_trait_parent_proc_buff",
-	child_buff_template = "weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_child",
-	child_duration = 2.5,
-	predicted = false,
-	stacks_to_remove = 5,
-	proc_events = {
-		[proc_events.on_hit] = 1
-	},
-	add_child_proc_events = {
-		[proc_events.on_hit] = 1
-	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_staggering_hit
-}
-templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_child = {
-	predicted = false,
-	stack_offset = -1,
-	max_stacks = 5,
-	class_name = "buff",
-	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.1
-	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
-}
+templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_power_bonus_on_staggering_enemies_parent)
+templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent.child_buff_template = "weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_child"
+templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_child = table.clone(BaseWeaponTraitBuffTemplates.stacking_power_bonus_on_staggering_enemies_child)
 
 return templates

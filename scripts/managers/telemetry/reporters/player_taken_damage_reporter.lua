@@ -32,6 +32,7 @@ local function extract_data(entry)
 		damage_type = entry.damage_type,
 		damage = entry.damage,
 		permanent_damage = entry.permanent_damage,
+		actual_damage = entry.actual_damage,
 		damage_absorbed = entry.damage_absorbed
 	}
 end
@@ -46,6 +47,7 @@ PlayerTakenDamageReporter.register_event = function (self, player, data)
 			if compare_entry(entry, data) then
 				entry.damage = entry.damage + data.damage
 				entry.permanent_damage = entry.permanent_damage + data.permanent_damage
+				entry.actual_damage = entry.actual_damage + data.actual_damage
 				entry.damage_absorbed = entry.damage_absorbed + data.damage_absorbed
 				entry.observations = entry.observations + 1
 

@@ -16,6 +16,7 @@ HazardPropExtension.init = function (self, extension_init_context, unit, extensi
 	self._current_state = hazard_state.idle
 	self._content = hazard_content.undefined
 	self._trigger_timer = 0
+	self._trigger_direction = Vector3Box()
 	self._fuse_active = false
 	self._world = extension_init_context.world
 	self._nav_world = extension_init_context.nav_world
@@ -121,6 +122,30 @@ HazardPropExtension.set_current_state = function (self, state)
 			if self._is_server then
 				self:start_trigger_timer()
 				self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
+
+				local bot_group = nil
+				local bot_players = Managers.player:bot_players()
+
+				for _, bot_player in pairs(bot_players) do
+					local bot_unit = bot_player.player_unit
+					local group_extension = ScriptUnit.has_extension(bot_unit, "group_system")
+
+					if group_extension then
+						bot_group = group_extension:bot_group()
+
+						break
+					end
+				end
+
+				if bot_group then
+					local shape = "sphere"
+					local size = explosion_settings.explosion_template.radius
+					local rotation = Quaternion.identity()
+					local duration = TRIGGER_TIME
+					local position = POSITION_LOOKUP[unit]
+
+					bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+				end
 			end
 		end
 	elseif state == hazard_state.broken then
@@ -176,7 +201,12 @@ HazardPropExtension.damage = function (self, damage_amount, hit_actor, attack_di
 		return
 	end
 
+	if self._trigger_timer == TRIGGER_TIME then
+		return
+	end
+
 	if self._current_state == hazard_state.idle then
+		Vector3Box.store(self._trigger_direction, attack_direction)
 		self:set_current_state(hazard_state.triggered)
 	elseif self._current_state == hazard_state.triggered then
 		self:set_current_state(hazard_state.exploding)
@@ -200,6 +230,7 @@ HazardPropExtension._trigger_hazard = function (self)
 	elseif content == hazard_content.fire then
 		local world = Managers.world:world("level_world")
 		local physics_world = World.physics_world(world)
+		local spawn_position = Unit.world_position(unit, Unit.node(unit, "c_explosion"))
 		local explosion_position = Unit.world_position(unit, Unit.node(unit, "c_explosion"))
 		local explosion_template = fire_settings.explosion_template
 		local liquid_area_template = fire_settings.liquid_area_template
@@ -209,16 +240,16 @@ HazardPropExtension._trigger_hazard = function (self)
 
 		Explosion.create_explosion(self._world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type)
 
-		for ii = 1, fire_settings.fire_node_count do
-			local node_position = Unit.world_position(unit, Unit.node(unit, "c_fire" .. ii))
-			local los_hit, hit_position, _, _ = PhysicsWorld.raycast(physics_world, node_position, Vector3.down(), fire_settings.raycast_distance, "closest", "collision_filter", "filter_player_mover")
+		local attack_direction = self._trigger_direction:unbox()
+		attack_direction.z = 0
+		spawn_position = spawn_position - attack_direction
+		local los_hit, hit_position, _, _ = PhysicsWorld.raycast(physics_world, spawn_position, Vector3.down(), fire_settings.raycast_distance, "closest", "collision_filter", "filter_player_mover")
 
-			if los_hit then
-				node_position = hit_position
-			end
-
-			LiquidArea.try_create(node_position, Vector3.down(), self._nav_world, liquid_area_template, unit)
+		if los_hit then
+			spawn_position = hit_position
 		end
+
+		LiquidArea.try_create(spawn_position, Vector3.down(), self._nav_world, liquid_area_template, unit)
 	end
 end
 

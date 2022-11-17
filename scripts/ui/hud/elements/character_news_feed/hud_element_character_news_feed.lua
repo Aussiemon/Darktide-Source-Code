@@ -125,10 +125,8 @@ HudElementCharacterNewsFeed._present_next_new_item = function (self, dt)
 	local item = table.remove(new_presentation_items, 1)
 	local event_name = "event_add_notification_message"
 	local message_type = "item_granted"
-	local sound_event = UISoundEvents.character_news_feed_new_item
-	local callback = nil
 
-	Managers.event:trigger(event_name, message_type, item, callback, sound_event)
+	Managers.event:trigger(event_name, message_type, item)
 
 	local gear_id = item.gear_id
 

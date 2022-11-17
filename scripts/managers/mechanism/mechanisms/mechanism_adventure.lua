@@ -1,7 +1,9 @@
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MechanismAdventure = class("MechanismAdventure", "MechanismBase")
 local READY_FOR_SCORE_TIMEOUT = 400
 
@@ -21,6 +23,7 @@ MechanismAdventure.init = function (self, ...)
 		self._is_owner_mission_server = Managers.connection:is_dedicated_mission_server()
 		local mission_name = context.mission_name
 		local challenge, resistance, circumstance_name, side_mission, backend_mission_id = nil
+		local host_type = Managers.connection:host_type()
 
 		if self._is_owner_mission_server then
 			challenge = context.challenge
@@ -55,6 +58,7 @@ MechanismAdventure.init = function (self, ...)
 		data.mission_giver_vo_override = context.mission_giver_vo_override or "none"
 		data.backend_mission_id = backend_mission_id
 		data.ready_voting_completed = false
+		data.pacing_control = context.pacing_control
 		local do_vote = self._is_owner_mission_server
 
 		if do_vote then
@@ -64,6 +68,11 @@ MechanismAdventure.init = function (self, ...)
 
 			Managers.voting:start_voting("mission_lobby_ready", voting_params):next(function (voting_id)
 				self._voting_id = voting_id
+			end):catch(function (error)
+				Log.error("MechanismAdventure", "Failed start voting 'mission_lobby_ready', skipping voting. Error: %s", table.tostring(error, 3))
+				self:_on_vote_finished()
+
+				data.ready_for_transition = true
 			end)
 		end
 	end

@@ -13,13 +13,12 @@ end
 WwiseStateGroupMinionAggroIntensity.update = function (self, dt, t)
 	WwiseStateGroupMinionAggroIntensity.super.update(self)
 
+	local wwise_state = WwiseGameSyncSettings.default_group_state
 	local player_unit = self._player_unit
 
-	if not player_unit or not ALIVE[player_unit] then
-		return
+	if player_unit and ALIVE[player_unit] then
+		wwise_state = self:_wwise_state()
 	end
-
-	local wwise_state = self:_wwise_state()
 
 	self:_set_wwise_state(wwise_state)
 end

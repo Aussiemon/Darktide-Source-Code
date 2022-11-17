@@ -30,14 +30,15 @@ end
 
 SweepTrail.update = function (self, unit, dt, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
-	local action_kind = action_settings and action_settings.kind
 
-	self:_update_windup(action_kind)
-	self:_update_trail_status(action_kind)
+	if action_settings then
+		self:_update_windup(action_settings.kind)
+		self:_update_trail_status(t, action_settings)
+	end
 end
 
 SweepTrail.update_first_person_mode = function (self, first_person_mode)
-	return
+	self._first_person_mode = first_person_mode
 end
 
 SweepTrail.wield = function (self)
@@ -45,7 +46,8 @@ SweepTrail.wield = function (self)
 	local action_kind = action_settings and action_settings.kind
 
 	self:_update_windup(action_kind)
-	self:_update_trail_status(action_kind)
+	_update_status(self._sweep_trail_components_1p, false, false, false, true)
+	_update_status(self._sweep_trail_components_3p, false, false, false, true)
 end
 
 SweepTrail.unwield = function (self)
@@ -70,21 +72,41 @@ SweepTrail._update_windup = function (self, action_kind)
 	end
 end
 
-SweepTrail._update_trail_status = function (self, action_kind)
+SweepTrail._update_trail_status = function (self, t, action_settings)
+	local weapon_action_component = self._weapon_action_component
 	local is_critical = self._critical_strike_component.is_active
 	local is_powered = self._inventory_slot_component.special_active
+	local time_scale = weapon_action_component.time_scale
+	local in_damage_window = false
+	local is_sweep_action = action_settings.kind == "sweep"
+
+	if is_sweep_action then
+		local weapon_template = self._weapon_template
+		local start_offset = weapon_template.damage_window_start_sweep_trail_offset or 0
+		local end_offset = weapon_template.damage_window_end_sweep_trail_offset or 0
+		local damage_window_start = (action_settings.sweep_trail_window_start or action_settings.damage_window_start + start_offset) * time_scale
+		local damage_window_end = (action_settings.sweep_trail_window_end or action_settings.damage_window_end + end_offset) * time_scale
+		local start_t = weapon_action_component.start_t or t
+		local action_time_offset = action_settings.action_time_offset or 0
+		local time_in_action = t - start_t + action_time_offset
+		local after_start = damage_window_start <= time_in_action
+		local before_end = time_in_action <= damage_window_end
+		in_damage_window = after_start and before_end
+	end
+
 	local is_visible = self._trail_visible
 
-	if action_kind == "sweep" and not is_visible then
+	if not is_visible and in_damage_window and is_sweep_action then
 		is_visible = true
-	elseif action_kind ~= "sweep" then
-		is_visible = is_visible and false
+	elseif is_visible and (not is_sweep_action or not in_damage_window) then
+		is_visible = false
 	end
 
 	local visibility_changed = is_visible ~= self._trail_visible
+	local in_3p = not self._first_person_mode
 
-	_update_status(self._sweep_trail_components_1p, is_critical, is_powered, is_visible, visibility_changed)
-	_update_status(self._sweep_trail_components_3p, is_critical, is_powered, is_visible, visibility_changed)
+	_update_status(self._sweep_trail_components_1p, is_critical, is_powered, is_visible, visibility_changed, in_3p)
+	_update_status(self._sweep_trail_components_3p, is_critical, is_powered, is_visible, visibility_changed, in_3p)
 
 	self._trail_visible = is_visible
 end
@@ -109,12 +131,12 @@ function _slot_components(attachments)
 	return component_list
 end
 
-function _update_status(components, is_critical, is_powered, is_visible, visibility_changed)
+function _update_status(components, is_critical, is_powered, is_visible, visibility_changed, in_3p)
 	for ii = 1, #components do
 		local sweep_trail = components[ii]
 		local unit = sweep_trail.unit
 
-		sweep_trail.component:set_critical_strike(unit, is_critical)
+		sweep_trail.component:set_critical_strike(unit, is_critical, in_3p)
 		sweep_trail.component:set_powered(unit, is_powered)
 
 		if visibility_changed then

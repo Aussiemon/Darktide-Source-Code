@@ -49,6 +49,12 @@ BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 		local walk_position = patrol.walk_position:unbox()
 
 		navigation_extension:move_to(walk_position)
+
+		local group_extension = ScriptUnit.extension(unit, "group_system")
+		local group_system = Managers.state.extension:system("group_system")
+		scratchpad.group_system = group_system
+		scratchpad.group_id = group_extension:group_id()
+		scratchpad.group_extension = group_extension
 	end
 
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -104,6 +110,10 @@ BtPatrolAction.leave = function (self, unit, breed, blackboard, scratchpad, acti
 	if scratchpad.is_patrol_leader and not breed.use_navigation_path_splines then
 		GwNavBot.set_use_channel(navigation_extension._nav_bot, false)
 	end
+
+	if scratchpad.is_patrol_leader then
+		self:trigger_patrol_sound(scratchpad, false)
+	end
 end
 
 local WAIT_AT_DESTINATION_TIME_RANGE = {
@@ -134,6 +144,10 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 
 			scratchpad.patrol_anim_end_at_t = nil
+
+			if scratchpad.is_patrol_leader then
+				self:trigger_patrol_sound(scratchpad, false)
+			end
 		end
 
 		if scratchpad.wait_at_destination_t and scratchpad.wait_at_destination_t <= t then
@@ -169,20 +183,33 @@ local MAX_VARIABLE_VALUE = 2
 BtPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_component, action_data, t)
 	behavior_component.move_state = "moving"
 	local move_event = Animation.random_event(action_data.anim_events or DEFAULT_MOVE_ANIM_EVENT)
-	local speed = action_data.speeds[move_event] or DEFAULT_SPEED
 
 	scratchpad.animation_extension:anim_event(move_event)
-	scratchpad.navigation_extension:set_max_speed(speed)
-
-	local variable_value = math.clamp(speed, 0, MAX_VARIABLE_VALUE)
-
-	scratchpad.animation_extension:set_variable(ANIM_VARIABLE_NAME, variable_value)
 
 	local duration = action_data.durations and action_data.durations[move_event]
 
 	if duration then
 		scratchpad.patrol_anim_end_at_t = t + duration
 	end
+
+	local speed = nil
+
+	if scratchpad.is_patrol_leader then
+		self:trigger_patrol_sound(scratchpad, true)
+
+		speed = action_data.speeds[move_event] or DEFAULT_SPEED
+	else
+		local patrol_component = scratchpad.patrol_component
+		local patrol_leader_unit = patrol_component.patrol_leader_unit
+		local patrol_leader_nav_extension = ALIVE[patrol_leader_unit] and ScriptUnit.has_extension(patrol_leader_unit, "navigation_system")
+		speed = patrol_leader_nav_extension and patrol_leader_nav_extension:max_speed() or action_data.speeds[move_event] or DEFAULT_SPEED
+	end
+
+	scratchpad.navigation_extension:set_max_speed(speed)
+
+	local variable_value = math.clamp(speed, 0, MAX_VARIABLE_VALUE)
+
+	scratchpad.animation_extension:set_variable(ANIM_VARIABLE_NAME, variable_value)
 
 	scratchpad.start_move_cooldown = t + 1
 end
@@ -201,6 +228,11 @@ local MIN_DISTANCE_TO_NEW_PATROL_POS = 2
 BtPatrolAction._set_new_patrol_position = function (self, unit, patrol_component)
 	local main_path_manager = Managers.state.main_path
 	local _, ahead_travel_distance = main_path_manager:ahead_unit(NEW_PATROL_POSITION_TARGET_SIDE_ID)
+
+	if not ahead_travel_distance then
+		return
+	end
+
 	local random_offset = math.random_range(AHEAD_TRAVEL_DISTANCE_RANDOM_RANGE[1], AHEAD_TRAVEL_DISTANCE_RANDOM_RANGE[2])
 	local total_path_distance = MainPathQueries.total_path_distance()
 	local wanted_distance = math.clamp(ahead_travel_distance + random_offset, 0, total_path_distance)
@@ -214,6 +246,32 @@ BtPatrolAction._set_new_patrol_position = function (self, unit, patrol_component
 	end
 
 	patrol_component.walk_position:store(wanted_position)
+end
+
+BtPatrolAction.trigger_patrol_sound = function (self, scratchpad, should_start)
+	if should_start and not scratchpad.started_patrol_sound then
+		local group_system = scratchpad.group_system
+		local group = scratchpad.group_extension:group()
+		local start_event = group.group_start_sound_event
+		local stop_event = group.group_stop_sound_event
+
+		if start_event and not group.sfx and not group.group_sound_event_started then
+			group_system:start_group_sfx(scratchpad.group_id, start_event, stop_event)
+		end
+
+		scratchpad.started_patrol_sound = true
+	elseif not should_start then
+		local group_system = scratchpad.group_system
+		local group = scratchpad.group_extension:group()
+
+		group_system:stop_group_sfx(group)
+
+		group.group_sound_event_started = false
+
+		Managers.state.game_session:send_rpc_clients("rpc_stop_group_sfx", scratchpad.group_id)
+
+		scratchpad.started_patrol_sound = false
+	end
 end
 
 local ABOVE = 2
@@ -306,6 +364,15 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 
 	if Vector3.distance_squared(patrol_position, scratchpad.previous_move_to_position:unbox()) <= MIN_DISTANCE_SQ_TO_MOVE then
 		navigation_extension:set_max_speed(follow_unit_leader_speed)
+
+		local variable_value = math.clamp(follow_unit_leader_speed, MIN_VARIABLE_VALUE, MAX_VARIABLE_VALUE)
+		local old_variable_value = scratchpad.old_move_speed_variable
+
+		if variable_value ~= old_variable_value then
+			scratchpad.animation_extension:set_variable(ANIM_VARIABLE_NAME, variable_value)
+
+			scratchpad.old_move_speed_variable = variable_value
+		end
 
 		return
 	end

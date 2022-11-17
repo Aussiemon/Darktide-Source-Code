@@ -56,9 +56,7 @@ PlayerCharacterStateLadderTopLeaving.on_exit = function (self, unit, t, next_sta
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end
 
-	if self._is_server then
-		PlayerMovement.teleport(self._player, self._ladder_character_state_component.end_position)
-	end
+	PlayerMovement.teleport_fixed_update(unit, self._ladder_character_state_component.end_position)
 end
 
 PlayerCharacterStateLadderTopLeaving.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

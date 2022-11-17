@@ -64,14 +64,14 @@ local function create_mission_objective(scenegraph_id)
 	local drop_shadow = false
 	local header_font_color = UIHudSettings.color_tint_main_1
 	local icon_size = {
-		30,
-		30
+		32,
+		32
 	}
 	local icon_offset = 10
 	local side_offset = 10
 	local bar_offset = {
 		icon_size[1] + side_offset + icon_offset,
-		header_size[2] + 1,
+		1,
 		0
 	}
 	local bar_size = {
@@ -83,10 +83,9 @@ local function create_mission_objective(scenegraph_id)
 		{
 			style_id = "bar_background",
 			pass_type = "texture",
-			visibility_function = " content.show_bar ",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "top",
+				vertical_alignment = "bottom",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
@@ -99,29 +98,34 @@ local function create_mission_objective(scenegraph_id)
 					0,
 					0
 				}
-			}
+			},
+			visibility_function = function (content)
+				return content.show_bar
+			end
 		},
 		{
 			style_id = "bar",
 			pass_type = "texture",
-			visibility_function = " content.show_bar ",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "top",
+				vertical_alignment = "bottom",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
 					7
 				},
 				size = bar_size,
-				default_size = bar_size,
+				default_length = bar_size[1],
 				color = {
 					230,
 					255,
 					151,
 					29
 				}
-			}
+			},
+			visibility_function = function (content)
+				return content.show_bar
+			end
 		},
 		{
 			value_id = "icon",
@@ -134,7 +138,7 @@ local function create_mission_objective(scenegraph_id)
 				size = icon_size,
 				offset = {
 					icon_offset,
-					-4,
+					0,
 					6
 				},
 				color = UIHudSettings.color_tint_main_1
@@ -160,8 +164,7 @@ local function create_mission_objective(scenegraph_id)
 				default_text_color = header_font_color,
 				drop_shadow = drop_shadow,
 				size = {
-					header_size[1] - (side_offset * 2 + icon_size[1] * 2),
-					header_size[2]
+					header_size[1] - (side_offset * 2 + icon_size[1] * 2)
 				}
 			}
 		},
@@ -185,38 +188,22 @@ local function create_mission_objective(scenegraph_id)
 				default_text_color = header_font_color,
 				drop_shadow = drop_shadow,
 				size = {
-					bar_size[1],
-					header_size[2]
+					bar_size[1]
 				}
 			}
 		}
-	}, scenegraph_id)
+	}, scenegraph_id, nil, header_size)
 end
 
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
 			style_id = "background",
-			pass_type = "texture_uv",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				},
-				color = {
-					100,
-					0,
-					0,
-					0
-				}
+				color = Color.terminal_background_gradient(255, true)
 			}
 		},
 		{
@@ -234,60 +221,7 @@ local widget_definitions = {
 					0,
 					5
 				},
-				color = UIHudSettings.color_tint_main_1
-			}
-		},
-		{
-			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
-			style_id = "background_emitter_glow",
-			pass_type = "texture_uv",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				},
-				size = {
-					150
-				},
-				offset = {
-					0,
-					0,
-					4
-				},
-				color = color_copy({}, UIHudSettings.color_tint_main_3, 150)
-			}
-		},
-		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "background_shadow",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				scale_to_material = true,
-				horizontal_alignment = "right",
-				color = {
-					100,
-					0,
-					0,
-					0
-				},
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					10,
-					-10,
-					0
-				}
+				color = Color.terminal_corner_hover(nil, true)
 			}
 		}
 	}, "background")

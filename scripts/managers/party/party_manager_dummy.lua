@@ -39,7 +39,7 @@ PartyManagerDummy.member_peers = function (self)
 	return {}
 end
 
-PartyManagerDummy.num_members = function (self)
+PartyManagerDummy.num_other_members = function (self)
 	return 0
 end
 

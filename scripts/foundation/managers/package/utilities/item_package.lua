@@ -90,6 +90,18 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 		resource_dependencies[texture_resource] = true
 	end
 
+	local icon = item_entry_data.icon
+
+	if icon and icon ~= "" then
+		resource_dependencies[icon] = true
+	end
+
+	local hud_icon = item_entry_data.hud_icon
+
+	if hud_icon and hud_icon ~= "" then
+		resource_dependencies[hud_icon] = true
+	end
+
 	local resource = item_entry_data.resource or item_entry_data.base_unit
 
 	if resource then
@@ -124,12 +136,16 @@ ItemPackage.compile_items_dependencies = function (items, items_dictionary, opti
 	return result
 end
 
-ItemPackage.compile_item_dependencies = function (item_name, items_dictionary, out_result, optional_mission_template)
+ItemPackage.compile_item_dependencies = function (item, items_dictionary, out_result, optional_mission_template)
 	local result = out_result or {}
-	local item_entry = rawget(items_dictionary, item_name)
+	local item_entry = item
+
+	if type(item_entry) == "string" then
+		item_entry = rawget(items_dictionary, item_entry)
+	end
 
 	if not item_entry then
-		Log.error("ItemPackage", "Unable to find item %s", item_name)
+		Log.error("ItemPackage", "Unable to find item %s", item)
 
 		return
 	end
@@ -149,6 +165,12 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 
 	if attachments then
 		ItemPackage._resolve_item_packages_recursive(attachments, items_dictionary, result)
+	end
+
+	local icon = item.icon
+
+	if icon and icon ~= "" then
+		result[icon] = true
 	end
 
 	local weapon_skin_item = item.slot_weapon_skin

@@ -1,5 +1,4 @@
 local Breeds = require("scripts/settings/breed/breeds")
-local ErrorTestify = require("scripts/foundation/utilities/error_testify")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
@@ -7,6 +6,67 @@ local RenderSettings = require("scripts/settings/options/render_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local world_create_particles = World.create_particles
 local world_set_particles_life_time = World.set_particles_life_time
+
+local function get_items_for_archetype(archetype, filtered_slots, workflow_states)
+	local WORKFLOW_STATES = {
+		"SHIPPABLE",
+		"RELEASABLE",
+		"FUNCTIONAL"
+	}
+	local item_definitions = MasterItems.get_cached()
+	local items = {}
+
+	for item_name, item in pairs(item_definitions) do
+		repeat
+			local slots = item.slots
+			local slot = slots and slots[1]
+
+			if not table.contains(filtered_slots, slot) then
+				break
+			end
+
+			local archetypes = item.archetypes
+
+			if not archetypes or not table.contains(archetypes, archetype) then
+				break
+			end
+
+			local is_item_stripped = true
+			local strip_tags_table = Application.get_strip_tags_table()
+
+			if table.size(item.feature_flags) == 0 then
+				is_item_stripped = false
+			else
+				for _, feature_flag in pairs(item.feature_flags) do
+					if strip_tags_table[feature_flag] == true then
+						is_item_stripped = false
+
+						break
+					end
+				end
+			end
+
+			if is_item_stripped then
+				break
+			end
+
+			local testable = table.contains(WORKFLOW_STATES, item.workflow_state)
+
+			if not testable then
+				break
+			end
+
+			if items[slot] == nil then
+				items[slot] = {}
+			end
+
+			items[slot][item_name] = item
+		until true
+	end
+
+	return items
+end
+
 local StateGameTestify = {
 	action_rule = function (data)
 		local action_name = data.action_name
@@ -62,40 +122,37 @@ local StateGameTestify = {
 			return Testify.RETRY
 		end
 
-		local SLOT_PRIMARY = "slot_primary"
-		local SLOT_SECONDARY = "slot_secondary"
-		local item_definitions = MasterItems.get_cached()
-		local weapons = {
-			slot_primary = {},
-			slot_secondary = {}
+		local weapons_slots = {
+			"slot_primary",
+			"slot_secondary"
 		}
-
-		for item_name, item in pairs(item_definitions) do
-			repeat
-				local slots = item.slots
-				local slot = slots and slots[1]
-
-				if slot ~= SLOT_PRIMARY and slot ~= SLOT_SECONDARY then
-					break
-				end
-
-				local archetypes = item.archetypes
-
-				if not archetypes or not table.contains(archetypes, archetype) then
-					break
-				end
-
-				local testable = item.workflow_state == "FUNCTIONAL" or item.workflow_state == "SHIPPABLE" or item.workflow_state == "RELEASABLE"
-
-				if not testable then
-					break
-				end
-
-				weapons[slot][item_name] = item
-			until true
-		end
+		local weapons = get_items_for_archetype(archetype, weapons_slots)
 
 		return weapons
+	end,
+	all_gears = function (archetype, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local gears_slots = {
+			"slot_gear_head",
+			"slot_gear_lowerbody",
+			"slot_gear_upperbody",
+			"slot_gear_extra_cosmetic"
+		}
+		local gears = get_items_for_archetype(archetype, gears_slots)
+
+		return gears
+	end,
+	slot_fallback_item = function (slot, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local fallback_item = MasterItems.find_fallback_item_id(slot)
+
+		return fallback_item
 	end,
 	all_items = function (_, _)
 		if not MasterItems.has_data() then
@@ -125,18 +182,6 @@ local StateGameTestify = {
 
 		setfenv(func, context)
 		func(assert_data)
-	end,
-	log_size_assert = function (assert_data)
-		ErrorTestify.log_size_assert(assert_data.condition, assert_data.message)
-	end,
-	num_peers_assert = function (assert_data)
-		ErrorTestify.num_peers_assert(assert_data.condition, assert_data.message)
-	end,
-	performance_cameras_assert = function (assert_data)
-		ErrorTestify.performance_cameras_assert(assert_data.condition, assert_data.message)
-	end,
-	player_died_assert = function (assert_data)
-		ErrorTestify.player_died_assert(assert_data.condition, assert_data.message)
 	end,
 	change_dev_parameter = function (parameter, _)
 		ParameterResolver.set_dev_parameter(parameter.name, parameter.value)
@@ -228,17 +273,20 @@ local StateGameTestify = {
 	skip_privacy_policy_popup_if_displayed = function (_, state_game)
 		local current_state_name = state_game:current_state_name()
 
-		if current_state_name == "StateSplash" then
-			return Testify.RETRY
-		elseif current_state_name == "StateTitle" then
+		if current_state_name == "StateTitle" then
 			local state_machine = state_game:state_machine()
 			local state_title = state_machine:current_state()
 			local state_title_state = state_title:state()
 
+			if state_title_state == "done" then
+				return
+			end
+
 			if state_title_state == "legal_verification" then
 				local constant_elements = Managers.ui:ui_constant_elements()
 				local constant_element_popup_handler = constant_elements:element("ConstantElementPopupHandler")
-				local accept_button = constant_element_popup_handler._widgets_by_name.button_2
+				local widgets_by_name = constant_element_popup_handler:widgets_by_name()
+				local accept_button = widgets_by_name.popup_widget_2
 
 				if accept_button then
 					constant_element_popup_handler:trigger_widget_callback(accept_button)
@@ -247,11 +295,7 @@ local StateGameTestify = {
 				end
 			end
 
-			if state_title_state == "done" then
-				return
-			else
-				return Testify.RETRY
-			end
+			return Testify.RETRY
 		end
 	end,
 	weapon_template = function (weapon)

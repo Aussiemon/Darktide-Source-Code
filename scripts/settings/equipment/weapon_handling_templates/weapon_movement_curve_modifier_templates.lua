@@ -17,6 +17,12 @@ local weapon_movement_curve_modifier_templates = {
 			lerp_basic = 0.5
 		}
 	},
+	lasgun_p3 = {
+		modifier = {
+			lerp_perfect = 1,
+			lerp_basic = 0.6
+		}
+	},
 	chainsword_p1_m1 = {
 		modifier = {
 			lerp_perfect = 1.5,

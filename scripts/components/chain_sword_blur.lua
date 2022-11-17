@@ -3,6 +3,7 @@ local BLUR_NODE_NAME = "fx_chain_blur"
 local BLUR_VISIBILITY_GROUP = "chain_blur"
 local FRESNEL_VARIABLE_NAME = "fresnel_max"
 local BLUR_VARIABLE_NAME = "blur_amount"
+local DEFAULT_MIN_SPEED = 1
 
 ChainSwordBlur.init = function (self, unit)
 	self:enable(unit)
@@ -21,6 +22,7 @@ ChainSwordBlur.init = function (self, unit)
 end
 
 ChainSwordBlur._set_speed = function (self, speed)
+	speed = speed or DEFAULT_MIN_SPEED
 	local min_speed = self._min_speed
 	local max_speed = self._max_speed
 	local visible = min_speed < speed

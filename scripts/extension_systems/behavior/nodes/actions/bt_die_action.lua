@@ -33,7 +33,7 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 	local death_animation_events = nil
 	local death_animations = action_data.death_animations
 
-	if not damage_profile.ragdoll_only and death_animations then
+	if not damage_profile.ragdoll_only and death_animations or action_data.force_death_animation then
 		local killing_damage_type = death_component.killing_damage_type
 
 		if killing_damage_type and death_animations[killing_damage_type] then
@@ -82,7 +82,7 @@ BtDieAction.init_values = function (self, blackboard)
 	death_component.force_instant_ragdoll = false
 end
 
-BtDieAction._set_dead = function (self, unit, scratchpad, breed)
+BtDieAction._set_dead = function (self, unit, scratchpad, breed, action_data, blackboard)
 	local death_component = scratchpad.death_component
 	local attack_direction = death_component.attack_direction:unbox()
 	local hit_zone_name = death_component.hit_zone_name
@@ -107,7 +107,7 @@ BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_da
 	local ragdoll_timing = scratchpad.ragdoll_timing
 
 	if ragdoll_timing <= t then
-		self:_set_dead(unit, scratchpad, breed)
+		self:_set_dead(unit, scratchpad, breed, action_data, blackboard)
 	else
 		local death_component = scratchpad.death_component
 		local hit_during_death = death_component.hit_during_death
@@ -115,7 +115,7 @@ BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_da
 		if hit_during_death and not action_data.ignore_hit_during_death_ragdoll then
 			scratchpad.do_ragdoll_push = true
 
-			self:_set_dead(unit, scratchpad, breed)
+			self:_set_dead(unit, scratchpad, breed, action_data, blackboard)
 
 			death_component.hit_during_death = false
 		end

@@ -4,7 +4,7 @@ local beast_of_nurgle_settings = {
 	radius = 2.25,
 	range = 20,
 	min_range = 0,
-	from_node = "j_head",
+	from_node = "j_tongue_mouth",
 	states = STATES,
 	vfx = {
 		flamer_particle = "content/fx/particles/enemies/beast_of_nurgle/bon_vomit_projectile",
@@ -22,10 +22,11 @@ local beast_of_nurgle_settings = {
 		initial_speed = 6
 	},
 	cooldowns = {
-		melee = 3,
-		vomit = 2,
-		melee_aoe = 8,
-		consume = 10
+		melee_aoe = 7,
+		consume = 10,
+		melee = 1.5,
+		consume_failed = 1,
+		vomit = 2
 	}
 }
 

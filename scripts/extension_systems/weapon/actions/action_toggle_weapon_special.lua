@@ -17,9 +17,9 @@ ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
 		local deactivate_anim_event = action_settings.deactivate_anim_event
 
 		if special_active and deactivate_anim_event then
-			self:trigger_anim_event(deactivate_anim_event)
+			self:trigger_anim_event(deactivate_anim_event, deactivate_anim_event)
 		elseif not special_active and activate_anim_event then
-			self:trigger_anim_event(activate_anim_event)
+			self:trigger_anim_event(activate_anim_event, activate_anim_event)
 		end
 	end
 end

@@ -15,7 +15,7 @@ local Quaternion_forward = Quaternion.forward
 local Vector3_normalize = Vector3.normalize
 local Vector3_dot = Vector3.dot
 local Quaternion_look = Quaternion.look
-local PLAYER_RENDER_FRAME_POSITIONS = table.enum("interpolate", "extrapolate")
+local PLAYER_RENDER_FRAME_POSITIONS = table.enum("interpolate", "extrapolate", "raw")
 
 PlayerUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_component, game_object_component_or_game_session, game_object_id_or_nil)
 	self._unit = unit
@@ -97,10 +97,9 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 
 	self._script_minion_collision = true
 	self._old_position = Vector3Box(pos)
+	self._latest_simulated_position = Vector3Box(pos)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
 	self._network_max_mover_frames = NetworkConstants.max_mover_frames
-
-	Managers.state.out_of_bounds:register_soft_oob_unit(unit, self, "_on_soft_oob")
 end
 
 PlayerUnitLocomotionExtension.game_object_initialized = function (self, session, object_id)
@@ -121,10 +120,25 @@ PlayerUnitLocomotionExtension.destroy = function (self)
 	Managers.state.out_of_bounds:unregister_soft_oob_unit(self._unit, self)
 end
 
+PlayerUnitLocomotionExtension._update_soft_oob = function (self, dt, locomotion_component)
+	local out_of_bounds_manager = Managers.state.out_of_bounds
+	local soft_cap_extents = out_of_bounds_manager:soft_cap_extents()
+	local position = locomotion_component.position
+	local velocity_current = locomotion_component.velocity_current
+	local projected_position = position + velocity_current * dt
+
+	if soft_cap_extents.x <= math.abs(projected_position.x) or soft_cap_extents.y <= math.abs(projected_position.y) or soft_cap_extents.z <= math.abs(projected_position.z) then
+		self:_on_soft_oob()
+	end
+end
+
 PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, locomotion_component, steering_component, inair_component)
 	local old_on_ground = inair_component.on_ground
 	local position = locomotion_component.position
 	local mover = Unit.mover(unit)
+
+	self._old_position:store(position)
+
 	local move_method = steering_component.move_method
 	local calculate_fall_velocity = steering_component.calculate_fall_velocity
 
@@ -136,6 +150,8 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 	else
 		ferror("Unknown move_method %s", move_method)
 	end
+
+	self._latest_simulated_position:store(position)
 
 	local flying_frames = Mover.flying_frames(mover)
 	local standing_frames = Mover.standing_frames(mover)
@@ -558,12 +574,27 @@ PlayerUnitLocomotionExtension.visual_unlink = function (self)
 	end
 end
 
+PlayerUnitLocomotionExtension.hot_join_sync = function (self, unit, sender, _)
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local linker_component = unit_data_extension:read_component("player_unit_linker")
+	local linked = linker_component.linked
+
+	if linked then
+		local channel = Managers.state.game_session:peer_to_channel(sender)
+		local game_object_id = self._game_object_id
+		local parent_unit = linker_component.parent_unit
+		local _, parent_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(parent_unit)
+		local parent_node_name = linker_component.parent_node
+		local parent_node = Unit.node(parent_unit, parent_node_name)
+		local node_name = linker_component.node
+		local node = Unit.node(unit, node_name)
+
+		RPC.rpc_set_player_link(channel, game_object_id, node, parent_unit_id, parent_node)
+	end
+end
+
 PlayerUnitLocomotionExtension.fixed_update = function (self, unit, dt, t, frame)
 	local locomotion_component = self._locomotion_component
-	local prev_position = locomotion_component.position
-
-	self._old_position:store(prev_position)
-
 	local steering_component = self._locomotion_steering_component
 
 	if steering_component.move_method == "script_driven_hub" then
@@ -573,6 +604,7 @@ PlayerUnitLocomotionExtension.fixed_update = function (self, unit, dt, t, frame)
 	local inair_component = self._inair_state_component
 	local force_rotation_component = self._locomotion_force_rotation_component
 
+	self:_update_soft_oob(dt, locomotion_component)
 	self:_update_movement(unit, dt, t, locomotion_component, steering_component, inair_component)
 	self:_update_rotation(unit, dt, t, locomotion_component, steering_component, force_rotation_component)
 
@@ -641,8 +673,7 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	local locomotion_component = self._locomotion_component
 	local locomotion_steering_component = self._locomotion_steering_component
 	local force_translation_component = self._locomotion_force_translation_component
-	local position = locomotion_component.position
-	local abs_pos = position
+	local abs_pos = self._latest_simulated_position:unbox()
 	local remainder_t = t - self._last_fixed_t
 	local simulated_pos = nil
 
@@ -657,11 +688,22 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 		elseif mode == "interpolate" then
 			local old_pos = self._old_position:unbox()
 			local t_value = remainder_t / GameParameters.fixed_time_step
-			t_value = math.min(t_value, 1)
-			simulated_pos = Vector3.lerp(old_pos, abs_pos, t_value)
+			simulated_pos = Vector3.lerp(old_pos, abs_pos, math.min(t_value, 1))
+		elseif mode == "raw" then
+			simulated_pos = abs_pos
 		else
 			ferror("Invalid DevParameters.player_render_frame_position %q.", mode)
 		end
+	end
+
+	local parent_unit = locomotion_component.parent_unit
+	local moveable_platform_extension = parent_unit and ScriptUnit.has_extension(parent_unit, "moveable_platform_system")
+
+	if moveable_platform_extension then
+		simulated_pos = simulated_pos + moveable_platform_extension:movement_since_last_fixed_update()
+		local mover = Unit.mover(unit)
+
+		Mover.set_position(mover, locomotion_component.position)
 	end
 
 	Unit.set_local_position(unit, 1, simulated_pos)
@@ -682,7 +724,6 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 
 		local sync_pos, sync_rot = nil
 		local abs_rot = locomotion_component.rotation
-		local parent_unit = locomotion_component.parent_unit
 
 		if parent_unit then
 			sync_rot, sync_pos = PlayerMovement.calculate_relative_rotation_position(parent_unit, abs_rot, abs_pos)
@@ -787,8 +828,6 @@ PlayerUnitLocomotionExtension.set_parent_unit = function (self, unit)
 		locomotion_component.parent_unit = unit
 	end
 
-	self._old_position:store(locomotion_component.position)
-
 	if self._is_server then
 		local game_object_id = self._game_object_id
 		local game_session = self._game_session
@@ -878,11 +917,10 @@ PlayerUnitLocomotionExtension.current_velocity = function (self)
 	return loc_component.velocity_current
 end
 
-PlayerUnitLocomotionExtension._on_soft_oob = function (self, unit)
-	local reason = "oob"
+PlayerUnitLocomotionExtension._on_soft_oob = function (self)
+	self._locomotion_component.velocity_current = Vector3.zero()
 
-	PlayerDeath.die(unit, nil, nil, reason)
-	Managers.state.out_of_bounds:unregister_soft_oob_unit(unit, self)
+	PlayerDeath.die(self._unit, 0, nil, "oob")
 end
 
 return PlayerUnitLocomotionExtension

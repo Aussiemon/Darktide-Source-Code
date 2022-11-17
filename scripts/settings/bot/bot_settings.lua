@@ -34,8 +34,9 @@ local bot_settings = {
 			level_forced_teleport = "boolean"
 		},
 		health_station = {
+			needs_health_queue_number = "number",
 			needs_health = "boolean",
-			needs_health_queue_number = "number"
+			time_in_proximity = "number"
 		},
 		melee = {
 			stop_at_current_position = "boolean",

@@ -20,7 +20,7 @@ ActionThrow.start = function (self, action_settings, t, time_scale, action_start
 	local used_input = action_start_params.used_input
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
-	local slot_name_or_nil = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_component)
+	local slot_name_or_nil = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
 	local slot_to_wield = nil
 
 	if not slot_name_or_nil or slot_name_or_nil == wielded_slot then

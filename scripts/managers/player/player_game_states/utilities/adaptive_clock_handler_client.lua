@@ -5,6 +5,10 @@ local MAX_SPEED_UP = 0.05
 local MAX_SLOW_DOWN = 0.05
 local MAX_FRAMERATE_SPIKE_THRESHOLD = 2
 local INCREASE_MULTIPLIER_ON_SPIKE = 1.1
+local DIAGNOSTICS_BUFFER = 64
+local DIAGNOSTICS_STRIDE = 6
+local DIAGNOSTICS_UPDATE_FREQUENCY = 0.25
+local DIAGNOSTICS_SIZE = DIAGNOSTICS_BUFFER * DIAGNOSTICS_STRIDE
 
 AdaptiveClockHandlerClient.init = function (self, network_event_delegate)
 	network_event_delegate:register_session_events(self, "rpc_sync_clock_offset")
@@ -17,6 +21,23 @@ AdaptiveClockHandlerClient.init = function (self, network_event_delegate)
 	self._time_per_sample = TIME_PER_SAMPLE
 	self._offset_correction = 0
 	self._has_registered_timer = false
+	self._in_panic = false
+	local diagnostics = Script.new_array(DIAGNOSTICS_SIZE)
+	self._diagnostics = diagnostics
+	diagnostics[0] = DIAGNOSTICS_BUFFER
+
+	for i = 1, DIAGNOSTICS_BUFFER do
+		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
+		diagnostics[diag_i + 1] = 0
+		diagnostics[diag_i + 2] = 0
+		diagnostics[diag_i + 3] = 0
+		diagnostics[diag_i + 4] = 0
+		diagnostics[diag_i + 5] = 0
+		diagnostics[diag_i + 6] = 0
+	end
+
+	self._diagnostics_timer = 0
+	self._last_diagnostics_timer = 0
 	self._base_time_scale = 1
 end
 
@@ -86,6 +107,24 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 	end
 
 	Managers.time:set_local_scale("gameplay", self._time_scale)
+
+	local diagnostics_timer = self._diagnostics_timer + main_dt
+	self._diagnostics_timer = diagnostics_timer
+	local time_since_last_diagnostics = diagnostics_timer - self._last_diagnostics_timer
+
+	if DIAGNOSTICS_UPDATE_FREQUENCY < time_since_last_diagnostics then
+		self._last_diagnostics_timer = diagnostics_timer
+		local diag = self._diagnostics
+		local i = (diag[0] + 1 - 1) % DIAGNOSTICS_BUFFER + 1
+		diag[0] = i
+		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
+		diag[diag_i + 1] = time_since_last_diagnostics
+		diag[diag_i + 2] = target_offset
+		diag[diag_i + 3] = self._current_offset
+		diag[diag_i + 4] = self._time_scale
+		diag[diag_i + 5] = self._server_offset
+		diag[diag_i + 6] = self._offset_correction
+	end
 end
 
 AdaptiveClockHandlerClient._update_max_frame_time = function (self, dt)
@@ -121,6 +160,43 @@ AdaptiveClockHandlerClient._update_max_frame_time = function (self, dt)
 			self._max_frame_time = math.max(dt, self._max_frame_time)
 		end
 	end
+end
+
+AdaptiveClockHandlerClient.set_in_panic = function (self, in_panic)
+	self._in_panic = in_panic
+end
+
+AdaptiveClockHandlerClient.in_panic = function (self)
+	return self._in_panic
+end
+
+AdaptiveClockHandlerClient.diagnostics_dump = function (self)
+	local dump = nil
+	local diag = self._diagnostics
+	local i = diag[0]
+
+	for j = 1, DIAGNOSTICS_BUFFER do
+		i = (i + 1 - 1) % DIAGNOSTICS_BUFFER + 1
+		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
+		local t = diag[diag_i + 1]
+		local target = diag[diag_i + 2]
+		local current = diag[diag_i + 3]
+		local time_scale = diag[diag_i + 4]
+		local server_offset = diag[diag_i + 5]
+		local offset_correction = diag[diag_i + 6]
+		local frame_string = string.format("\t[%i]t:%.2f target:%.3f current:%.3f time_scale:%.5f server_offset:%.3f offset_correction:%.3f", i, t, target, current, time_scale, server_offset, offset_correction)
+		local wrap = (j - 1) % 4 == 0
+
+		if not dump then
+			dump = string.format("%s", frame_string)
+		elseif wrap then
+			dump = string.format("%s\n%s", dump, frame_string)
+		else
+			dump = string.format("%s %s", dump, frame_string)
+		end
+	end
+
+	return dump
 end
 
 AdaptiveClockHandlerClient.rpc_sync_clock_offset = function (self, channel_id, offset, server_gameplay_t)

@@ -15,33 +15,7 @@ local templates = {
 }
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_child"
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
-templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = {
-	predicted = false,
-	stack_offset = -1,
-	class_name = "stepped_stat_buff",
-	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05
-	},
-	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	start_func = function (template_data, template_context)
-		local item_slot_name = template_context.item_slot_name
-		local unit = template_context.unit
-		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
-		template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
-	end,
-	min_max_step_func = function (template_data, template_context)
-		return 0, 10
-	end,
-	bonus_step_func = function (template_data, template_context)
-		local inventory_slot_component = template_data.inventory_slot_component
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
-		local missing_in_clip = max_ammunition_clip - current_ammunition_clip
-
-		return missing_in_clip
-	end
-}
+templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_based_on_ammo_left)
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills = {
 	predicted = false,
 	class_name = "proc_buff",

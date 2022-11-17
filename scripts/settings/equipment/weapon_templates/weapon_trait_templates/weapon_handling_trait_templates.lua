@@ -123,6 +123,74 @@ local weapon_handling_trait_templates = {
 			0.05
 		}
 	},
+	forcestaff_p2_m1_ramp_up_stat = {
+		{
+			"flamer_ramp_up_times",
+			1,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			2,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			3,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			4,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			5,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			6,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"flamer_ramp_up_times",
+			7,
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		}
+	},
+	forcestaff_p3_m1_crit_stat = {
+		{
+			"critical_strike",
+			"chance_modifier",
+			{
+				max = 1,
+				min = 0
+			}
+		}
+	},
 	stubrevolver_crit_stat = {
 		{
 			"critical_strike",

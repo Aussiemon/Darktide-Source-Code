@@ -42,14 +42,13 @@ local ability_template = {
 			start_input = "aim_pressed",
 			kind = "targeted_dash_aim",
 			sprint_ready_up_time = 0,
-			aim_ready_up_time = 0.25,
+			aim_ready_up_time = 0,
 			uninterruptible = true,
-			decal_unit_name = "content/fx/units/decal_dash",
 			allowed_during_lunge = true,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			stop_input = "block_cancel",
-			minimum_hold_time = 0.01,
+			minimum_hold_time = 0.075,
 			total_time = math.huge,
 			lunge_template_name = LungeTemplates.zealot_dash.name,
 			allowed_chain_actions = {
@@ -75,7 +74,8 @@ local ability_template = {
 	},
 	fx_sources = {},
 	equiped_ability_effect_scripts = {
-		"TargetedDashEffects"
+		"TargetedDashEffects",
+		"LungeEffects"
 	},
 	targeting_fx = {
 		effect_name = "content/fx/particles/abilities/zealot_dash_charge"

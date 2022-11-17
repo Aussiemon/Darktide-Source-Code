@@ -94,22 +94,32 @@ CoverSlots.create = function (physics_world, nav_world, unit, cover_type, node_p
 	return cover_slots
 end
 
+local COVER_SLOT_ID = 0
+local MIN_SLOT_TO_NAVMESH_DISTANCE = 1.5
+
 CoverSlots._add_slot = function (physics_world, unit, navmesh_position, slot_position, left, cover_type, nav_world, cover_slots)
-	local above = 1
-	local below = 1
+	local above = 0.75
+	local below = 0.75
 	local horizontal = CoverSettings.slot_navmesh_outside_search_distance
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, navmesh_position, above, below, horizontal)
 
 	if position_on_navmesh then
 		local boxed_navmesh_position = Vector3Box(position_on_navmesh)
+
+		if MIN_SLOT_TO_NAVMESH_DISTANCE < Vector3.distance(position_on_navmesh, slot_position) then
+			return
+		end
+
 		slot_position.z = boxed_navmesh_position.z
 		local boxed_slot_position = Vector3Box(slot_position)
+		COVER_SLOT_ID = COVER_SLOT_ID + 1
 		local cover_slot = {
 			navmesh_position = boxed_navmesh_position,
 			position = boxed_slot_position,
 			type = cover_type,
 			normal = Vector3Box(left),
-			direction = Vector3Box(-left)
+			direction = Vector3Box(-left),
+			id = COVER_SLOT_ID
 		}
 		local valid_cover_slot = CoverSlots._generate_slot_peek_types(physics_world, cover_slot, cover_type, position_on_navmesh)
 

@@ -401,10 +401,6 @@ local player = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_pellets",
-				hit_direction_interface = true
-			},
-			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_husk",
 				only_3p = true
 			}

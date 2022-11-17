@@ -2,10 +2,7 @@ local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/wea
 local WeaponTemplate = {}
 
 WeaponTemplate.current_weapon_template = function (weapon_action_component)
-	local weapon_template_name = weapon_action_component.template_name
-	local weapon_template = WeaponTemplate.weapon_template(weapon_template_name)
-
-	return weapon_template
+	return WeaponTemplate.weapon_template(weapon_action_component.template_name)
 end
 
 WeaponTemplate.is_ranged = function (weapon_template)

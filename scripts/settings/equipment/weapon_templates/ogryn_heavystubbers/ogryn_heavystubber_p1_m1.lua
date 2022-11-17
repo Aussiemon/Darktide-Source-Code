@@ -8,6 +8,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsOgrynHeavystubbertP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_heavystubber_p1")
 local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -129,14 +130,14 @@ weapon_template.action_input_hierarchy = {
 		shoot_release = "base"
 	},
 	zoom = {
-		wield = "base",
 		zoom_release = "base",
+		wield = "base",
 		grenade_ability = "base",
-		brace_reload = "stay",
+		reload = "base",
 		combat_ability = "base",
 		zoom_shoot = {
-			brace_reload = "previous",
 			wield = "base",
+			reload = "base",
 			zoom_release = "base",
 			shoot_release = "previous"
 		}
@@ -166,6 +167,9 @@ weapon_template.actions = {
 		conditional_state_to_action_input = {
 			started_reload = {
 				input_name = "reload"
+			},
+			no_ammo = {
+				input_name = "reload"
 			}
 		},
 		allowed_chain_actions = {
@@ -184,7 +188,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.5
+				chain_time = 1.2
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
@@ -197,15 +201,16 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		ammunition_usage = 1,
-		weapon_handling_template = "ogryn_heavystubber_p1_m1_hip_fire",
-		kind = "shoot_hit_scan",
-		start_input = "shoot",
-		abort_sprint = true,
 		minimum_hold_time = 0.5,
-		allowed_during_sprint = true,
+		weapon_handling_template = "ogryn_heavystubber_p1_m1_hip_fire",
+		start_input = "shoot",
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.5,
+		kind = "shoot_hit_scan",
+		allowed_during_sprint = true,
+		ammunition_usage = 1,
+		anim_end_event = "attack_finished",
+		abort_sprint = true,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -222,12 +227,12 @@ weapon_template.actions = {
 				t = 0.175
 			},
 			{
-				modifier = 0.9,
-				t = 0.3
+				modifier = 0.75,
+				t = 0.5
 			},
 			{
-				modifier = 1,
-				t = 0.5
+				modifier = 0.9,
+				t = 1.5
 			},
 			start_modifier = 0.5
 		},
@@ -235,21 +240,23 @@ weapon_template.actions = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_ignite",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ogryn_heavystubber/ogryn_heavystubber_muzzle",
 			num_pre_loop_events = 1,
 			alternate_muzzle_flashes = true,
 			auto_fire_time_parameter_name = "wpn_fire_interval",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_heavystubber_01",
+			alternate_shell_casings = true,
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			pre_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
-			line_effect = LineEffects.autogun_bullet
+			line_effect = LineEffects.heavy_stubber_bullet
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto,
-			damage_type = damage_types.auto_bullet
+			damage_type = damage_types.heavy_stubber_bullet
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -283,12 +290,13 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
+		minimum_hold_time = 0.5,
 		start_input = "zoom_shoot",
+		anim_end_event = "attack_finished",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		weapon_handling_template = "ogryn_heavystubber_p1_m1_full_auto",
 		ammunition_usage = 1,
-		minimum_hold_time = 0.5,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -310,21 +318,23 @@ weapon_template.actions = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto,
-			damage_type = damage_types.auto_bullet
+			damage_type = damage_types.heavy_stubber_bullet
 		},
 		fx = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_braced_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_ignite",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/ogryn_heavystubber/ogryn_heavystubber_muzzle",
 			num_pre_loop_events = 1,
 			alternate_muzzle_flashes = true,
 			auto_fire_time_parameter_name = "wpn_fire_interval",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_heavystubber_01",
+			alternate_shell_casings = true,
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			pre_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
-			line_effect = LineEffects.autogun_bullet
+			line_effect = LineEffects.heavy_stubber_bullet
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -336,8 +346,8 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			brace_reload = {
-				action_name = "action_brace_reload"
+			reload = {
+				action_name = "action_reload"
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
@@ -361,7 +371,7 @@ weapon_template.actions = {
 		uninterruptible = true,
 		start_input = "zoom",
 		kind = "aim",
-		total_time = 0.65,
+		total_time = 1.65,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_snp,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -373,51 +383,19 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			brace_reload = {
-				action_name = "action_brace_reload",
+			reload = {
+				action_name = "action_reload",
 				chain_time = 0.1
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.1
+				chain_time = 1
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
 				chain_time = 0.1
 			}
 		},
-		action_keywords = {
-			"braced"
-		}
-	},
-	action_zoom_fast = {
-		uninterruptible = true,
-		kind = "aim",
-		total_time = 0.55,
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
-			},
-			wield = {
-				action_name = "action_unwield"
-			},
-			brace_reload = {
-				action_name = "action_brace_reload",
-				chain_time = 0.25
-			},
-			zoom_shoot = {
-				action_name = "action_shoot_zoomed",
-				chain_time = 0.5
-			},
-			zoom_release = {
-				action_name = "action_unzoom",
-				chain_time = 0.25
-			}
-		},
-		smart_targeting_template = SmartTargetingTemplates.alternate_fire_snp,
 		action_keywords = {
 			"braced"
 		}
@@ -437,11 +415,15 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_brace_reload",
+				action_name = "action_reload",
 				chain_time = 0.25
 			},
 			zoom = {
-				action_name = "action_zoom_fast"
+				action_name = "action_zoom"
+			},
+			stab = {
+				action_name = "action_stab",
+				chain_time = 0.1
 			}
 		}
 	},
@@ -515,7 +497,7 @@ weapon_template.actions = {
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "dot",
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 7,
 		action_movement_curve = {
@@ -574,7 +556,7 @@ weapon_template.actions = {
 		}
 	},
 	action_stab = {
-		damage_window_start = 0.3,
+		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "stab",
 		range_mod = 1.15,
@@ -634,7 +616,7 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 1.5
+				chain_time = 1.2
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -642,19 +624,19 @@ weapon_template.actions = {
 			},
 			stab = {
 				action_name = "action_stab",
-				chain_time = 1.7
+				chain_time = 1.2
 			}
 		},
 		weapon_box = {
 			0.2,
-			1.2,
+			1.25,
 			0.3
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked/attack_special_right",
 			anchor_point_offset = {
 				0.2,
-				0.8,
+				1,
 				0
 			}
 		},
@@ -681,7 +663,7 @@ weapon_template.entry_actions = {
 	primary_action = "action_shoot_hip",
 	secondary_action = "action_zoom"
 }
-weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/rippergun"
+weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/heavy_stubber"
 weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked"
 weapon_template.reload_template = ReloadTemplates.heavy_stubber_twin_linked
 weapon_template.sway_template = "ogyn_heavy_stubber_sway"
@@ -695,25 +677,28 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo_no_alternate_fire",
+		conditional_state = "no_ammo_no_alternate_fire_with_delay",
 		input_name = "reload"
 	},
 	{
 		conditional_state = "no_ammo_and_started_reload_alternate_fire",
-		input_name = "brace_reload"
+		input_name = "reload"
 	},
 	{
-		conditional_state = "no_ammo_alternate_fire",
-		input_name = "brace_reload"
+		conditional_state = "no_ammo_alternate_fire_with_delay",
+		input_name = "reload"
 	}
 }
+weapon_template.no_ammo_delay = 0.4
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
+	_eject = "fx_eject_01",
+	_muzzle_secondary = "fx_02",
 	_muzzle = "fx_01",
-	_muzzle_secondary = "fx_02"
+	_eject_secondary = "fx_eject_02"
 }
 weapon_template.crosshair_type = "spray_n_pray"
 weapon_template.hit_marker_type = "center"
@@ -757,7 +742,7 @@ weapon_template.alternate_fire_settings = {
 			t = 0.5
 		},
 		{
-			modifier = 0.65,
+			modifier = 0.5,
 			t = 2
 		}
 	}
@@ -846,6 +831,10 @@ weapon_template.traits = {}
 local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
 
 table.append(weapon_template.traits, ranged_common_traits)
+
+local ogryn_heavystubbert_p1_traits = table.keys(WeaponTraitsOgrynHeavystubbertP1)
+
+table.append(weapon_template.traits, ogryn_heavystubbert_p1_traits)
 
 weapon_template.displayed_keywords = {
 	{

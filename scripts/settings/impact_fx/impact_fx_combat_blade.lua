@@ -52,7 +52,7 @@ local unarmored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
 			}
 		},
@@ -265,7 +265,7 @@ local armored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
 			}
 		},
@@ -283,7 +283,7 @@ local armored = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_knife_heavy_reduced_damage",
 				append_husk_to_event_name = true
 			},
 			{
@@ -725,7 +725,7 @@ local disgustingly_resilient = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
 			}
 		},
@@ -743,7 +743,7 @@ local disgustingly_resilient = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_knife_heavy_reduced_damage",
 				append_husk_to_event_name = true
 			},
 			{
@@ -751,7 +751,12 @@ local disgustingly_resilient = {
 				append_husk_to_event_name = true
 			}
 		},
-		shove = {}
+		shove = {
+			{
+				event = "wwise/events/weapon/play_player_push_resilient",
+				append_husk_to_event_name = true
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
@@ -935,7 +940,7 @@ local resistant = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_knife_heavy_no_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
 			}
 		},

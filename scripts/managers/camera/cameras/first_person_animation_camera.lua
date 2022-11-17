@@ -16,6 +16,15 @@ FirstPersonAnimationCamera.set_root_unit = function (self, unit, object)
 end
 
 FirstPersonAnimationCamera.update = function (self, dt, position, rotation, data)
+	local camera_offset_lerp = 1
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		local value = account_data.interface_settings.camera_movement_offset_sway_intensity
+		camera_offset_lerp = math.ilerp(0, 100, value)
+	end
+
 	local root_unit = self._root_unit
 	local rot_offset = Quaternion.identity()
 	local pos_offset = Vector3.zero()
@@ -28,6 +37,8 @@ FirstPersonAnimationCamera.update = function (self, dt, position, rotation, data
 
 	local new_rotation = Quaternion.multiply(rotation, rot_offset)
 	local new_position = position + Quaternion.rotate(new_rotation, pos_offset)
+	new_rotation = Quaternion.lerp(rotation, new_rotation, camera_offset_lerp)
+	new_position = Vector3.lerp(position, new_position, camera_offset_lerp)
 
 	BaseCamera.update(self, dt, new_position, new_rotation, data)
 end

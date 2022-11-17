@@ -6,6 +6,7 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
+local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -53,11 +54,21 @@ BtBeastOfNurgleConsumeAction.init_values = function (self, blackboard)
 	behavior_component.vomit_cooldown = 0
 	behavior_component.wants_to_eat = false
 	behavior_component.consume_cooldown = 0
-	behavior_component.wants_to_play_change_target = false
+	behavior_component.wants_to_play_alerted = false
 end
 
 BtBeastOfNurgleConsumeAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local consumed_unit = scratchpad.consumed_unit
+	local cooldowns = ChaosBeastOfNurgleSettings.cooldowns
+
+	if ALIVE[consumed_unit] then
+		local cooldown = cooldowns.consume
+		scratchpad.behavior_component.consume_cooldown = t + cooldown
+	else
+		local cooldown = cooldowns.consume_failed
+		scratchpad.behavior_component.consume_cooldown = t + cooldown
+	end
+
 	local disabled_state_component = scratchpad.hit_unit_disabled_character_state_component
 
 	if reason ~= "done" and ALIVE[consumed_unit] then
@@ -93,17 +104,24 @@ BtBeastOfNurgleConsumeAction.leave = function (self, unit, breed, blackboard, sc
 	end
 
 	scratchpad.behavior_component.force_spit_out = false
+	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+	stagger_component.count = 0
+	stagger_component.num_triggered_staggers = 0
 end
 
 BtBeastOfNurgleConsumeAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local state = scratchpad.state
 
 	if state == "consuming" then
-		self:_update_consuming(unit, scratchpad, action_data, t, dt)
-
 		local disabled_state_component = scratchpad.hit_unit_disabled_character_state_component
 
 		if disabled_state_component and ALIVE[disabled_state_component.disabling_unit] and disabled_state_component.disabling_unit ~= unit then
+			return "done"
+		end
+
+		local done = self:_update_consuming(unit, scratchpad, action_data, t, dt)
+
+		if done then
 			return "done"
 		end
 	elseif state == "throwing" then
@@ -111,12 +129,6 @@ BtBeastOfNurgleConsumeAction.run = function (self, unit, breed, blackboard, scra
 	elseif state == "done" then
 		return "done"
 	end
-
-	local variable_name = action_data.tongue_length_variable_name
-	local percentage = scratchpad.initial_distance_to_target / action_data.max_tongue_length
-	local variable_value = math.clamp(percentage, 0, 1)
-
-	scratchpad.animation_extension:set_variable(variable_name, variable_value)
 
 	return "running"
 end
@@ -131,7 +143,7 @@ BtBeastOfNurgleConsumeAction._start_consuming = function (self, unit, scratchpad
 
 	scratchpad.animation_extension:anim_event(consume_anim)
 
-	local consume_duration = action_data.consume_durations[consume_anim]
+	local consume_duration = action_data.consume_durations[breed_name]
 	scratchpad.consume_duration = t + consume_duration
 	local next_damage_t = action_data.damage_timings[breed_name][1]
 	scratchpad.next_damage_t = t + next_damage_t
@@ -141,12 +153,26 @@ BtBeastOfNurgleConsumeAction._start_consuming = function (self, unit, scratchpad
 end
 
 BtBeastOfNurgleConsumeAction._update_consuming = function (self, unit, scratchpad, action_data, t, dt)
+	local target_unit = scratchpad.perception_component.target_unit
+
 	if scratchpad.consume_timing and scratchpad.consume_timing <= t then
+		local consume_node_name = action_data.consume_node
+		local consume_node = Unit.node(unit, consume_node_name)
+		local consume_position = Unit.world_position(unit, consume_node)
+		local consume_target_node_name = action_data.consume_target_node
+		local consume_target_node = Unit.node(target_unit, consume_target_node_name)
+		local consume_target_position = Unit.world_position(target_unit, consume_target_node)
+		local distance = Vector3.distance(consume_position, consume_target_position)
+		local consume_check_radius = action_data.consume_check_radius
+
+		if consume_check_radius < distance then
+			return true
+		end
+
 		self:_consume_target(unit, scratchpad.target_unit, scratchpad, action_data, t)
 
 		scratchpad.consume_timing = nil
 	elseif scratchpad.consume_timing then
-		local target_unit = scratchpad.perception_component.target_unit
 		local direction_to_target = Vector3.normalize(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[unit])
 
 		MinionMovement.update_ground_normal_rotation(unit, scratchpad, direction_to_target)

@@ -7,6 +7,7 @@ local XboxJoinPermission = require("scripts/managers/party_immaterium/join_permi
 local SteamJoinPermission = require("scripts/managers/party_immaterium/join_permission/steam_join_permission")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local PartyConstants = require("scripts/settings/network/party_constants")
+local MatchmakingNotificationHandler = require("scripts/multiplayer/matchmaking_notification_handler")
 local PartyImmateriumManagerTestify = GameParameters.testify and require("scripts/managers/party_immaterium/party_immaterium_manager_testify")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -35,11 +36,13 @@ PartyImmateriumManager.init = function (self)
 	self._last_join_permission_ensure = 0
 	self._party_connection = nil
 	self._joining_party_connection = nil
+	self._current_party_id = nil
 	self._game_session_promises = {}
 	self._invite_popups = {}
 	self._request_to_join_popups = {}
 	self._other_members = {}
 	self._resolved_join_permissions = {}
+	self._matchmaking_notification_handler = MatchmakingNotificationHandler:new()
 
 	self:_reset_party_data()
 	Managers.event:register(self, "party_immaterium_request_to_join", "_handle_request_to_join")
@@ -58,6 +61,7 @@ PartyImmateriumManager.init = function (self)
 	Managers.event:register(self, "event_stay_in_party_voting_started", "_handle_stay_in_party_voting_started")
 	Managers.event:register(self, "event_stay_in_party_voting_completed", "_handle_stay_in_party_voting_completed")
 	Managers.event:register(self, "event_stay_in_party_voting_aborted", "_handle_stay_in_party_voting_aborted")
+	Managers.event:register(self, "backend_game_session_aborted", "_handle_game_session_aborted")
 end
 
 PartyImmateriumManager.destroy = function (self)
@@ -77,25 +81,41 @@ PartyImmateriumManager.destroy = function (self)
 	Managers.event:unregister(self, "event_stay_in_party_voting_started")
 	Managers.event:unregister(self, "event_stay_in_party_voting_completed")
 	Managers.event:unregister(self, "event_stay_in_party_voting_aborted")
+	Managers.event:unregister(self, "backend_game_session_aborted")
+	self._matchmaking_notification_handler:delete()
+
+	self._matchmaking_notification_handler = nil
 end
 
-PartyImmateriumManager._resolve_join_permission = function (self, presence_entry, context_suffix)
-	context_suffix = not context_suffix and "" or "_" .. context_suffix
-
+PartyImmateriumManager._resolve_join_permission = function (self, presence_entry, context)
 	if not presence_entry:is_online() then
 		return Promise.resolved(nil)
 	end
 
+	if (IS_GDK or IS_XBS) and (context == "INVITE" or context == "JOIN_REQUEST") then
+		local inviter_platform = presence_entry:platform()
+
+		if inviter_platform == "xbox" then
+			local platform_user_id = presence_entry:platform_user_id()
+
+			if Managers.account:is_blocked(platform_user_id) then
+				return Promise.rejected({
+					error_details = "XBOX_BLOCKED_" .. context
+				})
+			end
+		end
+	end
+
 	local promises = {}
 
-	table.insert(promises, CommonJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context_suffix))
+	table.insert(promises, CommonJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
 
 	local authenticate_method = Managers.backend:get_auth_method()
 
 	if authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE then
-		table.insert(promises, XboxJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context_suffix))
+		table.insert(promises, XboxJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
 	elseif authenticate_method == Managers.backend.AUTH_METHOD_STEAM then
-		table.insert(promises, SteamJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context_suffix))
+		table.insert(promises, SteamJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
 	end
 
 	if #promises == 0 then
@@ -104,7 +124,11 @@ PartyImmateriumManager._resolve_join_permission = function (self, presence_entry
 
 	return Promise.all(unpack(promises)):catch(function (results)
 		for _, result in ipairs(results) do
-			if result ~= "OK" then
+			if result == "declined" then
+				return Promise.rejected({
+					error_details = "PERMISSION_CHECK_FAILED"
+				})
+			elseif result ~= "OK" then
 				return Promise.rejected({
 					error_details = result
 				})
@@ -186,7 +210,7 @@ PartyImmateriumManager.start = function (self)
 	end
 
 	return self:join_party(default_party_id, true):catch(function (error)
-		Log.error("PartyImmateriumManager", "could not join default party, trying an empty party instead.. error=" .. table.tostring(error, 5))
+		Log.error("PartyImmateriumManager", "could not join default party, trying an empty party instead.. error=%s", table.tostring(error, 5))
 
 		return self:leave_party()
 	end)
@@ -230,10 +254,23 @@ PartyImmateriumManager._reset_party_data = function (self)
 	end
 
 	table.clear(self._game_session_promises)
+
+	if self._standing_invite_code_promise then
+		self._standing_invite_code_promise:cancel()
+
+		self._standing_invite_code_promise = nil
+	end
+
+	self._standing_invite_code = nil
+	self._matched_hub_session_id = nil
 end
 
 PartyImmateriumManager.other_members = function (self)
 	return self._other_members
+end
+
+PartyImmateriumManager.num_other_members = function (self)
+	return #self._other_members
 end
 
 PartyImmateriumManager.member_from_account_id = function (self, account_id)
@@ -301,7 +338,7 @@ PartyImmateriumManager._fetch_cached_debug_get_parties = function (self, dt, for
 		self:debug_get_parties():next(function (result)
 			self._cached_debug_get_parties = result.parties
 		end):catch(function (error)
-			Log.error("[PartyImmateriumManager] Could not fetch debug get parties " .. self:_table_tostring_or_string(error))
+			Log.error("PartyImmateriumManager", "Could not fetch debug get parties %s", self:_table_tostring_or_string(error))
 		end)
 
 		self._cached_debug_get_parties_time = 0
@@ -324,44 +361,90 @@ PartyImmateriumManager.leave_party = function (self)
 			leaving_party_connection:abort()
 		end
 
-		Log.error("PartyImmateriumManager", "failed to leave party " .. table.tostring(error, 3))
+		Log.error("PartyImmateriumManager", "failed to leave party %s", table.tostring(error, 3))
 
 		return self:join_party(default_party_id)
 	end)
 end
 
-PartyImmateriumManager.join_party = function (self, join_parameter, is_reconnect)
-	local party_id = nil
+PartyImmateriumManager._can_join_new_party_check = function (self, join_parameter)
+	local can_join_party_promise = Promise:new()
 
-	if type(join_parameter) == "string" then
-		if string.starts_with(join_parameter, "i:") then
-			local split = string.split(join_parameter, ":")
-			join_parameter = {
-				party_id = split[2],
-				invite_token = split[3]
-			}
+	if join_parameter == "" then
+		can_join_party_promise:resolve()
+	else
+		local local_player_can_join_party, fail_reason = Managers.data_service.social:local_player_can_join_party()
+
+		if local_player_can_join_party then
+			can_join_party_promise:resolve()
 		else
-			party_id = join_parameter
-			join_parameter = {
-				party_id = party_id
-			}
+			local error_code = "UNKNOWN"
+
+			if fail_reason == "in_mission" then
+				if type(join_parameter) == "table" and join_parameter.stay_in_party_join then
+					can_join_party_promise:resolve()
+
+					return can_join_party_promise
+				else
+					error_code = "YOU_ARE_IN_MISSION"
+				end
+			elseif fail_reason == "in_matchmaking" then
+				error_code = "YOU_ARE_IN_MATCHMAKING"
+			end
+
+			can_join_party_promise:reject({
+				error_details = error_code
+			})
 		end
-	else
-		party_id = join_parameter.party_id
 	end
 
-	local party_connection, accept_party_promise = nil
-	local is_party_id = party_id ~= ""
+	return can_join_party_promise
+end
 
-	if is_party_id then
-		accept_party_promise = Managers.grpc:get_party(party_id):next(function (party)
-			return self:_resolve_join_permission_on_whole_party(party)
-		end)
-	else
-		accept_party_promise = Promise.resolved()
-	end
+PartyImmateriumManager.join_party = function (self, join_parameter, is_reconnect)
+	local party_connection = nil
 
-	return accept_party_promise:next(function ()
+	return self:_can_join_new_party_check(join_parameter):next(function ()
+		local party_id = nil
+
+		if type(join_parameter) == "string" then
+			local join_parameter_as_string = string.gsub(join_parameter, "%%3A", ":")
+
+			if string.starts_with(join_parameter_as_string, "i:") then
+				local split = string.split(join_parameter_as_string, ":")
+
+				if #split >= 3 then
+					join_parameter = {
+						party_id = split[2],
+						invite_token = split[3]
+					}
+					party_id = join_parameter.party_id
+				else
+					return Promise.rejected("INVALID_INVITE_CODE")
+				end
+			else
+				party_id = join_parameter
+				join_parameter = {
+					party_id = party_id
+				}
+			end
+		else
+			party_id = join_parameter.party_id
+		end
+
+		local accept_party_promise = nil
+		local is_party_id = party_id and party_id ~= ""
+
+		if is_party_id then
+			accept_party_promise = Managers.grpc:get_party(party_id):next(function (party)
+				return self:_resolve_join_permission_on_whole_party(party)
+			end)
+		else
+			accept_party_promise = Promise.resolved()
+		end
+
+		return accept_party_promise
+	end):next(function ()
 		if self._joining_party_connection then
 			self._joining_party_connection:abort()
 		end
@@ -396,14 +479,14 @@ PartyImmateriumManager.join_party = function (self, join_parameter, is_reconnect
 			self:_on_join_party_error(error.error_details)
 		end
 
-		_error("could not join party " .. table.tostring(error, 5))
+		_error("could not join party %s", table.tostring(error, 5))
 
 		return Promise.rejected(error)
 	end)
 end
 
 PartyImmateriumManager._hot_join_ticket = function (self, mission_session_id)
-	_info("Getting ticket for mission_session_id=" .. mission_session_id)
+	_info("Getting ticket for mission_session_id=%s", mission_session_id)
 
 	local profile = Managers.player:local_player_backend_profile()
 	local character_id = profile and profile.character_id
@@ -494,6 +577,17 @@ PartyImmateriumManager._handle_party_update_event = function (self, event)
 		table.clear(self._request_to_join_popups)
 	end
 
+	if self._current_party_id ~= event.party_id then
+		Managers.event:trigger("party_immaterium_joined")
+
+		if table.size(self._other_members) > 0 then
+			Managers.ui:play_2d_sound(UISoundEvents.notification_player_join_party)
+		end
+
+		self._current_party_id = event.party_id
+	end
+
+	Managers.event:trigger("party_immaterium_other_members_updated", self._other_members)
 	PlayerCompositions.trigger_change_event("party")
 end
 
@@ -549,13 +643,14 @@ PartyImmateriumManager.update = function (self, dt, t)
 	local current_state = self:current_state()
 
 	if self._last_state ~= current_state then
-		_info("State changed from " .. self._last_state .. " to " .. current_state)
+		_info("State changed from %s to %s", self._last_state, current_state)
+		self._matchmaking_notification_handler:state_changed(self._last_state, current_state)
 
 		self._last_state = current_state
 	end
 
+	self._matchmaking_notification_handler:update(dt)
 	self:_ensure_join_permission_on_current_party(dt)
-	self:_matchmaking_status_notifier()
 	self:_check_for_invites()
 
 	self._last_party_connection_retry = self._last_party_connection_retry + dt
@@ -566,7 +661,7 @@ PartyImmateriumManager.update = function (self, dt, t)
 		if not self._last_party_connection_wait_done then
 			self._last_party_connection_wait_done = true
 		elseif party_connection and party_connection:error() then
-			_error("party connection failed with error " .. table.tostring(self._party_connection:error(), 5))
+			_error("party connection failed with error %s", table.tostring(self._party_connection:error(), 5))
 
 			self._last_party_connection_wait_done = false
 
@@ -589,13 +684,16 @@ PartyImmateriumManager.update = function (self, dt, t)
 	end
 
 	if self._party_connection then
+		if not self._standing_invite_code_promise then
+			self:get_your_standing_invite_code()
+		end
+
 		self._party_connection:update(dt)
 
 		local event_buffer = self._party_connection:event_buffer()
 
 		if #event_buffer > 0 then
 			for i, event in ipairs(event_buffer) do
-				_info("recevied party event " .. table.tostring(event, 3))
 				self:_handle_party_event(event)
 			end
 
@@ -610,20 +708,6 @@ end
 
 PartyImmateriumManager.is_in_matchmaking = function (self)
 	return self:current_state() == PartyConstants.State.matchmaking
-end
-
-PartyImmateriumManager._matchmaking_status_notifier = function (self)
-	local is_in_matchmaking = self:is_in_matchmaking()
-
-	if is_in_matchmaking and not self._is_in_matchmaking_message_id then
-		Managers.event:trigger("event_add_notification_message", "mission", "Party is in matchmaking, please wait...", function (id)
-			self._is_in_matchmaking_message_id = id
-		end)
-	elseif not is_in_matchmaking and self._is_in_matchmaking_message_id then
-		Managers.event:trigger("event_remove_notification", self._is_in_matchmaking_message_id)
-
-		self._is_in_matchmaking_message_id = nil
-	end
 end
 
 PartyImmateriumManager._reject_game_session_promises = function (self, error)
@@ -755,7 +839,7 @@ PartyImmateriumManager.hot_join_party_hub_server = function (self)
 		return Managers.grpc:hot_join_party_hub_server(response.ticket)
 	end):next(function (response)
 		if response.success then
-			_info("Hot joined hub session, response = " .. table.tostring(response, 3))
+			_info("Hot joined hub session, matched_hub_session_id = %s", response.matched_hub_session_id)
 
 			return Promise.resolved(response.matched_hub_session_id)
 		else
@@ -779,7 +863,7 @@ PartyImmateriumManager.create_single_player_game = function (self, mission_id)
 	return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_single_player(mission_id, character_id):next(function (response)
 		return Managers.grpc:create_single_player_game(self:party_id(), response.ticket)
 	end):catch(function (error)
-		_error("Could not create single player game, error=" .. table.tostring(error, 3))
+		_error("Could not create single player game, error=%s", table.tostring(error, 3))
 
 		return Promise.rejected(error)
 	end)
@@ -821,21 +905,16 @@ PartyImmateriumManager.current_game_session_mission_data = function (self)
 	end
 end
 
-PartyImmateriumManager.current_hub_server_session_id = function (self)
-	local game_state = self:party_game_state()
+PartyImmateriumManager.consume_matched_hub_server_session_id = function (self)
+	local matched_hub_session_id = self._matched_hub_session_id
+	self._matched_hub_session_id = nil
 
-	if game_state.hub_session then
-		return game_state.hub_session.hub_session_id
-	else
-		return nil
-	end
+	return matched_hub_session_id
 end
 
 PartyImmateriumManager.cancel_matchmaking = function (self)
 	return Managers.grpc:cancel_matchmaking(self:party_id()):catch(function (error)
-		_error("Could not cancel matchmaking, error=" .. table.tostring(error, 3))
-
-		return Promise.rejected(error)
+		_error("Could not cancel matchmaking, error=%s", table.tostring(error, 3))
 	end)
 end
 
@@ -844,7 +923,9 @@ PartyImmateriumManager.latched_hub_server_matchmaking = function (self)
 		return Managers.grpc:latched_hub_server_matchmaking(response.ticket)
 	end):next(function (response)
 		if response.success then
-			_info("Hub Server Latched matchmaking, response = " .. table.tostring(response, 3))
+			_info("Hub Server Latched matchmaking, matched_hub_session_id = %s", response.matched_hub_session_id)
+
+			self._matched_hub_session_id = response.matched_hub_session_id
 
 			return Promise.resolved(response.matched_hub_session_id)
 		else
@@ -853,7 +934,7 @@ PartyImmateriumManager.latched_hub_server_matchmaking = function (self)
 			})
 		end
 	end):catch(function (error)
-		_error("Hub Server Latched matchmaking, error=" .. table.tostring(error, 3))
+		_error("Hub Server Latched matchmaking, error=%s", table.tostring(error, 3))
 	end)
 end
 
@@ -873,7 +954,7 @@ PartyImmateriumManager._game_session_promise = function (self)
 	return game_session_promise
 end
 
-PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission_id)
+PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission_id, private_session)
 	local vote_state = self:party_vote_state()
 
 	if vote_state.state == "ONGOING" then
@@ -883,9 +964,10 @@ PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission
 	end
 
 	return Managers.voting:start_voting("mission_vote_matchmaking_immaterium", {
-		backend_mission_id = backend_mission_id
+		backend_mission_id = backend_mission_id,
+		private_session = private_session and "true" or "false"
 	}):catch(function (error)
-		_error("Could not start voting, error=" .. self:_table_tostring_or_string(error))
+		_error("Could not start voting, error=%s", self:_table_tostring_or_string(error))
 	end):next(function ()
 		return self:_game_session_promise()
 	end)
@@ -908,11 +990,18 @@ PartyImmateriumManager._mission_matchmaking_completed = function (self, matched_
 end
 
 PartyImmateriumManager._mission_matchmaking_aborted = function (self, reason)
-	local info_string = string.format("Matchmaking failed, %s", reason)
+	if reason == "CANCELLED" then
+		local info_string = Localize("loc_matchmaking_cancelled")
 
-	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = info_string
-	}, nil, UISoundEvents.notification_matchmaking_failed)
+		Managers.event:trigger("event_add_notification_message", "default", info_string, nil, UISoundEvents.notification_matchmaking_failed)
+	else
+		local info_string = Localize("loc_matchmaking_failed")
+
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = info_string
+		}, nil, UISoundEvents.notification_matchmaking_failed)
+	end
+
 	_info("Mission Matchmaking aborted, fail reason: %s", reason)
 end
 
@@ -920,16 +1009,73 @@ PartyImmateriumManager.ready_voting_completed = function (self)
 	return
 end
 
-PartyImmateriumManager.get_invite_code_for_platform_invite = function (self, platform, platform_user_id)
+PartyImmateriumManager.get_your_standing_invite_code = function (self)
 	local party_id = self:party_id()
 
-	return Managers.grpc:invite_to_party(party_id, platform, platform_user_id):next(function (response)
-		return "i:" .. party_id .. ":" .. response.invite_token
-	end):catch(function (error)
-		_warn("could not get_invite_code_for_platform_invite, error=" .. table.tostring(error, 3))
+	if self._standing_invite_code_promise then
+		return self._standing_invite_code_promise
+	end
 
-		return Promise.rejected(error)
+	local promise = Promise:new()
+	self._standing_invite_code_promise = promise
+
+	self:_retry_get_your_standing_invite_code(party_id, promise)
+
+	return promise
+end
+
+PartyImmateriumManager._retry_get_your_standing_invite_code = function (self, party_id, promise)
+	if promise:is_canceled() then
+		return
+	end
+
+	local invite_list = self:party_invite_list()
+
+	if invite_list then
+		for i, invite in ipairs(invite_list.invites) do
+			if invite.platform == "invite-code" and invite.inviter_account_id == self._myself:account_id() then
+				self._standing_invite_code = "i:" .. party_id .. ":" .. invite.invite_token
+
+				promise:resolve(self._standing_invite_code)
+
+				return
+			end
+		end
+	end
+
+	Managers.grpc:invite_to_party(party_id, "invite-code", ""):next(function (response)
+		if promise:is_canceled() then
+			return
+		end
+
+		self._standing_invite_code = "i:" .. party_id .. ":" .. response.invite_token
+
+		promise:resolve(self._standing_invite_code)
+	end):catch(function (error)
+		_warn("could not invite_to_party, error=%s", table.tostring(error, 3))
+
+		return Managers.grpc:delay_with_jitter_and_backoff("get_your_standing_invite_code"):next(function ()
+			self:_retry_get_your_standing_invite_code(party_id, promise)
+		end)
 	end)
+end
+
+PartyImmateriumManager.get_invite_code_for_platform_invite = function (self, platform, platform_user_id)
+	local promise = Promise:new()
+
+	if self._standing_invite_code then
+		promise:resolve(self._standing_invite_code)
+	else
+		local error = {
+			error_details = "NO_STANDING_INVITE_FOUND",
+			error_code = -1
+		}
+
+		_warn("could not get_invite_code_for_platform_invite, error=%s", table.tostring(error, 3))
+		promise:reject(error)
+	end
+
+	return promise
 end
 
 PartyImmateriumManager.invite_to_party = function (self, invitee_account_id)
@@ -946,7 +1092,7 @@ PartyImmateriumManager.invite_to_party = function (self, invitee_account_id)
 	end):next(function ()
 		return Managers.grpc:invite_to_party(party_id, "", invitee_account_id)
 	end):catch(function (error)
-		_warn("could not invite, error=" .. table.tostring(error, 3))
+		_warn("could not invite, error=%s", table.tostring(error, 3))
 		self:_on_invite_party_error(error.error_details)
 
 		return Promise.rejected(error)
@@ -962,8 +1108,8 @@ PartyImmateriumManager.cancel_party_invite = function (self, invite_token)
 		})
 	end
 
-	return Managers.grpc:cancel_invite_to_party(party_id, invite_token):catch(function (error)
-		_warn("could not cancel invite, error=" .. table.tostring(error, 3))
+	return Managers.grpc:cancel_invite_to_party(party_id, invite_token, "PARTY_CANCELED"):catch(function (error)
+		_warn("could not cancel invite, error=%s", table.tostring(error, 3))
 
 		return Promise.rejected(error)
 	end)
@@ -987,7 +1133,7 @@ end
 
 PartyImmateriumManager._decline_party_invite = function (self, party_id, invite_token, answer_code)
 	return Managers.grpc:cancel_invite_to_party(party_id, invite_token, answer_code):catch(function (error)
-		_warn("could not decline invite, error=" .. table.tostring(error, 3))
+		_warn("could not decline invite, error=%s", table.tostring(error, 3))
 
 		return Promise.rejected(error)
 	end)
@@ -1011,6 +1157,7 @@ PartyImmateriumManager._handle_member_joined = function (self, member_account_id
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_join_party)
 	end)
+	Managers.event:trigger("party_immaterium_member_added", member_account_id)
 end
 
 PartyImmateriumManager._handle_member_left = function (self, member_account_id)
@@ -1050,6 +1197,10 @@ end
 
 PartyImmateriumManager._handle_invite_canceled = function (self, invite_token, platform, platform_user_id, inviter_account_id, canceler_account_id, answer_code)
 	if self._myself:account_id() ~= inviter_account_id or platform ~= "" then
+		return
+	end
+
+	if answer_code == "PARTY_FULL" then
 		return
 	end
 
@@ -1101,24 +1252,27 @@ PartyImmateriumManager._handle_invite_accepted = function (self, invite_token, i
 	end
 
 	self:_get_presence_promise(invitee_account_id):next(function (invitee_presence)
-		local message = Localize("loc_party_notification_invite_accepted", true, {
-			invitee_character_name = invitee_presence:character_name()
-		})
+		local character_name = invitee_presence:character_name()
+		local message = nil
+
+		if not character_name or character_name == "" then
+			message = Localize("loc_party_notification_invite_accepted_no_character")
+		else
+			message = Localize("loc_party_notification_invite_accepted", true, {
+				invitee_character_name = character_name
+			})
+		end
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_join_party)
 	end)
+	Managers.event:trigger("party_immaterium_member_added", invitee_account_id)
 end
 
 PartyImmateriumManager._on_join_party = function (self, reconnect)
 	if reconnect then
-		Log.info("PartyImmateriumManager", "Reconnected to strike team")
-	elseif table.size(self._other_members) > 0 then
-		Log.info("PartyImmateriumManager", "Joined new strike team")
-		Managers.event:trigger("party_immaterium_join")
-
-		if table.size(self._other_members) > 0 then
-			Managers.ui:play_2d_sound(UISoundEvents.notification_player_join_party)
-		end
+		_info("Reconnected to strike team")
+	else
+		_info("Joined new strike team")
 	end
 
 	self._cached_debug_get_parties_time = 9.7
@@ -1133,27 +1287,39 @@ PartyImmateriumManager._on_join_party_error = function (self, error_code)
 end
 
 PartyImmateriumManager._handle_stay_in_party_voting_started = function (self, voting_id, new_party_id, new_party_invite_token)
-	self._new_party_id = new_party_id
-	self._new_party_invite_token = new_party_invite_token
+	self._active_party_vote = {
+		voting_id = voting_id,
+		party_id = new_party_id,
+		party_invite_token = new_party_invite_token
+	}
 end
 
 PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, result)
-	local new_party_id = self._new_party_id
-	local new_party_invite_token = self._new_party_invite_token
+	local new_party_id = self._active_party_vote.party_id
+	local new_party_invite_token = self._active_party_vote.party_invite_token
 
 	if result == "approved" then
 		self:join_party({
+			stay_in_party_join = true,
 			party_id = new_party_id,
 			invite_token = new_party_invite_token
-		})
-		Log.info("PartyImmateriumManager", "stay_in_party_voting_completed -> joining new party %s:%s", new_party_id, new_party_invite_token or "")
+		}):next(function ()
+			Promise.delay(2):next(function ()
+				self:latched_hub_server_matchmaking()
+			end)
+		end)
+		_info("stay_in_party_voting_completed -> joining new party %s:%s", new_party_id, new_party_invite_token or "")
 	end
 
-	self._new_party_id = nil
+	self._active_party_vote = nil
 end
 
 PartyImmateriumManager._handle_stay_in_party_voting_aborted = function (self)
-	self._new_party_id = nil
+	self._active_party_vote = nil
+end
+
+PartyImmateriumManager.active_stay_in_party_vote = function (self)
+	return self._active_party_vote
 end
 
 PartyImmateriumManager._on_invite_party_error = function (self, error_code)
@@ -1165,7 +1331,7 @@ PartyImmateriumManager._on_invite_party_error = function (self, error_code)
 end
 
 PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, invite_token, inviter_account_id)
-	Log.info("PartyImmateriumManager", "Got invite, party_id=%s, inviter_account_id=%s, invite_token=%s", party_id, inviter_account_id, invite_token)
+	_info("Got invite, party_id=%s, inviter_account_id=%s, invite_token=%s", party_id, inviter_account_id, invite_token)
 
 	if self:current_state() == PartyConstants.State.in_mission then
 		self:_decline_party_invite(party_id, invite_token, "IN_MISSION")
@@ -1199,7 +1365,6 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 						{
 							text = "loc_social_party_invite_received_accept_button",
 							close_on_pressed = true,
-							hotkey = "confirm_pressed",
 							callback = function ()
 								self:join_party({
 									party_id = party_id,
@@ -1222,7 +1387,6 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 						{
 							text = "loc_social_party_invite_received_decline_and_block_button",
 							close_on_pressed = true,
-							hotkey = "hotkey_menu_special_2",
 							on_pressed_sound = UISoundEvents.social_menu_block_player,
 							callback = function ()
 								self:_decline_party_invite(party_id, invite_token)
@@ -1244,13 +1408,23 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 	end
 end
 
-PartyImmateriumManager._handle_immaterium_invite_canceled = function (self, party_id, invite_token, inviter_account_id, canceler_account_id)
-	Log.info("PartyImmateriumManager", "invite canceled, party_id=%s, invite_token=%s, inviter_account_id=%s, canceler_account_id=%s", party_id, invite_token, inviter_account_id, canceler_account_id)
+PartyImmateriumManager._handle_immaterium_invite_canceled = function (self, party_id, invite_token, inviter_account_id, canceler_account_id, answer_code)
+	_info("invite canceled, party_id=%s, invite_token=%s, inviter_account_id=%s, canceler_account_id=%s", party_id, invite_token, inviter_account_id, canceler_account_id)
 	self:_close_invite_popup(party_id)
+
+	if answer_code == "PARTY_FULL" then
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_party_notification_canceled_invite_party_full")
+		}, nil, UISoundEvents.notification_join_party_failed)
+	elseif answer_code == "PARTY_CANCELED" then
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_party_notification_canceled_invite")
+		}, nil, UISoundEvents.notification_join_party_failed)
+	end
 end
 
 PartyImmateriumManager._handle_immaterium_invite_timeout = function (self, party_id, invite_token, inviter_account_id)
-	Log.info("PartyImmateriumManager", "invite timeout, party_id=%s, inviter_account_id=%s, inviter_account_id=%s", party_id, invite_token, inviter_account_id)
+	_info("invite timeout, party_id=%s, inviter_account_id=%s, inviter_account_id=%s", party_id, invite_token, inviter_account_id)
 	self:_close_invite_popup(party_id)
 end
 
@@ -1265,7 +1439,7 @@ PartyImmateriumManager._close_invite_popup = function (self, party_id)
 end
 
 PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_id)
-	Log.info("SocialService", "Got invite, joiner_account_id=%s", joiner_account_id)
+	_info("Got invite, joiner_account_id=%s", joiner_account_id)
 	self:_close_request_to_join_popup(joiner_account_id)
 
 	local _, promise = Managers.presence:get_presence(joiner_account_id)
@@ -1294,7 +1468,6 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 				{
 					text = "loc_party_request_to_join_accept_button",
 					close_on_pressed = true,
-					hotkey = "confirm_pressed",
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "OK_POPUP")
 
@@ -1314,7 +1487,6 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 				{
 					text = "loc_social_party_request_to_join_decline_and_block_button",
 					close_on_pressed = true,
-					hotkey = "hotkey_menu_special_2",
 					on_pressed_sound = UISoundEvents.social_menu_block_player,
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "MEMBER_DECLINED_REQUEST_TO_JOIN")
@@ -1333,7 +1505,7 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 end
 
 PartyImmateriumManager._handle_request_to_join_popup_cancel = function (self, joiner_account_id)
-	Log.info("SocialService", " request to join canceled joiner_account_id=%s", joiner_account_id)
+	_info("request to join canceled joiner_account_id=%s", joiner_account_id)
 	self:_close_request_to_join_popup(joiner_account_id)
 end
 
@@ -1345,6 +1517,21 @@ PartyImmateriumManager._close_request_to_join_popup = function (self, joiner_acc
 
 		self._request_to_join_popups[joiner_account_id] = nil
 	end
+end
+
+PartyImmateriumManager._handle_game_session_aborted = function (self, payload)
+	local context = {
+		title_text = "loc_game_session_aborted_popup_title",
+		description_text = "loc_game_session_aborted_popup_description",
+		options = {
+			{
+				close_on_pressed = true,
+				text = "loc_game_session_aborted_popup_close_button"
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context)
 end
 
 return PartyImmateriumManager

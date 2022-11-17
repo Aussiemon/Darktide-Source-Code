@@ -23,17 +23,18 @@ local breed_data = {
 	display_name = "loc_breed_display_name_cultist_assault",
 	spawn_inventory_slot = "slot_ranged_weapon",
 	run_speed = 5.5,
+	challenge_rating = 0.75,
 	use_bone_lod = true,
 	spawn_anim_state = "to_riflemen",
 	unit_template_name = "minion",
 	faction_name = "chaos",
-	detection_radius = 15,
+	volley_fire_target = true,
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
 	stagger_resistance = 1.5,
 	aggro_inventory_slot = "slot_ranged_weapon",
+	detection_radius = 15,
 	walk_speed = 2.3,
-	game_object_type = "minion_ranged",
 	use_avoidance = true,
 	base_height = 1.9,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
@@ -41,8 +42,8 @@ local breed_data = {
 	use_wounds = true,
 	can_patrol = true,
 	slot_template = "renegade_melee",
+	game_object_type = "minion_ranged",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	challenge_rating = 0.75,
 	hit_mass = 1.25,
 	bone_lod_radius = 1,
 	has_direct_ragdoll_flow_event = true,
@@ -54,6 +55,7 @@ local breed_data = {
 	},
 	tags = {
 		minion = true,
+		far = true,
 		roamer = true,
 		close = true
 	},
@@ -89,15 +91,22 @@ local breed_data = {
 	cover_config = {
 		max_distance_modifier_duration = 30,
 		max_distance_modifier_percentage = 0.8,
-		max_distance_from_target = 50,
+		suppressed_max_distance_from_combat_vector = 60,
+		max_distance_from_target = 30,
 		max_distance_from_target_z_below = -10,
 		search_radius = 40,
-		max_distance_from_combat_vector = 60,
+		max_distance_from_combat_vector = 30,
+		suppressed_max_distance_from_target = 60,
 		max_distance_from_target_z = 10,
+		suppressed_search_radius = 50,
 		cover_combat_ranges = {
 			far = true
 		},
-		search_source = CoverSettings.user_search_sources.from_target
+		search_source = CoverSettings.user_search_sources.from_self,
+		suppressed_search_sticky_time = {
+			8,
+			10
+		}
 	},
 	combat_vector_config = {
 		choose_closest_to_target = true,
@@ -110,10 +119,11 @@ local breed_data = {
 		}
 	},
 	suppress_config = {
+		above_threshold_decay_multiplier = 2,
 		max_value = {
-			melee = 50,
-			far = 15,
-			close = 50
+			melee = 60,
+			far = 20,
+			close = 60
 		},
 		threshold = {
 			melee = 44,
@@ -124,6 +134,11 @@ local breed_data = {
 			melee = 0.05,
 			far = 0.1,
 			close = 0.1
+		},
+		disable_cover_threshold = {
+			melee = 55,
+			far = 15,
+			close = 55
 		},
 		immunity_duration = {
 			2.75,
@@ -140,15 +155,16 @@ local breed_data = {
 			0.01
 		},
 		moving_melee = {
-			0.7,
-			0.8
+			0.2,
+			0.5
 		}
 	},
 	line_of_sight_data = {
 		{
-			id = "eyes",
 			to_node = "enemy_aim_target_03",
 			from_node = "j_head",
+			id = "eyes",
+			from_offsets = Vector3Box(0, 0, 0.1),
 			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
 		},
 		{
@@ -455,9 +471,6 @@ local breed_data = {
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
-	},
-	hitzone_armor_override = {
-		[hit_zone_names.head] = armor_types.armored
 	},
 	hitzone_damage_multiplier = {
 		ranged = {

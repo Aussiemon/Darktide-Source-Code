@@ -6,67 +6,7 @@ GearService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
 end
 
-GearService.force_offline_mode = function (self)
-	self._offline_mode = true
-end
-
-local function _fetch_placeholder_inventory(slot_filter_list, item_type_filter_list)
-	local items = {}
-	local gear_id_counter = 1
-	local item_definitions = MasterItems.get_cached()
-
-	for _, item_definition in pairs(item_definitions) do
-		local gear_id = gear_id_counter
-		gear_id_counter = gear_id_counter + 1
-		local item = table.clone(item_definition)
-		item.gear_id = gear_id
-		items[gear_id] = item
-	end
-
-	if slot_filter_list then
-		for gear_id, item in pairs(items) do
-			local slot_approved = false
-			local slots = item.slots
-
-			if slots then
-				for _, slot_name in ipairs(slots) do
-					if table.contains(slot_filter_list, slot_name) then
-						slot_approved = true
-
-						break
-					end
-				end
-			end
-
-			if not slot_approved then
-				items[gear_id] = nil
-			end
-		end
-	end
-
-	if item_type_filter_list then
-		for gear_id, item in pairs(items) do
-			local item_type_approved = false
-			local item_type = item.item_type
-
-			if item_type and table.contains(item_type_filter_list, item_type) then
-				item_type_approved = true
-			end
-
-			if not item_type_approved then
-				items[gear_id] = nil
-			end
-		end
-	end
-
-	return Promise.resolved(items)
-end
-
 GearService.fetch_inventory = function (self, character_id, slot_filter_list, item_type_filter_list)
-	if self._offline_mode then
-		return _fetch_placeholder_inventory(slot_filter_list, item_type_filter_list)
-	end
-
 	local backend_interface = self._backend_interface
 	local gear_promise = backend_interface.gear:fetch()
 
@@ -129,10 +69,6 @@ GearService.fetch_inventory = function (self, character_id, slot_filter_list, it
 end
 
 GearService.fetch_inventory_paged = function (self, character_id, item_amount, slot_filter_list)
-	if self._offline_mode or not Managers.backend:authenticated() then
-		return _fetch_placeholder_inventory(slot_filter_list)
-	end
-
 	local backend_interface = self._backend_interface
 	local gear_promise = backend_interface.gear:fetch_paged(item_amount or 100, slot_filter_list)
 
@@ -164,9 +100,9 @@ GearService.fetch_inventory_paged = function (self, character_id, item_amount, s
 	end)
 end
 
-GearService.fetch_account_items_paged = function (self, item_amount, slot_filter_list)
+GearService.fetch_account_items_paged = function (self, item_amount, slot_filter_list, chained_promise)
 	local backend_interface = self._backend_interface
-	local gear_promise = backend_interface.gear:fetch_paged(item_amount or 100, slot_filter_list)
+	local gear_promise = chained_promise or backend_interface.gear:fetch_paged(item_amount or 100, slot_filter_list)
 
 	return gear_promise:next(function (gear_list)
 		if gear_list.has_next then
@@ -181,7 +117,13 @@ GearService.fetch_account_items_paged = function (self, item_amount, slot_filter
 			items[gear_id] = gear_item
 		end
 
-		return Promise.resolved(items)
+		return Promise.resolved({
+			items = items,
+			has_next = gear_list.has_next,
+			next_page = function (data)
+				return self:fetch_account_items_paged(nil, nil, gear_list.next_page(data))
+			end
+		})
 	end):catch(function (errors)
 		local gear_list_error = unpack(errors)
 		local error_string = tostring(gear_list_error)

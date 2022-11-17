@@ -4,6 +4,7 @@ local DamageProfileSettings = require("scripts/settings/damage/damage_profile_se
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local GibbingPower = GibbingSettings.gibbing_power
 local GibbingTypes = GibbingSettings.gibbing_types
 local damage_types = DamageSettings.damage_types
@@ -127,6 +128,7 @@ damage_templates.ogryn_shovel_light_tank = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -188,7 +190,8 @@ damage_templates.ogryn_shovel_light_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.ogryn_shovel_light_tank_followup = {
 	ragdoll_push_force = 350,
@@ -199,6 +202,7 @@ damage_templates.ogryn_shovel_light_tank_followup = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -260,7 +264,8 @@ damage_templates.ogryn_shovel_light_tank_followup = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.ogryn_shovel_heavy_tank = {
 	ragdoll_push_force = 750,
@@ -271,6 +276,7 @@ damage_templates.ogryn_shovel_heavy_tank = {
 	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	armor_damage_modifier = tank_heavy_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -332,7 +338,8 @@ damage_templates.ogryn_shovel_heavy_tank = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.ogryn_shovel_light_smiter = {
 	ragdoll_push_force = 500,
@@ -342,6 +349,7 @@ damage_templates.ogryn_shovel_light_smiter = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -458,7 +466,8 @@ damage_templates.ogryn_shovel_light_smiter = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.ogryn_shovel_heavy_smiter = {
 	ragdoll_push_force = 800,
@@ -468,6 +477,7 @@ damage_templates.ogryn_shovel_heavy_smiter = {
 	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	armor_damage_modifier = tank_heavy_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -584,17 +594,20 @@ damage_templates.ogryn_shovel_heavy_smiter = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 damage_templates.ogryn_shovel_uppercut = {
-	weapon_special = true,
 	ragdoll_only = true,
+	weapon_special = true,
 	ragdoll_push_force = 700,
 	stagger_category = "explosion",
 	cleave_distribution = medium_cleave,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.ogryn_shovel,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -700,6 +713,7 @@ damage_templates.ogryn_shovel_heavy_linesman = {
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.ogryn_shovel,
 	stagger_duration_modifier = {
 		0.1,
 		0.5
@@ -813,7 +827,8 @@ damage_templates.ogryn_shovel_heavy_linesman = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
 
 return {

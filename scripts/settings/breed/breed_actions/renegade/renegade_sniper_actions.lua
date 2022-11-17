@@ -175,6 +175,52 @@ local action_data = {
 		move_anim_event = "assault_fwd",
 		considerations = UtilityConsiderations.sniper_move_to_combat_vector
 	},
+	movement = {
+		idle_anim_events = "idle",
+		sprint_target_distance = 15,
+		anim_driven_min_distance = 3,
+		utility_weight = 2,
+		sprint_anim_event = "assault_fwd",
+		move_type_switch_stickiness = 2,
+		considerations = UtilityConsiderations.sniper_movement,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right"
+		},
+		start_move_anim_data = {
+			move_start_fwd = {},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			move_start_right = 0,
+			move_start_fwd = 0,
+			move_start_bwd = 0,
+			move_start_left = 0
+		},
+		start_rotation_durations = {
+			move_start_right = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_bwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666
+		},
+		speeds = {
+			jogging = 4.2,
+			sprinting = 6.2
+		}
+	},
 	move_to_cover = {
 		idle_anim_events = "idle",
 		sprint_target_distance = 15,
@@ -182,7 +228,7 @@ local action_data = {
 		utility_weight = 2,
 		sprint_anim_event = "assault_fwd",
 		move_type_switch_stickiness = 2,
-		considerations = UtilityConsiderations.sniper_move_to_cover,
+		considerations = UtilityConsiderations.sniper_movement,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",

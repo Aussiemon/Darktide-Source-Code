@@ -8,6 +8,7 @@ local DialogueSettings = {
 		"conversations_core",
 		"guidance_vo",
 		"enemy_vo",
+		"cutscenes_vo",
 		"event_vo_fortification",
 		"event_vo_kill",
 		"event_vo_demolition",
@@ -16,12 +17,19 @@ local DialogueSettings = {
 		"event_vo_survive",
 		"event_vo_hacking",
 		"event_vo_scan",
-		"on_demand_vo"
+		"on_demand_vo",
+		"circumstance_vo_nurgle_rot"
 	},
 	menu_vo_files = {
 		"conversations_hub"
 	},
 	level_specific_load_files = {
+		om_hub_01 = {
+			"mission_vo_om_hub_01"
+		},
+		om_hub_02 = {
+			"mission_vo_om_hub_02"
+		},
 		om_basic_combat_01 = {
 			"on_demand_vo",
 			"training_grounds"
@@ -30,6 +38,11 @@ local DialogueSettings = {
 			"cutscenes_vo",
 			"on_demand_vo",
 			"conversations_hub"
+		},
+		prologue = {
+			"cutscenes_vo",
+			"enemy_vo",
+			"mission_vo_prologue"
 		},
 		dm_forge = {
 			"mission_vo_dm_forge"
@@ -40,8 +53,35 @@ local DialogueSettings = {
 		lm_cooling = {
 			"mission_vo_lm_cooling"
 		},
+		fm_cargo = {
+			"mission_vo_fm_cargo"
+		},
+		fm_resurgence = {
+			"mission_vo_fm_resurgence"
+		},
+		km_station = {
+			"mission_vo_km_station"
+		},
+		hm_strain = {
+			"mission_vo_hm_strain"
+		},
+		lm_scavenge = {
+			"mission_vo_lm_scavenge"
+		},
+		dm_propaganda = {
+			"mission_vo_dm_propaganda"
+		},
+		dm_stockpile = {
+			"mission_vo_dm_stockpile"
+		},
 		km_enforcer = {
 			"mission_vo_km_enforcer"
+		},
+		hm_cartel = {
+			"mission_vo_hm_cartel"
+		},
+		cm_habs = {
+			"mission_vo_cm_habs"
 		}
 	},
 	blocked_auto_load_files = {
@@ -64,8 +104,8 @@ local DialogueSettings = {
 	observer_view_distance = 8,
 	friends_close_distance = 25,
 	friends_distant_distance = 40,
-	enemies_close_distance = 25,
-	enemies_distant_distance = 40,
+	enemies_close_distance = 10,
+	enemies_distant_distance = 30,
 	knocked_down_broadcast_range = 40,
 	pounced_down_broadcast_range = 40,
 	suicide_run_broadcast_range = 40,
@@ -106,7 +146,8 @@ local DialogueSettings = {
 	special_proximity_distance_heard = 30,
 	guidance_wrong_way_distance = 30,
 	health_hog_health_before_healing = 0.8,
-	ammo_hog_pickup_share = 0.8
+	ammo_hog_pickup_share = 0.7,
+	friendly_fire_bullet_counter = 4
 }
 HealthTriggerSettings = {
 	levels = {

@@ -78,6 +78,13 @@ foundry_1.slots.envrionmental_override.items = {
 templates.renegade_executor[zone_ids.tank_foundry] = {
 	foundry_1
 }
+local dust_1 = table.clone(basic_renegade_executor_template)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.renegade_executor[zone_ids.dust] = {
+	dust_1
+}
 local watertown_1 = table.clone(basic_renegade_executor_template)
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"

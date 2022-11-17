@@ -202,6 +202,18 @@ local create_notification_message = {
 					80
 				}
 				text_offset = 130
+			elseif element.icon_size == "portrait_frame" then
+				icon_size = {
+					90,
+					100
+				}
+				text_offset = 210
+			elseif element.icon_size == "insignia" then
+				icon_size = {
+					30,
+					80
+				}
+				text_offset = 210
 			else
 				icon_size = {
 					40,
@@ -217,7 +229,7 @@ local create_notification_message = {
 			if text.display_name and text.display_name ~= "" then
 				local pass_name = string.format("text_%d", i)
 				local text_style = widget.style[pass_name]
-				text_style.font_size = i == 1 and 22 or text_style.font_size
+				text_style.font_size = text.font_size or i == 1 and 22 or text_style.font_size
 				local width, height = UIRenderer.text_size(parent._parent:ui_renderer(), text.display_name, text_style.font_type, text_style.font_size, {
 					max_text_width,
 					math.huge
@@ -237,6 +249,8 @@ local create_notification_message = {
 		end
 
 		widget.content.icon = element.icon
+		widget.style.icon.material_values = element.icon_material_values or {}
+		element.color = element.color or Color.terminal_background(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
 		widget.style.background.material_values.background_color = _convert_to_material_color(element.color)
 		widget.style.background.material_values.line_color = _convert_to_material_color(element.line_color)
 		widget.style.background.material_values.background_glow_opacity = element.glow_opacity or 0

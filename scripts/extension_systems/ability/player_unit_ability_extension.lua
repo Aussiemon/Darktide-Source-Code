@@ -112,6 +112,14 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_handler:set_action_context(action_context)
 end
 
+PlayerUnitAbilityExtension.on_player_unit_spawn = function (self, spawn_grenade_percentage)
+	local ability_components = self._ability_components
+	local grenade_component = ability_components.grenade_ability
+	local num_charges = grenade_component.num_charges
+	local num_spawn_charges = math.ceil(num_charges * spawn_grenade_percentage)
+	grenade_component.num_charges = num_spawn_charges
+end
+
 PlayerUnitAbilityExtension.on_player_unit_respawn = function (self, respawn_grenade_percentage)
 	local ability_components = self._ability_components
 	local grenade_component = ability_components.grenade_ability

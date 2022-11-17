@@ -53,28 +53,9 @@ local templates = {
 			[stat_buffs.ranged_power_level_modifier] = 0.05
 		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		check_proc_func = function (params, template_data, template_context)
-			local is_melee = CheckProcFunctions.on_melee_hit(params, template_data, template_context)
-			local template_override_data = template_context.template_override_data
-			local buff_data = template_override_data and template_override_data.buff_data or template_data.buff_data
-			local required_num_hits = buff_data.required_num_hits
-			local target_index = params.target_index
-			local hit_enough_enemies = required_num_hits <= target_index
-
-			return hit_enough_enemies and is_melee
-		end
+		check_proc_func = CheckProcFunctions.on_multiple_melee_hit
 	},
-	weapon_trait_bespoke_ogryn_thumper_p1_pass_trough_armor_on_weapon_special = {
-		predicted = false,
-		stack_offset = -1,
-		max_stacks = 5,
-		class_name = "buff",
-		conditional_keywords = {
-			keywords.use_reduced_hit_mass,
-			keywords.ignore_armor_aborts_attack
-		},
-		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
-	}
+	weapon_trait_bespoke_ogryn_thumper_p1_pass_trough_armor_on_weapon_special = table.clone(BaseWeaponTraitBuffTemplates.pass_trough_armor_on_weapon_special)
 }
 
 return templates

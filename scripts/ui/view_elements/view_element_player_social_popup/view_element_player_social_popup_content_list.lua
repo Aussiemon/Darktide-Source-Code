@@ -44,6 +44,7 @@ local function _add_divider(at_index)
 end
 
 local function _add_party_management_items(parent, player_info, is_own_player)
+	local social_service = Managers.data_service.social
 	local party_status = player_info:party_status()
 
 	if is_own_player then
@@ -52,22 +53,29 @@ local function _add_party_management_items(parent, player_info, is_own_player)
 		list_item.label = Localize("loc_social_menu_leave_party")
 		list_item.callback = callback(parent, "cb_leave_party", player_info)
 		list_item.is_disabled = player_info:num_party_members() < 2
+
+		_add_divider()
 	elseif party_status == PartyStatus.mine or party_status == PartyStatus.same_mission then
-		local can_kick, cannot_kick_reason = Managers.data_service.social:can_kick_from_party(player_info)
-		local list_item = _get_next_list_item()
-		list_item.blueprint = not can_kick and "disabled_button_with_explanation" or "button"
-		list_item.label = Localize("loc_social_menu_vote_to_kick_from_party")
-		list_item.callback = callback(parent, "cb_vote_to_kick_player_from_party", player_info)
-		list_item.is_disabled = not can_kick
-		list_item.reason_for_disabled = cannot_kick_reason and Localize(cannot_kick_reason) or ""
+		if social_service:is_in_mission() then
+			local can_kick, cannot_kick_reason = social_service:can_kick_from_party(player_info)
+			local list_item = _get_next_list_item()
+			list_item.blueprint = not can_kick and "disabled_button_with_explanation" or "button"
+			list_item.label = Localize("loc_social_menu_vote_to_kick_from_party")
+			list_item.callback = callback(parent, "cb_vote_to_kick_player_from_party", player_info)
+			list_item.is_disabled = not can_kick
+			list_item.reason_for_disabled = cannot_kick_reason and Localize(cannot_kick_reason) or ""
+
+			_add_divider()
+		end
 	elseif party_status == PartyStatus.invite_pending then
 		local list_item = _get_next_list_item()
 		list_item.blueprint = "button"
 		list_item.label = Localize("loc_social_menu_cancel_party_invite")
 		list_item.callback = callback(parent, "cb_cancel_party_invite", player_info)
 		list_item.on_pressed_sound = UISoundEvents.social_menu_cancel_invite
+
+		_add_divider()
 	else
-		local social_service = Managers.data_service.social
 		local can_invite, cannot_invite_reason = social_service:can_invite_to_party(player_info)
 		local can_join, cannot_join_reason = social_service:can_join_party(player_info)
 		local list_item = _get_next_list_item()
@@ -84,6 +92,8 @@ local function _add_party_management_items(parent, player_info, is_own_player)
 		list_item.callback = callback(parent, "cb_join_players_party", player_info)
 		list_item.is_disabled = not can_join
 		list_item.on_pressed_sound = UISoundEvents.social_menu_send_invite
+
+		_add_divider()
 	end
 end
 
@@ -100,8 +110,6 @@ local function _add_friend_management_items(parent, player_info)
 
 		_add_divider()
 	elseif friend_status == FriendStatus.friend then
-		_add_divider()
-
 		local list_item = _get_next_list_item()
 		list_item.blueprint = "button"
 		list_item.label = Localize("loc_social_menu_unfriend_player")
@@ -116,8 +124,16 @@ local function _add_friend_management_items(parent, player_info)
 		_add_divider()
 	elseif friend_status == FriendStatus.invite then
 		local can_accept, cannot_befriend_reason = Managers.data_service.social:can_befriend()
+		local user_display_name = player_info:user_display_name()
+
+		if (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+			local xuid = player_info:platform_user_id()
+			local platform_profile = parent:get_platform_profile(xuid)
+			user_display_name = platform_profile and platform_profile.gamertag or "N/A"
+		end
+
 		local request_header_params = {
-			player = player_info:user_display_name()
+			player = user_display_name
 		}
 		local list_item = _get_next_list_item(1)
 		list_item.blueprint = "choice_header"
@@ -194,15 +210,8 @@ local view_element_player_social_popup_content_list = {
 
 		if not is_blocked then
 			_add_party_management_items(parent, player_info, is_own_player)
-			_add_divider()
 		end
 
-		local player_profile_item = _get_next_list_item()
-		player_profile_item.blueprint = "button"
-		player_profile_item.label = Localize("loc_social_menu_player_profile")
-		player_profile_item.callback = callback(parent, "cb_show_player_profile", player_info)
-		player_profile_item.is_disabled = true
-		player_profile_item.on_pressed_sound = UISoundEvents.social_menu_see_player_profile
 		local xbox_platform = Platforms.xbox
 
 		if social_service:platform() == xbox_platform and player_info:platform() == xbox_platform then

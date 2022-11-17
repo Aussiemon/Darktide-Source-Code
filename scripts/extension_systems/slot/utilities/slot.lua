@@ -898,8 +898,6 @@ Slot.update_target_slots_status = function (target_unit, target_units, unit_exte
 	end
 end
 
-local GwNavQueries_triangle_from_position = GwNavQueries.triangle_from_position
-
 local function _update_target_slots_positions_on_ladder(target_unit, target_units, unit_extension_data, should_offset_slot, nav_world, traverse_logic, ladder_unit, bottom, top)
 	local target_unit_extension = unit_extension_data[target_unit]
 	local all_slots = target_unit_extension.all_slots
@@ -909,7 +907,6 @@ local function _update_target_slots_positions_on_ladder(target_unit, target_unit
 		local total_slots_count = slot_data.total_slots_count
 		local slot_offset_dist = 1
 		local ladder_dir = Vector3_normalize(Vector3_flat(Quaternion.forward(Unit.world_rotation(ladder_unit, 1))))
-		local ladder_right = Vector3.cross(ladder_dir, Vector3.up())
 		local top_half = math.floor(total_slots_count / 2)
 		local top_anchor_index = math.ceil(top_half / 2)
 		local top_anchor_slot = target_slots[top_anchor_index]
@@ -920,31 +917,16 @@ local function _update_target_slots_positions_on_ladder(target_unit, target_unit
 		_set_slot_absolute_position(top_anchor_slot, last_pos, target_unit_extension)
 		_update_slot_status(top_anchor_slot, true, target_units, unit_extension_data)
 
-		local success = true
-
 		for i = top_anchor_index - 1, 1, -1 do
 			local slot = target_slots[i]
-			local new_wanted_pos = last_pos - ladder_right * slot_offset_dist
-			success = success and GwNavQueries_raycango(nav_world, last_pos, new_wanted_pos, traverse_logic)
 
-			slot.original_absolute_position:store(new_wanted_pos)
-			_set_slot_absolute_position(slot, new_wanted_pos, target_unit_extension)
-			_update_slot_status(slot, success, target_units, unit_extension_data)
-
-			last_pos = new_wanted_pos
+			_update_slot_status(slot, false, target_units, unit_extension_data)
 		end
-
-		last_pos = last_pos_on_navmesh or top
-		success = true
 
 		for i = top_anchor_index + 1, top_half do
 			local slot = target_slots[i]
-			local new_wanted_pos = last_pos + ladder_right * slot_offset_dist
-			success = success and GwNavQueries_raycango(nav_world, last_pos, new_wanted_pos, traverse_logic)
 
-			slot.original_absolute_position:store(new_wanted_pos)
-			_set_slot_absolute_position(slot, new_wanted_pos, target_unit_extension)
-			_update_slot_status(slot, success, target_units, unit_extension_data)
+			_update_slot_status(slot, false, target_units, unit_extension_data)
 		end
 
 		local inverse_ladder_dir = -ladder_dir
@@ -957,53 +939,16 @@ local function _update_target_slots_positions_on_ladder(target_unit, target_unit
 		_set_slot_absolute_position(bottom_anchor_slot, last_pos, target_unit_extension)
 		_update_slot_status(bottom_anchor_slot, true, target_units, unit_extension_data)
 
-		local above = 1
-		local below = 1
-		local circle_radius = 1
-		local center = last_pos + circle_radius * inverse_ladder_dir
-		local right_amount = bottom_anchor_index - 1 - top_half
-		local angle_increment = math.pi / 2.5 / right_amount
-		local increment = 1
-
 		for i = bottom_anchor_index - 1, top_half + 1, -1 do
 			local slot = target_slots[i]
-			local angle = math.pi * 1.5 + increment * angle_increment
-			local new_wanted_pos = center + circle_radius * (ladder_right * math.cos(angle) + ladder_dir * math.sin(angle))
-			local z = GwNavQueries_triangle_from_position(nav_world, last_pos, above, below, traverse_logic)
-			success = z ~= nil
 
-			if success then
-				new_wanted_pos.z = z
-			end
-
-			slot.original_absolute_position:store(new_wanted_pos)
-			_set_slot_absolute_position(slot, new_wanted_pos, target_unit_extension)
-			_update_slot_status(slot, success, target_units, unit_extension_data)
-
-			increment = increment + 1
+			_update_slot_status(slot, false, target_units, unit_extension_data)
 		end
-
-		local left_amount = total_slots_count - bottom_anchor_index
-		angle_increment = math.pi / 2.5 / left_amount
-		increment = 1
-		last_pos = bottom_pos_on_navmesh or bottom
 
 		for i = bottom_anchor_index + 1, total_slots_count do
 			local slot = target_slots[i]
-			local angle = math.pi * 1.5 - increment * angle_increment
-			local new_wanted_pos = center + circle_radius * (ladder_right * math.cos(angle) + ladder_dir * math.sin(angle))
-			local z = GwNavQueries_triangle_from_position(nav_world, last_pos, above, below, traverse_logic)
-			success = z ~= nil
 
-			if success then
-				new_wanted_pos.z = z
-			end
-
-			slot.original_absolute_position:store(new_wanted_pos)
-			_set_slot_absolute_position(slot, new_wanted_pos, target_unit_extension)
-			_update_slot_status(slot, success, target_units, unit_extension_data)
-
-			increment = increment + 1
+			_update_slot_status(slot, false, target_units, unit_extension_data)
 		end
 
 		_update_anchor_weights(target_unit, unit_extension_data)

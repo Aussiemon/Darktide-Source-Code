@@ -40,14 +40,18 @@ local basic_cultist_berzerker_template = {
 			drop_on_death = true,
 			is_weapon = true,
 			items = {
-				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_01"
+				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_01",
+				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_02",
+				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_03"
 			}
 		},
 		slot_melee_weapon_offhand = {
 			drop_on_death = true,
 			is_weapon = true,
 			items = {
-				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_01"
+				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_01",
+				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_02",
+				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_03"
 			}
 		},
 		slot_variation_gear = {
@@ -109,6 +113,18 @@ foundry_2.slots.envrionmental_override.items = {
 templates.cultist_berzerker[zone_ids.tank_foundry] = {
 	foundry_1,
 	foundry_2
+}
+local dust_1 = table.clone(default_1)
+dust_1.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+local dust_2 = table.clone(default_2)
+dust_2.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/sand_02"
+}
+templates.cultist_berzerker[zone_ids.dust] = {
+	dust_1,
+	dust_2
 }
 local watertown_1 = table.clone(default_1)
 watertown_1.slots.envrionmental_override.items = {

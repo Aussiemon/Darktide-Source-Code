@@ -4,6 +4,7 @@ local settings = {
 	host_singleplay = true,
 	vaulting_allowed = true,
 	bot_backfilling_allowed = false,
+	force_base_talents = true,
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_training_grounds",
 	disable_hologram = true,
 	cache_local_player_profile = true,

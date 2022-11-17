@@ -1,3 +1,29 @@
-local AchievementCategories = table.enum("account", "character_feats", "enemies", "equipment", "feat_of_strength", "general", "melee_weapons", "progression", "range_weapons", "weapon_works", "defence", "offence", "mission", "cooperation", "story", "ogryn_2", "zealot_2", "psyker_2", "veteran_2", "autogun_p1", "autogun_p2", "autogun_p3", "autopistol_p1", "autopistol_p2", "bolter_p1", "chain_axe_p1", "chain_sword_p1", "combat_axe_p1", "combat_axe_p2", "combat_axe_p3", "combat_blade_p1", "combat_knife_p1", "combat_sword_p1", "combat_sword_p2", "combat_sword_p3", "flamer_p1", "force_staff_p1", "force_staff_p2", "force_staff_p3", "force_sword_p1", "grenadier_gauntlet_p1", "heavystubber_p1", "lasgun_p1", "lasgun_p2", "lasgun_p3", "laspistol_p1", "ogryn_club_p1", "ogryn_club_p2", "ogryn_power_maul_p1", "ogryn_powermaul_slabshield_p1", "plasma_rifle_p1", "plasma_rifle_p2", "power_maul_p1", "power_sword_p1", "rippergun_p1", "shotgun_p1", "shotgun_p3", "shotgun_grenade_p1", "stub_pistol_p1", "stub_rifle_p1", "thunder_hammer_p1")
+local AchievementCategoriesInterface = {
+	"name",
+	"display_name",
+	"parent_name"
+}
+local AchievementCategories = {}
+
+local function _add_category(name, loc_key, optional_parent_name)
+	AchievementCategories[name] = {
+		name = name,
+		display_name = loc_key,
+		parent_name = optional_parent_name
+	}
+end
+
+_add_category("account", "loc_achievement_category_account_label")
+_add_category("classes", "loc_achievement_category_classes_label")
+_add_category("ogryn_2", "loc_achievement_category_ogryn_2_label", "classes")
+_add_category("zealot_2", "loc_achievement_category_zealot_2_label", "classes")
+_add_category("psyker_2", "loc_achievement_category_psyker_2_label", "classes")
+_add_category("veteran_2", "loc_achievement_category_veteran_2_label", "classes")
+_add_category("enemies", "loc_achievement_category_enemies_label")
+_add_category("missions", "loc_achievement_category_missions_label")
+_add_category("offensive", "loc_achievement_category_offensive_label")
+_add_category("defensive", "loc_achievement_category_defensive_label")
+_add_category("teamplay", "loc_achievement_category_teamplay_label")
+table.make_strict_with_interface(AchievementCategories, "AchievementCategories", AchievementCategoriesInterface)
 
 return settings("AchievementCategories", AchievementCategories)

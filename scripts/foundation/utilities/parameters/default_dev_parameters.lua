@@ -48,6 +48,7 @@ local categories = {
 	"Hud",
 	"Imgui",
 	"Input",
+	"Item",
 	"Ledge Finder",
 	"LegacyV2ProximitySystem",
 	"Level & Mission",
@@ -458,6 +459,14 @@ params.projectile_aim_disable_aim_offset = {
 	value = false,
 	category = "Projectile Locomotion"
 }
+params.projectile_aim_disable_fx_spawner_offset = {
+	value = false,
+	category = "Projectile Locomotion"
+}
+params.projectile_aim_disable_sway_recoil = {
+	value = false,
+	category = "Projectile Locomotion"
+}
 params.debug_projectile_aim = {
 	value = false,
 	category = "Projectile Locomotion"
@@ -595,6 +604,10 @@ params.projectile_locomotion_speed_maximal_override = {
 	category = "Projectile Locomotion",
 	num_decimals = 1
 }
+params.visualize_projectile_locomotion = {
+	value = false,
+	category = "Projectile Locomotion"
+}
 params.debug_destructibles = {
 	value = false,
 	category = "Destructibles"
@@ -631,9 +644,11 @@ params.physics_debug_filter = {
 		"filter_player_character_interactable_line_of_sight_check",
 		"filter_player_character_interactable_overlap",
 		"filter_player_character_melee_sweep",
-		"filter_player_character_shooting",
-		"filter_player_character_shooting_dynamics",
-		"filter_player_character_shooting_statics",
+		"filter_player_character_ballistic_raycast",
+		"filter_player_character_shooting_projectile",
+		"filter_player_character_shooting_raycast",
+		"filter_player_character_shooting_raycast_dynamics",
+		"filter_player_character_shooting_raycast_statics",
 		"filter_player_character_throwing",
 		"filter_player_mover",
 		"filter_player_ping_target_selection",
@@ -688,10 +703,10 @@ params.character_profile_selector_placeholder = {
 	},
 	options_texts = {
 		"Use backend profile",
-		"Grunt",
-		"Bonebreaker",
-		"Maniac",
-		"Biomancer",
+		"Sharpshooter (Ranger)",
+		"Skullbreaker (Bonebreaker)",
+		"Preacher (Maniac)",
+		"Psykinetic (Biomancer)",
 		"Squad leader",
 		"Gun lugger",
 		"Preacher",
@@ -779,6 +794,14 @@ params.always_max_warp_charge = {
 	value = false,
 	category = "Player Character"
 }
+params.debug_draw_ledge_hanging_ik = {
+	value = false,
+	category = "Player Character"
+}
+params.disable_ledge_hanging_ik = {
+	value = false,
+	category = "Player Character"
+}
 params.hang_ledge_draw_enabled = {
 	value = false,
 	user_setting = false,
@@ -793,12 +816,17 @@ params.infinite_stamina = {
 	value = false,
 	category = "Player Character"
 }
+params.debug_stamina = {
+	value = false,
+	category = "Player Character"
+}
 params.player_render_frame_position = {
 	value = "interpolate",
 	category = "Player Character",
 	options = {
 		"interpolate",
-		"extrapolate"
+		"extrapolate",
+		"raw"
 	}
 }
 params.print_debugged_player_data_fields = {
@@ -882,6 +910,20 @@ params.disable_likely_stuck_implementation = {
 params.debug_push_velocity = {
 	value = false,
 	category = "Player Character"
+}
+params.enable_player_character_scale_overrides = {
+	value = false,
+	category = "Player Character"
+}
+params.player_character_first_person_scale_override = {
+	value = 1,
+	category = "Player Character",
+	num_decimals = 3
+}
+params.player_character_third_person_scale_override = {
+	value = 1,
+	category = "Player Character",
+	num_decimals = 3
 }
 params.debug_wwise_states = {
 	value = false,
@@ -1019,7 +1061,8 @@ params.debug_wwise_states_override_i_options = {
 	category = "Wwise States",
 	options = {
 		"None",
-		"ingame_menu"
+		"ingame_menu",
+		"vendor_menu"
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("options", new_value)
@@ -1143,6 +1186,10 @@ params.debug_buffs_hide_non_predicted = {
 	category = "Buffs"
 }
 params.debug_meta_buffs = {
+	value = false,
+	category = "Buffs"
+}
+params.debug_minion_buff_fx = {
 	value = false,
 	category = "Buffs"
 }
@@ -1782,6 +1829,10 @@ params.debug_disable_minion_suppression = {
 	value = false,
 	category = "Minions"
 }
+params.debug_minion_dissolve = {
+	value = false,
+	category = "Minions"
+}
 params.debug_disable_minion_suppression_indicators = {
 	value = false,
 	category = "Minions"
@@ -1999,6 +2050,10 @@ params.disable_server_metrics_prints = {
 	value = false,
 	category = "Misc"
 }
+params.disable_player_unit_weapon_extension_on_reload = {
+	value = false,
+	category = "Misc"
+}
 params.challenge = {
 	value = 3,
 	category = "Difficulty",
@@ -2063,6 +2118,14 @@ params.chunk_lod_free_flight_camera_raycast = {
 	value = false,
 	category = "Chunk Lod"
 }
+params.debug_print_stripped_items = {
+	value = true,
+	category = "Item"
+}
+params.show_gear_ids = {
+	value = false,
+	category = "Item"
+}
 params.debug_players_immune_net = {
 	value = false,
 	category = "Netgunner"
@@ -2096,11 +2159,19 @@ params.debug_combat_vector = {
 	value = false,
 	category = "Combat Vector"
 }
+params.debug_combat_vector_simple = {
+	value = false,
+	category = "Combat Vector"
+}
 params.debug_corruptors = {
 	value = false,
 	category = "Corruptors"
 }
-params.debug_auto_kill_corruptor_pustules = {
+params.auto_kill_corruptor_pustules = {
+	value = false,
+	category = "Corruptors"
+}
+params.disable_corruptor_damage_tick = {
 	value = false,
 	category = "Corruptors"
 }
@@ -2188,6 +2259,14 @@ params.renegade_sniper_allowed = {
 	value = true,
 	category = "Specials"
 }
+params.flamer_allowed = {
+	value = true,
+	category = "Specials"
+}
+params.renegade_flamer_allowed = {
+	value = true,
+	category = "Specials"
+}
 params.disable_monster_pacing = {
 	value = false,
 	category = "Monsters"
@@ -2220,6 +2299,18 @@ params.debug_player_combat_states = {
 	value = false,
 	category = "Pacing"
 }
+params.disable_beast_of_nurgle = {
+	value = false,
+	category = "Pacing"
+}
+params.disable_daemonhost = {
+	value = false,
+	category = "Pacing"
+}
+params.disable_renegade_berzerker = {
+	value = false,
+	category = "Pacing"
+}
 params.debug_join_party = {
 	value = false,
 	category = "Party"
@@ -2231,6 +2322,14 @@ params.immaterium_local_grpc = {
 params.party_hash = {
 	value = false,
 	category = "Party"
+}
+params.verbose_party_log = {
+	value = false,
+	category = "Party"
+}
+params.verbose_presence_log = {
+	value = false,
+	category = "Presence"
 }
 params.hide_hud = {
 	value = false,
@@ -2460,6 +2559,10 @@ params.show_selected_unit_info = {
 	category = "Version Info"
 }
 params.show_vo_story_stage_info = {
+	value = false,
+	category = "Version Info"
+}
+params.show_cinematic_active = {
 	value = false,
 	category = "Version Info"
 }
@@ -2776,7 +2879,26 @@ params.ui_debug_news_screen = {
 	value = false,
 	category = "UI"
 }
+params.ui_enable_notifications = {
+	value = true,
+	category = "UI",
+	on_value_set = function ()
+		Managers.event:trigger("event_clear_notifications")
+	end
+}
 params.spawn_next_to_mission_board = {
+	value = false,
+	category = "UI"
+}
+params.spawn_next_to_crafting = {
+	value = false,
+	category = "UI"
+}
+params.ui_debug_loc_strings = {
+	value = false,
+	category = "UI"
+}
+params.ui_ignore_hub_interaction_requirements = {
 	value = false,
 	category = "UI"
 }
@@ -3220,10 +3342,6 @@ params.disable_game_end_conditions = {
 	value = false,
 	category = "Game Mode"
 }
-params.debug_end_zone_conditions = {
-	value = false,
-	category = "Game Mode"
-}
 params.disable_achievement_backend_update = {
 	value = false,
 	category = "Achievements",
@@ -3270,6 +3388,18 @@ params.disable_respawning = {
 }
 params.no_respawn_wait_time = {
 	value = false,
+	category = "Respawn"
+}
+params.teleport_on_spawn = {
+	value = false,
+	category = "Respawn"
+}
+params.teleport_on_spawn_location = {
+	value = "Vector3(0,0,0)",
+	category = "Respawn"
+}
+params.teleport_on_spawn_yaw_pitch_roll = {
+	value = "Vector3(0,0,0)",
 	category = "Respawn"
 }
 
@@ -3627,11 +3757,35 @@ params.visualize_aim_assist_trajectory = {
 	value = false,
 	category = "Weapon Aim Assist"
 }
-params.debug_sticky_effects = {
+params.debug_chain_weapon_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_force_weapon_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_grimoire_effects = {
 	value = false,
 	category = "Weapon Effects"
 }
 params.debug_plasmagun_overheat_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_power_weapon_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_sticky_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_thunder_hammer_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_weapon_flashlight = {
 	value = false,
 	category = "Weapon Effects"
 }
@@ -3905,6 +4059,10 @@ params.debug_side_proximity = {
 	value = false,
 	category = "ProximitySystem"
 }
+params.debug_proximity_system = {
+	value = false,
+	category = "ProximitySystem"
+}
 params.debug_has_been_seen = {
 	value = false,
 	category = "LegacyV2ProximitySystem"
@@ -3956,6 +4114,10 @@ params.override_1p_camera_movement_offset_lerp = {
 	value = 1,
 	category = "Camera",
 	num_decimals = 2
+}
+params.disable_player_hit_reaction = {
+	value = false,
+	category = "Camera"
 }
 params.free_flight_follow_path_speed = {
 	value = 7.4,
@@ -4163,7 +4325,6 @@ params.debug_local_test_hub_server = {
 	value = false
 }
 params.debug_change_time_scale.value = false
-params.debug_change_time_scale.value = false
 
 for param, config in pairs(params) do
 	local category = config.category
@@ -4174,6 +4335,7 @@ for param, config in pairs(params) do
 end
 
 return {
+	enable_filter_by_defaults = true,
 	parameters = params,
 	categories = categories
 }

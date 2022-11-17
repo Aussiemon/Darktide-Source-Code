@@ -28,6 +28,7 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 	self._send_buffer_size = settings.buffered_frames
 	local num_actions = #settings.actions
 	self._num_actions = num_actions
+	self._in_panic = false
 	local input_cache = Script.new_array(num_actions + 2)
 	local action_lookup = {}
 
@@ -248,8 +249,6 @@ HumanInputHandler.update = function (self, dt, t, input_service)
 
 		if self._send_buffer_size < frame - self._last_frame_acknowledged then
 			start_frame = frame - self._send_buffer_size + 1
-
-			Log.info("HumanInputHandler", "Out of buffer space, skipping %i to %i", self._last_frame_acknowledged, start_frame - 1)
 		else
 			start_frame = self._last_frame_acknowledged + 1
 		end
@@ -315,6 +314,16 @@ end
 
 HumanInputHandler.had_received_input = function (self, fixed_frame)
 	return true
+end
+
+HumanInputHandler.in_panic = function (self)
+	return self._in_panic
+end
+
+HumanInputHandler.set_in_panic = function (self, in_panic)
+	self._in_panic = in_panic
+
+	self._client_clock_handler:set_in_panic(in_panic)
 end
 
 return HumanInputHandler

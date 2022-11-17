@@ -14,6 +14,7 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 	self._is_being_used = false
 	self._active = not extension_init_data.start_inactive
 	self._spawn_cooldown = extension_init_data.spawn_interaction_cooldown
+	self._owner_system = extension_init_context.owner_system
 	self._interactions = {}
 	self._override_contexts = {}
 	self._active_interaction_type = nil
@@ -43,6 +44,8 @@ InteracteeExtension.update = function (self, unit, dt, t)
 		end
 
 		self._spawn_cooldown = spawn_cooldown
+	else
+		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
 	end
 end
 
@@ -243,6 +246,17 @@ InteracteeExtension.display_start_event = function (self)
 	return override_context.display_start_event or false
 end
 
+InteracteeExtension.disable_display_start_event = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+	override_context.display_start_event = false
+end
+
 InteracteeExtension.ui_interaction_type = function (self)
 	local active_interaction_type = self._active_interaction_type
 
@@ -322,12 +336,13 @@ InteracteeExtension.description = function (self)
 	return override_context.description or interaction:description()
 end
 
-InteracteeExtension.set_block_text = function (self, text)
+InteracteeExtension.set_block_text = function (self, text, block_text_context)
 	local active_interaction_type = self._active_interaction_type
 
 	if active_interaction_type then
 		local override_context = self._override_contexts[active_interaction_type]
 		override_context.block_text = text
+		override_context.block_text_context = block_text_context
 	end
 end
 
@@ -344,7 +359,7 @@ InteracteeExtension.block_text = function (self)
 		return
 	end
 
-	return override_context.block_text
+	return override_context.block_text, override_context.block_text_context
 end
 
 InteracteeExtension.hold_required = function (self)
@@ -363,6 +378,12 @@ InteracteeExtension.interactor_item_to_equip = function (self)
 
 	if item_to_equip and item_to_equip ~= "" then
 		local item = MasterItems.get_item(item_to_equip)
+
+		if not item then
+			Log.error("InteracteeExtension", "missing inventory item: %s for interaction: %s", item, active_interaction_type)
+
+			return MasterItems.find_fallback_item("slot_device")
+		end
 
 		return item
 	end

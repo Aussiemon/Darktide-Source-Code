@@ -11,7 +11,7 @@ PresenceEntryImmaterium.init = function (self, my_own_platform, platform, platfo
 		platform = "",
 		platform_user_id = "",
 		status = "OFFLINE",
-		last_update = 0,
+		last_update = -1,
 		account_id = "",
 		key_values = {}
 	}
@@ -26,21 +26,18 @@ PresenceEntryImmaterium.init = function (self, my_own_platform, platform, platfo
 		immaterium_entry.platform_user_id = platform_user_id
 	end
 
-	self._has_done_platform_request = false
 	self._immaterium_entry = immaterium_entry
-	self._alive_queried = false
+	self._alive_queried = true
 	self._alive = true
-	self._stream_operation_id = nil
 	self._stream_first_update_promises = {}
 	self._parsed_character_profile = nil
+	self._started = false
+	self._request_platform = nil
+	self._request_id = nil
 end
 
 PresenceEntryImmaterium.destroy = function (self)
-	if self._stream_operation_id then
-		Managers.grpc:abort_operation(self._stream_operation_id)
-
-		self._stream_operation_id = nil
-	end
+	Managers.presence:_abort_batched_presence(self)
 
 	if self._stream_first_update_promises then
 		local error = {
@@ -58,11 +55,10 @@ PresenceEntryImmaterium.destroy = function (self)
 end
 
 PresenceEntryImmaterium.update = function (self)
-	if self._stream_operation_id then
-		local new_immaterium_entry = Managers.grpc:get_latest_presence_from_stream(self._stream_operation_id)
+	if self._started then
+		local new_immaterium_entry = Managers.presence:_get_batched_presence(self, self._request_platform, self._request_platform_user_id)
 
 		if new_immaterium_entry then
-			self:_info("Got presence entry " .. table.tostring(new_immaterium_entry, 5))
 			self:update_with(new_immaterium_entry)
 
 			if self._stream_first_update_promises then
@@ -89,37 +85,15 @@ PresenceEntryImmaterium.first_update_promise = function (self)
 end
 
 PresenceEntryImmaterium.start_stream = function (self)
-	local promise, id = nil
-
 	if self._account_id then
-		promise, id = Managers.grpc:get_presence_stream("", self._account_id)
+		self._request_platform = ""
+		self._request_platform_user_id = self._account_id
 	else
-		promise, id = Managers.grpc:get_presence_stream(self._platform, self:_convert_platform_user_id_for_immaterium(self._platform, self._platform_user_id))
+		self._request_platform = self._platform
+		self._request_platform_user_id = self:_convert_platform_user_id_for_immaterium(self._platform, self._platform_user_id)
 	end
 
-	self:_info("created stream with id " .. id)
-
-	self._stream_operation_id = id
-
-	promise:next(function ()
-		self._stream_operation_id = nil
-
-		self:start_stream()
-	end):catch(function (error)
-		self._stream_operation_id = nil
-
-		if self._stream_open_promise then
-			self._stream_open_promise:reject(error)
-
-			self._stream_open_promise = nil
-		end
-
-		if error.aborted then
-			self:_info("aborted stream")
-		else
-			self:_error("get_presence_stream returned error " .. table.tostring(error, 3))
-		end
-	end)
+	self._started = true
 end
 
 PresenceEntryImmaterium.update_with = function (self, new_entry)
@@ -199,8 +173,15 @@ PresenceEntryImmaterium.is_online = function (self)
 end
 
 PresenceEntryImmaterium.platform_persona_name_or_account_name = function (self)
-	if HAS_STEAM and self:platform_user_id() and self:platform() == "steam" then
-		return Steam.user_name(self:platform_user_id())
+	local platform = self:platform()
+	local platform_user_id = self:platform_user_id()
+
+	if platform and platform_user_id then
+		local platform_username = Managers.presence:get_requested_platform_username(platform, platform_user_id)
+
+		if platform_username then
+			return platform_username
+		end
 	end
 
 	if self._immaterium_entry.account_name ~= "" then
@@ -230,10 +211,6 @@ PresenceEntryImmaterium.is_alive = function (self)
 	return self._alive
 end
 
-PresenceEntryImmaterium.has_operation = function (self)
-	return self._stream_operation_id ~= nil
-end
-
 PresenceEntryImmaterium.reset_alive_queried = function (self)
 	local alive_queried = self._alive_queried
 	self._alive_queried = false
@@ -241,26 +218,8 @@ PresenceEntryImmaterium.reset_alive_queried = function (self)
 	return alive_queried
 end
 
-PresenceEntryImmaterium._log_id = function (self)
-	if self._account_id then
-		return "[" .. self._account_id .. "]"
-	else
-		return "[" .. self._platform .. ":" .. self._platform_user_id .. "]"
-	end
-end
-
-PresenceEntryImmaterium._info = function (self, message)
-	Log.info("PresenceEntryImmaterium" .. self:_log_id(), message)
-end
-
-PresenceEntryImmaterium._error = function (self, message)
-	Log.info("PresenceEntryImmaterium" .. self:_log_id(), message)
-end
-
 PresenceEntryImmaterium._process_platform_id_convert = function (self, new_entry)
-	if HAS_STEAM and new_entry.platform == "steam" then
-		new_entry.platform_user_id = Application.dec64_to_hex(new_entry.platform_user_id)
-	elseif new_entry.platform == "xbox" then
+	if new_entry.platform == "steam" or new_entry.platform == "xbox" then
 		new_entry.platform_user_id = Application.dec64_to_hex(new_entry.platform_user_id)
 	end
 
@@ -293,19 +252,16 @@ PresenceEntryImmaterium._process_character_profile_convert = function (self, new
 end
 
 PresenceEntryImmaterium._update_from_platform = function (self)
-	if self._has_done_platform_request ~= "steam" then
-		if HAS_STEAM and self:platform() == "steam" and self:platform_user_id() then
-			Steam.request_user_name_async(self:platform_user_id())
-		end
+	local platform = self:platform()
+	local platform_user_id = self:platform_user_id()
 
-		self._has_done_platform_request = "steam"
+	if platform and platform_user_id then
+		Managers.presence:request_platform_username_async(platform, platform_user_id)
 	end
 end
 
 PresenceEntryImmaterium._convert_platform_user_id_for_immaterium = function (self, platform, platform_user_id)
-	if HAS_STEAM and platform == "steam" and platform_user_id then
-		return Application.hex64_to_dec(platform_user_id)
-	elseif platform == "xbox" then
+	if (platform == "steam" or platform == "xbox") and platform_user_id then
 		return Application.hex64_to_dec(platform_user_id)
 	end
 

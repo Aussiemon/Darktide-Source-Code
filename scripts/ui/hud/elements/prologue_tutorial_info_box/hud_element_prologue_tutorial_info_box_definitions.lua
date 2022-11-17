@@ -75,17 +75,13 @@ local widget_definitions = {
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
+				scale_to_material = true,
 				horizontal_alignment = "center",
 				size_addition = {
 					10,
 					10
 				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
+				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
@@ -98,6 +94,12 @@ local widget_definitions = {
 			style_id = "title_text",
 			pass_type = "text",
 			style = info_box_settings.title_text_style
+		},
+		{
+			style_id = "input_description_text",
+			value_id = "input_description_text",
+			pass_type = "text",
+			style = info_box_settings.input_description_text_style
 		},
 		{
 			style_id = "description_text",
@@ -127,7 +129,7 @@ local animations = {
 		},
 		{
 			name = "enter_left",
-			end_time = 0.6,
+			end_time = 0.8,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				local scenegraph_id = widget.scenegraph_id
@@ -148,6 +150,7 @@ local animations = {
 				local style = widget.style
 				local alpha = anim_progress * 255
 				style.description_text.text_color[1] = alpha
+				style.input_description_text.text_color[1] = alpha
 			end
 		},
 		{
@@ -169,6 +172,7 @@ local animations = {
 				local style = widget.style
 				local alpha = anim_progress * 255
 				style.description_text.text_color[1] = alpha
+				style.input_description_text.text_color[1] = alpha
 			end
 		},
 		{
@@ -210,7 +214,7 @@ local animations = {
 		},
 		{
 			name = "add_entry",
-			end_time = 0.6,
+			end_time = 0.8,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				local scenegraph_id = widget.scenegraph_id
@@ -258,6 +262,76 @@ animations.remove_entry = {
 		end
 	}
 }
+animations.uptick_entry = {
+	{
+		name = "blink",
+		end_time = 0.4,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
+			style.frame.color[1] = alpha
+		end
+	},
+	{
+		name = "reset_alpha",
+		end_time = 0.8,
+		start_time = 0.4,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = math.lerp(style.frame.color[1], 255, progress)
+			style.frame.color[1] = alpha
+		end
+	}
+}
+animations.complete_entry = {
+	{
+		name = "blink",
+		end_time = 0.8,
+		start_time = 0,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
+			style.frame.color[1] = alpha
+		end
+	},
+	{
+		name = "reset_alpha",
+		end_time = 1.2,
+		start_time = 0.8,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = math.lerp(style.frame.color[1], 255, progress)
+			style.frame.color[1] = alpha
+		end
+	},
+	{
+		name = "fade_out_counter",
+		end_time = 0.6,
+		start_time = 0.4,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = 255 * (1 - progress)
+			style.counter_text.text_color[1] = alpha
+		end
+	},
+	{
+		name = "fade_in_checkmark",
+		end_time = 0.8,
+		start_time = 0.6,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local content = widget.content
+			content.counter_text = ""
+			local style = widget.style
+			style.counter_text.font_size = 30
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local style = widget.style
+			local alpha = 255 * progress
+			style.counter_text.text_color[1] = alpha
+		end
+	}
+}
 
 local function create_entry_widget(scenegraph_id)
 	local counter_text_style = info_box_settings.counter_text_style
@@ -284,17 +358,13 @@ local function create_entry_widget(scenegraph_id)
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
+				scale_to_material = true,
 				size = entry_size,
 				size_addition = {
 					20,
 					15
 				},
-				color = {
-					255,
-					255,
-					255,
-					255
-				},
+				color = Color.terminal_grid_background(255, true),
 				offset = {
 					-5,
 					-10,

@@ -221,7 +221,7 @@ RespawnBeaconSystem._move_hogtied_players = function (self, players, best_beacon
 			local player_unit = player.player_unit
 			local rotation = Unit.world_rotation(player_unit, 1)
 
-			PlayerMovement.teleport(player, move_position, rotation)
+			PlayerMovement.teleport_fixed_update(player_unit, move_position, rotation)
 		end
 	end
 end

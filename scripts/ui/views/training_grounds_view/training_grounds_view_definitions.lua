@@ -63,30 +63,6 @@ local scenegraph_definition = {
 	}
 }
 local widget_definitions = {
-	corner_top_left = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/character_01_upper"
-		}
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/character_01_upper",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		}
-	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -119,10 +95,10 @@ local intro_texts = {
 }
 local button_options_definitions = {
 	{
-		display_name = "loc_training_grounds_view_option_play_basic",
+		display_name = "loc_basic_training_title",
 		callback = function (self)
 			local tab_bar_params = {
-				hide_tabs = false,
+				hide_tabs = true,
 				layer = 10,
 				tabs_params = {
 					{
@@ -147,10 +123,10 @@ local button_options_definitions = {
 		end
 	},
 	{
-		display_name = "loc_training_grounds_view_option_play_advanced",
+		display_name = "loc_advanced_training_title",
 		callback = function (self)
 			local tab_bar_params = {
-				hide_tabs = false,
+				hide_tabs = true,
 				layer = 10,
 				tabs_params = {
 					{
@@ -164,6 +140,30 @@ local button_options_definitions = {
 									alias = "training_grounds",
 									name = "advanced_training"
 								},
+								singleplay_type = SINGLEPLAY_TYPES.training_grounds
+							}
+						}
+					}
+				}
+			}
+
+			self:_setup_tab_bar(tab_bar_params)
+		end
+	},
+	{
+		display_name = "loc_training_grounds_view_shooting_range_text",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
+					{
+						view = "training_grounds_options_view",
+						display_name = "loc_training_grounds_view_display_name",
+						context = {
+							training_grounds_settings = "shooting_range",
+							mechanism_context = {
+								mission_name = "tg_shooting_range",
 								singleplay_type = SINGLEPLAY_TYPES.training_grounds
 							}
 						}

@@ -97,7 +97,8 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 		wwise_world = extension_init_context.wwise_world,
 		visual_loadout_extension = self,
 		unit_data_extension = unit_data_extension,
-		fx_extension = fx_extension
+		fx_extension = fx_extension,
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
 	}
 	local inventory_component_data = PlayerCharacterConstants.inventory_component_data
 
@@ -156,6 +157,8 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 end
 
 PlayerUnitVisualLoadoutExtension.extensions_ready = function (self, world, unit)
+	WieldableSlotScripts.extensions_ready(self._wieldable_slot_scripts)
+
 	if not self._is_server then
 		PlayerUnitVisualLoadout.wield_slot(self._default_wielded_slot_name, unit, self._initialized_fixed_t)
 	end
@@ -177,7 +180,10 @@ PlayerUnitVisualLoadoutExtension.game_object_initialized = function (self, sessi
 			local slot_id = NetworkLookup.player_inventory_slot_names[slot_name]
 
 			if slot_config.profile_field then
-				Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_from_profile_to_slot", self._player:channel_id(), object_id, slot_id)
+				local item = slot.item
+				local item_id = NetworkLookup.player_item_names[item.name]
+
+				Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_from_profile_to_slot", self._player:channel_id(), object_id, slot_id, item_id)
 			else
 				local item = slot.item
 				local item_id = NetworkLookup.player_item_names[item.name]
@@ -188,7 +194,13 @@ PlayerUnitVisualLoadoutExtension.game_object_initialized = function (self, sessi
 		end
 	end
 
-	PlayerUnitVisualLoadout.wield_slot(self._default_wielded_slot_name, self._unit, self._initialized_fixed_t)
+	local inventory_component = self._unit_data_extension:read_component("inventory")
+
+	if PlayerUnitVisualLoadout.slot_equipped(inventory_component, self, self._default_wielded_slot_name) then
+		PlayerUnitVisualLoadout.wield_slot(self._default_wielded_slot_name, self._unit, self._initialized_fixed_t)
+	else
+		Log.error("PlayerUnitVisualLoadoutExtension", "[game_object_initialized] slot(%s) is unequipped.", tostring(self._default_wielded_slot_name))
+	end
 end
 
 local function _register_fx_sources(fx_extension, unit_1p, unit_3p, attachments_1p, attachments_3p, source_config, slot_name, is_in_first_person_mode)
@@ -436,6 +448,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 	local slot_configuration = self._slot_configuration
 	local unit_data_extension = self._unit_data_extension
+	local is_server = self._is_server
 
 	for i = #slot_equip_order, 1, -1 do
 		local slot_name = slot_equip_order[i]
@@ -444,19 +457,30 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 		if slot.equipped then
 			local slot_config = slot_configuration[slot_name]
 
-			if slot_config.slot_type == "luggable" then
+			if is_server and slot_config.slot_type == "luggable" then
 				local first_person_component = unit_data_extension:read_component("first_person")
 				local locomotion_component = unit_data_extension:read_component("locomotion")
 
 				Luggable.enable_physics(first_person_component, locomotion_component, slot.unit_3p)
 			end
 
-			if slot_config.slot_type == "pocketable" then
-				local is_server = self._is_server
-				local unit = self._unit
-				local inventory_component = self._inventory_component
+			if slot_name == "slot_pocketable" then
+				local is_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, "slot_pocketable", "grimoire")
 
-				Pocketable.drop_pocketable(latest_frame, is_server, unit, inventory_component, self)
+				if is_grimoire then
+					self:unequip_item_from_slot(slot_name, latest_frame)
+
+					if is_server then
+						local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+						mission_objective_system:store_grimoire()
+					end
+				else
+					local unit = self._unit
+					local inventory_component = self._inventory_component
+
+					Pocketable.drop_pocketable(latest_frame, is_server, unit, inventory_component, self)
+				end
 			else
 				self:_unequip_item_from_slot(slot_name, false, latest_frame)
 			end
@@ -482,7 +506,9 @@ PlayerUnitVisualLoadoutExtension.hot_join_sync = function (self, unit, sender)
 			local slot_id = NetworkLookup.player_inventory_slot_names[slot_name]
 
 			if slot_config.profile_field then
-				RPC.rpc_player_equip_item_from_profile_to_slot(channel, game_object_id, slot_id)
+				local item_id = NetworkLookup.player_item_names[slot.item.name]
+
+				RPC.rpc_player_equip_item_from_profile_to_slot(channel, game_object_id, slot_id, item_id)
 			else
 				local item_id = NetworkLookup.player_item_names[slot.item.name]
 				local optional_existing_unit_3p_id = slot.use_existing_unit_3p and Managers.state.unit_spawner:game_object_id(slot.unit_3p) or NetworkConstants.invalid_game_object_id
@@ -509,7 +535,9 @@ PlayerUnitVisualLoadoutExtension.equip_item_to_slot = function (self, item, slot
 		local slot_id = NetworkLookup.player_inventory_slot_names[slot_name]
 
 		if slot_config.profile_field then
-			Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_from_profile_to_slot", self._player:channel_id(), self._game_object_id, slot_id)
+			local item_id = NetworkLookup.player_item_names[item.name]
+
+			Managers.state.game_session:send_rpc_clients_except("rpc_player_equip_item_from_profile_to_slot", self._player:channel_id(), self._game_object_id, slot_id, item_id)
 		else
 			local item_id = NetworkLookup.player_item_names[item.name]
 			local optional_existing_unit_3p_id = optional_existing_unit_3p and Managers.state.unit_spawner:game_object_id(optional_existing_unit_3p) or NetworkConstants.invalid_game_object_id
@@ -565,6 +593,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 		local decal_unit_ids = ImpactFxResourceDependencies.impact_decal_units(template_name, weapon_template)
 
 		Managers.state.decal:register_decal_unit_ids(decal_unit_ids)
+		self:_cache_node_names(weapon_template, slot_name)
 	end
 
 	self:_update_item_visibility(is_in_first_person_mode)
@@ -644,6 +673,10 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 		local decal_unit_ids = ImpactFxResourceDependencies.impact_decal_units(template_name, weapon_template)
 
 		Managers.state.decal:unregister_decal_unit_ids(decal_unit_ids)
+
+		if slot_config.slot_type == "weapon" then
+			self._fx_extension:destroy_particle_group()
+		end
 	end
 
 	local is_in_first_person_mode = self._is_in_first_person_mode
@@ -701,8 +734,9 @@ end
 
 PlayerUnitVisualLoadoutExtension.weapon_template_from_slot = function (self, slot_name)
 	local slot = self._equipment[slot_name]
+	local weapon_template = WeaponTemplate.weapon_template_from_item(slot and slot.item)
 
-	return WeaponTemplate.weapon_template_from_item(slot and slot.item)
+	return weapon_template, slot
 end
 
 PlayerUnitVisualLoadoutExtension.item_from_slot = function (self, slot_name)
@@ -854,6 +888,79 @@ PlayerUnitVisualLoadoutExtension.unit_and_attachments_from_slot = function (self
 	local slot = self._equipment[slot_name]
 
 	return slot.unit_1p, slot.unit_3p, slot.attachments_1p, slot.attachments_3p
+end
+
+PlayerUnitVisualLoadoutExtension._cache_node_names = function (self, weapon_template, slot_name)
+	local fx_sources = weapon_template.fx_sources
+	local slot = self._equipment[slot_name]
+	local cached_nodes = slot.cached_nodes
+
+	table.clear(cached_nodes)
+
+	for _, node_name in pairs(fx_sources) do
+		local node_unit_1p, node_index_1p, node_unit_3p, node_index_3p = self:_unit_and_node_from_node_name(slot_name, node_name)
+		cached_nodes[node_name] = {
+			node_unit_1p = node_unit_1p,
+			node_index_1p = node_index_1p,
+			node_unit_3p = node_unit_3p,
+			node_index_3p = node_index_3p
+		}
+	end
+end
+
+PlayerUnitVisualLoadoutExtension._unit_and_node_from_node_name = function (self, slot_name, node_name)
+	local node_unit_1p, node_index_1p, node_unit_3p, node_index_3p = nil
+	local slot = self._equipment[slot_name]
+	local unit_1p = slot.unit_1p
+	local unit_3p = slot.unit_3p
+	local attachments_1p = slot.attachments_1p
+	local attachments_3p = slot.attachments_3p
+
+	if unit_1p and Unit.has_node(unit_1p, node_name) then
+		node_unit_1p = unit_1p
+		node_index_1p = Unit.node(unit_1p, node_name)
+	elseif attachments_1p then
+		local num_attachments = #attachments_1p
+
+		for i = 1, num_attachments do
+			local unit = attachments_1p[i]
+
+			if Unit.has_node(unit, node_name) then
+				node_unit_1p = unit
+				node_index_1p = Unit.node(unit, node_name)
+			end
+		end
+	end
+
+	if unit_3p and Unit.has_node(unit_3p, node_name) then
+		node_unit_3p = unit_3p
+		node_index_3p = Unit.node(unit_3p, node_name)
+	elseif attachments_3p then
+		local num_attachments = #attachments_3p
+
+		for i = 1, num_attachments do
+			local unit = attachments_3p[i]
+
+			if Unit.has_node(unit, node_name) then
+				node_unit_3p = unit
+				node_index_3p = Unit.node(unit, node_name)
+			end
+		end
+	end
+
+	return node_unit_1p, node_index_1p, node_unit_3p, node_index_3p
+end
+
+PlayerUnitVisualLoadoutExtension.unit_and_node_from_node_name = function (self, slot_name, node_name)
+	local slot = self._equipment[slot_name]
+	local cached_nodes = slot.cached_nodes
+	local chaced_node = cached_nodes[node_name]
+
+	if chaced_node then
+		return chaced_node.node_unit_1p, chaced_node.node_index_1p, chaced_node.node_unit_3p, chaced_node.node_index_3p
+	end
+
+	return nil, nil, nil, nil
 end
 
 PlayerUnitVisualLoadoutExtension.item_in_slot = function (self, slot_name)

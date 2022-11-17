@@ -10,6 +10,7 @@ PlayerHuskMusicParameterExtension.init = function (self, extension_init_context,
 	self._intensity_percent = 0
 	self._tension_percent = 0
 	self._locked_in_melee = false
+	self._update_timer = 0
 end
 
 PlayerHuskMusicParameterExtension.on_game_object_created = function (self, game_session, game_object_id)
@@ -22,11 +23,11 @@ PlayerHuskMusicParameterExtension.on_game_object_destroyed = function (self, gam
 	self._game_session = nil
 end
 
-PlayerHuskMusicParameterExtension.fixed_update = function (self, unit, dt, t)
+PlayerHuskMusicParameterExtension.update = function (self, unit, dt, t)
 	local game_session = self._game_session
 	local game_object_id = self._game_object_id
 
-	if not game_session or not game_object_id then
+	if not game_session or not game_object_id or t < self._update_timer then
 		return
 	end
 
@@ -40,6 +41,7 @@ PlayerHuskMusicParameterExtension.fixed_update = function (self, unit, dt, t)
 	self._num_aggroed_minions_near = GameSession.game_object_field(game_session, game_object_id, "num_aggroed_minions_near")
 	self._locked_in_melee = GameSession.game_object_field(game_session, game_object_id, "locked_in_melee")
 	self._num_aggroed_minions = GameSession.game_object_field(game_session, game_object_id, "num_aggroed_minions")
+	self._update_timer = t + 0.5
 end
 
 PlayerHuskMusicParameterExtension.num_aggroed_minions_near = function (self)

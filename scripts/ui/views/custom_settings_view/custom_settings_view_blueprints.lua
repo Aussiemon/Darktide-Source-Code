@@ -122,9 +122,9 @@ blueprints.value_slider = {
 		content.apply_on_drag = entry.apply_on_drag and true
 		local get_function = entry.get_function
 		local value = get_function(entry)
-		value = value / entry.max_value
-		content.previous_slider_value = value
-		content.slider_value = value
+		local slider_value = math.normalize_01(value, entry.min_value, entry.max_value)
+		content.previous_slider_value = slider_value
+		content.slider_value = slider_value
 		content.pressed_callback = callback(parent, callback_name, widget, entry)
 	end,
 	update = function (parent, widget, input_service, dt, t)

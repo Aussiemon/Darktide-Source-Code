@@ -22,9 +22,6 @@ EACClientManager.init = function (self)
 
 		return
 	end
-
-	EOS.set_server(false)
-	_info("EOS.set_server(false)")
 end
 
 EACClientManager.has_eac = function (self)
@@ -51,12 +48,13 @@ EACClientManager.authenticate = function (self)
 
 		_info("retrieving app_ticket")
 
-		self._authenticated = false
 		self._timeout_at = Managers.time:time("main") + TIMEOUT
+		self._authenticated = false
 	elseif IS_GDK then
 		XboxLive.user_id():next(function (user_id)
 			local auth_job_id = EOS.authenticate_with_xbox(user_id)
 			self._auth_job_id = auth_job_id
+			self._timeout_at = Managers.time:time("main") + TIMEOUT
 			self._state = EAC_STATES.authenticating_eos
 
 			_info("recieved user id from xbox live,  trying to authenticate with eos")
@@ -86,16 +84,14 @@ EACClientManager.begin_session = function (self)
 	local mode = "ClientServer"
 	local server_name = Managers.connection:server_name()
 
+	_info("begin_session, user_id:%s, mode:%s, server_name:%s", user_id, mode, server_name)
 	EOS.begin_session(user_id, mode, server_name)
 
 	self._state = EAC_STATES.in_session
+	local server_channel_id = Managers.connection:host_channel()
 
-	_info("begin_session")
-
-	local server_peer_id = Managers.connection:host_channel()
-
-	EOS.set_server_peer_id(server_peer_id)
-	_info("set_server_peer_id server_peer_id:%s", server_peer_id)
+	EOS.set_server_channel_id(server_channel_id)
+	_info("set_server_channel_id :%s", server_channel_id)
 end
 
 EACClientManager.end_session = function (self)
@@ -116,6 +112,10 @@ end
 
 EACClientManager.in_session = function (self)
 	return self._state == EAC_STATES.in_session
+end
+
+EACClientManager.user_id = function (self)
+	return self._user_id
 end
 
 EACClientManager.update = function (self, dt, t)
@@ -151,7 +151,7 @@ EACClientManager.update = function (self, dt, t)
 				local user_id = EOS.job_payload_user_id(job_id)
 				self._user_id = user_id
 
-				_info("got user id from EOS")
+				_info("got user id from EOS %s", user_id)
 			else
 				Managers.error:report_error(EACError:new("loc_eac_error_auth_eac_failed"))
 				_info("authentication failed")
@@ -162,6 +162,16 @@ EACClientManager.update = function (self, dt, t)
 			EOS.erase_job(job_id)
 
 			self._auth_job_id = nil
+		elseif job_status == EOS.FAILURE then
+			local job_result = EOS.job_result(job_id)
+
+			_info("authentication failed")
+			EOS.erase_job(job_id)
+
+			self._auth_job_id = nil
+			self._state = EAC_STATES.error
+
+			Managers.error:report_error(EACError:new("loc_eac_error_auth_eac_failed"))
 		end
 
 		if self._timeout_at < t then
@@ -171,9 +181,25 @@ EACClientManager.update = function (self, dt, t)
 			self._state = EAC_STATES.error
 		end
 	elseif state == EAC_STATES.in_session then
-		-- Nothing
+		local user_id = self._user_id
+
+		if user_id then
+			self:_validate_user_id()
+		end
 	elseif state == EAC_STATES.error then
 		-- Nothing
+	end
+end
+
+EACClientManager._validate_user_id = function (self)
+	local user_id_valid = EOS.user_id_valid()
+
+	if not user_id_valid then
+		self._user_id = nil
+		self._authenticated = false
+
+		self:authenticate()
+		_info("user id invalid, re-authenticating")
 	end
 end
 
