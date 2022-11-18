@@ -4,7 +4,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local left_column_width = 540
 local visible_area_width = 1560
-local visible_area_height = 770
+local visible_area_height = 780
 local achievements_grid_margin = 16
 local achievement_width = 882
 local main_column_width = achievement_width + 2 * achievements_grid_margin
@@ -66,13 +66,19 @@ achievements_view_styles.achievements_grid = {}
 local achievements_grid_style = achievements_view_styles.achievements_grid
 achievements_grid_style.size = {
 	achievement_width,
-	770
+	780
 }
 achievements_grid_style.margin = achievements_grid_margin
 achievements_view_styles.achievement_summary = {}
 local achievement_summary_style = achievements_view_styles.achievement_summary
 achievement_summary_style.num_completed_to_show = num_completed_to_show
 achievement_summary_style.num_near_completed_to_show = num_near_completed_to_show
+achievements_view_styles.gamepad_unfold_hint = {}
+local gamepad_unfold_hint_style = achievements_view_styles.gamepad_unfold_hint
+gamepad_unfold_hint_style.text = table.clone(UIFontSettings.body)
+local gamepad_unfold_hint_text_style = gamepad_unfold_hint_style.text
+gamepad_unfold_hint_text_style.text_horizontal_alignment = "center"
+gamepad_unfold_hint_text_style.text_vertical_alignment = "center"
 achievements_view_styles.blueprints = {}
 local blueprint_styles = achievements_view_styles.blueprints
 blueprint_styles.pass_template = {}
@@ -481,8 +487,8 @@ completed_overlay_style.color = {
 }
 blueprint_styles.list_padding = {
 	size = {
-		main_column_width,
-		8
+		achievement_width,
+		4
 	}
 }
 blueprint_styles.category_list_padding_top = {}
@@ -551,9 +557,35 @@ simple_category_blueprint_style.corner = table.clone(common_achievement_corner_s
 local simple_category_blueprint_corner_style = simple_category_blueprint_style.corner
 simple_category_blueprint_corner_style.size = simple_category_blueprint_style.size
 simple_category_blueprint_style.divider = table.clone(category_list_padding_top_divider_style)
+simple_category_blueprint_style.bullet = {}
+local simple_category_blueprint_bullet_style = simple_category_blueprint_style.bullet
+simple_category_blueprint_bullet_style.size = {
+	32,
+	32
+}
+simple_category_blueprint_bullet_style.offset = {
+	15,
+	0,
+	3
+}
+simple_category_blueprint_bullet_style.horizontal_alignment = "left"
+simple_category_blueprint_bullet_style.vertical_alignment = "center"
+simple_category_blueprint_bullet_style.color = Color.terminal_text_body(255, true)
+simple_category_blueprint_bullet_style.default_color = Color.terminal_text_body(255, true)
+simple_category_blueprint_bullet_style.hover_color = Color.terminal_text_header(255, true)
+simple_category_blueprint_bullet_style.selected_color = Color.terminal_text_header_selected(255, true)
+simple_category_blueprint_style.bullet_active = table.clone(simple_category_blueprint_style.bullet)
+local simple_category_blueprint_active_bullet_style = simple_category_blueprint_style.bullet_active
+simple_category_blueprint_active_bullet_style.offset[3] = 4
+simple_category_blueprint_active_bullet_style.min_alpha = 0
+simple_category_blueprint_active_bullet_style.max_alpha = 255
 simple_category_blueprint_style.text = table.clone(UIFontSettings.list_button)
 local simple_category_blueprint_text_style = simple_category_blueprint_style.text
-simple_category_blueprint_text_style.offset[1] = 26
+simple_category_blueprint_text_style.offset = {
+	50,
+	0,
+	3
+}
 simple_category_blueprint_text_style.default_color = Color.terminal_text_body(255, true)
 simple_category_blueprint_text_style.hover_color = Color.terminal_text_header(255, true)
 simple_category_blueprint_text_style.selected_color = Color.terminal_text_header_selected(255, true)
@@ -567,7 +599,8 @@ top_category_blueprint_style.arrow = {}
 local top_category_blueprint_arrow_style = top_category_blueprint_style.arrow
 top_category_blueprint_arrow_style.color = Color.terminal_frame(255, true)
 top_category_blueprint_arrow_style.default_color = top_category_blueprint_arrow_style.color
-top_category_blueprint_arrow_style.focused_color = Color.terminal_frame_hover(255, true)
+top_category_blueprint_arrow_style.hover_color = Color.terminal_frame_hover(nil, true)
+top_category_blueprint_arrow_style.selected_color = Color.terminal_frame_selected(nil, true)
 top_category_blueprint_arrow_style.angle = math.degrees_to_radians(-90)
 top_category_blueprint_arrow_style.size = {
 	24,
@@ -622,60 +655,39 @@ blueprint_header_label_style.size = {
 	header_height
 }
 blueprint_header_label_style.horizontal_alignment = "center"
+blueprint_header_label_style.vertical_alignment = "center"
 blueprint_header_label_style.offset = {
 	0,
 	0,
 	5
 }
-blueprint_header_style.background_rect = {}
-local blueprint_header_background_rect_style = blueprint_header_style.background_rect
-blueprint_header_background_rect_style.size = {
-	main_column_width,
-	header_height
+blueprint_header_style.divider_right = {}
+local blueprint_header_divider_right_style = blueprint_header_style.divider_right
+blueprint_header_divider_right_style.size = {
+	achievement_width / 2 - 60,
+	24
 }
-blueprint_header_background_rect_style.offset = {
+blueprint_header_divider_right_style.horizontal_alignment = "right"
+blueprint_header_divider_right_style.vertical_alignment = "center"
+blueprint_header_divider_right_style.offset = {
+	-40,
 	0,
-	0,
-	3
-}
-blueprint_header_background_rect_style.horizontal_alignment = "center"
-blueprint_header_background_rect_style.color = Color.terminal_background(200, true)
-blueprint_header_style.background = {}
-local blueprint_header_background_style = blueprint_header_style.background
-blueprint_header_background_style.size = {
-	main_column_width,
-	header_height
-}
-blueprint_header_background_style.offset = {
-	0,
-	0,
-	4
-}
-blueprint_header_background_style.color = Color.terminal_grid_background(100, true)
-blueprint_header_background_style.horizontal_alignment = "center"
-blueprint_header_style.divider_top = {}
-local blueprint_header_divider_top_style = blueprint_header_style.divider_top
-blueprint_header_divider_top_style.size = {
-	main_column_width,
-	44
-}
-blueprint_header_divider_top_style.horizontal_alignment = "center"
-blueprint_header_divider_top_style.offset = {
-	0,
-	-22,
 	5
 }
-blueprint_header_style.divider_bottom = table.clone(blueprint_header_style.divider_top)
-local blueprint_header_divider_bottom_style = blueprint_header_style.divider_bottom
-blueprint_header_divider_bottom_style.size = {
-	main_column_width,
-	44
-}
-blueprint_header_divider_bottom_style.vertical_alignment = "bottom"
-blueprint_header_divider_bottom_style.offset = {
-	0,
-	22 - header_height_margin,
-	5
+blueprint_header_divider_right_style.color = Color.terminal_frame(255, true)
+blueprint_header_style.divider_left = table.clone(blueprint_header_divider_right_style)
+local blueprint_header_divider_left_style = blueprint_header_style.divider_left
+blueprint_header_divider_left_style.horizontal_alignment = "left"
+blueprint_header_divider_left_style.offset[1] = 40
+blueprint_header_divider_left_style.uvs = {
+	{
+		1,
+		0
+	},
+	{
+		0,
+		1
+	}
 }
 blueprint_styles.achievement_divider = {}
 local achievement_divider_style = blueprint_styles.achievement_divider
@@ -731,7 +743,8 @@ foldout_achievement_style.arrow = {}
 local foldout_achievement_arrow_style = foldout_achievement_style.arrow
 foldout_achievement_arrow_style.color = Color.terminal_frame(255, true)
 foldout_achievement_arrow_style.default_color = top_category_blueprint_arrow_style.color
-foldout_achievement_arrow_style.focused_color = Color.terminal_frame_hover(255, true)
+foldout_achievement_arrow_style.hover_color = Color.terminal_frame_hover(255, true)
+foldout_achievement_arrow_style.selected_color = Color.terminal_frame_selected(nil, true)
 foldout_achievement_arrow_style.angle = math.degrees_to_radians(-90)
 foldout_achievement_arrow_style.size = {
 	24,

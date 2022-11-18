@@ -2269,6 +2269,7 @@ ButtonPassTemplates.menu_panel_button = {
 		style = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "center",
+			scale_to_material = true,
 			size = {
 				nil,
 				26
@@ -2913,7 +2914,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			change_function = function (content, style)
 				local text_color = style.text_color
 				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local default_color = (hotspot.disabled or content.disabled) and style.disabled_color or style.default_color
 				local highlight_color = style.hover_color
 				local hover_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local ignore_alpha = true

@@ -261,9 +261,17 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 			local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
 			subtitle_format_context.speaker = speaker_display_name
 			subtitle_format_context.subtitle = currently_playing_subtitle_localized
-			currently_playing_subtitle_localized = self:_localize("loc_subtitle_speaker_format", no_cache, subtitle_format_context)
+			local string_exists = Managers.localization:exists(currently_playing_subtitle)
 
-			self:_display_text_line(currently_playing_subtitle_localized)
+			if not string_exists then
+				self:_display_text_line("", nil)
+
+				self._line_currently_playing = nil
+			else
+				currently_playing_subtitle_localized = self:_localize("loc_subtitle_speaker_format", no_cache, subtitle_format_context)
+
+				self:_display_text_line(currently_playing_subtitle_localized)
+			end
 		end
 	elseif self._line_currently_playing then
 		self:_display_text_line("", nil)

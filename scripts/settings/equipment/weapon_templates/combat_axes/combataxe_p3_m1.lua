@@ -73,10 +73,14 @@ weapon_template.actions = {
 		total_time = 0.3,
 		action_movement_curve = {
 			{
-				modifier = 1,
+				modifier = 1.2,
 				t = 0.3
 			},
-			start_modifier = 1.5
+			{
+				modifier = 1,
+				t = 0.4
+			},
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
 			combat_ability = {

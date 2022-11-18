@@ -21,7 +21,7 @@ end
 
 local function highlight_color_change_function(content, style)
 	local default_color = content.disabled and style.disabled_color or style.default_color
-	local hover_color = style.hover_color
+	local hover_color = content.disabled and style.disabled_color or style.hover_color
 	local color = style.color or style.text_color
 	local hotspot = content.hotspot
 	local is_highlighted = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
@@ -90,9 +90,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 			}
 		},
 		{
-			value = "content/ui/materials/buttons/background_selected_edge",
-			style_id = "slider_track_endplate_left",
 			pass_type = "texture",
+			style_id = "slider_track_endplate_left",
+			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
@@ -100,18 +100,21 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_brown_light(255, true),
+				disabled_color = Color.ui_grey_light(255, true),
+				default_color = Color.ui_brown_light(255, true),
+				hover_color = Color.ui_terminal(255, true),
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
 					2
 				}
-			}
+			},
+			change_function = highlight_color_change_function
 		},
 		{
-			value = "content/ui/materials/buttons/background_selected_edge",
-			style_id = "slider_track_endplate_right",
 			pass_type = "texture",
+			style_id = "slider_track_endplate_right",
+			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "right",
@@ -119,13 +122,16 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_brown_light(255, true),
+				disabled_color = Color.ui_grey_light(255, true),
+				default_color = Color.ui_brown_light(255, true),
+				hover_color = Color.ui_terminal(255, true),
 				offset = {
 					0,
 					0,
 					2
 				}
-			}
+			},
+			change_function = highlight_color_change_function
 		},
 		{
 			pass_type = "texture",

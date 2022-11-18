@@ -30,7 +30,28 @@ local IMPACT_FX_DATA = {
 
 MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_world_position_or_nil, attacking_unit_or_nil, hit_actor_or_nil, herding_template_or_nil, critical_strike_or_nil)
 	if not DEDICATED_SERVER then
-		-- Nothing
+		local attack_ragdolls_enabled_locally = Application.user_setting("gore_settings", "attack_ragdolls_enabled")
+
+		if attack_ragdolls_enabled_locally == nil then
+			attack_ragdolls_enabled_locally = DefaultGameParameters.attack_ragdolls_enabled
+		end
+
+		if not attack_ragdolls_enabled_locally then
+			return
+		end
+
+		local hit_zone_name = hit_zone_name_or_nil or "center_mass"
+
+		_push_ragdoll(ragdoll_unit, hit_zone_name, attack_direction, damage_profile, herding_template_or_nil)
+		_gib(ragdoll_unit, hit_zone_name, attack_direction, damage_profile, critical_strike_or_nil)
+
+		local damage = 1
+		local attack_result = attack_results.damaged
+		local hit_normal = nil
+		local attack_was_stopped = false
+		local damage_efficiency = damage_efficiencies.full
+
+		ImpactEffect.play(ragdoll_unit, hit_actor_or_nil, damage, damage_type, hit_zone_name, attack_result, hit_world_position_or_nil, hit_normal, attack_direction, attacking_unit_or_nil, IMPACT_FX_DATA, attack_was_stopped, nil, damage_efficiency, nil)
 	end
 end
 

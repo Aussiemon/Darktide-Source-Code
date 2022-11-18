@@ -326,7 +326,13 @@ BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit,
 	local cover_type = cover_component.type
 	local peek_identifier = scratchpad.current_peak_identifier
 	local clear_shot_offset_from_peeking = action_data.clear_shot_offset_from_peeking[cover_type]
-	local local_offset = clear_shot_offset_from_peeking[peek_identifier]:unbox()
+	local boxed_offset = clear_shot_offset_from_peeking[peek_identifier]
+
+	if not boxed_offset then
+		return false, nil
+	end
+
+	local local_offset = boxed_offset:unbox()
 	local clear_shot_line_of_sight_data = scratchpad.clear_shot_line_of_sight_data
 	local to_node_name = clear_shot_line_of_sight_data.to_node
 	local unit_world_pose = Unit.world_pose(unit, 1)

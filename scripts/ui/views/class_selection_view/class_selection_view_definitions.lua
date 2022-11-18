@@ -615,6 +615,7 @@ local domain_option_definition = UIWidget.create_definition({
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			scale_to_material = true,
 			hdr = true,
 			color = Color.ui_terminal(255, true),
 			size = ClassSelectionViewSettings.domain_option_icon_size,
@@ -737,7 +738,7 @@ local legend_inputs = {
 		alignment = "left_alignment",
 		on_pressed_callback = "_on_back_pressed",
 		visibility_function = function (parent)
-			return parent._force_character_creation and parent._classes_visible == true or not parent._force_character_creation
+			return not parent._force_character_creation
 		end
 	},
 	{
@@ -746,7 +747,7 @@ local legend_inputs = {
 		alignment = "left_alignment",
 		on_pressed_callback = "_on_quit_pressed",
 		visibility_function = function (parent)
-			return parent._force_character_creation and PLATFORM == "win32" and parent._classes_visible == false
+			return parent._force_character_creation and PLATFORM == "win32"
 		end
 	},
 	{

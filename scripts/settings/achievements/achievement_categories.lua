@@ -1,15 +1,19 @@
 local AchievementCategoriesInterface = {
 	"name",
 	"display_name",
-	"parent_name"
+	"parent_name",
+	"sort_index"
 }
 local AchievementCategories = {}
+local sort_index = 0
 
 local function _add_category(name, loc_key, optional_parent_name)
+	sort_index = sort_index + 1
 	AchievementCategories[name] = {
 		name = name,
 		display_name = loc_key,
-		parent_name = optional_parent_name
+		parent_name = optional_parent_name,
+		sort_index = sort_index
 	}
 end
 

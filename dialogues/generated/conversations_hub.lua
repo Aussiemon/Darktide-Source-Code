@@ -19,7 +19,7 @@ return function ()
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"barber_distance"
+				"barber_distance_disabled"
 			},
 			{
 				"query_context",

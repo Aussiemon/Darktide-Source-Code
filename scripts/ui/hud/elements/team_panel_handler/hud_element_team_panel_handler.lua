@@ -104,20 +104,20 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 
 		if not player_panel_by_unique_id[unique_id] then
 			temp_new_unique_ids[#temp_new_unique_ids + 1] = unique_id
-		elseif player_panel_by_unique_id[unique_id].player == player then
+		else
 			player_panel_by_unique_id[unique_id].synced = true
 		end
 	end
 
-	local num_players_to_add = #temp_new_unique_ids
-	local max_panels = self._max_panels
 	local panel_removed = false
 
 	for i = #player_panels_array, 1, -1 do
 		local data = player_panels_array[i]
 		local unique_id = data.unique_id
+		local player = data.player
+		local player_deleted = player.__deleted
 
-		if not data.synced then
+		if not data.synced or player_deleted then
 			self:_remove_panel(unique_id, ui_renderer)
 
 			panel_removed = true
@@ -130,6 +130,8 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 		self:_on_panels_removed()
 	end
 
+	local num_players_to_add = #temp_new_unique_ids
+	local max_panels = self._max_panels
 	local players_added = false
 
 	if num_players_to_add > 0 then
@@ -177,7 +179,7 @@ HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, 
 	local parent = self._parent
 	local is_my_player = self._my_player == player
 	local data = {
-		synced = true,
+		synced = false,
 		unique_id = unique_id,
 		player = player,
 		is_my_player = is_my_player,

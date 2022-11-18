@@ -332,18 +332,21 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local currency_type = data.currency
 		local amount = data.amount
 		local wallet_settings = WalletSettings[currency_type]
-		local icon_texture_large = wallet_settings.icon_texture_big
-		local selected_color = Color.terminal_corner_selected(255, true)
-		local text = string.format("{#color(%d,%d,%d)}%s %s{#reset()} added", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
-		notification_data = {
-			icon_size = "medium",
-			texts = {
-				{
-					display_name = text
-				}
-			},
-			icon = icon_texture_large
-		}
+
+		if wallet_settings then
+			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
+			local selected_color = Color.terminal_corner_selected(255, true)
+			local text = string.format("{#color(%d,%d,%d)}%s %s{#reset()} added", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			notification_data = {
+				icon_size = "medium",
+				texts = {
+					{
+						display_name = text
+					}
+				},
+				icon = icon_texture_large
+			}
+		end
 	elseif message_type == MESSAGE_TYPES.achievement then
 		notification_data = {
 			icon_size = "medium",
@@ -463,6 +466,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		}
 	end
 
+	if not notification_data then
+		return
+	end
+
 	notification_data.type = message_type
 	notification_data.enter_sound_event = notification_data.enter_sound_event or UISoundEvents.notification_default_enter
 	notification_data.exit_sound_event = notification_data.exit_sound_event or UISoundEvents.notification_default_exit
@@ -488,21 +495,24 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	end
 
 	local notification_data = self:_generate_notification_data(message_type, data)
-	local notification = self:_create_notification_entry(notification_data)
-	local notification_id = notification.id
 
-	if callback then
-		callback(notification_id)
-	end
+	if notification_data then
+		local notification = self:_create_notification_entry(notification_data)
+		local notification_id = notification.id
 
-	if notification.animation_enter then
-		local sound_event = sound_event or notification.enter_sound_event
-
-		if sound_event then
-			Managers.ui:play_2d_sound(sound_event)
+		if callback then
+			callback(notification_id)
 		end
 
-		self:_start_animation(notification.animation_enter, notification.widget)
+		if notification.animation_enter then
+			local sound_event = sound_event or notification.enter_sound_event
+
+			if sound_event then
+				Managers.ui:play_2d_sound(sound_event)
+			end
+
+			self:_start_animation(notification.animation_enter, notification.widget)
+		end
 	end
 end
 

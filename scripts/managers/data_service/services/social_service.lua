@@ -378,14 +378,14 @@ SocialService.fetch_blocked_accounts = function (self)
 
 	return blocked_accounts_promise:catch(function (error)
 		_warning(string.format("Failed fetching blocked accounts: %s", error))
+
+		return Promise.rejected(error)
 	end)
 end
 
 SocialService.fetch_blocked_players = function (self)
 	return self:fetch_blocked_accounts():next(function (data)
 		return self._blocked_players_list
-	end):catch(function (error)
-		_warning(string.format("Failed fetching blocked accounts: %s", error))
 	end)
 end
 

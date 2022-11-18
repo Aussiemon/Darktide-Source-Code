@@ -475,6 +475,10 @@ end
 MainMenuView._on_create_character_pressed = function (self)
 	self:_play_sound(UISoundEvents.character_create_enter)
 	Managers.event:trigger("event_create_new_character_start")
+
+	if Managers.ui:view_active("system_view") then
+		Managers.ui:close_view("system_view")
+	end
 end
 
 MainMenuView._on_delete_selected_character_pressed = function (self)
