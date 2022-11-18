@@ -77,36 +77,6 @@ local scenegraph_definition = {
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
-			style_id = "background",
-			pass_type = "rect",
-			style = {
-				color = {
-					255,
-					32,
-					32,
-					32
-				}
-			}
-		},
-		{
-			scenegraph_id = "background_icon",
-			pass_type = "slug_icon",
-			value = "content/ui/vector_textures/symbols/cog_skull_01",
-			offset = {
-				0,
-				0,
-				1
-			},
-			style = {
-				color = {
-					80,
-					0,
-					0,
-					0
-				}
-			}
-		},
-		{
 			value = "content/ui/materials/frames/screen/achievements_01_upper",
 			scenegraph_id = "corner_top_left",
 			pass_type = "texture"
@@ -171,10 +141,23 @@ local input_legend_params = {
 		}
 	}
 }
+local background_world_params = {
+	shading_environment = "content/shading_environments/ui/inventory",
+	world_layer = 1,
+	total_blur_duration = 0.5,
+	timer_name = "ui",
+	viewport_type = "default",
+	register_camera_event = "event_register_inventory_default_camera_human",
+	viewport_name = "ui_account_profile_view_world_viewport",
+	viewport_layer = 1,
+	level_name = "content/levels/ui/inventory/inventory",
+	world_name = "ui_account_profile_view_world"
+}
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	tab_bar_params = tab_bar_params,
-	input_legend_params = input_legend_params
+	input_legend_params = input_legend_params,
+	background_world_params = background_world_params
 }

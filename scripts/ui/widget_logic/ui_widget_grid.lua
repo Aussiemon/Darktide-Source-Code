@@ -669,6 +669,10 @@ UIWidgetGrid.index_by_widget = function (self, widget)
 	end
 end
 
+UIWidgetGrid.first_interactable_grid_index = function (self)
+	return self._first_interactable_widget_index
+end
+
 UIWidgetGrid.last_interactable_grid_index = function (self)
 	return self._last_interactable_widget_index
 end

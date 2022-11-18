@@ -85,13 +85,13 @@ overcharge_numeral_text_style.font_size_threshold = {
 	},
 	{
 		font_size = 50,
-		threshold = 0.33,
+		threshold = 0.5,
 		animation_size_fraction = 0.25,
 		color = Color.ui_hud_overcharge_medium(153, true)
 	},
 	{
 		font_size = 55,
-		threshold = 0.75,
+		threshold = 0.97,
 		animation_size_fraction = 0.25,
 		color = Color.ui_hud_overcharge_high(153, true)
 	}

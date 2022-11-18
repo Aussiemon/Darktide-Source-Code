@@ -270,8 +270,8 @@ local views = {
 		}
 	},
 	account_profile_view = {
-		state_bound = true,
 		display_name = "loc_account_profile_view_display_name",
+		state_bound = true,
 		use_transition_ui = true,
 		path = "scripts/ui/views/account_profile_view/account_profile_view",
 		package = "packages/ui/views/account_profile_view/account_profile_view",
@@ -280,6 +280,9 @@ local views = {
 		disable_game_world = false,
 		load_in_hub = true,
 		game_world_blur = 1.1,
+		levels = {
+			"content/levels/ui/inventory/inventory"
+		},
 		enter_sound_events = {
 			UISoundEvents.default_menu_enter
 		},
@@ -679,8 +682,8 @@ local views = {
 	},
 	social_menu_view = {
 		display_name = "loc_social_menu_view_display_name",
-		state_bound = true,
 		use_transition_ui = true,
+		state_bound = true,
 		path = "scripts/ui/views/social_menu_view/social_menu_view",
 		package = "packages/ui/views/social_menu_view/social_menu_view",
 		load_always = true,
@@ -688,6 +691,9 @@ local views = {
 		disable_game_world = false,
 		load_in_hub = true,
 		game_world_blur = 1.1,
+		levels = {
+			"content/levels/ui/inventory/inventory"
+		},
 		enter_sound_events = {
 			UISoundEvents.default_menu_enter
 		},

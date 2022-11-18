@@ -7,12 +7,18 @@ local highlight_size_addition = 10
 local function list_item_focused_visibility_function(content, style)
 	local hotspot = content.hotspot or content.parent.hotspot
 
-	return hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
+	return (hotspot.is_hover or hotspot.is_selected) and not content.disabled or hotspot.is_focused
+end
+
+local function list_item_highight_focused_visibility_function(content, style)
+	local hotspot = content.hotspot or content.parent.hotspot
+
+	return (hotspot.is_hover or hotspot.is_selected or hotspot.is_focused) and not content.disabled
 end
 
 local function highlight_color_change_function(content, style)
 	local default_color = content.disabled and style.disabled_color or style.default_color
-	local hover_color = style.hover_color
+	local hover_color = content.disabled and style.disabled_color or style.hover_color
 	local color = style.color or style.text_color
 	local progress = content.highlight_progress
 
@@ -32,7 +38,8 @@ local ListHeaderPassTemplates = {
 	},
 	highlight_size_addition = highlight_size_addition,
 	list_highlight_color_change_function = highlight_color_change_function,
-	list_item_focused_visibility_function = list_item_focused_visibility_function
+	list_item_focused_visibility_function = list_item_focused_visibility_function,
+	list_item_highight_focused_visibility_function = list_item_highight_focused_visibility_function
 }
 
 ListHeaderPassTemplates.list_header = function (header_width, height, use_is_focused)
@@ -41,6 +48,7 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 		header_width,
 		height
 	}
+	header_font_style.disabled_color = Color.ui_chalk_grey(255, true)
 	local passes = {
 		{
 			style_id = "hotspot",

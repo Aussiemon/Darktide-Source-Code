@@ -31,6 +31,9 @@ local Breeds = require("scripts/settings/breed/breeds")
 local CharacterAppearanceView = class("CharacterAppearanceView", "BaseView")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
+local CharacterCreate = require("scripts/utilities/character_create")
+local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
 local eye_types = {
 	{
 		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r1_l1",
@@ -114,9 +117,13 @@ end
 
 CharacterAppearanceView.init = function (self, settings, context)
 	self._character_create = context.character_create
-	self._profile_versions = table.clone(self._character_create:profile_value_versions())
 	self._context = context
 	self._parent = context and context.parent
+
+	if self._parent and self._parent.set_active_view_instance then
+		self._parent:set_active_view_instance(self)
+	end
+
 	self._force_character_creation = context.force_character_creation
 
 	CharacterAppearanceView.super.init(self, Definitions, settings)
@@ -133,47 +140,94 @@ CharacterAppearanceView.init = function (self, settings, context)
 end
 
 CharacterAppearanceView.on_enter = function (self)
-	CharacterAppearanceView.super.on_enter(self)
+	local character_create_promise = Promise:new()
 
-	self._current_progress = 0
-	self._page_grids = {}
-	self._camera_zoomed = false
-	self._gear_visible = false
-	self._page_indicator_widgets = {}
-	self._is_character_showing = false
-	self._active_page_number = 1
-	self._block_continue = {}
-	self._pages = self:_get_pages()
-	self._character_name_status = {
-		custom = false
-	}
+	character_create_promise:next(function ()
+		local input_manager = Managers.input
+		local name = self.__class_name
 
-	for i = 1, #self._pages do
-		self._block_continue[i] = {
-			false
+		if not self._no_cursor then
+			input_manager:push_cursor(name)
+
+			self._cursor_pushed = true
+		end
+
+		self._update_scenegraph = true
+		self._entered = true
+		local enter_sound_events = self._settings.enter_sound_events
+
+		if enter_sound_events then
+			for i = 1, #enter_sound_events do
+				local sound_event = enter_sound_events[i]
+
+				self:_play_sound(sound_event)
+			end
+		end
+
+		Managers.telemetry_events:open_view(self.view_name)
+
+		self._profile_versions = table.clone(self._character_create:profile_value_versions())
+		self._current_progress = 0
+		self._page_grids = {}
+		self._camera_zoomed = false
+		self._gear_visible = false
+		self._page_indicator_widgets = {}
+		self._is_character_showing = false
+		self._active_page_number = 1
+		self._active_page_name = ""
+		self._block_continue = {}
+		self._pages = self:_get_pages()
+		self._character_name_status = {
+			custom = false
 		}
+
+		for i = 1, #self._pages do
+			self._block_continue[i] = {
+				false
+			}
+		end
+
+		self._navigation = {
+			index = 0,
+			grid = 0
+		}
+		self._backstory_selection_page = nil
+		self._backstory_selection = nil
+
+		self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
+
+		local is_syncing = self._parent and self._parent._character_is_syncing or false
+
+		self:_event_profile_sync_changed(is_syncing)
+		self:_create_offscreen_renderer()
+		self:_setup_input_legend()
+		self:_setup_button_callbacks()
+		self:_setup_profile_background()
+		self:_create_page_indicators()
+		self._character_create:reset_backstory()
+		self:_randomize_character_backstory()
+		self:_open_page(1)
+	end)
+
+	if not self._character_create then
+		local item_definitions = MasterItems.get_cached()
+		local player = Managers.player:local_player(1)
+		local profile = player:profile()
+
+		Managers.data_service.profiles:fetch_all_profiles():next(function (data)
+			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
+
+			character_create_promise:resolve()
+		end):catch(function (error)
+			self._character_create = CharacterCreate:new(item_definitions, {}, profile)
+
+			character_create_promise:resolve()
+		end)
+
+		return
 	end
 
-	self._navigation = {
-		index = 0,
-		grid = 0
-	}
-	self._backstory_selection_page = nil
-	self._backstory_selection = nil
-
-	self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
-
-	local is_syncing = self._parent and self._parent._character_is_syncing or false
-
-	self:_event_profile_sync_changed(is_syncing)
-	self:_create_offscreen_renderer()
-	self:_setup_input_legend()
-	self:_setup_button_callbacks()
-	self:_setup_profile_background()
-	self:_create_page_indicators()
-	self._character_create:reset_backstory()
-	self:_randomize_character_backstory()
-	self:_open_page(1)
+	character_create_promise:resolve()
 end
 
 CharacterAppearanceView._create_offscreen_renderer = function (self)
@@ -434,8 +488,9 @@ CharacterAppearanceView._update_appearance_selection = function (self)
 
 					for k = 1, #page_grid.widgets do
 						local widget = page_grid.widgets[k]
+						local element_selected = selected_value and type(selected_value) == "table" and selected_value.name and type(widget.content.entry.value) == "table" and widget.content.entry.value.name and selected_value.name == widget.content.entry.value.name or selected_value and selected_value == widget.content.entry.value
 
-						if selected_value and selected_value == widget.content.entry.value then
+						if element_selected then
 							widget.content.element_selected = true
 						else
 							widget.content.element_selected = false
@@ -610,6 +665,7 @@ CharacterAppearanceView._open_page = function (self, index)
 	end
 
 	self._active_page_number = index
+	self._active_page_name = self._pages[self._active_page_number].name
 	local page = self._pages[index]
 
 	self:_hide_pages_widgets()
@@ -1004,7 +1060,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 			widget.content.slot_name = entry.slot_name
 			widget.content.entry = option
 			widget.index = visible_index
-			local element_selected = focused_value and focused_value == option.value
+			local element_selected = focused_value and type(focused_value) == "table" and focused_value.name and type(option.value) == "table" and option.value.name and focused_value.name == option.value.name or focused_value and focused_value == option.value
 			widget.content.element_selected = element_selected
 			widget.content.visible = false
 			local icon_texture = option.icon_texture
@@ -1321,6 +1377,10 @@ CharacterAppearanceView._set_camera = function (self, camera_focus, gear_visible
 end
 
 CharacterAppearanceView.draw = function (self, dt, t, input_service, layer)
+	if self.closing_view or not self._entered then
+		return
+	end
+
 	self:_draw_grid(dt, t, input_service)
 	CharacterAppearanceView.super.draw(self, dt, t, input_service, layer)
 end
@@ -1464,7 +1524,7 @@ CharacterAppearanceView._show_loading_awaiting_validation = function (self, is_a
 end
 
 CharacterAppearanceView.update = function (self, dt, t, input_service)
-	if self.closing_view then
+	if self.closing_view or not self._entered then
 		return
 	end
 
@@ -1587,9 +1647,11 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 				for i = 1, #entries do
 					local entry = entries[i]
 
-					if self._active_page_number == 5 and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
-						self._page_grids[1].widgets[i].content.show_warning = entry
-					elseif self._active_page_number == 6 and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
+					if self._active_page_name == "appearance" and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
+						if not self._is_barber then
+							self._page_grids[1].widgets[i].content.show_warning = entry
+						end
+					elseif self._active_page_name == "personality" and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
 						self._page_grids[1].widgets[i].content.show_warning = entry
 					end
 
@@ -1661,7 +1723,7 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 		WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 	end
 
-	if self._active_page_number == 1 then
+	if self._active_page_name == "home_planet" then
 		self:_play_sound(UISoundEvents.character_create_planet_select)
 	else
 		self:_play_sound(UISoundEvents.character_appearence_option_pressed)
@@ -1927,16 +1989,21 @@ CharacterAppearanceView._on_close_pressed = function (self)
 	if self._backstory_selection_page then
 		self._backstory_selection_page.leave(true)
 		self:_open_page(self._active_page_number)
-	elseif self._using_cursor_navigation == false and self._navigation.grid > 1 and self._active_page_number == 5 then
+	elseif self._using_cursor_navigation == false and #self._page_grids > 1 and #self._page_grids[2].widgets > 0 and self._active_page_name == "appearance" then
+		local current_navigation_position = 1
+
 		for i = 1, #self._page_grids[1].widgets do
 			local widget = self._page_grids[1].widgets[i]
 
 			if widget.content.element_selected == true then
-				self:_update_current_navigation_position(1, i)
+				current_navigation_position = i
 
 				break
 			end
 		end
+
+		self:_open_page(self._active_page_number)
+		self:_update_current_navigation_position(1, current_navigation_position)
 	elseif self._active_page_number > 1 then
 		local previous_index = self._active_page_number - 1
 
@@ -2200,7 +2267,6 @@ CharacterAppearanceView._populate_backstory_info = function (self, settings)
 	local pos = self._ui_scenegraph.backstory_selection_pivot.position
 	local list_pos = self._ui_scenegraph.list_pivot.position
 	local size = self._ui_scenegraph.backstory_selection_pivot_background.size
-	self._ui_scenegraph.choice_detail.vertical_alignment = self._ui_scenegraph.backstory_selection_pivot.vertical_alignment
 
 	self:_set_scenegraph_position("choice_detail", pos[1], pos[2] + list_pos[2] + background_size[2] + choice_margin)
 end
@@ -2664,12 +2730,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					on_pressed_function = function (widget)
 						on_pressed_function("set_item_per_slot", option, entry_slot_name)
 
-						local page_five = self._pages[5]
+						local page = self._pages[self._active_page_number]
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
-						end
-
+						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
 					end
 				}
@@ -2704,12 +2767,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						self:_update_appearance_selection()
 
-						local page_five = self._pages[5]
+						local page = self._pages[self._active_page_number]
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
-						end
-
+						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
 					end
 				}
@@ -2728,12 +2788,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					on_pressed_function = function (widget)
 						on_pressed_function("set_item_per_slot", option, entry_slot_name)
 
-						local page_five = self._pages[5]
+						local page = self._pages[self._active_page_number]
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
-						end
-
+						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
 					end
 				}
@@ -2759,12 +2816,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					on_pressed_function = function ()
 						on_pressed_function("set_item_per_slot", option, entry_slot_name)
 
-						local page_five = self._pages[5]
+						local page = self._pages[self._active_page_number]
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
-						end
-
+						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
 					end
 				}
@@ -2786,26 +2840,40 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				local option = entry_options[j]
 				options[#options + 1] = {
 					on_pressed_function = function (widget)
-						on_pressed_function("set_gender", option)
+						if option ~= self._character_create:gender() then
+							on_pressed_function("set_gender", option)
 
-						local page = self._pages[self._active_page_number]
-						page.content = self:_get_appearance_content()
+							local page = self._pages[self._active_page_number]
+							local current_navigation_position = 1
 
-						self:_populate_page_grid(1, page.content)
+							for i = 1, #self._page_grids[1].widgets do
+								local widget = self._page_grids[1].widgets[i]
 
-						local page_five = self._pages[5]
+								if widget.content.element_selected == true then
+									current_navigation_position = i
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
+									break
+								end
+							end
+
+							page.content = self:_get_appearance_content()
+
+							self:_populate_page_grid(1, page.content)
+							self:_check_appearance_continue_block(page.content)
+							self._character_create:reset_height()
+
+							local height = self._character_create:height()
+
+							self:_set_character_height(height)
+
+							self._height_changed = true
+
+							self:_update_current_navigation_position(1, current_navigation_position)
+
+							self._page_grids[1].widgets[current_navigation_position].content.element_selected = true
+						else
+							self:_randomize_character_appearance()
 						end
-
-						self._character_create:reset_height()
-
-						local height = self._character_create:height()
-
-						self:_set_character_height(height)
-
-						self._height_changed = true
 					end,
 					display_name = gender_display_name[option],
 					value = option,
@@ -2839,11 +2907,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					on_pressed_function = function (widget)
 						on_pressed_function("set_item_per_slot", option, entry_slot_name)
 
-						local page_five = self._pages[5]
+						local page = self._pages[self._active_page_number]
 
-						if page_five then
-							self:_check_appearance_continue_block(page_five.content)
-						end
+						self:_check_appearance_continue_block(page.content)
 					end
 				}
 			end
@@ -3512,24 +3578,18 @@ CharacterAppearanceView._get_personality_content = function (self)
 					on_personality_changed(option)
 					self:_populate_backstory_info(personality_settings)
 
-					local page_six = self._pages[6]
+					local page = self._pages[self._active_page_number]
 
-					if page_six then
-						page_six.content = self:_get_personality_content()
-
-						self:_check_personality_continue_block(page_six.content)
-					end
+					self:_check_personality_continue_block(page.content)
 				end,
 				on_pressed_function = function (widget)
 					on_personality_changed(option)
 					on_personality_voice_trigger(personality_settings, widget)
 					self:_populate_backstory_info(personality_settings)
 
-					local page_six = self._pages[6]
+					local page = self._pages[self._active_page_number]
 
-					if page_six then
-						self:_check_personality_continue_block(page_six.content)
-					end
+					self:_check_personality_continue_block(page.content)
 				end,
 				on_voice_pressed_function = function (element, widget)
 					return
@@ -3541,7 +3601,7 @@ CharacterAppearanceView._get_personality_content = function (self)
 	return {
 		page_template = "backstory_selection",
 		template = "personality_button",
-		options = self:_check_valid_personality_options(personality_options),
+		options = personality_options,
 		get_value_function = callback(self._character_create, "personality"),
 		settings = Personalities
 	}
@@ -3607,6 +3667,7 @@ end
 CharacterAppearanceView._get_pages = function (self)
 	return {
 		{
+			name = "home_planet",
 			show_character = false,
 			enter = function (page)
 				self:_populate_page_grid(1, page.content)
@@ -3683,6 +3744,7 @@ CharacterAppearanceView._get_pages = function (self)
 			content = self:_get_planet_content()
 		},
 		{
+			name = "childhood",
 			show_character = false,
 			enter = function (page)
 				self:_populate_page_grid(1, page.content)
@@ -3736,6 +3798,7 @@ CharacterAppearanceView._get_pages = function (self)
 			content = self:_get_childhood_content()
 		},
 		{
+			name = "growing_up",
 			show_character = false,
 			enter = function (page)
 				self:_populate_page_grid(1, page.content)
@@ -3789,6 +3852,7 @@ CharacterAppearanceView._get_pages = function (self)
 			content = self:_get_growing_up_content()
 		},
 		{
+			name = "formative_event",
 			show_character = false,
 			enter = function (page)
 				self:_populate_page_grid(1, page.content)
@@ -3842,6 +3906,7 @@ CharacterAppearanceView._get_pages = function (self)
 			content = self:_get_formative_event_content()
 		},
 		{
+			name = "appearance",
 			show_character = true,
 			enter = function (page)
 				page.content = self:_get_appearance_content()
@@ -3885,11 +3950,13 @@ CharacterAppearanceView._get_pages = function (self)
 			end
 		},
 		{
+			name = "personality",
 			show_rewards_text = false,
 			gear_visible = false,
 			show_character = true,
 			enter = function (page)
 				page.content = self:_get_personality_content()
+				page.content.options = self:_check_valid_personality_options(page.content.options)
 
 				self:_check_personality_continue_block(page.content)
 				self:_populate_page_grid(1, page.content)
@@ -3938,6 +4005,7 @@ CharacterAppearanceView._get_pages = function (self)
 			description = Localize("loc_character_creator_personality_introduction")
 		},
 		{
+			name = "crime",
 			gear_visible = true,
 			show_character = true,
 			enter = function (page)
@@ -3997,6 +4065,7 @@ CharacterAppearanceView._get_pages = function (self)
 		},
 		{
 			gear_visible = true,
+			name = "final",
 			show_character = true,
 			enter = function (page)
 				self:_show_final_page(page)
@@ -4022,6 +4091,8 @@ end
 
 CharacterAppearanceView._check_appearance_continue_block = function (self, page_content)
 	local options = page_content.options
+	local profile_changes = false
+	local is_blocked = false
 
 	if type(options) == "table" then
 		for i = 1, #options do
@@ -4050,8 +4121,18 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 
 							if should_present_option and should_present_option.should_present_option == false then
 								block_continue = true
+								is_blocked = true
+							elseif self._is_barber then
+								local slot = selected_option.value.slots and selected_option.value.slots[1]
 
-								break
+								if slot then
+									local player = Managers.player:local_player(1)
+									local profile = player:profile()
+
+									if profile.loadout[slot].name ~= selected_option.value.name then
+										profile_changes = true
+									end
+								end
 							end
 						end
 					end
@@ -4059,6 +4140,12 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 			end
 
 			self._block_continue[self._active_page_number][i] = block_continue
+		end
+	end
+
+	if not is_blocked and not profile_changes and self._is_barber then
+		for i = 1, #self._block_continue[self._active_page_number] do
+			self._block_continue[self._active_page_number][i] = true
 		end
 	end
 end
@@ -4101,6 +4188,11 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 		for f = 1, #options do
 			local option = options[f]
 			local should_present_option = self:_should_present_option(option)
+
+			if self._is_barber and should_present_option.should_present_option == false and should_present_option.reason then
+				should_present_option.reason = nil
+			end
+
 			option.should_present_option = should_present_option
 
 			if should_present_option.should_present_option == false and focused_value == option.value and requires_reselection == false then
@@ -4164,6 +4256,11 @@ CharacterAppearanceView._check_valid_personality_options = function (self, optio
 			value = Personalities[option.value]
 		}
 		local should_present_option = self:_should_present_option(personality_options)
+
+		if self._is_barber and should_present_option.should_present_option == false and should_present_option.reason then
+			should_present_option.reason = nil
+		end
+
 		option.should_present_option = should_present_option
 
 		if should_present_option.should_present_option == false and selected_value == option.value and requires_reselection == false then
@@ -4291,7 +4388,7 @@ CharacterAppearanceView._handle_input = function (self, input_service)
 		if not self._widgets_by_name.continue_button.content.hotspot.disabled then
 			self:_on_continue_pressed()
 		end
-	elseif self._using_cursor_navigation and input_service:get("confirm_pressed") and self._active_page_number == 8 and self._page_widgets and self._page_widgets[1].content.is_writing and not self._widgets_by_name.continue_button.content.hotspot.disabled then
+	elseif self._using_cursor_navigation and input_service:get("confirm_pressed") and self._active_page_name == "final" and self._page_widgets and self._page_widgets[1].content.is_writing and not self._widgets_by_name.continue_button.content.hotspot.disabled then
 		self:_on_continue_pressed()
 	end
 end

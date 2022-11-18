@@ -1338,7 +1338,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_change_name",
 		alignment = "left_alignment",
 		visibility_function = function (parent)
-			return IS_XBS and parent._active_page_number == 8 and not parent._loading_overlay_visible
+			return IS_XBS and parent._active_page_name == "final" and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1353,7 +1353,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_randomize_character_appearance",
 		visibility_function = function (parent)
-			return parent._is_character_showing and parent._active_page_number == 5 and not parent._loading_overlay_visible
+			return parent._is_character_showing and parent._active_page_name == "appearance" and not parent._is_barber and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1370,7 +1370,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._loading_overlay_visible
+			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_name ~= "final" and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1379,7 +1379,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_number < 8 and not parent._disable_zoom and not parent._loading_overlay_visible
+			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_name ~= "final" and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	}
 }

@@ -225,26 +225,48 @@ TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
 	end
 
 	local layer = input_legend_params.layer or 10
-	local input_legend = self:_add_element(ViewElementInputLegend, "input_legend", layer)
+
+	self:_add_element(ViewElementInputLegend, "input_legend", layer)
+
 	local buttons_params = input_legend_params.buttons_params
 
 	for i = 1, #buttons_params do
 		local legend_input = buttons_params[i]
-		local press_callback = nil
-		local on_pressed_callback = legend_input.on_pressed_callback
 
-		if on_pressed_callback then
-			local callback_parent = self[on_pressed_callback] and self or nil
+		self:add_input_legend_entry(legend_input)
+	end
+end
 
-			if not callback_parent and self._active_view then
-				local view_instance = self._active_view and Managers.ui:view_instance(self._active_view)
-				callback_parent = view_instance
-			end
+TabbedMenuViewBase.add_input_legend_entry = function (self, entry_params)
+	local input_legend = self:_element("input_legend")
+	local press_callback = nil
+	local on_pressed_callback = entry_params.on_pressed_callback
 
-			press_callback = callback_parent and callback(callback_parent, on_pressed_callback)
+	if on_pressed_callback then
+		local callback_parent = self[on_pressed_callback] and self or nil
+
+		if not callback_parent and self._active_view then
+			local view_instance = self._active_view and Managers.ui:view_instance(self._active_view)
+			callback_parent = view_instance
 		end
 
-		input_legend:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, press_callback, legend_input.alignment)
+		press_callback = callback_parent and callback(callback_parent, on_pressed_callback)
+	end
+
+	return input_legend:add_entry(entry_params.display_name, entry_params.input_action, entry_params.visibility_function, press_callback, entry_params.alignment)
+end
+
+TabbedMenuViewBase.remove_input_legend_entry = function (self, id)
+	local input_legend = self:_element("input_legend")
+
+	return input_legend and input_legend:remove_entry(id)
+end
+
+TabbedMenuViewBase.input_legend_entry_set_display_name = function (self, entry_id, display_name, suffix)
+	local input_legend = self:_element("input_legend")
+
+	if input_legend then
+		input_legend:set_display_name(entry_id, display_name, suffix)
 	end
 end
 

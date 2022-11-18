@@ -102,7 +102,7 @@ local function _common_text_change_function(content, style)
 	local hotspot = content.hotspot
 	local select_progress = hotspot.anim_select_progress
 	local hover_progress = math_max(hotspot.anim_hover_progress - select_progress, 0)
-	local color = style.text_color
+	local color = style.text_color or style.color
 	local default_color = style.default_color
 	local hover_color = style.hover_color
 	local focused_color = style.selected_color
@@ -346,17 +346,7 @@ local _achievement_foldout_pass_template = {
 		pass_type = "rotated_texture",
 		value_id = "arrow",
 		value = "content/ui/materials/buttons/arrow_01",
-		change_function = function (content, style)
-			local color_lerp = _color_lerp
-			local math_max = _math_max
-			local hotspot = content.hotspot
-			local hover_progress = math_max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
-			local color = style.color
-			local default_color = style.default_color
-			local focused_color = style.focused_color
-
-			color_lerp(default_color, focused_color, hover_progress, color)
-		end
+		change_function = _common_frame_hover_change_function
 	}
 }
 
@@ -364,11 +354,12 @@ local function _achievement_foldout_pass_template_init(widget, widget_content, w
 	widget_content.size[2] = folded_height
 	widget_content.folded_height = folded_height
 	widget_content.unfolded_height = unfolded_height
+	widget_content.unfolded = false
 
-	widget_content.hotspot.pressed_callback = function ()
+	local function fold_callback()
 		local parent = parent
 		local content = widget_content
-		local unfolded = not content.unfolded or false
+		local unfolded = not content.unfolded
 		content.unfolded = unfolded
 		content.size[2] = unfolded and widget_content.unfolded_height or widget_content.folded_height
 		local arrow_style = widget_style.arrow
@@ -378,6 +369,16 @@ local function _achievement_foldout_pass_template_init(widget, widget_content, w
 		parent:select_grid_widget(widget)
 		parent:force_update_list_size()
 	end
+
+	widget_content.hotspot.pressed_callback = function ()
+		local content = widget_content
+
+		if not content.is_gamepad_active then
+			fold_callback()
+		end
+	end
+
+	widget_content.fold_callback = fold_callback
 end
 
 local _small_reward_icon_template = {
@@ -1032,7 +1033,7 @@ local _in_progress_overlay_pass_template = {
 local function _category_frame_hover_change_function(content, style)
 	local hotspot = content.hotspot
 	local select_progress = hotspot.anim_select_progress
-	local hover_progress = hotspot.anim_hover_progress
+	local hover_progress = _math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 	local color = style.color
 	local default_color = style.default_color
 	local hover_color = style.hover_color
@@ -1134,6 +1135,21 @@ local _category_common_pass_templates = {
 		style_id = "divider"
 	},
 	{
+		style_id = "bullet",
+		pass_type = "texture",
+		value_id = "bullet",
+		value = "content/ui/materials/icons/system/page_indicator_02_idle",
+		change_function = _common_text_change_function
+	},
+	{
+		style_id = "bullet_active",
+		pass_type = "texture",
+		value_id = "bullet_active",
+		value = "content/ui/materials/icons/system/page_indicator_02_active",
+		change_function = _category_frame_hover_change_function,
+		visibility_function = _common_hover_visibility_function
+	},
+	{
 		style_id = "text",
 		pass_type = "text",
 		value_id = "text",
@@ -1146,16 +1162,17 @@ local function _category_common_pass_templates_init(parent, widget, config, call
 	local category = config.category
 	local content = widget.content
 	local label = category and category.label or config.label
-	content.text = "· " .. Localize(label)
+	content.text = Localize(label)
 	content.category = category
 
 	if category then
 		category.widget = widget
+		category.has_sub_categories = config.has_sub_categories
 	end
 
 	local hotspot = content.hotspot
-	hotspot.pressed_callback = callback(parent, callback_name, widget, config)
-	hotspot.selected_callback = callback(config.selected_callback, widget, category and category.id)
+	hotspot.pressed_callback = callback(parent, callback_name, widget, config, category and category.id)
+	hotspot.selected_callback = callback(config.selected_callback, widget, config, category and category.id)
 end
 
 achievements_view_blueprints.list_padding = {
@@ -1182,12 +1199,21 @@ achievements_view_blueprints.simple_category_button = {
 	style = blueprint_styles.simple_category_button,
 	init = _category_common_pass_templates_init
 }
+local _category_foldout_pass_template = {
+	{
+		style_id = "arrow",
+		pass_type = "rotated_texture",
+		value_id = "arrow",
+		value = "content/ui/materials/buttons/arrow_01",
+		change_function = _category_frame_hover_change_function
+	}
+}
 achievements_view_blueprints.top_category_button = {
 	size = blueprint_styles.top_category_button.size,
 	pass_template_function = function (parent, config)
 		local pass_templates = table.clone(_category_common_pass_templates)
 
-		table.append(pass_templates, _achievement_foldout_pass_template)
+		table.append(pass_templates, _category_foldout_pass_template)
 
 		return pass_templates
 	end,
@@ -1210,34 +1236,36 @@ achievements_view_blueprints.header = {
 	size = blueprint_styles.header.size,
 	pass_template = {
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-			style_id = "divider_top",
-			pass_type = "texture"
-		},
-		{
 			style_id = "label",
 			value_id = "label",
 			pass_type = "text"
 		},
 		{
-			value = "content/ui/materials/backgrounds/headline_terminal",
-			style_id = "background",
-			pass_type = "texture"
+			value = "content/ui/materials/dividers/skull_left_01",
+			value_id = "divider_left",
+			pass_type = "texture_uv",
+			style_id = "divider_left"
 		},
 		{
-			pass_type = "rect",
-			style_id = "background_rect"
-		},
-		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-			style_id = "divider_bottom",
-			pass_type = "texture"
+			value = "content/ui/materials/dividers/skull_left_01",
+			value_id = "divider_right",
+			pass_type = "texture",
+			style_id = "divider_right"
 		}
 	},
 	style = blueprint_styles.header,
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
+		local label = TextUtilities.localize_to_upper(config.display_name)
 		local content = widget.content
-		content.label = TextUtilities.localize_to_upper(config.display_name)
+		content.label = label
+		local style = widget.style
+		local label_style = style.label
+		local label_width = _text_size(ui_renderer, label, label_style)
+		local divider_left_style = style.divider_left
+		local divider_width = divider_left_style.size[1] - math.floor(label_width / 2)
+		divider_left_style.size[1] = divider_width
+		local divider_right_style = style.divider_right
+		divider_right_style.size[1] = divider_width
 	end
 }
 achievements_view_blueprints.achievement_divider = {

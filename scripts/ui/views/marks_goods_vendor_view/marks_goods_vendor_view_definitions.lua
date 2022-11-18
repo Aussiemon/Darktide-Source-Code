@@ -37,7 +37,7 @@ local scenegraph_definition = {
 		size = grid_size,
 		position = {
 			-edge_padding * 0.5,
-			120,
+			40,
 			1
 		}
 	},

@@ -663,14 +663,16 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 		style_id = "focused",
 		pass_type = "rect",
 		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			color = Color.ui_terminal(255, true),
 			size_addition = {
-				2,
-				2
+				4,
+				4
 			},
 			offset = {
-				-1,
-				-1,
+				0,
+				0,
 				-1
 			}
 		},
@@ -684,7 +686,7 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 		style_id = "background",
 		pass_type = "rect",
 		style = {
-			color = Color.terminal_grid_background(80, true)
+			color = Color.terminal_grid_background(255, true)
 		}
 	},
 	{

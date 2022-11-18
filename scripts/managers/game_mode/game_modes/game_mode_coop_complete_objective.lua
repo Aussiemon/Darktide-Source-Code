@@ -323,11 +323,23 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 		weapon_slot_data[slot_name] = data
 	end
 
+	local ability_extension = ScriptUnit.extension(unit, "ability_system")
+	local equipped_abilities = ability_extension:equipped_abilities()
+	local grenade_ability = equipped_abilities.grenade_ability
+	local grenades_percent = nil
+
+	if not grenade_ability.exclude_from_persistant_player_data then
+		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
+		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
+		grenades_percent = num_grenades / max_grenades
+	end
+
 	local data = {
 		damage_percent = damage_percent,
 		permanent_damage_percent = permanent_damage_percent,
 		character_state_name = character_state_name,
-		weapon_slot_data = weapon_slot_data
+		weapon_slot_data = weapon_slot_data,
+		grenades_percent = grenades_percent
 	}
 
 	if player:is_human_controlled() then
@@ -387,6 +399,19 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 
 				if max_ammo_clip > 0 and data.ammo_clip_percent then
 					wieldable_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
+				end
+			end
+
+			if selected_data.grenades_percent then
+				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
+				local equipped_abilities = ability_extension:equipped_abilities()
+				local grenade_ability = equipped_abilities.grenade_ability
+
+				if not grenade_ability.exclude_from_persistant_player_data then
+					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
+					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
+
+					ability_extension:set_ability_charges("grenade_ability", num_grenades)
 				end
 			end
 		else

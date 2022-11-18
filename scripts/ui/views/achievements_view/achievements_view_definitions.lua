@@ -23,6 +23,10 @@ local categories_mask_size = {
 	categories_grid_size[1] + 2 * categories_grid_margin,
 	categories_grid_size[2]
 }
+local background_icon_size = {
+	categories_grid_size[1],
+	categories_grid_size[1]
+}
 local main_column_size = ViewStyles.main_column_size
 local achievements_grid_size = achievements_grid_style.size
 local achievements_grid_margin = achievements_grid_style.margin
@@ -37,7 +41,7 @@ local search_field_pos = {
 }
 local categories_header_pos = {
 	0,
-	-10,
+	0,
 	0
 }
 local total_progress_pos = {
@@ -98,6 +102,17 @@ local scenegraph_definition = {
 		size = categories_grid_size,
 		position = categories_grid_pos
 	},
+	background_icon = {
+		vertical_alignment = "center",
+		parent = "categories_grid",
+		horizontal_alignment = "center",
+		size = background_icon_size,
+		position = {
+			0,
+			0,
+			1
+		}
+	},
 	main_column = {
 		vertical_alignment = "top",
 		parent = "visible_area",
@@ -125,19 +140,45 @@ local widget_definitions = {
 	categories_header = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/frames/achievements_top",
-			style_id = "background",
+			value_id = "background",
 			pass_type = "texture",
-			value_id = "background"
+			style_id = "background"
+		},
+		{
+			value_id = "total_score",
+			style_id = "total_score",
+			pass_type = "text",
+			scenegraph_id = "total_progress",
+			value = ""
 		}
 	}, "categories_header", nil, nil, ViewStyles.completed),
-	completed = UIWidget.create_definition({
+	category_background_icon = UIWidget.create_definition({
+		{
+			value = "content/ui/vector_textures/symbols/cog_skull_01",
+			pass_type = "slug_icon",
+			offset = {
+				0,
+				0,
+				1
+			},
+			style = {
+				color = {
+					80,
+					0,
+					0,
+					0
+				}
+			}
+		}
+	}, "background_icon"),
+	gamepad_unfold_hint = UIWidget.create_definition({
 		{
 			value = "",
-			value_id = "total_score",
+			value_id = "text",
 			pass_type = "text",
-			style_id = "total_score"
+			style_id = "text"
 		}
-	}, "total_progress", nil, nil, ViewStyles.completed)
+	}, "main_column", nil, nil, ViewStyles.gamepad_unfold_hint)
 }
 local categories_grid_settings = {
 	scrollbar_vertical_margin = 20,
@@ -157,7 +198,7 @@ local achievements_grid_settings = {
 	title_formatting = "upper_case",
 	use_is_focused_for_navigation = true,
 	use_terminal_background = true,
-	title_height = 70,
+	title_height = 0,
 	grid_spacing = {
 		8,
 		8
@@ -168,6 +209,30 @@ local achievements_grid_settings = {
 	scrollbar_pass_templates = ScrollbarPassTemplates.metal_scrollbar,
 	edge_padding = achievements_grid_margin * 2
 }
+local legend_inputs = {
+	{
+		input_action = "hotkey_menu_special_1",
+		display_name = "loc_achievements_view_button_hint_fold_achievement",
+		visibility_function = function (parent)
+			local active_view = parent._active_view_instance
+
+			if active_view then
+				return active_view:_cb_unfold_legend_button_visibility(true)
+			end
+		end
+	},
+	{
+		input_action = "hotkey_menu_special_1",
+		display_name = "loc_achievements_view_button_hint_unfold_achievement",
+		visibility_function = function (parent)
+			local active_view = parent._active_view_instance
+
+			if active_view then
+				return active_view:_cb_unfold_legend_button_visibility(false)
+			end
+		end
+	}
+}
 
 return settings("AchievementsViewDefinitions", {
 	widget_definitions = widget_definitions,
@@ -176,5 +241,6 @@ return settings("AchievementsViewDefinitions", {
 	grid_settings = {
 		categories_grid_settings,
 		achievements_grid_settings
-	}
+	},
+	legend_inputs = legend_inputs
 })

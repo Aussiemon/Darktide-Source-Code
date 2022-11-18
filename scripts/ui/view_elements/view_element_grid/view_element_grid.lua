@@ -691,6 +691,14 @@ ViewElementGrid.widget_by_index = function (self, widget)
 	end
 end
 
+ViewElementGrid.first_interactable_grid_index = function (self)
+	local grid = self._grid
+
+	if grid then
+		return grid:first_interactable_grid_index()
+	end
+end
+
 ViewElementGrid.last_interactable_grid_index = function (self)
 	local grid = self._grid
 
@@ -728,21 +736,21 @@ ViewElementGrid.force_update_list_size = function (self)
 	end
 end
 
-ViewElementGrid.get_scrollbar_percentage_by_index = function (self, index)
-	return self._grid:get_scrollbar_percentage_by_index(index)
+ViewElementGrid.get_scrollbar_percentage_by_index = function (self, index, start_from_bottom)
+	return self._grid:get_scrollbar_percentage_by_index(index, start_from_bottom)
 end
 
-ViewElementGrid.scroll_to_grid_index = function (self, index, instant_scroll)
+ViewElementGrid.scroll_to_grid_index = function (self, index, instant_scroll, start_from_bottom)
 	local grid = self._grid
-	local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
+	local scroll_progress = grid:get_scrollbar_percentage_by_index(index, start_from_bottom)
 
 	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
 end
 
-ViewElementGrid.scroll_to_grid_widget = function (self, widget, instant_scroll)
+ViewElementGrid.scroll_to_grid_widget = function (self, widget, instant_scroll, start_from_bottom)
 	local grid = self._grid
 	local index = grid:index_by_widget(widget)
-	local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
+	local scroll_progress = grid:get_scrollbar_percentage_by_index(index, start_from_bottom)
 
 	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
 end

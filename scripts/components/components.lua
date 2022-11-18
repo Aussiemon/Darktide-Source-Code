@@ -1,10 +1,9 @@
 Components = Components or {}
-local destroyed_mt = {}
-
-destroyed_mt.__index = function (t, k)
-	ferror("Tried accessing %s on destroyed component of type %s", tostring(k), t.__component_name)
-end
-
+local destroyed_mt = {
+	__index = function (t, k)
+		ferror("Tried accessing %s on destroyed component of type %s", tostring(k), rawget(t, "__component_name") or "<unknown>")
+	end
+}
 local special_functions = {
 	__index = true,
 	name = true,
@@ -369,6 +368,9 @@ function component(component_name, super_name, ...)
 
 		component_table.delete = function (self, ...)
 			self:destroy(...)
+
+			self.__component_name = component_name
+
 			setmetatable(self, destroyed_mt)
 		end
 

@@ -31,14 +31,14 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 
 	if last_action_warp_charge_percent then
 		local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
-		local critical_warp_charge_threshold = specialization_warp_charge_template.critical_threshold
-		local dif = 1 - critical_warp_charge_threshold
+		local extreme_warp_charge_threshold = specialization_warp_charge_template.extreme_threshold
+		local dif = 1 - extreme_warp_charge_threshold
 		local stat_buffs = self._buff_extension:stat_buffs()
 		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1
 		local new_dif = dif * warp_charge_reduction
-		critical_warp_charge_threshold = 1 - new_dif
+		extreme_warp_charge_threshold = 1 - new_dif
 
-		if last_action_warp_charge_percent < critical_warp_charge_threshold then
+		if last_action_warp_charge_percent < extreme_warp_charge_threshold then
 			self._prevent_explosion = true
 		end
 	end

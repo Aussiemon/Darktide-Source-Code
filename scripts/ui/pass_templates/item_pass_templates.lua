@@ -2125,7 +2125,7 @@ ItemPassTemplates.general_goods_item = {
 		style_id = "price_text",
 		pass_type = "text",
 		value = "n/a",
-		style = {},
+		style = item_price_style,
 		visibility_function = function (content, style)
 			return content.has_price_tag
 		end

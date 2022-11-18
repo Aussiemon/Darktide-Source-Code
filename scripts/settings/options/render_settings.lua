@@ -283,11 +283,12 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "dlss_g",
+		require_apply = true,
 		display_name = "loc_setting_dlss_g",
 		indentation_level = 1,
-		require_apply = true,
 		default_value = 0,
+		apply_on_startup = true,
+		id = "dlss_g",
 		save_location = "master_render_settings",
 		validation_function = function ()
 			return Application.render_caps("dlss_g_supported")
@@ -448,6 +449,7 @@ local RENDER_TEMPLATES = {
 		default_value = 0,
 		require_apply = true,
 		display_name = "loc_setting_fsr2",
+		apply_on_startup = true,
 		id = "fsr2",
 		tooltip_text = "loc_setting_fsr2_mouseover",
 		save_location = "master_render_settings",
@@ -534,10 +536,11 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		default_value = 0,
-		display_name = "loc_setting_fsr",
 		id = "fsr",
+		display_name = "loc_setting_fsr",
 		require_apply = true,
+		default_value = 0,
+		apply_on_startup = true,
 		tooltip_text = "loc_setting_fsr_mouseover",
 		save_location = "master_render_settings",
 		options = {
@@ -1765,6 +1768,16 @@ local RENDER_TEMPLATES = {
 		value_type = "boolean",
 		display_name = "loc_minion_wounds_enabled",
 		tooltip_text = "loc_minion_wounds_enabled_mouseover",
+		require_apply = false,
+		require_restart = false,
+		default_value = true,
+		save_location = "gore_settings"
+	},
+	{
+		id = "attack_ragdolls_enabled",
+		value_type = "boolean",
+		display_name = "loc_attack_ragdolls_enabled",
+		tooltip_text = "loc_attack_ragdolls_enabled_mouseover",
 		require_apply = false,
 		require_restart = false,
 		default_value = true,

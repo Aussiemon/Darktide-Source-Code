@@ -496,6 +496,14 @@ PlayerUnitAbilityExtension.restore_ability_charge = function (self, ability_type
 	ability_component.num_charges = math.clamp(ability_component.num_charges + num_charges_restored, 0, max_charges)
 end
 
+PlayerUnitAbilityExtension.set_ability_charges = function (self, ability_type, num_charges)
+	local ability_component = self._ability_components[ability_type]
+	local equipped_abilities = self._equipped_abilities
+	local ability = equipped_abilities[ability_type]
+	local max_charges = self:_ability_max_charges(ability)
+	ability_component.num_charges = math.clamp(num_charges, 0, max_charges)
+end
+
 PlayerUnitAbilityExtension.reduce_ability_cooldown_percentage = function (self, ability_type, reduce_percetage)
 	local max_cooldown = self:max_ability_cooldown(ability_type)
 	local reduce_time = reduce_percetage * max_cooldown

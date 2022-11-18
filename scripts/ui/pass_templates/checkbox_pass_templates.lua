@@ -4,6 +4,8 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition
+local highlight_color_change_function = ListHeaderPassTemplates.list_highlight_color_change_function
+local list_item_highight_focused_visibility_function = ListHeaderPassTemplates.list_item_highight_focused_visibility_function
 
 local function list_item_highlight_change_function(content, style)
 	local hotspot = content.hotspot
@@ -21,8 +23,6 @@ local function list_item_highlight_change_function(content, style)
 	style.hdr = progress == 1
 end
 
-local list_item_focused_visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function
-local highlight_color_change_function = ListHeaderPassTemplates.list_highlight_color_change_function
 local CheckboxPassTemplates = {
 	settings_checkbox = function (width, height, settings_area_width, num_options, use_is_focused)
 		local header_width = width - settings_area_width
@@ -49,7 +49,7 @@ local CheckboxPassTemplates = {
 				}
 			},
 			change_function = list_item_highlight_change_function,
-			visibility_function = list_item_focused_visibility_function
+			visibility_function = list_item_highight_focused_visibility_function
 		}
 		local option_width = settings_area_width / num_options
 		local option_size = {
