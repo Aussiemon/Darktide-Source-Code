@@ -221,12 +221,20 @@ PartyImmateriumHubSessionBoot.update = function (self, dt)
 		local lobby_state = self._engine_lobby:state()
 
 		if lobby_state == "failed" then
-			_info("Failed to join server %s", self._server_name)
-			self:_failed("failed_to_join_server")
+			_info("Failed to join lobby")
+			self:_failed("failed_joining_lobby")
 		elseif lobby_state == "joined" then
-			_info("Joined server %s", self._server_name)
-			self:_create_connection()
-			self:_set_state(STATES.ready)
+			local host_peer_id = self._engine_lobby:lobby_host()
+
+			if host_peer_id then
+				_info("Joined lobby %s", host_peer_id)
+				self:_create_connection()
+				self:_set_state(STATES.ready)
+			else
+				Crashify.print_exception("PartyImmateriumHubSessionBoot", "Failed to join lobby due to missing host_peer_id")
+				_info("Failed to join lobby due to missing host_peer_id")
+				self:_failed("failed_joining_lobby_no_host_peer")
+			end
 		end
 	end
 

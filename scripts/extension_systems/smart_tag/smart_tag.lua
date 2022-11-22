@@ -9,13 +9,21 @@ SmartTag.init = function (self, tag_id, template, tagger_unit, target_unit, targ
 	self._template = template
 	self._tagger_unit = tagger_unit
 	self._target_unit = target_unit
+	self._target_unit_outline = template.target_unit_outline
+	self._replies = replies or {}
+	self._tagger_player = Managers.state.player_unit_spawn:owner(tagger_unit)
+
+	if target_unit then
+		local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+
+		if unit_data_extension then
+			self._breed = unit_data_extension:breed()
+		end
+	end
 
 	if target_location then
 		self._target_location = Vector3Box(target_location)
 	end
-
-	self._tagger_player = Managers.state.player_unit_spawn:owner(tagger_unit)
-	self._replies = replies or {}
 end
 
 SmartTag.destroy = function (self)
@@ -160,8 +168,16 @@ SmartTag.validate_target_unit = function (target_unit)
 	return true
 end
 
+SmartTag.breed = function (self)
+	return self._breed
+end
+
 SmartTag.target_unit_outline = function (self)
-	return self._template.target_unit_outline
+	return self._target_unit_outline
+end
+
+SmartTag.set_target_unit_outline = function (self, wanted_target_unit_outline)
+	self._target_unit_outline = wanted_target_unit_outline
 end
 
 return SmartTag

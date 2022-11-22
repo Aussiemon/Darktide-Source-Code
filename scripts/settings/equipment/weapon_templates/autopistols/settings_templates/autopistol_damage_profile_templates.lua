@@ -32,12 +32,12 @@ damage_templates.default_autopistol_assault = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
 				[armor_types.armored] = damage_lerp_values.lerp_0_6,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
 			},
 			impact = {
@@ -56,12 +56,12 @@ damage_templates.default_autopistol_assault = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_6,
 				[armor_types.armored] = damage_lerp_values.lerp_0_4,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_3
 			},
 			impact = {
@@ -83,8 +83,8 @@ damage_templates.default_autopistol_assault = {
 	},
 	power_distribution = {
 		attack = {
-			30,
-			70
+			40,
+			80
 		},
 		impact = {
 			1,
@@ -196,8 +196,8 @@ damage_templates.default_autopistol_snp = {
 	},
 	power_distribution = {
 		attack = {
-			30,
-			70
+			40,
+			80
 		},
 		impact = {
 			1,

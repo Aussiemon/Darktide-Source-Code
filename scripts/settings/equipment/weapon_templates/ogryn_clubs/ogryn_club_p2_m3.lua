@@ -1412,11 +1412,6 @@ weapon_template.base_stats = {
 			base = {
 				stamina_trait_templates.thunderhammer_p1_m1_defence_stat
 			}
-		},
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat
-			}
 		}
 	},
 	ogryn_club_p2_m3_mobility_stat = {

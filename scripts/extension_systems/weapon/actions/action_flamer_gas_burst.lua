@@ -1,5 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -20,6 +21,7 @@ ActionFlamerGasBurst.init = function (self, action_context, action_params, actio
 
 	self._targets = {}
 	self._dot_targets = {}
+	self._killing_blow = false
 	self._action_module_position_finder_component = action_context.unit_data_extension:write_component("action_module_position_finder")
 	self._action_flamer_gas_component = action_context.unit_data_extension:write_component("action_flamer_gas")
 end
@@ -43,6 +45,9 @@ ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
 	ActionFlamerGasBurst.super.start(self, action_settings, t, ...)
 	table.clear(self._targets)
 	table.clear(self._dot_targets)
+
+	self._killing_blow = false
+
 	self:_setup_flame_data(action_settings)
 end
 
@@ -100,6 +105,14 @@ ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, c
 		for hit_unit, _ in pairs(units) do
 			Suppression.apply_suppression(hit_unit, player_unit, damage_profile, POSITION_LOOKUP[player_unit])
 		end
+
+		local killing_blow = self._killing_blow
+		local has_targets = killing_blow or not table.is_empty(self._targets) or not table.is_empty(self._dot_targets)
+		local shot_result = self._shot_result
+		shot_result.data_valid = true
+		shot_result.hit_minion = has_targets
+		shot_result.hit_weakspot = false
+		shot_result.killing_blow = killing_blow
 	end
 
 	local action_component = self._action_component
@@ -113,6 +126,8 @@ ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, c
 
 		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
 	end
+
+	self._killing_blow = false
 end
 
 local INDEX_POSITION = 1
@@ -249,8 +264,9 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
 	local charge_level = 1
 	local weapon_item = self._weapon.item
-
-	RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+	local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+	local killing_blow = attack_result == AttackSettings.attack_results.died
+	self._killing_blow = self._killing_blow or killing_blow
 end
 
 ActionFlamerGasBurst._burn_target = function (self, t, target_unit)

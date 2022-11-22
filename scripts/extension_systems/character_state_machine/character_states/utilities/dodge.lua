@@ -114,7 +114,7 @@ local Dodge = {
 		local dodge_linger_time = dodge_linger_time_base * dodge_linger_time_modifier
 		local dodge_linger_end_time = dodge_time + dodge_linger_time
 
-		if t < dodge_linger_end_time then
+		if is_melee and t < dodge_linger_end_time then
 			return true, dodge_types.linger
 		end
 

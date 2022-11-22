@@ -1,5 +1,6 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local template = {}
 local size = {
 	100,
@@ -13,6 +14,7 @@ local icon_size = {
 	64,
 	64
 }
+template.default_visual_type = "default"
 template.using_smart_tag_system = true
 template.size = size
 template.name = "unit_threat"
@@ -42,6 +44,88 @@ template.get_smart_tag_id = function (marker)
 	local data = marker.data
 
 	return data.tag_id
+end
+
+local template_visual_definitions = {
+	default = {
+		colors = {
+			arrow = Color.ui_hud_red_light(255, true),
+			icon = Color.ui_hud_red_light(255, true),
+			text = Color.ui_hud_red_light(255, true),
+			entry_icon_1 = Color.ui_hud_red_light(255, true),
+			entry_icon_2 = Color.ui_hud_red_light(255, true)
+		},
+		textures = {
+			arrow = "content/ui/materials/hud/interactions/frames/direction",
+			icon = "content/ui/materials/hud/interactions/icons/enemy"
+		}
+	},
+	passive = {
+		colors = {
+			arrow = {
+				255,
+				236,
+				165,
+				50
+			},
+			icon = {
+				255,
+				236,
+				165,
+				50
+			},
+			text = {
+				255,
+				236,
+				165,
+				50
+			},
+			entry_icon_1 = {
+				255,
+				236,
+				165,
+				50
+			},
+			entry_icon_2 = {
+				255,
+				236,
+				165,
+				50
+			}
+		},
+		textures = {
+			arrow = "content/ui/materials/hud/interactions/frames/direction",
+			icon = "content/ui/materials/hud/interactions/icons/attention"
+		}
+	}
+}
+
+local function setup_marker_by_visual_type(widget, marker, visual_type)
+	local content = widget.content
+	local style = widget.style
+	local visual_definition = template_visual_definitions[visual_type]
+	local default_color = visual_definition.colors
+	local default_textures = visual_definition.textures
+	local template_settings_overrides = visual_definition.template_settings_overrides
+
+	if template_settings_overrides then
+		local new_template = table.clone(marker.template)
+		marker.template = table.merge_recursive(new_template, template_settings_overrides)
+	end
+
+	for style_id, pass_style in pairs(style) do
+		local color = default_color[style_id]
+
+		if color then
+			ColorUtilities.color_copy(color, pass_style.color or pass_style.text_color)
+		end
+	end
+
+	for content_id, value in pairs(default_textures) do
+		content[content_id] = value ~= StrictNil and value or nil
+	end
+
+	marker.template.default_position_offset = marker.template.position_offset
 end
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -200,6 +284,23 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 	if data then
 		data.distance = distance
+	end
+
+	local tag_instance = data.tag_instance
+	local wanted_visual_type = data.visual_type or template.default_visual_type
+
+	if tag_instance then
+		local target_unit_outline = tag_instance:target_unit_outline()
+
+		if target_unit_outline ~= wanted_visual_type and target_unit_outline == "smart_tagged_enemy_passive" then
+			wanted_visual_type = "passive"
+		end
+	end
+
+	if wanted_visual_type ~= data.visual_type then
+		setup_marker_by_visual_type(widget, marker, wanted_visual_type)
+
+		data.visual_type = wanted_visual_type
 	end
 
 	local spawn_progress_timer = content.spawn_progress_timer

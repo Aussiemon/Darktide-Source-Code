@@ -177,14 +177,14 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 
 		if not is_aggroed then
 			condition_result = false
-		elseif is_running then
-			condition_result = true
 		else
 			local behavior_component = blackboard.behavior
 			local consumed_unit = behavior_component.consumed_unit
 
 			if not HEALTH_ALIVE[consumed_unit] then
 				condition_result = false
+			elseif is_running then
+				condition_result = true
 			elseif behavior_component.force_spit_out then
 				condition_result = true
 			else
@@ -482,7 +482,40 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	local condition_result = nil
 
 	repeat
-		if is_running then
+		local sub_condition_result_01, condition_result = nil
+
+		repeat
+			local sub_condition_result_01, condition_result = nil
+
+			repeat
+				local perception_component = blackboard.perception
+
+				if not is_running and perception_component.lock_target then
+					condition_result = false
+				else
+					local target_unit = perception_component.target_unit
+					condition_result = HEALTH_ALIVE[target_unit]
+				end
+			until true
+
+			sub_condition_result_01 = condition_result
+			local has_target_unit = sub_condition_result_01
+
+			if not has_target_unit then
+				condition_result = false
+			else
+				local perception_component = blackboard.perception
+				local is_aggroed = perception_component.aggro_state == "aggroed"
+				condition_result = is_aggroed
+			end
+		until true
+
+		sub_condition_result_01 = condition_result
+		local is_aggroed = sub_condition_result_01
+
+		if not is_aggroed then
+			condition_result = false
+		elseif is_running then
 			condition_result = true
 		else
 			local perception_component = blackboard.perception
@@ -491,53 +524,18 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 			if not target_is_close then
 				condition_result = false
 			else
-				local sub_condition_result_01, condition_result = nil
+				local behavior_component = blackboard.behavior
+				local cooldown = behavior_component.consume_cooldown
+				local t = Managers.time:time("gameplay")
 
-				repeat
-					local sub_condition_result_01, condition_result = nil
-
-					repeat
-						local perception_component = blackboard.perception
-
-						if not is_running and perception_component.lock_target then
-							condition_result = false
-						else
-							local target_unit = perception_component.target_unit
-							condition_result = HEALTH_ALIVE[target_unit]
-						end
-					until true
-
-					sub_condition_result_01 = condition_result
-					local has_target_unit = sub_condition_result_01
-
-					if not has_target_unit then
-						condition_result = false
-					else
-						local perception_component = blackboard.perception
-						local is_aggroed = perception_component.aggro_state == "aggroed"
-						condition_result = is_aggroed
-					end
-				until true
-
-				sub_condition_result_01 = condition_result
-				local is_aggroed = sub_condition_result_01
-
-				if not is_aggroed then
+				if t < cooldown then
 					condition_result = false
 				else
-					local behavior_component = blackboard.behavior
-					local cooldown = behavior_component.consume_cooldown
-					local t = Managers.time:time("gameplay")
-
-					if t < cooldown then
-						condition_result = false
-					else
-						local target_unit = perception_component.target_unit
-						local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-						local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
-						local current_stacks = buff_extension:current_stacks(vomit_buff_name)
-						condition_result = current_stacks ~= 0
-					end
+					local target_unit = perception_component.target_unit
+					local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+					local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+					local current_stacks = buff_extension:current_stacks(vomit_buff_name)
+					condition_result = current_stacks ~= 0
 				end
 			end
 		end

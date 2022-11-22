@@ -20,6 +20,30 @@ local templates = {
 				"minion_outline",
 				"minion_outline_reversed_depth"
 			},
+			color = {
+				1,
+				0.005,
+				0
+			},
+			visibility_check = function (unit)
+				if not HEALTH_ALIVE[unit] then
+					return false
+				end
+
+				return true
+			end
+		},
+		smart_tagged_enemy_passive = {
+			priority = 1,
+			color = {
+				0.8,
+				0.75,
+				0
+			},
+			material_layers = {
+				"minion_outline",
+				"minion_outline_reversed_depth"
+			},
 			visibility_check = function (unit)
 				if not HEALTH_ALIVE[unit] then
 					return false

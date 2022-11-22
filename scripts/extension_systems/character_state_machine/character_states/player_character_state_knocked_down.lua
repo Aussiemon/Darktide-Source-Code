@@ -233,30 +233,8 @@ PlayerCharacterStateKnockedDown._stop_movement = function (self, t)
 end
 
 PlayerCharacterStateKnockedDown._enter_third_person_mode = function (self, t)
-	local unit = self._unit
-	local first_person_component = self._first_person_component
 	local first_person_mode_component = self._first_person_mode_component
-	local force_look_rotation_component = self._force_look_rotation_component
-	local forcing_look_rotation = force_look_rotation_component.use_force_look_rotation
 
-	if forcing_look_rotation then
-		ForceLookRotation.stop(force_look_rotation_component)
-	end
-
-	local extra_timing = 0
-	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-	local player = player_unit_spawn_manager:owner(unit)
-
-	if player and player.remote then
-		extra_timing = player:lag_compensation_rewind_s()
-	end
-
-	local yaw = 0
-	local pitch = -math.pi * 0.2
-	local duration = 2
-	local starting_rotation = first_person_component.rotation
-
-	ForceLookRotation.start(force_look_rotation_component, starting_rotation, pitch, yaw, t + extra_timing, duration)
 	FirstPersonView.exit(t, first_person_mode_component)
 end
 

@@ -1,7 +1,7 @@
 local combat_ranges = {
 	name = "renegade_assault",
 	calculate_target_velocity_dot = true,
-	target_velocity_dot_reset = 1.5,
+	target_velocity_dot_reset = 1,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -31,17 +31,23 @@ local combat_ranges = {
 		close = {
 			{
 				switch_combat_range = "melee",
-				locked_in_melee_distance = 6,
-				distance = 2,
+				locked_in_melee_distance = 7.5,
+				distance = 3,
 				switch_weapon_slot = "slot_melee_weapon",
 				distance_operator = "lesser",
 				max_z_distance = 1.5,
 				sticky_time = 1,
-				target_velocity_dot_duration_inverted = 2,
 				activate_slot_system = true,
 				target_weapon_type_distance = {
 					ranged = 1,
-					melee = 4
+					melee = 5.5
+				},
+				target_velocity_dot_duration_inverted = {
+					6,
+					5,
+					4,
+					4,
+					3
 				}
 			},
 			{
@@ -60,17 +66,23 @@ local combat_ranges = {
 				switch_combat_range = "far"
 			},
 			{
-				locked_in_melee_distance = 8,
+				locked_in_melee_distance = 12,
 				distance = 7,
 				switch_weapon_slot = "slot_ranged_weapon",
-				target_velocity_dot_duration = 2,
 				distance_operator = "greater",
 				switch_combat_range = "close",
 				sticky_time = 3,
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					ranged = 1.25,
-					melee = 8
+					melee = 10
+				},
+				target_velocity_dot_duration = {
+					6,
+					5,
+					4,
+					4,
+					3
 				}
 			}
 		}

@@ -901,19 +901,15 @@ local template = {
 		},
 		km_station_kill_target_wave_1 = {
 			{
-				"debug_print",
-				text = "event_kill_target_wave",
-				duration = 3
-			},
-			{
-				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+				"delay",
+				duration = 5
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_platform_reinforcements_middle",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_platform_reinforcements_left",
 				limit_spawners = 3,
-				points = 20,
+				points = 16,
 				breed_tags = {
 					{
 						"melee",
@@ -936,7 +932,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_platform_reinforcements_left",
 				limit_spawners = 3,
-				points = 15,
+				points = 7,
 				breed_tags = {
 					{
 						"melee",
@@ -945,14 +941,34 @@ local template = {
 				}
 			},
 			{
-				"continue_when",
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
-				end
+				"delay",
+				duration = 5
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_platform_reinforcements_left",
+				limit_spawners = 3,
+				points = 7,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
 				duration = 5
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 5
+				end
+			},
+			{
+				"delay",
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
@@ -960,6 +976,10 @@ local template = {
 			}
 		},
 		km_station_kill_target_wave_2 = {
+			{
+				"delay",
+				duration = 5
+			},
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
@@ -973,7 +993,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_platform_reinforcements_left",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_platform_reinforcements_right",
 				limit_spawners = 3,
 				points = 6,
 				breed_tags = {
@@ -987,7 +1008,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_platform_reinforcements_right",
 				limit_spawners = 3,
-				points = 16,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
@@ -1008,7 +1029,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_platform_reinforcements_left",
+				spawner_group = "spawner_platform_reinforcements_right",
 				limit_spawners = 3,
 				points = 16,
 				breed_tags = {
@@ -1019,14 +1040,18 @@ local template = {
 				}
 			},
 			{
+				"delay",
+				duration = 5
+			},
+			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
 				"delay",
-				duration = 5
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
@@ -1035,8 +1060,13 @@ local template = {
 		},
 		km_station_kill_target_wave_3 = {
 			{
+				"delay",
+				duration = 5
+			},
+			{
 				"spawn_by_points",
-				spawner_group = "spawner_platform_reinforcements_right",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_platform_reinforcements_middle",
 				limit_spawners = 3,
 				points = 8,
 				breed_tags = {
@@ -1048,9 +1078,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_platform_reinforcements_right",
+				spawner_group = "spawner_platform_reinforcements_middle",
 				limit_spawners = 3,
-				points = 14,
+				points = 12,
 				breed_tags = {
 					{
 						"close",
@@ -1097,14 +1127,18 @@ local template = {
 				}
 			},
 			{
+				"delay",
+				duration = 5
+			},
+			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
 				"delay",
-				duration = 5
+				duration = 8
 			},
 			{
 				"start_random_terror_event",

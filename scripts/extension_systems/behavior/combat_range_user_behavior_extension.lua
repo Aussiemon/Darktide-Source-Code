@@ -239,10 +239,18 @@ function _get_combat_range_switch_distance(config, target_unit)
 end
 
 function _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, target_velocity_dot_duration)
-	local return_on_target_velocity_dot_inverted = target_velocity_dot_duration and config.target_velocity_dot_duration_inverted and config.target_velocity_dot_duration_inverted < target_velocity_dot_duration
+	local return_on_target_velocity_dot_inverted = target_velocity_dot_duration and config.target_velocity_dot_duration_inverted
 
 	if return_on_target_velocity_dot_inverted then
-		return false
+		if type(config.target_velocity_dot_duration_inverted) == "table" then
+			local diff_switch_on_target_velocity_dot = Managers.state.difficulty:get_table_entry_by_challenge(config.target_velocity_dot_duration_inverted)
+
+			if diff_switch_on_target_velocity_dot < target_velocity_dot_duration then
+				return false
+			end
+		elseif config.target_velocity_dot_duration_inverted < target_velocity_dot_duration then
+			return false
+		end
 	end
 
 	local z_distance = math.abs(POSITION_LOOKUP[target_unit].z - POSITION_LOOKUP[unit].z)
@@ -272,10 +280,16 @@ function _should_switch_combat_range(unit, blackboard, target_distance, config, 
 		return true
 	end
 
-	local switch_on_target_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration and config.target_velocity_dot_duration <= target_velocity_dot_duration
+	local switch_on_target_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration
 
 	if switch_on_target_velocity_dot then
-		return true
+		if type(config.target_velocity_dot_duration) == "table" then
+			local diff_switch_on_target_velocity_dot = Managers.state.difficulty:get_table_entry_by_challenge(config.target_velocity_dot_duration)
+
+			return diff_switch_on_target_velocity_dot <= target_velocity_dot_duration
+		else
+			return config.target_velocity_dot_duration <= target_velocity_dot_duration
+		end
 	end
 end
 

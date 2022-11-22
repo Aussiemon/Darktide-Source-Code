@@ -21,7 +21,8 @@ local archetype_talents = {
 			display_name = "loc_talent_zealot_2_combat",
 			large_icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_combat",
 			format_values = {
-				damage = talent_settings.combat_ability.melee_damage * 100
+				damage = talent_settings.combat_ability.melee_damage * 100,
+				toughness = talent_settings.combat_ability.toughness * 100
 			},
 			player_ability = {
 				ability_type = "combat_ability",
@@ -110,7 +111,7 @@ local archetype_talents = {
 		},
 		zealot_2_tier_1_name_2 = {
 			description = "loc_talent_maniac_toughness_melee_effectiveness_desc",
-			name = "Critical strikes reduce toughness damage taken by 33% for 3 seconds",
+			name = "Critical strikes reduce toughness damage taken by 50% for 3 seconds",
 			display_name = "loc_talent_maniac_toughness_melee_effectiveness",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_3",
 			format_values = {
@@ -129,7 +130,8 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_1",
 			format_values = {
 				toughness = talent_settings.toughness_3.toughness * 200,
-				range = talent_settings.toughness_3.range
+				range = talent_settings.toughness_3.range,
+				num_enemies = talent_settings.toughness_3.num_enemies
 			},
 			passive = {
 				buff_template_name = "zealot_maniac_toughness_regen_in_melee",
@@ -197,7 +199,7 @@ local archetype_talents = {
 		},
 		zealot_2_tier_3_name_2 = {
 			description = "loc_talent_maniac_aura_efficiency_desc",
-			name = "Increase the efficiency of your aura to 20%",
+			name = "Increase the efficiency of your aura to 15%",
 			display_name = "loc_talent_maniac_aura_efficiency",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_2",
 			format_values = {
@@ -210,7 +212,7 @@ local archetype_talents = {
 		},
 		zealot_2_tier_3_name_3 = {
 			description = "loc_talent_maniac_ability_grants_toughness_to_allies_desc",
-			name = "When you use your Combat Ability, allies in coherency gain 15% toughness",
+			name = "When you use your Combat Ability, allies in coherency gain 20% toughness",
 			display_name = "loc_talent_maniac_ability_grants_toughness_to_allies",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_3",
 			format_values = {
@@ -240,7 +242,7 @@ local archetype_talents = {
 			display_name = "loc_talent_maniac_movement_speed_on_damaged",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_3_3",
 			format_values = {
-				movement_speed = (talent_settings.defensive_2.movement_speed - 1) * 100,
+				movement_speed = math_round((talent_settings.defensive_2.movement_speed - 1) * 100),
 				time = talent_settings.defensive_2.active_duration
 			},
 			passive = {

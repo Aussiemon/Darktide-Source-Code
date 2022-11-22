@@ -139,8 +139,11 @@ CameraSettings.player_third_person = {
 					}
 				},
 				_node = {
+					should_apply_fov_multiplier = true,
 					name = "third_person",
 					class = "TransformCamera",
+					custom_vertical_fov = 65,
+					vertical_fov = 65,
 					offset_position = {
 						z = 0,
 						x = 0,
@@ -149,8 +152,9 @@ CameraSettings.player_third_person = {
 				}
 			},
 			_node = {
-				class = "AimCamera",
-				name = "third_person_aim"
+				offset_pitch = -25,
+				name = "third_person_aim",
+				class = "AimCamera"
 			}
 		},
 		_node = {
@@ -455,8 +459,7 @@ CameraSettings.player_third_person_hub = {
 		root_object_name = "j_camera_attach",
 		tree_transitions = {
 			world = CameraTransitionTemplates.instant_cut,
-			first_person = CameraTransitionTemplates.to_first_person,
-			dead = CameraTransitionTemplates.dead
+			first_person = CameraTransitionTemplates.to_first_person
 		},
 		node_transitions = {
 			default = CameraTransitionTemplates.to_third_person
@@ -617,12 +620,67 @@ CameraSettings.player_first_person = {
 			third_person = CameraTransitionTemplates.to_third_person,
 			pounced = CameraTransitionTemplates.to_third_person,
 			consumed = CameraTransitionTemplates.to_consumed,
-			dead = CameraTransitionTemplates.dead,
-			ledge_hanging_no_flip = CameraTransitionTemplates.to_third_person_hanging
+			dead = CameraTransitionTemplates.dead
 		},
 		node_transitions = {
 			default = CameraTransitionTemplates.zoom
 		}
+	}
+}
+CameraSettings.player_dead = {
+	{
+		{
+			{
+				{
+					_node = {
+						name = "dead",
+						class = "TransformCamera",
+						offset_position = {
+							z = 0,
+							x = 0,
+							y = 0
+						}
+					}
+				},
+				_node = {
+					name = "back_translation",
+					class = "TransformCamera",
+					offset_position = {
+						z = 0,
+						x = 0,
+						y = -2.75
+					}
+				}
+			},
+			_node = {
+				name = "up_translation",
+				class = "TransformCamera",
+				offset_position = {
+					z = 0.25,
+					x = 0,
+					y = 0
+				}
+			}
+		},
+		_node = {
+			offset_pitch = -35,
+			name = "dead_aim",
+			class = "AimCamera",
+			ignore_aim_pitch = true
+		}
+	},
+	_node = {
+		far_range = 800,
+		name = "root_node",
+		near_range = 0.08,
+		class = "RootCamera",
+		vertical_fov = 65,
+		root_object_name = "j_camera_attach",
+		tree_transitions = {},
+		node_transitions = {
+			default = CameraTransitionTemplates.dead
+		},
+		safe_position_offset = Vector3Box(0, 0, 1.65)
 	}
 }
 

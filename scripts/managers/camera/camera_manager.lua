@@ -876,10 +876,16 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 		local root_unit, root_object = current_node:root_unit()
 		local pos = camera_data.position
 
-		if root_unit and ALIVE[root_unit] and current_node:use_collision() then
+		if current_node:use_collision() then
 			local safe_position_offset = current_node:safe_position_offset()
-			local safe_pos = Unit.world_position(root_unit, root_object or 1) + safe_position_offset:unbox()
-			pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
+
+			if root_unit and ALIVE[root_unit] then
+				local safe_pos = Unit.world_position(root_unit, root_object or 1) + safe_position_offset:unbox()
+				pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
+			else
+				local safe_pos = camera_data.position + safe_position_offset:unbox()
+				pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
+			end
 		end
 
 		camera_data.boxed_position = Vector3Box(camera_data.position)

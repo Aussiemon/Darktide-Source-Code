@@ -66,31 +66,43 @@ local temp_remove_tag_ids = {}
 local temp_remove_tag_reason = {}
 
 SmartTagSystem.update = function (self, context, dt, t, ...)
-	if not self._is_server then
-		return
-	end
+	if self._is_server then
+		table.clear(temp_remove_tag_ids)
+		table.clear(temp_remove_tag_reason)
 
-	table.clear(temp_remove_tag_ids)
-	table.clear(temp_remove_tag_reason)
+		for tag_id, tag in pairs(self._all_tags) do
+			local is_valid, remove_reason = tag:is_valid(t)
 
-	for tag_id, tag in pairs(self._all_tags) do
-		local is_valid, remove_reason = tag:is_valid(t)
+			if not is_valid then
+				temp_remove_tag_ids[#temp_remove_tag_ids + 1] = tag_id
+				temp_remove_tag_reason[#temp_remove_tag_reason + 1] = remove_reason
+			else
+				local template = tag:template()
 
-		if not is_valid then
-			temp_remove_tag_ids[#temp_remove_tag_ids + 1] = tag_id
-			temp_remove_tag_reason[#temp_remove_tag_reason + 1] = remove_reason
+				if template.update then
+					template.update(tag)
+				end
+			end
 		end
-	end
 
-	for i = 1, #temp_remove_tag_ids do
-		local tag_id = temp_remove_tag_ids[i]
-		local reason = temp_remove_tag_reason[i]
+		for i = 1, #temp_remove_tag_ids do
+			local tag_id = temp_remove_tag_ids[i]
+			local reason = temp_remove_tag_reason[i]
 
-		self:_remove_tag_locally(tag_id, reason)
+			self:_remove_tag_locally(tag_id, reason)
 
-		local reason_id = REMOVE_TAG_REASONS_LOOKUP[reason]
+			local reason_id = REMOVE_TAG_REASONS_LOOKUP[reason]
 
-		Managers.state.game_session:send_rpc_clients("rpc_remove_smart_tag", tag_id, reason_id)
+			Managers.state.game_session:send_rpc_clients("rpc_remove_smart_tag", tag_id, reason_id)
+		end
+	else
+		for tag_id, tag in pairs(self._all_tags) do
+			local template = tag:template()
+
+			if template.update then
+				template.update(tag)
+			end
+		end
 	end
 end
 
@@ -356,6 +368,10 @@ SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagg
 		end
 	end
 
+	if template.start then
+		template.start(tag)
+	end
+
 	Managers.event:trigger("event_smart_tag_created", tag, is_hotjoin_synced)
 
 	return tag
@@ -400,6 +416,12 @@ SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 				end
 			end
 		end
+	end
+
+	local template = tag:template()
+
+	if template.stop then
+		template.stop(tag)
 	end
 
 	Managers.event:trigger("event_smart_tag_removed", tag, reason)

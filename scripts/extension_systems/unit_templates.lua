@@ -1182,9 +1182,13 @@ local unit_templates = {
 				config:add("SmartTagExtension", {
 					target_type = breed.smart_tag_target_type
 				})
-				config:add("MinionOutlineExtension")
+				config:add("MinionOutlineExtension", {
+					breed = breed
+				})
 			elseif breed.volley_fire_target then
-				config:add("MinionOutlineExtension")
+				config:add("MinionOutlineExtension", {
+					breed = breed
+				})
 			end
 
 			local behavior_extension_init_data = {
@@ -1372,9 +1376,13 @@ local unit_templates = {
 				config:add("SmartTagExtension", {
 					target_type = breed.smart_tag_target_type
 				})
-				config:add("MinionOutlineExtension")
+				config:add("MinionOutlineExtension", {
+					breed = breed
+				})
 			elseif breed.volley_fire_target then
-				config:add("MinionOutlineExtension")
+				config:add("MinionOutlineExtension", {
+					breed = breed
+				})
 			end
 		end
 	},

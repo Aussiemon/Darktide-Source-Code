@@ -49,11 +49,15 @@ local attack_intensity_settings = {
 	},
 	toughness_broken_grace = {
 		{
-			spread_multiplier = 2,
-			duration = 1.5
+			spread_multiplier = 3,
+			duration = 2
 		},
 		{
-			spread_multiplier = 2,
+			spread_multiplier = 3,
+			duration = 2
+		},
+		{
+			spread_multiplier = 2.5,
 			duration = 1.5
 		},
 		{
@@ -62,19 +66,15 @@ local attack_intensity_settings = {
 		},
 		{
 			spread_multiplier = 2,
-			duration = 1.15
-		},
-		{
-			spread_multiplier = 2,
 			duration = 1
 		}
 	},
 	toughness_broken_grace_cooldown = {
-		1.75,
+		1.5,
 		2,
+		3,
 		4,
-		5,
-		6
+		5
 	},
 	attack_intensities = {
 		melee = {
@@ -478,12 +478,13 @@ local attack_intensity_settings = {
 			},
 			{
 				attack_allowed_decay_multiplier = 1.25,
-				decay_grace = 0.35,
-				disallow_when_suppressed = true,
-				threshold = 14,
 				decay = 4.5,
-				reset = 2,
 				attack_intensity_clamp = 15,
+				threshold = 12,
+				disallow_when_suppressed = true,
+				decay_grace = 0.35,
+				locked_in_melee_check = true,
+				reset = 2,
 				ignored_movement_states = {
 					sprint = false
 				}
@@ -492,7 +493,7 @@ local attack_intensity_settings = {
 				attack_allowed_decay_multiplier = 1.5,
 				decay_grace = 0.25,
 				disallow_when_suppressed = true,
-				threshold = 16,
+				threshold = 14,
 				decay = 8,
 				reset = 2,
 				attack_intensity_clamp = 20,
@@ -504,7 +505,7 @@ local attack_intensity_settings = {
 				attack_allowed_decay_multiplier = 2,
 				decay_grace = 0.2,
 				disallow_when_suppressed = true,
-				threshold = 22,
+				threshold = 20,
 				decay = 10,
 				reset = 2,
 				attack_intensity_clamp = 25,

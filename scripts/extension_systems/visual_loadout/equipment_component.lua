@@ -186,12 +186,6 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 			unit_set_unit_visibility(item_unit_3p, false, true)
 		end
 
-		local player_visibility = ScriptUnit.has_extension(unit_3p, "player_visibility_system")
-
-		if player_visibility then
-			player_visibility:update_visibility_snapshot()
-		end
-
 		local deform_overrides = slot.deform_overrides
 
 		if deform_overrides then
@@ -627,6 +621,15 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 	local unit_showing = first_person_mode and unit_1p or unit_3p
 	local unit_hidden = first_person_mode and unit_3p or unit_1p
 	local player_visibility = ScriptUnit.has_extension(unit_3p, "player_visibility_system")
+	local player_visible = true
+
+	if player_visibility then
+		player_visible = player_visibility:visible()
+
+		if not player_visible then
+			player_visibility:show()
+		end
+	end
 
 	if unit_showing then
 		unit_set_unit_visibility(unit_showing, true, true)
@@ -748,8 +751,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 		end
 	end
 
-	if player_visibility then
-		player_visibility:update_visibility_snapshot()
+	if not player_visible then
+		player_visibility:hide()
 	end
 end
 

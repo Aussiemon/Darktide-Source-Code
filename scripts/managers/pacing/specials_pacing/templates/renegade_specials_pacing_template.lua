@@ -215,7 +215,7 @@ local specials_pacing_template = {
 			max_alive_specials = 4,
 			first_spawn_timer_modifer = 0.5,
 			chance_for_coordinated_strike = 0.125,
-			rushing_distance = 60,
+			rushing_distance = 50,
 			speed_running_check_frequency = 5,
 			speed_running_required_challenge_rating = 50,
 			num_required_speed_running_checks = 4,
@@ -223,7 +223,7 @@ local specials_pacing_template = {
 			destroy_special_distance = 100,
 			spawn_failed_wait_time = 5,
 			timer_range = {
-				100,
+				110,
 				250
 			},
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
@@ -267,16 +267,16 @@ local specials_pacing_template = {
 			max_alive_specials = 5,
 			first_spawn_timer_modifer = 0.35,
 			chance_for_coordinated_strike = 0.15,
-			rushing_distance = 60,
+			rushing_distance = 45,
 			speed_running_check_frequency = 5,
-			speed_running_required_challenge_rating = 50,
+			speed_running_required_challenge_rating = 40,
 			num_required_speed_running_checks = 4,
-			speed_running_required_distance = 12,
+			speed_running_required_distance = 10,
 			destroy_special_distance = 100,
 			spawn_failed_wait_time = 5,
 			timer_range = {
-				80,
-				220
+				90,
+				230
 			},
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
@@ -306,8 +306,8 @@ local specials_pacing_template = {
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
-				20,
-				40
+				10,
+				20
 			},
 			speed_running_prevention_failed_cooldown = {
 				5,
@@ -319,7 +319,7 @@ local specials_pacing_template = {
 			max_alive_specials = 6,
 			first_spawn_timer_modifer = 0.25,
 			chance_for_coordinated_strike = 0.2,
-			rushing_distance = 50,
+			rushing_distance = 40,
 			speed_running_check_frequency = 5,
 			speed_running_required_challenge_rating = 40,
 			num_required_speed_running_checks = 4,
@@ -327,8 +327,8 @@ local specials_pacing_template = {
 			destroy_special_distance = 100,
 			spawn_failed_wait_time = 5,
 			timer_range = {
-				60,
-				170
+				70,
+				190
 			},
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
@@ -358,8 +358,8 @@ local specials_pacing_template = {
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
-				20,
-				40
+				10,
+				15
 			},
 			speed_running_prevention_failed_cooldown = {
 				5,

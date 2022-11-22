@@ -32,17 +32,23 @@ local combat_ranges = {
 		close = {
 			{
 				switch_combat_range = "melee",
-				locked_in_melee_distance = 4,
+				locked_in_melee_distance = 6,
 				distance = 2,
 				switch_weapon_slot = "slot_melee_weapon",
 				distance_operator = "lesser",
 				max_z_distance = 1.5,
 				sticky_time = 2,
-				target_velocity_dot_duration_inverted = 2,
 				activate_slot_system = true,
 				target_weapon_type_distance = {
 					ranged = 1,
-					melee = 4
+					melee = 6
+				},
+				target_velocity_dot_duration_inverted = {
+					6,
+					4,
+					4,
+					3,
+					2
 				}
 			},
 			{
@@ -64,15 +70,21 @@ local combat_ranges = {
 				sticky_time = 2,
 				distance = 7,
 				switch_weapon_slot = "slot_ranged_weapon",
-				target_velocity_dot_duration = 2,
 				distance_operator = "greater",
 				switch_combat_range = "close",
-				locked_in_melee_distance = 6,
+				locked_in_melee_distance = 7,
 				switch_anim_state = "to_ranged",
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					ranged = 1,
 					melee = 6
+				},
+				target_velocity_dot_duration = {
+					6,
+					4,
+					4,
+					3,
+					2
 				}
 			}
 		}

@@ -19,7 +19,7 @@ CameraTransitionTemplates.dead = {
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time * 0.8
+		duration = CameraTransitionSettings.perspective_transition_time * 1.5
 	}
 }
 CameraTransitionTemplates.reviving = {

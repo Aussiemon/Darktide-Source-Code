@@ -14,9 +14,9 @@ local renegade_rifleman_default = {
 	damage_type = damage_types.minion_laser,
 	line_effect = LineEffects.renegade_lasbeam,
 	damage_falloff = {
-		falloff_range = 20,
-		max_range = 20,
-		max_power_reduction = 0.5
+		falloff_range = 15,
+		max_range = 15,
+		max_power_reduction = 0.6
 	}
 }
 local shoot_templates = {

@@ -141,7 +141,11 @@ templates.ogryn_bonebreaker_heavy_attacks_bleed = {
 		local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
 
 		if buff_extension then
-			buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", template_context.unit)
+			local num_stacks = talent_settings.offensive_3.stacks
+
+			for i = 1, num_stacks do
+				buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", template_context.unit)
+			end
 		end
 	end
 }

@@ -197,9 +197,9 @@ local function _spread_direction(target_unit, minion_unit, shoot_direction, spre
 end
 
 local DEFAULT_DAMAGE_FALLOFF = {
-	falloff_range = 20,
-	max_range = 20,
-	max_power_reduction = 0.5
+	falloff_range = 15,
+	max_range = 15,
+	max_power_reduction = 0.6
 }
 
 MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier, perception_component)
@@ -228,7 +228,7 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 
 	if max_range < distance then
 		local falloff_range = damage_falloff.falloff_range
-		local falloff_distance = math.max(distance - falloff_range, 1)
+		local falloff_distance = math.min(distance - max_range, falloff_range)
 		local max_power_reduction = damage_falloff.max_power_reduction
 		local percentage = math.min(falloff_distance / falloff_range, 1)
 		local power_percentage_reduction = 1 - max_power_reduction * percentage
@@ -246,7 +246,7 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	if should_hit then
 		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	elseif hits then
-		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * 0.25, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * 0.175, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	end
 
 	end_position = end_position or from_position + spread_direction * range

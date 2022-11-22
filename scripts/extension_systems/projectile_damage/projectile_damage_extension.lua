@@ -374,7 +374,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 			if buff_extension and buff_extension:has_keyword(buff_keywords.cluster_explode_on_super_armored) then
 				local hit_zone_is_shield = hit_zone_name == "shield"
 				local hitzone_armor_override = breed_or_nil and breed_or_nil.hitzone_armor_override and breed_or_nil.hitzone_armor_override[hit_zone_name]
-				local is_super_armored_hit = breed_or_nil and breed_or_nil.armor_type and breed_or_nil.armor_type == armor_types.super_armor or hitzone_armor_override == armor_types.super_armor
+				local is_super_armored_hit = breed_or_nil and breed_or_nil.armor_type and (breed_or_nil.armor_type == armor_types.super_armor or breed_or_nil.armor_type == armor_types.armored or breed_or_nil.armor_type == armor_types.resistant) or hitzone_armor_override == armor_types.super_armor or hitzone_armor_override == armor_types.armored or hitzone_armor_override == armor_types.resistant
 				local super_armored_settings = (is_super_armored_hit or hit_zone_is_shield) and damage_settings.super_armored and damage_settings.super_armored.impact.cluster
 
 				if super_armored_settings and not self.has_cluster_impacted then

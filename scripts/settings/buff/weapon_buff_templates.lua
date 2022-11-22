@@ -116,11 +116,13 @@ local templates = {
 		}
 	},
 	bleed = {
-		interval = 0.75,
+		interval = 0.5,
 		predicted = false,
+		interval_stack_removal = true,
+		max_stacks_cap = 16,
 		refresh_duration_on_stack = true,
 		max_stacks = 16,
-		duration = 4,
+		duration = 1.5,
 		class_name = "interval_buff",
 		keywords = {
 			buff_keywords.bleeding
@@ -130,7 +132,9 @@ local templates = {
 
 			if HEALTH_ALIVE[unit] then
 				local damage_template = DamageProfileTemplates.bleeding
-				local power_level = 15
+				local stack_multiplier = template_context.stack_count / template.max_stacks
+				local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+				local power_level = smoothstep_multiplier * 500
 				local source_item = template_context.is_server and template_context.source_item or nil
 				local owner_unit = template_context.is_server and template_context.owner_unit or template_context.unit or nil
 

@@ -2,11 +2,13 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local FirstPersonView = require("scripts/utilities/first_person_view")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interacting = require("scripts/extension_systems/character_state_machine/character_states/utilities/interacting")
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
 local Interrupt = require("scripts/utilities/attack/interrupt")
+local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -114,6 +116,12 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 	if not self._looping_sound_component.is_playing then
 		self._fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS)
 	end
+
+	local is_third_person = template.is_third_person
+
+	if is_third_person then
+		FirstPersonView.exit(t, self._first_person_mode_component)
+	end
 end
 
 PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
@@ -166,6 +174,15 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 
 	if self._looping_sound_component.is_playing then
 		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
+	end
+
+	local is_third_person = template.is_third_person
+
+	if is_third_person then
+		local first_person_mode_component = self._first_person_mode_component
+		local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+
+		FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 	end
 end
 

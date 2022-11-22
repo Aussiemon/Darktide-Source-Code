@@ -960,11 +960,10 @@ weapon_template.actions = {
 	},
 	action_push = {
 		block_duration = 0.5,
-		push_radius = 4,
+		push_radius = 2.75,
 		kind = "push",
-		charge_template = "forcesword_p1_m1_push",
-		anim_event = "attack_push",
 		weapon_handling_template = "time_scale_1",
+		anim_event = "attack_push",
 		total_time = 0.4,
 		action_movement_curve = {
 			{
@@ -1164,11 +1163,11 @@ weapon_template.actions = {
 				t = 0.15
 			},
 			{
-				modifier = 0.2,
-				t = 0.2
+				modifier = 0.5,
+				t = 0.4
 			},
 			{
-				modifier = 0.01,
+				modifier = 0.85,
 				t = 5
 			},
 			start_modifier = 1

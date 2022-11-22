@@ -281,6 +281,7 @@ Interactable.component_data = {
 		ui_name = "Interaction Type",
 		options_keys = {
 			"ammunition",
+			"body_shop",
 			"chest",
 			"contracts",
 			"decoding",
@@ -307,6 +308,7 @@ Interactable.component_data = {
 		},
 		options_values = {
 			"ammunition",
+			"body_shop",
 			"chest",
 			"contracts",
 			"decoding",

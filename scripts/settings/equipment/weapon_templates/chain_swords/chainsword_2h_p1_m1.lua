@@ -1729,71 +1729,25 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				overrides = {
-					smiter_light_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					smiter_light_chainsword_2h_active = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_left_heavy = {
-				overrides = {
-					heavy_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					heavy_chainsword_active_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_diagonal_light = {
-				overrides = {
-					default_light_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					light_chainsword_active_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_heavy = {
-				overrides = {
-					heavy_chainsword_smiter_sticky_quick_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_left_light = {
-				overrides = {
-					default_light_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					light_chainsword_active_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_down_light = {
-				overrides = {
-					smiter_light_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					smiter_light_chainsword_2h_active = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_right_light_pushfollow = {
-				overrides = {
-					default_light_chainsword_2h = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					},
-					light_chainsword_active_2h_push_follow = {
-						damage_trait_templates.combatsword_cleave_targets_stat
-					}
-				}
+				damage_trait_templates.combatsword_cleave_targets_stat
 			}
 		}
 	},

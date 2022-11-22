@@ -15,8 +15,8 @@ local renegade_assault_default = {
 	damage_type = damage_types.minion_laser,
 	line_effect = LineEffects.renegade_assault_lasbeam,
 	damage_falloff = {
-		falloff_range = 10,
-		max_range = 15,
+		falloff_range = 7,
+		max_range = 7,
 		max_power_reduction = 0.5
 	}
 }

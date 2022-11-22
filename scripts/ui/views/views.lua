@@ -533,6 +533,47 @@ local views = {
 			ui_views = false
 		}
 	},
+	barber_vendor_background_view = {
+		display_name = "loc_barber_vendor_background_view_display_name",
+		state_bound = true,
+		killswitch = "show_contracts",
+		use_transition_ui = true,
+		killswitch_unavailable_header = "loc_popup_unavailable_view_contract_header",
+		killswitch_unavailable_description = "loc_popup_unavailable_view_contract_description",
+		path = "scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view",
+		package = "packages/ui/views/barber_vendor_background_view/barber_vendor_background_view",
+		load_in_hub = true,
+		class = "ContractsBackgroundView",
+		disable_game_world = true,
+		levels = {
+			"content/levels/ui/barber/barber",
+			"content/levels/ui/barber_character_appearance/barber_character_appearance"
+		},
+		enter_sound_events = {
+			UISoundEvents.barber_chirurgeon_on_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.barber_chirurgeon_on_exit
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
+	},
+	body_shop_view = {
+		display_name = "loc_body_shop_view_display_name",
+		state_bound = true,
+		use_transition_ui = true,
+		path = "scripts/ui/views/body_shop_view/body_shop_view",
+		package = "packages/ui/views/body_shop_view/body_shop_view",
+		class = "BodyShopView",
+		disable_game_world = true,
+		levels = {
+			"content/levels/ui/character_create/character_create"
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
+	},
 	contracts_background_view = {
 		display_name = "loc_contracts_background_view_display_name",
 		state_bound = true,

@@ -88,6 +88,7 @@ end
 
 local WIELD_ACTION_INPUT = "wield"
 local NO_KEYWORDS = {}
+local interrupt_reason_data = {}
 
 PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t)
@@ -139,7 +140,9 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	end
 
 	if interrupt_delay and interrupt_delay <= time_in_state and not stunned_character_state_component.actions_interrupted then
-		Interrupt.ability_and_action(t, unit, "stunned", nil)
+		interrupt_reason_data.self_stun = stun_settings.self_stun
+
+		Interrupt.ability_and_action(t, unit, "stunned", interrupt_reason_data)
 
 		stunned_character_state_component.actions_interrupted = true
 	end

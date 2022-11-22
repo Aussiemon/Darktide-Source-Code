@@ -54,14 +54,14 @@ local talent_settings = {
 			range = DamageSettings.in_melee_range
 		},
 		offensive_1_1 = {
-			damage_far = 0.25
+			damage_far = 0.2
 		},
 		offensive_1_2 = {
 			reload_speed = 0.2
 		},
 		offensive_1_3 = {
 			grenade_restored = 1,
-			grenade_replenishment_cooldown = 45
+			grenade_replenishment_cooldown = 60
 		},
 		defensive_1 = {
 			toughness_damage_taken_multiplier = 0.25
@@ -76,14 +76,14 @@ local talent_settings = {
 			outline_short_duration = 5
 		},
 		coop_2 = {
-			proc_chance = 0.08
+			proc_chance = 0.05
 		},
 		coop_3 = {
-			toughness_percent = 0.04,
+			toughness_percent = 0.1,
 			range = 5
 		},
 		offensive_2_1 = {
-			stacks = 2
+			stacks = 8
 		},
 		offensive_2_2 = {
 			spread_modifier = -0.19,
@@ -302,7 +302,7 @@ local talent_settings = {
 			max_charges = 1
 		},
 		grenade = {
-			max_charges = 1
+			max_charges = 2
 		},
 		coherency = {
 			max_stacks = 1,
@@ -331,7 +331,9 @@ local talent_settings = {
 			damage_vs_ogryn = 0.5
 		},
 		offensive_2 = {},
-		offensive_3 = {},
+		offensive_3 = {
+			stacks = 4
+		},
 		coop_1 = {
 			coherency_aura_size_increase = 0.5
 		},
@@ -402,10 +404,11 @@ local talent_settings = {
 			distance = 7,
 			melee_damage = 0.25,
 			cooldown = 30,
-			duration = 3,
 			melee_critical_strike_chance = 1,
-			max_stacks = 1,
+			duration = 3,
 			on_hit_proc_chance = 1,
+			max_stacks = 1,
+			toughness = 0.5,
 			max_charges = 1
 		},
 		grenade = {
@@ -432,25 +435,26 @@ local talent_settings = {
 			toughness_melee_replenish = 0.5
 		},
 		toughness_2 = {
-			toughness_damage_taken_multiplier = 0.5,
-			duration = 3
+			toughness_damage_taken_multiplier = 0.25,
+			duration = 4
 		},
 		toughness_3 = {
-			num_ticks_to_trigger = 5,
-			range = 4,
+			num_ticks_to_trigger = 3,
+			range = 5,
 			time = 0.1,
 			toughness = 0.025,
-			num_enemies = 4
+			num_enemies = 3
 		},
 		offensive_1 = {
-			melee_critical_strike_chance = 0.1,
-			duration = 3
+			stacks = 2,
+			duration = 3,
+			melee_critical_strike_chance = 0.1
 		},
 		offensive_2 = {
 			duration = 5,
 			damage = 0.2,
-			impact_modifier = 0.1,
-			max_stacks = 3,
+			impact_modifier = 0.3,
+			max_stacks = 5,
 			min_hits = 3
 		},
 		offensive_3 = {
@@ -482,7 +486,7 @@ local talent_settings = {
 		},
 		defensive_2 = {
 			on_damage_taken_proc_chance = 1,
-			movement_speed = 1.3,
+			movement_speed = 1.2,
 			active_duration = 2
 		},
 		defensive_3 = {
@@ -629,6 +633,7 @@ local talent_settings = {
 			shout_range = 30,
 			power_level = 500,
 			override_radius = 5,
+			warpcharge_vent = 0.5,
 			max_radius = 8.75,
 			max_charges = 1
 		},
