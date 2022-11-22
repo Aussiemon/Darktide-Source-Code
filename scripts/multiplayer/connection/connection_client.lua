@@ -289,23 +289,6 @@ end
 ConnectionClient.rpc_kicked = function (self, channel_id, reason, optional_details)
 	self._host_connection:disconnect(reason, optional_details)
 
-	local optional_info = {
-		error_code = optional_details
-	}
-
-	if PLATFORM == "win32" then
-		optional_info.options = {
-			{
-				text = "loc_popup_link_description_eac_error",
-				template_type = "url_button",
-				margin_bottom = 20,
-				callback = function ()
-					Application.open_url_in_browser(Localize("loc_popup_link_eac_error"))
-				end
-			}
-		}
-	end
-
 	if reason == "EAC_KICK" then
 		Managers.error:report_error(EACError:new("loc_popup_description_eac_kick", optional_info))
 	end

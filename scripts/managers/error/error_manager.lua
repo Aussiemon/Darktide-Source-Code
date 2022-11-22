@@ -33,11 +33,12 @@ end
 local function _notify_error(error_object)
 	local loc_title = error_object:loc_title()
 	local title = Localize(loc_title)
-	local loc_description, loc_description_params = error_object:loc_description()
+	local loc_description, loc_description_params, string_format = error_object:loc_description()
+	local string_format = string_format or "%s: %s"
 	local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = string.format("%s: %s", title, description)
+		text = string.format(string_format, title, description)
 	})
 end
 

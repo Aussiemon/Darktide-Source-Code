@@ -159,8 +159,8 @@ damage_templates.ogryn_club_light_tank = {
 			armor_damage_modifier = tank_light_am_1,
 			power_distribution = {
 				attack = {
-					100,
-					120
+					80,
+					160
 				},
 				impact = {
 					20,
@@ -172,8 +172,8 @@ damage_templates.ogryn_club_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					80,
-					100
+					60,
+					120
 				},
 				impact = {
 					20,
@@ -229,7 +229,7 @@ damage_templates.ogryn_club_heavy_tank = {
 			power_distribution = {
 				attack = {
 					120,
-					150
+					240
 				},
 				impact = {
 					30,
@@ -242,7 +242,7 @@ damage_templates.ogryn_club_heavy_tank = {
 			power_distribution = {
 				attack = {
 					80,
-					100
+					160
 				},
 				impact = {
 					20,
@@ -296,8 +296,8 @@ damage_templates.ogryn_club_light_smiter = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					75,
-					150
+					100,
+					250
 				},
 				impact = {
 					15,
@@ -383,7 +383,7 @@ damage_templates.ogryn_club_light_smiter = {
 damage_templates.ogryn_club_heavy_smiter = {
 	ragdoll_push_force = 1000,
 	ragdoll_only = true,
-	stagger_category = "melee",
+	stagger_category = "uppercut",
 	cleave_distribution = single_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.crushing,
@@ -395,12 +395,12 @@ damage_templates.ogryn_club_heavy_smiter = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
 				},

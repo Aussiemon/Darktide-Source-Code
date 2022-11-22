@@ -609,10 +609,11 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	ImpactEffect.play_shotshell_surface_effect(physics_world, player_unit, unit_to_index_lookup.stop, surface_impact_num_hits_per_unit.stop, surface_impact_data.stop, damage_type, hit_types.stop, IMPACT_FX_DATA)
 
 	self._num_saved_pellets = 0
-	self._shot_result.data_valid = true
-	self._shot_result.hit_minion = hit_minion
-	self._shot_result.hit_weakspot = hit_weakspot
-	self._shot_result.killing_blow = killing_blow
+	local shot_result = self._shot_result
+	shot_result.data_valid = true
+	shot_result.hit_minion = hit_minion
+	shot_result.hit_weakspot = hit_weakspot
+	shot_result.killing_blow = killing_blow
 
 	return number_of_units_hit
 end

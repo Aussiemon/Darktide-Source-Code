@@ -155,8 +155,12 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		movement_state_component.is_dodging = true
 	end
 
-	if self._is_server and lunge_template.restore_toughness then
-		Toughness.replenish_percentage(unit, 0.5, true)
+	if self._is_server then
+		local toughness = lunge_template.restore_toughness
+
+		if toughness then
+			Toughness.replenish_percentage(unit, toughness, true)
+		end
 	end
 
 	local buff = lunge_template.add_buff

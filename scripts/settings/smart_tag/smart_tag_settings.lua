@@ -1,3 +1,4 @@
+local MinionPerception = require("scripts/utilities/minion_perception")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local groups = {
@@ -325,7 +326,49 @@ local templates = {
 		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
 		replies = {
 			replies.ok
-		}
+		},
+		start = function (tag)
+			local breed = tag:breed()
+
+			if breed.smart_tag_breed_aggroed_context then
+				local tag_unit = tag:target_unit()
+				local game_session = Managers.state.game_session:game_session()
+				local game_object_id = Managers.state.unit_spawner:game_object_id(tag_unit)
+				local target_unit = MinionPerception.target_unit(game_session, game_object_id)
+				local wanted_target_unit_outline = tag:target_unit_outline()
+				local current_target_unit_outline = wanted_target_unit_outline
+
+				if not target_unit then
+					wanted_target_unit_outline = "smart_tagged_enemy_passive"
+				end
+
+				if wanted_target_unit_outline ~= current_target_unit_outline then
+					tag:set_target_unit_outline(wanted_target_unit_outline)
+				end
+			end
+		end,
+		update = function (tag)
+			local breed = tag:breed()
+
+			if breed.smart_tag_breed_aggroed_context then
+				local tag_unit = tag:target_unit()
+				local game_session = Managers.state.game_session:game_session()
+				local game_object_id = Managers.state.unit_spawner:game_object_id(tag_unit)
+				local target_unit = MinionPerception.target_unit(game_session, game_object_id)
+				local wanted_target_unit_outline = tag:target_unit_outline()
+				local current_target_unit_outline = wanted_target_unit_outline
+
+				if target_unit then
+					wanted_target_unit_outline = "smart_tagged_enemy"
+				end
+
+				if wanted_target_unit_outline ~= current_target_unit_outline then
+					Managers.event:trigger("event_smart_tag_removed", tag)
+					tag:set_target_unit_outline(wanted_target_unit_outline)
+					Managers.event:trigger("event_smart_tag_created", tag)
+				end
+			end
+		end
 	}
 }
 

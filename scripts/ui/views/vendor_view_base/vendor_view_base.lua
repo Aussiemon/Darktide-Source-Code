@@ -198,7 +198,7 @@ VendorViewBase._fetch_store_items = function (self)
 		self._offers = offers
 		local layout = self:_convert_offers_to_layout_entries(self._offers)
 		self._offer_items_layout = layout
-		self._current_rotation_end = data.current_rotation_end and tonumber(data.current_rotation_end) * 0.001
+		self._current_rotation_end = data.current_rotation_end
 		local menu_tab_content_by_store_category = {}
 		local menu_tab_content_array = {}
 
@@ -304,6 +304,13 @@ VendorViewBase._fetch_store_items = function (self)
 		if focus_on_first_offer and first_offer then
 			self:focus_on_offer(first_offer)
 		end
+	end):catch(function (error)
+		self._current_rotation_end = nil
+		self._offer_items_layout = nil
+		self._filtered_offer_items_layout = nil
+		self._next_tab_index = nil
+		self._next_tab_index_ignore_item_selection = nil
+		self._store_promise = nil
 	end)
 
 	self._store_promise = store_promise
@@ -398,8 +405,8 @@ end
 
 VendorViewBase.update = function (self, dt, t, input_service)
 	if self._item_grid and self._current_rotation_end then
-		local os_time = os.time()
-		local expire_time = math.max(self._current_rotation_end - os_time, 0)
+		local server_time = Managers.backend:get_server_time(t)
+		local expire_time = math.max((self._current_rotation_end - server_time) * 0.001, 0)
 
 		self._item_grid:set_expire_time(expire_time)
 

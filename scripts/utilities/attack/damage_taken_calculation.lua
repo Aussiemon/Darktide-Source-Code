@@ -140,23 +140,19 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 	local ranged_attack = attack_type == "ranged"
 	local remaining_damage, toughness_damage, absorbed_attack, toughness_broken = nil
 	local zealot_toughness = attacked_unit_keywords.zealot_toughness
-	local apply_stat_buffs = ranged_attack or zealot_toughness
 	local toughness_melee_damage_modifier = weapon_toughness_template and weapon_toughness_template.melee_damage_modifier or toughness_template.melee_damage_modifier or 1
-
-	if apply_stat_buffs then
-		local damage_modifier = toughness_template.state_damage_modifiers[movement_state] or 1
-		local toughness_multiplier = damage_profile.toughness_multiplier or 1
-		local weapon_toughness_multiplier = weapon_toughness_template and weapon_toughness_template.toughness_damage_modifier or 1
-		damage_modifier = damage_modifier + toughness_multiplier * weapon_toughness_multiplier - 1
-		local buff_toughness_damage_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_multiplier or 1
-		local buff_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_modifier or 1
-		local damage_buff_multiplier = buff_toughness_damage_taken_multiplier * buff_toughness_damage_taken_modifier
-		damage_modifier = damage_modifier * damage_buff_multiplier
-		toughness_damage = math.clamp(damage_amount * damage_modifier, 0, max_toughness)
-	end
+	local damage_modifier = toughness_template.state_damage_modifiers[movement_state] or 1
+	local toughness_multiplier = damage_profile.toughness_multiplier or 1
+	local weapon_toughness_multiplier = weapon_toughness_template and weapon_toughness_template.toughness_damage_modifier or 1
+	damage_modifier = damage_modifier + toughness_multiplier * weapon_toughness_multiplier - 1
+	local buff_toughness_damage_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_multiplier or 1
+	local buff_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_modifier or 1
+	local damage_buff_multiplier = buff_toughness_damage_taken_multiplier * buff_toughness_damage_taken_modifier
+	damage_modifier = damage_modifier * damage_buff_multiplier
+	toughness_damage = math.clamp(damage_amount * damage_modifier, 0, max_toughness)
 
 	if melee_attack then
-		local override_max_toughness = zealot_toughness and toughness_damage
+		local override_max_toughness = toughness_damage
 		local real_max_toughness = toughness_template.max * toughness_bonus + toughness_extra
 		local bonus_toughness = attacked_unit_stat_buffs.toughness_bonus_flat or 0
 		local melee_toughness_multiplier = damage_profile.melee_toughness_multiplier or 2

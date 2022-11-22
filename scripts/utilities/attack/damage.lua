@@ -15,10 +15,10 @@ local Vo = require("scripts/utilities/vo")
 local attack_results = AttackSettings.attack_results
 local proc_events = BuffSettings.proc_events
 local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
-	ranged_close = 16,
 	ranged = math.huge,
 	elite_ranged = math.huge,
-	elite_shotgun = math.huge
+	elite_shotgun = math.huge,
+	ranged_close = math.huge
 }
 local Damage = {}
 local _trigger_player_hurt_vo = nil

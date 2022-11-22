@@ -156,7 +156,7 @@ projectile_templates.frag_grenade = {
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.frag_grenade_impact,
-			damage_type = damage_types.frag
+			damage_type = damage_types.blunt
 		}
 	},
 	effects = {

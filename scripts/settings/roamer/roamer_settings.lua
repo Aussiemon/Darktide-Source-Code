@@ -59,7 +59,7 @@ roamer_settings.density_settings = {
 			num_roamers_range = {
 				renegade = {
 					2,
-					2
+					3
 				},
 				cultist = {
 					3,
@@ -237,8 +237,8 @@ roamer_settings.density_settings = {
 					6
 				},
 				cultist = {
-					6,
-					8
+					5,
+					7
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -345,7 +345,7 @@ roamer_settings.density_settings = {
 				},
 				cultist = {
 					3,
-					5
+					4
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -486,8 +486,8 @@ roamer_settings.density_settings = {
 					5
 				},
 				cultist = {
-					5,
-					7
+					4,
+					6
 				}
 			},
 			roamer_slot_placement_functions = {
@@ -628,8 +628,8 @@ roamer_settings.density_settings = {
 					6
 				},
 				cultist = {
-					6,
-					8
+					5,
+					7
 				}
 			},
 			roamer_slot_placement_functions = {

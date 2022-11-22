@@ -1166,29 +1166,6 @@ weapon_template.base_stats = {
 				damage_trait_templates.thunderhammer_control_stat
 			}
 		},
-		weapon_handling = {
-			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_light = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_left_light_2 = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_right_light_pushfollow = {
-				weapon_handling_trait_templates.default_finesse_stat
-			},
-			action_special_action = {
-				weapon_handling_trait_templates.default_finesse_stat
-			}
-		},
 		stagger_duration_modifier = {
 			action_left_light = {
 				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat

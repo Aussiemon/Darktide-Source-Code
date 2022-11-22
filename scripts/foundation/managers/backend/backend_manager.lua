@@ -32,7 +32,7 @@ local function retry_delay(attempt)
 end
 
 local function is_retryable_error_code(code)
-	if code and (code == 429 or code == 1000 or math.floor(code / 100) == 5) then
+	if code and (code == 429 or code == 1000 or code == 0 or math.floor(code / 100) == 5) then
 		return true
 	end
 

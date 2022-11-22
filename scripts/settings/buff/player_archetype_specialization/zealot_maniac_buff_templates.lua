@@ -277,7 +277,7 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 
 			local num_hits = broadphase:query(player_position, range, broadphase_results, enemy_side_names)
 
-			if talent_settings.toughness_3.num_enemies < num_hits then
+			if talent_settings.toughness_3.num_enemies <= num_hits then
 				template_data.current_tick = template_data.current_tick + 1
 
 				if talent_settings.toughness_3.num_ticks_to_trigger <= template_data.current_tick then
@@ -337,14 +337,17 @@ templates.zealot_maniac_bleeding_crits = {
 			local bleeding_dot_buff_name = "bleed"
 			local t = FixedFrame.get_latest_fixed_time()
 			local unit = template_context.unit
+			local num_stacks = talent_settings.offensive_1.stacks
 
-			victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
+			for i = 1, num_stacks do
+				victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
+			end
 		end
 	end
 }
 templates.zealot_maniac_critical_strike_chance_buff = {
 	refresh_duration_on_stack = true,
-	max_stacks = 1,
+	max_stacks = 3,
 	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_2_1",
 	predicted = false,
 	hud_priority = 4,

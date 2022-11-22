@@ -92,15 +92,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -119,7 +119,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.75
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block"
@@ -127,6 +127,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.7
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -185,7 +191,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.75
+				chain_time = 0.65
 			},
 			block = {
 				action_name = "action_block"
@@ -193,6 +199,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -257,7 +269,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.85
+				chain_time = 0.65
 			},
 			block = {
 				action_name = "action_block"
@@ -265,6 +277,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -302,15 +320,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -328,7 +346,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.75
+				chain_time = 0.65
 			},
 			block = {
 				action_name = "action_block"
@@ -336,6 +354,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -402,6 +426,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -436,7 +466,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		allowed_during_sprint = true,
 		damage_window_end = 0.3333333333333333,
-		attack_direction_override = "down",
+		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_down",
@@ -476,6 +506,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.1
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -513,15 +549,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -547,6 +583,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -562,7 +604,7 @@ weapon_template.actions = {
 		range_mod = 1.25,
 		anim_event_3p = "attack_swing_punch",
 		weapon_handling_template = "time_scale_1_1",
-		damage_window_end = 0.4,
+		damage_window_end = 0.3333333333333333,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -613,6 +655,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -701,6 +749,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special_2",
 				chain_time = 0.7
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -788,6 +842,12 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 1.2
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -851,6 +911,12 @@ weapon_template.actions = {
 			start_modifier = 1
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -914,6 +980,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.65
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -977,6 +1046,10 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.5
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1109,11 +1182,6 @@ weapon_template.base_stats = {
 		stamina = {
 			base = {
 				stamina_trait_templates.thunderhammer_p1_m1_defence_stat
-			}
-		},
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat
 			}
 		}
 	},

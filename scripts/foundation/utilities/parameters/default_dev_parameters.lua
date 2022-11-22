@@ -812,6 +812,19 @@ params.infinite_ledge_hanging = {
 	value = false,
 	category = "Player Character"
 }
+params.override_ledge_hanging_time = {
+	value = false,
+	category = "Player Character",
+	options = {
+		false,
+		5,
+		10,
+		15,
+		20,
+		25,
+		30
+	}
+}
 params.infinite_stamina = {
 	value = false,
 	category = "Player Character"

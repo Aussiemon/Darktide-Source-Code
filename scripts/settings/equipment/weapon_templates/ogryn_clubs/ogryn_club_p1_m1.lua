@@ -99,15 +99,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -131,7 +131,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -201,11 +201,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.75
+				chain_time = 0.65
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.75
+				chain_time = 0.65
 			},
 			block = {
 				action_name = "action_block",
@@ -329,15 +329,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -361,7 +361,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.75
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block"
@@ -556,15 +556,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.55,
 				t = 0.4
 			},
 			{
@@ -588,7 +588,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.75
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block"
@@ -798,15 +798,15 @@ weapon_template.actions = {
 				t = 0.2
 			},
 			{
-				modifier = 0.32,
+				modifier = 0.52,
 				t = 0.3
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.5,
 				t = 0.325
 			},
 			{
-				modifier = 0.31,
+				modifier = 0.51,
 				t = 0.35
 			},
 			{
@@ -895,11 +895,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.75
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.75
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

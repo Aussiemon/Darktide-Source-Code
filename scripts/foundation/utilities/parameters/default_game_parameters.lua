@@ -15,7 +15,7 @@ DefaultGameParameters.disable_flow_timescale = false
 DefaultGameParameters.fixed_time_step = 0.016
 DefaultGameParameters.level_seed = false
 DefaultGameParameters.max_players = 4
-DefaultGameParameters.max_players_hub = 100
+DefaultGameParameters.max_players_hub = 25
 DefaultGameParameters.skip_cinematics = false
 DefaultGameParameters.skip_first_character_creation = false
 DefaultGameParameters.crash_countdown = -1
@@ -65,8 +65,8 @@ DefaultGameParameters.debug_disable_xbox_live = false
 DefaultGameParameters.show_watermark_overlay = false
 DefaultGameParameters.watermark_overlay_alpha_multiplier = 0.0196078431372549
 DefaultGameParameters.watermark_overlay_text = "CLOSED ALPHA TEST"
-DefaultGameParameters.show_beta_label_overlay = false
-DefaultGameParameters.beta_label_overlay_text = "Closed Beta Test October 14-16 2022"
+DefaultGameParameters.show_beta_label_overlay = true
+DefaultGameParameters.beta_label_overlay_text = "Pre-Order Beta Test November 17-29, 2022"
 DefaultGameParameters.enable_string_tags = false
 DefaultGameParameters.vertical_fov = 65
 DefaultGameParameters.min_vertical_fov = 45
@@ -104,5 +104,6 @@ slot0.gibbing_enabled = true
 DefaultGameParameters.enable_afk_check = BUILD == "release"
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.show_beta_label_overlay = true
 
 return DefaultGameParameters

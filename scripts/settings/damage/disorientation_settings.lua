@@ -139,7 +139,7 @@ local disorientation_settings = {
 				interrupt_delay = 0.05,
 				end_anim = "hit_stun_recover",
 				end_stun_early_time = 0.5,
-				stun_immunity_time_buff = "stun_immune_ultra_short",
+				stun_immunity_time_buff = "stun_immune_long",
 				stun_duration = 1,
 				action_delay = 0.75
 			}
@@ -358,9 +358,10 @@ local disorientation_settings = {
 			hit_react_anim_1p = "shake_heavy",
 			stun = {
 				end_stun_early_time = 0.9,
-				stun_immunity_time_buff = "stun_immune_short",
 				intoxication_level = 4,
+				stun_immunity_time_buff = "stun_immune_short",
 				stun_duration = 1.8,
+				self_stun = true,
 				interrupt_delay = false,
 				action_delay = 1.1
 			}
@@ -480,8 +481,8 @@ local disorientation_settings = {
 				end_anim = "hit_stun_finished",
 				end_stun_early_time = 0,
 				stun_immunity_time_buff = "stun_immune_short",
-				stun_duration = 0.1,
-				action_delay = 0.05
+				stun_duration = 0.3,
+				action_delay = 0.2
 			}
 		}
 	}

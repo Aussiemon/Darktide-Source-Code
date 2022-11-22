@@ -32,6 +32,7 @@ local breed_data = {
 	ignore_ally_alerts = true,
 	stagger_resistance = 1,
 	boss_health_bar_disabled = true,
+	smart_tag_breed_aggroed_context = true,
 	use_action_controlled_alert = true,
 	hit_reacts_min_damage = 100,
 	game_object_type = "minion_daemonhost",
@@ -409,6 +410,9 @@ local breed_data = {
 			[hit_zone_names.upper_right_leg] = 0.6,
 			[hit_zone_names.center_mass] = 0.6
 		}
+	},
+	outline_config = {
+		visual_loadout_slot = "slot_body"
 	},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_daemonhost
 }

@@ -188,12 +188,15 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 		end
 	elseif focused_grid_id == CATEGORIES_GRID then
 		if input_service:get("navigate_right_continuous") or input_service:get("confirm_pressed") then
-			focused_grid_id = ACHIEVEMENT_GRID
-			local grid = self._grids[focused_grid_id]
+			local grid = self._grids[ACHIEVEMENT_GRID]
 
 			if self._current_achievements and grid:first_interactable_grid_index() then
-				grid_has_changed = true
+				focused_grid_id = ACHIEVEMENT_GRID
+			else
+				self._next_category_id = nil
 			end
+
+			grid_has_changed = true
 		elseif input_service:get("secondary_action_pressed") then
 			local current_category_id = self._current_category_id
 

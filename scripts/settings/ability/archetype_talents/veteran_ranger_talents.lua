@@ -140,7 +140,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_2_name_3 = {
 			description = "loc_talent_ranger_replenish_grenade_desc",
-			name = "You replenish 1 grenade every 45 seconds",
+			name = "You replenish 1 grenade every 60 seconds",
 			display_name = "loc_talent_ranger_replenish_grenade",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			format_values = {
@@ -164,7 +164,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_3_name_2 = {
 			description = "loc_talent_ranger_grenade_on_elite_kills_coop_desc",
-			name = "You and allies in coherency have 10% chance to gain a grenade whenever you or an ally in coherency kills an elite enemy.",
+			name = "You and allies in coherency have 5% chance to gain a grenade whenever you or an ally in coherency kills an elite enemy.",
 			display_name = "loc_talent_ranger_grenade_on_elite_kills_coop",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_2",
 			format_values = {
@@ -177,7 +177,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_3_name_3 = {
 			description = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills_desc",
-			name = "Replenishes 4% toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
+			name = "Replenishes 10% toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
 			display_name = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_3",
 			format_values = {

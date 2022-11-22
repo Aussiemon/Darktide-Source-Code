@@ -39,8 +39,8 @@ local weapon_ammo_templates = {
 			lerp_basic = 15
 		},
 		ammunition_reserve = {
-			lerp_perfect = 210,
-			lerp_basic = 90
+			lerp_perfect = 280,
+			lerp_basic = 120
 		}
 	},
 	autogun_p1_m2 = {
@@ -49,8 +49,8 @@ local weapon_ammo_templates = {
 			lerp_basic = 25
 		},
 		ammunition_reserve = {
-			lerp_perfect = 270,
-			lerp_basic = 150
+			lerp_perfect = 360,
+			lerp_basic = 200
 		}
 	},
 	autogun_p1_m3 = {
@@ -59,8 +59,8 @@ local weapon_ammo_templates = {
 			lerp_basic = 20
 		},
 		ammunition_reserve = {
-			lerp_perfect = 240,
-			lerp_basic = 120
+			lerp_perfect = 320,
+			lerp_basic = 160
 		}
 	},
 	autogun_p2_m1 = {

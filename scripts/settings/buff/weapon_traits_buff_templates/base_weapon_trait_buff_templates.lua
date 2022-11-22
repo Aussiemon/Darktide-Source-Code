@@ -2103,7 +2103,13 @@ base_templates.power_scales_with_clip_percentage = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local inventory_component = unit_data_extension:read_component("inventory")
 		local wielded_slot = inventory_component.wielded_slot
-		local slot_type = slot_configuration[wielded_slot].slot_type
+
+		if wielded_slot == "none" or not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
+			return 0
+		end
+
+		local wielded_slot_configuration = slot_configuration[wielded_slot]
+		local slot_type = wielded_slot_configuration and wielded_slot_configuration.slot_type
 
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)

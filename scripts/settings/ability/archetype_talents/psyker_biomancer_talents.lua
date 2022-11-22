@@ -16,9 +16,12 @@ local archetype_talents = {
 	talents = {
 		psyker_2_combat = {
 			large_icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_combat",
-			name = "F-Ability - Shout, knocking down enemies in front of you in a cone, and remove all accumilated warp charge",
+			name = "F-Ability - Shout, knocking down enemies in front of you in a cone, and remove 50% accumulated warp charge",
 			display_name = "loc_talent_psyker_2_combat",
 			description = "loc_talent_psyker_2_combat_description",
+			format_values = {
+				warpcharge_vent = talent_settings.combat_ability.warpcharge_vent * 100
+			},
 			player_ability = {
 				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_discharge_shout

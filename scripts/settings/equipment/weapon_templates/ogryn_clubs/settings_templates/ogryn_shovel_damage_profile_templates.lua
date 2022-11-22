@@ -147,6 +147,10 @@ damage_templates.ogryn_shovel_light_tank = {
 					8,
 					16
 				}
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{
@@ -221,6 +225,10 @@ damage_templates.ogryn_shovel_light_tank_followup = {
 					12,
 					24
 				}
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{
@@ -295,6 +303,10 @@ damage_templates.ogryn_shovel_heavy_tank = {
 					10,
 					25
 				}
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{
@@ -402,6 +414,10 @@ damage_templates.ogryn_shovel_light_smiter = {
 				[armor_types.disgustingly_resilient] = 0.25,
 				[armor_types.void_shield] = 0.25,
 				[armor_types.prop_armor] = 0.25
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{
@@ -530,6 +546,10 @@ damage_templates.ogryn_shovel_heavy_smiter = {
 				[armor_types.disgustingly_resilient] = 0.25,
 				[armor_types.void_shield] = 0.25,
 				[armor_types.prop_armor] = 0.25
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{
@@ -648,6 +668,10 @@ damage_templates.ogryn_shovel_uppercut = {
 					30,
 					60
 				}
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		default_target = {
@@ -772,6 +796,10 @@ damage_templates.ogryn_shovel_heavy_linesman = {
 			power_distribution = {
 				attack = 1.25,
 				impact = 1.5
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
 			}
 		},
 		{

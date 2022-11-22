@@ -6,13 +6,15 @@ local function _info(...)
 end
 
 EACClientManager = class("EACClientManager")
-local EAC_STATES = table.enum("none", "retrieving_app_ticket", "authenticating_eos", "ready", "in_session", "error")
+local EAC_AUTH_STATES = table.enum("none", "retrieving_app_ticket", "authenticating_eos", "ready", "error")
+local EAC_SESSION_STATES = table.enum("no_session", "in_session", "end_session_requested")
 local TIMEOUT = 15
 
 EACClientManager.init = function (self)
 	_info("init")
 
-	self._state = EAC_STATES.none
+	self._auth_state = EAC_AUTH_STATES.none
+	self._session_state = EAC_SESSION_STATES.no_session
 	self._authenticated = false
 	self._has_eac = self:has_eac()
 
@@ -44,7 +46,7 @@ EACClientManager.authenticate = function (self)
 	if HAS_STEAM then
 		Steam.retrieve_encrypted_app_ticket()
 
-		self._state = EAC_STATES.retrieving_app_ticket
+		self._auth_state = EAC_AUTH_STATES.retrieving_app_ticket
 
 		_info("retrieving app_ticket")
 
@@ -55,7 +57,7 @@ EACClientManager.authenticate = function (self)
 			local auth_job_id = EOS.authenticate_with_xbox(user_id)
 			self._auth_job_id = auth_job_id
 			self._timeout_at = Managers.time:time("main") + TIMEOUT
-			self._state = EAC_STATES.authenticating_eos
+			self._auth_state = EAC_AUTH_STATES.authenticating_eos
 
 			_info("recieved user id from xbox live,  trying to authenticate with eos")
 		end):catch(function (error)
@@ -79,7 +81,10 @@ EACClientManager.begin_session = function (self)
 		return
 	end
 
-	local state = self._state
+	if self:in_session() then
+		self:end_session()
+	end
+
 	local user_id = self._user_id
 	local mode = "ClientServer"
 	local server_name = Managers.connection:server_name()
@@ -87,7 +92,7 @@ EACClientManager.begin_session = function (self)
 	_info("begin_session, user_id:%s, mode:%s, server_name:%s", user_id, mode, server_name)
 	EOS.begin_session(user_id, mode, server_name)
 
-	self._state = EAC_STATES.in_session
+	self._session_state = EAC_SESSION_STATES.in_session
 	local server_channel_id = Managers.connection:host_channel()
 
 	EOS.set_server_channel_id(server_channel_id)
@@ -96,22 +101,22 @@ end
 
 EACClientManager.end_session = function (self)
 	if not self._authenticated then
-		_info("cant end_session when not authenticated")
+		self._session_state = EAC_SESSION_STATES.end_session_requested
+
+		_info("Cant end_session when not authenticated, will retry")
 
 		return
 	end
 
-	local state = self._state
-
 	EOS.end_session()
 
-	self._state = EAC_STATES.ready
+	self._session_state = EAC_SESSION_STATES.no_session
 
 	_info("end_session")
 end
 
 EACClientManager.in_session = function (self)
-	return self._state == EAC_STATES.in_session
+	return self._session_state == EAC_SESSION_STATES.in_session
 end
 
 EACClientManager.user_id = function (self)
@@ -119,15 +124,20 @@ EACClientManager.user_id = function (self)
 end
 
 EACClientManager.update = function (self, dt, t)
-	local state = self._state
+	self:_update_authentication(dt, t)
+	self:_update_session(dt, t)
+end
 
-	if state == EAC_STATES.retrieving_app_ticket then
+EACClientManager._update_authentication = function (self, dt, t)
+	local auth_state = self._auth_state
+
+	if auth_state == EAC_AUTH_STATES.retrieving_app_ticket then
 		local app_ticket, app_ticket_size = Steam.poll_encrypted_app_ticket_raw()
 
 		if app_ticket then
 			local auth_job_id = EOS.authenticate_with_steam(app_ticket, app_ticket_size)
 			self._auth_job_id = auth_job_id
-			self._state = EAC_STATES.authenticating_eos
+			self._auth_state = EAC_AUTH_STATES.authenticating_eos
 
 			_info("recieved app_ticket trying to authenticate with eos")
 		end
@@ -136,9 +146,9 @@ EACClientManager.update = function (self, dt, t)
 			Managers.error:report_error(EACError:new("loc_eac_error_timeout_auth_eac"))
 			_info("authentication timed out")
 
-			self._state = EAC_STATES.error
+			self._auth_state = EAC_AUTH_STATES.error
 		end
-	elseif state == EAC_STATES.authenticating_eos then
+	elseif auth_state == EAC_AUTH_STATES.authenticating_eos then
 		local job_id = self._auth_job_id
 		local job_status = EOS.job_status(job_id)
 
@@ -146,7 +156,7 @@ EACClientManager.update = function (self, dt, t)
 			local job_result = EOS.job_result(job_id)
 
 			if job_result == EOS.Success then
-				self._state = EAC_STATES.ready
+				self._auth_state = EAC_AUTH_STATES.ready
 				self._authenticated = true
 				local user_id = EOS.job_payload_user_id(job_id)
 				self._user_id = user_id
@@ -156,7 +166,7 @@ EACClientManager.update = function (self, dt, t)
 				Managers.error:report_error(EACError:new("loc_eac_error_auth_eac_failed"))
 				_info("authentication failed")
 
-				self._state = EAC_STATES.error
+				self._auth_state = EAC_AUTH_STATES.error
 			end
 
 			EOS.erase_job(job_id)
@@ -169,7 +179,7 @@ EACClientManager.update = function (self, dt, t)
 			EOS.erase_job(job_id)
 
 			self._auth_job_id = nil
-			self._state = EAC_STATES.error
+			self._auth_state = EAC_AUTH_STATES.error
 
 			Managers.error:report_error(EACError:new("loc_eac_error_auth_eac_failed"))
 		end
@@ -178,16 +188,24 @@ EACClientManager.update = function (self, dt, t)
 			Managers.error:report_error(EACError:new("loc_eac_error_timeout_auth_eac"))
 			_info("authentication timed out")
 
-			self._state = EAC_STATES.error
+			self._auth_state = EAC_AUTH_STATES.error
 		end
-	elseif state == EAC_STATES.in_session then
+	elseif auth_state == EAC_AUTH_STATES.error then
+		-- Nothing
+	end
+end
+
+EACClientManager._update_session = function (self, dt, t)
+	local session_state = self._session_state
+
+	if session_state == EAC_SESSION_STATES.in_session then
 		local user_id = self._user_id
 
 		if user_id then
 			self:_validate_user_id()
 		end
-	elseif state == EAC_STATES.error then
-		-- Nothing
+	elseif session_state == EAC_SESSION_STATES.end_session_requested then
+		self:end_session()
 	end
 end
 
@@ -201,6 +219,17 @@ EACClientManager._validate_user_id = function (self)
 		self:authenticate()
 		_info("user id invalid, re-authenticating")
 	end
+end
+
+EACClientManager.reset = function (self)
+	_info("Reset")
+
+	if self:in_session() then
+		self:end_session()
+	end
+
+	self._user_id = nil
+	self._authenticated = false
 end
 
 return EACClientManager

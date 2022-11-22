@@ -7,6 +7,8 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local TalentSettings = require("scripts/settings/buff/talent_settings")
+local talent_settings = TalentSettings.psyker_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
@@ -107,7 +109,9 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local shout_drains_warp_charge = specialization_extension:has_special_rule(special_rules.shout_drains_warp_charge)
 
 	if shout_drains_warp_charge then
-		WarpCharge.decrease_immediate(0.5, warp_charge_component, player_unit)
+		local drain_amount = talent_settings.combat_ability.warpcharge_vent or 0.5
+
+		WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
 	end
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")

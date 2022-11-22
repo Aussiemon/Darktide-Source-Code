@@ -1,3 +1,4 @@
+local ErrorCodes = require("scripts/managers/error/error_codes")
 local PartyImmateriumMember = require("scripts/managers/party_immaterium/party_immaterium_member")
 local PartyImmateriumConnection = require("scripts/managers/party_immaterium/party_immaterium_connection")
 local PartyImmateriumMemberMyself = require("scripts/managers/party_immaterium/party_immaterium_member_myself")
@@ -995,7 +996,10 @@ PartyImmateriumManager._mission_matchmaking_aborted = function (self, reason)
 
 		Managers.event:trigger("event_add_notification_message", "default", info_string, nil, UISoundEvents.notification_matchmaking_failed)
 	else
-		local info_string = Localize("loc_matchmaking_failed")
+		local error_code = ErrorCodes.get_error_code_string_from_reason(reason)
+		local info_string = Localize("loc_matchmaking_failed", true, {
+			error_code = error_code
+		})
 
 		Managers.event:trigger("event_add_notification_message", "alert", {
 			text = info_string

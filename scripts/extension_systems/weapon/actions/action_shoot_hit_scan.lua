@@ -88,10 +88,11 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 
 	self:_play_line_fx(line_effect, position, end_position)
 
-	self._shot_result.data_valid = true
-	self._shot_result.hit_minion = hit_minion
-	self._shot_result.hit_weakspot = hit_weakspot
-	self._shot_result.killing_blow = killing_blow
+	local shot_result = self._shot_result
+	shot_result.data_valid = true
+	shot_result.hit_minion = hit_minion
+	shot_result.hit_weakspot = hit_weakspot
+	shot_result.killing_blow = killing_blow
 end
 
 function _hit_sort_function(entry_1, entry_2)

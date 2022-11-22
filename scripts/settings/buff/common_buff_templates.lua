@@ -169,7 +169,7 @@ templates.ogryn_powermaul_stun_movement_slow = {
 }
 templates.stun_immune_ultra_short = {
 	unique_buff_id = "stun_immunity",
-	duration = 0.25,
+	duration = 0.4,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune
@@ -178,7 +178,7 @@ templates.stun_immune_ultra_short = {
 }
 templates.stun_immune_short = {
 	unique_buff_id = "stun_immunity",
-	duration = 0.5,
+	duration = 0.7,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune
@@ -187,7 +187,7 @@ templates.stun_immune_short = {
 }
 templates.stun_immune_medium = {
 	unique_buff_id = "stun_immunity",
-	duration = 1,
+	duration = 1.25,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune
@@ -196,7 +196,7 @@ templates.stun_immune_medium = {
 }
 templates.stun_immune_long = {
 	unique_buff_id = "stun_immunity",
-	duration = 1.3,
+	duration = 1.75,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune

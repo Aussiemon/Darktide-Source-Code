@@ -41,7 +41,7 @@ LocalInSessionState.update = function (self, dt)
 			local diagnostics_dump = clock_handler_client:diagnostics_dump()
 			local error_text = string.format("AdaptiveClockHandler has been in panic for more than 10 seconds.\n%s", diagnostics_dump)
 
-			Log.error("AdaptiveClockHandler", error_text)
+			Crashify.print_exception("ApativeClockHandler", error_text)
 
 			return "lost_session", {
 				game_reason = "lost_session"

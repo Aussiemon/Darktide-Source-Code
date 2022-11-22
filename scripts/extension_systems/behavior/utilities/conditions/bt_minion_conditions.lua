@@ -792,15 +792,15 @@ conditions.beast_of_nurgle_has_spit_out_target = function (unit, blackboard, scr
 		return false
 	end
 
-	if is_running then
-		return true
-	end
-
 	local behavior_component = blackboard.behavior
 	local consumed_unit = behavior_component.consumed_unit
 
 	if not HEALTH_ALIVE[consumed_unit] then
 		return false
+	end
+
+	if is_running then
+		return true
 	end
 
 	if behavior_component.force_spit_out then
@@ -1038,6 +1038,12 @@ conditions.beast_of_nurgle_melee_body_slam_aoe = function (unit, blackboard, scr
 end
 
 conditions.beast_of_nurgle_should_eat = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
 	if is_running then
 		return true
 	end
@@ -1046,12 +1052,6 @@ conditions.beast_of_nurgle_should_eat = function (unit, blackboard, scratchpad, 
 	local target_is_close = perception_component.target_distance < 5
 
 	if not target_is_close then
-		return false
-	end
-
-	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-
-	if not is_aggroed then
 		return false
 	end
 

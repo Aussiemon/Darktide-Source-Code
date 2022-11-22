@@ -208,6 +208,12 @@ PlayerUnitStatus.is_assisted = function (assisted_state_input)
 	return is_assisted
 end
 
+PlayerUnitStatus.is_dead = function (character_state_component)
+	local state_name = character_state_component.state_name
+
+	return state_name == "dead"
+end
+
 PlayerUnitStatus.is_in_critical_health = function (health_extension, toughness_extension)
 	local health_percent = health_extension:current_health_percent()
 	local toughness_percent = toughness_extension:current_toughness_percent()

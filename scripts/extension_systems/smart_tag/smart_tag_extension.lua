@@ -76,6 +76,7 @@ SmartTagExtension._setup_display_name = function (self, unit)
 	elseif target_type == "breed" then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
+		self._breed = breed
 		self._display_name = breed.display_name
 	end
 end

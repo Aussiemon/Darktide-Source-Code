@@ -11,7 +11,6 @@ local zealot_lunge_templates = {
 	zealot_dash = {
 		on_screen_effect_delay = 0.13,
 		is_dodging = true,
-		restore_toughness = true,
 		move_back_cancel = true,
 		add_buff_delay = 0.13,
 		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash",
@@ -79,6 +78,7 @@ local zealot_lunge_templates = {
 			on_state = "zealot_dash",
 			off_state = "none"
 		},
+		restore_toughness = talent_settings.combat_ability.toughness,
 		stop_armor_types = {
 			armor_types.super_armor,
 			armor_types.void_shield,

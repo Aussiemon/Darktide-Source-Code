@@ -125,6 +125,7 @@ CharacterAppearanceView.init = function (self, settings, context)
 	end
 
 	self._force_character_creation = context.force_character_creation
+	self._is_barber = context.is_barber
 
 	CharacterAppearanceView.super.init(self, Definitions, settings)
 
@@ -177,6 +178,58 @@ CharacterAppearanceView.on_enter = function (self)
 		self._active_page_name = ""
 		self._block_continue = {}
 		self._pages = self:_get_pages()
+
+		if self._is_barber then
+			self._pages = {
+				{
+					name = "appearance",
+					show_character = true,
+					enter = function (page)
+						page.content = self:_get_appearance_content()
+
+						self:_check_appearance_continue_block(page.content)
+						self:_populate_page_grid(1, page.content)
+						self:_show_default_page(page)
+						self:_update_appearance_selection()
+						self:_handle_continue_button_text()
+					end,
+					title = Localize("loc_character_create_title_appearance"),
+					top_frame = {
+						icon = "content/ui/materials/icons/character_creator/appearence",
+						header = "content/ui/materials/frames/character_creator_top",
+						header_extra = "content/ui/materials/effects/character_creator_top_candles",
+						size = {
+							485,
+							230
+						},
+						offset = {
+							0,
+							-205,
+							1
+						},
+						title_offset = {
+							0,
+							-4,
+							2
+						},
+						icon_size = {
+							100,
+							100
+						},
+						icon_offset = {
+							0,
+							-130,
+							3
+						}
+					},
+					content = {},
+					get_value_function = function ()
+						return 1
+					end
+				}
+			}
+		end
+
 		self._character_name_status = {
 			custom = false
 		}
@@ -204,8 +257,12 @@ CharacterAppearanceView.on_enter = function (self)
 		self:_setup_button_callbacks()
 		self:_setup_profile_background()
 		self:_create_page_indicators()
-		self._character_create:reset_backstory()
-		self:_randomize_character_backstory()
+
+		if not self._is_barber then
+			self._character_create:reset_backstory()
+			self:_randomize_character_backstory()
+		end
+
 		self:_open_page(1)
 	end)
 
@@ -277,6 +334,10 @@ CharacterAppearanceView._setup_background_world = function (self)
 		local viewport_layer = CharacterAppearanceViewSettings.viewport_layer
 		local shading_environment = CharacterAppearanceViewSettings.shading_environment
 
+		if self._is_barber then
+			shading_environment = CharacterAppearanceViewSettings.barber_shading_environment
+		end
+
 		self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 		self:_unregister_event(default_camera_event_id)
 	end
@@ -307,6 +368,10 @@ CharacterAppearanceView._setup_background_world = function (self)
 	local world_timer_name = CharacterAppearanceViewSettings.timer_name
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 	local level_name = CharacterAppearanceViewSettings.level_name
+
+	if self._is_barber then
+		level_name = CharacterAppearanceViewSettings.barber_level_name
+	end
 
 	self._world_spawner:spawn_level(level_name)
 end
@@ -355,100 +420,155 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
 end
 
 CharacterAppearanceView._on_continue_pressed = function (self)
-	local num_pages = #self._pages
-	local active_page_number = self._active_page_number
+	if self._is_barber then
+		if not self._popup_finish_open then
+			self._popup_finish_open = true
+			local context = {
+				title_text = "loc_popup_header_barber_finalise_changes",
+				description_text = "loc_popup_description_barber_finalise_changes"
+			}
+			context.options = {
+				{
+					self._parent:play_vo_events(CharacterAppearanceViewSettings.vo_event_vendor_purchase, "barber_a", nil, 1.7),
+					stop_exit_sound = true,
+					text = "loc_barber_vendor_confirm_button",
+					close_on_pressed = true,
+					on_pressed_sound = UISoundEvents.finalize_creation_confirm,
+					callback = callback(function ()
+						local profile = self._character_create:profile()
+						local loadout = profile.loadout
+						local items = {
+							slot_body_face = loadout.slot_body_face,
+							slot_body_face_tattoo = loadout.slot_body_face_tattoo,
+							slot_body_face_scar = loadout.slot_body_face_scar,
+							slot_body_face_hair = loadout.slot_body_face_hair,
+							slot_body_hair = loadout.slot_body_hair,
+							slot_body_tattoo = loadout.slot_body_tattoo,
+							slot_body_hair_color = loadout.slot_body_hair_color,
+							slot_body_skin_color = loadout.slot_body_skin_color,
+							slot_body_eye_color = loadout.slot_body_eye_color
+						}
 
-	if active_page_number == num_pages and self._await_validation then
-		self._block_continue[self._active_page_number] = {
-			true
-		}
+						ItemUtils.equip_slot_master_items(items)
 
-		self:_show_loading_awaiting_validation(true)
+						self._parent._active_view_instance = nil
 
-		local name = self._character_create:name()
+						self._parent:_handle_back_pressed()
+					end)
+				},
+				{
+					text = "loc_popup_button_cancel",
+					template_type = "terminal_button_small",
+					close_on_pressed = true,
+					hotkey = "back",
+					callback = callback(function ()
+						self._popup_finish_open = nil
+					end)
+				}
+			}
 
-		self._character_create:check_name(name):next(function (data)
-			self:_show_loading_awaiting_validation(false)
+			Managers.event:trigger("event_show_ui_popup", context)
+		end
+	else
+		local num_pages = #self._pages
+		local active_page_number = self._active_page_number
 
-			if data.permitted == false then
-				return self:_create_errors_name_input({
-					Localize("loc_character_create_name_validation_failed_message")
-				})
-			else
+		if active_page_number == num_pages then
+			self:_stop_character_name_input()
+		end
+
+		if active_page_number == num_pages and self._await_validation then
+			self._block_continue[self._active_page_number] = {
+				true
+			}
+
+			self:_show_loading_awaiting_validation(true)
+
+			local name = self._character_create:name()
+
+			self._character_create:check_name(name):next(function (data)
+				self:_show_loading_awaiting_validation(false)
+
+				if data.permitted == false then
+					return self:_create_errors_name_input({
+						Localize("loc_character_create_name_validation_failed_message")
+					})
+				else
+					self._block_continue[self._active_page_number] = {
+						false
+					}
+					self._await_validation = false
+
+					return self:_on_continue_pressed()
+				end
+			end):catch(function (error)
 				self._block_continue[self._active_page_number] = {
 					false
 				}
-				self._await_validation = false
 
-				return self:_on_continue_pressed()
+				self:_show_loading_awaiting_validation(false)
+			end)
+		else
+			local world = Managers.ui:world()
+			local wwise_world = Managers.world:wwise_world(world)
+
+			if self._current_sound_id and WwiseWorld.is_playing(wwise_world, self._current_sound_id) then
+				WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 			end
-		end):catch(function (error)
-			self._block_continue[self._active_page_number] = {
-				false
-			}
 
-			self:_show_loading_awaiting_validation(false)
-		end)
-	else
-		local world = Managers.ui:world()
-		local wwise_world = Managers.world:wwise_world(world)
+			if active_page_number == num_pages then
+				if not self._popup_finish_open then
+					self._popup_finish_open = true
+					local context = {
+						title_text = "loc_popup_header_create_character",
+						description_text = "loc_popup_description_create_character",
+						options = {
+							{
+								text = "loc_character_create_confirm_play_prologue",
+								stop_exit_sound = true,
+								close_on_pressed = true,
+								on_pressed_sound = UISoundEvents.finalize_creation_confirm,
+								callback = callback(function ()
+									local skip_onboarding = false
 
-		if self._current_sound_id and WwiseWorld.is_playing(wwise_world, self._current_sound_id) then
-			WwiseWorld.stop_event(wwise_world, self._current_sound_id)
-		end
+									Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
+								end)
+							},
+							{
+								text = "loc_popup_button_cancel",
+								template_type = "terminal_button_small",
+								close_on_pressed = true,
+								hotkey = "back",
+								callback = callback(function ()
+									self._popup_finish_open = nil
+								end)
+							}
+						}
+					}
 
-		if active_page_number == num_pages then
-			if not self._popup_finish_open then
-				self._popup_finish_open = true
-				local context = {
-					title_text = "loc_popup_header_create_character",
-					description_text = "loc_popup_description_create_character",
-					options = {
-						{
-							text = "loc_character_create_confirm_play_prologue",
+					if Managers.data_service.account:has_completed_onboarding() then
+						local skip_onboarding_option = {
+							text = "loc_character_create_confirm_skip_prologue",
 							stop_exit_sound = true,
 							close_on_pressed = true,
 							on_pressed_sound = UISoundEvents.finalize_creation_confirm,
 							callback = callback(function ()
-								local skip_onboarding = false
+								local skip_onboarding = true
 
 								Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
 							end)
-						},
-						{
-							text = "loc_popup_button_cancel",
-							template_type = "terminal_button_small",
-							close_on_pressed = true,
-							hotkey = "back",
-							callback = callback(function ()
-								self._popup_finish_open = nil
-							end)
 						}
-					}
-				}
 
-				if Managers.data_service.account:has_completed_onboarding() then
-					local skip_onboarding_option = {
-						text = "loc_character_create_confirm_skip_prologue",
-						stop_exit_sound = true,
-						close_on_pressed = true,
-						on_pressed_sound = UISoundEvents.finalize_creation_confirm,
-						callback = callback(function ()
-							local skip_onboarding = true
+						table.insert(context.options, 2, skip_onboarding_option)
+					end
 
-							Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
-						end)
-					}
-
-					table.insert(context.options, 2, skip_onboarding_option)
+					Managers.event:trigger("event_show_ui_popup", context)
 				end
+			else
+				local next_page_index = active_page_number + 1
 
-				Managers.event:trigger("event_show_ui_popup", context)
+				self:_open_page(next_page_index)
 			end
-		else
-			local next_page_index = active_page_number + 1
-
-			self:_open_page(next_page_index)
 		end
 	end
 end
@@ -516,6 +636,10 @@ CharacterAppearanceView._handle_continue_button_text = function (self)
 		continue_button_action_display_name = "loc_character_create_finish"
 	else
 		continue_button_action_display_name = "loc_character_create_advance"
+	end
+
+	if self._is_barber then
+		continue_button_action_display_name = "loc_button_barber_confirm"
 	end
 
 	if not self._using_cursor_navigation then
@@ -2008,9 +2132,17 @@ CharacterAppearanceView._on_close_pressed = function (self)
 		local previous_index = self._active_page_number - 1
 
 		self:_open_page(previous_index)
+	elseif self._is_barber then
+		self._parent._active_view_instance = nil
+
+		self._parent:_handle_back_pressed()
 	else
 		Managers.event:trigger("event_create_new_character_back")
 	end
+end
+
+CharacterAppearanceView.on_back_pressed = function (self)
+	return true
 end
 
 CharacterAppearanceView._destroy_renderer = function (self)
@@ -3216,7 +3348,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 	}
 	local gender_options = self._character_create:gender_options()
 
-	if gender_options and #gender_options > 1 then
+	if not self._is_barber and gender_options and #gender_options > 1 then
 		appearance_options[#appearance_options + 1] = {
 			icon = "content/ui/materials/icons/item_types/body_types",
 			text = Localize("loc_gender"),
@@ -3497,36 +3629,38 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		}
 	end
 
-	appearance_options[#appearance_options + 1] = {
-		icon = "content/ui/materials/icons/item_types/height",
-		text = Localize("loc_body_height"),
-		on_pressed_function = function (widget)
-			self:_open_appearance_options(widget.index)
-		end,
-		options = self:_get_appearance_category_options({
-			{
-				grid_template = "single",
-				template = "vertical_slider",
-				type = "height",
-				initialized = function (page_grid)
-					local page = self._pages[self._active_page_number]
+	if not self._is_barber then
+		appearance_options[#appearance_options + 1] = {
+			icon = "content/ui/materials/icons/item_types/height",
+			text = Localize("loc_body_height"),
+			on_pressed_function = function (widget)
+				self:_open_appearance_options(widget.index)
+			end,
+			options = self:_get_appearance_category_options({
+				{
+					grid_template = "single",
+					template = "vertical_slider",
+					type = "height",
+					initialized = function (page_grid)
+						local page = self._pages[self._active_page_number]
 
-					self:_set_camera_height_option(nil, page.gear_visible)
-				end,
-				enter = function (page_grid)
-					local widget = page_grid.widgets[1]
-					widget.content.element_selected = true
-				end,
-				leave = function (page_grid)
-					local widget = page_grid.widgets[1]
-					widget.content.element_selected = false
-				end,
-				options = {
-					{}
+						self:_set_camera_height_option(nil, page.gear_visible)
+					end,
+					enter = function (page_grid)
+						local widget = page_grid.widgets[1]
+						widget.content.element_selected = true
+					end,
+					leave = function (page_grid)
+						local widget = page_grid.widgets[1]
+						widget.content.element_selected = false
+					end,
+					options = {
+						{}
+					}
 				}
-			}
-		})
-	}
+			})
+		}
+	end
 
 	return appearance
 end

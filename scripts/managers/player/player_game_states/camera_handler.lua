@@ -7,6 +7,8 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local CameraModes = require("scripts/managers/player/player_game_states/utilities/camera_modes")
 local DEFAULT_CAMERA_TREE = "world"
 local DEFAULT_CAMERA_NODE = "world"
+local DEFAULT_DEAD_CAMERA_TREE = "dead"
+local DEFAULT_DEAD_CAMERA_NODE = "dead"
 local CINEMATIC_CAMERA_TREE = "cinematic"
 local CINEMATIC_GAMEPLAY_CAMERA_TREE = "cinematic_gameplay"
 local CINEMATIC_CAMERA_NODE = "story_slave"
@@ -41,8 +43,8 @@ CameraHandler.on_reload = function (self, refreshed_resources)
 	local unit = self._camera_follow_unit
 
 	if unit then
-		local camera_extension = ScriptUnit.extension(unit, "camera_system")
-		local wanted_tree, wanted_camera_node, wanted_object = camera_extension:camera_tree_node()
+		local camera_extensionension = ScriptUnit.extension(unit, "camera_system")
+		local wanted_tree, wanted_camera_node, wanted_object = camera_extensionension:camera_tree_node()
 		local camera_manager = Managers.state.camera
 
 		camera_manager:set_node_tree_root_unit(viewport_name, wanted_tree, unit, wanted_object, true)
@@ -58,6 +60,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local player_is_available = player:unit_is_alive() and not self._testify_force_spectate
 	local is_hogtied = false
 	local is_being_rescued = false
+	local is_dead = false
 	local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
 
 	if unit_data_extension then
@@ -65,14 +68,20 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		local assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
 		is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 		is_being_rescued = PlayerUnitStatus.is_assisted(assisted_state_input_component)
+		is_dead = PlayerUnitStatus.is_dead(character_state_component)
 	end
 
 	local was_hogtied = self._is_hogtied
 	self._is_hogtied = is_hogtied
+	local force_switch = false
 	local was_being_rescued = self._is_being_rescued
 	self._is_being_rescued = is_being_rescued
 
-	if is_hogtied and not was_being_rescued and is_being_rescued then
+	if is_dead then
+		force_switch = self._mode ~= CameraModes.dead
+		new_unit = player.player_unit
+		self._mode = CameraModes.dead
+	elseif is_hogtied and not was_being_rescued and is_being_rescued then
 		new_unit = player.player_unit
 		self._mode = CameraModes.observer
 	elseif not was_hogtied and is_hogtied then
@@ -101,7 +110,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		self:_switch_follow_target(new_unit)
 	end
 
-	self:_update_follow(switched_target)
+	self:_update_follow(switched_target or force_switch)
 	self:_update_wwise_state(new_unit)
 	self:_update_player_mood(switched_target, new_unit)
 
@@ -127,10 +136,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	end
 
 	return new_unit
-end
-
-local function _spectatable_player(player)
-	return player.remote or not player:is_human_controlled()
 end
 
 CameraHandler._switch_follow_target = function (self, new_unit)
@@ -217,7 +222,18 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 	local follow_unit = self._camera_follow_unit
 	local follow_unit_available = follow_unit and ALIVE[follow_unit]
 
-	if follow_unit_available then
+	if self._mode == CameraModes.dead then
+		if follow_unit_switch then
+			local camera_manager = Managers.state.camera
+			local viewport_name = self._viewport_name
+
+			if follow_unit_available then
+				camera_manager:set_node_tree_root_position(viewport_name, DEFAULT_DEAD_CAMERA_TREE, POSITION_LOOKUP[follow_unit])
+			end
+
+			camera_manager:set_camera_node(viewport_name, DEFAULT_DEAD_CAMERA_TREE, DEFAULT_DEAD_CAMERA_NODE)
+		end
+	elseif follow_unit_available then
 		self:_update_follow_camera(follow_unit, follow_unit_switch)
 	elseif follow_unit_switch then
 		local camera_manager = Managers.state.camera
@@ -225,8 +241,8 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 		local current_camera_node = camera_manager:current_camera_node(viewport_name)
 
 		if follow_unit_available then
-			local camera_ext = ScriptUnit.extension(follow_unit, "camera_system")
-			local _, _, wanted_object = camera_ext:camera_tree_node()
+			local camera_extension = ScriptUnit.extension(follow_unit, "camera_system")
+			local _, _, wanted_object = camera_extension:camera_tree_node()
 
 			camera_manager:set_node_tree_root_unit(viewport_name, DEFAULT_CAMERA_TREE, follow_unit, wanted_object)
 
@@ -268,8 +284,8 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 		wanted_camera_node = TESTIFY_CAMERA_NODE
 		wanted_tree = TESTIFY_CAMERA_TREE
 	else
-		local camera_ext = ScriptUnit.extension(unit, "camera_system")
-		wanted_tree, wanted_camera_node, wanted_object = camera_ext:camera_tree_node()
+		local camera_extension = ScriptUnit.extension(unit, "camera_system")
+		wanted_tree, wanted_camera_node, wanted_object = camera_extension:camera_tree_node()
 	end
 
 	local camera_manager = Managers.state.camera

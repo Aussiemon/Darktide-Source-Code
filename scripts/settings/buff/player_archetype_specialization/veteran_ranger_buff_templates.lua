@@ -620,13 +620,18 @@ templates.veteran_ranger_replenish_toughness_of_ally_close_to_victim = {
 	proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
 
-		if not HEALTH_ALIVE[victim_unit] then
+		if not ALIVE[victim_unit] then
+			return
+		end
+
+		local victim_pos = victim_unit and POSITION_LOOKUP[victim_unit]
+
+		if not victim_pos then
 			return
 		end
 
 		local player_units = template_data.side.valid_player_units
 		local local_unit = template_context.unit
-		local victim_pos = POSITION_LOOKUP[victim_unit]
 		local chosen_ally_unit = nil
 		local range = talent_settings.coop_3.range
 

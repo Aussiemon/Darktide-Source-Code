@@ -33,13 +33,13 @@ local burninating_barrel_adm = {
 	[armor_types.prop_armor] = 1.75
 }
 local bleeding_adm = {
-	[armor_types.unarmored] = 1,
+	[armor_types.unarmored] = 0.5,
 	[armor_types.armored] = 0.75,
-	[armor_types.resistant] = 2,
+	[armor_types.resistant] = 4,
 	[armor_types.player] = 1,
 	[armor_types.berserker] = 1,
-	[armor_types.super_armor] = 0.1,
-	[armor_types.disgustingly_resilient] = 1.25,
+	[armor_types.super_armor] = 0.5,
+	[armor_types.disgustingly_resilient] = 0.25,
 	[armor_types.void_shield] = 1,
 	[armor_types.prop_armor] = 0.75
 }
@@ -285,7 +285,7 @@ damage_templates.warpfire = {
 	}
 }
 damage_templates.bleeding = {
-	stagger_category = "melee",
+	stagger_category = "flamer",
 	toughness_multiplier = 3,
 	ignore_shield = true,
 	armor_damage_modifier = {
@@ -293,7 +293,7 @@ damage_templates.bleeding = {
 		impact = bleeding_adm
 	},
 	power_distribution = {
-		attack = 400,
+		attack = 40,
 		impact = 0
 	},
 	cleave_distribution = {

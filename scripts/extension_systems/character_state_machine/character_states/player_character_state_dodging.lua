@@ -83,8 +83,18 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 		local next_speed_settings = dodge_speed_at_times[next_speed_setting_index]
 		local current_time_in_setting = current_speed_settings.time_in_dodge
 		local next_time_in_setting = next_speed_settings.time_in_dodge
-		local current_setting_speed = current_speed_settings.speed * distance_scale
-		local next_setting_speed = next_speed_settings.speed * distance_scale
+		local current_setting_speed = current_speed_settings.speed
+
+		if current_setting_speed > 4 then
+			current_setting_speed = current_setting_speed * distance_scale
+		end
+
+		local next_setting_speed = next_speed_settings.speed
+
+		if next_setting_speed > 4 then
+			next_setting_speed = next_setting_speed * distance_scale
+		end
+
 		local time_between_settings = next_time_in_setting - current_time_in_setting
 		local time_in_setting = time_in_dodge / distance_scale - current_time_in_setting
 		local percentage_in_between = time_in_setting / time_between_settings

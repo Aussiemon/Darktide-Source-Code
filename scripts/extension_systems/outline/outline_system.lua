@@ -45,6 +45,11 @@ OutlineSystem.on_add_extension = function (self, world, unit, extension_name, ex
 	extension.outlines = {}
 	extension.visible_material_layers = nil
 	self._unit_extension_data[unit] = extension
+	local breed = extension_init_data.breed
+
+	if breed then
+		extension.outline_config = breed.outline_config
+	end
 
 	return extension
 end
@@ -112,12 +117,13 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 		return
 	end
 
-	outlines[#outlines + 1] = {
+	local outline = {
 		name = outline_name,
 		priority = setting.priority,
 		material_layers = setting.material_layers,
 		visibility_check = setting.visibility_check
 	}
+	outlines[#outlines + 1] = outline
 
 	table.sort(outlines, _sort_outlines_by_priority)
 
@@ -126,6 +132,31 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 
 	if top_outline.name == outline_name then
 		self:_hide_outline(unit, extension)
+	end
+
+	local wanted_outline_color = setting.color
+
+	if wanted_outline_color then
+		local outline_config = extension.outline_config
+
+		if outline_config then
+			local color_unit = unit
+			local visual_loadout_slot = outline_config.visual_loadout_slot
+
+			if visual_loadout_slot then
+				local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+				color_unit = visual_loadout_extension:slot_unit(visual_loadout_slot)
+			end
+
+			local material_layers = outline.material_layers
+
+			for i = 1, #material_layers do
+				local material_layer_name = material_layers[i]
+				local material_variable_name = "outline_color"
+
+				Unit.set_vector3_for_material(color_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+			end
+		end
 	end
 end
 

@@ -1,3 +1,4 @@
+local ErrorCodes = require("scripts/managers/error/error_codes")
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local MultiplayerSessionDisconnectError = class("MultiplayerSessionDisconnectError")
@@ -37,9 +38,12 @@ MultiplayerSessionDisconnectError.loc_description = function (self)
 	if self._error_reason == "afk" then
 		return "loc_popup_description_afk_kicked"
 	else
+		local error_code_string = ErrorCodes.get_error_code_string_from_reason(self._error_reason)
+		local string_format = "%s %s"
+
 		return "loc_error_reason", {
-			error_reason = self._error_reason
-		}
+			error_reason = error_code_string
+		}, string_format
 	end
 end
 
