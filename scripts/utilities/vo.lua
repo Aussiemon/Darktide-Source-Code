@@ -37,11 +37,6 @@ Vo.interaction_start_event = function (unit, target_unit, interaction_template_n
 		end
 	end
 
-	if interaction_template_name ~= "remove_net" then
-		if true then
-		end
-	end
-
 	if ScriptUnit.has_extension(target_unit, "dialogue_context_system") then
 		local timeset = Managers.time:time("gameplay") + 900
 		local dialogue_extension = ScriptUnit.extension(target_unit, "dialogue_system")
@@ -179,7 +174,7 @@ Vo.player_damage_event = function (unit, damage)
 	local event_name = "expression"
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
-		local sound_event_alias = (damage < DialogueSettings.player_vce_light_damage_threshold and "hurt_light_vce") or "hurt_heavy_vce"
+		local sound_event_alias = damage < DialogueSettings.player_vce_light_damage_threshold and "hurt_light_vce" or "hurt_heavy_vce"
 		local fx_extension = ScriptUnit.extension(unit, "fx_system")
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
@@ -824,6 +819,7 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 	local is_server = Managers.state.game_session:is_server()
 
 	if not is_server then
+		-- Nothing
 	end
 
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
@@ -853,6 +849,7 @@ Vo.mission_giver_point_of_interest_vo = function (dialogue_target_filter, look_a
 	local is_server = Managers.state.game_session:is_server()
 
 	if not is_server then
+		-- Nothing
 	end
 
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
@@ -909,6 +906,7 @@ Vo.play_npc_interacting_vo_event = function (unit, interactor_unit, vo_event, co
 	local is_server = Managers.state.game_session:is_server()
 
 	if not is_server then
+		-- Nothing
 	end
 
 	local dialogue_ext_npc = ScriptUnit.has_extension(unit, "dialogue_system")
@@ -1258,7 +1256,7 @@ function _get_closest_player_except(position, filtered_player_unit)
 		if num_alive_players > 0 then
 			table.clear(valid_player_units)
 
-			for i = 1, num_alive_players, 1 do
+			for i = 1, num_alive_players do
 				local player_unit = alive_players[i].player_unit
 
 				if player_unit ~= filtered_player_unit then
@@ -1272,7 +1270,7 @@ function _get_closest_player_except(position, filtered_player_unit)
 				local closest_distance = math.huge
 				local best_player_unit = nil
 
-				for i = 1, num_valid_player_units, 1 do
+				for i = 1, num_valid_player_units do
 					local player_unit = valid_player_units[i]
 					local player_position = POSITION_LOOKUP[player_unit]
 					local distance = Vector3.distance(position, player_position)
@@ -1299,7 +1297,7 @@ function _get_random_non_threatening_player_unit(minion_unit)
 	local least_threatening_unit = nil
 	local num_alive_players = #alive_players
 
-	for i = 1, num_alive_players, 1 do
+	for i = 1, num_alive_players do
 		local player_unit = alive_players[i].player_unit
 		local threat = perception_extension:threat(player_unit)
 
@@ -1333,7 +1331,7 @@ function _get_all_vox_voice_profiles()
 	local npc_vo_classes = DialogueBreedSettings.voice_classes_npc
 	local vox_voice_profiles = {}
 
-	for i = 1, #npc_vo_classes, 1 do
+	for i = 1, #npc_vo_classes do
 		local vo_class = npc_vo_classes[i]
 		local class_settings = DialogueBreedSettings[vo_class]
 		local voice_profiles = class_settings.wwise_voices
