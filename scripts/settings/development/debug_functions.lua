@@ -1797,124 +1797,30 @@ functions.add_all_animation_items = {
 		local item_definitions = MasterItems.get_cached()
 
 		for id, item in pairs(item_definitions) do
+			repeat
+				local item_type = item.item_type
 
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 27-27, warpins: 2 ---
-			--- END OF BLOCK #0 ---
+				if not item_type then
+					break
+				end
 
-			FLOW; TARGET BLOCK #0
+				if item_type == "EMOTE" or item_type == "END_OF_ROUND" then
+					local item_name = item.name
+					local slots = item.slots
+					local slot_name = slots[1]
+					local overrides = {}
+					local DONT_ALLOW_DUPLICATES = false
 
+					Managers.backend.interfaces.gear:create(item_name, slot_name, nil, overrides, DONT_ALLOW_DUPLICATES):next(function (v)
+						local gear = v.gear
+						local gear_id = gear.uuid
 
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 28-30, warpins: 1 ---
-			local item_type = item.item_type
-
-			if not item_type then
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #2 31-31, warpins: 1 ---
-				break
-				--- END OF BLOCK #2 ---
-
-
-
-			end
-
-			--- END OF BLOCK #1 ---
-
-			FLOW; TARGET BLOCK #3
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #2 31-31, warpins: 1 ---
-			break
-
-			--- END OF BLOCK #2 ---
-
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #3 32-33, warpins: 1 ---
-			--- END OF BLOCK #3 ---
-
-			FLOW; TARGET BLOCK #5
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #4 34-35, warpins: 1 ---
-			--- END OF BLOCK #4 ---
-
-			if item_type == "END_OF_ROUND" then
-			JUMP TO BLOCK #5
-			else
-			JUMP TO BLOCK #6
-			end
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #5 36-61, warpins: 2 ---
-			local item_name = item.name
-			local slots = item.slots
-			local slot_name = slots[1]
-			local overrides = {}
-			local DONT_ALLOW_DUPLICATES = false
-
-			Managers.backend.interfaces.gear:create(item_name, slot_name, nil, overrides, DONT_ALLOW_DUPLICATES):next(function (v)
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 1-10, warpins: 1 ---
-				local gear = v.gear
-				local gear_id = gear.uuid
-
-				Log.info("DebugFunctions", " %s created in inventory: %s", item_name, gear_id)
-
-				return
-				--- END OF BLOCK #0 ---
-
-
-
-			end):catch(function (errors)
-
-				-- Decompilation error in this vicinity:
-				--- BLOCK #0 1-8, warpins: 1 ---
-				Log.error("DebugFunctions", "Creating %s failed: %s", item_name, errors)
-
-				return
-				--- END OF BLOCK #0 ---
-
-
-
-			end)
-
-			break
-			--- END OF BLOCK #5 ---
-
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #6 62-63, warpins: 1 ---
-			--- END OF BLOCK #6 ---
-
-			slot30001 = if true then
-			JUMP TO BLOCK #7
-			else
-			JUMP TO BLOCK #0
-			end
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #7 64-65, warpins: 4 ---
-			--- END OF BLOCK #7 ---
-
-
-
+						Log.info("DebugFunctions", " %s created in inventory: %s", item_name, gear_id)
+					end):catch(function (errors)
+						Log.error("DebugFunctions", "Creating %s failed: %s", item_name, errors)
+					end)
+				end
+			until true
 		end
 	end
 }
@@ -1922,47 +1828,13 @@ functions.delete_all_characters = {
 	name = "Delete All Characters",
 	category = "Player Profiles",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local is_main_menu_active = _is_main_menu_active()
 
-		--- END OF BLOCK #0 ---
-
-		slot0 = if is_main_menu_active then
-		JUMP TO BLOCK #1
+		if is_main_menu_active then
+			_delete_all_characters()
 		else
-		JUMP TO BLOCK #2
+			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 5-7, warpins: 1 ---
-		_delete_all_characters()
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 8-12, warpins: 1 ---
-		Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 13-13, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.delete_characters = {
@@ -1970,171 +1842,61 @@ functions.delete_characters = {
 	number_button = true,
 	category = "Player Profiles",
 	on_activated = function (amount)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local is_main_menu_active = _is_main_menu_active()
 
-		--- END OF BLOCK #0 ---
-
-		slot1 = if is_main_menu_active then
-		JUMP TO BLOCK #1
+		if is_main_menu_active then
+			_delete_amount_of_characters(amount)
 		else
-		JUMP TO BLOCK #2
+			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 5-8, warpins: 1 ---
-		_delete_amount_of_characters(amount)
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 9-13, warpins: 1 ---
-		Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 14-14, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.delete_selected_character = {
 	name = "Delete Selected Character",
 	category = "Player Profiles",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local is_main_menu_active = _is_main_menu_active()
 
-		--- END OF BLOCK #0 ---
-
-		slot0 = if is_main_menu_active then
-		JUMP TO BLOCK #1
+		if is_main_menu_active then
+			_delete_selected_character()
 		else
-		JUMP TO BLOCK #2
+			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 5-7, warpins: 1 ---
-		_delete_selected_character()
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 8-12, warpins: 1 ---
-		Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 13-13, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 
 local function _select_player_voice(selected_voice)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-28, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 	local local_player_id = local_player:local_player_id()
 	local local_player_unit = local_player.player_unit
 	local is_server = Managers.state.game_session:is_server()
 	local voice_id = NetworkLookup.player_character_voices[selected_voice]
 	local game_object_id = Managers.state.unit_spawner:game_object_id(local_player_unit)
-	--- END OF BLOCK #0 ---
 
-	slot4 = if is_server then
-	JUMP TO BLOCK #1
+	if is_server then
+		local profile = local_player:profile()
+		profile.selected_voice = selected_voice
+		local peer_id = local_player:peer_id()
+		local profile_synchronizer_host = Managers.profile_loading:synchronizer_host()
+
+		profile_synchronizer_host:set_player_profile(peer_id, local_player_id, profile)
+
+		local function callback()
+			Managers.state.game_session:send_rpc_clients("rpc_player_select_voice", game_object_id, voice_id)
+
+			local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
+
+			dialogue_extension:set_vo_profile(selected_voice)
+		end
+
+		profile_synchronizer_host:do_when_synced(peer_id, callback, "selected_voice")
 	else
-	JUMP TO BLOCK #2
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 29-54, warpins: 1 ---
-	local profile = local_player:profile()
-	profile.selected_voice = selected_voice
-	local peer_id = local_player:peer_id()
-	local profile_synchronizer_host = Managers.profile_loading:synchronizer_host()
-
-	profile_synchronizer_host:set_player_profile(peer_id, local_player_id, profile)
-
-	local function callback()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-19, warpins: 1 ---
-		Managers.state.game_session:send_rpc_clients("rpc_player_select_voice", game_object_id, voice_id)
+		Managers.state.game_session:send_rpc_server("rpc_player_select_voice_server", game_object_id, voice_id)
 
 		local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
 
 		dialogue_extension:set_vo_profile(selected_voice)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
-
-	profile_synchronizer_host:do_when_synced(peer_id, callback, "selected_voice")
-	--- END OF BLOCK #1 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 55-72, warpins: 1 ---
-	Managers.state.game_session:send_rpc_server("rpc_player_select_voice_server", game_object_id, voice_id)
-
-	local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
-
-	dialogue_extension:set_vo_profile(selected_voice)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 73-74, warpins: 2 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
@@ -2142,243 +1904,76 @@ functions.select_player_voice = {
 	name = "Select Player Voice",
 	category = "Player Voice",
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local voices = DialogueBreedSettings.human.wwise_voices
 
 		return voices
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_activated = function (new_value, old_value)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		_select_player_voice(new_value)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.report_error = {
 	name = "Report Error",
 	category = "Error",
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
 		local level_names = {}
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 8-10, warpins: 0 ---
 		for name, level in pairs(Managers.error.ERROR_LEVEL) do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 8-8, warpins: 1 ---
 			level_names[level] = name
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 9-10, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-11, warpins: 1 ---
 		return level_names
-		--- END OF BLOCK #2 ---
-
-
-
 	end,
 	on_activated = function (level_name)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-14, warpins: 1 ---
 		local test_error_class = require("scripts/managers/error/errors/test_error")
 		local error_obj = test_error_class:new(level_name)
 
 		Managers.error:report_error(error_obj)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.complete_game_mode = {
 	name = "Complete Game Mode",
 	category = "Game Mode",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-9, warpins: 1 ---
 		local outcome = "won"
 		local is_server = Managers.state.game_session:is_server()
 
-		--- END OF BLOCK #0 ---
-
-		slot1 = if is_server then
-		JUMP TO BLOCK #1
+		if is_server then
+			Managers.state.game_mode:debug_complete_game_mode(outcome)
 		else
-		JUMP TO BLOCK #2
+			local outcome_id = NetworkLookup.game_mode_outcomes[outcome]
+
+			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 10-17, warpins: 1 ---
-		Managers.state.game_mode:debug_complete_game_mode(outcome)
-
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 18-28, warpins: 1 ---
-		local outcome_id = NetworkLookup.game_mode_outcomes[outcome]
-
-		Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 29-29, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.fail_game_mode = {
 	name = "Fail Game Mode",
 	category = "Game Mode",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-9, warpins: 1 ---
 		local outcome = "lost"
 		local is_server = Managers.state.game_session:is_server()
 
-		--- END OF BLOCK #0 ---
-
-		slot1 = if is_server then
-		JUMP TO BLOCK #1
+		if is_server then
+			Managers.state.game_mode:debug_complete_game_mode(outcome)
 		else
-		JUMP TO BLOCK #2
+			local outcome_id = NetworkLookup.game_mode_outcomes[outcome]
+
+			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 10-17, warpins: 1 ---
-		Managers.state.game_mode:debug_complete_game_mode(outcome)
-
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 18-28, warpins: 1 ---
-		local outcome_id = NetworkLookup.game_mode_outcomes[outcome]
-
-		Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 29-29, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.force_respawn = {
 	name = "Force Respawn All Players",
 	category = "Game Mode",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
 		local is_server = Managers.state.game_session:is_server()
 
-		--- END OF BLOCK #0 ---
-
-		slot0 = if is_server then
-		JUMP TO BLOCK #1
+		if is_server then
+			Managers.state.game_mode:debug_force_respawn()
 		else
-		JUMP TO BLOCK #2
+			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_force_respawn")
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 9-15, warpins: 1 ---
-		Managers.state.game_mode:debug_force_respawn()
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 16-22, warpins: 1 ---
-		Managers.state.game_session:send_rpc_server("rpc_debug_client_request_force_respawn")
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 23-23, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.debug_stagger_selected_unit = {
@@ -2386,39 +1981,13 @@ functions.debug_stagger_selected_unit = {
 	button_text = "Trigger",
 	category = "Stagger",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local selected_unit = Debug.selected_unit
-		--- END OF BLOCK #0 ---
 
-		slot0 = if selected_unit then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if selected_unit then
+			local Stagger = require("scripts/utilities/attack/stagger")
+
+			Stagger.debug_trigger_minion_stagger(selected_unit)
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 5-10, warpins: 1 ---
-		local Stagger = require("scripts/utilities/attack/stagger")
-
-		Stagger.debug_trigger_minion_stagger(selected_unit)
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-11, warpins: 2 ---
-		return
-		--- END OF BLOCK #2 ---
-
-
-
 	end
 }
 functions.debug_stagger_selected_unit_with_animation = {
@@ -2426,392 +1995,97 @@ functions.debug_stagger_selected_unit_with_animation = {
 	category = "Stagger",
 	dynamic_contents = true,
 	on_activated = function (stagger_animation)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		local selected_unit = Debug.selected_unit
-		--- END OF BLOCK #0 ---
 
-		slot1 = if selected_unit then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if selected_unit then
+			local Stagger = require("scripts/utilities/attack/stagger")
+			local stagger_direction = nil
+
+			Stagger.debug_trigger_minion_stagger(selected_unit, stagger_direction, stagger_animation)
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 5-13, warpins: 1 ---
-		local Stagger = require("scripts/utilities/attack/stagger")
-		local stagger_direction = nil
-
-		Stagger.debug_trigger_minion_stagger(selected_unit, stagger_direction, stagger_animation)
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 14-14, warpins: 2 ---
-		return
-		--- END OF BLOCK #2 ---
-
-
-
 	end,
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
 		local options = {}
+		local selected_unit = Debug:exists() and Debug.selected_unit
 
-		--- END OF BLOCK #0 ---
+		if selected_unit and ALIVE[selected_unit] then
+			local is_server = Managers.state.game_session:is_server()
 
-		slot1 = if Debug:exists()
+			if not is_server then
+				return options
+			end
 
-		 then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+			local unit_data_extension = ScriptUnit.has_extension(selected_unit, "unit_data_system")
+
+			if not unit_data_extension then
+				return options
+			end
+
+			local breed = unit_data_extension:breed()
+
+			if Breed.is_player(breed) then
+				return options
+			end
+
+			local behavior_extension = ScriptUnit.has_extension(selected_unit, "behavior_system")
+
+			if not behavior_extension then
+				return options
+			end
+
+			local brain = behavior_extension:brain()
+			local behavior_tree = brain:behavior_tree()
+			local action_data = behavior_tree:action_data()
+			local stagger_action_data = action_data.stagger
+
+			if stagger_action_data then
+				local stagger_type = DevParameters.debug_stagger_type
+				local action_stagger_anims = stagger_action_data.stagger_anims
+				local stagger_type_anims = action_stagger_anims[stagger_type]
+
+				if stagger_type_anims then
+					local stagger_direction = DevParameters.debug_stagger_direction
+					local stagger_direction_anims = stagger_type_anims[stagger_direction]
+
+					if stagger_direction_anims then
+						for _, animation in pairs(stagger_direction_anims) do
+							table.insert(options, animation)
+						end
+					end
+				end
+			end
+
+			table.sort(options)
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 8-9, warpins: 1 ---
-		local selected_unit = Debug.selected_unit
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-11, warpins: 2 ---
-		--- END OF BLOCK #2 ---
-
-		slot1 = if selected_unit then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #18
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 12-15, warpins: 1 ---
-		--- END OF BLOCK #3 ---
-
-		slot2 = if ALIVE[selected_unit] then
-		JUMP TO BLOCK #4
-		else
-		JUMP TO BLOCK #18
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 16-23, warpins: 1 ---
-		local is_server = Managers.state.game_session:is_server()
-
-		--- END OF BLOCK #4 ---
-
-		slot2 = if not is_server then
-		JUMP TO BLOCK #5
-		else
-		JUMP TO BLOCK #6
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #5 24-24, warpins: 1 ---
 		return options
-
-		--- END OF BLOCK #5 ---
-
-		FLOW; TARGET BLOCK #6
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #6 25-31, warpins: 2 ---
-		local unit_data_extension = ScriptUnit.has_extension(selected_unit, "unit_data_system")
-
-		--- END OF BLOCK #6 ---
-
-		slot3 = if not unit_data_extension then
-		JUMP TO BLOCK #7
-		else
-		JUMP TO BLOCK #8
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #7 32-32, warpins: 1 ---
-		return options
-
-		--- END OF BLOCK #7 ---
-
-		FLOW; TARGET BLOCK #8
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #8 33-41, warpins: 2 ---
-		local breed = unit_data_extension:breed()
-
-		--- END OF BLOCK #8 ---
-
-		slot5 = if Breed.is_player(breed)
-
-		 then
-		JUMP TO BLOCK #9
-		else
-		JUMP TO BLOCK #10
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #9 42-42, warpins: 1 ---
-		return options
-
-		--- END OF BLOCK #9 ---
-
-		FLOW; TARGET BLOCK #10
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #10 43-49, warpins: 2 ---
-		local behavior_extension = ScriptUnit.has_extension(selected_unit, "behavior_system")
-
-		--- END OF BLOCK #10 ---
-
-		slot5 = if not behavior_extension then
-		JUMP TO BLOCK #11
-		else
-		JUMP TO BLOCK #12
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #11 50-50, warpins: 1 ---
-		return options
-
-		--- END OF BLOCK #11 ---
-
-		FLOW; TARGET BLOCK #12
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #12 51-62, warpins: 2 ---
-		local brain = behavior_extension:brain()
-		local behavior_tree = brain:behavior_tree()
-		local action_data = behavior_tree:action_data()
-		local stagger_action_data = action_data.stagger
-		--- END OF BLOCK #12 ---
-
-		slot9 = if stagger_action_data then
-		JUMP TO BLOCK #13
-		else
-		JUMP TO BLOCK #17
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #13 63-68, warpins: 1 ---
-		local stagger_type = DevParameters.debug_stagger_type
-		local action_stagger_anims = stagger_action_data.stagger_anims
-		local stagger_type_anims = action_stagger_anims[stagger_type]
-		--- END OF BLOCK #13 ---
-
-		slot12 = if stagger_type_anims then
-		JUMP TO BLOCK #14
-		else
-		JUMP TO BLOCK #17
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #14 69-73, warpins: 1 ---
-		local stagger_direction = DevParameters.debug_stagger_direction
-		local stagger_direction_anims = stagger_type_anims[stagger_direction]
-
-		--- END OF BLOCK #14 ---
-
-		slot14 = if stagger_direction_anims then
-		JUMP TO BLOCK #15
-		else
-		JUMP TO BLOCK #17
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #15 74-77, warpins: 1 ---
-		--- END OF BLOCK #15 ---
-
-		FLOW; TARGET BLOCK #16
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #16 78-84, warpins: 0 ---
-		for _, animation in pairs(stagger_direction_anims) do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 78-82, warpins: 1 ---
-			table.insert(options, animation)
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 83-84, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
-		end
-
-		--- END OF BLOCK #16 ---
-
-		FLOW; TARGET BLOCK #17
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #17 85-88, warpins: 4 ---
-		table.sort(options)
-
-		--- END OF BLOCK #17 ---
-
-		FLOW; TARGET BLOCK #18
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #18 89-89, warpins: 3 ---
-		return options
-		--- END OF BLOCK #18 ---
-
-
-
 	end
 }
 
 local function actions_options()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 	local weapon_template = WeaponTemplates[DevParameters.sweep_spline_selected_weapon_template]
 	local options = {}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-19, warpins: 0 ---
 	for name, action_settings in pairs(weapon_template.actions) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 12-14, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
 		if action_settings.kind == "sweep" then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+			options[#options + 1] = name
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 15-17, warpins: 1 ---
-		options[#options + 1] = name
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 18-19, warpins: 3 ---
-		--- END OF BLOCK #2 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 20-20, warpins: 1 ---
 	return options
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 local function run_sweep_spline_editor(new_value, old_value)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 
-	--- END OF BLOCK #0 ---
+	if local_player:unit_is_alive() then
+		local player_unit = local_player.player_unit
+		local weapon_template_name = DevParameters.sweep_spline_selected_weapon_template
+		local weapon_system = Managers.state.extension:system("weapon_system")
 
-	slot3 = if local_player:unit_is_alive()
-
-	 then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+		weapon_system:debug_run_sweep_editor(player_unit, weapon_template_name, new_value)
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-27, warpins: 1 ---
-	local player_unit = local_player.player_unit
-	local weapon_template_name = DevParameters.sweep_spline_selected_weapon_template
-	local weapon_system = Managers.state.extension:system("weapon_system")
-
-	weapon_system:debug_run_sweep_editor(player_unit, weapon_template_name, new_value)
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 28-28, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 functions.sweep_spline_editor = {
@@ -2824,30 +2098,12 @@ functions.reset_time_scale = {
 	name = "Reset Time Scale",
 	category = "Time",
 	on_activated = function (new_value, old_value)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-5, warpins: 1 ---
 		Debug:reset_time_scale()
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 
 local function _sleep(seconds)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	Application.sleep(1000 * seconds)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.sleep = {
@@ -2861,20 +2117,11 @@ functions.sleep = {
 }
 
 local function _reset_dev_parameters()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-14, warpins: 1 ---
 	local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 
 	ParameterResolver.reset_defaults()
 	Application.set_user_setting("development_settings", DevParameters)
 	Application.save_user_settings()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.reset_dev_parameters = {
@@ -2884,314 +2131,56 @@ functions.reset_dev_parameters = {
 }
 
 local function _params_to_string(actual, defaults)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local params_as_strings = {}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-75, warpins: 0 ---
 	for name, default_value in pairs(defaults) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-6, warpins: 2 ---
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 7-12, warpins: 1 ---
-		local value = actual[name]
-
-		--- END OF BLOCK #1 ---
-
-		if type(value)
-
-		 ~= "table" then
-		JUMP TO BLOCK #2
-		else
-		JUMP TO BLOCK #3
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 13-14, warpins: 1 ---
-		slot9 = false
-		--- END OF BLOCK #2 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 15-15, warpins: 1 ---
-		local should_skip = true
-
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 16-17, warpins: 2 ---
-		--- END OF BLOCK #4 ---
-
-		slot9 = if should_skip then
-		JUMP TO BLOCK #5
-		else
-		JUMP TO BLOCK #6
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #5 18-18, warpins: 1 ---
-		--- END OF BLOCK #5 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #17
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #6 19-23, warpins: 1 ---
-		--- END OF BLOCK #6 ---
-
-		if type(default_value)
-
-		 == "table" then
-		JUMP TO BLOCK #7
-		else
-		JUMP TO BLOCK #9
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #7 24-26, warpins: 1 ---
-		--- END OF BLOCK #7 ---
-
-		if default_value.value ~= nil then
-		JUMP TO BLOCK #8
-		else
-		JUMP TO BLOCK #9
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #8 27-27, warpins: 1 ---
-		default_value = default_value.value
-		--- END OF BLOCK #8 ---
-
-		FLOW; TARGET BLOCK #9
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #9 28-29, warpins: 3 ---
-		--- END OF BLOCK #9 ---
-
-		if value ~= default_value then
-		JUMP TO BLOCK #10
-		else
-		JUMP TO BLOCK #16
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #10 30-31, warpins: 1 ---
-		--- END OF BLOCK #10 ---
-
-		if value == true then
-		JUMP TO BLOCK #11
-		else
-		JUMP TO BLOCK #12
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #11 32-40, warpins: 1 ---
-		params_as_strings[#params_as_strings + 1] = string.format("-%s", name)
-
-		--- END OF BLOCK #11 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #16
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #12 41-45, warpins: 1 ---
-		--- END OF BLOCK #12 ---
-
-		if type(value)
-		 == "string" then
-		JUMP TO BLOCK #13
-		else
-		JUMP TO BLOCK #15
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #13 46-52, warpins: 1 ---
-		--- END OF BLOCK #13 ---
-
-		if string.find(value, " ")
-
-		 ~= nil then
-		JUMP TO BLOCK #14
-		else
-		JUMP TO BLOCK #15
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #14 53-62, warpins: 1 ---
-		params_as_strings[#params_as_strings + 1] = string.format("-%s \"%s\"", name, value)
-		--- END OF BLOCK #14 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #16
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #15 63-71, warpins: 2 ---
-		params_as_strings[#params_as_strings + 1] = string.format("-%s %s", name, value)
-		--- END OF BLOCK #15 ---
-
-		FLOW; TARGET BLOCK #16
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #16 72-73, warpins: 4 ---
-		--- END OF BLOCK #16 ---
-
-		slot30001 = if true then
-		JUMP TO BLOCK #17
-		else
-		JUMP TO BLOCK #0
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #17 74-75, warpins: 3 ---
-		--- END OF BLOCK #17 ---
-
-
-
+		repeat
+			local value = actual[name]
+			local should_skip = type(value) == "table"
+
+			if should_skip then
+				break
+			end
+
+			if type(default_value) == "table" and default_value.value ~= nil then
+				default_value = default_value.value
+			end
+
+			if value ~= default_value then
+				if value == true then
+					params_as_strings[#params_as_strings + 1] = string.format("-%s", name)
+				elseif type(value) == "string" and string.find(value, " ") ~= nil then
+					params_as_strings[#params_as_strings + 1] = string.format("-%s \"%s\"", name, value)
+				else
+					params_as_strings[#params_as_strings + 1] = string.format("-%s %s", name, value)
+				end
+			end
+		until true
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 76-80, warpins: 1 ---
 	return table.concat(params_as_strings, " ")
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 local function _copy_parameters()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-18, warpins: 1 ---
 	local game_params = _params_to_string(GameParameters, require("scripts/foundation/utilities/parameters/default_game_parameters"))
 	local dev_params = _params_to_string(DevParameters, require("scripts/foundation/utilities/parameters/default_dev_parameters").parameters)
 	local all_strings = {}
-	--- END OF BLOCK #0 ---
 
 	if #game_params > 0 then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+		all_strings[#all_strings + 1] = "-game"
+		all_strings[#all_strings + 1] = game_params
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 19-25, warpins: 1 ---
-	all_strings[#all_strings + 1] = "-game"
-	all_strings[#all_strings + 1] = game_params
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 26-29, warpins: 2 ---
-	--- END OF BLOCK #2 ---
 
 	if #dev_params > 0 then
-	JUMP TO BLOCK #3
-	else
-	JUMP TO BLOCK #4
+		all_strings[#all_strings + 1] = "-dev"
+		all_strings[#all_strings + 1] = dev_params
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 30-36, warpins: 1 ---
-	all_strings[#all_strings + 1] = "-dev"
-	all_strings[#all_strings + 1] = dev_params
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 37-47, warpins: 2 ---
 	local concat_string = table.concat(all_strings, " ")
 
-	--- END OF BLOCK #4 ---
-
-	slot4 = if not Clipboard.put(concat_string)
-	 then
-	JUMP TO BLOCK #5
-	else
-	JUMP TO BLOCK #6
+	if not Clipboard.put(concat_string) then
+		Log.warning("DebugFunctions", "Failed to copy string to clipboard.")
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 48-52, warpins: 1 ---
-	Log.warning("DebugFunctions", "Failed to copy string to clipboard.")
-
-	--- END OF BLOCK #5 ---
-
-	FLOW; TARGET BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 53-53, warpins: 2 ---
-	return
-	--- END OF BLOCK #6 ---
-
-
-
 end
 
 functions.copy_parameters = {
@@ -3201,186 +2190,54 @@ functions.copy_parameters = {
 }
 
 local function _print_dev_combat_stats()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	DevCombatStats.print_stats()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 local function _next_level()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 	local profile = local_player:profile()
-	--- END OF BLOCK #0 ---
 
-	slot1 = if profile then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #4
+	if profile then
+		local character_id = local_player:character_id()
+		local current_level = profile.current_level
+
+		if character_id then
+			Managers.backend.interfaces.progression:get_progression("character", character_id):next(function (character_progression)
+				local needed_xp_for_next_level = character_progression.neededXpForNextLevel
+
+				if needed_xp_for_next_level == 0 or needed_xp_for_next_level == -1 then
+					return Promise.resolved(true)
+				end
+
+				local current_xp = character_progression.currentXp
+				local new_xp = current_xp + needed_xp_for_next_level
+				local promise = Managers.backend.interfaces.progression:set_character_xp(character_id, new_xp)
+
+				return promise
+			end):next(function (data)
+				local next_level = current_level + 1
+				local promise = Managers.backend.interfaces.progression:level_up_character(character_id, next_level)
+
+				return promise
+			end):next(function (data)
+				local new_level = data.progressionInfo.currentLevel
+				local new_xp = data.progressionInfo.currentXp
+				local profile_archetype = profile.archetype
+				local specialization_name = profile.specialization
+				local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, new_level)
+
+				if talent_group_id then
+					Managers.data_service.talents:mark_unlocked_group_as_new(character_id, talent_group_id)
+				end
+
+				Log.info("DebugFunctions", "Player level bumped to: %s, Player xp bumped to %s", new_level, new_xp)
+
+				profile.current_level = new_level
+			end):catch(function (error)
+				Log.info("DebugFunctions", "Bumping player level failed, %s", error)
+			end)
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-17, warpins: 1 ---
-	local character_id = local_player:character_id()
-	local current_level = profile.current_level
-
-	--- END OF BLOCK #1 ---
-
-	slot2 = if character_id then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 18-42, warpins: 1 ---
-	Managers.backend.interfaces.progression:get_progression("character", character_id):next(function (character_progression)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		local needed_xp_for_next_level = character_progression.neededXpForNextLevel
-
-		--- END OF BLOCK #0 ---
-
-		if needed_xp_for_next_level ~= 0 then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-5, warpins: 1 ---
-		--- END OF BLOCK #1 ---
-
-		if needed_xp_for_next_level == -1 then
-		JUMP TO BLOCK #2
-		else
-		JUMP TO BLOCK #3
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 6-9, warpins: 2 ---
-		return Promise.resolved(true)
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 10-21, warpins: 2 ---
-		local current_xp = character_progression.currentXp
-		local new_xp = current_xp + needed_xp_for_next_level
-		local promise = Managers.backend.interfaces.progression:set_character_xp(character_id, new_xp)
-
-		return promise
-		--- END OF BLOCK #3 ---
-
-
-
-	end):next(function (data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-12, warpins: 1 ---
-		local next_level = current_level + 1
-		local promise = Managers.backend.interfaces.progression:level_up_character(character_id, next_level)
-
-		return promise
-		--- END OF BLOCK #0 ---
-
-
-
-	end):next(function (data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-16, warpins: 1 ---
-		local new_level = data.progressionInfo.currentLevel
-		local new_xp = data.progressionInfo.currentXp
-		local profile_archetype = profile.archetype
-		local specialization_name = profile.specialization
-		local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, new_level)
-
-		--- END OF BLOCK #0 ---
-
-		slot5 = if talent_group_id then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 17-24, warpins: 1 ---
-		Managers.data_service.talents:mark_unlocked_group_as_new(character_id, talent_group_id)
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 25-34, warpins: 2 ---
-		Log.info("DebugFunctions", "Player level bumped to: %s, Player xp bumped to %s", new_level, new_xp)
-
-		profile.current_level = new_level
-
-		return
-		--- END OF BLOCK #2 ---
-
-
-
-	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
-		Log.info("DebugFunctions", "Bumping player level failed, %s", error)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 43-43, warpins: 2 ---
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 44-45, warpins: 2 ---
-	return
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 functions.level_up = {
@@ -3391,75 +2248,22 @@ functions.level_up = {
 }
 
 local function _set_xp(value)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 	local profile = local_player:profile()
-	--- END OF BLOCK #0 ---
 
-	slot2 = if profile then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #3
+	if profile then
+		local character_id = local_player:character_id()
+
+		if character_id then
+			local promise = Managers.backend.interfaces.progression:set_character_xp(character_id, value)
+
+			promise:next(function ()
+				Log.info("DebugFunctions", "XP set to: %d", value)
+			end):catch(function (error)
+				Log.info("DebugFunctions", "Adding character XP failed, %s", error)
+			end)
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-16, warpins: 1 ---
-	local character_id = local_player:character_id()
-	--- END OF BLOCK #1 ---
-
-	slot3 = if character_id then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 17-33, warpins: 1 ---
-	local promise = Managers.backend.interfaces.progression:set_character_xp(character_id, value)
-
-	promise:next(function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
-		Log.info("DebugFunctions", "XP set to: %d", value)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
-		Log.info("DebugFunctions", "Adding character XP failed, %s", error)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 34-35, warpins: 3 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 functions.set_xp = {
@@ -3472,91 +2276,24 @@ functions.set_xp = {
 local Stories = require("scripts/settings/narrative/narrative_stories").stories
 
 local function _get_chapter_names(chapters)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local names = {
 		"reset"
 	}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-10, warpins: 0 ---
 	for i = 1, #chapters do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 6-10, warpins: 2 ---
 		names[i + 1] = chapters[i].name
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 11-11, warpins: 1 ---
 	return names
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 for story_name, chapters in pairs(Stories) do
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 432-454, warpins: 1 ---
 	local function _set_story(chapter_name)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
 		if chapter_name ~= "reset" then
-		JUMP TO BLOCK #1
+			Managers.narrative:force_story_chapter(story_name, chapter_name)
 		else
-		JUMP TO BLOCK #2
+			Managers.narrative:force_story_chapter(story_name)
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 3-10, warpins: 1 ---
-		Managers.narrative:force_story_chapter(story_name, chapter_name)
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-16, warpins: 1 ---
-		Managers.narrative:force_story_chapter(story_name)
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 17-17, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 
 	functions[string.format("force_story_%s", story_name)] = {
@@ -3565,42 +2302,14 @@ for story_name, chapters in pairs(Stories) do
 		on_activated = _set_story,
 		options_function = _get_chapter_names(chapters)
 	}
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 455-456, warpins: 2 ---
-	--- END OF BLOCK #1 ---
-
-
-
 end
 
 local function _get_story_names()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-4, warpins: 1 ---
 	return table.keys(Stories)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 local function _skip_story(story_name)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	Managers.narrative:skip_story(story_name)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.skip_story = {
@@ -3611,29 +2320,13 @@ functions.skip_story = {
 }
 
 local function _list_narrative_event_names()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
 
 	return table.keys(NarrativeStories.events)
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 local function _complete_narrative_event(event_name)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	Managers.narrative:force_event_complete(event_name)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.complete_narrative_event = {
@@ -3644,16 +2337,7 @@ functions.complete_narrative_event = {
 }
 
 local function _uncomplete_narrative_event(event_name)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	Managers.narrative:force_event_not_complete(event_name)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.reset_narrative_event = {
@@ -3664,75 +2348,20 @@ functions.reset_narrative_event = {
 }
 
 local function _reset_achievements()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 	local profile = local_player:profile()
-	--- END OF BLOCK #0 ---
 
-	slot1 = if profile then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #3
+	if profile then
+		local account_id = local_player:account_id()
+
+		if type(account_id) == "string" then
+			Managers.backend.interfaces.commendations:delete_commendations(account_id):next(function ()
+				Log.info("DebugFunctions", "Sucessfully deleted achievements data")
+			end):catch(function (error)
+				Log.info("DebugFunctions", "Deleting achievements failed, %s", error)
+			end)
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-19, warpins: 1 ---
-	local account_id = local_player:account_id()
-
-	--- END OF BLOCK #1 ---
-
-	if type(account_id)
-	 == "string" then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 20-35, warpins: 1 ---
-	Managers.backend.interfaces.commendations:delete_commendations(account_id):next(function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-6, warpins: 1 ---
-		Log.info("DebugFunctions", "Sucessfully deleted achievements data")
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
-		Log.info("DebugFunctions", "Deleting achievements failed, %s", error)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 36-36, warpins: 3 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 functions.reset_achievements = {
@@ -3743,75 +2372,20 @@ functions.reset_achievements = {
 }
 
 local function _list_backend_achievements()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-11, warpins: 1 ---
 	local local_player = Managers.player:local_player(1)
 	local profile = local_player:profile()
-	--- END OF BLOCK #0 ---
 
-	slot1 = if profile then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #3
+	if profile then
+		local account_id = local_player:account_id()
+
+		if type(account_id) == "string" then
+			Managers.backend.interfaces.commendations:get_commendations(account_id, true, true):next(function (data)
+				Log.info("DebugFunctions", "Successfully fetched achievements data %s", table.tostring(data, 5))
+			end):catch(function (error)
+				Log.info("DebugFunctions", "Fetching achievements failed, %s", error)
+			end)
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 12-19, warpins: 1 ---
-	local account_id = local_player:account_id()
-
-	--- END OF BLOCK #1 ---
-
-	if type(account_id)
-	 == "string" then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 20-37, warpins: 1 ---
-	Managers.backend.interfaces.commendations:get_commendations(account_id, true, true):next(function (data)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-11, warpins: 1 ---
-		Log.info("DebugFunctions", "Successfully fetched achievements data %s", table.tostring(data, 5))
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end):catch(function (error)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-7, warpins: 1 ---
-		Log.info("DebugFunctions", "Fetching achievements failed, %s", error)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
-	end)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 38-38, warpins: 3 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 functions.list_backend_achievements = {
@@ -3822,58 +2396,18 @@ functions.list_backend_achievements = {
 }
 
 local function _list_achievement_definitions()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-10, warpins: 1 ---
 	local achievement_definitions = Managers.achievements:get_achievement_definitions()
 	local readable = {}
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 11-28, warpins: 0 ---
 	for _, achievement_definition in ipairs(achievement_definitions) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 11-26, warpins: 1 ---
 		readable[#readable + 1] = {
 			id = achievement_definition:id(),
 			label = achievement_definition:label(),
 			description = achievement_definition:description()
 		}
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 27-28, warpins: 2 ---
-		--- END OF BLOCK #1 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 29-39, warpins: 1 ---
 	Log.info("DebugFunction", "Achievements : %s", table.tostring(readable, 99))
-
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 functions.list_achievement_definitions = {
@@ -3884,16 +2418,7 @@ functions.list_achievement_definitions = {
 }
 
 local function _verify_achievements()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	Managers.achievements:verify_achievements()
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 functions.verify_achievements = {
@@ -3905,191 +2430,42 @@ functions.verify_achievements = {
 local Views = require("scripts/ui/views/views")
 
 local function _ui_manager_not_initialized()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	Log.warning("DebugFunctions", "The UI Manager has not been initialized")
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 local function _get_all_active_views()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	slot0 = if ui_manager then
-	JUMP TO BLOCK #1
+	if ui_manager then
+		return ui_manager._view_handler._active_views_array
 	else
-	JUMP TO BLOCK #2
+		_ui_manager_not_initialized()
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-8, warpins: 1 ---
-	return ui_manager._view_handler._active_views_array
-
-	--- END OF BLOCK #1 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 9-10, warpins: 1 ---
-	_ui_manager_not_initialized()
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 11-11, warpins: 2 ---
-	return
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 local function _get_all_view_names()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
 	local filtered_views = {}
 	local i = 1
 
-	--- END OF BLOCK #0 ---
-
-	FLOW; TARGET BLOCK #1
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-19, warpins: 0 ---
 	for view_name, view in pairs(Views) do
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 7-9, warpins: 1 ---
 		local testify_flags = view.testify_flags
-		--- END OF BLOCK #0 ---
 
-		if testify_flags ~= nil then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #3
+		if testify_flags == nil or testify_flags.ui_views == nil or testify_flags.ui_views then
+			filtered_views[i] = view_name
+			i = i + 1
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 10-12, warpins: 1 ---
-		--- END OF BLOCK #1 ---
-
-		if testify_flags.ui_views ~= nil then
-		JUMP TO BLOCK #2
-		else
-		JUMP TO BLOCK #3
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 13-15, warpins: 1 ---
-		--- END OF BLOCK #2 ---
-
-		slot8 = if testify_flags.ui_views then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #4
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 16-17, warpins: 3 ---
-		filtered_views[i] = view_name
-		i = i + 1
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 18-19, warpins: 3 ---
-		--- END OF BLOCK #4 ---
-
-
-
 	end
 
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 20-20, warpins: 1 ---
 	return filtered_views
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 functions.close_all_views = {
 	name = "Close All Views",
 	category = "UI",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		slot0 = if ui_manager then
-		JUMP TO BLOCK #1
+		if ui_manager then
+			ui_manager:close_all_views()
 		else
-		JUMP TO BLOCK #2
+			_ui_manager_not_initialized()
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-8, warpins: 1 ---
-		ui_manager:close_all_views()
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 9-10, warpins: 1 ---
-		_ui_manager_not_initialized()
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 11-11, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.close_view = {
@@ -4097,651 +2473,158 @@ functions.close_view = {
 	category = "UI",
 	dynamic_contents = true,
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return _get_all_active_views()
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_activated = function (view_name)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		slot1 = if ui_manager then
-		JUMP TO BLOCK #1
+		if ui_manager then
+			ui_manager:close_view(view_name)
 		else
-		JUMP TO BLOCK #2
+			_ui_manager_not_initialized()
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-9, warpins: 1 ---
-		ui_manager:close_view(view_name)
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-11, warpins: 1 ---
-		_ui_manager_not_initialized()
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 12-12, warpins: 2 ---
-		return
-		--- END OF BLOCK #3 ---
-
-
-
 	end
 }
 functions.open_view = {
 	name = "Open View",
 	category = "UI",
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return _get_all_view_names()
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_activated = function (view_name)
+		if ui_manager then
+			local is_view_active = ui_manager:view_active(view_name)
 
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
+			if not is_view_active then
+				local context = Views[view_name].dummy_data or {
+					debug_preview = true,
+					can_exit = true
+				}
 
-		slot1 = if ui_manager then
-		JUMP TO BLOCK #1
+				ui_manager:open_view(view_name, nil, nil, nil, nil, context)
+			else
+				Log.warning("DebugFunctions", "View with name " .. view_name .. " is already active.")
+			end
 		else
-		JUMP TO BLOCK #6
+			_ui_manager_not_initialized()
 		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-10, warpins: 1 ---
-		local is_view_active = ui_manager:view_active(view_name)
-		--- END OF BLOCK #1 ---
-
-		slot1 = if not is_view_active then
-		JUMP TO BLOCK #2
-		else
-		JUMP TO BLOCK #5
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-15, warpins: 1 ---
-		--- END OF BLOCK #2 ---
-
-		slot2 = if not Views[view_name].dummy_data then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #4
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 16-16, warpins: 1 ---
-		local context = {
-			debug_preview = true,
-			can_exit = true
-		}
-
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 17-24, warpins: 2 ---
-		ui_manager:open_view(view_name, nil, nil, nil, nil, context)
-		--- END OF BLOCK #4 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #7
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #5 25-33, warpins: 1 ---
-		Log.warning("DebugFunctions", "View with name " .. view_name .. " is already active.")
-		--- END OF BLOCK #5 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #7
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #6 34-35, warpins: 1 ---
-		_ui_manager_not_initialized()
-
-		--- END OF BLOCK #6 ---
-
-		FLOW; TARGET BLOCK #7
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #7 36-36, warpins: 3 ---
-		return
-		--- END OF BLOCK #7 ---
-
-
-
 	end
 }
 local selected_voice, selected_sound_event_type, selected_sound_event, player_manager = nil
 
 local function _dialogue_extension()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local player = player_manager:local_player(1)
 
-	--- END OF BLOCK #0 ---
-
-	if player ~= nil then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if player == nil or player.player_unit == nil then
+		return
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 8-10, warpins: 1 ---
-	--- END OF BLOCK #1 ---
-
-	if player.player_unit == nil then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 11-11, warpins: 2 ---
-	return
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 12-17, warpins: 2 ---
 	local dialogue_extension = ScriptUnit.extension(player.player_unit, "dialogue_system")
 
 	return dialogue_extension
-	--- END OF BLOCK #3 ---
-
-
-
 end
 
 local function _select_voice(voice)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	selected_voice = voice
 	selected_sound_event_type = nil
 	selected_sound_event = nil
 	local dialogue_extension = _dialogue_extension()
-	--- END OF BLOCK #0 ---
 
-	slot1 = if dialogue_extension then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if dialogue_extension then
+		local old_vo_profile = dialogue_extension:get_profile_name()
+
+		dialogue_extension:set_vo_profile(voice)
+		dialogue_extension:set_vo_profile(old_vo_profile)
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 8-18, warpins: 1 ---
-	local old_vo_profile = dialogue_extension:get_profile_name()
-
-	dialogue_extension:set_vo_profile(voice)
-	dialogue_extension:set_vo_profile(old_vo_profile)
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 19-19, warpins: 2 ---
-	return
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 local function _sound_event_types()
+	if selected_voice then
+		local dialogue_extension = _dialogue_extension()
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	slot0 = if selected_voice then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #4
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-7, warpins: 1 ---
-	local dialogue_extension = _dialogue_extension()
-
-	--- END OF BLOCK #1 ---
-
-	if dialogue_extension == nil then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 8-9, warpins: 1 ---
-	return EMPTY_TABLE
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 10-25, warpins: 1 ---
-	local vo_sources = dialogue_extension._vo_sources_cache._vo_sources
-	local sound_event_types = vo_sources[selected_voice]
-	local sound_event_type_names = table.keys(sound_event_types)
-
-	table.sort(sound_event_type_names, function (a, b)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		if a:upper()
-		 >= b:upper()
-
-		 then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if dialogue_extension == nil then
+			return EMPTY_TABLE
 		end
 
+		local vo_sources = dialogue_extension._vo_sources_cache._vo_sources
+		local sound_event_types = vo_sources[selected_voice]
+		local sound_event_type_names = table.keys(sound_event_types)
 
+		table.sort(sound_event_type_names, function (a, b)
+			return a:upper() < b:upper()
+		end)
 
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 9-10, warpins: 1 ---
-		slot2 = false
-		--- END OF BLOCK #1 ---
-
-		UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-11, warpins: 1 ---
-		slot2 = true
-
-		--- END OF BLOCK #2 ---
-
-		FLOW; TARGET BLOCK #3
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 12-12, warpins: 2 ---
-		return slot2
-		--- END OF BLOCK #3 ---
-
-
-
-	end)
-
-	return sound_event_type_names
-	--- END OF BLOCK #3 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 26-28, warpins: 1 ---
-	return EMPTY_TABLE
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 29-29, warpins: 2 ---
-	return
-	--- END OF BLOCK #5 ---
-
-	FLOW; TARGET BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 30-30, warpins: 2 ---
-	--- END OF BLOCK #6 ---
-
-
-
+		return sound_event_type_names
+	else
+		return EMPTY_TABLE
+	end
 end
 
 local function _sound_events()
+	if selected_sound_event_type then
+		local dialogue_extension = _dialogue_extension()
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
+		if dialogue_extension == nil then
+			return EMPTY_TABLE
+		end
 
-	slot0 = if selected_sound_event_type then
-	JUMP TO BLOCK #1
+		local vo_sources = dialogue_extension._vo_sources_cache._vo_sources
+		local sound_event_types = vo_sources[selected_voice]
+		local sound_event_type = sound_event_types[selected_sound_event_type]
+		local sound_events = sound_event_type.sound_events
+
+		return sound_events
 	else
-	JUMP TO BLOCK #4
+		return EMPTY_TABLE
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-7, warpins: 1 ---
-	local dialogue_extension = _dialogue_extension()
-
-	--- END OF BLOCK #1 ---
-
-	if dialogue_extension == nil then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 8-9, warpins: 1 ---
-	return EMPTY_TABLE
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 10-18, warpins: 2 ---
-	local vo_sources = dialogue_extension._vo_sources_cache._vo_sources
-	local sound_event_types = vo_sources[selected_voice]
-	local sound_event_type = sound_event_types[selected_sound_event_type]
-	local sound_events = sound_event_type.sound_events
-
-	return sound_events
-	--- END OF BLOCK #3 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 19-20, warpins: 1 ---
-	return EMPTY_TABLE
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 21-21, warpins: 2 ---
-	return
-	--- END OF BLOCK #5 ---
-
-
-
 end
 
 local function _play_selected_sound_event()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-5, warpins: 1 ---
 	local dialogue_extension = _dialogue_extension()
-	--- END OF BLOCK #0 ---
 
-	slot1 = if selected_sound_event then
-	JUMP TO BLOCK #1
+	if selected_sound_event and dialogue_extension then
+		local wwise_route = dialogue_extension._dialogue_system._wwise_route_default
+		local event_type = "vorbis_external"
+		local sound_event = {
+			type = event_type,
+			wwise_route = wwise_route,
+			sound_event = selected_sound_event
+		}
+
+		dialogue_extension:play_event(sound_event)
+
+		local subtitle_localized = Managers.localization:localize(sound_event.sound_event, true)
+		local constant_elements = Managers.ui:ui_constant_elements()
+		local constant_element_subtitles = constant_elements:element("ConstantElementSubtitles")
+
+		constant_element_subtitles:_display_text_line(subtitle_localized, 10)
+		Log.info("DebugFunctions", "Played sound event: " .. selected_sound_event)
 	else
-	JUMP TO BLOCK #3
+		Log.info("DebugFunctions", "You need to select a sound event to be able to play one!")
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 6-7, warpins: 1 ---
-	--- END OF BLOCK #1 ---
-
-	slot0 = if dialogue_extension then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 8-48, warpins: 1 ---
-	local wwise_route = dialogue_extension._dialogue_system._wwise_route_default
-	local event_type = "vorbis_external"
-	local sound_event = {}
-	sound_event.type = event_type
-	sound_event.wwise_route = wwise_route
-	sound_event.sound_event = selected_sound_event
-
-	dialogue_extension:play_event(sound_event)
-
-	local subtitle_localized = Managers.localization:localize(sound_event.sound_event, true)
-	local constant_elements = Managers.ui:ui_constant_elements()
-	local constant_element_subtitles = constant_elements:element("ConstantElementSubtitles")
-
-	constant_element_subtitles:_display_text_line(subtitle_localized, 10)
-	Log.info("DebugFunctions", "Played sound event: " .. selected_sound_event)
-	--- END OF BLOCK #2 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 49-53, warpins: 2 ---
-	Log.info("DebugFunctions", "You need to select a sound event to be able to play one!")
-
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 54-54, warpins: 2 ---
-	return
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 functions.select_voice = {
 	name = "01. Select Voice",
 	category = "VO",
 	get_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		slot0 = if not selected_voice then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-4, warpins: 1 ---
-		slot0 = ""
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 5-5, warpins: 2 ---
-		return slot0
-		--- END OF BLOCK #2 ---
-
-
-
+		return selected_voice or ""
 	end,
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-5, warpins: 1 ---
 		local voices = {}
 
-		--- END OF BLOCK #0 ---
-
-		FLOW; TARGET BLOCK #1
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 6-10, warpins: 0 ---
 		for key, speaker in pairs(DialogueSpeakerVoiceSettings) do
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 6-8, warpins: 1 ---
 			voices[#voices + 1] = key
-			--- END OF BLOCK #0 ---
-
-			FLOW; TARGET BLOCK #1
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 9-10, warpins: 2 ---
-			--- END OF BLOCK #1 ---
-
-
-
 		end
 
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-22, warpins: 1 ---
 		voices = table.unique_array_values(voices)
 
 		table.sort(voices, function (a, b)
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #0 1-8, warpins: 1 ---
-			--- END OF BLOCK #0 ---
-
-			if a:upper()
-			 >= b:upper()
-
-			 then
-			JUMP TO BLOCK #1
-			else
-			JUMP TO BLOCK #2
-			end
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #1 9-10, warpins: 1 ---
-			slot2 = false
-			--- END OF BLOCK #1 ---
-
-			UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #2 11-11, warpins: 1 ---
-			slot2 = true
-
-			--- END OF BLOCK #2 ---
-
-			FLOW; TARGET BLOCK #3
-
-
-
-			-- Decompilation error in this vicinity:
-			--- BLOCK #3 12-12, warpins: 2 ---
-			return slot2
-			--- END OF BLOCK #3 ---
-
-
-
+			return a:upper() < b:upper()
 		end)
 
 		return voices
-		--- END OF BLOCK #2 ---
-
-
-
 	end,
 	on_activated = function (voice)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-4, warpins: 1 ---
 		_select_voice(voice)
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.select_sound_event_type = {
@@ -4749,59 +2632,14 @@ functions.select_sound_event_type = {
 	category = "VO",
 	dynamic_contents = true,
 	get_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		slot0 = if not selected_sound_event_type then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-4, warpins: 1 ---
-		slot0 = ""
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 5-5, warpins: 2 ---
-		return slot0
-		--- END OF BLOCK #2 ---
-
-
-
+		return selected_sound_event_type or ""
 	end,
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return _sound_event_types()
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_activated = function (sound_event_type)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
 		selected_sound_event_type = sound_event_type
 		selected_sound_event = nil
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.select_sound_event = {
@@ -4809,74 +2647,20 @@ functions.select_sound_event = {
 	category = "VO",
 	dynamic_contents = true,
 	get_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
-		--- END OF BLOCK #0 ---
-
-		slot0 = if not selected_sound_event then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
-		end
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 4-4, warpins: 1 ---
-		slot0 = ""
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 5-5, warpins: 2 ---
-		return slot0
-		--- END OF BLOCK #2 ---
-
-
-
+		return selected_sound_event or ""
 	end,
 	options_function = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return _sound_events()
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	on_activated = function (sound_event)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		selected_sound_event = sound_event
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.play_sound_event = {
 	name = "04. Play Sound Event",
 	category = "VO",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
 		_play_selected_sound_event()
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 functions.apply_weapon_trait_lerp_value = {
@@ -4885,132 +2669,42 @@ functions.apply_weapon_trait_lerp_value = {
 	category = "WeaponTraits",
 	number_button = true,
 	on_activated = function (value)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
 		local local_player = Managers.player:local_player(1)
 
-		--- END OF BLOCK #0 ---
-
-		slot1 = if not local_player then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if not local_player then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 9-9, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-14, warpins: 2 ---
 		local player_unit = local_player.player_unit
 
-		--- END OF BLOCK #2 ---
-
-		slot3 = if not ALIVE[player_unit] then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #4
+		if not ALIVE[player_unit] then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 15-15, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 16-25, warpins: 2 ---
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_apply_trait_lerp_value(value)
-
-		return
-		--- END OF BLOCK #4 ---
-
-
-
 	end
 }
 functions.reset_weapon_lerp_values = {
 	name = "Remove Override Weapon Trait and Tweak Lerp Value",
 	category = "WeaponTraits",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
 		local local_player = Managers.player:local_player(1)
 
-		--- END OF BLOCK #0 ---
-
-		slot0 = if not local_player then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if not local_player then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 9-9, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-14, warpins: 2 ---
 		local player_unit = local_player.player_unit
 
-		--- END OF BLOCK #2 ---
-
-		slot2 = if not ALIVE[player_unit] then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #4
+		if not ALIVE[player_unit] then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 15-15, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 16-24, warpins: 2 ---
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_remove_trait_lerp_value()
-
-		return
-		--- END OF BLOCK #4 ---
-
-
-
 	end
 }
 functions.apply_lerp_value_to_all_tweak_templates = {
@@ -5019,90 +2713,33 @@ functions.apply_lerp_value_to_all_tweak_templates = {
 	category = "WeaponTraits",
 	number_button = true,
 	on_activated = function (value)
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-8, warpins: 1 ---
 		local local_player = Managers.player:local_player(1)
 
-		--- END OF BLOCK #0 ---
-
-		slot1 = if not local_player then
-		JUMP TO BLOCK #1
-		else
-		JUMP TO BLOCK #2
+		if not local_player then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #1 9-9, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #1 ---
-
-		FLOW; TARGET BLOCK #2
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-14, warpins: 2 ---
 		local player_unit = local_player.player_unit
 
-		--- END OF BLOCK #2 ---
-
-		slot3 = if not ALIVE[player_unit] then
-		JUMP TO BLOCK #3
-		else
-		JUMP TO BLOCK #4
+		if not ALIVE[player_unit] then
+			return
 		end
 
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #3 15-15, warpins: 1 ---
-		return
-
-		--- END OF BLOCK #3 ---
-
-		FLOW; TARGET BLOCK #4
-
-
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #4 16-25, warpins: 2 ---
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_apply_tweak_template_lerp_value(value)
-
-		return
-		--- END OF BLOCK #4 ---
-
-
-
 	end
 }
 functions.verify_trait_templates = {
 	name = "Verify Trait Templates",
 	category = "WeaponTraits",
 	on_activated = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-6, warpins: 1 ---
 		local trait_template_verification = require("scripts/settings/equipment/tests/trait_template_verification")
 		local success = trait_template_verification()
-
-		return
-		--- END OF BLOCK #0 ---
-
-
-
 	end
 }
 
 local function character_state_options()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
 	local options = {
 		"hogtied",
 		"knocked_down",
@@ -5110,186 +2747,43 @@ local function character_state_options()
 	}
 
 	return options
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 local function force_character_state(new_value)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-8, warpins: 1 ---
 	local is_server = Managers.state.game_session:is_server()
 
-	--- END OF BLOCK #0 ---
-
-	slot1 = if not is_server then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if not is_server then
+		Log.info("DebugFunctions", "Can't set character state as client")
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 9-13, warpins: 1 ---
-	Log.info("DebugFunctions", "Can't set character state as client")
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 14-19, warpins: 2 ---
 	local selected_unit = Debug.selected_unit
 
-	--- END OF BLOCK #2 ---
-
-	slot3 = if not ALIVE[selected_unit] then
-	JUMP TO BLOCK #3
-	else
-	JUMP TO BLOCK #4
+	if not ALIVE[selected_unit] then
+		return
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 20-20, warpins: 1 ---
-	return
-
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 21-27, warpins: 2 ---
 	local unit_data_extension = ScriptUnit.has_extension(selected_unit, "unit_data_system")
 
-	--- END OF BLOCK #4 ---
-
-	slot3 = if not unit_data_extension then
-	JUMP TO BLOCK #5
-	else
-	JUMP TO BLOCK #6
+	if not unit_data_extension then
+		return
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 28-28, warpins: 1 ---
-	return
-
-	--- END OF BLOCK #5 ---
-
-	FLOW; TARGET BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 29-37, warpins: 2 ---
 	local breed_or_nil = unit_data_extension:breed()
 
-	--- END OF BLOCK #6 ---
-
-	slot5 = if not Breed.is_player(breed_or_nil)
-
-	 then
-	JUMP TO BLOCK #7
-	else
-	JUMP TO BLOCK #8
+	if not Breed.is_player(breed_or_nil) then
+		return
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #7 38-38, warpins: 1 ---
-	return
-
-	--- END OF BLOCK #7 ---
-
-	FLOW; TARGET BLOCK #8
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #8 39-40, warpins: 2 ---
-	--- END OF BLOCK #8 ---
 
 	if new_value == "hogtied" then
-	JUMP TO BLOCK #9
-	else
-	JUMP TO BLOCK #10
+		local hogtied_state_input = unit_data_extension:write_component("hogtied_state_input")
+		hogtied_state_input.hogtie = true
+	elseif new_value == "knocked_down" then
+		local knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
+		knocked_down_state_input.knock_down = true
+	elseif new_value == "dead" then
+		local dead_state_input = unit_data_extension:write_component("dead_state_input")
+		dead_state_input.die = true
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #9 41-47, warpins: 1 ---
-	local hogtied_state_input = unit_data_extension:write_component("hogtied_state_input")
-	hogtied_state_input.hogtie = true
-	--- END OF BLOCK #9 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #14
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #10 48-49, warpins: 1 ---
-	--- END OF BLOCK #10 ---
-
-	if new_value == "knocked_down" then
-	JUMP TO BLOCK #11
-	else
-	JUMP TO BLOCK #12
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #11 50-56, warpins: 1 ---
-	local knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
-	knocked_down_state_input.knock_down = true
-	--- END OF BLOCK #11 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #14
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #12 57-58, warpins: 1 ---
-	--- END OF BLOCK #12 ---
-
-	if new_value == "dead" then
-	JUMP TO BLOCK #13
-	else
-	JUMP TO BLOCK #14
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #13 59-64, warpins: 1 ---
-	local dead_state_input = unit_data_extension:write_component("dead_state_input")
-	dead_state_input.die = true
-
-	--- END OF BLOCK #13 ---
-
-	FLOW; TARGET BLOCK #14
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #14 65-65, warpins: 4 ---
-	return
-	--- END OF BLOCK #14 ---
-
-
-
 end
 
 functions.force_character_state = {
@@ -5301,42 +2795,16 @@ functions.force_character_state = {
 }
 
 for key, config in pairs(functions) do
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 592-595, warpins: 1 ---
 	local category = config.category
-	--- END OF BLOCK #0 ---
 
-	slot133 = if category then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if category then
+		-- Nothing
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 596-596, warpins: 1 ---
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 596-597, warpins: 3 ---
-	--- END OF BLOCK #2 ---
-
-
-
 end
 
 local debug_functions_initialized = false
 
 local function initialize()
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-25, warpins: 1 ---
 	local item_definitions = MasterItems.get_cached()
 
 	_init_weapons(item_definitions)
@@ -5348,36 +2816,16 @@ local function initialize()
 	debug_functions_initialized = true
 	player_manager = Managers.player
 	ui_manager = Managers.ui
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
 end
 
 return {
 	parameters = functions,
 	categories = categories,
 	is_ready = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-3, warpins: 1 ---
 		return MasterItems.has_data()
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	is_initialized = function ()
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #0 1-2, warpins: 1 ---
 		return debug_functions_initialized
-		--- END OF BLOCK #0 ---
-
-
-
 	end,
 	initialize = initialize
 }
