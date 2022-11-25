@@ -46,7 +46,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = bar_size,
 		position = {
-			138,
+			112,
 			36,
 			2
 		}
@@ -196,6 +196,36 @@ local widget_definitions = {
 					rows = 1,
 					columns = 1,
 					grid_index = 1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/base/ui_default_base",
+			style_id = "insignia",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					30,
+					80
+				},
+				offset = {
+					-40,
+					0,
+					1
+				},
+				material_values = {
+					use_placeholder_texture = 1,
+					rows = 1,
+					columns = 1,
+					grid_index = 1
+				},
+				color = {
+					0,
+					255,
+					255,
+					255
 				}
 			}
 		}

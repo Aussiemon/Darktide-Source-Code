@@ -64,6 +64,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"pilot",
 					"sergeant"
 				}
 			}
@@ -1063,7 +1065,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		}
 	})
 	define_rule({

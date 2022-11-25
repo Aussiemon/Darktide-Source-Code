@@ -28,14 +28,22 @@ SaveManager.state = function (self)
 	return self._state
 end
 
-SaveManager.account_data = function (self)
-	local account_id = Managers.backend:account_id() or PlayerManager.NO_ACCOUNT_ID
+SaveManager.set_save_data_account_id = function (self, account_id)
+	self._signed_in_account_id = account_id
+end
+
+SaveManager.save_data_account_id = function (self)
+	return self._signed_in_account_id
+end
+
+SaveManager.account_data = function (self, account_id)
+	account_id = account_id or self:save_data_account_id() or PlayerManager.NO_ACCOUNT_ID
 
 	return self._save_data:account_data(account_id)
 end
 
 SaveManager.character_data = function (self, character_id)
-	local account_id = Managers.backend:account_id() or PlayerManager.NO_ACCOUNT_ID
+	local account_id = self:save_data_account_id()
 
 	return self._save_data:character_data(account_id, character_id)
 end

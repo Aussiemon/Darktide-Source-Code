@@ -20,6 +20,28 @@ local wallet_settings = {
 		backend_index = 1,
 		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
 		show_in_character_menu = true
+	},
+	plasteel = {
+		sort_order = 3,
+		icon_texture_small = "content/ui/materials/icons/currencies/plasteel_small",
+		display_name = "loc_currency_name_plasteel",
+		font_gradient_material = "content/ui/materials/font_gradients/slug_font_gradient_plasteel",
+		icon_texture_big = "content/ui/materials/icons/currencies/plasteel_big",
+		string_symbol = "",
+		backend_index = 1,
+		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
+		show_in_character_menu = true
+	},
+	diamantine = {
+		sort_order = 4,
+		icon_texture_small = "content/ui/materials/icons/currencies/diamantine_small",
+		display_name = "loc_currency_name_diamantine",
+		font_gradient_material = "content/ui/materials/font_gradients/slug_font_gradient_diamantine",
+		icon_texture_big = "content/ui/materials/icons/currencies/diamantine_big",
+		string_symbol = "",
+		backend_index = 1,
+		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
+		show_in_character_menu = true
 	}
 }
 

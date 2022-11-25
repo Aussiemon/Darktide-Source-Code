@@ -336,7 +336,6 @@ end
 
 VendorViewBase.cb_on_sort_button_pressed = function (self, option)
 	VendorViewBase.super.cb_on_sort_button_pressed(self, option)
-	self._item_grid:set_expire_time(self._current_rotation_end)
 end
 
 VendorViewBase._item_valid_by_current_profile = function (self, item)

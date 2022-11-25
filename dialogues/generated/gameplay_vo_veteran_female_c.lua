@@ -326,6 +326,133 @@ local gameplay_vo_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	deployed_ammo_crate = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_ammo_crate_01",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_ammo_crate_02",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_ammo_crate_03",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_ammo_crate_04"
+		},
+		sound_events_duration = {
+			0.857177,
+			0.868979,
+			0.714188,
+			1.159438
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
+	deployed_ammo_crate_ogryn_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_c__found_ammo_ogryn_low_on_ammo_01",
+			"loc_veteran_female_c__found_ammo_ogryn_low_on_ammo_02",
+			"loc_veteran_female_c__found_ammo_ogryn_low_on_ammo_03",
+			"loc_veteran_female_c__found_ammo_ogryn_low_on_ammo_04",
+			"loc_veteran_female_c__found_ammo_ogryn_low_on_ammo_05"
+		},
+		sound_events_duration = {
+			1.050667,
+			1.307938,
+			1.173708,
+			1.5995,
+			1.804344
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	deployed_ammo_crate_psyker_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_c__found_ammo_psyker_low_on_ammo_01",
+			"loc_veteran_female_c__found_ammo_psyker_low_on_ammo_02",
+			"loc_veteran_female_c__found_ammo_psyker_low_on_ammo_03",
+			"loc_veteran_female_c__found_ammo_psyker_low_on_ammo_04",
+			"loc_veteran_female_c__found_ammo_psyker_low_on_ammo_05"
+		},
+		sound_events_duration = {
+			1.302917,
+			1.065948,
+			0.894667,
+			1.347833,
+			1.593177
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	deployed_ammo_crate_veteran_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_c__found_ammo_veteran_low_on_ammo_01",
+			"loc_veteran_female_c__found_ammo_veteran_low_on_ammo_02",
+			"loc_veteran_female_c__found_ammo_veteran_low_on_ammo_03",
+			"loc_veteran_female_c__found_ammo_veteran_low_on_ammo_04",
+			"loc_veteran_female_c__found_ammo_veteran_low_on_ammo_05"
+		},
+		sound_events_duration = {
+			0.955208,
+			1.259156,
+			0.882188,
+			0.893125,
+			1.04174
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	deployed_ammo_crate_zealot_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_c__found_ammo_zealot_low_on_ammo_01",
+			"loc_veteran_female_c__found_ammo_zealot_low_on_ammo_02",
+			"loc_veteran_female_c__found_ammo_zealot_low_on_ammo_03",
+			"loc_veteran_female_c__found_ammo_zealot_low_on_ammo_04",
+			"loc_veteran_female_c__found_ammo_zealot_low_on_ammo_05"
+		},
+		sound_events_duration = {
+			1.153188,
+			1.152698,
+			1.233354,
+			1.363083,
+			1.444479
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -873,6 +1000,29 @@ local gameplay_vo_veteran_female_c = {
 			1.233354,
 			1.363083,
 			1.444479
+		},
+		randomize_indexes = {}
+	},
+	found_health_booster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_medical_crate_01",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_medical_crate_02",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_medical_crate_03",
+			"loc_veteran_female_c__smart_tag_vo_pickup_deployed_medical_crate_04"
+		},
+		sound_events_duration = {
+			0.90601,
+			0.820521,
+			1.199917,
+			0.967781
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},

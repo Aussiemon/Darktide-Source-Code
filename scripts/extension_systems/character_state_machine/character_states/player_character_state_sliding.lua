@@ -142,13 +142,14 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local speed = Vector3.length(Vector3.flat(velocity_current))
 
 	if SPEED_EPSILON < speed then
+		local weapon_template_or_nil = weapon_extension:weapon_template()
 		local friction_function = self._slide_character_state_component.friction_function
 		local friction_speed = nil
 
 		if friction_function == "sprint" then
-			friction_speed = self._constants.sprint_slide_friction_function(speed, time_in_action, buff_extension)
+			friction_speed = self._constants.sprint_slide_friction_function(speed, time_in_action, buff_extension, weapon_template_or_nil)
 		else
-			friction_speed = self._constants.slide_friction_function(speed, time_in_action, buff_extension)
+			friction_speed = self._constants.slide_friction_function(speed, time_in_action, buff_extension, weapon_template_or_nil)
 		end
 
 		local friction = math.min(speed, friction_speed * dt) / speed * velocity_current

@@ -8,7 +8,11 @@ wield_info_passives_templates[1] = {
 	input_descriptions = {
 		{
 			description = "loc_auspex_input_description_scan_wield_scanner",
-			input_action = "wield_4"
+			input_action = "wield_4",
+			icon_width = 84,
+			icon_height = 84,
+			icon = "content/ui/materials/icons/pocketables/hud/auspex_scanner",
+			icon_color = Color.terminal_text_body(255, true)
 		}
 	},
 	validation_function = function (wielded_slot_id, item, current_action, current_action_name, player)

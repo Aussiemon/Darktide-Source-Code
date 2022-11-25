@@ -682,12 +682,6 @@ local mission_giver_vo_sergeant_a = {
 			6.651771,
 			7.501125
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_brief_a = {

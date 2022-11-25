@@ -545,6 +545,12 @@ StateMainMenu.on_exit = function (self)
 
 		self._main_menu_loader = nil
 	end
+
+	if self._reconnect_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._reconnect_popup_id)
+
+		self._reconnect_popup_id = nil
+	end
 end
 
 StateMainMenu._rejoin_game = function (self)

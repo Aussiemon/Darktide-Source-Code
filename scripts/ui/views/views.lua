@@ -199,7 +199,7 @@ local views = {
 	inventory_weapon_details_view = {
 		state_bound = true,
 		display_name = "loc_inventory_weapon_details_view_display_name",
-		use_transition_ui = true,
+		use_transition_ui = false,
 		path = "scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view",
 		package = "packages/ui/views/inventory_weapon_details_view/inventory_weapon_details_view",
 		class = "InventoryWeaponDetailsView",
@@ -277,7 +277,7 @@ local views = {
 		package = "packages/ui/views/account_profile_view/account_profile_view",
 		load_always = true,
 		class = "AccountProfileView",
-		disable_game_world = false,
+		disable_game_world = true,
 		load_in_hub = true,
 		game_world_blur = 1.1,
 		levels = {
@@ -300,9 +300,12 @@ local views = {
 		path = "scripts/ui/views/achievements_view/achievements_view",
 		package = "packages/ui/views/achievements_view/achievements_view",
 		class = "AchievementsView",
-		disable_game_world = false,
+		disable_game_world = true,
 		load_in_hub = true,
-		game_world_blur = 1.1
+		game_world_blur = 1.1,
+		testify_flags = {
+			ui_views = false
+		}
 	},
 	class_selection_view = {
 		state_bound = true,
@@ -729,7 +732,7 @@ local views = {
 		package = "packages/ui/views/social_menu_view/social_menu_view",
 		load_always = true,
 		class = "SocialMenuView",
-		disable_game_world = false,
+		disable_game_world = true,
 		load_in_hub = true,
 		game_world_blur = 1.1,
 		levels = {
@@ -830,6 +833,13 @@ local function _declare_view(name, settings)
 	views[name] = settings
 end
 
+_declare_view("crafting_view", require("scripts/ui/views/crafting_view/crafting_view_declaration_settings"))
+_declare_view("crafting_modify_view", require("scripts/ui/views/crafting_modify_view/crafting_modify_view_declaration_settings"))
+_declare_view("crafting_upgrade_item_view", require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_declaration_settings"))
+_declare_view("crafting_reroll_perk_view", require("scripts/ui/views/crafting_reroll_perk_view/crafting_reroll_perk_view_declaration_settings"))
+_declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings"))
+_declare_view("crafting_fuse_view", require("scripts/ui/views/crafting_fuse_view/crafting_fuse_view_declaration_settings"))
+
 for view_name, settings in pairs(views) do
 	settings.name = view_name
 
@@ -838,4 +848,4 @@ for view_name, settings in pairs(views) do
 	end
 end
 
-return views
+return settings("Views", views)

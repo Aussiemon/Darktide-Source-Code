@@ -1,5 +1,6 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local template = {}
 local size = {
 	400,
@@ -67,7 +68,12 @@ end
 template.on_enter = function (widget, marker)
 	local data = marker.data
 	local content = widget.content
-	content.header_text = data:name()
+	local profile = data:profile()
+	local character_level = profile and profile.current_level or 1
+	local archetype = profile and profile.archetype
+	local string_symbol = archetype and archetype.string_symbol or ""
+	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
+	content.header_text = text
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)

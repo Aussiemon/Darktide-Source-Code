@@ -115,7 +115,7 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/tactical_overlay/tactical_overlay",
-		use_hud_scale = true,
+		use_hud_scale = false,
 		class_name = "HudElementTacticalOverlay",
 		filename = "scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay",
 		visibility_groups = {

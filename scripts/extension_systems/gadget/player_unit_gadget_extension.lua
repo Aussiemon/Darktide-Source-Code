@@ -124,7 +124,7 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 	if is_meta_buff then
 		local gadget_system = Managers.state.extension:system("gadget_system")
 		local player = Managers.state.player_unit_spawn:owner(self._unit)
-		local index = gadget_system:add_meta_buff(player, trait_name, t, lerp_value)
+		local index = gadget_system:add_meta_buff(player, trait_name, t, lerp_value, slot_name)
 		buff_data = {
 			meta_buff_index = index
 		}

@@ -178,23 +178,6 @@ local mission_vo_lm_rails_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_rails_set_charge = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_tech_priest_a__mission_rails_set_charge_01",
-			"loc_tech_priest_a__mission_rails_set_charge_02",
-			"loc_tech_priest_a__mission_rails_set_charge_03",
-			"loc_tech_priest_a__mission_rails_set_charge_04"
-		},
-		sound_events_duration = {
-			6.452167,
-			7.27425,
-			7.218396,
-			6.144417
-		},
-		randomize_indexes = {}
-	},
 	mission_rails_start_banter_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

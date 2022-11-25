@@ -107,7 +107,6 @@ local default_melee_action_input_setup = {
 			buffer_time = 0,
 			input_sequence = {
 				{
-					input_mode = "all",
 					inputs = {
 						{
 							value = false,

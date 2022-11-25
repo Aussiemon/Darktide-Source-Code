@@ -172,6 +172,9 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 
 	if entries then
 		local button_spacing = menu_settings.button_spacing
+		local input_label_offset = menu_settings.input_label_offset
+		local input_label_offset_x = input_label_offset and input_label_offset[1] or 0
+		local input_label_offset_y = input_label_offset and input_label_offset[2] or 0
 		local pivot_offset = self._pivot_offset
 		local pivot_offset_x = pivot_offset[1]
 		local pivot_offset_y = pivot_offset[2]
@@ -201,7 +204,8 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			end
 		end
 
-		widgets_by_name.input_text_left.offset[1] = left_size_offset
+		widgets_by_name.input_text_left.offset[1] = left_size_offset - input_label_offset_x
+		widgets_by_name.input_text_left.offset[2] = input_label_offset_y
 
 		for i = 1, num_entries do
 			local entry = entries[i]
@@ -220,7 +224,8 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			UIWidget.draw(widget, ui_renderer)
 		end
 
-		widgets_by_name.input_text_right.offset[1] = left_size_offset
+		widgets_by_name.input_text_right.offset[1] = left_size_offset + input_label_offset_x
+		widgets_by_name.input_text_right.offset[2] = input_label_offset_y
 		self._total_width = total_width
 	end
 

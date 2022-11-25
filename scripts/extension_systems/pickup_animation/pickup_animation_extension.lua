@@ -23,6 +23,7 @@ PickupAnimationExtension.start_pickup_animation = function (self, destination_un
 
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 
+	self._pickup_animation_started = true
 	local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
 
 	if interactee_ext then
@@ -40,7 +41,6 @@ PickupAnimationExtension.start_place_animation = function (self, destination_uni
 
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 
-	self._pickup_animation_started = true
 	local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
 
 	if interactee_ext then

@@ -13,6 +13,7 @@ local WeaponAmmoTemplates = require("scripts/settings/equipment/weapon_handling_
 local Weapon = require("scripts/extension_systems/weapon/weapon")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponStats = class("WeaponStats")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -33,7 +34,7 @@ WeaponStats.init = function (self, item)
 	self._stagger = weapon_stats.stagger or 0
 	self._stamina_block_cost = weapon_stats.stamina_block_cost or 0
 	self._stamina_push_cost = weapon_stats.stamina_push_cost or 0
-	self._stamina = weapon_stats.stamina or 0
+	self._stamina = weapon_stats.stamina_modifier or 0
 	self._rate_of_fire = weapon_stats.rate_of_fire or 0
 	self._bullets_per_second = weapon_stats.bullets_per_second or 0
 	self._reload_time = weapon_stats.reload_time or 0
@@ -169,9 +170,11 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					local max_shots = fire_rate.max_shots
 					local total_waiting_duration = -total_time
 					local total_rate_of_fire = 0
+					local tot_bullets = nil
 
 					if not auto_fire_time then
 						max_shots = 1
+						tot_bullets = max_shots
 
 						if fire_time then
 							fire_time = total_time
@@ -180,7 +183,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						max_shots = ammo_clip_size
 					end
 
-					local tot_bullets = ammo_clip_size
+					tot_bullets = tot_bullets or ammo_clip_size
 
 					while tot_bullets > 0 do
 						local burst_rate_of_fire = 0
@@ -188,7 +191,8 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						for i = 1, max_shots do
 							if tot_bullets > 0 then
 								if i == 1 then
-									burst_rate_of_fire = burst_rate_of_fire + fire_time
+									local first_fire_rate = fire_time > 0 and fire_time or auto_fire_time > 0 and auto_fire_time or 0
+									burst_rate_of_fire = burst_rate_of_fire + first_fire_rate
 								else
 									burst_rate_of_fire = burst_rate_of_fire + (auto_fire_time or 0)
 								end
@@ -496,7 +500,10 @@ WeaponStats.get_main_stats = function (self)
 		magazine = self._uses_ammunition and {
 			ammo = self._ammo,
 			reserve = self._ammo_reserve
-		}
+		},
+		attack_speed = self._attack_speed,
+		rate_of_fire = self._rate_of_fire,
+		reload_time = self._reload_time
 	}
 end
 

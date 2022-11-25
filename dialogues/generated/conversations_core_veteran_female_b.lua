@@ -4264,16 +4264,14 @@ local conversations_core_veteran_female_b = {
 	},
 	lore_hive_cities_one_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_veteran_female_b__lore_hive_cities_one_a_02",
-			"loc_veteran_female_b__lore_hive_cities_one_a_03",
-			"loc_veteran_female_b__lore_hive_cities_one_a_04"
+			[1.0] = "loc_veteran_female_b__lore_hive_cities_one_a_02",
+			[2.0] = "loc_veteran_female_b__lore_hive_cities_one_a_04"
 		},
 		sound_events_duration = {
-			3.966125,
-			3.481042,
-			1.762479
+			[1.0] = 3.966125,
+			[2.0] = 1.762479
 		},
 		randomize_indexes = {}
 	},

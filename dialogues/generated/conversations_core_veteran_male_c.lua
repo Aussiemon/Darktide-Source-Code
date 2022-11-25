@@ -3615,16 +3615,14 @@ local conversations_core_veteran_male_c = {
 	},
 	lore_enemy_within_one_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 3,
 		sound_events = {
 			"loc_veteran_male_c__lore_enemy_within_one_a_01",
-			"loc_veteran_male_c__lore_enemy_within_one_a_02",
 			"loc_veteran_male_c__lore_enemy_within_one_a_03",
 			"loc_veteran_male_c__lore_enemy_within_one_a_04"
 		},
 		sound_events_duration = {
 			3.390688,
-			2.613917,
 			2.75251,
 			2.655823
 		},

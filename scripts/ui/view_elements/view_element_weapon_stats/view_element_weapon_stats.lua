@@ -51,6 +51,8 @@ ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, o
 		world_name = self._unique_id .. "_cosmetics_portrait_world"
 	}
 	self._cosmetics_icon_renderer = PortraitUI:new(cosmetics_render_settings)
+
+	self:_register_event("event_item_icon_updated", "item_icon_updated")
 end
 
 ViewElementWeaponStats.destroy = function (self)
@@ -69,7 +71,7 @@ ViewElementWeaponStats.destroy = function (self)
 	end
 end
 
-local function add_presentation_perks(item, layout, grid_size)
+local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 	local item_type = item.item_type
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
@@ -98,7 +100,9 @@ local function add_presentation_perks(item, layout, grid_size)
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
 				perk_value = perk_value,
-				perk_rarity = perk_rarity
+				perk_rarity = perk_rarity,
+				perk_index = i,
+				is_selectable = perks_selectable
 			}
 		end
 
@@ -171,6 +175,7 @@ end
 ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_present_callback)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
+	local perks_selectable = menu_settings.perks_selectable
 	local item_name = item.name
 	local item_type = item.item_type
 	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
@@ -199,7 +204,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			item = item
 		}
 
-		if add_presentation_perks(item, layout, grid_size) then
+		if add_presentation_perks(item, layout, grid_size, perks_selectable) then
 			add_end_margin = true
 		end
 
@@ -216,7 +221,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			add_end_margin = false
 		end
 
-		if add_presentation_perks(item, layout, grid_size) then
+		if add_presentation_perks(item, layout, grid_size, perks_selectable) then
 			add_end_margin = true
 		end
 	elseif item_type == "WEAPON_SKIN" then
@@ -224,19 +229,86 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 
 		if visual_item then
 			layout[#layout + 1] = {
-				widget_type = "weapon_skin_header",
+				widget_type = "skin_header",
 				item = item,
 				visual_item = visual_item
 			}
+			layout[#layout + 1] = {
+				widget_type = "weapon_skin_icon",
+				item = item,
+				visual_item = visual_item
+			}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					20
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "weapon_skin_requirement_header",
+				item = item,
+				visual_item = visual_item
+			}
+			layout[#layout + 1] = {
+				widget_type = "weapon_skin_requirements",
+				item = item,
+				visual_item = visual_item
+			}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
+			}
+			add_end_margin = true
+		else
+			add_end_margin = false
 		end
-
-		add_end_margin = false
-	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
+	elseif item_type == "WEAPON_TRINKET" then
 		layout[#layout + 1] = {
-			widget_type = "cosmetic_gear_header",
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				30
+			}
+		}
+		layout[#layout + 1] = {
+			widget_type = "description",
 			item = item
 		}
-		add_end_margin = false
+		add_end_margin = true
+	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
+		layout[#layout + 1] = {
+			widget_type = "skin_header",
+			item = item
+		}
+		layout[#layout + 1] = {
+			widget_type = "cosmetic_gear_icon",
+			item = item
+		}
+
+		if item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
+			}
+			add_end_margin = true
+		else
+			add_end_margin = false
+		end
 	elseif item_type == "PORTRAIT_FRAME" then
 		layout[#layout + 1] = {
 			widget_type = "portrait_frame_header",
@@ -501,7 +573,7 @@ ViewElementWeaponStats.unload_item_icon = function (self, id)
 	end
 end
 
-ViewElementWeaponStats.item_icon_updated = function (self, peer_id, local_player_id, item)
+ViewElementWeaponStats.item_icon_updated = function (self, item)
 	local item_type = item.item_type
 
 	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then

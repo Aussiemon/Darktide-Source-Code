@@ -23,6 +23,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 templates.zealot_maniac_dash_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
+	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	max_stacks = talent_settings.combat_ability.max_stacks,
 	duration = talent_settings.combat_ability.duration,

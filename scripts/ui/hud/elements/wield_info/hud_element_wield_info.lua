@@ -49,6 +49,7 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 	local icon = input.icon and input.icon ~= "" and input.icon or nil
 	local icon_width = input.icon_width or 0
 	local icon_height = input.icon_height or 0
+	local icon_color = input.icon_color
 
 	if type(input_action) == "table" then
 		input_action = InputDevice.gamepad_active and input_action[2] or input_action[1]
@@ -82,6 +83,10 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 		local icon_style = style.icon
 		icon_style.size[1] = icon_width
 		icon_style.size[2] = icon_height
+
+		if icon_color then
+			icon_style.color = icon_color
+		end
 	end
 
 	return data

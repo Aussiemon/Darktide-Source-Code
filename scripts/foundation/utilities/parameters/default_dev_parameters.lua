@@ -2915,6 +2915,10 @@ params.ui_ignore_hub_interaction_requirements = {
 	value = false,
 	category = "UI"
 }
+params.local_crafting = {
+	value = false,
+	category = "UI"
+}
 params.override_stun_type = {
 	value = false,
 	category = "Damage",

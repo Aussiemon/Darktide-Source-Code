@@ -12,6 +12,7 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 
 	self._objective_widgets_by_name = {}
 	self._hud_objectives = {}
+	self._hud_objectives_names_array = {}
 	self._mission_widget_definition = Definitions.objective_definition
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	self._scan_delay = HudElementMissionObjectiveFeedSettings.scan_delay
@@ -122,6 +123,7 @@ end
 HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_renderer, locally_added)
 	local objective_name = objective:name()
 	local new_hud_objective = HudElementMissionObjective:new(objective)
+	self._hud_objectives_names_array[#self._hud_objectives_names_array + 1] = objective_name
 	self._hud_objectives[objective_name] = new_hud_objective
 	self._objectives_counter = self._objectives_counter + 1
 	local widget = self:_create_widget(objective_name, self._mission_widget_definition)
@@ -145,7 +147,7 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_re
 		}
 		local text_options = UIFonts.get_font_options_by_style(header_text_style)
 		local _, text_height = UIRenderer.text_size(ui_renderer, header_text, header_text_style.font_type, header_text_style.font_size, text_size, text_options)
-		header_height = text_height
+		header_height = text_height + 5
 	end
 
 	local widget_height = math.max(header_size[2], header_height)
@@ -157,6 +159,11 @@ end
 HudElementMissionObjectiveFeed._remove_objective = function (self, objective_name)
 	if self._objective_widgets_by_name[objective_name] then
 		self._objective_widgets_by_name[objective_name] = nil
+		local array_index = table.find(self._hud_objectives_names_array, objective_name)
+
+		if array_index then
+			table.remove(self._hud_objectives_names_array, array_index)
+		end
 
 		self:_unregister_widget_name(objective_name)
 		self._hud_objectives[objective_name]:delete()
@@ -212,19 +219,45 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	end
 
 	local colors_by_mission_type = HudElementMissionObjectiveFeedSettings.colors_by_mission_type
-	local mission_colors = nil
+	local size_by_mission_type = HudElementMissionObjectiveFeedSettings.size_by_mission_type
+	local offsets_by_mission_type = HudElementMissionObjectiveFeedSettings.offsets_by_mission_type
+	local mission_colors, mission_sizes, mission_offsets = nil
 
 	if hud_objective:is_side_mission() then
 		mission_colors = colors_by_mission_type.side_mission
+		mission_sizes = size_by_mission_type.side_mission
+		mission_offsets = offsets_by_mission_type.side_mission
 	else
 		mission_colors = colors_by_mission_type.default
+		mission_sizes = size_by_mission_type.default
+		mission_offsets = offsets_by_mission_type.default
 	end
 
 	for style_id, color in pairs(mission_colors) do
 		local pass_style = style[style_id]
 
-		if pass_style and pass_style.text_color then
-			ColorUtilities.color_copy(color, pass_style.text_color)
+		if pass_style and (pass_style.text_color or pass_style.color) then
+			ColorUtilities.color_copy(color, pass_style.text_color or pass_style.color)
+		end
+	end
+
+	for style_id, size in pairs(mission_sizes) do
+		local pass_style = style[style_id]
+
+		if pass_style and (pass_style.font_size or pass_style.size) then
+			if pass_style.font_size then
+				pass_style.font_size = size
+			else
+				pass_style.size = size
+			end
+		end
+	end
+
+	for style_id, offset in pairs(mission_offsets) do
+		local pass_style = style[style_id]
+
+		if pass_style and pass_style.offset then
+			pass_style.offset = offset
 		end
 	end
 end
@@ -251,14 +284,48 @@ end
 
 HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local ui_renderer = self._parent:ui_renderer()
-	local entry_spacing = HudElementMissionObjectiveFeedSettings.entry_spacing
+	local entry_spacing_by_mission_type = HudElementMissionObjectiveFeedSettings.entry_spacing_by_mission_type
 	local offset_y = 0
 	local objective_widgets_by_name = self._objective_widgets_by_name
 	local total_background_height = 0
 	local objectives_counter = self._objectives_counter
 	local index_counter = 0
+	local hud_objectives = self._hud_objectives
 
-	for _, widget in pairs(objective_widgets_by_name) do
+	local function mission_objective_sort_function(a, b)
+		local a_objective = hud_objectives[a]
+		local b_objective = hud_objectives[b]
+		local a_is_side_mission = a_objective and a_objective:is_side_mission() or false
+		local b_is_side_mission = b_objective and b_objective:is_side_mission() or false
+
+		if a_is_side_mission == b_is_side_mission then
+			return false
+		elseif a_is_side_mission then
+			return false
+		end
+
+		return true
+	end
+
+	local hud_objectives_names_array = self._hud_objectives_names_array
+
+	if #hud_objectives_names_array > 1 then
+		table.sort(hud_objectives_names_array, mission_objective_sort_function)
+	end
+
+	for i = 1, #hud_objectives_names_array do
+		local objective_name = hud_objectives_names_array[i]
+		local widget = objective_widgets_by_name[objective_name]
+		local hud_objective = hud_objectives[objective_name]
+		local is_side_mission = hud_objective:is_side_mission()
+		local entry_spacing = nil
+
+		if is_side_mission then
+			entry_spacing = entry_spacing_by_mission_type.side_mission
+		else
+			entry_spacing = entry_spacing_by_mission_type.default
+		end
+
 		index_counter = index_counter + 1
 		local widget_offset = widget.offset
 		widget_offset[2] = offset_y

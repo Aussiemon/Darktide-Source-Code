@@ -27,6 +27,7 @@ local interactions = {
 	body_shop = ViewInteraction,
 	chest = ChestInteraction,
 	contracts = ViewInteraction,
+	crafting = ViewInteraction,
 	decoding = DecodingInteraction,
 	door_control_panel = DoorControlPanelInteraction,
 	grenade = GrenadeInteraction,

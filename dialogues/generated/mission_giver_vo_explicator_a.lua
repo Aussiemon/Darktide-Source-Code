@@ -364,20 +364,14 @@ local mission_giver_vo_explicator_a = {
 		sound_events = {
 			"loc_explicator_a__mission_cartel_brief_two_01",
 			"loc_explicator_a__mission_cartel_brief_two_02",
-			"loc_explicator_a__mission_cartel_brief_two_03",
-			"loc_explicator_a__mission_cartel_brief_two_04"
+			"loc_explicator_a__mission_cartel_brief_two_04",
+			"loc_explicator_a__mission_cartel_brief_two_05"
 		},
 		sound_events_duration = {
 			6.244604,
 			7.883375,
-			8.934103,
-			5.730271
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
+			5.730271,
+			8.625292
 		},
 		randomize_indexes = {}
 	},

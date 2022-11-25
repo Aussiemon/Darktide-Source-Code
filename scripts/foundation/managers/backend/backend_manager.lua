@@ -260,7 +260,9 @@ BackendManager.authenticate = function (self)
 			end
 
 			if not DEDICATED_SERVER then
-				Managers.telemetry_events:system_settings()
+				local account_id = self:account_id()
+
+				Managers.telemetry_events:system_settings(account_id)
 			end
 		end)
 

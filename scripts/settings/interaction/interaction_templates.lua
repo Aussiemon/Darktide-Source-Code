@@ -106,6 +106,15 @@ local interaction_templates = {
 		interaction_class_name = "mission_board",
 		ui_view_name = "mission_board_view"
 	},
+	crafting = {
+		action_text = "loc_action_interaction_view",
+		ui_interaction_type = "point_of_interest",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/forge",
+		description = "loc_crafting_view",
+		duration = 0,
+		interaction_class_name = "crafting",
+		ui_view_name = "crafting_view"
+	},
 	inbox = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",

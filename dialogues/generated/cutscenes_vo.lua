@@ -2990,7 +2990,7 @@ return function ()
 	define_rule({
 		name = "narrative_event_bay_01",
 		category = "cutscene",
-		wwise_route = 5,
+		wwise_route = 19,
 		response = "narrative_event_bay_01",
 		database = "cutscenes_vo",
 		criterias = {
@@ -3020,7 +3020,7 @@ return function ()
 	define_rule({
 		name = "narrative_event_bay_02",
 		category = "cutscene",
-		wwise_route = 5,
+		wwise_route = 19,
 		response = "narrative_event_bay_02",
 		database = "cutscenes_vo",
 		criterias = {

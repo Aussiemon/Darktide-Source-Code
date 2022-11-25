@@ -148,6 +148,7 @@ PortraitUI.unload_profile_portrait = function (self, id)
 	local character_id = data.character_id
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
+	local callbacks = data.callbacks
 
 	if #references_array == 1 then
 		local grid_index = data.grid_index
@@ -166,6 +167,10 @@ PortraitUI.unload_profile_portrait = function (self, id)
 			end
 		end
 	else
+		if callbacks then
+			callbacks[id] = nil
+		end
+
 		references_lookup[id] = nil
 
 		for i = 1, #references_array do

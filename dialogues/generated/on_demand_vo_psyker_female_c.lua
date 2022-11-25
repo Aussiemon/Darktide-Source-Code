@@ -68,14 +68,6 @@ local on_demand_vo_psyker_female_c = {
 			2.14099,
 			2.215042
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_lets_go_this_way = {

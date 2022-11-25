@@ -1059,52 +1059,6 @@ return function ()
 		}
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_rails_set_charge",
-		response = "mission_rails_set_charge",
-		database = "mission_vo_lm_rails",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_rails_set_charge"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"faction_memory",
-				"mission_rails_set_charge",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"mission_rails_set_charge",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
 		name = "mission_rails_start_banter_a",
 		category = "conversations_prio_0",
 		wwise_route = 0,

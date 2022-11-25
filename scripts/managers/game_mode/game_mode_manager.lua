@@ -234,7 +234,7 @@ end
 GameModeManager.specializations_disabled = function (self)
 	local game_mode_settings = self._game_mode:settings()
 
-	return game_mode_settings.specializations_disabled or false
+	return not not game_mode_settings.specializations_disabled
 end
 
 GameModeManager.presence_name = function (self)
@@ -246,7 +246,7 @@ end
 
 GameModeManager.is_prologue = function (self)
 	local game_mode_settings = self._game_mode:settings()
-	local is_prologue = game_mode_settings.is_prologue or false
+	local is_prologue = not not game_mode_settings.is_prologue
 
 	return is_prologue
 end
@@ -254,11 +254,11 @@ end
 GameModeManager.is_social_hub = function (self)
 	local game_mode_settings = self._game_mode:settings()
 
-	return game_mode_settings.is_social_hub or false
+	return not not game_mode_settings.is_social_hub
 end
 
-GameModeManager.is_locked_reserve_ammo = function (self)
-	return self._gameplay_modifiers.ammo_locked
+GameModeManager.infinite_ammo_reserve = function (self)
+	return self._gameplay_modifiers.infinite_ammo_reserve
 end
 
 GameModeManager.default_wielded_slot_name = function (self)
@@ -336,6 +336,18 @@ end
 
 GameModeManager.should_spawn_dead = function (self, player)
 	return self._game_mode:should_spawn_dead(player)
+end
+
+GameModeManager.game_mode_ready = function (self)
+	local game_mode = self._game_mode
+
+	if game_mode.game_mode_ready then
+		local game_mode_ready = game_mode:game_mode_ready()
+
+		return game_mode_ready
+	end
+
+	return true
 end
 
 GameModeManager.update = function (self, dt, t)

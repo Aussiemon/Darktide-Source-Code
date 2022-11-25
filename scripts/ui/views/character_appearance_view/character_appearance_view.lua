@@ -141,9 +141,9 @@ CharacterAppearanceView.init = function (self, settings, context)
 end
 
 CharacterAppearanceView.on_enter = function (self)
-	local character_create_promise = Promise:new()
+	self._character_create_promise = Promise:new()
 
-	character_create_promise:next(function ()
+	self._character_create_promise:next(function ()
 		local input_manager = Managers.input
 		local name = self.__class_name
 
@@ -264,27 +264,32 @@ CharacterAppearanceView.on_enter = function (self)
 		end
 
 		self:_open_page(1)
+
+		self._character_create_promise = nil
 	end)
 
 	if not self._character_create then
 		local item_definitions = MasterItems.get_cached()
 		local player = Managers.player:local_player(1)
 		local profile = player:profile()
-
-		Managers.data_service.profiles:fetch_all_profiles():next(function (data)
+		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
-			character_create_promise:resolve()
+			self._character_create_promise:resolve()
+
+			self._fetch_all_profiles_promise = nil
 		end):catch(function (error)
 			self._character_create = CharacterCreate:new(item_definitions, {}, profile)
 
-			character_create_promise:resolve()
+			self._character_create_promise:resolve()
+
+			self._fetch_all_profiles_promise = nil
 		end)
 
 		return
 	end
 
-	character_create_promise:resolve()
+	self._character_create_promise:resolve()
 end
 
 CharacterAppearanceView._create_offscreen_renderer = function (self)
@@ -429,31 +434,44 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 			}
 			context.options = {
 				{
-					self._parent:play_vo_events(CharacterAppearanceViewSettings.vo_event_vendor_purchase, "barber_a", nil, 1.7),
-					stop_exit_sound = true,
 					text = "loc_barber_vendor_confirm_button",
+					stop_exit_sound = true,
 					close_on_pressed = true,
 					on_pressed_sound = UISoundEvents.finalize_creation_confirm,
 					callback = callback(function ()
-						local profile = self._character_create:profile()
-						local loadout = profile.loadout
-						local items = {
-							slot_body_face = loadout.slot_body_face,
-							slot_body_face_tattoo = loadout.slot_body_face_tattoo,
-							slot_body_face_scar = loadout.slot_body_face_scar,
-							slot_body_face_hair = loadout.slot_body_face_hair,
-							slot_body_hair = loadout.slot_body_hair,
-							slot_body_tattoo = loadout.slot_body_tattoo,
-							slot_body_hair_color = loadout.slot_body_hair_color,
-							slot_body_skin_color = loadout.slot_body_skin_color,
-							slot_body_eye_color = loadout.slot_body_eye_color
-						}
+						if not self.__deleted then
+							local character_create = self._character_create
+							local profile = character_create and character_create:profile()
+							local loadout = profile and profile.loadout
 
-						ItemUtils.equip_slot_master_items(items)
+							if loadout then
+								local items = {
+									slot_body_face = loadout.slot_body_face,
+									slot_body_face_tattoo = loadout.slot_body_face_tattoo,
+									slot_body_face_scar = loadout.slot_body_face_scar,
+									slot_body_face_hair = loadout.slot_body_face_hair,
+									slot_body_hair = loadout.slot_body_hair,
+									slot_body_tattoo = loadout.slot_body_tattoo,
+									slot_body_hair_color = loadout.slot_body_hair_color,
+									slot_body_skin_color = loadout.slot_body_skin_color,
+									slot_body_eye_color = loadout.slot_body_eye_color
+								}
 
-						self._parent._active_view_instance = nil
+								ItemUtils.equip_slot_master_items(items)
+							end
 
-						self._parent:_handle_back_pressed()
+							local parent = self._parent
+
+							if parent then
+								parent:play_vo_events(CharacterAppearanceViewSettings.vo_event_vendor_purchase, "barber_a", nil, 1.7)
+
+								parent._active_view_instance = nil
+
+								parent:_handle_back_pressed()
+							end
+
+							self._barber_confirm_popup_id = nil
+						end
 					end)
 				},
 				{
@@ -467,7 +485,9 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 				}
 			}
 
-			Managers.event:trigger("event_show_ui_popup", context)
+			Managers.event:trigger("event_show_ui_popup", context, function (id)
+				self._barber_confirm_popup_id = id
+			end)
 		end
 	else
 		local num_pages = #self._pages
@@ -2176,6 +2196,24 @@ CharacterAppearanceView._destroy_background = function (self)
 end
 
 CharacterAppearanceView.on_exit = function (self)
+	if self._barber_confirm_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._barber_confirm_popup_id)
+
+		self._barber_confirm_popup_id = nil
+	end
+
+	if self._character_create_promise then
+		self._character_create_promise:cancel()
+
+		self._character_create_promise = nil
+	end
+
+	if self._fetch_all_profiles_promise then
+		self._fetch_all_profiles_promise:cancel()
+
+		self._fetch_all_profiles_promise = nil
+	end
+
 	CharacterAppearanceView.super.on_exit(self)
 	self:_unload_all_appearance_icons()
 	self:_destroy_background()

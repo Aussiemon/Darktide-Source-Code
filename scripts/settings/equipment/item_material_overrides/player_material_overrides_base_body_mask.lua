@@ -95,6 +95,14 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_arms_keep_upperarms_forearms = {
+		property_overrides = {
+			mask_top_bottom = {
+				0.19,
+				0
+			}
+		}
+	},
 	mask_legs_keep_knees_and_shins = {
 		property_overrides = {
 			mask_top_bottom = {

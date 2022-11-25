@@ -454,10 +454,6 @@ PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	local selected_name = pickup_options[pickup_index]
 	guaranteed_spawned_pickups[selected_name] = (guaranteed_spawned_pickups[selected_name] or 0) + 1
 
-	if selected_name == "small_metal" or selected_name == "large_metal" or selected_name == "small_platinum" or selected_name == "large_platinum" then
-		return nil
-	end
-
 	return selected_name
 end
 

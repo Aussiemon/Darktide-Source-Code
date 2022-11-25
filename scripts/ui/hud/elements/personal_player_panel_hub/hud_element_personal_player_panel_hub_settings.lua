@@ -17,19 +17,21 @@ local hud_element_personal_player_panel_hub_settings = {
 		name = true,
 		pocketable = false,
 		character_text = true,
-		ammo = false,
-		toughness = false,
-		toughness_hit_indicator = false,
 		respawn_timer = false,
-		health = false,
-		player_color = false,
 		throwables = false,
+		corruption_text = false,
+		toughness_hit_indicator = false,
+		ammo = false,
+		player_color = false,
+		toughness = false,
+		level = true,
 		portrait = true,
 		voip = true,
 		health_text = false,
 		status_icon = false,
-		corruption_text = false,
-		toughness_text = false
+		health = false,
+		toughness_text = false,
+		insignia = true
 	}
 }
 

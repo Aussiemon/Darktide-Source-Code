@@ -23,6 +23,14 @@ for _, reload_template in pairs(ReloadTemplates) do
 	end
 end
 
+local SPRINT_SLIDE_TWEAK_VALUES = {
+	ninja_fencer = {},
+	no_tweak_values = {}
+}
+local SLIDE_TWEAK_VALUES = {
+	ninja_fencer = {},
+	no_tweak_values = {}
+}
 local constants = {
 	knocked_down_damage_tick_buff = "knocked_down_damage_tick",
 	ladder_top_entering_animation_time = 1,
@@ -141,22 +149,24 @@ local constants = {
 	climb_pitch_offset = math.pi / 8,
 	air_directional_speed_scale_angle = math.pi / 2,
 	air_drag_angle = math.pi / 6,
-	sprint_slide_friction_function = function (speed, slide_time, buff_extension)
+	sprint_slide_friction_function = function (speed, slide_time, buff_extension, weapon_template_or_nil)
 		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
 
 		if has_zero_slide_friction then
 			return -1
 		end
 
-		local grace_time = 0.5
-		local lerp_time = 0.2
+		local slide_tweak_type = weapon_template_or_nil and weapon_template_or_nil.slide_tweak_type or "no_tweak_values"
+		local slide_tweak_values = SLIDE_TWEAK_VALUES[slide_tweak_type]
+		local grace_time = slide_tweak_values.grace_time or 0.5
 
 		if slide_time < grace_time then
 			return 0
 		else
-			local friction_threshold = 7
-			local speed_threshold = 4
+			local friction_threshold = slide_tweak_values.friction_threshold or 7
+			local speed_threshold = slide_tweak_values.speed_threshold or 4
 			local friction_speed = speed < speed_threshold and math.lerp(10, friction_threshold, speed / speed_threshold) or friction_threshold
+			local lerp_time = 0.2
 
 			if slide_time < grace_time + lerp_time then
 				return math.lerp(0, friction_speed, (slide_time - grace_time) / lerp_time)
@@ -165,23 +175,27 @@ local constants = {
 			end
 		end
 	end,
-	slide_friction_function = function (speed, slide_time, buff_extension)
+	slide_friction_function = function (speed, slide_time, buff_extension, weapon_template_or_nil)
 		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
 
 		if has_zero_slide_friction then
 			return 0
 		end
 
-		local max_slide_speed = 4.5
-		local friction_threshold = 7
+		local slide_tweak_type = weapon_template_or_nil and weapon_template_or_nil.slide_tweak_type or "no_tweak_values"
+		local slide_tweak_values = SLIDE_TWEAK_VALUES[slide_tweak_type]
+		local max_slide_speed = slide_tweak_values.max_slide_speed or 5.5
 
-		if max_slide_speed < speed then
+		if speed > max_slide_speed then
 			local p = speed / max_slide_speed - 1
+			local min = slide_tweak_values.above_max_slide_friction_min or 12
+			local max = slide_tweak_values.above_max_slide_friction_max or 30
 
-			return math.lerp(12, 30, p * p * p)
+			return math.lerp(min, max, p * p * p)
 		else
 			local lerp_time = 0.2
-			local speed_threshold = 4
+			local speed_threshold = slide_tweak_values.speed_threshold or 4
+			local friction_threshold = slide_tweak_values.friction_threshold or 7
 			local friction_speed = speed < speed_threshold and math.lerp(12, friction_threshold, speed / speed_threshold) or friction_threshold
 
 			if slide_time < lerp_time then

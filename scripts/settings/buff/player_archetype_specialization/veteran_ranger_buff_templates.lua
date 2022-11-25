@@ -199,7 +199,6 @@ local templates = {
 }
 local OUTLINE_NAME = "special_target"
 local DISTANCE_LIMIT = talent_settings.combat_ability.outline_distance
-local ANGLE_LIMIT = math.pi * talent_settings.combat_ability.outline_angle
 local DISTANCE_LIMIT_SQUARED = DISTANCE_LIMIT * DISTANCE_LIMIT
 local HIGHLIGHT_OFFSET = talent_settings.combat_ability.outline_highlight_offset
 local HIGHLIGHT_OFFSET_TOTAL_MAX_TIME = talent_settings.combat_ability.outline_highlight_offset_total_max_time
@@ -213,10 +212,6 @@ local function _start_outline(template_data, template_context)
 	local side = side_system and side_system.side_by_unit[unit]
 	local enemy_units = side and side.enemy_units_lookup or {}
 	local player_position = POSITION_LOOKUP[unit]
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	local first_person_component = unit_data_extension:read_component("first_person")
-	local rotation = first_person_component.rotation
-	local player_forward = Vector3.normalize(Vector3.cross(Vector3.up(), Quaternion.right(rotation)))
 	local alive_specials = {}
 	local sort_value = {}
 
@@ -231,17 +226,15 @@ local function _start_outline(template_data, template_context)
 		if should_get_outlined then
 			local special_position = POSITION_LOOKUP[enemy_unit]
 			local from_player = special_position - player_position
-			local from_player_flatten = Vector3.normalize(Vector3.flat(from_player))
-			local distance_squared = Vector3.length_squared(from_player_flatten)
-			local angle = distance_squared > 0 and Vector3.angle(from_player_flatten, player_forward) or 0
-			local angle_score = angle / ANGLE_LIMIT
-			distance_squared = Vector3.length_squared(from_player)
-			local distance_score = distance_squared / DISTANCE_LIMIT_SQUARED
-			local is_score_low_enough = angle_score < 1 and distance_score < 1
+			local distance_squared = Vector3.length_squared(from_player)
+			local is_special = breed.tags.special
+			local distance_limit = DISTANCE_LIMIT_SQUARED
+			local distance_score = distance_squared / distance_limit
+			local distance_score_low_enough = is_special or distance_score < 1
 
-			if is_score_low_enough then
+			if distance_score_low_enough then
 				alive_specials[#alive_specials + 1] = enemy_unit
-				sort_value[enemy_unit] = angle_score + distance_score
+				sort_value[enemy_unit] = distance_score
 			end
 		end
 	end
@@ -322,15 +315,11 @@ templates.veteran_ranger_ranged_stance_outline_units = {
 		end
 
 		local unit = template_context.unit
-		local is_owner_unit = template_context.owner_unit == unit
+		local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
 
-		if is_owner_unit then
-			local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
-
-			if specialization_extension then
-				template_data.headhunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_headhunter)
-				template_data.big_game_hunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_big_game_hunter)
-			end
+		if specialization_extension then
+			template_data.headhunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_headhunter)
+			template_data.big_game_hunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_big_game_hunter)
 		end
 
 		_start_outline(template_data, template_context)

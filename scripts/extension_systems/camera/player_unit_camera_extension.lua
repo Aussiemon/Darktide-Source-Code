@@ -81,8 +81,11 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 		end
 	else
 		local is_disabled, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
+		local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 
-		if is_ledge_hanging then
+		if is_hogtied then
+			node = "hogtied"
+		elseif is_ledge_hanging then
 			node = "ledge_hanging"
 		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged then
 			node = "pounced"

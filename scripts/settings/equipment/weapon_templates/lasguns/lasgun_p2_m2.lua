@@ -1175,7 +1175,7 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.entry_actions = {
-	primary_action = "action_shoot_hip_start",
+	primary_action = "action_shoot_hip_charged",
 	secondary_action = "action_zoom"
 }
 weapon_template.allow_sprinting_with_special = true

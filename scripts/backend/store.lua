@@ -170,6 +170,38 @@ Store.get_ogryn_credits_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_ogryn", character_id, character_id, true)
 end
 
+Store.get_veteran_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_veteran", character_id, character_id, true)
+end
+
+Store.get_zealot_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_zealot", character_id, character_id, true)
+end
+
+Store.get_psyker_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_psyker", character_id, character_id, true)
+end
+
+Store.get_ogryn_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_ogryn", character_id, character_id, true)
+end
+
+Store.get_veteran_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_veteran", character_id, character_id, false)
+end
+
+Store.get_zealot_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_zealot", character_id, character_id, false)
+end
+
+Store.get_psyker_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_psyker", character_id, character_id, false)
+end
+
+Store.get_ogryn_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_ogryn", character_id, character_id, false)
+end
+
 Store.get_veteran_marks_store = function (self, t, character_id)
 	return self:_get_storefront(t, "marks_store_veteran", character_id, character_id, true)
 end

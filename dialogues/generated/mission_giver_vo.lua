@@ -2341,55 +2341,6 @@ return function ()
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		name = "mission_first_scan",
-		response = "mission_first_scan",
-		database = "mission_giver_vo",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_first_scan"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"faction_memory",
-				"mission_first_scan",
-				OP.EQ,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"mission_first_scan",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
 		name = "mission_forge_briefing_a",
 		response = "mission_forge_briefing_a",
 		database = "mission_giver_vo",

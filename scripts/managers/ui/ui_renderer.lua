@@ -39,43 +39,18 @@ local function _get_material_flag(render_settings, material_flags, render_pass_f
 	return material_flags
 end
 
-UIRenderer.add_resource_generator = function (ui_renderer, sort_key, name, ...)
-	local gui = ui_renderer.gui
+UIRenderer.add_render_pass = function (ui_renderer, sort_key, name, clear, ...)
+	local render_passes = ui_renderer.render_passes
 
-	Gui.resource_generator(gui, sort_key, name, ...)
+	if not render_passes[name] then
+		Gui.render_pass(ui_renderer.gui, sort_key, name, clear, ...)
 
-	if not ui_renderer.retained_resource_generators[name] then
-		local gui_retained = ui_renderer.gui_retained
-
-		Gui.resource_generator(gui_retained, sort_key, name, ...)
-
-		ui_renderer.retained_resource_generators[name] = {
-			sort_key = sort_key,
-			render_targets = {
-				...
-			}
-		}
+		render_passes[name] = true
 	end
 end
 
-UIRenderer.add_render_pass = function (ui_renderer, sort_key, name, clear, ...)
-	local gui = ui_renderer.gui
-
-	Gui.render_pass(gui, sort_key, name, clear, ...)
-
-	if not ui_renderer.retained_render_passes[name] then
-		local gui_retained = ui_renderer.gui_retained
-
-		Gui.render_pass(gui_retained, sort_key, name, clear, ...)
-
-		ui_renderer.retained_render_passes[name] = {
-			sort_key = sort_key,
-			render_targets = {
-				...
-			},
-			clear = clear
-		}
-	end
+UIRenderer.clear_render_pass_queue = function (ui_renderer)
+	table.clear(ui_renderer.render_passes)
 end
 
 UIRenderer.create_viewport_renderer = function (world, ...)
@@ -117,8 +92,7 @@ UIRenderer.create_ui_renderer = function (world, gui, gui_retained, name, render
 		debug_startpoint_direction = StrictNil,
 		debug_startpoint = StrictNil,
 		render_settings = StrictNil,
-		retained_render_passes = {},
-		retained_resource_generators = {}
+		render_passes = {}
 	})
 end
 

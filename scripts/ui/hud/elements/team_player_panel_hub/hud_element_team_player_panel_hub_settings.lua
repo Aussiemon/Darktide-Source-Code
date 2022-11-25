@@ -52,17 +52,19 @@ local hud_element_team_player_panel_hub_settings = {
 		200
 	},
 	feature_list = {
-		coherency = false,
-		name = true,
 		respawn_timer = false,
-		voip = true,
+		name = true,
 		portrait = true,
+		voip = true,
+		coherency = false,
 		ammo = false,
 		toughness_hit_indicator = false,
 		player_color = false,
 		status_icon = false,
 		health = false,
-		throwables = false
+		throwables = false,
+		insignia = true,
+		level = true
 	}
 }
 

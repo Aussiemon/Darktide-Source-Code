@@ -127,6 +127,21 @@ CameraSettings.player_third_person = {
 				{
 					_node = {
 						near_range = 0.025,
+						name = "hogtied",
+						class = "TransformCamera",
+						offset_position = {
+							z = -0.5,
+							x = 0,
+							y = -2
+						},
+						tree_transitions = {
+							first_person = CameraTransitionTemplates.instant_cut
+						}
+					}
+				},
+				{
+					_node = {
+						near_range = 0.025,
 						name = "ledge_hanging",
 						class = "TransformCamera",
 						custom_vertical_fov = 65,
@@ -152,9 +167,8 @@ CameraSettings.player_third_person = {
 				}
 			},
 			_node = {
-				offset_pitch = -25,
-				name = "third_person_aim",
-				class = "AimCamera"
+				class = "AimCamera",
+				name = "third_person_aim"
 			}
 		},
 		_node = {

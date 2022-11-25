@@ -10,7 +10,7 @@ local mission_templates = {
 		level = "content/levels/prologue/missions/prologue",
 		gameplay_modifiers = {
 			"unkillable",
-			"ammo_locked"
+			"infinite_ammo_reserve"
 		},
 		terror_event_templates = {
 			"terror_events_prologue"

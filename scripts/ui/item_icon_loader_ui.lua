@@ -59,6 +59,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 	local gear_id = data.gear_id
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
+	local callbacks = data.callbacks
 
 	if #references_array == 1 then
 		local package_manager = Managers.package
@@ -86,6 +87,10 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 			end
 		end
 	else
+		if callbacks then
+			callbacks[id] = nil
+		end
+
 		references_lookup[id] = nil
 
 		for i = 1, #references_array do

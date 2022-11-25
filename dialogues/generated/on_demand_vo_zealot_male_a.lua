@@ -51,13 +51,12 @@ local on_demand_vo_zealot_male_a = {
 	},
 	com_wheel_vo_for_the_emperor = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_01",
 			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_02",
 			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_03",
 			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_04",
-			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_05",
 			"loc_zealot_male_a__com_wheel_vo_for_the_emperor_06"
 		},
 		sound_events_duration = {
@@ -65,16 +64,7 @@ local on_demand_vo_zealot_male_a = {
 			2.817104,
 			2.3875,
 			2.104188,
-			1.843229,
 			1.879542
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	},

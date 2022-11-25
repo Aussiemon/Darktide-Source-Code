@@ -181,23 +181,6 @@ local mission_vo_lm_rails_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_rails_set_charge = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__mission_rails_set_charge_01",
-			"loc_sergeant_a__mission_rails_set_charge_02",
-			"loc_sergeant_a__mission_rails_set_charge_03",
-			"loc_sergeant_a__mission_rails_set_charge_04"
-		},
-		sound_events_duration = {
-			4.40375,
-			3.837229,
-			4.074542,
-			4.583146
-		},
-		randomize_indexes = {}
-	},
 	mission_rails_start_banter_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

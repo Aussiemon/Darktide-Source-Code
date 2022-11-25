@@ -1,52 +1,64 @@
 local weapon_unlock_settings = {
 	psyker_2 = {
 		{},
-		{},
+		{
+			"content/items/weapons/player/melee/forcesword_p1_m1",
+			"content/items/weapons/player/melee/combataxe_p1_m2"
+		},
 		{
 			"content/items/weapons/player/ranged/autogun_p3_m1",
 			"content/items/weapons/player/ranged/lasgun_p1_m2"
 		},
 		{
-			"content/items/weapons/player/melee/forcesword_p1_m1",
-			"content/items/weapons/player/ranged/autogun_p1_m2"
-		},
-		{
-			"content/items/weapons/player/melee/combataxe_p1_m2"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p1_m3"
-		},
-		{
-			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
-			"content/items/weapons/player/melee/combatsword_p1_m2"
-		},
-		{
 			"content/items/weapons/player/ranged/forcestaff_p1_m1",
+			"content/items/weapons/player/melee/combatsword_p1_m3"
+		},
+		{
+			"content/items/weapons/player/melee/combatsword_p3_m1",
 			"content/items/weapons/player/ranged/autogun_p1_m3"
 		},
 		{
-			"content/items/weapons/player/ranged/lasgun_p3_m1",
+			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
 			"content/items/weapons/player/melee/combataxe_p1_m3"
 		},
-		{},
-		{},
-		{},
+		{
+			"content/items/weapons/player/ranged/lasgun_p1_m3",
+			"content/items/weapons/player/melee/combatsword_p3_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/forcestaff_p3_m1",
+			"content/items/weapons/player/ranged/autogun_p1_m2"
+		},
+		{
+			"content/items/weapons/player/melee/combataxe_p2_m1",
+			"content/items/weapons/player/melee/combatsword_p1_m2"
+		},
+		{
+			"content/items/weapons/player/ranged/autogun_p3_m2",
+			"content/items/weapons/player/melee/combataxe_p2_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/forcestaff_p4_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m2"
+		},
+		{
+			"content/items/weapons/player/ranged/lasgun_p3_m1",
+			"content/items/weapons/player/melee/combatsword_p3_m2"
+		},
 		{
 			"content/items/weapons/player/ranged/lasgun_p3_m2",
-			"content/items/weapons/player/ranged/autogun_p3_m2"
+			"content/items/weapons/player/ranged/autogun_p3_m3"
 		},
-		{},
 		{
-			"content/items/weapons/player/ranged/autogun_p3_m3",
+			"content/items/weapons/player/melee/chainsword_p1_m1",
 			"content/items/weapons/player/ranged/lasgun_p3_m3"
 		},
+		{
+			"content/items/weapons/player/ranged/forcestaff_p2_m1"
+		},
 		{},
-		{
-			"content/items/weapons/player/melee/chainsword_p1_m1"
-		},
-		{
-			"content/items/weapons/player/melee/combatsword_p1_m3"
-		},
+		{},
+		{},
 		{},
 		{},
 		{},
@@ -63,66 +75,67 @@ local weapon_unlock_settings = {
 	zealot_2 = {
 		{},
 		{
-			"content/items/weapons/player/ranged/autogun_p2_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p1_m2"
-		},
-		{
-			"content/items/weapons/player/melee/combatsword_p1_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/autogun_p3_m1",
-			"content/items/weapons/player/melee/combataxe_p1_m3"
-		},
-		{
+			"content/items/weapons/player/ranged/autogun_p2_m1",
 			"content/items/weapons/player/ranged/shotgun_p1_m1"
 		},
 		{
+			"content/items/weapons/player/melee/combatsword_p2_m1",
+			"content/items/weapons/player/ranged/lasgun_p1_m2"
+		},
+		{
+			"content/items/weapons/player/ranged/lasgun_p1_m3",
+			"content/items/weapons/player/melee/combataxe_p1_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/autogun_p3_m1",
 			"content/items/weapons/player/melee/combatsword_p1_m2"
 		},
 		{
-			"content/items/weapons/player/ranged/flamer_p1_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/autogun_p2_m2"
-		},
-		{
-			"content/items/weapons/player/melee/chainsword_p1_m1"
-		},
-		{
-			"content/items/weapons/player/melee/chainsword_2h_p1_m1",
-			"content/items/weapons/player/ranged/autogun_p3_m2"
-		},
-		{
-			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
-			"content/items/weapons/player/melee/combatsword_p1_m3"
-		},
-		{
-			"content/items/weapons/player/melee/chainaxe_p1_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m1",
 			"content/items/weapons/player/ranged/autogun_p1_m2"
 		},
 		{
-			"content/items/weapons/player/ranged/bolter_p1_m1"
+			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
+			"content/items/weapons/player/melee/combatsword_p2_m2"
 		},
 		{
+			"content/items/weapons/player/ranged/flamer_p1_m1",
+			"content/items/weapons/player/melee/combatsword_p1_m3"
+		},
+		{
+			"content/items/weapons/player/melee/chainsword_p1_m1",
+			"content/items/weapons/player/ranged/autogun_p3_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/autogun_p2_m2",
+			"content/items/weapons/player/melee/combatsword_p2_m3"
+		},
+		{
+			"content/items/weapons/player/melee/chainsword_2h_p1_m1",
 			"content/items/weapons/player/ranged/autogun_p1_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/bolter_p1_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m2"
+		},
+		{
+			"content/items/weapons/player/melee/chainaxe_p1_m1",
+			"content/items/weapons/player/ranged/autogun_p3_m2"
+		},
+		{
+			"content/items/weapons/player/melee/combataxe_p2_m3",
+			"content/items/weapons/player/ranged/autogun_p2_m3"
 		},
 		{
 			"content/items/weapons/player/melee/thunderhammer_2h_p1_m1"
 		},
 		{},
-		{
-			"content/items/weapons/player/ranged/autogun_p2_m3"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p1_m3"
-		},
 		{},
 		{},
-		{
-			"content/items/weapons/player/ranged/autogun_p3_m3"
-		},
+		{},
+		{},
+		{},
+		{},
 		{},
 		{},
 		{},
@@ -137,35 +150,37 @@ local weapon_unlock_settings = {
 		{
 			"content/items/weapons/player/melee/ogryn_combatblade_p1_m3"
 		},
-		{},
 		{
 			"content/items/weapons/player/ranged/ogryn_rippergun_p1_m1"
 		},
-		{},
 		{
-			"content/items/weapons/player/melee/ogryn_club_p1_m1"
+			"content/items/weapons/player/ranged/ogryn_gauntlet_p1_m1"
 		},
-		{},
-		{},
 		{
 			"content/items/weapons/player/melee/ogryn_combatblade_p1_m2"
 		},
-		{},
-		{},
-		{},
+		{
+			"content/items/weapons/player/ranged/ogryn_rippergun_p1_m2"
+		},
 		{
 			"content/items/weapons/player/ranged/ogryn_thumper_p1_m2"
 		},
 		{
 			"content/items/weapons/player/ranged/ogryn_rippergun_p1_m3"
 		},
+		{
+			"content/items/weapons/player/ranged/ogryn_heavystubber_p1_m1"
+		},
+		{
+			"content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m1"
+		},
 		{},
-		{
-			"content/items/weapons/player/ranged/ogryn_gauntlet_p1_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/ogryn_rippergun_p1_m2"
-		},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
 		{},
 		{},
 		{},
@@ -183,70 +198,70 @@ local weapon_unlock_settings = {
 	veteran_2 = {
 		{},
 		{
-			"content/items/weapons/player/ranged/autogun_p3_m1"
+			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
+			"content/items/weapons/player/ranged/autogun_p1_m3"
 		},
 		{
-			"content/items/weapons/player/melee/combatsword_p1_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p1_m3"
-		},
-		{
-			"content/items/weapons/player/ranged/autogun_p3_m2"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p3_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/autogun_p2_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/autogun_p3_m3",
+			"content/items/weapons/player/ranged/autogun_p3_m1",
 			"content/items/weapons/player/melee/combataxe_p1_m2"
 		},
 		{
-			"content/items/weapons/player/ranged/shotgun_p1_m1",
-			"content/items/weapons/player/ranged/lasgun_p3_m3"
+			"content/items/weapons/player/melee/combatsword_p1_m1",
+			"content/items/weapons/player/ranged/lasgun_p1_m3"
 		},
 		{
-			"content/items/weapons/player/ranged/lasgun_p2_m1"
+			"content/items/weapons/player/ranged/lasgun_p2_m1",
+			"content/items/weapons/player/ranged/autogun_p3_m3"
 		},
 		{
-			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m1",
 			"content/items/weapons/player/ranged/autogun_p1_m2"
 		},
 		{
-			"content/items/weapons/player/melee/chainsword_p1_m1",
-			"content/items/weapons/player/ranged/lasgun_p2_m2"
+			"content/items/weapons/player/ranged/autogun_p2_m1",
+			"content/items/weapons/player/melee/combatsword_p1_m2"
 		},
 		{
-			"content/items/weapons/player/ranged/bolter_p1_m1",
-			"content/items/weapons/player/ranged/autogun_p2_m2"
-		},
-		{
-			"content/items/weapons/player/melee/powersword_p1_m1"
-		},
-		{
-			"content/items/weapons/player/ranged/lasgun_p3_m2",
-			"content/items/weapons/player/ranged/autogun_p1_m3"
-		},
-		{},
-		{
-			"content/items/weapons/player/ranged/plasmagun_p1_m1",
-			"content/items/weapons/player/ranged/lasgun_p2_m3"
-		},
-		{},
-		{
-			"content/items/weapons/player/melee/chainaxe_p1_m1",
+			"content/items/weapons/player/ranged/shotgun_p1_m1",
 			"content/items/weapons/player/melee/combataxe_p1_m3"
 		},
 		{
+			"content/items/weapons/player/ranged/lasgun_p2_m2",
 			"content/items/weapons/player/melee/combatsword_p1_m3"
 		},
 		{
-			"content/items/weapons/player/melee/combatsword_p1_m2",
+			"content/items/weapons/player/melee/chainsword_p1_m1",
+			"content/items/weapons/player/ranged/autogun_p3_m2"
+		},
+		{
+			"content/items/weapons/player/ranged/lasgun_p3_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m3"
+		},
+		{
+			"content/items/weapons/player/ranged/lasgun_p2_m3",
+			"content/items/weapons/player/ranged/autogun_p2_m2"
+		},
+		{
+			"content/items/weapons/player/melee/powersword_p1_m1",
+			"content/items/weapons/player/ranged/lasgun_p3_m2"
+		},
+		{
+			"content/items/weapons/player/ranged/bolter_p1_m1",
+			"content/items/weapons/player/melee/combataxe_p2_m2"
+		},
+		{
+			"content/items/weapons/player/melee/chainaxe_p1_m1",
 			"content/items/weapons/player/ranged/autogun_p2_m3"
 		},
+		{
+			"content/items/weapons/player/ranged/plasmagun_p1_m1",
+			"content/items/weapons/player/ranged/lasgun_p3_m3"
+		},
+		{},
+		{},
+		{},
+		{},
+		{},
 		{},
 		{},
 		{},

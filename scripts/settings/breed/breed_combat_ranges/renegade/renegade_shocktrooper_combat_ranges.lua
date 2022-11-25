@@ -1,7 +1,7 @@
 local combat_ranges = {
 	name = "renegade_shocktrooper",
 	calculate_target_velocity_dot = true,
-	target_velocity_dot_reset = 2,
+	target_velocity_dot_reset = 0.5,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -70,6 +70,7 @@ local combat_ranges = {
 				sticky_time = 2,
 				distance = 7,
 				switch_weapon_slot = "slot_ranged_weapon",
+				target_velocity_dot_distance = 6,
 				distance_operator = "greater",
 				switch_combat_range = "close",
 				locked_in_melee_distance = 7,

@@ -67,7 +67,9 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 	local target_unit = self._targeting_component.target_unit_1
 
 	if target_unit and target_unit ~= previously_targeted_unit then
-		self._time_on_target = 0
+		if self._is_server then
+			self._time_on_target = 0
+		end
 
 		if self._target_charge and self._target_locked then
 			self._charge_module:reset(t, self._charge_duration)
@@ -95,9 +97,7 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 
 			self._has_attacked_target = true
 		end
-	end
 
-	if target_unit then
 		self._time_on_target = self._time_on_target + dt
 	end
 

@@ -1,7 +1,7 @@
 local combat_ranges = {
 	name = "renegade_assault",
 	calculate_target_velocity_dot = true,
-	target_velocity_dot_reset = 1,
+	target_velocity_dot_reset = 0.5,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -72,6 +72,7 @@ local combat_ranges = {
 				distance_operator = "greater",
 				switch_combat_range = "close",
 				sticky_time = 3,
+				target_velocity_dot_distance = 6,
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					ranged = 1.25,

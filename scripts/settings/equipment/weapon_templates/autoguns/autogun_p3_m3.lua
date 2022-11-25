@@ -163,10 +163,9 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
 	shoot = "stay",
-	special_action = "stay",
 	reload = "stay",
 	zoom = {
-		special_action = "base",
+		special_action_hold = "base",
 		wield = "base",
 		zoom_shoot = "stay",
 		grenade_ability = "base",
@@ -175,14 +174,12 @@ weapon_template.action_input_hierarchy = {
 		combat_ability = "base"
 	},
 	special_action_hold = {
-		special_action = "base",
 		special_action_light = "base",
-		special_action_heavy = "base",
-		zoom = "base",
 		wield = "base",
+		special_action_heavy = "base",
+		grenade_ability = "base",
 		reload = "base",
-		combat_ability = "base",
-		grenade_ability = "base"
+		combat_ability = "base"
 	}
 }
 
@@ -511,12 +508,14 @@ weapon_template.actions = {
 		}
 	},
 	action_bash_start = {
-		uninterruptible = true,
-		sprint_requires_press_to_interrupt = true,
-		start_input = "special_action_hold",
 		kind = "windup",
+		uninterruptible = true,
+		start_input = "special_action_hold",
+		sprint_requires_press_to_interrupt = true,
+		unaim = true,
 		anim_end_event = "attack_finished",
 		abort_sprint = true,
+		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "attack_charge_stab",
 		prevent_sprint = true,
@@ -589,17 +588,19 @@ weapon_template.actions = {
 	action_bash = {
 		damage_window_start = 0.13333333333333333,
 		hit_armor_anim = "attack_hit",
-		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
-		anim_event = "attack_left_diagonal_up",
-		allowed_during_sprint = true,
+		allow_conditional_chain = true,
+		crosshair_type = "none",
 		range_mod = 1.15,
+		allowed_during_sprint = true,
 		damage_window_end = 0.3,
 		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_left_diagonal_up",
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -651,7 +652,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.6
+				chain_time = 0.8
 			},
 			special_action_hold = {
 				action_name = "action_bash_start",
@@ -678,17 +679,19 @@ weapon_template.actions = {
 	action_bash_heavy = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit",
-		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		anim_event = "attack_stab",
-		allowed_during_sprint = true,
+		allow_conditional_chain = true,
+		crosshair_type = "none",
 		range_mod = 1.15,
+		allowed_during_sprint = true,
 		damage_window_end = 0.26666666666666666,
 		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_stab",
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -740,7 +743,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.6
+				chain_time = 0.8
 			},
 			special_action_hold = {
 				action_name = "action_bash_start",

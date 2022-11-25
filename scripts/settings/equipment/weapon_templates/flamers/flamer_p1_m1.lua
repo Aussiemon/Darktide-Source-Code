@@ -655,11 +655,17 @@ weapon_template.base_stats = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		weapon_handling = {
+			action_shoot = {
+				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat
+			},
 			action_shoot_braced = {
 				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat
 			}
 		},
 		damage = {
+			action_shoot = {
+				damage_trait_templates.flamer_p1_m1_braced_dps_stat
+			},
 			action_shoot_braced = {
 				damage_trait_templates.flamer_p1_m1_braced_dps_stat
 			}

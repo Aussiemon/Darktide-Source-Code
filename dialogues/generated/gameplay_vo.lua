@@ -657,6 +657,294 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "deployed_ammo_crate",
+		wwise_route = 0,
+		response = "deployed_ammo_crate",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"deployed_ammo_crate"
+			},
+			{
+				"faction_context",
+				"total_ammo_percentage",
+				OP.GT,
+				0.5
+			},
+			{
+				"faction_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "deployed_ammo_crate_ogryn_low_on_ammo",
+		wwise_route = 0,
+		response = "deployed_ammo_crate_ogryn_low_on_ammo",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"deployed_ammo_crate"
+			},
+			{
+				"faction_context",
+				"total_ammo_percentage",
+				OP.LT,
+				0.5
+			},
+			{
+				"faction_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "deployed_ammo_crate_psyker_low_on_ammo",
+		wwise_route = 0,
+		response = "deployed_ammo_crate_psyker_low_on_ammo",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"deployed_ammo_crate"
+			},
+			{
+				"faction_context",
+				"total_ammo_percentage",
+				OP.LT,
+				0.5
+			},
+			{
+				"faction_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "deployed_ammo_crate_veteran_low_on_ammo",
+		wwise_route = 0,
+		response = "deployed_ammo_crate_veteran_low_on_ammo",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"deployed_ammo_crate"
+			},
+			{
+				"faction_context",
+				"total_ammo_percentage",
+				OP.LT,
+				0.5
+			},
+			{
+				"faction_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "deployed_ammo_crate_zealot_low_on_ammo",
+		wwise_route = 0,
+		response = "deployed_ammo_crate_zealot_low_on_ammo",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"deployed_ammo_crate"
+			},
+			{
+				"faction_context",
+				"total_ammo_percentage",
+				OP.LT,
+				0.5
+			},
+			{
+				"faction_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_deployed_ammo_crate",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "disabled_by_chaos_hound",
 		category = "player_prio_0",
 		wwise_route = 0,
@@ -1825,6 +2113,52 @@ return function ()
 				"user_memory",
 				"last_saw_ammo",
 				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "found_health_booster",
+		category = "player_prio_0",
+		wwise_route = 0,
+		response = "found_health_booster",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"found_health_booster_low_on_health"
+			},
+			{
+				"user_context",
+				"health",
+				OP.GTEQ,
+				0.3
+			},
+			{
+				"faction_memory",
+				"deployed_medical_crate",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"deployed_medical_crate",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
 			}
 		}
 	})
@@ -6382,6 +6716,13 @@ return function ()
 				"rapid_loosing_health_response",
 				OP.TIMEDIFF,
 				OP.GT,
+				180
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.LT,
 				180
 			}
 		},
@@ -12759,6 +13100,17 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"veteran_seen_killstreak_psyker",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_veteran_seen_killstreak_psyker",
 				OP.TIMESET
 			}
 		},

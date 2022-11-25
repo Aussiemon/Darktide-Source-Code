@@ -163,6 +163,17 @@ local narrative = {
 				on_complete = on_path_of_trust_chapter_completion("path_of_trust_1")
 			},
 			{
+				name = "pot_crafting",
+				backend_id = 2,
+				data = {
+					localization_key = "loc_progression_step_02",
+					vo_story_stage = "pot_2",
+					level_to_reach = PlayerProgressionUnlocks.pot_crafting
+				},
+				requirement = level_at_least(PlayerProgressionUnlocks.pot_crafting),
+				on_complete = on_path_of_trust_chapter_completion("unlock_crafting")
+			},
+			{
 				name = "pot_gadgets",
 				backend_id = 3,
 				data = {
@@ -242,9 +253,19 @@ local narrative = {
 		},
 		level_unlock_popups = {
 			{
+				name = "level_unlock_credits_store_popup",
+				backend_id = 1,
+				requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first")
+			},
+			{
 				name = "level_unlock_mission_board_popup_difficulty_increased_1",
 				backend_id = 2,
 				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_3)
+			},
+			{
+				name = "level_unlock_crafting_station_popup",
+				backend_id = 3,
+				requirement = beyond_story_chapter("path_of_trust", "pot_crafting")
 			},
 			{
 				name = "level_unlock_talent_tier_1",
@@ -320,6 +341,9 @@ local narrative = {
 		},
 		level_unlock_credits_store_visited = {
 			requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first")
+		},
+		level_unlock_crafting_station_visited = {
+			requirement = beyond_story_chapter("path_of_trust", "pot_crafting")
 		},
 		level_unlock_contract_store_visited = {
 			requirement = beyond_story_chapter("path_of_trust", "pot_contracts")

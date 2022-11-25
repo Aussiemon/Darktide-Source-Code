@@ -455,7 +455,11 @@ StateTitle._signin = function (self)
 		local gear = result.gear
 		local selected_profile = result.selected_profile
 		local has_created_first_character = result.has_created_first_character
-		local account_data = Managers.save:account_data()
+		local save_manager = Managers.save
+
+		save_manager:set_save_data_account_id(account_id)
+
+		local account_data = save_manager:account_data()
 		local input_layout = account_data and account_data.input_settings.controller_layout or "default"
 
 		Managers.input:change_input_layout(input_layout)

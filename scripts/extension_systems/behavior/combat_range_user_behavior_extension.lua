@@ -280,9 +280,9 @@ function _should_switch_combat_range(unit, blackboard, target_distance, config, 
 		return true
 	end
 
-	local switch_on_target_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration
+	local should_switch_on_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration and config.target_velocity_dot_distance
 
-	if switch_on_target_velocity_dot then
+	if should_switch_on_velocity_dot and config.target_velocity_dot_distance <= target_distance then
 		if type(config.target_velocity_dot_duration) == "table" then
 			local diff_switch_on_target_velocity_dot = Managers.state.difficulty:get_table_entry_by_challenge(config.target_velocity_dot_duration)
 
