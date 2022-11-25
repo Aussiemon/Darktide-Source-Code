@@ -121,15 +121,17 @@ weapon_template.action_input_hierarchy = {
 		shoot_release = "base"
 	},
 	zoom = {
-		zoom_release = "base",
+		special_action = "stay",
 		wield = "base",
 		grenade_ability = "base",
+		zoom_release = "base",
 		reload = "base",
 		combat_ability = "base",
 		zoom_shoot = {
-			grenade_ability = "base",
+			special_action = "previous",
 			wield = "base",
 			zoom_release = "base",
+			grenade_ability = "base",
 			reload = "base",
 			combat_ability = "base",
 			shoot_release = "previous"
@@ -433,19 +435,17 @@ weapon_template.actions = {
 		}
 	},
 	action_push = {
-		anim_event = "attack_push",
+		range_mod = 1.15,
 		push_radius = 1.5,
 		start_input = "special_action",
 		block_duration = 0.5,
 		kind = "push",
-		sprint_requires_press_to_interrupt = true,
-		anim_event_3p = "attack_left_diagonal_up",
-		range_mod = 1.15,
-		allowed_during_sprint = true,
-		damage_time = 0.15,
-		abort_sprint = true,
-		uninterruptible = true,
 		allow_conditional_chain = true,
+		crosshair_type = "none",
+		stop_alternate_fire = true,
+		damage_time = 0.15,
+		anim_event_3p = "attack_left_diagonal_up",
+		anim_event = "attack_push",
 		total_time = 1.1,
 		action_movement_curve = {
 			{

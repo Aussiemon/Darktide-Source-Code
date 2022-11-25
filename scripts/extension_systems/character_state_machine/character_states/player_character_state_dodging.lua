@@ -118,13 +118,14 @@ local function _calculate_dodge_total_time(specialization_dodge_template, dimini
 	local buff_speed_modifier = stat_buffs.dodge_speed_multiplier
 	local speed_modifier = weapon_speed_modifier * buff_speed_modifier
 	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
-	local dodge_distance = specialization_dodge_template.base_distance * distance_scale
+	local base_distance = weapon_dodge_template.base_distance or specialization_dodge_template.base_distance
+	local dodge_distance = base_distance * distance_scale
 
 	if dodge_distance <= 0 then
 		return 0
 	end
 
-	local dodge_speed_at_times = specialization_dodge_template.dodge_speed_at_times
+	local dodge_speed_at_times = weapon_dodge_template.dodge_speed_at_times or specialization_dodge_template.dodge_speed_at_times
 
 	while not hit_end do
 		time_in_dodge = time_in_dodge + time_step
@@ -159,7 +160,8 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 
 	local movement_state = self._movement_state_component
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
-	dodge_character_state_component.distance_left = specialization_dodge_template.base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local base_distance = weapon_dodge_template.base_distance or specialization_dodge_template.base_distance
+	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
 	dodge_character_state_component.jump_override_time = t + specialization_dodge_template.dodge_jump_override_timer
 	dodge_character_state_component.started_from_crouch = movement_state.is_crouching
 	local estimated_dodge_time = _calculate_dodge_total_time(specialization_dodge_template, diminishing_return_factor, weapon_dodge_template, self._buff_extension)
@@ -299,7 +301,7 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 		return false
 	end
 
-	local speed_at_times = specialization_dodge_template.dodge_speed_at_times
+	local speed_at_times = weapon_dodge_template.dodge_speed_at_times or specialization_dodge_template.dodge_speed_at_times
 	local start_point = 1
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
 	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor

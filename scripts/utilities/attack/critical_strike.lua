@@ -1,6 +1,7 @@
 local PseudoRandomDistribution = require("scripts/utilities/pseudo_random_distribution")
 local CriticalStrike = {
 	is_critical_strike = function (chance, prd_state, seed)
+		local chance = math.round_with_precision(chance, 2)
 		local is_critical_strike, new_prd_state, new_seed = PseudoRandomDistribution.flip_coin(chance, prd_state, seed)
 
 		return is_critical_strike, new_prd_state, new_seed

@@ -71,17 +71,17 @@ local widget_definitions = {
 			pass_type = "text",
 			value = "<player_name>",
 			style = {
+				font_size = 24,
+				default_font_size = 24,
 				text_vertical_alignment = "bottom",
 				text_horizontal_alignment = "left",
 				drop_shadow = true,
 				offset = {
-					icon_size[1] + 50,
-					-24,
+					icon_size[1] + 40,
+					-38,
 					3
 				},
 				font_type = hud_body_font_settings.font_type,
-				font_size = hud_body_font_settings.font_size,
-				default_font_size = hud_body_font_settings.font_size,
 				text_color = UIHudSettings.color_tint_main_1,
 				default_text_color = UIHudSettings.color_tint_main_1,
 				dead_text_color = {
@@ -104,8 +104,8 @@ local widget_definitions = {
 				text_vertical_alignment = "center",
 				text_horizontal_alignment = "left",
 				offset = {
-					icon_size[1] + 50,
-					26,
+					icon_size[1] + 40,
+					14,
 					3
 				},
 				font_type = hud_body_font_settings.font_type,
@@ -147,7 +147,7 @@ local widget_definitions = {
 				color = Color.terminal_background_gradient(178.5, true),
 				size_addition = {
 					-150,
-					-30
+					0
 				},
 				offset = {
 					110,
@@ -169,7 +169,42 @@ local widget_definitions = {
 					columns = 1,
 					grid_index = 1
 				},
-				color = UIHudSettings.color_tint_main_1
+				color = {
+					255,
+					255,
+					255,
+					255
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/base/ui_default_base",
+			style_id = "insignia",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					30,
+					80
+				},
+				offset = {
+					-40,
+					0,
+					1
+				},
+				material_values = {
+					use_placeholder_texture = 1,
+					rows = 1,
+					columns = 1,
+					grid_index = 1
+				},
+				color = {
+					0,
+					255,
+					255,
+					255
+				}
 			}
 		}
 	}, "player_icon")

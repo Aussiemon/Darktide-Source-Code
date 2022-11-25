@@ -19,7 +19,7 @@ return function ()
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"barber_distance_disabled"
+				"barber_distance"
 			},
 			{
 				"query_context",
@@ -3883,22 +3883,9 @@ return function ()
 				args = {
 					"tech_priest"
 				}
-			},
-			{
-				"user_memory",
-				"last_contract_vendor_distant",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"last_contract_vendor_distant",
-				OP.TIMESET
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "all"
 		}

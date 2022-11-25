@@ -18,6 +18,7 @@ ProfileSynchronizerHost.init = function (self, event_delegate)
 	self._profile_sync_states = {}
 	self._profile_updates = {}
 	self._initial_syncs = {}
+	self._delayed_profile_changes = {}
 end
 
 ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
@@ -317,6 +318,22 @@ ProfileSynchronizerHost.update = function (self, dt)
 			self._profile_updates[synced_peer_id] = nil
 		end
 	end
+
+	for peer_id, local_player_ids in pairs(self._delayed_profile_changes) do
+		for local_player_id, _ in pairs(local_player_ids) do
+			local player = Managers.player:player(peer_id, local_player_id)
+
+			if player then
+				self:profile_changed(peer_id, local_player_id)
+
+				local_player_ids[local_player_id] = nil
+			end
+		end
+
+		if not next(local_player_ids) then
+			self._delayed_profile_changes[peer_id] = nil
+		end
+	end
 end
 
 ProfileSynchronizerHost.destroy = function (self)
@@ -362,6 +379,15 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 end
 
 ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, peer_id, local_player_id)
+	local player = Managers.player:player(peer_id, local_player_id)
+
+	if not player then
+		self._delayed_profile_changes[peer_id] = self._delayed_profile_changes[peer_id] or {}
+		self._delayed_profile_changes[peer_id][local_player_id] = true
+
+		return
+	end
+
 	self:profile_changed(peer_id, local_player_id)
 end
 

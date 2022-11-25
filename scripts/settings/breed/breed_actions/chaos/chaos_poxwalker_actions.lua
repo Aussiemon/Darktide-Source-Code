@@ -787,11 +787,10 @@ local action_data = {
 			},
 			explosion = {
 				fwd = {
-					"stagger_explosion_back",
-					"stagger_explosion_back_2"
+					"stagger_explosion_front"
 				},
 				bwd = {
-					"stagger_explosion_front"
+					"stagger_explosion_back"
 				},
 				left = {
 					"stagger_explosion_left"

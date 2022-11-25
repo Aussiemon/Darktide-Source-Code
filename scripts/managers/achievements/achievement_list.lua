@@ -392,6 +392,7 @@ _add_achievement("prologue", UITypes.event, "content/ui/textures/icons/achieveme
 _add_achievement("basic_training", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0081", account_category_name, BackendTrigger:new())
 _add_achievement("unlock_gadgets", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0077", account_category_name, BackendTrigger:new())
 _add_achievement("unlock_contracts", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0104", account_category_name, BackendTrigger:new())
+_add_achievement("unlock_crafting", UITypes.event, nil, account_category_name, BackendTrigger:new())
 _add_achievement_family("path_of_trust_%s", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0082", account_category_name, BackendTrigger, nil, _range(1, 6))
 
 local teamplay_category_name = "teamplay"

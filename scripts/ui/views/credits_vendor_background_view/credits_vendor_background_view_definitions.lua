@@ -67,6 +67,48 @@ local button_options_definitions = {
 				fetch_store_items_on_enter = true
 			})
 		end
+	},
+	{
+		display_name = "loc_credits_vendor_view_option_buy_character_cosmetics",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
+					{
+						view = "credits_vendor_view",
+						display_name = "loc_credits_vendor_view_title",
+						blur_background = false
+					}
+				}
+			}
+
+			self:_setup_tab_bar(tab_bar_params, {
+				fetch_store_items_on_enter = true,
+				optional_store_service = "get_credits_cosmetics_store"
+			})
+		end
+	},
+	{
+		display_name = "loc_credits_vendor_view_option_buy_weapon_cosmetics",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
+					{
+						view = "credits_vendor_view",
+						display_name = "loc_credits_vendor_view_title",
+						blur_background = false
+					}
+				}
+			}
+
+			self:_setup_tab_bar(tab_bar_params, {
+				fetch_store_items_on_enter = true,
+				optional_store_service = "get_credits_weapon_cosmetics_store"
+			})
+		end
 	}
 }
 local background_world_params = {

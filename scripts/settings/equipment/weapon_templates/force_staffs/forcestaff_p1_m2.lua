@@ -191,6 +191,9 @@ weapon_template.actions = {
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 0.45
+			},
+			charge_explosion = {
+				action_name = "action_charge_explosion"
 			}
 		},
 		fx = {

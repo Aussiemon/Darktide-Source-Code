@@ -20,6 +20,7 @@ local ExternalPayment = require("scripts/backend/external_payment")
 local RegionLatency = require("scripts/backend/region_latency")
 local MailBox = require("scripts/backend/mailbox")
 local Wintracks = require("scripts/backend/wintracks")
+local Crafting = require("scripts/backend/crafting")
 local BackendInterface = class("BackendInterface")
 
 BackendInterface.init = function (self)
@@ -45,6 +46,7 @@ BackendInterface.init = function (self)
 	self.region_latency = RegionLatency:new()
 	self.mailbox = MailBox:new()
 	self.wintracks = Wintracks:new()
+	self.crafting = Crafting:new()
 end
 
 return BackendInterface

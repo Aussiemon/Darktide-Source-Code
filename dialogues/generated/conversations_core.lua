@@ -1993,9 +1993,9 @@ return function ()
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_veteran_male_c__combat_pause_quirk_veteran_a_professional_b_02",
-					"loc_veteran_male_c__combat_pause_quirk_expendable_b_01",
-					"loc_veteran_male_c__combat_pause_limited_veteran_a_14_b_01",
+					"loc_veteran_female_c__combat_pause_quirk_veteran_a_professional_b_02",
+					"loc_veteran_female_c__combat_pause_quirk_expendable_b_01",
+					"loc_veteran_female_c__combat_pause_limited_veteran_a_14_b_01",
 					""
 				}
 			},
@@ -2477,7 +2477,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_family_a"
+					"bonding_conversation_family_b"
 				}
 			},
 			{
@@ -3297,16 +3297,16 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"last_seen_killstreak_psyker",
+				"time_since_veteran_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
 				60
 			},
 			{
 				"faction_memory",
-				"seen_killstreak_psyker",
+				"veteran_seen_killstreak_psyker",
 				OP.GT,
-				1
+				0
 			}
 		},
 		on_done = {
@@ -3995,7 +3995,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b"
+					"veteran_female_a"
 				}
 			},
 			{
@@ -60553,7 +60553,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"lore_diction_a"
+					"lore_diction_b"
 				}
 			},
 			{
@@ -60600,7 +60600,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"lore_diction_a"
+					"lore_diction_c"
 				}
 			},
 			{

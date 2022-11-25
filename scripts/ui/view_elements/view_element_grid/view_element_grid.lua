@@ -37,7 +37,19 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._reset_selection_on_navigation_change = self._menu_settings.reset_selection_on_navigation_change
 
 	ViewElementGrid.super.init(self, parent, draw_layer, start_scale, definitions)
-	self:_setup_grid_gui()
+
+	if self._menu_settings.use_parent_ui_renderer then
+		local ui_renderer = self._parent:ui_renderer()
+		self._ui_grid_renderer = ui_renderer
+		self._ui_grid_renderer_is_external = true
+		local gui = self._ui_grid_renderer.gui
+		local gui_retained = self._ui_grid_renderer.gui_retained
+		local resource_renderer_name = self._unique_id
+		local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+		self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
+	else
+		self:_setup_grid_gui()
+	end
 
 	self._widgets_by_name.sort_button.content.visible = false
 	self._widgets_by_name.timer_text.content.visible = false
@@ -127,7 +139,7 @@ end
 ViewElementGrid._setup_grid_gui = function (self)
 	local ui_manager = Managers.ui
 	local timer_name = "ui"
-	local world_layer = 101
+	local world_layer = 101 + self._draw_layer
 	local world_name = self._unique_id .. "_ui_grid_world"
 	local parent = self._parent
 	local view_name = parent.view_name
@@ -157,15 +169,24 @@ ViewElementGrid._destroy_grid_gui = function (self)
 	if self._ui_grid_renderer then
 		self._ui_grid_renderer = nil
 
-		Managers.ui:destroy_renderer(self._unique_id .. "_grid_renderer")
+		if not self._ui_grid_renderer_is_external then
+			Managers.ui:destroy_renderer(self._unique_id .. "_grid_renderer")
+		end
+	end
 
-		local world = self._world
+	local world = self._world
+
+	if self._world then
 		local viewport_name = self._viewport_name
 
-		ScriptWorld.destroy_viewport(world, viewport_name)
+		if viewport_name then
+			ScriptWorld.destroy_viewport(world, viewport_name)
+
+			self._viewport_name = nil
+		end
+
 		Managers.ui:destroy_world(world)
 
-		self._viewport_name = nil
 		self._world = nil
 	end
 end
@@ -221,6 +242,10 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_grid_renderer = self._ui_grid_renderer
 
+	if not self._ui_grid_renderer_is_external then
+		UIRenderer.clear_render_pass_queue(ui_grid_renderer)
+	end
+
 	UIRenderer.begin_pass(ui_grid_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	local widgets = self._widgets
@@ -243,7 +268,8 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	render_settings.start_layer = previous_layer
 
 	self:_draw_grid(dt, t, input_service, render_settings)
-	self:_draw_render_target()
+	self:_draw_widgets(dt, t, input_service, ui_renderer, render_settings)
+	self:_draw_render_target(render_settings)
 
 	self._drawn = true
 
@@ -265,7 +291,7 @@ ViewElementGrid._draw_widgets = function (self, dt, t, input_service, ui_rendere
 	return
 end
 
-ViewElementGrid._draw_render_target = function (self)
+ViewElementGrid._draw_render_target = function (self, render_settings)
 	local ui_grid_renderer = self._ui_grid_renderer
 	local resolution_width = RESOLUTION_LOOKUP.width
 	local resolution_height = RESOLUTION_LOOKUP.height
@@ -281,7 +307,8 @@ ViewElementGrid._draw_render_target = function (self)
 		width,
 		height
 	}
-	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
+	local start_layer = (render_settings.start_layer or 0) + self._draw_layer
+	local gui_position = Vector3(position[1] * scale, position[2] * scale, (position[3] or 0) + start_layer)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
 
 	Gui.bitmap(gui, material, "render_pass", "to_screen", gui_position, gui_size, color)
@@ -302,12 +329,11 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 	local ui_renderer = self._ui_grid_renderer
 	local ui_resource_renderer = self._ui_resource_renderer
 	local ui_scenegraph = self._ui_scenegraph
-	local gui = ui_renderer.gui
 	local base_render_pass = ui_resource_renderer.base_render_pass
 	local render_target = ui_resource_renderer.render_target
 
-	Gui.render_pass(gui, 0, base_render_pass, true, render_target)
-	Gui.render_pass(gui, 1, "to_screen", false)
+	UIRenderer.add_render_pass(ui_renderer, 0, base_render_pass, true, render_target)
+	UIRenderer.add_render_pass(ui_renderer, 1, "to_screen", false)
 
 	local widget_visual_margin = self._widget_visual_margin
 

@@ -212,7 +212,7 @@ TelemetryEvents.local_player_spawned = function (self, player)
 	self._subject.character_id = player:character_id()
 end
 
-TelemetryEvents.system_settings = function (self)
+TelemetryEvents.system_settings = function (self, account_id)
 	local fullscreen = Application.user_setting("fullscreen")
 	local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
 	local windowed = not fullscreen and not borderless_fullscreen
@@ -233,7 +233,7 @@ TelemetryEvents.system_settings = function (self)
 	end
 
 	local sound_settings = Application.user_setting("sound_settings")
-	local account_data = Managers.save:account_data()
+	local account_data = Managers.save:account_data(account_id)
 	local language = Managers.localization:language()
 	local event = self:_create_event("system_settings")
 

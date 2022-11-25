@@ -510,7 +510,12 @@ end_player_view_blueprints.salary = {
 		local rewards = config.rewards
 
 		_get_currency_icon(pass_template, "credits")
+		_get_currency_icon(pass_template, "plasteel")
+		_get_currency_icon(pass_template, "diamantine")
 		_add_currency_passes(pass_template, "credits", rewards, ViewStyles.card_content_text_offset_y)
+		_insert_empty_row(pass_template)
+		_add_currency_passes(pass_template, "plasteel", rewards)
+		_add_currency_passes(pass_template, "diamantine", rewards)
 
 		return pass_template
 	end,

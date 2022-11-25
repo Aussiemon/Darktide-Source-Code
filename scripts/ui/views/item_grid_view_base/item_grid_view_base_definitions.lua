@@ -31,6 +31,28 @@ local grid_settings = {
 	title_height = title_height,
 	edge_padding = edge_padding
 }
+local weapon_stats_grid_settings = nil
+local padding = 12
+local width = 530
+local height = 920
+weapon_stats_grid_settings = {
+	scrollbar_width = 7,
+	ignore_blur = true,
+	title_height = 70,
+	grid_spacing = {
+		0,
+		0
+	},
+	grid_size = {
+		width - padding,
+		height
+	},
+	mask_size = {
+		width + 40,
+		height
+	},
+	edge_padding = padding
+}
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -246,6 +268,7 @@ local animations = {
 return {
 	animations = animations,
 	grid_settings = grid_settings,
+	weapon_stats_grid_settings = weapon_stats_grid_settings,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition
 }

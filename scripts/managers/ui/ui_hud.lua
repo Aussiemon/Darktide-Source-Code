@@ -226,7 +226,6 @@ end
 
 UIHud._update_element_visibility = function (self)
 	local ui_renderer = self._ui_renderer
-	local default_ui_renderer = ui_renderer
 	local visibility_groups = self._visibility_groups
 	local num_visibility_groups = #visibility_groups
 	local elements_hud_retained_mode_lookup = self._elements_hud_retained_mode_lookup

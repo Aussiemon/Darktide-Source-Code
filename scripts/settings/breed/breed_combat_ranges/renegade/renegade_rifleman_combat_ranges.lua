@@ -1,7 +1,7 @@
 local combat_ranges = {
 	name = "renegade_rifleman",
 	calculate_target_velocity_dot = true,
-	target_velocity_dot_reset = 1.5,
+	target_velocity_dot_reset = 0.5,
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -69,6 +69,7 @@ local combat_ranges = {
 			},
 			{
 				locked_in_melee_distance = 9,
+				target_velocity_dot_distance = 6,
 				distance = 7,
 				distance_operator = "greater",
 				switch_combat_range = "close",

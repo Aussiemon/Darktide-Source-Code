@@ -654,12 +654,12 @@ ProfileUtils.generate_random_name = function (profile)
 	return name
 end
 
-ProfileUtils.character_title = function (profile)
+ProfileUtils.character_title = function (profile, exlude_symbol)
 	local specialization_key = profile.specialization
 	local archetype = profile.archetype
 	local archetype_name = nil
 
-	if UISettings.archetype_font_icon[archetype.name] then
+	if UISettings.archetype_font_icon[archetype.name] and not exlude_symbol then
 		archetype_name = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
 	else
 		archetype_name = Localize(archetype.archetype_name)

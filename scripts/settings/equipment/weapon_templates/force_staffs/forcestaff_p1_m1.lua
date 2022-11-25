@@ -269,6 +269,9 @@ weapon_template.actions = {
 			vent = {
 				action_name = "action_vent",
 				chain_time = 0.3
+			},
+			charge_explosion = {
+				action_name = "action_charge_explosion"
 			}
 		},
 		fx = {

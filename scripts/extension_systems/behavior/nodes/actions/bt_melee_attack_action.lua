@@ -593,7 +593,7 @@ BtMeleeAttackAction._rotate_towards_target_unit = function (self, unit, scratchp
 	return flat_rotation
 end
 
-local MAX_CATCH_UP_SPEED = 7
+local MAX_CATCH_UP_SPEED = 5
 local MIN_APPLIED_MOVEMENTSPEED_FOR_CATCHUP = 1
 
 BtMeleeAttackAction._update_moving_attack = function (self, unit, dt, t, action_data, scratchpad)

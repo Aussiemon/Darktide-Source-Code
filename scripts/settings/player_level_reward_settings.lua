@@ -56,6 +56,12 @@ local defined_level_rewards = {
 		duration = display_duration
 	},
 	{
+		text = "Crafting Station Now Available",
+		type = "unlock",
+		level = 19,
+		duration = display_duration
+	},
+	{
 		text = "Contracts Now Available",
 		type = "unlock",
 		level = 23,

@@ -1503,6 +1503,8 @@ UIManager._popup_by_id = function (self, popup_id, remove)
 
 		if popup.id == popup_id then
 			if remove then
+				popup.closing = true
+
 				return table.remove(active_popups, i)
 			else
 				return popup

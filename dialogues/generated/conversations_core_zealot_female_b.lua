@@ -3631,14 +3631,12 @@ local conversations_core_zealot_female_b = {
 	},
 	lore_enemy_within_one_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_b__lore_enemy_within_one_c_01",
-			[2.0] = "loc_zealot_female_b__lore_enemy_within_one_c_02"
+			[1.0] = "loc_zealot_female_b__lore_enemy_within_one_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.884979,
-			[2.0] = 6.950667
+			[1.0] = 6.884979
 		},
 		randomize_indexes = {}
 	},
@@ -4234,14 +4232,12 @@ local conversations_core_zealot_female_b = {
 	},
 	lore_hive_cities_one_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_b__lore_hive_cities_one_c_01",
-			[2.0] = "loc_zealot_female_b__lore_hive_cities_one_c_02"
+			[1.0] = "loc_zealot_female_b__lore_hive_cities_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.949667,
-			[2.0] = 6.53075
+			[1.0] = 6.53075
 		},
 		randomize_indexes = {}
 	},

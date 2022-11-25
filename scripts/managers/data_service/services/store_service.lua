@@ -47,6 +47,84 @@ StoreService.get_credits_store = function (self)
 	end
 end
 
+StoreService.get_credits_cosmetics_store = function (self)
+	if Managers.backend:authenticated() then
+		local backend_interface = self._backend_interface
+		local local_player_id = 1
+		local player = Managers.player:local_player(local_player_id)
+		local character_id = player:character_id()
+		local archetype_name = player:archetype_name()
+		local store_promise = nil
+		local time_since_launch = Application.time_since_launch()
+
+		if archetype_name == "veteran" then
+			store_promise = backend_interface.store:get_veteran_credits_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "zealot" then
+			store_promise = backend_interface.store:get_zealot_credits_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "psyker" then
+			store_promise = backend_interface.store:get_psyker_credits_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "ogryn" then
+			store_promise = backend_interface.store:get_ogryn_credits_cosmetics_store(time_since_launch, character_id)
+		end
+
+		return store_promise:catch(function (error)
+			Log.error("StoreService", "Error fetching credits cosmetics store: %s", error)
+		end):next(function (store_catalogue)
+			local offers, current_rotation_end = nil
+
+			if store_catalogue then
+				local store_data = store_catalogue.data
+				offers = store_data.personal
+				current_rotation_end = store_data.currentRotationEnd
+			end
+
+			return {
+				offers = offers or {},
+				current_rotation_end = current_rotation_end
+			}
+		end)
+	end
+end
+
+StoreService.get_credits_weapon_cosmetics_store = function (self)
+	if Managers.backend:authenticated() then
+		local backend_interface = self._backend_interface
+		local local_player_id = 1
+		local player = Managers.player:local_player(local_player_id)
+		local character_id = player:character_id()
+		local archetype_name = player:archetype_name()
+		local store_promise = nil
+		local time_since_launch = Application.time_since_launch()
+
+		if archetype_name == "veteran" then
+			store_promise = backend_interface.store:get_veteran_credits_weapon_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "zealot" then
+			store_promise = backend_interface.store:get_zealot_credits_weapon_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "psyker" then
+			store_promise = backend_interface.store:get_psyker_credits_weapon_cosmetics_store(time_since_launch, character_id)
+		elseif archetype_name == "ogryn" then
+			store_promise = backend_interface.store:get_ogryn_credits_weapon_cosmetics_store(time_since_launch, character_id)
+		end
+
+		return store_promise:catch(function (error)
+			Log.error("StoreService", "Error fetching credits cosmetics store: %s", error)
+		end):next(function (store_catalogue)
+			local offers, current_rotation_end = nil
+
+			if store_catalogue then
+				local store_data = store_catalogue.data
+				offers = store_data.public
+				current_rotation_end = store_data.currentRotationEnd
+			end
+
+			return {
+				offers = offers or {},
+				current_rotation_end = current_rotation_end
+			}
+		end)
+	end
+end
+
 StoreService.get_marks_store = function (self)
 	if Managers.backend:authenticated() then
 		local backend_interface = self._backend_interface

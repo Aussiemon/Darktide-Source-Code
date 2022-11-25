@@ -3007,8 +3007,8 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			default_color = Color.ui_brown_light(255, true),
-			hover_color = Color.ui_brown_super_light(255, true),
+			default_color = Color.terminal_text_body(255, true),
+			hover_color = Color.terminal_corner_selected(255, true),
 			disabled_color = Color.ui_grey_medium(255, true),
 			color = {
 				255,

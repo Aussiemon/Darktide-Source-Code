@@ -232,23 +232,6 @@ local mission_vo_lm_rails_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_rails_set_charge = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__mission_rails_set_charge_01",
-			"loc_explicator_a__mission_rails_set_charge_02",
-			"loc_explicator_a__mission_rails_set_charge_03",
-			"loc_explicator_a__mission_rails_set_charge_04"
-		},
-		sound_events_duration = {
-			3.915396,
-			3.994708,
-			3.082208,
-			2.759125
-		},
-		randomize_indexes = {}
-	},
 	mission_rails_start_banter_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

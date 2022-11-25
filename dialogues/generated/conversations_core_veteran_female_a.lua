@@ -3286,17 +3286,6 @@ local conversations_core_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
-	lore_chaos_two_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_female_a__lore_chaos_two_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 5.660792
-		},
-		randomize_indexes = {}
-	},
 	lore_chaos_two_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

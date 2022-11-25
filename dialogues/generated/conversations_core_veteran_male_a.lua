@@ -2571,14 +2571,12 @@ local conversations_core_veteran_male_a = {
 	},
 	conversation_plague_ogryn_weakpoint_02 = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__conversation_plague_ogryn_weakpoint_02_01",
-			[2.0] = "loc_veteran_male_a__conversation_plague_ogryn_weakpoint_02_02"
+			[1.0] = "loc_veteran_male_a__conversation_plague_ogryn_weakpoint_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.159438,
-			[2.0] = 3.059729
+			[1.0] = 3.059729
 		},
 		randomize_indexes = {}
 	},
@@ -3329,17 +3327,6 @@ local conversations_core_veteran_male_a = {
 		sound_events_duration = {
 			[1.0] = 4.969479,
 			[2.0] = 10.1651
-		},
-		randomize_indexes = {}
-	},
-	lore_chaos_two_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__lore_chaos_two_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 4.8535
 		},
 		randomize_indexes = {}
 	},

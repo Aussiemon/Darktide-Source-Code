@@ -68,14 +68,6 @@ local on_demand_vo_ogryn_c = {
 			1.771365,
 			1.972042
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_lets_go_this_way = {

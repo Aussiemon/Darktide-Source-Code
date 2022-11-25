@@ -33,6 +33,7 @@ local mission_templates = {
 			},
 			path_of_trust_03 = {
 				"path_of_trust_03_part_01",
+				"path_of_trust_03_crafting_station",
 				"path_of_trust_03_part_02"
 			},
 			path_of_trust_04 = {

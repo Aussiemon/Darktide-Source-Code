@@ -7,6 +7,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 
 local function _apply_color_to_text(text, color)
 	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
@@ -139,15 +140,26 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	self._player = player
 
 	if supported_features.name then
-		local player_name = player:name()
+		local my_player = parent:player()
+		local profile = my_player and my_player:profile()
+		local current_level = profile.current_level or 1
 
-		if self._player_colored_name_prefix then
-			player_name = self._player_colored_name_prefix .. player_name
+		if current_level ~= self._current_level then
+			local player_name = player:name()
+
+			if self._player_name_prefix then
+				player_name = self._player_name_prefix .. player_name
+			end
+
+			if not supported_features.level then
+				current_level = nil
+			end
+
+			self:_set_player_name(player_name, current_level)
 		end
-
-		self:_set_player_name(player_name)
 	end
 
+	local insignia_item = nil
 	local profile = player:profile()
 
 	if profile then
@@ -166,6 +178,18 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 				self:_request_player_frame(frame_item, ui_renderer)
 			end
+
+			insignia_item = loadout.slot_insignia
+		end
+	end
+
+	if supported_features.insignia then
+		local insignia_item_gear_id = insignia_item and insignia_item.gear_id
+
+		if insignia_item_gear_id ~= self._insignia_item_gear_id then
+			self._insignia_item_gear_id = insignia_item_gear_id
+
+			self:_request_player_insignia(insignia_item, ui_renderer)
 		end
 	end
 
@@ -182,14 +206,13 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.character_text then
-		local character_level = profile.current_level or 0
 		local archetype = profile.archetype
 
-		if character_level ~= self._character_level or archetype ~= self._archetype then
-			self._character_level = character_level
+		if archetype ~= self._archetype then
 			self._archetype = archetype
+			local character_title = ProfileUtils.character_title(profile, true)
 
-			self:_set_character_text(character_level, archetype, ui_renderer)
+			self:_set_character_text(character_title, ui_renderer)
 		end
 	end
 
@@ -370,9 +393,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		end
 	end
 
-	if supported_features.player_color then
-		self:_update_player_color()
-	end
+	self:_update_player_name_prefix()
 
 	local player_status = false
 	local player_status_changed = false
@@ -743,13 +764,16 @@ HudElementPlayerPanelBase._set_ammo_level = function (self, ammo_status, visible
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._set_player_name = function (self, name, force_update)
+HudElementPlayerPanelBase._set_player_name = function (self, name, current_level)
 	local widget = self._widgets_by_name.player_name
+	local text = name
 
-	if name ~= widget.content.text then
-		widget.content.text = name
-		widget.dirty = true
+	if current_level then
+		text = text .. " - " .. current_level .. " "
 	end
+
+	widget.content.text = text
+	widget.dirty = true
 end
 
 HudElementPlayerPanelBase._update_pocketable_presentation = function (self, pocketable_hud_icon, visible, ui_renderer)
@@ -806,7 +830,16 @@ HudElementPlayerPanelBase._unload_portrait_frame = function (self, ui_renderer)
 end
 
 HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
+	if self.__deleted then
+		return
+	end
+
 	local player = self._player
+
+	if player.__deleted then
+		return
+	end
+
 	local profile = player and player:profile()
 	local loadout = profile and profile.loadout
 	local icon = nil
@@ -820,6 +853,80 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
 	material_values.portrait_frame_texture = icon
+	widget.dirty = true
+end
+
+HudElementPlayerPanelBase._request_player_insignia = function (self, item, ui_renderer)
+	self:_unload_portrait_insignia(ui_renderer)
+
+	if item then
+		self:_load_portrait_insignia(item)
+	end
+end
+
+HudElementPlayerPanelBase._load_portrait_insignia = function (self, item)
+	local cb = callback(self, "_cb_set_player_insignia")
+	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+	self._insignia_loaded_info = {
+		icon_load_id = icon_load_id
+	}
+end
+
+HudElementPlayerPanelBase._unload_portrait_insignia = function (self, ui_renderer)
+	local insignia_loaded_info = self._insignia_loaded_info
+
+	if not insignia_loaded_info then
+		return
+	end
+
+	local widget = self._widgets_by_name.player_icon
+
+	if not self.destroyed then
+		local insignia_style = widget.style.insignia
+		local material_values = insignia_style.material_values
+		insignia_style.color[1] = 0
+		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
+		widget.dirty = true
+	end
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
+	local icon_load_id = insignia_loaded_info.icon_load_id
+
+	Managers.ui:unload_item_icon(icon_load_id)
+
+	self._insignia_loaded_info = nil
+end
+
+HudElementPlayerPanelBase._cb_set_player_insignia = function (self, item)
+	if self.__deleted then
+		return
+	end
+
+	local player = self._player
+
+	if player.__deleted then
+		return
+	end
+
+	local profile = player and player:profile()
+	local loadout = profile and profile.loadout
+	local icon = nil
+
+	if item.icon then
+		icon = item.icon
+	else
+		icon = "content/ui/textures/nameplates/insignias/default"
+	end
+
+	local widget = self._widgets_by_name.player_icon
+	local insignia_style = widget.style.insignia
+	local material_values = insignia_style.material_values
+	insignia_style.color[1] = 255
+	material_values.texture_map = icon
 	widget.dirty = true
 end
 
@@ -877,13 +984,11 @@ HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._set_character_text = function (self, level, archetype, ui_renderer)
+HudElementPlayerPanelBase._set_character_text = function (self, character_title, ui_renderer)
 	local character_text_widget = self._widgets_by_name.character_text
 
 	if character_text_widget then
-		local archetype_name = archetype.archetype_name
-		local archetype_name_localized = Localize(archetype_name)
-		local text = tostring(level) .. " - " .. archetype_name_localized
+		local text = character_title
 		character_text_widget.content.text = text
 		character_text_widget.dirty = true
 	end
@@ -1148,7 +1253,7 @@ end
 
 local temp_player_color = UIHudSettings.color_tint_0
 
-HudElementPlayerPanelBase._update_player_color = function (self)
+HudElementPlayerPanelBase._update_player_name_prefix = function (self)
 	local my_player = self._data.player
 	local player_slot = my_player and my_player.slot and my_player:slot()
 
@@ -1159,7 +1264,13 @@ HudElementPlayerPanelBase._update_player_color = function (self)
 		local profile = my_player and my_player:profile()
 		local archetype = profile and profile.archetype
 		local string_symbol = archetype.string_symbol
-		self._player_colored_name_prefix = "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. string_symbol .. "{#reset()} "
+		local supported_features = self._supported_features
+
+		if supported_features.player_color then
+			self._player_name_prefix = "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. string_symbol .. "{#reset()} "
+		else
+			self._player_name_prefix = string_symbol .. " "
+		end
 	end
 end
 
@@ -1174,6 +1285,7 @@ HudElementPlayerPanelBase.destroy = function (self, ui_renderer)
 	HudElementPlayerPanelBase.super.destroy(self)
 	self:_unload_portrait_icon(ui_renderer)
 	self:_unload_portrait_frame(ui_renderer)
+	self:_unload_portrait_insignia(ui_renderer)
 	self:_destroy_widgets(ui_renderer)
 
 	if self._disabled_world_marker_id then

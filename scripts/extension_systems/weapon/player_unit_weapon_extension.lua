@@ -278,8 +278,8 @@ PlayerUnitWeaponExtension.on_player_unit_spawn = function (self, spawn_ammo_perc
 	for slot_name, config in pairs(slot_configuration_by_type.weapon) do
 		local wieldable_component = unit_data_extension:write_component(slot_name)
 		local ammo_reserve = wieldable_component.current_ammunition_reserve
-		local respawn_ammo_reserve = math.ceil(ammo_reserve * spawn_ammo_percentage)
-		wieldable_component.current_ammunition_reserve = respawn_ammo_reserve
+		local spawn_ammo_reserve = math.ceil(ammo_reserve * spawn_ammo_percentage)
+		wieldable_component.current_ammunition_reserve = spawn_ammo_reserve
 	end
 end
 

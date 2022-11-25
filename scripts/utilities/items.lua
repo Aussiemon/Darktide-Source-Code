@@ -410,6 +410,38 @@ ItemUtils.keywords_text = function (item)
 	return text
 end
 
+ItemUtils.weapon_skin_requirement_text = function (item)
+	local weapon_template_restriction = item.weapon_template_restriction
+	local text = ""
+
+	if not weapon_template_restriction or table.is_empty(weapon_template_restriction) then
+		return text, false
+	end
+
+	local weapon_template_display_settings = UISettings.weapon_template_display_settings
+
+	if not weapon_template_display_settings then
+		return text, false
+	end
+
+	for i = 1, #weapon_template_restriction do
+		local weapon_template_name = weapon_template_restriction[i]
+		local template_display_settings = weapon_template_name and weapon_template_display_settings[weapon_template_name]
+		local template_display_name = template_display_settings and template_display_settings.display_name
+		local template_display_name_localized = template_display_name and Localize(template_display_name)
+
+		if template_display_name_localized then
+			text = text .. "• " .. template_display_name_localized
+
+			if i < #weapon_template_restriction then
+				text = text .. "\n"
+			end
+		end
+	end
+
+	return text, true
+end
+
 ItemUtils.perk_item_by_id = function (perk_id)
 	return MasterItems.get_item(perk_id)
 end
@@ -524,8 +556,12 @@ ItemUtils.equip_slot_master_items = function (items)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
-	local player = player_manager:player(peer_id, local_player_id)
-	local player_unit = player.player_unit
+	local player = player_manager and player_manager:player(peer_id, local_player_id)
+
+	if not player then
+		return
+	end
+
 	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 	local profile = player:profile()
 	local archetype = profile.archetype
@@ -566,8 +602,12 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
-	local player = player_manager:player(peer_id, local_player_id)
-	local player_unit = player.player_unit
+	local player = player_manager and player_manager:player(peer_id, local_player_id)
+
+	if not player then
+		return
+	end
+
 	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 	local profile = player:profile()
 	local archetype = profile.archetype
@@ -608,52 +648,44 @@ ItemUtils.item_slot = function (item)
 	return slot_name and ItemSlotSettings[slot_name]
 end
 
-ItemUtils.sort_items_by_name_low_first = function (a, b)
-	if b.display_name == a.display_name then
-		return (a.rarity or 0) < (b.rarity or 0)
+ItemUtils.compare_item_name = function (a, b)
+	local Localize = Localize
+	local a_display_name = Localize(a.display_name)
+	local b_display_name = Localize(b.display_name)
+
+	if a_display_name < b_display_name then
+		return true
+	elseif b_display_name < a_display_name then
+		return false
 	end
 
-	return a.display_name < b.display_name
+	return nil
 end
 
-ItemUtils.sort_items_by_name_high_first = function (a, b)
-	if b.display_name == a.display_name then
-		return (a.rarity or 0) < (b.rarity or 0)
+ItemUtils.compare_item_rarity = function (a, b)
+	local a_rarity = a.rarity or 0
+	local b_rarity = b.rarity or 0
+
+	if a_rarity < b_rarity then
+		return true
+	elseif b_rarity < a_rarity then
+		return false
 	end
 
-	return b.display_name < a.display_name
+	return nil
 end
 
-ItemUtils.sort_items_by_rarity_low_first = function (a, b)
-	if (b.rarity or 0) == (a.rarity or 0) then
-		return b.display_name < a.display_name
+ItemUtils.compare_item_level = function (a, b)
+	local a_itemLevel = a.itemLevel or 0
+	local b_itemLevel = b.itemLevel or 0
+
+	if a_itemLevel < b_itemLevel then
+		return true
+	elseif b_itemLevel < a_itemLevel then
+		return false
 	end
 
-	return (a.rarity or 0) < (b.rarity or 0)
-end
-
-ItemUtils.sort_items_by_rarity_high_first = function (a, b)
-	if (b.rarity or 0) == (a.rarity or 0) then
-		return b.display_name < a.display_name
-	end
-
-	return (a.rarity or 0) > (b.rarity or 0)
-end
-
-ItemUtils.sort_items_by_item_level_low_first = function (a, b)
-	if (b.itemLevel or 0) == (a.itemLevel or 0) then
-		return ItemUtils.sort_items_by_name_high_first(a, b)
-	end
-
-	return (a.itemLevel or 0) < (b.itemLevel or 0)
-end
-
-ItemUtils.sort_items_by_item_level_high_first = function (a, b)
-	if (b.itemLevel or 0) == (a.itemLevel or 0) then
-		return ItemUtils.sort_items_by_name_high_first(a, b)
-	end
-
-	return (a.itemLevel or 0) > (b.itemLevel or 0)
+	return nil
 end
 
 local function _get_lerp_stepped_value(range, lerp_value)

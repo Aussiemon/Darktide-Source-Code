@@ -360,7 +360,9 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 	local currency_gain_widgets = self._currency_gain_widgets
 	local wallet_types = {
 		"credits",
-		"marks"
+		"marks",
+		"plasteel",
+		"diamantine"
 	}
 
 	for _, wallet_type in ipairs(wallet_types) do

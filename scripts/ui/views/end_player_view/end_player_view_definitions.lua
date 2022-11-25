@@ -103,7 +103,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = wallet_panel_size,
 		position = {
-			wallet_panel_size[1] + wallet_spacing,
+			0,
 			0,
 			0
 		}
@@ -111,10 +111,32 @@ local scenegraph_definition = {
 	wallet_panel_marks = {
 		vertical_alignment = "top",
 		parent = "wallet_bar",
+		horizontal_alignment = "left",
+		size = wallet_panel_size,
+		position = {
+			wallet_panel_size[1] + wallet_spacing,
+			0,
+			0
+		}
+	},
+	wallet_panel_plasteel = {
+		vertical_alignment = "top",
+		parent = "wallet_bar",
 		horizontal_alignment = "right",
 		size = wallet_panel_size,
 		position = {
 			-wallet_panel_size[1] - wallet_spacing,
+			0,
+			0
+		}
+	},
+	wallet_panel_diamantine = {
+		vertical_alignment = "top",
+		parent = "wallet_bar",
+		horizontal_alignment = "right",
+		size = wallet_panel_size,
+		position = {
+			0,
 			0,
 			0
 		}
@@ -191,6 +213,52 @@ local widget_definitions = {
 			style_id = "text"
 		}
 	}, "wallet_panel_marks", nil, nil, ViewStyles.wallet_panel),
+	plasteel_wallet = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background"
+		},
+		{
+			value = "content/ui/materials/frames/end_of_round/currency_holder",
+			style_id = "frame",
+			pass_type = "texture"
+		},
+		{
+			style_id = "currency_icon",
+			pass_type = "texture",
+			value = WalletSettings.plasteel.icon_texture_big
+		},
+		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
+			value = "0",
+			change_function = ViewAnimations.wallet_change_function
+		}
+	}, "wallet_panel_plasteel", nil, nil, ViewStyles.wallet_panel),
+	diamantine_wallet = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background"
+		},
+		{
+			value = "content/ui/materials/frames/end_of_round/currency_holder",
+			style_id = "frame",
+			pass_type = "texture"
+		},
+		{
+			style_id = "currency_icon",
+			pass_type = "texture",
+			value = WalletSettings.diamantine.icon_texture_big
+		},
+		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
+			value = "0",
+			change_function = ViewAnimations.wallet_change_function
+		}
+	}, "wallet_panel_diamantine", nil, nil, ViewStyles.wallet_panel),
 	experience_gain = UIWidget.create_definition({
 		{
 			style_id = "rect",
@@ -216,7 +284,31 @@ local widget_definitions = {
 			pass_type = "text",
 			style_id = "text"
 		}
-	}, "wallet_panel_credits", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain)
+	}, "wallet_panel_credits", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain),
+	plasteel_gain = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "rect"
+		},
+		{
+			value = "+0",
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text"
+		}
+	}, "wallet_panel_plasteel", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain),
+	diamantine_gain = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "rect"
+		},
+		{
+			value = "+0",
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text"
+		}
+	}, "wallet_panel_diamantine", nil, ViewStyles.currency_gain.size, ViewStyles.currency_gain)
 }
 
 return {

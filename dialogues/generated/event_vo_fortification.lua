@@ -34,7 +34,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		}
 	})
 	define_rule({
@@ -64,6 +64,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"pilot",
 					"sergeant",
 					"tech_priest",
 					"explicator"
@@ -114,7 +115,10 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"explicator",
+					"sergeant",
+					"pilot",
+					"tech_priest"
 				}
 			}
 		},
@@ -187,7 +191,10 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"explicator",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
@@ -233,6 +240,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"pilot",
 					"sergeant",
 					"tech_priest",
 					"explicator"
@@ -283,7 +291,10 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest",
+					"explicator"
 				}
 			}
 		},
@@ -329,7 +340,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		}
 	})
 end

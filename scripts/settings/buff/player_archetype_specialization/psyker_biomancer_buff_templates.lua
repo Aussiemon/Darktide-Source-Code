@@ -761,8 +761,18 @@ templates.psyker_biomancer_smite_on_hit = {
 			return
 		end
 
-		template_data.next_allowed_t = t + talent_settings.offensive_2_3.cooldown
+		local critical_peril = 0.97
 		local player_unit = template_context.unit
+		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+		local warp_charge_component = unit_data_extension and unit_data_extension:read_component("warp_charge")
+
+		if not warp_charge_component or critical_peril < warp_charge_component.current_percentage then
+			template_data.smite_target = nil
+
+			return
+		end
+
+		template_data.next_allowed_t = t + talent_settings.offensive_2_3.cooldown
 		local hit_unit_pos = POSITION_LOOKUP[smite_target]
 		local player_pos = POSITION_LOOKUP[player_unit]
 		local attack_direction = Vector3.normalize(hit_unit_pos - player_pos)

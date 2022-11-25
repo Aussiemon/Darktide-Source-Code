@@ -997,6 +997,92 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.bayonette_weapon_special_slash,
 		wounds_shape = wounds_shapes.right_45_slash_clean
 	},
+	action_stab_zoom = {
+		damage_window_start = 0.13333333333333333,
+		hit_armor_anim = "attack_hit_shield",
+		start_input = "zoom_weapon_special",
+		allow_conditional_chain = true,
+		kind = "sweep",
+		first_person_hit_anim = "attack_hit",
+		range_mod = 1.6,
+		first_person_hit_stop_anim = "attack_hit",
+		crosshair_type = "charge_up_ads",
+		allowed_during_sprint = true,
+		damage_window_end = 0.23333333333333334,
+		uninterruptible = true,
+		anim_event = "attack_stab",
+		total_time = 1.1,
+		action_movement_curve = {
+			{
+				t = 0.1,
+				modifier = 1.3 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 0.25,
+				modifier = 0.3 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 0.3,
+				modifier = 0.5 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 0.35,
+				modifier = 1.5 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 0.4,
+				modifier = 1.5 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 0.6,
+				modifier = 1.05 * action_movement_curve_mark_modifier
+			},
+			{
+				t = 1,
+				modifier = 0.75 * action_movement_curve_mark_modifier
+			},
+			start_modifier = 1.1 * action_movement_curve_mark_modifier
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			reload = {
+				action_name = "action_reload"
+			},
+			zoom_shoot_hold = {
+				chain_time = 0.575,
+				reset_combo = true,
+				action_name = "action_shoot_zoomed_start"
+			},
+			zoom_weapon_special = {
+				action_name = "action_stab_zoom",
+				chain_time = 0.575
+			}
+		},
+		weapon_box = {
+			0.08,
+			1.2,
+			0.08
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg/animations/ironsight_attack_stab_01",
+			anchor_point_offset = {
+				0,
+				0.8,
+				0
+			}
+		},
+		damage_type = damage_types.knife,
+		damage_profile = DamageProfileTemplates.bayonette_weapon_special_stab,
+		wounds_shape = wounds_shapes.default
+	},
 	action_inspect = {
 		skip_3p_anims = false,
 		lock_view = true,
@@ -1013,7 +1099,7 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.entry_actions = {
-	primary_action = "action_shoot_hip_start",
+	primary_action = "action_shoot_hip_charged",
 	secondary_action = "action_zoom"
 }
 weapon_template.allow_sprinting_with_special = true

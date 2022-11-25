@@ -738,7 +738,7 @@ DialogueSystem._update_story_lines = function (self, t)
 	if is_story_ticker and next_story_line_update_t < t then
 		self._next_story_line_update_t = t + DialogueSettings.story_tick_time
 
-		if self.global_context.team_threat_level == "low" then
+		if self.global_context.team_threat_level == "low" and self.global_context.active_hordes == 0 then
 			Vo.player_vo_event_by_concept("story_talk")
 		end
 	end
@@ -749,7 +749,7 @@ DialogueSystem._update_story_lines = function (self, t)
 	if is_short_story_ticker and next_short_story_line_update_t < t then
 		self._next_short_story_line_update_t = t + DialogueSettings.short_story_tick_time
 
-		if self.global_context.team_threat_level == "low" then
+		if self.global_context.team_threat_level == "low" and self.global_context.active_hordes == 0 then
 			Vo.player_vo_event_by_concept("short_story_talk")
 		end
 	end

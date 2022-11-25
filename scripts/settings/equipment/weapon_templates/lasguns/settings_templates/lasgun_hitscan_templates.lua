@@ -120,7 +120,7 @@ hitscan_templates.lasgun_spraynpray_p3_m2 = {
 }
 hitscan_templates.lasgun_spraynpray_p3_m3 = {
 	power_level = 900,
-	range = 50,
+	range = 100,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.heavy_lasgun_snp

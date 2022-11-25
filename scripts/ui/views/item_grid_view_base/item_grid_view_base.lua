@@ -26,7 +26,7 @@ ItemGridViewBase.init = function (self, definitions, settings, context)
 	self._grow_direction = "down"
 	self._context = context
 
-	ItemGridViewBase.super.init(self, merged_definitions, settings)
+	ItemGridViewBase.super.init(self, merged_definitions, settings, context)
 
 	self._pass_input = true
 	self._pass_draw = true
@@ -35,7 +35,6 @@ end
 
 ItemGridViewBase.on_enter = function (self)
 	ItemGridViewBase.super.on_enter(self)
-	self:_setup_weapon_preview()
 
 	self._weapon_stats = self:_setup_weapon_stats("weapon_stats", "weapon_stats_pivot")
 	self._weapon_compare_stats = self:_setup_weapon_stats("weapon_compare_stats", "weapon_compare_stats_pivot")
@@ -45,47 +44,84 @@ ItemGridViewBase.on_enter = function (self)
 
 	self._item_definitions = MasterItems.get_cached()
 	self._inventory_items = {}
+	local ui_renderer = self._context and self._context.ui_renderer
 
-	self:_setup_default_gui()
+	if ui_renderer then
+		self._ui_default_renderer = ui_renderer
+		self._ui_default_renderer_is_external = true
+	else
+		self:_setup_default_gui()
+	end
+end
+
+local function comparator(definition)
+	return function (a, b)
+		local a_item = a.item
+		local b_item = b.item
+
+		for i = 1, #definition, 2 do
+			local order = definition[i]
+			local func = definition[i + 1]
+			local is_lt = func(a_item, b_item)
+
+			if is_lt ~= nil then
+				if order == "<" then
+					return is_lt
+				else
+					return not is_lt
+				end
+			end
+		end
+
+		return nil
+	end
 end
 
 ItemGridViewBase._setup_sort_options = function (self)
 	self._sort_options = {
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = function (a, b)
-				local a_item = a.item
-				local b_item = b.item
-
-				return ItemUtils.sort_items_by_rarity_high_first(a_item, b_item)
-			end
+			sort_function = comparator({
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level,
+				"<",
+				ItemUtils.compare_item_name
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = function (a, b)
-				local a_item = a.item
-				local b_item = b.item
-
-				return ItemUtils.sort_items_by_rarity_low_first(a_item, b_item)
-			end
+			sort_function = comparator({
+				"<",
+				ItemUtils.compare_item_rarity,
+				"<",
+				ItemUtils.compare_item_level,
+				"<",
+				ItemUtils.compare_item_name
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = function (a, b)
-				local a_item = a.item
-				local b_item = b.item
-
-				return ItemUtils.sort_items_by_name_high_first(a_item, b_item)
-			end
+			sort_function = comparator({
+				">",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = function (a, b)
-				local a_item = a.item
-				local b_item = b.item
-
-				return ItemUtils.sort_items_by_name_low_first(a_item, b_item)
-			end
+			sort_function = comparator({
+				"<",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
 		}
 	}
 	local sort_callback = callback(self, "cb_on_sort_button_pressed")
@@ -370,31 +406,7 @@ end
 
 ItemGridViewBase._setup_weapon_stats = function (self, reference_name, scenegraph_id)
 	local layer = 10
-	local title_height = 70
-	local edge_padding = 12
-	local grid_width = 530
-	local grid_height = 920
-	local grid_size = {
-		grid_width - edge_padding,
-		grid_height
-	}
-	local grid_spacing = {
-		0,
-		0
-	}
-	local mask_size = {
-		grid_width + 40,
-		grid_height
-	}
-	local context = {
-		scrollbar_width = 7,
-		ignore_blur = true,
-		grid_spacing = grid_spacing,
-		grid_size = grid_size,
-		mask_size = mask_size,
-		title_height = title_height,
-		edge_padding = edge_padding
-	}
+	local context = self._definitions.weapon_stats_grid_settings
 	local weapon_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
 
 	self:_update_weapon_stats_position(scenegraph_id, weapon_stats)
@@ -467,17 +479,21 @@ ItemGridViewBase.on_exit = function (self)
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
 
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
+		if not self._ui_default_renderer_is_external then
+			Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
+		end
 
-		local world = self._gui_world
-		local viewport_name = self._gui_viewport_name
+		if self._gui_world then
+			local world = self._gui_world
+			local viewport_name = self._gui_viewport_name
 
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
+			ScriptWorld.destroy_viewport(world, viewport_name)
+			Managers.ui:destroy_world(world)
 
-		self._gui_viewport_name = nil
-		self._gui_viewport = nil
-		self._gui_world = nil
+			self._gui_viewport_name = nil
+			self._gui_viewport = nil
+			self._gui_world = nil
+		end
 	end
 
 	self:_destroy_weapon_preview()

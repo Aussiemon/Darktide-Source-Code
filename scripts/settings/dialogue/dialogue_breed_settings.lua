@@ -227,6 +227,7 @@ local dialogue_breed_settings = {
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = false,
 		dialogue_memory_faction_name = "npc",
+		level_requirement = 4,
 		prop_name = "voice_over_2d",
 		can_trigger_vo = true,
 		wwise_voice_switch_group = "voice_profile",

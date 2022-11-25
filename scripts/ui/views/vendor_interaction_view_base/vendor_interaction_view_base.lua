@@ -504,4 +504,8 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 	end
 end
 
+VendorInteractionViewBase.can_afford = function (self, amount, type)
+	return amount <= (self._current_balance[type] or 0)
+end
+
 return VendorInteractionViewBase

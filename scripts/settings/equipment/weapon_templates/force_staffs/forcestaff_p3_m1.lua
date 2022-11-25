@@ -261,6 +261,9 @@ weapon_template.actions = {
 				chain_time = 0.3,
 				reset_combo = true,
 				action_name = "action_stab_start"
+			},
+			charge = {
+				action_name = "action_charge"
 			}
 		},
 		fx = {

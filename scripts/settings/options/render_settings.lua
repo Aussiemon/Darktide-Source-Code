@@ -639,10 +639,7 @@ local RENDER_TEMPLATES = {
 		require_apply = false,
 		require_restart = false,
 		tooltip_text = "loc_setting_sharpen_enabled_mouseover",
-		save_location = "render_settings",
-		apply_values_on_edited = {
-			graphics_quality = "custom"
-		}
+		save_location = "render_settings"
 	},
 	{
 		require_apply = true,
@@ -775,6 +772,10 @@ local RENDER_TEMPLATES = {
 						rtxgi_quality = "high"
 					}
 				}
+			},
+			{
+				id = "custom",
+				display_name = "loc_setting_graphics_quality_option_custom"
 			}
 		},
 		validation_function = function ()
@@ -792,6 +793,9 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
 					render_settings = {
 						rt_checkerboard_reflections = false,
@@ -805,6 +809,9 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_low",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
 					master_render_settings = {
 						ssr_quality = "high"
@@ -824,6 +831,9 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
 					master_render_settings = {
 						ssr_quality = "off"
@@ -872,10 +882,10 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
-					master_render_settings = {
-						gi_quality = "high"
-					},
 					render_settings = {
 						baked_ddgi = true,
 						rtxgi_enabled = false
@@ -887,6 +897,9 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_low",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
 					render_settings = {
 						baked_ddgi = false,
@@ -901,6 +914,9 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
 				values = {
 					render_settings = {
 						baked_ddgi = false,
@@ -961,7 +977,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						lens_quality_enabled = false,
 						skin_material_enabled = false,
-						sharpen_enabled = false,
 						lod_scatter_density = 0.25,
 						motion_blur_enabled = false,
 						rough_transparency_enabled = false,
@@ -992,7 +1007,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						lens_quality_enabled = true,
 						skin_material_enabled = false,
-						sharpen_enabled = true,
 						lod_scatter_density = 0.5,
 						motion_blur_enabled = true,
 						rough_transparency_enabled = true,
@@ -1023,7 +1037,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						lens_quality_enabled = true,
 						skin_material_enabled = true,
-						sharpen_enabled = true,
 						lod_scatter_density = 1,
 						motion_blur_enabled = true,
 						rough_transparency_enabled = true,
@@ -1420,7 +1433,7 @@ local RENDER_TEMPLATES = {
 			{
 				id = "low",
 				display_name = "loc_settings_menu_low",
-				require_apply = false,
+				require_apply = true,
 				require_restart = false,
 				apply_values_on_edited = {
 					graphics_quality = "custom"
@@ -1435,7 +1448,7 @@ local RENDER_TEMPLATES = {
 			{
 				id = "high",
 				display_name = "loc_settings_menu_high",
-				require_apply = false,
+				require_apply = true,
 				require_restart = false,
 				apply_values_on_edited = {
 					graphics_quality = "custom"

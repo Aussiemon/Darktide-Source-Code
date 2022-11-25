@@ -4,11 +4,18 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
-local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local BaseView = class("BaseView")
 
-BaseView.init = function (self, definitions, settings)
-	self._ui_renderer = Managers.ui:create_renderer(self.__class_name .. "_ui_renderer")
+BaseView.init = function (self, definitions, settings, context)
+	local ui_renderer = context and context.ui_renderer
+
+	if ui_renderer then
+		self._ui_renderer = ui_renderer
+		self._ui_renderer_is_external = true
+	else
+		self._ui_renderer = Managers.ui:create_renderer(self.__class_name .. "_ui_renderer")
+	end
+
 	self._allow_close_hotkey = false
 	self._pass_input = false
 	self._pass_draw = true
@@ -239,7 +246,9 @@ BaseView.on_exit = function (self)
 	self._elements_array = nil
 	self._ui_renderer = nil
 
-	Managers.ui:destroy_renderer(self.__class_name .. "_ui_renderer")
+	if not self._ui_renderer_is_external then
+		Managers.ui:destroy_renderer(self.__class_name .. "_ui_renderer")
+	end
 
 	self._destroyed = true
 end

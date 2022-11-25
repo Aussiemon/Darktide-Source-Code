@@ -50,26 +50,24 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 	if optional_real_profile then
 		local archetype = optional_real_profile.archetype
 		local specialization = optional_real_profile.specialization
+		local backstory = optional_real_profile.lore.backstory
+		local selected_voice = optional_real_profile.selected_voice
+		local gender = optional_real_profile.gender
+		local breed = optional_real_profile.archetype.breed
+		local height = optional_real_profile.personal.character_height
+		self._character_height = height
 		self._profile = {
-			selected_voice = "ogryn_a",
 			name = "",
 			loadout = {},
-			abilities = {
-				support_ability = "grenade",
-				combat_ability = "dash"
-			},
+			selected_voice = selected_voice,
 			lore = {
-				backstory = {}
+				backstory = backstory
 			},
 			archetype = archetype,
-			specialization = specialization
+			specialization = specialization,
+			gender = gender,
+			breed = breed
 		}
-		local gender = optional_real_profile.gender
-
-		self:set_archetype(archetype)
-		self:set_gender(gender)
-		self:set_specialization(specialization)
-
 		local loadout = optional_real_profile.loadout
 
 		if loadout then

@@ -919,7 +919,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{
@@ -965,7 +967,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant"
+					"pilot",
+					"sergeant",
+					"tech_priest"
 				}
 			},
 			{

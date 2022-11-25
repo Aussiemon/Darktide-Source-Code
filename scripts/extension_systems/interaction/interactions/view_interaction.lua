@@ -4,6 +4,7 @@ local PlayerProgressionUnlocks = require("scripts/settings/player/player_progres
 local ViewInteraction = class("ViewInteraction", "BaseInteraction")
 local ui_view_level_requirement = {
 	credits_vendor_background_view = PlayerProgressionUnlocks.credits_vendor,
+	crafting_view = PlayerProgressionUnlocks.crafting,
 	contracts_background_view = PlayerProgressionUnlocks.contracts
 }
 
@@ -13,6 +14,10 @@ ViewInteraction.init = function (self, template)
 	self._view_story_chapter_requirement = {
 		credits_vendor_background_view = {
 			chapter = "pot_story_traitor_first",
+			story = "path_of_trust"
+		},
+		crafting_view = {
+			chapter = "pot_crafting",
 			story = "path_of_trust"
 		},
 		contracts_background_view = {

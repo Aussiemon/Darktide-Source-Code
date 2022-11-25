@@ -702,11 +702,17 @@ animations.salary_card_dim_out_content = {}
 
 _create_icon_animation(animations.salary_card_show_content, {
 	"credits",
-	0.25
+	0.25,
+	"plasteel",
+	4.25,
+	"diamantine",
+	5.25
 })
 _create_count_up_animation(animations.salary_card_show_content, "credits", "credits", 0.25, 2)
 _create_count_up_animation(animations.salary_card_show_content, "side_mission_credits", "credits", 2.25, 3)
 _create_count_up_animation(animations.salary_card_show_content, "circumstance_credits", "credits", 3.25, 4)
+_create_count_up_animation(animations.salary_card_show_content, "plasteel", "plasteel", 4.25, 5)
+_create_count_up_animation(animations.salary_card_show_content, "diamantine", "diamantine", 5.25, 6)
 _create_consolidate_wallet_animation(animations.salary_card_show_content, 6, 6.25, 7.25)
 _create_dim_out_animation(animations.salary_card_dim_out_content, animations.salary_card_show_content)
 

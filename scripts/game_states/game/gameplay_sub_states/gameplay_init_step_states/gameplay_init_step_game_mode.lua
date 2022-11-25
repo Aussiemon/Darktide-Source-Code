@@ -18,6 +18,13 @@ GameplayInitStepGameMode.on_enter = function (self, parent, params)
 end
 
 GameplayInitStepGameMode.update = function (self, main_dt, main_t)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode_ready = game_mode_manager:game_mode_ready()
+
+	if not game_mode_ready then
+		return
+	end
+
 	local next_step_params = {
 		shared_state = self._shared_state
 	}

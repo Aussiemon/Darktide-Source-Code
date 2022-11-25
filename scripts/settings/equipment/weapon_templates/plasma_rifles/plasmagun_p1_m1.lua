@@ -262,6 +262,9 @@ weapon_template.actions = {
 			},
 			vent_override = {
 				action_name = "action_vent_override"
+			},
+			brace = {
+				action_name = "action_charge"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

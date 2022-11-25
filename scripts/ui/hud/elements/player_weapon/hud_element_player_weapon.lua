@@ -65,6 +65,8 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	self:_update_input()
 	self:_register_events()
+
+	self._first_frame = true
 end
 
 HudElementPlayerWeapon.destroy = function (self, ui_renderer)
@@ -110,6 +112,12 @@ HudElementPlayerWeapon.slot_name = function (self)
 end
 
 HudElementPlayerWeapon._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+	if self._first_frame then
+		self._first_frame = false
+
+		return
+	end
+
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
@@ -252,10 +260,15 @@ HudElementPlayerWeapon.set_height_offset = function (self, height_offset)
 	self._height_offset = height_offset
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.background.offset[2] = height_offset
+	widgets_by_name.background.dirty = true
 	widgets_by_name.icon.offset[2] = height_offset
+	widgets_by_name.icon.dirty = true
 	widgets_by_name.input_text.offset[2] = height_offset
+	widgets_by_name.input_text.dirty = true
 	widgets_by_name.overheat_infinite_symbol.offset[2] = height_offset
+	widgets_by_name.overheat_infinite_symbol.dirty = true
 	widgets_by_name.ammo_text.offset[2] = height_offset
+	widgets_by_name.ammo_text.dirty = true
 end
 
 HudElementPlayerWeapon._set_alpha = function (self, alpha_fraction)

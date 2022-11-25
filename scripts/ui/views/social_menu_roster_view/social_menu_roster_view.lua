@@ -247,6 +247,8 @@ SocialMenuRosterView.init = function (self, settings, context)
 		[ROSTER_GRID_ID] = {}
 	}
 	self._focused_grid_id = nil
+	self._new_party_members = nil
+	self._new_list_data = nil
 	self._popup_menu = nil
 	self._refresh_list_delay = 0
 	self._roster_widgets = {}
@@ -315,6 +317,16 @@ SocialMenuRosterView.set_can_exit = function (self, value, apply_next_frame)
 end
 
 SocialMenuRosterView.update = function (self, dt, t, input_service)
+	if not self._party_promise:is_pending() then
+		local new_party_members = self._new_party_members
+
+		if new_party_members then
+			self:_update_party_list(new_party_members)
+
+			self._new_party_members = nil
+		end
+	end
+
 	local next_list_index = self._next_list_index
 
 	if not self._roster_lists_promise:is_pending() then
@@ -404,11 +416,10 @@ SocialMenuRosterView._on_navigation_input_changed = function (self)
 
 		if is_focused_grid then
 			selected_grid_index = grid:selected_grid_index()
+			local selected_widget = grid:widget_by_index(selected_grid_index)
 
-			if not selected_grid_index then
-				grid:select_first_index()
-
-				selected_grid_index = grid:selected_grid_index()
+			if not selected_widget then
+				selected_grid_index = grid:select_first_index()
 
 				if not selected_grid_index then
 					focused_grid_id = math.max(focused_grid_id - 1, 1)
@@ -1540,7 +1551,7 @@ SocialMenuRosterView._refresh_party_list = function (self)
 		promise = social_service:fetch_party_members()
 		promise = promise:next(function (party_members)
 			if not self._destroyed then
-				self:_update_party_list(party_members)
+				self._new_party_members = party_members
 			end
 		end)
 		self._party_promise = promise

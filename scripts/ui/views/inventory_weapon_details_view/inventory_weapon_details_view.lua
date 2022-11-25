@@ -7,6 +7,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
+local WeaponStats = require("scripts/utilities/weapon_stats")
 local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local InventoryWeaponDetailsView = class("InventoryWeaponDetailsView", "BaseView")
@@ -20,6 +21,8 @@ InventoryWeaponDetailsView.init = function (self, settings, context)
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
 	self._pass_input = false
 	self._pass_draw = false
+	self._togglable_views_index = nil
+	self._togglable_views = {}
 end
 
 InventoryWeaponDetailsView.on_enter = function (self)
@@ -38,8 +41,12 @@ InventoryWeaponDetailsView.on_enter = function (self)
 	end
 end
 
+InventoryWeaponDetailsView._setup_debug_weapon_stats = function (self, item)
+	self._weapon_statistics = WeaponStats:new(item)
+end
+
 InventoryWeaponDetailsView._setup_input_legend = function (self)
-	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 50)
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do

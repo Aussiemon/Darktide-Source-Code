@@ -4253,16 +4253,14 @@ local conversations_core_veteran_male_b = {
 	},
 	lore_hive_cities_one_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_veteran_male_b__lore_hive_cities_one_a_02",
-			"loc_veteran_male_b__lore_hive_cities_one_a_03",
-			"loc_veteran_male_b__lore_hive_cities_one_a_04"
+			[1.0] = "loc_veteran_male_b__lore_hive_cities_one_a_02",
+			[2.0] = "loc_veteran_male_b__lore_hive_cities_one_a_04"
 		},
 		sound_events_duration = {
-			4.400792,
-			3.5055,
-			2.240271
+			[1.0] = 4.400792,
+			[2.0] = 2.240271
 		},
 		randomize_indexes = {}
 	},

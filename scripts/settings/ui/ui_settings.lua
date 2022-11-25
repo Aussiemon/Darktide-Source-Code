@@ -579,6 +579,268 @@ local ui_settings = {
 				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/psyker_upperbody_career_03_lvl_01_set_01"
 			}
 		}
+	},
+	weapon_template_display_settings = {
+		chainaxe_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainaxe_p1",
+			display_name = "loc_chainaxe_p1_m1"
+		},
+		chainsword_2h_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainsword_2h_p1",
+			display_name = "loc_chainsword_2h_p1_m1"
+		},
+		chainsword_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainsword_p1",
+			display_name = "loc_chainsword_p1_m1"
+		},
+		combataxe_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
+			display_name = "loc_combataxe_p1_m1"
+		},
+		combataxe_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
+			display_name = "loc_combataxe_p1_m2"
+		},
+		combataxe_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
+			display_name = "loc_combataxe_p1_m3"
+		},
+		combataxe_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
+			display_name = "loc_combataxe_p2_m1"
+		},
+		combataxe_p2_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
+			display_name = "loc_combataxe_p2_m2"
+		},
+		combataxe_p2_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
+			display_name = "loc_combataxe_p2_m3"
+		},
+		combataxe_p3_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
+			display_name = "loc_combataxe_p3_m1"
+		},
+		combatknife_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatknife_p1",
+			display_name = "loc_combatknife_p1_m1"
+		},
+		combatsword_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
+			display_name = "loc_combatsword_p1_m1"
+		},
+		combatsword_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
+			display_name = "loc_combatsword_p1_m2"
+		},
+		combatsword_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
+			display_name = "loc_combatsword_p1_m3"
+		},
+		combatsword_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
+			display_name = "loc_combatsword_p2_m1"
+		},
+		combatsword_p2_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
+			display_name = "loc_combatsword_p2_m2"
+		},
+		combatsword_p2_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
+			display_name = "loc_combatsword_p2_m3"
+		},
+		combatsword_p3_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
+			display_name = "loc_combatsword_p3_m1"
+		},
+		combatsword_p3_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
+			display_name = "loc_combatsword_p3_m2"
+		},
+		combatsword_p3_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
+			display_name = "loc_combatsword_p3_m3"
+		},
+		forcesword_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
+			display_name = "loc_forcesword_p1_m1"
+		},
+		ogryn_club_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
+			display_name = "loc_ogryn_club_p1_m1"
+		},
+		ogryn_club_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
+			display_name = "loc_ogryn_club_p2_m1"
+		},
+		ogryn_combatblade_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
+			display_name = "loc_ogryn_combatblade_p1_m1"
+		},
+		ogryn_combatblade_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
+			display_name = "loc_ogryn_combatblade_p1_m2"
+		},
+		ogryn_combatblade_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
+			display_name = "loc_ogryn_combatblade_p1_m3"
+		},
+		ogryn_powermaul_slabshield_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_slabshield_p1",
+			display_name = "loc_ogryn_powermaul_slabshield_p1_m1"
+		},
+		powersword_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",
+			display_name = "loc_powersword_p1_m1"
+		},
+		thunderhammer_2h_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_thunderhammer_2h_p1",
+			display_name = "loc_thunderhammer_2h_p1_m1"
+		},
+		autogun_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
+			display_name = "loc_autogun_p1_m1"
+		},
+		autogun_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
+			display_name = "loc_autogun_p1_m2"
+		},
+		autogun_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
+			display_name = "loc_autogun_p1_m3"
+		},
+		autogun_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
+			display_name = "loc_autogun_p2_m1"
+		},
+		autogun_p2_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
+			display_name = "loc_autogun_p2_m2"
+		},
+		autogun_p2_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
+			display_name = "loc_autogun_p2_m3"
+		},
+		autogun_p3_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
+			display_name = "loc_autogun_p3_m1"
+		},
+		autogun_p3_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
+			display_name = "loc_autogun_p3_m2"
+		},
+		autogun_p3_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
+			display_name = "loc_autogun_p3_m3"
+		},
+		autopistol_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_autopistol_p1",
+			display_name = "loc_autopistol_p1_m1"
+		},
+		bolter_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_bolter_p1",
+			display_name = "loc_bolter_p1_m1"
+		},
+		flamer_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_flamer_p1",
+			display_name = "loc_flamer_p1_m1"
+		},
+		forcestaff_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p1",
+			display_name = "loc_forcestaff_p1_m1"
+		},
+		forcestaff_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p2",
+			display_name = "loc_forcestaff_p2_m1"
+		},
+		forcestaff_p3_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p3",
+			display_name = "loc_forcestaff_p3_m1"
+		},
+		forcestaff_p4_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p4",
+			display_name = "loc_forcestaff_p4_m1"
+		},
+		lasgun_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
+			display_name = "loc_lasgun_p1_m1"
+		},
+		lasgun_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
+			display_name = "loc_lasgun_p1_m2"
+		},
+		lasgun_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
+			display_name = "loc_lasgun_p1_m3"
+		},
+		lasgun_p2_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
+			display_name = "loc_lasgun_p2_m1"
+		},
+		lasgun_p2_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
+			display_name = "loc_lasgun_p2_m2"
+		},
+		lasgun_p2_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
+			display_name = "loc_lasgun_p2_m3"
+		},
+		lasgun_p3_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
+			display_name = "loc_lasgun_p3_m1"
+		},
+		lasgun_p3_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
+			display_name = "loc_lasgun_p3_m2"
+		},
+		lasgun_p3_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
+			display_name = "loc_lasgun_p3_m3"
+		},
+		laspistol_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_laspistol_p1",
+			display_name = "loc_laspistol_p1_m1"
+		},
+		ogryn_gauntlet_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_gauntlet_p1",
+			display_name = "loc_ogryn_gauntlet_p1_m1"
+		},
+		ogryn_heavystubber_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
+			display_name = "loc_ogryn_heavystubber_p1_m1"
+		},
+		ogryn_rippergun_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
+			display_name = "loc_ogryn_rippergun_p1_m1"
+		},
+		ogryn_rippergun_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
+			display_name = "loc_ogryn_rippergun_p1_m2"
+		},
+		ogryn_rippergun_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
+			display_name = "loc_ogryn_rippergun_p1_m3"
+		},
+		ogryn_thumper_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_thumper_p1_m1",
+			display_name = "loc_ogryn_thumper_p1_m1"
+		},
+		ogryn_thumper_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_thumper_p1_m2",
+			display_name = "loc_ogryn_thumper_p1_m2"
+		},
+		plasmagun_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_plasmagun_p1",
+			display_name = "loc_plasmagun_p1_m1"
+		},
+		shotgun_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
+			display_name = "loc_shotgun_p1_m1"
+		},
+		stubrevolver_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
+			display_name = "loc_stubrevolver_p1_m1"
+		}
 	}
 }
 
